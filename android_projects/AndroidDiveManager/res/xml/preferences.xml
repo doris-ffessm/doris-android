@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory
+	        android:title="@string/unit_category"
+	        android:key="unit_category">
+	         
+	        
+	        <ListPreference
+	            android:key="length_unit"
+	            android:title="Length unit"
+	            android:summary="Define which length unit is used in the application"
+	            android:defaultValue="m"
+	            android:entries="@array/length_units_array"
+	            android:entryValues="@array/length_units_arrayvalues"
+	        /> 
+	        <ListPreference
+	            android:key="temperature_unit"
+	            android:title="Temperature unit"
+	            android:summary="Define which temperature unit is used in the application"
+	            android:defaultValue="°C"
+	            android:entries="@array/temperature_units_array"
+	            android:entryValues="@array/temperature_units_arrayvalues"
+	        />  
+	             
+	    </PreferenceCategory>
+
+</PreferenceScreen>
