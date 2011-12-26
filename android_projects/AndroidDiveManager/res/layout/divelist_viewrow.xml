@@ -31,7 +31,7 @@
 	        android:id="@+id/details"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="@+id/label"
+	        android:text="@+id/details"
 	        android:textSize="16sp" >
 	    </TextView>
 	</LinearLayout>

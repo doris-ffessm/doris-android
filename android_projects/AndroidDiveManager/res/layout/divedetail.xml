@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+	<ImageView
+        android:id="@+id/divelist_viewrow_icon"
+        android:contentDescription="Dive icon"
+        android:layout_width="22px"
+        android:layout_height="22px"
+        android:layout_marginLeft="4px"
+        android:layout_marginRight="10px"
+        android:layout_marginTop="4px"
+        android:src="@drawable/ic_launcher" >
+    </ImageView>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+            <TextView
+	            android:text="@string/detail_divedate"
+	            android:padding="3dip" />
+	        <TextView
+	            android:id="@+id/detail_divedate"
+	            android:gravity="right"
+	            android:padding="3dip" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+            <TextView
+	            android:text="@string/detail_divedepth"
+	            android:padding="3dip" />
+	        <TextView
+	            android:id="@+id/detail_divedepth"
+	            android:gravity="right"
+	            android:padding="3dip" />
+        </TableRow>
+        
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+            <TextView
+	            android:text="@string/detail_divelocation"
+	            android:padding="3dip" />
+	        <TextView
+	            android:id="@+id/detail_divelocation"
+	            android:gravity="right"
+	            android:padding="3dip" />
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>

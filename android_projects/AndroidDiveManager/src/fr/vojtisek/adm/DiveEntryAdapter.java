@@ -1,6 +1,9 @@
 package fr.vojtisek.adm;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import fr.vojtisek.adm.data.DiveEntry;
 
@@ -22,10 +25,11 @@ public class DiveEntryAdapter extends BaseAdapter  {
 
     private List<DiveEntry> diveEntries;
 
-	public DiveEntryAdapter(Context context, List<DiveEntry> diveEntries) {
+	public DiveEntryAdapter(Context context, RuntimeExceptionDao<DiveEntry, Integer> diveEntriesDao) {
 		super();
 		this.context = context;
-		this.diveEntries = diveEntries;
+		// TODO find a way to query in a lazy way
+		this.diveEntries = diveEntriesDao.queryForAll();
 	}
 
 	@Override
@@ -46,21 +50,24 @@ public class DiveEntryAdapter extends BaseAdapter  {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-		 DiveEntry entry = diveEntries.get(position);
-	        if (convertView == null) {
-	            LayoutInflater inflater = (LayoutInflater) context
-	                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	            convertView = inflater.inflate(R.layout.divelist_viewrow, null);
-	        }
-	        TextView tvLabel = (TextView) convertView.findViewById(R.id.label);
-	        tvLabel.setText(entry.getDate());
+		DiveEntry entry = diveEntries.get(position);
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.divelist_viewrow, null);
+        }
+        TextView tvLabel = (TextView) convertView.findViewById(R.id.label);
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        tvLabel.setText(dateFormatter.format(entry.getDate()));
 
-	        TextView tvDetails = (TextView) convertView.findViewById(R.id.details);
-	        tvDetails.setText(entry.getLocation());
+        TextView tvDetails = (TextView) convertView.findViewById(R.id.details);
+        tvDetails.setText(entry.getLocation());
 
-	       
-	        
-	        return convertView;
+        // assign the entry to the row in order to ease GUI interactions
+        LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.divelist_viewrow);
+        llRow.setTag(entry);
+        
+        return convertView;
 
 	}
 
