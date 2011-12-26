@@ -5,23 +5,28 @@
 	        android:key="unit_category">
 	         
 	        
-	        <ListPreference
-	            android:key="length_unit"
-	            android:title="Length unit"
-	            android:summary="Define which length unit is used in the application"
-	            android:defaultValue="m"
-	            android:entries="@array/length_units_array"
-	            android:entryValues="@array/length_units_arrayvalues"
-	        /> 
-	        <ListPreference
-	            android:key="temperature_unit"
-	            android:title="Temperature unit"
-	            android:summary="Define which temperature unit is used in the application"
-	            android:defaultValue="°C"
-	            android:entries="@array/temperature_units_array"
-	            android:entryValues="@array/temperature_units_arrayvalues"
-	        />  
-	             
-	    </PreferenceCategory>
-
+        <ListPreference
+            android:key="length_unit"
+            android:title="@string/length_unit_prompt"
+            android:summary="@string/length_unit_summary"
+            android:defaultValue="m"
+            android:entries="@array/length_units_array"
+            android:entryValues="@array/length_units_arrayvalues"
+        /> 
+        <ListPreference
+            android:key="temperature_unit"
+            android:title="@string/temperature_unit_prompt"
+            android:summary="@string/temperature_unit_summary"
+            android:defaultValue="°C"
+            android:entries="@array/temperature_units_array"
+            android:entryValues="@array/temperature_units_arrayvalues"
+        />  
+             
+    </PreferenceCategory>
+	 <PreferenceCategory
+	        android:title="@string/presentation_category"
+	        android:key="presentation_category">
+	     <EditTextPreference android:key="dateformat" android:title="@string/dateformat_prompt" android:summary="@string/dateformat_summary" android:defaultValue="@string/dateformat_default"/>
+        
+     </PreferenceCategory>
 </PreferenceScreen>

@@ -28,6 +28,18 @@
 	            android:gravity="right"
 	            android:padding="3dip" />
         </TableRow>
+        
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+            <TextView
+	            android:text="@string/detail_divelocation"
+	            android:padding="3dip" />
+	        <TextView
+	            android:id="@+id/detail_divelocation"
+	            android:gravity="right"
+	            android:padding="3dip" />
+        </TableRow>
 
         <TableRow
             android:layout_width="wrap_content"
@@ -40,15 +52,15 @@
 	            android:gravity="right"
 	            android:padding="3dip" />
         </TableRow>
-        
+
         <TableRow
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
             <TextView
-	            android:text="@string/detail_divelocation"
+	            android:text="@string/detail_diveduration"
 	            android:padding="3dip" />
 	        <TextView
-	            android:id="@+id/detail_divelocation"
+	            android:id="@+id/detail_diveduration"
 	            android:gravity="right"
 	            android:padding="3dip" />
         </TableRow>

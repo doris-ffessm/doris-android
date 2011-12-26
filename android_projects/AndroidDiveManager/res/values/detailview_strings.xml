@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="detail_divedate">Date : </string>
+    <string name="detail_divedepth">Max Depth : </string>
+    <string name="detail_divelocation">Location : </string>
+    <string name="detail_diveduration">Duration : </string>
+</resources>

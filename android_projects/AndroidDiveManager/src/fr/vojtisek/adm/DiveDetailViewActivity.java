@@ -48,6 +48,8 @@ public class DiveDetailViewActivity extends OrmLiteBaseActivity<ORMLiteDBHelper>
     	
     	((TextView) findViewById(R.id.detail_divedepth)).setText(entry.getMaxdepth().toString());
     	
+    	((TextView) findViewById(R.id.detail_diveduration)).setText(entry.getDuration().toString());
+    	
 	}
 
 	@Override

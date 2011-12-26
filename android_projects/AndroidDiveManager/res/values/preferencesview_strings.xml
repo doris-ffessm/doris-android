@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!-- Options text -->
+    <string name="preferences_option">Preferences</string>
+    
+	<!-- Preferences -->
+	<string name="unit_category">Units category</string>
+	<string name="unit_prompt">Choose the units</string>
+	<string name="length_unit_prompt">Length unit</string>
+	<string name="length_unit_summary">Define which length unit is used in the application</string>
+    <string-array name="length_units_array">
+        <item name="meter">Meter</item>
+        <item name="inch">Inch</item>
+    </string-array><string-array name="length_units_arrayvalues">
+        <item name="meter">m</item>
+        <item name="inch">inch</item>
+    </string-array>
+    <string name="temperature_unit_prompt">Temperature unit</string>
+	<string name="temperature_unit_summary">Define which temperature unit is used in the application</string>
+	<string-array name="temperature_units_array">
+        <item name="celcius">Celcius</item>
+        <item name="fahrenheit">Fahrenheit</item>
+    </string-array><string-array name="temperature_units_arrayvalues">
+        <item name="celcius">°C</item>
+        <item name="fahrenheit">°F</item>
+    </string-array>
+    
+    <string name="presentation_category">Presentation category</string>
+    <string name="dateformat_prompt">Choose a format for date</string>
+    <string name="dateformat_summary">(ex: MM/dd/yyyy HH:mm)</string>
+    <string name="dateformat_default">MM/dd/yyyy HH:mm</string>
+    
+</resources>

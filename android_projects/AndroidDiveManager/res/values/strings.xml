@@ -2,31 +2,7 @@
 <resources>
     <string name="app_name">AndroidDiveManager</string>
 	
-    <!-- Options text -->
-    <string name="preferences_option">Preferences</string>
     
-	<!-- Preferences -->
-	<string name="unit_category">Units category</string>
-	<string name="unit_prompt">Choose the units</string>
-	<string name="length_unit_prompt">Choose the length unit</string>
-    <string-array name="length_units_array">
-        <item name="meter">Meter</item>
-        <item name="inch">Inch</item>
-    </string-array><string-array name="length_units_arrayvalues">
-        <item name="meter">m</item>
-        <item name="inch">inch</item>
-    </string-array>
-	<string name="temperature_unit_prompt">Choose the temperature unit</string>
-	<string-array name="temperature_units_array">
-        <item name="celcius">Celcius</item>
-        <item name="fahrenheit">Fahrenheit</item>
-    </string-array><string-array name="temperature_units_arrayvalues">
-        <item name="celcius">°C</item>
-        <item name="fahrenheit">°F</item>
-    </string-array>
     <string name="surface_interval">Surface interval</string>
-    <string name="detail_divedate">Date : </string>
-    <string name="detail_divedepth">Max Depth : </string>
-    <string name="detail_divelocation">Location : </string>
     <string name="create_fake_data_option">Create fake data</string>
 </resources>
