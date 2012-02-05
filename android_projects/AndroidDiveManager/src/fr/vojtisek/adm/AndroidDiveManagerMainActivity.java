@@ -3,9 +3,16 @@ package fr.vojtisek.adm;
 import java.util.Date;
 import java.util.List;
 import java.io.File;
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 
 import fr.vojtisek.adm.openintents.intents.FileManagerIntents;
+import fr.vojtisek.adm.sdm2.SDM2Dive;
+import fr.vojtisek.adm.sdm2.SDM2FileLoader;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -162,7 +169,6 @@ public class AndroidDiveManagerMainActivity extends OrmLiteBaseActivity<ORMLiteD
     
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
 		case REQUEST_CODE_PICK_FILE_OR_DIRECTORY:
@@ -170,8 +176,26 @@ public class AndroidDiveManagerMainActivity extends OrmLiteBaseActivity<ORMLiteD
 			if (fileUri != null) {
 				String filePath = fileUri.getPath();
 				if (filePath != null) {
-					Toast.makeText(this, "Loading from file "+ filePath, 
-							Toast.LENGTH_SHORT).show();
+					File f = new File(filePath);
+					try {
+						SDM2FileLoader sdmLoader = new SDM2FileLoader(f);
+						Toast.makeText(this, "Importing "+ sdmLoader.getDives().size() + " dive(s)", 
+										Toast.LENGTH_SHORT).show();
+						for(SDM2Dive sdmDive : sdmLoader.getDives()){
+							Toast.makeText(this, sdmDive.getDate()+" " + sdmDive.getTime() + " "+sdmDive.getDepth(), 
+									Toast.LENGTH_LONG).show();
+						}
+					} catch (SAXException e) {
+						Toast.makeText(this, "Cannot load invalid file "+ filePath + e, 
+								Toast.LENGTH_LONG).show();
+					} catch (IOException e) {
+						Toast.makeText(this, "Cannot load file "+ filePath + e, 
+								Toast.LENGTH_LONG).show();
+					}
+					catch (ParserConfigurationException e) {
+						Toast.makeText(this, "Cannot load file "+ filePath + e, 
+								Toast.LENGTH_LONG).show();
+					}
 				}
 			}
 			
