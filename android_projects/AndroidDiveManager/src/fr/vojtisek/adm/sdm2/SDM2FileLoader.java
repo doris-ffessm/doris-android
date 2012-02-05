@@ -74,6 +74,8 @@ public class SDM2FileLoader extends DefaultHandler {
     	if(currentFullQName.equals("SUUNTO/MSG/")){
     		currentDive = new SDM2Dive();
     		dives.add(currentDive);
+    	} else if(currentFullQName.equals("SUUNTO/MSG/SAMPLE/")){
+    		// TODO
     	}
 	}
 	
@@ -97,6 +99,48 @@ public class SDM2FileLoader extends DefaultHandler {
 		}
 		else if(currentFullQName.equals("SUUNTO/MSG/MAXDEPTH/")){
 			currentDive.setDepth(sb.toString());
+		}
+		else if(currentFullQName.equals("SUUNTO/MSG/MEANDEPTH/")){
+			currentDive.setAvgDepth(sb.toString());
+		}
+		else if(currentFullQName.equals("SUUNTO/MSG/LOGNOTES/")){
+			currentDive.setNotes(sb.toString());
+		}
+		else if(currentFullQName.equals("SUUNTO/MSG/LOCATION/")){
+			currentDive.setLocation(sb.toString());
+		}
+		else if(currentFullQName.equals("SUUNTO/MSG/SITE/")){
+			currentDive.setSite(sb.toString());
+		}
+		else if(currentFullQName.equals("SUUNTO/MSG/WATERTEMPMAXDEPTH/")){
+			currentDive.setTemperature(sb.toString());
+		}
+		else if(currentFullQName.equals("SUUNTO/MSG/PARTNER/")){
+			currentDive.setPartner(sb.toString());
+		}
+		else if(currentFullQName.equals("SUUNTO/MSG/DIVEMASTER/")){
+			currentDive.setDivemaster(sb.toString());
+		}
+		else if(currentFullQName.equals("SUUNTO/MSG/CYLINDERSIZE/")){
+			currentDive.setTankSize(sb.toString());
+		}
+		else if(currentFullQName.equals("SUUNTO/MSG/CYLINDERUNITS/")){
+			currentDive.setTankUnits(sb.toString());
+		}
+		else if(currentFullQName.equals("SUUNTO/MSG/CYLINDERSTARTPRESSURE/")){
+			currentDive.setPressureStart(sb.toString());
+		}
+		else if(currentFullQName.equals("SUUNTO/MSG/CYLINDERENDPRESSURE/")){
+			currentDive.setPressureEnd(sb.toString());
+		}
+		else if(currentFullQName.equals("SUUNTO/MSG/O2PCT/")){
+			currentDive.setO2pct(sb.toString());
+		}
+		else if(currentFullQName.equals("SUUNTO/MSG/O2PCT_2/")){
+			currentDive.setO2pct2(sb.toString());
+		}
+		else if(currentFullQName.equals("SUUNTO/MSG/O2PCT_3/")){
+			currentDive.setO2pct3(sb.toString());
 		}
 		
     }
