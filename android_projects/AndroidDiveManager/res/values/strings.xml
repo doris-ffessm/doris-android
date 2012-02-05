@@ -5,4 +5,5 @@
     
     <string name="surface_interval">Surface interval</string>
     <string name="create_fake_data_option">Create fake data</string>
+    <string name="edit_menu">Edit</string>
 </resources>

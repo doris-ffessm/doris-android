@@ -10,8 +10,12 @@ import fr.vojtisek.adm.data.ORMLiteDBHelper;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnKeyListener;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class DiveDetailViewActivity extends OrmLiteBaseActivity<ORMLiteDBHelper> {
@@ -25,6 +29,8 @@ public class DiveDetailViewActivity extends OrmLiteBaseActivity<ORMLiteDBHelper>
         setContentView(R.layout.divedetail);
         currentDiveId = getIntent().getExtras().getInt("diveId");
         //findViewById(R.id.divedate);
+        
+        
     }
     
     @Override
@@ -55,7 +61,8 @@ public class DiveDetailViewActivity extends OrmLiteBaseActivity<ORMLiteDBHelper>
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		// add options in the menu
-        menu.add(Menu.NONE, 0, 0, R.string.preferences_option).setIcon(android.R.drawable.ic_menu_preferences);
+		menu.add(Menu.NONE, 0, 0, R.string.edit_menu).setIcon(android.R.drawable.ic_menu_edit);
+        menu.add(Menu.NONE, 1, 0, R.string.preferences_option).setIcon(android.R.drawable.ic_menu_preferences);
         return super.onCreateOptionsMenu(menu);
     }
     
@@ -64,9 +71,16 @@ public class DiveDetailViewActivity extends OrmLiteBaseActivity<ORMLiteDBHelper>
     public boolean onOptionsItemSelected(MenuItem item) {
     	// behavior of option menu
         switch (item.getItemId()) {
-            case 0:
-                startActivity(new Intent(this, PreferencesActivity.class));
-                return true;
+        case 0:
+        	Intent toDetailView = new Intent(this, EditableDiveDetailViewActivity.class);
+            Bundle b = new Bundle();
+            b.putInt("diveId", currentDiveId);
+    		toDetailView.putExtras(b);
+            startActivity(toDetailView);
+            return true;
+        case 1:
+            startActivity(new Intent(this, PreferencesActivity.class));
+            return true;
         }
         return false;
     }

@@ -31,7 +31,7 @@ public class DiveListViewActivity extends OrmLiteBaseActivity<ORMLiteDBHelper> i
 		super.onCreate(bundle);
 		setContentView(R.layout.divelist_listview);
 
-        ListView list = (ListView) findViewById(R.id.divelist_listview);
+		ListView list = (ListView) findViewById(R.id.divelist_listview);
         list.setClickable(true);
 
         /*final List<DiveEntry> diveEntries = new ArrayList<DiveEntry>();
@@ -52,10 +52,13 @@ public class DiveListViewActivity extends OrmLiteBaseActivity<ORMLiteDBHelper> i
 	protected void onResume() {
 		super.onResume();
 		
-		// get our dao
-		//RuntimeExceptionDao<DiveEntry, Integer> simpleDao = getHelper().getDiveEntriesDao();
-		// query for all of the data objects in the database
-		//List<DiveEntry> diveEntries = simpleDao.queryForAll();
+		ListView list = (ListView) findViewById(R.id.divelist_listview);
+        list.setClickable(true);
+
+        DiveEntryAdapter adapter = new DiveEntryAdapter(this, getHelper().getDiveEntriesDao());
+        list.setOnItemClickListener(this);
+        list.setAdapter(adapter);
+		
 	} 
 	
 	
