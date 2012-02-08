@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
-import fr.vojtisek.adm.data.DiveEntry;
+import fr.vojtisek.adm.data.db.DiveEntry;
 
 import android.content.Context;
 import android.view.LayoutInflater;

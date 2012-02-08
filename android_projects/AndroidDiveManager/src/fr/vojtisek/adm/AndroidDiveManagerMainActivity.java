@@ -17,8 +17,8 @@ import fr.vojtisek.adm.sdm2.SDM2FileLoader;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
-import fr.vojtisek.adm.data.DiveEntry;
-import fr.vojtisek.adm.data.ORMLiteDBHelper;
+import fr.vojtisek.adm.data.db.DiveEntry;
+import fr.vojtisek.adm.data.db.ORMLiteDBHelper;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -127,7 +127,7 @@ public class AndroidDiveManagerMainActivity extends OrmLiteBaseActivity<ORMLiteD
     public void createFakeData(){
 		long millis = System.currentTimeMillis();
 		// create some entries in the onCreate
-		DiveEntry diveEntry = new DiveEntry(new Date(millis), "Rennes", 20, "0:30");
+		DiveEntry diveEntry = new DiveEntry(new Date(millis), "Rennes", 20, 30);
 		dao.create(diveEntry);
         //diveEntries.add(new DiveEntry(new Date(2011,17,7), "Dinard", 25, "0:35"));
         //diveEntries.add(new DiveEntry(new Date(2008,4,15), "St Malo", 12, "0:45"));

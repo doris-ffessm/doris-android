@@ -1,8 +1,11 @@
-package fr.vojtisek.adm.data;
+package fr.vojtisek.adm.data.db;
 
 import java.util.Date;
 
+
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "diveEntries")
@@ -22,16 +25,38 @@ public class DiveEntry {
 	private Integer maxdepth;
 	
 	@DatabaseField
-	private String duration;
+	private Integer duration;
+	
+	@DatabaseField
+	private Integer airtemperature;
+	
+	@DatabaseField
+    private Integer altitude;
+	
+	@ForeignCollectionField(eager = false)
+	ForeignCollection<DiveBudy> budies;
+	
+	@ForeignCollectionField(eager = false)
+	ForeignCollection<DiveSite> sites;
+	
+	@ForeignCollectionField(eager = false)
+	ForeignCollection<DiveStructure> structures;
+	
+    //private String density;
+    //private String divenumber;
+    //private UddfFileEquipmentUsed equipmentused;
+    
+    @DatabaseField
+    private Integer lowesttemperature;
 	
 	
 	
 	public DiveEntry(){}; // needed by ormlite
 	
 	public DiveEntry(Date date, String location, Integer maxdepth,
-			String duration) {
+			Integer duration) {
 		super();
-		this.setId(id);
+		//this.setId(id);
 		this.date = date;
 		this.location = location;
 		this.maxdepth = maxdepth;
@@ -55,10 +80,10 @@ public class DiveEntry {
 	public void setMaxdepth(Integer maxdepth) {
 		this.maxdepth = maxdepth;
 	}
-	public String getDuration() {
+	public Integer getDuration() {
 		return duration;
 	}
-	public void setDuration(String duration) {
+	public void setDuration(Integer duration) {
 		this.duration = duration;
 	}
 	public Integer getId() {

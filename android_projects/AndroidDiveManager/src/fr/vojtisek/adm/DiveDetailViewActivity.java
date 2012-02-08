@@ -5,8 +5,8 @@ import java.text.SimpleDateFormat;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
-import fr.vojtisek.adm.data.DiveEntry;
-import fr.vojtisek.adm.data.ORMLiteDBHelper;
+import fr.vojtisek.adm.data.db.DiveEntry;
+import fr.vojtisek.adm.data.db.ORMLiteDBHelper;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
