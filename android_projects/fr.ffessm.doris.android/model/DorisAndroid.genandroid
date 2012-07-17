@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<genandroid:AndroidProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:genandroid="http://genandroid/1.0" name="DorisAndroid" packagePrefix="fr.ffessm.doris.android">
+<genandroid:AndroidProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:genandroid="http://genandroid/1.0" name="DorisAndroid" packagePrefix="fr.ffessm.doris.android">
   <dataModel>
     <rootClass href="DorisAndroid.ecore#//DorisDataModel"/>
     <dataClasses>
@@ -12,4 +12,7 @@
       <eClass href="DorisAndroid.ecore#//Picture"/>
     </dataClasses>
   </dataModel>
+  <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ParticipantList" selectItemAction="//@viewActivities.1" listedElement="//@dataModel/@dataClasses.1" presentedDetail="//@classDetails.0"/>
+  <viewActivities xsi:type="genandroid:ElementViewActivity" name="ParticipantDetail" element="//@dataModel/@dataClasses.1"/>
+  <classDetails name="ParticipantListDetail"/>
 </genandroid:AndroidProject>
