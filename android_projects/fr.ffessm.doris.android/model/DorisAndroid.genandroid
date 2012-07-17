@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genandroid:AndroidProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:genandroid="http://genandroid/1.0" name="DorisAndroid" packagePrefix="fr.ffessm.doris.android">
+  <dataModel>
+    <rootClass href="DorisAndroid.ecore#//DorisDataModel"/>
+    <dataClasses>
+      <eClass href="DorisAndroid.ecore#//Card"/>
+    </dataClasses>
+    <dataClasses>
+      <eClass href="DorisAndroid.ecore#//Participant"/>
+    </dataClasses>
+    <dataClasses>
+      <eClass href="DorisAndroid.ecore#//Picture"/>
+    </dataClasses>
+  </dataModel>
+</genandroid:AndroidProject>
