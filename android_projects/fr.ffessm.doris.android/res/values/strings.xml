@@ -4,7 +4,12 @@
     <string name="app_name">DorisAndroid</string>
 	<!--Start of user code remove protected zone to rebuild all default values
 		-->
-    <string name="edit_menu">Edit</string>
+    <string name="sync_data_option">Sync</string>
+    <string name="create_fake_data_option">Create FakeData</string>
+    
+        
+    <string name="download_ticker">Préparation du téléchargement</string> 
+    <string name="download_notification_content_title">Doris download</string>   
 	<!--End of user code
 	  -->
 </resources>

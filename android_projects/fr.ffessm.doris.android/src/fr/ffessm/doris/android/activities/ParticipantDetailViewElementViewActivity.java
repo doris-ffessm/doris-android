@@ -72,6 +72,7 @@ public class ParticipantDetailViewElementViewActivity extends OrmLiteBaseActivit
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		// add options in the menu
+        menu.add(Menu.NONE, 777, 0, R.string.mainpreferences_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
         
 		//Start of user code additional onCreateOptionsMenu
 
@@ -84,6 +85,9 @@ public class ParticipantDetailViewElementViewActivity extends OrmLiteBaseActivit
     public boolean onOptionsItemSelected(MenuItem item) {
     	// behavior of option menu
         switch (item.getItemId()) {
+        	case 777:
+                    startActivity(new Intent(this, MainPreferencesActivity.class));
+                    return true;
         
 		//Start of user code additional menu action
 

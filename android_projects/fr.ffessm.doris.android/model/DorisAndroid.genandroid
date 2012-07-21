@@ -21,13 +21,17 @@
       </dataAttributes>
     </dataClasses>
     <dataClasses>
-      <eClass href="DorisAndroid.ecore#//Picture"/>
+      <eClass href="DorisAndroid.ecore#//CardPicture"/>
       <dataAttributes>
         <eAttribute href="DorisAndroid.ecore#//Picture/pictureFileName"/>
       </dataAttributes>
+    </dataClasses>
+    <dataClasses>
+      <eClass href="DorisAndroid.ecore#//ParticipantPhoto"/>
     </dataClasses>
   </dataModel>
   <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ParticipantListView" selectItemAction="//@viewActivities.1" listedElement="//@dataModel/@dataClasses.1" presentedDetail="//@classDetails.0"/>
   <viewActivities xsi:type="genandroid:ElementViewActivity" name="ParticipantDetailView" element="//@dataModel/@dataClasses.1"/>
   <classDetails mainAttributes="//@dataModel/@dataClasses.1/@dataAttributes.0" name="ParticipantListDetail"/>
+  <preferenceView name="MainPreferences"/>
 </genandroid:AndroidProject>

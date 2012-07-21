@@ -41,7 +41,7 @@ public class Participant {
 	@ForeignCollectionField(eager = false, foreignFieldName = "verifier")
 	protected ForeignCollection<Card> verifierOf;
 	@ForeignCollectionField(eager = false, foreignFieldName = "author")
-	protected ForeignCollection<Picture> authorOfPicture;
+	protected ForeignCollection<CardPicture> authorOfPicture;
 	// Start of user code Participant additional properties
 	// End of user code
 	
