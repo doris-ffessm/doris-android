@@ -14,7 +14,12 @@ public class NotificationHelper {
     private NotificationManager mNotificationManager;
     private PendingIntent mContentIntent;
     private CharSequence mContentTitle;
-    public NotificationHelper(Context context)
+    
+    private String maxNbPages = "???";
+    
+   
+
+	public NotificationHelper(Context context)
     {
         mContext = context;
     }
@@ -34,7 +39,7 @@ public class NotificationHelper {
 
         //create the content which is shown in the notification pulldown
         mContentTitle = mContext.getString(R.string.download_notification_content_title); //Full title of the notification in the pull down
-        CharSequence contentText = "0% complete"; //Text of the notification in the pull down
+        CharSequence contentText = "0 / "+maxNbPages+" pages"; //Text of the notification in the pull down
 
         //you have to set a PendingIntent on a notification to tell the system what you want it to do when the notification is selected
         //I don't want to use this here so I'm just creating a blank one
@@ -55,9 +60,9 @@ public class NotificationHelper {
      * Receives progress updates from the background task and updates the status bar notification appropriately
      * @param percentageComplete
      */
-    public void progressUpdate(int percentageComplete) {
+    public void progressUpdate(int pagesComplete) {
         //build up the new status message
-        CharSequence contentText = percentageComplete + "% complete";
+        CharSequence contentText = pagesComplete + " / " +maxNbPages+" pages traitées";
         //publish it to the status bar
         mNotification.setLatestEventInfo(mContext, mContentTitle, contentText, mContentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mNotification);
@@ -71,4 +76,12 @@ public class NotificationHelper {
         //remove the notification from the status bar
         mNotificationManager.cancel(NOTIFICATION_ID);
     }
+    
+    public String getMaxNbPages() {
+		return maxNbPages;
+	}
+
+	public void setMaxNbPages(String maxNbPages) {
+		this.maxNbPages = maxNbPages;
+	}
 }

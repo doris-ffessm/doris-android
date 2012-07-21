@@ -9,7 +9,7 @@
     
         
     <string name="download_ticker">Préparation du téléchargement</string> 
-    <string name="download_notification_content_title">Doris download</string>   
+    <string name="download_notification_content_title">Téléchargement de la liste des fiches</string>   
 	<!--End of user code
 	  -->
 </resources>

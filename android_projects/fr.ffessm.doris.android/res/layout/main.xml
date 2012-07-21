@@ -9,7 +9,7 @@
         android:id="@+id/btnCardList"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Liste des participants"
+        android:text="Liste des fiches"
         android:onClick="onClickBtnCardList" />
     <Button
         android:id="@+id/btnParticipantList"
