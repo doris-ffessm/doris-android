@@ -4,6 +4,12 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <Button
+        android:id="@+id/btnParticipantList"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Liste des participants"
+        android:onClick="onClickBtnParticipantList" />
     <TextView
 	    android:id="@+id/debug_text_view"
         android:layout_width="fill_parent"

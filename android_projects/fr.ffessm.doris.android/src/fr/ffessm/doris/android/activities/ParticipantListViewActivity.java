@@ -26,16 +26,16 @@ import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 
 
-public class ParticipantListActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
+public class ParticipantListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
 	
 
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
-		setContentView(R.layout.participantlist_listview);
+		setContentView(R.layout.participantlistview_listview);
 
-		ListView list = (ListView) findViewById(R.id.participantlist_listview);
+		ListView list = (ListView) findViewById(R.id.participantlistview_listview);
         list.setClickable(true);
-        ParticipantListAdapter adapter = new ParticipantListAdapter(this, getHelper().getParticipantDao());
+        ParticipantListViewAdapter adapter = new ParticipantListViewAdapter(this, getHelper().getParticipantDao());
 
         
         list.setOnItemClickListener(this);

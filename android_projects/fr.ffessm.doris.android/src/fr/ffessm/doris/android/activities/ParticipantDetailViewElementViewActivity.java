@@ -32,7 +32,7 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 
-public class ParticipantDetailElementViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>{
+public class ParticipantDetailViewElementViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>{
 	
 	protected int participantId;
 	
@@ -40,7 +40,7 @@ public class ParticipantDetailElementViewActivity extends OrmLiteBaseActivity<Or
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.participantdetail_elementview);
+        setContentView(R.layout.participantdetailview_elementview);
         participantId = getIntent().getExtras().getInt("participantId");
         //findViewById(R.id.divedate);
     }
@@ -57,6 +57,7 @@ public class ParticipantDetailElementViewActivity extends OrmLiteBaseActivity<Or
     	RuntimeExceptionDao<Participant, Integer> entriesDao = getHelper().getParticipantDao();
     	Participant entry = entriesDao.queryForId(participantId);
     	
+		((TextView) findViewById(R.id.participantdetailview_elementview_name)).setText(entry.getName());
     	/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
     	((TextView) findViewById(R.id.detail_divedate)).setText(dateFormatter.format(entry.getDate()));
 		

@@ -34,19 +34,19 @@ public class Participant {
 	@DatabaseField
 	protected java.lang.String webSite;
 	@DatabaseField
-	protected int idDoris;
+	protected java.lang.Integer idDoris;
 	
-	@ForeignCollectionField(eager = false)
+	@ForeignCollectionField(eager = false, foreignFieldName = "writer")
 	protected ForeignCollection<Card> writerOf;
-	@ForeignCollectionField(eager = false)
+	@ForeignCollectionField(eager = false, foreignFieldName = "verifier")
 	protected ForeignCollection<Card> verifierOf;
-	@ForeignCollectionField(eager = false)
+	@ForeignCollectionField(eager = false, foreignFieldName = "author")
 	protected ForeignCollection<Picture> authorOfPicture;
 	// Start of user code Participant additional properties
 	// End of user code
 	
 	public Participant() {}// needed by ormlite
-	public Participant(java.lang.String name, java.lang.String webSite, int idDoris) {
+	public Participant(java.lang.String name, java.lang.String webSite, java.lang.Integer idDoris) {
 		super();
 		this.name = name;
 		this.webSite = webSite;
@@ -72,10 +72,10 @@ public class Participant {
 	public void setWebSite(java.lang.String webSite) {
 		this.webSite = webSite;
 	}
-	public int getIdDoris() {
+	public java.lang.Integer getIdDoris() {
 		return this.idDoris;
 	}
-	public void setIdDoris(int idDoris) {
+	public void setIdDoris(java.lang.Integer idDoris) {
 		this.idDoris = idDoris;
 	}
 

@@ -31,13 +31,13 @@ import android.widget.Toast;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
-public class ParticipantListAdapter extends BaseAdapter{
+public class ParticipantListViewAdapter extends BaseAdapter{
 	
 private Context context;
 
     private List<Participant> participantList;
 
-	public ParticipantListAdapter(Context context, RuntimeExceptionDao<Participant, Integer> entriesDao) {
+	public ParticipantListViewAdapter(Context context, RuntimeExceptionDao<Participant, Integer> entriesDao) {
 		super();
 		this.context = context;
 		// TODO find a way to query in a lazy way
@@ -66,17 +66,19 @@ private Context context;
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.participantlist_listviewrow, null);
+            convertView = inflater.inflate(R.layout.participantlistview_listviewrow, null);
         }
        
 		// set data in the row 
-		TextView tvLabel = (TextView) convertView.findViewById(R.id.participantlist_listviewrow_label);
+		TextView tvLabel = (TextView) convertView.findViewById(R.id.participantlistview_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
+		labelSB.append(entry.getName());
+		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
 
 		
         // assign the entry to the row in order to ease GUI interactions
-        LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.participantlist_listviewrow);
+        LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.participantlistview_listviewrow);
         llRow.setTag(entry);
         
         return convertView;

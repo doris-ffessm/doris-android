@@ -31,19 +31,19 @@ public class Card {
 	@DatabaseField
 	protected java.lang.String scientificName;
 	@DatabaseField
-	protected int idDoris;
+	protected java.lang.Integer idDoris;
 	
-	//@DatabaseField(foreign = true, columnName = USER_ID_FIELD_NAME)
-	//protected Participant writer;
-	//@DatabaseField(foreign = true, columnName = USER_ID_FIELD_NAME)
-	//protected Participant verifier;
-	@ForeignCollectionField(eager = false)
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
+	protected Participant writer;
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
+	protected Participant verifier;
+	@ForeignCollectionField(eager = false, foreignFieldName = "ofCard")
 	protected ForeignCollection<Picture> pictures;
 	// Start of user code Card additional properties
 	// End of user code
 	
 	public Card() {}// needed by ormlite
-	public Card(java.lang.String scientificName, int idDoris) {
+	public Card(java.lang.String scientificName, java.lang.Integer idDoris) {
 		super();
 		this.scientificName = scientificName;
 		this.idDoris = idDoris;
@@ -62,10 +62,10 @@ public class Card {
 	public void setScientificName(java.lang.String scientificName) {
 		this.scientificName = scientificName;
 	}
-	public int getIdDoris() {
+	public java.lang.Integer getIdDoris() {
 		return this.idDoris;
 	}
-	public void setIdDoris(int idDoris) {
+	public void setIdDoris(java.lang.Integer idDoris) {
 		this.idDoris = idDoris;
 	}
 

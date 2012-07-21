@@ -12,7 +12,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="authorOfPicture" upperBound="-1"
         eType="#//Picture" eOpposite="#//Picture/author"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="idDoris" lowerBound="1"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" iD="true"/>
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"
+        iD="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Card">
     <eStructuralFeatures xsi:type="ecore:EReference" name="writer" eType="#//Participant"
@@ -20,21 +21,26 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="verifier" eType="#//Participant"
         eOpposite="#//Participant/verifierOf"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="pictures" upperBound="-1"
-        eType="#//Picture"/>
+        eType="#//Picture" containment="true" eOpposite="#//Picture/ofCard"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="scientificName" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="idDoris" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="idDoris" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"
         iD="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DorisDataModel">
     <eStructuralFeatures xsi:type="ecore:EReference" name="cards" upperBound="-1"
-        containment="true"/>
+        eType="#//Card" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="authors" upperBound="-1"
-        containment="true"/>
+        eType="#//Participant" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Picture">
     <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//Participant"
         eOpposite="#//Participant/authorOfPicture"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pictureFileName" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ofCard" eType="#//Card"
+        eOpposite="#//Card/pictures"/>
   </eClassifiers>
 </ecore:EPackage>

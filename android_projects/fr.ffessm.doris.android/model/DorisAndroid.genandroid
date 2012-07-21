@@ -4,15 +4,30 @@
     <rootClass href="DorisAndroid.ecore#//DorisDataModel"/>
     <dataClasses>
       <eClass href="DorisAndroid.ecore#//Card"/>
+      <dataReferences>
+        <eReference href="DorisAndroid.ecore#//Picture/author"/>
+      </dataReferences>
+      <dataAttributes>
+        <eAttribute href="DorisAndroid.ecore#//Card/scientificName"/>
+      </dataAttributes>
     </dataClasses>
     <dataClasses>
       <eClass href="DorisAndroid.ecore#//Participant"/>
+      <dataAttributes>
+        <eAttribute href="DorisAndroid.ecore#//Participant/name"/>
+      </dataAttributes>
+      <dataAttributes>
+        <eAttribute href="DorisAndroid.ecore#//Participant/idDoris"/>
+      </dataAttributes>
     </dataClasses>
     <dataClasses>
       <eClass href="DorisAndroid.ecore#//Picture"/>
+      <dataAttributes>
+        <eAttribute href="DorisAndroid.ecore#//Picture/pictureFileName"/>
+      </dataAttributes>
     </dataClasses>
   </dataModel>
-  <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ParticipantList" selectItemAction="//@viewActivities.1" listedElement="//@dataModel/@dataClasses.1" presentedDetail="//@classDetails.0"/>
-  <viewActivities xsi:type="genandroid:ElementViewActivity" name="ParticipantDetail" element="//@dataModel/@dataClasses.1"/>
-  <classDetails name="ParticipantListDetail"/>
+  <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ParticipantListView" selectItemAction="//@viewActivities.1" listedElement="//@dataModel/@dataClasses.1" presentedDetail="//@classDetails.0"/>
+  <viewActivities xsi:type="genandroid:ElementViewActivity" name="ParticipantDetailView" element="//@dataModel/@dataClasses.1"/>
+  <classDetails mainAttributes="//@dataModel/@dataClasses.1/@dataAttributes.0" name="ParticipantListDetail"/>
 </genandroid:AndroidProject>
