@@ -166,12 +166,12 @@ public class DownloadDorisDataTask  extends AsyncTask<String,Integer, Integer>{
     	
     	String patternString =
     			//"fiche_numero=(\\d*)";
-    			"<em>([-a-zA-Zàéèêïù'’0-9&; \\t]*)</em></td>"+
+    			"<em>([-a-zA-Zàéèêïù\'’0-9&; \\t]*)</em></td>"+
     			"\\s*<td >&nbsp;</td>"+
     			"\\s*</tr>"+
     			"\\s*<tr>"+
     			"\\s*<td >&nbsp;</td>"+
-    			"\\s*<td[-a-zA-Z0-9=\"\\s]*class=\"gris_gras\">([-a-zA-Zàéèêïù'’0-9&; \\t]*)</td>"+
+    			"\\s*<td[-a-zA-Z0-9=\"\\s]*class=\"gris_gras\">([-a-zA-Zàéèêïù\'’0-9&; \\t]*)</td>"+
     			"\\s*<td >&nbsp;</td>"+
     			"\\s*</tr>"+
     			"\\s*<tr [-a-zA-Z0-9=#\"\\s]*>"+
@@ -197,7 +197,10 @@ public class DownloadDorisDataTask  extends AsyncTask<String,Integer, Integer>{
 			//Log.d(LOG_TAG, matcher.group(1) + " " + matcher.group(2)+ " " + matcher.group(3)+ " " + matcher.group(4));
 			Log.d(LOG_TAG,"SciName="+ matcher.group(1)+" CommonName="+ matcher.group(2) + " Fiche numero="+ matcher.group(3) );
 			//result = Integer.parseInt(matcher.group(1));
+			// can now create incomplete cards from these data
 		}
+		
+		//TODO shoudl recheck with a simple &fiche_numero=(\\d*)&";	 just in case a card was missed, so we can fall back into the direct card full download
     	
     }
     
