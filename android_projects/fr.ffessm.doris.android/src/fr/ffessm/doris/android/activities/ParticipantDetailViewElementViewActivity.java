@@ -58,6 +58,7 @@ public class ParticipantDetailViewElementViewActivity extends OrmLiteBaseActivit
     	Participant entry = entriesDao.queryForId(participantId);
     	
 		((TextView) findViewById(R.id.participantdetailview_elementview_name)).setText(entry.getName());
+		((TextView) findViewById(R.id.participantdetailview_elementview_iddoris)).setText(((Integer)entry.getIdDoris()).toString());					
     	/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
     	((TextView) findViewById(R.id.detail_divedate)).setText(dateFormatter.format(entry.getDate()));
 		

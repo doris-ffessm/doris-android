@@ -46,8 +46,8 @@
         <item name="celcius">Celcius</item>
         <item name="fahrenheit">Fahrenheit</item>
     </string-array><string-array name="temperature_units_arrayvalues">
-        <item name="celcius">ÃƒÂ¯Ã‚Â¿Ã‚Â½C</item>
-        <item name="fahrenheit">ÃƒÂ¯Ã‚Â¿Ã‚Â½F</item>
+        <item name="celcius">ÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¿Ãƒâ€šÃ‚Â½C</item>
+        <item name="fahrenheit">ÃƒÆ’Ã‚Â¯Ãƒâ€šÃ‚Â¿Ãƒâ€šÃ‚Â½F</item>
     </string-array>
     
     <string name="presentation_category">Presentation category</string>

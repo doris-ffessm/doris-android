@@ -34,7 +34,7 @@ public class Participant {
 	@DatabaseField
 	protected java.lang.String webSite;
 	@DatabaseField
-	protected java.lang.Integer idDoris;
+	protected int idDoris;
 	
 	@ForeignCollectionField(eager = false, foreignFieldName = "writer")
 	protected ForeignCollection<Card> writerOf;
@@ -46,7 +46,7 @@ public class Participant {
 	// End of user code
 	
 	public Participant() {}// needed by ormlite
-	public Participant(java.lang.String name, java.lang.String webSite, java.lang.Integer idDoris) {
+	public Participant(java.lang.String name, java.lang.String webSite, int idDoris) {
 		super();
 		this.name = name;
 		this.webSite = webSite;
@@ -72,10 +72,10 @@ public class Participant {
 	public void setWebSite(java.lang.String webSite) {
 		this.webSite = webSite;
 	}
-	public java.lang.Integer getIdDoris() {
+	public int getIdDoris() {
 		return this.idDoris;
 	}
-	public void setIdDoris(java.lang.Integer idDoris) {
+	public void setIdDoris(int idDoris) {
 		this.idDoris = idDoris;
 	}
 

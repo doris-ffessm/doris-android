@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.CharBuffer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,7 +69,8 @@ public class DownloadDorisDataTask  extends AsyncTask<String,Integer, Integer>{
     protected String getPageContent(String urlString) throws IOException{
     	StringBuilder sb = new StringBuilder();
     	URL url = new URL(urlString);
-        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream(), "ISO-8859-1"));
+        
         try{
 	        String inputLine;
 	        while ((inputLine = in.readLine()) != null)
@@ -77,6 +79,10 @@ public class DownloadDorisDataTask  extends AsyncTask<String,Integer, Integer>{
         finally{
         	in.close();
         }
+        // convert to UTF8 if necessary
+        // TODO
+        //charset=iso-8859-1
+        //sb.toString().
         return sb.toString();
     }
     
@@ -86,6 +92,108 @@ public class DownloadDorisDataTask  extends AsyncTask<String,Integer, Integer>{
     	Log.d(LOG_TAG, content);
     	Integer maxNbPages = getNbPages(content);
     	mNotificationHelper.setMaxNbPages(maxNbPages.toString());
+    	
+    	processCardSummariesInPage(content);
+    	
+    }
+    
+    protected void processCardSummariesInPage(String pageContent){
+ /*   	String patternString =
+"<table width=\"196\" height=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#F3F3F3\">" +
+"\\W*<tr>"+
+"\\W*<td width=\"5\" >&nbsp;</td>"+
+"\\W*<td height=\"110\" align=\"center\" valign=\"bottom\" >"+
+"\\W*<a href=\"photo_gde_taille3.asp?temp=0&nomcommunte=&nomcommunpr=&nomcommunen=&allcheck=&checkvar=&touslesmotste=&touslesmotsen=&touslesmotspr=&nomcommun=e&touslesmots=&PageCourante=1&varposition=1&fiche_numero=2676&origine=recherche&fiche_etat=5\">"+
+"\\W*<img src=\"(\\S+)\" height=\"105\" border=\"0\" >\\W</a>"+ // url photo principale
+"\\W*<td width=\"5\" >&nbsp;</td>"+
+"\\W*</tr>"+
+"\\W*<tr>"+
+"\\W*<td >&nbsp;</td>"+
+"\\W*<td height=\"29\"  align=\"center\"  class=\"normal_noir_gras\"><em>(\\w*)</em></td>"+ // nom scientifique
+"\\W*<td >&nbsp;</td>"+
+"\\W*</tr>"+
+"\\W*<tr>"+
+"\\W*<td >&nbsp;</td>"+
+"\\W*<td height=\"29\"  align=\"center\"  class=\"gris_gras\">(\\w*)</td>"+ //  nom commun
+"\\W*<td >&nbsp;</td>"+
+"\\W*</tr>"+
+"\\W*<tr bgcolor=\"#FAEDC0\">"+
+"\\W*<td >&nbsp;</td>"+
+"\\W*<td  align=\"center\"  class=\"normalgris\">"+
+"\\W*<a href=\"fiche3.asp?\\S+&fiche_numero=(\\d*)\\S+&fiche_etat=5\"class=\"normalgris\"><img src=\"images/fiche.gif\" width=\"18\" height=\"18\" border=\"0\" align=\"absmiddle\">.*</a>"+
+"\\W*</td>"+
+"\\W*<td >&nbsp;</td>"+
+"\\W*</tr>"+
+"\\W*</table>";    	*/
+/*
+<table width="196" height="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#F3F3F3">
+                      <tr>
+                        <td width="5" >&nbsp;</td>
+                        <td height="110" align="center" valign="bottom" >
+						
+                         
+
+                        
+                        <a href="photo_gde_taille3.asp?temp=0&nomcommunte=&nomcommunpr=&nomcommunen=&allcheck=&checkvar=&touslesmotste=&touslesmotsen=&touslesmotspr=&nomcommun=e&touslesmots=&PageCourante=1&varposition=1&fiche_numero=2676&origine=recherche&fiche_etat=5">
+						 <img src="http://doris.ffessm.fr/gestionenligne/photos_fiche_vig/Abietinaria-abietina-sas1.JPG" height="105" border="0" >						 </a>
+                        
+                         
+                         
+                                      						</td>
+                        <td width="5" >&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td >&nbsp;</td>
+                        <td height="29"  align="center"  class="normal_noir_gras"><em>Abietinaria abietina</em></td>
+                        <td >&nbsp;</td>
+                      </tr>
+                      <tr>
+                        <td >&nbsp;</td>
+                        <td height="29"  align="center"  class="gris_gras">Hydraire sapin</td>
+                        <td >&nbsp;</td>
+                      </tr>
+					  <tr bgcolor="#FAEDC0">
+                        <td >&nbsp;</td>
+                        <td  align="center"  class="normalgris">
+                           <a href="fiche3.asp?temp=0&nomcommunte=&nomcommunpr=&nomcommunen=&allcheck=&checkvar=&touslesmotste=&touslesmotsen=&touslesmotspr=&nomcommun=e&touslesmots=&PageCourante=1&varpositionf=1&fiche_numero=2676&origine=recherche&fiche_etat=5"class="normalgris"><img src="images/fiche.gif" width="18" height="18" border="0" align="absmiddle">Fiche propos�e...</a>
+						   
+                         </td>
+                        <td >&nbsp;</td>
+                      </tr>
+</table> 
+ 	
+ */
+    	
+    	String patternString =
+    			//"fiche_numero=(\\d*)";
+    			"<em>([-a-zA-Zàéèêïù'’0-9&; \\t]*)</em></td>"+
+    			"\\s*<td >&nbsp;</td>"+
+    			"\\s*</tr>"+
+    			"\\s*<tr>"+
+    			"\\s*<td >&nbsp;</td>"+
+    			"\\s*<td[-a-zA-Z0-9=\"\\s]*class=\"gris_gras\">([-a-zA-Zàéèêïù'’0-9&; \\t]*)</td>";//+
+    			//"[.\\s]*<a href=\"fiche3.asp\\?[-a-zA-Z0-9&=]*&fiche_numero=(\\d*)&";	  
+					  
+    			
+    			
+    			; //</span>";//"<span\\s*class=\"gris_gras\">([-a-zA-Z��0-9&;]*)</span></td>";//+
+                //"<td[-a-zA-Z0-9=\"\\s]*>"+
+                //"\\s<a href=\"fiche3.asp[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*fiche_numero=(\\d*)";
+    			//"\\bhttp://doris\\.ffessm\\.fr/gestionenligne/photos/(.*)\"";//+
+               // ".*<td class=\"trait_hautbas\"><table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">"+
+               // ".*<td width=\"331\" height=\"25\" valign=\"middle\" bgcolor=\"#FFFFFF\"><span class=\"normal_noir_gras\"><em>(\\w*)</em></span><span class=\"gris_gras\">(\\w*)</span></td>"+
+               // ".*<a href=\"fiche3.asp\\?temp=0&nomcommunte=&nomcommunpr=&nomcommunen=&allcheck=&checkvar=&touslesmotste=&touslesmotsen=&touslesmotspr=&nomcommun=e&touslesmots=&PageCourante=1&varpositionf=2&fiche_numero=(\\d*)&origine=recherche&fiche_etat=(\\d*)\" class=\"titre2\" >";
+    	
+    	Pattern pattern = Pattern.compile(patternString);
+    	Matcher matcher = pattern.matcher(pageContent);
+		// Check all occurance
+    	Log.d(LOG_TAG, "Looking for pattern in page");
+		while (matcher.find()) {
+			//Log.d(LOG_TAG, matcher.group(1) + " " + matcher.group(2)+ " " + matcher.group(3)+ " " + matcher.group(4));
+			Log.d(LOG_TAG,"SciName="+ matcher.group(1)+" CommonName="+ matcher.group(2)/* + " Fiche numero="+ matcher.group(3)*/ );
+			//result = Integer.parseInt(matcher.group(1));
+		}
+    	
     }
     
     protected int getNbPages(String firstPageContent){
