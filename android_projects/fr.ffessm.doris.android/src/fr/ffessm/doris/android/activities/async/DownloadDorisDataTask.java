@@ -171,8 +171,13 @@ public class DownloadDorisDataTask  extends AsyncTask<String,Integer, Integer>{
     			"\\s*</tr>"+
     			"\\s*<tr>"+
     			"\\s*<td >&nbsp;</td>"+
-    			"\\s*<td[-a-zA-Z0-9=\"\\s]*class=\"gris_gras\">([-a-zA-Zàéèêïù'’0-9&; \\t]*)</td>";//+
-    			//"[.\\s]*<a href=\"fiche3.asp\\?[-a-zA-Z0-9&=]*&fiche_numero=(\\d*)&";	  
+    			"\\s*<td[-a-zA-Z0-9=\"\\s]*class=\"gris_gras\">([-a-zA-Zàéèêïù'’0-9&; \\t]*)</td>"+
+    			"\\s*<td >&nbsp;</td>"+
+    			"\\s*</tr>"+
+    			"\\s*<tr [-a-zA-Z0-9=#\"\\s]*>"+
+    			"\\s*<td >&nbsp;</td>"+
+    			"\\s*<td [-a-zA-Z0-9=#\"\\s]*>"+
+    			"\\s*<a href=\"fiche3.asp\\?[-a-zA-Z0-9&=]*&fiche_numero=(\\d*)&";	  
 					  
     			
     			
@@ -190,7 +195,7 @@ public class DownloadDorisDataTask  extends AsyncTask<String,Integer, Integer>{
     	Log.d(LOG_TAG, "Looking for pattern in page");
 		while (matcher.find()) {
 			//Log.d(LOG_TAG, matcher.group(1) + " " + matcher.group(2)+ " " + matcher.group(3)+ " " + matcher.group(4));
-			Log.d(LOG_TAG,"SciName="+ matcher.group(1)+" CommonName="+ matcher.group(2)/* + " Fiche numero="+ matcher.group(3)*/ );
+			Log.d(LOG_TAG,"SciName="+ matcher.group(1)+" CommonName="+ matcher.group(2) + " Fiche numero="+ matcher.group(3) );
 			//result = Integer.parseInt(matcher.group(1));
 		}
     	
