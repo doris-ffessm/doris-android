@@ -5,7 +5,13 @@
     <dataClasses>
       <eClass href="DorisAndroid.ecore#//Card"/>
       <dataReferences>
-        <eReference href="DorisAndroid.ecore#//Picture/author"/>
+        <eReference href="DorisAndroid.ecore#//Card/verifier"/>
+      </dataReferences>
+      <dataReferences>
+        <eReference href="DorisAndroid.ecore#//Card/writer"/>
+      </dataReferences>
+      <dataReferences>
+        <eReference href="DorisAndroid.ecore#//Card/generalDownloadStatus"/>
       </dataReferences>
       <dataAttributes>
         <eAttribute href="DorisAndroid.ecore#//Card/scientificName"/>
@@ -13,6 +19,9 @@
     </dataClasses>
     <dataClasses>
       <eClass href="DorisAndroid.ecore#//Participant"/>
+      <dataReferences>
+        <eReference href="DorisAndroid.ecore#//Participant/verifierOf"/>
+      </dataReferences>
       <dataAttributes>
         <eAttribute href="DorisAndroid.ecore#//Participant/name"/>
       </dataAttributes>
@@ -23,11 +32,26 @@
     <dataClasses>
       <eClass href="DorisAndroid.ecore#//CardPicture"/>
       <dataAttributes>
-        <eAttribute href="DorisAndroid.ecore#//Picture/pictureFileName"/>
+        <eAttribute href="DorisAndroid.ecore#//CardPicture/pictureFileName"/>
       </dataAttributes>
     </dataClasses>
     <dataClasses>
       <eClass href="DorisAndroid.ecore#//ParticipantPhoto"/>
+    </dataClasses>
+    <dataClasses>
+      <eClass href="DorisAndroid.ecore#//GeneralDownloadStatus"/>
+      <dataReferences>
+        <eReference href="DorisAndroid.ecore#//GeneralDownloadStatus/incompleteCards"/>
+      </dataReferences>
+    </dataClasses>
+    <dataClasses>
+      <eClass href="DorisAndroid.ecore#//Zone"/>
+      <dataReferences>
+        <eReference href="DorisAndroid.ecore#//Zone/cardsInZone"/>
+      </dataReferences>
+      <dataAttributes>
+        <eAttribute href="DorisAndroid.ecore#//Zone/name"/>
+      </dataAttributes>
     </dataClasses>
   </dataModel>
   <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ParticipantListView" selectItemAction="//@viewActivities.1" listedElement="//@dataModel/@dataClasses.1" presentedDetail="//@classDetails.0"/>

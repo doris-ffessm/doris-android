@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="doris">
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="doris"
+    nsURI="http://fr.ffessm.doris/android" nsPrefix="">
   <eClassifiers xsi:type="ecore:EClass" name="Participant">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="webSite" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -28,14 +29,21 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="idDoris" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
         iD="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDownloaded" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
-        defaultValueLiteral="2"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="partOfZones" upperBound="-1"
+        eType="#//Zone" eOpposite="#//Zone/cardsInZone"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastDownloadTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="generalDownloadStatus"
+        eType="#//GeneralDownloadStatus" eOpposite="#//GeneralDownloadStatus/incompleteCards"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DorisDataModel">
     <eStructuralFeatures xsi:type="ecore:EReference" name="cards" upperBound="-1"
         eType="#//Card" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="authors" upperBound="-1"
         eType="#//Participant" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="generalDownloadStatus"
+        lowerBound="1" eType="#//GeneralDownloadStatus" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="zones" upperBound="-1"
+        eType="#//Zone"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CardPicture">
     <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//Participant"
@@ -49,5 +57,19 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ParticipantPhoto">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="photoFileName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GeneralDownloadStatus">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nbSummary" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastSummaryDowloaded" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastTry" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="incompleteCards" upperBound="-1"
+        eType="#//Card" containment="true" eOpposite="#//Card/generalDownloadStatus"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastTimeFullSummaryCompleted"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Zone">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cardsInZone" upperBound="-1"
+        eType="#//Card" eOpposite="#//Card/partOfZones"/>
   </eClassifiers>
 </ecore:EPackage>
