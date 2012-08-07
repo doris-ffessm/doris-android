@@ -1,5 +1,7 @@
 package fr.ffessm.doris.android;
 
+import java.util.List;
+
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
@@ -7,6 +9,7 @@ import fr.ffessm.doris.android.activities.MainPreferencesActivity;
 import fr.ffessm.doris.android.activities.ParticipantListViewActivity;
 import fr.ffessm.doris.android.activities.async.DownloadDorisDataTask;
 import fr.ffessm.doris.android.datamodel.Card;
+import fr.ffessm.doris.android.datamodel.GeneralDownloadStatus;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
 import android.content.Intent;
@@ -15,6 +18,7 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 public class DorisAndroidMainActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> {
 	
@@ -25,6 +29,7 @@ public class DorisAndroidMainActivity extends OrmLiteBaseActivity<OrmLiteDBHelpe
 	
 	protected RuntimeExceptionDao<Participant, Integer> participantDao;
 	protected RuntimeExceptionDao<Card, Integer> cardDao;
+	protected RuntimeExceptionDao<GeneralDownloadStatus, Integer> generalDownloadStatusDao;
 	
 	
     /** Called when the activity is first created. */
@@ -37,6 +42,7 @@ public class DorisAndroidMainActivity extends OrmLiteBaseActivity<OrmLiteDBHelpe
         
         participantDao = getHelper().getParticipantDao();
         cardDao = getHelper().getCardDao();
+        generalDownloadStatusDao = getHelper().getGeneralDownloadStatusDao();
     }
     
     @Override
@@ -60,7 +66,23 @@ public class DorisAndroidMainActivity extends OrmLiteBaseActivity<OrmLiteDBHelpe
      * Refresh data on this view
      */
     protected void refreshScreenData(){
-    	
+    	StringBuilder builder = new StringBuilder();
+   	 
+       
+		
+		// query for all of the data objects in the database
+		List<GeneralDownloadStatus> list = generalDownloadStatusDao.queryForAll();
+		// our string builder for building the content-view
+		StringBuilder sb = new StringBuilder();
+		builder.append("\ngot ").append(list.size()).append(" entries.\n");
+		
+		for(GeneralDownloadStatus generalDownloadStatus : list){
+			builder.append("\n"+generalDownloadStatus.toXML());
+		}
+		
+		 
+		TextView settingsTextView = (TextView) findViewById(R.id.debug_text_view);
+		settingsTextView.setText(builder.toString());
     }
     
     @Override
@@ -94,7 +116,7 @@ public class DorisAndroidMainActivity extends OrmLiteBaseActivity<OrmLiteDBHelpe
     
     public void createFakeData(){
 		long millis = System.currentTimeMillis();
-		Participant participant = new Participant("Célina Vojtisek ("+millis+")", "", ((Long)millis).intValue());
+		Participant participant = new Participant("CÃ©lina Vojtisek ("+millis+")", "", ((Long)millis).intValue());
 		participantDao.create(participant);
 		// create some entries in the onCreate
 		//DiveEntry diveEntry = new DiveEntry(new Date(millis), "Rennes", 20, 30);
@@ -113,7 +135,7 @@ public class DorisAndroidMainActivity extends OrmLiteBaseActivity<OrmLiteDBHelpe
         //diveEntries.add(new DiveEntry(new Date(2011,17,7), "Dinard", 25, "0:35"));
         //diveEntries.add(new DiveEntry(new Date(2008,4,15), "St Malo", 12, "0:45"));
 		
-    	new DownloadDorisDataTask(getApplicationContext()).execute("");
+    	new DownloadDorisDataTask(getApplicationContext(), this.getHelper()).execute("");
     	
     	refreshScreenData();
     }

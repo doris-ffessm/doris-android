@@ -62,7 +62,7 @@ public class NotificationHelper {
      */
     public void progressUpdate(int pagesComplete) {
         //build up the new status message
-        CharSequence contentText = pagesComplete + " / " +maxNbPages+" pages traitées";
+        CharSequence contentText = pagesComplete + " / " +maxNbPages+" pages traitÃ©es";
         //publish it to the status bar
         mNotification.setLatestEventInfo(mContext, mContentTitle, contentText, mContentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mNotification);
@@ -70,7 +70,7 @@ public class NotificationHelper {
 
     /**
      * called when the background task is complete, this removes the notification from the status bar.
-     * We could also use this to add a new ‘task complete’ notification
+     * We could also use this to add a new ï¿½task completeï¿½ notification
      */
     public void completed()    {
         //remove the notification from the status bar

@@ -6,8 +6,12 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.CharBuffer;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import fr.ffessm.doris.android.datamodel.GeneralDownloadStatus;
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -18,8 +22,14 @@ public class DownloadDorisDataTask  extends AsyncTask<String,Integer, Integer>{
 	
 	
     private NotificationHelper mNotificationHelper;
-    public DownloadDorisDataTask(Context context){
+    private OrmLiteDBHelper dbHelper;
+    
+    
+    GeneralDownloadStatus generalDownloadStatus = null;
+    
+    public DownloadDorisDataTask(Context context, OrmLiteDBHelper dbHelper){
         mNotificationHelper = new NotificationHelper(context);
+        this.dbHelper = dbHelper;
     }
 
     protected void onPreExecute(){
@@ -29,6 +39,12 @@ public class DownloadDorisDataTask  extends AsyncTask<String,Integer, Integer>{
 
     @Override
     protected Integer doInBackground(String... arg0) {
+    	
+    	List<GeneralDownloadStatus> generalDownloadStatusList = dbHelper.getGeneralDownloadStatusDao().queryForAll();
+    	if( generalDownloadStatusList.size() != 0) {generalDownloadStatus = generalDownloadStatusList.get(0);}
+    	if(generalDownloadStatus == null){
+    		generalDownloadStatus = new GeneralDownloadStatus(0,0, "now","never");
+    	}
     	
     	// get first page
     	try {
@@ -60,7 +76,7 @@ public class DownloadDorisDataTask  extends AsyncTask<String,Integer, Integer>{
         //from the background thread and publishes them to the status bar
         mNotificationHelper.progressUpdate(progress[0]);
     }
-    protected void onPostExecute(Void result)    {
+    protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
     }
@@ -92,6 +108,10 @@ public class DownloadDorisDataTask  extends AsyncTask<String,Integer, Integer>{
     	Log.d(LOG_TAG, content);
     	Integer maxNbPages = getNbPages(content);
     	mNotificationHelper.setMaxNbPages(maxNbPages.toString());
+    	
+    	generalDownloadStatus.setNbSummary(maxNbPages);
+    	
+    	dbHelper.getGeneralDownloadStatusDao().createOrUpdate(generalDownloadStatus);
     	
     	processCardSummariesInPage(content);
     	
