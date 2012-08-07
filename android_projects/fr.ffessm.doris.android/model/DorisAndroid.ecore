@@ -34,6 +34,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastDownloadTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="generalDownloadStatus"
         eType="#//GeneralDownloadStatus" eOpposite="#//GeneralDownloadStatus/incompleteCards"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="commonName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DorisDataModel">
     <eStructuralFeatures xsi:type="ecore:EReference" name="cards" upperBound="-1"

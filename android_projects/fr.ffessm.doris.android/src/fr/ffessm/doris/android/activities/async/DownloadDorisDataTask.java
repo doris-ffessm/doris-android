@@ -3,19 +3,18 @@ package fr.ffessm.doris.android.activities.async;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.CharBuffer;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fr.ffessm.doris.android.datamodel.GeneralDownloadStatus;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import fr.ffessm.doris.android.Helper;
+import fr.ffessm.doris.android.datamodel.Card;
+import fr.ffessm.doris.android.datamodel.GeneralDownloadStatus;
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 
 public class DownloadDorisDataTask  extends AsyncTask<String,Integer, Integer>{
 	private static final String LOG_TAG = DownloadDorisDataTask.class.getCanonicalName();
@@ -110,6 +109,7 @@ public class DownloadDorisDataTask  extends AsyncTask<String,Integer, Integer>{
     	mNotificationHelper.setMaxNbPages(maxNbPages.toString());
     	
     	generalDownloadStatus.setNbSummary(maxNbPages);
+    	generalDownloadStatus.setLastTry(Helper.getCurrentDateString());
     	
     	dbHelper.getGeneralDownloadStatusDao().createOrUpdate(generalDownloadStatus);
     	
@@ -201,7 +201,7 @@ public class DownloadDorisDataTask  extends AsyncTask<String,Integer, Integer>{
 					  
     			
     			
-    			; //</span>";//"<span\\s*class=\"gris_gras\">([-a-zA-Z��0-9&;]*)</span></td>";//+
+    			//</span>";//"<span\\s*class=\"gris_gras\">([-a-zA-Z��0-9&;]*)</span></td>";//+
                 //"<td[-a-zA-Z0-9=\"\\s]*>"+
                 //"\\s<a href=\"fiche3.asp[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*fiche_numero=(\\d*)";
     			//"\\bhttp://doris\\.ffessm\\.fr/gestionenligne/photos/(.*)\"";//+
@@ -216,8 +216,16 @@ public class DownloadDorisDataTask  extends AsyncTask<String,Integer, Integer>{
 		while (matcher.find()) {
 			//Log.d(LOG_TAG, matcher.group(1) + " " + matcher.group(2)+ " " + matcher.group(3)+ " " + matcher.group(4));
 			Log.d(LOG_TAG,"SciName="+ matcher.group(1)+" CommonName="+ matcher.group(2) + " Fiche numero="+ matcher.group(3) );
-			//result = Integer.parseInt(matcher.group(1));
+			Card card = new Card();
+			card.setIdDoris(Integer.parseInt(matcher.group(3)));
 			// can now create incomplete cards from these data
+			List<Card> matchingCards = dbHelper.getCardDao().queryForMatching(card);
+			if(!matchingCards.isEmpty()){
+				card = matchingCards.get(0);
+			}
+			card.setScientificName(matcher.group(1));
+			card.setCommonName(matcher.group(2));
+			dbHelper.getCardDao().createOrUpdate(card);
 		}
 		
 		//TODO shoudl recheck with a simple &fiche_numero=(\\d*)&";	 just in case a card was missed, so we can fall back into the direct card full download

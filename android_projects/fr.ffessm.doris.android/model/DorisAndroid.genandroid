@@ -16,6 +16,9 @@
       <dataAttributes>
         <eAttribute href="DorisAndroid.ecore#//Card/scientificName"/>
       </dataAttributes>
+      <dataAttributes>
+        <eAttribute href="DorisAndroid.ecore#//Card/commonName"/>
+      </dataAttributes>
     </dataClasses>
     <dataClasses>
       <eClass href="DorisAndroid.ecore#//Participant"/>
@@ -54,8 +57,11 @@
       </dataAttributes>
     </dataClasses>
   </dataModel>
-  <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ParticipantListView" selectItemAction="//@viewActivities.1" listedElement="//@dataModel/@dataClasses.1" presentedDetail="//@classDetails.0"/>
+  <viewActivities xsi:type="genandroid:ElementViewActivity" name="CardDetailView" element="//@dataModel/@dataClasses.0"/>
+  <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ParticipantListView" selectItemAction="//@viewActivities.2" listedElement="//@dataModel/@dataClasses.1" presentedDetail="//@classDetails.0"/>
   <viewActivities xsi:type="genandroid:ElementViewActivity" name="ParticipantDetailView" element="//@dataModel/@dataClasses.1"/>
+  <viewActivities xsi:type="genandroid:ClassListViewActivity" name="CardListView" listedElement="//@dataModel/@dataClasses.0"/>
   <classDetails mainAttributes="//@dataModel/@dataClasses.1/@dataAttributes.0" name="ParticipantListDetail"/>
+  <classDetails mainAttributes="//@dataModel/@dataClasses.0/@dataAttributes.1" name="CardListDetail"/>
   <preferenceView name="MainPreferences"/>
 </genandroid:AndroidProject>

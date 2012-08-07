@@ -5,6 +5,7 @@ import java.util.List;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
+import fr.ffessm.doris.android.activities.CardListViewActivity;
 import fr.ffessm.doris.android.activities.MainPreferencesActivity;
 import fr.ffessm.doris.android.activities.ParticipantListViewActivity;
 import fr.ffessm.doris.android.activities.async.DownloadDorisDataTask;
@@ -54,7 +55,7 @@ public class DorisAndroidMainActivity extends OrmLiteBaseActivity<OrmLiteDBHelpe
     
     public void onClickBtnCardList(View view){
     	// open the view activity
-		//startActivity(new Intent(this, CardListViewActivity.class));
+		startActivity(new Intent(this, CardListViewActivity.class));
     }
     public void onClickBtnParticipantList(View view){
     	// open the view activity
@@ -70,13 +71,12 @@ public class DorisAndroidMainActivity extends OrmLiteBaseActivity<OrmLiteDBHelpe
    	 
        
 		
+		builder.append("\ngot ").append(cardDao.queryForAll().size()).append(" entries.\n");
+		
 		// query for all of the data objects in the database
 		List<GeneralDownloadStatus> list = generalDownloadStatusDao.queryForAll();
-		// our string builder for building the content-view
-		StringBuilder sb = new StringBuilder();
-		builder.append("\ngot ").append(list.size()).append(" entries.\n");
-		
 		for(GeneralDownloadStatus generalDownloadStatus : list){
+			//builder.append("\ngot ").append(generalDownloadStatus.getIncompleteCards().size()).append(" incomplete entries.\n");
 			builder.append("\n"+generalDownloadStatus.toXML());
 		}
 		
