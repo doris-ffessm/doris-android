@@ -34,7 +34,7 @@ public class CardListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> i
 		setContentView(R.layout.cardlistview_listview);
 
 		ListView list = (ListView) findViewById(R.id.cardlistview_listview);
-        list.setClickable(false);
+        list.setClickable(true);
         CardListViewAdapter adapter = new CardListViewAdapter(this, getHelper().getCardDao());
 
         

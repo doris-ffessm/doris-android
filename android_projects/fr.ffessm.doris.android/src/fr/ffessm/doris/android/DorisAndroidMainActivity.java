@@ -71,7 +71,8 @@ public class DorisAndroidMainActivity extends OrmLiteBaseActivity<OrmLiteDBHelpe
    	 
        
 		
-		builder.append("\ngot ").append(cardDao.queryForAll().size()).append(" entries.\n");
+		builder.append("\ngot ").append(cardDao.queryForAll().size()).append(" card entries.\n");
+		builder.append("\ngot ").append(participantDao.queryForAll().size()).append(" participant entries.\n");
 		
 		// query for all of the data objects in the database
 		List<GeneralDownloadStatus> list = generalDownloadStatusDao.queryForAll();
