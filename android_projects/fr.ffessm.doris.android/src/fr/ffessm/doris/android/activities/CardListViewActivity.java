@@ -12,10 +12,12 @@ package fr.ffessm.doris.android.activities;
 
 
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -46,15 +48,16 @@ public class CardListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> i
 
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
-		showToast(view.toString() + ", "+ view.getId());
+		//showToast(view.toString() + ", "+ view.getId());
 		/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
         //tvLabel.setText(dateFormatter.format(entry.getDate()));
         showToast(dateFormatter.format(((DiveEntry)view.getTag()).getDate()));
-        Intent toDetailView = new Intent(this, DiveDetailViewActivity.class);
+		*/
+        Intent toDetailView = new Intent(this, CardDetailViewElementViewActivity.class);
         Bundle b = new Bundle();
-        b.putInt("diveId", ((DiveEntry)view.getTag()).getId());
+        b.putInt("cardId", ((Card)view.getTag()).getId());
 		toDetailView.putExtras(b);
-        startActivity(toDetailView);*/
+        startActivity(toDetailView);
     }
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();

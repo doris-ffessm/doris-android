@@ -15,7 +15,9 @@
         android:label="@string/app_name" >
 <!--End of user code-->
 	
+		<activity android:name=".activities.CardDetailViewElementViewActivity" android:label="@string/app_name"></activity>
 		<activity android:name=".activities.ParticipantListViewActivity" android:label="@string/app_name"></activity>
+		<activity android:name=".activities.ParticipantDetailViewElementViewActivity" android:label="@string/app_name"></activity>
 		<activity android:name=".activities.CardListViewActivity" android:label="@string/app_name"></activity>
 		<activity android:name=".activities.MainPreferencesActivity" android:label="@string/app_name"></activity>
 <!--Start of user code zone 2
