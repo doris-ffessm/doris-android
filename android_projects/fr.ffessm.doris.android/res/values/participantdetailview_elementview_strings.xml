@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<string name="participantdetailview_elementview_name_label">Name : </string>
-	<string name="participantdetailview_elementview_iddoris_label">IdDoris : </string>
-	<string name="participantdetailview_elementview_name_hint_text"></string>
-	<string name="participantdetailview_elementview_iddoris_hint_text"></string>
-</resources>

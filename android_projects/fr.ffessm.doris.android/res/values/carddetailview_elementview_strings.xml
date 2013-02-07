@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<string name="carddetailview_elementview_scientificname_label">ScientificName : </string>
-	<string name="carddetailview_elementview_commonname_label">CommonName : </string>
-	<string name="carddetailview_elementview_scientificname_hint_text"></string>
-	<string name="carddetailview_elementview_commonname_hint_text"></string>
-</resources>
