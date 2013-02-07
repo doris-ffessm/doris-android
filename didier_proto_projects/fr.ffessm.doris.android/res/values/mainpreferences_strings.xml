@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Start of user code protected
+		-->
+    <!-- Options text -->
+    <string name="mainpreferences_menu_title">Preferences</string>
+    
+	<!-- Preferences -->
+	<string name="sync_preference_category">Option de telechargement</string>
+	
+	<string name="sync_max_card_number_prompt">Nombre max de fiches a telecharger</string>
+	<string name="sync_max_card_number_summary">(ex: 1, 5, 100 ou * pour toutes les fiches)</string>
+    <string name="sync_max_card_number_default">5</string>
+    
+    
+	<string name="sync_fresh_water_prompt">Fiches eau douce</string>
+    <string name="sync_fresh_water_summary"></string>
+    
+    <string name="sync_france_prompt">Fiches France</string>
+    <string name="sync_france_summary"></string>
+	
+    <string name="sync_atl_nothwest_prompt">Fiches Atl. Nord/Ouest</string>
+    <string name="sync_atl_nothwest_summary"></string>
+	
+    <string name="sync_indo_pacific_prompt">Fiches Indo-Pacifique</string>
+    <string name="sync_indo_pacific_summary"></string>    
+    
+    <string name="sync_carabean_prompt">Fiches Caraibes</string>
+    <string name="sync_carabean_summary"></string> 
+	    
+	    
+	<!--<string name="unit_category">Units category</string>
+	<string name="unit_prompt">Choose the units</string>
+	<string name="length_unit_prompt">Length unit</string>
+	<string name="length_unit_summary">Define which length unit is used in the application</string>
+    <string-array name="length_units_array">
+        <item name="meter">Meter</item>
+        <item name="inch">Inch</item>
+    </string-array><string-array name="length_units_arrayvalues">
+        <item name="meter">m</item>
+        <item name="inch">inch</item>
+    </string-array>
+    <string name="temperature_unit_prompt">Temperature unit</string>
+	<string name="temperature_unit_summary">Define which temperature unit is used in the application</string>
+	<string-array name="temperature_units_array">
+        <item name="celcius">Celcius</item>
+        <item name="fahrenheit">Fahrenheit</item>
+    </string-array><string-array name="temperature_units_arrayvalues">
+        <item name="celcius"></item>
+    </string-array>
+    
+    <string name="presentation_category">Presentation category</string>
+    
+    -->
+    <!--End of user code
+		-->
+</resources>

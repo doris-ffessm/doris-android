@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+	<ImageView
+        android:id="@+id/divelist_viewrow_icon"
+        android:contentDescription="Dive icon"
+        android:layout_width="22px"
+        android:layout_height="22px"
+        android:layout_marginLeft="4px"
+        android:layout_marginRight="10px"
+        android:layout_marginTop="4px"
+        android:src="@drawable/ic_launcher" >
+    </ImageView>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        
+         
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+            <TextView
+	            android:text="@string/detail_divedate"
+	            android:padding="3dip"
+	            android:layout_weight="1" />
+	        <TextView
+	            android:id="@+id/editabledetail_divedate"
+	            android:gravity="right"
+	            android:padding="3dip"
+	            android:layout_weight="2" />
+	        <Button android:id="@+id/editableDetail_pickDate"
+        		android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/change_date_btn_text"
+		        android:layout_weight="1"/>
+	        <Button android:id="@+id/editableDetail_pickTime"
+        		android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/change_time_btn_text"
+		        android:layout_weight="1"/>
+	        
+        </TableRow>
+        
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+            <TextView
+	            android:layout_weight="1"
+	            android:text="@string/detail_divelocation"
+	            android:padding="3dip" />
+
+	        <EditText
+	            android:id="@+id/editabledetail_divelocation"
+	            android:layout_width="match_parent"
+	            android:layout_weight="3"
+	            android:gravity="right"
+	            android:hint="@string/divelocation_hint_text"
+	            android:padding="3dip" />
+
+	        <!-- <Button android:id="@+id/editableDetail_pickLocation"
+        		android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/pick_location_btn_text"/>-->
+	        <ImageButton
+		        android:id="@+id/editableDetail_pickLocation"
+	            android:layout_width="50dp"
+	            android:layout_height="50dp"
+		        android:layout_weight="2"
+	            android:src="@android:drawable/ic_menu_more" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+            <TextView
+        		android:layout_width="wrap_content"
+	            android:layout_weight="1"
+	            android:text="@string/detail_divedepth"
+	            android:padding="3dip" />
+
+            <EditText
+                android:id="@+id/editabledetail_divedepth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+	            android:layout_weight="3"
+	            android:gravity="right"
+	            android:padding="3dip"
+                android:inputType="number" />
+	        <!-- <Button android:id="@+id/editableDetail_pickDepth"
+        		android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/pick_depth_btn_text"/>-->
+
+	        <ImageButton
+	            android:id="@+id/editableDetail_pickDepth"
+	            android:layout_width="50dp"
+	            android:layout_height="50dp"
+		        android:layout_weight="2"
+	            android:src="@android:drawable/ic_menu_more" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+            <TextView
+	            android:text="@string/detail_diveduration"
+	            android:padding="3dip"
+	            android:layout_weight="1" />
+	        <TextView
+	            android:id="@+id/editabledetail_diveduration"
+	            android:gravity="right"
+	            android:padding="3dip"
+                android:inputType="number"
+	            android:layout_weight="3" />
+
+	        <ImageButton
+	            android:id="@+id/editableDetail_pickDuration"
+	            android:layout_width="50dp"
+	            android:layout_height="50dp"
+		        android:layout_weight="2"
+	            android:src="@android:drawable/ic_menu_more" />
+
+        </TableRow>
+    </TableLayout>
+
+
+</LinearLayout>
