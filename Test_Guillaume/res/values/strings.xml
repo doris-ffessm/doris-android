@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">D0RIS</string>
+    <string name="cst_racineSite">http://doris.ffessm.fr</string>
+    
+    <string name="txt_apropos">A propos - DORIS - Version\u00A0: @version\</string>
+    
+    <string name="txt_pas_internet">Aucune Connection Internet disponible</string>
+    <string name="txt_aucune_saisie">Aucune Saisie !</string>
+    <string name="txt_connectionLente">La connection à internet semble actuellement trop lente pour télécharger</string>
+    
+    <string name="recherche_btn">Rech.</string>
+    
+    <string name="txt_rechercheGuidee">Recherche Guidée</string>
+    <string name="txt_rechercheGroupPere">Groupe Sup.</string>
+    <string name="txt_navigationHistorique">Historique</string>
+    <string name="txt_effacerResultats">Effacer résultats</string>
+    <string name="txt_ClicCourtSurResultatsSuivants">Faites un Appui long pour charger les résultats suivants.</string>
+    <string name="txt_ClicCourtSurGalleriePhotos">Faites un Appui long pour afficher cette photo en grand.</string>
+    <string name="txt_retourAccueil">Accueil</string>
+    
+    <string name="txt_patienceChargement">Chargement, veuillez patienter\u00A0\u2026</string>
+    <string name="txt_patienceTelechargement">Téléchargement, veuillez patienter\u00A0\u2026</string>
+    <string name="txt_patienceTraitement">Traitement, veuillez patienter\u00A0\u2026</string>
+    <string name="txt_patienceRecupEntete">Récupération Fiches, veuillez patienter\u00A0\u2026</string>
+    <string name="txt_patienceRecupGroupe">Récup. Groupes, veuillez patienter\u00A0\u2026</string>
+    
+    <string name="txt_historiqueTitre_debut">Historique\u00A0:\u00A0</string>
+    <string name="txt_resultatsTitre_fin">\u00A0résultat(s)</string>
+    
+    <string name="txt_QuitterTitre">Quitter</string>
+    <string name="txt_QuitterDemandeConfirmation">Voulez-vous vraiment quitter\u00A0?</string>
+    
+    <string name="txt_ficheType_F"></string>
+    <string name="txt_ficheType_FP">(Fiche proposée)</string>
+    <string name="txt_ficheType_FR">(Fiche en cours de rédaction)</string>
+    
+    <string name="txt_ficheDetailAutresDenominations">Autres dénominations</string>
+    <string name="txt_ficheDetailFichesLiees">Fiches Liées</string>
+    
+    <string name="txt_config_affichage">Affichage</string>
+    <string name="txt_config_aff_type_lib_titre">Résultats de recherches par\u00A0:</string>
+    <string name="txt_config_aff_type_lib_detail">Nom utilisé pour l\'affichage de la grille de résultats.</string>
+    <string-array name="res_liste_config_type_lib">
+        <item>Nom Français</item>
+        <item>Nom Scientifique</item>
+    </string-array>
+    
+    <string name="txt_config_filtres">Filtrage des Fiches</string>
+    <string name="txt_config_filtre_type_fiche_titre">Afficher les fiches\u00A0:</string>
+    <string-array name="res_liste_config_restriction_type_fiche">
+        <item>Toutes</item>
+        <item>Publiées seulement</item>
+    </string-array>
+    <string name="txt_config_filtre_zone_geo_titre">Zone Géographique (pour la recherche guidée)\u00A0:</string>
+    <string name="txt_config_filtre_zone_geo_detail">Lors de la recherche guidée, il est possible de restreintre les propositions à la zone géographique choisie ici.</string>
+    <string-array name="res_liste_config_restriction_zone_geo">
+        <item>Pas de restriction géographique</item>
+        <item>France</item>
+        <item>Eau douce</item>
+        <item>Atlantique Nord-Ouest</item>
+        <item>Indo-Pacifique</item>
+        <item>Caraïbes</item>
+    </string-array>
+    
+    <string name="txt_config_telechargement">Paramètres de Téléchargement</string>
+    <string name="txt_config_cache_titre">Cache\u00A0; conserver les pages\u00A0:</string>
+    <string name="txt_config_cache_detail">L\'utilisation du cache augmente la vitesse et diminue le volume de téléchargements mais masque les nouveautés.</string>
+    <string-array name="res_liste_config_cache_duree">
+        <item>Jamais</item>
+        <item>Pendant 1 jour</item>
+        <item>Pendant 1 semaine</item>
+        <item>Pendant 1 mois</item>
+        <item>N\'expire jamais</item>
+    </string-array>
+    <string name="txt_config_cache_vider_titre">Vider le cache\u00A0:</string>
+    <string name="txt_config_cache_vider_det">Actuellement la taille du cache est de\u00A0:\u00A0</string>
+    
+    <string name="txt_image_msg_vers_gallerie">L\'image a été sauvegardée dans le dossier Doris de votre gallerie de photos.</string>
+    
+    <string name="cst_urlFiche_racine">http://doris.ffessm.fr/fiche2.asp?fiche_numero=</string>
+    <string name="cst_urlImage_racine">http://doris.ffessm.fr/gestionenligne/photos/</string>
+    <string name="cst_urlVignette_racine">http://doris.ffessm.fr/gestionenligne/photos_fiche_vig/</string>
+    
+    <string name="cst_sitewebaccueil1_nom">DORIS.fr</string>
+    <string name="cst_sitewebaccueil1_url">http://doris.ffessm.fr</string>
+    <string name="cst_sitewebaccueil2_nom"></string>
+    <string name="cst_sitewebaccueil2_url">http://www.ffessm.fr</string>    
+</resources>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	 android:orientation="vertical"
+	 android:layout_width="fill_parent"
+	 android:layout_height="fill_parent"
+ >
+
+	<it.sephiroth.android.library.imagezoom.ImageViewTouch android:id="@+id/image"
+	       android:layout_width="fill_parent"
+	       android:layout_height="fill_parent"
+	       android:scaleType="fitCenter" />
+
+	<Button
+       android:id="@+id/bouton_avant"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_alignBottom="@+id/image"
+       android:layout_alignParentLeft="true"
+       android:background="@drawable/fleche_retour" />
+
+	<Button
+       android:id="@+id/bouton_versgalerie"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_above="@+id/bouton_avant"
+       android:layout_alignParentLeft="true"
+       android:layout_marginBottom="10dip"
+       android:background="@android:drawable/ic_menu_share" />
+   
+   
+    <Button
+        android:id="@+id/bouton_apres"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/image"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/fleche_apres" />
+
+    <Button
+        android:id="@+id/bouton_fiche"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bouton_apres"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dip"
+        android:text="XX" />
+		
+    <TextView android:id="@+id/text"
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content" 
+        android:layout_marginBottom="10dip"
+	    android:layout_alignParentTop="true"
+	    android:layout_centerHorizontal="true"
+        android:padding="12dip"
+        android:background="#AA000000"
+        android:textColor="#ffffffff"
+        android:layout_above="@+id/image"
+        android:text="Libellé Image"
+	/>
+
+ </RelativeLayout>
