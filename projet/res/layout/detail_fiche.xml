@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="1">
+    	
+	<TextView android:text="Titre" android:id="@+id/TV_Titre"
+		android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="center|clip_horizontal|left" 
+	  android:textStyle="bold">
+		</TextView>
+	<TextView android:text="Contenu" android:id="@+id/TV_Contenu"
+		android:layout_height="wrap_content" android:layout_width="fill_parent"  android:textColor="#535A5F">
+		</TextView>
+
+</LinearLayout>
