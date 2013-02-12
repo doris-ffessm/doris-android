@@ -8,3 +8,4 @@ The generated code uses tags that allow embedding custom code in several places.
 
 		//End of user code
 		
+		
