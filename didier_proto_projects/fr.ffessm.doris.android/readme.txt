@@ -7,3 +7,4 @@ The generated code uses tags that allow embedding custom code in several places.
 		//Start of user code 
 
 		//End of user code
+		
