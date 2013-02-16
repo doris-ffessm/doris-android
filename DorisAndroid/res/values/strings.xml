@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">DorisAndroid</string>
+	<!--Start of user code remove protected zone to rebuild all default values
+		-->
+    <string name="edit_menu">Edit</string>
+	<!--End of user code
+	  -->
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genandroid:AndroidProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:genandroid="http://genandroid/1.0" name="DorisAndroid" packagePrefix="fr.ffessm.doris.android">
+  <dataModel name="DorisDB">
+    <dataClasses xsi:type="genandroid:DataClass" name="Fiche">
+      <dataReferences name="redacteurs" upperBound="-1" type="//@dataModel/@dataClasses.1"/>
+      <dataAttributes name="nomScientifique" type="//@dataModel/@dataClasses.6"/>
+      <dataAttributes name="nomCommun" type="//@dataModel/@dataClasses.6"/>
+    </dataClasses>
+    <dataClasses xsi:type="genandroid:DataClass" name="Participant">
+      <dataAttributes name="nom" type="//@dataModel/@dataClasses.6"/>
+    </dataClasses>
+    <dataClasses xsi:type="genandroid:DataClass" name="PhotoFiche"/>
+    <dataClasses xsi:type="genandroid:DataClass" name="PhotoParticipant"/>
+    <dataClasses xsi:type="genandroid:DataClass" name="ZoneGeographique">
+      <dataAttributes name="nom" type="//@dataModel/@dataClasses.6"/>
+    </dataClasses>
+    <dataClasses xsi:type="genandroid:DataClass" name="ZoneObservation">
+      <dataAttributes name="nom" type="//@dataModel/@dataClasses.6"/>
+    </dataClasses>
+    <dataClasses xsi:type="genandroid:NativeDataClass" name="String" instanceClassName="java.lang.String"/>
+    <dataClasses xsi:type="genandroid:NativeDataClass" name="Integer" instanceClassName="int"/>
+  </dataModel>
+</genandroid:AndroidProject>
