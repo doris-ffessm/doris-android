@@ -59,6 +59,7 @@ public class Fiche {
 	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
 	protected ForeignCollection<PhotoFiche> photosFiche;
 
+	/** zones géographiques où l'on peut trouver l'élément décrit par la fiche */ 
 	public List<ZoneGeographique> lookupZonesGeographiques(DorisDBHelper contextDB) throws SQLException {
 		if (zonesGeographiquesQuery == null) {
 			zonesGeographiquesQuery = makeZonesGeographiquesQuery(contextDB);
@@ -89,6 +90,7 @@ public class Fiche {
 
 				
 
+	/** zones  où l'on peut observer l'élément décrit par la fiche */ 
 	public List<ZoneObservation> lookupZonesObservation(DorisDBHelper contextDB) throws SQLException {
 		if (zonesObservationQuery == null) {
 			zonesObservationQuery = makeZonesObservationQuery(contextDB);
@@ -119,6 +121,7 @@ public class Fiche {
 
 				
 
+	/** listes des personnes ayant vérifié la fiche */ 
 	public List<Participant> lookupVerificateurs(DorisDBHelper contextDB) throws SQLException {
 		if (verificateursQuery == null) {
 			verificateursQuery = makeVerificateursQuery(contextDB);
@@ -149,6 +152,7 @@ public class Fiche {
 
 				
 
+	/** responsable régional de la fiche */ 
 	@DatabaseField(foreign = true)
 	protected Participant responsableRegional;
 

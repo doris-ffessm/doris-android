@@ -4,11 +4,11 @@
     <dataClasses xsi:type="genandroid:DataClass" name="Fiche" documentation="Fiche Doris, donne accés aux données de la fiche">
       <dataReferences name="redacteurs" type="//@dataModel/@dataClasses.1"/>
       <dataReferences name="photosFiche" documentation="Liste des photos de la fiche" upperBound="-1" opposite="//@dataModel/@dataAssociations.0" type="//@dataModel/@dataClasses.2"/>
-      <dataReferences name="zonesGeographiques" lowerbound="1" upperBound="-1" opposite="//@dataModel/@dataAssociations.1" type="//@dataModel/@dataClasses.4"/>
-      <dataReferences name="zonesObservation" lowerbound="1" upperBound="-1" opposite="//@dataModel/@dataAssociations.2" type="//@dataModel/@dataClasses.5"/>
-      <dataReferences name="verificateurs" upperBound="-1" opposite="//@dataModel/@dataAssociations.4" type="//@dataModel/@dataClasses.1"/>
-      <dataReferences name="responsableRegional" type="//@dataModel/@dataClasses.1"/>
-      <dataReferences name="contenu" upperBound="-1" opposite="//@dataModel/@dataAssociations.5" type="//@dataModel/@dataClasses.9"/>
+      <dataReferences name="zonesGeographiques" documentation="zones géographiques où l'on peut trouver l'élément décrit par la fiche" lowerbound="1" upperBound="-1" opposite="//@dataModel/@dataAssociations.1" type="//@dataModel/@dataClasses.4"/>
+      <dataReferences name="zonesObservation" documentation="zones  où l'on peut observer l'élément décrit par la fiche" lowerbound="1" upperBound="-1" opposite="//@dataModel/@dataAssociations.2" type="//@dataModel/@dataClasses.5"/>
+      <dataReferences name="verificateurs" documentation="listes des personnes ayant vérifié la fiche" upperBound="-1" opposite="//@dataModel/@dataAssociations.4" type="//@dataModel/@dataClasses.1"/>
+      <dataReferences name="responsableRegional" documentation="responsable régional de la fiche" type="//@dataModel/@dataClasses.1"/>
+      <dataReferences name="contenu" documentation="contenu textuel de la fiche" upperBound="-1" opposite="//@dataModel/@dataAssociations.5" type="//@dataModel/@dataClasses.9"/>
       <dataAttributes name="nomScientifique" type="//@dataModel/@dataClasses.6"/>
       <dataAttributes name="nomCommun" type="//@dataModel/@dataClasses.6"/>
       <dataAttributes name="numeroFiche" documentation="Numéro de la fiche tel que connu par le site lui même" type="//@dataModel/@dataClasses.7"/>
