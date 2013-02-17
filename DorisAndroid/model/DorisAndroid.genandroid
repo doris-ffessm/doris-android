@@ -1,23 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genandroid:AndroidProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:genandroid="http://genandroid/1.0" name="DorisAndroid" packagePrefix="fr.ffessm.doris.android">
   <dataModel name="DorisDB">
-    <dataClasses xsi:type="genandroid:DataClass" name="Fiche">
-      <dataReferences name="redacteurs" upperBound="-1" type="//@dataModel/@dataClasses.1"/>
+    <dataClasses xsi:type="genandroid:DataClass" name="Fiche" documentation="Fiche Doris, donne accés aux données de la fiche">
+      <dataReferences name="redacteurs" type="//@dataModel/@dataClasses.1"/>
+      <dataReferences name="photosFiche" documentation="Liste des photos de la fiche" upperBound="-1" opposite="//@dataModel/@dataAssociations.0" type="//@dataModel/@dataClasses.2"/>
+      <dataReferences name="zonesGeographiques" lowerbound="1" upperBound="-1" opposite="//@dataModel/@dataAssociations.1" type="//@dataModel/@dataClasses.4"/>
+      <dataReferences name="zonesObservation" lowerbound="1" upperBound="-1" opposite="//@dataModel/@dataAssociations.2" type="//@dataModel/@dataClasses.5"/>
+      <dataReferences name="verificateurs" upperBound="-1" opposite="//@dataModel/@dataAssociations.4" type="//@dataModel/@dataClasses.1"/>
+      <dataReferences name="responsableRegional" type="//@dataModel/@dataClasses.1"/>
+      <dataReferences name="contenu" upperBound="-1" opposite="//@dataModel/@dataAssociations.5" type="//@dataModel/@dataClasses.9"/>
       <dataAttributes name="nomScientifique" type="//@dataModel/@dataClasses.6"/>
       <dataAttributes name="nomCommun" type="//@dataModel/@dataClasses.6"/>
+      <dataAttributes name="numeroFiche" documentation="Numéro de la fiche tel que connu par le site lui même" type="//@dataModel/@dataClasses.7"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="Participant">
+      <dataReferences name="photo" documentation="photo du participant" opposite="//@dataModel/@dataAssociations.3" type="//@dataModel/@dataClasses.3"/>
+      <dataReferences name="fichesVerifiees" upperBound="-1" opposite="//@dataModel/@dataAssociations.4" type="//@dataModel/@dataClasses.0"/>
       <dataAttributes name="nom" type="//@dataModel/@dataClasses.6"/>
     </dataClasses>
-    <dataClasses xsi:type="genandroid:DataClass" name="PhotoFiche"/>
-    <dataClasses xsi:type="genandroid:DataClass" name="PhotoParticipant"/>
+    <dataClasses xsi:type="genandroid:DataClass" name="PhotoFiche">
+      <dataReferences name="fiche" lowerbound="1" opposite="//@dataModel/@dataAssociations.0" type="//@dataModel/@dataClasses.0"/>
+      <dataAttributes name="cleURL" type="//@dataModel/@dataClasses.6"/>
+      <dataAttributes name="imageVignette" derived="true" storage="File" type="//@dataModel/@dataClasses.8"/>
+      <dataAttributes name="imageMoyenne" derived="true" storage="File" type="//@dataModel/@dataClasses.8"/>
+      <dataAttributes name="imageGrande" derived="true" storage="File" type="//@dataModel/@dataClasses.8"/>
+    </dataClasses>
+    <dataClasses xsi:type="genandroid:DataClass" name="PhotoParticipant">
+      <dataReferences name="participant" opposite="//@dataModel/@dataAssociations.3" type="//@dataModel/@dataClasses.1"/>
+      <dataAttributes name="cleURL" type="//@dataModel/@dataClasses.6"/>
+      <dataAttributes name="image" derived="true" storage="File" type="//@dataModel/@dataClasses.8"/>
+    </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="ZoneGeographique">
+      <dataReferences name="fiches" upperBound="-1" opposite="//@dataModel/@dataAssociations.1" type="//@dataModel/@dataClasses.0"/>
       <dataAttributes name="nom" type="//@dataModel/@dataClasses.6"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="ZoneObservation">
+      <dataReferences name="fiches" upperBound="-1" opposite="//@dataModel/@dataAssociations.2" type="//@dataModel/@dataClasses.0"/>
       <dataAttributes name="nom" type="//@dataModel/@dataClasses.6"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:NativeDataClass" name="String" instanceClassName="java.lang.String"/>
     <dataClasses xsi:type="genandroid:NativeDataClass" name="Integer" instanceClassName="int"/>
+    <dataClasses xsi:type="genandroid:NativeDataClass" name="File" instanceClassName="java.io.File"/>
+    <dataClasses xsi:type="genandroid:DataClass" name="SectionFiche">
+      <dataReferences name="fiche" opposite="//@dataModel/@dataAssociations.5" type="//@dataModel/@dataClasses.0"/>
+      <dataAttributes name="titre" type="//@dataModel/@dataClasses.6"/>
+      <dataAttributes name="texte" type="//@dataModel/@dataClasses.6"/>
+    </dataClasses>
+    <dataAssociations name="Fiche_Photos" references="//@dataModel/@dataClasses.2/@dataReferences.0 //@dataModel/@dataClasses.0/@dataReferences.1"/>
+    <dataAssociations name="Fiches_ZonesGeographiques" references="//@dataModel/@dataClasses.4/@dataReferences.0 //@dataModel/@dataClasses.0/@dataReferences.2"/>
+    <dataAssociations name="Fiches_ZonesObservations" references="//@dataModel/@dataClasses.0/@dataReferences.3 //@dataModel/@dataClasses.5/@dataReferences.0"/>
+    <dataAssociations name="Participant_Photos" references="//@dataModel/@dataClasses.1/@dataReferences.0 //@dataModel/@dataClasses.3/@dataReferences.0"/>
+    <dataAssociations name="Fiches_verificateurs_Participants" references="//@dataModel/@dataClasses.0/@dataReferences.4 //@dataModel/@dataClasses.1/@dataReferences.1"/>
+    <dataAssociations name="Fiche_Sections" references="//@dataModel/@dataClasses.0/@dataReferences.6 //@dataModel/@dataClasses.9/@dataReferences.0"/>
   </dataModel>
 </genandroid:AndroidProject>

@@ -13,7 +13,7 @@ package fr.ffessm.doris.android.datamodel.xml;
 
 import org.xml.sax.helpers.DefaultHandler;
 
-public class ZoneGeographiqueXMLParser extends DefaultHandler{
+public class ContenuFicheXMLParser extends DefaultHandler{
 
 	
 }

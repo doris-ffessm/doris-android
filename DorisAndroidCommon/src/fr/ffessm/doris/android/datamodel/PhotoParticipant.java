@@ -15,6 +15,14 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.SelectArg;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import fr.ffessm.doris.android.datamodel.associations.*;
 
 /** 
   *  
@@ -37,6 +45,9 @@ public class PhotoParticipant {
 
 	protected java.io.File image;
 	
+
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
+	protected Participant participant;
 
 	// Start of user code PhotoParticipant additional user properties
 	// End of user code

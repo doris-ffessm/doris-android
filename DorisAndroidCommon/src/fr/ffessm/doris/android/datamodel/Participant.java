@@ -15,6 +15,14 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.SelectArg;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import fr.ffessm.doris.android.datamodel.associations.*;
 
 /** 
   *  
@@ -34,6 +42,40 @@ public class Participant {
 	@DatabaseField
 	protected java.lang.String nom;
 	
+
+	/** photo du participant */ 
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
+	protected PhotoParticipant photo;
+
+	public List<Fiche> lookupFichesVerifiees(DorisDBHelper contextDB) throws SQLException {
+		if (fichesVerifieesQuery == null) {
+			fichesVerifieesQuery = makeFichesVerifieesQuery(contextDB);
+		}
+		fichesVerifieesQuery.setArgumentHolderValue(0, this);
+		return contextDB.ficheDao.query(fichesVerifieesQuery);
+	}
+	private PreparedQuery<Fiche> fichesVerifieesQuery = null;
+	/**
+	 * Build a query for Fiche objects that match a Participant
+	 */
+	private PreparedQuery<Fiche> makeFichesVerifieesQuery(DorisDBHelper contextDB) throws SQLException {
+		// build our inner query for UserPost objects
+		QueryBuilder<Fiches_verificateurs_Participants, Integer> fiches_verificateurs_ParticipantsQb = contextDB.fiches_verificateurs_ParticipantsDao.queryBuilder();
+		// just select the post-id field
+		fiches_verificateurs_ParticipantsQb.selectColumns(Fiches_verificateurs_Participants.FICHE_ID_FIELD_NAME);
+		SelectArg userSelectArg = new SelectArg();
+		// you could also just pass in user1 here
+		fiches_verificateurs_ParticipantsQb.where().eq(Fiches_verificateurs_Participants.PARTICIPANT_ID_FIELD_NAME, userSelectArg);
+
+		// build our outer query for Post objects
+		QueryBuilder<Fiche, Integer> ficheQb = contextDB.ficheDao.queryBuilder();
+		// where the id matches in the fiche-id from the inner query
+		ficheQb.where().in("_id", fiches_verificateurs_ParticipantsQb);
+		return ficheQb.prepare();
+	}
+
+
+				
 
 	// Start of user code Participant additional user properties
 	// End of user code
