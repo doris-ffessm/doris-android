@@ -9,9 +9,11 @@
       <dataReferences name="verificateurs" documentation="listes des personnes ayant vérifié la fiche" upperBound="-1" opposite="//@dataModel/@dataAssociations.4" type="//@dataModel/@dataClasses.1"/>
       <dataReferences name="responsableRegional" documentation="responsable régional de la fiche" type="//@dataModel/@dataClasses.1"/>
       <dataReferences name="contenu" documentation="contenu textuel de la fiche" upperBound="-1" opposite="//@dataModel/@dataAssociations.5" type="//@dataModel/@dataClasses.9"/>
+      <dataReferences name="photoPrinicipale" documentation="Photo par défaut de l'espèce présentée par cette fiche. Elle est aussi présente dans la liste &quot;photosFiche&quot;." type="//@dataModel/@dataClasses.2"/>
       <dataAttributes name="nomScientifique" type="//@dataModel/@dataClasses.6"/>
       <dataAttributes name="nomCommun" type="//@dataModel/@dataClasses.6"/>
       <dataAttributes name="numeroFiche" documentation="Numéro de la fiche tel que connu par le site lui même" type="//@dataModel/@dataClasses.7"/>
+      <dataAttributes name="autresDenominations" type="//@dataModel/@dataClasses.6"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="Participant">
       <dataReferences name="photo" documentation="photo du participant" opposite="//@dataModel/@dataAssociations.3" type="//@dataModel/@dataClasses.3"/>
