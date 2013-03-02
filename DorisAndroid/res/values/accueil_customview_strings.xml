@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resource Strings speifc to accueil Custom View -->
+<resources>	
+	<!--Start of user code customView_strings
+	-->
+	<!-- freely add here the desired resource String for your custom view -->
+	<string name="accueil_customview_sample_btn_label">SampleButton</string>
+	<!--End of user code
+	-->
+</resources>

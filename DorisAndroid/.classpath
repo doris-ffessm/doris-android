@@ -7,6 +7,6 @@
 	<classpathentry kind="lib" path="libs/ormlite-android-4.41.jar"/>
 	<classpathentry kind="lib" path="libs/ormlite-core-4.41.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/DorisAndroidCommon"/>
+	<classpathentry kind="lib" path="libs/DorisAndroidCommon.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

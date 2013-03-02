@@ -55,4 +55,8 @@
     <dataAssociations name="Fiches_verificateurs_Participants" references="//@dataModel/@dataClasses.0/@dataReferences.4 //@dataModel/@dataClasses.1/@dataReferences.1"/>
     <dataAssociations name="Fiche_Sections" references="//@dataModel/@dataClasses.0/@dataReferences.6 //@dataModel/@dataClasses.9/@dataReferences.0"/>
   </dataModel>
+  <presentationModel preferenceView="//@presentationModel/@viewActivities.1" welcomeView="//@presentationModel/@viewActivities.0">
+    <viewActivities xsi:type="genandroid:CustomViewActivity" name="Accueil"/>
+    <viewActivities xsi:type="genandroid:PreferenceViewActivity" name="Preference"/>
+  </presentationModel>
 </genandroid:AndroidProject>
