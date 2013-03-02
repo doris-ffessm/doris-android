@@ -56,7 +56,15 @@
     <dataAssociations name="Fiche_Sections" references="//@dataModel/@dataClasses.0/@dataReferences.6 //@dataModel/@dataClasses.9/@dataReferences.0"/>
   </dataModel>
   <presentationModel preferenceView="//@presentationModel/@viewActivities.1" welcomeView="//@presentationModel/@viewActivities.0">
-    <viewActivities xsi:type="genandroid:CustomViewActivity" name="Accueil"/>
+    <viewActivities xsi:type="genandroid:CustomViewActivity" name="Accueil" accessibleViews="//@presentationModel/@viewActivities.2 //@presentationModel/@viewActivities.3" triggerableBackgroundActivities="//@presentationModel/@backgroundActivities.1 //@presentationModel/@backgroundActivities.2"/>
     <viewActivities xsi:type="genandroid:PreferenceViewActivity" name="Preference"/>
+    <viewActivities xsi:type="genandroid:CustomViewActivity" name="RechercheGuidee" accessibleViews="//@presentationModel/@viewActivities.3"/>
+    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ListeFicheAvecFiltre" documentation="Cette liste déroulante de fiche, dispose d'un filtre:&#xD;&#xA;Ce filtre permet d'entrer du texte, un zone géographique et une zone d'observation" accessibleViews="//@presentationModel/@viewActivities.4" selectItemAction="//@presentationModel/@viewActivities.4" listedElement="//@dataModel/@dataClasses.0" presentedDetail="//@presentationModel/@classDetails.0"/>
+    <viewActivities xsi:type="genandroid:ElementViewActivity" name="DetailsFiche" element="//@dataModel/@dataClasses.0"/>
+    <classDetails mainAttributes="//@dataModel/@dataClasses.2/@dataAttributes.1" name="ContenuListeFiche" secondaryAttributes="//@dataModel/@dataClasses.1/@dataAttributes.0"/>
+    <backgroundActivities name="TelechargeFiches" documentation="Tache responsable du téléchargement des données des fiches. &#xD;&#xA;Cela inclue les données croisées telles que les zones géographiqes et d'observation.&#xD;&#xA;Elle vérifie le niveau de détails requis pour chaque fiche."/>
+    <backgroundActivities name="VerifieNouvellesFiches" documentation="Tache responsable de la vérification de la disponibilité de nouvelles fiches."/>
+    <backgroundActivities name="VerifieMAJFiches" documentation="Tache responsable de vérifier s'il existe une version plus récente des fiches déjà connues."/>
+    <backgroundActivities name="TelechargePhotosFiches" documentation="Tache responsable du téléchargement des photo des fiches. &#xD;&#xA;Elle vérifie le nombre de photos et la précision requise pour chaque fiche."/>
   </presentationModel>
 </genandroid:AndroidProject>

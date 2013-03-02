@@ -1,0 +1,16 @@
+(start)->(Accueil)
+(Accueil)-><AccueilChoice>
+(Preference)-><PreferenceChoice>
+(RechercheGuidee)-><RechercheGuideeChoice>
+(ListeFicheAvecFiltre)-><ListeFicheAvecFiltreChoice>
+(DetailsFiche)-><DetailsFicheChoice>
+(TelechargeFiches)->(end)
+(VerifieNouvellesFiches)->(end)
+(VerifieMAJFiches)->(end)
+(TelechargePhotosFiches)->(end)
+<AccueilChoice>->(RechercheGuidee)
+<AccueilChoice>->(ListeFicheAvecFiltre)
+<AccueilChoice>->(VerifieNouvellesFiches)
+<AccueilChoice>->(VerifieMAJFiches)
+<RechercheGuideeChoice>->(ListeFicheAvecFiltre)
+(ListeFicheAvecFiltre)->(DetailsFiche)		
