@@ -84,7 +84,7 @@ public class ListeFicheAvecFiltreClassListViewActivity extends OrmLiteBaseActivi
         //tvLabel.setText(dateFormatter.format(entry.getDate()));
         showToast(dateFormatter.format(((DiveEntry)view.getTag()).getDate()));
 		*/
-        Intent toDetailView = new Intent(this, DetailsFicheElementViewActivity.class);
+        Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
         Bundle b = new Bundle();
         b.putInt("ficheId", ((Fiche)view.getTag()).getId());
 		toDetailView.putExtras(b);
