@@ -1,9 +1,10 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
-Copyright du Code : A COMPLÉTER  ([16/02/2013]) 
-
-A COMPLÉTER : A COMPLÉTER@gmail.com
+ * Copyright (c) 2012-2013 - FFESSM
+ * Auteurs : Guillaume Mo <gmo7942@gmail.com>
+ *           Didier Vojtisek <dvojtise@gmail.com>
+ * *********************************************************************
 
 Ce logiciel est un programme informatique servant à afficher de manière 
 ergonomique sur un terminal Android les fiches du site : doris.ffessm.fr. 
@@ -37,8 +38,6 @@ sécurité de leurs systèmes et ou de leurs données et, plus généralement,
 Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
 pris connaissance de la licence CeCILL-B, et que vous en avez accepté les
 termes.
-* Auteurs : Guillaume Mo <gmo7942@gmail.com>
-*           Didier Vojtisek <dvojtise@gmail.com>
 * ********************************************************************* */
 package fr.ffessm.doris.android.datamodel.associations;
 

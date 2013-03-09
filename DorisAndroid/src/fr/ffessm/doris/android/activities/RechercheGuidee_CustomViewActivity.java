@@ -60,9 +60,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-
+//Start of user code additional imports
+//End of user code
 public class RechercheGuidee_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>{
 	
+	//Start of user code constants
+	//End of user code
+
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {

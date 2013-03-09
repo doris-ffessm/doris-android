@@ -61,9 +61,18 @@ import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import android.preference.PreferenceManager;
-
+//Start of user code additional imports
+import fr.ffessm.doris.android.async.TelechargeFiches_BgActivity;
+//End of user code
 public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>{
 	
+	//Start of user code constants
+	static final int TELECHARGE_FICHE_MENU_ID = 1;	
+	static final int TELECHARGE_PHOTO_FICHES_MENU_ID = 2;
+	static final int VERIFIE_MAJ_FICHES_MENU_ID = 3;
+	static final int VERIFIE_NOUVELLES_FICHES_MENU_ID = 4;
+	//End of user code
+
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,7 +109,8 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
 		
 		//Start of user code additional onCreateOptionsMenu
-
+		menu.add(Menu.NONE, TELECHARGE_FICHE_MENU_ID, 1, R.string.telecharge_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
+        
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
@@ -115,7 +125,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		            return true;
 		
 		//Start of user code additional menu action
-
+			case TELECHARGE_FICHE_MENU_ID:
+				new TelechargeFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+				break;
 		//End of user code
         }
         return false;
