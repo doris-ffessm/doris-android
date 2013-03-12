@@ -22,6 +22,12 @@ import com.j256.ormlite.table.TableUtils;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Participant;
+import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.datamodel.SectionFiche;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
+import fr.ffessm.doris.android.datamodel.ZoneObservation;
+import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
+import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesObservations;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_verificateurs_Participants;
 
 public class PrefetchDorisWebSite {
@@ -62,13 +68,26 @@ public class PrefetchDorisWebSite {
 
 		dbContext = new DorisDBHelper();
 		dbContext.ficheDao = DaoManager.createDao(connectionSource, Fiche.class);
+		dbContext.photoFicheDao = DaoManager.createDao(connectionSource, PhotoFiche.class);
 		dbContext.participantDao = DaoManager.createDao(connectionSource, Participant.class);
+		dbContext.zoneGeographiqueDao = DaoManager.createDao(connectionSource, ZoneGeographique.class);
+		dbContext.zoneObservationDao = DaoManager.createDao(connectionSource, ZoneObservation.class);
+		dbContext.sectionFicheDao = DaoManager.createDao(connectionSource, SectionFiche.class);
 		dbContext.fiches_verificateurs_ParticipantsDao = DaoManager.createDao(connectionSource, Fiches_verificateurs_Participants.class);
-
+		dbContext.fiches_ZonesGeographiquesDao = DaoManager.createDao(connectionSource, Fiches_ZonesGeographiques.class);
+		dbContext.fiches_ZonesObservationsDao = DaoManager.createDao(connectionSource, Fiches_ZonesObservations.class);
+		
 		// if you need to create the table
 		TableUtils.createTable(connectionSource, Fiche.class);
 		TableUtils.createTable(connectionSource, Participant.class);
+
+		TableUtils.createTable(connectionSource, PhotoFiche.class);
+		TableUtils.createTable(connectionSource, ZoneGeographique.class);
+		TableUtils.createTable(connectionSource, ZoneObservation.class);
+		TableUtils.createTable(connectionSource, SectionFiche.class);
 		TableUtils.createTable(connectionSource, Fiches_verificateurs_Participants.class);
+		TableUtils.createTable(connectionSource, Fiches_ZonesGeographiques.class);
+		TableUtils.createTable(connectionSource, Fiches_ZonesObservations.class);
 	}
 
 	/**
@@ -79,11 +98,18 @@ public class PrefetchDorisWebSite {
 
 		Fiche fiche1 = new Fiche("Amphiprion bicinctus",
 				"Poisson-clown à deux bandes", 1001, "");
+		
 		Fiche fiche2 = new Fiche("Palaemon elegans Rathke",
 				"Petite crevette rose", 337, "");
 		// persist the fiches object to the database
 		dbContext.ficheDao.create(fiche1);
 		dbContext.ficheDao.create(fiche2);
+		
+		SectionFiche s1 = new SectionFiche("Titre S1","hqdshgh ojfjdj");
+		//fiche1.getContenu().add(s1);
+		s1.setFiche(fiche1);
+		dbContext.sectionFicheDao.create(s1);
+		
 		int id = fiche1.getId();
 
 		Participant p1 = new Participant("Didier");
@@ -131,7 +157,7 @@ public class PrefetchDorisWebSite {
 			out.write("<Doris>\n");
 			out.write("<Fiches>\n");
 			for (Fiche fiche : fiches) {
-				out.write(fiche.toXML()+"\n");
+				out.write(fiche.toXML("",dbContext)+"\n");
 			}
 			out.write("</Fiches>\n");
 			out.write("</Doris>\n");

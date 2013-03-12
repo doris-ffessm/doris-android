@@ -8,7 +8,7 @@
 [Fiche]
 [Fiche]-redacteurs 0..1>[Participant]
 [Fiche]-responsableRegional 0..1>[Participant]
-[Fiche]-photoPrinicipale 0..1>[PhotoFiche]
+[Fiche]-photoPrincipale 0..1>[PhotoFiche]
 [Participant]
 [PhotoFiche]
 [PhotoParticipant]

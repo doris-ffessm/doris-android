@@ -1,6 +1,18 @@
 <Doris>
 <Fiches>
-<FICHE id="1"  nomScientifique="Amphiprion bicinctus"  nomCommun="Poisson-clown à deux bandes"  numeroFiche="1001" ></FICHE>
-<FICHE id="2"  nomScientifique="Palaemon elegans Rathke"  nomCommun="Petite crevette rose"  numeroFiche="337" ></FICHE>
+<FICHE id="1"  nomScientifique="Amphiprion bicinctus"  nomCommun="Poisson-clown à deux bandes"  numeroFiche="1001" >
+	<autresDenominations></autresDenominations>
+	<photosFiche></photosFiche>
+	<verificateurs id="1"/>
+	<verificateurs id="2"/>
+	<contenu>
+		<SECTIONFICHE id="1" >
+			<titre>Titre S1</titre>
+			<texte>hqdshgh ojfjdj</texte></SECTIONFICHE></contenu></FICHE>
+<FICHE id="2"  nomScientifique="Palaemon elegans Rathke"  nomCommun="Petite crevette rose"  numeroFiche="337" >
+	<autresDenominations></autresDenominations>
+	<photosFiche></photosFiche>
+	<verificateurs id="1"/>
+	<contenu></contenu></FICHE>
 </Fiches>
 </Doris>

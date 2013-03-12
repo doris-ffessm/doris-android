@@ -69,18 +69,12 @@ public class DorisDBHelper {
 	//public RuntimeExceptionDao<ZoneObservation, Integer> zoneObservationDao;
 	public Dao<SectionFiche, Integer> sectionFicheDao;
 	//public RuntimeExceptionDao<SectionFiche, Integer> sectionFicheDao;
-	//public RuntimeExceptionDao<Fiche_Photos, Integer> fiche_PhotosDao;
-	public Dao<Fiche_Photos, Integer> fiche_PhotosDao;
 	//public RuntimeExceptionDao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesDao;
 	public Dao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesDao;
 	//public RuntimeExceptionDao<Fiches_ZonesObservations, Integer> fiches_ZonesObservationsDao;
 	public Dao<Fiches_ZonesObservations, Integer> fiches_ZonesObservationsDao;
-	//public RuntimeExceptionDao<Participant_Photos, Integer> participant_PhotosDao;
-	public Dao<Participant_Photos, Integer> participant_PhotosDao;
 	//public RuntimeExceptionDao<Fiches_verificateurs_Participants, Integer> fiches_verificateurs_ParticipantsDao;
 	public Dao<Fiches_verificateurs_Participants, Integer> fiches_verificateurs_ParticipantsDao;
-	//public RuntimeExceptionDao<Fiche_Sections, Integer> fiche_SectionsDao;
-	public Dao<Fiche_Sections, Integer> fiche_SectionsDao;
 
 	
 	public DorisDBHelper(){
