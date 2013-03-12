@@ -78,9 +78,9 @@ public class PrefetchDorisWebSite {
 		// create an instance of Fiche
 
 		Fiche fiche1 = new Fiche("Amphiprion bicinctus",
-				"Poisson-clown à deux bandes", 1001);
+				"Poisson-clown à deux bandes", 1001, "");
 		Fiche fiche2 = new Fiche("Palaemon elegans Rathke",
-				"Petite crevette rose", 337);
+				"Petite crevette rose", 337, "");
 		// persist the fiches object to the database
 		dbContext.ficheDao.create(fiche1);
 		dbContext.ficheDao.create(fiche2);

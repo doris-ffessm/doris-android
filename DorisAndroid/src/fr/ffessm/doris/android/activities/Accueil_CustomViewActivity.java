@@ -63,6 +63,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import android.preference.PreferenceManager;
 //Start of user code additional imports
 import fr.ffessm.doris.android.async.TelechargeFiches_BgActivity;
+import fr.ffessm.doris.android.async.VerifieNouvellesFiches_BgActivity;
 //End of user code
 public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>{
 	
@@ -110,7 +111,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		
 		//Start of user code additional onCreateOptionsMenu
 		menu.add(Menu.NONE, TELECHARGE_FICHE_MENU_ID, 1, R.string.telecharge_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
-        
+        menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 2, R.string.verifie_nouvelles_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
@@ -127,6 +128,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		//Start of user code additional menu action
 			case TELECHARGE_FICHE_MENU_ID:
 				new TelechargeFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+				break;
+			case VERIFIE_NOUVELLES_FICHES_MENU_ID:
+				new VerifieNouvellesFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 				break;
 		//End of user code
         }
