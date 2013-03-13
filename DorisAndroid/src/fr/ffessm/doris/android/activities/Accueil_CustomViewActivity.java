@@ -94,6 +94,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     //Start of user code additional code
 	public void onClickBtnSample(View view){
 		showToast("sample button pressed. \nPlease customize ;-)");
+		startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
     }
 	//End of user code
 

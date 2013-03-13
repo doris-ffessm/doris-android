@@ -56,6 +56,7 @@ import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports
+import fr.ffessm.doris.android.datamodel.Fiche;
 // End of user code
 
 public class TelechargeFiches_BgActivity  extends AsyncTask<String,Integer, Integer>{
@@ -99,6 +100,19 @@ public class TelechargeFiches_BgActivity  extends AsyncTask<String,Integer, Inte
                 try {
 					// simply sleep for one second
                     Thread.sleep(1000);
+                    
+                    //  cree des fiches bidon
+                    long millis = System.currentTimeMillis();
+                    Fiche f = new Fiche();
+                    f.setNomCommun("p"+i);
+                    List<Fiche> listeFiches = dbHelper.getFicheDao().queryForMatching(f);
+                    if(!listeFiches.isEmpty()){
+                    	f = listeFiches.get(0);
+                    }
+                    // complete la fiche avec ces info
+                    f.setNomScientifique("p"+millis);
+                    dbHelper.getFicheDao().createOrUpdate(f);
+                    
                     publishProgress(i);
 
                 } catch (InterruptedException e) {

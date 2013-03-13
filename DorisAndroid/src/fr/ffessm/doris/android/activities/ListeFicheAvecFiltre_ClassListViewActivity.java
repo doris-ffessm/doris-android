@@ -59,7 +59,7 @@ import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 
 
-public class ListeFicheAvecFiltreClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
+public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
 	
 
 	public void onCreate(Bundle bundle) {
@@ -68,7 +68,7 @@ public class ListeFicheAvecFiltreClassListViewActivity extends OrmLiteBaseActivi
 
 		ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
         list.setClickable(true);
-        ListeFicheAvecFiltreAdapter adapter = new ListeFicheAvecFiltreAdapter(this, getHelper().getFicheDao());
+        ListeFicheAvecFiltre_Adapter adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getFicheDao());
 
         
         list.setOnItemClickListener(this);

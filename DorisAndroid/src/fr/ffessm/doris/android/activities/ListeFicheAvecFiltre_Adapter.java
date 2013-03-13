@@ -62,13 +62,13 @@ import android.widget.Toast;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
-public class ListeFicheAvecFiltreAdapter extends BaseAdapter{
+public class ListeFicheAvecFiltre_Adapter extends BaseAdapter{
 	
 private Context context;
 
     private List<Fiche> ficheList;
 
-	public ListeFicheAvecFiltreAdapter(Context context, RuntimeExceptionDao<Fiche, Integer> entriesDao) {
+	public ListeFicheAvecFiltre_Adapter(Context context, RuntimeExceptionDao<Fiche, Integer> entriesDao) {
 		super();
 		this.context = context;
 		// TODO find a way to query in a lazy way
