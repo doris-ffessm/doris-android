@@ -137,11 +137,6 @@ public class PhotoParticipant {
 		sb.append(this.image);
     	sb.append("</"+XML_ATT_IMAGE+">");
 
-		if(this.participant!= null){
-			sb.append("\n"+indent+"\t<"+XML_REF_PARTICIPANT+">");
-			sb.append(this.participant);
-	    	sb.append("</"+XML_REF_PARTICIPANT+">");
-		}
 		// TODO deal with other case
 
 		sb.append("</"+XML_PHOTOPARTICIPANT+">");

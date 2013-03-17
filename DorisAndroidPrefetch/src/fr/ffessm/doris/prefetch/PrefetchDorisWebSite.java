@@ -72,6 +72,7 @@ import fr.ffessm.doris.android.datamodel.ZoneObservation;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesObservations;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_verificateurs_Participants;
+import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
 
 public class PrefetchDorisWebSite {
 
@@ -301,6 +302,10 @@ public class PrefetchDorisWebSite {
 
 		File f = new File("./prefetchedDorisDB.xml");
 		sauveXML(f, fiches);
+		
+		
+		// test de la nouvelle fonctions XMLHelper
+		XMLHelper.saveDBToFile(new File("./prefetchedDorisDB2.xml"), dbContext);
 	}
 
 	/**
