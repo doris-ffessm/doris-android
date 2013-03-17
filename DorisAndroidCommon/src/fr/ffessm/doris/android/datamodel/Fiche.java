@@ -207,6 +207,31 @@ public class Fiche {
 	protected PhotoFiche photoPrincipale;
 
 	// Start of user code Fiche additional user properties
+	/** Etat Avancement de la fiche 
+	 * F : Fiche Publiée, FR : En cours de Rédaction, FP : Fiche Proposée
+	 * */ 
+	@DatabaseField
+	protected java.lang.String etatFiche;
+		
+	/** Nouveau Constructeur
+	 *  TODO :Pour moi "Autres dénominations" devrait être une liste de string
+	 *  en effet, parfois on a la liste de dénominations francophones,
+	 *  parfois (dans un autre TR) de dénomination internationnale.
+	 *  Je pense que ce serait mieux de stocker ces 2 listes de noms dans une liste
+	 *  de 2 éléments pour l'instant
+	 *  TODO : J'ai ajouté un champ bidon pour avoir un contructeur avec un champ de plus
+	 *  je ne sais pas comment faire 2 contructeurs qui se ressemblent :-)
+	 * */
+
+	public Fiche(java.lang.String nomScientifique, java.lang.String nomCommun, int numeroFiche, java.lang.String etatFiche, boolean bidon) {
+		super();
+		this.nomScientifique = nomScientifique;
+		this.nomCommun = nomCommun;
+		this.numeroFiche = numeroFiche;
+		this.etatFiche = etatFiche;
+	} 
+	
+	
 	// End of user code
 	
 	public Fiche() {} // needed by ormlite

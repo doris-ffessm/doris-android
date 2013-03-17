@@ -45,7 +45,10 @@ package fr.ffessm.doris.prefetch;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +77,7 @@ import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesObservations;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_verificateurs_Participants;
 import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
 
+
 public class PrefetchDorisWebSite {
 
 	// Pourrait être un jour utile, on verra
@@ -82,12 +86,19 @@ public class PrefetchDorisWebSite {
 	// we are using the in-memory H2 database
 	private final static String DATABASE_URL = "jdbc:h2:mem:fiche";
 
+	// Dossiers liés au fonctionnement de l'appli prefetch
+	private final static String DOSSIER_BASE = "./run";
+	// Ces dossiers seront renommés qd nécessaire
+	private final static String DOSSIER_HTML = "html";
+	private final static String DOSSIER_IMG = "img";
+	private final static String DOSSIER_RESULTATS = "result";
+	
 	// Inititalisation de la Gestion des Log {Log(0) permet de forcer le mode debbug}
 	private final static String LOGTAG = "PrefetchDoris";
 	public static Log trace = new Log();
 	//public static Log trace = new Log(0);
 	
-	//Nombre maximum de fiches traitées (--max=K permet de changer cette valeur)
+	// Nombre maximum de fiches traitées (--max=K permet de changer cette valeur)
 	private static int nbMaxFichesTraitees = 9999;
 	
 	DorisDBHelper dbContext = null;
@@ -101,11 +112,24 @@ public class PrefetchDorisWebSite {
 
 	private void doMain(String[] args) throws Exception {
 		
-		//Vérification et lecture des arguments
+		// Vérification et lecture des arguments
 		trace.log(trace.LOG_DEBUG, LOGTAG, "doMain() : Vérification et lecture des arguments");
 		String action = checkArgs(args);
 		trace.log(trace.LOG_VERBOSE, LOGTAG, "action : " + action);
 		trace.log(trace.LOG_VERBOSE, LOGTAG, "Nb. Fiches Max : " + nbMaxFichesTraitees);
+		
+		// Vérification, Création, Sauvegarde des dossiers de travails
+		checkDossiers(action);
+		
+		// Récupération de la liste des fiches sur le site de DORIS
+		String listeFichesFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeFiches.html";
+		if (Outils.getFichierUrl(TempCommon.getListeFichesUrl(), listeFichesFichier)) {
+			String contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+			
+			TempCommon.getListeFiches(contenuFichierHtml, nbMaxFichesTraitees);
+		}
+		
+		
 		
 		ConnectionSource connectionSource = null;
 		try {
@@ -114,7 +138,7 @@ public class PrefetchDorisWebSite {
 			// setup our database and DAOs
 			setupDatabase(connectionSource);
 			// read and write some data
-			readWriteData();
+			//readWriteData();
 
 		} finally {
 			// destroy the data source which should close underlying connections
@@ -129,11 +153,11 @@ public class PrefetchDorisWebSite {
 	 * 
 	 *  @param args
 	 */
-	private String checkArgs(String[] args){
+	private String checkArgs(String[] inArgs){
 			
 		// Si Aucun Argument, on affiche l'aide et on termine
-		trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - nb args : " + args.length);
-		if (args.length < 1) {
+		trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - nb args : " + inArgs.length);
+		if (inArgs.length < 1) {
 			help();
 			trace.log(trace.LOG_ERROR, LOGTAG, "Le programme ne peut être lancé sans arguments.");
 			System.exit(0);
@@ -142,7 +166,7 @@ public class PrefetchDorisWebSite {
 		// On commence par regarder si un des paramètres est un paramétre optionnel prioritaire
 		// verbose, debug ou silence
 		trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - debug, verbose ou silence ? ");
-		for (String arg : args) {
+		for (String arg : inArgs) {
 			trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - arg : " + arg);
 			
 			if ( arg.equals("-d") || arg.equals("--debug") ) {
@@ -158,7 +182,7 @@ public class PrefetchDorisWebSite {
 		
 		// Si Aide ou Version alors affichage puis on termine
 		trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - help ou version ? ");
-		for (String arg : args) {
+		for (String arg : inArgs) {
 			
 			if ( arg.equals("-h") || arg.equals("--help")) {
 				trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - arg : " + arg);
@@ -174,7 +198,7 @@ public class PrefetchDorisWebSite {
 		
 		// paramètre qui permet de limiter le nombre de fiches à traiter
 		trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - max ? ");
-		for (String arg : args) {
+		for (String arg : inArgs) {
 			if ( arg.startsWith("-M") || arg.startsWith("--max=")) {
 				trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - arg : " + arg);
 				String nbFichesStr = null;
@@ -198,7 +222,7 @@ public class PrefetchDorisWebSite {
 			
 			
 		// Vérification que le dernier argument est une des actions prévues
-		String action = args[args.length - 1];
+		String action = inArgs[inArgs.length - 1];
 		trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - argument action : " + action);
 
 		if (action.equals("INIT")) {
@@ -212,7 +236,7 @@ public class PrefetchDorisWebSite {
 		} else {
 			help();
 			String listeArgs = "";
-			for (String arg : args) {
+			for (String arg : inArgs) {
 				listeArgs += arg + " ";
 			}
 			trace.log(trace.LOG_ERROR, LOGTAG, "arguments : " + listeArgs);
@@ -370,4 +394,99 @@ public class PrefetchDorisWebSite {
 		trace.log(trace.LOG_DEBUG, LOGTAG, "version() - Fin");
 	}
 
+	/**
+	 * Création, Sauvegarde des dossiers de travail de l'application
+	 * Selon l'action choisie
+	 * 
+	 * @param action
+	 */
+	public void checkDossiers(String inAction) {
+		trace.log(trace.LOG_DEBUG, LOGTAG, "checkDossiers() - Début");
+		
+		trace.log(trace.LOG_DEBUG, LOGTAG, "checkDossiers() - Action : " + inAction);
+		
+		trace.log(trace.LOG_DEBUG, LOGTAG, "checkDossiers() - Dossier de base : " + DOSSIER_BASE);
+		trace.log(trace.LOG_DEBUG, LOGTAG, "checkDossiers() - Dossier html : " + DOSSIER_HTML);
+		trace.log(trace.LOG_DEBUG, LOGTAG, "checkDossiers() - Dossier Resultats : " + DOSSIER_RESULTATS);
+		
+		// Si le dossier principal de travail n'existe pas, on le créé
+		File dossierBase = new File(DOSSIER_BASE);
+		if (dossierBase.mkdirs()) {
+			trace.log(trace.LOG_VERBOSE, LOGTAG, "Création du dossier : " + dossierBase.getAbsolutePath());
+		} else {
+			trace.log(trace.LOG_ERROR, LOGTAG, "Echec de la Création du dossier : " + dossierBase.getAbsolutePath());
+		}
+		
+		// Si les dossiers download (html et img) et résultats existent déjà, ils sont renommés
+		// avant d'être recréé vide
+		Date maintenant = new Date(); 
+		SimpleDateFormat sdf = new SimpleDateFormat("yyMMddhhmmss");
+		String suffixe = sdf.format(maintenant);
+		
+		//Le dossier des fichiers html téléchargés
+		if(inAction.equals("INIT")){
+			File dossierHtml = new File(DOSSIER_BASE + "/" + DOSSIER_HTML);
+			if (dossierHtml.exists()){
+				File dossierHtmlNew = new File(DOSSIER_BASE + "/" + DOSSIER_HTML + suffixe);
+				if(dossierHtml.renameTo(dossierHtmlNew)){
+					trace.log(trace.LOG_VERBOSE, LOGTAG, "Sauvegarde du dossier download : " + dossierHtmlNew.getAbsolutePath());
+				}else{
+					trace.log(trace.LOG_ERROR, LOGTAG, "Echec renommage du dossier download : " + dossierHtml.getAbsolutePath());
+					System.exit(0);
+				}
+			}
+			if (dossierHtml.mkdir()) {
+				trace.log(trace.LOG_VERBOSE, LOGTAG, "Création du dossier download : " + dossierHtml.getAbsolutePath());
+			} else {
+				trace.log(trace.LOG_ERROR, LOGTAG, "Echec de la Création du dossier download : " + dossierHtml.getAbsolutePath());
+				System.exit(0);
+			}
+		}
+		
+		// Le dossier des fichiers image téléchargés
+		if(inAction.equals("INIT") || inAction.equals("INITSSIMG")){
+			File dossierImg = new File(DOSSIER_BASE + "/" + DOSSIER_IMG);
+			if (dossierImg.exists()){
+				File dossierImgNew = new File(DOSSIER_BASE + "/" + DOSSIER_IMG + suffixe);
+				if(dossierImg.renameTo(dossierImgNew)){
+					trace.log(trace.LOG_VERBOSE, LOGTAG, "Sauvegarde du dossier download : " + dossierImgNew.getAbsolutePath());
+				}else{
+					trace.log(trace.LOG_ERROR, LOGTAG, "Echec renommage du dossier download : " + dossierImg.getAbsolutePath());
+					System.exit(0);
+				}
+			}
+			if (dossierImg.mkdir()) {
+				trace.log(trace.LOG_VERBOSE, LOGTAG, "Création du dossier download : " + dossierImg.getAbsolutePath());
+			} else {
+				trace.log(trace.LOG_ERROR, LOGTAG, "Echec de la Création du dossier download : " + dossierImg.getAbsolutePath());
+				System.exit(0);
+			}
+		}
+				
+		// Le dossier des résultats
+		// TODO : Il faudra être capable de lire le fichier précédement généré
+		File dossierResultats = new File(DOSSIER_BASE + "/" + DOSSIER_RESULTATS);
+		if (dossierResultats.exists()){
+			File dossierResultatsNew = new File(DOSSIER_BASE + "/" + DOSSIER_RESULTATS + suffixe);
+			if(dossierResultats.renameTo(dossierResultatsNew)){
+				trace.log(trace.LOG_VERBOSE, LOGTAG, "Sauvegarde du dossier résultats : " + dossierResultatsNew.getAbsolutePath());
+			}else{
+				trace.log(trace.LOG_ERROR, LOGTAG, "Echec renommage du dossier résultats : " + dossierResultats.getAbsolutePath());
+				System.exit(0);
+			}
+		}
+		if (dossierResultats.mkdir()) {
+			trace.log(trace.LOG_VERBOSE, LOGTAG, "Création du dossier résultats : " + dossierResultats.getAbsolutePath());
+		} else {
+			trace.log(trace.LOG_ERROR, LOGTAG, "Echec de la Création du dossier résultats : " + dossierResultats.getAbsolutePath());
+			System.exit(0);
+		}
+	
+		
+		
+		
+		trace.log(trace.LOG_DEBUG, LOGTAG, "checkDossiers() - Fin");
+	}
+	
+	
 }
