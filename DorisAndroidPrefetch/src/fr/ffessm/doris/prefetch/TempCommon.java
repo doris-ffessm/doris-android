@@ -43,31 +43,11 @@ termes.
 
 package fr.ffessm.doris.prefetch;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import fr.ffessm.doris.android.datamodel.Fiche;
 
-//import org.jdom2.input.SAXBuilder;
-//import org.jdom2.output.Format;
-//import org.jdom2.output.XMLOutputter;
-
-import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
@@ -128,15 +108,12 @@ public class TempCommon {
     				String ficheNomScientifique = contenu.replaceAll("([^-]*)-(.*)", "$1").trim();
     				String ficheNomCommun = contenu.replaceAll("([^-]*)-(.*)", "$2").trim();
     				int ficheId = Integer.parseInt(elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "").replaceAll("&.*", ""));
-    				String ficheEtat = null;
+    				int ficheEtat = Integer.parseInt(elementTDA.getAttributeValue("href").replaceAll(".*fiche_etat=", "").replaceAll("&.*", ""));
     				
-    				
-    				trace.log(trace.LOG_VERBOSE, LOGTAG, "getGroupes() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun);
-    				// TODO : le dernier paramètre est bidon
-    				Fiche fiche = new Fiche(ficheNomScientifique, ficheNomCommun, ficheId, ficheEtat, true);
-    				
+    				trace.log(trace.LOG_VERBOSE, LOGTAG, "getGroupes() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
+    				Fiche fiche = new Fiche(ficheNomScientifique, ficheNomCommun, ficheId, ficheEtat);
+      				
     				listeFiches.add(fiche);
-    				
     			}
 			}
 			

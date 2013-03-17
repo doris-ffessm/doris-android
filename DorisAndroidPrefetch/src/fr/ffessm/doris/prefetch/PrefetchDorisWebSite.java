@@ -48,11 +48,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+
+import net.htmlparser.jericho.Element;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -63,7 +66,6 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-
 
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -122,13 +124,53 @@ public class PrefetchDorisWebSite {
 		
 		// Récupération de la liste des fiches sur le site de DORIS
 		String listeFichesFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeFiches.html";
-		if (Outils.getFichierUrl(TempCommon.getListeFichesUrl(), listeFichesFichier)) {
+		trace.log(trace.LOG_VERBOSE, LOGTAG, "Récup. Liste Fiches Doris : " + listeFichesFichier);
+		
+		List<Fiche> listeFichesTravail = new ArrayList<Fiche>(1);
+		
+		if (! action.equals("NODWNLD")){
+			if (Outils.getFichierUrl(TempCommon.getListeFichesUrl(), listeFichesFichier)) {
+				String contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+				
+				listeFichesTravail = TempCommon.getListeFiches(contenuFichierHtml, nbMaxFichesTraitees);
+			} else {
+				trace.log(trace.LOG_ERROR, LOGTAG, "Une erreur est survenue lors de la récupération de la liste des fiches");
+				System.exit(0);
+			}
+		} else {
 			String contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
 			
-			TempCommon.getListeFiches(contenuFichierHtml, nbMaxFichesTraitees);
+			listeFichesTravail = TempCommon.getListeFiches(contenuFichierHtml, nbMaxFichesTraitees);
 		}
+		// TODO : Il faudra ici, pour les modes où on complète la base, reconstruire
+		// la table des fiches déjà connues
 		
 		
+		// Pour chaque fiche de la liste de travail :
+		// TODO : on vérifie qu'il faut la traiter
+		// On la télécharge (et sauvegarde le fichier original)
+		// On la traite
+		for (Fiche fiche : listeFichesTravail) {
+			// TODO : Ne pas traiter dans certain cas
+			
+			trace.log(trace.LOG_DEBUG, LOGTAG, "doMain() - Fiche : "+fiche.getNomCommun());
+			
+			String urlFiche = "http://doris.ffessm.fr/fiche2.asp?fiche_numero="+fiche.getNumeroFiche();
+			String fichierLocalFiche = DOSSIER_BASE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+".html";
+			if (! action.equals("NODWNLD")) {
+				if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
+					String contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+				
+					fiche.getFiche(contenuFichierHtml);
+				} else {
+					trace.log(trace.LOG_ERROR, LOGTAG, "Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
+				}
+			} else {
+				String contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+				
+				fiche.getFiche(contenuFichierHtml);
+			}
+		}
 		
 		ConnectionSource connectionSource = null;
 		try {
@@ -223,15 +265,12 @@ public class PrefetchDorisWebSite {
 		// Vérification que le dernier argument est une des actions prévues
 		String action = inArgs[inArgs.length - 1];
 		trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - argument action : " + action);
-
+		
 		if (action.equals("INIT")) {
-			
+		} else if (action.equals("NODWNLD")) {
 		} else if (action.equals("NEWFICHES")) {
-			
 		} else if (action.equals("UPDATE")) {
-			
 		} else if (action.equals("INITSSIMG")) {
-			
 		} else {
 			help();
 			String listeArgs = "";
@@ -371,6 +410,7 @@ public class PrefetchDorisWebSite {
 		System.out.println("");
 		System.out.println("ACTION :");
 		System.out.println("  INIT               Toutes les fiches sont retéléchargées sur doris.ffessm.fr et retraitées pour créer la base (images comprises)");
+		System.out.println("  NODWNLD	         Pas de téléchargement, travail sur ce qui est dispo. uniquement (utile en dev.)");
 		System.out.println("  NEWFICHES          Ne télécharge que les nouvelles fiches");
 		System.out.println("  UPDATE             En plus des nouvelles fiches, on retélécharge les fiches qui ont changées de statut");
 		System.out.println("  INITSSIMG          Comme INIT sauf que l'on ne retélécharge pas une image déjà connue");
@@ -414,11 +454,12 @@ public class PrefetchDorisWebSite {
 		
 		// Si les dossiers download (html et img) et résultats existent déjà, ils sont renommés
 		// avant d'être recréé vide
+		// TODO : dans le cas NODWNLD il faudrait vérifier dans les dossiers existent
 		Date maintenant = new Date(); 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyMMddhhmmss");
 		String suffixe = sdf.format(maintenant);
 		
-		//Le dossier des fichiers html téléchargés
+		// Le dossier des fichiers html téléchargés
 		if(inAction.equals("INIT")){
 			File dossierHtml = new File(DOSSIER_BASE + "/" + DOSSIER_HTML);
 			if (dossierHtml.exists()){
@@ -460,23 +501,24 @@ public class PrefetchDorisWebSite {
 				
 		// Le dossier des résultats
 		// TODO : Il faudra être capable de lire le fichier précédement généré
-		File dossierResultats = new File(DOSSIER_BASE + "/" + DOSSIER_RESULTATS);
-		if (dossierResultats.exists()){
-			File dossierResultatsNew = new File(DOSSIER_BASE + "/" + DOSSIER_RESULTATS + suffixe);
-			if(dossierResultats.renameTo(dossierResultatsNew)){
-				trace.log(trace.LOG_VERBOSE, LOGTAG, "Sauvegarde du dossier résultats : " + dossierResultatsNew.getAbsolutePath());
-			}else{
-				trace.log(trace.LOG_ERROR, LOGTAG, "Echec renommage du dossier résultats : " + dossierResultats.getAbsolutePath());
+		if( inAction.equals("INIT") || inAction.equals("NODWNLD") ){
+			File dossierResultats = new File(DOSSIER_BASE + "/" + DOSSIER_RESULTATS);
+			if (dossierResultats.exists()){
+				File dossierResultatsNew = new File(DOSSIER_BASE + "/" + DOSSIER_RESULTATS + suffixe);
+				if(dossierResultats.renameTo(dossierResultatsNew)){
+					trace.log(trace.LOG_VERBOSE, LOGTAG, "Sauvegarde du dossier résultats : " + dossierResultatsNew.getAbsolutePath());
+				}else{
+					trace.log(trace.LOG_ERROR, LOGTAG, "Echec renommage du dossier résultats : " + dossierResultats.getAbsolutePath());
+					System.exit(0);
+				}
+			}
+			if (dossierResultats.mkdir()) {
+				trace.log(trace.LOG_VERBOSE, LOGTAG, "Création du dossier résultats : " + dossierResultats.getAbsolutePath());
+			} else {
+				trace.log(trace.LOG_ERROR, LOGTAG, "Echec de la Création du dossier résultats : " + dossierResultats.getAbsolutePath());
 				System.exit(0);
 			}
 		}
-		if (dossierResultats.mkdir()) {
-			trace.log(trace.LOG_VERBOSE, LOGTAG, "Création du dossier résultats : " + dossierResultats.getAbsolutePath());
-		} else {
-			trace.log(trace.LOG_ERROR, LOGTAG, "Echec de la Création du dossier résultats : " + dossierResultats.getAbsolutePath());
-			System.exit(0);
-		}
-	
 		
 		
 		

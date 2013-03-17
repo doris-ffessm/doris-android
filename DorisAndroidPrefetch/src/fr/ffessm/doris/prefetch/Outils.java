@@ -44,28 +44,18 @@ termes.
 package fr.ffessm.doris.prefetch;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
-//import org.jdom2.input.SAXBuilder;
-//import org.jdom2.output.Format;
-//import org.jdom2.output.XMLOutputter;
 
 import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.Element;
