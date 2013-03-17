@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BaseDoris DateCreation="07/03/2013 08:03:31" UrlRacineSite="http://doris.ffessm.fr/">
+  <Fiche>
+    <Entete Reference="3504" TypeFiche="FR" EspeceGroupe="10">
+      <NomFrancais>Eponge-mamelle rose</NomFrancais>
+      <NomScientifique>Aaptos papillata (Keller, 1880)</NomScientifique>
+      <Region>Manche, Atlantique, Méditerranée</Region>
+      <Images>
+        <Image Principale="true" Url="gestionenligne/photos/aaptos_papillata-cq-01.jpg" UrlVignette="gestionenligne/photos_fiche_vig/aaptos_papillata-cq-01.jpg">Demi-sphère globuleuse</Image>
+      </Images>
+    </Entete>
+  </Fiche>
+  <Fiche>
+    <Entete Reference="2676" TypeFiche="FR" EspeceGroupe="12" EspeceSousGroupe="25">
+      <NomFrancais>Hydraire sapin</NomFrancais>
+      <NomScientifique>Abietinaria abietina (Linnaeus, 1758)</NomScientifique>
+      <Region>Manche, Atlantique Nord Ouest</Region>
+      <Images>
+        <Image Principale="true" Url="gestionenligne/photos/Abietinaria-abietina-sas1.JPG" UrlVignette="gestionenligne/photos_fiche_vig/Abietinaria-abietina-sas1.JPG">Hydraires sapin en touffe</Image>
+      </Images>
+    </Entete>
+  </Fiche>
+  <Fiche>
+    <Entete Reference="237" TypeFiche="F" EspeceGroupe="48" EspeceSousGroupe="96">
+      <NomFrancais>Brème commune</NomFrancais>
+      <NomScientifique>Abramis brama (Linnaeus, 1758)</NomScientifique>
+      <Region>Europe et Asie</Region>
+      <AutresDenominations>
+        <Denominations>Brème carpée, grande brème, brama, brémo, breume, daoradou, daourado d'aou, dorée, hariot, hazelin, omblais , plaquette (petite brème)</Denominations>
+        <Denominations>Bream, common bream, freshwater bream (GB), Abramide, brama (I), Brema común (E), Brachsen, Blei, Plattfisch, (D), Brasem (NL), Brema (P)</Denominations>
+      </AutresDenominations>
+      <Images>
+        <Image Principale="true" Url="gestionenligne/photos/abramis_brama-1.jpg" UrlVignette="gestionenligne/photos_fiche_vig/abramis_brama-1.jpg">Identification</Image>
+        <Image Principale="false" Url="gestionenligne/photos/abramis_brama-2.jpg" UrlVignette="gestionenligne/photos_fiche_vig/abramis_brama-2.jpg">Livrée</Image>
+        <Image Principale="false" Url="gestionenligne/photos/abramis_brama-RM-3.jpg" UrlVignette="gestionenligne/photos_fiche_vig/abramis_brama-RM-3.jpg">Sur fond vaseux</Image>
+        <Image Principale="false" Url="gestionenligne/photos/abramis_brama-RM-4.jpg" UrlVignette="gestionenligne/photos_fiche_vig/abramis_brama-RM-4.jpg">Distinction de la carpe</Image>
+        <Image Principale="false" Url="gestionenligne/photos/abramis_brama-RM-5.jpg" UrlVignette="gestionenligne/photos_fiche_vig/abramis_brama-RM-5.jpg">Alimentation</Image>
+        <Image Principale="false" Url="gestionenligne/photos/abramis_brama-RM-6.jpg" UrlVignette="gestionenligne/photos_fiche_vig/abramis_brama-RM-6.jpg">Biotope</Image>
+        <Image Principale="false" Url="gestionenligne/photos/abramis_brama-legende.jpg" UrlVignette="gestionenligne/photos_fiche_vig/abramis_brama-legende.jpg">Planche naturaliste</Image>
+      </Images>
+    </Entete>
+    <Details>
+      <Detail>
+        <Titre>Critères de reconnaissance</Titre>
+        <Contenu>Corps comprimé latéralement, avec profil bombé dorsalement Base de la nageoire anale deux fois plus longue que la base de la nageoire dorsale Nageoire caudale très échancrée avec un lobe inférieur plus long que le supérieur Tête petite Flancs argentés</Contenu>
+      </Detail>
+      <Detail>
+        <Titre>Distribution</Titre>
+        <Contenu>Europe et Asie : de l’est des Pyrénées et du nord des Alpes à l'Asie mineure, bassins des mers du Nord, Baltique, Noire, Caspienne et d'Aral. Elle est absente des zones de montagne et des régions chaudes (Espagne, sud de l'Italie, ouest de la Grêce). Présente presque partout en France en Suisse et en Belgique. Absente de la Corse.</Contenu>
+      </Detail>
+      <Detail>
+        <Titre>Biotope</Titre>
+        <Contenu>La brème est très commune dans les eaux stagnantes ou à courant lent, avec un fond d’argile ou de vase, bien pourvu de végétation. A tel point que ce type de milieu s’appelle « zone à brème ».</Contenu>
+      </Detail>
+      <Detail>
+        <Titre>Description</Titre>
+        <Contenu>La brème est un poisson qui peut atteindre une longueur de 80 cm (30 à 50 cm habituellement), pour un poids de 6 kg et un âge de 15 à 20 ans. Son corps, aux écailles bien visibles, recouvert d’un mucus abondant, est haut et comprimé latéralement, avec une seule nageoire dorsale dont les trois premiers rayons sont épineux. La nageoire anale a également les trois premiers rayons épineux et sa base est deux fois plus longue que la base de la nageoire dorsale. La nageoire caudale est très échancrée avec un lobe inférieur plus long que le supérieur. Le dessus de la tête et le dos sont vert olive foncé, les flancs, plus clairs, avec des reflets argentés et le ventre blanchâtre, avec de forts reflets argentés. La tête est petite, par rapport au corps, et la bouche protractile (se déplie vers l’avant).</Contenu>
+      </Detail>
+      <Detail>
+        <Titre>Espèces ressemblantes</Titre>
+        <Contenu>Blicca bjoerkna (Linnaeus, 1758) brème bordelière : ses nageoires ventrales et pectorales sont rouges avec des taches grises, et son oeil est plus grand. La jeune brème (plaquette) est argentée et se distingue du gardon (*) par sa forme plus aplatie et sa bouche tournée vers le bas.</Contenu>
+      </Detail>
+      <Detail>
+        <Titre>Autres noms scientifiques parfois utilisés, mais non valides</Titre>
+        <Contenu>Cyprinus brama Linnaeus, 1758 nom original Abramis melaenus Agassiz, 1835 Abramis vetula Heckel, 1836 Abramis media Koch, 1840 Brama brama Roule, 1925</Contenu>
+      </Detail>
+    </Details>
+  </Fiche>
+  <Fiche>
+    <Entete Reference="1109" TypeFiche="F" EspeceGroupe="48" EspeceSousGroupe="91">
+      <NomFrancais>Sergent-major à bandes</NomFrancais>
+      <NomScientifique>Abudefduf septemfasciatus (Cuvier, 1830)</NomScientifique>
+      <Region>Océan Indien, Pacifique tropical ouest et central</Region>
+      <AutresDenominations>
+        <Denominations>Banded sergeant, seven-band sergeant, sevenbar damsel (GB), Sergente lineato (I), Graustreifen-Sergeant, Gestreifter-Feldweblfisch (D), Syvbåndet sergentfisk (DK), Donzela sete faixas (P)</Denominations>
+      </AutresDenominations>
+      <Images>
+        <Image Principale="true" Url="gestionenligne/photos/abudefduf_septemfasciatus-slb1.jpg" UrlVignette="gestionenligne/photos_fiche_vig/abudefduf_septemfasciatus-slb1.jpg">Sacré caractère</Image>
+        <Image Principale="false" Url="gestionenligne/photos/abudefduf_septemfasciatus-cg1.jpg" UrlVignette="gestionenligne/photos_fiche_vig/abudefduf_septemfasciatus-cg1.jpg">Pas profond</Image>
+        <Image Principale="false" Url="gestionenligne/photos/abudefduf_septemfasciatus-slb2.jpg" UrlVignette="gestionenligne/photos_fiche_vig/abudefduf_septemfasciatus-slb2.jpg">Dans les rochers</Image>
+        <Image Principale="false" Url="gestionenligne/photos/abudefduf_septemfasciatus-pb1.jpg" UrlVignette="gestionenligne/photos_fiche_vig/abudefduf_septemfasciatus-pb1.jpg">Livrée verdâtre</Image>
+        <Image Principale="false" Url="gestionenligne/photos/abudefduf_septemfasciatus-slb3.jpg" UrlVignette="gestionenligne/photos_fiche_vig/abudefduf_septemfasciatus-slb3.jpg">En voisin</Image>
+      </Images>
+    </Entete>
+    <Details>
+      <Detail>
+        <Titre>Critères de reconnaissance</Titre>
+        <Contenu>Corps haut et comprimé gris jaunâtre 6 ou 7 barres gris sombre verticales</Contenu>
+      </Detail>
+      <Detail>
+        <Titre>Distribution</Titre>
+        <Contenu>Le sergent-major à bandes se rencontre du Yémen à l'Afrique du Sud, à Madagascar et à la Réunion, aux Tuamotu et aux îles Line, et du sud du Japon à l'Australie (Grande Barrière de Corail) et à la Nouvelle-Calédonie.</Contenu>
+      </Detail>
+      <Detail>
+        <Titre>Biotope</Titre>
+        <Contenu>Abudefduf septemfasciatus fréquente les zones rocheuses et récifales, soumises au déferlement et vagues modérés, de la surface à 3 m de profondeur. Les juvéniles sont souvent dans les flaques et trous dans les milieux peu profonds agités.</Contenu>
+      </Detail>
+      <Detail>
+        <Titre>Description</Titre>
+        <Contenu>Le corps du sergent-major à bandes est haut et comprimé ; il peut atteindre 23 cm de long. Il est de couleur gris jaunâtre, avec parfois le dos verdâtre. 6 barres verticales larges, gris sombre à noir, marquent le corps, la première commençant en arrière de l'opercule, de l'origine de la nageoire dorsale à la base de la pectorale et la dernière se situant sur le pédoncule caudal. Une 7ème bande peut être présente sur le front. La bouche est petite, terminale et garnie de 48 à 52 dents incisiformes* sur chaque mâchoire. Les écailles sont relativement grandes et bien visibles, la ligne latérale est interrompue. Les nageoires dorsale (13 épines et 12-14 rayons mous), anale (2 épines et 11-13 rayons mous) et caudale sont généralement blanchâtres, mais peuvent devenir pratiquement noires. La queue est légèrement fourchue. En période de reproduction, la coloration est plus sombre.</Contenu>
+      </Detail>
+      <Detail>
+        <Titre>Espèces ressemblantes</Titre>
+        <Contenu>Il existe plusieurs sergents-majors avec 6 ou 7 bandes noires verticales : Abudefduf bengalensis : 7 bandes noires également, mais présent uniquement dans l'est de l'océan Indien et le Pacifique Ouest. Abudefduf lorenzi : 6 bandes noires et une tache ovale noire sur le pédoncule caudal. Présent uniquement dans le Pacifique Ouest. Abudefduf sordidus (*) : 6 bandes grises et une tache noire sur la partie supérieure du pédoncule caudal. Abudefduf margariteus : présent uniquement à la Réunion et Maurice, avec 6 barres à peine visibles et un corps gris-bleuté.</Contenu>
+      </Detail>
+      <Detail>
+        <Titre>Autres noms scientifiques parfois utilisés, mais non valides</Titre>
+        <Contenu>Glyphisodon septemfasciatus Cuvier, 1830 Abudefduf multifasciatus Seale, 1906</Contenu>
+      </Detail>
+    </Details>
+  </Fiche>
+  <Fiche>
+    <Entete Reference="1093" TypeFiche="F" EspeceGroupe="12" EspeceSousGroupe="25">
+      <NomFrancais>Zyzzyzus</NomFrancais>
+      <NomScientifique>Zyzzyzus warreni Calder, 1988</NomScientifique>
+      <Region>Amphi-atlantique (présent des deux côtés de l'Atlantique)</Region>
+      <Images>
+        <Image Principale="true" Url="gestionenligne/photos/zyzzyzus_warreni-vm1.JPG" UrlVignette="gestionenligne/photos_fiche_vig/zyzzyzus_warreni-vm1.JPG">Hydranthes</Image>
+        <Image Principale="false" Url="gestionenligne/photos/zyzzyzus_warreni_vlam_3.jpg" UrlVignette="gestionenligne/photos_fiche_vig/zyzzyzus_warreni_vlam_3.jpg">Petite population</Image>
+        <Image Principale="false" Url="gestionenligne/photos/zyzzyzus_warreni-2.jpg" UrlVignette="gestionenligne/photos_fiche_vig/zyzzyzus_warreni-2.jpg">Ancrage</Image>
+        <Image Principale="false" Url="gestionenligne/photos/zyzzyzus_warreni_ap2.jpg" UrlVignette="gestionenligne/photos_fiche_vig/zyzzyzus_warreni_ap2.jpg">A la pêche</Image>
+      </Images>
+    </Entete>
+    <Details>
+      <Detail>
+        <Titre>Critères de reconnaissance</Titre>
+        <Contenu>Hydraire de 1 à 2 cm de haut maximum Colonne gélatineuse, transparente, parcourue de cannelures longitudinales Deux couronnes de tentacules filiformes Gonophores orange</Contenu>
+      </Detail>
+      <Detail>
+        <Titre>Distribution</Titre>
+        <Contenu>Cet hydraire est largement distribué des deux côtés de l’Atlantique. Côté ouest : des Bermudes aux côtes du Brésil. Côté est : de l’Afrique du Sud aux îles du Cap Vert.</Contenu>
+      </Detail>
+      <Detail>
+        <Titre>Biotope</Titre>
+        <Contenu>Le Zyzzyzus se rencontre à faible profondeur (rarement au-delà de 20 m), et comme beaucoup d'hydraires il affectionne les zones où l'eau est constamment renouvelée par un courant faible. On le trouve en premier lieu sur les éponges.</Contenu>
+      </Detail>
+      <Detail>
+        <Titre>Description</Titre>
+        <Contenu>Cet animal se présente comme un polype solitaire, mais on trouve le plus souvent les individus regroupés à plusieurs sur un même emplacement favorable. Il mesure au maximum 1 à 1,5 centimètres de haut. L'hydranthe* lui-même est transparent, mais on le repère facilement car il porte des gonophores* d'un rose orangé. La colonne ou hydrocaule* est assez large à la base et se rétrécit vers le haut. Elle est parcourue longitudinalement de canaux qui sont visibles par transparence comme des cannelures. A la base de la colonne, des prolongements filamenteux appelés hydrorhizes* (pseudo-racines) permettent au polype de s’ancrer sur son support. La bouche est entourée de 2 couronnes de tentacules filiformes : une couronne de tentacules oraux (comprenant 7-18 tentacules courts) entoure immédiatement la bouche, et une autre couronne (comprenant 16-24 tentacules longs) se situe plus bas. Les gonophores se forment juste au-dessus des tentacules aboraux, ils ont la même forme globulaire chez les deux 
+sexes.</Contenu>
+      </Detail>
+      <Detail>
+        <Titre>Espèces ressemblantes</Titre>
+        <Contenu>Zyzzyzus floridanus Petersen, 1990, plus petit, est signalé sur les côtes de Floride et des Bahamas. Dans l'Indo-Pacifique : l'espèce Zyzzyzus spongicola, d'Australie et de Nouvelle-Zélande, est très proche de Zyzzyzus warreni.</Contenu>
+      </Detail>
+      <Detail>
+        <Titre>Autres noms scientifiques parfois utilisés, mais non valides</Titre>
+        <Contenu>Tubularia solitaria : première description par Warren (1906) mais ce nom est invalide car c'était l'homonyme junior d’un autre Tubulariidae (Rapp, 1829). En fait cette homonymie n'existe plus car l'espèce de de Rapp est aujourd’hui transférée dans le genre Pachycerianthus et celle de Warren dans Zyzzyzus ! Zyzzyzus solitarius (Stechow, 1921) Zyzzyzus calderi Petersen, 1990</Contenu>
+      </Detail>
+    </Details>
+  </Fiche>
+</BaseDoris>
