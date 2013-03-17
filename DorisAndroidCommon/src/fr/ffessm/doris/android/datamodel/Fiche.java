@@ -49,11 +49,18 @@ import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Collection;
 
+import net.htmlparser.jericho.Attribute;
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.HTMLElementName;
+import net.htmlparser.jericho.Source;
+
 import fr.ffessm.doris.android.datamodel.associations.*;
+
 
 /** 
   * Fiche Doris, donne accés aux données de la fiche 
@@ -208,28 +215,529 @@ public class Fiche {
 
 	// Start of user code Fiche additional user properties
 	/** Etat Avancement de la fiche 
-	 * F : Fiche Publiée, FR : En cours de Rédaction, FP : Fiche Proposée
+	 * 4 : Fiche Publiée - 1, 2, 3 : En cours de Rédaction - 5 : Fiche Proposée
 	 * */ 
 	@DatabaseField
-	protected java.lang.String etatFiche;
+	protected int etatFiche;
 		
+	public int getEtatFiche() {
+		return this.etatFiche;
+	}
+	public void setEtatFiche(int etatFiche) {
+		this.etatFiche = etatFiche;
+	}
+	
+	
+	
+	
 	/** Nouveau Constructeur
 	 *  TODO :Pour moi "Autres dénominations" devrait être une liste de string
 	 *  en effet, parfois on a la liste de dénominations francophones,
 	 *  parfois (dans un autre TR) de dénomination internationnale.
 	 *  Je pense que ce serait mieux de stocker ces 2 listes de noms dans une liste
 	 *  de 2 éléments pour l'instant
-	 *  TODO : J'ai ajouté un champ bidon pour avoir un contructeur avec un champ de plus
-	 *  je ne sais pas comment faire 2 contructeurs qui se ressemblent :-)
 	 * */
 
-	public Fiche(java.lang.String nomScientifique, java.lang.String nomCommun, int numeroFiche, java.lang.String etatFiche, boolean bidon) {
+	public Fiche(java.lang.String nomScientifique, java.lang.String nomCommun, int numeroFiche, int etatFiche) {
 		super();
 		this.nomScientifique = nomScientifique;
 		this.nomCommun = nomCommun;
 		this.numeroFiche = numeroFiche;
 		this.etatFiche = etatFiche;
 	} 
+	
+	
+	public void getFiche(String htmlFiche){
+    	//// trace.log(trace.LOG_DEBUG, TAG, "getFiche()- Début");
+
+    	int i;
+    	String listeLienRencontre = "";
+    	
+    	htmlFiche = htmlFiche.replace("&nbsp;</td>", "</td>");
+    	try {
+			htmlFiche = Outils.ciblePage(htmlFiche, "FICHE");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+    	
+    	htmlFiche = htmlFiche.replace("<strong>", "");
+    	htmlFiche = htmlFiche.replace("</strong>", "");
+    	htmlFiche = htmlFiche.replace("<em>", "");
+    	htmlFiche = htmlFiche.replace("</em>", "");
+    	htmlFiche = htmlFiche.replace("<br>", "");
+    	htmlFiche = htmlFiche.replace("<br/>", "");
+    	
+    	// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - htmlFiche : " + htmlFiche.substring(0, 200));
+    	
+		// Utilisation du parser Jericho
+		Source source=new Source(htmlFiche);
+		
+		// Necessaire pour trouver ensuite les pères
+		source.fullSequentialParse();
+
+		// Recherche TD dont la class est code_fiche
+		// Il contient le code fiche, le nom français, le nom latin et la zone géographique
+		Element ElementTDcode_fiche;
+		ElementTDcode_fiche = source.getFirstElementByClass("code_fiche");
+		
+		// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - ElementTDcode_fiche.toString() : " + ElementTDcode_fiche.toString());
+
+		String ficheRef = ElementTDcode_fiche.getFirstElementByClass("normalgris").getRenderer().toString().trim();
+		ficheRef = ficheRef.replace("(N°", "").replace(")", "");
+		setNumeroFiche(Integer.parseInt(ficheRef));
+		// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - ref : " + ficheRef);		
+				
+		//Centrage sur la TABLE qui contient tout le texte et les images
+		Element ElementTable;
+		List<? extends Element> listeElementsTable_TABLE;
+		List<? extends Attribute> listeAttributs;
+		int num_table = 0;
+		
+		// Lecture des informations pour une fiche complète
+		if ( getEtatFiche() == 4) {
+		
+			
+			//Recup de l'ensemble des lignes (TR) de la TABLE
+			// La 1ère contient l'entête
+			// La 2ème contient la description
+			// La 4ème contient la classification et la suite
+			
+			ElementTable=source.getFirstElementByClass("trait_cadregris").getFirstElement();
+			// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - ElementTable : " + ElementTable.toString().substring(0, Math.min(ElementTable.toString().length(),200)));
+			
+			listeElementsTable_TABLE = ElementTable.getFirstElement(HTMLElementName.TABLE).getChildElements();
+			// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - listeElementsTable_TABLE.size : " + listeElementsTable_TABLE.size());
+
+			for (Element elementTable_TABLE : listeElementsTable_TABLE) {
+				num_table++;
+				// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - ligneTable_TR :" + num_table);
+				// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - elementTable_TR : " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),100)));
+				switch(num_table) {
+				//Entête de la Fiche
+				case 1 :
+					//Recup du TD qui contient les infos Haut Gauche
+					List<? extends Element> listeElementsHG_TD = elementTable_TABLE.getAllElementsByClass("code_fiche");
+					
+					for (Element element : listeElementsHG_TD) {
+						List<? extends Element> listeElementsHG_TR = element.getAllElements(HTMLElementName.TR);
+						i = 0;
+						for (Element elementTR : listeElementsHG_TR) {
+							i++;
+							if (i == 2) {
+								// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - ficheNomLatin : " + elementTR.getRenderer().toString());
+								setNomScientifique( Outils.nettoyageCaracteres(elementTR.getRenderer().toString().trim()) );
+							}
+							if (i == 3) {
+								// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - ficheRegion : " + elementTR.getRenderer().toString());
+								// TODO :
+								//ficheRegion = elementTR.getRenderer().toString().trim();
+							}
+							if (i == 5) {
+								// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - ficheNomFrancais : " + elementTR.getRenderer().toString());
+								setNomCommun( Outils.nettoyageCaracteres(elementTR.getRenderer().toString().trim()) );
+							}
+						}
+					}
+					
+					//Recup TRs Haut Droit contenant le Groupe auquel appartient l'espèce
+					List<? extends Element> listeElementsIMG = elementTable_TABLE.getAllElements(HTMLElementName.IMG);
+					for (Element element : listeElementsIMG) {
+						listeAttributs=element.getAttributes();
+						for (Attribute attribut : listeAttributs) {
+							
+							if (attribut.getName().equals("src") && attribut.getValue().toString().startsWith("gestionenligne/images_groupe/") ) {
+
+								Element listeElementsHD_TR = element.getParentElement().getParentElement();
+								
+								// TODO :
+								//groupeRef = Integer.parseInt(attribut.getValue().toString().replaceAll(".*images_groupe/([0-9]*).gif","$1"));
+								// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - groupeRef : " + groupeRef);
+
+								// TODO :
+								//groupeRefTexte = listeElementsHD_TR.getRenderer().toString().trim();
+								// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - groupeRefTexte : " + groupeRefTexte);
+							}
+						}
+					}
+
+					
+					
+					break;
+				//Description
+				case 2 :
+					
+					//Le grand pere du 1er TD de class Normal est le TBODY des Détails
+					Element ElementsMG_normal=elementTable_TABLE.getFirstElementByClass("normal");
+					// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - ElementsMG_rubrique : " + ElementsMG_normal.toString().substring(0, Math.min(ElementsMG_normal.toString().length(),20)));
+					Element ElementsMG=ElementsMG_normal.getParentElement().getParentElement();
+					List<? extends Element> listeElementsMG_TD = ElementsMG.getAllElements(HTMLElementName.TD);
+					String autresDenominations = "";
+					boolean autresDenominationsFlag = true;
+					String rubrique = "";
+					String contenu = "";
+	
+					for (Element elementTD : listeElementsMG_TD) {
+						// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - listeElementsMG_TD : " + elementTD.toString().substring(0, Math.min(elementTD.toString().length(),50)));
+						listeAttributs=elementTD.getAttributes();
+						for (Attribute attribut : listeAttributs) {
+							
+							if (attribut.getName().equals("class") && attribut.getValue().equals("rubrique")) {
+								//Si c'est la 1ère fois que l'on passe alors on enregistre les autres dénomination et 
+								// l'international dans un nouveau détail
+								if (rubrique.equals("") && !autresDenominations.equals("") && autresDenominationsFlag) {
+									// TODO:
+									//ficheListeDetails.add(new Detail("Autres Denominations", autresDenominations, true));
+									
+									// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - autresDenominations(A) : " + autresDenominations);
+									autresDenominations = "";
+									//autresDenominationsFlag = false;
+								}
+								rubrique = elementTD.getRenderer().toString().trim();
+							}
+							
+							if (attribut.getName().equals("class") && attribut.getValue().equals("normal") ) {
+								// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - rubrique : " + rubrique);
+								if (rubrique.equals("")) {
+									autresDenominations  = elementTD.getRenderer().toString().trim();
+									
+									// suppression des sauts de ligne
+									autresDenominations = autresDenominations.replaceAll("\r\n", " ").replaceAll("\n", " ");
+									// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - autresDenominations(B1) : " + autresDenominations);
+	
+									// suppression des blancs multiples
+									autresDenominations = autresDenominations.replaceAll("\\s{2,}"," ");
+									// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - autresDenominations(B2) : " + autresDenominations);
+									
+									// permet d'enlever les Liens et de les remplacer par (*)
+									autresDenominations = autresDenominations.replaceAll("<[^>]*>", "(*)").trim();
+										
+								} else {
+									contenu = elementTD.getRenderer().toString();
+									// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - contenu(initial) : " + contenu);
+									
+									// suppression des sauts de ligne
+									contenu = contenu.replaceAll("\r\n", " ").replaceAll("\n", " ");
+									// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - contenu(1) : " + contenu);
+	
+									// suppression des blancs multiples
+									contenu = contenu.replaceAll("\\s{2,}"," ");
+									// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - contenu(2) : " + contenu);
+									
+									// permet d'enlever les Liens et de les remplacer par (*)
+									contenu = contenu.replaceAll("<[^>]*>", "(*)").trim();
+	
+									// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - rubrique : " + rubrique);
+									// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - contenu(après nettoyage) : " + contenu);
+									//TODO :
+									//ficheListeDetails.add(new Detail(rubrique,contenu,false));
+								}
+							}
+						}
+						
+						// Création de la liste des Liens (url vers d'autres fiches)
+						
+						for (Element elementTDA : elementTD.getAllElements(HTMLElementName.A)) {
+							
+							// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - A : " + elementTDA.getRenderer().toString().trim() + " - lien : " + elementTDA.getAttributeValue("href"));
+							
+							if (elementTDA.getAttributeValue("href").startsWith("../") || elementTDA.getAttributeValue("href").startsWith("http://doris.ffessm.fr") ) {
+							
+								if (elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "") != "" && elementTDA.getRenderer().toString().trim() != "") {
+								
+									String tempLien = elementTDA.getRenderer().toString().trim();
+									// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - listeLienRencontre : " + listeLienRencontre );
+									
+									if (!listeLienRencontre.contains(tempLien + "£")) {
+										listeLienRencontre += tempLien + "£";
+										
+										//TODO :
+										//ficheListeLiensUrl.add(elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", ""));
+										//ficheListeLiensTexte.add(tempLien);
+									}
+								}
+							}
+						}
+					}
+					
+					//Recup du TD qui contient les infos DROITE (images et qui a fait la fiche)
+					//Recup du TR dont le 3ème TD fils contient les infos DROITE (images et qui a fait la fiche)
+					
+					List<? extends Element> listeElements1 = null;
+					listeElements1 = elementTable_TABLE.getAllElementsByClass("trait_cadregris");
+					// trace.log(trace.LOG_DEBUG, TAG, "getFiche() -  element : " + " - " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),30)));
+					
+					for (Element element : listeElements1) {
+						// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - vignette 1: " + element.toString().substring(0, Math.min(100,element.toString().toString().length())));
+						
+						Element element2 = element.getFirstElement(HTMLElementName.A);
+						String urlImageDansFiche = "";
+						
+						if (element2 != null)
+						{
+							element2 = element2.getFirstElement(HTMLElementName.IMG);
+							// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - vignette 2: " + element2.toString().substring(0, Math.min(100,element2.toString().toString().length())));
+							
+							listeAttributs=element2.getAttributes();
+							for (Attribute attribut : listeAttributs) {
+								if (attribut.getName().equalsIgnoreCase("src") && attribut.getValue().contains("gestionenligne")){
+									//TODO :
+									//urlImageDansFiche = attribut.getValue().replaceAll(Extraction.racineSite, "");
+									// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - urlImageDansFiche : " + urlImageDansFiche);
+																										
+									break;
+								}
+								
+							}
+						}
+						
+						//Recup Texte
+						element2 = element.getFirstElementByClass("normal2");
+						if (element2 != null)
+						{
+							// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - Texte : " + element2.getRenderer().toString());
+							// TODO :
+							// ficheListeImages.add(new Image(element2.getRenderer().toString(),urlImageDansFiche));
+						}
+					}					
+					break;
+					
+				//Ligne blanche => rien à faire mais à garder pour ne pas passer dans le default
+				case 3 :
+					break;
+					
+				//la classification et la suite
+				case 4 :
+					// To Do
+					break;
+				default :
+					break;
+				}
+			}
+			
+			//Recup du sous-Groupe auquel appartient l'espèce
+			List<? extends Element> listeElementsTDSousGroupe = source.getAllElementsByClass("sousgroupe_fiche");
+			for (Element element : listeElementsTDSousGroupe) {
+				int index = listeElementsTDSousGroupe.indexOf(element);
+				// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - index : " + index);
+				
+				if (index == 1) {
+					// TODO :
+					// sousgroupeRefTexte = element.getRenderer().toString().trim();
+					// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - sousgroupeRefTexte : " + sousgroupeRefTexte);
+				}
+				if (index == 2) {
+					
+					listeAttributs = element.getFirstElement(HTMLElementName.IMG).getAttributes();
+					for (Attribute attribut : listeAttributs) {
+						
+						if (attribut.getName().equals("src") && attribut.getValue().toString().startsWith("gestionenligne/images_sousgroupe/") ) {
+							// TODO :
+							// sousgroupeRef = Integer.parseInt(attribut.getValue().toString().toLowerCase().replaceAll(".*images_sousgroupe/([0-9]*).(gif|jpg)","$1"));
+							// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - sousgroupeRef : " + sousgroupeRef);
+						}
+					}
+				}
+			}
+
+			
+		}
+		
+		
+		//Lecture des informations pour une fiche proposée et pour le début d'une fiche en cours de rédaction
+		if ( getEtatFiche() == 1 || getEtatFiche() == 2 || getEtatFiche() == 3
+				|| getEtatFiche() == 5 ) {
+			ElementTable=source.getFirstElementByClass("trait_cadregris");
+			// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - ElementTable : " + ElementTable.toString().substring(0, Math.min(ElementTable.toString().length(),200)));
+
+			listeElementsTable_TABLE = ElementTable.getAllElements(HTMLElementName.TABLE);
+			// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - listeElementsTable_TABLE.size : " + listeElementsTable_TABLE.size());
+
+			for (Element elementTable_TABLE : listeElementsTable_TABLE) {
+				num_table++;
+				// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - num_table :" + num_table);
+				// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - elementTable_TABLE.length() : " + elementTable_TABLE.toString().length());
+				// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - elementTable_TABLE : " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),100)));
+
+				String largeurTable = elementTable_TABLE.getAttributeValue("width");
+				// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - largeurTable :" + largeurTable);
+				String urlImageDansFiche = "";
+				
+				//Entête de la Fiche
+				if (num_table== 2) {
+			
+					Element ElementInfosGauche = elementTable_TABLE.getFirstElementByClass("code_fiche").getFirstElement();
+					
+					try	{
+						Element ElementNomLatin = ElementInfosGauche.getFirstElementByClass("texte_bandeau").getFirstElement();
+						// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - ElementNomLatin : " + ElementNomLatin.getRenderer().toString().trim());
+						setNomScientifique( ElementNomLatin.getRenderer().toString().trim() );
+					} catch (Exception e) {
+		        		// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - le nom latin n'est pas toujours renseigné");
+		        	}
+					
+					try	{
+						Element ElementDistribution = ElementInfosGauche.getFirstElementByClass("normal").getFirstElement();
+						// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - ElementDistribution : " + ElementDistribution.getRenderer().toString().trim());
+						// TODO :
+						//ficheRegion = ElementDistribution.getRenderer().toString().trim();
+					} catch (Exception e) {
+		        		// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - la Distribution n'est pas toujours renseignée");
+		        	}
+					
+					try	{
+						Element ElementNomCommun = ElementInfosGauche.getFirstElementByClass("titre2").getFirstElement();
+						// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - ElementNomCommun : " + ElementNomCommun.getRenderer().toString().trim());
+						setNomCommun( ElementNomCommun.getRenderer().toString().trim() );
+					} catch (Exception e) {
+		        		// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - le nom français n'est pas toujours renseigné");
+		        	}
+					
+					//Recup TRs Haut Droit contenant le Groupe auquel appartient l'espèce
+					List<? extends Element> listeElementsIMG = elementTable_TABLE.getAllElements(HTMLElementName.IMG);
+					for (Element element : listeElementsIMG) {
+						listeAttributs=element.getAttributes();
+						for (Attribute attribut : listeAttributs) {
+							
+							if (attribut.getName().equals("src") && attribut.getValue().toString().startsWith("gestionenligne/images_groupe/") ) {
+
+								Element listeElementsHD_TR = element.getParentElement().getParentElement();
+								// TODO :
+								// groupeRef = Integer.parseInt(attribut.getValue().toString().replaceAll(".*images_groupe/([0-9]*).gif","$1"));
+								// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - groupeRef : " + groupeRef);
+								// TODO :
+								// groupeRefTexte = listeElementsHD_TR.getRenderer().toString().trim();
+								// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - groupeRefTexte : " + groupeRefTexte);
+							}
+						}
+					}
+
+								
+				}
+					
+				if (largeurTable!=null && largeurTable.equals("372")) {
+					// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - Recup. Images");
+					
+					//Recup du TR dont le 3ème TD fils contient les infos DROITE (images et qui a fait la fiche)
+					List<? extends Element> ListeelementTable_IMG = elementTable_TABLE.getAllElements(HTMLElementName.IMG);
+					
+					for (Element elementTableImg : ListeelementTable_IMG) {
+						List<? extends Attribute> listeAttributsTableImg=elementTableImg.getAttributes();
+						for (Attribute attribut : listeAttributsTableImg) {
+							if (attribut.getName().equalsIgnoreCase("src") && attribut.getValue().contains("gestionenligne")){
+								// TODO :
+								// urlImageDansFiche = attribut.getValue().replaceAll(Extraction.racineSite, "");
+								// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - urlImageDansFiche : " + urlImageDansFiche);
+														
+								break;
+							}
+							
+						}
+					}
+						
+					//Recup Texte
+					Element element2 = elementTable_TABLE.getFirstElementByClass("normal2");
+					if (element2 != null)
+					{
+						// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - Texte : " + element2.getRenderer().toString());
+						// TODO :
+						// ficheListeImages.add(new Image(element2.getRenderer().toString(), urlImageDansFiche));
+					}
+					break;
+				
+				}
+				
+
+			}
+			
+			//Recup du sous-Groupe auquel appartient l'espèce
+			// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - Recup du sous-Groupe auquel appartient l'espèce");
+			List<? extends Element> listeElementsTDSousGroupe = source.getAllElementsByClass("sousgroupe_fiche");
+			
+			for (Element element : listeElementsTDSousGroupe) {
+				int index = listeElementsTDSousGroupe.indexOf(element);
+				// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - index : " + index);
+				
+				if (index == 1) {
+					// TODO :
+					// sousgroupeRefTexte = element.getRenderer().toString().trim();
+					// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - sousgroupeRefTexte : " + sousgroupeRefTexte);
+				}
+				if (index == 2) {
+					
+					listeAttributs = element.getFirstElement(HTMLElementName.IMG).getAttributes();
+					for (Attribute attribut : listeAttributs) {
+						
+						if (attribut.getName().equals("src") && attribut.getValue().toString().startsWith("gestionenligne/images_sousgroupe/") ) {
+							// TODO :
+							// sousgroupeRef = Integer.parseInt(attribut.getValue().toString().toLowerCase().replaceAll(".*images_sousgroupe/([0-9]*).(gif|jpg)","$1"));
+							// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - sousgroupeRef : " + sousgroupeRef);
+						}
+					}
+				}
+			}
+			
+			
+		}
+		
+		listeElementsTable_TABLE = null;
+		
+    	// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - Fin");
+	}
+	
+	
+	public class Detail {
+
+		public String titre;
+		public String contenu;
+		public boolean affiche;
+		
+		public Detail(String inTitre, String inContenu, boolean inAffiche) {
+			// trace.log(trace.LOG_DEBUG, TAG, "Detail() - Début");
+			// trace.log(trace.LOG_DEBUG, TAG, "Detail() - Titre : " + inTitre);
+			// trace.log(trace.LOG_DEBUG, TAG, "Detail() - Contenu : " + inContenu);
+			// trace.log(trace.LOG_DEBUG, TAG, "Detail() - Affiche : " + inAffiche);
+			titre = inTitre;
+			contenu = inContenu;
+			affiche = inAffiche;
+			// trace.log(trace.LOG_DEBUG, TAG, "Detail() - Fin");
+		}
+	}
+	
+	public class Image {
+
+		public String titre;
+		public boolean principale;
+		public String urlVignette;
+		public String urlImage;
+		
+		public Image(String inTitre, String inUrl) {
+			// trace.log(trace.LOG_DEBUG, TAG, "Image() - Début");
+			// trace.log(trace.LOG_DEBUG, TAG, "Image() - Titre : " + inTitre);
+			// trace.log(trace.LOG_DEBUG, TAG, "Image() - Url : " + inUrl);
+
+			titre = inTitre;
+			
+			//Les remplacements si dessous permettent de "calculer" simplement la référence de la grande image
+			urlImage = inUrl.replace("/photos_fiche_moy/","/photos/").replace("/photos_fiche_vig/","/photos/");
+			//ou de la vignette
+			urlVignette = inUrl.replace("/photos_fiche_moy/","/photos_fiche_vig/");
+			
+			//Si c'est l'image principale alors c'est l'image : photos_fiche_moy
+			if (inUrl.contains("/photos_fiche_moy/")) {
+				principale = true;
+			}else {
+				principale = false;
+			}
+			
+			// trace.log(trace.LOG_DEBUG, TAG, "Image() - principale : " + principale);
+			// trace.log(trace.LOG_DEBUG, TAG, "Image() - urlImage : " + urlImage);
+			// trace.log(trace.LOG_DEBUG, TAG, "Image() - urlVignette : " + urlVignette);
+			// trace.log(trace.LOG_DEBUG, TAG, "Image() - Fin");
+		}
+		
+	}
+	
 	
 	
 	// End of user code
