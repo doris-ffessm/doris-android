@@ -160,19 +160,20 @@ public class PrefetchDorisWebSite {
 			String fichierLocalFiche = DOSSIER_BASE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+".html";
 			if (! action.equals("NODWNLD")) {
 				if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
-					String contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+					String contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
 				
 					fiche.getFiche(contenuFichierHtml);
 				} else {
 					trace.log(trace.LOG_ERROR, LOGTAG, "Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 				}
 			} else {
-				String contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+				String contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
 				
 				fiche.getFiche(contenuFichierHtml);
 			}
 		}
 		
+		// Ecriture des fiches dans le fichier xml final
 		ConnectionSource connectionSource = null;
 		try {
 			// create our data-source for the database
@@ -180,7 +181,7 @@ public class PrefetchDorisWebSite {
 			// setup our database and DAOs
 			setupDatabase(connectionSource);
 			// read and write some data
-			//readWriteData();
+			readWriteData(listeFichesTravail);
 
 		} finally {
 			// destroy the data source which should close underlying connections
@@ -317,13 +318,14 @@ public class PrefetchDorisWebSite {
 	/**
 	 * Read and write some example data.
 	 */
-	private void readWriteData() throws Exception {
+	private void readWriteData(List<Fiche> inListeFiches) throws Exception {
 		// create an instance of Fiche
 
-		Fiche fiche1 = new Fiche("Amphiprion bicinctus",
+		/* Fiche fiche1 = new Fiche("Amphiprion bicinctus",
 				"Poisson-clown à deux bandes", 1001, "");
 		Fiche fiche2 = new Fiche("Palaemon elegans Rathke",
 				"Petite crevette rose", 337, "");
+		
 		// persist the fiches object to the database
 		dbContext.ficheDao.create(fiche1);
 		dbContext.ficheDao.create(fiche2);
@@ -348,7 +350,7 @@ public class PrefetchDorisWebSite {
 		dbContext.fiches_verificateurs_ParticipantsDao.create(verification1);
 		dbContext.fiches_verificateurs_ParticipantsDao.create(verification2);
 		dbContext.fiches_verificateurs_ParticipantsDao.create(verification3);
-		
+		*/
 		
 		
 		// assign a password
@@ -357,18 +359,24 @@ public class PrefetchDorisWebSite {
 		//ficheDao.update(fiche1);
 
 		// query for all items in the database
-		List<Fiche> fiches = dbContext.ficheDao.queryForAll();
+		/*List<Fiche> fiches = dbContext.ficheDao.queryForAll();
 		Fiche fiche3 = fiches.get(0);
 		
 		
 		System.out.println("nb verificateur fiche 0: " + fiche3.lookupVerificateurs(dbContext).size());
-
+*/
+		for (Fiche fiche : inListeFiches){
+			dbContext.ficheDao.create(fiche);
+		}
+		
+		/*
 		File f = new File("./prefetchedDorisDB.xml");
 		sauveXML(f, fiches);
-		
+		*/
 		
 		// test de la nouvelle fonctions XMLHelper
-		XMLHelper.saveDBToFile(new File("./prefetchedDorisDB2.xml"), dbContext);
+		String fichierXML = DOSSIER_BASE + "/" + DOSSIER_RESULTATS + "/" + "prefetchedDorisDB.xml";
+		XMLHelper.saveDBToFile(new File(fichierXML), dbContext);
 	}
 
 	/**
