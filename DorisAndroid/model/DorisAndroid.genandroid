@@ -16,7 +16,7 @@
       <dataAttributes name="autresDenominations" type="//@dataModel/@dataClasses.6"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="Participant">
-      <dataReferences name="photo" documentation="photo du participant" opposite="//@dataModel/@dataAssociations.3" type="//@dataModel/@dataClasses.3"/>
+      <dataReferences name="photo" documentation="photo du participant" containment="true" opposite="//@dataModel/@dataAssociations.3" type="//@dataModel/@dataClasses.3"/>
       <dataReferences name="fichesVerifiees" upperBound="-1" opposite="//@dataModel/@dataAssociations.4" type="//@dataModel/@dataClasses.0"/>
       <dataAttributes name="nom" type="//@dataModel/@dataClasses.6"/>
     </dataClasses>
