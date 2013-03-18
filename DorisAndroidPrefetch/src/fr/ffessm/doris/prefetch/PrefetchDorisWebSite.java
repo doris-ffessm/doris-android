@@ -55,6 +55,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+//import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.htmlparser.jericho.Element;
 
 import com.j256.ormlite.dao.Dao;
@@ -99,6 +102,7 @@ public class PrefetchDorisWebSite {
 	// Inititalisation de la Gestion des Log {Log(0) permet de forcer le mode debbug}
 	private final static String LOGTAG = "PrefetchDoris";
 	public static Log trace = new Log();
+	public org.apache.commons.logging.Log log = LogFactory.getLog(XMLHelper.class);
 	//public static Log trace = new Log(0);
 	
 	// Nombre maximum de fiches traitées (--max=K permet de changer cette valeur)
@@ -114,7 +118,7 @@ public class PrefetchDorisWebSite {
 	}
 
 	private void doMain(String[] args) throws Exception {
-		
+		log.info("Test log Didier");
 		// Vérification et lecture des arguments
 		trace.log(trace.LOG_DEBUG, LOGTAG, "doMain() : Vérification et lecture des arguments");
 		String action = checkArgs(args);

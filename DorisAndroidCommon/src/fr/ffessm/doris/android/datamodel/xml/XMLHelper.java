@@ -50,9 +50,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.sql.SQLException;
 import java.util.List;
+
+
+
 import fr.ffessm.doris.android.datamodel.associations.*;
 import fr.ffessm.doris.android.datamodel.*;
 // Start of user code additional import
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 // End of user code
 
 /**
@@ -60,6 +65,8 @@ import fr.ffessm.doris.android.datamodel.*;
  */
 public class XMLHelper {
 	// Start of user code additional helper code 1
+	private Log log = LogFactory.getLog(XMLHelper.class);
+
 	// End of user code
 
 	public static void saveDBToFile(File file,DorisDBHelper dbContext){
@@ -71,7 +78,8 @@ public class XMLHelper {
 			// Close the output stream
 			out.close();
 		} catch (Exception e) {// Catch exception if any
-			System.err.println("Error: " + e.getMessage());
+			Log log = LogFactory.getLog(XMLHelper.class);
+			log.error(e.getMessage(), e);
 		}
 	}
 	

@@ -62,6 +62,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import org.apache.commons.logging.Log;
 
 //import org.jdom2.input.SAXBuilder;
 //import org.jdom2.output.Format;
