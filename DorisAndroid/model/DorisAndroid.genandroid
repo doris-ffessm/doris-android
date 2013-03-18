@@ -10,10 +10,11 @@
       <dataReferences name="responsableRegional" documentation="responsable régional de la fiche" type="//@dataModel/@dataClasses.1"/>
       <dataReferences name="contenu" documentation="contenu textuel de la fiche" upperBound="-1" containment="true" opposite="//@dataModel/@dataAssociations.5" type="//@dataModel/@dataClasses.9"/>
       <dataReferences name="photoPrincipale" documentation="Photo par défaut de l'espèce présentée par cette fiche. Elle est aussi présente dans la liste &quot;photosFiche&quot;." type="//@dataModel/@dataClasses.2"/>
+      <dataReferences name="autresDenominations" documentation="Liste des autres dénominations de l'espèce présentée sur la fiche." upperBound="-1" containment="true" opposite="//@dataModel/@dataAssociations.6" type="//@dataModel/@dataClasses.10"/>
       <dataAttributes name="nomScientifique" type="//@dataModel/@dataClasses.6" simpleXmlType="true"/>
       <dataAttributes name="nomCommun" type="//@dataModel/@dataClasses.6" simpleXmlType="true"/>
       <dataAttributes name="numeroFiche" documentation="Numéro de la fiche tel que connu par le site lui même" type="//@dataModel/@dataClasses.7" simpleXmlType="true"/>
-      <dataAttributes name="autresDenominations" type="//@dataModel/@dataClasses.6"/>
+      <dataAttributes name="etatFiche" documentation="Etat Avancement de la fiche &#xD;&#xA;4 : Fiche Publiée - 1, 2, 3 : En cours de Rédaction - 5 : Fiche Proposée" type="//@dataModel/@dataClasses.7" simpleXmlType="true"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="Participant">
       <dataReferences name="photo" documentation="photo du participant" containment="true" opposite="//@dataModel/@dataAssociations.3" type="//@dataModel/@dataClasses.3"/>
@@ -48,12 +49,18 @@
       <dataAttributes name="titre" type="//@dataModel/@dataClasses.6"/>
       <dataAttributes name="texte" type="//@dataModel/@dataClasses.6"/>
     </dataClasses>
+    <dataClasses xsi:type="genandroid:DataClass" name="AutreDenomination">
+      <dataReferences name="fiche" opposite="//@dataModel/@dataAssociations.6" type="//@dataModel/@dataClasses.0"/>
+      <dataAttributes name="denomination" lowerbound="1" type="//@dataModel/@dataClasses.6"/>
+      <dataAttributes name="langue" documentation="Si renseigné, indique la ou les langues qui utilisent cette dénomination " type="//@dataModel/@dataClasses.6"/>
+    </dataClasses>
     <dataAssociations name="Fiche_Photos" references="//@dataModel/@dataClasses.2/@dataReferences.0 //@dataModel/@dataClasses.0/@dataReferences.1"/>
     <dataAssociations name="Fiches_ZonesGeographiques" references="//@dataModel/@dataClasses.4/@dataReferences.0 //@dataModel/@dataClasses.0/@dataReferences.2"/>
     <dataAssociations name="Fiches_ZonesObservations" references="//@dataModel/@dataClasses.0/@dataReferences.3 //@dataModel/@dataClasses.5/@dataReferences.0"/>
     <dataAssociations name="Participant_Photos" references="//@dataModel/@dataClasses.1/@dataReferences.0 //@dataModel/@dataClasses.3/@dataReferences.0"/>
     <dataAssociations name="Fiches_verificateurs_Participants" references="//@dataModel/@dataClasses.0/@dataReferences.4 //@dataModel/@dataClasses.1/@dataReferences.1"/>
     <dataAssociations name="Fiche_Sections" references="//@dataModel/@dataClasses.0/@dataReferences.6 //@dataModel/@dataClasses.9/@dataReferences.0"/>
+    <dataAssociations name="Fiche_Denominations" references="//@dataModel/@dataClasses.0/@dataReferences.8 //@dataModel/@dataClasses.10/@dataReferences.0"/>
   </dataModel>
   <presentationModel preferenceView="//@presentationModel/@viewActivities.1" welcomeView="//@presentationModel/@viewActivities.0">
     <viewActivities xsi:type="genandroid:CustomViewActivity" name="Accueil" accessibleViews="//@presentationModel/@viewActivities.2 //@presentationModel/@viewActivities.3" triggerableBackgroundActivities="//@presentationModel/@backgroundActivities.1 //@presentationModel/@backgroundActivities.2"/>

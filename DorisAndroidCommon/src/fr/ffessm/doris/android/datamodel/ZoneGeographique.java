@@ -55,6 +55,9 @@ import java.util.Collection;
 
 import fr.ffessm.doris.android.datamodel.associations.*;
 
+// Start of user code additional import for ZoneGeographique
+// End of user code
+
 /** 
   *  
   */ 

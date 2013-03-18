@@ -87,6 +87,9 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	// the DAO object we use to access the diveBudies table
 	private Dao<SectionFiche, Integer> sectionFicheDao = null;
 	private RuntimeExceptionDao<SectionFiche, Integer> sectionFicheRuntimeDao = null;
+	// the DAO object we use to access the diveBudies table
+	private Dao<AutreDenomination, Integer> autreDenominationDao = null;
+	private RuntimeExceptionDao<AutreDenomination, Integer> autreDenominationRuntimeDao = null;
 
 	public OrmLiteDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -107,6 +110,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 			TableUtils.createTable(connectionSource, ZoneGeographique.class);
 			TableUtils.createTable(connectionSource, ZoneObservation.class);
 			TableUtils.createTable(connectionSource, SectionFiche.class);
+			TableUtils.createTable(connectionSource, AutreDenomination.class);
 		} catch (SQLException e) {
 			Log.e(OrmLiteDBHelper.class.getName(), "Can't create database", e);
 			throw new RuntimeException(e);
@@ -139,6 +143,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 			TableUtils.dropTable(connectionSource, ZoneGeographique.class, true);
 			TableUtils.dropTable(connectionSource, ZoneObservation.class, true);
 			TableUtils.dropTable(connectionSource, SectionFiche.class, true);
+			TableUtils.dropTable(connectionSource, AutreDenomination.class, true);
 			// after we drop the old databases, we create the new ones
 			onCreate(db, connectionSource);
 		} catch (SQLException e) {
@@ -224,6 +229,17 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		return sectionFicheRuntimeDao;
 	}
 
+	/**
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
+	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
+	 */
+	public RuntimeExceptionDao<AutreDenomination, Integer> getAutreDenominationDao() {
+		if (autreDenominationRuntimeDao == null) {
+			autreDenominationRuntimeDao = getRuntimeExceptionDao(AutreDenomination.class);
+		}
+		return autreDenominationRuntimeDao;
+	}
+
 	
 
 	/**
@@ -239,6 +255,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		zoneGeographiqueRuntimeDao = null;
 		zoneObservationRuntimeDao = null;
 		sectionFicheRuntimeDao = null;
+		autreDenominationRuntimeDao = null;
 	}
 
 }

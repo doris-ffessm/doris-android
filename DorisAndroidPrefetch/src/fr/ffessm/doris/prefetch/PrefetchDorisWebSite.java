@@ -67,6 +67,7 @@ import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
+import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Participant;
@@ -299,9 +300,11 @@ public class PrefetchDorisWebSite {
 		dbContext.zoneGeographiqueDao = DaoManager.createDao(connectionSource, ZoneGeographique.class);
 		dbContext.zoneObservationDao = DaoManager.createDao(connectionSource, ZoneObservation.class);
 		dbContext.sectionFicheDao = DaoManager.createDao(connectionSource, SectionFiche.class);
+		dbContext.autreDenominationDao = DaoManager.createDao(connectionSource, AutreDenomination.class);
 		dbContext.fiches_verificateurs_ParticipantsDao = DaoManager.createDao(connectionSource, Fiches_verificateurs_Participants.class);
 		dbContext.fiches_ZonesGeographiquesDao = DaoManager.createDao(connectionSource, Fiches_ZonesGeographiques.class);
 		dbContext.fiches_ZonesObservationsDao = DaoManager.createDao(connectionSource, Fiches_ZonesObservations.class);
+		
 		
 		// if you need to create the table
 		TableUtils.createTable(connectionSource, Fiche.class);
@@ -310,6 +313,7 @@ public class PrefetchDorisWebSite {
 		TableUtils.createTable(connectionSource, ZoneGeographique.class);
 		TableUtils.createTable(connectionSource, ZoneObservation.class);
 		TableUtils.createTable(connectionSource, SectionFiche.class);
+		TableUtils.createTable(connectionSource, AutreDenomination.class);
 		TableUtils.createTable(connectionSource, Fiches_verificateurs_Participants.class);
 		TableUtils.createTable(connectionSource, Fiches_ZonesGeographiques.class);
 		TableUtils.createTable(connectionSource, Fiches_ZonesObservations.class);

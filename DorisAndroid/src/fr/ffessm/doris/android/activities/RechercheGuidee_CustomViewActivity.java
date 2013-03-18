@@ -100,7 +100,7 @@ public class RechercheGuidee_CustomViewActivity extends OrmLiteBaseActivity<OrmL
     public boolean onCreateOptionsMenu(Menu menu) {
 		// add options in the menu
 		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
-		
+
 		//Start of user code additional onCreateOptionsMenu
 
 		//End of user code

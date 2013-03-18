@@ -42,8 +42,11 @@ termes.
 package fr.ffessm.doris.android.datamodel.xml;
 
 import org.xml.sax.helpers.DefaultHandler;
-
+//Start of user code additional import for PhotoFicheXMLParser
+//End of user code
 public class PhotoFicheXMLParser extends DefaultHandler{
 
+//Start of user code additional code for PhotoFicheXMLParser
+//End of user code
 	
 }

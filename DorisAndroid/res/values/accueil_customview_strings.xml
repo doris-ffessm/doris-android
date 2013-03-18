@@ -5,7 +5,7 @@
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
 	<string name="accueil_customview_sample_btn_label">SampleButton</string>
-	<string name="telecharge_fiches_menu_option">Télécharge fiches</string>
+	<string name="telecharge_fiches_menu_option">TÃ©lÃ©charge fiches</string>
 	<string name="verifie_nouvelles_fiches_menu_option">Cherche nouvelles fiches</string>
 	<!--End of user code
 	-->

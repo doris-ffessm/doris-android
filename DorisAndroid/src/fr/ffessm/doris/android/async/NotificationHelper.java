@@ -1,4 +1,4 @@
-/* org.eclipse.emf.ecore.impl.DynamicEObjectImpl@bc6674 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@ea7b49 (name: OclInvalid_Class) (instanceClassName: null) (abstract: false, interface: false)) */
+/* invalid */
 package fr.ffessm.doris.android.async;
 
 import fr.ffessm.doris.android.R;

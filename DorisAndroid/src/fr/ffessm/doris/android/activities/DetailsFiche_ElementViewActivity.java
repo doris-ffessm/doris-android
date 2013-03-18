@@ -91,7 +91,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText(entry.getNomScientifique());
 		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun());
 		((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText(((Integer)entry.getNumeroFiche()).toString());					
-		((TextView) findViewById(R.id.detailsfiche_elementview_autresdenominations)).setText(entry.getAutresDenominations());
+		((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer)entry.getEtatFiche()).toString());					
     	/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
     	((TextView) findViewById(R.id.detail_divedate)).setText(dateFormatter.format(entry.getDate()));
 		
@@ -107,7 +107,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     public boolean onCreateOptionsMenu(Menu menu) {
 		// add options in the menu
         menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
-        
+
 		//Start of user code additional onCreateOptionsMenu
 
 		//End of user code

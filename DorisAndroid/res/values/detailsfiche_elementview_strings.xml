@@ -4,9 +4,9 @@
 	<string name="detailsfiche_elementview_nomscientifique_label">NomScientifique : </string>
 	<string name="detailsfiche_elementview_nomcommun_label">NomCommun : </string>
 	<string name="detailsfiche_elementview_numerofiche_label">NumeroFiche : </string>
-	<string name="detailsfiche_elementview_autresdenominations_label">AutresDenominations : </string>
+	<string name="detailsfiche_elementview_etatfiche_label">EtatFiche : </string>
 	<string name="detailsfiche_elementview_nomscientifique_hint_text"></string>
 	<string name="detailsfiche_elementview_nomcommun_hint_text"></string>
 	<string name="detailsfiche_elementview_numerofiche_hint_text"></string>
-	<string name="detailsfiche_elementview_autresdenominations_hint_text"></string>
+	<string name="detailsfiche_elementview_etatfiche_hint_text"></string>
 </resources>

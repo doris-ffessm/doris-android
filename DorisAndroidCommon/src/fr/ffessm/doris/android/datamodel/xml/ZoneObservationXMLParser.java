@@ -42,8 +42,11 @@ termes.
 package fr.ffessm.doris.android.datamodel.xml;
 
 import org.xml.sax.helpers.DefaultHandler;
-
+//Start of user code additional import for ZoneObservationXMLParser
+//End of user code
 public class ZoneObservationXMLParser extends DefaultHandler{
 
+//Start of user code additional code for ZoneObservationXMLParser
+//End of user code
 	
 }
