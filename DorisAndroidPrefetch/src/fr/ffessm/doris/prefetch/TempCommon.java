@@ -66,9 +66,13 @@ public class TempCommon {
     private final static String SITE_RACINE_URL = "http://doris.ffessm.fr/";
     private final static String LISTE_TOUTES_FICHES_URL = "nom_scientifique.asp?numero_fichier=10";
     
+    public static String getSiteUrl() {
+		String listeFichesUrl = SITE_RACINE_URL;
+		return listeFichesUrl;
+    }
     
     public static String getListeFichesUrl() {
-    		String listeFichesUrl = SITE_RACINE_URL + LISTE_TOUTES_FICHES_URL;
+		String listeFichesUrl = SITE_RACINE_URL + LISTE_TOUTES_FICHES_URL;
     	return listeFichesUrl;
     }
     

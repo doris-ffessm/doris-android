@@ -108,6 +108,12 @@ public class PrefetchDorisWebSite {
 	// Nombre maximum de fiches traitées (--max=K permet de changer cette valeur)
 	private static int nbMaxFichesTraitees = 9999;
 	
+	// Balises et Attributs des fichiers XML
+	public static final String XML_BASE = "Doris";
+	public static final String XML_FICHES = "Fiches";
+	public static final String XML_ATT_DATE_CREAT = "DateCreation";
+	public static final String XML_ATT_SITE_URL = "UrlRacineSite";
+	
 	DorisDBHelper dbContext = null;
 
 	public static void main(String[] args) throws Exception {
@@ -397,14 +403,32 @@ public class PrefetchDorisWebSite {
 			// Create file
 			FileWriter fstream = new FileWriter(file);
 			BufferedWriter out = new BufferedWriter(fstream);
-			out.write("<Doris>\n");
-			out.write("<Fiches>\n");
+			out.write("<");
+			out.write(XML_BASE);
+			out.write(" ");
+			out.write(XML_ATT_DATE_CREAT);
+			out.write("=\"");
+			SimpleDateFormat formatDate = new SimpleDateFormat ("dd/MM/yyyy HH:mm:ss" );
+			out.write(formatDate.format(new Date()));
+			out.write("\" ");
+			out.write(XML_ATT_SITE_URL);
+			out.write("=\"");
+			out.write(TempCommon.getSiteUrl());
+			out.write("\"");
+			out.write(">\n");
+			out.write("<");
+			out.write(XML_FICHES);
+			out.write(">\n");
 			for (Fiche fiche : fiches) {
 				out.write(fiche.toXML("",dbContext)+"\n");
 				//out.write(fiche.toXML()+"\n");
 			}
-			out.write("</Fiches>\n");
-			out.write("</Doris>\n");
+			out.write("</");
+			out.write(XML_FICHES);
+			out.write(">\n");
+			out.write("</");
+			out.write(XML_BASE);
+			out.write(">\n");
 			// Close the output stream
 			out.close();
 		} catch (Exception e) {// Catch exception if any

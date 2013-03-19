@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Groupe DateCreation="28/02/2013 23:17:07">
+	<Nom>Les grands groupes</Nom>
+	<Groupes>
+		<Groupe urlVignette="/gestionenligne/images_groupe/1.gif">
+		    <Nom>PROCARYOTES</Nom>
+			<Groupes>	   
+				<Groupe numUrlGroupe="1" urlVignette="/gestionenligne/images_groupe/1.gif">
+		      		<Nom>Procaryotes (Bactéries et Cyanobactéries)</Nom>
+		      		<Description>On nomme « procaryotes » (terme n’ayant plus de valeur systématique) des organismes unicellulaires dépourvus de noyau. Ce sont les bactéries au sens large (Archées + Eubactéries), et en particulier les cyanobactéries (encore appelées algues bleues), bactéries photosynthétiques parfois visibles en plongée sous forme d’un voile filamenteux.</Description>
+		    	</Groupe>
+	    	</Groupes>
+		</Groupe>
+		<Groupe urlVignette="/gestionenligne/images_groupe/2.gif">
+		    <Nom>VEGETAUX</Nom>
+		    <Groupes>
+		    	<Groupe urlVignette="/gestionenligne/images_groupe/2.gif">
+		      		<Nom>Algues</Nom>
+		      		<Groupes>
+		      			<Groupe numUrlGroupe="2" urlVignette="/gestionenligne/images_groupe/2.gif">
+		        			<Nom>Rhodophycées (Algues rouges)</Nom>
+		        			<Description>Les algues sont des végétaux chlorophylliens unicellulaires ou pluricellulaires constitués d'un thalle (appareil végétatif) peu différencié. Chez les algues pluricellulaires il peut avoir des formes très diverses plus ou moins ramifiées. Le terme de Rhodophycées, ou algues rouges, est utilisé pour désigner les algues possédant en plus des pigments les plus communs (chlorophylles…) des pigments rouges et des pigments bleus.</Description>
+		        			<Groupes>
+		        				<Groupe numUrlGroupe="2" numUrlSsGroupe="72" urlVignette="/gestionenligne/images_sousgroupe/72.gif">
+		          					<Nom>Thalles érigés</Nom>
+		        				</Groupe>
+		        				<Groupe numUrlGroupe="2" numUrlSsGroupe="73" urlVignette="/gestionenligne/images_sousgroupe/73.gif">
+		          					<Nom>Thalles encroûtants</Nom>
+		        				</Groupe>
+		      				</Groupes>
+	      				</Groupe>
+			      		<Groupe numUrlGroupe="3" urlVignette="/gestionenligne/images_groupe/3.gif">
+		    		    	<Nom>Chlorophycées (Algues vertes)</Nom>
+	      				</Groupe>
+		      			<Groupe numUrlGroupe="4" urlVignette="/gestionenligne/images_groupe/4.gif">
+		        			<Nom>Phéophycées (Algues brunes)</Nom>
+		      			</Groupe>
+	      			</Groupes>
+		    	</Groupe>
+		    	<Groupe urlVignette="/gestionenligne/images_groupe/5.gif">
+	      			<Nom>Plantes à fleurs (phanérogames)</Nom>
+		      		<Groupes>
+		      			<Groupe numUrlGroupe="5" urlVignette="/gestionenligne/images_groupe/5.gif">
+		        			<Nom>Plantes subaquatiques</Nom>
+		      			</Groupe>
+		      			<Groupe numUrlGroupe="6" urlVignette="/gestionenligne/images_groupe/6.gif">
+		        			<Nom>Plantes terrestres</Nom>
+		      			</Groupe>
+	      			</Groupes>
+		    	</Groupe>
+	    	</Groupes>
+		</Groupe>
+		<Groupe urlVignette="/gestionenligne/images_groupe/7.gif">
+	    	<Nom>LICHENS</Nom>
+	    	<Groupes>
+	    		<Groupe numUrlGroupe="7" urlVignette="/gestionenligne/images_groupe/7.gif">
+	      			<Nom>Champignons et Lichens</Nom>
+	    		</Groupe>
+			</Groupes>
+		</Groupe>
+	</Groupes>
+</Groupe>
