@@ -27,7 +27,12 @@
       <Region>Europe et Asie</Region>
       <AutresDenominations>
         <Denominations>Brème carpée, grande brème, brama, brémo, breume, daoradou, daourado d'aou, dorée, hariot, hazelin, omblais , plaquette (petite brème)</Denominations>
-        <Denominations>Bream, common bream, freshwater bream (GB), Abramide, brama (I), Brema común (E), Brachsen, Blei, Plattfisch, (D), Brasem (NL), Brema (P)</Denominations>
+        <Denominations Langue="GB">Bream, common bream, freshwater bream</Denominations>
+        <Denominations Langue="I">Abramide, brama</Denominations>
+        <Denominations Langue="E">Brema común</Denominations>
+        <Denominations Langue="D">Brachsen, Blei, Plattfisch</Denominations>
+        <Denominations Langue="NL">Brasem</Denominations>
+        <Denominations Langue="P">Brema</Denominations>
       </AutresDenominations>
       <Images>
         <Image Principale="true" Url="gestionenligne/photos/abramis_brama-1.jpg" UrlVignette="gestionenligne/photos_fiche_vig/abramis_brama-1.jpg">Identification</Image>

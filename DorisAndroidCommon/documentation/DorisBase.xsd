@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:element name="BaseDoris">
     <xs:complexType>
@@ -38,8 +39,10 @@
                   </xs:sequence>
                   <xs:attribute type="xs:short" name="Reference" use="optional"/>
                   <xs:attribute type="xs:string" name="TypeFiche" use="optional"/>
-                  <xs:attribute type="xs:byte" name="EspeceGroupe" use="optional"/>
-                  <xs:attribute type="xs:byte" name="EspeceSousGroupe" use="optional"/>
+                  <xs:attribute type="xs:short" name="EspeceGroupe" use="optional"/>
+                  <xs:attribute type="xs:short" name="EspeceSousGroupe" use="optional"/>
+                  <xs:attribute type="xs:date" name="DateCreation"/>
+                  <xs:attribute type="xs:date" name="DateModification"/>
                 </xs:complexType>
               </xs:element>
               <xs:element name="Details" minOccurs="0">
@@ -48,8 +51,9 @@
                     <xs:element name="Detail" maxOccurs="unbounded" minOccurs="0">
                       <xs:complexType>
                         <xs:sequence>
-                          <xs:element type="xs:string" name="Titre"/>
-                          <xs:element type="xs:string" name="Contenu"/>
+							<xs:element type="xs:integer" name="NumOrdre"/>
+                          	<xs:element type="xs:string" name="Titre"/>
+                          	<xs:element type="xs:string" name="Contenu"/>
                         </xs:sequence>
                       </xs:complexType>
                     </xs:element>
