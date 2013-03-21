@@ -102,11 +102,8 @@ public class PrefetchDorisWebSite {
 	private final static String DOSSIER_IMG = "img";
 	private final static String DOSSIER_RESULTATS = "result";
 	
-	// Inititalisation de la Gestion des Log {Log(0) permet de forcer le mode debbug}
-	private final static String LOGTAG = "PrefetchDoris";
-	public static Trace trace = new Trace();
-	
-	//public static Log trace = new Log(0);
+	// Inititalisation de la Gestion des Log 
+	public static Log log = LogFactory.getLog(PrefetchDorisWebSite.class);
 	
 	// Nombre maximum de fiches traitées (--max=K permet de changer cette valeur)
 	private static int nbMaxFichesTraitees = 9999;
@@ -127,19 +124,21 @@ public class PrefetchDorisWebSite {
 	}
 
 	private void doMain(String[] args) throws Exception {
+		log.debug("doMain() - Début");
 		
 		// Vérification et lecture des arguments
-		trace.log(trace.LOG_DEBUG, LOGTAG, "doMain() : Vérification et lecture des arguments");
+		log.debug("doMain() : Vérification et lecture des arguments");
 		String action = checkArgs(args);
-		trace.log(trace.LOG_VERBOSE, LOGTAG, "action : " + action);
-		trace.log(trace.LOG_VERBOSE, LOGTAG, "Nb. Fiches Max : " + nbMaxFichesTraitees);
+		log.info("action : " + action);
+		log.info("Nb. Fiches Max : " + nbMaxFichesTraitees);
 		
+	
 		// Vérification, Création, Sauvegarde des dossiers de travails
 		checkDossiers(action);
 		
 		// Récupération de la liste des fiches sur le site de DORIS
 		String listeFichesFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeFiches.html";
-		trace.log(trace.LOG_VERBOSE, LOGTAG, "Récup. Liste Fiches Doris : " + listeFichesFichier);
+		log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
 		
 		List<Fiche> listeFichesTravail = new ArrayList<Fiche>(1);
 		
@@ -149,7 +148,7 @@ public class PrefetchDorisWebSite {
 				
 				listeFichesTravail = TempCommon.getListeFiches(contenuFichierHtml, nbMaxFichesTraitees);
 			} else {
-				trace.log(trace.LOG_ERROR, LOGTAG, "Une erreur est survenue lors de la récupération de la liste des fiches");
+				log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 				System.exit(0);
 			}
 		} else {
@@ -168,7 +167,7 @@ public class PrefetchDorisWebSite {
 		for (Fiche fiche : listeFichesTravail) {
 			// TODO : Ne pas traiter dans certain cas
 			
-			trace.log(trace.LOG_DEBUG, LOGTAG, "doMain() - Fiche : "+fiche.getNomCommun());
+			log.debug("doMain() - Fiche : "+fiche.getNomCommun());
 			
 			String urlFiche = "http://doris.ffessm.fr/fiche2.asp?fiche_numero="+fiche.getNumeroFiche();
 			String fichierLocalFiche = DOSSIER_BASE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+".html";
@@ -178,7 +177,7 @@ public class PrefetchDorisWebSite {
 				
 					fiche.getFiche(contenuFichierHtml);
 				} else {
-					trace.log(trace.LOG_ERROR, LOGTAG, "Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
+					log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 				}
 			} else {
 				String contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
@@ -203,6 +202,7 @@ public class PrefetchDorisWebSite {
 				connectionSource.close();
 			}
 		}
+		log.debug("doMain() - Fin");
 	}
 
 	/**
@@ -213,51 +213,54 @@ public class PrefetchDorisWebSite {
 	private String checkArgs(String[] inArgs){
 			
 		// Si Aucun Argument, on affiche l'aide et on termine
-		trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - nb args : " + inArgs.length);
+		log.debug("checkArgs() - nb args : " + inArgs.length);
 		if (inArgs.length < 1) {
 			help();
-			trace.log(trace.LOG_ERROR, LOGTAG, "Le programme ne peut être lancé sans arguments.");
+			log.error("Le programme ne peut être lancé sans arguments.");
 			System.exit(0);
 		}
 		
 		// On commence par regarder si un des paramètres est un paramétre optionnel prioritaire
 		// verbose, debug ou silence
-		trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - debug, verbose ou silence ? ");
+		log.debug("checkArgs() - debug, verbose ou silence ? ");
 		for (String arg : inArgs) {
-			trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - arg : " + arg);
+			log.debug("checkArgs() - arg : " + arg);
 			
 			if ( arg.equals("-d") || arg.equals("--debug") ) {
-				trace.set_niveauTrace(trace.LOG_DEBUG);
+				org.apache.log4j.Logger logger = org.apache.log4j.Logger.getRootLogger();
+		    	logger.setLevel(Level.DEBUG);
 			}
 			if ( arg.equals("-v") || arg.equals("--verbose")) {
-				trace.set_niveauTrace(trace.LOG_VERBOSE);
+				org.apache.log4j.Logger logger = org.apache.log4j.Logger.getRootLogger();
+		    	logger.setLevel(Level.INFO);
 			}
 			if ( arg.equals("-s") || arg.equals("--silence")) {
-				trace.set_niveauTrace(trace.LOG_SILENCE);
+				org.apache.log4j.Logger logger = org.apache.log4j.Logger.getRootLogger();
+		    	logger.setLevel(Level.OFF);
 			}
 		}
 		
 		// Si Aide ou Version alors affichage puis on termine
-		trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - help ou version ? ");
+		log.debug("checkArgs() - help ou version ? ");
 		for (String arg : inArgs) {
 			
 			if ( arg.equals("-h") || arg.equals("--help")) {
-				trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - arg : " + arg);
+				log.debug("checkArgs() - arg : " + arg);
 				help();
 				System.exit(0);
 			}
 			if ( arg.equals("-V") || arg.equals("--version")) {
-				trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - arg : " + arg);
+				log.debug("checkArgs() - arg : " + arg);
 				version();
 				System.exit(0);
 			}
 		}
 		
 		// paramètre qui permet de limiter le nombre de fiches à traiter
-		trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - max ? ");
+		log.debug("checkArgs() - max ? ");
 		for (String arg : inArgs) {
 			if ( arg.startsWith("-M") || arg.startsWith("--max=")) {
-				trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - arg : " + arg);
+				log.debug("checkArgs() - arg : " + arg);
 				String nbFichesStr = null;
 				if ( arg.startsWith("-M")) {
 					nbFichesStr =  arg.substring(3);
@@ -267,10 +270,10 @@ public class PrefetchDorisWebSite {
 				}
 				try { 
 					 nbMaxFichesTraitees = Integer.parseInt(nbFichesStr);
-					 trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - nbMaxFichesTraitees : " + nbMaxFichesTraitees);
+					 log.debug("checkArgs() - nbMaxFichesTraitees : " + nbMaxFichesTraitees);
 			    } catch(NumberFormatException e) { 
 			    	help();
-					trace.log(trace.LOG_ERROR, LOGTAG, "Argument -M ou --max mal utilisé : " + arg);
+					log.error("Argument -M ou --max mal utilisé : " + arg);
 			    	System.exit(0);
 			    }
 			}
@@ -280,7 +283,7 @@ public class PrefetchDorisWebSite {
 			
 		// Vérification que le dernier argument est une des actions prévues
 		String action = inArgs[inArgs.length - 1];
-		trace.log(trace.LOG_DEBUG, LOGTAG, "checkArgs() - argument action : " + action);
+		log.debug("checkArgs() - argument action : " + action);
 		
 		if (action.equals("INIT")) {
 		} else if (action.equals("NODWNLD")) {
@@ -293,8 +296,8 @@ public class PrefetchDorisWebSite {
 			for (String arg : inArgs) {
 				listeArgs += arg + " ";
 			}
-			trace.log(trace.LOG_ERROR, LOGTAG, "arguments : " + listeArgs);
-			trace.log(trace.LOG_ERROR, LOGTAG, "Action non prévue");
+			log.error("arguments : " + listeArgs);
+			log.error("Action non prévue");
 			System.exit(0);
 		}
 		return action;
@@ -443,7 +446,7 @@ public class PrefetchDorisWebSite {
      * Afficher l'aide de l'application
      **/	
 	private static void help(){
-		trace.log(trace.LOG_DEBUG, LOGTAG, "help() - Début");
+		log.debug("help() - Début");
 		
 		System.out.println("Récupération de la base de fiches pour DorisAndroid, Version : " + VERSION);
 		System.out.println("Usage: java -jar PrefetchDorisWebSite.jar [OPTIONS] [ACTION]");
@@ -463,18 +466,18 @@ public class PrefetchDorisWebSite {
 		System.out.println("  UPDATE             En plus des nouvelles fiches, on retélécharge les fiches qui ont changées de statut");
 		System.out.println("  INITSSIMG          Comme INIT sauf que l'on ne retélécharge pas une image déjà connue");
 		
-		trace.log(trace.LOG_DEBUG, LOGTAG, "help() - Fin");
+		log.debug("help() - Fin");
 	}
 	
 	/**
      * Afficher la version de l'application
      * */	
 	private static void version(){
-		trace.log(trace.LOG_DEBUG, LOGTAG, "version() - Début");
+		log.debug("version() - Début");
 		
 		System.out.println("Version : " + VERSION);
 		
-		trace.log(trace.LOG_DEBUG, LOGTAG, "version() - Fin");
+		log.debug("version() - Fin");
 	}
 
 	/**
@@ -484,20 +487,20 @@ public class PrefetchDorisWebSite {
 	 * @param action
 	 */
 	public void checkDossiers(String inAction) {
-		trace.log(trace.LOG_DEBUG, LOGTAG, "checkDossiers() - Début");
+		log.debug("checkDossiers() - Début");
 		
-		trace.log(trace.LOG_DEBUG, LOGTAG, "checkDossiers() - Action : " + inAction);
+		log.debug("checkDossiers() - Action : " + inAction);
 		
-		trace.log(trace.LOG_DEBUG, LOGTAG, "checkDossiers() - Dossier de base : " + DOSSIER_BASE);
-		trace.log(trace.LOG_DEBUG, LOGTAG, "checkDossiers() - Dossier html : " + DOSSIER_HTML);
-		trace.log(trace.LOG_DEBUG, LOGTAG, "checkDossiers() - Dossier Resultats : " + DOSSIER_RESULTATS);
+		log.debug("checkDossiers() - Dossier de base : " + DOSSIER_BASE);
+		log.debug("checkDossiers() - Dossier html : " + DOSSIER_HTML);
+		log.debug("checkDossiers() - Dossier Resultats : " + DOSSIER_RESULTATS);
 		
 		// Si le dossier principal de travail n'existe pas, on le créé
 		File dossierBase = new File(DOSSIER_BASE);
 		if (dossierBase.mkdirs()) {
-			trace.log(trace.LOG_VERBOSE, LOGTAG, "Création du dossier : " + dossierBase.getAbsolutePath());
+			log.info("Création du dossier : " + dossierBase.getAbsolutePath());
 		} else {
-			trace.log(trace.LOG_ERROR, LOGTAG, "Echec de la Création du dossier : " + dossierBase.getAbsolutePath());
+			log.error("Echec de la Création du dossier : " + dossierBase.getAbsolutePath());
 		}
 		
 		// Si les dossiers download (html et img) et résultats existent déjà, ils sont renommés
@@ -513,16 +516,16 @@ public class PrefetchDorisWebSite {
 			if (dossierHtml.exists()){
 				File dossierHtmlNew = new File(DOSSIER_BASE + "/" + DOSSIER_HTML + suffixe);
 				if(dossierHtml.renameTo(dossierHtmlNew)){
-					trace.log(trace.LOG_VERBOSE, LOGTAG, "Sauvegarde du dossier download : " + dossierHtmlNew.getAbsolutePath());
+					log.info("Sauvegarde du dossier download : " + dossierHtmlNew.getAbsolutePath());
 				}else{
-					trace.log(trace.LOG_ERROR, LOGTAG, "Echec renommage du dossier download : " + dossierHtml.getAbsolutePath());
+					log.error("Echec renommage du dossier download : " + dossierHtml.getAbsolutePath());
 					System.exit(0);
 				}
 			}
 			if (dossierHtml.mkdir()) {
-				trace.log(trace.LOG_VERBOSE, LOGTAG, "Création du dossier download : " + dossierHtml.getAbsolutePath());
+				log.info("Création du dossier download : " + dossierHtml.getAbsolutePath());
 			} else {
-				trace.log(trace.LOG_ERROR, LOGTAG, "Echec de la Création du dossier download : " + dossierHtml.getAbsolutePath());
+				log.error("Echec de la Création du dossier download : " + dossierHtml.getAbsolutePath());
 				System.exit(0);
 			}
 		}
@@ -533,16 +536,16 @@ public class PrefetchDorisWebSite {
 			if (dossierImg.exists()){
 				File dossierImgNew = new File(DOSSIER_BASE + "/" + DOSSIER_IMG + suffixe);
 				if(dossierImg.renameTo(dossierImgNew)){
-					trace.log(trace.LOG_VERBOSE, LOGTAG, "Sauvegarde du dossier download : " + dossierImgNew.getAbsolutePath());
+					log.info("Sauvegarde du dossier download : " + dossierImgNew.getAbsolutePath());
 				}else{
-					trace.log(trace.LOG_ERROR, LOGTAG, "Echec renommage du dossier download : " + dossierImg.getAbsolutePath());
+					log.error("Echec renommage du dossier download : " + dossierImg.getAbsolutePath());
 					System.exit(0);
 				}
 			}
 			if (dossierImg.mkdir()) {
-				trace.log(trace.LOG_VERBOSE, LOGTAG, "Création du dossier download : " + dossierImg.getAbsolutePath());
+				log.info("Création du dossier download : " + dossierImg.getAbsolutePath());
 			} else {
-				trace.log(trace.LOG_ERROR, LOGTAG, "Echec de la Création du dossier download : " + dossierImg.getAbsolutePath());
+				log.error("Echec de la Création du dossier download : " + dossierImg.getAbsolutePath());
 				System.exit(0);
 			}
 		}
@@ -554,23 +557,23 @@ public class PrefetchDorisWebSite {
 			if (dossierResultats.exists()){
 				File dossierResultatsNew = new File(DOSSIER_BASE + "/" + DOSSIER_RESULTATS + suffixe);
 				if(dossierResultats.renameTo(dossierResultatsNew)){
-					trace.log(trace.LOG_VERBOSE, LOGTAG, "Sauvegarde du dossier résultats : " + dossierResultatsNew.getAbsolutePath());
+					log.info("Sauvegarde du dossier résultats : " + dossierResultatsNew.getAbsolutePath());
 				}else{
-					trace.log(trace.LOG_ERROR, LOGTAG, "Echec renommage du dossier résultats : " + dossierResultats.getAbsolutePath());
+					log.error("Echec renommage du dossier résultats : " + dossierResultats.getAbsolutePath());
 					System.exit(0);
 				}
 			}
 			if (dossierResultats.mkdir()) {
-				trace.log(trace.LOG_VERBOSE, LOGTAG, "Création du dossier résultats : " + dossierResultats.getAbsolutePath());
+				log.info("Création du dossier résultats : " + dossierResultats.getAbsolutePath());
 			} else {
-				trace.log(trace.LOG_ERROR, LOGTAG, "Echec de la Création du dossier résultats : " + dossierResultats.getAbsolutePath());
+				log.error("Echec de la Création du dossier résultats : " + dossierResultats.getAbsolutePath());
 				System.exit(0);
 			}
 		}
 		
 		
 		
-		trace.log(trace.LOG_DEBUG, LOGTAG, "checkDossiers() - Fin");
+		log.debug("checkDossiers() - Fin");
 	}
 	
 	

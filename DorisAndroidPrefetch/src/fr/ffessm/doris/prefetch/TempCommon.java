@@ -46,6 +46,9 @@ package fr.ffessm.doris.prefetch;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import fr.ffessm.doris.android.datamodel.Fiche;
 
 import net.htmlparser.jericho.Element;
@@ -59,8 +62,7 @@ import net.htmlparser.jericho.Source;
 public class TempCommon {
     
 	// Inititalisation de la Gestion des Log
-	private final static String LOGTAG = "TempCommon";
-    private static Trace trace = PrefetchDorisWebSite.trace;
+	public static Log log = LogFactory.getLog(TempCommon.class);
     
     
     private final static String SITE_RACINE_URL = "http://doris.ffessm.fr/";
@@ -77,8 +79,8 @@ public class TempCommon {
     }
     
     public static List<Fiche> getListeFiches(String inCodePageHtml, int inNbFichesMax) {
-    	trace.log(trace.LOG_DEBUG, LOGTAG, "getListeFiches()- Début");
-    	trace.log(trace.LOG_DEBUG, LOGTAG, "getListeFiches()- NbFichesMax : "+inNbFichesMax);
+    	log.debug("getListeFiches()- Début");
+    	log.debug("getListeFiches()- NbFichesMax : "+inNbFichesMax);
     	
     	// TODO : j'ai mis 1, je ne connais pas les conséquences de ce choix
     	// 3000 n'est-il pas trop grand
@@ -86,35 +88,35 @@ public class TempCommon {
     	
     	Source source=new Source(inCodePageHtml);
     	source.fullSequentialParse();
-    	trace.log(trace.LOG_DEBUG, LOGTAG, "getListeFiches()- source.length() : " + source.length());
-    	trace.log(trace.LOG_DEBUG, LOGTAG, "getListeFiches()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
+    	log.debug("getListeFiches()- source.length() : " + source.length());
+    	log.debug("getListeFiches()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
 
     	Element elementTableracine=source.getFirstElementByClass("titre_page").getParentElement().getParentElement();
-    	trace.log(trace.LOG_DEBUG, LOGTAG, "getListeFiches()- elementTableracine.length() : " + elementTableracine.length());
-    	trace.log(trace.LOG_DEBUG, LOGTAG, "getListeFiches()- elementTableracine : " + elementTableracine.toString().substring(0, Math.min(100, elementTableracine.toString().length())));
+    	log.debug("getListeFiches()- elementTableracine.length() : " + elementTableracine.length());
+    	log.debug("getListeFiches()- elementTableracine : " + elementTableracine.toString().substring(0, Math.min(100, elementTableracine.toString().length())));
 
     	List<? extends Element> listeElementsTD = elementTableracine.getAllElements(HTMLElementName.TD);
-    	trace.log(trace.LOG_DEBUG, LOGTAG, "getGroupes() - listeElementsTD.size() : " + listeElementsTD.size());
+    	log.debug("getGroupes() - listeElementsTD.size() : " + listeElementsTD.size());
 		
     	for (Element elementTD : listeElementsTD) {
-    		//trace.log(trace.LOG_DEBUG, LOGTAG, "getGroupes() - elementTD.length() : " + elementTD.length());
-    		//trace.log(trace.LOG_DEBUG, LOGTAG, "getListeFiches()- elementTD : " + elementTD.toString().substring(0, Math.min(100, elementTD.toString().length())));
+    		//log.debug("getGroupes() - elementTD.length() : " + elementTD.length());
+    		//log.debug("getListeFiches()- elementTD : " + elementTD.toString().substring(0, Math.min(100, elementTD.toString().length())));
     		
     		String elementTDwidth = elementTD.getAttributeValue("width");
 			if (elementTDwidth != null){
     			if (elementTDwidth.toString().equals("75%")) {
-    				trace.log(trace.LOG_DEBUG, LOGTAG, "getGroupes() - elementTD : "+elementTD.getRenderer());
+    				log.debug("getGroupes() - elementTD : "+elementTD.getRenderer());
     				Element elementTDA = elementTD.getFirstElement(HTMLElementName.A);
     				
     				String contenu = elementTDA.getRenderer().toString();
-    				trace.log(trace.LOG_DEBUG, LOGTAG, "getGroupes() - contenu : "+contenu);
+    				log.debug("getGroupes() - contenu : "+contenu);
     				
     				String ficheNomScientifique = contenu.replaceAll("([^-]*)-(.*)", "$1").trim();
     				String ficheNomCommun = contenu.replaceAll("([^-]*)-(.*)", "$2").trim();
     				int ficheId = Integer.parseInt(elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "").replaceAll("&.*", ""));
     				int ficheEtat = Integer.parseInt(elementTDA.getAttributeValue("href").replaceAll(".*fiche_etat=", "").replaceAll("&.*", ""));
     				
-    				trace.log(trace.LOG_VERBOSE, LOGTAG, "getGroupes() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
+    				log.info("getGroupes() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
     				Fiche fiche = new Fiche(ficheNomScientifique, ficheNomCommun, ficheId, ficheEtat);
       				
     				listeFiches.add(fiche);
@@ -123,12 +125,12 @@ public class TempCommon {
 			
 			// Permet de limiter le nombre de fiches traitées pendant les dev.
 			if (listeFiches.size() >= inNbFichesMax){
-				trace.log(trace.LOG_VERBOSE, LOGTAG, "getGroupes() - le nombre de fiches max. est atteint : "+listeFiches.size());
+				log.info("getGroupes() - le nombre de fiches max. est atteint : "+listeFiches.size());
 				break;
 			}
 
 		}
-		trace.log(trace.LOG_DEBUG, LOGTAG, "getListeFiches()- Fin");
+		log.debug("getListeFiches()- Fin");
 		return listeFiches;
     }
     
