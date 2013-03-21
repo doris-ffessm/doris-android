@@ -70,7 +70,7 @@ public class Outils {
     
 	// Inititalisation de la Gestion des Log
 	private final static String LOGTAG = "Outils";
-    private static Log trace = PrefetchDorisWebSite.trace;
+    private static Trace trace = PrefetchDorisWebSite.trace;
     
     public static boolean getFichierUrl(String inUrl, String inFichierRetour) {
     	trace.log(trace.LOG_DEBUG, LOGTAG, "getFichierUrl()- Début");

@@ -60,7 +60,7 @@ public class TempCommon {
     
 	// Inititalisation de la Gestion des Log
 	private final static String LOGTAG = "TempCommon";
-    private static Log trace = PrefetchDorisWebSite.trace;
+    private static Trace trace = PrefetchDorisWebSite.trace;
     
     
     private final static String SITE_RACINE_URL = "http://doris.ffessm.fr/";

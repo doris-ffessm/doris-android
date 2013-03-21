@@ -43,12 +43,28 @@ termes.
 
 package fr.ffessm.doris.prefetch;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+
+/* Niveaux de trace de org.apache.commons.logging
+# fatal = Level.SEVERE
+# error = Level.SEVERE
+# warn = Level.WARNING
+# info = Level.INFO
+# debug = Level.FINE
+# trace = Level.FINEST
+*/
+
+
 /* *********************************************************************
  * Log
  ********************************************************************** */
-public class Log {
+public class Trace {
     private final static String LOGTAG = "Log";
-
+    public Log log = LogFactory.getLog(Trace.class);
+    
+    
     public final int LOG_SILENCE = 9;
     public final int LOG_MESSAGE = 4;
     public final int LOG_WARNING = 3;
@@ -58,7 +74,7 @@ public class Log {
     
     public static int niveauTrace;
     
-    Log (){
+    Trace (){
     	niveauTrace = LOG_WARNING;
     	
     	log(LOG_DEBUG, LOGTAG, "Log() - Début");
@@ -66,7 +82,7 @@ public class Log {
     	log(LOG_DEBUG, LOGTAG, "Log() - Fin");
     }
     
-    Log (int niveauTraceIn){
+    Trace (int niveauTraceIn){
     	niveauTrace = niveauTraceIn;
     }
     
@@ -79,15 +95,30 @@ public class Log {
     } 
 	
     public void log(int inTypeTrace, String inTagLog, String inStrLog) {
-    	String texte = null;
-    	
-    	if (niveauTrace == LOG_DEBUG){
-    		texte = inTagLog + " - ";
-    	}
-    	
+    	System.out.println(inTagLog + " - " + inStrLog);
 		if (inTypeTrace >= niveauTrace) {
-			texte = texte + inStrLog;
-			System.out.println(texte);
+			
+			switch (inTypeTrace) {
+			case LOG_SILENCE :
+				break;
+			case LOG_MESSAGE :
+				log.info(inStrLog);
+				//System.out.println(texte);
+				break;
+			case LOG_WARNING :
+				log.warn(inStrLog);
+				break;
+			case LOG_ERROR :
+				log.error(inStrLog);
+				break;
+			case LOG_VERBOSE :
+				log.trace(inStrLog);
+				break;
+			case LOG_DEBUG :
+				log.debug(inTagLog + " - " + inStrLog);
+				break;
+			}
+
 		}
 		
 	}
