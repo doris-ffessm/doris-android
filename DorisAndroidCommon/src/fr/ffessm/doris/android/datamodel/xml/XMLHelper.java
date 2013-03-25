@@ -50,9 +50,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.sql.SQLException;
 import java.util.List;
-
-
-
 import fr.ffessm.doris.android.datamodel.associations.*;
 import fr.ffessm.doris.android.datamodel.*;
 // Start of user code additional import
@@ -78,8 +75,7 @@ public class XMLHelper {
 			// Close the output stream
 			out.close();
 		} catch (Exception e) {// Catch exception if any
-			Log log = LogFactory.getLog(XMLHelper.class);
-			log.error(e.getMessage(), e);
+			System.err.println("Error: " + e.getMessage());
 		}
 	}
 	

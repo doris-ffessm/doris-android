@@ -53,6 +53,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Collection;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import fr.ffessm.doris.android.datamodel.associations.*;
 
 // Start of user code additional import for PhotoFiche
@@ -158,7 +160,7 @@ public class PhotoFiche {
     	sb.append(">");
 
 		sb.append("\n"+indent+"\t<"+XML_ATT_CLEURL+">");
-		sb.append(this.cleURL);
+		sb.append(StringEscapeUtils.escapeXml(this.cleURL));
     	sb.append("</"+XML_ATT_CLEURL+">");
 		sb.append("\n"+indent+"\t<"+XML_ATT_IMAGEVIGNETTE+">");
 		sb.append(this.imageVignette);

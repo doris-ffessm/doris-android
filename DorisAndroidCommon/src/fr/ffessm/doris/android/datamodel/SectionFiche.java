@@ -53,6 +53,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Collection;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import fr.ffessm.doris.android.datamodel.associations.*;
 
 // Start of user code additional import for SectionFiche
@@ -133,10 +135,10 @@ public class SectionFiche {
     	sb.append(">");
 
 		sb.append("\n"+indent+"\t<"+XML_ATT_TITRE+">");
-		sb.append(this.titre);
+		sb.append(StringEscapeUtils.escapeXml(this.titre));
     	sb.append("</"+XML_ATT_TITRE+">");
 		sb.append("\n"+indent+"\t<"+XML_ATT_TEXTE+">");
-		sb.append(this.texte);
+		sb.append(StringEscapeUtils.escapeXml(this.texte));
     	sb.append("</"+XML_ATT_TEXTE+">");
 
 		// TODO deal with other case

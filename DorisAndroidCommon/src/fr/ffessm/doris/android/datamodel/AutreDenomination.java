@@ -53,6 +53,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Collection;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import fr.ffessm.doris.android.datamodel.associations.*;
 
 // Start of user code additional import for AutreDenomination
@@ -134,10 +136,10 @@ public class AutreDenomination {
     	sb.append(">");
 
 		sb.append("\n"+indent+"\t<"+XML_ATT_DENOMINATION+">");
-		sb.append(this.denomination);
+		sb.append(StringEscapeUtils.escapeXml(this.denomination));
     	sb.append("</"+XML_ATT_DENOMINATION+">");
 		sb.append("\n"+indent+"\t<"+XML_ATT_LANGUE+">");
-		sb.append(this.langue);
+		sb.append(StringEscapeUtils.escapeXml(this.langue));
     	sb.append("</"+XML_ATT_LANGUE+">");
 
 		// TODO deal with other case

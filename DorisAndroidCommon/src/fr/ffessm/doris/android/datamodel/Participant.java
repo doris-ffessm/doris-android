@@ -53,6 +53,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Collection;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import fr.ffessm.doris.android.datamodel.associations.*;
 
 // Start of user code additional import for Participant
@@ -155,7 +157,7 @@ public class Participant {
     	sb.append(">");
 
 		sb.append("\n"+indent+"\t<"+XML_ATT_NOM+">");
-		sb.append(this.nom);
+		sb.append(StringEscapeUtils.escapeXml(this.nom));
     	sb.append("</"+XML_ATT_NOM+">");
 
 		if(this.photo!= null){
