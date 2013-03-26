@@ -5,5 +5,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/ormlite-core-4.41.jar" sourcepath="/DorisAndroid/libs/src/ormlite-core-4.41-sources.jar"/>
 	<classpathentry kind="lib" path="libs/jericho-html-3.1.jar"/>
 	<classpathentry kind="lib" path="libs/commons-logging-api-1.1.1.jar"/>
+	<classpathentry kind="lib" path="libs/commons-lang3-3.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

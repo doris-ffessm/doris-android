@@ -39,49 +39,14 @@ Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
 pris connaissance de la licence CeCILL-B, et que vous en avez accepté les
 termes.
 * ********************************************************************* */
-package fr.ffessm.doris.android.datamodel;
+package fr.ffessm.doris.android.datamodel.xml;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
-import java.sql.SQLException;
+import org.xml.sax.helpers.DefaultHandler;
+//Start of user code additional import for GroupeXMLParser
+//End of user code
+public class GroupeXMLParser extends DefaultHandler{
 
-import fr.ffessm.doris.android.datamodel.associations.*;
-
-/**
- * Context class used to simplify the access to the different DAOs of the application
- */
-public class DorisDBHelper {
-
-
-	public Dao<Fiche, Integer> ficheDao;
-	//public RuntimeExceptionDao<Fiche, Integer> ficheDao;
-	public Dao<AutreDenomination, Integer> autreDenominationDao;
-	//public RuntimeExceptionDao<AutreDenomination, Integer> autreDenominationDao;
-	public Dao<PhotoFiche, Integer> photoFicheDao;
-	//public RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao;
-	public Dao<SectionFiche, Integer> sectionFicheDao;
-	//public RuntimeExceptionDao<SectionFiche, Integer> sectionFicheDao;
-	public Dao<Participant, Integer> participantDao;
-	//public RuntimeExceptionDao<Participant, Integer> participantDao;
-	public Dao<PhotoParticipant, Integer> photoParticipantDao;
-	//public RuntimeExceptionDao<PhotoParticipant, Integer> photoParticipantDao;
-	public Dao<ZoneGeographique, Integer> zoneGeographiqueDao;
-	//public RuntimeExceptionDao<ZoneGeographique, Integer> zoneGeographiqueDao;
-	public Dao<ZoneObservation, Integer> zoneObservationDao;
-	//public RuntimeExceptionDao<ZoneObservation, Integer> zoneObservationDao;
-	public Dao<Groupe, Integer> groupeDao;
-	//public RuntimeExceptionDao<Groupe, Integer> groupeDao;
-	//public RuntimeExceptionDao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesDao;
-	public Dao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesDao;
-	//public RuntimeExceptionDao<Fiches_ZonesObservations, Integer> fiches_ZonesObservationsDao;
-	public Dao<Fiches_ZonesObservations, Integer> fiches_ZonesObservationsDao;
-	//public RuntimeExceptionDao<Fiches_verificateurs_Participants, Integer> fiches_verificateurs_ParticipantsDao;
-	public Dao<Fiches_verificateurs_Participants, Integer> fiches_verificateurs_ParticipantsDao;
-
+//Start of user code additional code for GroupeXMLParser
+//End of user code
 	
-	public DorisDBHelper(){
-	}
-
 }
