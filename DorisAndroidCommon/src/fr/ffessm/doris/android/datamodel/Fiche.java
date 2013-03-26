@@ -57,6 +57,11 @@ import fr.ffessm.doris.android.datamodel.associations.*;
 
 // Start of user code additional import for Fiche
 import java.io.IOException;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
@@ -223,11 +228,12 @@ public class Fiche {
 
 	// Start of user code Fiche additional user properties
 	
-	
+	// Inititalisation de la Gestion des Log 
+	public static Log log = LogFactory.getLog(Fiche.class);
 	
 	public void getFiche(String htmlFiche){
-    	//// trace.log(trace.LOG_DEBUG, TAG, "getFiche()- Début");
-
+		log.debug("getFiche() - Début");
+		
     	int i;
     	String listeLienRencontre = "";
     	
@@ -246,7 +252,7 @@ public class Fiche {
     	htmlFiche = htmlFiche.replace("<br>", "");
     	htmlFiche = htmlFiche.replace("<br/>", "");
     	
-    	// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - htmlFiche : " + htmlFiche.substring(0, 200));
+    	log.debug("getFiche() - htmlFiche : " + htmlFiche.substring(0, 200));
     	
 		// Utilisation du parser Jericho
 		Source source=new Source(htmlFiche);
@@ -259,12 +265,12 @@ public class Fiche {
 		Element ElementTDcode_fiche;
 		ElementTDcode_fiche = source.getFirstElementByClass("code_fiche");
 		
-		// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - ElementTDcode_fiche.toString() : " + ElementTDcode_fiche.toString());
+		log.debug("getFiche() - ElementTDcode_fiche.toString() : " + ElementTDcode_fiche.toString());
 
 		String ficheRef = ElementTDcode_fiche.getFirstElementByClass("normalgris").getRenderer().toString().trim();
 		ficheRef = ficheRef.replace("(N°", "").replace(")", "");
 		setNumeroFiche(Integer.parseInt(ficheRef));
-		// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - ref : " + ficheRef);		
+		log.info("getFiche() - ref : " + ficheRef);		
 				
 		//Centrage sur la TABLE qui contient tout le texte et les images
 		Element ElementTable;
@@ -282,15 +288,15 @@ public class Fiche {
 			// La 4ème contient la classification et la suite
 			
 			ElementTable=source.getFirstElementByClass("trait_cadregris").getFirstElement();
-			// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - ElementTable : " + ElementTable.toString().substring(0, Math.min(ElementTable.toString().length(),200)));
+			log.debug("getFiche() - ElementTable : " + ElementTable.toString().substring(0, Math.min(ElementTable.toString().length(),200)));
 			
 			listeElementsTable_TABLE = ElementTable.getFirstElement(HTMLElementName.TABLE).getChildElements();
-			// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - listeElementsTable_TABLE.size : " + listeElementsTable_TABLE.size());
+			log.debug("getFiche() - listeElementsTable_TABLE.size : " + listeElementsTable_TABLE.size());
 
 			for (Element elementTable_TABLE : listeElementsTable_TABLE) {
 				num_table++;
-				// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - ligneTable_TR :" + num_table);
-				// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - elementTable_TR : " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),100)));
+				log.debug("getFiche() - ligneTable_TR :" + num_table);
+				log.debug("getFiche() - elementTable_TR : " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),100)));
 				switch(num_table) {
 				//Entête de la Fiche
 				case 1 :
@@ -303,16 +309,16 @@ public class Fiche {
 						for (Element elementTR : listeElementsHG_TR) {
 							i++;
 							if (i == 2) {
-								// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - ficheNomLatin : " + elementTR.getRenderer().toString());
+								log.info("getFiche() - ficheNomLatin : " + elementTR.getRenderer().toString());
 								setNomScientifique( Outils.nettoyageCaracteres(elementTR.getRenderer().toString().trim()) );
 							}
 							if (i == 3) {
-								// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - ficheRegion : " + elementTR.getRenderer().toString());
+								log.info("getFiche() - ficheRegion : " + elementTR.getRenderer().toString());
 								// TODO :
 								//ficheRegion = elementTR.getRenderer().toString().trim();
 							}
 							if (i == 5) {
-								// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - ficheNomFrancais : " + elementTR.getRenderer().toString());
+								log.info("getFiche() - ficheNomFrancais : " + elementTR.getRenderer().toString());
 								setNomCommun( Outils.nettoyageCaracteres(elementTR.getRenderer().toString().trim()) );
 							}
 						}
@@ -330,11 +336,11 @@ public class Fiche {
 								
 								// TODO :
 								//groupeRef = Integer.parseInt(attribut.getValue().toString().replaceAll(".*images_groupe/([0-9]*).gif","$1"));
-								// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - groupeRef : " + groupeRef);
+								//log.info("getFiche() - groupeRef : " + groupeRef);
 
 								// TODO :
 								//groupeRefTexte = listeElementsHD_TR.getRenderer().toString().trim();
-								// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - groupeRefTexte : " + groupeRefTexte);
+								//log.info("getFiche() - groupeRefTexte : " + groupeRefTexte);
 							}
 						}
 					}
@@ -347,7 +353,7 @@ public class Fiche {
 					
 					//Le grand pere du 1er TD de class Normal est le TBODY des Détails
 					Element ElementsMG_normal=elementTable_TABLE.getFirstElementByClass("normal");
-					// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - ElementsMG_rubrique : " + ElementsMG_normal.toString().substring(0, Math.min(ElementsMG_normal.toString().length(),20)));
+					log.debug("getFiche() - ElementsMG_rubrique : " + ElementsMG_normal.toString().substring(0, Math.min(ElementsMG_normal.toString().length(),20)));
 					Element ElementsMG=ElementsMG_normal.getParentElement().getParentElement();
 					List<? extends Element> listeElementsMG_TD = ElementsMG.getAllElements(HTMLElementName.TD);
 					String autresDenominations = "";
@@ -356,7 +362,7 @@ public class Fiche {
 					String contenu = "";
 	
 					for (Element elementTD : listeElementsMG_TD) {
-						// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - listeElementsMG_TD : " + elementTD.toString().substring(0, Math.min(elementTD.toString().length(),50)));
+						log.debug("getFiche() - listeElementsMG_TD : " + elementTD.toString().substring(0, Math.min(elementTD.toString().length(),50)));
 						listeAttributs=elementTD.getAttributes();
 						for (Attribute attribut : listeAttributs) {
 							
@@ -367,7 +373,7 @@ public class Fiche {
 									// TODO:
 									//ficheListeDetails.add(new Detail("Autres Denominations", autresDenominations, true));
 									
-									// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - autresDenominations(A) : " + autresDenominations);
+									log.info("getFiche() - autresDenominations(A) : " + autresDenominations);
 									autresDenominations = "";
 									//autresDenominationsFlag = false;
 								}
@@ -375,38 +381,38 @@ public class Fiche {
 							}
 							
 							if (attribut.getName().equals("class") && attribut.getValue().equals("normal") ) {
-								// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - rubrique : " + rubrique);
+								log.debug("getFiche() - rubrique : " + rubrique);
 								if (rubrique.equals("")) {
 									autresDenominations  = elementTD.getRenderer().toString().trim();
 									
 									// suppression des sauts de ligne
 									autresDenominations = autresDenominations.replaceAll("\r\n", " ").replaceAll("\n", " ");
-									// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - autresDenominations(B1) : " + autresDenominations);
+									log.debug("getFiche() - autresDenominations(B1) : " + autresDenominations);
 	
 									// suppression des blancs multiples
 									autresDenominations = autresDenominations.replaceAll("\\s{2,}"," ");
-									// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - autresDenominations(B2) : " + autresDenominations);
+									log.debug("getFiche() - autresDenominations(B2) : " + autresDenominations);
 									
 									// permet d'enlever les Liens et de les remplacer par (*)
 									autresDenominations = autresDenominations.replaceAll("<[^>]*>", "(*)").trim();
 										
 								} else {
 									contenu = elementTD.getRenderer().toString();
-									// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - contenu(initial) : " + contenu);
+									log.debug("getFiche() - contenu(initial) : " + contenu);
 									
 									// suppression des sauts de ligne
 									contenu = contenu.replaceAll("\r\n", " ").replaceAll("\n", " ");
-									// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - contenu(1) : " + contenu);
+									log.debug("getFiche() - contenu(1) : " + contenu);
 	
 									// suppression des blancs multiples
 									contenu = contenu.replaceAll("\\s{2,}"," ");
-									// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - contenu(2) : " + contenu);
+									log.debug("getFiche() - contenu(2) : " + contenu);
 									
 									// permet d'enlever les Liens et de les remplacer par (*)
 									contenu = contenu.replaceAll("<[^>]*>", "(*)").trim();
 	
-									// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - rubrique : " + rubrique);
-									// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - contenu(après nettoyage) : " + contenu);
+									log.info("getFiche() - rubrique : " + rubrique);
+									log.info("getFiche() - contenu(après nettoyage) : " + contenu);
 									//TODO :
 									//ficheListeDetails.add(new Detail(rubrique,contenu,false));
 								}
@@ -417,14 +423,14 @@ public class Fiche {
 						
 						for (Element elementTDA : elementTD.getAllElements(HTMLElementName.A)) {
 							
-							// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - A : " + elementTDA.getRenderer().toString().trim() + " - lien : " + elementTDA.getAttributeValue("href"));
+							log.debug("getFiche() - A : " + elementTDA.getRenderer().toString().trim() + " - lien : " + elementTDA.getAttributeValue("href"));
 							
 							if (elementTDA.getAttributeValue("href").startsWith("../") || elementTDA.getAttributeValue("href").startsWith("http://doris.ffessm.fr") ) {
 							
 								if (elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "") != "" && elementTDA.getRenderer().toString().trim() != "") {
 								
 									String tempLien = elementTDA.getRenderer().toString().trim();
-									// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - listeLienRencontre : " + listeLienRencontre );
+									log.info("getFiche() - listeLienRencontre : " + listeLienRencontre );
 									
 									if (!listeLienRencontre.contains(tempLien + "£")) {
 										listeLienRencontre += tempLien + "£";
@@ -443,10 +449,10 @@ public class Fiche {
 					
 					List<? extends Element> listeElements1 = null;
 					listeElements1 = elementTable_TABLE.getAllElementsByClass("trait_cadregris");
-					// trace.log(trace.LOG_DEBUG, TAG, "getFiche() -  element : " + " - " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),30)));
+					log.debug("getFiche() -  element : " + " - " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),30)));
 					
 					for (Element element : listeElements1) {
-						// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - vignette 1: " + element.toString().substring(0, Math.min(100,element.toString().toString().length())));
+						log.debug("getFiche() - vignette 1: " + element.toString().substring(0, Math.min(100,element.toString().toString().length())));
 						
 						Element element2 = element.getFirstElement(HTMLElementName.A);
 						String urlImageDansFiche = "";
@@ -454,14 +460,14 @@ public class Fiche {
 						if (element2 != null)
 						{
 							element2 = element2.getFirstElement(HTMLElementName.IMG);
-							// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - vignette 2: " + element2.toString().substring(0, Math.min(100,element2.toString().toString().length())));
+							log.debug("getFiche() - vignette 2: " + element2.toString().substring(0, Math.min(100,element2.toString().toString().length())));
 							
 							listeAttributs=element2.getAttributes();
 							for (Attribute attribut : listeAttributs) {
 								if (attribut.getName().equalsIgnoreCase("src") && attribut.getValue().contains("gestionenligne")){
 									//TODO :
 									//urlImageDansFiche = attribut.getValue().replaceAll(Extraction.racineSite, "");
-									// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - urlImageDansFiche : " + urlImageDansFiche);
+									log.info("getFiche() - urlImageDansFiche : " + urlImageDansFiche);
 																										
 									break;
 								}
@@ -473,7 +479,7 @@ public class Fiche {
 						element2 = element.getFirstElementByClass("normal2");
 						if (element2 != null)
 						{
-							// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - Texte : " + element2.getRenderer().toString());
+							log.info("getFiche() - Texte : " + element2.getRenderer().toString());
 							// TODO :
 							// ficheListeImages.add(new Image(element2.getRenderer().toString(),urlImageDansFiche));
 						}
@@ -497,12 +503,12 @@ public class Fiche {
 			List<? extends Element> listeElementsTDSousGroupe = source.getAllElementsByClass("sousgroupe_fiche");
 			for (Element element : listeElementsTDSousGroupe) {
 				int index = listeElementsTDSousGroupe.indexOf(element);
-				// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - index : " + index);
+				log.debug("getFiche() - index : " + index);
 				
 				if (index == 1) {
 					// TODO :
-					// sousgroupeRefTexte = element.getRenderer().toString().trim();
-					// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - sousgroupeRefTexte : " + sousgroupeRefTexte);
+					//sousgroupeRefTexte = element.getRenderer().toString().trim();
+					//log.info("getFiche() - sousgroupeRefTexte : " + sousgroupeRefTexte);
 				}
 				if (index == 2) {
 					
@@ -511,8 +517,8 @@ public class Fiche {
 						
 						if (attribut.getName().equals("src") && attribut.getValue().toString().startsWith("gestionenligne/images_sousgroupe/") ) {
 							// TODO :
-							// sousgroupeRef = Integer.parseInt(attribut.getValue().toString().toLowerCase().replaceAll(".*images_sousgroupe/([0-9]*).(gif|jpg)","$1"));
-							// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - sousgroupeRef : " + sousgroupeRef);
+							//sousgroupeRef = Integer.parseInt(attribut.getValue().toString().toLowerCase().replaceAll(".*images_sousgroupe/([0-9]*).(gif|jpg)","$1"));
+							//log.info("getFiche() - sousgroupeRef : " + sousgroupeRef);
 						}
 					}
 				}
@@ -526,19 +532,19 @@ public class Fiche {
 		if ( getEtatFiche() == 1 || getEtatFiche() == 2 || getEtatFiche() == 3
 				|| getEtatFiche() == 5 ) {
 			ElementTable=source.getFirstElementByClass("trait_cadregris");
-			// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - ElementTable : " + ElementTable.toString().substring(0, Math.min(ElementTable.toString().length(),200)));
+			log.debug("getFiche() - ElementTable : " + ElementTable.toString().substring(0, Math.min(ElementTable.toString().length(),200)));
 
 			listeElementsTable_TABLE = ElementTable.getAllElements(HTMLElementName.TABLE);
-			// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - listeElementsTable_TABLE.size : " + listeElementsTable_TABLE.size());
+			log.debug("getFiche() - listeElementsTable_TABLE.size : " + listeElementsTable_TABLE.size());
 
 			for (Element elementTable_TABLE : listeElementsTable_TABLE) {
 				num_table++;
-				// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - num_table :" + num_table);
-				// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - elementTable_TABLE.length() : " + elementTable_TABLE.toString().length());
-				// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - elementTable_TABLE : " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),100)));
+				log.debug("getFiche() - num_table :" + num_table);
+				log.debug("getFiche() - elementTable_TABLE.length() : " + elementTable_TABLE.toString().length());
+				log.debug("getFiche() - elementTable_TABLE : " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),100)));
 
 				String largeurTable = elementTable_TABLE.getAttributeValue("width");
-				// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - largeurTable :" + largeurTable);
+				log.debug("getFiche() - largeurTable :" + largeurTable);
 				String urlImageDansFiche = "";
 				
 				//Entête de la Fiche
@@ -548,27 +554,27 @@ public class Fiche {
 					
 					try	{
 						Element ElementNomLatin = ElementInfosGauche.getFirstElementByClass("texte_bandeau").getFirstElement();
-						// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - ElementNomLatin : " + ElementNomLatin.getRenderer().toString().trim());
+						log.info("getFiche() - ElementNomLatin : " + ElementNomLatin.getRenderer().toString().trim());
 						setNomScientifique( ElementNomLatin.getRenderer().toString().trim() );
 					} catch (Exception e) {
-		        		// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - le nom latin n'est pas toujours renseigné");
+		        		log.debug("getFiche() - le nom latin n'est pas toujours renseigné");
 		        	}
 					
 					try	{
 						Element ElementDistribution = ElementInfosGauche.getFirstElementByClass("normal").getFirstElement();
-						// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - ElementDistribution : " + ElementDistribution.getRenderer().toString().trim());
+						log.info("getFiche() - ElementDistribution : " + ElementDistribution.getRenderer().toString().trim());
 						// TODO :
 						//ficheRegion = ElementDistribution.getRenderer().toString().trim();
 					} catch (Exception e) {
-		        		// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - la Distribution n'est pas toujours renseignée");
+		        		log.debug("getFiche() - la Distribution n'est pas toujours renseignée");
 		        	}
 					
 					try	{
 						Element ElementNomCommun = ElementInfosGauche.getFirstElementByClass("titre2").getFirstElement();
-						// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - ElementNomCommun : " + ElementNomCommun.getRenderer().toString().trim());
+						log.info("getFiche() - ElementNomCommun : " + ElementNomCommun.getRenderer().toString().trim());
 						setNomCommun( ElementNomCommun.getRenderer().toString().trim() );
 					} catch (Exception e) {
-		        		// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - le nom français n'est pas toujours renseigné");
+		        		log.debug("getFiche() - le nom français n'est pas toujours renseigné");
 		        	}
 					
 					//Recup TRs Haut Droit contenant le Groupe auquel appartient l'espèce
@@ -581,11 +587,11 @@ public class Fiche {
 
 								Element listeElementsHD_TR = element.getParentElement().getParentElement();
 								// TODO :
-								// groupeRef = Integer.parseInt(attribut.getValue().toString().replaceAll(".*images_groupe/([0-9]*).gif","$1"));
-								// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - groupeRef : " + groupeRef);
+								//groupeRef = Integer.parseInt(attribut.getValue().toString().replaceAll(".*images_groupe/([0-9]*).gif","$1"));
+								//log.info("getFiche() - groupeRef : " + groupeRef);
 								// TODO :
-								// groupeRefTexte = listeElementsHD_TR.getRenderer().toString().trim();
-								// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - groupeRefTexte : " + groupeRefTexte);
+								//groupeRefTexte = listeElementsHD_TR.getRenderer().toString().trim();
+								//log.info("getFiche() - groupeRefTexte : " + groupeRefTexte);
 							}
 						}
 					}
@@ -594,7 +600,7 @@ public class Fiche {
 				}
 					
 				if (largeurTable!=null && largeurTable.equals("372")) {
-					// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - Recup. Images");
+					log.debug("getFiche() - Recup. Images");
 					
 					//Recup du TR dont le 3ème TD fils contient les infos DROITE (images et qui a fait la fiche)
 					List<? extends Element> ListeelementTable_IMG = elementTable_TABLE.getAllElements(HTMLElementName.IMG);
@@ -605,7 +611,7 @@ public class Fiche {
 							if (attribut.getName().equalsIgnoreCase("src") && attribut.getValue().contains("gestionenligne")){
 								// TODO :
 								// urlImageDansFiche = attribut.getValue().replaceAll(Extraction.racineSite, "");
-								// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - urlImageDansFiche : " + urlImageDansFiche);
+								log.info("getFiche() - urlImageDansFiche : " + urlImageDansFiche);
 														
 								break;
 							}
@@ -617,7 +623,7 @@ public class Fiche {
 					Element element2 = elementTable_TABLE.getFirstElementByClass("normal2");
 					if (element2 != null)
 					{
-						// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - Texte : " + element2.getRenderer().toString());
+						log.info("getFiche() - Texte : " + element2.getRenderer().toString());
 						// TODO :
 						// ficheListeImages.add(new Image(element2.getRenderer().toString(), urlImageDansFiche));
 					}
@@ -629,17 +635,17 @@ public class Fiche {
 			}
 			
 			//Recup du sous-Groupe auquel appartient l'espèce
-			// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - Recup du sous-Groupe auquel appartient l'espèce");
+			log.debug("getFiche() - Recup du sous-Groupe auquel appartient l'espèce");
 			List<? extends Element> listeElementsTDSousGroupe = source.getAllElementsByClass("sousgroupe_fiche");
 			
 			for (Element element : listeElementsTDSousGroupe) {
 				int index = listeElementsTDSousGroupe.indexOf(element);
-				// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - index : " + index);
+				log.debug("getFiche() - index : " + index);
 				
 				if (index == 1) {
 					// TODO :
-					// sousgroupeRefTexte = element.getRenderer().toString().trim();
-					// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - sousgroupeRefTexte : " + sousgroupeRefTexte);
+					//sousgroupeRefTexte = element.getRenderer().toString().trim();
+					//log.info("getFiche() - sousgroupeRefTexte : " + sousgroupeRefTexte);
 				}
 				if (index == 2) {
 					
@@ -648,8 +654,8 @@ public class Fiche {
 						
 						if (attribut.getName().equals("src") && attribut.getValue().toString().startsWith("gestionenligne/images_sousgroupe/") ) {
 							// TODO :
-							// sousgroupeRef = Integer.parseInt(attribut.getValue().toString().toLowerCase().replaceAll(".*images_sousgroupe/([0-9]*).(gif|jpg)","$1"));
-							// trace.log(trace.LOG_VERBOSE, TAG, "getFiche() - sousgroupeRef : " + sousgroupeRef);
+							//sousgroupeRef = Integer.parseInt(attribut.getValue().toString().toLowerCase().replaceAll(".*images_sousgroupe/([0-9]*).(gif|jpg)","$1"));
+							//log.info("getFiche() - sousgroupeRef : " + sousgroupeRef);
 						}
 					}
 				}
@@ -660,7 +666,7 @@ public class Fiche {
 		
 		listeElementsTable_TABLE = null;
 		
-    	// trace.log(trace.LOG_DEBUG, TAG, "getFiche() - Fin");
+    	log.debug("getFiche() - Fin");
 	}
 	
 	
@@ -671,14 +677,14 @@ public class Fiche {
 		public boolean affiche;
 		
 		public Detail(String inTitre, String inContenu, boolean inAffiche) {
-			// trace.log(trace.LOG_DEBUG, TAG, "Detail() - Début");
-			// trace.log(trace.LOG_DEBUG, TAG, "Detail() - Titre : " + inTitre);
-			// trace.log(trace.LOG_DEBUG, TAG, "Detail() - Contenu : " + inContenu);
-			// trace.log(trace.LOG_DEBUG, TAG, "Detail() - Affiche : " + inAffiche);
+			log.debug("Detail() - Début");
+			log.debug("Detail() - Titre : " + inTitre);
+			log.debug("Detail() - Contenu : " + inContenu);
+			log.debug("Detail() - Affiche : " + inAffiche);
 			titre = inTitre;
 			contenu = inContenu;
 			affiche = inAffiche;
-			// trace.log(trace.LOG_DEBUG, TAG, "Detail() - Fin");
+			log.debug("Detail() - Fin");
 		}
 	}
 	
@@ -690,9 +696,9 @@ public class Fiche {
 		public String urlImage;
 		
 		public Image(String inTitre, String inUrl) {
-			// trace.log(trace.LOG_DEBUG, TAG, "Image() - Début");
-			// trace.log(trace.LOG_DEBUG, TAG, "Image() - Titre : " + inTitre);
-			// trace.log(trace.LOG_DEBUG, TAG, "Image() - Url : " + inUrl);
+			log.debug("Image() - Début");
+			log.debug("Image() - Titre : " + inTitre);
+			log.debug("Image() - Url : " + inUrl);
 
 			titre = inTitre;
 			
@@ -708,10 +714,10 @@ public class Fiche {
 				principale = false;
 			}
 			
-			// trace.log(trace.LOG_DEBUG, TAG, "Image() - principale : " + principale);
-			// trace.log(trace.LOG_DEBUG, TAG, "Image() - urlImage : " + urlImage);
-			// trace.log(trace.LOG_DEBUG, TAG, "Image() - urlVignette : " + urlVignette);
-			// trace.log(trace.LOG_DEBUG, TAG, "Image() - Fin");
+			log.debug("Image() - principale : " + principale);
+			log.debug("Image() - urlImage : " + urlImage);
+			log.debug("Image() - urlVignette : " + urlVignette);
+			log.debug("Image() - Fin");
 		}
 		
 	}
@@ -806,12 +812,12 @@ public class Fiche {
 		sb.append(" ");
     	sb.append(XML_ATT_NOMSCIENTIFIQUE);
     	sb.append("=\"");
-		sb.append(this.nomScientifique);
+		sb.append(StringEscapeUtils.escapeXml(this.nomScientifique));
     	sb.append("\" ");
 		sb.append(" ");
     	sb.append(XML_ATT_NOMCOMMUN);
     	sb.append("=\"");
-		sb.append(this.nomCommun);
+		sb.append(StringEscapeUtils.escapeXml(this.nomCommun));
     	sb.append("\" ");
 		sb.append(" ");
     	sb.append(XML_ATT_NUMEROFICHE);
