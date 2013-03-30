@@ -56,6 +56,7 @@ import java.util.Collection;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import fr.ffessm.doris.android.datamodel.associations.*;
+import fr.ffessm.doris.android.sitedoris.Outils;
 
 // Start of user code additional import for Fiche
 import java.io.IOException;
@@ -251,7 +252,9 @@ public class Fiche {
     	int i;
     	String listeLienRencontre = "";
     	
-    	htmlFiche = htmlFiche.replace("&nbsp;</td>", "</td>");
+    	htmlFiche = Outils.nettoyageBalises(htmlFiche);
+    	
+    	
     	try {
 			htmlFiche = Outils.ciblePage(htmlFiche, "FICHE");
 		} catch (IOException e1) {
@@ -259,12 +262,6 @@ public class Fiche {
 			e1.printStackTrace();
 		}
     	
-    	htmlFiche = htmlFiche.replace("<strong>", "");
-    	htmlFiche = htmlFiche.replace("</strong>", "");
-    	htmlFiche = htmlFiche.replace("<em>", "");
-    	htmlFiche = htmlFiche.replace("</em>", "");
-    	htmlFiche = htmlFiche.replace("<br>", "");
-    	htmlFiche = htmlFiche.replace("<br/>", "");
     	
     	log.debug("getFiche() - htmlFiche : " + htmlFiche.substring(0, 200));
     	

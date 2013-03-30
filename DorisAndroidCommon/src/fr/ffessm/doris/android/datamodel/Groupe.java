@@ -109,6 +109,11 @@ C'est ce texte. */
 	protected Groupe goupePere;
 
 	// Start of user code Groupe additional user properties
+	
+	
+	
+	
+	
 	// End of user code
 	
 	public Groupe() {} // needed by ormlite

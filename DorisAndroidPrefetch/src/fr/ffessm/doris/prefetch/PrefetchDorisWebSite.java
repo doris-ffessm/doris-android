@@ -85,6 +85,8 @@ import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesObservations;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_verificateurs_Participants;
 import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
+import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.SiteDoris;
 
 
 public class PrefetchDorisWebSite {
@@ -136,72 +138,102 @@ public class PrefetchDorisWebSite {
 		// Vérification, Création, Sauvegarde des dossiers de travails
 		checkDossiers(action);
 		
-		// Récupération de la liste des fiches sur le site de DORIS
-		String listeFichesFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeFiches.html";
-		log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
-		
-		List<Fiche> listeFichesTravail = new ArrayList<Fiche>(1);
-		
-		if (! action.equals("NODWNLD")){
-			if (Outils.getFichierUrl(TempCommon.getListeFichesUrl(), listeFichesFichier)) {
-				String contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
-				
-				listeFichesTravail = TempCommon.getListeFiches(contenuFichierHtml, nbMaxFichesTraitees);
-			} else {
-				log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-				System.exit(0);
-			}
+		if (action.equals("TEST")) {
+	    	String test = "\"\"\"\"\"\"\"<a href=\"fiche2.asp?fiche_numero=3527&fiche_espece=\"Montereina\" (Discodoris) coerulescens&fiche_etat=5&origine=scientifique\"><em>\"Montereina\" (Discodoris) coerulescens</em>&nbsp;&nbsp;-&nbsp;&nbsp;Discodoris azurée</a>";
+	    	
+	    	log.debug(test);
+	    	
+	    	log.debug(fr.ffessm.doris.android.sitedoris.Outils.nettoyageBalises(test));
+	    	
+	    	log.debug(fr.ffessm.doris.android.sitedoris.Outils.nettoyageBalises(fr.ffessm.doris.android.sitedoris.Outils.nettoyageBalises(test)));
 		} else {
-			String contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
-			
-			listeFichesTravail = TempCommon.getListeFiches(contenuFichierHtml, nbMaxFichesTraitees);
-		}
-		// TODO : Il faudra ici, pour les modes où on complète la base, reconstruire
-		// la table des fiches déjà connues
 		
 		
-		// Pour chaque fiche de la liste de travail :
-		// TODO : on vérifie qu'il faut la traiter
-		// On la télécharge (et sauvegarde le fichier original)
-		// On la traite
-		for (Fiche fiche : listeFichesTravail) {
-			// TODO : Ne pas traiter dans certain cas
+			// Récupération de la liste des groupes sur le site de DORIS
+			String listeGroupesFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeGroupes.html";
+			log.info("Récup. Liste Groupes Doris : " + listeGroupesFichier);
 			
-			log.debug("doMain() - Fiche : "+fiche.getNomCommun());
-			
-			String urlFiche = "http://doris.ffessm.fr/fiche2.asp?fiche_numero="+fiche.getNumeroFiche();
-			String fichierLocalFiche = DOSSIER_BASE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+".html";
-			if (! action.equals("NODWNLD")) {
-				if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
-					String contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
-				
-					fiche.getFiche(contenuFichierHtml);
+			if (! action.equals("NODWNLD")){
+				if (Outils.getFichierUrl(Constants.getGroupesUrl(), listeGroupesFichier)) {
+					String contenuFichierHtml = Outils.getFichier(new File(listeGroupesFichier));
+					
 				} else {
-					log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
+					log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
+					System.exit(0);
 				}
 			} else {
-				String contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
+				String contenuFichierHtml = Outils.getFichier(new File(listeGroupesFichier));
 				
-				fiche.getFiche(contenuFichierHtml);
 			}
-		}
-		
-		// Ecriture des fiches dans le fichier xml final
-		ConnectionSource connectionSource = null;
-		try {
-			// create our data-source for the database
-			connectionSource = new JdbcConnectionSource(DATABASE_URL);
-			// setup our database and DAOs
-			setupDatabase(connectionSource);
-			// read and write some data
-			readWriteData(listeFichesTravail);
-
-		} finally {
-			// destroy the data source which should close underlying connections
-			if (connectionSource != null) {
-				connectionSource.close();
+	
+			
+			// Récupération de la liste des fiches sur le site de DORIS
+			String listeFichesFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeFiches.html";
+			log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
+			
+			List<Fiche> listeFichesTravail = new ArrayList<Fiche>(1);
+			
+			if (! action.equals("NODWNLD")){
+				if (Outils.getFichierUrl(Constants.getListeFichesUrl(), listeFichesFichier)) {
+					String contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+					
+					listeFichesTravail = SiteDoris.getListeFiches(contenuFichierHtml, nbMaxFichesTraitees);
+				} else {
+					log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
+					System.exit(0);
+				}
+			} else {
+				String contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+				
+				listeFichesTravail = SiteDoris.getListeFiches(contenuFichierHtml, nbMaxFichesTraitees);
 			}
-		}
+			// TODO : Il faudra ici, pour les modes où on complète la base, reconstruire
+			// la table des fiches déjà connues
+			
+			
+			// Pour chaque fiche de la liste de travail :
+			// TODO : on vérifie qu'il faut la traiter
+			// On la télécharge (et sauvegarde le fichier original)
+			// On la traite
+			for (Fiche fiche : listeFichesTravail) {
+				// TODO : Ne pas traiter dans certain cas
+				
+				log.debug("doMain() - Fiche : "+fiche.getNomCommun());
+				
+				String urlFiche = "http://doris.ffessm.fr/fiche2.asp?fiche_numero="+fiche.getNumeroFiche();
+				String fichierLocalFiche = DOSSIER_BASE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+".html";
+				if (! action.equals("NODWNLD")) {
+					if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
+						String contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
+					
+						fiche.getFiche(contenuFichierHtml);
+					} else {
+						log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
+					}
+				} else {
+					String contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
+					
+					fiche.getFiche(contenuFichierHtml);
+				}
+			}
+			
+			// Ecriture des fiches dans le fichier xml final
+			ConnectionSource connectionSource = null;
+			try {
+				// create our data-source for the database
+				connectionSource = new JdbcConnectionSource(DATABASE_URL);
+				// setup our database and DAOs
+				setupDatabase(connectionSource);
+				// read and write some data
+				readWriteData(listeFichesTravail);
+	
+			} finally {
+				// destroy the data source which should close underlying connections
+				if (connectionSource != null) {
+					connectionSource.close();
+				}
+			}
+		} // Fin de <> TEST
 		log.debug("doMain() - Fin");
 	}
 
@@ -290,6 +322,7 @@ public class PrefetchDorisWebSite {
 		} else if (action.equals("NEWFICHES")) {
 		} else if (action.equals("UPDATE")) {
 		} else if (action.equals("INITSSIMG")) {
+		} else if (action.equals("TEST")) {
 		} else {
 			help();
 			String listeArgs = "";
@@ -419,7 +452,7 @@ public class PrefetchDorisWebSite {
 			out.write("\" ");
 			out.write(XML_ATT_SITE_URL);
 			out.write("=\"");
-			out.write(TempCommon.getSiteUrl());
+			out.write(Constants.getSiteUrl());
 			out.write("\"");
 			out.write(">\n");
 			out.write("<");
@@ -465,6 +498,7 @@ public class PrefetchDorisWebSite {
 		System.out.println("  NEWFICHES          Ne télécharge que les nouvelles fiches");
 		System.out.println("  UPDATE             En plus des nouvelles fiches, on retélécharge les fiches qui ont changées de statut");
 		System.out.println("  INITSSIMG          Comme INIT sauf que l'on ne retélécharge pas une image déjà connue");
+		System.out.println("  TEST          	 Pour les développeurs");
 		
 		log.debug("help() - Fin");
 	}

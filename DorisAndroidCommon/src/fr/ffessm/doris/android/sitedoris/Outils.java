@@ -41,32 +41,22 @@ termes.
 * ********************************************************************* */
 
 
-package fr.ffessm.doris.android.datamodel;
+package fr.ffessm.doris.android.sitedoris;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.logging.Log;
-
-//import org.jdom2.input.SAXBuilder;
-//import org.jdom2.output.Format;
-//import org.jdom2.output.XMLOutputter;
+import org.apache.commons.logging.LogFactory;
 
 import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.Element;
@@ -80,13 +70,12 @@ import net.htmlparser.jericho.Source;
 public class Outils {
     
 	// Inititalisation de la Gestion des Log
-	private final static String LOGTAG = "Outils";
-    //private static Log trace = PrefetchDorisWebSite.trace;
+	public static Log log = LogFactory.getLog(Outils.class);
     
     public static boolean getFichierUrl(String inUrl, String inFichierRetour) {
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "getFichierUrl()- Début");
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "getFichierUrl()- url : " + inUrl);
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "getFichierUrl()- Fichier Retourné : " + inFichierRetour);
+    	log.debug("getFichierUrl()- Début");
+    	log.debug("getFichierUrl()- url : " + inUrl);
+    	log.debug("getFichierUrl()- Fichier Retourné : " + inFichierRetour);
     	
     	InputStream flux = null;
         FileOutputStream fichierUrl = null;
@@ -99,7 +88,7 @@ public class Outils {
 
             if (fileLength == -1)
             {
-                // trace.log(trace.LOG_ERROR, LOGTAG, "URL Invalide : " + inUrl);
+                log.error("URL Invalide : " + inUrl);
                 return false;
             }
 
@@ -115,7 +104,7 @@ public class Outils {
         catch (IOException e)
         {
             e.printStackTrace();
-            // trace.log(trace.LOG_ERROR, LOGTAG, "Erreur lors du téléchargement du fichier : " + inUrl);
+            log.error("Erreur lors du téléchargement du fichier : " + inUrl);
             return false;
         }
         finally
@@ -128,19 +117,19 @@ public class Outils {
             catch (IOException e)
             {
                 e.printStackTrace();
-                // trace.log(trace.LOG_ERROR, LOGTAG, "Erreur lors de l'écriture du fichier : " + inFichierRetour);
+                log.error("Erreur lors de l'écriture du fichier : " + inFichierRetour);
                 return false;
             }
         }
     	
     	
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "getFichierUrl()- Fin");
+    	log.debug("getFichierUrl()- Fin");
     	return true;
     }
     
 	public static String getFichier(File inFichier) {
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "getFichier()- Début");
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "getFichier()- htmlFiche : " + inFichier);
+    	log.debug("getFichier()- Début");
+    	log.debug("getFichier()- htmlFiche : " + inFichier);
     	
     	FileInputStream objFile = null;
 		try {
@@ -158,7 +147,7 @@ public class Outils {
 				try {
 					objFile.close();
 					
-					// trace.log(trace.LOG_DEBUG, LOGTAG, "getFichier()- Fin");
+					log.debug("getFichier()- Fin");
 			    	return (objBuffer.toString());
 			    	
 				} catch (IOException e) {
@@ -176,8 +165,8 @@ public class Outils {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		// trace.log(trace.LOG_ERROR, LOGTAG, "Erreur lors de la lecture du fichier : " + inFichier);
-     	// trace.log(trace.LOG_DEBUG, LOGTAG, "getFichier()- Fin");
+		log.error("Erreur lors de la lecture du fichier : " + inFichier);
+     	log.debug("getFichier()- Fin");
 		return null;
 	}
 
@@ -186,20 +175,20 @@ public class Outils {
      * ciblePage permet de supprimer tout le superflu de la page HTML
      ********************************************************************* */
     public static String ciblePage(String inCodeHtml, String inTypePage) throws IOException{
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "ciblePage() - Début");
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "ciblePage() - codeHtml : " + inCodeHtml.substring(0, Math.min(50, inCodeHtml.length())));
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "ciblePage() - inTypePage : " + inTypePage);
+    	log.debug("ciblePage() - Début");
+    	log.debug("ciblePage() - codeHtml : " + inCodeHtml.substring(0, Math.min(50, inCodeHtml.length())));
+    	log.debug("ciblePage() - inTypePage : " + inTypePage);
     			
     	String pageANettoyer = inCodeHtml;
     	String typePage = inTypePage;
     	
     	// Suppression des sauts de lignes
     	pageANettoyer.replaceAll("/r/n","");
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "ciblePage() - pageANettoyer 10 : " + pageANettoyer.substring(0, Math.min(100, pageANettoyer.length())));
+    	log.debug("ciblePage() - pageANettoyer 10 : " + pageANettoyer.substring(0, Math.min(100, pageANettoyer.length())));
     	
     	// Suppression des espaces inutiles (entre les ><)
     	pageANettoyer.replaceAll(">\\s*<","><");
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "ciblePage() - pageANettoyer 20 : " + pageANettoyer.substring(0, Math.min(100, pageANettoyer.length())));
+    	log.debug("ciblePage() - pageANettoyer 20 : " + pageANettoyer.substring(0, Math.min(100, pageANettoyer.length())));
     	
 		Source source=new Source(pageANettoyer);
 		source.fullSequentialParse();
@@ -209,12 +198,12 @@ public class Outils {
 			// Récupération de la Table des Résultats
 			List<? extends Element> listeElementsTable=source.getAllElements(HTMLElementName.TABLE);
 			for (Element elementTable : listeElementsTable) {
-				// trace.log(trace.LOG_DEBUG, LOGTAG, "ciblePage() - elementTable : " + elementTable.toString().substring(0, Math.min(100, elementTable.toString().length())));
+				log.debug("ciblePage() - elementTable : " + elementTable.toString().substring(0, Math.min(100, elementTable.toString().length())));
 				
 				List<? extends Attribute> listeAttributs=elementTable.getAttributes();
 				for (Attribute attribut : listeAttributs) {
 					if (attribut.getName().toLowerCase().equals("width") &  attribut.getValue().equals("820")) {
-						// trace.log(trace.LOG_DEBUG, LOGTAG, "ciblePage() - Table Trouvée : " + attribut.getName() + " = " +  attribut.getValue());
+						log.debug("ciblePage() - Table Trouvée : " + attribut.getName() + " = " +  attribut.getValue());
 						tableResultats = elementTable;
 						break;
 					}
@@ -226,36 +215,63 @@ public class Outils {
 		if (typePage == "RECHERCHE"){
 			// Récupération de la Table des Résultats
 			Element elementTitreGrandsGroupes = source.getFirstElementByClass("titre3");
-			// trace.log(trace.LOG_DEBUG, LOGTAG, "ciblePage() - titre3 : "+ elementTitreGrandsGroupes.toString().substring(0, Math.min(20,elementTitreGrandsGroupes.toString().length())));
+			log.debug("ciblePage() - titre3 : "+ elementTitreGrandsGroupes.toString().substring(0, Math.min(20,elementTitreGrandsGroupes.toString().length())));
 			
 			Element elementTable = elementTitreGrandsGroupes.getParentElement().getParentElement().getParentElement();
-			// trace.log(trace.LOG_DEBUG, LOGTAG, "ciblePage() - table : "+elementTable.toString().substring(0, Math.min(20,elementTable.toString().length())));
+			log.debug("ciblePage() - table : "+elementTable.toString().substring(0, Math.min(20,elementTable.toString().length())));
 
 			tableResultats = elementTable;
 
 		}
  
 		if ( tableResultats != null ){
-			// trace.log(trace.LOG_DEBUG, LOGTAG, "ciblePage() - longueur tableResultats : "+tableResultats.toString().length());
-			// trace.log(trace.LOG_DEBUG, LOGTAG, "ciblePage() - tableResultats : "+tableResultats.toString().substring(0, Math.min(50, tableResultats.toString().length())));
-			// trace.log(trace.LOG_DEBUG, LOGTAG, "ciblePage() - tableResultats : ...");
-			// trace.log(trace.LOG_DEBUG, LOGTAG, "ciblePage() - tableResultats : "+tableResultats.toString().substring(Math.max(0, tableResultats.toString().length()-50), tableResultats.toString().length() ));
-			// trace.log(trace.LOG_DEBUG, LOGTAG, "ciblePage() - Fin");
+			log.debug("ciblePage() - longueur tableResultats : "+tableResultats.toString().length());
+			log.debug("ciblePage() - tableResultats : "+tableResultats.toString().substring(0, Math.min(50, tableResultats.toString().length())));
+			log.debug("ciblePage() - tableResultats : ...");
+			log.debug("ciblePage() - tableResultats : "+tableResultats.toString().substring(Math.max(0, tableResultats.toString().length()-50), tableResultats.toString().length() ));
+			log.debug("ciblePage() - Fin");
 		
 			return tableResultats.toString();
 		
 		} else {
 			// trace.log(trace.LOG_WARNING, LOGTAG, "ciblePage() - tableResultats == null");
-			// trace.log(trace.LOG_DEBUG, LOGTAG, "ciblePage() - Fin");
+			log.debug("ciblePage() - Fin");
 			
 			return null;
 		}
     }
 
+    public static String nettoyageBalises(String texteANettoye) {
+    	log.debug("nettoyageBalises() - Début");
+    	log.trace("nettoyageBalises() - texteANettoye : " + texteANettoye);
+		String texteNettoye = texteANettoye;
+		
+		texteNettoye = texteNettoye.replace("&nbsp;</td>", "</td>");
+    	
+    	
+		texteNettoye = texteNettoye.replace("<strong>", "");
+		texteNettoye = texteNettoye.replace("</strong>", "");
+		texteNettoye = texteNettoye.replace("<em>", "");
+		texteNettoye = texteNettoye.replace("</em>", "");
+		texteNettoye = texteNettoye.replace("<br>", "");
+		texteNettoye = texteNettoye.replace("<br/>", "");
+		
+		// Certaines fiches comme : http://doris.ffessm.fr/fiche2.asp?fiche_numero=3527 (au 30 mars 13)
+		// contiennent des " dans le nom de l'animal, or les " ne sont pas échappés donc ça met le
+		// bazard dans le code html
+		// Je retire donc ici les paires de " qui sont à l'intérieure d'une autre paire de "
+		// et qui ne contiennent pas de = ? < >
+		texteNettoye = texteNettoye.replaceAll("(href=\"[^\"]*)\"([^\"=?<>]*)\"([^\"]*\")", "$1$2$3");
+		
+		log.trace("nettoyageBalises() - texteNettoye : " + texteNettoye);
+		log.debug("nettoyageBalises() - Fin");
+		return texteNettoye;
+	}
+
 	
     public static String nettoyageCaracteres(String texteANettoye) {
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "nettoyageCaracteres() - Début");
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "nettoyageCaracteres() - texteANettoye : " + texteANettoye);
+    	log.debug("nettoyageCaracteres() - Début");
+    	log.debug("nettoyageCaracteres() - texteANettoye : " + texteANettoye);
 		String texteNettoye = texteANettoye;
 		
 		//if (LOG) Log.v(TAG, "nettoyageCaracteres() - texteNettoye : " + texteNettoye.charAt(7) + " - " + texteNettoye.codePointAt(7));
@@ -268,25 +284,25 @@ public class Outils {
 		//Œ OE
 		texteNettoye = texteNettoye.replaceAll("\u008C", "\u0152");
 				
-		// trace.log(trace.LOG_DEBUG, LOGTAG, "nettoyageCaracteres() - texteNettoye : " + texteNettoye);
+		log.debug("nettoyageCaracteres() - texteNettoye : " + texteNettoye);
 		
-		// trace.log(trace.LOG_DEBUG, LOGTAG, "nettoyageCaracteres() - Fin");
+		log.debug("nettoyageCaracteres() - Fin");
 		return texteNettoye;
 	}
 
     /*
     static void enregistreXML(Boolean nouveauFichier, File fichierXML, org.jdom2.Element arbreXMLaAjouter)
     {
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "enregistreXML() - Début");
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "enregistreXML() - nouveauFichier : " + nouveauFichier);
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "enregistreXML() - fichierXML : " + fichierXML);
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "enregistreXML() - arbreXMLaAjouter : " + arbreXMLaAjouter);
+    	log.debug("enregistreXML() - Début");
+    	log.debug("enregistreXML() - nouveauFichier : " + nouveauFichier);
+    	log.debug("enregistreXML() - fichierXML : " + fichierXML);
+    	log.debug("enregistreXML() - arbreXMLaAjouter : " + arbreXMLaAjouter);
     	
     	org.jdom2.Element racineFichier = null;
     	org.jdom2.Document document = null;
     	
     	if (fichierXML.exists() && !nouveauFichier){
-			// trace.log(trace.LOG_DEBUG, LOGTAG, "enregistreXML() - Le fichier : " + fichierXML + " existe, l'arbre est donc lu.");
+			log.debug("enregistreXML() - Le fichier : " + fichierXML + " existe, l'arbre est donc lu.");
 
 			org.jdom2.input.SAXBuilder sxb = new org.jdom2.input.SAXBuilder();
 			try
@@ -300,7 +316,7 @@ public class Outils {
 			}
 
 		} else {
-			// trace.log(trace.LOG_DEBUG, LOGTAG, "enregistreXML() - Le fichier : " + fichierXML + " n'existe pas, l'arbre est donc créé.");
+			log.debug("enregistreXML() - Le fichier : " + fichierXML + " n'existe pas, l'arbre est donc créé.");
 			
 			try{
 				
@@ -339,32 +355,32 @@ public class Outils {
 		catch (java.io.IOException e){
 			e.printStackTrace();
 		}
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "enregistreXML() - Fin");
+    	log.debug("enregistreXML() - Fin");
     }
     
     static void enregistreHTML(File fichierHTML, String codeHtml)
     {
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "enregistreHTML() - Début");
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "enregistreHTML() - fichierDestination : " + fichierHTML);
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "enregistreHTML() - codeHtml.length() : " + codeHtml.length());
+    	log.debug("enregistreHTML() - Début");
+    	log.debug("enregistreHTML() - fichierDestination : " + fichierHTML);
+    	log.debug("enregistreHTML() - codeHtml.length() : " + codeHtml.length());
      	
     	if (! fichierHTML.exists()){
-			// trace.log(trace.LOG_ERROR, LOGTAG, "enregistreHTML() - Le fichier de destination : " + fichierHTML + " n'existe pas !");
+			log.error("enregistreHTML() - Le fichier de destination : " + fichierHTML + " n'existe pas !");
 
 		} else {
 			
 			String fichierHtmlContenu = getFichier(fichierHTML);
-			// trace.log(trace.LOG_DEBUG, LOGTAG, "enregistreHTML() - fichierHtmlContenu.length() : " + fichierHtmlContenu.length());
+			log.debug("enregistreHTML() - fichierHtmlContenu.length() : " + fichierHtmlContenu.length());
 			
 			if (!fichierHtmlContenu.contains("<!--REPERE-->")){
-				// trace.log(trace.LOG_ERROR, LOGTAG, "enregistreHTML() - Le fichier de destination est mal formé !");
+				log.error("enregistreHTML() - Le fichier de destination est mal formé !");
 
 			} else {
 				codeHtml = codeHtml + "<!--REPERE-->";
-				// trace.log(trace.LOG_DEBUG, LOGTAG, "enregistreHTML() - codeHtml.length() : " + codeHtml.length());
+				log.debug("enregistreHTML() - codeHtml.length() : " + codeHtml.length());
 		     					
 				fichierHtmlContenu = fichierHtmlContenu.replaceAll("<!--REPERE-->", codeHtml);
-				// trace.log(trace.LOG_DEBUG, LOGTAG, "enregistreHTML() - fichierHtmlContenu.length() : " + fichierHtmlContenu.length());
+				log.debug("enregistreHTML() - fichierHtmlContenu.length() : " + fichierHtmlContenu.length());
 		     	
 
 				Writer out;
@@ -394,15 +410,15 @@ public class Outils {
 			
 		}
     	
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "enregistreHTML() - Fin");
+    	log.debug("enregistreHTML() - Fin");
     }
     */
     
     /*
     static String xmlToTableauFichesHtml(File fichierXML)
     {
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "xmlToTableauFichesHtml() - Début");
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "xmlToTableauFichesHtml() - fichierXML : " + fichierXML);
+    	log.debug("xmlToTableauFichesHtml() - Début");
+    	log.debug("xmlToTableauFichesHtml() - fichierXML : " + fichierXML);
      	
     	StringBuffer tableauHtml = new StringBuffer();
     	
@@ -429,23 +445,23 @@ public class Outils {
 		}
 
 		
-		// trace.log(trace.LOG_DEBUG, LOGTAG, "tableauHtml = " + tableauHtml.toString());
-		// trace.log(trace.LOG_DEBUG, LOGTAG, "xmlToTableauFichesHtml() - Fin");
+		log.debug("tableauHtml = " + tableauHtml.toString());
+		log.debug("xmlToTableauFichesHtml() - Fin");
     	return tableauHtml.toString();
     }
     */
     /*
     static String xmlFicheToHtml(org.jdom2.Element elemFiche)
     {
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "xmlFicheToHtml() - Début");
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "xmlFicheToHtml() - elemFiche : " + elemFiche);
+    	log.debug("xmlFicheToHtml() - Début");
+    	log.debug("xmlFicheToHtml() - elemFiche : " + elemFiche);
      	
     	StringBuffer tableauHtml = new StringBuffer();
     	
 
 
     	org.jdom2.Element elemEntete = elemFiche.getChild("Entete");
-    	// trace.log(trace.LOG_DEBUG, LOGTAG, "Fiche - Ref. = " + elemEntete.getAttribute("Reference").getValue());
+    	log.debug("Fiche - Ref. = " + elemEntete.getAttribute("Reference").getValue());
 		
     	tableauHtml.append("<tr bgcolor=\"#ffffff\" onMouseOver=\"this.bgColor='#F3F3F3';\" onMouseOut=\"this.bgColor='#ffffff';\" style=\"height: 150px;\">\n");
     	tableauHtml.append("<td width=\"5\" valign=\"middle\" class=\"listeHorsLigne\" bgcolor=\"#cccccc\">&nbsp;</td>\n");
@@ -495,9 +511,12 @@ public class Outils {
 	        
 
 		
-		// trace.log(trace.LOG_DEBUG, LOGTAG, "tableauHtml = " + tableauHtml.toString());
-		// trace.log(trace.LOG_DEBUG, LOGTAG, "xmlToTableauFichesHtml() - Fin");
+		log.debug("tableauHtml = " + tableauHtml.toString());
+		log.debug("xmlToTableauFichesHtml() - Fin");
     	return tableauHtml.toString();
     }
     */
+    
+ 
+    
 }
