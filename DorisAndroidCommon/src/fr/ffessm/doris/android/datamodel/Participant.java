@@ -76,43 +76,13 @@ public class Participant {
 	protected int _id;
 	
 
-	@DatabaseField
 	protected java.lang.String nom;
 	
 
 	/** photo du participant */ 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected PhotoParticipant photo;
 
-	public List<Fiche> lookupFichesVerifiees(DorisDBHelper contextDB) throws SQLException {
-		if (fichesVerifieesQuery == null) {
-			fichesVerifieesQuery = makeFichesVerifieesQuery(contextDB);
-		}
-		fichesVerifieesQuery.setArgumentHolderValue(0, this);
-		return contextDB.ficheDao.query(fichesVerifieesQuery);
-	}
-	private PreparedQuery<Fiche> fichesVerifieesQuery = null;
-	/**
-	 * Build a query for Fiche objects that match a Participant
-	 */
-	private PreparedQuery<Fiche> makeFichesVerifieesQuery(DorisDBHelper contextDB) throws SQLException {
-		// build our inner query for UserPost objects
-		QueryBuilder<Fiches_verificateurs_Participants, Integer> fiches_verificateurs_ParticipantsQb = contextDB.fiches_verificateurs_ParticipantsDao.queryBuilder();
-		// just select the post-id field
-		fiches_verificateurs_ParticipantsQb.selectColumns(Fiches_verificateurs_Participants.FICHE_ID_FIELD_NAME);
-		SelectArg userSelectArg = new SelectArg();
-		// you could also just pass in user1 here
-		fiches_verificateurs_ParticipantsQb.where().eq(Fiches_verificateurs_Participants.PARTICIPANT_ID_FIELD_NAME, userSelectArg);
-
-		// build our outer query for Post objects
-		QueryBuilder<Fiche, Integer> ficheQb = contextDB.ficheDao.queryBuilder();
-		// where the id matches in the fiche-id from the inner query
-		ficheQb.where().in("_id", fiches_verificateurs_ParticipantsQb);
-		return ficheQb.prepare();
-	}
-
-
-				
+	protected Fiche fichesVerifiees;
 
 	// Start of user code Participant additional user properties
 	// End of user code
@@ -144,6 +114,12 @@ public class Participant {
 	public void setPhoto(PhotoParticipant photo) {
 		this.photo = photo;
 	}			
+	public Fiche getFichesVerifiees() {
+		return this.fichesVerifiees;
+	}
+	public void setFichesVerifiees(Fiche fichesVerifiees) {
+		this.fichesVerifiees = fichesVerifiees;
+	}			
 
 
 
@@ -156,24 +132,17 @@ public class Participant {
     	sb.append("\" ");
     	sb.append(">");
 
-		sb.append("\n"+indent+"\t<"+XML_ATT_NOM+">");
-		sb.append(StringEscapeUtils.escapeXml(this.nom));
-    	sb.append("</"+XML_ATT_NOM+">");
 
 		if(this.photo!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_PHOTO+">");
 			sb.append(this.photo);
 	    	sb.append("</"+XML_REF_PHOTO+">");
 		}
-		try{
-			for(Fiche ref : this.lookupFichesVerifiees(contextDB)){
-	    		sb.append("\n"+indent+"\t<"+XML_REF_FICHESVERIFIEES+" id=\"");
-	    		sb.append(ref._id);
-	        	sb.append("\"/>");
-				
-	    	}
+		if(this.fichesVerifiees!= null){
+			sb.append("\n"+indent+"\t<"+XML_REF_FICHESVERIFIEES+">");
+			sb.append(this.fichesVerifiees);
+	    	sb.append("</"+XML_REF_FICHESVERIFIEES+">");
 		}
-		catch(SQLException e){};	
 		// TODO deal with other case
 
 		sb.append("</"+XML_PARTICIPANT+">");

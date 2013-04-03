@@ -75,39 +75,10 @@ public class ZoneGeographique {
 	protected int _id;
 	
 
-	@DatabaseField
 	protected java.lang.String nom;
 	
 
-	public List<Fiche> lookupFiches(DorisDBHelper contextDB) throws SQLException {
-		if (fichesQuery == null) {
-			fichesQuery = makeFichesQuery(contextDB);
-		}
-		fichesQuery.setArgumentHolderValue(0, this);
-		return contextDB.ficheDao.query(fichesQuery);
-	}
-	private PreparedQuery<Fiche> fichesQuery = null;
-	/**
-	 * Build a query for Fiche objects that match a ZoneGeographique
-	 */
-	private PreparedQuery<Fiche> makeFichesQuery(DorisDBHelper contextDB) throws SQLException {
-		// build our inner query for UserPost objects
-		QueryBuilder<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesQb = contextDB.fiches_ZonesGeographiquesDao.queryBuilder();
-		// just select the post-id field
-		fiches_ZonesGeographiquesQb.selectColumns(Fiches_ZonesGeographiques.FICHE_ID_FIELD_NAME);
-		SelectArg userSelectArg = new SelectArg();
-		// you could also just pass in user1 here
-		fiches_ZonesGeographiquesQb.where().eq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, userSelectArg);
-
-		// build our outer query for Post objects
-		QueryBuilder<Fiche, Integer> ficheQb = contextDB.ficheDao.queryBuilder();
-		// where the id matches in the fiche-id from the inner query
-		ficheQb.where().in("_id", fiches_ZonesGeographiquesQb);
-		return ficheQb.prepare();
-	}
-
-
-				
+	protected Fiche fiches;
 
 	// Start of user code ZoneGeographique additional user properties
 	// End of user code
@@ -132,6 +103,12 @@ public class ZoneGeographique {
 		this.nom = nom;
 	}
 
+	public Fiche getFiches() {
+		return this.fiches;
+	}
+	public void setFiches(Fiche fiches) {
+		this.fiches = fiches;
+	}			
 
 
 
@@ -144,19 +121,12 @@ public class ZoneGeographique {
     	sb.append("\" ");
     	sb.append(">");
 
-		sb.append("\n"+indent+"\t<"+XML_ATT_NOM+">");
-		sb.append(StringEscapeUtils.escapeXml(this.nom));
-    	sb.append("</"+XML_ATT_NOM+">");
 
-		try{
-			for(Fiche ref : this.lookupFiches(contextDB)){
-	    		sb.append("\n"+indent+"\t<"+XML_REF_FICHES+" id=\"");
-	    		sb.append(ref._id);
-	        	sb.append("\"/>");
-				
-	    	}
+		if(this.fiches!= null){
+			sb.append("\n"+indent+"\t<"+XML_REF_FICHES+">");
+			sb.append(this.fiches);
+	    	sb.append("</"+XML_REF_FICHES+">");
 		}
-		catch(SQLException e){};	
 		// TODO deal with other case
 
 		sb.append("</"+XML_ZONEGEOGRAPHIQUE+">");

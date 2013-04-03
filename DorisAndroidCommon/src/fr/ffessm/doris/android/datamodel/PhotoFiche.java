@@ -78,7 +78,6 @@ public class PhotoFiche {
 	protected int _id;
 	
 
-	@DatabaseField
 	protected java.lang.String cleURL;
 
 	protected java.io.File imageVignette;
@@ -88,7 +87,6 @@ public class PhotoFiche {
 	protected java.io.File imageGrande;
 	
 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiche;
 
 	// Start of user code PhotoFiche additional user properties
@@ -159,18 +157,6 @@ public class PhotoFiche {
     	sb.append("\" ");
     	sb.append(">");
 
-		sb.append("\n"+indent+"\t<"+XML_ATT_CLEURL+">");
-		sb.append(StringEscapeUtils.escapeXml(this.cleURL));
-    	sb.append("</"+XML_ATT_CLEURL+">");
-		sb.append("\n"+indent+"\t<"+XML_ATT_IMAGEVIGNETTE+">");
-		sb.append(this.imageVignette);
-    	sb.append("</"+XML_ATT_IMAGEVIGNETTE+">");
-		sb.append("\n"+indent+"\t<"+XML_ATT_IMAGEMOYENNE+">");
-		sb.append(this.imageMoyenne);
-    	sb.append("</"+XML_ATT_IMAGEMOYENNE+">");
-		sb.append("\n"+indent+"\t<"+XML_ATT_IMAGEGRANDE+">");
-		sb.append(this.imageGrande);
-    	sb.append("</"+XML_ATT_IMAGEGRANDE+">");
 
 		// TODO deal with other case
 

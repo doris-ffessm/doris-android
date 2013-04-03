@@ -62,7 +62,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class XMLHelper {
 	// Start of user code additional helper code 1
-	private Log log = LogFactory.getLog(XMLHelper.class);
+	private static Log log = LogFactory.getLog(XMLHelper.class);
 
 	// End of user code
 
@@ -80,12 +80,22 @@ public class XMLHelper {
 	}
 	
 	public static String generateXML4DB(DorisDBHelper dbContext){
+		log.debug("generateXML4DB() - Début");
+		log.debug("generateXML4DB() - dbContext : "+dbContext.toString() );
+		try {
+			log.debug("generateXML4DB() - dbContext.ficheDao.queryForAll().size() : "+dbContext.ficheDao.queryForAll().size() );
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DORISDB>");
 		sb.append("\n\t<FICHES>");
 		try {	
 			List<Fiche> fiches = dbContext.ficheDao.queryForAll();
 			for(Fiche  fiche : fiches){
+				log.debug("generateXML4DB() - fiche : "+fiche.getNomScientifique());
 				sb.append("\n");
 				sb.append(fiche.toXML("\t\t", dbContext));
 			}
@@ -131,6 +141,8 @@ public class XMLHelper {
 		}
 		sb.append("\n\t</ZONEOBSERVATIONS>\n");
 		sb.append("\n</DORISDB>");
+		
+		log.debug("generateXML4DB() - Fin");
 		return sb.toString();
 	}
 	

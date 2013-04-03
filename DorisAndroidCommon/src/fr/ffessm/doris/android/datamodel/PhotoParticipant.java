@@ -76,13 +76,11 @@ public class PhotoParticipant {
 	protected int _id;
 	
 
-	@DatabaseField
 	protected java.lang.String cleURL;
 
 	protected java.io.File image;
 	
 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Participant participant;
 
 	// Start of user code PhotoParticipant additional user properties
@@ -135,12 +133,6 @@ public class PhotoParticipant {
     	sb.append("\" ");
     	sb.append(">");
 
-		sb.append("\n"+indent+"\t<"+XML_ATT_CLEURL+">");
-		sb.append(StringEscapeUtils.escapeXml(this.cleURL));
-    	sb.append("</"+XML_ATT_CLEURL+">");
-		sb.append("\n"+indent+"\t<"+XML_ATT_IMAGE+">");
-		sb.append(this.image);
-    	sb.append("</"+XML_ATT_IMAGE+">");
 
 		// TODO deal with other case
 

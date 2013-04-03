@@ -76,6 +76,7 @@ import com.j256.ormlite.table.TableUtils;
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
@@ -113,6 +114,7 @@ public class PrefetchDorisWebSite {
 	// Balises et Attributs des fichiers XML
 	public static final String XML_BASE = "Doris";
 	public static final String XML_FICHES = "Fiches";
+	public static final String XML_GROUPES = "Groupes";
 	public static final String XML_ATT_DATE_CREAT = "DateCreation";
 	public static final String XML_ATT_SITE_URL = "UrlRacineSite";
 	
@@ -153,40 +155,46 @@ public class PrefetchDorisWebSite {
 			String listeGroupesFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeGroupes.html";
 			log.info("Récup. Liste Groupes Doris : " + listeGroupesFichier);
 			
+			String contenuFichierHtml = null;
+			List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
+			
 			if (! action.equals("NODWNLD")){
 				if (Outils.getFichierUrl(Constants.getGroupesUrl(), listeGroupesFichier)) {
-					String contenuFichierHtml = Outils.getFichier(new File(listeGroupesFichier));
+					contenuFichierHtml = Outils.getFichier(new File(listeGroupesFichier));
 					
 				} else {
 					log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 					System.exit(0);
 				}
 			} else {
-				String contenuFichierHtml = Outils.getFichier(new File(listeGroupesFichier));
+				contenuFichierHtml = Outils.getFichier(new File(listeGroupesFichier));
 				
 			}
-	
+			listeGroupes = SiteDoris.getListeGroupes(contenuFichierHtml);
+			log.debug("doMain() - listeGroupes.size : "+listeGroupes.size());
 			
 			// Récupération de la liste des fiches sur le site de DORIS
+			
 			String listeFichesFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeFiches.html";
 			log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
 			
-			List<Fiche> listeFichesTravail = new ArrayList<Fiche>(1);
+			List<Fiche> listeFiches = new ArrayList<Fiche>(0);
 			
 			if (! action.equals("NODWNLD")){
 				if (Outils.getFichierUrl(Constants.getListeFichesUrl(), listeFichesFichier)) {
-					String contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+					contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
 					
-					listeFichesTravail = SiteDoris.getListeFiches(contenuFichierHtml, nbMaxFichesTraitees);
 				} else {
 					log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 					System.exit(0);
 				}
 			} else {
-				String contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
-				
-				listeFichesTravail = SiteDoris.getListeFiches(contenuFichierHtml, nbMaxFichesTraitees);
+				contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+
 			}
+			listeFiches = SiteDoris.getListeFiches(contenuFichierHtml, nbMaxFichesTraitees);
+			log.debug("doMain() - listeFiches.size : "+listeFiches.size());
+			
 			// TODO : Il faudra ici, pour les modes où on complète la base, reconstruire
 			// la table des fiches déjà connues
 			
@@ -195,29 +203,36 @@ public class PrefetchDorisWebSite {
 			// TODO : on vérifie qu'il faut la traiter
 			// On la télécharge (et sauvegarde le fichier original)
 			// On la traite
-			for (Fiche fiche : listeFichesTravail) {
+			for (Fiche fiche : listeFiches) {
 				// TODO : Ne pas traiter dans certain cas
 				
-				log.debug("doMain() - Fiche : "+fiche.getNomCommun());
+				log.debug("doMain() - Traitement Fiche : "+fiche.getNomCommun());
 				
 				String urlFiche = "http://doris.ffessm.fr/fiche2.asp?fiche_numero="+fiche.getNumeroFiche();
 				String fichierLocalFiche = DOSSIER_BASE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+".html";
 				if (! action.equals("NODWNLD")) {
 					if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
-						String contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
+						contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
 					
-						fiche.getFiche(contenuFichierHtml);
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
+						continue;
 					}
 				} else {
-					String contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
+					contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
 					
-					fiche.getFiche(contenuFichierHtml);
 				}
+				fiche.getFiche(contenuFichierHtml);
+				
+				log.debug("doMain() - Info Fiche {");
+				log.debug("doMain() -      - ref : "+fiche.getNumeroFiche());
+				log.debug("doMain() -      - nom : "+fiche.getNomCommun());
+				log.debug("doMain() -      - etat : "+fiche.getEtatFiche());
+				log.debug("doMain() - }");
 			}
 			
-			// Ecriture des fiches dans le fichier xml final
+			
+			// Ecriture des données récupérées dans le fichier xml final
 			ConnectionSource connectionSource = null;
 			try {
 				// create our data-source for the database
@@ -225,7 +240,7 @@ public class PrefetchDorisWebSite {
 				// setup our database and DAOs
 				setupDatabase(connectionSource);
 				// read and write some data
-				readWriteData(listeFichesTravail);
+				readWriteData(listeFiches, listeGroupes);
 	
 			} finally {
 				// destroy the data source which should close underlying connections
@@ -341,22 +356,27 @@ public class PrefetchDorisWebSite {
 	 */
 	private void setupDatabase(ConnectionSource connectionSource)
 			throws Exception {
-
+		log.debug("setupDatabase() - Début");
+		
 		dbContext = new DorisDBHelper();
 		dbContext.ficheDao = DaoManager.createDao(connectionSource, Fiche.class);
+		dbContext.groupeDao = DaoManager.createDao(connectionSource, Groupe.class);
+		
 		dbContext.photoFicheDao = DaoManager.createDao(connectionSource, PhotoFiche.class);
 		dbContext.participantDao = DaoManager.createDao(connectionSource, Participant.class);
 		dbContext.zoneGeographiqueDao = DaoManager.createDao(connectionSource, ZoneGeographique.class);
 		dbContext.zoneObservationDao = DaoManager.createDao(connectionSource, ZoneObservation.class);
 		dbContext.sectionFicheDao = DaoManager.createDao(connectionSource, SectionFiche.class);
 		dbContext.autreDenominationDao = DaoManager.createDao(connectionSource, AutreDenomination.class);
-		dbContext.fiches_verificateurs_ParticipantsDao = DaoManager.createDao(connectionSource, Fiches_verificateurs_Participants.class);
-		dbContext.fiches_ZonesGeographiquesDao = DaoManager.createDao(connectionSource, Fiches_ZonesGeographiques.class);
-		dbContext.fiches_ZonesObservationsDao = DaoManager.createDao(connectionSource, Fiches_ZonesObservations.class);
+		//dbContext.fiches_verificateurs_ParticipantsDao = DaoManager.createDao(connectionSource, Fiches_verificateurs_Participants.class);
+		//dbContext.fiches_ZonesGeographiquesDao = DaoManager.createDao(connectionSource, Fiches_ZonesGeographiques.class);
+		//dbContext.fiches_ZonesObservationsDao = DaoManager.createDao(connectionSource, Fiches_ZonesObservations.class);
 		
 		
 		// if you need to create the table
 		TableUtils.createTable(connectionSource, Fiche.class);
+		TableUtils.createTable(connectionSource, Groupe.class);
+		
 		TableUtils.createTable(connectionSource, Participant.class);
 		TableUtils.createTable(connectionSource, PhotoFiche.class);
 		TableUtils.createTable(connectionSource, ZoneGeographique.class);
@@ -366,12 +386,14 @@ public class PrefetchDorisWebSite {
 		TableUtils.createTable(connectionSource, Fiches_verificateurs_Participants.class);
 		TableUtils.createTable(connectionSource, Fiches_ZonesGeographiques.class);
 		TableUtils.createTable(connectionSource, Fiches_ZonesObservations.class);
+		
+		log.debug("setupDatabase() - Fin");
 	}
 
 	/**
 	 * Read and write some example data.
 	 */
-	private void readWriteData(List<Fiche> inListeFiches) throws Exception {
+	private void readWriteData(List<Fiche> inListeFiches, List<Groupe> inListeGroupes) throws Exception {
 		// create an instance of Fiche
 
 		/* Fiche fiche1 = new Fiche("Amphiprion bicinctus",
@@ -418,17 +440,21 @@ public class PrefetchDorisWebSite {
 		
 		System.out.println("nb verificateur fiche 0: " + fiche3.lookupVerificateurs(dbContext).size());
 */
+
+		File f = new File(DOSSIER_BASE + "/" + DOSSIER_RESULTATS + "/" + "prefetchedDorisDB1.xml");
+		sauveXML(f, inListeFiches, inListeGroupes);
+		
 		for (Fiche fiche : inListeFiches){
+			
 			dbContext.ficheDao.create(fiche);
 		}
-		
-		/*
-		File f = new File("./prefetchedDorisDB.xml");
-		sauveXML(f, fiches);
-		*/
+		for (Groupe groupe : inListeGroupes){
+			
+			dbContext.groupeDao.create(groupe);
+		}
 		
 		// test de la nouvelle fonctions XMLHelper
-		String fichierXML = DOSSIER_BASE + "/" + DOSSIER_RESULTATS + "/" + "prefetchedDorisDB.xml";
+		String fichierXML = DOSSIER_BASE + "/" + DOSSIER_RESULTATS + "/" + "prefetchedDorisDB2.xml";
 		XMLHelper.saveDBToFile(new File(fichierXML), dbContext);
 	}
 
@@ -437,11 +463,12 @@ public class PrefetchDorisWebSite {
 	 * 
 	 * @param fiches
 	 */
-	public void sauveXML(File file, List<Fiche> fiches) {
+	public void sauveXML(File file, List<Fiche> fiches, List<Groupe> groupes) {
 		try {
 			// Create file
 			FileWriter fstream = new FileWriter(file);
 			BufferedWriter out = new BufferedWriter(fstream);
+			
 			out.write("<");
 			out.write(XML_BASE);
 			out.write(" ");
@@ -464,6 +491,16 @@ public class PrefetchDorisWebSite {
 			}
 			out.write("</");
 			out.write(XML_FICHES);
+			out.write(">\n");
+			out.write("<");
+			out.write(XML_GROUPES);
+			out.write(">\n");
+			for (Groupe groupe : groupes) {
+				out.write(groupe.toXML("",dbContext)+"\n");
+				//out.write(fiche.toXML()+"\n");
+			}
+			out.write("</");
+			out.write(XML_GROUPES);
 			out.write(">\n");
 			out.write("</");
 			out.write(XML_BASE);

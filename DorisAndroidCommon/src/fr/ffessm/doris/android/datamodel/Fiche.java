@@ -56,7 +56,6 @@ import java.util.Collection;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import fr.ffessm.doris.android.datamodel.associations.*;
-import fr.ffessm.doris.android.sitedoris.Outils;
 
 // Start of user code additional import for Fiche
 import java.io.IOException;
@@ -68,6 +67,8 @@ import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
+
+import fr.ffessm.doris.android.sitedoris.Outils;
 // End of user code
 
 /** 
@@ -99,146 +100,49 @@ public class Fiche {
 	protected int _id;
 	
 
-	@DatabaseField
 	protected java.lang.String nomScientifique;
 
-	@DatabaseField
 	protected java.lang.String nomCommun;
 
 	/** Numéro de la fiche tel que connu par le site lui même */ 
-	@DatabaseField
 	protected int numeroFiche;
 
 	/** Etat Avancement de la fiche 
 4 : Fiche Publiée - 1, 2, 3 : En cours de Rédaction - 5 : Fiche Proposée */ 
-	@DatabaseField
 	protected int etatFiche;
 
-	@DatabaseField
 	protected java.lang.String dateCreation;
 
-	@DatabaseField
 	protected java.lang.String dateModification;
 	
 
-	@DatabaseField(foreign = true)
 	protected Participant redacteurs;
 
 	/** Liste des photos de la fiche */ 
-	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
-	protected ForeignCollection<PhotoFiche> photosFiche;
+	protected PhotoFiche photosFiche;
 
 	/** zones géographiques où l'on peut trouver l'élément décrit par la fiche */ 
-	public List<ZoneGeographique> lookupZonesGeographiques(DorisDBHelper contextDB) throws SQLException {
-		if (zonesGeographiquesQuery == null) {
-			zonesGeographiquesQuery = makeZonesGeographiquesQuery(contextDB);
-		}
-		zonesGeographiquesQuery.setArgumentHolderValue(0, this);
-		return contextDB.zoneGeographiqueDao.query(zonesGeographiquesQuery);
-	}
-	private PreparedQuery<ZoneGeographique> zonesGeographiquesQuery = null;
-	/**
-	 * Build a query for ZoneGeographique objects that match a Fiche
-	 */
-	private PreparedQuery<ZoneGeographique> makeZonesGeographiquesQuery(DorisDBHelper contextDB) throws SQLException {
-		// build our inner query for UserPost objects
-		QueryBuilder<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesQb = contextDB.fiches_ZonesGeographiquesDao.queryBuilder();
-		// just select the post-id field
-		fiches_ZonesGeographiquesQb.selectColumns(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME);
-		SelectArg userSelectArg = new SelectArg();
-		// you could also just pass in user1 here
-		fiches_ZonesGeographiquesQb.where().eq(Fiches_ZonesGeographiques.FICHE_ID_FIELD_NAME, userSelectArg);
-
-		// build our outer query for Post objects
-		QueryBuilder<ZoneGeographique, Integer> zoneGeographiqueQb = contextDB.zoneGeographiqueDao.queryBuilder();
-		// where the id matches in the zoneGeographique-id from the inner query
-		zoneGeographiqueQb.where().in("_id", fiches_ZonesGeographiquesQb);
-		return zoneGeographiqueQb.prepare();
-	}
-
-
-				
+	protected ZoneGeographique zonesGeographiques;
 
 	/** zones  où l'on peut observer l'élément décrit par la fiche */ 
-	public List<ZoneObservation> lookupZonesObservation(DorisDBHelper contextDB) throws SQLException {
-		if (zonesObservationQuery == null) {
-			zonesObservationQuery = makeZonesObservationQuery(contextDB);
-		}
-		zonesObservationQuery.setArgumentHolderValue(0, this);
-		return contextDB.zoneObservationDao.query(zonesObservationQuery);
-	}
-	private PreparedQuery<ZoneObservation> zonesObservationQuery = null;
-	/**
-	 * Build a query for ZoneObservation objects that match a Fiche
-	 */
-	private PreparedQuery<ZoneObservation> makeZonesObservationQuery(DorisDBHelper contextDB) throws SQLException {
-		// build our inner query for UserPost objects
-		QueryBuilder<Fiches_ZonesObservations, Integer> fiches_ZonesObservationsQb = contextDB.fiches_ZonesObservationsDao.queryBuilder();
-		// just select the post-id field
-		fiches_ZonesObservationsQb.selectColumns(Fiches_ZonesObservations.ZONEOBSERVATION_ID_FIELD_NAME);
-		SelectArg userSelectArg = new SelectArg();
-		// you could also just pass in user1 here
-		fiches_ZonesObservationsQb.where().eq(Fiches_ZonesObservations.FICHE_ID_FIELD_NAME, userSelectArg);
-
-		// build our outer query for Post objects
-		QueryBuilder<ZoneObservation, Integer> zoneObservationQb = contextDB.zoneObservationDao.queryBuilder();
-		// where the id matches in the zoneObservation-id from the inner query
-		zoneObservationQb.where().in("_id", fiches_ZonesObservationsQb);
-		return zoneObservationQb.prepare();
-	}
-
-
-				
+	protected ZoneObservation zonesObservation;
 
 	/** listes des personnes ayant vérifié la fiche */ 
-	public List<Participant> lookupVerificateurs(DorisDBHelper contextDB) throws SQLException {
-		if (verificateursQuery == null) {
-			verificateursQuery = makeVerificateursQuery(contextDB);
-		}
-		verificateursQuery.setArgumentHolderValue(0, this);
-		return contextDB.participantDao.query(verificateursQuery);
-	}
-	private PreparedQuery<Participant> verificateursQuery = null;
-	/**
-	 * Build a query for Participant objects that match a Fiche
-	 */
-	private PreparedQuery<Participant> makeVerificateursQuery(DorisDBHelper contextDB) throws SQLException {
-		// build our inner query for UserPost objects
-		QueryBuilder<Fiches_verificateurs_Participants, Integer> fiches_verificateurs_ParticipantsQb = contextDB.fiches_verificateurs_ParticipantsDao.queryBuilder();
-		// just select the post-id field
-		fiches_verificateurs_ParticipantsQb.selectColumns(Fiches_verificateurs_Participants.PARTICIPANT_ID_FIELD_NAME);
-		SelectArg userSelectArg = new SelectArg();
-		// you could also just pass in user1 here
-		fiches_verificateurs_ParticipantsQb.where().eq(Fiches_verificateurs_Participants.FICHE_ID_FIELD_NAME, userSelectArg);
-
-		// build our outer query for Post objects
-		QueryBuilder<Participant, Integer> participantQb = contextDB.participantDao.queryBuilder();
-		// where the id matches in the participant-id from the inner query
-		participantQb.where().in("_id", fiches_verificateurs_ParticipantsQb);
-		return participantQb.prepare();
-	}
-
-
-				
+	protected Participant verificateurs;
 
 	/** responsable régional de la fiche */ 
-	@DatabaseField(foreign = true)
 	protected Participant responsableRegional;
 
 	/** contenu textuel de la fiche */ 
-	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
-	protected ForeignCollection<SectionFiche> contenu;
+	protected SectionFiche contenu;
 
 	/** Photo par défaut de l'espèce présentée par cette fiche. Elle est aussi présente dans la liste "photosFiche". */ 
-	@DatabaseField(foreign = true)
 	protected PhotoFiche photoPrincipale;
 
 	/** Liste des autres dénominations de l'espèce présentée sur la fiche. */ 
-	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
-	protected ForeignCollection<AutreDenomination> autresDenominations;
+	protected AutreDenomination autresDenominations;
 
 	/** Permet d'identifier avec le sous-groupe (optionel) le groupe auquel est rattaché la fiche */ 
-	@DatabaseField(foreign = true)
 	protected Groupe groupe;
 
 	// Start of user code Fiche additional user properties
@@ -798,10 +702,34 @@ public class Fiche {
 	public void setRedacteurs(Participant redacteurs) {
 		this.redacteurs = redacteurs;
 	}			
-	/** Liste des photos de la fiche */
-	public Collection<PhotoFiche> getPhotosFiche() {
+	/** Liste des photos de la fiche */ 
+	public PhotoFiche getPhotosFiche() {
 		return this.photosFiche;
-	}					
+	}
+	public void setPhotosFiche(PhotoFiche photosFiche) {
+		this.photosFiche = photosFiche;
+	}			
+	/** zones géographiques où l'on peut trouver l'élément décrit par la fiche */ 
+	public ZoneGeographique getZonesGeographiques() {
+		return this.zonesGeographiques;
+	}
+	public void setZonesGeographiques(ZoneGeographique zonesGeographiques) {
+		this.zonesGeographiques = zonesGeographiques;
+	}			
+	/** zones  où l'on peut observer l'élément décrit par la fiche */ 
+	public ZoneObservation getZonesObservation() {
+		return this.zonesObservation;
+	}
+	public void setZonesObservation(ZoneObservation zonesObservation) {
+		this.zonesObservation = zonesObservation;
+	}			
+	/** listes des personnes ayant vérifié la fiche */ 
+	public Participant getVerificateurs() {
+		return this.verificateurs;
+	}
+	public void setVerificateurs(Participant verificateurs) {
+		this.verificateurs = verificateurs;
+	}			
 	/** responsable régional de la fiche */ 
 	public Participant getResponsableRegional() {
 		return this.responsableRegional;
@@ -809,10 +737,13 @@ public class Fiche {
 	public void setResponsableRegional(Participant responsableRegional) {
 		this.responsableRegional = responsableRegional;
 	}			
-	/** contenu textuel de la fiche */
-	public Collection<SectionFiche> getContenu() {
+	/** contenu textuel de la fiche */ 
+	public SectionFiche getContenu() {
 		return this.contenu;
-	}					
+	}
+	public void setContenu(SectionFiche contenu) {
+		this.contenu = contenu;
+	}			
 	/** Photo par défaut de l'espèce présentée par cette fiche. Elle est aussi présente dans la liste "photosFiche". */ 
 	public PhotoFiche getPhotoPrincipale() {
 		return this.photoPrincipale;
@@ -820,10 +751,13 @@ public class Fiche {
 	public void setPhotoPrincipale(PhotoFiche photoPrincipale) {
 		this.photoPrincipale = photoPrincipale;
 	}			
-	/** Liste des autres dénominations de l'espèce présentée sur la fiche. */
-	public Collection<AutreDenomination> getAutresDenominations() {
+	/** Liste des autres dénominations de l'espèce présentée sur la fiche. */ 
+	public AutreDenomination getAutresDenominations() {
 		return this.autresDenominations;
-	}					
+	}
+	public void setAutresDenominations(AutreDenomination autresDenominations) {
+		this.autresDenominations = autresDenominations;
+	}			
 	/** Permet d'identifier avec le sous-groupe (optionel) le groupe auquel est rattaché la fiche */ 
 	public Groupe getGroupe() {
 		return this.groupe;
@@ -835,6 +769,8 @@ public class Fiche {
 
 
 	public String toXML(String indent, DorisDBHelper contextDB){
+		log.debug("toXML() - Début");
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append(indent+"<");
     	sb.append(XML_FICHE);
@@ -854,6 +790,7 @@ public class Fiche {
 		sb.append(" ");
     	sb.append(XML_ATT_NUMEROFICHE);
     	sb.append("=\"");
+    	log.debug("toXML() - numeroFiche : " + this.numeroFiche);
 		sb.append(this.numeroFiche);
     	sb.append("\" ");
 		sb.append(" ");
@@ -863,70 +800,52 @@ public class Fiche {
     	sb.append("\" ");
     	sb.append(">");
 
-		sb.append("\n"+indent+"\t<"+XML_ATT_DATECREATION+">");
-		sb.append(StringEscapeUtils.escapeXml(this.dateCreation));
-    	sb.append("</"+XML_ATT_DATECREATION+">");
-		sb.append("\n"+indent+"\t<"+XML_ATT_DATEMODIFICATION+">");
-		sb.append(StringEscapeUtils.escapeXml(this.dateModification));
-    	sb.append("</"+XML_ATT_DATEMODIFICATION+">");
 
 		if(this.redacteurs!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_REDACTEURS+">");
 			sb.append(this.redacteurs);
 	    	sb.append("</"+XML_REF_REDACTEURS+">");
 		}
-		sb.append("\n"+indent+"\t<"+XML_REF_PHOTOSFICHE+">");
-		for(PhotoFiche ref : this.photosFiche){
-			sb.append("\n"+ref.toXML(indent+"\t\t", contextDB));
-    	}
-		sb.append("</"+XML_REF_PHOTOSFICHE+">");		
-		try{
-			for(ZoneGeographique ref : this.lookupZonesGeographiques(contextDB)){
-	    		sb.append("\n"+indent+"\t<"+XML_REF_ZONESGEOGRAPHIQUES+" id=\"");
-	    		sb.append(ref._id);
-	        	sb.append("\"/>");
-				
-	    	}
+		if(this.photosFiche!= null){
+			sb.append("\n"+indent+"\t<"+XML_REF_PHOTOSFICHE+">");
+			sb.append(this.photosFiche);
+	    	sb.append("</"+XML_REF_PHOTOSFICHE+">");
 		}
-		catch(SQLException e){};	
-		try{
-			for(ZoneObservation ref : this.lookupZonesObservation(contextDB)){
-	    		sb.append("\n"+indent+"\t<"+XML_REF_ZONESOBSERVATION+" id=\"");
-	    		sb.append(ref._id);
-	        	sb.append("\"/>");
-				
-	    	}
+		if(this.zonesGeographiques!= null){
+			sb.append("\n"+indent+"\t<"+XML_REF_ZONESGEOGRAPHIQUES+">");
+			sb.append(this.zonesGeographiques);
+	    	sb.append("</"+XML_REF_ZONESGEOGRAPHIQUES+">");
 		}
-		catch(SQLException e){};	
-		try{
-			for(Participant ref : this.lookupVerificateurs(contextDB)){
-	    		sb.append("\n"+indent+"\t<"+XML_REF_VERIFICATEURS+" id=\"");
-	    		sb.append(ref._id);
-	        	sb.append("\"/>");
-				
-	    	}
+		if(this.zonesObservation!= null){
+			sb.append("\n"+indent+"\t<"+XML_REF_ZONESOBSERVATION+">");
+			sb.append(this.zonesObservation);
+	    	sb.append("</"+XML_REF_ZONESOBSERVATION+">");
 		}
-		catch(SQLException e){};	
+		if(this.verificateurs!= null){
+			sb.append("\n"+indent+"\t<"+XML_REF_VERIFICATEURS+">");
+			sb.append(this.verificateurs);
+	    	sb.append("</"+XML_REF_VERIFICATEURS+">");
+		}
 		if(this.responsableRegional!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_RESPONSABLEREGIONAL+">");
 			sb.append(this.responsableRegional);
 	    	sb.append("</"+XML_REF_RESPONSABLEREGIONAL+">");
 		}
-		sb.append("\n"+indent+"\t<"+XML_REF_CONTENU+">");
-		for(SectionFiche ref : this.contenu){
-			sb.append("\n"+ref.toXML(indent+"\t\t", contextDB));
-    	}
-		sb.append("</"+XML_REF_CONTENU+">");		
+		if(this.contenu!= null){
+			sb.append("\n"+indent+"\t<"+XML_REF_CONTENU+">");
+			sb.append(this.contenu);
+	    	sb.append("</"+XML_REF_CONTENU+">");
+		}
 		if(this.photoPrincipale!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_PHOTOPRINCIPALE+">");
 			sb.append(this.photoPrincipale);
 	    	sb.append("</"+XML_REF_PHOTOPRINCIPALE+">");
 		}
-		sb.append("\n"+indent+"\t<"+XML_REF_AUTRESDENOMINATIONS+">");
-		for(AutreDenomination ref : this.autresDenominations){
-			sb.append("\n"+ref.toXML(indent+"\t\t", contextDB));
-    	}
-		sb.append("</"+XML_REF_AUTRESDENOMINATIONS+">");		
+		if(this.autresDenominations!= null){
+			sb.append("\n"+indent+"\t<"+XML_REF_AUTRESDENOMINATIONS+">");
+			sb.append(this.autresDenominations);
+	    	sb.append("</"+XML_REF_AUTRESDENOMINATIONS+">");
+		}
 		if(this.groupe!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_GROUPE+">");
 			sb.append(this.groupe);
@@ -935,6 +854,8 @@ public class Fiche {
 		// TODO deal with other case
 
 		sb.append("</"+XML_FICHE+">");
+		
+		log.debug("toXML() - Fin");
 		return sb.toString();
 	}
 }

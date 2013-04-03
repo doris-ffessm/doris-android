@@ -76,15 +76,12 @@ public class AutreDenomination {
 	protected int _id;
 	
 
-	@DatabaseField
 	protected java.lang.String denomination;
 
 	/** Si renseigné, indique la ou les langues qui utilisent cette dénomination  */ 
-	@DatabaseField
 	protected java.lang.String langue;
 	
 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiche;
 
 	// Start of user code AutreDenomination additional user properties
@@ -135,12 +132,6 @@ public class AutreDenomination {
     	sb.append("\" ");
     	sb.append(">");
 
-		sb.append("\n"+indent+"\t<"+XML_ATT_DENOMINATION+">");
-		sb.append(StringEscapeUtils.escapeXml(this.denomination));
-    	sb.append("</"+XML_ATT_DENOMINATION+">");
-		sb.append("\n"+indent+"\t<"+XML_ATT_LANGUE+">");
-		sb.append(StringEscapeUtils.escapeXml(this.langue));
-    	sb.append("</"+XML_ATT_LANGUE+">");
 
 		// TODO deal with other case
 

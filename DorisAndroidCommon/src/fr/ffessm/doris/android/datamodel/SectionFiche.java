@@ -76,14 +76,11 @@ public class SectionFiche {
 	protected int _id;
 	
 
-	@DatabaseField
 	protected java.lang.String titre;
 
-	@DatabaseField
 	protected java.lang.String texte;
 	
 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiche;
 
 	// Start of user code SectionFiche additional user properties
@@ -134,12 +131,6 @@ public class SectionFiche {
     	sb.append("\" ");
     	sb.append(">");
 
-		sb.append("\n"+indent+"\t<"+XML_ATT_TITRE+">");
-		sb.append(StringEscapeUtils.escapeXml(this.titre));
-    	sb.append("</"+XML_ATT_TITRE+">");
-		sb.append("\n"+indent+"\t<"+XML_ATT_TEXTE+">");
-		sb.append(StringEscapeUtils.escapeXml(this.texte));
-    	sb.append("</"+XML_ATT_TEXTE+">");
 
 		// TODO deal with other case
 
