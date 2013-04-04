@@ -76,15 +76,12 @@ public class Participant {
 	protected int _id;
 	
 
-	@DatabaseField
 	protected java.lang.String nom;
 	
 
 	/** photo du participant */ 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected PhotoParticipant photo;
 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fichesVerifiees;
 
 	// Start of user code Participant additional user properties

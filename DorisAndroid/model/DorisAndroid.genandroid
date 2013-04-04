@@ -57,8 +57,6 @@
     <dataClasses xsi:type="genandroid:DataClass" name="Groupe" documentation="Groupe correspond aux entités permettant de naviguer par image sur le site web : &#xA;http://doris.ffessm.fr/groupes.asp?numero_fichier=10. Le niveau 0 est la racine du site.">
       <dataReferences name="groupesFils" documentation="Permet de créer ou lire l'arborescence des groupes par récurrence" upperBound="-1" containment="true" opposite="//@dataModel/@dataAssociations.7" type="//@dataModel/@dataClasses.8"/>
       <dataReferences name="groupePere" opposite="//@dataModel/@dataAssociations.7" type="//@dataModel/@dataClasses.8"/>
-      <dataAttributes name="refGroupe" documentation="Je ne suis pas certain que ce soit très utile car = Niveau &amp; Groupe &amp; SousGroupe" lowerbound="1" type="//@dataModel/@dataClasses.9"/>
-      <dataAttributes name="niveau" documentation="0 : Racine, 1 : enfants de racine (PROCARYOTES, VEGETAUX, etc).&#xA;Surtout utile pour débeuguer et peut-être retrouver la racine à vrai dire" lowerbound="1" type="//@dataModel/@dataClasses.10" simpleXmlType="true"/>
       <dataAttributes name="numeroGroupe" documentation="XXX de groupe_numero=XXX dans l'url permettant d'afficher le groupe.&#xA;Certains groupes (de haut niveau) n'ont pas de numéro" type="//@dataModel/@dataClasses.10"/>
       <dataAttributes name="numeroSousGroupe" documentation="XXX de sousgroupe_numero=XXX dans l'url permettant avec le numero de groupe d'afficher le groupe.&#xA;Seuls certains groupes de plus bas niveau ont le numéro de sous-groupe" type="//@dataModel/@dataClasses.10"/>
       <dataAttributes name="nomGroupe" lowerbound="1" type="//@dataModel/@dataClasses.9" simpleXmlType="true"/>

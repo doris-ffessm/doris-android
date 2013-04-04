@@ -69,8 +69,6 @@ public class Groupe {
 
 	public static final String XML_GROUPE = "GROUPE";
 	public static final String XML_ATT_ID = "id";
-	public static final String XML_ATT_REFGROUPE = "refGroupe";
-	public static final String XML_ATT_NIVEAU = "niveau";
 	public static final String XML_ATT_NUMEROGROUPE = "numeroGroupe";
 	public static final String XML_ATT_NUMEROSOUSGROUPE = "numeroSousGroupe";
 	public static final String XML_ATT_NOMGROUPE = "nomGroupe";
@@ -81,15 +79,6 @@ public class Groupe {
 	@DatabaseField(generatedId = true)
 	protected int _id;
 	
-
-	/** Je ne suis pas certain que ce soit très utile car = Niveau & Groupe & SousGroupe */ 
-	@DatabaseField
-	protected java.lang.String refGroupe;
-
-	/** 0 : Racine, 1 : enfants de racine (PROCARYOTES, VEGETAUX, etc).
-Surtout utile pour débeuguer et peut-être retrouver la racine à vrai dire */ 
-	@DatabaseField
-	protected int niveau;
 
 	/** XXX de groupe_numero=XXX dans l'url permettant d'afficher le groupe.
 Certains groupes (de haut niveau) n'ont pas de numéro */ 
@@ -126,10 +115,8 @@ C'est ce texte. */
 	// End of user code
 	
 	public Groupe() {} // needed by ormlite
-	public Groupe(java.lang.String refGroupe, int niveau, int numeroGroupe, int numeroSousGroupe, java.lang.String nomGroupe, java.lang.String descriptionGroupe) {
+	public Groupe(int numeroGroupe, int numeroSousGroupe, java.lang.String nomGroupe, java.lang.String descriptionGroupe) {
 		super();
-		this.refGroupe = refGroupe;
-		this.niveau = niveau;
 		this.numeroGroupe = numeroGroupe;
 		this.numeroSousGroupe = numeroSousGroupe;
 		this.nomGroupe = nomGroupe;
@@ -143,18 +130,6 @@ C'est ce texte. */
 		this._id = id;
 	}
 
-	public java.lang.String getRefGroupe() {
-		return this.refGroupe;
-	}
-	public void setRefGroupe(java.lang.String refGroupe) {
-		this.refGroupe = refGroupe;
-	}
-	public int getNiveau() {
-		return this.niveau;
-	}
-	public void setNiveau(int niveau) {
-		this.niveau = niveau;
-	}
 	public int getNumeroGroupe() {
 		return this.numeroGroupe;
 	}
@@ -201,11 +176,6 @@ C'est ce texte. */
 		sb.append(this._id);
     	sb.append("\" ");
 		sb.append(" ");
-    	sb.append(XML_ATT_NIVEAU);
-    	sb.append("=\"");
-		sb.append(this.niveau);
-    	sb.append("\" ");
-		sb.append(" ");
     	sb.append(XML_ATT_NOMGROUPE);
     	sb.append("=\"");
 		sb.append(StringEscapeUtils.escapeXml(this.nomGroupe));
@@ -217,9 +187,6 @@ C'est ce texte. */
     	sb.append("\" ");
     	sb.append(">");
 
-		sb.append("\n"+indent+"\t<"+XML_ATT_REFGROUPE+">");
-		sb.append(StringEscapeUtils.escapeXml(this.refGroupe));
-    	sb.append("</"+XML_ATT_REFGROUPE+">");
 		sb.append("\n"+indent+"\t<"+XML_ATT_NUMEROGROUPE+">");
 		sb.append(this.numeroGroupe);
     	sb.append("</"+XML_ATT_NUMEROGROUPE+">");

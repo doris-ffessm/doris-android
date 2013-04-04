@@ -76,14 +76,11 @@ public class SectionFiche {
 	protected int _id;
 	
 
-	@DatabaseField
 	protected java.lang.String titre;
 
-	@DatabaseField
 	protected java.lang.String texte;
 	
 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiche;
 
 	// Start of user code SectionFiche additional user properties

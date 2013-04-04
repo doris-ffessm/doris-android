@@ -100,65 +100,49 @@ public class Fiche {
 	protected int _id;
 	
 
-	@DatabaseField
 	protected java.lang.String nomScientifique;
 
-	@DatabaseField
 	protected java.lang.String nomCommun;
 
 	/** Numéro de la fiche tel que connu par le site lui même */ 
-	@DatabaseField
 	protected int numeroFiche;
 
 	/** Etat Avancement de la fiche 
 4 : Fiche Publiée - 1, 2, 3 : En cours de Rédaction - 5 : Fiche Proposée */ 
-	@DatabaseField
 	protected int etatFiche;
 
-	@DatabaseField
 	protected java.lang.String dateCreation;
 
-	@DatabaseField
 	protected java.lang.String dateModification;
 	
 
-	@DatabaseField(foreign = true)
 	protected Participant redacteurs;
 
 	/** Liste des photos de la fiche */ 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected PhotoFiche photosFiche;
 
 	/** zones géographiques où l'on peut trouver l'élément décrit par la fiche */ 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected ZoneGeographique zonesGeographiques;
 
 	/** zones  où l'on peut observer l'élément décrit par la fiche */ 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected ZoneObservation zonesObservation;
 
 	/** listes des personnes ayant vérifié la fiche */ 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Participant verificateurs;
 
 	/** responsable régional de la fiche */ 
-	@DatabaseField(foreign = true)
 	protected Participant responsableRegional;
 
 	/** contenu textuel de la fiche */ 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected SectionFiche contenu;
 
 	/** Photo par défaut de l'espèce présentée par cette fiche. Elle est aussi présente dans la liste "photosFiche". */ 
-	@DatabaseField(foreign = true)
 	protected PhotoFiche photoPrincipale;
 
 	/** Liste des autres dénominations de l'espèce présentée sur la fiche. */ 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected AutreDenomination autresDenominations;
 
 	/** Permet d'identifier avec le sous-groupe (optionel) le groupe auquel est rattaché la fiche */ 
-	@DatabaseField(foreign = true)
 	protected Groupe groupe;
 
 	// Start of user code Fiche additional user properties

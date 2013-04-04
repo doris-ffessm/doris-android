@@ -130,12 +130,10 @@ public class SiteDoris {
     	// 200 n'est-il pas trop grand ?
     	List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
     	
-    	int numGroupe = 0;
     	int nivPrecedent = 0;
-    	int[] groupeNivPrecedents = {-1,-1,-1,-1,-1};
     	
     	// Création du groupe racine qui contiendra récurcivement tout l'arbre
-    	Groupe groupe = new Groupe("racine", 0, 0, 0, "","");
+    	Groupe groupe = new Groupe(0, 0, "racine","Tempo pour debug : 0-0");
     	Groupe groupeRacine = groupe;
     	Groupe groupeNiveau1Courant = null;
     	Groupe groupeNiveau2Courant = null;
@@ -154,10 +152,8 @@ public class SiteDoris {
     	Element ElementNormal;
     	
     	Element elementTitreGrandsGroupes = source.getFirstElementByClass("titre3");
-		
     	
     	Element elementTable = elementTitreGrandsGroupes.getParentElement().getParentElement().getParentElement();
-
     	
 		listeElementsTable = elementTable.getAllElements(HTMLElementName.TR);
 		int profondeurTRlignes = elementTable.getFirstElement(HTMLElementName.TR).getDepth();
@@ -175,19 +171,11 @@ public class SiteDoris {
 						if (elementIMG.getAttributeValue("src").contains("pucecarre.gif")) {
 							log.info("getGroupes() - groupe 1 : "+elementTD.getRenderer().toString());
 							
-							numGroupe += 1;  
-							groupe = new Groupe("G1-"+numGroupe, 1, 0, 0, elementTD.getRenderer().toString(),"");
+							groupe = new Groupe(0, 0, elementTD.getRenderer().toString(),"Tempo pour debug : 1-0");
 							listeGroupes.add(groupe);
 							groupe.setGroupePere(groupeRacine);
+							
 							groupeNiveau1Courant = groupe;
-							//groupe.setGoupePere(listeGroupes.get(0));
-							//addEnfant(numGroupe, 1, elementTD.getRenderer().toString());
-							
-							groupeNivPrecedents[1] = numGroupe;
-							groupeNivPrecedents[2] = -1;
-							groupeNivPrecedents[3] = -1;
-							groupeNivPrecedents[4] = -1;
-							
 							nivPrecedent = 1;
 						}
 					} else {
@@ -195,20 +183,16 @@ public class SiteDoris {
 						if (nivPrecedent != 0) {
 							log.info("getGroupes() - groupe 2 : "+elementTD.getRenderer().toString());
 							
-							numGroupe += 1;  
-							groupe = new Groupe("G2-"+numGroupe, 2, 0, 0, elementTD.getRenderer().toString(),"");
+							groupe = new Groupe(0, 0, elementTD.getRenderer().toString(),"Tempo pour debug : 2-0");
 							listeGroupes.add(groupe);
-							if(groupeNiveau1Courant != null) groupe.setGroupePere(groupeNiveau1Courant);
+							
+							if (nivPrecedent >= 1) {
+								groupe.setGroupePere(groupeNiveau1Courant);
+							} else {
+								groupe.setGroupePere(groupeRacine);
+							}
+							
 							groupeNiveau2Courant = groupe;
-							//groupe.setGoupePere(groupeNivPrecedents[1]);
-							
-							//int numGroupe = groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.size();
-							//groupeListeEnfants.get(groupeNivPrecedents[1]).addEnfant(numGroupe,	2, elementTD.getRenderer().toString());
-							
-							groupeNivPrecedents[2] = numGroupe;
-							groupeNivPrecedents[3] = -1;
-							groupeNivPrecedents[4] = -1;
-							
 							nivPrecedent = 2;
 						}
 					}
@@ -237,40 +221,22 @@ public class SiteDoris {
 												if (nivPrecedent == 1){
 													log.info("getGroupes() - groupe 3 : "+elementA.getRenderer().toString());
 													
-													numGroupe += 1;  
-													groupe = new Groupe("G2-"+numGroupe, 2, 0, 0, elementA.getRenderer().toString(),"");
+													groupe = new Groupe(Integer.parseInt(elementA.getAttributeValue("href").toString().replaceAll(".*=", "")), 0, elementA.getRenderer().toString(),"Tempo pour debug : 3-1");
 													listeGroupes.add(groupe);
-													//int numGroupe = groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.size();;
-													//groupeListeEnfants.get(groupeNivPrecedents[1]).addEnfant(numGroupe,	3, elementA.getRenderer().toString());
-													//groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(numGroupe).setUrlVignette(racineSite+"/"+elementIMG.getAttributeValue("src").toString());
-													//groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(numGroupe).setNumUrlGroupe(Integer.parseInt(elementA.getAttributeValue("href").toString().replaceAll(".*=", "")));
-													
-													//if (groupeListeEnfants.get(groupeNivPrecedents[1]).urlVignette == ""){groupeListeEnfants.get(groupeNivPrecedents[1]).setUrlVignette(racineSite+"/"+elementIMG.getAttributeValue("src").toString());}
 	
-													groupeNivPrecedents[2] = numGroupe;
-													groupeNivPrecedents[3] = -1;
-											    	groupeNivPrecedents[4] = -1;
-											    	
+													groupe.setGroupePere(groupeNiveau1Courant);
+													
+													groupeNiveau2Courant = groupe;
 											    	nivPrecedent = 2;
 												} else if (nivPrecedent >= 2){
 													log.info("getGroupes() - groupe 3 : "+elementA.getRenderer().toString());
 													
-													groupe = new Groupe("G3-"+numGroupe, 3, 0, 0, elementA.getRenderer().toString(),"");
+													groupe = new Groupe(Integer.parseInt(elementA.getAttributeValue("href").toString().replaceAll(".*=", "")), 0, elementA.getRenderer().toString(),"Tempo pour debug : 3-2");
 													listeGroupes.add(groupe);
-													if(groupeNiveau2Courant != null) groupe.setGroupePere(groupeNiveau2Courant);
+
+													groupe.setGroupePere(groupeNiveau2Courant);
+
 													groupeNiveau3Courant = groupe;
-																			
-													//int numGroupe = groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).groupeListeEnfants.size();
-													//groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).addEnfant(numGroupe,	3, elementA.getRenderer().toString());
-													//groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).groupeListeEnfants.get(numGroupe).setUrlVignette(racineSite+"/"+elementIMG.getAttributeValue("src").toString());
-													//groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).groupeListeEnfants.get(numGroupe).setNumUrlGroupe(Integer.parseInt(elementA.getAttributeValue("href").toString().replaceAll(".*=", "")));
-													
-													//if (groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).urlVignette == ""){groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).setUrlVignette(racineSite+"/"+elementIMG.getAttributeValue("src").toString());}
-													//if (groupeListeEnfants.get(groupeNivPrecedents[1]).urlVignette == ""){groupeListeEnfants.get(groupeNivPrecedents[1]).setUrlVignette(racineSite+"/"+elementIMG.getAttributeValue("src").toString());}
-	
-													groupeNivPrecedents[3] = numGroupe;
-													groupeNivPrecedents[4] = -1;
-											    	
 											    	nivPrecedent = 3;
 												}
 											}
@@ -293,34 +259,21 @@ public class SiteDoris {
 
 												log.info("getGroupes() - groupe 4 : "+elementAG4.getRenderer().toString());
 												
-												groupe = new Groupe("G4-"+numGroupe, 4, 0, 0, elementAG4.getRenderer().toString(),"");
+												groupe = new Groupe(0, Integer.parseInt(elementAG4.getAttributeValue("href").toString().replaceAll(".*sousgroupe_numero=(\\d+)&groupe_numero.*", "$1")), elementAG4.getRenderer().toString(),"Tempo pour debug : 4-0");
 												listeGroupes.add(groupe);
-												if(groupeNiveau3Courant != null) groupe.setGroupePere(groupeNiveau3Courant);
-												groupeNiveau4Courant = groupe;
 												
-												//int numGroupe = groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).groupeListeEnfants.get(groupeNivPrecedents[3]).groupeListeEnfants.size();
-												//groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).groupeListeEnfants.get(groupeNivPrecedents[3]).addEnfant(numGroupe,	4, elementAG4.getRenderer().toString());
-												//groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).groupeListeEnfants.get(groupeNivPrecedents[3]).groupeListeEnfants.get(numGroupe).setUrlVignette(racineSite+"/"+elementIMG.getAttributeValue("src").toString());
-												//groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).groupeListeEnfants.get(groupeNivPrecedents[3]).groupeListeEnfants.get(numGroupe).setNumUrlGroupe(groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).groupeListeEnfants.get(groupeNivPrecedents[3]).numUrlGroupe);
-												//groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).groupeListeEnfants.get(groupeNivPrecedents[3]).groupeListeEnfants.get(numGroupe).setNumUrlSsGroupe(Integer.parseInt(elementAG4.getAttributeValue("href").toString().replaceAll(".*sousgroupe_numero=(\\d+)&groupe_numero.*", "$1")));
-													
-										    	groupeNivPrecedents[4] = numGroupe;
-										    	
+												groupe.setGroupePere(groupeNiveau3Courant);
+												
+												groupeNiveau4Courant = groupe;
 										    	nivPrecedent = 4;
 
 											}
-
 										}										
-								
-								
 									}
 								}
 							}
-
 						}
-
 					}
-				
 				}
 			}
 		}

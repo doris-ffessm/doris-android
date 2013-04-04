@@ -6,7 +6,7 @@
 [PhotoParticipant|cleURL : String;/image : File]		
 [ZoneGeographique|nom : String]		
 [ZoneObservation|nom : String]		
-[Groupe|refGroupe : String;niveau : Integer;numeroGroupe : Integer;numeroSousGroupe : Integer;nomGroupe : String;descriptionGroupe : String]		
+[Groupe|numeroGroupe : Integer;numeroSousGroupe : Integer;nomGroupe : String;descriptionGroupe : String]		
 [Fiche]
 [Fiche]-redacteurs 0..1>[Participant]
 [Fiche]-responsableRegional 0..1>[Participant]

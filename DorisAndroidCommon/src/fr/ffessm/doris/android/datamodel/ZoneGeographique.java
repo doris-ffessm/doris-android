@@ -75,11 +75,9 @@ public class ZoneGeographique {
 	protected int _id;
 	
 
-	@DatabaseField
 	protected java.lang.String nom;
 	
 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiches;
 
 	// Start of user code ZoneGeographique additional user properties

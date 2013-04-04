@@ -76,13 +76,11 @@ public class PhotoParticipant {
 	protected int _id;
 	
 
-	@DatabaseField
 	protected java.lang.String cleURL;
 
 	protected java.io.File image;
 	
 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Participant participant;
 
 	// Start of user code PhotoParticipant additional user properties

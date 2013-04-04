@@ -78,7 +78,6 @@ public class PhotoFiche {
 	protected int _id;
 	
 
-	@DatabaseField
 	protected java.lang.String cleURL;
 
 	protected java.io.File imageVignette;
@@ -88,7 +87,6 @@ public class PhotoFiche {
 	protected java.io.File imageGrande;
 	
 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiche;
 
 	// Start of user code PhotoFiche additional user properties
