@@ -92,6 +92,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun());
 		((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText(((Integer)entry.getNumeroFiche()).toString());					
 		((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer)entry.getEtatFiche()).toString());					
+		((TextView) findViewById(R.id.detailsfiche_elementview_datecreation)).setText(entry.getDateCreation());
+		((TextView) findViewById(R.id.detailsfiche_elementview_datemodification)).setText(entry.getDateModification());
     	/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
     	((TextView) findViewById(R.id.detail_divedate)).setText(dateFormatter.format(entry.getDate()));
 		

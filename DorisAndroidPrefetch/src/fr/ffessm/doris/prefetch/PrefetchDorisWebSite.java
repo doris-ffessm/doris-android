@@ -79,6 +79,7 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.datamodel.PhotoParticipant;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.ZoneObservation;
@@ -364,10 +365,12 @@ public class PrefetchDorisWebSite {
 		
 		dbContext.photoFicheDao = DaoManager.createDao(connectionSource, PhotoFiche.class);
 		dbContext.participantDao = DaoManager.createDao(connectionSource, Participant.class);
+		dbContext.photoParticipantDao = DaoManager.createDao(connectionSource, PhotoParticipant.class);
 		dbContext.zoneGeographiqueDao = DaoManager.createDao(connectionSource, ZoneGeographique.class);
 		dbContext.zoneObservationDao = DaoManager.createDao(connectionSource, ZoneObservation.class);
 		dbContext.sectionFicheDao = DaoManager.createDao(connectionSource, SectionFiche.class);
 		dbContext.autreDenominationDao = DaoManager.createDao(connectionSource, AutreDenomination.class);
+		
 		//dbContext.fiches_verificateurs_ParticipantsDao = DaoManager.createDao(connectionSource, Fiches_verificateurs_Participants.class);
 		//dbContext.fiches_ZonesGeographiquesDao = DaoManager.createDao(connectionSource, Fiches_ZonesGeographiques.class);
 		//dbContext.fiches_ZonesObservationsDao = DaoManager.createDao(connectionSource, Fiches_ZonesObservations.class);
@@ -508,7 +511,8 @@ public class PrefetchDorisWebSite {
 			// Close the output stream
 			out.close();
 		} catch (Exception e) {// Catch exception if any
-			System.err.println("Error: " + e.getMessage());
+			log.error(e.getMessage(), e);
+			//System.err.println("Error: " + e.getMessage());
 		}
 	}
 	

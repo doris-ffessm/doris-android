@@ -27,4 +27,4 @@
 [Participant]verificateurs 0..1-fichesVerifiees  0..1[Fiche]
 [SectionFiche]contenu 0..1-fiche  0..1[Fiche]
 [AutreDenomination]autresDenominations 0..1-fiche  0..1[Fiche]
-[Groupe]goupeFils 0..1-groupePere  0..1[Groupe]
+[Groupe]groupesFils 0..*-groupePere  0..1[Groupe]

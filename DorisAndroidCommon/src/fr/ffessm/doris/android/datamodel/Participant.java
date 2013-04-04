@@ -76,12 +76,15 @@ public class Participant {
 	protected int _id;
 	
 
+	@DatabaseField
 	protected java.lang.String nom;
 	
 
 	/** photo du participant */ 
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected PhotoParticipant photo;
 
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fichesVerifiees;
 
 	// Start of user code Participant additional user properties
@@ -132,6 +135,9 @@ public class Participant {
     	sb.append("\" ");
     	sb.append(">");
 
+		sb.append("\n"+indent+"\t<"+XML_ATT_NOM+">");
+		sb.append(StringEscapeUtils.escapeXml(this.nom));
+    	sb.append("</"+XML_ATT_NOM+">");
 
 		if(this.photo!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_PHOTO+">");

@@ -60,6 +60,28 @@
 	            android:gravity="right"
 	            android:padding="3dip" />
         </TableRow>
+		<TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+            <TextView
+	            android:text="@string/detailsfiche_elementview_datecreation_label"
+	            android:padding="3dip" />
+	        <TextView
+	            android:id="@+id/detailsfiche_elementview_datecreation"
+	            android:gravity="right"
+	            android:padding="3dip" />
+        </TableRow>
+		<TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+            <TextView
+	            android:text="@string/detailsfiche_elementview_datemodification_label"
+	            android:padding="3dip" />
+	        <TextView
+	            android:id="@+id/detailsfiche_elementview_datemodification"
+	            android:gravity="right"
+	            android:padding="3dip" />
+        </TableRow>
     </TableLayout>
 
 </LinearLayout>

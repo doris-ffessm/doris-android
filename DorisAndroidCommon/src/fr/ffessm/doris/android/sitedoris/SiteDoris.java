@@ -136,6 +136,11 @@ public class SiteDoris {
     	
     	// Création du groupe racine qui contiendra récurcivement tout l'arbre
     	Groupe groupe = new Groupe("racine", 0, 0, 0, "","");
+    	Groupe groupeRacine = groupe;
+    	Groupe groupeNiveau1Courant = null;
+    	Groupe groupeNiveau2Courant = null;
+    	Groupe groupeNiveau3Courant = null;
+    	Groupe groupeNiveau4Courant = null;
     	listeGroupes.add(groupe);
     	
     	Source source=new Source(inCodePageHtml);
@@ -173,6 +178,8 @@ public class SiteDoris {
 							numGroupe += 1;  
 							groupe = new Groupe("G1-"+numGroupe, 1, 0, 0, elementTD.getRenderer().toString(),"");
 							listeGroupes.add(groupe);
+							groupe.setGroupePere(groupeRacine);
+							groupeNiveau1Courant = groupe;
 							//groupe.setGoupePere(listeGroupes.get(0));
 							//addEnfant(numGroupe, 1, elementTD.getRenderer().toString());
 							
@@ -191,6 +198,8 @@ public class SiteDoris {
 							numGroupe += 1;  
 							groupe = new Groupe("G2-"+numGroupe, 2, 0, 0, elementTD.getRenderer().toString(),"");
 							listeGroupes.add(groupe);
+							if(groupeNiveau1Courant != null) groupe.setGroupePere(groupeNiveau1Courant);
+							groupeNiveau2Courant = groupe;
 							//groupe.setGoupePere(groupeNivPrecedents[1]);
 							
 							//int numGroupe = groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.size();
@@ -248,7 +257,9 @@ public class SiteDoris {
 													
 													groupe = new Groupe("G3-"+numGroupe, 3, 0, 0, elementA.getRenderer().toString(),"");
 													listeGroupes.add(groupe);
-													
+													if(groupeNiveau2Courant != null) groupe.setGroupePere(groupeNiveau2Courant);
+													groupeNiveau3Courant = groupe;
+																			
 													//int numGroupe = groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).groupeListeEnfants.size();
 													//groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).addEnfant(numGroupe,	3, elementA.getRenderer().toString());
 													//groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).groupeListeEnfants.get(numGroupe).setUrlVignette(racineSite+"/"+elementIMG.getAttributeValue("src").toString());
@@ -284,6 +295,8 @@ public class SiteDoris {
 												
 												groupe = new Groupe("G4-"+numGroupe, 4, 0, 0, elementAG4.getRenderer().toString(),"");
 												listeGroupes.add(groupe);
+												if(groupeNiveau3Courant != null) groupe.setGroupePere(groupeNiveau3Courant);
+												groupeNiveau4Courant = groupe;
 												
 												//int numGroupe = groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).groupeListeEnfants.get(groupeNivPrecedents[3]).groupeListeEnfants.size();
 												//groupeListeEnfants.get(groupeNivPrecedents[1]).groupeListeEnfants.get(groupeNivPrecedents[2]).groupeListeEnfants.get(groupeNivPrecedents[3]).addEnfant(numGroupe,	4, elementAG4.getRenderer().toString());

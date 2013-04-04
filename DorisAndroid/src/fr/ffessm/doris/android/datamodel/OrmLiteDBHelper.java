@@ -70,11 +70,17 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	private Dao<Fiche, Integer> ficheDao = null;
 	private RuntimeExceptionDao<Fiche, Integer> ficheRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
-	private Dao<Participant, Integer> participantDao = null;
-	private RuntimeExceptionDao<Participant, Integer> participantRuntimeDao = null;
+	private Dao<AutreDenomination, Integer> autreDenominationDao = null;
+	private RuntimeExceptionDao<AutreDenomination, Integer> autreDenominationRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
 	private Dao<PhotoFiche, Integer> photoFicheDao = null;
 	private RuntimeExceptionDao<PhotoFiche, Integer> photoFicheRuntimeDao = null;
+	// the DAO object we use to access the diveBudies table
+	private Dao<SectionFiche, Integer> sectionFicheDao = null;
+	private RuntimeExceptionDao<SectionFiche, Integer> sectionFicheRuntimeDao = null;
+	// the DAO object we use to access the diveBudies table
+	private Dao<Participant, Integer> participantDao = null;
+	private RuntimeExceptionDao<Participant, Integer> participantRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
 	private Dao<PhotoParticipant, Integer> photoParticipantDao = null;
 	private RuntimeExceptionDao<PhotoParticipant, Integer> photoParticipantRuntimeDao = null;
@@ -85,11 +91,8 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	private Dao<ZoneObservation, Integer> zoneObservationDao = null;
 	private RuntimeExceptionDao<ZoneObservation, Integer> zoneObservationRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
-	private Dao<SectionFiche, Integer> sectionFicheDao = null;
-	private RuntimeExceptionDao<SectionFiche, Integer> sectionFicheRuntimeDao = null;
-	// the DAO object we use to access the diveBudies table
-	private Dao<AutreDenomination, Integer> autreDenominationDao = null;
-	private RuntimeExceptionDao<AutreDenomination, Integer> autreDenominationRuntimeDao = null;
+	private Dao<Groupe, Integer> groupeDao = null;
+	private RuntimeExceptionDao<Groupe, Integer> groupeRuntimeDao = null;
 
 	public OrmLiteDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -104,13 +107,14 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		try {
 			Log.i(OrmLiteDBHelper.class.getName(), "onCreate");
 			TableUtils.createTable(connectionSource, Fiche.class);
-			TableUtils.createTable(connectionSource, Participant.class);
+			TableUtils.createTable(connectionSource, AutreDenomination.class);
 			TableUtils.createTable(connectionSource, PhotoFiche.class);
+			TableUtils.createTable(connectionSource, SectionFiche.class);
+			TableUtils.createTable(connectionSource, Participant.class);
 			TableUtils.createTable(connectionSource, PhotoParticipant.class);
 			TableUtils.createTable(connectionSource, ZoneGeographique.class);
 			TableUtils.createTable(connectionSource, ZoneObservation.class);
-			TableUtils.createTable(connectionSource, SectionFiche.class);
-			TableUtils.createTable(connectionSource, AutreDenomination.class);
+			TableUtils.createTable(connectionSource, Groupe.class);
 		} catch (SQLException e) {
 			Log.e(OrmLiteDBHelper.class.getName(), "Can't create database", e);
 			throw new RuntimeException(e);
@@ -137,13 +141,14 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		try {
 			Log.i(OrmLiteDBHelper.class.getName(), "onUpgrade");
 			TableUtils.dropTable(connectionSource, Fiche.class, true);
-			TableUtils.dropTable(connectionSource, Participant.class, true);
+			TableUtils.dropTable(connectionSource, AutreDenomination.class, true);
 			TableUtils.dropTable(connectionSource, PhotoFiche.class, true);
+			TableUtils.dropTable(connectionSource, SectionFiche.class, true);
+			TableUtils.dropTable(connectionSource, Participant.class, true);
 			TableUtils.dropTable(connectionSource, PhotoParticipant.class, true);
 			TableUtils.dropTable(connectionSource, ZoneGeographique.class, true);
 			TableUtils.dropTable(connectionSource, ZoneObservation.class, true);
-			TableUtils.dropTable(connectionSource, SectionFiche.class, true);
-			TableUtils.dropTable(connectionSource, AutreDenomination.class, true);
+			TableUtils.dropTable(connectionSource, Groupe.class, true);
 			// after we drop the old databases, we create the new ones
 			onCreate(db, connectionSource);
 		} catch (SQLException e) {
@@ -167,11 +172,11 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
 	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
 	 */
-	public RuntimeExceptionDao<Participant, Integer> getParticipantDao() {
-		if (participantRuntimeDao == null) {
-			participantRuntimeDao = getRuntimeExceptionDao(Participant.class);
+	public RuntimeExceptionDao<AutreDenomination, Integer> getAutreDenominationDao() {
+		if (autreDenominationRuntimeDao == null) {
+			autreDenominationRuntimeDao = getRuntimeExceptionDao(AutreDenomination.class);
 		}
-		return participantRuntimeDao;
+		return autreDenominationRuntimeDao;
 	}
 
 	/**
@@ -183,6 +188,28 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 			photoFicheRuntimeDao = getRuntimeExceptionDao(PhotoFiche.class);
 		}
 		return photoFicheRuntimeDao;
+	}
+
+	/**
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
+	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
+	 */
+	public RuntimeExceptionDao<SectionFiche, Integer> getSectionFicheDao() {
+		if (sectionFicheRuntimeDao == null) {
+			sectionFicheRuntimeDao = getRuntimeExceptionDao(SectionFiche.class);
+		}
+		return sectionFicheRuntimeDao;
+	}
+
+	/**
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
+	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
+	 */
+	public RuntimeExceptionDao<Participant, Integer> getParticipantDao() {
+		if (participantRuntimeDao == null) {
+			participantRuntimeDao = getRuntimeExceptionDao(Participant.class);
+		}
+		return participantRuntimeDao;
 	}
 
 	/**
@@ -222,22 +249,11 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
 	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
 	 */
-	public RuntimeExceptionDao<SectionFiche, Integer> getSectionFicheDao() {
-		if (sectionFicheRuntimeDao == null) {
-			sectionFicheRuntimeDao = getRuntimeExceptionDao(SectionFiche.class);
+	public RuntimeExceptionDao<Groupe, Integer> getGroupeDao() {
+		if (groupeRuntimeDao == null) {
+			groupeRuntimeDao = getRuntimeExceptionDao(Groupe.class);
 		}
-		return sectionFicheRuntimeDao;
-	}
-
-	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
-	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
-	 */
-	public RuntimeExceptionDao<AutreDenomination, Integer> getAutreDenominationDao() {
-		if (autreDenominationRuntimeDao == null) {
-			autreDenominationRuntimeDao = getRuntimeExceptionDao(AutreDenomination.class);
-		}
-		return autreDenominationRuntimeDao;
+		return groupeRuntimeDao;
 	}
 
 	
@@ -249,13 +265,14 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	public void close() {
 		super.close();
 		ficheRuntimeDao = null;
-		participantRuntimeDao = null;
+		autreDenominationRuntimeDao = null;
 		photoFicheRuntimeDao = null;
+		sectionFicheRuntimeDao = null;
+		participantRuntimeDao = null;
 		photoParticipantRuntimeDao = null;
 		zoneGeographiqueRuntimeDao = null;
 		zoneObservationRuntimeDao = null;
-		sectionFicheRuntimeDao = null;
-		autreDenominationRuntimeDao = null;
+		groupeRuntimeDao = null;
 	}
 
 }

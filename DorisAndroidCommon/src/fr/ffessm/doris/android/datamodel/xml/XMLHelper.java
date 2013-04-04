@@ -80,48 +80,117 @@ public class XMLHelper {
 	}
 	
 	public static String generateXML4DB(DorisDBHelper dbContext){
-		log.debug("generateXML4DB() - Début");
-		log.debug("generateXML4DB() - dbContext : "+dbContext.toString() );
-		try {
-			log.debug("generateXML4DB() - dbContext.ficheDao.queryForAll().size() : "+dbContext.ficheDao.queryForAll().size() );
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DORISDB>");
 		sb.append("\n\t<FICHES>");
 		try {	
 			List<Fiche> fiches = dbContext.ficheDao.queryForAll();
 			for(Fiche  fiche : fiches){
-				log.debug("generateXML4DB() - fiche : "+fiche.getNomScientifique());
-				sb.append("\n");
-				sb.append(fiche.toXML("\t\t", dbContext));
+				// TODO find if contained by another element, if not put it there
+					sb.append("\n");
+					sb.append(fiche.toXML("\t\t", dbContext));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		sb.append("\n\t</FICHES>\n");
+		sb.append("\n\t<AUTREDENOMINATIONS>");
+		try {	
+			List<AutreDenomination> autreDenominations = dbContext.autreDenominationDao.queryForAll();
+			for(AutreDenomination  autreDenomination : autreDenominations){
+				// TODO find if contained by another element, if not put it there
+				boolean isContained = false;
+				if(autreDenomination.getFiche() != null){
+					isContained = true;
+				}
+				if(!isContained){
+					sb.append("\n");
+					sb.append(autreDenomination.toXML("\t\t", dbContext));
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sb.append("\n\t</AUTREDENOMINATIONS>\n");
+		sb.append("\n\t<PHOTOFICHES>");
+		try {	
+			List<PhotoFiche> photoFiches = dbContext.photoFicheDao.queryForAll();
+			for(PhotoFiche  photoFiche : photoFiches){
+				// TODO find if contained by another element, if not put it there
+				boolean isContained = false;
+				if(photoFiche.getFiche() != null){
+					isContained = true;
+				}
+				if(!isContained){
+					sb.append("\n");
+					sb.append(photoFiche.toXML("\t\t", dbContext));
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sb.append("\n\t</PHOTOFICHES>\n");
+		sb.append("\n\t<SECTIONFICHES>");
+		try {	
+			List<SectionFiche> sectionFiches = dbContext.sectionFicheDao.queryForAll();
+			for(SectionFiche  sectionFiche : sectionFiches){
+				// TODO find if contained by another element, if not put it there
+				boolean isContained = false;
+				if(sectionFiche.getFiche() != null){
+					isContained = true;
+				}
+				if(!isContained){
+					sb.append("\n");
+					sb.append(sectionFiche.toXML("\t\t", dbContext));
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sb.append("\n\t</SECTIONFICHES>\n");
 		sb.append("\n\t<PARTICIPANTS>");
 		try {	
 			List<Participant> participants = dbContext.participantDao.queryForAll();
 			for(Participant  participant : participants){
-				sb.append("\n");
-				sb.append(participant.toXML("\t\t", dbContext));
+				// TODO find if contained by another element, if not put it there
+					sb.append("\n");
+					sb.append(participant.toXML("\t\t", dbContext));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		sb.append("\n\t</PARTICIPANTS>\n");
+		sb.append("\n\t<PHOTOPARTICIPANTS>");
+		try {	
+			List<PhotoParticipant> photoParticipants = dbContext.photoParticipantDao.queryForAll();
+			for(PhotoParticipant  photoParticipant : photoParticipants){
+				// TODO find if contained by another element, if not put it there
+				boolean isContained = false;
+				if(photoParticipant.getParticipant() != null){
+					isContained = true;
+				}
+				if(!isContained){
+					sb.append("\n");
+					sb.append(photoParticipant.toXML("\t\t", dbContext));
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sb.append("\n\t</PHOTOPARTICIPANTS>\n");
 		sb.append("\n\t<ZONEGEOGRAPHIQUES>");
 		try {	
 			List<ZoneGeographique> zoneGeographiques = dbContext.zoneGeographiqueDao.queryForAll();
 			for(ZoneGeographique  zoneGeographique : zoneGeographiques){
-				sb.append("\n");
-				sb.append(zoneGeographique.toXML("\t\t", dbContext));
+				// TODO find if contained by another element, if not put it there
+					sb.append("\n");
+					sb.append(zoneGeographique.toXML("\t\t", dbContext));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -132,17 +201,32 @@ public class XMLHelper {
 		try {	
 			List<ZoneObservation> zoneObservations = dbContext.zoneObservationDao.queryForAll();
 			for(ZoneObservation  zoneObservation : zoneObservations){
-				sb.append("\n");
-				sb.append(zoneObservation.toXML("\t\t", dbContext));
+				// TODO find if contained by another element, if not put it there
+					sb.append("\n");
+					sb.append(zoneObservation.toXML("\t\t", dbContext));
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		sb.append("\n\t</ZONEOBSERVATIONS>\n");
+		sb.append("\n\t<GROUPES>");
+		try {	
+			List<Groupe> groupes = dbContext.groupeDao.queryForAll();
+			for(Groupe  groupe : groupes){
+				// TODO find if contained by another element, if not put it there
+				boolean isContained = false;
+				if(!isContained){
+					sb.append("\n");
+					sb.append(groupe.toXML("\t\t", dbContext));
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sb.append("\n\t</GROUPES>\n");
 		sb.append("\n</DORISDB>");
-		
-		log.debug("generateXML4DB() - Fin");
 		return sb.toString();
 	}
 	
