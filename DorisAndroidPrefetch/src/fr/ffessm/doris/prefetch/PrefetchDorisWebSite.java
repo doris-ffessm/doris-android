@@ -241,7 +241,7 @@ public class PrefetchDorisWebSite {
 				// setup our database and DAOs
 				setupDatabase(connectionSource);
 				// read and write some data
-				readWriteData(listeFiches, listeGroupes);
+				ecritureDataXML(listeFiches, listeGroupes);
 	
 			} finally {
 				// destroy the data source which should close underlying connections
@@ -394,71 +394,36 @@ public class PrefetchDorisWebSite {
 	}
 
 	/**
-	 * Read and write some example data.
+	 * Ecriture Fichier de données au format xml
 	 */
-	private void readWriteData(List<Fiche> inListeFiches, List<Groupe> inListeGroupes) throws Exception {
-		// create an instance of Fiche
-
-		/* Fiche fiche1 = new Fiche("Amphiprion bicinctus",
-				"Poisson-clown à deux bandes", 1001, "");
-		Fiche fiche2 = new Fiche("Palaemon elegans Rathke",
-				"Petite crevette rose", 337, "");
+	private void ecritureDataXML(List<Fiche> inListeFiches, List<Groupe> inListeGroupes) throws Exception {
+		log.debug("ecritureDataXML() - Début");
+		log.debug("ecritureDataXML() - inListeFiches.size() : "+inListeFiches.size());
+		log.debug("ecritureDataXML() - inListeGroupes.size() : "+inListeGroupes.size());
 		
-		// persist the fiches object to the database
-		dbContext.ficheDao.create(fiche1);
-		dbContext.ficheDao.create(fiche2);
-		
-		SectionFiche s1 = new SectionFiche("Titre S1","hqdshgh ojfjdj");
-		//fiche1.getContenu().add(s1);
-		//s1.setFiche(fiche1);
-		dbContext.sectionFicheDao.create(s1);
-		
-		int id = fiche1.getId();
-
-		Participant p1 = new Participant("Didier");
-		Participant p2 = new Participant("Guillaume");
-		
-		dbContext.participantDao.create(p1);
-		dbContext.participantDao.create(p2);
-		
-		Fiches_verificateurs_Participants verification1 =  new Fiches_verificateurs_Participants(fiche1,p1);
-		Fiches_verificateurs_Participants verification2 =  new Fiches_verificateurs_Participants(fiche1,p2);
-		Fiches_verificateurs_Participants verification3 =  new Fiches_verificateurs_Participants(fiche2,p1);
-		
-		dbContext.fiches_verificateurs_ParticipantsDao.create(verification1);
-		dbContext.fiches_verificateurs_ParticipantsDao.create(verification2);
-		dbContext.fiches_verificateurs_ParticipantsDao.create(verification3);
-		*/
-		
-		
-		// assign a password
-		//fiche1.setId(1001);
-		// update the database after changing the object
-		//ficheDao.update(fiche1);
-
-		// query for all items in the database
-		/*List<Fiche> fiches = dbContext.ficheDao.queryForAll();
-		Fiche fiche3 = fiches.get(0);
-		
-		
-		System.out.println("nb verificateur fiche 0: " + fiche3.lookupVerificateurs(dbContext).size());
-*/
-
+		// Sera à supprimer
+		// -------------------
 		File f = new File(DOSSIER_BASE + "/" + DOSSIER_RESULTATS + "/" + "prefetchedDorisDB1.xml");
 		sauveXML(f, inListeFiches, inListeGroupes);
+		// -------------------
 		
 		for (Fiche fiche : inListeFiches){
 			
 			dbContext.ficheDao.create(fiche);
 		}
+			
+
 		for (Groupe groupe : inListeGroupes){
 			
 			dbContext.groupeDao.create(groupe);
 		}
+
+		String fichierXML = DOSSIER_BASE + "/" + DOSSIER_RESULTATS + "/" + Constants.getFichierDorisXML();
+		log.debug("ecritureDataXML() - fichierXML : "+fichierXML);
 		
-		// test de la nouvelle fonctions XMLHelper
-		String fichierXML = DOSSIER_BASE + "/" + DOSSIER_RESULTATS + "/" + "prefetchedDorisDB2.xml";
 		XMLHelper.saveDBToFile(new File(fichierXML), dbContext);
+		
+		log.debug("ecritureDataXML() - Fin");
 	}
 
 	/**

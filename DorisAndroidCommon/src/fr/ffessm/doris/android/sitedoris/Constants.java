@@ -49,6 +49,8 @@ public class Constants {
     private final static String LISTE_TOUTES_FICHES_URL = "nom_scientifique.asp?numero_fichier=10";
     private final static String GROUPES_URL = "groupes.asp?numero_fichier=10";
     
+	private final static String FICHIER_DORIS_XML = "prefetchedDorisDB.xml";
+	
     public static String getSiteUrl() {
 		String listeFichesUrl = SITE_RACINE_URL;
 		return listeFichesUrl;
@@ -62,6 +64,11 @@ public class Constants {
     public static String getGroupesUrl() {
 		String listeFichesUrl = SITE_RACINE_URL + GROUPES_URL;
     	return listeFichesUrl;
+    }
+    
+    public static String getFichierDorisXML() {
+		String refFichierDorisXML = FICHIER_DORIS_XML;
+    	return refFichierDorisXML;
     }
 	
 }
