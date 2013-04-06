@@ -62,13 +62,10 @@ public class SiteDoris {
 	
 
     
-    public static List<Fiche> getListeFiches(String inCodePageHtml, int inNbFichesMax) {
+    public static List<Fiche> getListeFiches(String inCodePageHtml) {
     	log.debug("getListeFiches()- Début");
-    	log.debug("getListeFiches()- NbFichesMax : "+inNbFichesMax);
     	
-    	// TODO : j'ai mis 1, je ne connais pas les conséquences de ce choix
-    	// 3000 n'est-il pas trop grand ?
-    	List<Fiche> listeFiches = new ArrayList<Fiche>(1);
+    	List<Fiche> listeFiches = new ArrayList<Fiche>(0);
     	
     	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
     	source.fullSequentialParse();
@@ -100,8 +97,8 @@ public class SiteDoris {
     				int ficheId = Integer.parseInt(elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "").replaceAll("&.*", ""));
     				int ficheEtat = Integer.parseInt(elementTDA.getAttributeValue("href").replaceAll(".*fiche_etat=", "").replaceAll("&.*", ""));
     				
-    				String dateCreation = ""; //TODO
-    				String dateModification = ""; //TODO
+    				String dateCreation = ""; //TODO : Ça aurait été bien que la date de modif. apparaisse dans la page des noms scientifiques
+    				String dateModification = "";
     				log.info("getGroupes() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
     				
     				Fiche fiche = new Fiche(ficheNomScientifique, ficheNomCommun, ficheId, ficheEtat, dateCreation, dateModification);
@@ -110,12 +107,6 @@ public class SiteDoris {
     			}
 			}
 			
-			// Permet de limiter le nombre de fiches traitées pendant les dev.
-			if (listeFiches.size() >= inNbFichesMax){
-				log.info("getGroupes() - le nombre de fiches max. est atteint : "+listeFiches.size());
-				break;
-			}
-
 		}
 		log.debug("getListeFiches()- Fin");
 		return listeFiches;
@@ -126,19 +117,18 @@ public class SiteDoris {
     public static List<Groupe> getListeGroupes(String inCodePageHtml){
     	log.debug("getGroupes() - Début");
     	
-    	// TODO : j'ai mis 1, je ne connais pas les conséquences de ce choix
-    	// 200 n'est-il pas trop grand ?
     	List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
     	
     	int nivPrecedent = 0;
     	
     	// Création du groupe racine qui contiendra récurcivement tout l'arbre
+    	// TODO : Supprimer sur les Créations de Groupe ci-dessous le commentaire tempo aidaant à debbeuger
     	Groupe groupe = new Groupe(0, 0, "racine","Tempo pour debug : 0-0");
     	Groupe groupeRacine = groupe;
     	Groupe groupeNiveau1Courant = null;
     	Groupe groupeNiveau2Courant = null;
     	Groupe groupeNiveau3Courant = null;
-    	Groupe groupeNiveau4Courant = null;
+    	
     	listeGroupes.add(groupe);
     	
     	Source source=new Source(inCodePageHtml);
@@ -259,12 +249,11 @@ public class SiteDoris {
 
 												log.info("getGroupes() - groupe 4 : "+elementAG4.getRenderer().toString());
 												
-												groupe = new Groupe(0, Integer.parseInt(elementAG4.getAttributeValue("href").toString().replaceAll(".*sousgroupe_numero=(\\d+)&groupe_numero.*", "$1")), elementAG4.getRenderer().toString(),"Tempo pour debug : 4-0");
+												groupe = new Groupe(groupeNiveau3Courant.getNumeroGroupe(), Integer.parseInt(elementAG4.getAttributeValue("href").toString().replaceAll(".*sousgroupe_numero=(\\d+)&groupe_numero.*", "$1")), elementAG4.getRenderer().toString(),"Tempo pour debug : 4-0");
 												listeGroupes.add(groupe);
 												
 												groupe.setGroupePere(groupeNiveau3Courant);
 												
-												groupeNiveau4Courant = groupe;
 										    	nivPrecedent = 4;
 
 											}
@@ -281,8 +270,29 @@ public class SiteDoris {
 		return listeGroupes;
     }
 
-    
-    
-    
+    public static Groupe getGroupeFromListeGroupes(List<Groupe> listeGroupes, int numGroupe, int numSousGroupe){
+    	log.debug("getGroupeFromListeGroupes() - Début");
+    	log.debug("getGroupeFromListeGroupes() - numGroupe : "+numGroupe);
+    	log.debug("getGroupeFromListeGroupes() - numSousGroupe : "+numSousGroupe);
+    	
+    	// Contrôle basique des entrées
+    	if (numGroupe == 0) {
+    		log.error("getGroupeFromListeGroupes() - refGroupe ne peut être égal à 0");
+    		return null;
+    	}
+    	
+    	for (Groupe groupe : listeGroupes) {
+    	
+    		if ( groupe.getNumeroGroupe() == numGroupe && ( numSousGroupe == 0 || groupe.getNumeroSousGroupe() == numSousGroupe) ) {
+    			log.debug("getGroupeFromListeGroupes() - Groupe Trouvé : "+groupe.getId()+" - "+groupe.getNomGroupe());
+    			log.debug("getGroupeFromListeGroupes() - Fin");
+    			return groupe;
+    		}
+    		
+    	}
+    	
+    	log.debug("getGroupeFromListeGroupes() - Fin (sans avoir trouvé de groupe correspondant)");
+		return null;
+    }
     
 }

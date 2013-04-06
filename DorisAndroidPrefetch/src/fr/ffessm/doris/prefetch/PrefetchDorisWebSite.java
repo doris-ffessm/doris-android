@@ -193,7 +193,7 @@ public class PrefetchDorisWebSite {
 				contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
 
 			}
-			listeFiches = SiteDoris.getListeFiches(contenuFichierHtml, nbMaxFichesTraitees);
+			listeFiches = SiteDoris.getListeFiches(contenuFichierHtml);
 			log.debug("doMain() - listeFiches.size : "+listeFiches.size());
 			
 			// TODO : Il faudra ici, pour les modes où on complète la base, reconstruire
@@ -204,32 +204,36 @@ public class PrefetchDorisWebSite {
 			// TODO : on vérifie qu'il faut la traiter
 			// On la télécharge (et sauvegarde le fichier original)
 			// On la traite
+			int nbFichesTraitees = 0;
 			for (Fiche fiche : listeFiches) {
-				// TODO : Ne pas traiter dans certain cas
-				
-				log.debug("doMain() - Traitement Fiche : "+fiche.getNomCommun());
-				
-				String urlFiche = "http://doris.ffessm.fr/fiche2.asp?fiche_numero="+fiche.getNumeroFiche();
-				String fichierLocalFiche = DOSSIER_BASE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+".html";
-				if (! action.equals("NODWNLD")) {
-					if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
-						contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
+				nbFichesTraitees += 1;
+				if (  nbFichesTraitees <= nbMaxFichesTraitees ) {
+					// TODO : Ne pas traiter dans certain cas
 					
+					log.debug("doMain() - Traitement Fiche : "+fiche.getNomCommun());
+					
+					String urlFiche = "http://doris.ffessm.fr/fiche2.asp?fiche_numero="+fiche.getNumeroFiche();
+					String fichierLocalFiche = DOSSIER_BASE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+".html";
+					if (! action.equals("NODWNLD")) {
+						if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
+							contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
+						
+						} else {
+							log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
+							continue;
+						}
 					} else {
-						log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
-						continue;
+						contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
+						
 					}
-				} else {
-					contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
-					
-				}
-				fiche.getFiche(contenuFichierHtml);
+					fiche.getFiche(contenuFichierHtml, listeGroupes);
 				
-				log.debug("doMain() - Info Fiche {");
-				log.debug("doMain() -      - ref : "+fiche.getNumeroFiche());
-				log.debug("doMain() -      - nom : "+fiche.getNomCommun());
-				log.debug("doMain() -      - etat : "+fiche.getEtatFiche());
-				log.debug("doMain() - }");
+					log.debug("doMain() - Info Fiche {");
+					log.debug("doMain() -      - ref : "+fiche.getNumeroFiche());
+					log.debug("doMain() -      - nom : "+fiche.getNomCommun());
+					log.debug("doMain() -      - etat : "+fiche.getEtatFiche());
+					log.debug("doMain() - }");
+				}
 			}
 			
 			

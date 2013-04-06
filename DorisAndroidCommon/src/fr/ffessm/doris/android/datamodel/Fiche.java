@@ -69,7 +69,9 @@ import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
 
 import fr.ffessm.doris.android.sitedoris.Outils;
+import fr.ffessm.doris.android.sitedoris.SiteDoris;
 // End of user code
+
 
 /** 
   * Fiche Doris, donne accés aux données de la fiche 
@@ -99,50 +101,65 @@ public class Fiche {
 	@DatabaseField(generatedId = true)
 	protected int _id;
 	
-
+	@DatabaseField
 	protected java.lang.String nomScientifique;
 
+	@DatabaseField
 	protected java.lang.String nomCommun;
 
 	/** Numéro de la fiche tel que connu par le site lui même */ 
+	@DatabaseField
 	protected int numeroFiche;
 
 	/** Etat Avancement de la fiche 
 4 : Fiche Publiée - 1, 2, 3 : En cours de Rédaction - 5 : Fiche Proposée */ 
+	@DatabaseField
 	protected int etatFiche;
 
+	@DatabaseField
 	protected java.lang.String dateCreation;
 
+	@DatabaseField
 	protected java.lang.String dateModification;
 	
 
+	@DatabaseField(foreign = true)
 	protected Participant redacteurs;
 
 	/** Liste des photos de la fiche */ 
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected PhotoFiche photosFiche;
 
 	/** zones géographiques où l'on peut trouver l'élément décrit par la fiche */ 
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected ZoneGeographique zonesGeographiques;
 
 	/** zones  où l'on peut observer l'élément décrit par la fiche */ 
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected ZoneObservation zonesObservation;
 
 	/** listes des personnes ayant vérifié la fiche */ 
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Participant verificateurs;
 
 	/** responsable régional de la fiche */ 
+	@DatabaseField(foreign = true)
 	protected Participant responsableRegional;
 
 	/** contenu textuel de la fiche */ 
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected SectionFiche contenu;
 
 	/** Photo par défaut de l'espèce présentée par cette fiche. Elle est aussi présente dans la liste "photosFiche". */ 
+	@DatabaseField(foreign = true)
 	protected PhotoFiche photoPrincipale;
 
 	/** Liste des autres dénominations de l'espèce présentée sur la fiche. */ 
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected AutreDenomination autresDenominations;
 
 	/** Permet d'identifier avec le sous-groupe (optionel) le groupe auquel est rattaché la fiche */ 
+	@DatabaseField(foreign = true)
 	protected Groupe groupe;
 
 	// Start of user code Fiche additional user properties
@@ -150,7 +167,7 @@ public class Fiche {
 	// Inititalisation de la Gestion des Log 
 	public static Log log = LogFactory.getLog(Fiche.class);
 	
-	public void getFiche(String htmlFiche){
+	public void getFiche(String htmlFiche, List<Groupe> listeGroupes){
 		log.debug("getFiche() - Début");
 		
     	int i;
@@ -192,6 +209,8 @@ public class Fiche {
 		List<? extends Element> listeElementsTable_TABLE;
 		List<? extends Attribute> listeAttributs;
 		int num_table = 0;
+		int groupeRef = 0;
+		int sousgroupeRef = 0;
 		
 		// Lecture des informations pour une fiche complète
 		if ( getEtatFiche() == 4) {
@@ -246,16 +265,12 @@ public class Fiche {
 						for (Attribute attribut : listeAttributs) {
 							
 							if (attribut.getName().equals("src") && attribut.getValue().toString().startsWith("gestionenligne/images_groupe/") ) {
+								// Certaines fiches appartiennent à un groupe sans être dans un sous-groupe
+								// c'est pourquoi, on initialise d'abord le groupe
+								groupeRef = Integer.parseInt(attribut.getValue().toString().replaceAll(".*images_groupe/([0-9]*).gif","$1"));
+								log.info("getFiche() - groupeRef : " + groupeRef);
 
-								Element listeElementsHD_TR = element.getParentElement().getParentElement();
-								
-								// TODO :
-								//groupeRef = Integer.parseInt(attribut.getValue().toString().replaceAll(".*images_groupe/([0-9]*).gif","$1"));
-								//log.info("getFiche() - groupeRef : " + groupeRef);
-
-								// TODO :
-								//groupeRefTexte = listeElementsHD_TR.getRenderer().toString().trim();
-								//log.info("getFiche() - groupeRefTexte : " + groupeRefTexte);
+								groupe = SiteDoris.getGroupeFromListeGroupes(listeGroupes, groupeRef, 0);
 							}
 						}
 					}
@@ -420,10 +435,8 @@ public class Fiche {
 				int index = listeElementsTDSousGroupe.indexOf(element);
 				log.debug("getFiche() - index : " + index);
 				
-				if (index == 1) {
-					// TODO :
-					//sousgroupeRefTexte = element.getRenderer().toString().trim();
-					//log.info("getFiche() - sousgroupeRefTexte : " + sousgroupeRefTexte);
+				if (index == 1) {					
+					// Texte du sous-groupe (inutile pour nous)
 				}
 				if (index == 2) {
 					
@@ -431,9 +444,14 @@ public class Fiche {
 					for (Attribute attribut : listeAttributs) {
 						
 						if (attribut.getName().equals("src") && attribut.getValue().toString().startsWith("gestionenligne/images_sousgroupe/") ) {
-							// TODO :
-							//sousgroupeRef = Integer.parseInt(attribut.getValue().toString().toLowerCase().replaceAll(".*images_sousgroupe/([0-9]*).(gif|jpg)","$1"));
-							//log.info("getFiche() - sousgroupeRef : " + sousgroupeRef);
+							// Certaines fiches appartiennent à un groupe sans être dans un sous-groupe
+							// c'est pourquoi, on a d'abord initialiser les groupes
+							// et qu'on l'écrase ici. (on a l'arborescence des groupes par ailleurs)
+							sousgroupeRef = Integer.parseInt(attribut.getValue().toString().toLowerCase().replaceAll(".*images_sousgroupe/([0-9]*).(gif|jpg)","$1"));
+							log.info("getFiche() - sousgroupeRef : " + sousgroupeRef);
+
+							groupe = SiteDoris.getGroupeFromListeGroupes(listeGroupes, groupeRef, sousgroupeRef);
+
 						}
 					}
 				}
@@ -500,13 +518,11 @@ public class Fiche {
 							
 							if (attribut.getName().equals("src") && attribut.getValue().toString().startsWith("gestionenligne/images_groupe/") ) {
 
-								Element listeElementsHD_TR = element.getParentElement().getParentElement();
-								// TODO :
-								//groupeRef = Integer.parseInt(attribut.getValue().toString().replaceAll(".*images_groupe/([0-9]*).gif","$1"));
-								//log.info("getFiche() - groupeRef : " + groupeRef);
-								// TODO :
-								//groupeRefTexte = listeElementsHD_TR.getRenderer().toString().trim();
-								//log.info("getFiche() - groupeRefTexte : " + groupeRefTexte);
+								groupeRef = Integer.parseInt(attribut.getValue().toString().replaceAll(".*images_groupe/([0-9]*).gif","$1"));
+								log.info("getFiche() - groupeRef : " + groupeRef);
+
+								groupe = SiteDoris.getGroupeFromListeGroupes(listeGroupes, groupeRef, 0);
+
 							}
 						}
 					}
@@ -558,9 +574,6 @@ public class Fiche {
 				log.debug("getFiche() - index : " + index);
 				
 				if (index == 1) {
-					// TODO :
-					//sousgroupeRefTexte = element.getRenderer().toString().trim();
-					//log.info("getFiche() - sousgroupeRefTexte : " + sousgroupeRefTexte);
 				}
 				if (index == 2) {
 					
@@ -568,9 +581,10 @@ public class Fiche {
 					for (Attribute attribut : listeAttributs) {
 						
 						if (attribut.getName().equals("src") && attribut.getValue().toString().startsWith("gestionenligne/images_sousgroupe/") ) {
-							// TODO :
-							//sousgroupeRef = Integer.parseInt(attribut.getValue().toString().toLowerCase().replaceAll(".*images_sousgroupe/([0-9]*).(gif|jpg)","$1"));
-							//log.info("getFiche() - sousgroupeRef : " + sousgroupeRef);
+							sousgroupeRef = Integer.parseInt(attribut.getValue().toString().toLowerCase().replaceAll(".*images_sousgroupe/([0-9]*).(gif|jpg)","$1"));
+							log.info("getFiche() - sousgroupeRef : " + sousgroupeRef);
+
+							groupe = SiteDoris.getGroupeFromListeGroupes(listeGroupes, groupeRef, sousgroupeRef);
 						}
 					}
 				}
