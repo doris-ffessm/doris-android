@@ -78,12 +78,24 @@ public class PhotoFiche {
 	protected int _id;
 	
 
+	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@45821196 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
+	// att.storage : 
+	// storageKind::SQLite : SQLite
 	protected java.lang.String cleURL;
 
+	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@3f721e0 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
+	// att.storage : File
+	// storageKind::SQLite : SQLite
 	protected java.io.File imageVignette;
 
+	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@3f721e0 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
+	// att.storage : File
+	// storageKind::SQLite : SQLite
 	protected java.io.File imageMoyenne;
 
+	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@3f721e0 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
+	// att.storage : File
+	// storageKind::SQLite : SQLite
 	protected java.io.File imageGrande;
 	
 

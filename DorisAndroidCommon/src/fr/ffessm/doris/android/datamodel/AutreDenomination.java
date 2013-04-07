@@ -76,12 +76,20 @@ public class AutreDenomination {
 	protected int _id;
 	
 
+	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@45821196 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
+	// att.storage : 
+	// storageKind::SQLite : SQLite
+	@DatabaseField
 	protected java.lang.String denomination;
 
 	/** Si renseigné, indique la ou les langues qui utilisent cette dénomination  */ 
+	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@45821196 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
+	// att.storage : 
+	// storageKind::SQLite : SQLite
+	@DatabaseField
 	protected java.lang.String langue;
 	
-
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiche;
 
 	// Start of user code AutreDenomination additional user properties

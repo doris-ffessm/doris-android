@@ -68,10 +68,10 @@ import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
 
+import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Outils;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 // End of user code
-
 
 /** 
   * Fiche Doris, donne accés aux données de la fiche 
@@ -101,24 +101,43 @@ public class Fiche {
 	@DatabaseField(generatedId = true)
 	protected int _id;
 	
+
+	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@45821196 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
+	// att.storage : 
+	// storageKind::SQLite : SQLite
 	@DatabaseField
 	protected java.lang.String nomScientifique;
 
+	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@45821196 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
+	// att.storage : 
+	// storageKind::SQLite : SQLite
 	@DatabaseField
 	protected java.lang.String nomCommun;
 
 	/** Numéro de la fiche tel que connu par le site lui même */ 
+	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@5e50b280 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
+	// att.storage : 
+	// storageKind::SQLite : SQLite
 	@DatabaseField
 	protected int numeroFiche;
 
 	/** Etat Avancement de la fiche 
 4 : Fiche Publiée - 1, 2, 3 : En cours de Rédaction - 5 : Fiche Proposée */ 
+	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@5e50b280 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
+	// att.storage : 
+	// storageKind::SQLite : SQLite
 	@DatabaseField
 	protected int etatFiche;
 
+	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@45821196 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
+	// att.storage : 
+	// storageKind::SQLite : SQLite
 	@DatabaseField
 	protected java.lang.String dateCreation;
 
+	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@45821196 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
+	// att.storage : 
+	// storageKind::SQLite : SQLite
 	@DatabaseField
 	protected java.lang.String dateModification;
 	
@@ -147,17 +166,17 @@ public class Fiche {
 	protected Participant responsableRegional;
 
 	/** contenu textuel de la fiche */ 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
-	protected SectionFiche contenu;
-
+	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
+	protected ForeignCollection<SectionFiche> contenu;
+	
 	/** Photo par défaut de l'espèce présentée par cette fiche. Elle est aussi présente dans la liste "photosFiche". */ 
 	@DatabaseField(foreign = true)
 	protected PhotoFiche photoPrincipale;
 
 	/** Liste des autres dénominations de l'espèce présentée sur la fiche. */ 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
-	protected AutreDenomination autresDenominations;
-
+	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
+	protected ForeignCollection<AutreDenomination> autresDenominations;
+	
 	/** Permet d'identifier avec le sous-groupe (optionel) le groupe auquel est rattaché la fiche */ 
 	@DatabaseField(foreign = true)
 	protected Groupe groupe;
@@ -278,7 +297,7 @@ public class Fiche {
 					
 					
 					break;
-				//Description
+				//Description Gauche et Droite
 				case 2 :
 					
 					//Le grand pere du 1er TD de class Normal est le TBODY des Détails
@@ -286,65 +305,67 @@ public class Fiche {
 					log.debug("getFiche() - ElementsMG_rubrique : " + ElementsMG_normal.toString().substring(0, Math.min(ElementsMG_normal.toString().length(),20)));
 					Element ElementsMG=ElementsMG_normal.getParentElement().getParentElement();
 					List<? extends Element> listeElementsMG_TD = ElementsMG.getAllElements(HTMLElementName.TD);
-					String autresDenominations = "";
+
 					boolean autresDenominationsFlag = true;
 					String rubrique = "";
-					String contenu = "";
 	
 					for (Element elementTD : listeElementsMG_TD) {
 						log.debug("getFiche() - listeElementsMG_TD : " + elementTD.toString().substring(0, Math.min(elementTD.toString().length(),50)));
 						listeAttributs=elementTD.getAttributes();
 						for (Attribute attribut : listeAttributs) {
-							
+							// Récupération du Titre de la rubrique
+							// Le titre est vide pour "Autres Dénominations"
 							if (attribut.getName().equals("class") && attribut.getValue().equals("rubrique")) {
-								//Si c'est la 1ère fois que l'on passe alors on enregistre les autres dénomination et 
-								// l'international dans un nouveau détail
-								if (rubrique.equals("") && !autresDenominations.equals("") && autresDenominationsFlag) {
-									// TODO:
-									//ficheListeDetails.add(new Detail("Autres Denominations", autresDenominations, true));
-									
-									log.info("getFiche() - autresDenominations(A) : " + autresDenominations);
-									autresDenominations = "";
-									//autresDenominationsFlag = false;
+								rubrique = elementTD.getRenderer().toString().trim();
+								
+								//Si c'est la 1ère fois que l'on passe par "rubrique" alors 
+								// c'est que l'on a déjà passé les autres dénomination et que donc on les connait
+								if (!rubrique.equals("") && autresDenominationsFlag) {
+									autresDenominationsFlag = false;
 								}
 								rubrique = elementTD.getRenderer().toString().trim();
 							}
 							
 							if (attribut.getName().equals("class") && attribut.getValue().equals("normal") ) {
 								log.debug("getFiche() - rubrique : " + rubrique);
-								if (rubrique.equals("")) {
-									autresDenominations  = elementTD.getRenderer().toString().trim();
+								if (autresDenominationsFlag) {
+									String autresDenominationsTexte  = elementTD.getRenderer().toString().trim();
 									
 									// suppression des sauts de ligne
-									autresDenominations = autresDenominations.replaceAll("\r\n", " ").replaceAll("\n", " ");
+									autresDenominationsTexte = autresDenominationsTexte.replaceAll("\r\n", " ").replaceAll("\n", " ");
 									log.debug("getFiche() - autresDenominations(B1) : " + autresDenominations);
 	
 									// suppression des blancs multiples
-									autresDenominations = autresDenominations.replaceAll("\\s{2,}"," ");
+									autresDenominationsTexte = autresDenominationsTexte.replaceAll("\\s{2,}"," ");
 									log.debug("getFiche() - autresDenominations(B2) : " + autresDenominations);
 									
 									// permet d'enlever les Liens et de les remplacer par (*)
-									autresDenominations = autresDenominations.replaceAll("<[^>]*>", "(*)").trim();
+									autresDenominationsTexte = autresDenominationsTexte.replaceAll("<[^>]*>", "(*)").trim();
 										
+									AutreDenomination autreDenomination = new AutreDenomination(autresDenominationsTexte, "");
+									autreDenomination.setFiche(this);
+									
+									
 								} else {
-									contenu = elementTD.getRenderer().toString();
+									String contenuTexte = elementTD.getRenderer().toString();
 									log.debug("getFiche() - contenu(initial) : " + contenu);
 									
 									// suppression des sauts de ligne
-									contenu = contenu.replaceAll("\r\n", " ").replaceAll("\n", " ");
-									log.debug("getFiche() - contenu(1) : " + contenu);
+									contenuTexte = contenuTexte.replaceAll("\r\n", " ").replaceAll("\n", " ");
+									log.debug("getFiche() - contenu(1) : " + contenuTexte);
 	
 									// suppression des blancs multiples
-									contenu = contenu.replaceAll("\\s{2,}"," ");
-									log.debug("getFiche() - contenu(2) : " + contenu);
+									contenuTexte = contenuTexte.replaceAll("\\s{2,}"," ");
+									log.debug("getFiche() - contenu(2) : " + contenuTexte);
 									
 									// permet d'enlever les Liens et de les remplacer par (*)
-									contenu = contenu.replaceAll("<[^>]*>", "(*)").trim();
+									contenuTexte = contenuTexte.replaceAll("<[^>]*>", "(*)").trim();
 	
 									log.info("getFiche() - rubrique : " + rubrique);
-									log.info("getFiche() - contenu(après nettoyage) : " + contenu);
-									//TODO :
-									//ficheListeDetails.add(new Detail(rubrique,contenu,false));
+									log.info("getFiche() - contenu(après nettoyage) : " + contenuTexte);
+									
+									SectionFiche contenu = new SectionFiche(contenuTexte, "");
+									contenu.setFiche(this);
 								}
 							}
 						}
@@ -377,44 +398,84 @@ public class Fiche {
 					//Recup du TD qui contient les infos DROITE (images et qui a fait la fiche)
 					//Recup du TR dont le 3ème TD fils contient les infos DROITE (images et qui a fait la fiche)
 					
-					List<? extends Element> listeElements1 = null;
-					listeElements1 = elementTable_TABLE.getAllElementsByClass("trait_cadregris");
+					List<? extends Element> listeElementsEntoureDeGris = elementTable_TABLE.getAllElementsByClass("trait_cadregris");
 					log.debug("getFiche() -  element : " + " - " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),30)));
 					
-					for (Element element : listeElements1) {
-						log.debug("getFiche() - vignette 1: " + element.toString().substring(0, Math.min(100,element.toString().toString().length())));
+					for (Element elementEntoureDeGris : listeElementsEntoureDeGris) {
+						log.debug("getFiche() - vignette 1: " + elementEntoureDeGris.toString().substring(0, Math.min(100,elementEntoureDeGris.toString().toString().length())));
 						
-						Element element2 = element.getFirstElement(HTMLElementName.A);
+						// Les images de la fiche sont dans les liens (A)
+						Element elementAinEntoureDeGris= elementEntoureDeGris.getFirstElement(HTMLElementName.A);
+						Element elementImg = null;
 						String urlImageDansFiche = "";
 						
-						if (element2 != null)
+						if (elementAinEntoureDeGris != null)
 						{
-							element2 = element2.getFirstElement(HTMLElementName.IMG);
-							log.debug("getFiche() - vignette 2: " + element2.toString().substring(0, Math.min(100,element2.toString().toString().length())));
+							elementImg = elementAinEntoureDeGris.getFirstElement(HTMLElementName.IMG);
+							log.debug("getFiche() - vignette 2: " + elementImg.toString().substring(0, Math.min(100,elementImg.toString().toString().length())));
 							
-							listeAttributs=element2.getAttributes();
+							listeAttributs=elementImg.getAttributes();
 							for (Attribute attribut : listeAttributs) {
 								if (attribut.getName().equalsIgnoreCase("src") && attribut.getValue().contains("gestionenligne")){
-									//TODO :
-									//urlImageDansFiche = attribut.getValue().replaceAll(Extraction.racineSite, "");
+									urlImageDansFiche = attribut.getValue().replaceAll(Constants.getSiteUrl(), "");
 									log.info("getFiche() - urlImageDansFiche : " + urlImageDansFiche);
-																										
 									break;
 								}
-								
 							}
 						}
-						
-						//Recup Texte
-						element2 = element.getFirstElementByClass("normal2");
-						if (element2 != null)
-						{
-							log.info("getFiche() - Texte : " + element2.getRenderer().toString());
-							// TODO :
-							// ficheListeImages.add(new Image(element2.getRenderer().toString(),urlImageDansFiche));
+						if (elementImg != null) {
+							//Recup Texte
+							Element elementImgTexte = elementEntoureDeGris.getFirstElementByClass("normal2");
+							if (elementImgTexte != null)
+							{
+								log.info("getFiche() - Texte : " + elementImgTexte.getRenderer().toString());
+								// TODO :
+								// ficheListeImages.add(new Image(element2.getRenderer().toString(),urlImageDansFiche));
+							}
 						}
-					}					
-					break;
+
+					
+						// Les participants
+						// On vérifie que le cadre Gris contient la rubrique Participants
+						Element elementRubriqueinEntoureDeGris= elementEntoureDeGris.getFirstElementByClass("rubrique");
+						if (elementRubriqueinEntoureDeGris != null) {
+							if (elementRubriqueinEntoureDeGris.getRenderer().toString().equals("Participants")) {
+								
+								// On parcourt les TD
+								// Si class=gris_gras et contenu texte != vide => qualité de la personne ci-après
+								// Si class=normal et contenu texte != vide => nom de la personne
+								String intervenantQualite = null;
+								String intervenantNom = null;
+								
+								List<? extends Element> listeElementsTDinEntoureDeGris = elementRubriqueinEntoureDeGris.getAllElements(HTMLElementName.TD);
+								for (Element elementTDParticipants : listeElementsTDinEntoureDeGris) {
+									if (elementTDParticipants.getClass().toString().equals("gris_gras") &&
+											!elementTDParticipants.getRenderer().toString().isEmpty() ) {
+										intervenantQualite = elementTDParticipants.getRenderer().toString();
+									}
+									
+									if (elementTDParticipants.getClass().toString().equals("normal") &&
+											!elementTDParticipants.getRenderer().toString().isEmpty() ) {
+										intervenantNom = elementTDParticipants.getRenderer().toString();
+										// TODO : C'est ici qu'il faudra ajouter l'init
+										
+									}
+									
+								}
+							}
+						}
+										
+					} // Fin parcourt des Cadres Gris
+					
+					// Les dates de Créations et de nodifications
+					// Elles sont dans le seul TD de class = normalgris
+					Element ElementDates=elementTable_TABLE.getFirstElementByClass("normalgris");
+					log.info("getFiche() - Bloc Dates : " + ElementDates.getRenderer().toString());
+					
+					dateCreation = ElementDates.getRenderer().toString().replaceAll("Création le : ([^ ]*).*", "$1").trim();
+					dateModification = ElementDates.getRenderer().toString().replaceAll(".*modification le(.*)", "$1").trim();
+					
+					break; // Fin de la recherche d'infos dans le bloc principal
 					
 				//Ligne blanche => rien à faire mais à garder pour ne pas passer dans le default
 				case 3 :
@@ -752,12 +813,10 @@ public class Fiche {
 		this.responsableRegional = responsableRegional;
 	}			
 	/** contenu textuel de la fiche */ 
-	public SectionFiche getContenu() {
+	public Collection<SectionFiche> getContenu() {
 		return this.contenu;
 	}
-	public void setContenu(SectionFiche contenu) {
-		this.contenu = contenu;
-	}			
+
 	/** Photo par défaut de l'espèce présentée par cette fiche. Elle est aussi présente dans la liste "photosFiche". */ 
 	public PhotoFiche getPhotoPrincipale() {
 		return this.photoPrincipale;
@@ -765,13 +824,10 @@ public class Fiche {
 	public void setPhotoPrincipale(PhotoFiche photoPrincipale) {
 		this.photoPrincipale = photoPrincipale;
 	}			
-	/** Liste des autres dénominations de l'espèce présentée sur la fiche. */ 
-	public AutreDenomination getAutresDenominations() {
+	/** Liste des autres dénominations de l'espèce présentée sur la fiche. */
+	public Collection<AutreDenomination> getAutresDenominations() {
 		return this.autresDenominations;
-	}
-	public void setAutresDenominations(AutreDenomination autresDenominations) {
-		this.autresDenominations = autresDenominations;
-	}			
+	}					
 	/** Permet d'identifier avec le sous-groupe (optionel) le groupe auquel est rattaché la fiche */ 
 	public Groupe getGroupe() {
 		return this.groupe;
@@ -848,21 +904,25 @@ public class Fiche {
 			sb.append(this.responsableRegional);
 	    	sb.append("</"+XML_REF_RESPONSABLEREGIONAL+">");
 		}
-		if(this.contenu!= null){
-			sb.append("\n"+indent+"\t<"+XML_REF_CONTENU+">");
-			sb.append(this.contenu);
-	    	sb.append("</"+XML_REF_CONTENU+">");
+		sb.append("\n"+indent+"\t<"+XML_REF_CONTENU+">");
+		if(this.contenu != null){
+			for(SectionFiche ref : this.contenu){
+				sb.append("\n"+ref.toXML(indent+"\t\t", contextDB));
+	    	}
 		}
+		sb.append("</"+XML_REF_CONTENU+">");		
 		if(this.photoPrincipale!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_PHOTOPRINCIPALE+">");
 			sb.append(this.photoPrincipale);
 	    	sb.append("</"+XML_REF_PHOTOPRINCIPALE+">");
 		}
-		if(this.autresDenominations!= null){
-			sb.append("\n"+indent+"\t<"+XML_REF_AUTRESDENOMINATIONS+">");
-			sb.append(this.autresDenominations);
-	    	sb.append("</"+XML_REF_AUTRESDENOMINATIONS+">");
+		sb.append("\n"+indent+"\t<"+XML_REF_AUTRESDENOMINATIONS+">");
+		if(this.autresDenominations != null){
+			for(AutreDenomination ref : this.autresDenominations){
+				sb.append("\n"+ref.toXML(indent+"\t\t", contextDB));
+	    	}
 		}
+		sb.append("</"+XML_REF_AUTRESDENOMINATIONS+">");		
 		if(this.groupe!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_GROUPE+">");
 			sb.append(this.groupe);
