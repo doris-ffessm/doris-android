@@ -47,61 +47,65 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import fr.ffessm.doris.android.datamodel.associations.*;
 import fr.ffessm.doris.android.datamodel.*;
-//Start of user code additional import for PhotoFicheXMLParser
-//End of user code
-public class PhotoFicheXMLParser extends DefaultHandler{
+// Start of user code additional import for DorisDBXMLParser
+// End of user code
 
+/**
+ * Root Sax XML DefaultHandler for parsing the datamodel DorisDB
+ */
+public class DorisDBXMLParser extends DefaultHandler {
+	// Start of user code additional handler code 1
+	// End of user code
 	private XMLReader reader;
-    private DefaultHandler parentHandler;
-    private PhotoFiche currentPhotoFiche;
-    private StringBuilder content;
+   // private List<Team> teams;
 
- 	public PhotoFicheXMLParser(XMLReader reader, DefaultHandler parentHandler) {
+    public DorisDBXMLParser(XMLReader reader) {
         this.reader = reader;
-        this.parentHandler = parentHandler;
-        this.content = new StringBuilder();
-    }
-
-	// characters can be called multiple times per element so aggregate the content in a StringBuilder
-    public void characters(char[] ch, int start, int length) throws SAXException {
-        content.append(ch, start, length);
+     //   this.teams = new LinkedList<Team>();
     }
 
     public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
-		if(name.equals(PhotoFiche.XML_PHOTOFICHE)){
 
-        	this.currentPhotoFiche = new PhotoFiche();			
-			// deal with simple DataAttribute
-		}
-		// reset content for current element (mixed content XML syntax not allowed)
-        content.setLength(0);
-	
-    }
-
-    public void endElement(String uri, String localName, String name) throws SAXException {
-		if(name.equals(PhotoFiche.XML_PHOTOFICHE)){
-			// TODO store in the parent or database
-		}
-		// deal with not simple DataAttribute
-		else if (name.equals(PhotoFiche.XML_ATT_CLEURL)) {
-			this.currentPhotoFiche.setCleURL(content.toString());
-    	}
-		else if (name.equals(PhotoFiche.XML_ATT_IMAGEVIGNETTE)) {
-			// TODO this.currentPhotoFiche.setImageVignette(content.toString());
-    	}
-		else if (name.equals(PhotoFiche.XML_ATT_IMAGEMOYENNE)) {
-			// TODO this.currentPhotoFiche.setImageMoyenne(content.toString());
-    	}
-		else if (name.equals(PhotoFiche.XML_ATT_IMAGEGRANDE)) {
-			// TODO this.currentPhotoFiche.setImageGrande(content.toString());
-    	}
-		else if (name.equals("PHOTOFICHES")) {            
-            // Switch handler back to our parent
-            reader.setContentHandler(parentHandler);
+		if (name.equals("FICHES")) {
+            // Switch handler to parse the Fiche element
+            reader.setContentHandler(new FicheXMLParser(reader, this));
         }
-    }
+		if (name.equals("AUTREDENOMINATIONS")) {
+            // Switch handler to parse the AutreDenomination element
+            reader.setContentHandler(new AutreDenominationXMLParser(reader, this));
+        }
+		if (name.equals("PHOTOFICHES")) {
+            // Switch handler to parse the PhotoFiche element
+            reader.setContentHandler(new PhotoFicheXMLParser(reader, this));
+        }
+		if (name.equals("SECTIONFICHES")) {
+            // Switch handler to parse the SectionFiche element
+            reader.setContentHandler(new SectionFicheXMLParser(reader, this));
+        }
+		if (name.equals("PARTICIPANTS")) {
+            // Switch handler to parse the Participant element
+            reader.setContentHandler(new ParticipantXMLParser(reader, this));
+        }
+		if (name.equals("PHOTOPARTICIPANTS")) {
+            // Switch handler to parse the PhotoParticipant element
+            reader.setContentHandler(new PhotoParticipantXMLParser(reader, this));
+        }
+		if (name.equals("ZONEGEOGRAPHIQUES")) {
+            // Switch handler to parse the ZoneGeographique element
+            reader.setContentHandler(new ZoneGeographiqueXMLParser(reader, this));
+        }
+		if (name.equals("ZONEOBSERVATIONS")) {
+            // Switch handler to parse the ZoneObservation element
+            reader.setContentHandler(new ZoneObservationXMLParser(reader, this));
+        }
+		if (name.equals("GROUPES")) {
+            // Switch handler to parse the Groupe element
+            reader.setContentHandler(new GroupeXMLParser(reader, this));
+        }
 
-//Start of user code additional code for PhotoFicheXMLParser
-//End of user code
-	
+
+        
+    }
+	// Start of user code additional handler code 2
+	// End of user code
 }

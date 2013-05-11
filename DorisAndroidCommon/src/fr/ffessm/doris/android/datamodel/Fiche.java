@@ -102,42 +102,24 @@ public class Fiche {
 	protected int _id;
 	
 
-	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@45821196 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
-	// att.storage : 
-	// storageKind::SQLite : SQLite
 	@DatabaseField
 	protected java.lang.String nomScientifique;
 
-	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@45821196 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
-	// att.storage : 
-	// storageKind::SQLite : SQLite
 	@DatabaseField
 	protected java.lang.String nomCommun;
 
 	/** Numéro de la fiche tel que connu par le site lui même */ 
-	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@5e50b280 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
-	// att.storage : 
-	// storageKind::SQLite : SQLite
 	@DatabaseField
 	protected int numeroFiche;
 
 	/** Etat Avancement de la fiche 
 4 : Fiche Publiée - 1, 2, 3 : En cours de Rédaction - 5 : Fiche Proposée */ 
-	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@5e50b280 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
-	// att.storage : 
-	// storageKind::SQLite : SQLite
 	@DatabaseField
 	protected int etatFiche;
 
-	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@45821196 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
-	// att.storage : 
-	// storageKind::SQLite : SQLite
 	@DatabaseField
 	protected java.lang.String dateCreation;
 
-	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@45821196 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
-	// att.storage : 
-	// storageKind::SQLite : SQLite
 	@DatabaseField
 	protected java.lang.String dateModification;
 	
@@ -168,15 +150,15 @@ public class Fiche {
 	/** contenu textuel de la fiche */ 
 	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
 	protected ForeignCollection<SectionFiche> contenu;
-	
+
 	/** Photo par défaut de l'espèce présentée par cette fiche. Elle est aussi présente dans la liste "photosFiche". */ 
 	@DatabaseField(foreign = true)
 	protected PhotoFiche photoPrincipale;
 
 	/** Liste des autres dénominations de l'espèce présentée sur la fiche. */ 
-	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
-	protected ForeignCollection<AutreDenomination> autresDenominations;
-	
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
+	protected AutreDenomination autresDenominations;
+
 	/** Permet d'identifier avec le sous-groupe (optionel) le groupe auquel est rattaché la fiche */ 
 	@DatabaseField(foreign = true)
 	protected Groupe groupe;
@@ -512,7 +494,7 @@ public class Fiche {
 							log.info("getFiche() - sousgroupeRef : " + sousgroupeRef);
 
 							groupe = SiteDoris.getGroupeFromListeGroupes(listeGroupes, groupeRef, sousgroupeRef);
-
+							
 						}
 					}
 				}
@@ -812,11 +794,10 @@ public class Fiche {
 	public void setResponsableRegional(Participant responsableRegional) {
 		this.responsableRegional = responsableRegional;
 	}			
-	/** contenu textuel de la fiche */ 
+	/** contenu textuel de la fiche */
 	public Collection<SectionFiche> getContenu() {
 		return this.contenu;
-	}
-
+	}					
 	/** Photo par défaut de l'espèce présentée par cette fiche. Elle est aussi présente dans la liste "photosFiche". */ 
 	public PhotoFiche getPhotoPrincipale() {
 		return this.photoPrincipale;
@@ -824,10 +805,13 @@ public class Fiche {
 	public void setPhotoPrincipale(PhotoFiche photoPrincipale) {
 		this.photoPrincipale = photoPrincipale;
 	}			
-	/** Liste des autres dénominations de l'espèce présentée sur la fiche. */
-	public Collection<AutreDenomination> getAutresDenominations() {
+	/** Liste des autres dénominations de l'espèce présentée sur la fiche. */ 
+	public AutreDenomination getAutresDenominations() {
 		return this.autresDenominations;
-	}					
+	}
+	public void setAutresDenominations(AutreDenomination autresDenominations) {
+		this.autresDenominations = autresDenominations;
+	}			
 	/** Permet d'identifier avec le sous-groupe (optionel) le groupe auquel est rattaché la fiche */ 
 	public Groupe getGroupe() {
 		return this.groupe;
@@ -876,32 +860,32 @@ public class Fiche {
 
 		if(this.redacteurs!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_REDACTEURS+">");
-			sb.append(this.redacteurs);
+			sb.append(this.redacteurs.getId());
 	    	sb.append("</"+XML_REF_REDACTEURS+">");
 		}
 		if(this.photosFiche!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_PHOTOSFICHE+">");
-			sb.append(this.photosFiche);
+			sb.append(this.photosFiche.getId());
 	    	sb.append("</"+XML_REF_PHOTOSFICHE+">");
 		}
 		if(this.zonesGeographiques!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_ZONESGEOGRAPHIQUES+">");
-			sb.append(this.zonesGeographiques);
+			sb.append(this.zonesGeographiques.getId());
 	    	sb.append("</"+XML_REF_ZONESGEOGRAPHIQUES+">");
 		}
 		if(this.zonesObservation!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_ZONESOBSERVATION+">");
-			sb.append(this.zonesObservation);
+			sb.append(this.zonesObservation.getId());
 	    	sb.append("</"+XML_REF_ZONESOBSERVATION+">");
 		}
 		if(this.verificateurs!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_VERIFICATEURS+">");
-			sb.append(this.verificateurs);
+			sb.append(this.verificateurs.getId());
 	    	sb.append("</"+XML_REF_VERIFICATEURS+">");
 		}
 		if(this.responsableRegional!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_RESPONSABLEREGIONAL+">");
-			sb.append(this.responsableRegional);
+			sb.append(this.responsableRegional.getId());
 	    	sb.append("</"+XML_REF_RESPONSABLEREGIONAL+">");
 		}
 		sb.append("\n"+indent+"\t<"+XML_REF_CONTENU+">");
@@ -913,19 +897,17 @@ public class Fiche {
 		sb.append("</"+XML_REF_CONTENU+">");		
 		if(this.photoPrincipale!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_PHOTOPRINCIPALE+">");
-			sb.append(this.photoPrincipale);
+			sb.append(this.photoPrincipale.getId());
 	    	sb.append("</"+XML_REF_PHOTOPRINCIPALE+">");
 		}
-		sb.append("\n"+indent+"\t<"+XML_REF_AUTRESDENOMINATIONS+">");
-		if(this.autresDenominations != null){
-			for(AutreDenomination ref : this.autresDenominations){
-				sb.append("\n"+ref.toXML(indent+"\t\t", contextDB));
-	    	}
+		if(this.autresDenominations!= null){
+			sb.append("\n"+indent+"\t<"+XML_REF_AUTRESDENOMINATIONS+">");
+			sb.append(this.autresDenominations.getId());
+	    	sb.append("</"+XML_REF_AUTRESDENOMINATIONS+">");
 		}
-		sb.append("</"+XML_REF_AUTRESDENOMINATIONS+">");		
 		if(this.groupe!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_GROUPE+">");
-			sb.append(this.groupe);
+			sb.append(this.groupe.getId());
 	    	sb.append("</"+XML_REF_GROUPE+">");
 		}
 		// TODO deal with other case

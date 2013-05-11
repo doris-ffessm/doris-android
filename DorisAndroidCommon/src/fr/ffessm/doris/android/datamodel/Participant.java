@@ -76,15 +76,15 @@ public class Participant {
 	protected int _id;
 	
 
-	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@45821196 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
-	// att.storage : 
-	// storageKind::SQLite : SQLite
+	@DatabaseField
 	protected java.lang.String nom;
 	
 
 	/** photo du participant */ 
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected PhotoParticipant photo;
 
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fichesVerifiees;
 
 	// Start of user code Participant additional user properties
@@ -141,12 +141,12 @@ public class Participant {
 
 		if(this.photo!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_PHOTO+">");
-			sb.append(this.photo);
+			sb.append(this.photo.getId());
 	    	sb.append("</"+XML_REF_PHOTO+">");
 		}
 		if(this.fichesVerifiees!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_FICHESVERIFIEES+">");
-			sb.append(this.fichesVerifiees);
+			sb.append(this.fichesVerifiees.getId());
 	    	sb.append("</"+XML_REF_FICHESVERIFIEES+">");
 		}
 		// TODO deal with other case

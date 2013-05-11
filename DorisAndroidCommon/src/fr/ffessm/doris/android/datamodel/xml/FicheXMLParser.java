@@ -41,10 +41,125 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.datamodel.xml;
 
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
+import fr.ffessm.doris.android.datamodel.associations.*;
+import fr.ffessm.doris.android.datamodel.*;
 //Start of user code additional import for FicheXMLParser
 //End of user code
 public class FicheXMLParser extends DefaultHandler{
+
+	private XMLReader reader;
+    private DefaultHandler parentHandler;
+    private Fiche currentFiche;
+    private StringBuilder content;
+
+ 	public FicheXMLParser(XMLReader reader, DefaultHandler parentHandler) {
+        this.reader = reader;
+        this.parentHandler = parentHandler;
+        this.content = new StringBuilder();
+    }
+
+	// characters can be called multiple times per element so aggregate the content in a StringBuilder
+    public void characters(char[] ch, int start, int length) throws SAXException {
+        content.append(ch, start, length);
+    }
+
+    public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
+		if(name.equals(Fiche.XML_FICHE)){
+
+        	this.currentFiche = new Fiche();			
+			// deal with simple DataAttribute
+			this.currentFiche.setNomScientifique(attributes.getValue(Fiche.XML_ATT_NOMSCIENTIFIQUE));
+			this.currentFiche.setNomCommun(attributes.getValue(Fiche.XML_ATT_NOMCOMMUN));
+			// TODO this.currentFiche.setNumeroFiche(attributes.getValue(Fiche.XML_ATT_NUMEROFICHE));			
+			// TODO this.currentFiche.setEtatFiche(attributes.getValue(Fiche.XML_ATT_ETATFICHE));			
+		}
+		// reset content for current element (mixed content XML syntax not allowed)
+        content.setLength(0);
+	
+    }
+
+    public void endElement(String uri, String localName, String name) throws SAXException {
+		if(name.equals(Fiche.XML_FICHE)){
+			// TODO store in the parent or database
+		}
+		// deal with not simple DataAttribute
+		else if (name.equals(Fiche.XML_ATT_DATECREATION)) {
+			this.currentFiche.setDateCreation(content.toString());
+    	}
+		else if (name.equals(Fiche.XML_ATT_DATEMODIFICATION)) {
+			this.currentFiche.setDateModification(content.toString());
+    	}
+		//TODO deal with one 2 one reference
+		// if(this.redacteurs!= null){
+		//	sb.append("\n"+indent+"\t<"+XML_REF_REDACTEURS+">");
+		//	sb.append(this.redacteurs);
+	    //	sb.append("</"+XML_REF_REDACTEURS+">");
+		//}
+		//TODO deal with one 2 one reference
+		// if(this.photosFiche!= null){
+		//	sb.append("\n"+indent+"\t<"+XML_REF_PHOTOSFICHE+">");
+		//	sb.append(this.photosFiche);
+	    //	sb.append("</"+XML_REF_PHOTOSFICHE+">");
+		//}
+		//TODO deal with one 2 one reference
+		// if(this.zonesGeographiques!= null){
+		//	sb.append("\n"+indent+"\t<"+XML_REF_ZONESGEOGRAPHIQUES+">");
+		//	sb.append(this.zonesGeographiques);
+	    //	sb.append("</"+XML_REF_ZONESGEOGRAPHIQUES+">");
+		//}
+		//TODO deal with one 2 one reference
+		// if(this.zonesObservation!= null){
+		//	sb.append("\n"+indent+"\t<"+XML_REF_ZONESOBSERVATION+">");
+		//	sb.append(this.zonesObservation);
+	    //	sb.append("</"+XML_REF_ZONESOBSERVATION+">");
+		//}
+		//TODO deal with one 2 one reference
+		// if(this.verificateurs!= null){
+		//	sb.append("\n"+indent+"\t<"+XML_REF_VERIFICATEURS+">");
+		//	sb.append(this.verificateurs);
+	    //	sb.append("</"+XML_REF_VERIFICATEURS+">");
+		//}
+		//TODO deal with one 2 one reference
+		// if(this.responsableRegional!= null){
+		//	sb.append("\n"+indent+"\t<"+XML_REF_RESPONSABLEREGIONAL+">");
+		//	sb.append(this.responsableRegional);
+	    //	sb.append("</"+XML_REF_RESPONSABLEREGIONAL+">");
+		//}
+		// deal with many 2 one contained reference
+		//sb.append("\n"+indent+"\t<"+XML_REF_CONTENU+">");
+		//if(this.contenu != null){
+		//	for(SectionFiche ref : this.contenu){
+		//		sb.append("\n"+ref.toXML(indent+"\t\t", contextDB));
+	    //	}
+		//}
+		//sb.append("</"+XML_REF_CONTENU+">");		
+		//TODO deal with one 2 one reference
+		// if(this.photoPrincipale!= null){
+		//	sb.append("\n"+indent+"\t<"+XML_REF_PHOTOPRINCIPALE+">");
+		//	sb.append(this.photoPrincipale);
+	    //	sb.append("</"+XML_REF_PHOTOPRINCIPALE+">");
+		//}
+		//TODO deal with one 2 one reference
+		// if(this.autresDenominations!= null){
+		//	sb.append("\n"+indent+"\t<"+XML_REF_AUTRESDENOMINATIONS+">");
+		//	sb.append(this.autresDenominations);
+	    //	sb.append("</"+XML_REF_AUTRESDENOMINATIONS+">");
+		//}
+		//TODO deal with one 2 one reference
+		// if(this.groupe!= null){
+		//	sb.append("\n"+indent+"\t<"+XML_REF_GROUPE+">");
+		//	sb.append(this.groupe);
+	    //	sb.append("</"+XML_REF_GROUPE+">");
+		//}
+		else if (name.equals("FICHES")) {            
+            // Switch handler back to our parent
+            reader.setContentHandler(parentHandler);
+        }
+    }
 
 //Start of user code additional code for FicheXMLParser
 //End of user code

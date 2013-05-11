@@ -41,10 +41,59 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.datamodel.xml;
 
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
+import fr.ffessm.doris.android.datamodel.associations.*;
+import fr.ffessm.doris.android.datamodel.*;
 //Start of user code additional import for SectionFicheXMLParser
 //End of user code
 public class SectionFicheXMLParser extends DefaultHandler{
+
+	private XMLReader reader;
+    private DefaultHandler parentHandler;
+    private SectionFiche currentSectionFiche;
+    private StringBuilder content;
+
+ 	public SectionFicheXMLParser(XMLReader reader, DefaultHandler parentHandler) {
+        this.reader = reader;
+        this.parentHandler = parentHandler;
+        this.content = new StringBuilder();
+    }
+
+	// characters can be called multiple times per element so aggregate the content in a StringBuilder
+    public void characters(char[] ch, int start, int length) throws SAXException {
+        content.append(ch, start, length);
+    }
+
+    public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
+		if(name.equals(SectionFiche.XML_SECTIONFICHE)){
+
+        	this.currentSectionFiche = new SectionFiche();			
+			// deal with simple DataAttribute
+		}
+		// reset content for current element (mixed content XML syntax not allowed)
+        content.setLength(0);
+	
+    }
+
+    public void endElement(String uri, String localName, String name) throws SAXException {
+		if(name.equals(SectionFiche.XML_SECTIONFICHE)){
+			// TODO store in the parent or database
+		}
+		// deal with not simple DataAttribute
+		else if (name.equals(SectionFiche.XML_ATT_TITRE)) {
+			this.currentSectionFiche.setTitre(content.toString());
+    	}
+		else if (name.equals(SectionFiche.XML_ATT_TEXTE)) {
+			this.currentSectionFiche.setTexte(content.toString());
+    	}
+		else if (name.equals("SECTIONFICHES")) {            
+            // Switch handler back to our parent
+            reader.setContentHandler(parentHandler);
+        }
+    }
 
 //Start of user code additional code for SectionFicheXMLParser
 //End of user code

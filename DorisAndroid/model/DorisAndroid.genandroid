@@ -8,7 +8,7 @@
       <dataReferences name="zonesObservation" documentation="zones  où l'on peut observer l'élément décrit par la fiche" lowerbound="1" opposite="//@dataModel/@dataAssociations.2" type="//@dataModel/@dataClasses.7"/>
       <dataReferences name="verificateurs" documentation="listes des personnes ayant vérifié la fiche" opposite="//@dataModel/@dataAssociations.4" type="//@dataModel/@dataClasses.4"/>
       <dataReferences name="responsableRegional" documentation="responsable régional de la fiche" type="//@dataModel/@dataClasses.4"/>
-      <dataReferences name="contenu" documentation="contenu textuel de la fiche" containment="true" opposite="//@dataModel/@dataAssociations.5" type="//@dataModel/@dataClasses.3"/>
+      <dataReferences name="contenu" documentation="contenu textuel de la fiche" upperBound="-1" containment="true" opposite="//@dataModel/@dataAssociations.5" type="//@dataModel/@dataClasses.3"/>
       <dataReferences name="photoPrincipale" documentation="Photo par défaut de l'espèce présentée par cette fiche. Elle est aussi présente dans la liste &quot;photosFiche&quot;." type="//@dataModel/@dataClasses.2"/>
       <dataReferences name="autresDenominations" documentation="Liste des autres dénominations de l'espèce présentée sur la fiche." containment="true" opposite="//@dataModel/@dataAssociations.6" type="//@dataModel/@dataClasses.1"/>
       <dataReferences name="groupe" documentation="Permet d'identifier avec le sous-groupe (optionel) le groupe auquel est rattaché la fiche" type="//@dataModel/@dataClasses.8"/>

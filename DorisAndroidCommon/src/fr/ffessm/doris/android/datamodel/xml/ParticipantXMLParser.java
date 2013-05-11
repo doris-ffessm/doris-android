@@ -41,10 +41,68 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.datamodel.xml;
 
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
+import fr.ffessm.doris.android.datamodel.associations.*;
+import fr.ffessm.doris.android.datamodel.*;
 //Start of user code additional import for ParticipantXMLParser
 //End of user code
 public class ParticipantXMLParser extends DefaultHandler{
+
+	private XMLReader reader;
+    private DefaultHandler parentHandler;
+    private Participant currentParticipant;
+    private StringBuilder content;
+
+ 	public ParticipantXMLParser(XMLReader reader, DefaultHandler parentHandler) {
+        this.reader = reader;
+        this.parentHandler = parentHandler;
+        this.content = new StringBuilder();
+    }
+
+	// characters can be called multiple times per element so aggregate the content in a StringBuilder
+    public void characters(char[] ch, int start, int length) throws SAXException {
+        content.append(ch, start, length);
+    }
+
+    public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
+		if(name.equals(Participant.XML_PARTICIPANT)){
+
+        	this.currentParticipant = new Participant();			
+			// deal with simple DataAttribute
+		}
+		// reset content for current element (mixed content XML syntax not allowed)
+        content.setLength(0);
+	
+    }
+
+    public void endElement(String uri, String localName, String name) throws SAXException {
+		if(name.equals(Participant.XML_PARTICIPANT)){
+			// TODO store in the parent or database
+		}
+		// deal with not simple DataAttribute
+		else if (name.equals(Participant.XML_ATT_NOM)) {
+			this.currentParticipant.setNom(content.toString());
+    	}
+		//TODO deal with one 2 one reference
+		// if(this.photo!= null){
+		//	sb.append("\n"+indent+"\t<"+XML_REF_PHOTO+">");
+		//	sb.append(this.photo);
+	    //	sb.append("</"+XML_REF_PHOTO+">");
+		//}
+		//TODO deal with one 2 one reference
+		// if(this.fichesVerifiees!= null){
+		//	sb.append("\n"+indent+"\t<"+XML_REF_FICHESVERIFIEES+">");
+		//	sb.append(this.fichesVerifiees);
+	    //	sb.append("</"+XML_REF_FICHESVERIFIEES+">");
+		//}
+		else if (name.equals("PARTICIPANTS")) {            
+            // Switch handler back to our parent
+            reader.setContentHandler(parentHandler);
+        }
+    }
 
 //Start of user code additional code for ParticipantXMLParser
 //End of user code

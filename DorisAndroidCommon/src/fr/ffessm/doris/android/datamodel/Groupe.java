@@ -82,31 +82,19 @@ public class Groupe {
 
 	/** XXX de groupe_numero=XXX dans l'url permettant d'afficher le groupe.
 Certains groupes (de haut niveau) n'ont pas de numéro */ 
-	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@5e50b280 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
-	// att.storage : 
-	// storageKind::SQLite : SQLite
 	@DatabaseField
 	protected int numeroGroupe;
 
 	/** XXX de sousgroupe_numero=XXX dans l'url permettant avec le numero de groupe d'afficher le groupe.
 Seuls certains groupes de plus bas niveau ont le numéro de sous-groupe */ 
-	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@5e50b280 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
-	// att.storage : 
-	// storageKind::SQLite : SQLite
 	@DatabaseField
 	protected int numeroSousGroupe;
 
-	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@45821196 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
-	// att.storage : 
-	// storageKind::SQLite : SQLite
 	@DatabaseField
 	protected java.lang.String nomGroupe;
 
 	/** En haut des pages de groupe, il y a un petit texte expliquant les grandes caractéristques du groupe.
 C'est ce texte. */ 
-	// att.type : org.eclipse.emf.ecore.impl.DynamicEObjectImpl@45821196 (eClass: org.eclipse.emf.ecore.impl.EClassImpl@632d9392 (name: NativeDataClass) (instanceClassName: null) (abstract: false, interface: false))
-	// att.storage : 
-	// storageKind::SQLite : SQLite
 	@DatabaseField
 	protected java.lang.String descriptionGroupe;
 	

@@ -41,10 +41,59 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.datamodel.xml;
 
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
+import fr.ffessm.doris.android.datamodel.associations.*;
+import fr.ffessm.doris.android.datamodel.*;
 //Start of user code additional import for AutreDenominationXMLParser
 //End of user code
 public class AutreDenominationXMLParser extends DefaultHandler{
+
+	private XMLReader reader;
+    private DefaultHandler parentHandler;
+    private AutreDenomination currentAutreDenomination;
+    private StringBuilder content;
+
+ 	public AutreDenominationXMLParser(XMLReader reader, DefaultHandler parentHandler) {
+        this.reader = reader;
+        this.parentHandler = parentHandler;
+        this.content = new StringBuilder();
+    }
+
+	// characters can be called multiple times per element so aggregate the content in a StringBuilder
+    public void characters(char[] ch, int start, int length) throws SAXException {
+        content.append(ch, start, length);
+    }
+
+    public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
+		if(name.equals(AutreDenomination.XML_AUTREDENOMINATION)){
+
+        	this.currentAutreDenomination = new AutreDenomination();			
+			// deal with simple DataAttribute
+		}
+		// reset content for current element (mixed content XML syntax not allowed)
+        content.setLength(0);
+	
+    }
+
+    public void endElement(String uri, String localName, String name) throws SAXException {
+		if(name.equals(AutreDenomination.XML_AUTREDENOMINATION)){
+			// TODO store in the parent or database
+		}
+		// deal with not simple DataAttribute
+		else if (name.equals(AutreDenomination.XML_ATT_DENOMINATION)) {
+			this.currentAutreDenomination.setDenomination(content.toString());
+    	}
+		else if (name.equals(AutreDenomination.XML_ATT_LANGUE)) {
+			this.currentAutreDenomination.setLangue(content.toString());
+    	}
+		else if (name.equals("AUTREDENOMINATIONS")) {            
+            // Switch handler back to our parent
+            reader.setContentHandler(parentHandler);
+        }
+    }
 
 //Start of user code additional code for AutreDenominationXMLParser
 //End of user code
