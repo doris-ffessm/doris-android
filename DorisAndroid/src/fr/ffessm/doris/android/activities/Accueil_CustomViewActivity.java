@@ -64,6 +64,7 @@ import android.preference.PreferenceManager;
 //Start of user code additional imports
 import fr.ffessm.doris.android.async.TelechargeFiches_BgActivity;
 import fr.ffessm.doris.android.async.VerifieNouvellesFiches_BgActivity;
+import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
 //End of user code
 public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>{
 	
@@ -72,6 +73,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	static final int TELECHARGE_PHOTO_FICHES_MENU_ID = 2;
 	static final int VERIFIE_MAJ_FICHES_MENU_ID = 3;
 	static final int VERIFIE_NOUVELLES_FICHES_MENU_ID = 4;
+	static final int RESET_DB_FROM_XML_MENU_ID = 5;
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -96,6 +98,13 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		showToast("sample button pressed. \nPlease customize ;-)");
 		startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
     }
+	
+	public void reinitializeDBFromPrefetched(){
+		XMLHelper.loadDBFromXMLFile(getHelper().getDorisDBHelper(), this.getResources().openRawResource(R.raw.prefetched_db));
+		showToast("Base de donnée réinitialisée.");
+		
+    }
+	
 	//End of user code
 
     /** refresh screen from data 
@@ -113,6 +122,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		//Start of user code additional onCreateOptionsMenu
 		menu.add(Menu.NONE, TELECHARGE_FICHE_MENU_ID, 1, R.string.telecharge_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
         menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 2, R.string.verifie_nouvelles_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
+        menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 4, R.string.reinitialise_a_partir_du_xml_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
@@ -132,6 +142,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 				break;
 			case VERIFIE_NOUVELLES_FICHES_MENU_ID:
 				new VerifieNouvellesFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+				break;
+			case RESET_DB_FROM_XML_MENU_ID:
+				reinitializeDBFromPrefetched();
 				break;
 		//End of user code
         }

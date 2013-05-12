@@ -142,13 +142,30 @@ public class PrefetchDorisWebSite {
 		checkDossiers(action);
 		
 		if (action.equals("TEST")) {
-	    	String test = "\"\"\"\"\"\"\"<a href=\"fiche2.asp?fiche_numero=3527&fiche_espece=\"Montereina\" (Discodoris) coerulescens&fiche_etat=5&origine=scientifique\"><em>\"Montereina\" (Discodoris) coerulescens</em>&nbsp;&nbsp;-&nbsp;&nbsp;Discodoris azurée</a>";
+	    	//String test = "\"\"\"\"\"\"\"<a href=\"fiche2.asp?fiche_numero=3527&fiche_espece=\"Montereina\" (Discodoris) coerulescens&fiche_etat=5&origine=scientifique\"><em>\"Montereina\" (Discodoris) coerulescens</em>&nbsp;&nbsp;-&nbsp;&nbsp;Discodoris azurée</a>";
 	    	
-	    	log.debug(test);
+	    	//log.debug(test);
 	    	
-	    	log.debug(fr.ffessm.doris.android.sitedoris.Outils.nettoyageBalises(test));
+	    	//log.debug(fr.ffessm.doris.android.sitedoris.Outils.nettoyageBalises(test));
 	    	
-	    	log.debug(fr.ffessm.doris.android.sitedoris.Outils.nettoyageBalises(fr.ffessm.doris.android.sitedoris.Outils.nettoyageBalises(test)));
+	    	//log.debug(fr.ffessm.doris.android.sitedoris.Outils.nettoyageBalises(fr.ffessm.doris.android.sitedoris.Outils.nettoyageBalises(test)));
+			ConnectionSource connectionSource = null;
+			try {
+			// create our data-source for the database
+			connectionSource = new JdbcConnectionSource(DATABASE_URL);
+			// setup our database and DAOs
+			setupDatabase(connectionSource);
+			String fichierXML = DOSSIER_BASE + "/" + DOSSIER_RESULTATS + "/" + Constants.getFichierDorisXML();
+			log.debug("loadDBFromXMLFile() - fichierXML : "+fichierXML);
+			
+			XMLHelper.loadDBFromXMLFile(dbContext, new File(fichierXML));
+			} finally {
+				// destroy the data source which should close underlying connections
+				if (connectionSource != null) {
+					connectionSource.close();
+				}
+			}
+			
 		} else {
 			ConnectionSource connectionSource = null;
 			try {
@@ -256,6 +273,8 @@ public class PrefetchDorisWebSite {
 			
 				// read and write some data
 				ecritureDataXML(listeFiches, listeGroupes);
+				
+				
 	
 			} finally {
 				// destroy the data source which should close underlying connections
@@ -263,6 +282,8 @@ public class PrefetchDorisWebSite {
 					connectionSource.close();
 				}
 			}
+			
+			
 		} // Fin de <> TEST
 		log.debug("doMain() - Fin");
 	}

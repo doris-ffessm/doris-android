@@ -47,9 +47,15 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
+import org.xmlpull.v1.XmlPullParserException;
+
 import fr.ffessm.doris.android.datamodel.associations.*;
 import fr.ffessm.doris.android.datamodel.*;
 // Start of user code additional import
@@ -228,6 +234,91 @@ public class XMLHelper {
 		sb.append("\n\t</GROUPES>\n");
 		sb.append("\n</DORISDB>");
 		return sb.toString();
+	}
+	
+	public static void loadDBFromXMLFile(DorisDBHelper dbContext, File file){
+		try{
+			loadDBFromXMLFile(dbContext, new FileInputStream(file));
+		} catch (FileNotFoundException e) {
+			log.error("File not found "+e.getMessage(),e);
+		}
+	}
+
+	public static void loadDBFromXMLFile(DorisDBHelper dbContext, InputStream inputStream){
+		DorisDBXMLParser parser = new DorisDBXMLParser();
+		try {
+			parser.parse(inputStream);
+			for(Fiche fiche : parser.fiches){
+				try {
+					dbContext.ficheDao.create(fiche);
+				} catch (SQLException e) {
+					log.error("cannot create Fiche "+e.getMessage(),e);
+				}
+			}
+			for(AutreDenomination autreDenomination : parser.autreDenominations){
+				try {
+					dbContext.autreDenominationDao.create(autreDenomination);
+				} catch (SQLException e) {
+					log.error("cannot create AutreDenomination "+e.getMessage(),e);
+				}
+			}
+			for(PhotoFiche photoFiche : parser.photoFiches){
+				try {
+					dbContext.photoFicheDao.create(photoFiche);
+				} catch (SQLException e) {
+					log.error("cannot create PhotoFiche "+e.getMessage(),e);
+				}
+			}
+			for(SectionFiche sectionFiche : parser.sectionFiches){
+				try {
+					dbContext.sectionFicheDao.create(sectionFiche);
+				} catch (SQLException e) {
+					log.error("cannot create SectionFiche "+e.getMessage(),e);
+				}
+			}
+			for(Participant participant : parser.participants){
+				try {
+					dbContext.participantDao.create(participant);
+				} catch (SQLException e) {
+					log.error("cannot create Participant "+e.getMessage(),e);
+				}
+			}
+			for(PhotoParticipant photoParticipant : parser.photoParticipants){
+				try {
+					dbContext.photoParticipantDao.create(photoParticipant);
+				} catch (SQLException e) {
+					log.error("cannot create PhotoParticipant "+e.getMessage(),e);
+				}
+			}
+			for(ZoneGeographique zoneGeographique : parser.zoneGeographiques){
+				try {
+					dbContext.zoneGeographiqueDao.create(zoneGeographique);
+				} catch (SQLException e) {
+					log.error("cannot create ZoneGeographique "+e.getMessage(),e);
+				}
+			}
+			for(ZoneObservation zoneObservation : parser.zoneObservations){
+				try {
+					dbContext.zoneObservationDao.create(zoneObservation);
+				} catch (SQLException e) {
+					log.error("cannot create ZoneObservation "+e.getMessage(),e);
+				}
+			}
+			for(Groupe groupe : parser.groupes){
+				try {
+					dbContext.groupeDao.create(groupe);
+				} catch (SQLException e) {
+					log.error("cannot create Groupe "+e.getMessage(),e);
+				}
+			}
+
+		} catch (XmlPullParserException e) {
+			log.error("XML parse error "+e.getMessage(),e);
+		} catch (IOException e) {
+			log.error("Read error "+e.getMessage(),e);
+		}
+		// Start of user code loadDBFromXMLFile 2
+		// End of user code
 	}
 	
 	// Start of user code additional helper code 2

@@ -78,4 +78,29 @@ public class DorisDBHelper {
 	public DorisDBHelper(){
 	}
 
+	public DorisDBHelper(
+		Dao<Fiche, Integer> ficheDao,
+		Dao<AutreDenomination, Integer> autreDenominationDao,
+		Dao<PhotoFiche, Integer> photoFicheDao,
+		Dao<SectionFiche, Integer> sectionFicheDao,
+		Dao<Participant, Integer> participantDao,
+		Dao<PhotoParticipant, Integer> photoParticipantDao,
+		Dao<ZoneGeographique, Integer> zoneGeographiqueDao,
+		Dao<ZoneObservation, Integer> zoneObservationDao,
+		Dao<Groupe, Integer> groupeDao
+		
+	){
+		this.ficheDao = ficheDao;
+		this.autreDenominationDao = autreDenominationDao;
+		this.photoFicheDao = photoFicheDao;
+		this.sectionFicheDao = sectionFicheDao;
+		this.participantDao = participantDao;
+		this.photoParticipantDao = photoParticipantDao;
+		this.zoneGeographiqueDao = zoneGeographiqueDao;
+		this.zoneObservationDao = zoneObservationDao;
+		this.groupeDao = groupeDao;
+	}
+
+	
+
 }

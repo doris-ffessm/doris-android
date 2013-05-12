@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Resource Strings speifc to rechercheguidee Custom View -->
+<!-- Resource Strings specific to rechercheguidee Custom View -->
 <resources>	
-	<!--Start of user code customView_strings
+	<!--Start of user code customView_stringsrechercheguidee
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
 	<string name="rechercheguidee_customview_sample_btn_label">SampleButton</string>

@@ -275,4 +275,26 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		groupeRuntimeDao = null;
 	}
 
+	
+	/**
+     *
+     */
+	public DorisDBHelper getDorisDBHelper(){
+		DorisDBHelper helper = new DorisDBHelper();
+		try{
+			helper.ficheDao = getDao(Fiche.class);
+			helper.autreDenominationDao = getDao(AutreDenomination.class);
+			helper.photoFicheDao = getDao(PhotoFiche.class);
+			helper.sectionFicheDao = getDao(SectionFiche.class);
+			helper.participantDao = getDao(Participant.class);
+			helper.photoParticipantDao = getDao(PhotoParticipant.class);
+			helper.zoneGeographiqueDao = getDao(ZoneGeographique.class);
+			helper.zoneObservationDao = getDao(ZoneObservation.class);
+			helper.groupeDao = getDao(Groupe.class);
+		} catch (SQLException e) {
+			Log.e(OrmLiteDBHelper.class.getName(), "Can't get ", e);
+			e.printStackTrace();
+		}
+		return helper;
+	}
 }
