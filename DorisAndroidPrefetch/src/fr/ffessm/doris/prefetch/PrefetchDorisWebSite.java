@@ -259,12 +259,39 @@ public class PrefetchDorisWebSite {
 						}
 						fiche.getFiche(contenuFichierHtml, listeGroupes);
 						dbContext.ficheDao.update(fiche);
-					
+						
+
 						log.debug("doMain() - Info Fiche {");
 						log.debug("doMain() -      - ref : "+fiche.getNumeroFiche());
 						log.debug("doMain() -      - nom : "+fiche.getNomCommun());
 						log.debug("doMain() -      - etat : "+fiche.getEtatFiche());
 						log.debug("doMain() - }");
+						
+						String urlListePhotos = "http://doris.ffessm.fr/fiche_photo_liste_apercu.asp?fiche_numero="+fiche.getNumeroFiche();
+						String fichierLocalListePhotos = DOSSIER_BASE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+"_listePhotos.html";
+						if (! action.equals("NODWNLD")) {
+							if (Outils.getFichierUrl(urlListePhotos, fichierLocalListePhotos)) {
+								contenuFichierHtml = Outils.getFichier(new File(fichierLocalListePhotos));
+							
+							} else {
+								log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
+								continue;
+							}
+						} else {
+							contenuFichierHtml = Outils.getFichier(new File(fichierLocalListePhotos));
+							
+						}
+						// TODO update liste photos for fiche
+						List<PhotoFiche> listePhotoFiche = SiteDoris.getListePhotosFiche(fiche, contenuFichierHtml);
+						for (PhotoFiche photoFiche : listePhotoFiche){
+							
+							dbContext.photoFicheDao.create(photoFiche);
+						}
+						if(listePhotoFiche.size() > 0){
+							fiche.setPhotoPrincipale(listePhotoFiche.get(0));
+							fiche.setPhotosFiche(listePhotoFiche.get(0));
+						}
+						dbContext.ficheDao.update(fiche);
 					}
 				}
 				

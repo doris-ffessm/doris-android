@@ -54,6 +54,7 @@ import org.apache.commons.logging.LogFactory;
 
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
+import fr.ffessm.doris.android.datamodel.PhotoFiche;
 
 public class SiteDoris {
 
@@ -294,5 +295,51 @@ public class SiteDoris {
     	log.debug("getGroupeFromListeGroupes() - Fin (sans avoir trouvé de groupe correspondant)");
 		return null;
     }
+
+
+
+	public static List<PhotoFiche> getListePhotosFiche(Fiche fiche,
+			String inCodePageHtml) {
+		log.debug("getListePhotosFiche()- Début");
+    	
+    	List<PhotoFiche> listePhotosFiche = new ArrayList<PhotoFiche>(0);
+    	
+    	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
+    	source.fullSequentialParse();
+    	log.debug("getListePhotosFiche()- source.length() : " + source.length());
+    	log.debug("getListePhotosFiche()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
+    	
+    	Element elementTableracine=source.getFirstElementByClass("titre2").getParentElement().getParentElement();
+    	List<? extends Element> listeElementsTD = elementTableracine.getAllElements(HTMLElementName.TD);
+    	log.debug("getListePhotosFiche() - listeElementsTD.size() : " + listeElementsTD.size());
+    	
+    	// Element pour titre de la photo courante
+    	Element titrePhotoCouranteElem = null;
+    	// Element pour descritioon de la photo courante
+    	Element descritionPhotoCouranteElem = null;
+    	// Element pour image de la photo courante
+    	Element imgPhotoCouranteElem = null;
+    	
+    	for (Element elementTD : listeElementsTD) {
+    		if(elementTD.getAttributeValue("class").equals("normal_noir_gras")){
+    			// c'est le titre
+    			titrePhotoCouranteElem = elementTD;
+    		}
+    		if(elementTD.getAttributeValue("class").equals("normal")){
+    			// c'est la description
+    			descritionPhotoCouranteElem = elementTD;
+    		}
+    		if(elementTD.getAttributeValue("class").equals("liste1")){
+    			// c'est l'image
+    			imgPhotoCouranteElem = elementTD;
+    			Element elementIMG = elementTD.getFirstElement(HTMLElementName.IMG);
+    			String cleURL = elementIMG.getAttributeValue("src");
+    			PhotoFiche photoFiche = new PhotoFiche(cleURL, null, null, null);
+  				
+    			listePhotosFiche.add(photoFiche);
+    		}
+    	}
+		return listePhotosFiche;
+	}
     
 }
