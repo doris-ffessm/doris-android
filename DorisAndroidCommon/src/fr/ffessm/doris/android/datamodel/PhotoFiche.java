@@ -95,7 +95,7 @@ public class PhotoFiche {
 	// End of user code
 	
 	public PhotoFiche() {} // needed by ormlite
-	public PhotoFiche(java.lang.String cleURL, java.io.File imageVignette, java.io.File imageMoyenne, java.io.File imageGrande) {
+	public PhotoFiche(java.lang.String cleURL) {
 		super();
 		this.cleURL = cleURL;
 		this.imageVignette = imageVignette;
@@ -162,15 +162,6 @@ public class PhotoFiche {
 		sb.append("\n"+indent+"\t<"+XML_ATT_CLEURL+">");
 		sb.append(StringEscapeUtils.escapeXml(this.cleURL));
     	sb.append("</"+XML_ATT_CLEURL+">");
-		sb.append("\n"+indent+"\t<"+XML_ATT_IMAGEVIGNETTE+">");
-		sb.append(this.imageVignette);
-    	sb.append("</"+XML_ATT_IMAGEVIGNETTE+">");
-		sb.append("\n"+indent+"\t<"+XML_ATT_IMAGEMOYENNE+">");
-		sb.append(this.imageMoyenne);
-    	sb.append("</"+XML_ATT_IMAGEMOYENNE+">");
-		sb.append("\n"+indent+"\t<"+XML_ATT_IMAGEGRANDE+">");
-		sb.append(this.imageGrande);
-    	sb.append("</"+XML_ATT_IMAGEGRANDE+">");
 
 		// TODO deal with other case
 

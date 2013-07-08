@@ -334,7 +334,7 @@ public class SiteDoris {
     			imgPhotoCouranteElem = elementTD;
     			Element elementIMG = elementTD.getFirstElement(HTMLElementName.IMG);
     			String cleURL = elementIMG.getAttributeValue("src");
-    			PhotoFiche photoFiche = new PhotoFiche(cleURL, null, null, null);
+    			PhotoFiche photoFiche = new PhotoFiche(cleURL);
   				
     			listePhotosFiche.add(photoFiche);
     		}

@@ -89,7 +89,7 @@ public class PhotoParticipant {
 	// End of user code
 	
 	public PhotoParticipant() {} // needed by ormlite
-	public PhotoParticipant(java.lang.String cleURL, java.io.File image) {
+	public PhotoParticipant(java.lang.String cleURL) {
 		super();
 		this.cleURL = cleURL;
 		this.image = image;
@@ -138,9 +138,6 @@ public class PhotoParticipant {
 		sb.append("\n"+indent+"\t<"+XML_ATT_CLEURL+">");
 		sb.append(StringEscapeUtils.escapeXml(this.cleURL));
     	sb.append("</"+XML_ATT_CLEURL+">");
-		sb.append("\n"+indent+"\t<"+XML_ATT_IMAGE+">");
-		sb.append(this.image);
-    	sb.append("</"+XML_ATT_IMAGE+">");
 
 		// TODO deal with other case
 
