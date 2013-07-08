@@ -284,14 +284,14 @@ public class PrefetchDorisWebSite {
 						// TODO update liste photos for fiche
 						List<PhotoFiche> listePhotoFiche = SiteDoris.getListePhotosFiche(fiche, contenuFichierHtml);
 						for (PhotoFiche photoFiche : listePhotoFiche){
-							
+							photoFiche.setFiche(fiche);
 							dbContext.photoFicheDao.create(photoFiche);
+							fiche.getPhotosFiche().add(photoFiche);
 						}
 						if(listePhotoFiche.size() > 0){
 							fiche.setPhotoPrincipale(listePhotoFiche.get(0));
-							fiche.setPhotosFiche(listePhotoFiche.get(0));
+							dbContext.ficheDao.update(fiche);
 						}
-						dbContext.ficheDao.update(fiche);
 					}
 				}
 				

@@ -3,7 +3,7 @@
   <dataModel name="DorisDB">
     <dataClasses xsi:type="genandroid:DataClass" name="Fiche" documentation="Fiche Doris, donne accés aux données de la fiche">
       <dataReferences name="redacteurs" type="//@dataModel/@dataClasses.4"/>
-      <dataReferences name="photosFiche" documentation="Liste des photos de la fiche" containment="true" opposite="//@dataModel/@dataAssociations.0" type="//@dataModel/@dataClasses.2"/>
+      <dataReferences name="photosFiche" documentation="Liste des photos de la fiche" upperBound="-1" containment="true" opposite="//@dataModel/@dataAssociations.0" type="//@dataModel/@dataClasses.2"/>
       <dataReferences name="zonesGeographiques" documentation="zones géographiques où l'on peut trouver l'élément décrit par la fiche" lowerbound="1" opposite="//@dataModel/@dataAssociations.1" type="//@dataModel/@dataClasses.6"/>
       <dataReferences name="zonesObservation" documentation="zones  où l'on peut observer l'élément décrit par la fiche" lowerbound="1" opposite="//@dataModel/@dataAssociations.2" type="//@dataModel/@dataClasses.7"/>
       <dataReferences name="verificateurs" documentation="listes des personnes ayant vérifié la fiche" opposite="//@dataModel/@dataAssociations.4" type="//@dataModel/@dataClasses.4"/>

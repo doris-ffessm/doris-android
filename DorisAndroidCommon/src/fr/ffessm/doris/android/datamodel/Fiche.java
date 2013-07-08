@@ -128,8 +128,8 @@ public class Fiche {
 	protected Participant redacteurs;
 
 	/** Liste des photos de la fiche */ 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
-	protected PhotoFiche photosFiche;
+	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
+	protected ForeignCollection<PhotoFiche> photosFiche;
 
 	/** zones géographiques où l'on peut trouver l'élément décrit par la fiche */ 
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
@@ -759,13 +759,10 @@ public class Fiche {
 	public void setRedacteurs(Participant redacteurs) {
 		this.redacteurs = redacteurs;
 	}			
-	/** Liste des photos de la fiche */ 
-	public PhotoFiche getPhotosFiche() {
+	/** Liste des photos de la fiche */
+	public Collection<PhotoFiche> getPhotosFiche() {
 		return this.photosFiche;
-	}
-	public void setPhotosFiche(PhotoFiche photosFiche) {
-		this.photosFiche = photosFiche;
-	}			
+	}					
 	/** zones géographiques où l'on peut trouver l'élément décrit par la fiche */ 
 	public ZoneGeographique getZonesGeographiques() {
 		return this.zonesGeographiques;
@@ -863,11 +860,13 @@ public class Fiche {
 			sb.append(this.redacteurs.getId());
 	    	sb.append("</"+XML_REF_REDACTEURS+">");
 		}
-		if(this.photosFiche!= null){
-			sb.append("\n"+indent+"\t<"+XML_REF_PHOTOSFICHE+">");
-			sb.append(this.photosFiche.getId());
-	    	sb.append("</"+XML_REF_PHOTOSFICHE+">");
+		sb.append("\n"+indent+"\t<"+XML_REF_PHOTOSFICHE+">");
+		if(this.photosFiche != null){
+			for(PhotoFiche ref : this.photosFiche){
+				sb.append("\n"+ref.toXML(indent+"\t\t", contextDB));
+	    	}
 		}
+		sb.append("</"+XML_REF_PHOTOSFICHE+">");		
 		if(this.zonesGeographiques!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_ZONESGEOGRAPHIQUES+">");
 			sb.append(this.zonesGeographiques.getId());
