@@ -293,7 +293,6 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 			helper.groupeDao = getDao(Groupe.class);
 		} catch (SQLException e) {
 			Log.e(OrmLiteDBHelper.class.getName(), "Can't get ", e);
-			e.printStackTrace();
 		}
 		return helper;
 	}

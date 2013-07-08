@@ -62,6 +62,13 @@ import android.widget.Toast;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
+//Start of user code protected additional ListeFicheAvecFiltre_Adapter imports
+// additional imports
+import android.graphics.Bitmap;
+import android.widget.ImageView;
+import fr.ffessm.doris.android.tools.Outils;
+//End of user code
+
 public class ListeFicheAvecFiltre_Adapter extends BaseAdapter{
 	
 private Context context;
@@ -118,6 +125,21 @@ private Context context;
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.listeficheavecfiltre_listviewrow);
         llRow.setTag(entry);
         
+		// Start of user code protected additional ListeFicheAvecFiltre_Adapter getView code
+		//	additional code
+        ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_icon);
+        Bitmap iconBitmap = Outils.getAvailableImagePrincipaleFiche(context, entry);
+        if(iconBitmap != null){
+        	ivIcon.setImageBitmap(iconBitmap);        	
+        	ivIcon.setAdjustViewBounds(true);
+        	//ivIcon.setLayoutParams(new Gallery.LayoutParams(
+            //    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        }
+        else{
+        	// TODO voir pour lancer un téléchargement en tache de fond si réseau disponible avec mise à jour de l'affichage
+        }
+		// End of user code
+
         return convertView;
 
 	}

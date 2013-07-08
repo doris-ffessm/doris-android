@@ -56,6 +56,13 @@ import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports
+import java.util.ArrayList;
+
+
+import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
+import fr.ffessm.doris.android.tools.Outils;
 // End of user code
 
 public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer, Integer>{
@@ -64,8 +71,10 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	
     private NotificationHelper mNotificationHelper;
     private OrmLiteDBHelper dbHelper;
+    private Context context;
     
     // Start of user code additional attribute declarations
+    
 	// End of user code
     
 	/** constructor */
@@ -74,6 +83,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		String notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
         this.dbHelper = dbHelper;
+		this.context = context;
     }
 
     protected void onPreExecute(){
@@ -86,30 +96,56 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     	
 
 		// Start of user code initialization of the task
-		// do the initializatio of the task here
+		// do the initialization of the task here
+    	
+    	int nbPhotoToRetreive = 0;
+    	List<Fiche> listeFiches = dbHelper.getFicheDao().queryForAll();
+    	List<PhotoFiche> listePhotosATraiter = new ArrayList<PhotoFiche>();
+    	// en priorité toutes les photos principales (pour les vignettes)
+        if(!listeFiches.isEmpty()){
+        	for (Fiche fiche : listeFiches) {
+        		if( !Outils.isAvailableImagePrincipaleFiche(context, fiche)){
+        			listePhotosATraiter.add(fiche.getPhotoPrincipale());
+        		}
+			}
+        }
+        // TODO puis les autres photos applicable aux filtres utilisateurs
+        
 		// once done, you should indicates to the notificationHelper how many item will be processed
-		//mNotificationHelper.setMaxNbPages(maxNbPages.toString());
+		mNotificationHelper.setMaxItemToProcess(""+listePhotosATraiter.size());
 		// End of user code
     	
     	// Start of user code main loop of task
 		// This is where we would do the actual job
 		// you should indicates the progression using publishProgress()
-		for (int i=10;i<=100;i += 10)
-            {
-                try {
-					// simply sleep for one second
-                    Thread.sleep(1000);
-                    publishProgress(i);
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+    	int nbPhotoRetreived = 0;
+    	for (PhotoFiche photoFiche : listePhotosATraiter) {
+    		
+    		// recupération de la photo sur internet
+    		try{
+    			Outils.getVignetteFile(context, photoFiche);
+    		
+    			nbPhotoRetreived = nbPhotoRetreived+1;
+    			publishProgress(nbPhotoRetreived);
+    			// laisse un peu de temps entre chaque téléchargement 
+                Thread.sleep(10);
+    		} catch (InterruptedException e) {
+    			Log.i(LOG_TAG, e.getMessage(), e);
+            } catch (IOException e) {
+    			Log.i(LOG_TAG, "Error while downloading, stopping for this time. "+e.getMessage(), e);
+    			break;
+			}
+    		// DEBUG arret avant la fin
+    		if(nbPhotoRetreived > 10) {
+    			Log.d(LOG_TAG, "DEBUG mode : nombe max de photo téléchargé : Arret du téléchargement");
+    			break;
+    		}
+		}
 		// End of user code
         
 		// Start of user code end of task
 		// return the number of item processed
-        return 100;
+        return nbPhotoRetreived;
 		// End of user code
     }
     protected void onProgressUpdate(Integer... progress) {

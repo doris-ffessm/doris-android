@@ -286,7 +286,7 @@ public class PrefetchDorisWebSite {
 						for (PhotoFiche photoFiche : listePhotoFiche){
 							photoFiche.setFiche(fiche);
 							dbContext.photoFicheDao.create(photoFiche);
-							fiche.getPhotosFiche().add(photoFiche);
+							//fiche.getPhotosFiche().add(photoFiche);
 						}
 						if(listePhotoFiche.size() > 0){
 							fiche.setPhotoPrincipale(listePhotoFiche.get(0));

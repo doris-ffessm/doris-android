@@ -313,30 +313,35 @@ public class SiteDoris {
     	List<? extends Element> listeElementsTD = elementTableracine.getAllElements(HTMLElementName.TD);
     	log.debug("getListePhotosFiche() - listeElementsTD.size() : " + listeElementsTD.size());
     	
-    	// Element pour titre de la photo courante
-    	Element titrePhotoCouranteElem = null;
-    	// Element pour descritioon de la photo courante
-    	Element descritionPhotoCouranteElem = null;
-    	// Element pour image de la photo courante
-    	Element imgPhotoCouranteElem = null;
+    	// titre de la photo courante
+    	String titrePhotoCourante = null;
+    	// descritioon de la photo courante
+    	String descritionPhotoCourante = null;
     	
     	for (Element elementTD : listeElementsTD) {
     		if(elementTD.getAttributeValue("class").equals("normal_noir_gras")){
     			// c'est le titre
+    	    	Element titrePhotoCouranteElem = null;
     			titrePhotoCouranteElem = elementTD;
+    			titrePhotoCourante = titrePhotoCouranteElem.getRenderer().toString();
     		}
     		if(elementTD.getAttributeValue("class").equals("normal")){
     			// c'est la description
+    	    	Element descritionPhotoCouranteElem = null;
     			descritionPhotoCouranteElem = elementTD;
+    			descritionPhotoCourante = descritionPhotoCouranteElem.getRenderer().toString();
     		}
     		if(elementTD.getAttributeValue("class").equals("liste1")){
     			// c'est l'image
-    			imgPhotoCouranteElem = elementTD;
     			Element elementIMG = elementTD.getFirstElement(HTMLElementName.IMG);
     			String cleURL = elementIMG.getAttributeValue("src");
-    			PhotoFiche photoFiche = new PhotoFiche(cleURL);
+    			cleURL = cleURL.substring(cleURL.lastIndexOf("/"), cleURL.length()); // garde seulement le nom du fichier
+    			PhotoFiche photoFiche = new PhotoFiche(cleURL,titrePhotoCourante, descritionPhotoCourante);
   				
     			listePhotosFiche.add(photoFiche);
+    			
+    			titrePhotoCourante = null;
+    			descritionPhotoCourante = null;
     		}
     	}
 		return listePhotosFiche;

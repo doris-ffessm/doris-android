@@ -64,6 +64,7 @@ public class VerifieNouvellesFiches_BgActivity  extends AsyncTask<String,Integer
 	
     private NotificationHelper mNotificationHelper;
     private OrmLiteDBHelper dbHelper;
+    private Context context;
     
     // Start of user code additional attribute declarations
 	// End of user code
@@ -74,6 +75,7 @@ public class VerifieNouvellesFiches_BgActivity  extends AsyncTask<String,Integer
 		String notificationTitle = context.getString(R.string.verifienouvellesfiches_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
         this.dbHelper = dbHelper;
+		this.context = context;
     }
 
     protected void onPreExecute(){

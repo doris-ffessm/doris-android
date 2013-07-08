@@ -63,6 +63,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import android.preference.PreferenceManager;
 //Start of user code additional imports
 import fr.ffessm.doris.android.async.TelechargeFiches_BgActivity;
+import fr.ffessm.doris.android.async.TelechargePhotosFiches_BgActivity;
 import fr.ffessm.doris.android.async.VerifieNouvellesFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
 //End of user code
@@ -121,8 +122,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 
 		//Start of user code additional onCreateOptionsMenu
 		menu.add(Menu.NONE, TELECHARGE_FICHE_MENU_ID, 1, R.string.telecharge_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
-        menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 2, R.string.verifie_nouvelles_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
-        menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 4, R.string.reinitialise_a_partir_du_xml_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
+		menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.telecharge_photofiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
+        menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 4, R.string.verifie_nouvelles_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
+        menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 5, R.string.reinitialise_a_partir_du_xml_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
@@ -139,6 +141,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		//Start of user code additional menu action
 			case TELECHARGE_FICHE_MENU_ID:
 				new TelechargeFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+				break;
+			case TELECHARGE_PHOTO_FICHES_MENU_ID:
+				new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 				break;
 			case VERIFIE_NOUVELLES_FICHES_MENU_ID:
 				new VerifieNouvellesFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");

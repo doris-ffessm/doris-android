@@ -14,8 +14,8 @@
       <dataReferences name="groupe" documentation="Permet d'identifier avec le sous-groupe (optionel) le groupe auquel est rattaché la fiche" type="//@dataModel/@dataClasses.8"/>
       <dataAttributes name="nomScientifique" type="//@dataModel/@dataClasses.9" simpleXmlType="true"/>
       <dataAttributes name="nomCommun" type="//@dataModel/@dataClasses.9" simpleXmlType="true"/>
-      <dataAttributes name="numeroFiche" documentation="Numéro de la fiche tel que connu par le site lui même" type="//@dataModel/@dataClasses.10" simpleXmlType="true"/>
-      <dataAttributes name="etatFiche" documentation="Etat Avancement de la fiche &#xD;&#xA;4 : Fiche Publiée - 1, 2, 3 : En cours de Rédaction - 5 : Fiche Proposée" type="//@dataModel/@dataClasses.10" simpleXmlType="true"/>
+      <dataAttributes name="numeroFiche" documentation="Numéro de la fiche tel que connu par le site lui même" type="//@dataModel/@dataClasses.11" simpleXmlType="true"/>
+      <dataAttributes name="etatFiche" documentation="Etat Avancement de la fiche &#xD;&#xA;4 : Fiche Publiée - 1, 2, 3 : En cours de Rédaction - 5 : Fiche Proposée" type="//@dataModel/@dataClasses.11" simpleXmlType="true"/>
       <dataAttributes name="dateCreation" lowerbound="1" type="//@dataModel/@dataClasses.9"/>
       <dataAttributes name="dateModification" type="//@dataModel/@dataClasses.9"/>
     </dataClasses>
@@ -27,9 +27,11 @@
     <dataClasses xsi:type="genandroid:DataClass" name="PhotoFiche">
       <dataReferences name="fiche" lowerbound="1" opposite="//@dataModel/@dataAssociations.0" type="//@dataModel/@dataClasses.0"/>
       <dataAttributes name="cleURL" type="//@dataModel/@dataClasses.9"/>
-      <dataAttributes name="imageVignette" derived="true" storage="File" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="imageMoyenne" derived="true" storage="File" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="imageGrande" derived="true" storage="File" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="imageVignette" derived="true" storage="File" type="//@dataModel/@dataClasses.12"/>
+      <dataAttributes name="imageMoyenne" derived="true" storage="File" type="//@dataModel/@dataClasses.12"/>
+      <dataAttributes name="imageGrande" derived="true" storage="File" type="//@dataModel/@dataClasses.12"/>
+      <dataAttributes name="titre" type="//@dataModel/@dataClasses.9"/>
+      <dataAttributes name="description" type="//@dataModel/@dataClasses.10"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="SectionFiche">
       <dataReferences name="fiche" opposite="//@dataModel/@dataAssociations.5" type="//@dataModel/@dataClasses.0"/>
@@ -44,7 +46,7 @@
     <dataClasses xsi:type="genandroid:DataClass" name="PhotoParticipant">
       <dataReferences name="participant" opposite="//@dataModel/@dataAssociations.3" type="//@dataModel/@dataClasses.4"/>
       <dataAttributes name="cleURL" type="//@dataModel/@dataClasses.9"/>
-      <dataAttributes name="image" derived="true" storage="File" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="image" derived="true" storage="File" type="//@dataModel/@dataClasses.12"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="ZoneGeographique">
       <dataReferences name="fiches" opposite="//@dataModel/@dataAssociations.1" type="//@dataModel/@dataClasses.0"/>
@@ -57,12 +59,13 @@
     <dataClasses xsi:type="genandroid:DataClass" name="Groupe" documentation="Groupe correspond aux entités permettant de naviguer par image sur le site web : &#xA;http://doris.ffessm.fr/groupes.asp?numero_fichier=10. Le niveau 0 est la racine du site.">
       <dataReferences name="groupesFils" documentation="Permet de créer ou lire l'arborescence des groupes par récurrence" upperBound="-1" containment="true" opposite="//@dataModel/@dataAssociations.7" type="//@dataModel/@dataClasses.8"/>
       <dataReferences name="groupePere" opposite="//@dataModel/@dataAssociations.7" type="//@dataModel/@dataClasses.8"/>
-      <dataAttributes name="numeroGroupe" documentation="XXX de groupe_numero=XXX dans l'url permettant d'afficher le groupe.&#xA;Certains groupes (de haut niveau) n'ont pas de numéro" type="//@dataModel/@dataClasses.10"/>
-      <dataAttributes name="numeroSousGroupe" documentation="XXX de sousgroupe_numero=XXX dans l'url permettant avec le numero de groupe d'afficher le groupe.&#xA;Seuls certains groupes de plus bas niveau ont le numéro de sous-groupe" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="numeroGroupe" documentation="XXX de groupe_numero=XXX dans l'url permettant d'afficher le groupe.&#xA;Certains groupes (de haut niveau) n'ont pas de numéro" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="numeroSousGroupe" documentation="XXX de sousgroupe_numero=XXX dans l'url permettant avec le numero de groupe d'afficher le groupe.&#xA;Seuls certains groupes de plus bas niveau ont le numéro de sous-groupe" type="//@dataModel/@dataClasses.11"/>
       <dataAttributes name="nomGroupe" lowerbound="1" type="//@dataModel/@dataClasses.9" simpleXmlType="true"/>
       <dataAttributes name="descriptionGroupe" documentation="En haut des pages de groupe, il y a un petit texte expliquant les grandes caractéristques du groupe.&#xA;C'est ce texte." type="//@dataModel/@dataClasses.9" simpleXmlType="true"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:NativeDataClass" name="String" instanceClassName="java.lang.String"/>
+    <dataClasses xsi:type="genandroid:NativeDataClass" name="LongString" instanceClassName="java.lang.String" databaseType="com.j256.ormlite.field.DataType.LONG_STRING"/>
     <dataClasses xsi:type="genandroid:NativeDataClass" name="Integer" instanceClassName="int"/>
     <dataClasses xsi:type="genandroid:NativeDataClass" name="File" instanceClassName="java.io.File"/>
     <dataAssociations name="Fiche_Photos" references="//@dataModel/@dataClasses.2/@dataReferences.0 //@dataModel/@dataClasses.0/@dataReferences.1"/>

@@ -92,7 +92,6 @@ public class PhotoParticipant {
 	public PhotoParticipant(java.lang.String cleURL) {
 		super();
 		this.cleURL = cleURL;
-		this.image = image;
 	} 
 
 	public int getId() {

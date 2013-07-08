@@ -374,6 +374,16 @@ public class DorisDBXMLParser {
 			//TODO if (name.equals("IMAGEGRANDE")) {
 	        //    title = readTitle(parser);
 	        //} else	
+			if (name.equals("TITRE")) {
+				parser.require(XmlPullParser.START_TAG, ns, "TITRE");
+	            result.setTitre(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, "TITRE");
+	        } else
+			if (name.equals("DESCRIPTION")) {
+				parser.require(XmlPullParser.START_TAG, ns, "DESCRIPTION");
+	            result.setDescription(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, "DESCRIPTION");
+	        } else
 	        {
 	            skip(parser);
 	        }

@@ -65,6 +65,7 @@ public class TelechargeFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 	
     private NotificationHelper mNotificationHelper;
     private OrmLiteDBHelper dbHelper;
+    private Context context;
     
     // Start of user code additional attribute declarations
 	// End of user code
@@ -75,6 +76,7 @@ public class TelechargeFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		String notificationTitle = context.getString(R.string.telechargefiches_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
         this.dbHelper = dbHelper;
+		this.context = context;
     }
 
     protected void onPreExecute(){
