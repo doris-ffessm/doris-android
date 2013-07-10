@@ -90,7 +90,7 @@ public class VerifieNouvellesFiches_BgActivity  extends AsyncTask<String,Integer
 		// Start of user code initialization of the task
 		// do the initializatio of the task here
 		// once done, you should indicates to the notificationHelper how many item will be processed
-		//mNotificationHelper.setMaxNbPages(maxNbPages.toString());
+    	mNotificationHelper.setMaxItemToProcess(""+100);
 		// End of user code
     	
     	// Start of user code main loop of task
