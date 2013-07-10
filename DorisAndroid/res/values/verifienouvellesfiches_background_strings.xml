@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Resource Strings speifc to verifienouvellesfiches Custom View -->
 <resources>	
-	<!--Start of user code BackgroundActivity_strings
+	<!--Start of user code BackgroundActivity_stringsverifienouvellesfiches
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
 	<string name="verifienouvellesfiches_bg_initialTickerText">VerifieNouvellesFiches</string>

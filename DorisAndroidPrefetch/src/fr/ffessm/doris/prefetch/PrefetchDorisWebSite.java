@@ -159,6 +159,18 @@ public class PrefetchDorisWebSite {
 			log.debug("loadDBFromXMLFile() - fichierXML : "+fichierXML);
 			
 			XMLHelper.loadDBFromXMLFile(dbContext, new File(fichierXML));
+			
+			
+			Fiche f =dbContext.ficheDao.queryForAll().get(0);
+			f.setContextDB(dbContext);
+			f.getPhotosFiche();
+			for (PhotoFiche p : f.getPhotosFiche()) {
+				p.getCleURL();
+			}
+			PhotoFiche photo = f.getPhotoPrincipale();
+			
+			dbContext.photoFicheDao.refresh(photo);
+			f.getPhotosFiche();
 			} finally {
 				// destroy the data source which should close underlying connections
 				if (connectionSource != null) {

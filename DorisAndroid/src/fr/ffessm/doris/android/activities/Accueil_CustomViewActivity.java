@@ -65,6 +65,8 @@ import android.preference.PreferenceManager;
 import fr.ffessm.doris.android.async.TelechargeFiches_BgActivity;
 import fr.ffessm.doris.android.async.TelechargePhotosFiches_BgActivity;
 import fr.ffessm.doris.android.async.VerifieNouvellesFiches_BgActivity;
+import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
 //End of user code
 public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>{
@@ -112,6 +114,12 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
      */
     private void refreshScreenData() {
     	//Start of user code action when refreshing the screen
+    	StringBuffer sb = new StringBuffer();
+    	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
+    	sb.append("nbFiches="+ficheDao.countOf());
+    	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
+    	sb.append("\nnbPhotoFiches="+photoFicheDao.countOf());
+    	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());
 		//End of user code
 	}
 

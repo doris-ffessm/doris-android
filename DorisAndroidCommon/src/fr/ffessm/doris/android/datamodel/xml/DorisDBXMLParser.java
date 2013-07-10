@@ -44,14 +44,16 @@ package fr.ffessm.doris.android.datamodel.xml;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import fr.ffessm.doris.android.datamodel.associations.*;
+//import fr.ffessm.doris.android.datamodel.associations.*;
 import fr.ffessm.doris.android.datamodel.*;
 // Start of user code additional import for DorisDBXMLParser
 // End of user code
@@ -62,6 +64,9 @@ import fr.ffessm.doris.android.datamodel.*;
 public class DorisDBXMLParser {
 	// Start of user code additional handler code 1
 	// End of user code
+
+	List<RefCommand> refCommands = new ArrayList<RefCommand>();
+
 	List<Fiche> fiches = new ArrayList<Fiche>();
 	List<AutreDenomination> autreDenominations = new ArrayList<AutreDenomination>();
 	List<PhotoFiche> photoFiches = new ArrayList<PhotoFiche>();
@@ -71,6 +76,15 @@ public class DorisDBXMLParser {
 	List<ZoneGeographique> zoneGeographiques = new ArrayList<ZoneGeographique>();
 	List<ZoneObservation> zoneObservations = new ArrayList<ZoneObservation>();
 	List<Groupe> groupes = new ArrayList<Groupe>();
+	Set<Fiche> fichesToUpdate = new HashSet<Fiche>();
+	Set<AutreDenomination> autreDenominationsToUpdate = new HashSet<AutreDenomination>();
+	Set<PhotoFiche> photoFichesToUpdate = new HashSet<PhotoFiche>();
+	Set<SectionFiche> sectionFichesToUpdate = new HashSet<SectionFiche>();
+	Set<Participant> participantsToUpdate = new HashSet<Participant>();
+	Set<PhotoParticipant> photoParticipantsToUpdate = new HashSet<PhotoParticipant>();
+	Set<ZoneGeographique> zoneGeographiquesToUpdate = new HashSet<ZoneGeographique>();
+	Set<ZoneObservation> zoneObservationsToUpdate = new HashSet<ZoneObservation>();
+	Set<Groupe> groupesToUpdate = new HashSet<Groupe>();
 	Hashtable<String, Fiche> xmlId2Fiche = new Hashtable<String, Fiche>();
 	Hashtable<String, AutreDenomination> xmlId2AutreDenomination = new Hashtable<String, AutreDenomination>();
 	Hashtable<String, PhotoFiche> xmlId2PhotoFiche = new Hashtable<String, PhotoFiche>();
@@ -108,31 +122,31 @@ public class DorisDBXMLParser {
 	        }
 	        String name = parser.getName();
 		 	if (name.equals("FICHES")) {
-	            fiches = readFiches(parser);
+	            fiches.addAll(readFiches(parser,"FICHES"));
 	        } else 
 		 	if (name.equals("AUTREDENOMINATIONS")) {
-	            autreDenominations = readAutreDenominations(parser);
+	            autreDenominations.addAll(readAutreDenominations(parser,"AUTREDENOMINATIONS"));
 	        } else 
 		 	if (name.equals("PHOTOFICHES")) {
-	            photoFiches = readPhotoFiches(parser);
+	            photoFiches.addAll(readPhotoFiches(parser,"PHOTOFICHES"));
 	        } else 
 		 	if (name.equals("SECTIONFICHES")) {
-	            sectionFiches = readSectionFiches(parser);
+	            sectionFiches.addAll(readSectionFiches(parser,"SECTIONFICHES"));
 	        } else 
 		 	if (name.equals("PARTICIPANTS")) {
-	            participants = readParticipants(parser);
+	            participants.addAll(readParticipants(parser,"PARTICIPANTS"));
 	        } else 
 		 	if (name.equals("PHOTOPARTICIPANTS")) {
-	            photoParticipants = readPhotoParticipants(parser);
+	            photoParticipants.addAll(readPhotoParticipants(parser,"PHOTOPARTICIPANTS"));
 	        } else 
 		 	if (name.equals("ZONEGEOGRAPHIQUES")) {
-	            zoneGeographiques = readZoneGeographiques(parser);
+	            zoneGeographiques.addAll(readZoneGeographiques(parser,"ZONEGEOGRAPHIQUES"));
 	        } else 
 		 	if (name.equals("ZONEOBSERVATIONS")) {
-	            zoneObservations = readZoneObservations(parser);
+	            zoneObservations.addAll(readZoneObservations(parser,"ZONEOBSERVATIONS"));
 	        } else 
 		 	if (name.equals("GROUPES")) {
-	            groupes = readGroupes(parser);
+	            groupes.addAll(readGroupes(parser,"GROUPES"));
 	        } else 
 			{
 	            skip(parser);
@@ -141,9 +155,12 @@ public class DorisDBXMLParser {
 		
 	}
 
-	List<Fiche> readFiches(XmlPullParser parser)  throws XmlPullParserException, IOException{
+	/**
+     * parser for a group of Fiche
+     */
+	List<Fiche> readFiches(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
 		List<Fiche> entries = new ArrayList<Fiche>();
-		parser.require(XmlPullParser.START_TAG, ns, "FICHES");
+		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
@@ -157,9 +174,12 @@ public class DorisDBXMLParser {
 	    }
 		return entries;
 	}
-	List<AutreDenomination> readAutreDenominations(XmlPullParser parser)  throws XmlPullParserException, IOException{
+	/**
+     * parser for a group of AutreDenomination
+     */
+	List<AutreDenomination> readAutreDenominations(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
 		List<AutreDenomination> entries = new ArrayList<AutreDenomination>();
-		parser.require(XmlPullParser.START_TAG, ns, "AUTREDENOMINATIONS");
+		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
@@ -173,9 +193,12 @@ public class DorisDBXMLParser {
 	    }
 		return entries;
 	}
-	List<PhotoFiche> readPhotoFiches(XmlPullParser parser)  throws XmlPullParserException, IOException{
+	/**
+     * parser for a group of PhotoFiche
+     */
+	List<PhotoFiche> readPhotoFiches(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
 		List<PhotoFiche> entries = new ArrayList<PhotoFiche>();
-		parser.require(XmlPullParser.START_TAG, ns, "PHOTOFICHES");
+		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
@@ -189,9 +212,12 @@ public class DorisDBXMLParser {
 	    }
 		return entries;
 	}
-	List<SectionFiche> readSectionFiches(XmlPullParser parser)  throws XmlPullParserException, IOException{
+	/**
+     * parser for a group of SectionFiche
+     */
+	List<SectionFiche> readSectionFiches(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
 		List<SectionFiche> entries = new ArrayList<SectionFiche>();
-		parser.require(XmlPullParser.START_TAG, ns, "SECTIONFICHES");
+		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
@@ -205,9 +231,12 @@ public class DorisDBXMLParser {
 	    }
 		return entries;
 	}
-	List<Participant> readParticipants(XmlPullParser parser)  throws XmlPullParserException, IOException{
+	/**
+     * parser for a group of Participant
+     */
+	List<Participant> readParticipants(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
 		List<Participant> entries = new ArrayList<Participant>();
-		parser.require(XmlPullParser.START_TAG, ns, "PARTICIPANTS");
+		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
@@ -221,9 +250,12 @@ public class DorisDBXMLParser {
 	    }
 		return entries;
 	}
-	List<PhotoParticipant> readPhotoParticipants(XmlPullParser parser)  throws XmlPullParserException, IOException{
+	/**
+     * parser for a group of PhotoParticipant
+     */
+	List<PhotoParticipant> readPhotoParticipants(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
 		List<PhotoParticipant> entries = new ArrayList<PhotoParticipant>();
-		parser.require(XmlPullParser.START_TAG, ns, "PHOTOPARTICIPANTS");
+		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
@@ -237,9 +269,12 @@ public class DorisDBXMLParser {
 	    }
 		return entries;
 	}
-	List<ZoneGeographique> readZoneGeographiques(XmlPullParser parser)  throws XmlPullParserException, IOException{
+	/**
+     * parser for a group of ZoneGeographique
+     */
+	List<ZoneGeographique> readZoneGeographiques(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
 		List<ZoneGeographique> entries = new ArrayList<ZoneGeographique>();
-		parser.require(XmlPullParser.START_TAG, ns, "ZONEGEOGRAPHIQUES");
+		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
@@ -253,9 +288,12 @@ public class DorisDBXMLParser {
 	    }
 		return entries;
 	}
-	List<ZoneObservation> readZoneObservations(XmlPullParser parser)  throws XmlPullParserException, IOException{
+	/**
+     * parser for a group of ZoneObservation
+     */
+	List<ZoneObservation> readZoneObservations(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
 		List<ZoneObservation> entries = new ArrayList<ZoneObservation>();
-		parser.require(XmlPullParser.START_TAG, ns, "ZONEOBSERVATIONS");
+		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
@@ -269,9 +307,12 @@ public class DorisDBXMLParser {
 	    }
 		return entries;
 	}
-	List<Groupe> readGroupes(XmlPullParser parser)  throws XmlPullParserException, IOException{
+	/**
+     * parser for a group of Groupe
+     */
+	List<Groupe> readGroupes(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
 		List<Groupe> entries = new ArrayList<Groupe>();
-		parser.require(XmlPullParser.START_TAG, ns, "GROUPES");
+		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
@@ -290,7 +331,7 @@ public class DorisDBXMLParser {
 		Fiche result = new Fiche();
 
 		parser.require(XmlPullParser.START_TAG, ns, "FICHE");
-    	String tag = parser.getName();
+    	String currentTagName = parser.getName();
     			
     	xmlId2Fiche.put(parser.getAttributeValue(null, "id"),result);		
 		result.setNomScientifique(parser.getAttributeValue(null, "nomScientifique"));
@@ -301,16 +342,71 @@ public class DorisDBXMLParser {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
 	        }
-	        String name = parser.getName();
-			if (name.equals("DATECREATION")) {
-				parser.require(XmlPullParser.START_TAG, ns, "DATECREATION");
+	        currentTagName = parser.getName();
+			if (currentTagName.equals("dateCreation")) {
+				parser.require(XmlPullParser.START_TAG, ns, "dateCreation");
 	            result.setDateCreation(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, "DATECREATION");
+				parser.require(XmlPullParser.END_TAG, ns, "dateCreation");
 	        } else
-			if (name.equals("DATEMODIFICATION")) {
-				parser.require(XmlPullParser.START_TAG, ns, "DATEMODIFICATION");
+			if (currentTagName.equals("dateModification")) {
+				parser.require(XmlPullParser.START_TAG, ns, "dateModification");
 	            result.setDateModification(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, "DATEMODIFICATION");
+				parser.require(XmlPullParser.END_TAG, ns, "dateModification");
+	        } else
+			if (currentTagName.equals("redacteurs")) {	
+				parser.require(XmlPullParser.START_TAG, ns, "redacteurs");
+	            String id = readText(parser);
+				refCommands.add(new Fiche_setRedacteurs_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, "redacteurs");	    
+	        } else
+			if (currentTagName.equals("photosFiche")) {
+				List<PhotoFiche> entries = readPhotoFiches(parser,"photosFiche");	
+				photoFiches.addAll(entries); // add for inclusion in the DB
+				//result.getPhotosFiche().addAll(entries);  //  doesn't work and need to be done in the other way round using the opposite
+				refCommands.add(new Fiche_addContainedPhotosFiche_RefCommand(result,entries));	    
+	        } else
+			if (currentTagName.equals("zonesGeographiques")) {	
+				parser.require(XmlPullParser.START_TAG, ns, "zonesGeographiques");
+	            String id = readText(parser);
+				refCommands.add(new Fiche_setZonesGeographiques_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, "zonesGeographiques");	    
+	        } else
+			if (currentTagName.equals("zonesObservation")) {	
+				parser.require(XmlPullParser.START_TAG, ns, "zonesObservation");
+	            String id = readText(parser);
+				refCommands.add(new Fiche_setZonesObservation_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, "zonesObservation");	    
+	        } else
+			if (currentTagName.equals("verificateurs")) {	
+				parser.require(XmlPullParser.START_TAG, ns, "verificateurs");
+	            String id = readText(parser);
+				refCommands.add(new Fiche_setVerificateurs_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, "verificateurs");	    
+	        } else
+			if (currentTagName.equals("responsableRegional")) {	
+				parser.require(XmlPullParser.START_TAG, ns, "responsableRegional");
+	            String id = readText(parser);
+				refCommands.add(new Fiche_setResponsableRegional_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, "responsableRegional");	    
+	        } else
+			if (currentTagName.equals("contenu")) {
+				List<SectionFiche> entries = readSectionFiches(parser,"contenu");	
+				sectionFiches.addAll(entries); // add for inclusion in the DB
+				//result.getContenu().addAll(entries);  //  doesn't work and need to be done in the other way round using the opposite
+				refCommands.add(new Fiche_addContainedContenu_RefCommand(result,entries));	    
+	        } else
+			if (currentTagName.equals("photoPrincipale")) {	
+				parser.require(XmlPullParser.START_TAG, ns, "photoPrincipale");
+	            String id = readText(parser);
+				refCommands.add(new Fiche_setPhotoPrincipale_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, "photoPrincipale");	    
+	        } else
+					// TODO deal with owned ref autresDenominations
+			if (currentTagName.equals("groupe")) {	
+				parser.require(XmlPullParser.START_TAG, ns, "groupe");
+	            String id = readText(parser);
+				refCommands.add(new Fiche_setGroupe_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, "groupe");	    
 	        } else
 	        {
 	            skip(parser);
@@ -323,23 +419,29 @@ public class DorisDBXMLParser {
 		AutreDenomination result = new AutreDenomination();
 
 		parser.require(XmlPullParser.START_TAG, ns, "AUTREDENOMINATION");
-    	String tag = parser.getName();
+    	String currentTagName = parser.getName();
     			
     	xmlId2AutreDenomination.put(parser.getAttributeValue(null, "id"),result);		
 		while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
 	        }
-	        String name = parser.getName();
-			if (name.equals("DENOMINATION")) {
-				parser.require(XmlPullParser.START_TAG, ns, "DENOMINATION");
+	        currentTagName = parser.getName();
+			if (currentTagName.equals("denomination")) {
+				parser.require(XmlPullParser.START_TAG, ns, "denomination");
 	            result.setDenomination(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, "DENOMINATION");
+				parser.require(XmlPullParser.END_TAG, ns, "denomination");
 	        } else
-			if (name.equals("LANGUE")) {
-				parser.require(XmlPullParser.START_TAG, ns, "LANGUE");
+			if (currentTagName.equals("langue")) {
+				parser.require(XmlPullParser.START_TAG, ns, "langue");
 	            result.setLangue(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, "LANGUE");
+				parser.require(XmlPullParser.END_TAG, ns, "langue");
+	        } else
+			if (currentTagName.equals("fiche")) {	
+				parser.require(XmlPullParser.START_TAG, ns, "fiche");
+	            String id = readText(parser);
+				refCommands.add(new AutreDenomination_setFiche_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, "fiche");	    
 	        } else
 	        {
 	            skip(parser);
@@ -352,37 +454,43 @@ public class DorisDBXMLParser {
 		PhotoFiche result = new PhotoFiche();
 
 		parser.require(XmlPullParser.START_TAG, ns, "PHOTOFICHE");
-    	String tag = parser.getName();
+    	String currentTagName = parser.getName();
     			
     	xmlId2PhotoFiche.put(parser.getAttributeValue(null, "id"),result);		
 		while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
 	        }
-	        String name = parser.getName();
-			if (name.equals("CLEURL")) {
-				parser.require(XmlPullParser.START_TAG, ns, "CLEURL");
+	        currentTagName = parser.getName();
+			if (currentTagName.equals("cleURL")) {
+				parser.require(XmlPullParser.START_TAG, ns, "cleURL");
 	            result.setCleURL(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, "CLEURL");
+				parser.require(XmlPullParser.END_TAG, ns, "cleURL");
 	        } else
-			//TODO if (name.equals("IMAGEVIGNETTE")) {
+			//TODO if (currentTagName.equals("IMAGEVIGNETTE")) {
 	        //    title = readTitle(parser);
 	        //} else	
-			//TODO if (name.equals("IMAGEMOYENNE")) {
+			//TODO if (currentTagName.equals("IMAGEMOYENNE")) {
 	        //    title = readTitle(parser);
 	        //} else	
-			//TODO if (name.equals("IMAGEGRANDE")) {
+			//TODO if (currentTagName.equals("IMAGEGRANDE")) {
 	        //    title = readTitle(parser);
 	        //} else	
-			if (name.equals("TITRE")) {
-				parser.require(XmlPullParser.START_TAG, ns, "TITRE");
+			if (currentTagName.equals("titre")) {
+				parser.require(XmlPullParser.START_TAG, ns, "titre");
 	            result.setTitre(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, "TITRE");
+				parser.require(XmlPullParser.END_TAG, ns, "titre");
 	        } else
-			if (name.equals("DESCRIPTION")) {
-				parser.require(XmlPullParser.START_TAG, ns, "DESCRIPTION");
+			if (currentTagName.equals("description")) {
+				parser.require(XmlPullParser.START_TAG, ns, "description");
 	            result.setDescription(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, "DESCRIPTION");
+				parser.require(XmlPullParser.END_TAG, ns, "description");
+	        } else
+			if (currentTagName.equals("fiche")) {	
+				parser.require(XmlPullParser.START_TAG, ns, "fiche");
+	            String id = readText(parser);
+				refCommands.add(new PhotoFiche_setFiche_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, "fiche");	    
 	        } else
 	        {
 	            skip(parser);
@@ -395,23 +503,29 @@ public class DorisDBXMLParser {
 		SectionFiche result = new SectionFiche();
 
 		parser.require(XmlPullParser.START_TAG, ns, "SECTIONFICHE");
-    	String tag = parser.getName();
+    	String currentTagName = parser.getName();
     			
     	xmlId2SectionFiche.put(parser.getAttributeValue(null, "id"),result);		
 		while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
 	        }
-	        String name = parser.getName();
-			if (name.equals("TITRE")) {
-				parser.require(XmlPullParser.START_TAG, ns, "TITRE");
+	        currentTagName = parser.getName();
+			if (currentTagName.equals("titre")) {
+				parser.require(XmlPullParser.START_TAG, ns, "titre");
 	            result.setTitre(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, "TITRE");
+				parser.require(XmlPullParser.END_TAG, ns, "titre");
 	        } else
-			if (name.equals("TEXTE")) {
-				parser.require(XmlPullParser.START_TAG, ns, "TEXTE");
+			if (currentTagName.equals("texte")) {
+				parser.require(XmlPullParser.START_TAG, ns, "texte");
 	            result.setTexte(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, "TEXTE");
+				parser.require(XmlPullParser.END_TAG, ns, "texte");
+	        } else
+			if (currentTagName.equals("fiche")) {	
+				parser.require(XmlPullParser.START_TAG, ns, "fiche");
+	            String id = readText(parser);
+				refCommands.add(new SectionFiche_setFiche_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, "fiche");	    
 	        } else
 	        {
 	            skip(parser);
@@ -424,18 +538,25 @@ public class DorisDBXMLParser {
 		Participant result = new Participant();
 
 		parser.require(XmlPullParser.START_TAG, ns, "PARTICIPANT");
-    	String tag = parser.getName();
+    	String currentTagName = parser.getName();
     			
     	xmlId2Participant.put(parser.getAttributeValue(null, "id"),result);		
 		while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
 	        }
-	        String name = parser.getName();
-			if (name.equals("NOM")) {
-				parser.require(XmlPullParser.START_TAG, ns, "NOM");
+	        currentTagName = parser.getName();
+			if (currentTagName.equals("nom")) {
+				parser.require(XmlPullParser.START_TAG, ns, "nom");
 	            result.setNom(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, "NOM");
+				parser.require(XmlPullParser.END_TAG, ns, "nom");
+	        } else
+					// TODO deal with owned ref photo
+			if (currentTagName.equals("fichesVerifiees")) {	
+				parser.require(XmlPullParser.START_TAG, ns, "fichesVerifiees");
+	            String id = readText(parser);
+				refCommands.add(new Participant_setFichesVerifiees_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, "fichesVerifiees");	    
 	        } else
 	        {
 	            skip(parser);
@@ -448,22 +569,28 @@ public class DorisDBXMLParser {
 		PhotoParticipant result = new PhotoParticipant();
 
 		parser.require(XmlPullParser.START_TAG, ns, "PHOTOPARTICIPANT");
-    	String tag = parser.getName();
+    	String currentTagName = parser.getName();
     			
     	xmlId2PhotoParticipant.put(parser.getAttributeValue(null, "id"),result);		
 		while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
 	        }
-	        String name = parser.getName();
-			if (name.equals("CLEURL")) {
-				parser.require(XmlPullParser.START_TAG, ns, "CLEURL");
+	        currentTagName = parser.getName();
+			if (currentTagName.equals("cleURL")) {
+				parser.require(XmlPullParser.START_TAG, ns, "cleURL");
 	            result.setCleURL(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, "CLEURL");
+				parser.require(XmlPullParser.END_TAG, ns, "cleURL");
 	        } else
-			//TODO if (name.equals("IMAGE")) {
+			//TODO if (currentTagName.equals("IMAGE")) {
 	        //    title = readTitle(parser);
 	        //} else	
+			if (currentTagName.equals("participant")) {	
+				parser.require(XmlPullParser.START_TAG, ns, "participant");
+	            String id = readText(parser);
+				refCommands.add(new PhotoParticipant_setParticipant_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, "participant");	    
+	        } else
 	        {
 	            skip(parser);
 	        }
@@ -475,18 +602,24 @@ public class DorisDBXMLParser {
 		ZoneGeographique result = new ZoneGeographique();
 
 		parser.require(XmlPullParser.START_TAG, ns, "ZONEGEOGRAPHIQUE");
-    	String tag = parser.getName();
+    	String currentTagName = parser.getName();
     			
     	xmlId2ZoneGeographique.put(parser.getAttributeValue(null, "id"),result);		
 		while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
 	        }
-	        String name = parser.getName();
-			if (name.equals("NOM")) {
-				parser.require(XmlPullParser.START_TAG, ns, "NOM");
+	        currentTagName = parser.getName();
+			if (currentTagName.equals("nom")) {
+				parser.require(XmlPullParser.START_TAG, ns, "nom");
 	            result.setNom(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, "NOM");
+				parser.require(XmlPullParser.END_TAG, ns, "nom");
+	        } else
+			if (currentTagName.equals("fiches")) {	
+				parser.require(XmlPullParser.START_TAG, ns, "fiches");
+	            String id = readText(parser);
+				refCommands.add(new ZoneGeographique_setFiches_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, "fiches");	    
 	        } else
 	        {
 	            skip(parser);
@@ -499,18 +632,24 @@ public class DorisDBXMLParser {
 		ZoneObservation result = new ZoneObservation();
 
 		parser.require(XmlPullParser.START_TAG, ns, "ZONEOBSERVATION");
-    	String tag = parser.getName();
+    	String currentTagName = parser.getName();
     			
     	xmlId2ZoneObservation.put(parser.getAttributeValue(null, "id"),result);		
 		while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
 	        }
-	        String name = parser.getName();
-			if (name.equals("NOM")) {
-				parser.require(XmlPullParser.START_TAG, ns, "NOM");
+	        currentTagName = parser.getName();
+			if (currentTagName.equals("nom")) {
+				parser.require(XmlPullParser.START_TAG, ns, "nom");
 	            result.setNom(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, "NOM");
+				parser.require(XmlPullParser.END_TAG, ns, "nom");
+	        } else
+			if (currentTagName.equals("fiches")) {	
+				parser.require(XmlPullParser.START_TAG, ns, "fiches");
+	            String id = readText(parser);
+				refCommands.add(new ZoneObservation_setFiches_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, "fiches");	    
 	        } else
 	        {
 	            skip(parser);
@@ -523,7 +662,7 @@ public class DorisDBXMLParser {
 		Groupe result = new Groupe();
 
 		parser.require(XmlPullParser.START_TAG, ns, "GROUPE");
-    	String tag = parser.getName();
+    	String currentTagName = parser.getName();
     			
     	xmlId2Groupe.put(parser.getAttributeValue(null, "id"),result);		
 		result.setNomGroupe(parser.getAttributeValue(null, "nomGroupe"));
@@ -532,13 +671,25 @@ public class DorisDBXMLParser {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
 	        }
-	        String name = parser.getName();
-			//TODO if (name.equals("NUMEROGROUPE")) {
+	        currentTagName = parser.getName();
+			//TODO if (currentTagName.equals("NUMEROGROUPE")) {
 	        //    title = readTitle(parser);
 	        //} else	
-			//TODO if (name.equals("NUMEROSOUSGROUPE")) {
+			//TODO if (currentTagName.equals("NUMEROSOUSGROUPE")) {
 	        //    title = readTitle(parser);
 	        //} else	
+			if (currentTagName.equals("groupesFils")) {
+				List<Groupe> entries = readGroupes(parser,"groupesFils");	
+				groupes.addAll(entries); // add for inclusion in the DB
+				//result.getGroupesFils().addAll(entries);  //  doesn't work and need to be done in the other way round using the opposite
+				refCommands.add(new Groupe_addContainedGroupesFils_RefCommand(result,entries));	    
+	        } else
+			if (currentTagName.equals("groupePere")) {	
+				parser.require(XmlPullParser.START_TAG, ns, "groupePere");
+	            String id = readText(parser);
+				refCommands.add(new Groupe_setGroupePere_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, "groupePere");	    
+	        } else
 	        {
 	            skip(parser);
 	        }
@@ -547,6 +698,395 @@ public class DorisDBXMLParser {
 		return result;
 	}
 
+   /**
+    * abstract command for dealing with all task that must wait that the element have been created
+	*/
+	public abstract class RefCommand{
+		public abstract void run();
+	}
+	class Fiche_setRedacteurs_RefCommand extends RefCommand{
+		Fiche self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public Fiche_setRedacteurs_RefCommand(Fiche self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setRedacteurs(parser.xmlId2Participant.get(referencedElementID));
+			fichesToUpdate.add(self);
+		}
+	}
+	class Fiche_addContainedPhotosFiche_RefCommand extends RefCommand{
+		Fiche container;
+		List<PhotoFiche> containedElements;
+		
+		public Fiche_addContainedPhotosFiche_RefCommand(Fiche container,
+				List<PhotoFiche> containedElements) {
+			super();
+			this.container = container;
+			this.containedElements = containedElements;
+		}
+
+		@Override
+		public void run() {
+			for (PhotoFiche element : containedElements) {				
+				element.setFiche(container);
+				photoFichesToUpdate.add(element);
+			}
+		}
+		
+	}
+	class Fiche_setZonesGeographiques_RefCommand extends RefCommand{
+		Fiche self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public Fiche_setZonesGeographiques_RefCommand(Fiche self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setZonesGeographiques(parser.xmlId2ZoneGeographique.get(referencedElementID));
+			fichesToUpdate.add(self);
+		}
+	}
+	class Fiche_setZonesObservation_RefCommand extends RefCommand{
+		Fiche self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public Fiche_setZonesObservation_RefCommand(Fiche self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setZonesObservation(parser.xmlId2ZoneObservation.get(referencedElementID));
+			fichesToUpdate.add(self);
+		}
+	}
+	class Fiche_setVerificateurs_RefCommand extends RefCommand{
+		Fiche self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public Fiche_setVerificateurs_RefCommand(Fiche self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setVerificateurs(parser.xmlId2Participant.get(referencedElementID));
+			fichesToUpdate.add(self);
+		}
+	}
+	class Fiche_setResponsableRegional_RefCommand extends RefCommand{
+		Fiche self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public Fiche_setResponsableRegional_RefCommand(Fiche self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setResponsableRegional(parser.xmlId2Participant.get(referencedElementID));
+			fichesToUpdate.add(self);
+		}
+	}
+	class Fiche_addContainedContenu_RefCommand extends RefCommand{
+		Fiche container;
+		List<SectionFiche> containedElements;
+		
+		public Fiche_addContainedContenu_RefCommand(Fiche container,
+				List<SectionFiche> containedElements) {
+			super();
+			this.container = container;
+			this.containedElements = containedElements;
+		}
+
+		@Override
+		public void run() {
+			for (SectionFiche element : containedElements) {				
+				element.setFiche(container);
+				sectionFichesToUpdate.add(element);
+			}
+		}
+		
+	}
+	class Fiche_setPhotoPrincipale_RefCommand extends RefCommand{
+		Fiche self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public Fiche_setPhotoPrincipale_RefCommand(Fiche self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setPhotoPrincipale(parser.xmlId2PhotoFiche.get(referencedElementID));
+			fichesToUpdate.add(self);
+		}
+	}
+	class Fiche_setContainedAutresDenominations_RefCommand extends RefCommand{
+	Fiche container;
+		AutreDenomination containedElement;
+		
+		public Fiche_setContainedAutresDenominations_RefCommand(Fiche container,
+				AutreDenomination containedElement) {
+			super();
+			this.container = container;
+			this.containedElement = containedElement;
+		}
+
+		@Override
+		public void run() {
+			containedElement.setFiche(container);
+			autreDenominationsToUpdate.add(containedElement);			
+		}
+		
+	}
+	class Fiche_setGroupe_RefCommand extends RefCommand{
+		Fiche self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public Fiche_setGroupe_RefCommand(Fiche self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setGroupe(parser.xmlId2Groupe.get(referencedElementID));
+			fichesToUpdate.add(self);
+		}
+	}
+	class AutreDenomination_setFiche_RefCommand extends RefCommand{
+		AutreDenomination self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public AutreDenomination_setFiche_RefCommand(AutreDenomination self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setFiche(parser.xmlId2Fiche.get(referencedElementID));
+			autreDenominationsToUpdate.add(self);
+		}
+	}
+	class PhotoFiche_setFiche_RefCommand extends RefCommand{
+		PhotoFiche self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public PhotoFiche_setFiche_RefCommand(PhotoFiche self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setFiche(parser.xmlId2Fiche.get(referencedElementID));
+			photoFichesToUpdate.add(self);
+		}
+	}
+	class SectionFiche_setFiche_RefCommand extends RefCommand{
+		SectionFiche self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public SectionFiche_setFiche_RefCommand(SectionFiche self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setFiche(parser.xmlId2Fiche.get(referencedElementID));
+			sectionFichesToUpdate.add(self);
+		}
+	}
+	class Participant_setContainedPhoto_RefCommand extends RefCommand{
+	Participant container;
+		PhotoParticipant containedElement;
+		
+		public Participant_setContainedPhoto_RefCommand(Participant container,
+				PhotoParticipant containedElement) {
+			super();
+			this.container = container;
+			this.containedElement = containedElement;
+		}
+
+		@Override
+		public void run() {
+			containedElement.setParticipant(container);
+			photoParticipantsToUpdate.add(containedElement);			
+		}
+		
+	}
+	class Participant_setFichesVerifiees_RefCommand extends RefCommand{
+		Participant self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public Participant_setFichesVerifiees_RefCommand(Participant self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setFichesVerifiees(parser.xmlId2Fiche.get(referencedElementID));
+			participantsToUpdate.add(self);
+		}
+	}
+	class PhotoParticipant_setParticipant_RefCommand extends RefCommand{
+		PhotoParticipant self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public PhotoParticipant_setParticipant_RefCommand(PhotoParticipant self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setParticipant(parser.xmlId2Participant.get(referencedElementID));
+			photoParticipantsToUpdate.add(self);
+		}
+	}
+	class ZoneGeographique_setFiches_RefCommand extends RefCommand{
+		ZoneGeographique self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public ZoneGeographique_setFiches_RefCommand(ZoneGeographique self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setFiches(parser.xmlId2Fiche.get(referencedElementID));
+			zoneGeographiquesToUpdate.add(self);
+		}
+	}
+	class ZoneObservation_setFiches_RefCommand extends RefCommand{
+		ZoneObservation self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public ZoneObservation_setFiches_RefCommand(ZoneObservation self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setFiches(parser.xmlId2Fiche.get(referencedElementID));
+			zoneObservationsToUpdate.add(self);
+		}
+	}
+	class Groupe_addContainedGroupesFils_RefCommand extends RefCommand{
+		Groupe container;
+		List<Groupe> containedElements;
+		
+		public Groupe_addContainedGroupesFils_RefCommand(Groupe container,
+				List<Groupe> containedElements) {
+			super();
+			this.container = container;
+			this.containedElements = containedElements;
+		}
+
+		@Override
+		public void run() {
+			for (Groupe element : containedElements) {				
+				element.setGroupePere(container);
+				groupesToUpdate.add(element);
+			}
+		}
+		
+	}
+	class Groupe_setGroupePere_RefCommand extends RefCommand{
+		Groupe self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public Groupe_setGroupePere_RefCommand(Groupe self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setGroupePere(parser.xmlId2Groupe.get(referencedElementID));
+			groupesToUpdate.add(self);
+		}
+	}
+
+	// ---------- Additional helper methods
 	private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
 	    String result = "";
 	    if (parser.next() == XmlPullParser.TEXT) {
@@ -574,5 +1114,6 @@ public class DorisDBXMLParser {
 	}
 
 	// Start of user code additional handler code 2
+
 	// End of user code
 }

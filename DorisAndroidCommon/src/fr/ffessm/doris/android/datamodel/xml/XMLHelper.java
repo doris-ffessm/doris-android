@@ -58,6 +58,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import fr.ffessm.doris.android.datamodel.associations.*;
 import fr.ffessm.doris.android.datamodel.*;
+import fr.ffessm.doris.android.datamodel.xml.DorisDBXMLParser.RefCommand;
 // Start of user code additional import
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -248,6 +249,7 @@ public class XMLHelper {
 		DorisDBXMLParser parser = new DorisDBXMLParser();
 		try {
 			parser.parse(inputStream);
+			// create the elements in the DB
 			for(Fiche fiche : parser.fiches){
 				try {
 					dbContext.ficheDao.create(fiche);
@@ -311,7 +313,76 @@ public class XMLHelper {
 					log.error("cannot create Groupe "+e.getMessage(),e);
 				}
 			}
-
+			
+			// proceed with cross ref
+			for (RefCommand command : parser.refCommands) {
+				command.run();
+			}
+			
+			// update the DB
+			for(Fiche elem : parser.fichesToUpdate){
+				try {
+					dbContext.ficheDao.update(elem);
+				} catch (SQLException e) {
+					log.error("cannot update Fiche "+e.getMessage(),e);
+				}
+			}
+			for(AutreDenomination elem : parser.autreDenominationsToUpdate){
+				try {
+					dbContext.autreDenominationDao.update(elem);
+				} catch (SQLException e) {
+					log.error("cannot update AutreDenomination "+e.getMessage(),e);
+				}
+			}
+			for(PhotoFiche elem : parser.photoFichesToUpdate){
+				try {
+					dbContext.photoFicheDao.update(elem);
+				} catch (SQLException e) {
+					log.error("cannot update PhotoFiche "+e.getMessage(),e);
+				}
+			}
+			for(SectionFiche elem : parser.sectionFichesToUpdate){
+				try {
+					dbContext.sectionFicheDao.update(elem);
+				} catch (SQLException e) {
+					log.error("cannot update SectionFiche "+e.getMessage(),e);
+				}
+			}
+			for(Participant elem : parser.participantsToUpdate){
+				try {
+					dbContext.participantDao.update(elem);
+				} catch (SQLException e) {
+					log.error("cannot update Participant "+e.getMessage(),e);
+				}
+			}
+			for(PhotoParticipant elem : parser.photoParticipantsToUpdate){
+				try {
+					dbContext.photoParticipantDao.update(elem);
+				} catch (SQLException e) {
+					log.error("cannot update PhotoParticipant "+e.getMessage(),e);
+				}
+			}
+			for(ZoneGeographique elem : parser.zoneGeographiquesToUpdate){
+				try {
+					dbContext.zoneGeographiqueDao.update(elem);
+				} catch (SQLException e) {
+					log.error("cannot update ZoneGeographique "+e.getMessage(),e);
+				}
+			}
+			for(ZoneObservation elem : parser.zoneObservationsToUpdate){
+				try {
+					dbContext.zoneObservationDao.update(elem);
+				} catch (SQLException e) {
+					log.error("cannot update ZoneObservation "+e.getMessage(),e);
+				}
+			}
+			for(Groupe elem : parser.groupesToUpdate){
+				try {
+					dbContext.groupeDao.update(elem);
+				} catch (SQLException e) {
+					log.error("cannot update Groupe "+e.getMessage(),e);
+				}
+			}
 		} catch (XmlPullParserException e) {
 			log.error("XML parse error "+e.getMessage(),e);
 		} catch (IOException e) {

@@ -11,6 +11,11 @@
         	android:title="@string/sync_max_card_number_prompt" 
         	android:summary="@string/sync_max_card_number_summary" 
         	android:defaultValue="@string/sync_max_card_number_default"/>
+        <CheckBoxPreference android:key="@string/pref_id_limit_download"
+            android:summary="réduit les download (utile pour le debug de l'application)" 
+            android:title="Limitation des downloads" 
+            android:enabled="true" />
+        
     </PreferenceCategory>
 	<!--End of user code
 		-->

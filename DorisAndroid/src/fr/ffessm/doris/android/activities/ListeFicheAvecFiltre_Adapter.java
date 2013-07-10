@@ -45,10 +45,12 @@ package fr.ffessm.doris.android.activities;
 import java.util.List;
 
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -71,15 +73,28 @@ import fr.ffessm.doris.android.tools.Outils;
 
 public class ListeFicheAvecFiltre_Adapter extends BaseAdapter{
 	
-private Context context;
+	private Context context;
+
+	/**
+     * dbHelper used to autorefresh values and doing queries
+     * must be set other wise most getter will return proxy that will need to be refreshed
+	 */
+	protected DorisDBHelper _contextDB = null;
+
+	private static final String LOG_TAG = ListeFicheAvecFiltre_Adapter.class.getCanonicalName();
 
     private List<Fiche> ficheList;
 
-	public ListeFicheAvecFiltre_Adapter(Context context, RuntimeExceptionDao<Fiche, Integer> entriesDao) {
+	public ListeFicheAvecFiltre_Adapter(Context context, DorisDBHelper contextDB) {
 		super();
 		this.context = context;
+		this._contextDB = contextDB;
 		// TODO find a way to query in a lazy way
-		this.ficheList = entriesDao.queryForAll();
+		try{
+			this.ficheList = _contextDB.ficheDao.queryForAll();
+		} catch (java.sql.SQLException e) {
+			Log.e(LOG_TAG, e.getMessage(), e);
+		}
 	}
 
 	@Override
@@ -101,6 +116,7 @@ private Context context;
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
 		Fiche entry = ficheList.get(position);
+		entry.setContextDB(_contextDB);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -68,7 +68,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 
 		ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
         list.setClickable(true);
-        ListeFicheAvecFiltre_Adapter adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getFicheDao());
+        ListeFicheAvecFiltre_Adapter adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper());
 
         
         list.setOnItemClickListener(this);

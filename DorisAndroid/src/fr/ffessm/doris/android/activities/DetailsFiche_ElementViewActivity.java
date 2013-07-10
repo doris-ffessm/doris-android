@@ -61,11 +61,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-
+// Start of user code protectedDetailsFiche_ElementViewActivity_additional_import
+import android.widget.ImageView;
+import android.graphics.Bitmap;
+import java.io.IOException;
+import fr.ffessm.doris.android.tools.Outils;
+// End of user code
 
 public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>{
 	
 	protected int ficheId;
+	
+	private static final String LOG_TAG = DetailsFiche_ElementViewActivity.class.getCanonicalName();
 	
 	/** Called when the activity is first created. */
     @Override
@@ -87,14 +94,17 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     	// get our dao
     	RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
     	Fiche entry = entriesDao.queryForId(ficheId);
-    	
+    	entry.setContextDB(getHelper().getDorisDBHelper());
+
 		((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText(entry.getNomScientifique());
 		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun());
 		((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText(((Integer)entry.getNumeroFiche()).toString());					
 		((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer)entry.getEtatFiche()).toString());					
 		((TextView) findViewById(R.id.detailsfiche_elementview_datecreation)).setText(entry.getDateCreation());
 		((TextView) findViewById(R.id.detailsfiche_elementview_datemodification)).setText(entry.getDateModification());
-    	/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+		
+		// Start of user code protectedDetailsFiche_ElementViewActivity.refreshScreenData
+		/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
     	((TextView) findViewById(R.id.detail_divedate)).setText(dateFormatter.format(entry.getDate()));
 		
     	((TextView) findViewById(R.id.detail_divelocation)).setText(entry.getLocation());
@@ -102,7 +112,32 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     	((TextView) findViewById(R.id.detail_divedepth)).setText(entry.getMaxdepth().toString());
     	
     	((TextView) findViewById(R.id.detail_diveduration)).setText(entry.getDuration().toString());
-    	*/
+    	*/	
+		StringBuffer sb = new StringBuffer();
+		if(entry.getPhotoPrincipale()!=null){
+			sb.append("photoPrincipale="+entry.getPhotoPrincipale());
+			try {
+				Outils.getVignetteFile(getBaseContext(), entry.getPhotoPrincipale());
+				ImageView ivIcon = (ImageView) findViewById(R.id.detailsfiche_elementview_icon);
+		        Bitmap iconBitmap = Outils.getAvailableImagePrincipaleFiche(getBaseContext(), entry);
+		        if(iconBitmap != null){
+		        	ivIcon.setImageBitmap(iconBitmap);        	
+		        	ivIcon.setAdjustViewBounds(true);
+		        	//ivIcon.setLayoutParams(new Gallery.LayoutParams(
+		            //    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		        }
+			} catch (IOException e) {
+				Log.e(LOG_TAG, e.getMessage(), e);
+			}
+			entry.getPhotoPrincipale().getImageVignette();
+		}
+		if(entry.getPhotosFiche()!=null){
+			sb.append("\nnbPhoto="+entry.getPhotosFiche().size());
+		}
+		((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setText(sb.toString());
+		
+		// End of user code
+    	
 	}
 
 	@Override

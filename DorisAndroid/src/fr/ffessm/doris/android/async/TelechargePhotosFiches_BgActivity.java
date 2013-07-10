@@ -58,6 +58,7 @@ import fr.ffessm.doris.android.R;
 // Start of user code additional imports
 import java.util.ArrayList;
 
+import android.preference.PreferenceManager;
 
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
@@ -104,8 +105,13 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     	// en priorité toutes les photos principales (pour les vignettes)
         if(!listeFiches.isEmpty()){
         	for (Fiche fiche : listeFiches) {
+        		fiche.setContextDB(dbHelper.getDorisDBHelper());
         		if( !Outils.isAvailableImagePrincipaleFiche(context, fiche)){
-        			listePhotosATraiter.add(fiche.getPhotoPrincipale());
+        			PhotoFiche photoFiche = fiche.getPhotoPrincipale();
+        			photoFiche.setContextDB(dbHelper.getDorisDBHelper());
+        			if(photoFiche != null){
+        				listePhotosATraiter.add(photoFiche);
+        			}
         		}
 			}
         }
@@ -136,8 +142,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     			break;
 			}
     		// DEBUG arret avant la fin
-    		if(nbPhotoRetreived > 10) {
-    			Log.d(LOG_TAG, "DEBUG mode : nombe max de photo téléchargé : Arret du téléchargement");
+    		if(nbPhotoRetreived > 10 && PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_id_limit_download), true)) {
+    			Log.d(LOG_TAG, "DEBUG mode : nombre max de photo téléchargé : Arret du téléchargement");
     			break;
     		}
 		}

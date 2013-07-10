@@ -3,6 +3,10 @@
 <resources>
     <!--Start of user code protected
 		-->
+		
+	<!-- ids -->
+	<string name="pref_id_limit_download">limit_download</string>	
+		
     <!-- Options text -->
     <string name="preference_menu_title">Preference</string>
     

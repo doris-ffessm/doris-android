@@ -3,8 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-	<!--<ImageView
-        android:id="@+id/divelist_viewrow_icon"
+	<!--Start of user code elementView_layout for DetailsFiche
+-->
+<ImageView
+        android:id="@+id/detailsfiche_elementview_icon"
         android:contentDescription="Dive icon"
         android:layout_width="22px"
         android:layout_height="22px"
@@ -12,7 +14,15 @@
         android:layout_marginRight="10px"
         android:layout_marginTop="4px"
         android:src="@drawable/ic_launcher" >
-    </ImageView>-->
+    </ImageView>
+<TextView
+          android:id="@+id/detailsfiche_elementview_debug_text"
+          android:padding="3dip" 
+          android:layout_width="wrap_content"
+         	android:layout_height="wrap_content"/>
+<!--End of user code
+-->
+
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
