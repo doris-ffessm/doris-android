@@ -108,8 +108,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         		fiche.setContextDB(dbHelper.getDorisDBHelper());
         		if( !Outils.isAvailableImagePrincipaleFiche(context, fiche)){
         			PhotoFiche photoFiche = fiche.getPhotoPrincipale();
-        			photoFiche.setContextDB(dbHelper.getDorisDBHelper());
         			if(photoFiche != null){
+            			photoFiche.setContextDB(dbHelper.getDorisDBHelper());
         				listePhotosATraiter.add(photoFiche);
         			}
         		}
