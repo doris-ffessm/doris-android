@@ -104,6 +104,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	
 	public void reinitializeDBFromPrefetched(){
 		XMLHelper.loadDBFromXMLFile(getHelper().getDorisDBHelper(), this.getResources().openRawResource(R.raw.prefetched_db));
+		refreshScreenData();
 		showToast("Base de donnée réinitialisée.");
 		
     }

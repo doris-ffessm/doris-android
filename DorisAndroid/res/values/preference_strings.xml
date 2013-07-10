@@ -6,6 +6,7 @@
 		
 	<!-- ids -->
 	<string name="pref_id_limit_download">limit_download</string>	
+	<string name="pref_key_list_icon_size">pref_key_list_icon_size</string>
 		
     <!-- Options text -->
     <string name="preference_menu_title">Preference</string>
@@ -15,11 +16,17 @@
     <string name="mainpreferences_menu_title">Preferences</string>
     
 	<!-- Preferences -->
-	<string name="sync_preference_category">Option de telechargement</string>
+	<string name="sync_preference_category">Options de téléchargement</string>
 	
-	<string name="sync_max_card_number_prompt">Nombre max de fiches a telecharger</string>
+	<string name="sync_max_card_number_prompt">Nombre max de fiches à télécharger</string>
 	<string name="sync_max_card_number_summary">(ex: 1, 5, 100 ou * pour toutes les fiches)</string>
     <string name="sync_max_card_number_default">5</string>
+    
+    
+	<string name="presentation_preference_category">Options de présentation</string>
+    <string name="list_icon_size_prompt">Taille des icones dans les listes</string>
+	<string name="list_icon_size_summary">(ex: 24, 48, 64, 128)</string>
+    <string name="list_icon_size_default">48</string>
     
     
 	<string name="sync_fresh_water_prompt">Fiches eau douce</string>

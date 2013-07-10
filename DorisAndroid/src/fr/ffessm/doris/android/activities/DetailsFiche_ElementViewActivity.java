@@ -122,7 +122,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		        Bitmap iconBitmap = Outils.getAvailableImagePrincipaleFiche(getBaseContext(), entry);
 		        if(iconBitmap != null){
 		        	ivIcon.setImageBitmap(iconBitmap);        	
-		        	ivIcon.setAdjustViewBounds(true);
+		        	//ivIcon.setAdjustViewBounds(true);
+		        	//ivIcon.setLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT);
 		        	//ivIcon.setLayoutParams(new Gallery.LayoutParams(
 		            //    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		        }

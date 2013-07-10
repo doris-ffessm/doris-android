@@ -14,7 +14,18 @@
         <CheckBoxPreference android:key="@string/pref_id_limit_download"
             android:summary="réduit les download (utile pour le debug de l'application)" 
             android:title="Limitation des downloads" 
-            android:enabled="true" />
+            android:defaultValue="true" />
+        
+    </PreferenceCategory>
+    <PreferenceCategory
+	        android:title="@string/presentation_preference_category"
+	        android:key="presentation_category">
+	         
+        <EditTextPreference android:key="@string/pref_key_list_icon_size" 
+        	android:title="@string/list_icon_size_prompt" 
+        	android:summary="@string/list_icon_size_summary" 
+        	android:defaultValue="@string/list_icon_size_default"/>
+        
         
     </PreferenceCategory>
 	<!--End of user code

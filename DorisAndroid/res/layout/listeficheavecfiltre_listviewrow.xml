@@ -8,10 +8,12 @@
     <ImageView
         android:id="@+id/listeficheavecfiltre_listviewrow_icon"
         android:contentDescription="Fiche icon"
-        android:layout_width="22px"
-        android:layout_height="22px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:maxHeight="48dip"
         android:layout_marginLeft="4px"
-        android:layout_marginRight="10px"
+        android:layout_marginRight="4px"
         android:layout_marginTop="4px"
         android:src="@drawable/ic_launcher" >
     </ImageView>

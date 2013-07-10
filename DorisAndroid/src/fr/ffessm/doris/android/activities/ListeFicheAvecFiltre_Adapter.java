@@ -67,6 +67,8 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 //Start of user code protected additional ListeFicheAvecFiltre_Adapter imports
 // additional imports
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 import android.widget.ImageView;
 import fr.ffessm.doris.android.tools.Outils;
 //End of user code
@@ -143,15 +145,26 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter{
         
 		// Start of user code protected additional ListeFicheAvecFiltre_Adapter getView code
 		//	additional code
+        
+        String defaultIconSizeString = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.pref_key_list_icon_size), "48");
+        int defaultIconSize = 48;
+        try{
+        	defaultIconSize = Integer.parseInt(defaultIconSizeString);
+        }catch(Exception e){}
+        
         ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_icon);
         Bitmap iconBitmap = Outils.getAvailableImagePrincipaleFiche(context, entry);
         if(iconBitmap != null){
         	ivIcon.setImageBitmap(iconBitmap);        	
         	ivIcon.setAdjustViewBounds(true);
+        	ivIcon.setMaxHeight(defaultIconSize);
         	//ivIcon.setLayoutParams(new Gallery.LayoutParams(
             //    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         }
         else{
+        	// utilisation de l'image par defaut
+        	ivIcon.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher));
+        	ivIcon.setMaxHeight(defaultIconSize);
         	// TODO voir pour lancer un téléchargement en tache de fond si réseau disponible avec mise à jour de l'affichage
         }
 		// End of user code

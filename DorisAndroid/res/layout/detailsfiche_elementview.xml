@@ -8,11 +8,12 @@
 <ImageView
         android:id="@+id/detailsfiche_elementview_icon"
         android:contentDescription="Dive icon"
-        android:layout_width="22px"
-        android:layout_height="22px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="4px"
         android:layout_marginRight="10px"
         android:layout_marginTop="4px"
+        android:adjustViewBounds="true"
         android:src="@drawable/ic_launcher" >
     </ImageView>
 <TextView
