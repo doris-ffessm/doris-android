@@ -56,7 +56,7 @@ public class NotificationHelper {
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mNotifyBuilder;
     private PendingIntent mContentIntent;
-   // private CharSequence mContentTitle;
+    private CharSequence mContentTitle;
     
     private String maxItemToProcess = "???";
     

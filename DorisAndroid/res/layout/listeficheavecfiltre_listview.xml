@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+android:id/listeficheavecfiltre_listview"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-</ListView>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+     
+    <!-- Search row -->
+    <LinearLayout
+        android:id="@+android:id/listeficheavecfiltre_listviewsearchrow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <!-- Editext for Search -->
+
+        <EditText
+            android:id="@+id/inputSearch_listeficheavecfiltre_listviewsearchrow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.67"
+            android:hint="@string/searchHint_listeficheavecfiltre_listviewsearchrow"
+            android:inputType="textVisiblePassword" />
+	<!--	Start of user code protectedlisteficheavecfiltre_listviewsearchrow  -->
+
+        <Button
+            android:id="@+id/btnOtherFiler_listeficheavecfiltre_listviewsearchrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickFilterBtn"
+            android:text="@string/btnOtherFiler_listeficheavecfiltre_listviewsearchrow_btn_label" />
+
+<!-- End of user code -->
+    </LinearLayout>
+
+	<ListView 
+	    android:id="@+android:id/listeficheavecfiltre_listview"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent" >
+	</ListView>
+</LinearLayout>

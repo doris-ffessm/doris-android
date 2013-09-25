@@ -42,6 +42,9 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import fr.ffessm.doris.android.R;
@@ -57,7 +60,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,7 +79,7 @@ import android.widget.ImageView;
 import fr.ffessm.doris.android.tools.Outils;
 //End of user code
 
-public class ListeFicheAvecFiltre_Adapter extends BaseAdapter{
+public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filterable{
 	
 	private Context context;
 
@@ -86,6 +92,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter{
 	private static final String LOG_TAG = ListeFicheAvecFiltre_Adapter.class.getCanonicalName();
 
     private List<Fiche> ficheList;
+    private List<Fiche> mObjects;
+	private final Object mLock = new Object();
+	private SimpleFilter mFilter;
 
 	public ListeFicheAvecFiltre_Adapter(Context context, DorisDBHelper contextDB) {
 		super();
@@ -94,6 +103,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter{
 		// TODO find a way to query in a lazy way
 		try{
 			this.ficheList = _contextDB.ficheDao.queryForAll();
+			mObjects = ficheList;
 		} catch (java.sql.SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
 		}
@@ -101,12 +111,14 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter{
 
 	@Override
 	public int getCount() {
-		return ficheList.size();
+		//return ficheList.size();
+		return mObjects == null ? 0 : mObjects.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return ficheList.get(position);
+		//return ficheList.get(position);
+		return mObjects.get(position);
 
 	}
 
@@ -117,7 +129,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter{
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-		Fiche entry = ficheList.get(position);
+		Fiche entry = mObjects.get(position);
 		entry.setContextDB(_contextDB);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
@@ -169,9 +181,96 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter{
         }
 		// End of user code
 
+        
+        
         return convertView;
 
 	}
 
+	protected boolean sortAfterFilter() {
+		return false;
+	}
+	
+	public int filter(int position, Fiche fiche, String pattern){
+		if(fiche.getNomCommun().contains(pattern)) return 1;
+		else return -1;
+	}
+	
+	@Override
+	public Filter getFilter() {
+		if (mFilter == null) {
+			mFilter = new SimpleFilter();
+		}
+		return mFilter;
+	}
+	
+	private class SimpleFilter extends Filter {
+
+		@Override
+		protected FilterResults performFiltering(CharSequence prefix) {
+			FilterResults results = new FilterResults();
+
+			/*if (ficheList == null) {
+				synchronized (mLock) {
+					ficheList = new ArrayList<Fiches>(mObjects);
+				}
+			}*/
+
+			if (prefix == null || prefix.length() == 0) {
+				synchronized (mLock) {
+					ArrayList<Fiche> list = new ArrayList<Fiche>(ficheList);
+					results.values = list;
+					results.count = list.size();
+				}
+			} else {
+				String prefixString = prefix.toString().toLowerCase();
+				boolean sort = sortAfterFilter();
+
+				final List<Fiche> values = ficheList;
+				final int count = values.size();
+				
+				final ArrayList<Fiche> newValues = new ArrayList<Fiche>(count);
+				final int[] orders = sort ? new int[count] : null;
+
+				for (int i = 0; i < count; i++) {
+					final Fiche value = values.get(i);
+					int order = ListeFicheAvecFiltre_Adapter.this.filter(i, value, prefixString);
+					if (order >= 0) {
+						if (sort)
+							orders[newValues.size()] = order;
+						newValues.add(value);
+					}
+				}
+				
+				if (sort) {
+					Comparator<Fiche> c = new Comparator<Fiche>() {
+						public int compare(Fiche object1, Fiche object2) {
+							int i1 = newValues.indexOf(object1);
+							int i2 = newValues.indexOf(object2);
+							return orders[i1] - orders[i2];
+						}
+					};
+					Collections.sort(newValues, c);
+				}
+
+				results.values = newValues;
+				results.count = newValues.size();
+			}
+
+			return results;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		protected void publishResults(CharSequence constraint, FilterResults results) {
+			mObjects = (List<Fiche>) results.values;
+			if (results.count > 0) {
+				notifyDataSetChanged();
+			} else {
+				notifyDataSetInvalidated();
+			}
+		}
+		
+	}
 	
 }

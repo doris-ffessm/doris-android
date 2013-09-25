@@ -5,6 +5,10 @@
 	<!--Start of user code remove protected zone to rebuild all default values
 		-->
     <string name="edit_menu">Edit</string>
+    
+    
+    <string name="btnOtherFiler_listeficheavecfiltre_listviewsearchrow_btn_label">Filtres</string>
+    <string name="searchHint_listeficheavecfiltre_listviewsearchrow">Chercher...</string>
 	<!--End of user code
 	  -->
 </resources>

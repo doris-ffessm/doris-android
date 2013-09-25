@@ -50,17 +50,24 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
-
+// Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity_additionalimports
+// End of user code
 
 public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
 	
+	// Search EditText
+    EditText inputSearch;
+    ListeFicheAvecFiltre_Adapter adapter;
 
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
@@ -68,12 +75,38 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 
 		ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
         list.setClickable(true);
-        ListeFicheAvecFiltre_Adapter adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper());
+        adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper());
 
         
         list.setOnItemClickListener(this);
 
         list.setAdapter(adapter);
+
+		inputSearch = (EditText) findViewById(R.id.inputSearch_listeficheavecfiltre_listviewsearchrow);
+
+		/**
+         * Enabling Search Filter
+         * */
+        inputSearch.addTextChangedListener(new TextWatcher() {
+             
+            @Override
+            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                // When user changed the Text
+                ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(cs);  
+            }
+             
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                    int arg3) {
+                // TODO Auto-generated method stub
+                 
+            }
+             
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // TODO Auto-generated method stub                         
+            }
+        });
 	}
 	
 
@@ -90,6 +123,13 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 		toDetailView.putExtras(b);
         startActivity(toDetailView);
     }
+
+	// Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity
+	public void onClickFilterBtn(View view){
+		showToast("filter button pressed. \nPlease customize ;-)");
+    }
+	// End of user code
+
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
