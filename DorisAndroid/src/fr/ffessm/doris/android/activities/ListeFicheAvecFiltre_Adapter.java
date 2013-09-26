@@ -92,7 +92,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 	private static final String LOG_TAG = ListeFicheAvecFiltre_Adapter.class.getCanonicalName();
 
     private List<Fiche> ficheList;
-    private List<Fiche> mObjects;
+    private List<Fiche> filteredFicheList;
 	private final Object mLock = new Object();
 	private SimpleFilter mFilter;
 
@@ -103,7 +103,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 		// TODO find a way to query in a lazy way
 		try{
 			this.ficheList = _contextDB.ficheDao.queryForAll();
-			mObjects = ficheList;
+			filteredFicheList = ficheList;
 		} catch (java.sql.SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
 		}
@@ -112,13 +112,13 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 	@Override
 	public int getCount() {
 		//return ficheList.size();
-		return mObjects == null ? 0 : mObjects.size();
+		return filteredFicheList == null ? 0 : filteredFicheList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
 		//return ficheList.get(position);
-		return mObjects.get(position);
+		return filteredFicheList.get(position);
 
 	}
 
@@ -129,7 +129,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-		Fiche entry = mObjects.get(position);
+		Fiche entry = filteredFicheList.get(position);
 		entry.setContextDB(_contextDB);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
@@ -263,7 +263,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 		@SuppressWarnings("unchecked")
 		@Override
 		protected void publishResults(CharSequence constraint, FilterResults results) {
-			mObjects = (List<Fiche>) results.values;
+			filteredFicheList = (List<Fiche>) results.values;
 			if (results.count > 0) {
 				notifyDataSetChanged();
 			} else {

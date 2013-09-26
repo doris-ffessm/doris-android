@@ -1,22 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Start of user code customView_layout for Accueil
--->
+<!-- Start of user code customView_layout for Accueil -->
 <!-- freely adapt here the desired layout for your custom view -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-	<Button
-        android:id="@+id/btnSampleAccueil"
+
+    <Button
+        android:id="@+id/btnListeFichesAccueil"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/accueil_customview_sample_btn_label"
-        android:onClick="onClickBtnSample" />
-	<TextView
-          android:id="@+id/accueil_debug_text"
-          android:padding="3dip" 
-          android:layout_width="wrap_content"
-         	android:layout_height="wrap_content"/>
-</LinearLayout>
-<!--End of user code
--->
+        android:onClick="onClickBtnListeFiches"
+        android:text="@string/accueil_customview_listefiches_btn_label" />
+
+    <TextView
+        android:id="@+id/accueil_debug_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="3dip" />
+
+    <ImageView
+        android:id="@+id/accueil_logo_Doris"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dip"
+        android:layout_marginRight="4dip"
+        android:layout_marginTop="4dip"
+        android:adjustViewBounds="true"
+        android:contentDescription="Logo Doris Accueil"
+        android:src="@drawable/logo_doris" >
+    </ImageView>
+    <ImageView
+        android:id="@+id/accueil_logo_biologie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dip"
+        android:layout_marginRight="4dip"
+        android:layout_marginTop="4dip"
+        android:adjustViewBounds="true"
+        android:contentDescription="Logo Biologie Accueil"
+        android:src="@drawable/logo_biologie" >
+    </ImageView>
+
+</LinearLayout><!-- End of user code -->

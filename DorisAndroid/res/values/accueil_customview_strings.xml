@@ -4,7 +4,7 @@
 	<!--Start of user code customView_stringsaccueil
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
-	<string name="accueil_customview_sample_btn_label">SampleButton</string>
+	<string name="accueil_customview_listefiches_btn_label">Toutes les fiches</string>
 	<string name="telecharge_fiches_menu_option">Télécharge fiches</string>
 	<string name="telecharge_photofiches_menu_option">Télécharge photos des fiches</string>
 	<string name="verifie_nouvelles_fiches_menu_option">Cherche nouvelles fiches</string>
