@@ -122,6 +122,8 @@ public class VerifieNouvellesFiches_BgActivity  extends AsyncTask<String,Integer
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
+		// Start of user code VerifieNouvellesFiches onPostExecute
+		// End of user code
     }
 
     

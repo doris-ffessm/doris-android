@@ -136,6 +136,8 @@ public class TelechargeFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
+		// Start of user code TelechargeFiches onPostExecute
+		// End of user code
     }
 
     

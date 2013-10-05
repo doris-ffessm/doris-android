@@ -62,6 +62,7 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import android.preference.PreferenceManager;
 //Start of user code additional imports
+import fr.ffessm.doris.android.async.InitialisationApplication_BgActivity;
 import fr.ffessm.doris.android.async.TelechargeFiches_BgActivity;
 import fr.ffessm.doris.android.async.TelechargePhotosFiches_BgActivity;
 import fr.ffessm.doris.android.async.VerifieNouvellesFiches_BgActivity;
@@ -86,6 +87,12 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 			PreferenceManager.setDefaultValues(this, R.xml.preference, false);
         setContentView(R.layout.accueil_customview);
         //Start of user code onCreate
+		// si pas de fiche alors il faut initialiser la base à partir du prefetched_DB
+		RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
+    	if(ficheDao.countOf() == 0){
+    		new InitialisationApplication_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+    		showToast("Veuillez patienter que la base de donnée s'initialise.");
+		}
 		//End of user code
     }
     
@@ -103,9 +110,10 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     }
 	
 	public void reinitializeDBFromPrefetched(){
-		XMLHelper.loadDBFromXMLFile(getHelper().getDorisDBHelper(), this.getResources().openRawResource(R.raw.prefetched_db));
-		refreshScreenData();
-		showToast("Base de donnée réinitialisée.");
+		//XMLHelper.loadDBFromXMLFile(getHelper().getDorisDBHelper(), this.getResources().openRawResource(R.raw.prefetched_db));
+
+		new InitialisationApplication_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+		showToast("Veuillez patienter que la base de donnée s'initialise.");
 		
     }
 	
@@ -113,7 +121,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 
     /** refresh screen from data 
      */
-    private void refreshScreenData() {
+    public void refreshScreenData() {
     	//Start of user code action when refreshing the screen
     	StringBuffer sb = new StringBuffer();
     	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();

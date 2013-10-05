@@ -88,5 +88,6 @@
     <backgroundActivities name="VerifieNouvellesFiches" documentation="Tache responsable de la vérification de la disponibilité de nouvelles fiches."/>
     <backgroundActivities name="VerifieMAJFiches" documentation="Tache responsable de vérifier s'il existe une version plus récente des fiches déjà connues."/>
     <backgroundActivities name="TelechargePhotosFiches" documentation="Tache responsable du téléchargement des photo des fiches. &#xD;&#xA;Elle vérifie le nombre de photos et la précision requise pour chaque fiche."/>
+    <backgroundActivities name="InitialisationApplication"/>
   </presentationModel>
 </genandroid:AndroidProject>

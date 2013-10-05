@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Start of user code customView_layout for Accueil -->
+<!--Start of user code customView_layout for Accueil -->
 <!-- freely adapt here the desired layout for your custom view -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -42,4 +42,5 @@
         android:src="@drawable/logo_biologie" >
     </ImageView>
 
-</LinearLayout><!-- End of user code -->
+</LinearLayout><!-- End of user code
+-->

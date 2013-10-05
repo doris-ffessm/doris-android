@@ -91,7 +91,7 @@ public class RechercheGuidee_CustomViewActivity extends OrmLiteBaseActivity<OrmL
 
     /** refresh screen from data 
      */
-    private void refreshScreenData() {
+    public void refreshScreenData() {
     	//Start of user code action when refreshing the screen
 		//End of user code
 	}

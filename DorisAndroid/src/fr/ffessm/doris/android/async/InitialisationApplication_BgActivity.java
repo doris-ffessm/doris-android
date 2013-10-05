@@ -56,10 +56,13 @@ import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports
+import android.widget.Toast;
+import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
+import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
 // End of user code
 
-public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Integer>{
-	private static final String LOG_TAG = VerifieMAJFiches_BgActivity.class.getCanonicalName();
+public class InitialisationApplication_BgActivity  extends AsyncTask<String,Integer, Integer>{
+	private static final String LOG_TAG = InitialisationApplication_BgActivity.class.getCanonicalName();
 	
 	
     private NotificationHelper mNotificationHelper;
@@ -67,12 +70,21 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     private Context context;
     
     // Start of user code additional attribute declarations
+    public InitialisationApplication_BgActivity(Context context, OrmLiteDBHelper dbHelper, Accueil_CustomViewActivity accueil_CustomViewActivity){
+    	String initialTickerText = context.getString(R.string.initialisationapplication_bg_initialTickerText);
+		String notificationTitle = context.getString(R.string.initialisationapplication_bg_notificationTitle);
+        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
+        this.dbHelper = dbHelper;
+		this.context = context;
+		this.accueil_CustomViewActivity = accueil_CustomViewActivity;
+		
+    }
 	// End of user code
     
 	/** constructor */
-    public VerifieMAJFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper){
-		String initialTickerText = context.getString(R.string.verifiemajfiches_bg_initialTickerText);
-		String notificationTitle = context.getString(R.string.verifiemajfiches_bg_notificationTitle);
+    public InitialisationApplication_BgActivity(Context context, OrmLiteDBHelper dbHelper){
+		String initialTickerText = context.getString(R.string.initialisationapplication_bg_initialTickerText);
+		String notificationTitle = context.getString(R.string.initialisationapplication_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
         this.dbHelper = dbHelper;
 		this.context = context;
@@ -90,28 +102,20 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		// Start of user code initialization of the task
 		// do the initializatio of the task here
 		// once done, you should indicates to the notificationHelper how many item will be processed
-		mNotificationHelper.setMaxItemToProcess(""+100);
+		//mNotificationHelper.setMaxNbPages(maxNbPages.toString());
 		// End of user code
     	
     	// Start of user code main loop of task
 		// This is where we would do the actual job
 		// you should indicates the progression using publishProgress()
-		for (int i=10;i<=100;i += 10)
-            {
-                try {
-					// simply sleep for one second
-                    Thread.sleep(1000);
-                    publishProgress(i);
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+    	XMLHelper.loadDBFromXMLFile(dbHelper.getDorisDBHelper(), context.getResources().openRawResource(R.raw.prefetched_db));
+		
+        publishProgress(1);
 		// End of user code
         
 		// Start of user code end of task
 		// return the number of item processed
-        return 100;
+        return 1;
 		// End of user code
     }
     protected void onProgressUpdate(Integer... progress) {
@@ -122,13 +126,18 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
-		// Start of user code VerifieMAJFiches onPostExecute
+		// Start of user code InitialisationApplication onPostExecute
+        if(accueil_CustomViewActivity != null){
+        	accueil_CustomViewActivity.refreshScreenData();
+        	Toast.makeText(accueil_CustomViewActivity, "Base initialisée avec les données prédéfinies", Toast.LENGTH_LONG).show();
+        }
 		// End of user code
     }
 
     
     // Start of user code additional operations
 	
+    private Accueil_CustomViewActivity accueil_CustomViewActivity = null;
 	// End of user code
     
 	

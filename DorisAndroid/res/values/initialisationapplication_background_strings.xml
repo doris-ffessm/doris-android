@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resource Strings speifc to initialisationapplication Custom View -->
+<resources>	
+	<!--Start of user code BackgroundActivity_stringsinitialisationapplication
+	-->
+	<!-- freely add here the desired resource String for your custom view -->
+	<string name="initialisationapplication_bg_initialTickerText">Initialisation de la base de donnée</string>
+	<string name="initialisationapplication_bg_notificationTitle">Initialisation Doris</string>
+	<!--End of user code
+	-->
+</resources>

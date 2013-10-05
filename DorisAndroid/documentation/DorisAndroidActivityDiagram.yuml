@@ -8,6 +8,7 @@
 (VerifieNouvellesFiches)->(end)
 (VerifieMAJFiches)->(end)
 (TelechargePhotosFiches)->(end)
+(InitialisationApplication)->(end)
 <AccueilChoice>->(RechercheGuidee)
 <AccueilChoice>->(ListeFicheAvecFiltre)
 <AccueilChoice>->(VerifieNouvellesFiches)
