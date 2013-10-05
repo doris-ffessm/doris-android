@@ -41,7 +41,6 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -103,7 +102,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 		// TODO find a way to query in a lazy way
 		try{
 			this.ficheList = _contextDB.ficheDao.queryForAll();
-			filteredFicheList = ficheList;
+			this.filteredFicheList = this.ficheList;
 		} catch (java.sql.SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
 		}
@@ -111,13 +110,11 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 
 	@Override
 	public int getCount() {
-		//return ficheList.size();
-		return filteredFicheList == null ? 0 : filteredFicheList.size();
+		return filteredFicheList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		//return ficheList.get(position);
 		return filteredFicheList.get(position);
 
 	}
@@ -181,8 +178,6 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
         }
 		// End of user code
 
-        
-        
         return convertView;
 
 	}
@@ -192,12 +187,14 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 	}
 	
 	public int filter(int position, Fiche fiche, String pattern){
+		// Start of user code protected additional ListeFicheAvecFiltre_Adapter filter code
 		// TODO probablement faire en sorte d'ignorer les accents pour la recherche
 		// TODO chercher séparement les mots (séparés par un blanc) et faire un "ET" 
 		if(fiche.getNomCommun().toLowerCase().contains(pattern)) return 1;
 		else if(fiche.getNomScientifique().toLowerCase().contains(pattern)) return 1;
 		//else if(fiche.getAutresDenominations().contains(pattern)) return 1; 
 		else return -1;
+		// End of user code
 	}
 	
 	@Override
@@ -249,9 +246,11 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 				if (sort) {
 					Comparator<Fiche> c = new Comparator<Fiche>() {
 						public int compare(Fiche object1, Fiche object2) {
+							// Start of user code protected additional ListeFicheAvecFiltre_Adapter compare code
 							int i1 = newValues.indexOf(object1);
 							int i2 = newValues.indexOf(object2);
 							return orders[i1] - orders[i2];
+							// End of user code
 						}
 					};
 					Collections.sort(newValues, c);
@@ -274,7 +273,5 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 				notifyDataSetInvalidated();
 			}
 		}
-		
 	}
-	
 }
