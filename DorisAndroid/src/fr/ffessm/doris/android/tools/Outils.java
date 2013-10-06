@@ -116,4 +116,16 @@ public class Outils {
 		
 		return result;
 	}
+	
+	public static int getVignetteCount(Context inContext){
+		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);
+		return imageFolder.list().length;
+		
+	}
+	public static long getVignettesDiskUsage(Context inContext){
+		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);
+		DiskUsage du = new DiskUsage();
+    	du.accept(imageFolder);
+    	return du.getSize();
+	}
 }

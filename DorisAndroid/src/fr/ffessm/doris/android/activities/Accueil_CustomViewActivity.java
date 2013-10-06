@@ -68,7 +68,7 @@ import fr.ffessm.doris.android.async.TelechargePhotosFiches_BgActivity;
 import fr.ffessm.doris.android.async.VerifieNouvellesFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
-import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
+import fr.ffessm.doris.android.tools.Outils;
 //End of user code
 public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>{
 	
@@ -125,9 +125,12 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	//Start of user code action when refreshing the screen
     	StringBuffer sb = new StringBuffer();
     	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
-    	sb.append("nbFiches="+ficheDao.countOf());
+    	sb.append("Nombres de fiches dans la base local: "+ficheDao.countOf());
     	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
-    	sb.append("\nnbPhotoFiches="+photoFicheDao.countOf());
+    	sb.append("\nNombres de photos référencées: "+photoFicheDao.countOf());
+    	sb.append("\n\tNombres de photos téléchargées: "+Outils.getVignetteCount(this.getApplicationContext()));
+    	double sizeInMiB = Outils.getVignettesDiskUsage(getApplicationContext())/(double)(1024.0*1024.0);
+    	sb.append("\t("+String.format("%.2f", sizeInMiB)+" MiB)");
     	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());
 		//End of user code
 	}
