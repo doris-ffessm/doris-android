@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="crash_toast_text">Crash détecté, envoyer un mail avec les traces pour aider les développeurs à le corriger. (aucune information personnelle ne sera communiquée)</string>
+</resources>
