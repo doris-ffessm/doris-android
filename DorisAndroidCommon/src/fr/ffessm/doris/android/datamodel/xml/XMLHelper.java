@@ -248,8 +248,10 @@ public class XMLHelper {
 	public static void loadDBFromXMLFile(DorisDBHelper dbContext, InputStream inputStream){
 		DorisDBXMLParser parser = new DorisDBXMLParser();
 		try {
+			log.info("starting parsing...");
 			parser.parse(inputStream);
 			// create the elements in the DB
+			log.info("starting creation of Fiche...");
 			for(Fiche fiche : parser.fiches){
 				try {
 					dbContext.ficheDao.create(fiche);
@@ -257,6 +259,7 @@ public class XMLHelper {
 					log.error("cannot create Fiche "+e.getMessage(),e);
 				}
 			}
+			log.info("starting creation of AutreDenomination...");
 			for(AutreDenomination autreDenomination : parser.autreDenominations){
 				try {
 					dbContext.autreDenominationDao.create(autreDenomination);
@@ -264,6 +267,7 @@ public class XMLHelper {
 					log.error("cannot create AutreDenomination "+e.getMessage(),e);
 				}
 			}
+			log.info("starting creation of PhotoFiche...");
 			for(PhotoFiche photoFiche : parser.photoFiches){
 				try {
 					dbContext.photoFicheDao.create(photoFiche);
@@ -271,6 +275,7 @@ public class XMLHelper {
 					log.error("cannot create PhotoFiche "+e.getMessage(),e);
 				}
 			}
+			log.info("starting creation of SectionFiche...");
 			for(SectionFiche sectionFiche : parser.sectionFiches){
 				try {
 					dbContext.sectionFicheDao.create(sectionFiche);
@@ -278,6 +283,7 @@ public class XMLHelper {
 					log.error("cannot create SectionFiche "+e.getMessage(),e);
 				}
 			}
+			log.info("starting creation of Participant...");
 			for(Participant participant : parser.participants){
 				try {
 					dbContext.participantDao.create(participant);
@@ -285,6 +291,7 @@ public class XMLHelper {
 					log.error("cannot create Participant "+e.getMessage(),e);
 				}
 			}
+			log.info("starting creation of PhotoParticipant...");
 			for(PhotoParticipant photoParticipant : parser.photoParticipants){
 				try {
 					dbContext.photoParticipantDao.create(photoParticipant);
@@ -292,6 +299,7 @@ public class XMLHelper {
 					log.error("cannot create PhotoParticipant "+e.getMessage(),e);
 				}
 			}
+			log.info("starting creation of ZoneGeographique...");
 			for(ZoneGeographique zoneGeographique : parser.zoneGeographiques){
 				try {
 					dbContext.zoneGeographiqueDao.create(zoneGeographique);
@@ -299,6 +307,7 @@ public class XMLHelper {
 					log.error("cannot create ZoneGeographique "+e.getMessage(),e);
 				}
 			}
+			log.info("starting creation of ZoneObservation...");
 			for(ZoneObservation zoneObservation : parser.zoneObservations){
 				try {
 					dbContext.zoneObservationDao.create(zoneObservation);
@@ -306,6 +315,7 @@ public class XMLHelper {
 					log.error("cannot create ZoneObservation "+e.getMessage(),e);
 				}
 			}
+			log.info("starting creation of Groupe...");
 			for(Groupe groupe : parser.groupes){
 				try {
 					dbContext.groupeDao.create(groupe);
@@ -313,13 +323,14 @@ public class XMLHelper {
 					log.error("cannot create Groupe "+e.getMessage(),e);
 				}
 			}
-			
+			log.info("starting crossref...");
 			// proceed with cross ref
 			for (RefCommand command : parser.refCommands) {
 				command.run();
 			}
 			
 			// update the DB
+			log.info("starting update DB of Fiche...");
 			for(Fiche elem : parser.fichesToUpdate){
 				try {
 					dbContext.ficheDao.update(elem);
@@ -327,6 +338,7 @@ public class XMLHelper {
 					log.error("cannot update Fiche "+e.getMessage(),e);
 				}
 			}
+			log.info("starting update DB of AutreDenomination...");
 			for(AutreDenomination elem : parser.autreDenominationsToUpdate){
 				try {
 					dbContext.autreDenominationDao.update(elem);
@@ -334,6 +346,7 @@ public class XMLHelper {
 					log.error("cannot update AutreDenomination "+e.getMessage(),e);
 				}
 			}
+			log.info("starting update DB of PhotoFiche...");
 			for(PhotoFiche elem : parser.photoFichesToUpdate){
 				try {
 					dbContext.photoFicheDao.update(elem);
@@ -341,6 +354,7 @@ public class XMLHelper {
 					log.error("cannot update PhotoFiche "+e.getMessage(),e);
 				}
 			}
+			log.info("starting update DB of SectionFiche...");
 			for(SectionFiche elem : parser.sectionFichesToUpdate){
 				try {
 					dbContext.sectionFicheDao.update(elem);
@@ -348,6 +362,7 @@ public class XMLHelper {
 					log.error("cannot update SectionFiche "+e.getMessage(),e);
 				}
 			}
+			log.info("starting update DB of Participant...");
 			for(Participant elem : parser.participantsToUpdate){
 				try {
 					dbContext.participantDao.update(elem);
@@ -355,6 +370,7 @@ public class XMLHelper {
 					log.error("cannot update Participant "+e.getMessage(),e);
 				}
 			}
+			log.info("starting update DB of PhotoParticipant...");
 			for(PhotoParticipant elem : parser.photoParticipantsToUpdate){
 				try {
 					dbContext.photoParticipantDao.update(elem);
@@ -362,6 +378,7 @@ public class XMLHelper {
 					log.error("cannot update PhotoParticipant "+e.getMessage(),e);
 				}
 			}
+			log.info("starting update DB of ZoneGeographique...");
 			for(ZoneGeographique elem : parser.zoneGeographiquesToUpdate){
 				try {
 					dbContext.zoneGeographiqueDao.update(elem);
@@ -369,6 +386,7 @@ public class XMLHelper {
 					log.error("cannot update ZoneGeographique "+e.getMessage(),e);
 				}
 			}
+			log.info("starting update DB of ZoneObservation...");
 			for(ZoneObservation elem : parser.zoneObservationsToUpdate){
 				try {
 					dbContext.zoneObservationDao.update(elem);
@@ -376,6 +394,7 @@ public class XMLHelper {
 					log.error("cannot update ZoneObservation "+e.getMessage(),e);
 				}
 			}
+			log.info("starting update DB of Groupe...");
 			for(Groupe elem : parser.groupesToUpdate){
 				try {
 					dbContext.groupeDao.update(elem);
@@ -383,6 +402,7 @@ public class XMLHelper {
 					log.error("cannot update Groupe "+e.getMessage(),e);
 				}
 			}
+			log.info("DB filled from XML");
 		} catch (XmlPullParserException e) {
 			log.error("XML parse error "+e.getMessage(),e);
 		} catch (IOException e) {
