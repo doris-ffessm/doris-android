@@ -253,7 +253,7 @@ public class DorisDBXMLParser {
 	/**
      * parser for a group of Fiche
      */
-	List<Fiche> readFiches(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
+	List<Fiche> readFiches(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
 		List<Fiche> entries = new ArrayList<Fiche>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
@@ -272,7 +272,7 @@ public class DorisDBXMLParser {
 	/**
      * parser for a group of AutreDenomination
      */
-	List<AutreDenomination> readAutreDenominations(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
+	List<AutreDenomination> readAutreDenominations(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
 		List<AutreDenomination> entries = new ArrayList<AutreDenomination>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
@@ -291,7 +291,7 @@ public class DorisDBXMLParser {
 	/**
      * parser for a group of PhotoFiche
      */
-	List<PhotoFiche> readPhotoFiches(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
+	List<PhotoFiche> readPhotoFiches(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
 		List<PhotoFiche> entries = new ArrayList<PhotoFiche>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
@@ -310,7 +310,7 @@ public class DorisDBXMLParser {
 	/**
      * parser for a group of SectionFiche
      */
-	List<SectionFiche> readSectionFiches(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
+	List<SectionFiche> readSectionFiches(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
 		List<SectionFiche> entries = new ArrayList<SectionFiche>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
@@ -329,7 +329,7 @@ public class DorisDBXMLParser {
 	/**
      * parser for a group of Participant
      */
-	List<Participant> readParticipants(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
+	List<Participant> readParticipants(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
 		List<Participant> entries = new ArrayList<Participant>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
@@ -348,7 +348,7 @@ public class DorisDBXMLParser {
 	/**
      * parser for a group of PhotoParticipant
      */
-	List<PhotoParticipant> readPhotoParticipants(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
+	List<PhotoParticipant> readPhotoParticipants(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
 		List<PhotoParticipant> entries = new ArrayList<PhotoParticipant>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
@@ -367,7 +367,7 @@ public class DorisDBXMLParser {
 	/**
      * parser for a group of ZoneGeographique
      */
-	List<ZoneGeographique> readZoneGeographiques(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
+	List<ZoneGeographique> readZoneGeographiques(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
 		List<ZoneGeographique> entries = new ArrayList<ZoneGeographique>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
@@ -386,7 +386,7 @@ public class DorisDBXMLParser {
 	/**
      * parser for a group of ZoneObservation
      */
-	List<ZoneObservation> readZoneObservations(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
+	List<ZoneObservation> readZoneObservations(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
 		List<ZoneObservation> entries = new ArrayList<ZoneObservation>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
@@ -405,7 +405,7 @@ public class DorisDBXMLParser {
 	/**
      * parser for a group of Groupe
      */
-	List<Groupe> readGroupes(XmlPullParser parser, String containingTag)  throws XmlPullParserException, IOException{
+	List<Groupe> readGroupes(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
 		List<Groupe> entries = new ArrayList<Groupe>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
