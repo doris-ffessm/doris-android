@@ -217,31 +217,40 @@ public class DorisDBXMLParser {
 	        }
 	        String name = parser.getName();
 		 	if (name.equals(DATACLASSIFIER_FICHES)) {
-	            fiches.addAll(readFiches(parser,DATACLASSIFIER_FICHES));
+				fiches = readFiches(parser,DATACLASSIFIER_FICHES);
+	            // fiches.addAll(readFiches(parser,DATACLASSIFIER_FICHES));
 	        } else 
 		 	if (name.equals(DATACLASSIFIER_AUTREDENOMINATIONS)) {
-	            autreDenominations.addAll(readAutreDenominations(parser,DATACLASSIFIER_AUTREDENOMINATIONS));
+				autreDenominations = readAutreDenominations(parser,DATACLASSIFIER_AUTREDENOMINATIONS);
+	            // autreDenominations.addAll(readAutreDenominations(parser,DATACLASSIFIER_AUTREDENOMINATIONS));
 	        } else 
 		 	if (name.equals(DATACLASSIFIER_PHOTOFICHES)) {
-	            photoFiches.addAll(readPhotoFiches(parser,DATACLASSIFIER_PHOTOFICHES));
+				photoFiches = readPhotoFiches(parser,DATACLASSIFIER_PHOTOFICHES);
+	            // photoFiches.addAll(readPhotoFiches(parser,DATACLASSIFIER_PHOTOFICHES));
 	        } else 
 		 	if (name.equals(DATACLASSIFIER_SECTIONFICHES)) {
-	            sectionFiches.addAll(readSectionFiches(parser,DATACLASSIFIER_SECTIONFICHES));
+				sectionFiches = readSectionFiches(parser,DATACLASSIFIER_SECTIONFICHES);
+	            // sectionFiches.addAll(readSectionFiches(parser,DATACLASSIFIER_SECTIONFICHES));
 	        } else 
 		 	if (name.equals(DATACLASSIFIER_PARTICIPANTS)) {
-	            participants.addAll(readParticipants(parser,DATACLASSIFIER_PARTICIPANTS));
+				participants = readParticipants(parser,DATACLASSIFIER_PARTICIPANTS);
+	            // participants.addAll(readParticipants(parser,DATACLASSIFIER_PARTICIPANTS));
 	        } else 
 		 	if (name.equals(DATACLASSIFIER_PHOTOPARTICIPANTS)) {
-	            photoParticipants.addAll(readPhotoParticipants(parser,DATACLASSIFIER_PHOTOPARTICIPANTS));
+				photoParticipants = readPhotoParticipants(parser,DATACLASSIFIER_PHOTOPARTICIPANTS);
+	            // photoParticipants.addAll(readPhotoParticipants(parser,DATACLASSIFIER_PHOTOPARTICIPANTS));
 	        } else 
 		 	if (name.equals(DATACLASSIFIER_ZONEGEOGRAPHIQUES)) {
-	            zoneGeographiques.addAll(readZoneGeographiques(parser,DATACLASSIFIER_ZONEGEOGRAPHIQUES));
+				zoneGeographiques = readZoneGeographiques(parser,DATACLASSIFIER_ZONEGEOGRAPHIQUES);
+	            // zoneGeographiques.addAll(readZoneGeographiques(parser,DATACLASSIFIER_ZONEGEOGRAPHIQUES));
 	        } else 
 		 	if (name.equals(DATACLASSIFIER_ZONEOBSERVATIONS)) {
-	            zoneObservations.addAll(readZoneObservations(parser,DATACLASSIFIER_ZONEOBSERVATIONS));
+				zoneObservations = readZoneObservations(parser,DATACLASSIFIER_ZONEOBSERVATIONS);
+	            // zoneObservations.addAll(readZoneObservations(parser,DATACLASSIFIER_ZONEOBSERVATIONS));
 	        } else 
 		 	if (name.equals(DATACLASSIFIER_GROUPES)) {
-	            groupes.addAll(readGroupes(parser,DATACLASSIFIER_GROUPES));
+				groupes = readGroupes(parser,DATACLASSIFIER_GROUPES);
+	            // groupes.addAll(readGroupes(parser,DATACLASSIFIER_GROUPES));
 	        } else 
 			{
 	            skip(parser);
@@ -254,7 +263,7 @@ public class DorisDBXMLParser {
      * parser for a group of Fiche
      */
 	List<Fiche> readFiches(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
-		List<Fiche> entries = new ArrayList<Fiche>();
+		ArrayList<Fiche> entries = new ArrayList<Fiche>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -267,13 +276,14 @@ public class DorisDBXMLParser {
 	            skip(parser);
 	        }
 	    }
+		entries.trimToSize();
 		return entries;
 	}
 	/**
      * parser for a group of AutreDenomination
      */
 	List<AutreDenomination> readAutreDenominations(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
-		List<AutreDenomination> entries = new ArrayList<AutreDenomination>();
+		ArrayList<AutreDenomination> entries = new ArrayList<AutreDenomination>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -286,13 +296,14 @@ public class DorisDBXMLParser {
 	            skip(parser);
 	        }
 	    }
+		entries.trimToSize();
 		return entries;
 	}
 	/**
      * parser for a group of PhotoFiche
      */
 	List<PhotoFiche> readPhotoFiches(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
-		List<PhotoFiche> entries = new ArrayList<PhotoFiche>();
+		ArrayList<PhotoFiche> entries = new ArrayList<PhotoFiche>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -305,13 +316,14 @@ public class DorisDBXMLParser {
 	            skip(parser);
 	        }
 	    }
+		entries.trimToSize();
 		return entries;
 	}
 	/**
      * parser for a group of SectionFiche
      */
 	List<SectionFiche> readSectionFiches(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
-		List<SectionFiche> entries = new ArrayList<SectionFiche>();
+		ArrayList<SectionFiche> entries = new ArrayList<SectionFiche>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -324,13 +336,14 @@ public class DorisDBXMLParser {
 	            skip(parser);
 	        }
 	    }
+		entries.trimToSize();
 		return entries;
 	}
 	/**
      * parser for a group of Participant
      */
 	List<Participant> readParticipants(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
-		List<Participant> entries = new ArrayList<Participant>();
+		ArrayList<Participant> entries = new ArrayList<Participant>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -343,13 +356,14 @@ public class DorisDBXMLParser {
 	            skip(parser);
 	        }
 	    }
+		entries.trimToSize();
 		return entries;
 	}
 	/**
      * parser for a group of PhotoParticipant
      */
 	List<PhotoParticipant> readPhotoParticipants(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
-		List<PhotoParticipant> entries = new ArrayList<PhotoParticipant>();
+		ArrayList<PhotoParticipant> entries = new ArrayList<PhotoParticipant>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -362,13 +376,14 @@ public class DorisDBXMLParser {
 	            skip(parser);
 	        }
 	    }
+		entries.trimToSize();
 		return entries;
 	}
 	/**
      * parser for a group of ZoneGeographique
      */
 	List<ZoneGeographique> readZoneGeographiques(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
-		List<ZoneGeographique> entries = new ArrayList<ZoneGeographique>();
+		ArrayList<ZoneGeographique> entries = new ArrayList<ZoneGeographique>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -381,13 +396,14 @@ public class DorisDBXMLParser {
 	            skip(parser);
 	        }
 	    }
+		entries.trimToSize();
 		return entries;
 	}
 	/**
      * parser for a group of ZoneObservation
      */
 	List<ZoneObservation> readZoneObservations(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
-		List<ZoneObservation> entries = new ArrayList<ZoneObservation>();
+		ArrayList<ZoneObservation> entries = new ArrayList<ZoneObservation>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -400,13 +416,14 @@ public class DorisDBXMLParser {
 	            skip(parser);
 	        }
 	    }
+		entries.trimToSize();
 		return entries;
 	}
 	/**
      * parser for a group of Groupe
      */
 	List<Groupe> readGroupes(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
-		List<Groupe> entries = new ArrayList<Groupe>();
+		ArrayList<Groupe> entries = new ArrayList<Groupe>();
 		parser.require(XmlPullParser.START_TAG, ns, containingTag);
 	    while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -419,6 +436,7 @@ public class DorisDBXMLParser {
 	            skip(parser);
 	        }
 	    }
+		entries.trimToSize();
 		return entries;
 	}
 
@@ -438,12 +456,12 @@ public class DorisDBXMLParser {
 	            continue;
 	        }
 	        currentTagName = parser.getName();
-			if (currentTagName.equals("dateCreation")) {
+			if (currentTagName.equals(DATAATT_FICHE_dateCreation)) {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_FICHE_dateCreation);
 	            result.setDateCreation(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_FICHE_dateCreation);
 	        } else
-			if (currentTagName.equals("dateModification")) {
+			if (currentTagName.equals(DATAATT_FICHE_dateModification)) {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_FICHE_dateModification);
 	            result.setDateModification(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_FICHE_dateModification);
@@ -454,7 +472,7 @@ public class DorisDBXMLParser {
 				refCommands.add(new Fiche_setRedacteurs_RefCommand(result,id, this));
 				parser.require(XmlPullParser.END_TAG, ns, DATAREF_FICHE_redacteurs);	    
 	        } else
-			if (currentTagName.equals("photosFiche")) {
+			if (currentTagName.equals(DATAREF_FICHE_photosFiche)) {
 				List<PhotoFiche> entries = readPhotoFiches(parser,DATAREF_FICHE_photosFiche);	
 				photoFiches.addAll(entries); // add for inclusion in the DB
 				//result.getPhotosFiche().addAll(entries);  //  doesn't work and need to be done in the other way round using the opposite
@@ -484,7 +502,7 @@ public class DorisDBXMLParser {
 				refCommands.add(new Fiche_setResponsableRegional_RefCommand(result,id, this));
 				parser.require(XmlPullParser.END_TAG, ns, DATAREF_FICHE_responsableRegional);	    
 	        } else
-			if (currentTagName.equals("contenu")) {
+			if (currentTagName.equals(DATAREF_FICHE_contenu)) {
 				List<SectionFiche> entries = readSectionFiches(parser,DATAREF_FICHE_contenu);	
 				sectionFiches.addAll(entries); // add for inclusion in the DB
 				//result.getContenu().addAll(entries);  //  doesn't work and need to be done in the other way round using the opposite
@@ -522,12 +540,12 @@ public class DorisDBXMLParser {
 	            continue;
 	        }
 	        currentTagName = parser.getName();
-			if (currentTagName.equals("denomination")) {
+			if (currentTagName.equals(DATAATT_AUTREDENOMINATION_denomination)) {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_AUTREDENOMINATION_denomination);
 	            result.setDenomination(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_AUTREDENOMINATION_denomination);
 	        } else
-			if (currentTagName.equals("langue")) {
+			if (currentTagName.equals(DATAATT_AUTREDENOMINATION_langue)) {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_AUTREDENOMINATION_langue);
 	            result.setLangue(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_AUTREDENOMINATION_langue);
@@ -557,7 +575,7 @@ public class DorisDBXMLParser {
 	            continue;
 	        }
 	        currentTagName = parser.getName();
-			if (currentTagName.equals("cleURL")) {
+			if (currentTagName.equals(DATAATT_PHOTOFICHE_cleURL)) {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_PHOTOFICHE_cleURL);
 	            result.setCleURL(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_PHOTOFICHE_cleURL);
@@ -571,12 +589,12 @@ public class DorisDBXMLParser {
 			//TODO if (currentTagName.equals(DATAATT_PHOTOFICHE_IMAGEGRANDE)) {
 	        //    title = readTitle(parser);
 	        //} else	
-			if (currentTagName.equals("titre")) {
+			if (currentTagName.equals(DATAATT_PHOTOFICHE_titre)) {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_PHOTOFICHE_titre);
 	            result.setTitre(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_PHOTOFICHE_titre);
 	        } else
-			if (currentTagName.equals("description")) {
+			if (currentTagName.equals(DATAATT_PHOTOFICHE_description)) {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_PHOTOFICHE_description);
 	            result.setDescription(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_PHOTOFICHE_description);
@@ -606,12 +624,12 @@ public class DorisDBXMLParser {
 	            continue;
 	        }
 	        currentTagName = parser.getName();
-			if (currentTagName.equals("titre")) {
+			if (currentTagName.equals(DATAATT_SECTIONFICHE_titre)) {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_SECTIONFICHE_titre);
 	            result.setTitre(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_SECTIONFICHE_titre);
 	        } else
-			if (currentTagName.equals("texte")) {
+			if (currentTagName.equals(DATAATT_SECTIONFICHE_texte)) {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_SECTIONFICHE_texte);
 	            result.setTexte(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_SECTIONFICHE_texte);
@@ -641,7 +659,7 @@ public class DorisDBXMLParser {
 	            continue;
 	        }
 	        currentTagName = parser.getName();
-			if (currentTagName.equals("nom")) {
+			if (currentTagName.equals(DATAATT_PARTICIPANT_nom)) {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_PARTICIPANT_nom);
 	            result.setNom(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_PARTICIPANT_nom);
@@ -672,7 +690,7 @@ public class DorisDBXMLParser {
 	            continue;
 	        }
 	        currentTagName = parser.getName();
-			if (currentTagName.equals("cleURL")) {
+			if (currentTagName.equals(DATAATT_PHOTOPARTICIPANT_cleURL)) {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_PHOTOPARTICIPANT_cleURL);
 	            result.setCleURL(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_PHOTOPARTICIPANT_cleURL);
@@ -705,7 +723,7 @@ public class DorisDBXMLParser {
 	            continue;
 	        }
 	        currentTagName = parser.getName();
-			if (currentTagName.equals("nom")) {
+			if (currentTagName.equals(DATAATT_ZONEGEOGRAPHIQUE_nom)) {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_ZONEGEOGRAPHIQUE_nom);
 	            result.setNom(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_ZONEGEOGRAPHIQUE_nom);
@@ -735,7 +753,7 @@ public class DorisDBXMLParser {
 	            continue;
 	        }
 	        currentTagName = parser.getName();
-			if (currentTagName.equals("nom")) {
+			if (currentTagName.equals(DATAATT_ZONEOBSERVATION_nom)) {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_ZONEOBSERVATION_nom);
 	            result.setNom(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_ZONEOBSERVATION_nom);
@@ -773,7 +791,7 @@ public class DorisDBXMLParser {
 			//TODO if (currentTagName.equals(DATAATT_GROUPE_NUMEROSOUSGROUPE)) {
 	        //    title = readTitle(parser);
 	        //} else	
-			if (currentTagName.equals("groupesFils")) {
+			if (currentTagName.equals(DATAREF_GROUPE_groupesFils)) {
 				List<Groupe> entries = readGroupes(parser,DATAREF_GROUPE_groupesFils);	
 				groupes.addAll(entries); // add for inclusion in the DB
 				//result.getGroupesFils().addAll(entries);  //  doesn't work and need to be done in the other way round using the opposite
