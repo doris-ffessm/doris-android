@@ -7,6 +7,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="fr.ffessm.doris.prefetch.PrefetchDorisWebSite"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-d --max=5 INIT"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-d --max=100 INIT"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="DorisAndroidPrefetch"/>
 </launchConfiguration>

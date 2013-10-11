@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    name="DorisAndroidCommon"
+    default="createjar" >
+	<!-- <condition property="is_windows">
+    	<os family="windows"/>
+	</condition>-->
+    <target name="git.revision"  description="Store git revision in ${repository.version}" >
+        
+		<!-- <if>
+			<condition property="is_windows">
+    			<os family="windows"/>
+			</condition>    
+			<then>-->
+			    <exec executable="cmd" outputproperty="git.revision">
+		    		<arg value="/c" />
+		    		<arg value="git.cmd log -1 --pretty=format:%H" />
+				</exec>
+			<!-- </then>
+			<else>
+			 	<exec executable="git" outputproperty="git.revision">
+    				<arg value="log -1 - -pretty=format:%H" />
+				</exec>   
+			</else>
+		</if>-->
+        
+        
+    </target>
+
+    <target name="build_identifiers.xml" depends="git.revision"
+        description="build build_identifiers.xml from template"  >
+        <echo>Repository version ${git.revision}</echo>
+        <copy file="templates/build_identifiers.xml" overwrite="yes" tofile="res/values/build_identifiers.xml" >
+            <filterchain>
+                <replacetokens>
+                    <token key="repository.version" value="${git.revision}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+        <!-- <eclipse.refreshLocal
+            depth="infinite"
+            resource="DorisAndroid/libs" /> -->
+    </target>
+
+</project>
