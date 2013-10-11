@@ -46,7 +46,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,6 +74,7 @@ import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.table.TableUtils;
 
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
@@ -97,7 +101,9 @@ public class PrefetchDorisWebSite {
 	private final static String VERSION = "0.01";
 	
 	// we are using the in-memory H2 database
-	private final static String DATABASE_URL = "jdbc:h2:mem:fiche";
+	//private final static String DATABASE_URL = "jdbc:h2:mem:fiche";
+	// we are using the created SQLite database
+	private final static String DATABASE_URL = "jdbc:sqlite:run/DorisAndroid.db";
 
 	// Dossiers liés au fonctionnement de l'appli prefetch
 	private final static String DOSSIER_BASE = "./run";
@@ -141,7 +147,7 @@ public class PrefetchDorisWebSite {
 		// Vérification, Création, Sauvegarde des dossiers de travails
 		checkDossiers(action);
 		
-		if (action.equals("TEST")) {
+	/*	if (action.equals("TEST")) {
 	    	//String test = "\"\"\"\"\"\"\"<a href=\"fiche2.asp?fiche_numero=3527&fiche_espece=\"Montereina\" (Discodoris) coerulescens&fiche_etat=5&origine=scientifique\"><em>\"Montereina\" (Discodoris) coerulescens</em>&nbsp;&nbsp;-&nbsp;&nbsp;Discodoris azurée</a>";
 	    	
 	    	//log.debug(test);
@@ -179,8 +185,12 @@ public class PrefetchDorisWebSite {
 			}
 			
 		} else {
+		*/
 			ConnectionSource connectionSource = null;
 			try {
+				// create empty DB and initialize it for Android
+				initializeEmptySQLite(DATABASE_URL);
+				
 				// create our data-source for the database
 				connectionSource = new JdbcConnectionSource(DATABASE_URL);
 				// setup our database and DAOs
@@ -311,7 +321,7 @@ public class PrefetchDorisWebSite {
 				// Ecriture des données récupérées dans le fichier xml final
 			
 				// read and write some data
-				ecritureDataXML(listeFiches, listeGroupes);
+			//	ecritureDataXML(listeFiches, listeGroupes);
 				
 				
 	
@@ -323,7 +333,7 @@ public class PrefetchDorisWebSite {
 			}
 			
 			
-		} // Fin de <> TEST
+	//	} // Fin de <> TEST
 		log.debug("doMain() - Fin");
 	}
 
@@ -426,6 +436,25 @@ public class PrefetchDorisWebSite {
 		return action;
 	}
 	
+	private void initializeEmptySQLite(String url) throws ClassNotFoundException, SQLException{
+		
+		Class.forName("org.sqlite.JDBC");
+		Connection c = DriverManager.getConnection(url);
+		log.debug("Opened database successfully");
+		
+		Statement  stmt = c.createStatement();
+		String sql = "CREATE TABLE \"android_metadata\" (\"locale\" TEXT DEFAULT 'en_US')"; 
+		stmt.executeUpdate(sql);
+		stmt.close();
+		
+		stmt = c.createStatement();
+		sql = "    INSERT INTO \"android_metadata\" VALUES ('en_US')"; 
+		stmt.executeUpdate(sql);
+		stmt.close();
+		c.close();
+      
+	}
+	
 	/**
 	 * Setup our database and DAOs
 	 */
@@ -448,6 +477,7 @@ public class PrefetchDorisWebSite {
 		//dbContext.fiches_verificateurs_ParticipantsDao = DaoManager.createDao(connectionSource, Fiches_verificateurs_Participants.class);
 		//dbContext.fiches_ZonesGeographiquesDao = DaoManager.createDao(connectionSource, Fiches_ZonesGeographiques.class);
 		//dbContext.fiches_ZonesObservationsDao = DaoManager.createDao(connectionSource, Fiches_ZonesObservations.class);
+		
 		
 		
 		// if you need to create the table
