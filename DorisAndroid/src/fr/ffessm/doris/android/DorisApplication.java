@@ -1,7 +1,11 @@
 package fr.ffessm.doris.android;
 
+import java.io.IOException;
+
 import org.acra.*;
 import org.acra.annotation.*;
+
+import fr.ffessm.doris.android.datamodel.SQLiteDataBaseHelper;
 
 import android.app.Application;
 
@@ -19,5 +23,23 @@ public class DorisApplication extends Application {
 
         // The following line triggers the initialization of ACRA
         ACRA.init(this);
+        
+        
+        // The following initialize the DB from file
+        SQLiteDataBaseHelper myDbHelper = new SQLiteDataBaseHelper(this);
+        //myDbHelper = new DataBaseHelper(this);
+         
+        try {
+         
+        	myDbHelper.createDataBase();
+         
+        } catch (IOException ioe) {
+         
+        	throw new Error("Unable to create database");
+         
+        }
+         
+       
+        
     }
 }

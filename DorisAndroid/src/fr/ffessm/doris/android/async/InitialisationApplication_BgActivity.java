@@ -108,7 +108,7 @@ public class InitialisationApplication_BgActivity  extends AsyncTask<String,Inte
     	// Start of user code main loop of task
 		// This is where we would do the actual job
 		// you should indicates the progression using publishProgress()
-    	XMLHelper.loadDBFromXMLFile(dbHelper.getDorisDBHelper(), context.getResources().openRawResource(R.raw.prefetched_db));
+    //	XMLHelper.loadDBFromXMLFile(dbHelper.getDorisDBHelper(), context.getResources().openRawResource(R.raw.prefetched_db));
 		
         publishProgress(1);
 		// End of user code
