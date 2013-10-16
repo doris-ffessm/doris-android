@@ -26,5 +26,5 @@
 [PhotoParticipant]photo 0..1-participant  0..1[Participant]
 [Participant]verificateurs 0..1-fichesVerifiees  0..1[Fiche]
 [SectionFiche]contenu 0..*-fiche  0..1[Fiche]
-[AutreDenomination]autresDenominations 0..1-fiche  0..1[Fiche]
+[AutreDenomination]autresDenominations 0..*-fiche  0..1[Fiche]
 [Groupe]groupesFils 0..*-groupePere  0..1[Groupe]

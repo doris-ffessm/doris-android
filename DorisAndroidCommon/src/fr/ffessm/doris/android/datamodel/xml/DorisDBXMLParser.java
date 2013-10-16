@@ -514,7 +514,12 @@ public class DorisDBXMLParser {
 				refCommands.add(new Fiche_setPhotoPrincipale_RefCommand(result,id, this));
 				parser.require(XmlPullParser.END_TAG, ns, DATAREF_FICHE_photoPrincipale);	    
 	        } else
-					// TODO deal with owned ref autresDenominations
+			if (currentTagName.equals(DATAREF_FICHE_autresDenominations)) {
+				List<AutreDenomination> entries = readAutreDenominations(parser,DATAREF_FICHE_autresDenominations);	
+				autreDenominations.addAll(entries); // add for inclusion in the DB
+				//result.getAutresDenominations().addAll(entries);  //  doesn't work and need to be done in the other way round using the opposite
+				refCommands.add(new Fiche_addContainedAutresDenominations_RefCommand(result,entries));	    
+	        } else
 			if (currentTagName.equals(DATAREF_FICHE_groupe)) {	
 				parser.require(XmlPullParser.START_TAG, ns, DATAREF_FICHE_groupe);
 	            String id = readText(parser);
@@ -971,21 +976,23 @@ public class DorisDBXMLParser {
 			fichesToUpdate.add(self);
 		}
 	}
-	class Fiche_setContainedAutresDenominations_RefCommand extends RefCommand{
-	Fiche container;
-		AutreDenomination containedElement;
+	class Fiche_addContainedAutresDenominations_RefCommand extends RefCommand{
+		Fiche container;
+		List<AutreDenomination> containedElements;
 		
-		public Fiche_setContainedAutresDenominations_RefCommand(Fiche container,
-				AutreDenomination containedElement) {
+		public Fiche_addContainedAutresDenominations_RefCommand(Fiche container,
+				List<AutreDenomination> containedElements) {
 			super();
 			this.container = container;
-			this.containedElement = containedElement;
+			this.containedElements = containedElements;
 		}
 
 		@Override
 		public void run() {
-			containedElement.setFiche(container);
-			autreDenominationsToUpdate.add(containedElement);			
+			for (AutreDenomination element : containedElements) {				
+				element.setFiche(container);
+				autreDenominationsToUpdate.add(element);
+			}
 		}
 		
 	}

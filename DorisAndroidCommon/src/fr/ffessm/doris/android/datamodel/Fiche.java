@@ -61,6 +61,7 @@ import fr.ffessm.doris.android.datamodel.associations.*;
 
 // Start of user code additional import for Fiche
 import java.io.IOException;
+import java.util.ArrayList;
 
 import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.Element;
@@ -168,8 +169,8 @@ public class Fiche {
 	protected PhotoFiche photoPrincipale;
 
 	/** Liste des autres dénominations de l'espèce présentée sur la fiche. */ 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
-	protected AutreDenomination autresDenominations;
+	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
+	protected ForeignCollection<AutreDenomination> autresDenominations;
 
 	/** Permet d'identifier avec le sous-groupe (optionel) le groupe auquel est rattaché la fiche */ 
 	@DatabaseField(foreign = true)
@@ -177,7 +178,8 @@ public class Fiche {
 
 	// Start of user code Fiche additional user properties
 	
-	public void getFiche(String htmlFiche, List<Groupe> listeGroupes){
+	
+	public void getFiche(String htmlFiche, List<Groupe> listeGroupes) throws SQLException{
 		log.debug("getFiche() - Début");
 		
     	int i;
@@ -333,8 +335,10 @@ public class Fiche {
 									// permet d'enlever les Liens et de les remplacer par (*)
 									autresDenominationsTexte = autresDenominationsTexte.replaceAll("<[^>]*>", "(*)").trim();
 										
-									AutreDenomination autreDenomination = new AutreDenomination(autresDenominationsTexte, "");
+									AutreDenomination autreDenomination = new AutreDenomination(autresDenominationsTexte, "");									
 									autreDenomination.setFiche(this);
+									_contextDB.autreDenominationDao.create(autreDenomination);
+									//this.autresDenominations.add(autreDenomination);
 									
 									
 								} else {
@@ -355,8 +359,10 @@ public class Fiche {
 									log.info("getFiche() - rubrique : " + rubrique);
 									log.info("getFiche() - contenu(après nettoyage) : " + contenuTexte);
 									
-									SectionFiche contenu = new SectionFiche(contenuTexte, "");
+									SectionFiche contenu = new SectionFiche(rubrique, contenuTexte);
 									contenu.setFiche(this);
+									_contextDB.sectionFicheDao.create(contenu);
+									//this.getContenu().add(contenu);
 								}
 							}
 						}
@@ -884,24 +890,10 @@ public class Fiche {
 	public void setPhotoPrincipale(PhotoFiche photoPrincipale) {
 		this.photoPrincipale = photoPrincipale;
 	}			
-	/** Liste des autres dénominations de l'espèce présentée sur la fiche. */ 
-	public AutreDenomination getAutresDenominations() {
-		try {
-			if(_mayNeedDBRefresh && _contextDB != null){
-				_contextDB.autreDenominationDao.refresh(this.autresDenominations);
-				_mayNeedDBRefresh = false;
-			}
-		} catch (SQLException e) {
-			log.error(e.getMessage(),e);
-		}
-		if(_contextDB==null && this.autresDenominations == null){
-			log.warn("Fiche may not be properly refreshed from DB (_id="+_id+")");
-		}
+	/** Liste des autres dénominations de l'espèce présentée sur la fiche. */
+	public Collection<AutreDenomination> getAutresDenominations() {
 		return this.autresDenominations;
-	}
-	public void setAutresDenominations(AutreDenomination autresDenominations) {
-		this.autresDenominations = autresDenominations;
-	}			
+	}					
 	/** Permet d'identifier avec le sous-groupe (optionel) le groupe auquel est rattaché la fiche */ 
 	public Groupe getGroupe() {
 		try {
@@ -1003,11 +995,13 @@ public class Fiche {
 			sb.append(this.photoPrincipale.getId());
 	    	sb.append("</"+XML_REF_PHOTOPRINCIPALE+">");
 		}
-		if(this.autresDenominations!= null){
-			sb.append("\n"+indent+"\t<"+XML_REF_AUTRESDENOMINATIONS+">");
-			sb.append(this.autresDenominations.getId());
-	    	sb.append("</"+XML_REF_AUTRESDENOMINATIONS+">");
+		sb.append("\n"+indent+"\t<"+XML_REF_AUTRESDENOMINATIONS+">");
+		if(this.autresDenominations != null){
+			for(AutreDenomination ref : this.autresDenominations){
+				sb.append("\n"+ref.toXML(indent+"\t\t", contextDB));
+	    	}
 		}
+		sb.append("</"+XML_REF_AUTRESDENOMINATIONS+">");		
 		if(this.groupe!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_GROUPE+">");
 			sb.append(this.groupe.getId());

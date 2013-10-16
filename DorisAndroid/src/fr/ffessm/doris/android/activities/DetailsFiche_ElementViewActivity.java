@@ -42,6 +42,7 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
@@ -65,6 +66,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import android.widget.ImageView;
 import android.graphics.Bitmap;
 import java.io.IOException;
+import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
 
@@ -133,7 +135,17 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			entry.getPhotoPrincipale().getImageVignette();
 		}
 		if(entry.getPhotosFiche()!=null){
-			sb.append("\nnbPhoto="+entry.getPhotosFiche().size());
+			sb.append("\nnbPhoto="+entry.getPhotosFiche().size()+"\n");
+		}
+		if(entry.getAutresDenominations() != null){
+			for (AutreDenomination autreDenomination : entry.getAutresDenominations()) {
+				sb.append(autreDenomination.getDenomination()+"\n");
+			}
+		}
+		if(entry.getContenu() != null){
+			for (SectionFiche sectionFiche : entry.getContenu()) {
+				sb.append(sectionFiche.getTitre()+" :\n"+sectionFiche.getTexte()+"\n");
+			}
 		}
 		((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setText(sb.toString());
 		
