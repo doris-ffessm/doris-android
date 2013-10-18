@@ -42,7 +42,6 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
@@ -66,6 +65,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import android.widget.ImageView;
 import android.graphics.Bitmap;
 import java.io.IOException;
+import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code

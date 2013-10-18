@@ -61,37 +61,37 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	// name of the database file for your application -- change to something appropriate for your app
 	private static final String DATABASE_NAME = "DorisAndroid.db";
 	// any time you make changes to your database objects, you may have to increase the database version
-	// Start of user code DorisAndroid
+	// Start of user code OrmLiteDBHelper DB version DorisAndroid
 	private static final int DATABASE_VERSION = 1;
 	// End of user code
 
 
 	// the DAO object we use to access the diveBudies table
-	private Dao<Fiche, Integer> ficheDao = null;
+	// private Dao<Fiche, Integer> ficheDao = null;
 	private RuntimeExceptionDao<Fiche, Integer> ficheRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
-	private Dao<AutreDenomination, Integer> autreDenominationDao = null;
+	// private Dao<AutreDenomination, Integer> autreDenominationDao = null;
 	private RuntimeExceptionDao<AutreDenomination, Integer> autreDenominationRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
-	private Dao<PhotoFiche, Integer> photoFicheDao = null;
+	// private Dao<PhotoFiche, Integer> photoFicheDao = null;
 	private RuntimeExceptionDao<PhotoFiche, Integer> photoFicheRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
-	private Dao<SectionFiche, Integer> sectionFicheDao = null;
+	// private Dao<SectionFiche, Integer> sectionFicheDao = null;
 	private RuntimeExceptionDao<SectionFiche, Integer> sectionFicheRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
-	private Dao<Participant, Integer> participantDao = null;
+	// private Dao<Participant, Integer> participantDao = null;
 	private RuntimeExceptionDao<Participant, Integer> participantRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
-	private Dao<PhotoParticipant, Integer> photoParticipantDao = null;
+	// private Dao<PhotoParticipant, Integer> photoParticipantDao = null;
 	private RuntimeExceptionDao<PhotoParticipant, Integer> photoParticipantRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
-	private Dao<ZoneGeographique, Integer> zoneGeographiqueDao = null;
+	// private Dao<ZoneGeographique, Integer> zoneGeographiqueDao = null;
 	private RuntimeExceptionDao<ZoneGeographique, Integer> zoneGeographiqueRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
-	private Dao<ZoneObservation, Integer> zoneObservationDao = null;
+	// private Dao<ZoneObservation, Integer> zoneObservationDao = null;
 	private RuntimeExceptionDao<ZoneObservation, Integer> zoneObservationRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
-	private Dao<Groupe, Integer> groupeDao = null;
+	// private Dao<Groupe, Integer> groupeDao = null;
 	private RuntimeExceptionDao<Groupe, Integer> groupeRuntimeDao = null;
 
 	public OrmLiteDBHelper(Context context) {
@@ -104,7 +104,8 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	 */
 	@Override
 	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
-		/*try {
+	// Start of user code OrmLiteDBHelper onCreate DorisAndroid
+		try {
 			Log.i(OrmLiteDBHelper.class.getName(), "onCreate");
 			TableUtils.createTable(connectionSource, Fiche.class);
 			TableUtils.createTable(connectionSource, AutreDenomination.class);
@@ -118,7 +119,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		} catch (SQLException e) {
 			Log.e(OrmLiteDBHelper.class.getName(), "Can't create database", e);
 			throw new RuntimeException(e);
-		}*/
+		}
 
 		// here we try inserting data in the on-create as a test
 		/*RuntimeExceptionDao<DiveEntry, Integer> dao = getSimpleDataDao();
@@ -130,6 +131,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		dao.create(simple);
 		Log.i(ORMLiteDBHelper.class.getName(), "created new entries in onCreate: " + millis);
 		*/
+		// End of user code
 	}
 
 	/**
@@ -138,6 +140,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
+	// Start of user code OrmLiteDBHelper onUpgrade DorisAndroid
 	/*	try {
 			Log.i(OrmLiteDBHelper.class.getName(), "onUpgrade");
 			TableUtils.dropTable(connectionSource, Fiche.class, true);
@@ -155,6 +158,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 			Log.e(OrmLiteDBHelper.class.getName(), "Can't drop databases", e);
 			throw new RuntimeException(e);
 		}*/
+	// End of user code
 	}
 
 	/**
