@@ -215,7 +215,6 @@ public class PrefetchDorisWebSite {
 					contenuFichierHtml = Outils.getFichier(new File(listeGroupesFichier));
 					
 				}
-				
 				for (Groupe groupe : SiteDoris.getListeGroupes(contenuFichierHtml)){
 					
 					dbContext.groupeDao.create(groupe);
@@ -242,7 +241,9 @@ public class PrefetchDorisWebSite {
 					contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
 	
 				}
-				for (Fiche fiche : SiteDoris.getListeFiches(contenuFichierHtml)){
+				List<Fiche> listFicheFromHTML = SiteDoris.getListeFiches(contenuFichierHtml);
+				log.info("Creation de "+listFicheFromHTML.size()+" fiches dans la base...");
+				for (Fiche fiche : listFicheFromHTML){
 					
 					dbContext.ficheDao.create(fiche);
 				}
@@ -257,9 +258,16 @@ public class PrefetchDorisWebSite {
 				// TODO : on vérifie qu'il faut la traiter
 				// On la télécharge (et sauvegarde le fichier original)
 				// On la traite
+
+				log.info("Mise à jours des "+listeFiches.size()+" fiches présentes dans la base...");
 				int nbFichesTraitees = 0;
 				for (Fiche fiche : listeFiches) {
 					nbFichesTraitees += 1;
+					
+					if (  (nbFichesTraitees % 50) == 0) {
+						log.info("fiche traitées = "+nbFichesTraitees+", pause de 5s...");
+						Thread.sleep(1000);
+					}
 					if (  nbFichesTraitees <= nbMaxFichesTraitees ) {
 						// TODO : Ne pas traiter dans certain cas
 						
@@ -296,29 +304,36 @@ public class PrefetchDorisWebSite {
 						
 						String urlListePhotos = "http://doris.ffessm.fr/fiche_photo_liste_apercu.asp?fiche_numero="+fiche.getNumeroFiche();
 						String fichierLocalListePhotos = DOSSIER_BASE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+"_listePhotos.html";
+						String contenuFichierHtmlListePhotos = null;
 						if (! action.equals("NODWNLD")) {
 							if (Outils.getFichierUrl(urlListePhotos, fichierLocalListePhotos)) {
-								contenuFichierHtml = Outils.getFichier(new File(fichierLocalListePhotos));
+								contenuFichierHtmlListePhotos = Outils.getFichier(new File(fichierLocalListePhotos));
 							
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
-								continue;
+								//continue;
 							}
 						} else {
-							contenuFichierHtml = Outils.getFichier(new File(fichierLocalListePhotos));
+							contenuFichierHtmlListePhotos = Outils.getFichier(new File(fichierLocalListePhotos));
 							
 						}
-						// TODO update liste photos for fiche
-						List<PhotoFiche> listePhotoFiche = SiteDoris.getListePhotosFiche(fiche, contenuFichierHtml);
-						for (PhotoFiche photoFiche : listePhotoFiche){
-							photoFiche.setFiche(fiche);
-							dbContext.photoFicheDao.create(photoFiche);
-							//fiche.getPhotosFiche().add(photoFiche);
+						if(contenuFichierHtmlListePhotos != null){
+							// TODO update liste photos for fiche
+							List<PhotoFiche> listePhotoFiche = SiteDoris.getListePhotosFiche(fiche, contenuFichierHtmlListePhotos);
+							for (PhotoFiche photoFiche : listePhotoFiche){
+								photoFiche.setFiche(fiche);
+								dbContext.photoFicheDao.create(photoFiche);
+								//fiche.getPhotosFiche().add(photoFiche);
+							}
+							if(listePhotoFiche.size() > 0){
+								fiche.setPhotoPrincipale(listePhotoFiche.get(0));
+								dbContext.ficheDao.update(fiche);
+							}
 						}
-						if(listePhotoFiche.size() > 0){
-							fiche.setPhotoPrincipale(listePhotoFiche.get(0));
-							dbContext.ficheDao.update(fiche);
-						}
+					}
+					else{
+						log.info("Nombre max de fiches à traiter atteind.");
+						break; // ignore les fiches suivantes
 					}
 				}
 				
@@ -339,7 +354,7 @@ public class PrefetchDorisWebSite {
 			
 			
 	//	} // Fin de <> TEST
-		log.debug("doMain() - Fin");
+		log.info("doMain() - Fin");
 	}
 
 	/**

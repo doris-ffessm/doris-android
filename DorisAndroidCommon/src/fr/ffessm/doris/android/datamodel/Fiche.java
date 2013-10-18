@@ -180,10 +180,10 @@ public class Fiche {
 	
 	
 	public void getFiche(String htmlFiche, List<Groupe> listeGroupes) throws SQLException{
-		log.debug("getFiche() - Début");
+		log.trace("getFiche() - Début");
 		
     	int i;
-    	String listeLienRencontre = "";
+    	//String listeLienRencontre = "";
     	
     	htmlFiche = Outils.nettoyageBalises(htmlFiche);
     	
@@ -368,12 +368,12 @@ public class Fiche {
 						}
 						
 						// Création de la liste des Liens (url vers d'autres fiches)
-						
+						/* non utilisé dans la version android
 						for (Element elementTDA : elementTD.getAllElements(HTMLElementName.A)) {
+							String hrefValue = elementTDA.getAttributeValue("href");
+							log.debug("getFiche() - A : " + elementTDA.getRenderer().toString().trim() + " - lien : " + hrefValue);
 							
-							log.debug("getFiche() - A : " + elementTDA.getRenderer().toString().trim() + " - lien : " + elementTDA.getAttributeValue("href"));
-							
-							if (elementTDA.getAttributeValue("href").startsWith("../") || elementTDA.getAttributeValue("href").startsWith("http://doris.ffessm.fr") ) {
+							if (hrefValue != null && hrefValue.startsWith("../") || hrefValue.startsWith("http://doris.ffessm.fr") ) {
 							
 								if (elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "") != "" && elementTDA.getRenderer().toString().trim() != "") {
 								
@@ -389,7 +389,7 @@ public class Fiche {
 									}
 								}
 							}
-						}
+						}*/
 					}
 					
 					//Recup du TD qui contient les infos DROITE (images et qui a fait la fiche)
@@ -653,7 +653,7 @@ public class Fiche {
 		
 		listeElementsTable_TABLE = null;
 		
-    	log.debug("getFiche() - Fin");
+    	log.trace("getFiche() - Fin");
 	}
 	
 	
@@ -664,14 +664,14 @@ public class Fiche {
 		public boolean affiche;
 		
 		public Detail(String inTitre, String inContenu, boolean inAffiche) {
-			log.debug("Detail() - Début");
+			log.trace("Detail() - Début");
 			log.debug("Detail() - Titre : " + inTitre);
 			log.debug("Detail() - Contenu : " + inContenu);
 			log.debug("Detail() - Affiche : " + inAffiche);
 			titre = inTitre;
 			contenu = inContenu;
 			affiche = inAffiche;
-			log.debug("Detail() - Fin");
+			log.trace("Detail() - Fin");
 		}
 	}
 	

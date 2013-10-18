@@ -75,7 +75,7 @@ public class Outils {
 	public static Log log = LogFactory.getLog(Outils.class);
     
     public static boolean getFichierUrl(String inUrl, String inFichierRetour) {
-    	log.debug("getFichierUrl()- Début");
+    	log.trace("getFichierUrl()- Début");
     	log.debug("getFichierUrl()- url : " + inUrl);
     	log.debug("getFichierUrl()- Fichier Retourné : " + inFichierRetour);
     	
@@ -112,9 +112,9 @@ public class Outils {
         finally
         {
             try
-            {
-            	fichierUrl.close();
-                flux.close();
+            {  	
+            	if(fichierUrl!=null) fichierUrl.close();            	
+            	if(flux!=null)  flux.close();
             }
             catch (IOException e)
             {
@@ -125,12 +125,12 @@ public class Outils {
         }
     	
     	
-    	log.debug("getFichierUrl()- Fin");
+    	log.trace("getFichierUrl()- Fin");
     	return true;
     }
     
 	public static String getFichier(File inFichier) {
-    	log.debug("getFichier()- Début");
+    	log.trace("getFichier()- Début");
     	log.debug("getFichier()- htmlFiche : " + inFichier);
     	
     	FileInputStream objFile = null;
@@ -149,7 +149,7 @@ public class Outils {
 				try {
 					objFile.close();
 					
-					log.debug("getFichier()- Fin");
+					log.trace("getFichier()- Fin");
 			    	return (objBuffer.toString());
 			    	
 				} catch (IOException e) {
@@ -168,7 +168,7 @@ public class Outils {
 			e.printStackTrace();
 		}
 		log.error("Erreur lors de la lecture du fichier : " + inFichier);
-     	log.debug("getFichier()- Fin");
+     	log.trace("getFichier()- Fin");
 		return null;
 	}
 
@@ -177,7 +177,7 @@ public class Outils {
      * ciblePage permet de supprimer tout le superflu de la page HTML
      ********************************************************************* */
     public static String ciblePage(String inCodeHtml, String inTypePage) throws IOException{
-    	log.debug("ciblePage() - Début");
+    	log.trace("ciblePage() - Début");
     	log.debug("ciblePage() - codeHtml : " + inCodeHtml.substring(0, Math.min(50, inCodeHtml.length())));
     	log.debug("ciblePage() - inTypePage : " + inTypePage);
     			
@@ -231,13 +231,13 @@ public class Outils {
 			log.debug("ciblePage() - tableResultats : "+tableResultats.toString().substring(0, Math.min(50, tableResultats.toString().length())));
 			log.debug("ciblePage() - tableResultats : ...");
 			log.debug("ciblePage() - tableResultats : "+tableResultats.toString().substring(Math.max(0, tableResultats.toString().length()-50), tableResultats.toString().length() ));
-			log.debug("ciblePage() - Fin");
+			log.trace("ciblePage() - Fin");
 		
 			return tableResultats.toString();
 		
 		} else {
 			log.warn("ciblePage() - tableResultats == null");
-			log.debug("ciblePage() - Fin");
+			log.trace("ciblePage() - Fin");
 			
 			return null;
 		}
@@ -245,7 +245,7 @@ public class Outils {
 
 	
     public static String nettoyageCaracteres(String texteANettoye) {
-    	log.debug("nettoyageCaracteres() - Début");
+    	log.trace("nettoyageCaracteres() - Début");
     	log.debug("nettoyageCaracteres() - texteANettoye : " + texteANettoye);
 		String texteNettoye = texteANettoye;
 		
@@ -261,7 +261,7 @@ public class Outils {
 				
 		log.debug("nettoyageCaracteres() - texteNettoye : " + texteNettoye);
 		
-		log.debug("nettoyageCaracteres() - Fin");
+		log.trace("nettoyageCaracteres() - Fin");
 		return texteNettoye;
 	}
 

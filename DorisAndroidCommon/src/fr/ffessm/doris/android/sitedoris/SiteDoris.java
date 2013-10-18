@@ -64,7 +64,7 @@ public class SiteDoris {
 
     
     public static List<Fiche> getListeFiches(String inCodePageHtml) {
-    	log.debug("getListeFiches()- Début");
+    	log.trace("getListeFiches()- Début");
     	
     	List<Fiche> listeFiches = new ArrayList<Fiche>(0);
     	
@@ -109,14 +109,14 @@ public class SiteDoris {
 			}
 			
 		}
-		log.debug("getListeFiches()- Fin");
+		log.trace("getListeFiches()- Fin");
 		return listeFiches;
     }
 	
 	
     
     public static List<Groupe> getListeGroupes(String inCodePageHtml){
-    	log.debug("getGroupes() - Début");
+    	log.trace("getGroupes() - Début");
     	
     	List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
     	
@@ -267,12 +267,12 @@ public class SiteDoris {
 				}
 			}
 		}
-		log.debug("getGroupes() - Fin");
+		log.trace("getGroupes() - Fin");
 		return listeGroupes;
     }
 
     public static Groupe getGroupeFromListeGroupes(List<Groupe> listeGroupes, int numGroupe, int numSousGroupe){
-    	log.debug("getGroupeFromListeGroupes() - Début");
+    	log.trace("getGroupeFromListeGroupes() - Début");
     	log.debug("getGroupeFromListeGroupes() - numGroupe : "+numGroupe);
     	log.debug("getGroupeFromListeGroupes() - numSousGroupe : "+numSousGroupe);
     	
@@ -286,7 +286,7 @@ public class SiteDoris {
     	
     		if ( groupe.getNumeroGroupe() == numGroupe && ( numSousGroupe == 0 || groupe.getNumeroSousGroupe() == numSousGroupe) ) {
     			log.debug("getGroupeFromListeGroupes() - Groupe Trouvé : "+groupe.getId()+" - "+groupe.getNomGroupe());
-    			log.debug("getGroupeFromListeGroupes() - Fin");
+    			log.trace("getGroupeFromListeGroupes() - Fin");
     			return groupe;
     		}
     		
@@ -300,7 +300,7 @@ public class SiteDoris {
 
 	public static List<PhotoFiche> getListePhotosFiche(Fiche fiche,
 			String inCodePageHtml) {
-		log.debug("getListePhotosFiche()- Début");
+		log.trace("getListePhotosFiche()- Début");
     	
     	List<PhotoFiche> listePhotosFiche = new ArrayList<PhotoFiche>(0);
     	
@@ -334,14 +334,21 @@ public class SiteDoris {
     		if(elementTD.getAttributeValue("class").equals("liste1")){
     			// c'est l'image
     			Element elementIMG = elementTD.getFirstElement(HTMLElementName.IMG);
-    			String cleURL = elementIMG.getAttributeValue("src");
-    			cleURL = cleURL.substring(cleURL.lastIndexOf("/"), cleURL.length()); // garde seulement le nom du fichier
-    			PhotoFiche photoFiche = new PhotoFiche(cleURL,titrePhotoCourante, descritionPhotoCourante);
-  				
-    			listePhotosFiche.add(photoFiche);
-    			
-    			titrePhotoCourante = null;
-    			descritionPhotoCourante = null;
+    			if(elementIMG != null){
+	    			String cleURL = elementIMG.getAttributeValue("src");
+	    			cleURL = cleURL.substring(cleURL.lastIndexOf("/"), cleURL.length()); // garde seulement le nom du fichier
+	    			PhotoFiche photoFiche = new PhotoFiche(cleURL,titrePhotoCourante, descritionPhotoCourante);
+	  				
+	    			listePhotosFiche.add(photoFiche);
+	    			
+	    			titrePhotoCourante = null;
+	    			descritionPhotoCourante = null;
+    			}
+    			else{
+    				log.warn("getListePhotosFiche() - ignore photo incorrecte pour la fiche "+fiche.getNumeroFiche());
+    				// ignore l'image si image manquante
+    				continue;
+    			}
     		}
     	}
 		return listePhotosFiche;
