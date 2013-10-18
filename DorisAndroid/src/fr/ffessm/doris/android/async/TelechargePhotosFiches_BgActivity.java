@@ -146,15 +146,15 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     			publishProgress(nbPhotoRetreived);
     			// laisse un peu de temps entre chaque téléchargement 
                 Thread.sleep(10);
-                // notify les listener toutes les 5 photos
-                if(((nbPhotoRetreived % 5) == 0) && listener != null){
+                // notify les listener toutes les 10 photos
+                if(((nbPhotoRetreived % 10) == 0) && listener != null){
             		listener.dataHasChanged(null);
             	}
     		} catch (InterruptedException e) {
     			Log.i(LOG_TAG, e.getMessage(), e);
             } catch (IOException e) {
-    			Log.i(LOG_TAG, "Error while downloading, stopping for this time. "+e.getMessage(), e);
-    			break;
+    			Log.i(LOG_TAG, "Erreur de téléchargement de "+e.getMessage(), e);
+    			continue;
 			}
     		// DEBUG arret avant la fin
     		if(nbPhotoRetreived > 10 && PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_id_limit_download), true)) {
