@@ -57,7 +57,7 @@ import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports InitialisationApplication_BgActivity
 import android.widget.Toast;
-import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
+import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
 // End of user code
 
@@ -70,7 +70,7 @@ public class InitialisationApplication_BgActivity  extends AsyncTask<String,Inte
     private Context context;
     
     // Start of user code additional attribute declarations InitialisationApplication_BgActivity
-    public InitialisationApplication_BgActivity(Context context, OrmLiteDBHelper dbHelper, Accueil_CustomViewActivity accueil_CustomViewActivity){
+    public InitialisationApplication_BgActivity(Context context, OrmLiteDBHelper dbHelper, DataChangedListener accueil_CustomViewActivity){
     	String initialTickerText = context.getString(R.string.initialisationapplication_bg_initialTickerText);
 		String notificationTitle = context.getString(R.string.initialisationapplication_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
@@ -128,15 +128,15 @@ public class InitialisationApplication_BgActivity  extends AsyncTask<String,Inte
         mNotificationHelper.completed();
 		// Start of user code InitialisationApplication onPostExecute
         if(accueil_CustomViewActivity != null){
-        	accueil_CustomViewActivity.refreshScreenData();
-        	Toast.makeText(accueil_CustomViewActivity, "Base initialisée avec les données prédéfinies", Toast.LENGTH_LONG).show();
+        	accueil_CustomViewActivity.dataHasChanged("Base initialisée avec les données prédéfinies");
+        	//Toast.makeText(accueil_CustomViewActivity.getContext(), "Base initialisée avec les données prédéfinies", Toast.LENGTH_LONG).show();
         }
 		// End of user code
     }
 
     // Start of user code additional operations InitialisationApplication_BgActivity
 
-    private Accueil_CustomViewActivity accueil_CustomViewActivity = null;
+    private DataChangedListener accueil_CustomViewActivity = null;
 	// End of user code
 	
 }

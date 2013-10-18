@@ -62,7 +62,10 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 //Start of user code additional imports RechercheGuidee_CustomViewActivity
 //End of user code
-public class RechercheGuidee_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>{
+public class RechercheGuidee_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
+//Start of user code additional implements RechercheGuidee_CustomViewActivity
+//End of user code
+{
 	
 	//Start of user code constants RechercheGuidee_CustomViewActivity
 	//End of user code

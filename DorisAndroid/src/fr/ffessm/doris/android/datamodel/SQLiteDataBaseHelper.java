@@ -61,6 +61,7 @@ public class SQLiteDataBaseHelper extends SQLiteOpenHelper {
 			// the default system path
 			// of your application so we are gonna be able to overwrite that
 			// database with our database.
+			// Attention genere des log d'erreur, mais pas grave ;-)
 			this.getReadableDatabase();
 
 			try {

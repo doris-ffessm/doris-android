@@ -62,22 +62,32 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import android.preference.PreferenceManager;
 //Start of user code additional imports Accueil_CustomViewActivity
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import fr.ffessm.doris.android.async.InitialisationApplication_BgActivity;
 import fr.ffessm.doris.android.async.TelechargeFiches_BgActivity;
 import fr.ffessm.doris.android.async.TelechargePhotosFiches_BgActivity;
 import fr.ffessm.doris.android.async.VerifieNouvellesFiches_BgActivity;
+import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.tools.Outils;
 //End of user code
-public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>{
+public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
+//Start of user code additional implements Accueil_CustomViewActivity
+	implements DataChangedListener
+//End of user code
+{
 	
 	//Start of user code constants Accueil_CustomViewActivity
-	static final int TELECHARGE_FICHE_MENU_ID = 1;	
+//	static final int TELECHARGE_FICHE_MENU_ID = 1;	
 	static final int TELECHARGE_PHOTO_FICHES_MENU_ID = 2;
-	static final int VERIFIE_MAJ_FICHES_MENU_ID = 3;
-	static final int VERIFIE_NOUVELLES_FICHES_MENU_ID = 4;
-	static final int RESET_DB_FROM_XML_MENU_ID = 5;
+//	static final int VERIFIE_MAJ_FICHES_MENU_ID = 3;
+//	static final int VERIFIE_NOUVELLES_FICHES_MENU_ID = 4;
+//	static final int RESET_DB_FROM_XML_MENU_ID = 5;
+	
+	Handler mHandler;
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -87,12 +97,31 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 			PreferenceManager.setDefaultValues(this, R.xml.preference, false);
         setContentView(R.layout.accueil_customview);
         //Start of user code onCreate Accueil_CustomViewActivity
-		// si pas de fiche alors il faut initialiser la base à partir du prefetched_DB
+	/*	// si pas de fiche alors il faut initialiser la base à partir du prefetched_DB
 		RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
     	if(ficheDao.countOf() == 0){
     		new InitialisationApplication_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+    		
     		showToast("Veuillez patienter que la base de donnée s'initialise.");
-		}
+		}*/
+        
+        // Defines a Handler object that's attached to the UI thread
+        mHandler = new Handler(Looper.getMainLooper()) {
+        	/*
+             * handleMessage() defines the operations to perform when
+             * the Handler receives a new Message to process.
+             */
+            @Override
+            public void handleMessage(Message inputMessage) {
+            	
+            	if(inputMessage.obj != null ){
+            		showToast((String) inputMessage.obj);
+            	}
+            	refreshScreenData();
+            }
+
+        };
+        
 		//End of user code
     }
     
@@ -105,17 +134,24 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	}
     //Start of user code additional code Accueil_CustomViewActivity
 	public void onClickBtnListeFiches(View view){
-		//showToast("sample button pressed. \nPlease customize ;-)");
 		startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
     }
 	
-	public void reinitializeDBFromPrefetched(){
+	/*public void reinitializeDBFromPrefetched(){
 		//XMLHelper.loadDBFromXMLFile(getHelper().getDorisDBHelper(), this.getResources().openRawResource(R.raw.prefetched_db));
 
 		new InitialisationApplication_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
 		showToast("Veuillez patienter que la base de donnée s'initialise.");
 		
-    }
+    }*/
+	
+	public void dataHasChanged(String textmessage){
+		 Message completeMessage = mHandler.obtainMessage(1, textmessage);
+         completeMessage.sendToTarget();
+	}
+	public Context getContext(){
+		return this;
+	}
 	
 	//End of user code
 
@@ -141,10 +177,10 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
 
 		//Start of user code additional onCreateOptionsMenu Accueil_CustomViewActivity
-		menu.add(Menu.NONE, TELECHARGE_FICHE_MENU_ID, 1, R.string.telecharge_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
+	//	menu.add(Menu.NONE, TELECHARGE_FICHE_MENU_ID, 1, R.string.telecharge_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
 		menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.telecharge_photofiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
-        menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 4, R.string.verifie_nouvelles_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
-        menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 5, R.string.reinitialise_a_partir_du_xml_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
+    //    menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 4, R.string.verifie_nouvelles_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
+    //    menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 5, R.string.reinitialise_a_partir_du_xml_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
@@ -159,18 +195,18 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		            return true;
 		
 		//Start of user code additional menu action Accueil_CustomViewActivity
-			case TELECHARGE_FICHE_MENU_ID:
+		/*	case TELECHARGE_FICHE_MENU_ID:
 				new TelechargeFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
-				break;
+				break; */
 			case TELECHARGE_PHOTO_FICHES_MENU_ID:
-				new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+				new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
 				break;
-			case VERIFIE_NOUVELLES_FICHES_MENU_ID:
+		/*	case VERIFIE_NOUVELLES_FICHES_MENU_ID:
 				new VerifieNouvellesFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 				break;
 			case RESET_DB_FROM_XML_MENU_ID:
 				reinitializeDBFromPrefetched();
-				break;
+				break; */
 		//End of user code
         }
         return false;

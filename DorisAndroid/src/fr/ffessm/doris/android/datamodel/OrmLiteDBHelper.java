@@ -105,7 +105,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	@Override
 	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
 	// Start of user code OrmLiteDBHelper onCreate DorisAndroid
-		try {
+	/*	try {
 			Log.i(OrmLiteDBHelper.class.getName(), "onCreate");
 			TableUtils.createTable(connectionSource, Fiche.class);
 			TableUtils.createTable(connectionSource, AutreDenomination.class);
@@ -120,7 +120,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 			Log.e(OrmLiteDBHelper.class.getName(), "Can't create database", e);
 			throw new RuntimeException(e);
 		}
-
+		*/
 		// here we try inserting data in the on-create as a test
 		/*RuntimeExceptionDao<DiveEntry, Integer> dao = getSimpleDataDao();
 		long millis = System.currentTimeMillis();

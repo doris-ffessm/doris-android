@@ -60,6 +60,7 @@ import java.util.ArrayList;
 
 import android.preference.PreferenceManager;
 
+import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
@@ -75,6 +76,17 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     private Context context;
     
     // Start of user code additional attribute declarations TelechargePhotosFiches_BgActivity
+    
+    protected DataChangedListener listener;
+    
+    public TelechargePhotosFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper, DataChangedListener listener){
+		String initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
+		String notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
+        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
+        this.dbHelper = dbHelper;
+		this.context = context;
+		this.listener = listener;
+    }
 	// End of user code
     
 	/** constructor */
@@ -98,7 +110,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		// Start of user code initialization of the task TelechargePhotosFiches_BgActivity
 		// do the initialization of the task here
     	
-    	int nbPhotoToRetreive = 0;
+    	
     	List<Fiche> listeFiches = dbHelper.getFicheDao().queryForAll();
     	List<PhotoFiche> listePhotosATraiter = new ArrayList<PhotoFiche>();
     	// en priorité toutes les photos principales (pour les vignettes)
@@ -134,6 +146,10 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     			publishProgress(nbPhotoRetreived);
     			// laisse un peu de temps entre chaque téléchargement 
                 Thread.sleep(10);
+                // notify les listener toutes les 5 photos
+                if(((nbPhotoRetreived % 5) == 0) && listener != null){
+            		listener.dataHasChanged(null);
+            	}
     		} catch (InterruptedException e) {
     			Log.i(LOG_TAG, e.getMessage(), e);
             } catch (IOException e) {
@@ -149,6 +165,9 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		// End of user code
         
 		// Start of user code end of task TelechargePhotosFiches_BgActivity
+    	if(listener != null && nbPhotoRetreived != 0){
+    		listener.dataHasChanged(null);
+    	}
 		// return the number of item processed
         return nbPhotoRetreived;
 		// End of user code
