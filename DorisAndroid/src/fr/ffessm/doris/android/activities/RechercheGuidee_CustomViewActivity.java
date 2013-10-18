@@ -60,11 +60,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-//Start of user code additional imports
+//Start of user code additional imports RechercheGuidee_CustomViewActivity
 //End of user code
 public class RechercheGuidee_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>{
 	
-	//Start of user code constants
+	//Start of user code constants RechercheGuidee_CustomViewActivity
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -72,7 +72,7 @@ public class RechercheGuidee_CustomViewActivity extends OrmLiteBaseActivity<OrmL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rechercheguidee_customview);
-        //Start of user code onCreate
+        //Start of user code onCreate RechercheGuidee_CustomViewActivity
 		//End of user code
     }
     
@@ -80,10 +80,10 @@ public class RechercheGuidee_CustomViewActivity extends OrmLiteBaseActivity<OrmL
 	protected void onResume() {
 		super.onResume();
 		refreshScreenData();
-		//Start of user code onResume
+		//Start of user code onResume RechercheGuidee_CustomViewActivity
 		//End of user code
 	}
-    //Start of user code additional code
+    //Start of user code additional code RechercheGuidee_CustomViewActivity
 	public void onClickBtnSample(View view){
 		showToast("sample button pressed. \nPlease customize ;-)");
     }
@@ -92,7 +92,7 @@ public class RechercheGuidee_CustomViewActivity extends OrmLiteBaseActivity<OrmL
     /** refresh screen from data 
      */
     public void refreshScreenData() {
-    	//Start of user code action when refreshing the screen
+    	//Start of user code action when refreshing the screen RechercheGuidee_CustomViewActivity
 		//End of user code
 	}
 
@@ -101,7 +101,7 @@ public class RechercheGuidee_CustomViewActivity extends OrmLiteBaseActivity<OrmL
 		// add options in the menu
 		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
 
-		//Start of user code additional onCreateOptionsMenu
+		//Start of user code additional onCreateOptionsMenu RechercheGuidee_CustomViewActivity
 
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -116,7 +116,7 @@ public class RechercheGuidee_CustomViewActivity extends OrmLiteBaseActivity<OrmL
 		            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
 		            return true;
 		
-		//Start of user code additional menu action
+		//Start of user code additional menu action RechercheGuidee_CustomViewActivity
 
 		//End of user code
         }

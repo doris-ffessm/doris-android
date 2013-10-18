@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Resource Strings specific to accueil Custom View -->
 <resources>	
-	<!--Start of user code customView_stringsaccueil
+	<!-- Start of user code customView_strings accueil
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
 	<string name="accueil_customview_listefiches_btn_label">Toutes les fiches</string>
@@ -9,6 +9,6 @@
 	<string name="telecharge_photofiches_menu_option">Télécharge photos des fiches</string>
 	<string name="verifie_nouvelles_fiches_menu_option">Cherche nouvelles fiches</string>
 	<string name="reinitialise_a_partir_du_xml_menu_option">Réinitialise Base</string>
-	<!--End of user code
+	<!-- End of user code
 	-->
 </resources>

@@ -55,7 +55,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
-// Start of user code additional imports
+// Start of user code additional imports InitialisationApplication_BgActivity
 import android.widget.Toast;
 import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
 import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
@@ -69,7 +69,7 @@ public class InitialisationApplication_BgActivity  extends AsyncTask<String,Inte
     private OrmLiteDBHelper dbHelper;
     private Context context;
     
-    // Start of user code additional attribute declarations
+    // Start of user code additional attribute declarations InitialisationApplication_BgActivity
     public InitialisationApplication_BgActivity(Context context, OrmLiteDBHelper dbHelper, Accueil_CustomViewActivity accueil_CustomViewActivity){
     	String initialTickerText = context.getString(R.string.initialisationapplication_bg_initialTickerText);
 		String notificationTitle = context.getString(R.string.initialisationapplication_bg_notificationTitle);
@@ -79,7 +79,7 @@ public class InitialisationApplication_BgActivity  extends AsyncTask<String,Inte
 		this.accueil_CustomViewActivity = accueil_CustomViewActivity;
 		
     }
-	// End of user code
+    // End of user code
     
 	/** constructor */
     public InitialisationApplication_BgActivity(Context context, OrmLiteDBHelper dbHelper){
@@ -99,13 +99,13 @@ public class InitialisationApplication_BgActivity  extends AsyncTask<String,Inte
     protected Integer doInBackground(String... arg0) {
     	
 
-		// Start of user code initialization of the task
+		// Start of user code initialization of the task InitialisationApplication_BgActivity
 		// do the initializatio of the task here
 		// once done, you should indicates to the notificationHelper how many item will be processed
 		//mNotificationHelper.setMaxNbPages(maxNbPages.toString());
 		// End of user code
     	
-    	// Start of user code main loop of task
+    	// Start of user code main loop of task InitialisationApplication_BgActivity
 		// This is where we would do the actual job
 		// you should indicates the progression using publishProgress()
     //	XMLHelper.loadDBFromXMLFile(dbHelper.getDorisDBHelper(), context.getResources().openRawResource(R.raw.prefetched_db));
@@ -113,7 +113,7 @@ public class InitialisationApplication_BgActivity  extends AsyncTask<String,Inte
         publishProgress(1);
 		// End of user code
         
-		// Start of user code end of task
+		// Start of user code end of task InitialisationApplication_BgActivity
 		// return the number of item processed
         return 1;
 		// End of user code
@@ -134,11 +134,9 @@ public class InitialisationApplication_BgActivity  extends AsyncTask<String,Inte
 		// End of user code
     }
 
-    
-    // Start of user code additional operations
-	
+    // Start of user code additional operations InitialisationApplication_BgActivity
+
     private Accueil_CustomViewActivity accueil_CustomViewActivity = null;
 	// End of user code
-    
 	
 }

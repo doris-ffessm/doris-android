@@ -55,7 +55,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
-// Start of user code additional imports
+// Start of user code additional imports TelechargePhotosFiches_BgActivity
 import java.util.ArrayList;
 
 import android.preference.PreferenceManager;
@@ -74,8 +74,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     private OrmLiteDBHelper dbHelper;
     private Context context;
     
-    // Start of user code additional attribute declarations
-    
+    // Start of user code additional attribute declarations TelechargePhotosFiches_BgActivity
 	// End of user code
     
 	/** constructor */
@@ -96,7 +95,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     protected Integer doInBackground(String... arg0) {
     	
 
-		// Start of user code initialization of the task
+		// Start of user code initialization of the task TelechargePhotosFiches_BgActivity
 		// do the initialization of the task here
     	
     	int nbPhotoToRetreive = 0;
@@ -121,7 +120,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		mNotificationHelper.setMaxItemToProcess(""+listePhotosATraiter.size());
 		// End of user code
     	
-    	// Start of user code main loop of task
+    	// Start of user code main loop of task TelechargePhotosFiches_BgActivity
 		// This is where we would do the actual job
 		// you should indicates the progression using publishProgress()
     	int nbPhotoRetreived = 0;
@@ -149,7 +148,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		}
 		// End of user code
         
-		// Start of user code end of task
+		// Start of user code end of task TelechargePhotosFiches_BgActivity
 		// return the number of item processed
         return nbPhotoRetreived;
 		// End of user code
@@ -166,10 +165,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		// End of user code
     }
 
-    
-    // Start of user code additional operations
+    // Start of user code additional operations TelechargePhotosFiches_BgActivity
 	
 	// End of user code
-    
 	
 }

@@ -61,7 +61,7 @@ import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import android.preference.PreferenceManager;
-//Start of user code additional imports
+//Start of user code additional imports Accueil_CustomViewActivity
 import fr.ffessm.doris.android.async.InitialisationApplication_BgActivity;
 import fr.ffessm.doris.android.async.TelechargeFiches_BgActivity;
 import fr.ffessm.doris.android.async.TelechargePhotosFiches_BgActivity;
@@ -72,7 +72,7 @@ import fr.ffessm.doris.android.tools.Outils;
 //End of user code
 public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>{
 	
-	//Start of user code constants
+	//Start of user code constants Accueil_CustomViewActivity
 	static final int TELECHARGE_FICHE_MENU_ID = 1;	
 	static final int TELECHARGE_PHOTO_FICHES_MENU_ID = 2;
 	static final int VERIFIE_MAJ_FICHES_MENU_ID = 3;
@@ -86,7 +86,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         super.onCreate(savedInstanceState);
 			PreferenceManager.setDefaultValues(this, R.xml.preference, false);
         setContentView(R.layout.accueil_customview);
-        //Start of user code onCreate
+        //Start of user code onCreate Accueil_CustomViewActivity
 		// si pas de fiche alors il faut initialiser la base à partir du prefetched_DB
 		RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
     	if(ficheDao.countOf() == 0){
@@ -100,10 +100,10 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	protected void onResume() {
 		super.onResume();
 		refreshScreenData();
-		//Start of user code onResume
+		//Start of user code onResume Accueil_CustomViewActivity
 		//End of user code
 	}
-    //Start of user code additional code
+    //Start of user code additional code Accueil_CustomViewActivity
 	public void onClickBtnListeFiches(View view){
 		//showToast("sample button pressed. \nPlease customize ;-)");
 		startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
@@ -122,7 +122,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     /** refresh screen from data 
      */
     public void refreshScreenData() {
-    	//Start of user code action when refreshing the screen
+    	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
     	StringBuffer sb = new StringBuffer();
     	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
     	sb.append("Nombres de fiches dans la base local: "+ficheDao.countOf());
@@ -140,7 +140,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		// add options in the menu
 		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
 
-		//Start of user code additional onCreateOptionsMenu
+		//Start of user code additional onCreateOptionsMenu Accueil_CustomViewActivity
 		menu.add(Menu.NONE, TELECHARGE_FICHE_MENU_ID, 1, R.string.telecharge_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
 		menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.telecharge_photofiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
         menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 4, R.string.verifie_nouvelles_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
@@ -158,7 +158,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
 		            return true;
 		
-		//Start of user code additional menu action
+		//Start of user code additional menu action Accueil_CustomViewActivity
 			case TELECHARGE_FICHE_MENU_ID:
 				new TelechargeFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 				break;

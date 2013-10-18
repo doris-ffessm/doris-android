@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <!--Start of user code protected
+    <!--Start of user code protected PreferenceViewActivity preference
 		-->
-	<PreferenceCategory
+		<PreferenceCategory
 	        android:title="@string/sync_preference_category"
 	        android:key="sync_category">
 	         

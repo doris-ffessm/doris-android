@@ -55,7 +55,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
-// Start of user code additional imports
+// Start of user code additional imports TelechargeFiches_BgActivity
 import fr.ffessm.doris.android.datamodel.Fiche;
 // End of user code
 
@@ -67,7 +67,7 @@ public class TelechargeFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     private OrmLiteDBHelper dbHelper;
     private Context context;
     
-    // Start of user code additional attribute declarations
+    // Start of user code additional attribute declarations TelechargeFiches_BgActivity
 	// End of user code
     
 	/** constructor */
@@ -88,13 +88,13 @@ public class TelechargeFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     protected Integer doInBackground(String... arg0) {
     	
 
-		// Start of user code initialization of the task
+		// Start of user code initialization of the task TelechargeFiches_BgActivity
 		// do the initializatio of the task here
 		// once done, you should indicates to the notificationHelper how many item will be processed
 		//mNotificationHelper.setMaxNbPages(maxNbPages.toString());
 		// End of user code
     	
-    	// Start of user code main loop of task
+    	// Start of user code main loop of task TelechargeFiches_BgActivity
 		// This is where we would do the actual job
 		// you should indicates the progression using publishProgress()
 		for (int i=10;i<=100;i += 10)
@@ -123,7 +123,7 @@ public class TelechargeFiches_BgActivity  extends AsyncTask<String,Integer, Inte
             }
 		// End of user code
         
-		// Start of user code end of task
+		// Start of user code end of task TelechargeFiches_BgActivity
 		// return the number of item processed
         return 100;
 		// End of user code
@@ -140,10 +140,8 @@ public class TelechargeFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		// End of user code
     }
 
-    
-    // Start of user code additional operations
+    // Start of user code additional operations TelechargeFiches_BgActivity
 	
 	// End of user code
-    
 	
 }
