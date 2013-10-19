@@ -8,12 +8,14 @@
 	
 <!--End of user code
 -->
-    <ScrollView 
+
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical" >
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
@@ -31,11 +33,52 @@
                 android:src="@drawable/ic_launcher" >
             </ImageView>
 
+            <TableLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" >
+
+				<TableRow
+				    android:layout_width="fill_parent"
+				    android:layout_height="wrap_content" >
+
+		            <TextView
+		                android:id="@+id/detailsfiche_elementview_nomcommun"
+		                android:layout_width="match_parent"
+		                android:layout_marginRight="3dip"
+		                android:gravity="left"
+		                android:padding="3dip" />
+
+		            <TextView
+			            android:id="@+id/detailsfiche_elementview_numerofiche"
+			            android:gravity="right"
+			            android:padding="3dip" />
+		        </TableRow>
+
+		        <TableRow
+		            android:layout_width="fill_parent"
+		            android:layout_height="wrap_content" >
+
+		            <TextView
+		                android:id="@+id/detailsfiche_elementview_nomscientifique"
+		                android:layout_width="match_parent"
+		                android:layout_marginRight="3dip"
+		                android:gravity="left"
+		                android:padding="3dip"
+		                android:textStyle="italic" />
+
+		            <TextView
+			            android:id="@+id/detailsfiche_elementview_etatfiche"
+			            android:gravity="right"
+			            android:padding="3dip" />
+            	 </TableRow>
+		    </TableLayout>
+            
             <TextView
                 android:id="@+id/detailsfiche_elementview_debug_text"
-                android:padding="3dip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="3dip" />
+
             <TableLayout
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content" >
@@ -43,62 +86,17 @@
 		            android:layout_width="wrap_content"
 		            android:layout_height="wrap_content" >
 		            <TextView
-			            android:text="@string/detailsfiche_elementview_nomscientifique_label"
-			            android:padding="3dip" />
-			        <TextView
-			            android:id="@+id/detailsfiche_elementview_nomscientifique"
-			            android:gravity="right"
-			            android:padding="3dip" />
-		        </TableRow>
-				<TableRow
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content" >
-		            <TextView
-			            android:text="@string/detailsfiche_elementview_nomcommun_label"
-			            android:padding="3dip" />
-			        <TextView
-			            android:id="@+id/detailsfiche_elementview_nomcommun"
-			            android:gravity="right"
-			            android:padding="3dip" />
-		        </TableRow>
-				<TableRow
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content" >
-		            <TextView
-			            android:text="@string/detailsfiche_elementview_numerofiche_label"
-			            android:padding="3dip" />
-			        <TextView
-			            android:id="@+id/detailsfiche_elementview_numerofiche"
-			            android:gravity="right"
-			            android:padding="3dip" />
-		        </TableRow>
-				<TableRow
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content" >
-		            <TextView
-			            android:text="@string/detailsfiche_elementview_etatfiche_label"
-			            android:padding="3dip" />
-			        <TextView
-			            android:id="@+id/detailsfiche_elementview_etatfiche"
-			            android:gravity="right"
-			            android:padding="3dip" />
-		        </TableRow>
-				<TableRow
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content" >
-		            <TextView
 			            android:text="@string/detailsfiche_elementview_datecreation_label"
+			            android:gravity="left"
 			            android:padding="3dip" />
 			        <TextView
 			            android:id="@+id/detailsfiche_elementview_datecreation"
-			            android:gravity="right"
+			            android:gravity="left"
 			            android:padding="3dip" />
-		        </TableRow>
-				<TableRow
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content" >
+		        
 		            <TextView
 			            android:text="@string/detailsfiche_elementview_datemodification_label"
+			            android:gravity="left"
 			            android:padding="3dip" />
 			        <TextView
 			            android:id="@+id/detailsfiche_elementview_datemodification"

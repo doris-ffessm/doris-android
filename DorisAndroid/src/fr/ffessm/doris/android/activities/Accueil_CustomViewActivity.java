@@ -161,10 +161,10 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
     	StringBuffer sb = new StringBuffer();
     	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
-    	sb.append("Nombres de fiches dans la base local: "+ficheDao.countOf());
+    	sb.append("Nombres de fiches dans la base locale : "+ficheDao.countOf());
     	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
-    	sb.append("\nNombres de photos référencées: "+photoFicheDao.countOf());
-    	sb.append("\n\tNombres de photos téléchargées: "+Outils.getVignetteCount(this.getApplicationContext()));
+    	sb.append("\nNombres de photos référencées : "+photoFicheDao.countOf());
+    	sb.append("\n\tNombres de photos téléchargées : "+Outils.getVignetteCount(this.getApplicationContext()));
     	double sizeInMiB = Outils.getVignettesDiskUsage(getApplicationContext())/(double)(1024.0*1024.0);
     	sb.append("\t("+String.format("%.2f", sizeInMiB)+" MiB)");
     	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());

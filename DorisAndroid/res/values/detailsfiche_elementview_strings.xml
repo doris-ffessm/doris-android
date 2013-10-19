@@ -5,8 +5,8 @@
 	<string name="detailsfiche_elementview_nomcommun_label">NomCommun : </string>
 	<string name="detailsfiche_elementview_numerofiche_label">NumeroFiche : </string>
 	<string name="detailsfiche_elementview_etatfiche_label">EtatFiche : </string>
-	<string name="detailsfiche_elementview_datecreation_label">DateCreation : </string>
-	<string name="detailsfiche_elementview_datemodification_label">DateModification : </string>
+	<string name="detailsfiche_elementview_datecreation_label">Création : </string>
+	<string name="detailsfiche_elementview_datemodification_label">Dernière modification : </string>
 	<string name="detailsfiche_elementview_nomscientifique_hint_text"></string>
 	<string name="detailsfiche_elementview_nomcommun_hint_text"></string>
 	<string name="detailsfiche_elementview_numerofiche_hint_text"></string>
