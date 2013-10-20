@@ -51,11 +51,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,7 +67,13 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_import
 import android.widget.ImageView;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import java.io.IOException;
+import fr.ffessm.doris.android.activities.view.FoldableClickListener;
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.tools.Outils;
@@ -142,9 +151,25 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 				sb.append(autreDenomination.getDenomination()+"\n");
 			}
 		}
+		
 		if(entry.getContenu() != null){
+			LinearLayout containerLayout =  (LinearLayout) findViewById(R.id.detailsfiche_sections_layout);
 			for (SectionFiche sectionFiche : entry.getContenu()) {
-				sb.append(sectionFiche.getTitre()+" :\n"+sectionFiche.getTexte()+"\n");
+				LayoutInflater inflater = (LayoutInflater) this.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	            View convertView = inflater.inflate(R.layout.detailsfiche_elementview_foldablesection, null);
+	            
+	            TextView titreText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_titre);
+	            titreText.setText(sectionFiche.getTitre());
+	            
+	            TextView contenuText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletext);
+	            contenuText.setText(sectionFiche.getTexte());
+	            
+	            ImageButton foldButton = (ImageButton)convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
+	            
+	            foldButton.setOnClickListener(new FoldableClickListener(contenuText));
+	            
+	            containerLayout.addView(convertView);
+				
 			}
 		}
 		((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setText(sb.toString());
@@ -180,6 +205,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         return false;
     }
 
+   /* public View getFoldableSectionView(){
+    	
+    }*/
+    
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+android:id/detailsfiche_elementview_foldablesection"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+	<LinearLayout 
+	    android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+	    android:orientation="horizontal"> 
+		<ImageButton
+		    android:id="@+id/detailsfiche_elementview_fold_unflod_section_imageButton"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:padding="4dip"
+		    android:src="@drawable/ic_expand"
+		    android:background="@android:color/transparent"
+		    android:contentDescription="@string/detailsfiche_elementview_fold_unflod_section_hint_text" />
+		<TextView
+	        android:id="@+id/detailsfiche_elementview_foldablesection_titre"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="16sp" >
+	    </TextView>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/detailsfiche_elementview_foldablesection_foldabletext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+    </TextView>
+</LinearLayout>

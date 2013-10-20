@@ -13,4 +13,5 @@
 	<string name="detailsfiche_elementview_etatfiche_hint_text"></string>
 	<string name="detailsfiche_elementview_datecreation_hint_text"></string>
 	<string name="detailsfiche_elementview_datemodification_hint_text"></string>
+	<string name="detailsfiche_elementview_fold_unflod_section_hint_text">Plie ou déplie texte de la section</string>
 </resources>
