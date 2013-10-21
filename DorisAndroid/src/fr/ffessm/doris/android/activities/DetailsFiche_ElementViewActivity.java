@@ -349,12 +349,12 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         Bitmap bm = Outils.getAvailableImagePhotoFiche(getBaseContext(), photoFiche);
         if(bm != null){
 	        LinearLayout layout = new LinearLayout(getApplicationContext());
-	        layout.setLayoutParams(new LayoutParams(150, 150));
+	        layout.setLayoutParams(new LayoutParams(200, 200));
 	        layout.setGravity(Gravity.CENTER);
 	        
 	        ImageView imageView = new ImageView(getApplicationContext());	        
-	        imageView.setLayoutParams(new LayoutParams(145, 145));
-	        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+	        imageView.setLayoutParams(new LayoutParams(200, 200));
+	        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 	        imageView.setImageBitmap(bm);
 	        
 	        layout.addView(imageView);
