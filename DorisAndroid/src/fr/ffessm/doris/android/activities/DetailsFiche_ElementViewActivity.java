@@ -144,8 +144,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		StringBuffer sbDebugText = new StringBuffer();
 		if(entry.getPhotoPrincipale()!=null){
 			sbDebugText.append("photoPrincipale="+entry.getPhotoPrincipale());
-			try {
-				Outils.getVignetteFile(getBaseContext(), entry.getPhotoPrincipale());
+			//try {
+				//Outils.getVignetteFile(getBaseContext(), entry.getPhotoPrincipale());
 				ImageView ivIcon = (ImageView) findViewById(R.id.detailsfiche_elementview_icon);
 		        Bitmap iconBitmap = Outils.getAvailableImagePrincipaleFiche(getBaseContext(), entry);
 		        if(iconBitmap != null){
@@ -155,10 +155,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		        	//ivIcon.setLayoutParams(new Gallery.LayoutParams(
 		            //    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 		        }
-			} catch (IOException e) {
-				Log.e(LOG_TAG, e.getMessage(), e);
-			}
-			entry.getPhotoPrincipale().getImageVignette();
+			//} catch (IOException e) {
+			//	Log.e(LOG_TAG, e.getMessage(), e);
+			//}
+			//entry.getPhotoPrincipale().getImageVignette();
 		}
 		if(entry.getPhotosFiche()!=null){
 			sbDebugText.append("\nnbPhoto="+entry.getPhotosFiche().size()+"\n");
