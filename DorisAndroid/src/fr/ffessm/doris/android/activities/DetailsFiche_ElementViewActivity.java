@@ -42,6 +42,7 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
@@ -50,6 +51,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.RelativeSizeSpan;
@@ -85,13 +89,16 @@ import java.util.Collection;
 import java.util.List;
 
 import fr.ffessm.doris.android.activities.view.FoldableClickListener;
+import fr.ffessm.doris.android.async.TelechargePhotosFiche_BgActivity;
 import fr.ffessm.doris.android.async.TelechargePhotosFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
 
-public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> {
+public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
+	implements DataChangedListener
+{
 	
 	protected int ficheId;
 	
@@ -107,7 +114,22 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         setContentView(R.layout.detailsfiche_elementview);
         ficheId = getIntent().getExtras().getInt("ficheId");
                 
-       
+        // Defines a Handler object that's attached to the UI thread
+        mHandler = new Handler(Looper.getMainLooper()) {
+        	/*
+             * handleMessage() defines the operations to perform when
+             * the Handler receives a new Message to process.
+             */
+            @Override
+            public void handleMessage(Message inputMessage) {
+            	
+            	if(inputMessage.obj != null ){
+            		showToast((String) inputMessage.obj);
+            	}
+            	refreshScreenData();
+            }
+
+        };
     }
     
     @Override
@@ -118,6 +140,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     
     boolean isOnCreate = true;
     List<FoldableClickListener> allFoldable = new ArrayList<FoldableClickListener>();
+    Handler mHandler;
     
     // attention au risque de conserver trop de donnée si appels répété à refreshScreenData ?
     private void refreshScreenData() {
@@ -149,11 +172,14 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 				ImageView ivIcon = (ImageView) findViewById(R.id.detailsfiche_elementview_icon);
 		        Bitmap iconBitmap = Outils.getAvailableImagePrincipaleFiche(getBaseContext(), entry);
 		        if(iconBitmap != null){
-		        	ivIcon.setImageBitmap(iconBitmap);        	
+		        	ivIcon.setImageBitmap(iconBitmap);    		        	
 		        	//ivIcon.setAdjustViewBounds(true);
 		        	//ivIcon.setLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT);
 		        	//ivIcon.setLayoutParams(new Gallery.LayoutParams(
 		            //    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		        }
+		        else{
+		        	new TelechargePhotosFiche_BgActivity(getApplicationContext(), this.getHelper(), entry, this).execute("");
 		        }
 			//} catch (IOException e) {
 			//	Log.e(LOG_TAG, e.getMessage(), e);
@@ -305,6 +331,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			foldable.unfold();
 		}
     }
+    
+    public void dataHasChanged(String textmessage){
+		Message completeMessage = mHandler.obtainMessage(1, textmessage);
+        completeMessage.sendToTarget();
+	}
     
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();

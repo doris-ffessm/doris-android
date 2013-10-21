@@ -67,8 +67,8 @@ import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
 
-public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer, Integer>{
-	private static final String LOG_TAG = TelechargePhotosFiches_BgActivity.class.getCanonicalName();
+public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer, Integer>{
+	private static final String LOG_TAG = TelechargePhotosFiche_BgActivity.class.getCanonicalName();
 	
 	
     private NotificationHelper mNotificationHelper;
@@ -77,20 +77,22 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     
     // Start of user code additional attribute declarations TelechargePhotosFiches_BgActivity
     
+    protected Fiche fiche;
     protected DataChangedListener listener;
     
-    public TelechargePhotosFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper, DataChangedListener listener){
+    public TelechargePhotosFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper, Fiche fiche, DataChangedListener listener){
 		String initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
 		String notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
         this.dbHelper = dbHelper;
 		this.context = context;
 		this.listener = listener;
+		this.fiche = fiche;
     }
 	// End of user code
     
 	/** constructor */
-    public TelechargePhotosFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper){
+    public TelechargePhotosFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper){
 		String initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
 		String notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
@@ -109,24 +111,22 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 
 		// Start of user code initialization of the task TelechargePhotosFiches_BgActivity
 		// do the initialization of the task here
-    	// Téléchargement en tache de fond de toutes les photos de toutes les fiches correspondants aux critères de l'utilisateur
+
+    	// Téléchargement en tache de fond de toutes les photos d'une fiche particulière
     	
-    	List<Fiche> listeFiches = dbHelper.getFicheDao().queryForAll();
     	List<PhotoFiche> listePhotosATraiter = new ArrayList<PhotoFiche>();
     	// en priorité toutes les photos principales (pour les vignettes)
-        if(!listeFiches.isEmpty()){
-        	for (Fiche fiche : listeFiches) {
-        		fiche.setContextDB(dbHelper.getDorisDBHelper());
-        		if( !Outils.isAvailableImagePrincipaleFiche(context, fiche)){
-        			PhotoFiche photoFiche = fiche.getPhotoPrincipale();
-        			if(photoFiche != null){
-            			photoFiche.setContextDB(dbHelper.getDorisDBHelper());
-        				listePhotosATraiter.add(photoFiche);
-        			}
-        		}
+        
+		fiche.setContextDB(dbHelper.getDorisDBHelper());
+		if( !Outils.isAvailableImagePrincipaleFiche(context, fiche)){
+			PhotoFiche photoFiche = fiche.getPhotoPrincipale();
+			if(photoFiche != null){
+    			photoFiche.setContextDB(dbHelper.getDorisDBHelper());
+				listePhotosATraiter.add(photoFiche);
 			}
-        }
-        // TODO puis les autres photos applicable aux filtres utilisateurs
+		}
+		
+        // TODO puis les autres photos 
         
 		// once done, you should indicates to the notificationHelper how many item will be processed
 		mNotificationHelper.setMaxItemToProcess(""+listePhotosATraiter.size());
@@ -145,13 +145,13 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     			nbPhotoRetreived = nbPhotoRetreived+1;
     			publishProgress(nbPhotoRetreived);
     			// laisse un peu de temps entre chaque téléchargement 
-                Thread.sleep(10);
-                // notify les listener toutes les 10 photos
-                if(((nbPhotoRetreived % 10) == 0) && listener != null){
+                //Thread.sleep(10);
+                // notify les listener toutes les 2 photos
+                if(((nbPhotoRetreived % 2) == 0) && listener != null){
             		listener.dataHasChanged(null);
             	}
-    		} catch (InterruptedException e) {
-    			Log.i(LOG_TAG, e.getMessage(), e);
+    		//} catch (InterruptedException e) {
+    		//	Log.i(LOG_TAG, e.getMessage(), e);
             } catch (IOException e) {
     			Log.i(LOG_TAG, "Erreur de téléchargement de "+e.getMessage(), e);
     			continue;
