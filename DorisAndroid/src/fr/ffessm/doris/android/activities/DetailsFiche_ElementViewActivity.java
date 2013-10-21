@@ -45,6 +45,7 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
@@ -61,6 +62,7 @@ import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -141,6 +143,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     boolean isOnCreate = true;
     List<FoldableClickListener> allFoldable = new ArrayList<FoldableClickListener>();
     Handler mHandler;
+    LinearLayout photoGallery;
+    Collection<String> insertedPhotosFiche = new ArrayList<String>();
+    boolean askedBgDownload = false;
     
     // attention au risque de conserver trop de donnée si appels répété à refreshScreenData ?
     private void refreshScreenData() {
@@ -165,7 +170,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     	((TextView) findViewById(R.id.detail_diveduration)).setText(entry.getDuration().toString());
     	*/	
 		StringBuffer sbDebugText = new StringBuffer();
-		if(entry.getPhotoPrincipale()!=null){
+		/*if(entry.getPhotoPrincipale()!=null){
 			sbDebugText.append("photoPrincipale="+entry.getPhotoPrincipale());
 			//try {
 				//Outils.getVignetteFile(getBaseContext(), entry.getPhotoPrincipale());
@@ -185,9 +190,28 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			//	Log.e(LOG_TAG, e.getMessage(), e);
 			//}
 			//entry.getPhotoPrincipale().getImageVignette();
-		}
-		if(entry.getPhotosFiche()!=null){
-			sbDebugText.append("\nnbPhoto="+entry.getPhotosFiche().size()+"\n");
+		}*/		
+		Collection<PhotoFiche> photosFiche = entry.getPhotosFiche(); 
+		if(photosFiche!=null){
+			sbDebugText.append("\nnbPhoto="+photosFiche.size()+"\n");
+			
+			photoGallery = (LinearLayout)findViewById(R.id.detailsfiche_elementview_photogallery);
+			for (PhotoFiche photoFiche : photosFiche) {
+				//sbDebugText.append("\nPhoto="+photoFiche.getCleURL()+"\n");
+				if(!insertedPhotosFiche.contains(photoFiche.getCleURL())){
+					View photoView = insertPhoto(photoFiche);
+					if(photoView!=null){
+						photoGallery.addView(photoView);
+						insertedPhotosFiche.add(photoFiche.getCleURL());
+					}
+					else if(!askedBgDownload){
+						askedBgDownload = true;
+						new TelechargePhotosFiche_BgActivity(getApplicationContext(), this.getHelper(), entry, this).execute("");
+						break; // les autres ne sont probablement pas là non plus, pas la peine d'essayer
+					}
+				}
+			}
+			
 		}
 		
 		if(isOnCreate){
@@ -321,6 +345,23 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         containerLayout.addView(convertView);
     }
     
+    View insertPhoto(PhotoFiche photoFiche){
+        Bitmap bm = Outils.getAvailableImagePhotoFiche(getBaseContext(), photoFiche);
+        if(bm != null){
+	        LinearLayout layout = new LinearLayout(getApplicationContext());
+	        layout.setLayoutParams(new LayoutParams(150, 150));
+	        layout.setGravity(Gravity.CENTER);
+	        
+	        ImageView imageView = new ImageView(getApplicationContext());	        
+	        imageView.setLayoutParams(new LayoutParams(145, 145));
+	        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+	        imageView.setImageBitmap(bm);
+	        
+	        layout.addView(imageView);
+	        return layout;
+        }
+        return null;
+    }
     protected void foldAll(){
     	for (FoldableClickListener foldable : allFoldable) {
 			foldable.fold();

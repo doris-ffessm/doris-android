@@ -50,20 +50,37 @@ public class Outils {
 	
 	public static boolean isAvailableImagePrincipaleFiche(Context inContext, Fiche fiche){
 		
-				
-		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);
-		
 		PhotoFiche imagePrincipale;
 		imagePrincipale = fiche.getPhotoPrincipale();
-		if(imagePrincipale != null){
-			File vignetteImage = new File(imageFolder, imagePrincipale.getCleURL());
+		return isAvailableImagePhotoFiche(inContext, imagePrincipale);		
+	}
+	
+	public static Bitmap getAvailableImagePhotoFiche(Context inContext, PhotoFiche photofiche){
+		
+		Bitmap result = null;		
+		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);
+		
+		if(photofiche != null){
+			File vignetteImage = new File(imageFolder, photofiche.getCleURL());
+			if(vignetteImage.exists()){
+				result = BitmapFactory.decodeFile(vignetteImage.getPath());
+			}
+		}
+		// utilise l'icone de base en tant que substitut
+		// TODO prendre l'icone du groupe auquel appartient l'espèce ?
+		// result = BitmapFactory.decodeResource(inContext.getResources(), R.drawable.ic_launcher);
+		return result;
+	}
+	public static boolean isAvailableImagePhotoFiche(Context inContext, PhotoFiche photofiche){
+		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);		
+		if(photofiche != null){
+			File vignetteImage = new File(imageFolder, photofiche.getCleURL());
 			if(vignetteImage.exists()){
 				return true;
 			}
 		}
 		return false;
 	}
-	
 	public static File getVignetteFile(Context inContext, PhotoFiche photo) throws IOException{
 		
 		File result = null;		

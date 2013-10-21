@@ -46,6 +46,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -118,15 +119,22 @@ public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer,
     	// en priorité toutes les photos principales (pour les vignettes)
         
 		fiche.setContextDB(dbHelper.getDorisDBHelper());
+		/*
 		if( !Outils.isAvailableImagePrincipaleFiche(context, fiche)){
 			PhotoFiche photoFiche = fiche.getPhotoPrincipale();
 			if(photoFiche != null){
     			photoFiche.setContextDB(dbHelper.getDorisDBHelper());
 				listePhotosATraiter.add(photoFiche);
 			}
-		}
+		} */
 		
-        // TODO puis les autres photos 
+        // toutes les photos de la fiche 
+		Collection<PhotoFiche> photosFiches = fiche.getPhotosFiche();
+		for (PhotoFiche photoFiche : photosFiches) {
+			if(!Outils.isAvailableImagePhotoFiche(context, photoFiche)){
+				listePhotosATraiter.add(photoFiche);
+			}
+		}
         
 		// once done, you should indicates to the notificationHelper how many item will be processed
 		mNotificationHelper.setMaxItemToProcess(""+listePhotosATraiter.size());
