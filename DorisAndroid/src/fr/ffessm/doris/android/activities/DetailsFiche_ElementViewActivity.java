@@ -106,9 +106,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detailsfiche_elementview);
         ficheId = getIntent().getExtras().getInt("ficheId");
-        
-        
-        
+                
        
     }
     
@@ -202,10 +200,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			sbCreditText.append(entry.getDateCreation()+"\n");
 			sbCreditText.append(getString(R.string.detailsfiche_elementview_datemodification_label));
 			sbCreditText.append(entry.getDateModification());
-			SpannableString text = new SpannableString(sbCreditText.toString());
-			text.setSpan(new RelativeSizeSpan(2f), 0, urlString.length(), 0);
-			text.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
-			addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_credit_label),sbCreditText.toString());
+			SpannableString richtext = new SpannableString(sbCreditText.toString());
+			//richtext.setSpan(new RelativeSizeSpan(2f), 0, urlString.length(), 0);
+			richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
+			addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_credit_label),richtext);
 			isOnCreate = false;
 		}
 		((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setText(sbDebugText.toString());
@@ -271,16 +269,18 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     }
     
     protected void addFoldableView(LinearLayout containerLayout, String titre, CharSequence texte){
-    	LayoutInflater inflater = (LayoutInflater) this.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    	LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View convertView = inflater.inflate(R.layout.detailsfiche_elementview_foldablesection, null);
         
         TextView titreText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_titre);
         titreText.setText(titre);
         
         TextView contenuText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletext);
+        contenuText.setVisibility(View.GONE); // par défault invisible
         contenuText.setText(texte, BufferType.SPANNABLE);
         // make our ClickableSpans and URLSpans work 
         contenuText.setMovementMethod(LinkMovementMethod.getInstance());
+       // contenuText.
         
         ImageButton foldButton = (ImageButton)convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
         
