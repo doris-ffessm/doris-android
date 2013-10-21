@@ -7,22 +7,28 @@ import android.view.View.OnClickListener;
 
 public class FoldableClickListener implements OnClickListener {
 
-	View foldableView;
+	protected View associatedFoldableView;
 	
 	public FoldableClickListener(View foldableView){
-		this.foldableView = foldableView;
+		this.associatedFoldableView = foldableView;
 	}
 	@Override
 	public void onClick(View v) {
-		if(foldableView.getVisibility() == View.GONE){
-			foldableView.setVisibility(View.VISIBLE);
+		if(associatedFoldableView.getVisibility() == View.GONE){
+			associatedFoldableView.setVisibility(View.VISIBLE);
 		}
 		else{
-			foldableView.setVisibility(View.GONE);
+			associatedFoldableView.setVisibility(View.GONE);
 		}
 		
 	}
-
+	
+	public void fold(){
+		associatedFoldableView.setVisibility(View.GONE);
+	}
+	public void unfold(){
+		associatedFoldableView.setVisibility(View.VISIBLE);
+	}
 	
 
 }

@@ -12,8 +12,8 @@
 		<ImageButton
 		    android:id="@+id/detailsfiche_elementview_fold_unflod_section_imageButton"
 		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:padding="4dip"
+		    android:layout_height="20sp"
+		    android:scaleType="centerInside"
 		    android:src="@drawable/ic_expand"
 		    android:background="@android:color/transparent"
 		    android:contentDescription="@string/detailsfiche_elementview_fold_unflod_section_hint_text" />

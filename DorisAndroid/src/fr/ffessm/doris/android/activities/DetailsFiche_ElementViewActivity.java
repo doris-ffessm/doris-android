@@ -50,7 +50,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.URLSpan;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,6 +67,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TextView.BufferType;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -73,17 +80,25 @@ import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import fr.ffessm.doris.android.activities.view.FoldableClickListener;
+import fr.ffessm.doris.android.async.TelechargePhotosFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
 
-public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>{
+public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> {
 	
 	protected int ficheId;
 	
 	private static final String LOG_TAG = DetailsFiche_ElementViewActivity.class.getCanonicalName();
+	
+	static final int FOLD_SECTIONS_MENU_ID = 1;	
+	static final int UNFOLD_SECTIONS_MENU_ID = 2;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -91,7 +106,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detailsfiche_elementview);
         ficheId = getIntent().getExtras().getInt("ficheId");
-        //findViewById(R.id.divedate);
+        
+        
+        
+       
     }
     
     @Override
@@ -100,7 +118,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		refreshScreenData();
 	}
     
+    boolean isOnCreate = true;
+    List<FoldableClickListener> allFoldable = new ArrayList<FoldableClickListener>();
     
+    // attention au risque de conserver trop de donnée si appels répété à refreshScreenData ?
     private void refreshScreenData() {
     	// get our dao
     	RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
@@ -110,9 +131,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText(entry.getNomScientifique());
 		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun());
 		((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText("N° "+((Integer)entry.getNumeroFiche()).toString());					
-		((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer)entry.getEtatFiche()).toString());					
-		((TextView) findViewById(R.id.detailsfiche_elementview_datecreation)).setText(entry.getDateCreation());
-		((TextView) findViewById(R.id.detailsfiche_elementview_datemodification)).setText(entry.getDateModification());
+		((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer)entry.getEtatFiche()).toString());	
 		
 		// Start of user code protectedDetailsFiche_ElementViewActivity.refreshScreenData
 		/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
@@ -124,9 +143,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     	
     	((TextView) findViewById(R.id.detail_diveduration)).setText(entry.getDuration().toString());
     	*/	
-		StringBuffer sb = new StringBuffer();
+		StringBuffer sbDebugText = new StringBuffer();
 		if(entry.getPhotoPrincipale()!=null){
-			sb.append("photoPrincipale="+entry.getPhotoPrincipale());
+			sbDebugText.append("photoPrincipale="+entry.getPhotoPrincipale());
 			try {
 				Outils.getVignetteFile(getBaseContext(), entry.getPhotoPrincipale());
 				ImageView ivIcon = (ImageView) findViewById(R.id.detailsfiche_elementview_icon);
@@ -144,35 +163,52 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			entry.getPhotoPrincipale().getImageVignette();
 		}
 		if(entry.getPhotosFiche()!=null){
-			sb.append("\nnbPhoto="+entry.getPhotosFiche().size()+"\n");
-		}
-		if(entry.getAutresDenominations() != null){
-			for (AutreDenomination autreDenomination : entry.getAutresDenominations()) {
-				sb.append(autreDenomination.getDenomination()+"\n");
-			}
+			sbDebugText.append("\nnbPhoto="+entry.getPhotosFiche().size()+"\n");
 		}
 		
-		if(entry.getContenu() != null){
+		if(isOnCreate){
+			// do only on first creation
 			LinearLayout containerLayout =  (LinearLayout) findViewById(R.id.detailsfiche_sections_layout);
-			for (SectionFiche sectionFiche : entry.getContenu()) {
-				LayoutInflater inflater = (LayoutInflater) this.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	            View convertView = inflater.inflate(R.layout.detailsfiche_elementview_foldablesection, null);
-	            
-	            TextView titreText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_titre);
-	            titreText.setText(sectionFiche.getTitre());
-	            
-	            TextView contenuText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletext);
-	            contenuText.setText(sectionFiche.getTexte());
-	            
-	            ImageButton foldButton = (ImageButton)convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
-	            
-	            foldButton.setOnClickListener(new FoldableClickListener(contenuText));
-	            
-	            containerLayout.addView(convertView);
-				
+			// section Autres Dénominations
+			if(entry.getAutresDenominations() != null){
+				Collection<AutreDenomination> autresDenominations = entry.getAutresDenominations();
+				if(autresDenominations.size() > 0){					
+		            StringBuilder sbAutresDenominations = new StringBuilder();	
+		            int i = 1;
+					for (AutreDenomination autreDenomination : autresDenominations) {
+						sbAutresDenominations.append(autreDenomination.getDenomination());
+						if(autresDenominations.size() > 1 && i < autresDenominations.size()){
+							sbAutresDenominations.append("\n");
+						}
+						i++;
+					}
+					addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_autresdenominations_label), sbAutresDenominations.toString());
+					
+				}
 			}
+			// section issues de la fiche
+			if(entry.getContenu() != null){
+				
+				for (SectionFiche sectionFiche : entry.getContenu()) {
+					addFoldableView(containerLayout, sectionFiche.getTitre(), sectionFiche.getTexte());
+				}
+			}
+			
+			// section "Crédits"
+			StringBuilder sbCreditText = new StringBuilder();
+			final String urlString = "http://doris.ffessm.fr/fiche2.asp?fiche_numero="+entry.getNumeroFiche(); 
+			sbCreditText.append(urlString+"\n");
+			sbCreditText.append(getString(R.string.detailsfiche_elementview_datecreation_label));
+			sbCreditText.append(entry.getDateCreation()+"\n");
+			sbCreditText.append(getString(R.string.detailsfiche_elementview_datemodification_label));
+			sbCreditText.append(entry.getDateModification());
+			SpannableString text = new SpannableString(sbCreditText.toString());
+			text.setSpan(new RelativeSizeSpan(2f), 0, urlString.length(), 0);
+			text.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
+			addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_credit_label),sbCreditText.toString());
+			isOnCreate = false;
 		}
-		((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setText(sb.toString());
+		((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setText(sbDebugText.toString());
 		
 		// End of user code
     	
@@ -184,6 +220,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
 
 		//Start of user code additional onCreateOptionsMenu
+        menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.ic_expand);
+		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.ic_expand);
 
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -199,17 +237,78 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
                     return true;
         
 		//Start of user code additional menu action
-
+        	case FOLD_SECTIONS_MENU_ID:
+        		foldAll();
+				break;
+        	case UNFOLD_SECTIONS_MENU_ID:
+        		unfoldAll();
+				break;
 		//End of user code
         }
         return false;
-    }
+    }   
+    
+    // pour le menu sur click long
+    @Override  
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {  
+    	super.onCreateContextMenu(menu, v, menuInfo);  
+        //menu.setHeaderTitle("Context Menu");  
+        menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.ic_expand);
+		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.ic_expand);
 
-   /* public View getFoldableSectionView(){
-    	
-    }*/
+    }
+    @Override  
+    public boolean onContextItemSelected(MenuItem item) {  
+    	switch (item.getItemId()) {    
+    	case FOLD_SECTIONS_MENU_ID:
+    		foldAll();
+			break;
+    	case UNFOLD_SECTIONS_MENU_ID:
+    		unfoldAll();
+			break;
+	    }
+	    return false;
+    }
+    
+    protected void addFoldableView(LinearLayout containerLayout, String titre, CharSequence texte){
+    	LayoutInflater inflater = (LayoutInflater) this.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View convertView = inflater.inflate(R.layout.detailsfiche_elementview_foldablesection, null);
+        
+        TextView titreText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_titre);
+        titreText.setText(titre);
+        
+        TextView contenuText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletext);
+        contenuText.setText(texte, BufferType.SPANNABLE);
+        // make our ClickableSpans and URLSpans work 
+        contenuText.setMovementMethod(LinkMovementMethod.getInstance());
+        
+        ImageButton foldButton = (ImageButton)convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
+        
+        FoldableClickListener foldable = new FoldableClickListener(contenuText);
+        allFoldable.add(foldable);
+        foldButton.setOnClickListener(foldable);
+        titreText.setOnClickListener(foldable);
+        // enregistre pour réagir au click long
+        registerForContextMenu(foldButton);
+        registerForContextMenu(titreText);
+        
+        containerLayout.addView(convertView);
+    }
+    
+    protected void foldAll(){
+    	for (FoldableClickListener foldable : allFoldable) {
+			foldable.fold();
+		}
+    }
+    protected void unfoldAll(){
+    	for (FoldableClickListener foldable : allFoldable) {
+			foldable.unfold();
+		}
+    }
     
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
+
+	
 }
