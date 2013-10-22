@@ -14,7 +14,7 @@
         <CheckBoxPreference android:key="@string/pref_id_limit_download"
             android:summary="réduit les download (utile pour le debug de l'application)" 
             android:title="Limitation des downloads" 
-            android:defaultValue="true" />
+            android:defaultValue="false" />
         
     </PreferenceCategory>
     <PreferenceCategory

@@ -58,6 +58,8 @@ import fr.ffessm.doris.android.R;
 // Start of user code additional imports TelechargePhotosFiches_BgActivity
 import java.util.ArrayList;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
@@ -110,12 +112,17 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		// Start of user code initialization of the task TelechargePhotosFiches_BgActivity
 		// do the initialization of the task here
     	// Téléchargement en tache de fond de toutes les photos de toutes les fiches correspondants aux critères de l'utilisateur
+    	if(!isOnline()){
+        	Log.d(LOG_TAG, "pas connexion internet : annulation du téléchargement");
+        	return 0;
+        }
     	
     	List<Fiche> listeFiches = dbHelper.getFicheDao().queryForAll();
     	List<PhotoFiche> listePhotosATraiter = new ArrayList<PhotoFiche>();
     	// en priorité toutes les photos principales (pour les vignettes)
         if(!listeFiches.isEmpty()){
         	for (Fiche fiche : listeFiches) {
+        		if( this.isCancelled()) return 0;
         		fiche.setContextDB(dbHelper.getDorisDBHelper());
         		if( !Outils.isAvailableImagePrincipaleFiche(context, fiche)){
         			PhotoFiche photoFiche = fiche.getPhotoPrincipale();
@@ -135,9 +142,11 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     	// Start of user code main loop of task TelechargePhotosFiches_BgActivity
 		// This is where we would do the actual job
 		// you should indicates the progression using publishProgress()
+		Log.d(LOG_TAG, "nombre max de photo à télécharger : "+listePhotosATraiter.size());
     	int nbPhotoRetreived = 0;
     	for (PhotoFiche photoFiche : listePhotosATraiter) {
     		
+    		if( this.isCancelled()) return nbPhotoRetreived;
     		// recupération de la photo sur internet
     		try{
     			Outils.getVignetteFile(context, photoFiche);
@@ -148,8 +157,20 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
                 Thread.sleep(10);
                 // notify les listener toutes les 10 photos
                 if(((nbPhotoRetreived % 10) == 0) && listener != null){
-            		listener.dataHasChanged(null);
+                	try{
+            			listener.dataHasChanged(null);
+            		}
+            		catch(Exception e){
+            			Log.d(LOG_TAG, "Listener n'est plus à l'écoute, Arrét du téléchargement");
+            			return nbPhotoRetreived;
+            		}
+            		// vérifie de temps en temps la connexion
+            		if(!isOnline()){
+                    	Log.d(LOG_TAG, "pas connexion internet : Arret du téléchargement");
+                    	break;
+                    }
             	}
+                
     		} catch (InterruptedException e) {
     			Log.i(LOG_TAG, e.getMessage(), e);
             } catch (IOException e) {
@@ -157,7 +178,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     			continue;
 			}
     		// DEBUG arret avant la fin
-    		if(nbPhotoRetreived > 10 && PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_id_limit_download), true)) {
+    		if(nbPhotoRetreived > 10 && PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_id_limit_download), false)) {
     			Log.d(LOG_TAG, "DEBUG mode : nombre max de photo téléchargé : Arret du téléchargement");
     			break;
     		}
@@ -166,7 +187,13 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         
 		// Start of user code end of task TelechargePhotosFiches_BgActivity
     	if(listener != null && nbPhotoRetreived != 0){
-    		listener.dataHasChanged(null);
+    		try{
+    			listener.dataHasChanged(null);
+    		}
+    		catch(Exception e){
+    			Log.d(LOG_TAG, "Listener n'est plus à l'écoute, arrét du téléchargement");
+    			return nbPhotoRetreived;
+    		}
     	}
 		// return the number of item processed
         return nbPhotoRetreived;
@@ -177,6 +204,11 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         //from the background thread and publishes them to the status bar
         mNotificationHelper.progressUpdate(progress[0]);
     }
+	@Override
+	protected void onCancelled() {
+		super.onCancelled();
+		mNotificationHelper.completed();
+	}
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
@@ -186,6 +218,16 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 
     // Start of user code additional operations TelechargePhotosFiches_BgActivity
 	
+    public boolean isOnline() {
+        ConnectivityManager cm =
+            (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        //if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+        if (netInfo != null && netInfo.isConnected()) {
+            return true;
+        }
+        return false;
+    }
 	// End of user code
 	
 }

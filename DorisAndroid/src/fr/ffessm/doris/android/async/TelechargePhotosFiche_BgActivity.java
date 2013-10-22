@@ -156,7 +156,13 @@ public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer,
                 //Thread.sleep(10);
                 // notify les listener toutes les 2 photos
                 if(((nbPhotoRetreived % 2) == 0) && listener != null){
-            		listener.dataHasChanged(null);
+                	try{
+            			listener.dataHasChanged(null);
+            		}
+            		catch(Exception e){
+            			Log.d(LOG_TAG, "Listener n'est plus à l'écoute, Arrét du téléchargement");
+            			return nbPhotoRetreived;
+            		}
             	}
     		//} catch (InterruptedException e) {
     		//	Log.i(LOG_TAG, e.getMessage(), e);

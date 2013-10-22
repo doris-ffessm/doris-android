@@ -119,6 +119,11 @@ public class VerifieNouvellesFiches_BgActivity  extends AsyncTask<String,Integer
         //from the background thread and publishes them to the status bar
         mNotificationHelper.progressUpdate(progress[0]);
     }
+	@Override
+	protected void onCancelled() {
+		super.onCancelled();
+		mNotificationHelper.completed();
+	}
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();

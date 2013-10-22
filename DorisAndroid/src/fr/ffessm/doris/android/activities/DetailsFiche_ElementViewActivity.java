@@ -109,7 +109,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	
     boolean isOnCreate = true;
     List<FoldableClickListener> allFoldable = new ArrayList<FoldableClickListener>();
-    static Handler mHandler;
+    Handler mHandler;
     LinearLayout photoGallery;
     Collection<String> insertedPhotosFiche = new ArrayList<String>();
     boolean askedBgDownload = false;
@@ -119,9 +119,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // évite d'avoir le clavier virtuel par défaut
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        
         setContentView(R.layout.detailsfiche_elementview);
         ficheId = getIntent().getExtras().getInt("ficheId");
         

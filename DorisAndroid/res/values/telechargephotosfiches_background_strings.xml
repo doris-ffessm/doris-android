@@ -4,8 +4,8 @@
 	<!--Start of user code BackgroundActivity_stringstelechargephotosfiches
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
-	<string name="telechargephotosfiches_bg_initialTickerText">TelechargePhotosFiches</string>
-	<string name="telechargephotosfiches_bg_notificationTitle">TelechargePhotosFiches</string>
+	<string name="telechargephotosfiches_bg_initialTickerText">Télécharge les photos des fiches (vignettes)</string>
+	<string name="telechargephotosfiches_bg_notificationTitle">Télécharge les photos des fiches (vignettes)</string>
 	<!--End of user code
 	-->
 </resources>

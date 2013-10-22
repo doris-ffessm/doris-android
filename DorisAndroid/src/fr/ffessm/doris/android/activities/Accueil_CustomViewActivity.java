@@ -62,6 +62,8 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import android.preference.PreferenceManager;
 //Start of user code additional imports Accueil_CustomViewActivity
+import android.os.AsyncTask.Status;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -88,6 +90,8 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 //	static final int RESET_DB_FROM_XML_MENU_ID = 5;
 	
 	Handler mHandler;
+	
+	AsyncTask telechargePhotosFiches_BgActivity = null;
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -122,6 +126,11 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 
         };
         
+        // démarre ou pas un téléchargement de photo au démarrage
+        if(getHelper().getFicheDao().countOf() > Outils.getVignetteCount(this.getApplicationContext())){
+        	telechargePhotosFiches_BgActivity = new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+        }
+        
 		//End of user code
     }
     
@@ -133,6 +142,14 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		//End of user code
 	}
     //Start of user code additional code Accueil_CustomViewActivity
+    
+    @Override
+    protected void onDestroy(){
+    	super.onDestroy();
+    	if(telechargePhotosFiches_BgActivity != null && telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING)
+    		telechargePhotosFiches_BgActivity.cancel(true);
+    }
+    
 	public void onClickBtnListeFiches(View view){
 		startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
     }
@@ -199,7 +216,8 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 				new TelechargeFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 				break; */
 			case TELECHARGE_PHOTO_FICHES_MENU_ID:
-				new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+				if(telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING)
+					telechargePhotosFiches_BgActivity = new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
 				break;
 		/*	case VERIFIE_NOUVELLES_FICHES_MENU_ID:
 				new VerifieNouvellesFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
