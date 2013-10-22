@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Resource Strings specific to detailsfiche Element View and EditableElement View -->
 <resources>
+	<!--Start of user code protecteddetailsfiche_elementview_strings.xml
+	-->	
 	<string name="detailsfiche_elementview_nomscientifique_label">NomScientifique : </string>
 	<string name="detailsfiche_elementview_nomcommun_label">NomCommun : </string>
 	<string name="detailsfiche_elementview_numerofiche_label">NumeroFiche : </string>
@@ -18,4 +20,6 @@
 	<string name="detailsfiche_elementview_fold_unflod_section_hint_text">Plie ou déplie texte de la section</string>
 	<string name="unfold_all_sections_menu_option">Tout déplier</string>
 	<string name="fold_all_sections_menu_option">Tout replier</string>
+	<!-- End of user code
+	-->
 </resources>

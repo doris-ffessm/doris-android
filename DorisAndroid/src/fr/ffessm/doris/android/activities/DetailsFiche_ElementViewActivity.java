@@ -42,50 +42,43 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.URLSpan;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TextView.BufferType;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_import
 import android.widget.ImageView;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
-import android.view.View.OnClickListener;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import java.io.IOException;
+import android.widget.LinearLayout;
+import android.widget.TextView.BufferType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -94,44 +87,62 @@ import fr.ffessm.doris.android.activities.view.FoldableClickListener;
 import fr.ffessm.doris.android.async.TelechargePhotosFiche_BgActivity;
 import fr.ffessm.doris.android.async.TelechargePhotosFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
+import fr.ffessm.doris.android.datamodel.DataChangedListener;
+import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
 
 public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
+// Start of user code protectedDetailsFiche_ElementViewActivity_additional_implements
 	implements DataChangedListener
+// End of user code
 {
 	
 	protected int ficheId;
 	
 	private static final String LOG_TAG = DetailsFiche_ElementViewActivity.class.getCanonicalName();
-	
+
+// Start of user code protectedDetailsFiche_ElementViewActivity_additional_attributes
 	static final int FOLD_SECTIONS_MENU_ID = 1;	
 	static final int UNFOLD_SECTIONS_MENU_ID = 2;
+	
+    boolean isOnCreate = true;
+    List<FoldableClickListener> allFoldable = new ArrayList<FoldableClickListener>();
+    static Handler mHandler;
+    LinearLayout photoGallery;
+    Collection<String> insertedPhotosFiche = new ArrayList<String>();
+    boolean askedBgDownload = false;
+// End of user code
 	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // évite d'avoir le clavier virtuel par défaut
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        
         setContentView(R.layout.detailsfiche_elementview);
         ficheId = getIntent().getExtras().getInt("ficheId");
-                
+        
+		// Start of user code protectedDetailsFiche_ElementViewActivity_onCreate        
         // Defines a Handler object that's attached to the UI thread
-        mHandler = new Handler(Looper.getMainLooper()) {
-        	/*
-             * handleMessage() defines the operations to perform when
-             * the Handler receives a new Message to process.
-             */
-            @Override
-            public void handleMessage(Message inputMessage) {
-            	
-            	if(inputMessage.obj != null ){
-            		showToast((String) inputMessage.obj);
-            	}
-            	refreshScreenData();
-            }
-
-        };
+		mHandler = new Handler(Looper.getMainLooper()) {
+			/*
+		     * handleMessage() defines the operations to perform when
+		     * the Handler receives a new Message to process.
+		     */
+		    @Override
+		    public void handleMessage(Message inputMessage) {
+		    	
+		    	if(inputMessage.obj != null ){
+		    		showToast((String) inputMessage.obj);
+		    	}
+		    	refreshScreenData();
+		    }
+		
+		};
+		// End of user code
     }
     
     @Override
@@ -140,35 +151,19 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		refreshScreenData();
 	}
     
-    boolean isOnCreate = true;
-    List<FoldableClickListener> allFoldable = new ArrayList<FoldableClickListener>();
-    Handler mHandler;
-    LinearLayout photoGallery;
-    Collection<String> insertedPhotosFiche = new ArrayList<String>();
-    boolean askedBgDownload = false;
     
-    // attention au risque de conserver trop de donnée si appels répété à refreshScreenData ?
     private void refreshScreenData() {
     	// get our dao
     	RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
     	Fiche entry = entriesDao.queryForId(ficheId);
     	entry.setContextDB(getHelper().getDorisDBHelper());
 
-		((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText(entry.getNomScientifique());
+		// Start of user code protectedDetailsFiche_ElementViewActivity.refreshScreenData
+    	((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText(entry.getNomScientifique());
 		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun());
 		((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText("N° "+((Integer)entry.getNumeroFiche()).toString());					
 		((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer)entry.getEtatFiche()).toString());	
 		
-		// Start of user code protectedDetailsFiche_ElementViewActivity.refreshScreenData
-		/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-    	((TextView) findViewById(R.id.detail_divedate)).setText(dateFormatter.format(entry.getDate()));
-		
-    	((TextView) findViewById(R.id.detail_divelocation)).setText(entry.getLocation());
-    	
-    	((TextView) findViewById(R.id.detail_divedepth)).setText(entry.getMaxdepth().toString());
-    	
-    	((TextView) findViewById(R.id.detail_diveduration)).setText(entry.getDuration().toString());
-    	*/	
 		StringBuffer sbDebugText = new StringBuffer();
 		/*if(entry.getPhotoPrincipale()!=null){
 			sbDebugText.append("photoPrincipale="+entry.getPhotoPrincipale());
@@ -294,8 +289,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		//End of user code
         }
         return false;
-    }   
-    
+    }
+
+	// Start of user code protectedDetailsFiche_ElementViewActivity_additional_operations
     // pour le menu sur click long
     @Override  
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {  
@@ -377,10 +373,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		Message completeMessage = mHandler.obtainMessage(1, textmessage);
         completeMessage.sendToTarget();
 	}
-    
+
+    // End of user code
+
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
-
-	
 }
