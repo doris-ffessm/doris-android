@@ -53,6 +53,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.WindowManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -77,7 +78,8 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
         list.setClickable(true);
         adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper());
 
-        
+		// avoid opening the keayboard on view opening
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         list.setOnItemClickListener(this);
 
         list.setAdapter(adapter);

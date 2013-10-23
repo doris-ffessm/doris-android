@@ -173,6 +173,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
                 
     		} catch (InterruptedException e) {
     			Log.i(LOG_TAG, e.getMessage(), e);
+    			Log.d(LOG_TAG, "InterruptedException recue : Arret du téléchargement");
+    			break;
             } catch (IOException e) {
     			Log.i(LOG_TAG, "Erreur de téléchargement de "+e.getMessage(), e);
     			continue;

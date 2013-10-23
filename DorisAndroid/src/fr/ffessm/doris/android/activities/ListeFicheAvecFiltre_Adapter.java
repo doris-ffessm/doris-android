@@ -189,10 +189,19 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 	public int filter(int position, Fiche fiche, String pattern){
 		// Start of user code protected additional ListeFicheAvecFiltre_Adapter filter code
 		// TODO probablement faire en sorte d'ignorer les accents pour la recherche
-		// TODO chercher séparement les mots (séparés par un blanc) et faire un "ET" 
-		if(fiche.getNomCommun().toLowerCase().contains(pattern)) return 1;
-		else if(fiche.getNomScientifique().toLowerCase().contains(pattern)) return 1;
-		//else if(fiche.getAutresDenominations().contains(pattern)) return 1; 
+		// chercher séparement les mots (séparés par un blanc) et faire un "ET" 
+		String[] patterns = pattern.split(" ");
+		boolean isValid = true;
+		for (String patt : patterns) {
+			if(patt.isEmpty()) continue; // en cas de blanc multiples
+			if(fiche.getNomCommun().toLowerCase().contains(patt))
+				continue;
+			else if(fiche.getNomScientifique().toLowerCase().contains(pattern)) 
+				continue;
+			//else if(fiche.getAutresDenominations().contains(pattern)) return 1; 
+			else isValid = false;
+		}
+		if(isValid) return 1;		
 		else return -1;
 		// End of user code
 	}
