@@ -53,8 +53,10 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.WindowManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
@@ -66,6 +68,9 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 
 public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
 	
+	//Start of user code constants ListeFicheAvecFiltre_ClassListViewActivity
+	//End of user code
+
 	// Search EditText
     EditText inputSearch;
     ListeFicheAvecFiltre_Adapter adapter;
@@ -125,6 +130,34 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 		toDetailView.putExtras(b);
         startActivity(toDetailView);
     }
+
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+		// add options in the menu
+		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
+
+		//Start of user code additional onCreateOptionsMenu ListeFicheAvecFiltre_ClassListViewActivity
+
+		//End of user code
+        return super.onCreateOptionsMenu(menu);
+    }
+    
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	// behavior of option menu
+        switch (item.getItemId()) {
+			case 777:
+		            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+		            return true;
+		
+		//Start of user code additional menu action ListeFicheAvecFiltre_ClassListViewActivity
+
+		//End of user code
+        }
+        return false;
+    }
+
 
 	// Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity
 	public void onClickFilterBtn(View view){
