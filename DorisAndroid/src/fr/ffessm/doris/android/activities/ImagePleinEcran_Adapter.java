@@ -46,7 +46,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
      
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        ImageView imgDisplay;
+    	fr.ffessm.doris.android.tools.TouchImageView imgDisplay;
         Button btnClose;
   
         inflater = (LayoutInflater) _activity
@@ -54,7 +54,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         View viewLayout = inflater.inflate(R.layout.imagepleinecran_image, container,
                 false);
   
-        imgDisplay = (ImageView) viewLayout.findViewById(R.id.imagepleinecran_image_imgDisplay);
+        imgDisplay = (fr.ffessm.doris.android.tools.TouchImageView) viewLayout.findViewById(R.id.imagepleinecran_image_imgDisplay);
         btnClose = (Button) viewLayout.findViewById(R.id.imagepleinecran_image_btnClose);
          
         BitmapFactory.Options options = new BitmapFactory.Options();
