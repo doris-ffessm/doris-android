@@ -40,6 +40,10 @@
 			android:name=".activities.DetailsFiche_ElementViewActivity" 
 			android:label="@string/app_name">
 		</activity>
+		<activity 
+			android:name=".activities.ImagePleinEcran_CustomViewActivity" 
+			android:label="@string/app_name">
+		</activity>
     </application>
 
 </manifest>

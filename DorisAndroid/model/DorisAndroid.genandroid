@@ -78,16 +78,17 @@
     <dataAssociations name="Groupe_Pere_Groupe_Fils" references="//@dataModel/@dataClasses.8/@dataReferences.0 //@dataModel/@dataClasses.8/@dataReferences.1"/>
   </dataModel>
   <presentationModel preferenceView="//@presentationModel/@viewActivities.1" welcomeView="//@presentationModel/@viewActivities.0">
-    <viewActivities xsi:type="genandroid:CustomViewActivity" name="Accueil" accessibleViews="//@presentationModel/@viewActivities.2 //@presentationModel/@viewActivities.3" triggerableBackgroundActivities="//@presentationModel/@backgroundActivities.1 //@presentationModel/@backgroundActivities.2"/>
+    <viewActivities xsi:type="genandroid:CustomViewActivity" name="Accueil" accessibleViews="//@presentationModel/@viewActivities.2 //@presentationModel/@viewActivities.3" triggerableBackgroundActivities="//@presentationModel/@backgroundActivities.1 //@presentationModel/@backgroundActivities.2 //@presentationModel/@backgroundActivities.3"/>
     <viewActivities xsi:type="genandroid:PreferenceViewActivity" name="Preference"/>
     <viewActivities xsi:type="genandroid:CustomViewActivity" name="RechercheGuidee" accessibleViews="//@presentationModel/@viewActivities.3"/>
     <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ListeFicheAvecFiltre" documentation="Cette liste déroulante de fiche, dispose d'un filtre:&#xD;&#xA;Ce filtre permet d'entrer du texte, un zone géographique et une zone d'observation" accessibleViews="//@presentationModel/@viewActivities.4" selectItemAction="//@presentationModel/@viewActivities.4" listedElement="//@dataModel/@dataClasses.0" presentedDetail="//@presentationModel/@classDetails.0"/>
-    <viewActivities xsi:type="genandroid:ElementViewActivity" name="DetailsFiche" element="//@dataModel/@dataClasses.0"/>
+    <viewActivities xsi:type="genandroid:ElementViewActivity" name="DetailsFiche" documentation="Affiche les détails d'une fiche" accessibleViews="//@presentationModel/@viewActivities.5" triggerableBackgroundActivities="//@presentationModel/@backgroundActivities.4" element="//@dataModel/@dataClasses.0"/>
+    <viewActivities xsi:type="genandroid:CustomViewActivity" name="ImagePleinEcran"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.0/@dataAttributes.1" name="ContenuListeFiche" secondaryAttributes="//@dataModel/@dataClasses.0/@dataAttributes.0"/>
     <backgroundActivities name="TelechargeFiches" documentation="Tache responsable du téléchargement des données des fiches. &#xD;&#xA;Cela inclue les données croisées telles que les zones géographiqes et d'observation.&#xD;&#xA;Elle vérifie le niveau de détails requis pour chaque fiche."/>
     <backgroundActivities name="VerifieNouvellesFiches" documentation="Tache responsable de la vérification de la disponibilité de nouvelles fiches."/>
     <backgroundActivities name="VerifieMAJFiches" documentation="Tache responsable de vérifier s'il existe une version plus récente des fiches déjà connues."/>
     <backgroundActivities name="TelechargePhotosFiches" documentation="Tache responsable du téléchargement des photo des fiches. &#xD;&#xA;Elle vérifie le nombre de photos et la précision requise pour chaque fiche."/>
-    <backgroundActivities name="InitialisationApplication"/>
+    <backgroundActivities name="TelechargePhotosFiche" documentation="Tache responsable du téléchargement des photos d'une fiche. &#xD;&#xA;Elle vérifie le nombre de photos et la précision requise pour chaque fiche."/>
   </presentationModel>
 </genandroid:AndroidProject>

@@ -46,7 +46,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,8 +55,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
-// Start of user code additional imports TelechargePhotosFiches_BgActivity
+// Start of user code additional imports TelechargePhotosFiche_BgActivity
 import java.util.ArrayList;
+import java.util.Collection;
 
 import android.preference.PreferenceManager;
 
@@ -76,7 +76,7 @@ public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer,
     private OrmLiteDBHelper dbHelper;
     private Context context;
     
-    // Start of user code additional attribute declarations TelechargePhotosFiches_BgActivity
+    // Start of user code additional attribute declarations TelechargePhotosFiche_BgActivity
     
     protected Fiche fiche;
     protected DataChangedListener listener;
@@ -94,8 +94,8 @@ public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer,
     
 	/** constructor */
     public TelechargePhotosFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper){
-		String initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
-		String notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
+		String initialTickerText = context.getString(R.string.telechargephotosfiche_bg_initialTickerText);
+		String notificationTitle = context.getString(R.string.telechargephotosfiche_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
         this.dbHelper = dbHelper;
 		this.context = context;
@@ -110,9 +110,8 @@ public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer,
     protected Integer doInBackground(String... arg0) {
     	
 
-		// Start of user code initialization of the task TelechargePhotosFiches_BgActivity
-		// do the initialization of the task here
-
+		// Start of user code initialization of the task TelechargePhotosFiche_BgActivity
+		// do the initializatio of the task here
     	// Téléchargement en tache de fond de toutes les photos d'une fiche particulière
     	
     	List<PhotoFiche> listePhotosATraiter = new ArrayList<PhotoFiche>();
@@ -136,11 +135,11 @@ public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer,
 			}
 		}
         
-		// once done, you should indicates to the notificationHelper how many item will be processed
+    	// once done, you should indicates to the notificationHelper how many item will be processed
 		mNotificationHelper.setMaxItemToProcess(""+listePhotosATraiter.size());
 		// End of user code
     	
-    	// Start of user code main loop of task TelechargePhotosFiches_BgActivity
+    	// Start of user code main loop of task TelechargePhotosFiche_BgActivity
 		// This is where we would do the actual job
 		// you should indicates the progression using publishProgress()
     	int nbPhotoRetreived = 0;
@@ -178,7 +177,7 @@ public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer,
 		}
 		// End of user code
         
-		// Start of user code end of task TelechargePhotosFiches_BgActivity
+		// Start of user code end of task TelechargePhotosFiche_BgActivity
     	if(listener != null && nbPhotoRetreived != 0){
     		listener.dataHasChanged(null);
     	}
@@ -191,14 +190,19 @@ public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer,
         //from the background thread and publishes them to the status bar
         mNotificationHelper.progressUpdate(progress[0]);
     }
+	@Override
+	protected void onCancelled() {
+		super.onCancelled();
+		mNotificationHelper.completed();
+	}
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
-		// Start of user code TelechargePhotosFiches onPostExecute
+		// Start of user code TelechargePhotosFiche onPostExecute
 		// End of user code
     }
 
-    // Start of user code additional operations TelechargePhotosFiches_BgActivity
+    // Start of user code additional operations TelechargePhotosFiche_BgActivity
 	
 	// End of user code
 	

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Start of user code customView_layout for ImagePleinEcran
+-->
+<!-- freely adapt here the desired layout for your custom view -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+	<Button
+        android:id="@+id/btnSampleImagePleinEcran"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/imagepleinecran_customview_sample_btn_label"
+        android:onClick="onClickBtnSample" />
+</LinearLayout>
+<!--End of user code
+-->
