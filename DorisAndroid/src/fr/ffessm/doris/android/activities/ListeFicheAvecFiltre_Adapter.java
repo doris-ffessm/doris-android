@@ -61,6 +61,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
@@ -176,6 +177,38 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
         	ivIcon.setMaxHeight(defaultIconSize);
         	// TODO voir pour lancer un téléchargement en tache de fond si réseau disponible avec mise à jour de l'affichage
         }
+        
+        TextView btnEtatFiche = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow__btnEtatFiche);
+        switch(entry.getEtatFiche()){
+        case 1:
+        	btnEtatFiche.setVisibility(View.VISIBLE);
+        	btnEtatFiche.setText(" R ");
+        	btnEtatFiche.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(context, R.string.ficheredaction_explications, Toast.LENGTH_LONG).show();
+				}
+			});
+        	break;
+        case 5:
+        	btnEtatFiche.setVisibility(View.VISIBLE);
+        	btnEtatFiche.setText(" P ");
+        	btnEtatFiche.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(context, R.string.ficheproposee_explications, Toast.LENGTH_LONG).show();
+				}
+			});
+        	break;
+        case 4:
+        	btnEtatFiche.setVisibility(View.GONE);
+        	
+        	break;
+        default:
+        	btnEtatFiche.setVisibility(View.VISIBLE);
+        	btnEtatFiche.setText(" "+entry.getEtatFiche()+" ");
+        }
+        
 		// End of user code
 
         return convertView;
