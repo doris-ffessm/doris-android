@@ -74,6 +74,7 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -188,11 +189,13 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			sbDebugText.append("\nnbPhoto="+photosFiche.size()+"\n");
 			
 			photoGallery = (LinearLayout)findViewById(R.id.detailsfiche_elementview_photogallery);
+			int pos = 0;
 			for (PhotoFiche photoFiche : photosFiche) {
 				//sbDebugText.append("\nPhoto="+photoFiche.getCleURL()+"\n");
 				if(!insertedPhotosFiche.contains(photoFiche.getCleURL())){
 					View photoView = insertPhoto(photoFiche);
 					if(photoView!=null){
+						photoView.setOnClickListener(new OnImageClickListener(this.ficheId,pos,this));
 						photoGallery.addView(photoView);
 						insertedPhotosFiche.add(photoFiche.getCleURL());
 					}
@@ -202,6 +205,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 						break; // les autres ne sont probablement pas là non plus, pas la peine d'essayer
 					}
 				}
+				pos++;
 			}
 			
 		}
@@ -371,6 +375,31 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         completeMessage.sendToTarget();
 	}
 
+    class OnImageClickListener implements OnClickListener {
+    	 
+        int _position;
+        int _ficheID;
+        Activity _activity;
+ 
+        // constructor
+        public OnImageClickListener(int ficheID, int position, Activity activity) {
+            this._position = position;
+            this._activity = activity;
+            this._ficheID = ficheID;
+        }
+ 
+        @Override
+        public void onClick(View v) {
+            // on selecting grid view image
+            // launch full screen activity
+            Intent i = new Intent(_activity, ImagePleinEcran_CustomViewActivity.class);
+            i.putExtra("position", _position);
+            i.putExtra("ficheId", _ficheID);
+            _activity.startActivity(i);
+        }
+ 
+    }
+    
     // End of user code
 
 	private void showToast(String message) {

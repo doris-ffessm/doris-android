@@ -6,12 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-	<Button
-        android:id="@+id/btnSampleImagePleinEcran"
+	<android.support.v4.view.ViewPager
+        android:id="@+id/imagepleinecran_pager"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/imagepleinecran_customview_sample_btn_label"
-        android:onClick="onClickBtnSample" />
+        android:layout_height="fill_parent" />
 </LinearLayout>
 <!--End of user code
 -->

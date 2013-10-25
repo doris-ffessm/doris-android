@@ -42,13 +42,19 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,6 +74,9 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteBaseActivity<OrmL
 {
 	
 	//Start of user code constants ImagePleinEcran_CustomViewActivity
+	
+	protected ImagePleinEcran_Adapter adapter;
+	protected ViewPager viewPager;
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -76,6 +85,33 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteBaseActivity<OrmL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.imagepleinecran_customview);
         //Start of user code onCreate ImagePleinEcran_CustomViewActivity
+        
+        viewPager = (ViewPager) findViewById(R.id.imagepleinecran_pager);
+        
+        Intent i = getIntent();
+        // récupération de la position dans du click dans la vue précédente
+		int position = i.getIntExtra("position", 0);
+		// récupération info qui permettra de retrouver la liste des images à afficher
+		int ficheId = i.getIntExtra("ficheId", 0);
+
+		
+		//TODO calcul de la liste d'images à partir de l'Id de la fiche  (pour plus tard, la même chose mais pour les photos principales d'un groupe ?) 
+		//ArrayList<String> imagePaths;
+		
+		RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
+    	Fiche entry = entriesDao.queryForId(ficheId);
+    	entry.setContextDB(getHelper().getDorisDBHelper());
+    	//Collection<PhotoFiche> photosFiche = entry.getPhotosFiche(); 
+    	ArrayList<PhotoFiche> photosFicheArrayList = new ArrayList<PhotoFiche>(entry.getPhotosFiche());
+		
+		
+        // Image adapter
+        adapter = new ImagePleinEcran_Adapter(ImagePleinEcran_CustomViewActivity.this, photosFicheArrayList);
+        
+        viewPager.setAdapter(adapter);
+        
+        // affiche l'image selectionnée en premier
+     	viewPager.setCurrentItem(position);
 		//End of user code
     }
     
@@ -87,9 +123,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteBaseActivity<OrmL
 		//End of user code
 	}
     //Start of user code additional code ImagePleinEcran_CustomViewActivity
-	public void onClickBtnSample(View view){
-		showToast("sample button pressed. \nPlease customize ;-)");
-    }
+	
 	//End of user code
 
     /** refresh screen from data 
