@@ -42,101 +42,90 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
-// Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity_additionalimports
-// End of user code
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+//Start of user code additional imports GroupSelection_CustomViewActivity
 
-public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
+import java.util.ArrayList;
+import fr.ffessm.doris.android.datamodel.Groupe;
+//End of user code
+public class GroupSelection_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
+//Start of user code additional implements GroupSelection_CustomViewActivity
+//End of user code
+{
 	
-	//Start of user code constants ListeFicheAvecFiltre_ClassListViewActivity
+	//Start of user code constants GroupSelection_CustomViewActivity
 	//End of user code
 
-	// Search EditText
-    EditText inputSearch;
-    ListeFicheAvecFiltre_Adapter adapter;
-
-	public void onCreate(Bundle bundle) {
-		super.onCreate(bundle);
-		setContentView(R.layout.listeficheavecfiltre_listview);
-
-		ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
-        list.setClickable(true);
-        adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper());
-
-		// avoid opening the keayboard on view opening
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        list.setOnItemClickListener(this);
-
-        list.setAdapter(adapter);
-
-		inputSearch = (EditText) findViewById(R.id.inputSearch_listeficheavecfiltre_listviewsearchrow);
-
-		/**
-         * Enabling Search Filter
-         * */
-        inputSearch.addTextChangedListener(new TextWatcher() {
-             
-            @Override
-            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                // When user changed the Text
-                ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(cs);  
-            }
-             
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-                    int arg3) {
-                // TODO Auto-generated method stub
-                 
-            }
-             
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                // TODO Auto-generated method stub                         
-            }
-        });
-	}
-	
-
-
-	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
-		//showToast(view.toString() + ", "+ view.getId());
-		/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-        //tvLabel.setText(dateFormatter.format(entry.getDate()));
-        showToast(dateFormatter.format(((DiveEntry)view.getTag()).getDate()));
-		*/
-        Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
-        Bundle b = new Bundle();
-        b.putInt("ficheId", ((Fiche)view.getTag()).getId());
-		toDetailView.putExtras(b);
-        startActivity(toDetailView);
+	/** Called when the activity is first created. */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.groupselection_customview);
+        //Start of user code onCreate GroupSelection_CustomViewActivity
+        
+     // get the listview
+        ExpandableListView expListView = (ExpandableListView) findViewById(R.id.groupselection_customview_lvExp);
+ 
+        // preparing list data
+        ArrayList<Groupe>rawGroupes =  new ArrayList<Groupe>();
+        rawGroupes.addAll(getHelper().getGroupeDao().queryForAll());
+        for (Groupe groupe : rawGroupes) {
+        	groupe.setContextDB(this.getHelper().getDorisDBHelper());
+		}
+ 
+        GroupSelection_Adapter listAdapter = new GroupSelection_Adapter(this, rawGroupes, 1);
+ 
+        // setting list adapter
+        expListView.setAdapter(listAdapter);
+        
+        
+        
+		//End of user code
     }
+    
+    @Override
+	protected void onResume() {
+		super.onResume();
+		refreshScreenData();
+		//Start of user code onResume GroupSelection_CustomViewActivity
+		//End of user code
+	}
+    //Start of user code additional code GroupSelection_CustomViewActivity
+	
+	//End of user code
+
+    /** refresh screen from data 
+     */
+    public void refreshScreenData() {
+    	//Start of user code action when refreshing the screen GroupSelection_CustomViewActivity
+		//End of user code
+	}
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		// add options in the menu
 		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
 
-		//Start of user code additional onCreateOptionsMenu ListeFicheAvecFiltre_ClassListViewActivity
+		//Start of user code additional onCreateOptionsMenu GroupSelection_CustomViewActivity
 
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -151,20 +140,12 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 		            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
 		            return true;
 		
-		//Start of user code additional menu action ListeFicheAvecFiltre_ClassListViewActivity
+		//Start of user code additional menu action GroupSelection_CustomViewActivity
 
 		//End of user code
         }
         return false;
     }
-
-
-	// Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity
-	public void onClickFilterBtn(View view){
-		showToast("filter button pressed. \nFeature under development ;-)");
-		startActivity(new Intent(this, GroupSelection_CustomViewActivity.class));
-    }
-	// End of user code
 
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();

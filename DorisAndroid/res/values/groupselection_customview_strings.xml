@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resource Strings specific to groupselection Custom View -->
+<resources>	
+	<!-- Start of user code customView_strings groupselection
+	-->
+	<!-- freely add here the desired resource String for your custom view -->
+	<string name="groupselection_customview_sample_btn_label">SampleButton</string>
+	<!-- End of user code
+	-->
+</resources>

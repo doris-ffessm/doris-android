@@ -5,6 +5,7 @@
 (ListeFicheAvecFiltre)-><ListeFicheAvecFiltreChoice>
 (DetailsFiche)-><DetailsFicheChoice>
 (ImagePleinEcran)-><ImagePleinEcranChoice>
+(GroupSelection)-><GroupSelectionChoice>
 (TelechargeFiches)->(end)
 (VerifieNouvellesFiches)->(end)
 (VerifieMAJFiches)->(end)
