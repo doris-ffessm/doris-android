@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 public class ImagePleinEcran_Adapter extends PagerAdapter {
 
@@ -118,7 +119,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     	}	
     	@Override
         public void onClick(View v) {
-        	_activity.showToast(photoFiche.getDescription());
+    		Toast.makeText(_activity, photoFiche.getDescription(), Toast.LENGTH_LONG).show();
         }
     }
     

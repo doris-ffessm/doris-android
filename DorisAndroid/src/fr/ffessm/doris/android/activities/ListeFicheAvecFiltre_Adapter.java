@@ -41,7 +41,6 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -50,7 +49,6 @@ import java.util.List;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
-import fr.ffessm.doris.android.datamodel.PhotoFiche;
 
 
 import android.content.Context;
@@ -63,7 +61,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
@@ -71,15 +68,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.squareup.picasso.Picasso;
 
 //Start of user code protected additional ListeFicheAvecFiltre_Adapter imports
 // additional imports
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
+import android.widget.Button;
 import android.widget.ImageView;
+import com.squareup.picasso.Picasso;
+import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.tools.Outils;
+import java.io.IOException;
 //End of user code
 
 public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filterable{

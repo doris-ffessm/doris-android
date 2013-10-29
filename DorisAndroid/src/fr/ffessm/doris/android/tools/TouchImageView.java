@@ -12,7 +12,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 public class TouchImageView extends ImageView {
-
+	private static final String LOG_TAG = TouchImageView.class.getCanonicalName();
+	
 	Matrix matrix;
 
 	// We can be in one of these 3 states
@@ -49,6 +50,7 @@ public class TouchImageView extends ImageView {
 	}
 
 	private void sharedConstructing(Context context) {
+		Log.d(LOG_TAG, "sharedConstructing");
 		super.setClickable(true);
 		this.context = context;
 		mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
@@ -120,6 +122,8 @@ public class TouchImageView extends ImageView {
 
 		@Override
 		public boolean onScale(ScaleGestureDetector detector) {
+
+			Log.d(LOG_TAG, "onScale");
 			float mScaleFactor = detector.getScaleFactor();
 			float origScale = saveScale;
 			saveScale *= mScaleFactor;
@@ -145,6 +149,8 @@ public class TouchImageView extends ImageView {
 	}
 
 	void fixTrans() {
+
+		Log.d(LOG_TAG, "fixTrans");
 		matrix.getValues(m);
 		float transX = m[Matrix.MTRANS_X];
 		float transY = m[Matrix.MTRANS_Y];
@@ -184,6 +190,8 @@ public class TouchImageView extends ImageView {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+		Log.d(LOG_TAG, "onMeasure");
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		viewWidth = MeasureSpec.getSize(widthMeasureSpec);
 		viewHeight = MeasureSpec.getSize(heightMeasureSpec);
@@ -208,7 +216,7 @@ public class TouchImageView extends ImageView {
 			int bmWidth = drawable.getIntrinsicWidth();
 			int bmHeight = drawable.getIntrinsicHeight();
 
-			Log.d("bmSize", "bmWidth: " + bmWidth + " bmHeight : " + bmHeight);
+			Log.d(LOG_TAG, "bmWidth: " + bmWidth + " bmHeight : " + bmHeight);
 
 			float scaleX = (float) viewWidth / (float) bmWidth;
 			float scaleY = (float) viewHeight / (float) bmHeight;
