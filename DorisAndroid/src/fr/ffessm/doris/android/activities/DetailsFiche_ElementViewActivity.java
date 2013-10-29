@@ -44,6 +44,7 @@ package fr.ffessm.doris.android.activities;
 
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
@@ -61,9 +62,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.squareup.picasso.Picasso;
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_import
 import android.widget.ImageView;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -80,6 +83,8 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView.BufferType;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -140,6 +145,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		    }
 		
 		};
+		Picasso.with(this).setDebugging(BuildConfig.DEBUG);
 		// End of user code
     }
     
@@ -163,27 +169,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer)entry.getEtatFiche()).toString());	
 		
 		StringBuffer sbDebugText = new StringBuffer();
-		/*if(entry.getPhotoPrincipale()!=null){
-			sbDebugText.append("photoPrincipale="+entry.getPhotoPrincipale());
-			//try {
-				//Outils.getVignetteFile(getBaseContext(), entry.getPhotoPrincipale());
-				ImageView ivIcon = (ImageView) findViewById(R.id.detailsfiche_elementview_icon);
-		        Bitmap iconBitmap = Outils.getAvailableImagePrincipaleFiche(getBaseContext(), entry);
-		        if(iconBitmap != null){
-		        	ivIcon.setImageBitmap(iconBitmap);    		        	
-		        	//ivIcon.setAdjustViewBounds(true);
-		        	//ivIcon.setLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT);
-		        	//ivIcon.setLayoutParams(new Gallery.LayoutParams(
-		            //    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		        }
-		        else{
-		        	new TelechargePhotosFiche_BgActivity(getApplicationContext(), this.getHelper(), entry, this).execute("");
-		        }
-			//} catch (IOException e) {
-			//	Log.e(LOG_TAG, e.getMessage(), e);
-			//}
-			//entry.getPhotoPrincipale().getImageVignette();
-		}*/		
+
+		
+		
 		Collection<PhotoFiche> photosFiche = entry.getPhotosFiche(); 
 		if(photosFiche!=null){
 			sbDebugText.append("\nnbPhoto="+photosFiche.size()+"\n");
@@ -191,8 +179,13 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			photoGallery = (LinearLayout)findViewById(R.id.detailsfiche_elementview_photogallery);
 			int pos = 0;
 			for (PhotoFiche photoFiche : photosFiche) {
+				View photoView = insertPhoto(photoFiche);
+				photoView.setOnClickListener(new OnImageClickListener(this.ficheId,pos,this));
+				photoGallery.addView(photoView);
+				
+				
 				//sbDebugText.append("\nPhoto="+photoFiche.getCleURL()+"\n");
-				if(!insertedPhotosFiche.contains(photoFiche.getCleURL())){
+				/*if(!insertedPhotosFiche.contains(photoFiche.getCleURL())){
 					View photoView = insertPhoto(photoFiche);
 					if(photoView!=null){
 						photoView.setOnClickListener(new OnImageClickListener(this.ficheId,pos,this));
@@ -204,7 +197,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 						new TelechargePhotosFiche_BgActivity(getApplicationContext(), this.getHelper(), entry, this).execute("");
 						break; // les autres ne sont probablement pas là non plus, pas la peine d'essayer
 					}
-				}
+				}*/
 				pos++;
 			}
 			
@@ -343,21 +336,38 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     }
     
     View insertPhoto(PhotoFiche photoFiche){
-        Bitmap bm = Outils.getAvailableImagePhotoFiche(getBaseContext(), photoFiche);
-        if(bm != null){
-	        LinearLayout layout = new LinearLayout(getApplicationContext());
-	        layout.setLayoutParams(new LayoutParams(200, 200));
-	        layout.setGravity(Gravity.CENTER);
-	        
-	        ImageView imageView = new ImageView(getApplicationContext());	        
-	        imageView.setLayoutParams(new LayoutParams(200, 200));
-	        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-	        imageView.setImageBitmap(bm);
-	        
-	        layout.addView(imageView);
-	        return layout;
-        }
-        return null;
+    	
+    	
+       LinearLayout layout = new LinearLayout(getApplicationContext());
+        layout.setLayoutParams(new LayoutParams(200, 200));
+        layout.setGravity(Gravity.CENTER);
+        
+        ImageView imageView = new ImageView(getApplicationContext());	        
+        imageView.setLayoutParams(new LayoutParams(200, 200));
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        if(Outils.isAvailableVignettePhotoFiche(this, photoFiche)){
+    		try {
+				Picasso.with(this).load(Outils.getVignetteFile(this, photoFiche))
+					.fit()
+					.centerInside()
+					.into(imageView);
+			} catch (IOException e) {
+			}
+    	}
+    	else{
+    		// pas préhargée en local pour l'instant, cherche sur internet
+    		Picasso.with(this)
+    			.load(PhotoFiche.VIGNETTE_BASE_URL+photoFiche.getCleURL())
+				.placeholder(R.drawable.doris_large)  // utilisation de l'image par defaut pour commencer
+				.error(R.drawable.photo_non_disponible)
+				.fit()
+				.centerInside()
+    			.into(imageView);
+    	}
+        
+        layout.addView(imageView);
+        return layout;
+   
     }
     protected void foldAll(){
     	for (FoldableClickListener foldable : allFoldable) {

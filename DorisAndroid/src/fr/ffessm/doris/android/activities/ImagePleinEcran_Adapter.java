@@ -1,11 +1,15 @@
 package fr.ffessm.doris.android.activities;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import com.squareup.picasso.Picasso;
 
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.ScreenTools;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,12 +27,12 @@ import android.widget.RelativeLayout;
 public class ImagePleinEcran_Adapter extends PagerAdapter {
 
 	
-	private Activity _activity;
+	private ImagePleinEcran_CustomViewActivity _activity;
     private ArrayList<PhotoFiche> _PhotoFicheLists;
     private LayoutInflater inflater;
  
     // constructor
-    public ImagePleinEcran_Adapter(Activity activity,
+    public ImagePleinEcran_Adapter(ImagePleinEcran_CustomViewActivity activity,
             ArrayList<PhotoFiche> photoFicheLists) {
         this._activity = activity;
         this._PhotoFicheLists = photoFicheLists;
@@ -56,18 +60,49 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
   
         imgDisplay = (fr.ffessm.doris.android.tools.TouchImageView) viewLayout.findViewById(R.id.imagepleinecran_image_imgDisplay);
         btnClose = (Button) viewLayout.findViewById(R.id.imagepleinecran_image_btnClose);
-         
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888; // TODO regarder si on peux exploiter cette option pour optimiser
-        Bitmap bitmap = Outils.getAvailableImagePhotoFiche(_activity, _PhotoFicheLists.get(position));
-        //Bitmap bitmap = BitmapFactory.decodeFile(_PhotoFicheLists.get(position), options);
-        imgDisplay.setImageBitmap(bitmap);
-         
+        
+        int hauteur = ScreenTools.getScreenHeight(_activity);
+        int largeur = ScreenTools.getScreenWidth(_activity);
+        PhotoFiche photoFiche = _PhotoFicheLists.get(position);
+        if(Outils.isAvailableHiResPhotoFiche(_activity,photoFiche)){
+    		try {
+				Picasso.with(_activity)
+					.load(Outils.getHiResFile(_activity, photoFiche))
+					.placeholder(R.drawable.doris_large)  // utilisation de l'image par defaut pour commencer
+					.resize(largeur, hauteur)
+					.centerInside()
+					.into(imgDisplay);
+			} catch (IOException e) {
+			}
+    	}
+    	else{
+    		if(Outils.isAvailableMedResPhotoFiche(_activity,photoFiche)){
+        		try {
+    				Picasso.with(_activity)
+    					.load(Outils.getMedResFile(_activity, photoFiche))
+    					.placeholder(R.drawable.doris_large)  // utilisation de l'image par defaut pour commencer
+    					.into(imgDisplay);
+    			} catch (IOException e) {
+    			}
+        	}
+    		else{
+	    		// pas préchargée en local pour l'instant, cherche sur internet
+	    		Picasso.with(_activity)
+	    			.load(PhotoFiche.MOYENNE_BASE_URL+photoFiche.getCleURL())
+					.placeholder(R.drawable.doris_large)  // utilisation de l'image par defaut pour commencer
+					.error(R.drawable.photo_non_disponible)
+					.resize(largeur, hauteur)
+					.centerInside()
+	    			.into(imgDisplay);
+    		}
+    	}
+        
+        imgDisplay.setOnClickListener(new PhotoClickListener(photoFiche));
         // close button click event
         btnClose.setOnClickListener(new View.OnClickListener() {           
             @Override
             public void onClick(View v) {
-                _activity.finish();
+            	_activity.finish();
             }
         });
   
@@ -76,6 +111,17 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         return viewLayout;
     }
      
+    class PhotoClickListener implements View.OnClickListener{
+    	PhotoFiche photoFiche;
+    	public PhotoClickListener(PhotoFiche photoFiche){
+    		this.photoFiche = photoFiche;
+    	}	
+    	@Override
+        public void onClick(View v) {
+        	_activity.showToast(photoFiche.getDescription());
+        }
+    }
+    
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         ((ViewPager) container).removeView((RelativeLayout) object);

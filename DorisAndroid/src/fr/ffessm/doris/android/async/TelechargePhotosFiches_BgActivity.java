@@ -149,7 +149,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     		if( this.isCancelled()) return nbPhotoRetreived;
     		// recupération de la photo sur internet
     		try{
-    			Outils.getVignetteFile(context, photoFiche);
+    			Outils.getOrDownloadVignetteFile(context, photoFiche);
     			Log.i(LOG_TAG, "vignette" +photoFiche.getCleURL()+" téléchargée");
     			nbPhotoRetreived = nbPhotoRetreived+1;
     			publishProgress(nbPhotoRetreived);

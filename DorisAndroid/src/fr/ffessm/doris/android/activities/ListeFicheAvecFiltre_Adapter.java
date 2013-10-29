@@ -41,6 +41,7 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,6 +50,7 @@ import java.util.List;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.PhotoFiche;
 
 
 import android.content.Context;
@@ -69,6 +71,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.squareup.picasso.Picasso;
 
 //Start of user code protected additional ListeFicheAvecFiltre_Adapter imports
 // additional imports
@@ -163,20 +166,29 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
         }catch(Exception e){}
         
         ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_icon);
-        Bitmap iconBitmap = Outils.getAvailableImagePrincipaleFiche(context, entry);
-        if(iconBitmap != null){
-        	ivIcon.setImageBitmap(iconBitmap);        	
-        	ivIcon.setAdjustViewBounds(true);
-        	ivIcon.setMaxHeight(defaultIconSize);
-        	//ivIcon.setLayoutParams(new Gallery.LayoutParams(
-            //    LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+    	ivIcon.setMaxHeight(defaultIconSize);
+    	PhotoFiche photoPrincipale = entry.getPhotoPrincipale();
+        if(photoPrincipale != null){
+        	if(Outils.isAvailableVignettePhotoFiche(context, photoPrincipale)){
+        		try {
+        			//Log.d(LOG_TAG, "from disk "+photoPrincipale.getCleURL());
+					Picasso.with(context)
+						.load(Outils
+						.getVignetteFile(context, photoPrincipale))
+						.placeholder(R.drawable.ic_launcher)  // utilisation de l'image par defaut pour commencer
+						.into(ivIcon);
+				} catch (IOException e) {
+				}
+        	}
+        	else{
+        		// pas préchargée en local pour l'instant, cherche sur internet
+        		Picasso.with(context)
+        			.load(PhotoFiche.VIGNETTE_BASE_URL+photoPrincipale.getCleURL())
+					.placeholder(R.drawable.ic_launcher)  // utilisation de l'image par defaut pour commencer
+        			.into(ivIcon);
+        	}
         }
-        else{
-        	// utilisation de l'image par defaut
-        	ivIcon.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher));
-        	ivIcon.setMaxHeight(defaultIconSize);
-        	// TODO voir pour lancer un téléchargement en tache de fond si réseau disponible avec mise à jour de l'affichage
-        }
+       
         
         TextView btnEtatFiche = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow__btnEtatFiche);
         switch(entry.getEtatFiche()){

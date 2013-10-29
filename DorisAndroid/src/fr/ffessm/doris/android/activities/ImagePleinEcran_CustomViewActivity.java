@@ -48,6 +48,7 @@ import java.util.Collection;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
@@ -66,6 +67,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.squareup.picasso.Picasso;
 //Start of user code additional imports ImagePleinEcran_CustomViewActivity
 //End of user code
 public class ImagePleinEcran_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
@@ -112,6 +114,9 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteBaseActivity<OrmL
         
         // affiche l'image selectionnée en premier
      	viewPager.setCurrentItem(position);
+     	
+     	// info de debug de Picasso
+     	Picasso.with(this).setDebugging(BuildConfig.DEBUG);
 		//End of user code
     }
     
@@ -160,7 +165,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteBaseActivity<OrmL
         return false;
     }
 
-	private void showToast(String message) {
+	public void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 }

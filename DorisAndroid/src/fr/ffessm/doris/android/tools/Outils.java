@@ -15,12 +15,22 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 import fr.ffessm.doris.android.R;
 
 public class Outils {
 	private static final String LOG_TAG = Outils.class.getCanonicalName();
 	public static final String VIGNETTES_FICHE_FOLDER = "vignettes_fiches";
+	public static final String MED_RES_FICHE_FOLDER = "medium_res_images_fiches";
+	public static final String HI_RES_FICHE_FOLDER = "hi_res_images_fiches";
+	
+	
+	public enum ImageType {
+	    VIGNETTE, MED_RES, HI_RES 
+	} 
 	
 	/**
 	 * renvoie l'image principale actuellement disponible pour une fiche donnée, 
@@ -72,6 +82,10 @@ public class Outils {
 		return result;
 	}
 	public static boolean isAvailableImagePhotoFiche(Context inContext, PhotoFiche photofiche){
+		
+		return isAvailableVignettePhotoFiche(inContext, photofiche);
+	}
+	public static boolean isAvailableVignettePhotoFiche(Context inContext, PhotoFiche photofiche){
 		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);		
 		if(photofiche != null){
 			File vignetteImage = new File(imageFolder, photofiche.getCleURL());
@@ -81,10 +95,65 @@ public class Outils {
 		}
 		return false;
 	}
-	public static File getVignetteFile(Context inContext, PhotoFiche photo) throws IOException{
-		
-		File result = null;		
-		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);
+	public static boolean isAvailableMedResPhotoFiche(Context inContext, PhotoFiche photofiche){
+		File imageFolder = inContext.getDir( MED_RES_FICHE_FOLDER , Context.MODE_PRIVATE);		
+		if(photofiche != null){
+			File vignetteImage = new File(imageFolder, photofiche.getCleURL());
+			if(vignetteImage.exists()){
+				return true;
+			}
+		}
+		return false;
+	}
+	public static boolean isAvailableHiResPhotoFiche(Context inContext, PhotoFiche photofiche){
+		File imageFolder = inContext.getDir( HI_RES_FICHE_FOLDER , Context.MODE_PRIVATE);		
+		if(photofiche != null){
+			File vignetteImage = new File(imageFolder, photofiche.getCleURL());
+			if(vignetteImage.exists()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static File getVignetteFile(Context inContext, PhotoFiche photo) throws IOException{		
+		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);		
+		return new File(imageFolder, photo.getCleURL());
+	}
+	public static File getMedResFile(Context inContext, PhotoFiche photo) throws IOException{		
+		File imageFolder = inContext.getDir(MED_RES_FICHE_FOLDER, Context.MODE_PRIVATE);		
+		return new File(imageFolder, photo.getCleURL());
+	}
+	public static File getHiResFile(Context inContext, PhotoFiche photo) throws IOException{		
+		File imageFolder = inContext.getDir(HI_RES_FICHE_FOLDER, Context.MODE_PRIVATE);		
+		return new File(imageFolder, photo.getCleURL());
+	}
+	
+	public static File getOrDownloadVignetteFile(Context inContext, PhotoFiche photo) throws IOException{
+		return getOrDownloadFile(inContext, photo, ImageType.VIGNETTE);
+	}
+	
+	public static File getOrDownloadFile(Context inContext, PhotoFiche photo, ImageType imageType) throws IOException{
+		File result = null;	
+		String imageFolderName="";
+		String baseUrl="";
+		switch (imageType) {
+		case VIGNETTE:
+			imageFolderName = VIGNETTES_FICHE_FOLDER;
+			baseUrl=PhotoFiche.VIGNETTE_BASE_URL;
+			break;
+		case MED_RES:
+			imageFolderName = MED_RES_FICHE_FOLDER;
+			baseUrl=PhotoFiche.MOYENNE_BASE_URL;
+			break;
+		case HI_RES:
+			imageFolderName = HI_RES_FICHE_FOLDER;
+			baseUrl=PhotoFiche.GRANDE_BASE_URL;
+			break;
+		default:
+			break;
+		}
+		File imageFolder = inContext.getDir(imageFolderName, Context.MODE_PRIVATE);
 		
 		
 		if(photo != null){
@@ -98,7 +167,9 @@ public class Outils {
 		    
 				URL urlHtml;
 				try {
-					urlHtml = new URL(PhotoFiche.VIGNETTE_BASE_URL+photo.getCleURL());
+					String urlNettoyee = baseUrl+photo.getCleURL();
+					urlNettoyee = urlNettoyee.replaceAll(" ", "%20");
+					urlHtml = new URL(urlNettoyee);
 					HttpURLConnection urlConnection = (HttpURLConnection) urlHtml.openConnection();
 			        urlConnection.setConnectTimeout(3000);
 			        urlConnection.setReadTimeout(10000);
@@ -145,4 +216,6 @@ public class Outils {
     	du.accept(imageFolder);
     	return du.getSize();
 	}
+	
+
 }
