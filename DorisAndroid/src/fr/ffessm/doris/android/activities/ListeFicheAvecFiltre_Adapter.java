@@ -41,6 +41,7 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -52,6 +53,7 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,8 +79,11 @@ import android.preference.PreferenceManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
+import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.OutilsGroupe;
+
 import java.io.IOException;
 //End of user code
 
@@ -98,6 +103,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
     private List<Fiche> filteredFicheList;
 	private final Object mLock = new Object();
 	private SimpleFilter mFilter;
+
+	protected Groupe filtreGroupe;
+	protected ArrayList<Integer> acceptedGroupeId;
 
 	public ListeFicheAvecFiltre_Adapter(Context context, DorisDBHelper contextDB) {
 		super();
@@ -169,6 +177,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
     	ivIcon.setMaxHeight(defaultIconSize);
     	PhotoFiche photoPrincipale = entry.getPhotoPrincipale();
         if(photoPrincipale != null){
+        	photoPrincipale.setContextDB(_contextDB);
         	if(Outils.isAvailableVignettePhotoFiche(context, photoPrincipale)){
         		try {
         			//Log.d(LOG_TAG, "from disk "+photoPrincipale.getCleURL());
@@ -227,6 +236,22 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 
 	}
 
+	public void refreshFilter(){
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);
+		try {
+			Groupe searchedGroupe = _contextDB.groupeDao.queryForId(prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1));
+			//Log.d(LOG_TAG, "filter _contextDB="+_contextDB);
+			searchedGroupe.setContextDB(_contextDB);
+			acceptedGroupeId = new ArrayList<Integer>();
+			for (Groupe groupe : OutilsGroupe.getAllSubGroupesForGroupe(searchedGroupe)) {
+				acceptedGroupeId.add(groupe.getId());
+			}
+		} catch (SQLException e) {
+			Log.e(LOG_TAG, e.getMessage(),e);
+		}
+	}
+	
 	protected boolean sortAfterFilter() {
 		return false;
 	}
@@ -245,6 +270,29 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 				continue;
 			//else if(fiche.getAutresDenominations().contains(pattern)) return 1; 
 			else isValid = false;
+		}
+		
+		if(isValid){
+			/*SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);
+			try {
+				Groupe searchedGroupe = _contextDB.groupeDao.queryForId(prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1));
+				//Log.d(LOG_TAG, "filter _contextDB="+_contextDB);
+				searchedGroupe.setContextDB(_contextDB);
+				fiche.setContextDB(_contextDB);
+				isValid = OutilsGroupe.isFichePartOfGroupe(fiche, searchedGroupe);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
+			Groupe groupeFiche = fiche.getGroupe();
+			if(groupeFiche != null)
+			{
+				groupeFiche.setContextDB(_contextDB);
+				if(!acceptedGroupeId.contains(Integer.valueOf(groupeFiche.getId()))){
+					isValid = false;
+				}
+			}
 		}
 		if(isValid) return 1;		
 		else return -1;
@@ -320,10 +368,11 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 		@SuppressWarnings("unchecked")
 		@Override
 		protected void publishResults(CharSequence constraint, FilterResults results) {
-			filteredFicheList = (List<Fiche>) results.values;
 			if (results.count > 0) {
+				filteredFicheList = (List<Fiche>) results.values;
 				notifyDataSetChanged();
 			} else {
+				filteredFicheList = new ArrayList<Fiche>();
 				notifyDataSetInvalidated();
 			}
 		}

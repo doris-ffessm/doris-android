@@ -1,15 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"    
-    android:padding="8dp" >
-    
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft">
+	 
+	
     <TextView
         android:id="@+id/groupselection_customview_lblListHeader"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
-        android:textSize="16sp" />
+        android:textSize="16sp" 
+        android:text="dsfljdgfjdqjl"/>
+	<ImageButton
+	    android:id="@+id/groupselection_customview_lblListGroup_moreBtn"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_toLeftOf="@+id/groupselection_customview_lblListGroup_selectBtn"
+	    android:background="@android:color/transparent"
+	    android:src="@android:drawable/ic_menu_view"
+	    android:focusable="false" 
+	    android:clickable="true"/>
 
-</LinearLayout>
+	<ImageButton
+        android:id="@+id/groupselection_customview_lblListGroup_selectBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"
+        android:src="@android:drawable/ic_menu_set_as"
+	    android:focusable="false" 
+	    android:clickable="true"/>
+		
+</RelativeLayout>

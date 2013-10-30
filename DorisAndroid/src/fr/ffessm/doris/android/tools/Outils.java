@@ -87,7 +87,7 @@ public class Outils {
 	}
 	public static boolean isAvailableVignettePhotoFiche(Context inContext, PhotoFiche photofiche){
 		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);		
-		if(photofiche != null){
+		if(photofiche != null && photofiche.getCleURL() != null && !photofiche.getCleURL().isEmpty()){
 			File vignetteImage = new File(imageFolder, photofiche.getCleURL());
 			if(vignetteImage.exists()){
 				return true;

@@ -99,6 +99,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
                 // When user changed the Text
+            	ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter();
                 ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(cs);  
             }
              

@@ -10,13 +10,18 @@ import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.tools.OutilsGroupe;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class GroupSelection_Adapter extends BaseExpandableListAdapter {
 
@@ -24,21 +29,21 @@ public class GroupSelection_Adapter extends BaseExpandableListAdapter {
 	
 	protected ArrayList<Groupe> rawGroupes;
 	
-	private Context _context;
+	private GroupSelection_CustomViewActivity _context;
     private List<Groupe> groupesHeader; // header titles
     // child data in format of header title, child title
     private HashMap<String, List<Groupe>> groupesChildMap;
     
     
     // niveau de profondeur utilisé pour le listGroup par rapport au Groupe 
-    protected int listgroupLevel =1;
+    public Groupe currentRootGroupe;
     
 	
-	public GroupSelection_Adapter(Context context, ArrayList<Groupe> rawGroupes, int listgroupLevel){
+	/*public GroupSelection_Adapter(Context context, ArrayList<Groupe> rawGroupes, int listgroupLevel){
 		super();
 		_context = context;
 		this.rawGroupes = rawGroupes;
-		this.listgroupLevel = listgroupLevel;
+		this.rootGroupe = listgroupLevel;
 		
 		// trouve les groups de Groupe pour le niveau requis
 		groupesHeader = OutilsGroupe.getAllGroupesForLevel(rawGroupes, listgroupLevel);
@@ -51,9 +56,42 @@ public class GroupSelection_Adapter extends BaseExpandableListAdapter {
 			groupesChildMap.put(groupe.getNomGroupe(), childs);
 			Log.d(LOG_TAG, "     Created childs.size="+childs.size());
 		}
+	}*/
+	
+	public GroupSelection_Adapter(GroupSelection_CustomViewActivity context, ArrayList<Groupe> rawGroupes, Groupe rootGroupe){
+		super();
+		_context = context;
+		this.rawGroupes = rawGroupes;
+		buildTreeForRoot(rootGroupe);
+		
 	}
 	
 	
+	protected void buildTreeForRoot(Groupe rootGroupe){
+		this.currentRootGroupe = rootGroupe;
+		
+		// trouve les groups de Groupe pour le niveau requis
+		groupesHeader = OutilsGroupe.getAllGroupesForNextLevel(rawGroupes, rootGroupe);
+		Log.d(LOG_TAG, "Created groupesHeader.size="+groupesHeader.size());
+		// crée les fils pour ces groups de Groupe
+		groupesChildMap = new HashMap<String, List<Groupe>>();
+		for (Groupe groupe : groupesHeader) {
+			List<Groupe> childs = new ArrayList<Groupe>();
+			childs.addAll(groupe.getGroupesFils());
+			groupesChildMap.put(groupe.getNomGroupe(), childs);
+			Log.d(LOG_TAG, "     Created childs.size="+childs.size());
+		}
+		notifyDataSetChanged();
+		refreshNavigation();
+	}
+	
+	protected void refreshNavigation(){
+		LinearLayout navigationLayout = (LinearLayout)_context.findViewById(R.id.groupselection_customview_navigation);
+    	TextView groupeNavigationText = new TextView(_context);
+    	groupeNavigationText.setText(currentRootGroupe.getNomGroupe());
+    	navigationLayout.addView(groupeNavigationText);
+    	//navigationLayout.
+	}
 	
 	
 	@Override
@@ -69,7 +107,8 @@ public class GroupSelection_Adapter extends BaseExpandableListAdapter {
 	@Override
 	public View getChildView(int groupPosition, int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
-		final String childText = ((Groupe) getChild(groupPosition, childPosition)).getNomGroupe();
+		final Groupe childGroupe = (Groupe) getChild(groupPosition, childPosition);
+		final String childText = childGroupe.getNomGroupe();
 		 
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
@@ -81,6 +120,37 @@ public class GroupSelection_Adapter extends BaseExpandableListAdapter {
                 .findViewById(R.id.groupselection_customview_lblListItem);
  
         txtListChild.setText(childText);
+        
+        ImageButton moreButton = (ImageButton)convertView
+                .findViewById(R.id.groupselection_customview_lblListItem_moreBtn);
+        // n'affiche la possibilité de faire un focus que s'il y a de sous groupe
+        if(childGroupe.getGroupesFils().isEmpty()){
+            moreButton.setVisibility(View.GONE);
+        }
+        else{
+        moreButton.setOnClickListener(new View.OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				buildTreeForRoot(childGroupe);
+			}});
+        }
+        
+        ImageButton selectbutton = (ImageButton) convertView
+                .findViewById(R.id.groupselection_customview_lblListItem_selectBtn);
+        selectbutton.setFocusable(false);
+        selectbutton.setClickable(true);
+        selectbutton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(_context, "Filtre espèces : "+childGroupe.getNomGroupe(), Toast.LENGTH_SHORT).show();
+				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(_context).edit();
+				ed.putInt(_context.getString(R.string.pref_key_filtre_groupe), childGroupe.getId());
+		        ed.commit();
+				_context.finish();
+			}
+		});
         return convertView;
 	}
 
@@ -110,7 +180,8 @@ public class GroupSelection_Adapter extends BaseExpandableListAdapter {
 			View convertView, ViewGroup parent) {
 
 		Log.d(LOG_TAG, "getGroupView groupPosition="+groupPosition);
-		String headerTitle = ((Groupe) getGroup(groupPosition)).getNomGroupe();
+		final Groupe groupe = (Groupe) getGroup(groupPosition);
+		String headerTitle = groupe.getNomGroupe();
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -122,6 +193,37 @@ public class GroupSelection_Adapter extends BaseExpandableListAdapter {
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
  
+        // n'affiche la possibilité de faire un focus que s'il y a de sous groupe
+        ImageButton morebutton = (ImageButton) convertView
+                .findViewById(R.id.groupselection_customview_lblListGroup_moreBtn);
+        morebutton.setFocusable(false);
+        if(groupe.getGroupesFils().isEmpty()){
+            morebutton.setVisibility(View.GONE);
+        }
+        else{
+            morebutton.setClickable(true);
+	        morebutton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					buildTreeForRoot(groupe);
+				}
+			});
+        }
+        ImageButton selectbutton = (ImageButton) convertView
+                .findViewById(R.id.groupselection_customview_lblListGroup_selectBtn);
+        selectbutton.setFocusable(false);
+        selectbutton.setClickable(true);
+        selectbutton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(_context, "Filtre espèces : "+groupe.getNomGroupe(), Toast.LENGTH_SHORT).show();
+				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(_context).edit();
+				ed.putInt(_context.getString(R.string.pref_key_filtre_groupe), groupe.getId());
+		        ed.commit();
+				_context.finish();
+			}
+		});
         return convertView;
 	}
 

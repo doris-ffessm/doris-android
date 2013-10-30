@@ -57,6 +57,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,6 +67,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import java.util.ArrayList;
 import fr.ffessm.doris.android.datamodel.Groupe;
+import fr.ffessm.doris.android.tools.OutilsGroupe;
 //End of user code
 public class GroupSelection_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
 //Start of user code additional implements GroupSelection_CustomViewActivity
@@ -73,6 +75,7 @@ public class GroupSelection_CustomViewActivity extends OrmLiteBaseActivity<OrmLi
 {
 	
 	//Start of user code constants GroupSelection_CustomViewActivity
+	GroupSelection_Adapter listAdapter;
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -82,7 +85,7 @@ public class GroupSelection_CustomViewActivity extends OrmLiteBaseActivity<OrmLi
         setContentView(R.layout.groupselection_customview);
         //Start of user code onCreate GroupSelection_CustomViewActivity
         
-     // get the listview
+        // get the listview
         ExpandableListView expListView = (ExpandableListView) findViewById(R.id.groupselection_customview_lvExp);
  
         // preparing list data
@@ -91,8 +94,7 @@ public class GroupSelection_CustomViewActivity extends OrmLiteBaseActivity<OrmLi
         for (Groupe groupe : rawGroupes) {
         	groupe.setContextDB(this.getHelper().getDorisDBHelper());
 		}
- 
-        GroupSelection_Adapter listAdapter = new GroupSelection_Adapter(this, rawGroupes, 1);
+        listAdapter = new GroupSelection_Adapter(this, rawGroupes, OutilsGroupe.getroot(rawGroupes));
  
         // setting list adapter
         expListView.setAdapter(listAdapter);
@@ -117,6 +119,11 @@ public class GroupSelection_CustomViewActivity extends OrmLiteBaseActivity<OrmLi
      */
     public void refreshScreenData() {
     	//Start of user code action when refreshing the screen GroupSelection_CustomViewActivity
+
+    	/*LinearLayout navigationLayout = (LinearLayout)findViewById(R.id.groupselection_customview_navigation);
+    	TextView groupeNavigationText = new TextView(this);
+    	groupeNavigationText.setText(listAdapter.currentRootGroupe.getNomGroupe());
+    	navigationLayout.addView(groupeNavigationText);*/
 		//End of user code
 	}
 
