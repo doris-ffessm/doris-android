@@ -42,13 +42,13 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -116,6 +116,27 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
             }
         });
 	}
+	
+	
+
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		// refresh on resume, the preferences and filter may have changed 
+		// TODO peut être qu'il y a moyen de s'abonner aux changements de préférence et de ne le faire que dans ce cas ?
+    	ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter();
+    	inputSearch = (EditText) findViewById(R.id.inputSearch_listeficheavecfiltre_listviewsearchrow);
+    	String searchedText = inputSearch.getText().toString();
+    	if(searchedText.isEmpty()){
+    		// workaround filter problem, if no text searched, then the filter isn't launched, but we need it for filtering group
+    		// (the google filtering class is quite convinient because it is done asynchronously
+    		searchedText = "*";
+    	}
+        ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(searchedText);
+	}
+
+
 	
 
 

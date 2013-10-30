@@ -105,7 +105,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 	private SimpleFilter mFilter;
 
 	protected Groupe filtreGroupe;
-	protected ArrayList<Integer> acceptedGroupeId;
+	
+	// vide signifie que l'on accepte tout
+	protected ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
 
 	public ListeFicheAvecFiltre_Adapter(Context context, DorisDBHelper contextDB) {
 		super();
@@ -264,6 +266,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 		boolean isValid = true;
 		for (String patt : patterns) {
 			if(patt.isEmpty()) continue; // en cas de blanc multiples
+			if(patt.equals("*")) break;  // accepte tout; aussi utilisé pour le filtre en retour de sélection de filtre
 			if(fiche.getNomCommun().toLowerCase().contains(patt))
 				continue;
 			else if(fiche.getNomScientifique().toLowerCase().contains(pattern)) 
@@ -273,23 +276,12 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 		}
 		
 		if(isValid){
-			/*SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-			prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);
-			try {
-				Groupe searchedGroupe = _contextDB.groupeDao.queryForId(prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1));
-				//Log.d(LOG_TAG, "filter _contextDB="+_contextDB);
-				searchedGroupe.setContextDB(_contextDB);
-				fiche.setContextDB(_contextDB);
-				isValid = OutilsGroupe.isFichePartOfGroupe(fiche, searchedGroupe);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
+			
 			Groupe groupeFiche = fiche.getGroupe();
 			if(groupeFiche != null)
 			{
 				groupeFiche.setContextDB(_contextDB);
-				if(!acceptedGroupeId.contains(Integer.valueOf(groupeFiche.getId()))){
+				if(!acceptedGroupeId.isEmpty() && !acceptedGroupeId.contains(Integer.valueOf(groupeFiche.getId()))){
 					isValid = false;
 				}
 			}
