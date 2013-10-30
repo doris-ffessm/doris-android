@@ -91,7 +91,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 	    		Picasso.with(_activity)
 	    			.load(PhotoFiche.MOYENNE_BASE_URL+photoFiche.getCleURL())
 					.placeholder(R.drawable.doris_large)  // utilisation de l'image par defaut pour commencer
-					.error(R.drawable.photo_non_disponible)
+					.error(R.drawable.doris_large_pas_connecte)
 					.resize(largeur, hauteur)
 					.centerInside()
 	    			.into(imgDisplay);

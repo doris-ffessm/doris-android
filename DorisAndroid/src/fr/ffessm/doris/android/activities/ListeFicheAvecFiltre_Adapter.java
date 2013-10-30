@@ -196,6 +196,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
         		Picasso.with(context)
         			.load(PhotoFiche.VIGNETTE_BASE_URL+photoPrincipale.getCleURL())
 					.placeholder(R.drawable.ic_launcher)  // utilisation de l'image par defaut pour commencer
+					.error(R.drawable.doris_large_pas_connecte)
         			.into(ivIcon);
         	}
         }
