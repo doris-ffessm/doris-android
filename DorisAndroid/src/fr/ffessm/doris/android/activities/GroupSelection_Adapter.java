@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -87,10 +88,36 @@ public class GroupSelection_Adapter extends BaseExpandableListAdapter {
 	
 	protected void refreshNavigation(){
 		LinearLayout navigationLayout = (LinearLayout)_context.findViewById(R.id.groupselection_customview_navigation);
+    	
+    	navigationLayout.removeAllViews();
+    	addBackToParentGroupButton(navigationLayout, currentRootGroupe.getGroupePere());
     	TextView groupeNavigationText = new TextView(_context);
     	groupeNavigationText.setText(currentRootGroupe.getNomGroupe());
     	navigationLayout.addView(groupeNavigationText);
     	//navigationLayout.
+	}
+	
+	protected void addBackToParentGroupButton(LinearLayout navigationLayout, final Groupe parent){
+		if(parent == null) return;
+		addBackToParentGroupButton(navigationLayout, parent.getGroupePere());
+		// ajout du nouveau bouton
+		Button backToParentButton = new Button(_context);
+		navigationLayout.addView(backToParentButton);
+		backToParentButton.setText(parent.getNomGroupe().trim());
+		backToParentButton.setBackgroundResource(R.drawable.button_background);
+		backToParentButton.setTextColor(_context.getResources().getColor(android.R.color.darker_gray));
+		backToParentButton.setPadding(5, 5, 5, 5);
+		LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
+		layoutParams.leftMargin =2;
+		layoutParams.rightMargin = 2;
+		backToParentButton.setLayoutParams(layoutParams);
+		backToParentButton.setHeight(30);
+		backToParentButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				buildTreeForRoot(parent);
+			}
+		});
 	}
 	
 	
