@@ -241,7 +241,6 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 
 	public void refreshFilter(){
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);
 		try {
 			Groupe searchedGroupe = _contextDB.groupeDao.queryForId(prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1));
 			//Log.d(LOG_TAG, "filter _contextDB="+_contextDB);

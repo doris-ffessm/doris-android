@@ -183,7 +183,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 
 	// Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity
 	public void onClickFilterBtn(View view){
-		showToast("filter button pressed. \nFeature under development ;-)");
+		//showToast("filter button pressed. \nFeature under development ;-)");
 		startActivity(new Intent(this, GroupSelection_CustomViewActivity.class));
     }
 	// End of user code

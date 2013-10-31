@@ -49,7 +49,9 @@ import fr.ffessm.doris.android.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,6 +61,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
@@ -100,6 +103,20 @@ public class GroupSelection_CustomViewActivity extends OrmLiteBaseActivity<OrmLi
         expListView.setAdapter(listAdapter);
         
         
+        // affiche ou cahce le filtre espèce actuel (+ son bouton de suppression)
+        RelativeLayout currentFilterInfoLayout = (RelativeLayout)findViewById(R.id.groupselection_customview_filtre_espece_courant_layout);
+    	
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int filtreCourantId = prefs.getInt(this.getString(R.string.pref_key_filtre_groupe), 1);
+        Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
+        if(filtreCourantId==1){
+        	currentFilterInfoLayout.setVisibility(View.GONE);
+        }
+        else{
+        	TextView filtreCourantTV = (TextView)findViewById(R.id.groupselection_customview_filtre_espece_courant_textView);
+        	currentFilterInfoLayout.setVisibility(View.VISIBLE);
+        	filtreCourantTV.setText(getString(R.string.groupselection_customview_filtre_espece_courant_label)+groupeFiltreCourant.getNomGroupe());
+        }
         
 		//End of user code
     }
@@ -154,6 +171,14 @@ public class GroupSelection_CustomViewActivity extends OrmLiteBaseActivity<OrmLi
         return false;
     }
 
+    public void onRemoveCurrentFilterClick(View view){
+    	Toast.makeText(this, "Filtre espèces supprimé", Toast.LENGTH_SHORT).show();
+		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
+		ed.putInt(this.getString(R.string.pref_key_filtre_groupe), 1);
+        ed.commit();
+		finish();
+    }
+    
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
