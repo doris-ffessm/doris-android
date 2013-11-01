@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Start of user code customView_layout for GroupSelection
+-->
+<!-- freely adapt here the desired layout for your custom view -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    
+
+    <LinearLayout
+        android:id="@+id/groupselection_customview_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         >
+        
+
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:background="@drawable/button_background"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:src="@drawable/arbre_phylogenetique_gris" />
+
+         <Button
+            android:id="@+id/button2"
+             android:layout_height="30dp"
+	        android:background="@drawable/button_background"
+	        android:textColor="@android:color/darker_gray"
+            android:layout_width="wrap_content"
+        android:layout_marginRight="5dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+            android:text="Button" />
+
+        <Button
+            android:id="@+id/button2"
+             android:layout_height="30dp"
+	        android:background="@drawable/button_background"
+	        android:textColor="@android:color/darker_gray"
+            android:layout_width="wrap_content"
+        android:layout_marginRight="15dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+            android:text="Button" />
+
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/groupselection_customview_filtre_espece_courant_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+             >
+        <TextView
+	        android:id="@+id/groupselection_customview_filtre_espece_courant_textView"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@+id/groupselection_customview_filtre_espece_courant_label"
+	        android:layout_toLeftOf="@+id/groupselection_customview_filtre_espece_courant__suppFiltreBtn"
+	        android:textAppearance="?android:attr/textAppearanceMedium" />
+        <ImageButton
+            android:id="@+id/groupselection_customview_filtre_espece_courant__suppFiltreBtn"
+            android:layout_width="32sp"
+            android:layout_height="32sp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@+id/groupselection_customview_suppression_filtre_espece_courant_descBtn"
+            android:src="@android:drawable/ic_delete" 
+            android:onClick="onRemoveCurrentFilterClick"/>
+
+    </RelativeLayout>
+    
+	<ExpandableListView
+		android:id="@+id/groupselection_customview_lvExp"
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		/>
+</LinearLayout>
+<!--End of user code
+-->

@@ -20,7 +20,7 @@
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
         android:background="@drawable/button_background"
-        android:textColor="#ffffff"
+        android:textColor="@android:color/darker_gray"
         android:text=" Fermer " />
  
 </RelativeLayout>

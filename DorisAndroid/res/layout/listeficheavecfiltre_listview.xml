@@ -22,12 +22,15 @@
             android:inputType="textVisiblePassword" />
 	<!--	Start of user code protectedlisteficheavecfiltre_listviewsearchrow  -->
 
-        <Button
+        <ImageButton
             android:id="@+id/btnOtherFiler_listeficheavecfiltre_listviewsearchrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/button_background"
+            android:src="@drawable/filter_settings_32"
+            android:padding="5dp"
             android:onClick="onClickFilterBtn"
-            android:text="@string/btnOtherFiler_listeficheavecfiltre_listviewsearchrow_btn_label" />
+            android:textColor="@android:color/primary_text_light" />
 
 <!-- End of user code -->
     </LinearLayout>

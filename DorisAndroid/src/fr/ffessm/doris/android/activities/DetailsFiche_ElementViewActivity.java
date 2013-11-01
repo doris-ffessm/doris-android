@@ -360,7 +360,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     		Picasso.with(this)
     			.load(PhotoFiche.VIGNETTE_BASE_URL+photoFiche.getCleURL())
 				.placeholder(R.drawable.doris_large)  // utilisation de l'image par defaut pour commencer
-				.error(R.drawable.photo_non_disponible)
+				.error(R.drawable.doris_large_pas_connecte)
 				.fit()
 				.centerInside()
     			.into(imageView);
