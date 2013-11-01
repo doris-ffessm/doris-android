@@ -23,7 +23,7 @@
 	<!--	Start of user code protectedlisteficheavecfiltre_listviewsearchrow  -->
 
         <ImageButton
-            android:id="@+id/btnOtherFiler_listeficheavecfiltre_listviewsearchrow"
+            android:id="@+id/btnOtherFilter_listeficheavecfiltre_listviewsearchrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_background"
