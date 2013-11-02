@@ -50,6 +50,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -60,6 +61,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
@@ -126,14 +128,28 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 		// refresh on resume, the preferences and filter may have changed 
 		// TODO peut être qu'il y a moyen de s'abonner aux changements de préférence et de ne le faire que dans ce cas ?
     	ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter();
-    	inputSearch = (EditText) findViewById(R.id.inputSearch_listeficheavecfiltre_listviewsearchrow);
-    	String searchedText = inputSearch.getText().toString();
-    	if(searchedText.isEmpty()){
-    		// workaround filter problem, if no text searched, then the filter isn't launched, but we need it for filtering group
-    		// (the google filtering class is quite convinient because it is done asynchronously
-    		searchedText = "*";
-    	}
-        ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(searchedText);
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if(prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1) != 1){
+			// on a un filtre actif
+	    	inputSearch = (EditText) findViewById(R.id.inputSearch_listeficheavecfiltre_listviewsearchrow);
+	    	String searchedText = inputSearch.getText().toString();
+	    	if(searchedText.isEmpty()){
+	    		// workaround filter problem, if no text searched, then the filter isn't launched, but we need it for filtering group
+	    		// (the google filtering class is quite convinient because it is done asynchronously
+	    		searchedText = "*";
+	    	}
+	        ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(searchedText);
+	        
+	        // mise à jour de l'image du bouton de filtre
+	        ImageButton searchButton = (ImageButton)findViewById(R.id.btnOtherFilter_listeficheavecfiltre_listviewsearchrow);
+	        searchButton.setImageResource(R.drawable.filter_settings_actif_32);
+		}
+		else{
+			// pas de filtre actif
+			// remet l'imaged efiltre inactif
+			ImageButton searchButton = (ImageButton)findViewById(R.id.btnOtherFilter_listeficheavecfiltre_listviewsearchrow);
+	        searchButton.setImageResource(R.drawable.filter_settings_32);
+		}
 	}
 
 
