@@ -6,7 +6,10 @@
 		<PreferenceCategory
 	        android:title="@string/sync_preference_category"
 	        android:key="sync_category">
-	         
+        <CheckBoxPreference android:key="@string/pref_sync_auto_wifi_only"
+            android:summary="@string/sync_auto_wifi_only_summary" 
+            android:title="@string/sync_auto_wifi_only_prompt" 
+            android:defaultValue="true" />  
         <EditTextPreference android:key="sync_max_card_number" 
         	android:title="@string/sync_max_card_number_prompt" 
         	android:summary="@string/sync_max_card_number_summary" 

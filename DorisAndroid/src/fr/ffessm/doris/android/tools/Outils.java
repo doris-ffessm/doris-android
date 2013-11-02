@@ -16,9 +16,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
 public class Outils {
@@ -217,5 +221,40 @@ public class Outils {
     	return du.getSize();
 	}
 	
-
+	/* *********************************************************************
+     * isOnline permet de vérifier que l'appli a bien accès à Internet
+     * si Que Wifi en paramètre envoie faux si pas sur Wifi
+     * TODO : type de connection
+     ********************************************************************** */		
+	public static boolean isOnline(Context context) {
+		if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - Début");
+	    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
+	    
+	    if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+	    	if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - isOnline : true");
+	    	
+	    	NetworkInfo mWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+	    	if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - mWifi.isConnected() : "+ mWifi.isConnected() );
+	    	
+	    	if (! PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_sync_auto_wifi_only), true) || mWifi.isConnected() ) {
+	    		if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - Wifi = True or OnlyWifi = false");
+		    	if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - Fin");
+		    	return true;
+	    	} else {
+	    		if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - mais pas en Wifi et OnlyWifi = True");
+		    	if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - Fin");
+		        return false;
+	    	}
+	    } else {
+	    	//String text = "Aucune Connection Internet disponible";
+	    	//if (LOG) Log.e(TAG, "isOnline() - " + text);
+	    	//Toast toast = Toast.makeText(mContext, text, Toast.LENGTH_LONG);
+			//toast.show();
+			
+	    	if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - isOnline : false");
+	    	if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - Fin");
+	    	return false;
+	    }
+	}
 }

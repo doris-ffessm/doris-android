@@ -127,11 +127,15 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         };
         
         // démarre ou pas un téléchargement de photo au démarrage
-        if(getHelper().getFicheDao().countOf() > Outils.getVignetteCount(this.getApplicationContext())){
-        	telechargePhotosFiches_BgActivity = new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+        Log.d("onCreate", "onCreate() - Outils.isOnline(this.getApplicationContext())) : "+Outils.isOnline(this.getApplicationContext()));
+        if (Outils.isOnline(this.getApplicationContext())){
+	        Log.d("onCreate", "onCreate() - getHelper().getFicheDao().countOf() : "+getHelper().getFicheDao().countOf());
+	        Log.d("onCreate", "onCreate() - Outils.getVignetteCount(this.getApplicationContext()) : "+Outils.getVignetteCount(this.getApplicationContext()));
+	        if(getHelper().getFicheDao().countOf() > Outils.getVignetteCount(this.getApplicationContext())){
+	        	telechargePhotosFiches_BgActivity = new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+	        }
         }
-        
-        
+        Log.d("onCreate", "onCreate()");
         
         
 		//End of user code
