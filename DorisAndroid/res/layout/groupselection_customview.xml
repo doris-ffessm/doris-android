@@ -61,7 +61,7 @@
 	        android:id="@+id/groupselection_customview_filtre_espece_courant_textView"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:text="@+id/groupselection_customview_filtre_espece_courant_label"
+	        android:text="@string/groupselection_customview_filtre_espece_courant_label"
 	        android:layout_toLeftOf="@+id/groupselection_customview_filtre_espece_courant__suppFiltreBtn"
 	        android:textAppearance="?android:attr/textAppearanceMedium" />
         <ImageButton
