@@ -43,6 +43,7 @@ package fr.ffessm.doris.android.activities;
 
 
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
@@ -127,11 +128,14 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         };
         
         // démarre ou pas un téléchargement de photo au démarrage
-        if(getHelper().getFicheDao().countOf() > Outils.getVignetteCount(this.getApplicationContext())){
-        	telechargePhotosFiches_BgActivity = new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+
+        if (Outils.isOnline(this.getApplicationContext())){
+        	if (BuildConfig.DEBUG) Log.d("Accueil_CustomViewActivity", "onCreate() - getHelper().getFicheDao().countOf() : "+getHelper().getFicheDao().countOf());
+        	if (BuildConfig.DEBUG) Log.d("Accueil_CustomViewActivity", "onCreate() - Outils.getVignetteCount(this.getApplicationContext()) : "+Outils.getVignetteCount(this.getApplicationContext()));
+	        if(getHelper().getFicheDao().countOf() > Outils.getVignetteCount(this.getApplicationContext())){
+	        	telechargePhotosFiches_BgActivity = new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+	        }
         }
-        
-        
         
         
 		//End of user code
@@ -179,16 +183,18 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
      */
     public void refreshScreenData() {
     	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
+
     	StringBuffer sb = new StringBuffer();
     	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
     	sb.append("Nombres de fiches dans la base locale : "+ficheDao.countOf());
-    	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
+     	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
     	sb.append("\nNombres de photos référencées : "+photoFicheDao.countOf());
     	sb.append("\n\tNombres de photos téléchargées : "+Outils.getVignetteCount(this.getApplicationContext()));
     	double sizeInMiB = Outils.getVignettesDiskUsage(getApplicationContext())/(double)(1024.0*1024.0);
     	sb.append("\t("+String.format("%.2f", sizeInMiB)+" MiB)");
     	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());
-		//End of user code
+  
+    	//End of user code
 	}
 
 	@Override
