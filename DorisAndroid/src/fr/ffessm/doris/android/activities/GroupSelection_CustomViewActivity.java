@@ -42,32 +42,31 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 //Start of user code additional imports GroupSelection_CustomViewActivity
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.tools.OutilsGroupe;
@@ -129,7 +128,14 @@ public class GroupSelection_CustomViewActivity extends OrmLiteBaseActivity<OrmLi
 		//End of user code
 	}
     //Start of user code additional code GroupSelection_CustomViewActivity
-	
+    public void onRemoveCurrentFilterClick(View view){
+    	Toast.makeText(this, "Filtre espèces supprimé", Toast.LENGTH_SHORT).show();
+		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
+		ed.putInt(this.getString(R.string.pref_key_filtre_groupe), 1);
+        ed.commit();
+		finish();
+    }
+   
 	//End of user code
 
     /** refresh screen from data 
@@ -171,14 +177,6 @@ public class GroupSelection_CustomViewActivity extends OrmLiteBaseActivity<OrmLi
         return false;
     }
 
-    public void onRemoveCurrentFilterClick(View view){
-    	Toast.makeText(this, "Filtre espèces supprimé", Toast.LENGTH_SHORT).show();
-		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
-		ed.putInt(this.getString(R.string.pref_key_filtre_groupe), 1);
-        ed.commit();
-		finish();
-    }
-    
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }

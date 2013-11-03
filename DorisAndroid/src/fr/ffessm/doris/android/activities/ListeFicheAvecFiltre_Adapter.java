@@ -41,7 +41,6 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -53,7 +52,6 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,18 +71,22 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code protected additional ListeFicheAvecFiltre_Adapter imports
 // additional imports
+
+import com.squareup.picasso.Picasso;
+import java.io.IOException;
+import java.sql.SQLException;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import com.squareup.picasso.Picasso;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.OutilsGroupe;
 
-import java.io.IOException;
+
 //End of user code
 
 public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filterable{
@@ -104,10 +106,14 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 	private final Object mLock = new Object();
 	private SimpleFilter mFilter;
 
+	//Start of user code protected additional ListeFicheAvecFiltre_Adapter attributes
+	// additional attributes
 	protected Groupe filtreGroupe;
 	
 	// vide signifie que l'on accepte tout
 	protected ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
+
+	//End of user code
 
 	public ListeFicheAvecFiltre_Adapter(Context context, DorisDBHelper contextDB) {
 		super();
@@ -239,6 +245,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 
 	}
 
+	//Start of user code protected additional ListeFicheAvecFiltre_Adapter methods
+	// additional methods
 	public void refreshFilter(){
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		try {
@@ -254,6 +262,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 		}
 	}
 	
+	//End of user code
+
 	protected boolean sortAfterFilter() {
 		return false;
 	}

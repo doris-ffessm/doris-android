@@ -42,15 +42,14 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -61,11 +60,13 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity_additionalimports
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.widget.ImageButton;
 // End of user code
 
 public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
@@ -101,7 +102,6 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
                 // When user changed the Text
-            	ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter();
                 ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(cs);  
             }
              
@@ -119,9 +119,22 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
         });
 	}
 	
-	
 
 
+	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
+		//showToast(view.toString() + ", "+ view.getId());
+		/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        //tvLabel.setText(dateFormatter.format(entry.getDate()));
+        showToast(dateFormatter.format(((DiveEntry)view.getTag()).getDate()));
+		*/
+        Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
+        Bundle b = new Bundle();
+        b.putInt("ficheId", ((Fiche)view.getTag()).getId());
+		toDetailView.putExtras(b);
+        startActivity(toDetailView);
+    }
+
+	//Start of user code additional  ListeFicheAvecFiltre_ClassListViewActivity methods
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -151,23 +164,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 	        searchButton.setImageResource(R.drawable.filter_settings_32);
 		}
 	}
-
-
-	
-
-
-	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
-		//showToast(view.toString() + ", "+ view.getId());
-		/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-        //tvLabel.setText(dateFormatter.format(entry.getDate()));
-        showToast(dateFormatter.format(((DiveEntry)view.getTag()).getDate()));
-		*/
-        Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
-        Bundle b = new Bundle();
-        b.putInt("ficheId", ((Fiche)view.getTag()).getId());
-		toDetailView.putExtras(b);
-        startActivity(toDetailView);
-    }
+	//End of user code
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
