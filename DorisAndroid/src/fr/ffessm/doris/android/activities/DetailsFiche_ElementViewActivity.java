@@ -339,7 +339,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     View insertPhoto(PhotoFiche photoFiche){
     	
     	
-       LinearLayout layout = new LinearLayout(getApplicationContext());
+    	LinearLayout layout = new LinearLayout(getApplicationContext());
         layout.setLayoutParams(new LayoutParams(200, 200));
         layout.setGravity(Gravity.CENTER);
         
@@ -356,7 +356,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			}
     	}
     	else{
-    		// pas préhargée en local pour l'instant, cherche sur internet
+    		// pas préchargée en local pour l'instant, cherche sur internet
     		Picasso.with(this)
     			.load(PhotoFiche.VIGNETTE_BASE_URL+photoFiche.getCleURL())
 				.placeholder(R.drawable.doris_large)  // utilisation de l'image par defaut pour commencer
