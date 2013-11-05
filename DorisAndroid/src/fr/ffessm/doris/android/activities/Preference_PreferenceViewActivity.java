@@ -43,16 +43,24 @@ package fr.ffessm.doris.android.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
-import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
+//Start of user code Preference preference activity additional imports
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.util.Log;
+import fr.ffessm.doris.android.BuildConfig;
+//End of user code
+
 public class Preference_PreferenceViewActivity  extends android.preference.PreferenceActivity {
+
+	
+	//Start of user code Preference preference activity additional attributes
+	//End of user code
+
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,4 +90,8 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 		//End of user code
         return false;
     }
+
+	
+	//Start of user code Preference preference activity additional operations
+	//End of user code
 }
