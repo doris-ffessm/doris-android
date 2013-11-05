@@ -31,6 +31,9 @@ public class Outils {
 	public static final String MED_RES_FICHE_FOLDER = "medium_res_images_fiches";
 	public static final String HI_RES_FICHE_FOLDER = "hi_res_images_fiches";
 	
+	public static final String CONNECTION_AUCUNE = "aucune";
+	public static final String CONNECTION_WIFI = "wifi";
+	public static final String CONNECTION_GSM = "gsm";
 	
 	public enum ImageType {
 	    VIGNETTE, MED_RES, HI_RES 
@@ -255,6 +258,37 @@ public class Outils {
 	    	if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - isOnline : false");
 	    	if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - Fin");
 	    	return false;
+	    }
+	}
+	
+	/* *********************************************************************
+     * Type de connection : aucune, wifi, gsm 
+     ********************************************************************** */		
+	public static String connectionType(Context context) {
+		if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Début");
+	    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
+	    
+	    if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+	    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - isOnline : true");
+	    	
+	    	NetworkInfo mWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+	    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - mWifi.isConnected() : "+ mWifi.isConnected() );
+	    	
+	    	if (mWifi.isConnected() ) {
+	    		if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Wifi = True");
+		    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Fin");
+		    	return CONNECTION_WIFI;
+	    	} else {
+	    		if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Wifi = False");
+		    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Fin");
+		        return CONNECTION_GSM;
+	    	}
+	    } else {
+			
+	    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - isOnline : false");
+	    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Fin");
+	    	return CONNECTION_AUCUNE;
 	    }
 	}
 }
