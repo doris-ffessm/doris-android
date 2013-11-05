@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -345,6 +346,63 @@ public class Outils {
 	    }
 	}
 	
+	public static long getNbVignettesAPrecharger(Context inContext,  OrmLiteDBHelper helper){
+		if (BuildConfig.DEBUG) Log.d("Outils", "getNbVignettesAPrecharger() - début" );
+    	
+		long nbPhotosAPrecharger;
+ 
+		switch(PrecharMode.valueOf(Outils.getParamString(inContext, R.string.pref_mode_precharg_region_ttzones,"P1"))) {
+		case P1 :
+			nbPhotosAPrecharger = helper.getFicheDao().countOf();
+			break;
+		case P2 :
+		case P3 :
+			nbPhotosAPrecharger = helper.getPhotoFicheDao().countOf();
+			break;
+		default:
+			nbPhotosAPrecharger = 0;
+		}
+		if (BuildConfig.DEBUG) Log.d("Outils", "getNbVignettesAPrecharger() - nbPhotosAPrecharger : " + nbPhotosAPrecharger );
+		return nbPhotosAPrecharger;
+	}
+	public static long getNbMedResAPrecharger(Context inContext,  OrmLiteDBHelper helper){
+		if (BuildConfig.DEBUG) Log.d("Outils", "getNbMedResAPrecharger() - début" );
+    	
+		long nbPhotosAPrecharger;
+ 
+		switch(PrecharMode.valueOf(Outils.getParamString(inContext, R.string.pref_mode_precharg_region_ttzones,"P1"))) {
+		case P3 :
+			nbPhotosAPrecharger = helper.getFicheDao().countOf();
+			break;
+		case P4 :
+		case P5 :
+			nbPhotosAPrecharger = helper.getPhotoFicheDao().countOf();
+			break;
+		default:
+			nbPhotosAPrecharger = 0;
+		}
+		if (BuildConfig.DEBUG) Log.d("Outils", "getNbMedResAPrecharger() - nbPhotosAPrecharger : " + nbPhotosAPrecharger );
+		return nbPhotosAPrecharger;
+	}
+	public static long getNbHiResAPrecharger(Context inContext,  OrmLiteDBHelper helper){
+		if (BuildConfig.DEBUG) Log.d("Outils", "getNbHiResAPrecharger() - début" );
+    	
+		long nbPhotosAPrecharger;
+ 
+		switch(PrecharMode.valueOf(Outils.getParamString(inContext, R.string.pref_mode_precharg_region_ttzones,"P1"))) {
+		case P5 :
+			nbPhotosAPrecharger = helper.getFicheDao().countOf();
+			break;
+		case P6 :
+			nbPhotosAPrecharger = helper.getPhotoFicheDao().countOf();
+			break;
+		default:
+			nbPhotosAPrecharger = 0;
+		}
+		if (BuildConfig.DEBUG) Log.d("Outils", "getNbHiResAPrecharger() - nbPhotosAPrecharger : " + nbPhotosAPrecharger );
+		return nbPhotosAPrecharger;
+	}
+	
 	/* Lecture Paramètres */
 	public static boolean getParamBoolean(Context context, int param, boolean valDef) {
 		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getApplicationContext().getString(param), valDef);
@@ -355,4 +413,5 @@ public class Outils {
 	public static long getParamLong(Context context, int param, Long valDef) {
 		return PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getApplicationContext().getString(param), valDef);
 	}
+	
 }
