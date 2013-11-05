@@ -43,9 +43,13 @@ package fr.ffessm.doris.android.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
 public class Preference_PreferenceViewActivity  extends android.preference.PreferenceActivity {
@@ -60,6 +64,8 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     public boolean onCreateOptionsMenu(Menu menu) {
 		//Start of user code preference specific menu definition
         // menu.add(Menu.NONE, 0, 0, "Back to main menu");
+    	
+   
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }

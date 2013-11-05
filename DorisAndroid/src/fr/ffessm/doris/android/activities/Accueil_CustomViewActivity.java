@@ -76,6 +76,7 @@ import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Outils.PrecharMode;
 //End of user code
 public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
 //Start of user code additional implements Accueil_CustomViewActivity
@@ -127,13 +128,17 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 
         };
         
-        // démarre ou pas un téléchargement de photo au démarrage
+        // démarre ou pas un téléchargement de photos au démarrage
 
-        if (Outils.isOnline(this.getApplicationContext())){
-        	if (BuildConfig.DEBUG) Log.d("Accueil_CustomViewActivity", "onCreate() - getHelper().getFicheDao().countOf() : "+getHelper().getFicheDao().countOf());
-        	if (BuildConfig.DEBUG) Log.d("Accueil_CustomViewActivity", "onCreate() - Outils.getVignetteCount(this.getApplicationContext()) : "+Outils.getVignetteCount(this.getApplicationContext()));
-	        if(getHelper().getFicheDao().countOf() > Outils.getVignetteCount(this.getApplicationContext())){
-	        	telechargePhotosFiches_BgActivity = new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+        if (Outils.getConnectionType(this.getApplicationContext()) == Outils.ConnectionType.WIFI 
+        		|| (! Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_mode_precharg_wifi_only, true) && Outils.getConnectionType(this.getApplicationContext()) == Outils.ConnectionType.WIFI )){
+	
+    		if(getNbVignettesAPrecharger(this.getApplicationContext()) > Outils.getVignetteCount(this.getApplicationContext())
+    				|| getNbMedResAPrecharger(this.getApplicationContext()) > Outils.getMedResCount(this.getApplicationContext())
+					|| getNbHiResAPrecharger(this.getApplicationContext()) > Outils.getHiResCount(this.getApplicationContext())
+				){
+        		if (BuildConfig.DEBUG) Log.d("Outils", "onCreate() - préchargement");
+        		telechargePhotosFiches_BgActivity = new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
 	        }
         }
         
@@ -190,7 +195,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
      	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
     	sb.append("\nNombres de photos référencées : "+photoFicheDao.countOf());
     	sb.append("\n\tNombres de photos téléchargées : "+Outils.getVignetteCount(this.getApplicationContext()));
-    	double sizeInMiB = Outils.getVignettesDiskUsage(getApplicationContext())/(double)(1024.0*1024.0);
+    	double sizeInMiB = Outils.getPhotosDiskUsage(getApplicationContext())/(double)(1024.0*1024.0);
     	sb.append("\t("+String.format("%.2f", sizeInMiB)+" MiB)");
     	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());
   
@@ -242,4 +247,63 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
+	
+	
+	/* Guillaume : A mettre dans outils probablement, mais je n'arrive pas à faire getHelper dans outils */
+	public long getNbVignettesAPrecharger(Context inContext){
+		if (BuildConfig.DEBUG) Log.d("Outils", "getNbVignettesAPrecharger() - début" );
+    	
+		long nbPhotosAPrecharger;
+ 
+		switch(PrecharMode.valueOf(Outils.getParamString(inContext, R.string.pref_mode_precharg_region_ttzones,"P1"))) {
+		case P1 :
+			nbPhotosAPrecharger = getHelper().getFicheDao().countOf();
+			break;
+		case P2 :
+		case P3 :
+			nbPhotosAPrecharger = getHelper().getPhotoFicheDao().countOf();
+			break;
+		default:
+			nbPhotosAPrecharger = 0;
+		}
+		if (BuildConfig.DEBUG) Log.d("Outils", "getNbVignettesAPrecharger() - nbPhotosAPrecharger : " + nbPhotosAPrecharger );
+		return nbPhotosAPrecharger;
+	}
+	public long getNbMedResAPrecharger(Context inContext){
+		if (BuildConfig.DEBUG) Log.d("Outils", "getNbMedResAPrecharger() - début" );
+    	
+		long nbPhotosAPrecharger;
+ 
+		switch(PrecharMode.valueOf(Outils.getParamString(inContext, R.string.pref_mode_precharg_region_ttzones,"P1"))) {
+		case P3 :
+			nbPhotosAPrecharger = getHelper().getFicheDao().countOf();
+			break;
+		case P4 :
+		case P5 :
+			nbPhotosAPrecharger = getHelper().getPhotoFicheDao().countOf();
+			break;
+		default:
+			nbPhotosAPrecharger = 0;
+		}
+		if (BuildConfig.DEBUG) Log.d("Outils", "getNbMedResAPrecharger() - nbPhotosAPrecharger : " + nbPhotosAPrecharger );
+		return nbPhotosAPrecharger;
+	}
+	public long getNbHiResAPrecharger(Context inContext){
+		if (BuildConfig.DEBUG) Log.d("Outils", "getNbHiResAPrecharger() - début" );
+    	
+		long nbPhotosAPrecharger;
+ 
+		switch(PrecharMode.valueOf(Outils.getParamString(inContext, R.string.pref_mode_precharg_region_ttzones,"P1"))) {
+		case P5 :
+			nbPhotosAPrecharger = getHelper().getFicheDao().countOf();
+			break;
+		case P6 :
+			nbPhotosAPrecharger = getHelper().getPhotoFicheDao().countOf();
+			break;
+		default:
+			nbPhotosAPrecharger = 0;
+		}
+		if (BuildConfig.DEBUG) Log.d("Outils", "getNbHiResAPrecharger() - nbPhotosAPrecharger : " + nbPhotosAPrecharger );
+		return nbPhotosAPrecharger;
+	}
 }

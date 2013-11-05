@@ -31,10 +31,17 @@ public class Outils {
 	public static final String MED_RES_FICHE_FOLDER = "medium_res_images_fiches";
 	public static final String HI_RES_FICHE_FOLDER = "hi_res_images_fiches";
 	
-	
 	public enum ImageType {
 	    VIGNETTE, MED_RES, HI_RES 
 	} 
+	
+	public enum ConnectionType {
+	    AUCUNE, WIFI, GSM 
+	}
+	
+	public enum PrecharMode {
+	    P0, P1, P2, P3, P4, P5, P6 
+	}
 	
 	/**
 	 * renvoie l'image principale actuellement disponible pour une fiche donnée, 
@@ -69,6 +76,7 @@ public class Outils {
 		return isAvailableImagePhotoFiche(inContext, imagePrincipale);		
 	}
 	
+	
 	public static Bitmap getAvailableImagePhotoFiche(Context inContext, PhotoFiche photofiche){
 		
 		Bitmap result = null;		
@@ -85,10 +93,30 @@ public class Outils {
 		// result = BitmapFactory.decodeResource(inContext.getResources(), R.drawable.ic_launcher);
 		return result;
 	}
+	
 	public static boolean isAvailableImagePhotoFiche(Context inContext, PhotoFiche photofiche){
-		
-		return isAvailableVignettePhotoFiche(inContext, photofiche);
+		if (BuildConfig.DEBUG) Log.d("Outils", "isAvailableImagePhotoFiche() - photofiche : "+ photofiche );
+    	
+		switch(PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_ttzones,"P1"))){
+		case P1 :
+		case P2 :
+			if (BuildConfig.DEBUG) Log.d("Outils", "isAvailableImagePhotoFiche() - Vignettes" );
+			return isAvailableVignettePhotoFiche(inContext, photofiche);
+		case P3 :
+		case P4 :
+			if (BuildConfig.DEBUG) Log.d("Outils", "isAvailableImagePhotoFiche() - Medium" );
+			return isAvailableMedResPhotoFiche(inContext, photofiche);
+		case P5 :
+		case P6 :
+			if (BuildConfig.DEBUG) Log.d("Outils", "isAvailableImagePhotoFiche() - Hight" );
+	    	return isAvailableHiResPhotoFiche(inContext, photofiche);
+		default:
+			return false;
+		}
 	}
+
+
+	
 	public static boolean isAvailableVignettePhotoFiche(Context inContext, PhotoFiche photofiche){
 		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);		
 		if(photofiche != null && photofiche.getCleURL() != null && !photofiche.getCleURL().isEmpty()){
@@ -99,6 +127,7 @@ public class Outils {
 		}
 		return false;
 	}
+	
 	public static boolean isAvailableMedResPhotoFiche(Context inContext, PhotoFiche photofiche){
 		File imageFolder = inContext.getDir( MED_RES_FICHE_FOLDER , Context.MODE_PRIVATE);		
 		if(photofiche != null){
@@ -109,6 +138,7 @@ public class Outils {
 		}
 		return false;
 	}
+	
 	public static boolean isAvailableHiResPhotoFiche(Context inContext, PhotoFiche photofiche){
 		File imageFolder = inContext.getDir( HI_RES_FICHE_FOLDER , Context.MODE_PRIVATE);		
 		if(photofiche != null){
@@ -124,10 +154,12 @@ public class Outils {
 		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);		
 		return new File(imageFolder, photo.getCleURL());
 	}
+	
 	public static File getMedResFile(Context inContext, PhotoFiche photo) throws IOException{		
 		File imageFolder = inContext.getDir(MED_RES_FICHE_FOLDER, Context.MODE_PRIVATE);		
 		return new File(imageFolder, photo.getCleURL());
 	}
+	
 	public static File getHiResFile(Context inContext, PhotoFiche photo) throws IOException{		
 		File imageFolder = inContext.getDir(HI_RES_FICHE_FOLDER, Context.MODE_PRIVATE);		
 		return new File(imageFolder, photo.getCleURL());
@@ -212,10 +244,33 @@ public class Outils {
 	public static int getVignetteCount(Context inContext){
 		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);
 		return imageFolder.list().length;
-		
+	}
+	public static int getMedResCount(Context inContext){
+		File imageFolder = inContext.getDir(MED_RES_FICHE_FOLDER, Context.MODE_PRIVATE);
+		return imageFolder.list().length;
+	}
+	public static int getHiResCount(Context inContext){
+		File imageFolder = inContext.getDir(HI_RES_FICHE_FOLDER, Context.MODE_PRIVATE);
+		return imageFolder.list().length;
+	}
+	
+	public static long getPhotosDiskUsage(Context inContext){
+    	return getVignettesDiskUsage(inContext) + getMedResDiskUsage(inContext) + getHiResDiskUsage(inContext);
 	}
 	public static long getVignettesDiskUsage(Context inContext){
 		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);
+		DiskUsage du = new DiskUsage();
+    	du.accept(imageFolder);
+    	return du.getSize();
+	}
+	public static long getMedResDiskUsage(Context inContext){
+		File imageFolder = inContext.getDir(MED_RES_FICHE_FOLDER, Context.MODE_PRIVATE);
+		DiskUsage du = new DiskUsage();
+    	du.accept(imageFolder);
+    	return du.getSize();
+	}
+	public static long getHiResDiskUsage(Context inContext){
+		File imageFolder = inContext.getDir(HI_RES_FICHE_FOLDER, Context.MODE_PRIVATE);
 		DiskUsage du = new DiskUsage();
     	du.accept(imageFolder);
     	return du.getSize();
@@ -225,7 +280,8 @@ public class Outils {
      * isOnline permet de vérifier que l'appli a bien accès à Internet
      * si Que Wifi en paramètre envoie faux si pas sur Wifi
      * TODO : type de connection
-     ********************************************************************** */		
+     ********************************************************************** */	
+	/* Guillaume : Ne doit plus servir, cf. : connectionType() */
 	public static boolean isOnline(Context context) {
 		if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - Début");
 	    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -256,5 +312,47 @@ public class Outils {
 	    	if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - Fin");
 	    	return false;
 	    }
+	}
+	
+	/* *********************************************************************
+     * Type de connection : aucune, wifi, gsm 
+     ********************************************************************** */		
+	public static ConnectionType getConnectionType(Context context) {
+		if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Début");
+	    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
+	    
+	    if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+	    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - isOnline : true");
+	    	
+	    	NetworkInfo mWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+	    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - mWifi.isConnected() : "+ mWifi.isConnected() );
+	    	
+	    	if (mWifi.isConnected() ) {
+	    		if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Wifi = True");
+		    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Fin");
+		    	return ConnectionType.WIFI;
+	    	} else {
+	    		if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Wifi = False");
+		    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Fin");
+		        return ConnectionType.GSM;
+	    	}
+	    } else {
+			
+	    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - isOnline : false");
+	    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Fin");
+	    	return ConnectionType.AUCUNE;
+	    }
+	}
+	
+	/* Lecture Paramètres */
+	public static boolean getParamBoolean(Context context, int param, boolean valDef) {
+		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getApplicationContext().getString(param), valDef);
+	}
+	public static String getParamString(Context context, int param, String valDef) {
+		return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getApplicationContext().getString(param), valDef);
+	}
+	public static long getParamLong(Context context, int param, Long valDef) {
+		return PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getApplicationContext().getString(param), valDef);
 	}
 }

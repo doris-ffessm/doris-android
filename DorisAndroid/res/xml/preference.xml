@@ -3,24 +3,42 @@
 
     <!--Start of user code protected PreferenceViewActivity preference
 		-->
+	<PreferenceCategory
+	        android:title="@string/mode_connecte_preference_category"
+	        android:key="mode_connecte_category">
+        <CheckBoxPreference android:key="@string/pref_mode_connecte_wifi_only"
+            android:title="@string/mode_connecte_wifi_only_prompt" 
+            android:defaultValue="true" />
+        
+   	</PreferenceCategory>
+   		<PreferenceCategory
+	        android:title="@string/mode_precharg_preference_category"
+	        android:key="mode_precharg_category">
+        <CheckBoxPreference android:key="@string/pref_mode_precharg_wifi_only"
+            android:title="@string/mode_precharg_wifi_only_prompt" 
+            android:defaultValue="true" />
+        <ListPreference android:entries="@array/mode_precharg_answers_lib"
+            android:title="@string/mode_precharg_region_ttzones_prompt"
+			android:key="@string/pref_mode_precharg_region_ttzones"
+			android:entryValues="@array/mode_precharg_answers_values"
+			android:defaultValue="P1"
+		/>
+        
+   	</PreferenceCategory>
 		<PreferenceCategory
 	        android:title="@string/sync_preference_category"
 	        android:key="sync_category">
-        <CheckBoxPreference android:key="@string/pref_sync_auto_wifi_only"
-            android:summary="@string/sync_auto_wifi_only_summary" 
-            android:title="@string/sync_auto_wifi_only_prompt" 
-            android:defaultValue="true" />  
         <EditTextPreference android:key="sync_max_card_number" 
         	android:title="@string/sync_max_card_number_prompt" 
         	android:summary="@string/sync_max_card_number_summary" 
-        	android:defaultValue="@string/sync_max_card_number_default"/>
+        	android:defaultValue="@string/sync_max_card_number_default" />
         <CheckBoxPreference android:key="@string/pref_id_limit_download"
             android:summary="réduit les download (utile pour le debug de l'application)" 
             android:title="Limitation des downloads" 
             android:defaultValue="false" />
-        
-    </PreferenceCategory>
-    <PreferenceCategory
+     </PreferenceCategory>
+ 
+	<PreferenceCategory
 	        android:title="@string/presentation_preference_category"
 	        android:key="presentation_category">
 	         

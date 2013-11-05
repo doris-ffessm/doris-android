@@ -5,7 +5,17 @@
 		-->
 		
 	<!-- ids -->
+	<string name="pref_mode_connecte_wifi_only">mode_connecte_wifi_only</string>
+	<string name="pref_mode_connecte_sizemax">mode_connecte_sizemax</string>
+	<string name="pref_mode_precharg_wifi_only">mode_precharg_wifi_only</string>
+	<string name="pref_mode_precharg_region_ttzones">mode_precharg_region_ttzones</string>
+	<!-- TODO:: Compléter la liste -->
+	<string name="pref_mode_precharg_sizemax">mode_precharg_sizemax</string>
+		
+	<!-- A effacer ? -->
 	<string name="pref_sync_auto_wifi_only">sync_auto_wifi_only</string>
+	<string name="pref_sync_auto">sync_auto</string>
+	
 	<string name="pref_id_limit_download">limit_download</string>	
 	<string name="pref_key_list_icon_size">pref_key_list_icon_size</string>
 	<string name="pref_key_filtre_groupe">pref_key_filtre_groupe</string>
@@ -18,15 +28,62 @@
     <string name="mainpreferences_menu_title">Préférences</string>
     
 	<!-- Preferences -->
-	<string name="sync_preference_category">Options de téléchargement</string>
+	<string name="mode_connecte_preference_category">Mode connecté / à la demande</string>
 	
+	<string name="mode_connecte_wifi_only_prompt">Téléch. en wifi uniquement ?</string>
+    <string name="mode_connecte_sizemax_prompt">Taille du cache à la demande (Mo) ?</string>
+    
+    
+	<string name="mode_precharg_preference_category">Préchargement pour Mode hors ligne</string>
+    
+	<string name="mode_precharg_wifi_only_prompt">Précharg. en wifi uniquement ?</string>
+    <!-- L option suivante sera probablement à supprimer plus tard, mais seul choix pertinent pour l instant-->
+	<string name="mode_precharg_region_ttzones_prompt">Précharg. photos toutes Zones ?</string>
+    <string name="mode_precharg_region_france_prompt">Préchargement photos France Métropolitaine ?</string>
+    <string name="mode_precharg_region_eaudouce_prompt">Préchargement photos Eau douce ?</string>
+    <string name="mode_precharg_region_atlantno_prompt">Préchargement photos Atlantique Nord-Ouest ?</string>
+    <string name="mode_precharg_region_indopac_prompt">Préchargement photos Indo-Pacifique ?</string>
+    <string name="mode_precharg_region_caraibes_prompt">Préchargement photos Caraïbes ?</string>
+    <string name="mode_precharg_favorite_prompt">Préchargement photos fiches préférées ?</string>
+    <string name="mode_precharg_sizemax_prompt">Limite de d\'occupation disque (Mo) ?</string>
+    
+    <!-- A effacer ? -->
 	<string name="sync_auto_wifi_only_prompt">Synchro. Auto en Wifi seulement</string>
 	<string name="sync_auto_wifi_only_summary">Permet d\'épargner le forfait data</string>
+
+	<string-array name="mode_precharg_answers_values">
+        <item>P0</item>
+        <item>P1</item>
+        <item>P2</item>
+        <item>P3</item>
+        <item>P4</item>
+        <item>P5</item>
+        <item>P6</item>
+    </string-array>
+	<string-array name="mode_precharg_answers_lib">
+        <item>Aucune photo préchargée</item>
+        <item>La photo principale en qualité vignette</item>
+        <item>Toutes les photos en qualité vignette</item>
+        <item>La photo principale en qualité moyenne, les autres en vignette</item>
+        <item>Toutes les photos en qualité moyenne</item>
+        <item>La photo principale en haute qualité, les autres en moyenne</item>
+        <item>Toutes les photos en haute qualité</item>
+    </string-array>
+   	<string-array name="mode_precharg_answers_descr">
+        <item>Pas de photo préchargée (Économe en disque mais pas en réseau)</item>
+        <item>toutes les photo principale des fiches sélectionnées en qualité vignettes (par défaut)</item>
+        <item>toutes les photos des fiches sélectionnées en qualité vignettes</item>
+        <item>photo principale en qualité moyenne, les autres en qualité vignette</item>
+        <item>toutes les photos  en qualité moyenne</item>
+        <item>photo principale en haute qualité, les autres en qualité moyenne</item>
+        <item>toutes les photos en haute qualité</item>
+    </string-array>
+
+	<string name="sync_preference_category">Options de téléchargement</string>
 	
 	<string name="sync_max_card_number_prompt">Nombre max de fiches à télécharger</string>
 	<string name="sync_max_card_number_summary">(ex: 1, 5, 100 ou * pour toutes les fiches)</string>
     <string name="sync_max_card_number_default">5</string>
-    
     
 	<string name="presentation_preference_category">Options de présentation</string>
     <string name="list_icon_size_prompt">Taille des icones dans les listes</string>
