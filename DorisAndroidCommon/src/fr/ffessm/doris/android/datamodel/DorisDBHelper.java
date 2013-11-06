@@ -73,6 +73,10 @@ public class DorisDBHelper {
 	//public RuntimeExceptionDao<ZoneObservation, Integer> zoneObservationDao;
 	public Dao<Groupe, Integer> groupeDao;
 	//public RuntimeExceptionDao<Groupe, Integer> groupeDao;
+	public Dao<DorisDB_metadata, Integer> dorisDB_metadataDao;
+	//public RuntimeExceptionDao<DorisDB_metadata, Integer> dorisDB_metadataDao;
+	public Dao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesDao;
+	//public RuntimeExceptionDao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesDao;
 
 	
 	public DorisDBHelper(){
@@ -87,8 +91,9 @@ public class DorisDBHelper {
 		Dao<PhotoParticipant, Integer> photoParticipantDao,
 		Dao<ZoneGeographique, Integer> zoneGeographiqueDao,
 		Dao<ZoneObservation, Integer> zoneObservationDao,
-		Dao<Groupe, Integer> groupeDao
-		
+		Dao<Groupe, Integer> groupeDao,
+		Dao<DorisDB_metadata, Integer> dorisDB_metadataDao,
+        Dao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesDao
 	){
 		this.ficheDao = ficheDao;
 		this.autreDenominationDao = autreDenominationDao;
@@ -99,6 +104,8 @@ public class DorisDBHelper {
 		this.zoneGeographiqueDao = zoneGeographiqueDao;
 		this.zoneObservationDao = zoneObservationDao;
 		this.groupeDao = groupeDao;
+		this.dorisDB_metadataDao = dorisDB_metadataDao;
+		this.fiches_ZonesGeographiquesDao = fiches_ZonesGeographiquesDao;
 	}
 
 	

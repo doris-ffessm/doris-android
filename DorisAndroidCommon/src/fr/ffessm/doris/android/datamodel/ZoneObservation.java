@@ -50,6 +50,7 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Collection;
 
@@ -90,8 +91,7 @@ public class ZoneObservation {
 	public boolean _mayNeedDBRefresh = true;
 	
 
-	@DatabaseField
-	protected java.lang.String nom;
+	// NOT Implemented<java.lang.String> nom;
 	
 
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
@@ -103,7 +103,6 @@ public class ZoneObservation {
 	public ZoneObservation() {} // needed by ormlite
 	public ZoneObservation(java.lang.String nom) {
 		super();
-		this.nom = nom;
 	} 
 
 	public int getId() {
@@ -120,12 +119,6 @@ public class ZoneObservation {
 		this._contextDB = contextDB;
 	}
 
-	public java.lang.String getNom() {
-		return this.nom;
-	}
-	public void setNom(java.lang.String nom) {
-		this.nom = nom;
-	}
 
 	public Fiche getFiches() {
 		try {
@@ -156,9 +149,6 @@ public class ZoneObservation {
     	sb.append("\" ");
     	sb.append(">");
 
-		sb.append("\n"+indent+"\t<"+XML_ATT_NOM+">");
-		sb.append(StringEscapeUtils.escapeXml(this.nom));
-    	sb.append("</"+XML_ATT_NOM+">");
 
 		if(this.fiches!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_FICHES+">");

@@ -50,6 +50,7 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Collection;
 
@@ -61,7 +62,6 @@ import fr.ffessm.doris.android.datamodel.associations.*;
 
 // Start of user code additional import for Fiche
 import java.io.IOException;
-import java.util.ArrayList;
 
 import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.Element;
@@ -145,12 +145,37 @@ public class Fiche {
 	protected ForeignCollection<PhotoFiche> photosFiche;
 
 	/** zones géographiques où l'on peut trouver l'élément décrit par la fiche */ 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
-	protected ZoneGeographique zonesGeographiques;
+	// work in progress, find association 
+	// Association many to many Fiches_ZonesGeographiques
+	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")	
+	protected ForeignCollection<Fiches_ZonesGeographiques> fiches_ZonesGeographiques;
+
+	/** zones géographiques où l'on peut trouver l'élément décrit par la fiche 
+	  * Attention, returned list is readonly
+      */
+	public List<ZoneGeographique> getZonesGeographiques(){
+		List<ZoneGeographique> result = new ArrayList<ZoneGeographique>();
+		
+		for (Fiches_ZonesGeographiques aFiches_ZonesGeographiques : fiches_ZonesGeographiques) {
+			if(_contextDB != null) aFiches_ZonesGeographiques.setContextDB(_contextDB);
+			result.add(aFiches_ZonesGeographiques.getZoneGeographique());
+		}
+		return result;
+	}
+	public void addZoneGeographique(ZoneGeographique zoneGeographique){
+		try {
+			_contextDB.fiches_ZonesGeographiquesDao.create(new Fiches_ZonesGeographiques( zoneGeographique, this));		
+		} catch (SQLException e) {
+			log.error("Pb while adding association fiches_ZonesGeographiques",e);
+		}
+	}
+	// end work in progress 	
+
+				
 
 	/** zones  où l'on peut observer l'élément décrit par la fiche */ 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
-	protected ZoneObservation zonesObservation;
+	@ForeignCollectionField(eager = false, foreignFieldName = "fiches")
+	protected ForeignCollection<ZoneObservation> zonesObservation;
 
 	/** listes des personnes ayant vérifié la fiche */ 
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
@@ -796,42 +821,10 @@ public class Fiche {
 	public Collection<PhotoFiche> getPhotosFiche() {
 		return this.photosFiche;
 	}					
-	/** zones géographiques où l'on peut trouver l'élément décrit par la fiche */ 
-	public ZoneGeographique getZonesGeographiques() {
-		try {
-			if(_mayNeedDBRefresh && _contextDB != null){
-				_contextDB.zoneGeographiqueDao.refresh(this.zonesGeographiques);
-				_mayNeedDBRefresh = false;
-			}
-		} catch (SQLException e) {
-			log.error(e.getMessage(),e);
-		}
-		if(_contextDB==null && this.zonesGeographiques == null){
-			log.warn("Fiche may not be properly refreshed from DB (_id="+_id+")");
-		}
-		return this.zonesGeographiques;
-	}
-	public void setZonesGeographiques(ZoneGeographique zonesGeographiques) {
-		this.zonesGeographiques = zonesGeographiques;
-	}			
-	/** zones  où l'on peut observer l'élément décrit par la fiche */ 
-	public ZoneObservation getZonesObservation() {
-		try {
-			if(_mayNeedDBRefresh && _contextDB != null){
-				_contextDB.zoneObservationDao.refresh(this.zonesObservation);
-				_mayNeedDBRefresh = false;
-			}
-		} catch (SQLException e) {
-			log.error(e.getMessage(),e);
-		}
-		if(_contextDB==null && this.zonesObservation == null){
-			log.warn("Fiche may not be properly refreshed from DB (_id="+_id+")");
-		}
+	/** zones  où l'on peut observer l'élément décrit par la fiche */
+	public Collection<ZoneObservation> getZonesObservation() {
 		return this.zonesObservation;
-	}
-	public void setZonesObservation(ZoneObservation zonesObservation) {
-		this.zonesObservation = zonesObservation;
-	}			
+	}					
 	/** listes des personnes ayant vérifié la fiche */ 
 	public Participant getVerificateurs() {
 		try {
@@ -963,15 +956,21 @@ public class Fiche {
 	    	}
 		}
 		sb.append("</"+XML_REF_PHOTOSFICHE+">");		
-		if(this.zonesGeographiques!= null){
-			sb.append("\n"+indent+"\t<"+XML_REF_ZONESGEOGRAPHIQUES+">");
-			sb.append(this.zonesGeographiques.getId());
-	    	sb.append("</"+XML_REF_ZONESGEOGRAPHIQUES+">");
-		}
-		if(this.zonesObservation!= null){
-			sb.append("\n"+indent+"\t<"+XML_REF_ZONESOBSERVATION+">");
-			sb.append(this.zonesObservation.getId());
-	    	sb.append("</"+XML_REF_ZONESOBSERVATION+">");
+		
+		for(ZoneGeographique ref : this.getZonesGeographiques()){
+    		sb.append("\n"+indent+"\t<"+XML_REF_ZONESGEOGRAPHIQUES+" id=\"");
+    		sb.append(ref._id);
+        	sb.append("\"/>");
+			
+    	}
+			
+		if(this.zonesObservation != null){
+			for(ZoneObservation ref : this.zonesObservation){
+					
+	    		sb.append("\n"+indent+"\t<"+XML_REF_ZONESOBSERVATION+" id=\"");
+	    		sb.append(ref._id);
+	        	sb.append("\"/>");
+	    	}		
 		}
 		if(this.verificateurs!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_VERIFICATEURS+">");

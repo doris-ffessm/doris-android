@@ -48,7 +48,19 @@ public class Constants {
     private final static String SITE_RACINE_URL = "http://doris.ffessm.fr/";
     private final static String LISTE_TOUTES_FICHES_URL = "nom_scientifique.asp?numero_fichier=10";
     private final static String GROUPES_URL = "groupes.asp?numero_fichier=10";
+    private final static String LISTE_FICHES_FRANCE_METROPOLITAINE_URL = "nom_scientifique.asp?numero_fichier=1&fichier=Faune%20et%20flore%20marines%20de%20France%20m%E9tropolitaine";
+    private final static String LISTE_FICHES_EAU_DOUCE_URL = "nom_scientifique.asp?numero_fichier=2&fichier=Faune%20et%20flore%20dulcicoles%20de%20France%20m%E9tropolitaine";
+    private final static String LISTE_FICHES_CARAIBES_URL = "nom_scientifique.asp?numero_fichier=4&fichier=Faune%20et%20flore%20subaquatiques%20des%20Cara%EFbes";
+    private final static String LISTE_FICHES_ATL_NORD_OUEST_URL = "nom_scientifique.asp?numero_fichier=5&fichier=Faune%20et%20flore%20marines%20et%20dulcicoles%20de%20l'Atlantique%20Nord-Ouest";
+    private final static String LISTE_FICHES_INDO_PACIFIQUE_URL = "nom_scientifique.asp?numero_fichier=3&fichier=Faune%20et%20flore%20marines%20et%20dulcicoles%20de%20l'Indo-Pacifique";
     
+    public enum ZoneGeographiqueKind {
+    	FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE,
+    	FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE,
+    	FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE,
+    	FAUNE_FLORE_SUBAQUATIQUES_CARAIBES,
+    	FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST
+    }
 	private final static String FICHIER_DORIS_XML = "prefetchedDorisDB.xml";
 	
     public static String getSiteUrl() {
@@ -59,6 +71,56 @@ public class Constants {
     public static String getListeFichesUrl() {
 		String listeFichesUrl = SITE_RACINE_URL + LISTE_TOUTES_FICHES_URL;
     	return listeFichesUrl;
+    }
+    
+    public static String getListeFichesUrl(ZoneGeographiqueKind zoneKing) {
+    	switch (zoneKing) {
+		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
+			return SITE_RACINE_URL + LISTE_FICHES_FRANCE_METROPOLITAINE_URL;
+		case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
+			return SITE_RACINE_URL + LISTE_FICHES_EAU_DOUCE_URL;
+		case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
+			return SITE_RACINE_URL + LISTE_FICHES_INDO_PACIFIQUE_URL;
+		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
+			return SITE_RACINE_URL + LISTE_FICHES_CARAIBES_URL;
+		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
+			return SITE_RACINE_URL + LISTE_FICHES_ATL_NORD_OUEST_URL;
+		default:
+			return SITE_RACINE_URL + LISTE_TOUTES_FICHES_URL;
+		}
+    } 
+    
+    public static String getTitreZoneGeographique(ZoneGeographiqueKind zoneKing) {
+    	switch (zoneKing) {
+		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
+			return "Faune et flore marines de France métropolitaine";
+		case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
+			return "Faune et flore dulcicoles de France métropolitaine";
+		case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
+			return "Faune et flore subaquatiques de l'Indo-Pacifique";
+		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
+			return "Faune et flore subaquatiques des Caraïbes";
+		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
+			return "Faune et flore subaquatiques de l'Atlantique Nord-Ouest";
+		default:
+			return "Faune et flore subaquatiques de toutes les zones DORIS";
+		}
+    }
+    public static String getTexteZoneGeographique(ZoneGeographiqueKind zoneKing) {
+    	switch (zoneKing) {
+		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
+			return "Méditerranée, Atlantique, Manche et mer du Nord";
+		case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
+			return "Fleuves, rivières, lacs et étangs, ...";
+		case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
+			return "La Réunion, Mayotte, Nouvelle-Calédonie, Polynésie et autres...";
+		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
+			return "Guadeloupe, Martinique et autress";
+		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
+			return "Côte est du Canada, embouchure du St Laurent, archipel de St Pierre-et-Miquelon";
+		default:
+			return "Faune et flore subaquatiques de toutes les zones DORIS";
+		}
     }
     
     public static String getGroupesUrl() {

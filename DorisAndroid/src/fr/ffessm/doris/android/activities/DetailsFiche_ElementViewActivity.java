@@ -97,6 +97,7 @@ import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
 
@@ -175,7 +176,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		
 		Collection<PhotoFiche> photosFiche = entry.getPhotosFiche(); 
 		if(photosFiche!=null){
-			sbDebugText.append("\nnbPhoto="+photosFiche.size()+"\n");
+			//sbDebugText.append("\nnbPhoto="+photosFiche.size()+"\n");
 			
 			photoGallery = (LinearLayout)findViewById(R.id.detailsfiche_elementview_photogallery);
 			int pos = 0;
@@ -202,6 +203,12 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 				pos++;
 			}
 			
+		}
+		List<ZoneGeographique> zonesGeographiques= entry.getZonesGeographiques();
+		if(zonesGeographiques!= null){			
+			for (ZoneGeographique zoneGeographique : zonesGeographiques) {
+				sbDebugText.append("\nzone doris="+zoneGeographique.getNom()+"\n");
+			}
 		}
 		
 		if(isOnCreate){

@@ -79,6 +79,7 @@ import com.j256.ormlite.table.TableUtils;
 
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
+import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.Participant;
@@ -93,6 +94,7 @@ import fr.ffessm.doris.android.datamodel.associations.Fiches_verificateurs_Parti
 import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
+import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 
 
 public class PrefetchDorisWebSite {
@@ -338,11 +340,21 @@ public class PrefetchDorisWebSite {
 				}
 				
 				
-				// Ecriture des données récupérées dans le fichier xml final
+				// mise à jour des zones geographiques
+				// zone France Métropolitaine Marines
+				majZoneGeographique(ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE, action);
+				// zone France Métropolitaine Eau douce
+				majZoneGeographique(ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE, action);
+				// zone indo pacifique
+				majZoneGeographique(ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE, action);
+				// zone Caraibes
+				majZoneGeographique(ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES, action);
+				// zone atlantique nordOuest
+				majZoneGeographique(ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST, action);
 			
-				// read and write some data
-			//	ecritureDataXML(listeFiches, listeGroupes);
-				
+				Date date = new Date();
+				SimpleDateFormat ft =  new SimpleDateFormat ("dd/MM/yyyy  hh:mm:ss");
+				dbContext.dorisDB_metadataDao.create(new DorisDB_metadata(ft.format(date)));
 				
 	
 			} finally {
@@ -357,6 +369,52 @@ public class PrefetchDorisWebSite {
 		log.info("doMain() - Fin");
 	}
 
+	private void majZoneGeographique(ZoneGeographiqueKind zoneKing, String action){
+		String listeFichesFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeFiches"+zoneKing.name()+".html";
+		log.info("Récup. Liste Fiches Doris Zone : " + listeFichesFichier);
+		//List<Fiche> listeFiches = new ArrayList<Fiche>(0);
+		String contenuFichierHtml = "";
+		if (! action.equals("NODWNLD")){
+			if (Outils.getFichierUrl(Constants.getListeFichesUrl(zoneKing), listeFichesFichier)) {
+				contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+				
+			} else {
+				log.error("Une erreur est survenue lors de la récupération de la liste des fiches de la zone ");
+				return;
+			}
+		} else {
+			contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+
+		}
+		ZoneGeographique zoneGeographique = new ZoneGeographique(Constants.getTitreZoneGeographique(zoneKing), 
+																 Constants.getTexteZoneGeographique(zoneKing));
+		try {
+			dbContext.zoneGeographiqueDao.create(zoneGeographique);
+		} catch (SQLException e) {
+			log.error("impossible de créer la zone dans la base", e);
+		}
+		
+		List<Fiche> listFicheFromHTML = SiteDoris.getListeFiches(contenuFichierHtml);
+		log.info("Création des "+listFicheFromHTML.size()+" associations pour la Zone : " + listeFichesFichier);
+		for (Fiche fiche : listFicheFromHTML) {
+			// retrouve la fiche dans la base
+			try {
+				Fiche queryFiche = new Fiche();
+				queryFiche.setNumeroFiche(fiche.getNumeroFiche());
+				List<Fiche> fichesDeLaBase = dbContext.ficheDao.queryForMatching(queryFiche);
+				if(fichesDeLaBase.size() != 1){
+					log.error("Pb pour retrouver la fiche n°"+queryFiche.getNumeroFiche()+ " dans la base qui en matche "+fichesDeLaBase.size());
+					continue;
+				}
+				fichesDeLaBase.get(0).setContextDB(dbContext);
+				fichesDeLaBase.get(0).addZoneGeographique(zoneGeographique);
+			} catch (SQLException e) {
+				log.error("erreur pendant la requete sur la fiche "+fiche.getNumeroFiche()+ " dans la base", e);
+			}
+		}
+	}
+	
+	
 	/**
 	 * Vérification des arguments passés à l'application
 	 * 
@@ -495,8 +553,9 @@ public class PrefetchDorisWebSite {
 		dbContext.autreDenominationDao = DaoManager.createDao(connectionSource, AutreDenomination.class);
 		
 		//dbContext.fiches_verificateurs_ParticipantsDao = DaoManager.createDao(connectionSource, Fiches_verificateurs_Participants.class);
-		//dbContext.fiches_ZonesGeographiquesDao = DaoManager.createDao(connectionSource, Fiches_ZonesGeographiques.class);
+		dbContext.fiches_ZonesGeographiquesDao = DaoManager.createDao(connectionSource, Fiches_ZonesGeographiques.class);
 		//dbContext.fiches_ZonesObservationsDao = DaoManager.createDao(connectionSource, Fiches_ZonesObservations.class);
+		dbContext.dorisDB_metadataDao = DaoManager.createDao(connectionSource, DorisDB_metadata.class);
 		
 		
 		
@@ -513,6 +572,7 @@ public class PrefetchDorisWebSite {
 		TableUtils.createTable(connectionSource, Fiches_verificateurs_Participants.class);
 		TableUtils.createTable(connectionSource, Fiches_ZonesGeographiques.class);
 		TableUtils.createTable(connectionSource, Fiches_ZonesObservations.class);
+		TableUtils.createTable(connectionSource, DorisDB_metadata.class);
 		
 		log.debug("setupDatabase() - Fin");
 	}

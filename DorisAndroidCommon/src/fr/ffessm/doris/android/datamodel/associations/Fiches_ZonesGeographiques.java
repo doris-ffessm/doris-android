@@ -44,6 +44,11 @@ package fr.ffessm.doris.android.datamodel.associations;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.sql.SQLException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import fr.ffessm.doris.android.datamodel.*;
 
 /** 
@@ -51,8 +56,9 @@ import fr.ffessm.doris.android.datamodel.*;
   */ 
 @DatabaseTable(tableName = "fiches_ZonesGeographiques")
 public class Fiches_ZonesGeographiques {
-
  
+	public static Log log = LogFactory.getLog(Fiches_ZonesGeographiques.class);
+
 	
 	public final static String ZONEGEOGRAPHIQUE_ID_FIELD_NAME = "ZoneGeographique_id";
 	public final static String FICHE_ID_FIELD_NAME = "Fiche_id";
@@ -69,6 +75,17 @@ public class Fiches_ZonesGeographiques {
 	@DatabaseField(foreign = true, columnName = FICHE_ID_FIELD_NAME)
 	Fiche fiche;
 
+	/**
+     * dbHelper used to autorefresh values and doing queries
+     * must be set other wise most getter will return proxy that will need to be refreshed
+	 */
+	protected DorisDBHelper _contextDB = null;
+
+	/**
+	 * object created from DB may need to be updated from the DB for being fully navigable
+	 */
+	public boolean _mayNeedDBRefresh = true;
+
 	Fiches_ZonesGeographiques() {
 		// for ormlite
 	}
@@ -76,5 +93,51 @@ public class Fiches_ZonesGeographiques {
 	public Fiches_ZonesGeographiques(ZoneGeographique zoneGeographique, Fiche fiche) {
 		this.zoneGeographique = zoneGeographique;
 		this.fiche = fiche;
+	}
+
+	/** accessors for Left part */  
+	public ZoneGeographique getZoneGeographique() {
+		try {
+			if(_mayNeedDBRefresh && _contextDB != null){
+				_contextDB.zoneGeographiqueDao.refresh(this.zoneGeographique);
+				_mayNeedDBRefresh = false;
+			}
+		} catch (SQLException e) {
+			log.error(e.getMessage(),e);
+		}
+		if(_contextDB==null && this.zoneGeographique == null){
+			log.warn("Fiches_ZonesGeographiques may not be properly refreshed from DB (_id="+_id+")");
+		}
+		return this.zoneGeographique;
+	}
+	public void setZoneGeographique(ZoneGeographique zoneGeographique) {
+		this.zoneGeographique = zoneGeographique;
+	}
+
+	/** accessors for Right part */ 
+	public Fiche getFiche() {
+		try {
+			if(_mayNeedDBRefresh && _contextDB != null){
+				_contextDB.ficheDao.refresh(this.fiche);
+				_mayNeedDBRefresh = false;
+			}
+		} catch (SQLException e) {
+			log.error(e.getMessage(),e);
+		}
+		if(_contextDB==null && this.fiche == null){
+			log.warn("Fiches_ZonesGeographiques may not be properly refreshed from DB (_id="+_id+")");
+		}
+		return this.fiche;
+	}
+	public void setFiche(Fiche fiche) {
+		this.fiche = fiche;
+	}
+
+
+	public DorisDBHelper getContextDB(){
+		return _contextDB;
+	}
+	public void setContextDB(DorisDBHelper contextDB){
+		this._contextDB = contextDB;
 	}
 }

@@ -76,6 +76,7 @@ public class DorisDBXMLParser {
 	List<ZoneGeographique> zoneGeographiques = new ArrayList<ZoneGeographique>();
 	List<ZoneObservation> zoneObservations = new ArrayList<ZoneObservation>();
 	List<Groupe> groupes = new ArrayList<Groupe>();
+	List<DorisDB_metadata> dorisDB_metadatas = new ArrayList<DorisDB_metadata>();
 	Set<Fiche> fichesToUpdate = new HashSet<Fiche>();
 	Set<AutreDenomination> autreDenominationsToUpdate = new HashSet<AutreDenomination>();
 	Set<PhotoFiche> photoFichesToUpdate = new HashSet<PhotoFiche>();
@@ -85,6 +86,7 @@ public class DorisDBXMLParser {
 	Set<ZoneGeographique> zoneGeographiquesToUpdate = new HashSet<ZoneGeographique>();
 	Set<ZoneObservation> zoneObservationsToUpdate = new HashSet<ZoneObservation>();
 	Set<Groupe> groupesToUpdate = new HashSet<Groupe>();
+	Set<DorisDB_metadata> dorisDB_metadatasToUpdate = new HashSet<DorisDB_metadata>();
 	Hashtable<String, Fiche> xmlId2Fiche = new Hashtable<String, Fiche>();
 	Hashtable<String, AutreDenomination> xmlId2AutreDenomination = new Hashtable<String, AutreDenomination>();
 	Hashtable<String, PhotoFiche> xmlId2PhotoFiche = new Hashtable<String, PhotoFiche>();
@@ -94,6 +96,7 @@ public class DorisDBXMLParser {
 	Hashtable<String, ZoneGeographique> xmlId2ZoneGeographique = new Hashtable<String, ZoneGeographique>();
 	Hashtable<String, ZoneObservation> xmlId2ZoneObservation = new Hashtable<String, ZoneObservation>();
 	Hashtable<String, Groupe> xmlId2Groupe = new Hashtable<String, Groupe>();
+	Hashtable<String, DorisDB_metadata> xmlId2DorisDB_metadata = new Hashtable<String, DorisDB_metadata>();
 
 	// minimize memory footprint by using static Strings
     public static final String ID_STRING = "id";
@@ -116,6 +119,8 @@ public class DorisDBXMLParser {
 	public static final String DATACLASSIFIER_ZONEOBSERVATION  = "ZONEOBSERVATION";
 	public static final String DATACLASSIFIER_GROUPES = "GROUPES";
 	public static final String DATACLASSIFIER_GROUPE  = "GROUPE";
+	public static final String DATACLASSIFIER_DORISDB_METADATAS = "DORISDB_METADATAS";
+	public static final String DATACLASSIFIER_DORISDB_METADATA  = "DORISDB_METADATA";
 
 	public static final String DATAATT_FICHE_nomScientifique = "nomScientifique";
 	public static final String DATAATT_FICHE_NOMSCIENTIFIQUE = "NOMSCIENTIFIQUE";
@@ -173,9 +178,9 @@ public class DorisDBXMLParser {
 	public static final String DATAREF_PHOTOPARTICIPANT_participant = "participant";
 	public static final String DATAATT_ZONEGEOGRAPHIQUE_nom = "nom";
 	public static final String DATAATT_ZONEGEOGRAPHIQUE_NOM = "NOM";
+	public static final String DATAATT_ZONEGEOGRAPHIQUE_description = "description";
+	public static final String DATAATT_ZONEGEOGRAPHIQUE_DESCRIPTION = "DESCRIPTION";
 	public static final String DATAREF_ZONEGEOGRAPHIQUE_fiches = "fiches";
-	public static final String DATAATT_ZONEOBSERVATION_nom = "nom";
-	public static final String DATAATT_ZONEOBSERVATION_NOM = "NOM";
 	public static final String DATAREF_ZONEOBSERVATION_fiches = "fiches";
 	public static final String DATAATT_GROUPE_nomGroupe = "nomGroupe";
 	public static final String DATAATT_GROUPE_NOMGROUPE = "NOMGROUPE";
@@ -187,6 +192,8 @@ public class DorisDBXMLParser {
 	public static final String DATAATT_GROUPE_NUMEROSOUSGROUPE = "NUMEROSOUSGROUPE";
 	public static final String DATAREF_GROUPE_groupesFils = "groupesFils";
 	public static final String DATAREF_GROUPE_groupePere = "groupePere";
+	public static final String DATAATT_DORISDB_METADATA_dateBase = "dateBase";
+	public static final String DATAATT_DORISDB_METADATA_DATEBASE = "DATEBASE";
 
 
 
@@ -251,6 +258,10 @@ public class DorisDBXMLParser {
 		 	if (name.equals(DATACLASSIFIER_GROUPES)) {
 				groupes = readGroupes(parser,DATACLASSIFIER_GROUPES);
 	            // groupes.addAll(readGroupes(parser,DATACLASSIFIER_GROUPES));
+	        } else 
+		 	if (name.equals(DATACLASSIFIER_DORISDB_METADATAS)) {
+				dorisDB_metadatas = readDorisDB_metadatas(parser,DATACLASSIFIER_DORISDB_METADATAS);
+	            // dorisDB_metadatas.addAll(readDorisDB_metadatas(parser,DATACLASSIFIER_DORISDB_METADATAS));
 	        } else 
 			{
 	            skip(parser);
@@ -439,6 +450,26 @@ public class DorisDBXMLParser {
 		entries.trimToSize();
 		return entries;
 	}
+	/**
+     * parser for a group of DorisDB_metadata
+     */
+	List<DorisDB_metadata> readDorisDB_metadatas(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
+		ArrayList<DorisDB_metadata> entries = new ArrayList<DorisDB_metadata>();
+		parser.require(XmlPullParser.START_TAG, ns, containingTag);
+	    while (parser.next() != XmlPullParser.END_TAG) {
+	        if (parser.getEventType() != XmlPullParser.START_TAG) {
+	            continue;
+	        }
+	        String name = parser.getName();
+			if (name.equals(DATACLASSIFIER_DORISDB_METADATA)) {
+	            entries.add(readDorisDB_metadata(parser));
+	        } else {
+	            skip(parser);
+	        }
+	    }
+		entries.trimToSize();
+		return entries;
+	}
 
 	Fiche readFiche(XmlPullParser parser)  throws XmlPullParserException, IOException{
 		Fiche result = new Fiche();
@@ -478,18 +509,8 @@ public class DorisDBXMLParser {
 				//result.getPhotosFiche().addAll(entries);  //  doesn't work and need to be done in the other way round using the opposite
 				refCommands.add(new Fiche_addContainedPhotosFiche_RefCommand(result,entries));	    
 	        } else
-			if (currentTagName.equals(DATAREF_FICHE_zonesGeographiques)) {	
-				parser.require(XmlPullParser.START_TAG, ns, DATAREF_FICHE_zonesGeographiques);
-	            String id = readText(parser);
-				refCommands.add(new Fiche_setZonesGeographiques_RefCommand(result,id, this));
-				parser.require(XmlPullParser.END_TAG, ns, DATAREF_FICHE_zonesGeographiques);	    
-	        } else
-			if (currentTagName.equals(DATAREF_FICHE_zonesObservation)) {	
-				parser.require(XmlPullParser.START_TAG, ns, DATAREF_FICHE_zonesObservation);
-	            String id = readText(parser);
-				refCommands.add(new Fiche_setZonesObservation_RefCommand(result,id, this));
-				parser.require(XmlPullParser.END_TAG, ns, DATAREF_FICHE_zonesObservation);	    
-	        } else
+					// TODO deal with ref zonesGeographiques
+					// TODO deal with ref zonesObservation
 			if (currentTagName.equals(DATAREF_FICHE_verificateurs)) {	
 				parser.require(XmlPullParser.START_TAG, ns, DATAREF_FICHE_verificateurs);
 	            String id = readText(parser);
@@ -733,12 +754,12 @@ public class DorisDBXMLParser {
 	            result.setNom(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_ZONEGEOGRAPHIQUE_nom);
 	        } else
-			if (currentTagName.equals(DATAREF_ZONEGEOGRAPHIQUE_fiches)) {	
-				parser.require(XmlPullParser.START_TAG, ns, DATAREF_ZONEGEOGRAPHIQUE_fiches);
-	            String id = readText(parser);
-				refCommands.add(new ZoneGeographique_setFiches_RefCommand(result,id, this));
-				parser.require(XmlPullParser.END_TAG, ns, DATAREF_ZONEGEOGRAPHIQUE_fiches);	    
+			if (currentTagName.equals(DATAATT_ZONEGEOGRAPHIQUE_description)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_ZONEGEOGRAPHIQUE_description);
+	            result.setDescription(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_ZONEGEOGRAPHIQUE_description);
 	        } else
+					// TODO deal with ref fiches
 	        {
 	            skip(parser);
 	        }
@@ -758,11 +779,6 @@ public class DorisDBXMLParser {
 	            continue;
 	        }
 	        currentTagName = parser.getName();
-			if (currentTagName.equals(DATAATT_ZONEOBSERVATION_nom)) {
-				parser.require(XmlPullParser.START_TAG, ns, DATAATT_ZONEOBSERVATION_nom);
-	            result.setNom(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, DATAATT_ZONEOBSERVATION_nom);
-	        } else
 			if (currentTagName.equals(DATAREF_ZONEOBSERVATION_fiches)) {	
 				parser.require(XmlPullParser.START_TAG, ns, DATAREF_ZONEOBSERVATION_fiches);
 	            String id = readText(parser);
@@ -807,6 +823,30 @@ public class DorisDBXMLParser {
 	            String id = readText(parser);
 				refCommands.add(new Groupe_setGroupePere_RefCommand(result,id, this));
 				parser.require(XmlPullParser.END_TAG, ns, DATAREF_GROUPE_groupePere);	    
+	        } else
+	        {
+	            skip(parser);
+	        }
+	    }
+
+		return result;
+	}
+	DorisDB_metadata readDorisDB_metadata(XmlPullParser parser)  throws XmlPullParserException, IOException{
+		DorisDB_metadata result = new DorisDB_metadata();
+
+		parser.require(XmlPullParser.START_TAG, ns, DATACLASSIFIER_DORISDB_METADATA);
+    	String currentTagName = parser.getName();
+    			
+    	xmlId2DorisDB_metadata.put(parser.getAttributeValue(null, ID_STRING),result);		
+		while (parser.next() != XmlPullParser.END_TAG) {
+	        if (parser.getEventType() != XmlPullParser.START_TAG) {
+	            continue;
+	        }
+	        currentTagName = parser.getName();
+			if (currentTagName.equals(DATAATT_DORISDB_METADATA_dateBase)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_DORISDB_METADATA_dateBase);
+	            result.setDateBase(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_DORISDB_METADATA_dateBase);
 	        } else
 	        {
 	            skip(parser);
@@ -861,44 +901,8 @@ public class DorisDBXMLParser {
 		}
 		
 	}
-	class Fiche_setZonesGeographiques_RefCommand extends RefCommand{
-		Fiche self;
-		String referencedElementID;
-		DorisDBXMLParser parser;
-		
-		public Fiche_setZonesGeographiques_RefCommand(Fiche self,
-				String referencedElementID, DorisDBXMLParser parser) {
-			super();
-			this.self = self;
-			this.referencedElementID = referencedElementID;
-			this.parser = parser;
-		}
-
-		@Override
-		public void run() {
-			self.setZonesGeographiques(parser.xmlId2ZoneGeographique.get(referencedElementID));
-			fichesToUpdate.add(self);
-		}
-	}
-	class Fiche_setZonesObservation_RefCommand extends RefCommand{
-		Fiche self;
-		String referencedElementID;
-		DorisDBXMLParser parser;
-		
-		public Fiche_setZonesObservation_RefCommand(Fiche self,
-				String referencedElementID, DorisDBXMLParser parser) {
-			super();
-			this.self = self;
-			this.referencedElementID = referencedElementID;
-			this.parser = parser;
-		}
-
-		@Override
-		public void run() {
-			self.setZonesObservation(parser.xmlId2ZoneObservation.get(referencedElementID));
-			fichesToUpdate.add(self);
-		}
-	}
+	// class Fiche_addZonesGeographiques_RefCommand extends RefCommand{
+	// class Fiche_addZonesObservation_RefCommand extends RefCommand{
 	class Fiche_setVerificateurs_RefCommand extends RefCommand{
 		Fiche self;
 		String referencedElementID;
@@ -1128,25 +1132,7 @@ public class DorisDBXMLParser {
 			photoParticipantsToUpdate.add(self);
 		}
 	}
-	class ZoneGeographique_setFiches_RefCommand extends RefCommand{
-		ZoneGeographique self;
-		String referencedElementID;
-		DorisDBXMLParser parser;
-		
-		public ZoneGeographique_setFiches_RefCommand(ZoneGeographique self,
-				String referencedElementID, DorisDBXMLParser parser) {
-			super();
-			this.self = self;
-			this.referencedElementID = referencedElementID;
-			this.parser = parser;
-		}
-
-		@Override
-		public void run() {
-			self.setFiches(parser.xmlId2Fiche.get(referencedElementID));
-			zoneGeographiquesToUpdate.add(self);
-		}
-	}
+	// class ZoneGeographique_addFiches_RefCommand extends RefCommand{
 	class ZoneObservation_setFiches_RefCommand extends RefCommand{
 		ZoneObservation self;
 		String referencedElementID;
