@@ -60,6 +60,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
+import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import android.preference.PreferenceManager;
@@ -69,11 +70,13 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.async.InitialisationApplication_BgActivity;
 import fr.ffessm.doris.android.async.TelechargeFiches_BgActivity;
 import fr.ffessm.doris.android.async.TelechargePhotosFiches_BgActivity;
 import fr.ffessm.doris.android.async.VerifieNouvellesFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
+import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.tools.Outils;
@@ -94,7 +97,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	
 	Handler mHandler;
 	
-	AsyncTask telechargePhotosFiches_BgActivity = null;
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -120,7 +122,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
              */
             @Override
             public void handleMessage(Message inputMessage) {
-            	
+            	if(Accueil_CustomViewActivity.this.isFinishing()) return;
             	if(inputMessage.obj != null ){
             		showToast((String) inputMessage.obj);
             	}
@@ -129,20 +131,26 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 
         };
         
-        // démarre ou pas un téléchargement de photos au démarrage
-
-        if (Outils.getConnectionType(this.getApplicationContext()) == Outils.ConnectionType.WIFI 
-        		|| (! Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_mode_precharg_wifi_only, true) && Outils.getConnectionType(this.getApplicationContext()) == Outils.ConnectionType.WIFI )){
-	
-    		if(Outils.getNbVignettesAPrecharger(this.getApplicationContext(), this.getHelper()) > Outils.getVignetteCount(this.getApplicationContext())
-    				|| Outils.getNbMedResAPrecharger(this.getApplicationContext(), this.getHelper()) > Outils.getMedResCount(this.getApplicationContext())
-					|| Outils.getNbHiResAPrecharger(this.getApplicationContext(), this.getHelper()) > Outils.getHiResCount(this.getApplicationContext())
-				){
-        		if (BuildConfig.DEBUG) Log.d("Outils", "onCreate() - préchargement");
-        		telechargePhotosFiches_BgActivity = new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
-	        }
+        if(DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null){
+        	// une tache précédente est en cours, on se réabonne aux évènements 
+        	// (on est probablement sur une rotation d'écran)
+        	DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.addListener(this);
         }
-        
+        else{
+	        // pas de tache précédente en cours
+        	// démarre ou pas un téléchargement de photos au démarrage	
+	        if (Outils.getConnectionType(this.getApplicationContext()) == Outils.ConnectionType.WIFI 
+	        		|| (! Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_mode_precharg_wifi_only, true) && Outils.getConnectionType(this.getApplicationContext()) == Outils.ConnectionType.WIFI )){
+		
+	    		if(Outils.getNbVignettesAPrecharger(this.getApplicationContext(), this.getHelper()) > Outils.getVignetteCount(this.getApplicationContext())
+	    				|| Outils.getNbMedResAPrecharger(this.getApplicationContext(), this.getHelper()) > Outils.getMedResCount(this.getApplicationContext())
+						|| Outils.getNbHiResAPrecharger(this.getApplicationContext(), this.getHelper()) > Outils.getHiResCount(this.getApplicationContext())
+					){
+	        		if (BuildConfig.DEBUG) Log.d("Outils", "onCreate() - préchargement");
+	        		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+		        }
+	        }
+        }        
         
 		//End of user code
     }
@@ -158,9 +166,17 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     
     @Override
     protected void onDestroy(){
+    	
+    	TelechargePhotosFiches_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;
+    	if(telechargePhotosFiches_BgActivity != null && telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING){
+    		((TelechargePhotosFiches_BgActivity)telechargePhotosFiches_BgActivity).removeListener(this);    		
+    		// TODO déterminer si c'est une rotation ou une vrai fin de l'appli pour tuer les taches background ou pas
+    		if(isFinishing())
+    			telechargePhotosFiches_BgActivity.cancel(true);
+    	}
     	super.onDestroy();
-    	if(telechargePhotosFiches_BgActivity != null && telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING)
-    		telechargePhotosFiches_BgActivity.cancel(true);
+    	
+    	
     }
     
 	public void onClickBtnListeFiches(View view){
@@ -191,6 +207,10 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
 
     	StringBuffer sb = new StringBuffer();
+    	CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
+    	while (it.hasNext()) {
+    		sb.append("Date base locale : " + it.next().getDateBase()+"\n");
+		}
     	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
     	sb.append("Nombres de fiches dans la base locale : "+ficheDao.countOf());
      	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
@@ -231,8 +251,10 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 				new TelechargeFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 				break; */
 			case TELECHARGE_PHOTO_FICHES_MENU_ID:
+				TelechargePhotosFiches_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
 				if(telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING)
-					telechargePhotosFiches_BgActivity = new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = 
+						(TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
 				break;
 		/*	case VERIFIE_NOUVELLES_FICHES_MENU_ID:
 				new VerifieNouvellesFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");

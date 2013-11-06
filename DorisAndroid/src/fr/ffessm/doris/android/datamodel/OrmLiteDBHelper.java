@@ -93,6 +93,9 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	// the DAO object we use to access the diveBudies table
 	// private Dao<Groupe, Integer> groupeDao = null;
 	private RuntimeExceptionDao<Groupe, Integer> groupeRuntimeDao = null;
+	// the DAO object we use to access the diveBudies table
+	// private Dao<DorisDB_metadata, Integer> dorisDB_metadataDao = null;
+	private RuntimeExceptionDao<DorisDB_metadata, Integer> dorisDB_metadataRuntimeDao = null;
 
 	public OrmLiteDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -260,6 +263,17 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		return groupeRuntimeDao;
 	}
 
+	/**
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
+	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
+	 */
+	public RuntimeExceptionDao<DorisDB_metadata, Integer> getDorisDB_metadataDao() {
+		if (dorisDB_metadataRuntimeDao == null) {
+			dorisDB_metadataRuntimeDao = getRuntimeExceptionDao(DorisDB_metadata.class);
+		}
+		return dorisDB_metadataRuntimeDao;
+	}
+
 	
 
 	/**
@@ -277,6 +291,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		zoneGeographiqueRuntimeDao = null;
 		zoneObservationRuntimeDao = null;
 		groupeRuntimeDao = null;
+		dorisDB_metadataRuntimeDao = null;
 	}
 
 	
@@ -295,6 +310,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 			helper.zoneGeographiqueDao = getDao(ZoneGeographique.class);
 			helper.zoneObservationDao = getDao(ZoneObservation.class);
 			helper.groupeDao = getDao(Groupe.class);
+			helper.dorisDB_metadataDao = getDao(DorisDB_metadata.class);
 		} catch (SQLException e) {
 			Log.e(OrmLiteDBHelper.class.getName(), "Can't get ", e);
 		}

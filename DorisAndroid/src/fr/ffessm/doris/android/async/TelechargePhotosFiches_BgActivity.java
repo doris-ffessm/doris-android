@@ -62,6 +62,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
@@ -88,6 +89,16 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         this.dbHelper = dbHelper;
 		this.context = context;
 		this.listener = listener;
+    }
+    
+    public void removeListener(DataChangedListener listener){
+    	listener= null;
+    }
+    public void removeAllListeners(){
+    	listener= null;
+    }
+    public void addListener(DataChangedListener listener){
+    	this.listener= listener;
     }
 	// End of user code
     
@@ -174,6 +185,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     		} catch (InterruptedException e) {
     			Log.i(LOG_TAG, e.getMessage(), e);
     			Log.d(LOG_TAG, "InterruptedException recue : Arret du téléchargement");
+    			// c'est probablement l'application qui se ferme, supprimer la notification
+    			mNotificationHelper.completed();
     			break;
             } catch (IOException e) {
     			Log.i(LOG_TAG, "Erreur de téléchargement de "+e.getMessage(), e);
@@ -215,6 +228,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
 		// Start of user code TelechargePhotosFiches onPostExecute
+        // retire l'activité qui est maintenant finie
+        DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = null;
 		// End of user code
     }
 

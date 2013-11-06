@@ -38,8 +38,7 @@ public class DorisApplication extends Application {
         	throw new Error("Unable to create database");
          
         }
-         
-       
-        
     }
+	
+	
 }

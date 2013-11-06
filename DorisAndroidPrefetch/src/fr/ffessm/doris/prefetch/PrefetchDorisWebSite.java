@@ -353,7 +353,7 @@ public class PrefetchDorisWebSite {
 				majZoneGeographique(ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST, action);
 			
 				Date date = new Date();
-				SimpleDateFormat ft =  new SimpleDateFormat ("dd/MM/yyyy  hh:mm:ss");
+				SimpleDateFormat ft =  new SimpleDateFormat ("dd/MM/yyyy  HH:mm");
 				dbContext.dorisDB_metadataDao.create(new DorisDB_metadata(ft.format(date)));
 				
 	
