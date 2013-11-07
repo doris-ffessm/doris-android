@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+     
+    <!-- Search row -->
+    <LinearLayout
+        android:id="@+android:id/zonegeoselection_listviewsearchrow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <!-- Editext for Search -->
+
+      <!--   <EditText
+            android:id="@+id/inputSearch_zonegeoselection_listviewsearchrow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.67"
+            android:hint="@string/searchHint_zonegeoselection_listviewsearchrow"
+            android:inputType="textVisiblePassword" />
+            -->
+	<!--	Start of user code protectedzonegeoselection_listviewsearchrow 
+      -->
+        
+	<!--	
+End of user code -->
+    </LinearLayout>
+
+	<ListView 
+	    android:id="@+android:id/zonegeoselection_listview"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent" >
+	</ListView>
+</LinearLayout>

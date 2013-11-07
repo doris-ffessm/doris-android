@@ -6,6 +6,7 @@
 (DetailsFiche)-><DetailsFicheChoice>
 (ImagePleinEcran)-><ImagePleinEcranChoice>
 (GroupSelection)-><GroupSelectionChoice>
+(ZoneGeoSelection)-><ZoneGeoSelectionChoice>
 (TelechargeFiches)->(end)
 (VerifieNouvellesFiches)->(end)
 (VerifieMAJFiches)->(end)
@@ -18,5 +19,6 @@
 <AccueilChoice>->(TelechargePhotosFiches)
 <RechercheGuideeChoice>->(ListeFicheAvecFiltre)
 (ListeFicheAvecFiltre)->(DetailsFiche)		
+<ListeFicheAvecFiltreChoice>->(GroupSelection)
 <DetailsFicheChoice>->(ImagePleinEcran)
 <DetailsFicheChoice>->(TelechargePhotosFiche)

@@ -42,6 +42,7 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 
@@ -52,38 +53,38 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity_additionalimports
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.preference.PreferenceManager;
+import android.view.Display;
+import android.view.LayoutInflater;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 // End of user code
 
 public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
 	
 	//Start of user code constants ListeFicheAvecFiltre_ClassListViewActivity
 	SearchPopupButtonManager searchPopupButtonManager;
-	
-	//End of user code
 	private static final String LOG_TAG = ListeFicheAvecFiltre_ClassListViewActivity.class.getSimpleName();
+    ImageButton searchButton;
+	//End of user code
+
 	// Search EditText
     EditText inputSearch;
-    ImageButton searchButton;
     ListeFicheAvecFiltre_Adapter adapter;
 
 	public void onCreate(Bundle bundle) {
@@ -125,15 +126,22 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
                 // TODO Auto-generated method stub                         
             }
         });
+		//Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
         searchButton = (ImageButton)findViewById(R.id.btnOtherFilter_listeficheavecfiltre_listviewsearchrow);
         // crée le manager de popup
         searchPopupButtonManager = new SearchPopupButtonManager(this);
+		//End of user code
 	}
 	
 
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
-		Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
+		//showToast(view.toString() + ", "+ view.getId());
+		/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        //tvLabel.setText(dateFormatter.format(entry.getDate()));
+        showToast(dateFormatter.format(((DiveEntry)view.getTag()).getDate()));
+		*/
+        Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
         Bundle b = new Bundle();
         b.putInt("ficheId", ((Fiche)view.getTag()).getId());
 		toDetailView.putExtras(b);
@@ -253,7 +261,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 	
 			//int OFFSET_X =(Twidth);
 			//int OFFSET_Y =Theight-(Theight-100);
-			Toast.makeText(getApplicationContext(), "Hi", Toast.LENGTH_LONG).show();
+			//Toast.makeText(getApplicationContext(), "Hi", Toast.LENGTH_LONG).show();
 			popup.setBackgroundDrawable(new BitmapDrawable());
 			//popup.showAsDropDown(layout,OFFSET_X,OFFSET_Y);
 			popup.showAsDropDown(searchButton,0,0);
@@ -288,8 +296,8 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 				  searchbuttonstatus=0;
 				  popup.dismiss();
 	
-				  Toast.makeText(getApplicationContext(), "Zone géographique", Toast.LENGTH_LONG).show();
-				  //startActivity(new Intent(context, GroupSelection_CustomViewActivity.class));
+				  //Toast.makeText(getApplicationContext(), "Zone géographique", Toast.LENGTH_LONG).show();
+				  startActivity(new Intent(context, ZoneGeoSelection_ClassListViewActivity.class));
 				  }
 				  });
 			   
