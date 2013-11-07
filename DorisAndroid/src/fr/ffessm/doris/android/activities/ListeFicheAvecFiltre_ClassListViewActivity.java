@@ -77,8 +77,8 @@ import android.widget.ImageButton;
 public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
 	
 	//Start of user code constants ListeFicheAvecFiltre_ClassListViewActivity
-	int searchbuttonstatus=0;
-	PopupWindow popup;
+	SearchPopupButtonManager searchPopupButtonManager;
+	
 	//End of user code
 	private static final String LOG_TAG = ListeFicheAvecFiltre_ClassListViewActivity.class.getSimpleName();
 	// Search EditText
@@ -125,17 +125,15 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
                 // TODO Auto-generated method stub                         
             }
         });
+        searchButton = (ImageButton)findViewById(R.id.btnOtherFilter_listeficheavecfiltre_listviewsearchrow);
+        // crée le manager de popup
+        searchPopupButtonManager = new SearchPopupButtonManager(this);
 	}
 	
 
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
-		//showToast(view.toString() + ", "+ view.getId());
-		/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-        //tvLabel.setText(dateFormatter.format(entry.getDate()));
-        showToast(dateFormatter.format(((DiveEntry)view.getTag()).getDate()));
-		*/
-        Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
+		Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
         Bundle b = new Bundle();
         b.putInt("ficheId", ((Fiche)view.getTag()).getId());
 		toDetailView.putExtras(b);
@@ -152,23 +150,21 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if(prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1) != 1){
 			// on a un filtre actif
-	    	inputSearch = (EditText) findViewById(R.id.inputSearch_listeficheavecfiltre_listviewsearchrow);
 	    	String searchedText = inputSearch.getText().toString();
 	    	if(searchedText.isEmpty()){
 	    		// workaround filter problem, if no text searched, then the filter isn't launched, but we need it for filtering group
-	    		// (the google filtering class is quite convinient because it is done asynchronously
+	    		// (the google filtering class is quite convinient because it is done asynchronously)
+	    		// so let's search for "*" that'll activate the filter process
 	    		searchedText = "*";
 	    	}
 	        ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(searchedText);
 	        
 	        // mise à jour de l'image du bouton de filtre
-	        searchButton = (ImageButton)findViewById(R.id.btnOtherFilter_listeficheavecfiltre_listviewsearchrow);
 	        searchButton.setImageResource(R.drawable.filter_settings_actif_32);
 		}
 		else{
 			// pas de filtre actif
 			// remet l'imaged efiltre inactif
-			searchButton = (ImageButton)findViewById(R.id.btnOtherFilter_listeficheavecfiltre_listviewsearchrow);
 	        searchButton.setImageResource(R.drawable.filter_settings_32);
 	        
 		}
@@ -207,73 +203,89 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 	public void onClickFilterBtn(View view){
 		//showToast("filter button pressed. \nFeature under development ;-)");
 		//startActivity(new Intent(this, GroupSelection_CustomViewActivity.class));
-		if(view == searchButton){
-			if(searchbuttonstatus==0){
-				Log.d(LOG_TAG, "searchbuttonstatus==0");
-				showPopup(this);
-			}
-			else{
-				Log.d(LOG_TAG, "searchbuttonstatus!=0");
-				searchbuttonstatus=0;
-				popup.dismiss();
-			}
-		}
+		searchPopupButtonManager.onClickFilterBtn(view);
     }
 	
-	private void showPopup(final Activity context) {
+	class SearchPopupButtonManager {
+		Activity context;
+		int searchbuttonstatus=0;
+		PopupWindow popup;
 		
-		WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
-	    Display display1 = getWindowManager().getDefaultDisplay();
-	    int Twidth = display1.getWidth();
-	    int Theight = display1.getHeight();
-		 
-		 
-		int popupWidth = 120;
-		int popupHeight =300;
-		LinearLayout viewGroup = (LinearLayout) context.findViewById(R.id.listeavecfiltre_filtrespopup);
-		LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View layout = layoutInflater.inflate(R.layout.listeficheavecfiltre_filtrespopup, viewGroup);
+		public SearchPopupButtonManager(Activity context){
+			this.context = context;
+		}
 		
-		popup = new PopupWindow(context);
-		popup.setContentView(layout);
+		public void onClickFilterBtn(View view){
+			if(view == searchButton){
+				if(searchbuttonstatus==0){;
+					showPopup();
+				}
+				else{
+					hidePopup();
+				}
+			}
+	    }
+		
+		public  void showPopup() {
+			
+			//WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+		    //Display display1 = getWindowManager().getDefaultDisplay();
+		    //int Twidth = display1.getWidth();
+		    //int Theight = display1.getHeight();
+			 
+			 
+			int popupWidth = 200;
+			int popupHeight =300;
+			LinearLayout viewGroup = (LinearLayout) context.findViewById(R.id.listeavecfiltre_filtrespopup);
+			LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View layout = layoutInflater.inflate(R.layout.listeficheavecfiltre_filtrespopup, viewGroup);
+			
+			popup = new PopupWindow(context);
+			popup.setContentView(layout);
+	
+			searchbuttonstatus=1;
+			popup.setWidth(popupWidth);
+			popup.setHeight(popupHeight);
+			popup.setFocusable(false);
+	
+			//int OFFSET_X =(Twidth);
+			//int OFFSET_Y =Theight-(Theight-100);
+			Toast.makeText(getApplicationContext(), "Hi", 150).show();
+			popup.setBackgroundDrawable(new BitmapDrawable());
+			//popup.showAsDropDown(layout,OFFSET_X,OFFSET_Y);
+			popup.showAsDropDown(searchButton,0,0);
+			Button close = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
+			close.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					popup.setFocusable(true);
+					searchbuttonstatus=0;
+					popup.dismiss();
+					startActivity(new Intent(context, GroupSelection_CustomViewActivity.class));
+				  }
+				});
+	
+		      Button btn2 = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_ZoneGeoButton);
+		      btn2.setOnClickListener(new View.OnClickListener() {
+				  @Override
+				  public void onClick(View v) {
+				  popup.setFocusable(true);
+				  searchbuttonstatus=0;
+				  popup.dismiss();
+	
+				  Toast.makeText(getApplicationContext(), "Zone géographique", 150).show();
+				  //startActivity(new Intent(context, GroupSelection_CustomViewActivity.class));
+				  }
+				  });
+			   
+		}
+		
+		public void hidePopup(){
 
-		searchbuttonstatus=1;
-		popup.setWidth(popupWidth);
-		popup.setHeight(popupHeight);
-		popup.setFocusable(false);
-
-		int OFFSET_X =(Twidth);
-		int OFFSET_Y =Theight-(Theight-100);
-		Toast.makeText(getApplicationContext(), "Hi", 150).show();
-		popup.setBackgroundDrawable(new BitmapDrawable());
-		//popup.showAsDropDown(layout,OFFSET_X,OFFSET_Y);
-		popup.showAsDropDown(searchButton,0,0);
-		Button close = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
-		close.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				popup.setFocusable(true);
-				searchbuttonstatus=0;
-				popup.dismiss();
-				startActivity(new Intent(context, GroupSelection_CustomViewActivity.class));
-			  }
-			});
-
-	      Button btn2 = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_ZoneGeoButton);
-	      btn2.setOnClickListener(new View.OnClickListener() {
-			  @Override
-			  public void onClick(View v) {
-			  popup.setFocusable(true);
 			  searchbuttonstatus=0;
 			  popup.dismiss();
-
-			  Toast.makeText(getApplicationContext(), "Zone géographique", 150).show();
-			  //startActivity(new Intent(context, GroupSelection_CustomViewActivity.class));
-			  }
-			  });
-		   
+		}
 	}
-	
 	// End of user code
 
 	private void showToast(String message) {
