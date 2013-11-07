@@ -1,34 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="wrap_content"
-	android:layout_height="wrap_content">
-	<RelativeLayout
-		android:id="@+id/listeavecfiltre_filtrespopup"
-		android:background="@drawable/popupwindow_background"
-		android:layout_width="200dp"
-		android:layout_height="140dp">
-	    <Button
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_alignParentTop="true"
-		    android:layout_centerHorizontal="true"
-		    android:layout_marginTop="15dp"
-	        android:layout_marginBottom="5dp"
-	        android:layout_marginLeft="10dp"
-	        android:layout_marginRight="10dp"
-		    android:id="@+id/listeavecfiltre_filtrespopup_GroupeButton"
-		    android:text="Filtre espèce"/>
+	android:layout_height="wrap_content"
+	android:id="@+id/listeavecfiltre_filtrespopup"
+	>
 
-	    <Button
-	        android:id="@+id/listeavecfiltre_filtrespopup_ZoneGeoButton"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/listeavecfiltre_filtrespopup_GroupeButton"
-	        android:layout_marginTop="5dp"
-	        android:layout_marginBottom="5dp"
-	        android:layout_marginLeft="10dp"
-	        android:layout_marginRight="10dp"
-	        android:text="Filtre géographique" />
+    <ImageView
+        android:id="@+id/listeavecfiltre_filtrespopup_backgroundimageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/listeavecfiltre_filtrespopup_bottom_backgroundimageView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/popupwindow_background" />
+	
+    <Button
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentTop="true"
+	    android:layout_centerHorizontal="true"
+	    android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+	    android:id="@+id/listeavecfiltre_filtrespopup_GroupeButton"
+	    android:text="@string/listeficheavecfiltre_popup_filtreEspece_sans"/>
 
-	</RelativeLayout>
+    <Button
+        android:id="@+id/listeavecfiltre_filtrespopup_ZoneGeoButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/listeavecfiltre_filtrespopup_GroupeButton"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/listeficheavecfiltre_popup_filtreGeographique_sans" />
+    <ImageView
+        android:id="@+id/listeavecfiltre_filtrespopup_bottom_backgroundimageView"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+	    android:layout_below="@+id/listeavecfiltre_filtrespopup_ZoneGeoButton"
+        android:scaleType="fitXY"
+        android:src="@android:color/transparent" />
+
+	    
 </RelativeLayout>

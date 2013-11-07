@@ -234,28 +234,43 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 		    //int Theight = display1.getHeight();
 			 
 			 
-			int popupWidth = 200;
-			int popupHeight =300;
+			//int popupWidth = 200;
+			//int popupHeight =300;
 			LinearLayout viewGroup = (LinearLayout) context.findViewById(R.id.listeavecfiltre_filtrespopup);
 			LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View layout = layoutInflater.inflate(R.layout.listeficheavecfiltre_filtrespopup, viewGroup);
 			
-			popup = new PopupWindow(context);
-			popup.setContentView(layout);
-	
+			popup = new PopupWindow(layout, 300, 300);
+			//popup.setContentView(layout);
+			
+			//int popupWidth = layout.getWidth(); 
+			//int popupHeight = layout.getHeight();
+			//Log.d(LOG_TAG," width="+popupWidth+", height="+popupHeight);
 			searchbuttonstatus=1;
-			popup.setWidth(popupWidth);
-			popup.setHeight(popupHeight);
+			//popup.setWidth(popupWidth);
+			//popup.setHeight(popupHeight);
 			popup.setFocusable(false);
 	
 			//int OFFSET_X =(Twidth);
 			//int OFFSET_Y =Theight-(Theight-100);
-			Toast.makeText(getApplicationContext(), "Hi", 150).show();
+			Toast.makeText(getApplicationContext(), "Hi", Toast.LENGTH_LONG).show();
 			popup.setBackgroundDrawable(new BitmapDrawable());
 			//popup.showAsDropDown(layout,OFFSET_X,OFFSET_Y);
 			popup.showAsDropDown(searchButton,0,0);
-			Button close = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
-			close.setOnClickListener(new View.OnClickListener() {
+			
+			
+			// boutoun filtre espèce 
+			Button btnFiltreEspece = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+	        int filtreCourantId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);	        
+			if(filtreCourantId==1){
+				btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_sans));
+	        }
+			else{
+				Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
+				btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec)+" "+groupeFiltreCourant.getNomGroupe().trim());
+			}
+			btnFiltreEspece.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					popup.setFocusable(true);
@@ -273,7 +288,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 				  searchbuttonstatus=0;
 				  popup.dismiss();
 	
-				  Toast.makeText(getApplicationContext(), "Zone géographique", 150).show();
+				  Toast.makeText(getApplicationContext(), "Zone géographique", Toast.LENGTH_LONG).show();
 				  //startActivity(new Intent(context, GroupSelection_CustomViewActivity.class));
 				  }
 				  });

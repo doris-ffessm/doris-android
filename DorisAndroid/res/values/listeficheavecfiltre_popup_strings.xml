@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="listeficheavecfiltre_popup_filtreEspece_sans">Filtrer par espèces</string>
+    <string name="listeficheavecfiltre_popup_filtreEspece_avec">Uniquement les </string>
+    
+    <string name="listeficheavecfiltre_popup_filtreGeographique_sans">Filtrer par zone géographique</string>
+    <string name="listeficheavecfiltre_popup_filtreGeographique_avec">Uniquement en </string>
+	
+</resources>
