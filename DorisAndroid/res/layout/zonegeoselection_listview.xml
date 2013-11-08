@@ -27,6 +27,7 @@ End of user code -->
 		    	android:id="@+android:id/zonegeoselection_listview_filtre_courant"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
+		        android:layout_marginRight="34sp"
 		        android:text="hjkhdgfdhgdgdlk jhgfkhdslkg jjmljds"
 		        android:textAppearance="?android:attr/textAppearance" />
 		</LinearLayout>
