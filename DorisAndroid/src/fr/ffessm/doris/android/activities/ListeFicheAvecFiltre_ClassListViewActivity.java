@@ -42,7 +42,6 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 
@@ -74,6 +73,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 // End of user code
+import android.widget.TextView;
 
 public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
 	
@@ -281,18 +281,28 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 				  }
 				});
 	
-		      Button btn2 = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_ZoneGeoButton);
-		      btn2.setOnClickListener(new View.OnClickListener() {
-				  @Override
-				  public void onClick(View v) {
-				  popup.setFocusable(true);
-				  searchbuttonstatus=0;
-				  popup.dismiss();
+			// bouton filtre zone géographique
+			Button btnZoneGeo = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_ZoneGeoButton);
+			int currentFilterId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), 0);
+	        if(currentFilterId == 0){
+	        	btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_sans));
+	        }
+	        else{
+	        	ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
+	        	btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec)+" "+currentZoneFilter.getNom().trim());
+	        }
+	        
+	        btnZoneGeo.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+				popup.setFocusable(true);
+				searchbuttonstatus=0;
+				popup.dismiss();
 	
-				  //Toast.makeText(getApplicationContext(), "Zone géographique", Toast.LENGTH_LONG).show();
-				  startActivity(new Intent(context, ZoneGeoSelection_ClassListViewActivity.class));
-				  }
-				  });
+				//Toast.makeText(getApplicationContext(), "Zone géographique", Toast.LENGTH_LONG).show();
+				startActivity(new Intent(context, ZoneGeoSelection_ClassListViewActivity.class));
+				}
+				});
 			   
 		}
 		

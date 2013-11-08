@@ -7,32 +7,39 @@
       -->
 	<!--	
 End of user code -->
-	<LinearLayout
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal" >
 
-	    <TextView
-	        android:layout_width="120dp"
-	        android:layout_height="wrap_content"
-	        android:text="@string/zonegeoselection_header_label"
-	        android:textAppearance="?android:attr/textAppearance" />
-
-	    <TextView
-	    	android:id="@+android:id/zonegeoselection_listview_filtre_courant"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_marginRight="32sp"
-	        android:text="hjkhdgfdhgdgdlk jhgfkhdslkg jjmljds"
-	        android:textAppearance="?android:attr/textAppearance" />
-	    <ImageButton
-            android:id="@+id/zonegeoselection_listview_filtre_courant__suppFiltreBtn"
-            android:layout_width="32sp"
-            android:layout_height="32sp"
-            android:contentDescription="@string/zonegeoselection_listview_suppression_filtre_courant_descBtn"
-            android:src="@android:drawable/ic_delete" 
-            android:onClick="onRemoveCurrentFilterClick"/>
-	</LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        <LinearLayout
+            android:id="@+android:id/zonegeoselection_listview_filtre_courant_textlayout"
+		   	android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentLeft="true"
+		    android:layout_alignRight="@+id/zonegeoselection_listview_filtre_courant__suppFiltreBtn" >
+	
+		    <TextView
+		        android:layout_width="120dp"
+		        android:layout_height="wrap_content"
+		        android:text="@string/zonegeoselection_header_label"
+		        android:textAppearance="?android:attr/textAppearance" />
+		    <TextView
+		    	android:id="@+android:id/zonegeoselection_listview_filtre_courant"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="hjkhdgfdhgdgdlk jhgfkhdslkg jjmljds"
+		        android:textAppearance="?android:attr/textAppearance" />
+		</LinearLayout>
+		<ImageButton
+	            android:id="@+id/zonegeoselection_listview_filtre_courant__suppFiltreBtn"
+	            android:layout_width="32sp"
+	            android:layout_height="32sp"
+	            android:layout_marginRight="2dp"
+	            android:layout_alignParentRight="true"
+	            android:contentDescription="@string/zonegeoselection_listview_suppression_filtre_courant_descBtn"
+	            android:src="@android:drawable/ic_delete" 
+	            android:onClick="onRemoveCurrentFilterClick"/>
+    </RelativeLayout>
 	<ListView 
 	    android:id="@+android:id/zonegeoselection_listview"
 	    android:layout_width="match_parent"
