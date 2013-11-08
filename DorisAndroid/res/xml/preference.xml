@@ -10,7 +10,7 @@
 	        >
         <CheckBoxPreference android:key="@string/pref_mode_connecte_wifi_only"
             android:title="@string/mode_connecte_wifi_only_prompt" 
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:layout="@layout/preference_layout_preference"
             />
    	</PreferenceCategory>
@@ -25,9 +25,16 @@
             android:defaultValue="true"
             android:layout="@layout/preference_layout_preference"
             />
-        <ListPreference android:entries="@array/mode_precharg_answers_lib"
+        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary android:entries="@array/mode_precharg_answers_lib"
             android:title="@string/mode_precharg_region_ttzones_prompt"
 			android:key="@string/pref_mode_precharg_region_ttzones"
+			android:entryValues="@array/mode_precharg_answers_values"
+			android:defaultValue="P1"
+			android:layout="@layout/preference_layout_preference"
+			/>
+        <ListPreference android:entries="@array/mode_precharg_answers_lib"
+            android:title="@string/mode_precharg_region_france_prompt"
+			android:key="@string/pref_mode_precharg_region_france"
 			android:entryValues="@array/mode_precharg_answers_values"
 			android:defaultValue="P1"
 			android:layout="@layout/preference_layout_preference"

@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:minHeight="?android:attr/listPreferredItemHeight"
-    android:paddingLeft="8dip"
+    android:paddingLeft="4dip"
     android:paddingRight="?android:attr/scrollbarSize" >
 
     <LinearLayout
@@ -31,7 +30,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:paddingBottom="6dip"
-        android:paddingRight="8dip"
+        android:paddingLeft="4dip"
+        android:paddingRight="4dip"
         android:paddingTop="6dip"
 		android:background="#404040" >
 
