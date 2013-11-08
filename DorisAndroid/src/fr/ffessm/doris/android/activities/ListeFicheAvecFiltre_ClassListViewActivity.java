@@ -82,7 +82,6 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 	private static final String LOG_TAG = ListeFicheAvecFiltre_ClassListViewActivity.class.getSimpleName();
     ImageButton searchButton;
 	//End of user code
-
 	// Search EditText
     EditText inputSearch;
     ListeFicheAvecFiltre_Adapter adapter;
@@ -100,7 +99,6 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
         list.setOnItemClickListener(this);
 
         list.setAdapter(adapter);
-
 		inputSearch = (EditText) findViewById(R.id.inputSearch_listeficheavecfiltre_listviewsearchrow);
 
 		/**
@@ -136,11 +134,6 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
-		//showToast(view.toString() + ", "+ view.getId());
-		/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-        //tvLabel.setText(dateFormatter.format(entry.getDate()));
-        showToast(dateFormatter.format(((DiveEntry)view.getTag()).getDate()));
-		*/
         Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
         Bundle b = new Bundle();
         b.putInt("ficheId", ((Fiche)view.getTag()).getId());

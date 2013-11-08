@@ -70,7 +70,7 @@
             android:layout_height="32sp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:contentDescription="@+id/groupselection_customview_suppression_filtre_espece_courant_descBtn"
+            android:contentDescription="@string/groupselection_customview_suppression_filtre_espece_courant_descBtn"
             android:src="@android:drawable/ic_delete" 
             android:onClick="onRemoveCurrentFilterClick"/>
 

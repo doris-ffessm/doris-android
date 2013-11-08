@@ -89,7 +89,7 @@ import fr.ffessm.doris.android.tools.OutilsGroupe;
 
 //End of user code
 
-public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filterable{
+public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filterable{
 	
 	private Context context;
 
@@ -105,7 +105,6 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
     private List<Fiche> filteredFicheList;
 	private final Object mLock = new Object();
 	private SimpleFilter mFilter;
-
 	//Start of user code protected additional ListeFicheAvecFiltre_Adapter attributes
 	// additional attributes
 	protected Groupe filtreGroupe;
@@ -263,7 +262,6 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 	}
 	
 	//End of user code
-
 	protected boolean sortAfterFilter() {
 		return false;
 	}

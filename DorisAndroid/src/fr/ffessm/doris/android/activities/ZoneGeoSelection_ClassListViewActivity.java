@@ -42,14 +42,15 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -61,6 +62,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedZoneGeoSelection_ClassListViewActivity_additionalimports
@@ -70,9 +72,6 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteBaseActivity<
 	
 	//Start of user code constants ZoneGeoSelection_ClassListViewActivity
 	//End of user code
-
-	// Search EditText
-    EditText inputSearch;
     ZoneGeoSelection_Adapter adapter;
 
 	public void onCreate(Bundle bundle) {
@@ -88,25 +87,51 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteBaseActivity<
         list.setOnItemClickListener(this);
 
         list.setAdapter(adapter);
-
 		//Start of user code onCreate additions ZoneGeoSelection_ClassListViewActivity
+        
 		//End of user code
 	}
 	
 
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
+		//Start of user code onItemClick additions ZoneGeoSelection_ClassListViewActivity
 		//showToast(view.toString() + ", "+ view.getId());
-		/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-        //tvLabel.setText(dateFormatter.format(entry.getDate()));
-        showToast(dateFormatter.format(((DiveEntry)view.getTag()).getDate()));
-		*/
-		showToast(view.toString() + ", "+ view.getId());
+		//End of user code		
     }
 
 	//Start of user code additional  ZoneGeoSelection_ClassListViewActivity methods
+	
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		TextView currentFilterText = (TextView) findViewById(R.id.zonegeoselection_listview_filtre_courant);
+		int currentFilterId = pref.getInt(this.getString(R.string.pref_key_filtre_zonegeo), 0);
+        if(currentFilterId == 0){
+        	currentFilterText.setText("");
+        	findViewById(R.id.zonegeoselection_listview_filtre_courant__suppFiltreBtn).setVisibility(View.GONE);
+        }
+        else{
+        	ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
+        	currentFilterText.setText(currentZoneFilter.getNom());
+        	findViewById(R.id.zonegeoselection_listview_filtre_courant__suppFiltreBtn).setVisibility(View.VISIBLE);
+        }
+	}
+	
+	public void onRemoveCurrentFilterClick(View view){
+    	Toast.makeText(this, "Filtre de zone géographique supprimé", Toast.LENGTH_SHORT).show();
+		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
+		ed.putInt(this.getString(R.string.pref_key_filtre_zonegeo), 0);
+        ed.commit();
+		finish();
+    }
 	//End of user code
+
+
+
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {

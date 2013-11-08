@@ -3,7 +3,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-     
     <!-- Search row -->
     <LinearLayout
         android:id="@+android:id/listeficheavecfiltre_listviewsearchrow"
@@ -34,7 +33,6 @@
 
 <!-- End of user code -->
     </LinearLayout>
-
 	<ListView 
 	    android:id="@+android:id/listeficheavecfiltre_listview"
 	    android:layout_width="match_parent"

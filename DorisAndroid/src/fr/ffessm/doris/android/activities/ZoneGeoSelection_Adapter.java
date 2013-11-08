@@ -52,6 +52,8 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +63,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,7 +74,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 // additional imports
 //End of user code
 
-public class ZoneGeoSelection_Adapter extends BaseAdapter {
+public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 	
 	private Context context;
 
@@ -85,7 +88,6 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter {
 
     private List<ZoneGeographique> zoneGeographiqueList;
     private List<ZoneGeographique> filteredZoneGeographiqueList;
-
 	//Start of user code protected additional ZoneGeoSelection_Adapter attributes
 	// additional attributes
 	//End of user code
@@ -121,7 +123,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-		ZoneGeographique entry = filteredZoneGeographiqueList.get(position);
+		final ZoneGeographique entry = filteredZoneGeographiqueList.get(position);
 		entry.setContextDB(_contextDB);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
@@ -148,7 +150,22 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter {
         llRow.setTag(entry);
         
 		// Start of user code protected additional ZoneGeoSelection_Adapter getView code
-		//	additional code
+		
+        ImageButton selectbutton = (ImageButton) convertView.findViewById(R.id.zonegeoselection__selectBtn);
+        selectbutton.setFocusable(false);
+        selectbutton.setClickable(true);
+        selectbutton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(context, "Filtre zone géographique : "+entry.getNom(), Toast.LENGTH_SHORT).show();
+				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), entry.getId());
+		        ed.commit();
+				((ZoneGeoSelection_ClassListViewActivity) context).finish();
+			}
+		});
+        
 		// End of user code
 
         return convertView;
@@ -158,5 +175,4 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter {
 	//Start of user code protected additional ZoneGeoSelection_Adapter methods
 	// additional methods
 	//End of user code
-
 }
