@@ -46,6 +46,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,9 +67,11 @@ import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
+import fr.ffessm.doris.android.tools.Outils.ImageType;
 
 public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer, Integer>{
 	private static final String LOG_TAG = TelechargePhotosFiches_BgActivity.class.getCanonicalName();
@@ -82,6 +85,21 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     
     protected DataChangedListener listener;
     
+	class PhotoATraiter
+	{
+		PhotoFiche photoATraiter;
+		Outils.ImageType imageType;
+		boolean imagePrincipale;
+		
+		public PhotoATraiter(){}
+
+		public PhotoATraiter(PhotoFiche inPhotoFiche, ImageType inImageType, boolean inImagePrincipale) {
+			photoATraiter = inPhotoFiche;
+			imageType = inImageType;
+			imagePrincipale = inImagePrincipale;
+		}
+	}
+		
     public TelechargePhotosFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper, DataChangedListener listener){
 		String initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
 		String notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
@@ -128,76 +146,174 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         	return 0;
         }
     	
-    	List<Fiche> listeFiches = dbHelper.getFicheDao().queryForAll();
-    	List<PhotoFiche> listePhotosATraiter = new ArrayList<PhotoFiche>();
-    	// en priorité toutes les photos principales (pour les vignettes)
-        if(!listeFiches.isEmpty()){
-        	for (Fiche fiche : listeFiches) {
-        		if( this.isCancelled()) return 0;
-        		fiche.setContextDB(dbHelper.getDorisDBHelper());
-        		if( !Outils.isAvailableImagePrincipaleFiche(context, fiche)){
-        			PhotoFiche photoFiche = fiche.getPhotoPrincipale();
-        			if(photoFiche != null){
-            			photoFiche.setContextDB(dbHelper.getDorisDBHelper());
-        				listePhotosATraiter.add(photoFiche);
-        			}
-        		}
-			}
-        }
-        // TODO puis les autres photos applicable aux filtres utilisateurs
-        
-		// once done, you should indicates to the notificationHelper how many item will be processed
-		mNotificationHelper.setMaxItemToProcess(""+listePhotosATraiter.size());
-		// End of user code
     	
-    	// Start of user code main loop of task TelechargePhotosFiches_BgActivity
-		// This is where we would do the actual job
-		// you should indicates the progression using publishProgress()
-		Log.d(LOG_TAG, "nombre max de photo à télécharger : "+listePhotosATraiter.size());
     	int nbPhotoRetreived = 0;
-    	for (PhotoFiche photoFiche : listePhotosATraiter) {
-    		
-    		if( this.isCancelled()) return nbPhotoRetreived;
-    		// recupération de la photo sur internet
-    		try{
-    			Outils.getOrDownloadVignetteFile(context, photoFiche);
-    			Log.i(LOG_TAG, "vignette" +photoFiche.getCleURL()+" téléchargée");
-    			nbPhotoRetreived = nbPhotoRetreived+1;
-    			publishProgress(nbPhotoRetreived);
-    			// laisse un peu de temps entre chaque téléchargement 
-                Thread.sleep(10);
-                // notify les listener toutes les 10 photos
-                if(((nbPhotoRetreived % 10) == 0) && listener != null){
-                	try{
-            			listener.dataHasChanged(null);
-            		}
-            		catch(Exception e){
-            			Log.d(LOG_TAG, "Listener n'est plus à l'écoute, Arrét du téléchargement");
-            			return nbPhotoRetreived;
-            		}
-            		// vérifie de temps en temps la connexion
-            		if(!isOnline()){
-                    	Log.d(LOG_TAG, "pas connexion internet : Arret du téléchargement");
-                    	break;
-                    }
-            	}
-                
-    		} catch (InterruptedException e) {
-    			Log.i(LOG_TAG, e.getMessage(), e);
-    			Log.d(LOG_TAG, "InterruptedException recue : Arret du téléchargement");
-    			// c'est probablement l'application qui se ferme, supprimer la notification
-    			mNotificationHelper.completed();
-    			break;
-            } catch (IOException e) {
-    			Log.i(LOG_TAG, "Erreur de téléchargement de "+e.getMessage(), e);
-    			continue;
+    	//Test Temporaire permettant de coserver l'algo initial
+    	// et de dévelooper un plus avancé
+    	if (! PreferenceManager.getDefaultSharedPreferences(context).getBoolean("debug_new_algo_sync", true) ) {
+    	// --- Algo initial ---
+    			
+	    	List<Fiche> listeFiches = dbHelper.getFicheDao().queryForAll();
+	    	List<PhotoFiche> listePhotosATraiter = new ArrayList<PhotoFiche>();
+	    	// en priorité toutes les photos principales (pour les vignettes)
+	        if(!listeFiches.isEmpty()){
+	        	for (Fiche fiche : listeFiches) {
+	        		if( this.isCancelled()) return 0;
+	        		fiche.setContextDB(dbHelper.getDorisDBHelper());
+	        		if( !Outils.isAvailableImagePrincipaleFiche(context, fiche)){
+	        			PhotoFiche photoFiche = fiche.getPhotoPrincipale();
+	        			if(photoFiche != null){
+	            			photoFiche.setContextDB(dbHelper.getDorisDBHelper());
+	        				listePhotosATraiter.add(photoFiche);
+	        			}
+	        		}
+				}
+	        }
+	        // TODO puis les autres photos applicable aux filtres utilisateurs
+	        
+			// once done, you should indicates to the notificationHelper how many item will be processed
+			mNotificationHelper.setMaxItemToProcess(""+listePhotosATraiter.size());
+			// End of user code
+	    	
+	    	// Start of user code main loop of task TelechargePhotosFiches_BgActivity
+			// This is where we would do the actual job
+			// you should indicates the progression using publishProgress()
+			Log.d(LOG_TAG, "nombre max de photo à télécharger : "+listePhotosATraiter.size());
+	    	
+	    	for (PhotoFiche photoFiche : listePhotosATraiter) {
+	    		
+	    		if( this.isCancelled()) return nbPhotoRetreived;
+	    		// recupération de la photo sur internet
+	    		try{
+	    			Outils.getOrDownloadVignetteFile(context, photoFiche);
+	    			Log.i(LOG_TAG, "vignette" +photoFiche.getCleURL()+" téléchargée");
+	    			nbPhotoRetreived = nbPhotoRetreived+1;
+	    			publishProgress(nbPhotoRetreived);
+	    			// laisse un peu de temps entre chaque téléchargement 
+	                Thread.sleep(10);
+	                // notify les listener toutes les 10 photos
+	                if(((nbPhotoRetreived % 10) == 0) && listener != null){
+	                	try{
+	            			listener.dataHasChanged(null);
+	            		}
+	            		catch(Exception e){
+	            			Log.d(LOG_TAG, "Listener n'est plus à l'écoute, Arrét du téléchargement");
+	            			return nbPhotoRetreived;
+	            		}
+	            		// vérifie de temps en temps la connexion
+	            		if(!isOnline()){
+	                    	Log.d(LOG_TAG, "pas connexion internet : Arret du téléchargement");
+	                    	break;
+	                    }
+	            	}
+	                
+	    		} catch (InterruptedException e) {
+	    			Log.i(LOG_TAG, e.getMessage(), e);
+	    			Log.d(LOG_TAG, "InterruptedException recue : Arret du téléchargement");
+	    			// c'est probablement l'application qui se ferme, supprimer la notification
+	    			mNotificationHelper.completed();
+	    			break;
+	            } catch (IOException e) {
+	    			Log.i(LOG_TAG, "Erreur de téléchargement de "+e.getMessage(), e);
+	    			continue;
+				}
+	    		// DEBUG arret avant la fin
+	    		if(nbPhotoRetreived > 10 && PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_id_limit_download), false)) {
+	    			Log.d(LOG_TAG, "DEBUG mode : nombre max de photo téléchargé : Arret du téléchargement");
+	    			break;
+	    		}
 			}
-    		// DEBUG arret avant la fin
-    		if(nbPhotoRetreived > 10 && PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_id_limit_download), false)) {
-    			Log.d(LOG_TAG, "DEBUG mode : nombre max de photo téléchargé : Arret du téléchargement");
-    			break;
-    		}
-		}
+    	// --- Fin Algo initial ---	
+    	} else {
+		// --- Algo avec Zones et qualités ---
+    		List<Fiche> listeFiches = dbHelper.getFicheDao().queryForAll();
+    		
+    		Log.d(LOG_TAG, "Debug - 010 - pour voir durée");
+    		
+    		Collection<PhotoATraiter> listePhotosPrincATraiter = new ArrayList<PhotoATraiter>();
+	    	Collection<PhotoATraiter> listePhotosATraiter = new ArrayList<PhotoATraiter>();
+	    	List<ZoneGeographique> listeZoneGeo = dbHelper.getZoneGeographiqueDao().queryForAll();
+	    	
+	    	// zoneGeo : 1 - Faune et flore marines de France métropolitaine
+	    	// zoneGeo : 2 - Faune et flore dulcicoles de France métropolitaine
+	    	// zoneGeo : 3 - Faune et flore subaquatiques de l'Indo-Pacifique
+	    	// zoneGeo : 4 - Faune et flore subaquatiques des Caraïbes
+	    	// zoneGeo : 5 - Faune et flore subaquatiques de l'Atlantique Nord-Ouest
+
+	    	Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
+	    	for (ZoneGeographique zoneGeo : listeZoneGeo) {
+	    		Log.d(LOG_TAG, "zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
+	    	}
+	    	int nbFichesdebug = 0;
+	    	
+	    	// en priorité toutes les photos principales (pour les vignettes)
+	        if(!listeFiches.isEmpty()){
+	        	for (Fiche fiche : listeFiches) {
+	        		if( this.isCancelled()) return 0;
+	        		
+	        		nbFichesdebug ++;
+	        		if( PreferenceManager.getDefaultSharedPreferences(context).getBoolean("limit_download", false)
+	        				&& nbFichesdebug >  Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("sync_max_card_number", "10") ) ) return 0;
+	        		
+	        		fiche.setContextDB(dbHelper.getDorisDBHelper());
+	        		PhotoFiche photoFichePrinc = fiche.getPhotoPrincipale();
+	        		listeZoneGeo = fiche.getZonesGeographiques();
+	        		Collection<PhotoFiche> listePhotosFiche = fiche.getPhotosFiche();
+	        		
+	        		
+        			if(photoFichePrinc != null){
+        				listeZoneGeo = fiche.getZonesGeographiques();
+        				for (ZoneGeographique zoneGeo : listeZoneGeo) {
+        					Outils.ImageType imageType = Outils.getImageQualityToDownload(context, true, zoneGeo);
+        					if(imageType != null) {
+        						if (! Outils.isAvailableImagePhotoFiche(context, photoFichePrinc, imageType)) {
+        							photoFichePrinc.setContextDB(dbHelper.getDorisDBHelper());
+        							listePhotosPrincATraiter.add(new PhotoATraiter(photoFichePrinc, imageType, true));
+        						}
+        					}
+        				}	
+	        		}
+ 
+        			for (PhotoFiche photoFiche : listePhotosFiche) {
+        				if (photoFiche != photoFichePrinc) {
+	        				for (ZoneGeographique zoneGeo : listeZoneGeo) {
+	        					Outils.ImageType imageType = Outils.getImageQualityToDownload(context, false, zoneGeo);
+	        					if(imageType != null) {
+	        						if (! Outils.isAvailableImagePhotoFiche(context, photoFiche, imageType)) {
+			        					photoFiche.setContextDB(dbHelper.getDorisDBHelper());
+				        				listePhotosATraiter.add(new PhotoATraiter(photoFiche, imageType, false));
+	        						}
+	        					}
+	        				}
+        				}
+        			}
+				}
+	        }
+
+			// once done, you should indicates to the notificationHelper how many item will be processed
+	        int nbPhotosATraiter = listePhotosPrincATraiter.size()+listePhotosATraiter.size();
+			mNotificationHelper.setMaxItemToProcess(""+nbPhotosATraiter);
+			// End of user code
+	    	
+	    	// Start of user code main loop of task TelechargePhotosFiches_BgActivity
+			// This is where we would do the actual job
+			// you should indicates the progression using publishProgress()
+			Log.d(LOG_TAG, "nombre max de photo à télécharger : "+nbPhotosATraiter);
+
+			// On commence par les principales
+			nbPhotoRetreived = recupPhotoSurInternet(listePhotosPrincATraiter);
+			Log.d(LOG_TAG, "Debug - 800 - nbPhotoRetreived : "+nbPhotoRetreived);
+			
+			// Puis toutes les autres
+			nbPhotoRetreived += recupPhotoSurInternet(listePhotosATraiter);
+
+			Log.d(LOG_TAG, "Debug - 900 - nbPhotoRetreived : "+nbPhotoRetreived);
+			Log.d(LOG_TAG, "Debug - 910 - pour voir durée");
+			
+    		if( this.isCancelled()) return nbPhotoRetreived;
+	    	
+		// --- Fin Algo avec Zones et qualités ---
+    	}
 		// End of user code
         
 		// Start of user code end of task TelechargePhotosFiches_BgActivity
@@ -245,6 +361,50 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         }
         return false;
     }
+    
+    
+    // recupération de la photo sur internet
+    private int recupPhotoSurInternet(Collection<PhotoATraiter> inListePhotosATraiter) {
+    	int nbPhotoRetreived = 0;
+		
+    	for (PhotoATraiter photoATraiter : inListePhotosATraiter) {
+	    	try{
+				Outils.getOrDownloadFile(context, photoATraiter.photoATraiter, photoATraiter.imageType);
+				Log.i(LOG_TAG, "image "+photoATraiter.imageType+" "+photoATraiter.photoATraiter.getCleURL()+" téléchargée");
+				nbPhotoRetreived = nbPhotoRetreived+1;
+				publishProgress(nbPhotoRetreived);
+				// laisse un peu de temps entre chaque téléchargement 
+		        Thread.sleep(10);
+		        // notify les listener toutes les 10 photos
+		        if(((nbPhotoRetreived % 10) == 0) && listener != null){
+		        	try{
+		    			listener.dataHasChanged(null);
+		    		}
+		    		catch(Exception e){
+		    			Log.d(LOG_TAG, "Listener n'est plus à l'écoute, Arrét du téléchargement");
+		    			return nbPhotoRetreived;
+		    		}
+		    		// vérifie de temps en temps la connexion
+		    		if(!isOnline()){
+		            	Log.d(LOG_TAG, "pas connexion internet : Arret du téléchargement");
+		            	break;
+		            }
+		    	}
+		        
+			} catch (InterruptedException e) {
+				Log.i(LOG_TAG, e.getMessage(), e);
+				Log.d(LOG_TAG, "InterruptedException recue : Arret du téléchargement");
+				// c'est probablement l'application qui se ferme, supprimer la notification
+				mNotificationHelper.completed();
+				break;
+		    } catch (IOException e) {
+				Log.i(LOG_TAG, "Erreur de téléchargement de "+e.getMessage(), e);
+				continue;
+			}
+    	}
+    	return nbPhotoRetreived;
+    }
+    
 	// End of user code
 	
 }
