@@ -142,13 +142,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	        if (Outils.getConnectionType(this.getApplicationContext()) == Outils.ConnectionType.WIFI 
 	        		|| (! Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_mode_precharg_wifi_only, true) && Outils.getConnectionType(this.getApplicationContext()) == Outils.ConnectionType.WIFI )){
 		
-	    		if(Outils.getNbVignettesAPrecharger(this.getApplicationContext(), this.getHelper()) > Outils.getVignetteCount(this.getApplicationContext())
-	    				|| Outils.getNbMedResAPrecharger(this.getApplicationContext(), this.getHelper()) > Outils.getMedResCount(this.getApplicationContext())
-						|| Outils.getNbHiResAPrecharger(this.getApplicationContext(), this.getHelper()) > Outils.getHiResCount(this.getApplicationContext())
-					){
-	        		if (BuildConfig.DEBUG) Log.d("Outils", "onCreate() - préchargement");
-	        		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
-		        }
+        		if (BuildConfig.DEBUG) Log.d("Outils", "onCreate() - préchargement");
+        		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+
 	        }
         }        
         

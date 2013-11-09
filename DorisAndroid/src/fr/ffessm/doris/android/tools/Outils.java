@@ -432,31 +432,13 @@ public class Outils {
 		return PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getApplicationContext().getString(param), valDef);
 	}
 	
-	public static ImageType getImageQualityToDownload(Context inContext, boolean photoPrincipale, ZoneGeographique zoneGeo){
+	public static ImageType getImageQualityToDownload(Context inContext, boolean inPhotoPrincipale, ZoneGeographique inZoneGeo){
 		//if (BuildConfig.DEBUG) Log.d("Outils", "getImageQualityToDownload() - Début" );
     	
 		ImageType imageType;
-		PrecharMode prechargementMode = null;
+		PrecharMode prechargementMode = getPrecharMode(inContext, inZoneGeo);
 		
-		switch(zoneGeo.getId()){
-		case 1 :
-			prechargementMode = PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_france,"P1"));
-			break;
-		case 2 :
-			prechargementMode = PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_eaudouce,"P1"));
-			break;
-		case 3 :
-			prechargementMode = PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_atlantno,"P1"));
-			break;
-		case 4 :
-			prechargementMode = PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_indopac,"P1"));
-			break;
-		case 5 :
-			prechargementMode = PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_caraibes,"P1"));
-			break;
-		}
-		
-		if (photoPrincipale) {
+		if (inPhotoPrincipale) {
 			switch(prechargementMode){
 			case P1 :
 			case P2 :
@@ -487,4 +469,51 @@ public class Outils {
 		
 	}
 	
+	public static PrecharMode getPrecharMode(Context inContext, ZoneGeographique inZoneGeo){
+		//if (BuildConfig.DEBUG) Log.d("Outils", "getPrecharMode() - Début" );
+		
+		switch(inZoneGeo.getId()){
+		case 1 :
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_france,"P1"));
+		case 2 :
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_eaudouce,"P1"));
+		case 3 :
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_atlantno,"P1"));
+		case 4 :
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_indopac,"P1"));
+		case 5 :
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_caraibes,"P1"));
+		default :
+			return null;
+		}
+	}
+	
+	public static boolean isPrecharModeOnlyP0(Context inContext){
+		//if (BuildConfig.DEBUG) Log.d("Outils", "getPrecharMode() - Début" );
+		
+		if ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_france,"P1")) == PrecharMode.P0 
+			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_eaudouce,"P1")) == PrecharMode.P0
+			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_atlantno,"P1")) == PrecharMode.P0
+			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_indopac,"P1")) == PrecharMode.P0
+			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_caraibes,"P1")) == PrecharMode.P0
+			) return true;
+		return false;	
+	}
+	
+	public static boolean isPrecharModeOnlyP0orP1(Context inContext){
+		//if (BuildConfig.DEBUG) Log.d("Outils", "getPrecharMode() - Début" );
+		
+		if ( ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_france,"P1")) == PrecharMode.P0 
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_france,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_eaudouce,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_eaudouce,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_atlantno,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_atlantno,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_indopac,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_indopac,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_caraibes,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_caraibes,"P1")) == PrecharMode.P1 )
+			) return true;
+		return false;	
+	}
 }

@@ -37,21 +37,19 @@
 	<!-- Preferences -->
 	<string name="mode_connecte_preference_category">Mode connecté / à la demande</string>
 	
-	<string name="mode_connecte_wifi_only_prompt">Téléch. en wifi uniquement ?</string>
+	<string name="mode_connecte_wifi_only_prompt">Téléch. photos en wifi uniquement ?</string>
     <string name="mode_connecte_sizemax_prompt">Taille du cache à la demande (Mo) ?</string>
     
     
-	<string name="mode_precharg_preference_category">Préchargement pour Mode hors ligne</string>
+	<string name="mode_precharg_preference_category">Préchargement photos en Mode hors ligne</string>
     
 	<string name="mode_precharg_wifi_only_prompt">Précharg. en wifi uniquement ?</string>
-    <!-- L option suivante sera probablement à supprimer plus tard, mais seul choix pertinent pour l instant-->
-	<string name="mode_precharg_region_ttzones_prompt">Précharg. photos toutes Zones ? (Tempo)</string>
-    <string name="mode_precharg_region_france_prompt">Précharg. photos France Métropolitaine ?</string>
-    <string name="mode_precharg_region_eaudouce_prompt">Précharg. photos Eau douce ?</string>
-    <string name="mode_precharg_region_atlantno_prompt">Précharg. photos Atlantique Nord-Ouest ?</string>
-    <string name="mode_precharg_region_indopac_prompt">Précharg. photos Indo-Pacifique ?</string>
-    <string name="mode_precharg_region_caraibes_prompt">Précharg. photos Caraïbes ?</string>
-    <string name="mode_precharg_favorite_prompt">Précharg. photos fiches préférées ?</string>
+    <string name="mode_precharg_region_france_prompt">- France Métropolitaine ?</string>
+    <string name="mode_precharg_region_eaudouce_prompt">- Eau douce ?</string>
+    <string name="mode_precharg_region_atlantno_prompt">- Atlantique Nord-Ouest ?</string>
+    <string name="mode_precharg_region_indopac_prompt">- Indo-Pacifique ?</string>
+    <string name="mode_precharg_region_caraibes_prompt">- Caraïbes ?</string>
+    <string name="mode_precharg_favorite_prompt">- Fiches préférées ? (A FAIRE)</string>
     <string name="mode_precharg_sizemax_prompt">Limite de d\'occupation disque (Mo) ?</string>
     
     <!-- A effacer ? -->
