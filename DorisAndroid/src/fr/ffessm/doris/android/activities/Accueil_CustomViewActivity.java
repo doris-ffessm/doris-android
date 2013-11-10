@@ -135,13 +135,18 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         if(DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null){
         	// une tache précédente est en cours, on se réabonne aux évènements 
         	// (on est probablement sur une rotation d'écran)
+        	Log.d(LOG_TAG, "onCreate() - une tache précédente est en cours, on se réabonne aux évènements");
         	DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.addListener(this);
         }
         else{
 	        // pas de tache précédente en cours
         	// démarre ou pas un téléchargement de photos au démarrage	
-	        if (Outils.getConnectionType(this.getApplicationContext()) == Outils.ConnectionType.WIFI 
-	        		|| (! Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_mode_precharg_wifi_only, true) && Outils.getConnectionType(this.getApplicationContext()) == Outils.ConnectionType.WIFI )){
+        	Outils.ConnectionType connectionType = Outils.getConnectionType(this.getApplicationContext());
+        	Log.d(LOG_TAG, "onCreate() - connectionType : "+connectionType);
+        	boolean wifiOnly = Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_mode_precharg_wifi_only, true);
+        	Log.d(LOG_TAG, "onCreate() - wifiOnly : "+wifiOnly);
+        	if ( connectionType == Outils.ConnectionType.WIFI 
+	        		|| (! wifiOnly && connectionType == Outils.ConnectionType.GSM)){
 		
         		Log.d(LOG_TAG, "onCreate() - Lancement préchargement");
         		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");

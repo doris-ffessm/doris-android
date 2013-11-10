@@ -336,7 +336,6 @@ public class Outils {
      * Type de connection : aucune, wifi, gsm 
      ********************************************************************** */		
 	public static ConnectionType getConnectionType(Context context) {
-		if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Début");
 	    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
 	    
@@ -347,18 +346,11 @@ public class Outils {
 	    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - mWifi.isConnected() : "+ mWifi.isConnected() );
 	    	
 	    	if (mWifi.isConnected() ) {
-	    		if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Wifi = True");
-		    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Fin");
 		    	return ConnectionType.WIFI;
 	    	} else {
-	    		if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Wifi = False");
-		    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Fin");
 		        return ConnectionType.GSM;
 	    	}
 	    } else {
-			
-	    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - isOnline : false");
-	    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Fin");
 	    	return ConnectionType.AUCUNE;
 	    }
 	}

@@ -152,7 +152,9 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     	// et de dévelooper un plus avancé
     	if (! PreferenceManager.getDefaultSharedPreferences(context).getBoolean("debug_new_algo_sync", true) ) {
     	// --- Algo initial ---
-    			
+			String notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
+	        mNotificationHelper.setContentTitle(notificationTitle);
+	        
 	    	List<Fiche> listeFiches = dbHelper.getFicheDao().queryForAll();
 	    	List<PhotoFiche> listePhotosATraiter = new ArrayList<PhotoFiche>();
 	    	// en priorité toutes les photos principales (pour les vignettes)
