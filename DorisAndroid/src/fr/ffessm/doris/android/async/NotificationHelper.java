@@ -150,4 +150,14 @@ public class NotificationHelper {
 		this.maxItemToProcess = maxItemToProcess;
 		progressUpdate(0);
 	}
+	
+	public void setContentTitle(String contentTitle) {
+		
+		this.notificationContentTitle = contentTitle;
+		mNotifyBuilder.setContentTitle(contentTitle);
+		
+        mNotificationManager.notify(
+        		NOTIFICATION_ID,
+                mNotifyBuilder.build());
+	}
 }

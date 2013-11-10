@@ -4,8 +4,10 @@
 	<!--Start of user code BackgroundActivity_stringstelechargephotosfiches
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
+	<string name="analysefiches_bg_initialTickerText">Analyse des fiches</string>
 	<string name="telechargephotosfiches_bg_initialTickerText">Télécharge les photos des fiches</string>
-	<string name="telechargephotosfiches_bg_notificationTitle">Télécharge les photos des fiches</string>
+	<string name="analysefiches_bg_notificationTitle">Analyse des fiches</string>
+	<string name="telechargephotosfiches_bg_notificationTitle">Télécharge les photos</string>
 	<!--End of user code
 	-->
 </resources>

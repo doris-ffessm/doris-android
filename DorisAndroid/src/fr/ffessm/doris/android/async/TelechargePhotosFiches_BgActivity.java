@@ -101,8 +101,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	}
 		
     public TelechargePhotosFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper, DataChangedListener listener){
-		String initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
-		String notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
+		String initialTickerText = context.getString(R.string.analysefiches_bg_initialTickerText);
+		String notificationTitle = context.getString(R.string.analysefiches_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
         this.dbHelper = dbHelper;
 		this.context = context;
@@ -122,8 +122,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     
 	/** constructor */
     public TelechargePhotosFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper){
-		String initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
-		String notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
+		String initialTickerText = context.getString(R.string.analysefiches_bg_initialTickerText);
+		String notificationTitle = context.getString(R.string.analysefiches_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
         this.dbHelper = dbHelper;
 		this.context = context;
@@ -230,7 +230,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     		
     		Log.d(LOG_TAG, "Debug - 010 - pour voir durée");
     		
-    		mNotificationHelper.setMaxItemToProcess("0");
+    		mNotificationHelper.setMaxItemToProcess(""+listeFiches.size());
     		
     		Collection<PhotoATraiter> listePhotosPrincATraiter = new ArrayList<PhotoATraiter>();
 	    	Collection<PhotoATraiter> listePhotosATraiter = new ArrayList<PhotoATraiter>();
@@ -249,7 +249,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    	}
 	    	Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
 	    	
-	    	int nbFichesdebug = 0;
+	    	int nbFichesAnalysees = 0;
 	    	int nbFichesdebug2 = 0;
 	    	
 	    	Log.d(LOG_TAG, "Debug - 110 - pour voir durée");
@@ -261,20 +261,24 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		        	for (Fiche fiche : listeFiches) {
 		        		if( this.isCancelled()) return 0;
 		        		
-		        		nbFichesdebug ++;
-		        		if( PreferenceManager.getDefaultSharedPreferences(context).getBoolean("limit_download", false)
-		        				&& nbFichesdebug >  Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("sync_max_card_number", "10") ) ) return 0;
-		        		if((nbFichesdebug % 100) == 0) Log.d(LOG_TAG, "Debug - 210 - nbFichesdebug : "+nbFichesdebug);
-			
-		        		fiche.setContextDB(dbHelper.getDorisDBHelper());
-		        		if((nbFichesdebug % 100) == 0) Log.d(LOG_TAG, "Debug - 211");
-		        		PhotoFiche photoFichePrinc = fiche.getPhotoPrincipale();
-		        		if((nbFichesdebug % 100) == 0) Log.d(LOG_TAG, "Debug - 212 - photoFichePrinc : "+photoFichePrinc.getCleURL());
-		        		listeZoneGeo = fiche.getZonesGeographiques();
-		        		if((nbFichesdebug % 100) == 0) Log.d(LOG_TAG, "Debug - 213 - listeZoneGeo : "+listeZoneGeo.size());
-		        		Collection<PhotoFiche> listePhotosFiche = fiche.getPhotosFiche();
-		        		if((nbFichesdebug % 100) == 0) Log.d(LOG_TAG, "Debug - 214 - listePhotosFiche : "+listePhotosFiche.size());
+		        		nbFichesAnalysees ++;
+		        		if((nbFichesAnalysees % 10) == 0) {
+		        			publishProgress(nbFichesAnalysees);
+	          			}
 		        		
+		        		// Debug
+		        		if( PreferenceManager.getDefaultSharedPreferences(context).getBoolean("limit_download", false)
+		        				&& nbFichesAnalysees >  Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("sync_max_card_number", "10") ) ) return 0;
+		        		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 210 - nbFichesAnalysees : "+nbFichesAnalysees);		
+		        		fiche.setContextDB(dbHelper.getDorisDBHelper());
+		        		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 211");
+		        		PhotoFiche photoFichePrinc = fiche.getPhotoPrincipale();
+		        		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 212 - photoFichePrinc : "+photoFichePrinc.getCleURL());
+		        		listeZoneGeo = fiche.getZonesGeographiques();
+		        		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 213 - listeZoneGeo : "+listeZoneGeo.size());
+		        		Collection<PhotoFiche> listePhotosFiche = fiche.getPhotosFiche();
+		        		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 214 - listePhotosFiche : "+listePhotosFiche.size());
+		        		// fin debug
 		        		
 	        			if(photoFichePrinc != null){
 	        				listeZoneGeo = fiche.getZonesGeographiques();
@@ -291,7 +295,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	        					}
 	        				}	
 		        		}
-	              		if((nbFichesdebug % 100) == 0) Log.d(LOG_TAG, "Debug - 230 - listePhotosPrincATraiter : "+listePhotosPrincATraiter.size());
+	              		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 230 - listePhotosPrincATraiter : "+listePhotosPrincATraiter.size());
 	             	   
 	        	    	// Si que des P0 et P1 pas de téléchargement de photos non principales, on passe donc
 	        	    	if (! Outils.isPrecharModeOnlyP0orP1(context)) {
@@ -309,19 +313,19 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		        				}
 		        			}
 	        	    	}
-	              		if((nbFichesdebug % 100) == 0) Log.d(LOG_TAG, "Debug - 240 - listePhotosATraiter : "+listePhotosATraiter.size());
-	              		if((nbFichesdebug % 20) == 0) {
-	              			int nbPhotosATraiter = listePhotosPrincATraiter.size()+listePhotosATraiter.size();
-	              			mNotificationHelper.setMaxItemToProcess(""+nbPhotosATraiter);
-	          			}
+	        	    	
+	              		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 240 - listePhotosATraiter : "+listePhotosATraiter.size());
 	              		 
 					}
 		        }
 	    	} // Fin isPrecharModeOnlyP0
 	    	
 			// once done, you should indicates to the notificationHelper how many item will be processed
-	        int nbPhotosATraiter = listePhotosPrincATraiter.size()+listePhotosATraiter.size();
-			mNotificationHelper.setMaxItemToProcess(""+nbPhotosATraiter);
+			String initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
+			String notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
+	        mNotificationHelper.setContentTitle(notificationTitle);
+	    	int nbPhotosATraiter = listePhotosPrincATraiter.size()+listePhotosATraiter.size();
+	        mNotificationHelper.setMaxItemToProcess(""+nbPhotosATraiter);
 			// End of user code
 	    	
 	    	// Start of user code main loop of task TelechargePhotosFiches_BgActivity
