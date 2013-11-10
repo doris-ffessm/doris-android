@@ -95,6 +95,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 //	static final int VERIFIE_NOUVELLES_FICHES_MENU_ID = 4;
 //	static final int RESET_DB_FROM_XML_MENU_ID = 5;
 	
+	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getCanonicalName();
 	Handler mHandler;
 	
 	//End of user code
@@ -142,7 +143,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	        if (Outils.getConnectionType(this.getApplicationContext()) == Outils.ConnectionType.WIFI 
 	        		|| (! Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_mode_precharg_wifi_only, true) && Outils.getConnectionType(this.getApplicationContext()) == Outils.ConnectionType.WIFI )){
 		
-        		if (BuildConfig.DEBUG) Log.d("Outils", "onCreate() - préchargement");
+        		Log.d(LOG_TAG, "onCreate() - Lancement préchargement");
         		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
 
 	        }
