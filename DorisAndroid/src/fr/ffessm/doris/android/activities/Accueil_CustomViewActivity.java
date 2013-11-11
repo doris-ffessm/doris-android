@@ -162,19 +162,21 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		super.onResume();
 		refreshScreenData();
 		//Start of user code onResume Accueil_CustomViewActivity
+		Log.d(LOG_TAG, "onResume()");
 		//End of user code
 	}
     //Start of user code additional code Accueil_CustomViewActivity
     
     @Override
     protected void onDestroy(){
-    	
+    	Log.d(LOG_TAG, "onDestroy()");
     	TelechargePhotosFiches_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;
     	if(telechargePhotosFiches_BgActivity != null && telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING){
     		((TelechargePhotosFiches_BgActivity)telechargePhotosFiches_BgActivity).removeListener(this);    		
     		// TODO déterminer si c'est une rotation ou une vrai fin de l'appli pour tuer les taches background ou pas
+    		Log.d(LOG_TAG, "onDestroy() - isFinishing() : "+isFinishing());
     		if(isFinishing())
-    			telechargePhotosFiches_BgActivity.cancel(true);
+    			Log.d(LOG_TAG, "onDestroy() - telechargePhotosFiches_BgActivity.cancel(true) : "+telechargePhotosFiches_BgActivity.cancel(true) );
     	}
     	super.onDestroy();
     	

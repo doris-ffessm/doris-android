@@ -288,7 +288,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	        					Outils.ImageType imageType = Outils.getImageQualityToDownload(context, true, zoneGeo);
 	        					if(imageType != null) {
 	        						nbFichesdebug2 ++;
-	        						if((nbFichesdebug2 % 100) == 0) Log.d(LOG_TAG, "Debug - 220 - nbFichesdebug2 : "+nbFichesdebug2);
+	        						if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 220 - nbFichesdebug2 : "+nbFichesdebug2);
 	        		        		
 	        						if (! Outils.isAvailableImagePhotoFiche(context, photoFichePrinc, imageType)) {
 	        							photoFichePrinc.setContextDB(dbHelper.getDorisDBHelper());

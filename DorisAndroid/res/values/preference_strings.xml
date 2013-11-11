@@ -74,27 +74,30 @@
         <item>La photo principale en haute qualité, les autres en moyenne</item>
         <item>Toutes les photos en haute qualité</item>
     </string-array>
-   	<string-array name="mode_precharg_answers_descr">
-        <item>Pas de photo préchargée (Économe en disque mais pas en réseau)</item>
-        <item>toutes les photo principale des fiches sélectionnées en qualité vignettes (par défaut)</item>
-        <item>toutes les photos des fiches sélectionnées en qualité vignettes</item>
-        <item>photo principale en qualité moyenne, les autres en qualité vignette</item>
-        <item>toutes les photos  en qualité moyenne</item>
-        <item>photo principale en haute qualité, les autres en qualité moyenne</item>
-        <item>toutes les photos en haute qualité</item>
-    </string-array>
 
-	<string name="sync_preference_category">Options de téléchargement</string>
+	<string name="presentation_preference_category">Options de présentation</string>
+    <string name="list_icon_size_prompt">Taille des icones dans les listes</string>
+	<string name="list_icon_size_summary">(ex: 24, 48, 64, 128)</string>
+    <string name="list_icon_size_default">128</string>
+	
+	<string-array name="list_icon_size_values">
+        <item>64</item>
+        <item>96</item>
+        <item>128</item>
+        <item>192</item>
+    </string-array>
+	<string-array name="list_icon_size_lib">
+        <item>64</item>
+        <item>96</item>
+        <item>128</item>
+        <item>192</item>
+    </string-array>
+    
+	<string name="debug_preference_category">Debug Application</string>
 	
 	<string name="sync_max_card_number_prompt">Nombre max de fiches à télécharger</string>
 	<string name="sync_max_card_number_summary">(ex: 1, 5, 100 ou * pour toutes les fiches)</string>
     <string name="sync_max_card_number_default">5</string>
-    
-	<string name="presentation_preference_category">Options de présentation</string>
-    <string name="list_icon_size_prompt">Taille des icones dans les listes</string>
-	<string name="list_icon_size_summary">(ex: 24, 48, 64, 128)</string>
-    <string name="list_icon_size_default">48</string>
-    
     
 	<string name="sync_fresh_water_prompt">Fiches eau douce</string>
     <string name="sync_fresh_water_summary"></string>
