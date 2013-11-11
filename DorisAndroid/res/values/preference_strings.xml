@@ -6,27 +6,31 @@
 		
 	<!-- ids -->
 	<string name="pref_mode_connecte_wifi_only">mode_connecte_wifi_only</string>
+	<string name="pref_mode_connecte_qualite_photo">mode_connecte_qualite_photo</string>
+	<!-- GMo : tjrs utile ?  -->
 	<string name="pref_mode_connecte_sizemax">mode_connecte_sizemax</string>
+
 	<string name="pref_mode_precharg_wifi_only">mode_precharg_wifi_only</string>
-	<!-- TODO:: Sera à effacer -->
-	<string name="pref_mode_precharg_region_ttzones">mode_precharg_region_ttzones</string>
+
 	<string name="pref_mode_precharg_region_france">mode_precharg_region_france</string>
 	<string name="pref_mode_precharg_region_eaudouce">mode_precharg_region_eaudouce</string>
 	<string name="pref_mode_precharg_region_atlantno">mode_precharg_region_atlantno</string>
 	<string name="pref_mode_precharg_region_indopac">mode_precharg_region_indopac</string>
 	<string name="pref_mode_precharg_region_caraibes">mode_precharg_region_caraibes</string>
 	<string name="pref_mode_precharg_region_favorite">mode_precharg_favorite</string>
+
 	<string name="pref_mode_precharg_sizemax">mode_precharg_sizemax</string>
-		
-	<!-- A effacer ? -->
-	<string name="pref_sync_auto_wifi_only">sync_auto_wifi_only</string>
-	<string name="pref_sync_auto">sync_auto</string>
-	
-	<string name="pref_id_limit_download">limit_download</string>	
+
 	<string name="pref_key_list_icon_size">pref_key_list_icon_size</string>
 	<string name="pref_key_filtre_groupe">pref_key_filtre_groupe</string>
 	<string name="pref_key_filtre_zonegeo">pref_key_filtre_zone_geographique</string>
-		
+			
+	<!-- Debug -->
+	<string name="pref_id_limit_download">limit_download</string>
+	<string name="pref_sync_auto_wifi_only">sync_auto_wifi_only</string>
+	<string name="pref_sync_auto">sync_auto</string>
+	<string name="pref_mode_precharg_region_ttzones">mode_precharg_region_ttzones</string>
+	
     <!-- Options text -->
     <string name="preference_menu_title">Préférences</string>
     
@@ -38,6 +42,18 @@
 	<string name="mode_connecte_preference_category">Mode connecté / à la demande</string>
 	
 	<string name="mode_connecte_wifi_only_prompt">Téléch. photos en wifi uniquement ?</string>
+    <string name="mode_connecte_qualite_photo_prompt">Qualité photos téléch. ?</string>
+    <string name="mode_connecte_qualite_photo_defaut">MED_RES</string>
+    <string-array name="mode_connecte_qualite_photo_values">
+        <item>MED_RES</item>
+        <item>HI_RES</item>
+    </string-array>
+	<string-array name="mode_connecte_qualite_photo_lib">
+        <item>Intermédiaire</item>
+        <item>Haute résolution</item>
+    </string-array>
+    
+    <!-- GMo : tjrs utile ?  -->
     <string name="mode_connecte_sizemax_prompt">Taille du cache à la demande (Mo) ?</string>
     
     
@@ -50,9 +66,10 @@
     <string name="mode_precharg_region_indopac_prompt">- Indo-Pacifique ?</string>
     <string name="mode_precharg_region_caraibes_prompt">- Caraïbes ?</string>
     <string name="mode_precharg_favorite_prompt">- Fiches préférées ? (A FAIRE)</string>
+    <string name="mode_precharg_region_defaut">P1</string>
     <string name="mode_precharg_sizemax_prompt">Limite de d\'occupation disque (Mo) ?</string>
     
-    <!-- A effacer ? -->
+    <!-- GMo : A effacer ? -->
 	<string name="sync_auto_wifi_only_prompt">Synchro. Auto en Wifi seulement</string>
 	<string name="sync_auto_wifi_only_summary">Permet d\'épargner le forfait data</string>
 
@@ -69,16 +86,16 @@
         <item>Aucune photo préchargée</item>
         <item>La photo principale en qualité vignette</item>
         <item>Toutes les photos en qualité vignette</item>
-        <item>La photo principale en qualité moyenne, les autres en vignette</item>
-        <item>Toutes les photos en qualité moyenne</item>
-        <item>La photo principale en haute qualité, les autres en moyenne</item>
-        <item>Toutes les photos en haute qualité</item>
+        <item>La photo principale en qualité intermédiaire, les autres en vignette</item>
+        <item>Toutes les photos en qualité intermédiaire</item>
+        <item>La photo principale en haute résolution, les autres en intermédiaire</item>
+        <item>Toutes les photos en haute résolution</item>
     </string-array>
 
 	<string name="presentation_preference_category">Options de présentation</string>
     <string name="list_icon_size_prompt">Taille des icones dans les listes</string>
-	<string name="list_icon_size_summary">(ex: 24, 48, 64, 128)</string>
     <string name="list_icon_size_default">128</string>
+	<string name="imagepleinecran_titre_longmax">25</string>
 	
 	<string-array name="list_icon_size_values">
         <item>64</item>
@@ -98,6 +115,8 @@
 	<string name="sync_max_card_number_prompt">Nombre max de fiches à télécharger</string>
 	<string name="sync_max_card_number_summary">(ex: 1, 5, 100 ou * pour toutes les fiches)</string>
     <string name="sync_max_card_number_default">5</string>
+    
+	<string name="mode_precharg_region_ttzones_prompt">Mode Précharg. ancien Algo</string>	
     
 	<string name="sync_fresh_water_prompt">Fiches eau douce</string>
     <string name="sync_fresh_water_summary"></string>

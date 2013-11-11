@@ -22,5 +22,20 @@
         android:background="@drawable/button_background"
         android:textColor="@android:color/darker_gray"
         android:text=" Fermer " />
- 
+
+     <Button
+         android:id="@+id/imagepleinecran_image_titre"
+         android:layout_width="wrap_content"
+         android:layout_height="30dp"
+         android:layout_alignParentBottom="true"
+         android:layout_centerHorizontal="true"
+         android:layout_marginBottom="30dp"
+         android:background="@drawable/button_background"
+         android:paddingBottom="2dp"
+         android:paddingLeft="2dp"
+         android:paddingRight="2dp"
+         android:paddingTop="2dp"
+         android:text=" Descr. "
+         android:textColor="@android:color/darker_gray" />
+
 </RelativeLayout>
