@@ -173,18 +173,13 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         int longMax = Integer.parseInt(Outils.getParamString(_activity, R.string.imagepleinecran_titre_longmax,"25"));
         // on termine par un espace insécable puis "..."
         if (titre.length() > longMax) titre = titre.substring(0, longMax)+"\u00A0\u2026";
-    	imgTitre.setText(titre);
+        if (titre.isEmpty()) titre = "Image sans titre";
+        imgTitre.setText(titre);
     	
         imgTitre.setOnClickListener(new View.OnClickListener() {           
         	@Override
             public void onClick(View v) {
-        		String titre = photoFiche.getTitre();
-        		String description = photoFiche.getDescription();
-        		String texteAff = description;
-        		if (titre.length() > Integer.parseInt(Outils.getParamString(_activity, R.string.imagepleinecran_titre_longmax,"25")))
-        			texteAff = titre + System.getProperty("line.separator") + description;
-        		if (texteAff.isEmpty()) texteAff = "Image sans description";
-            	showToast(texteAff);
+        		showDescription(photoFiche);
             }
         });
         
@@ -200,7 +195,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     	}	
     	@Override
         public void onClick(View v) {
-    		Toast.makeText(_activity, photoFiche.getDescription(), Toast.LENGTH_LONG).show();
+    		showDescription(photoFiche);
         }
     }
     
@@ -210,8 +205,15 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
   
     }
     
-	private void showToast(String message) {
-        Toast.makeText(_activity, message, Toast.LENGTH_LONG).show();
+	private void showDescription(PhotoFiche photoFiche) {
+		String titre = photoFiche.getTitre();
+		String description = photoFiche.getDescription();
+		String texteAff = description;
+		if (titre.length() > Integer.parseInt(Outils.getParamString(_activity, R.string.imagepleinecran_titre_longmax,"25")))
+			texteAff = titre + System.getProperty("line.separator") + description;
+		if (texteAff.isEmpty()) texteAff = "Image sans description";
+		
+		Toast.makeText(_activity, texteAff, Toast.LENGTH_LONG).show();
     }
 
 }
