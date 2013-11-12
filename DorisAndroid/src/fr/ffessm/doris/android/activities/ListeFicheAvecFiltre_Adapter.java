@@ -49,6 +49,7 @@ import java.util.List;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 
 
 import android.content.Context;
@@ -83,6 +84,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.OutilsGroupe;
 
@@ -107,10 +109,13 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	private SimpleFilter mFilter;
 	//Start of user code protected additional ListeFicheAvecFiltre_Adapter attributes
 	// additional attributes
+
+	SharedPreferences prefs;
 	protected Groupe filtreGroupe;
 	
 	// vide signifie que l'on accepte tout
 	protected ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
+	int filteredZoneGeoId = 0;
 
 	//End of user code
 
@@ -119,14 +124,36 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		this.context = context;
 		this._contextDB = contextDB;
 		// TODO find a way to query in a lazy way
+		updateList();
+		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+	}
+
+	protected void  updateList(){
 		try{
-			this.ficheList = _contextDB.ficheDao.queryForAll();
+			
+			if(filteredZoneGeoId == 0){
+				this.ficheList = _contextDB.ficheDao.queryForAll();
+			}
+			else{
+				Log.d(LOG_TAG,  "_contextDB= "+_contextDB);
+				Log.d(LOG_TAG,  "_contextDB.fiches_ZonesGeographiquesDao= "+_contextDB.fiches_ZonesGeographiquesDao);
+				List<Fiches_ZonesGeographiques> listeAssoc= _contextDB.fiches_ZonesGeographiquesDao.queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, filteredZoneGeoId);
+				this.ficheList = new ArrayList<Fiche>(listeAssoc.size());
+				//_contextDB.ficheDao.queryBuilder().where().
+				//queryBuilder().where()
+				if(listeAssoc !=  null)	for (Fiches_ZonesGeographiques fiches_ZonesGeographiques : listeAssoc) {
+					fiches_ZonesGeographiques.setContextDB(_contextDB);
+					Fiche fiche = fiches_ZonesGeographiques.getFiche();
+					fiche.setContextDB(_contextDB);
+					this.ficheList.add(fiche);
+				}
+			}
 			this.filteredFicheList = this.ficheList;
 		} catch (java.sql.SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
 		}
 	}
-
+	
 	@Override
 	public int getCount() {
 		return filteredFicheList.size();
@@ -146,7 +173,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
 		Fiche entry = filteredFicheList.get(position);
-		entry.setContextDB(_contextDB);
+		Log.d(LOG_TAG, "getView entry="+entry.getId());
+		Log.d(LOG_TAG, "getView entry.getContextDB()"+entry.getContextDB());
+		if(_contextDB != null) entry.setContextDB(_contextDB);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -174,7 +203,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		// Start of user code protected additional ListeFicheAvecFiltre_Adapter getView code
 		//	additional code
         
-        String defaultIconSizeString = PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.pref_key_list_icon_size), "48");
+        String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
         int defaultIconSize = 48;
         try{
         	defaultIconSize = Integer.parseInt(defaultIconSizeString);
@@ -247,7 +276,6 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	//Start of user code protected additional ListeFicheAvecFiltre_Adapter methods
 	// additional methods
 	public void refreshFilter(){
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		try {
 			Groupe searchedGroupe = _contextDB.groupeDao.queryForId(prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1));
 			//Log.d(LOG_TAG, "filter _contextDB="+_contextDB);
@@ -255,6 +283,12 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 			acceptedGroupeId = new ArrayList<Integer>();
 			for (Groupe groupe : OutilsGroupe.getAllSubGroupesForGroupe(searchedGroupe)) {
 				acceptedGroupeId.add(groupe.getId());
+			}
+			int oldFilteredZoneGeoId = filteredZoneGeoId;
+			filteredZoneGeoId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), 0);
+			if(oldFilteredZoneGeoId != filteredZoneGeoId){
+				//need full query
+				updateList();
 			}
 		} catch (SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(),e);
@@ -284,7 +318,6 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		}
 		
 		if(isValid){
-			
 			Groupe groupeFiche = fiche.getGroupe();
 			if(groupeFiche != null)
 			{
@@ -294,6 +327,17 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				}
 			}
 		}
+		/*if(isValid){
+			// vérifie si la zone doit être filtrée
+			
+			if(filteredZoneGeoId != 0){
+				isValid = false;
+				for(ZoneGeographique zoneFiche : fiche.getZonesGeographiques()){
+					if(zoneFiche.getId() == filteredZoneGeoId) isValid = true;
+					break;
+				}
+			}
+		}*/
 		if(isValid) return 1;		
 		else return -1;
 		// End of user code

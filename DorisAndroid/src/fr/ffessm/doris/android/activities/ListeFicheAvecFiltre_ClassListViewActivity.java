@@ -149,7 +149,8 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 		// TODO peut être qu'il y a moyen de s'abonner aux changements de préférence et de ne le faire que dans ce cas ?
     	ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter();
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if(prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1) != 1){
+		if((prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1) != 1) ||
+		   (prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), 0) != 0)){
 			// on a un filtre actif
 	    	String searchedText = inputSearch.getText().toString();
 	    	if(searchedText.isEmpty()){

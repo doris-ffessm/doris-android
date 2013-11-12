@@ -49,6 +49,9 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+
+import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
+
 import java.sql.SQLException;
 
 /**
@@ -311,6 +314,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 			helper.zoneObservationDao = getDao(ZoneObservation.class);
 			helper.groupeDao = getDao(Groupe.class);
 			helper.dorisDB_metadataDao = getDao(DorisDB_metadata.class);
+			helper.fiches_ZonesGeographiquesDao = getDao(Fiches_ZonesGeographiques.class);
 		} catch (SQLException e) {
 			Log.e(OrmLiteDBHelper.class.getName(), "Can't get ", e);
 		}
