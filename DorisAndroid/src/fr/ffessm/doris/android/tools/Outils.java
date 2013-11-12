@@ -9,10 +9,14 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -96,7 +100,7 @@ public class Outils {
 	}
 	
 	public static boolean isAvailableImagePhotoFiche(Context inContext, PhotoFiche photofiche){
-		if (BuildConfig.DEBUG) Log.d("Outils", "isAvailableImagePhotoFiche() - photofiche : "+ photofiche );
+		//if (BuildConfig.DEBUG) Log.d("Outils", "isAvailableImagePhotoFiche() - photofiche : "+ photofiche );
     	
 		switch(PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_ttzones,"P1"))){
 		case P1 :
@@ -116,7 +120,20 @@ public class Outils {
 		}
 	}
 
-
+	public static boolean isAvailableImagePhotoFiche(Context inContext, PhotoFiche inPhotofiche, ImageType inImageType){
+		//if (BuildConfig.DEBUG) Log.d("Outils", "isAvailableImagePhotoFiche() - photofiche : "+ photofiche + " - ImageType : " + inImageType);
+    	
+		switch(inImageType){
+		case VIGNETTE :
+			return isAvailableVignettePhotoFiche(inContext, inPhotofiche);
+		case MED_RES :
+			return isAvailableMedResPhotoFiche(inContext, inPhotofiche);
+		case HI_RES :
+	    	return isAvailableHiResPhotoFiche(inContext, inPhotofiche);
+		default:
+			return false;
+		}
+	}
 	
 	public static boolean isAvailableVignettePhotoFiche(Context inContext, PhotoFiche photofiche){
 		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);		
@@ -319,7 +336,6 @@ public class Outils {
      * Type de connection : aucune, wifi, gsm 
      ********************************************************************** */		
 	public static ConnectionType getConnectionType(Context context) {
-		if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Début");
 	    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
 	    
@@ -330,18 +346,11 @@ public class Outils {
 	    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - mWifi.isConnected() : "+ mWifi.isConnected() );
 	    	
 	    	if (mWifi.isConnected() ) {
-	    		if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Wifi = True");
-		    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Fin");
 		    	return ConnectionType.WIFI;
 	    	} else {
-	    		if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Wifi = False");
-		    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Fin");
 		        return ConnectionType.GSM;
 	    	}
 	    } else {
-			
-	    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - isOnline : false");
-	    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - Fin");
 	    	return ConnectionType.AUCUNE;
 	    }
 	}
@@ -350,7 +359,7 @@ public class Outils {
 		if (BuildConfig.DEBUG) Log.d("Outils", "getNbVignettesAPrecharger() - début" );
     	
 		long nbPhotosAPrecharger;
- 
+ 	
 		switch(PrecharMode.valueOf(Outils.getParamString(inContext, R.string.pref_mode_precharg_region_ttzones,"P1"))) {
 		case P1 :
 			nbPhotosAPrecharger = helper.getFicheDao().countOf();
@@ -365,6 +374,7 @@ public class Outils {
 		if (BuildConfig.DEBUG) Log.d("Outils", "getNbVignettesAPrecharger() - nbPhotosAPrecharger : " + nbPhotosAPrecharger );
 		return nbPhotosAPrecharger;
 	}
+	
 	public static long getNbMedResAPrecharger(Context inContext,  OrmLiteDBHelper helper){
 		if (BuildConfig.DEBUG) Log.d("Outils", "getNbMedResAPrecharger() - début" );
     	
@@ -414,4 +424,88 @@ public class Outils {
 		return PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getApplicationContext().getString(param), valDef);
 	}
 	
+	public static ImageType getImageQualityToDownload(Context inContext, boolean inPhotoPrincipale, ZoneGeographique inZoneGeo){
+		//if (BuildConfig.DEBUG) Log.d("Outils", "getImageQualityToDownload() - Début" );
+    	
+		ImageType imageType;
+		PrecharMode prechargementMode = getPrecharMode(inContext, inZoneGeo);
+		
+		if (inPhotoPrincipale) {
+			switch(prechargementMode){
+			case P1 :
+			case P2 :
+				return ImageType.VIGNETTE;
+			case P3 :
+			case P4 :
+				return ImageType.MED_RES;
+			case P5 :
+			case P6 :
+				return ImageType.HI_RES;
+			default:
+				return null;
+			}
+		} else {
+			switch(prechargementMode){
+			case P2 :
+			case P3 :
+				return ImageType.VIGNETTE;
+			case P4 :
+			case P5 :
+				return ImageType.MED_RES;
+			case P6 :
+				return ImageType.HI_RES;
+			default:
+				return null;
+			}
+		}
+		
+	}
+	
+	public static PrecharMode getPrecharMode(Context inContext, ZoneGeographique inZoneGeo){
+		//if (BuildConfig.DEBUG) Log.d("Outils", "getPrecharMode() - Début" );
+		
+		switch(inZoneGeo.getId()){
+		case 1 :
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_france,"P1"));
+		case 2 :
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_eaudouce,"P1"));
+		case 3 :
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_atlantno,"P1"));
+		case 4 :
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_indopac,"P1"));
+		case 5 :
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_caraibes,"P1"));
+		default :
+			return null;
+		}
+	}
+	
+	public static boolean isPrecharModeOnlyP0(Context inContext){
+		//if (BuildConfig.DEBUG) Log.d("Outils", "getPrecharMode() - Début" );
+		
+		if ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_france,"P1")) == PrecharMode.P0 
+			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_eaudouce,"P1")) == PrecharMode.P0
+			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_atlantno,"P1")) == PrecharMode.P0
+			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_indopac,"P1")) == PrecharMode.P0
+			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_caraibes,"P1")) == PrecharMode.P0
+			) return true;
+		return false;	
+	}
+	
+	public static boolean isPrecharModeOnlyP0orP1(Context inContext){
+		//if (BuildConfig.DEBUG) Log.d("Outils", "getPrecharMode() - Début" );
+		
+		if ( ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_france,"P1")) == PrecharMode.P0 
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_france,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_eaudouce,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_eaudouce,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_atlantno,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_atlantno,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_indopac,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_indopac,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_caraibes,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_caraibes,"P1")) == PrecharMode.P1 )
+			) return true;
+		return false;	
+	}
 }

@@ -13,6 +13,14 @@
             android:defaultValue="false"
             android:layout="@layout/preference_layout_preference"
             />
+         <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+            android:key="@string/pref_mode_connecte_qualite_photo"
+            android:title="@string/mode_connecte_qualite_photo_prompt"
+            android:entryValues="@array/mode_connecte_qualite_photo_values"
+            android:entries="@array/mode_connecte_qualite_photo_lib"
+			android:defaultValue="@string/mode_connecte_qualite_photo_defaut"
+			android:layout="@layout/preference_layout_preference"
+			/>
    	</PreferenceCategory>
 
 	<PreferenceCategory
@@ -25,25 +33,75 @@
             android:defaultValue="true"
             android:layout="@layout/preference_layout_preference"
             />
-        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary android:entries="@array/mode_precharg_answers_lib"
-            android:title="@string/mode_precharg_region_ttzones_prompt"
-			android:key="@string/pref_mode_precharg_region_ttzones"
-			android:entryValues="@array/mode_precharg_answers_values"
-			android:defaultValue="P1"
-			android:layout="@layout/preference_layout_preference"
-			/>
-        <ListPreference android:entries="@array/mode_precharg_answers_lib"
+        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+            android:entries="@array/mode_precharg_answers_lib"
             android:title="@string/mode_precharg_region_france_prompt"
 			android:key="@string/pref_mode_precharg_region_france"
 			android:entryValues="@array/mode_precharg_answers_values"
-			android:defaultValue="P1"
+			android:defaultValue="@string/mode_precharg_region_defaut"
+			android:layout="@layout/preference_layout_preference"
+			/>
+        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+            android:entries="@array/mode_precharg_answers_lib"
+            android:title="@string/mode_precharg_region_eaudouce_prompt"
+			android:key="@string/pref_mode_precharg_region_eaudouce"
+			android:entryValues="@array/mode_precharg_answers_values"
+			android:defaultValue="@string/mode_precharg_region_defaut"
+			android:layout="@layout/preference_layout_preference"
+			/>
+        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+            android:entries="@array/mode_precharg_answers_lib"
+            android:title="@string/mode_precharg_region_atlantno_prompt"
+			android:key="@string/pref_mode_precharg_region_atlantno"
+			android:entryValues="@array/mode_precharg_answers_values"
+			android:defaultValue="@string/mode_precharg_region_defaut"
+			android:layout="@layout/preference_layout_preference"
+			/>
+        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+            android:entries="@array/mode_precharg_answers_lib"
+            android:title="@string/mode_precharg_region_indopac_prompt"
+			android:key="@string/pref_mode_precharg_region_indopac"
+			android:entryValues="@array/mode_precharg_answers_values"
+			android:defaultValue="@string/mode_precharg_region_defaut"
+			android:layout="@layout/preference_layout_preference"
+			/>
+        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+            android:entries="@array/mode_precharg_answers_lib"
+            android:title="@string/mode_precharg_region_caraibes_prompt"
+			android:key="@string/pref_mode_precharg_region_caraibes"
+			android:entryValues="@array/mode_precharg_answers_values"
+			android:defaultValue="@string/mode_precharg_region_defaut"
+			android:layout="@layout/preference_layout_preference"
+			/>
+        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+            android:key="@string/pref_mode_precharg_region_favorite"
+            android:title="@string/mode_precharg_favorite_prompt"
+            android:entryValues="@array/mode_precharg_answers_values"
+            android:entries="@array/mode_precharg_answers_lib"
+			android:defaultValue="@string/mode_precharg_region_defaut"
 			android:layout="@layout/preference_layout_preference"
 			/>
    	</PreferenceCategory>
 
 	<PreferenceCategory
-	        android:title="@string/sync_preference_category"
-	        android:key="sync_category"
+	        android:title="@string/presentation_preference_category"
+	        android:key="presentation_category"
+	        android:layout="@layout/preference_layout_category"
+	        >
+	         
+        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+            android:key="@string/pref_key_list_icon_size" 
+        	android:title="@string/list_icon_size_prompt" 
+        	android:entryValues="@array/list_icon_size_values"
+        	android:entries="@array/list_icon_size_lib" 
+        	android:defaultValue="@string/list_icon_size_default"
+        	android:layout="@layout/preference_layout_preference"
+        	/>
+    </PreferenceCategory>
+    
+	<PreferenceCategory
+	        android:title="@string/debug_preference_category"
+	        android:key="debug_category"
 	        android:layout="@layout/preference_layout_category"
 	        >
         <EditTextPreference android:key="sync_max_card_number" 
@@ -58,23 +116,23 @@
             android:defaultValue="false"
             android:layout="@layout/preference_layout_preference"
             />
+        <CheckBoxPreference android:key="debug_new_algo_sync"
+            android:title="Test du nouvel algo sync"
+            android:summary="(nécessite redémarrage après changement)" 
+            android:defaultValue="false"
+            android:layout="@layout/preference_layout_preference"
+            />
+        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+            android:entries="@array/mode_precharg_answers_lib"
+            android:title="@string/mode_precharg_region_ttzones_prompt"
+			android:key="@string/pref_mode_precharg_region_ttzones"
+			android:entryValues="@array/mode_precharg_answers_values"
+			android:defaultValue="P1"
+			android:layout="@layout/preference_layout_preference"
+			/>
      </PreferenceCategory>
  
-	<PreferenceCategory
-	        android:title="@string/presentation_preference_category"
-	        android:key="presentation_category"
-	        android:layout="@layout/preference_layout_category"
-	        >
-	         
-        <EditTextPreference android:key="@string/pref_key_list_icon_size" 
-        	android:title="@string/list_icon_size_prompt" 
-        	android:summary="@string/list_icon_size_summary" 
-        	android:defaultValue="@string/list_icon_size_default"
-        	android:layout="@layout/preference_layout_preference"
-        	/>
-        
-        
-    </PreferenceCategory>
+
 	<!--End of user code
 		-->
 </PreferenceScreen>

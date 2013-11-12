@@ -95,6 +95,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 //	static final int VERIFIE_NOUVELLES_FICHES_MENU_ID = 4;
 //	static final int RESET_DB_FROM_XML_MENU_ID = 5;
 	
+	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getCanonicalName();
 	Handler mHandler;
 	
 	//End of user code
@@ -134,21 +135,22 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         if(DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null){
         	// une tache précédente est en cours, on se réabonne aux évènements 
         	// (on est probablement sur une rotation d'écran)
+        	Log.d(LOG_TAG, "onCreate() - une tache précédente est en cours, on se réabonne aux évènements");
         	DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.addListener(this);
         }
         else{
 	        // pas de tache précédente en cours
         	// démarre ou pas un téléchargement de photos au démarrage	
-	        if (Outils.getConnectionType(this.getApplicationContext()) == Outils.ConnectionType.WIFI 
-	        		|| (! Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_mode_precharg_wifi_only, true) && Outils.getConnectionType(this.getApplicationContext()) == Outils.ConnectionType.WIFI )){
+        	Outils.ConnectionType connectionType = Outils.getConnectionType(this.getApplicationContext());
+        	Log.d(LOG_TAG, "onCreate() - connectionType : "+connectionType);
+        	boolean wifiOnly = Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_mode_precharg_wifi_only, true);
+        	Log.d(LOG_TAG, "onCreate() - wifiOnly : "+wifiOnly);
+        	if ( connectionType == Outils.ConnectionType.WIFI 
+	        		|| (! wifiOnly && connectionType == Outils.ConnectionType.GSM)){
 		
-	    		if(Outils.getNbVignettesAPrecharger(this.getApplicationContext(), this.getHelper()) > Outils.getVignetteCount(this.getApplicationContext())
-	    				|| Outils.getNbMedResAPrecharger(this.getApplicationContext(), this.getHelper()) > Outils.getMedResCount(this.getApplicationContext())
-						|| Outils.getNbHiResAPrecharger(this.getApplicationContext(), this.getHelper()) > Outils.getHiResCount(this.getApplicationContext())
-					){
-	        		if (BuildConfig.DEBUG) Log.d("Outils", "onCreate() - préchargement");
-	        		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
-		        }
+        		Log.d(LOG_TAG, "onCreate() - Lancement préchargement");
+        		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+
 	        }
         }        
         
@@ -160,19 +162,21 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		super.onResume();
 		refreshScreenData();
 		//Start of user code onResume Accueil_CustomViewActivity
+		Log.d(LOG_TAG, "onResume()");
 		//End of user code
 	}
     //Start of user code additional code Accueil_CustomViewActivity
     
     @Override
     protected void onDestroy(){
-    	
+    	Log.d(LOG_TAG, "onDestroy()");
     	TelechargePhotosFiches_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;
     	if(telechargePhotosFiches_BgActivity != null && telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING){
     		((TelechargePhotosFiches_BgActivity)telechargePhotosFiches_BgActivity).removeListener(this);    		
     		// TODO déterminer si c'est une rotation ou une vrai fin de l'appli pour tuer les taches background ou pas
+    		Log.d(LOG_TAG, "onDestroy() - isFinishing() : "+isFinishing());
     		if(isFinishing())
-    			telechargePhotosFiches_BgActivity.cancel(true);
+    			Log.d(LOG_TAG, "onDestroy() - telechargePhotosFiches_BgActivity.cancel(true) : "+telechargePhotosFiches_BgActivity.cancel(true) );
     	}
     	super.onDestroy();
     	

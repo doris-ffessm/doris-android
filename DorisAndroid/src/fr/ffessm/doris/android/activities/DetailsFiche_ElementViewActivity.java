@@ -159,6 +159,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     
     
     private void refreshScreenData() {
+    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
+    	
     	// get our dao
     	RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
     	Fiche entry = entriesDao.queryForId(ficheId);
@@ -175,7 +177,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		
 		
 		Collection<PhotoFiche> photosFiche = entry.getPhotosFiche(); 
-		if(photosFiche!=null){
+		if(photosFiche!=null && isOnCreate){
 			//sbDebugText.append("\nnbPhoto="+photosFiche.size()+"\n");
 			
 			photoGallery = (LinearLayout)findViewById(R.id.detailsfiche_elementview_photogallery);
@@ -265,8 +267,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
 
 		//Start of user code additional onCreateOptionsMenu
-        menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.ic_expand);
-		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.ic_expand);
+        menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.ic_expand_close);
+		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.ic_expand_open);
 
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -299,8 +301,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {  
     	super.onCreateContextMenu(menu, v, menuInfo);  
         //menu.setHeaderTitle("Context Menu");  
-        menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.ic_expand);
-		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.ic_expand);
+        menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.ic_expand_close);
+		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.ic_expand_open);
 
     }
     @Override  
