@@ -294,6 +294,15 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	        							photoFichePrinc.setContextDB(dbHelper.getDorisDBHelper());
 	        							listePhotosPrincATraiter.add(new PhotoATraiter(photoFichePrinc, imageType, true));
 	        						}
+	        						
+	        						// Temporaire : on télécharge toujours le format vignette afin d'accélrer l'affichage des listes
+	        						if (imageType != Outils.ImageType.VIGNETTE) {
+	        							if (! Outils.isAvailableImagePhotoFiche(context, photoFichePrinc, Outils.ImageType.VIGNETTE)) {
+		        							photoFichePrinc.setContextDB(dbHelper.getDorisDBHelper());
+		        							listePhotosPrincATraiter.add(new PhotoATraiter(photoFichePrinc, Outils.ImageType.VIGNETTE, true));
+		        						}
+	        						}
+	        						
 	        					}
 	        				}	
 		        		}
