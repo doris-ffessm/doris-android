@@ -159,7 +159,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     
     
     private void refreshScreenData() {
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
+    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
     	
     	// get our dao
     	RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
@@ -206,9 +206,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			}
 			
 		}
-		List<ZoneGeographique> zonesGeographiques= entry.getZonesGeographiques();
-		if(zonesGeographiques!= null){			
-			for (ZoneGeographique zoneGeographique : zonesGeographiques) {
+		List<ZoneGeographique> zonesGeo = entry.getZonesGeographiques();
+		if(zonesGeo!= null){			
+			for (ZoneGeographique zoneGeographique : zonesGeo) {
 				sbDebugText.append("\nzone doris="+zoneGeographique.getNom()+"\n");
 			}
 		}
@@ -239,6 +239,21 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 				for (SectionFiche sectionFiche : entry.getContenu()) {
 					addFoldableView(containerLayout, sectionFiche.getTitre(), sectionFiche.getTexte());
 				}
+			}
+			
+			// Zones Géographiques
+			List<ZoneGeographique> zonesGeographiques= entry.getZonesGeographiques();
+			if(zonesGeographiques!= null){			
+				StringBuilder sbZonesGeographiques = new StringBuilder();	
+	            int i = 1;
+				for (ZoneGeographique zoneGeographique : zonesGeographiques) {
+					sbZonesGeographiques.append(zoneGeographique.getNom());
+					if(zonesGeographiques.size() > 1 && i < zonesGeographiques.size()){
+						sbZonesGeographiques.append("\n");
+					}
+					i++;
+				}
+				addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_zonesgeo_label), sbZonesGeographiques.toString());
 			}
 			
 			// section "Crédits"
