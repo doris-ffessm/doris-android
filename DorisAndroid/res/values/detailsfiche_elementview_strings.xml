@@ -7,10 +7,11 @@
 	<string name="detailsfiche_elementview_nomcommun_label">NomCommun : </string>
 	<string name="detailsfiche_elementview_numerofiche_label">NumeroFiche : </string>
 	<string name="detailsfiche_elementview_etatfiche_label">EtatFiche : </string>
-	<string name="detailsfiche_elementview_datecreation_label">Création : </string>
-	<string name="detailsfiche_elementview_datemodification_label">Dernière modification : </string>
+	<string name="detailsfiche_elementview_datecreation_label">"Création : "</string>
+	<string name="detailsfiche_elementview_datemodification_label">"Dernière modification : "</string>
 	<string name="detailsfiche_elementview_autresdenominations_label">Autres dénominations</string>
 	<string name="detailsfiche_elementview_credit_label">Crédits</string>
+	<string name="detailsfiche_elementview_zonesgeo_label">Zones Doris</string>
 	<string name="detailsfiche_elementview_nomscientifique_hint_text"></string>
 	<string name="detailsfiche_elementview_nomcommun_hint_text"></string>
 	<string name="detailsfiche_elementview_numerofiche_hint_text"></string>
@@ -20,7 +21,7 @@
 	<string name="detailsfiche_elementview_fold_unflod_section_hint_text">Plie ou déplie texte de la section</string>
 	<string name="unfold_all_sections_menu_option">Tout déplier</string>
 	<string name="fold_all_sections_menu_option">Tout replier</string>
-	<string name="ficheproposee_explications">Fiche propoposée. Trés peu d\'informations sont disponibles.</string>
+	<string name="ficheproposee_explications">Fiche propoposée. Très peu d\'informations sont disponibles.</string>
 	<string name="ficheredaction_explications">En cours de rédaction. Cette fiche est peut être incomplète.</string>
 	<!-- End of user code
 	-->
