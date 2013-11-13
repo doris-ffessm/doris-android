@@ -142,10 +142,15 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				//_contextDB.ficheDao.queryBuilder().where().
 				//queryBuilder().where()
 				if(listeAssoc !=  null)	for (Fiches_ZonesGeographiques fiches_ZonesGeographiques : listeAssoc) {
-					fiches_ZonesGeographiques.setContextDB(_contextDB);
+					if(_contextDB !=null) fiches_ZonesGeographiques.setContextDB(_contextDB);
 					Fiche fiche = fiches_ZonesGeographiques.getFiche();
 					//_contextDB.ficheDao.refresh(fiche);
-					fiche.setContextDB(_contextDB);
+					
+					//this.ficheList.add(fiche);
+					// tentative de workaround
+					Log.d(LOG_TAG,  "workround photo principale"+_contextDB);
+					fiche =_contextDB.ficheDao.queryForId(fiche.getId());
+					if(_contextDB !=null) fiche.setContextDB(_contextDB);
 					this.ficheList.add(fiche);
 				}
 			}
