@@ -144,6 +144,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				if(listeAssoc !=  null)	for (Fiches_ZonesGeographiques fiches_ZonesGeographiques : listeAssoc) {
 					fiches_ZonesGeographiques.setContextDB(_contextDB);
 					Fiche fiche = fiches_ZonesGeographiques.getFiche();
+					//_contextDB.ficheDao.refresh(fiche);
 					fiche.setContextDB(_contextDB);
 					this.ficheList.add(fiche);
 				}
@@ -211,9 +212,21 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         
         ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_icon);
     	ivIcon.setMaxHeight(defaultIconSize);
+    	
     	PhotoFiche photoPrincipale = entry.getPhotoPrincipale();
+    	if(photoPrincipale == null){
+	    	try {
+	    		Log.d(LOG_TAG, "bizarre photoprincipale="+photoPrincipale.getCleURL()+" application d'un workaround temporaire");
+	    		photoPrincipale = _contextDB.ficheDao.queryForId(entry.getId()).getPhotoPrincipale();
+				//_contextDB.ficheDao.refresh(entry);
+			} catch (SQLException e1) {
+				Log.e(LOG_TAG, e1.getMessage(),e1);
+			}
+    	}
         if(photoPrincipale != null){
         	photoPrincipale.setContextDB(_contextDB);
+
+    		Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
         	if(Outils.isAvailableVignettePhotoFiche(context, photoPrincipale)){
         		try {
         			//Log.d(LOG_TAG, "from disk "+photoPrincipale.getCleURL());
