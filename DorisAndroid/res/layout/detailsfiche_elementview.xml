@@ -67,6 +67,7 @@
 			            android:id="@+id/detailsfiche_elementview_numerofiche"
 			            android:layout_width="wrap_content"
 			            android:gravity="right"
+		                android:text="hkfhdkfhk"
 			            android:padding="3dip"
 			            />
 		        </TableRow>
@@ -83,11 +84,23 @@
 		                android:padding="3dip"
 		                android:textStyle="italic"
 		                />
-
-		            <TextView
+					<LinearLayout
+					    android:layout_height="wrap_content"
+		            	android:layout_width="wrap_content" 
+			            android:gravity="right"
+	        			android:layout_marginRight="2dp"
+					    >
+					    <TextView
 			            android:id="@+id/detailsfiche_elementview_etatfiche"
 			            android:gravity="right"
-			            android:padding="3dip" />
+			            android:padding="3dip"
+					    android:layout_height="wrap_content"
+		            	android:layout_width="wrap_content"
+	        			android:layout_marginRight="2dp"
+	        			android:background="@drawable/button_background"
+	        			android:textColor="@android:color/darker_gray" />
+					</LinearLayout>
+		            
             	 </TableRow>
 		    </TableLayout>
             <!-- <TableLayout

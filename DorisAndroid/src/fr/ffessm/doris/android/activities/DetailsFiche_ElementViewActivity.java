@@ -171,6 +171,39 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun());
 		((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText("N° "+((Integer)entry.getNumeroFiche()).toString());					
 		((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer)entry.getEtatFiche()).toString());	
+		TextView btnEtatFiche = (TextView)  findViewById(R.id.detailsfiche_elementview_etatfiche);
+		final DetailsFiche_ElementViewActivity context = this;
+        switch(entry.getEtatFiche()){
+        case 1:
+        	btnEtatFiche.setVisibility(View.VISIBLE);
+        	btnEtatFiche.setText(" R ");
+        	btnEtatFiche.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(context, R.string.ficheredaction_explications, Toast.LENGTH_LONG).show();
+				}
+			});
+        	break;
+        case 5:
+        	btnEtatFiche.setVisibility(View.VISIBLE);
+        	btnEtatFiche.setText(" P ");
+        	btnEtatFiche.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(context, R.string.ficheproposee_explications, Toast.LENGTH_LONG).show();
+				}
+			});
+        	break;
+        case 4:
+        	btnEtatFiche.setVisibility(View.GONE);
+        	
+        	break;
+        default:
+        	btnEtatFiche.setVisibility(View.VISIBLE);
+        	btnEtatFiche.setText(" "+entry.getEtatFiche()+" ");
+        }
+		
+		
 		
 		StringBuffer sbDebugText = new StringBuffer();
 
