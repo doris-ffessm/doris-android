@@ -84,7 +84,8 @@ public class Fiches_ZonesGeographiques {
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
-	public boolean _mayNeedDBRefresh = true;
+	public boolean _zoneGeographique_mayNeedDBRefresh = true;
+	public boolean _fiche_mayNeedDBRefresh = true;
 
 	Fiches_ZonesGeographiques() {
 		// for ormlite
@@ -98,9 +99,10 @@ public class Fiches_ZonesGeographiques {
 	/** accessors for Left part */  
 	public ZoneGeographique getZoneGeographique() {
 		try {
-			if(_mayNeedDBRefresh && _contextDB != null){
+			if(_zoneGeographique_mayNeedDBRefresh && _contextDB != null){
 				_contextDB.zoneGeographiqueDao.refresh(this.zoneGeographique);
-				_mayNeedDBRefresh = false;
+				this.zoneGeographique.setContextDB(_contextDB);
+				_zoneGeographique_mayNeedDBRefresh = false;
 			}
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);
@@ -117,9 +119,12 @@ public class Fiches_ZonesGeographiques {
 	/** accessors for Right part */ 
 	public Fiche getFiche() {
 		try {
-			if(_mayNeedDBRefresh && _contextDB != null){
+			if(_fiche_mayNeedDBRefresh && _contextDB != null){
+				//System.err.println();
 				_contextDB.ficheDao.refresh(this.fiche);
-				_mayNeedDBRefresh = false;
+				this.fiche.setContextDB(_contextDB);
+				//log.warn("Fiche refreshed from DB (_id="+fiche.getId()+") photoproprincipale = "+this.fiche.getPhotoPrincipale());
+				_fiche_mayNeedDBRefresh = false;
 			}
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);

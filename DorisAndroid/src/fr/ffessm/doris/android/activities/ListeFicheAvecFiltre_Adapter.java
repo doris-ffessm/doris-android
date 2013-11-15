@@ -135,22 +135,14 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				this.ficheList = _contextDB.ficheDao.queryForAll();
 			}
 			else{
-				Log.d(LOG_TAG,  "_contextDB= "+_contextDB);
-				Log.d(LOG_TAG,  "_contextDB.fiches_ZonesGeographiquesDao= "+_contextDB.fiches_ZonesGeographiquesDao);
+				//Log.d(LOG_TAG,  "_contextDB= "+_contextDB);
+				//Log.d(LOG_TAG,  "_contextDB.fiches_ZonesGeographiquesDao= "+_contextDB.fiches_ZonesGeographiquesDao);
 				List<Fiches_ZonesGeographiques> listeAssoc= _contextDB.fiches_ZonesGeographiquesDao.queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, filteredZoneGeoId);
 				this.ficheList = new ArrayList<Fiche>(listeAssoc.size());
-				//_contextDB.ficheDao.queryBuilder().where().
-				//queryBuilder().where()
 				if(listeAssoc !=  null)	for (Fiches_ZonesGeographiques fiches_ZonesGeographiques : listeAssoc) {
 					if(_contextDB !=null) fiches_ZonesGeographiques.setContextDB(_contextDB);
 					Fiche fiche = fiches_ZonesGeographiques.getFiche();
-					//_contextDB.ficheDao.refresh(fiche);
-					
-					//this.ficheList.add(fiche);
-					// tentative de workaround
-					Log.d(LOG_TAG,  "workround photo principale"+_contextDB);
-					fiche =_contextDB.ficheDao.queryForId(fiche.getId());
-					if(_contextDB !=null) fiche.setContextDB(_contextDB);
+					fiche.getPhotoPrincipale(); // bizarre besoin de faire cela ici pour s'assurer que la photo principâle soit bien chargée !?
 					this.ficheList.add(fiche);
 				}
 			}
@@ -179,8 +171,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
 		Fiche entry = filteredFicheList.get(position);
-		Log.d(LOG_TAG, "getView entry="+entry.getId());
-		Log.d(LOG_TAG, "getView entry.getContextDB()"+entry.getContextDB());
+		//Log.d(LOG_TAG, "getView entry="+entry.getId());
+		//Log.d(LOG_TAG, "getView entry.getContextDB()"+entry.getContextDB());
 		if(_contextDB != null) entry.setContextDB(_contextDB);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
@@ -220,13 +212,18 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
     	
     	PhotoFiche photoPrincipale = entry.getPhotoPrincipale();
     	if(photoPrincipale == null){
-	    	try {
-	    		Log.d(LOG_TAG, "bizarre photoprincipale="+photoPrincipale.getCleURL()+" application d'un workaround temporaire");
-	    		photoPrincipale = _contextDB.ficheDao.queryForId(entry.getId()).getPhotoPrincipale();
+	    	//try {
+	    		Log.w(LOG_TAG, "bizarre photoprincipale="+photoPrincipale.getCleURL()+" application d'un workaround temporaire");
+	    		//((ListeFicheAvecFiltre_ClassListViewActivity)context).getHelper().getFicheDao()
+	    		Fiche fiche =((ListeFicheAvecFiltre_ClassListViewActivity)context).getHelper().getFicheDao().queryForId(entry.getId());
+	    		fiche.setContextDB(_contextDB);
+	    		((ListeFicheAvecFiltre_ClassListViewActivity)context).getHelper().getFicheDao().refresh(fiche);
+	    		//fiche.
+	    		photoPrincipale =fiche.getPhotoPrincipale();
 				//_contextDB.ficheDao.refresh(entry);
-			} catch (SQLException e1) {
+			/*} catch (SQLException e1) {
 				Log.e(LOG_TAG, e1.getMessage(),e1);
-			}
+			}*/
     	}
         if(photoPrincipale != null){
         	photoPrincipale.setContextDB(_contextDB);
