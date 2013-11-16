@@ -120,10 +120,8 @@ public class Fiches_ZonesGeographiques {
 	public Fiche getFiche() {
 		try {
 			if(_fiche_mayNeedDBRefresh && _contextDB != null){
-				//System.err.println();
 				_contextDB.ficheDao.refresh(this.fiche);
 				this.fiche.setContextDB(_contextDB);
-				//log.warn("Fiche refreshed from DB (_id="+fiche.getId()+") photoproprincipale = "+this.fiche.getPhotoPrincipale());
 				_fiche_mayNeedDBRefresh = false;
 			}
 		} catch (SQLException e) {

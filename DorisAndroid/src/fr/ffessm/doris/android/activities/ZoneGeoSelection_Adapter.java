@@ -63,7 +63,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -72,6 +71,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code protected additional ZoneGeoSelection_Adapter imports
 // additional imports
+import android.widget.ImageButton;
 //End of user code
 
 public class ZoneGeoSelection_Adapter extends BaseAdapter  {
@@ -88,6 +88,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 
     private List<ZoneGeographique> zoneGeographiqueList;
     private List<ZoneGeographique> filteredZoneGeographiqueList;
+	SharedPreferences prefs;
 	//Start of user code protected additional ZoneGeoSelection_Adapter attributes
 	// additional attributes
 	//End of user code
@@ -96,13 +97,21 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 		super();
 		this.context = context;
 		this._contextDB = contextDB;
-		// TODO find a way to query in a lazy way
+		updateList();
+		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+	}
+	
+	protected void updateList(){
+		// Start of user code protected ZoneGeoSelection_Adapter updateList
+		// TODO find a way to query in a lazier way
 		try{
 			this.zoneGeographiqueList = _contextDB.zoneGeographiqueDao.queryForAll();
 			this.filteredZoneGeographiqueList = this.zoneGeographiqueList;
 		} catch (java.sql.SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
 		}
+
+		// End of user code
 	}
 
 	@Override
@@ -124,6 +133,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
 		final ZoneGeographique entry = filteredZoneGeographiqueList.get(position);
+		if(_contextDB != null) entry.setContextDB(_contextDB);
 		entry.setContextDB(_contextDB);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context

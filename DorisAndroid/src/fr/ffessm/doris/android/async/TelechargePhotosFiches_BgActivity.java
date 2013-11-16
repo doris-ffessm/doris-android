@@ -46,7 +46,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,6 +57,7 @@ import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports TelechargePhotosFiches_BgActivity
 import java.util.ArrayList;
+import java.util.Collection;
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -70,8 +70,8 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
 import fr.ffessm.doris.android.tools.Outils;
-// End of user code
 import fr.ffessm.doris.android.tools.Outils.ImageType;
+// End of user code
 
 public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer, Integer>{
 	private static final String LOG_TAG = TelechargePhotosFiches_BgActivity.class.getCanonicalName();
@@ -122,8 +122,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     
 	/** constructor */
     public TelechargePhotosFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper){
-		String initialTickerText = context.getString(R.string.analysefiches_bg_initialTickerText);
-		String notificationTitle = context.getString(R.string.analysefiches_bg_notificationTitle);
+		String initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
+		String notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
         this.dbHelper = dbHelper;
 		this.context = context;
@@ -176,8 +176,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 			// once done, you should indicates to the notificationHelper how many item will be processed
 			mNotificationHelper.setMaxItemToProcess(""+listePhotosATraiter.size());
 			// End of user code
-	    	
-	    	// Start of user code main loop of task TelechargePhotosFiches_BgActivity
+    	
+    	// Start of user code main loop of task TelechargePhotosFiches_BgActivity
 			// This is where we would do the actual job
 			// you should indicates the progression using publishProgress()
 			Log.d(LOG_TAG, "nombre max de photo à télécharger : "+listePhotosATraiter.size());
@@ -337,11 +337,6 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	        mNotificationHelper.setContentTitle(notificationTitle);
 	    	int nbPhotosATraiter = listePhotosPrincATraiter.size()+listePhotosATraiter.size();
 	        mNotificationHelper.setMaxItemToProcess(""+nbPhotosATraiter);
-			// End of user code
-	    	
-	    	// Start of user code main loop of task TelechargePhotosFiches_BgActivity
-			// This is where we would do the actual job
-			// you should indicates the progression using publishProgress()
 			Log.d(LOG_TAG, "nombre max de photo à télécharger : "+nbPhotosATraiter);
 
 			// On commence par les principales

@@ -42,13 +42,16 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -73,7 +76,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 // End of user code
-import android.widget.TextView;
 
 public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
 	

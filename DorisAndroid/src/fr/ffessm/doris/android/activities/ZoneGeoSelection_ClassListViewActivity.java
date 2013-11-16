@@ -42,6 +42,7 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 
@@ -62,10 +63,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedZoneGeoSelection_ClassListViewActivity_additionalimports
+import android.widget.TextView;
 // End of user code
 
 public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
@@ -129,9 +130,6 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteBaseActivity<
 		finish();
     }
 	//End of user code
-
-
-
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {

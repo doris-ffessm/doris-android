@@ -49,10 +49,11 @@ import java.util.List;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
-import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,15 +77,14 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.sql.SQLException;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.preference.PreferenceManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.OutilsGroupe;
 
@@ -107,12 +107,11 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
     private List<Fiche> filteredFicheList;
 	private final Object mLock = new Object();
 	private SimpleFilter mFilter;
+	SharedPreferences prefs;
 	//Start of user code protected additional ListeFicheAvecFiltre_Adapter attributes
 	// additional attributes
 
-	SharedPreferences prefs;
 	protected Groupe filtreGroupe;
-	
 	// vide signifie que l'on accepte tout
 	protected ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
 	int filteredZoneGeoId = 0;
@@ -123,12 +122,13 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		super();
 		this.context = context;
 		this._contextDB = contextDB;
-		// TODO find a way to query in a lazy way
 		updateList();
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	}
-
-	protected void  updateList(){
+	
+	protected void updateList(){
+		// Start of user code protected ListeFicheAvecFiltre_Adapter updateList
+		// TODO find a way to query in a lazier way
 		try{
 			
 			if(filteredZoneGeoId == 0){
@@ -150,8 +150,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		} catch (java.sql.SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
 		}
+		// End of user code
 	}
-	
+
 	@Override
 	public int getCount() {
 		return filteredFicheList.size();
@@ -170,10 +171,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-		Fiche entry = filteredFicheList.get(position);
-		//Log.d(LOG_TAG, "getView entry="+entry.getId());
-		//Log.d(LOG_TAG, "getView entry.getContextDB()"+entry.getContextDB());
+		final Fiche entry = filteredFicheList.get(position);
 		if(_contextDB != null) entry.setContextDB(_contextDB);
+		entry.setContextDB(_contextDB);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

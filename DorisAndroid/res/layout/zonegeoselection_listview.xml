@@ -5,9 +5,7 @@
     android:orientation="vertical" >
 	<!--	Start of user code protectedzonegeoselection_listviewheader 
       -->
-	<!--	
-End of user code -->
-
+      
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
@@ -41,6 +39,8 @@ End of user code -->
 	            android:src="@android:drawable/ic_delete" 
 	            android:onClick="onRemoveCurrentFilterClick"/>
     </RelativeLayout>
+	<!--	
+End of user code -->
 	<ListView 
 	    android:id="@+android:id/zonegeoselection_listview"
 	    android:layout_width="match_parent"

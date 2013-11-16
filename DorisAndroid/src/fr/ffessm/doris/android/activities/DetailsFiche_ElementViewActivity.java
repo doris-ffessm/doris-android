@@ -159,8 +159,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     
     
     private void refreshScreenData() {
-    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
-    	
     	// get our dao
     	RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
     	Fiche entry = entriesDao.queryForId(ficheId);
