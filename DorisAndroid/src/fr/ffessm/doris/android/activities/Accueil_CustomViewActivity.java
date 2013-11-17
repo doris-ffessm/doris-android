@@ -43,17 +43,25 @@ package fr.ffessm.doris.android.activities;
 
 
 import fr.ffessm.doris.android.BuildConfig;
+import fr.ffessm.doris.android.DorisApplication;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -94,6 +102,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 //	static final int VERIFIE_MAJ_FICHES_MENU_ID = 3;
 //	static final int VERIFIE_NOUVELLES_FICHES_MENU_ID = 4;
 //	static final int RESET_DB_FROM_XML_MENU_ID = 5;
+	static final int APROPOS = 6;
 	
 	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getCanonicalName();
 	Handler mHandler;
@@ -131,6 +140,25 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
             }
 
         };
+        
+        //Lors du 1er démarrage de l'application dans la version actuelle,
+        //on affiche la boite d'A Propos
+        String VersionAffichageAPropos = Outils.getParamString(this.getApplicationContext(), R.string.pref_key_a_propos_version, "jamais");
+        if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - VersionAffichageAPropos : "+VersionAffichageAPropos);
+    	
+        //Récupération du numéro de Version de DORIS
+        String appVersionName = Outils.getAppVersion(this);
+        if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - appVersionName : "+appVersionName);
+
+        if (!VersionAffichageAPropos.equals(appVersionName)) {
+        	if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Affichage A Propos");
+        	aPropos();
+        	
+        	SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor prefEdit = preferences.edit();  
+        	prefEdit.putString(this.getApplicationContext().getString(R.string.pref_key_a_propos_version), appVersionName);
+        	prefEdit.commit();
+        }
         
         if(DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null){
         	// une tache précédente est en cours, on se réabonne aux évènements 
@@ -237,6 +265,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.telecharge_photofiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
     //    menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 4, R.string.verifie_nouvelles_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
     //    menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 5, R.string.reinitialise_a_partir_du_xml_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
+		menu.add(Menu.NONE, APROPOS, 2, R.string.a_propos_label).setIcon(android.R.drawable.ic_menu_info_details);
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
@@ -266,6 +295,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 			case RESET_DB_FROM_XML_MENU_ID:
 				reinitializeDBFromPrefetched();
 				break; */
+			case APROPOS:
+				aPropos();				
+				break;
 		//End of user code
         }
         return false;
@@ -274,4 +306,60 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
+	
+	private void aPropos() {
+		StringBuffer texte = new StringBuffer();
+		texte.append(getContext().getString(R.string.a_propos_txt_1));
+		texte.append(DorisApplication.class.getSimpleName());
+		texte.append(System.getProperty("line.separator")); 
+				
+		texte.append(getContext().getString(R.string.a_propos_txt_2));
+		texte.append(Outils.getAppVersion(this)); 
+				
+		affichageMessageHTML( texte.toString(),
+			"file:///android_res/raw/apropos.html");		
+	}
+	/* *********************************************************************
+     * fonction permettant d'afficher des pages web locales comme l'Apropos par exemple
+     ********************************************************************** */
+	private void affichageMessageHTML(String inTitre, String inURL) {
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Début");
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - inTitre : " + inTitre);
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - inURL : " + inURL);
+    	
+		final Context  context = getBaseContext();
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);		
+    	LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+    	View layout = inflater.inflate(R.layout.message_html,
+    	                               (ViewGroup) findViewById(R.id.layout_root));
+    	
+    	TextView text = (TextView) layout.findViewById(R.id.text);
+    	text.setText(inTitre);
+    	
+    	WebView pageWeb = (WebView) layout.findViewById(R.id.webView);
+    	pageWeb.setWebViewClient(new WebViewClient() {  
+    	    @Override  
+    	    public boolean shouldOverrideUrlLoading(WebView inView, String inUrl)  
+    	    {  
+    	    	
+    	    	if (inUrl.startsWith("http")){
+	    	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Lancement navigateur Android Défaut");
+	        		
+	    	    	Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setData(Uri.parse(inUrl));
+					context.startActivity(intent);
+	
+					return true;
+    	    	} else {
+    	    		return true;
+    	    	}
+    	    }  
+    	});  
+    	
+    	pageWeb.loadUrl(inURL);
+    	alertDialog.setView(layout);
+    	alertDialog.show();
+    	
+    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Fin");
+	}
 }

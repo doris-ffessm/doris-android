@@ -18,6 +18,8 @@ import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -508,4 +510,18 @@ public class Outils {
 			) return true;
 		return false;	
 	}
+	
+	public static String getAppVersion(Context inContext) {
+		try	{
+        	PackageManager pm = inContext.getPackageManager();
+            PackageInfo pi = pm.getPackageInfo( inContext.getPackageName(), 0);
+            if (BuildConfig.DEBUG) Log.v(LOG_TAG, "getAppVersion() - appVersionName : "+pi.versionName);
+            return pi.versionName;
+     	} catch(Exception e) {
+    		if (BuildConfig.DEBUG) Log.e(LOG_TAG, "getAppVersion() - erreur : ");
+    		e.printStackTrace();
+    		return "";
+    	}
+	}
+	
 }
