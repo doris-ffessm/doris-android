@@ -63,6 +63,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -176,6 +177,35 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 			}
 		});
         
+        
+        ImageView ivIcon = (ImageView) convertView.findViewById(R.id.zonegeoselection_listviewrow_icon);
+        String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
+        int defaultIconSize = 48;
+        try{
+        	defaultIconSize = Integer.parseInt(defaultIconSizeString);
+        }catch(Exception e){}
+    	ivIcon.setMaxHeight(defaultIconSize);
+        // pas trés propre mais fonctionne
+    	switch (entry.getId()) {
+    	case 1:
+    		ivIcon.setImageResource(R.drawable.icone_france);
+    		break;
+		case 2:
+			ivIcon.setImageResource(R.drawable.icone_eau_douce);
+			break;
+		case 3:
+			ivIcon.setImageResource(R.drawable.icone_indo_pac);
+			break;
+		case 4:
+			ivIcon.setImageResource(R.drawable.icone_caraibes);
+			break;
+		case 5:
+			ivIcon.setImageResource(R.drawable.icone_atl_n_o);
+			break;
+		default:
+			break;
+		}
+    	
 		// End of user code
 
         return convertView;
