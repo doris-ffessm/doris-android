@@ -58,6 +58,7 @@ import fr.ffessm.doris.android.R;
 // Start of user code additional imports TelechargePhotosFiches_BgActivity
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -294,27 +295,23 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	        		
         			if(photoFichePrinc != null){
         				listeZoneGeo = fiche.getZonesGeographiques();
+        				Collection<Outils.ImageType> typesImagesARecuperer = new HashSet<Outils.ImageType>(3); // hashset pour n'ajouter les type qu'une seule fois;
+        				// Temporaire : on télécharge toujours le format vignette afin d'accélrer l'affichage des listes
+        				typesImagesARecuperer.add(Outils.ImageType.VIGNETTE);
         				for (ZoneGeographique zoneGeo : listeZoneGeo) {
         					Outils.ImageType imageType = Outils.getImageQualityToDownload(context, true, zoneGeo);
         					if(imageType != null) {
-        						nbFichesdebug2 ++;
-        						if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 220 - nbFichesdebug2 : "+nbFichesdebug2);
-        		        		
-        						if (! Outils.isAvailableImagePhotoFiche(context, photoFichePrinc, imageType)) {
-        							photoFichePrinc.setContextDB(dorisDBHelper);
-        							listePhotosPrincATraiter.add(new PhotoATraiter(photoFichePrinc, imageType, true));
-        						}
-        						
-        						// Temporaire : on télécharge toujours le format vignette afin d'accélrer l'affichage des listes
-        						if (imageType != Outils.ImageType.VIGNETTE) {
-        							if (! Outils.isAvailableImagePhotoFiche(context, photoFichePrinc, Outils.ImageType.VIGNETTE)) {
-	        							photoFichePrinc.setContextDB(dorisDBHelper);
-	        							listePhotosPrincATraiter.add(new PhotoATraiter(photoFichePrinc, Outils.ImageType.VIGNETTE, true));
-	        						}
-        						}
-        						
+        						typesImagesARecuperer.add(imageType);
         					}
         				}	
+        				for(Outils.ImageType imageType :typesImagesARecuperer){
+    						nbFichesdebug2 ++;
+    						if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 220 - nbFichesdebug2 : "+nbFichesdebug2);
+        					if (! Outils.isAvailableImagePhotoFiche(context, photoFichePrinc, imageType)) {
+    							photoFichePrinc.setContextDB(dorisDBHelper);
+    							listePhotosPrincATraiter.add(new PhotoATraiter(photoFichePrinc, imageType, true));
+    						}
+        				}
 	        		}
               		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 230 - listePhotosPrincATraiter : "+listePhotosPrincATraiter.size());
              	   
