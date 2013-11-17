@@ -43,25 +43,17 @@ package fr.ffessm.doris.android.activities;
 
 
 import fr.ffessm.doris.android.BuildConfig;
-import fr.ffessm.doris.android.DorisApplication;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -72,12 +64,21 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import android.preference.PreferenceManager;
 //Start of user code additional imports Accueil_CustomViewActivity
+
+import android.app.AlertDialog;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask.Status;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import com.j256.ormlite.dao.CloseableIterator;
+import fr.ffessm.doris.android.DorisApplication;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.async.InitialisationApplication_BgActivity;
 import fr.ffessm.doris.android.async.TelechargeFiches_BgActivity;
@@ -231,6 +232,63 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		return this;
 	}
 	
+	
+	private void aPropos() {
+		StringBuffer texte = new StringBuffer();
+		texte.append(getContext().getString(R.string.a_propos_txt_1));
+		texte.append(DorisApplication.class.getSimpleName());
+		texte.append(System.getProperty("line.separator")); 
+				
+		texte.append(getContext().getString(R.string.a_propos_txt_2));
+		texte.append(Outils.getAppVersion(this)); 
+				
+		affichageMessageHTML( texte.toString(),
+			"file:///android_res/raw/apropos.html");		
+	}
+	/* *********************************************************************
+     * fonction permettant d'afficher des pages web locales comme l'Apropos par exemple
+     ********************************************************************** */
+	private void affichageMessageHTML(String inTitre, String inURL) {
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Début");
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - inTitre : " + inTitre);
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - inURL : " + inURL);
+    	
+		final Context  context = getBaseContext();
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);		
+    	LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+    	View layout = inflater.inflate(R.layout.message_html,
+    	                               (ViewGroup) findViewById(R.id.layout_root));
+    	
+    	TextView text = (TextView) layout.findViewById(R.id.text);
+    	text.setText(inTitre);
+    	
+    	WebView pageWeb = (WebView) layout.findViewById(R.id.webView);
+    	pageWeb.setWebViewClient(new WebViewClient() {  
+    	    @Override  
+    	    public boolean shouldOverrideUrlLoading(WebView inView, String inUrl)  
+    	    {  
+    	    	
+    	    	if (inUrl.startsWith("http")){
+	    	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Lancement navigateur Android Défaut");
+	        		
+	    	    	Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setData(Uri.parse(inUrl));
+					context.startActivity(intent);
+	
+					return true;
+    	    	} else {
+    	    		return true;
+    	    	}
+    	    }  
+    	});  
+    	
+    	pageWeb.loadUrl(inURL);
+    	alertDialog.setView(layout);
+    	alertDialog.show();
+    	
+    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Fin");
+	}
+	
 	//End of user code
 
     /** refresh screen from data 
@@ -306,60 +364,4 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
-	
-	private void aPropos() {
-		StringBuffer texte = new StringBuffer();
-		texte.append(getContext().getString(R.string.a_propos_txt_1));
-		texte.append(DorisApplication.class.getSimpleName());
-		texte.append(System.getProperty("line.separator")); 
-				
-		texte.append(getContext().getString(R.string.a_propos_txt_2));
-		texte.append(Outils.getAppVersion(this)); 
-				
-		affichageMessageHTML( texte.toString(),
-			"file:///android_res/raw/apropos.html");		
-	}
-	/* *********************************************************************
-     * fonction permettant d'afficher des pages web locales comme l'Apropos par exemple
-     ********************************************************************** */
-	private void affichageMessageHTML(String inTitre, String inURL) {
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Début");
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - inTitre : " + inTitre);
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - inURL : " + inURL);
-    	
-		final Context  context = getBaseContext();
-		AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);		
-    	LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-    	View layout = inflater.inflate(R.layout.message_html,
-    	                               (ViewGroup) findViewById(R.id.layout_root));
-    	
-    	TextView text = (TextView) layout.findViewById(R.id.text);
-    	text.setText(inTitre);
-    	
-    	WebView pageWeb = (WebView) layout.findViewById(R.id.webView);
-    	pageWeb.setWebViewClient(new WebViewClient() {  
-    	    @Override  
-    	    public boolean shouldOverrideUrlLoading(WebView inView, String inUrl)  
-    	    {  
-    	    	
-    	    	if (inUrl.startsWith("http")){
-	    	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Lancement navigateur Android Défaut");
-	        		
-	    	    	Intent intent = new Intent(Intent.ACTION_VIEW);
-					intent.setData(Uri.parse(inUrl));
-					context.startActivity(intent);
-	
-					return true;
-    	    	} else {
-    	    		return true;
-    	    	}
-    	    }  
-    	});  
-    	
-    	pageWeb.loadUrl(inURL);
-    	alertDialog.setView(layout);
-    	alertDialog.show();
-    	
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Fin");
-	}
 }

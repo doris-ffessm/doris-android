@@ -50,6 +50,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
+import fr.ffessm.doris.android.datamodel.associations.*;
 
 /**
  * ORMLite Data base helper, designed to be used by android Activity
@@ -96,6 +97,8 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	// the DAO object we use to access the diveBudies table
 	// private Dao<DorisDB_metadata, Integer> dorisDB_metadataDao = null;
 	private RuntimeExceptionDao<DorisDB_metadata, Integer> dorisDB_metadataRuntimeDao = null;
+	
+		private RuntimeExceptionDao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesRuntimeDao = null;
 
 	public OrmLiteDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -165,7 +168,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	}
 
 	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our Fiche class. It will
 	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
 	 */
 	public RuntimeExceptionDao<Fiche, Integer> getFicheDao() {
@@ -176,7 +179,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	}
 
 	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our AutreDenomination class. It will
 	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
 	 */
 	public RuntimeExceptionDao<AutreDenomination, Integer> getAutreDenominationDao() {
@@ -187,7 +190,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	}
 
 	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our PhotoFiche class. It will
 	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
 	 */
 	public RuntimeExceptionDao<PhotoFiche, Integer> getPhotoFicheDao() {
@@ -198,7 +201,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	}
 
 	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our SectionFiche class. It will
 	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
 	 */
 	public RuntimeExceptionDao<SectionFiche, Integer> getSectionFicheDao() {
@@ -209,7 +212,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	}
 
 	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our Participant class. It will
 	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
 	 */
 	public RuntimeExceptionDao<Participant, Integer> getParticipantDao() {
@@ -220,7 +223,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	}
 
 	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our PhotoParticipant class. It will
 	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
 	 */
 	public RuntimeExceptionDao<PhotoParticipant, Integer> getPhotoParticipantDao() {
@@ -231,7 +234,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	}
 
 	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our ZoneGeographique class. It will
 	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
 	 */
 	public RuntimeExceptionDao<ZoneGeographique, Integer> getZoneGeographiqueDao() {
@@ -242,7 +245,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	}
 
 	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our ZoneObservation class. It will
 	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
 	 */
 	public RuntimeExceptionDao<ZoneObservation, Integer> getZoneObservationDao() {
@@ -253,7 +256,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	}
 
 	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our Groupe class. It will
 	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
 	 */
 	public RuntimeExceptionDao<Groupe, Integer> getGroupeDao() {
@@ -264,7 +267,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	}
 
 	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DiveBudy class. It will
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DorisDB_metadata class. It will
 	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
 	 */
 	public RuntimeExceptionDao<DorisDB_metadata, Integer> getDorisDB_metadataDao() {
@@ -275,6 +278,18 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	}
 
 	
+	
+	/**
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our Fiches_ZonesGeographiques class. It will
+	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
+	 */
+	public RuntimeExceptionDao<Fiches_ZonesGeographiques, Integer> getFiches_ZonesGeographiquesDao() {
+		if (fiches_ZonesGeographiquesRuntimeDao == null) {
+			fiches_ZonesGeographiquesRuntimeDao = getRuntimeExceptionDao(Fiches_ZonesGeographiques.class);
+		}
+		return fiches_ZonesGeographiquesRuntimeDao;
+	}
+
 
 	/**
 	 * Close the database connections and clear any cached DAOs.
@@ -292,6 +307,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		zoneObservationRuntimeDao = null;
 		groupeRuntimeDao = null;
 		dorisDB_metadataRuntimeDao = null;
+		fiches_ZonesGeographiquesRuntimeDao = null;
 	}
 
 	
@@ -311,6 +327,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 			helper.zoneObservationDao = getDao(ZoneObservation.class);
 			helper.groupeDao = getDao(Groupe.class);
 			helper.dorisDB_metadataDao = getDao(DorisDB_metadata.class);
+		helper.fiches_ZonesGeographiquesDao = getDao(Fiches_ZonesGeographiques.class);
 		} catch (SQLException e) {
 			Log.e(OrmLiteDBHelper.class.getName(), "Can't get ", e);
 		}
