@@ -42,8 +42,8 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.*;
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
@@ -149,7 +149,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 		super.onResume();
 		// refresh on resume, the preferences and filter may have changed 
 		// TODO peut être qu'il y a moyen de s'abonner aux changements de préférence et de ne le faire que dans ce cas ?
-    	ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter();
+		ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter();
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if((prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1) != 1) ||
 		   (prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), 0) != 0)){
