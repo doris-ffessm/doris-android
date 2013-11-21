@@ -73,6 +73,7 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
+import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.Outils.ImageType;
@@ -92,20 +93,38 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     
 	class PhotoATraiter
 	{
-		int photoATraiterId;
+		int id;
 		Outils.ImageType imageType;
 		boolean imagePrincipale;
 		
 		public PhotoATraiter(){}
 
 		public PhotoATraiter(PhotoFiche inPhotoFiche, ImageType inImageType, boolean inImagePrincipale) {
-			photoATraiterId = inPhotoFiche.getId();
+			id = inPhotoFiche.getId();
 			imageType = inImageType;
 			imagePrincipale = inImagePrincipale;
 		}
 		
+		public int getId() {
+			return this.id;
+		}
+		public String getIdStr() {
+			return ""+this.id;
+		}
 		
+		// Pour hashSet ?
+		@Override
+		public boolean equals(Object o){
+			if (o instanceof PhotoATraiter){
+				return ( (PhotoATraiter)o ).getIdStr().equals( this.getIdStr() ) ;
+			}
+			return false;
+		}
 		
+		@Override
+		public int hashCode(){
+			return id;
+		}
 	}
 		
     public TelechargePhotosFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper, DataChangedListener listener){
@@ -144,8 +163,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 
     @Override
     protected Integer doInBackground(String... arg0) {
-    	
-
+ 
 		// Start of user code initialization of the task TelechargePhotosFiches_BgActivity
 		// do the initialization of the task here
     	// Téléchargement en tache de fond de toutes les photos de toutes les fiches correspondants aux critères de l'utilisateur
@@ -156,11 +174,14 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     	
     	DorisDBHelper dorisDBHelper = dbHelper.getDorisDBHelper();
     	int nbPhotoRetreived = 0;
-    	//Test Temporaire permettant de coserver l'algo initial
-    	// et de dévelooper un plus avancé
-    	if (! PreferenceManager.getDefaultSharedPreferences(context).getBoolean("debug_new_algo_sync", true) ) {
+    	String notificationTitle = "";
+    	String initialTickerText = "";
+    	
+    	//Test Temporaire permettant de conserver l'algo initial
+    	// et d'en développer un plus avancé
+    	if (PreferenceManager.getDefaultSharedPreferences(context).getString("debug_algo_sync", "A1").equals("A0") ) {
     	// --- Algo initial ---
-			String notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
+			notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
 	        mNotificationHelper.setContentTitle(notificationTitle);
 	        
 	    	List<Fiche> listeFiches = dbHelper.getFicheDao().queryForAll();
@@ -233,9 +254,11 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    			break;
 	    		}
 			}
+    	}
     	// --- Fin Algo initial ---	
-    	} else {
+	    
 		// --- Algo avec Zones et qualités ---
+    	if (PreferenceManager.getDefaultSharedPreferences(context).getString("debug_algo_sync", "A1").equals("A1") ) {
     		//List<Fiche> listeFiches = dbHelper.getFicheDao().queryForAll();
     		
     		CloseableIterator<Fiche> itFiches = dbHelper.getFicheDao().closeableIterator();
@@ -244,8 +267,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     		
     		mNotificationHelper.setMaxItemToProcess(""+dbHelper.getFicheDao().countOf());
     		
-    		Collection<PhotoATraiter> listePhotosPrincATraiter = new ArrayList<PhotoATraiter>();
-	    	Collection<PhotoATraiter> listePhotosATraiter = new ArrayList<PhotoATraiter>();
+    		Collection<PhotoATraiter> collectPhotosPrincATraiter = new ArrayList<PhotoATraiter>();
+	    	Collection<PhotoATraiter> collectPhotosATraiter = new ArrayList<PhotoATraiter>();
 	    	List<ZoneGeographique> listeZoneGeo = dbHelper.getZoneGeographiqueDao().queryForAll();
 	    	
 	    	// zoneGeo : 1 - Faune et flore marines de France métropolitaine
@@ -309,11 +332,11 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     						if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 220 - nbFichesdebug2 : "+nbFichesdebug2);
         					if (! Outils.isAvailableImagePhotoFiche(context, photoFichePrinc, imageType)) {
     							photoFichePrinc.setContextDB(dorisDBHelper);
-    							listePhotosPrincATraiter.add(new PhotoATraiter(photoFichePrinc, imageType, true));
+    							collectPhotosPrincATraiter.add(new PhotoATraiter(photoFichePrinc, imageType, true));
     						}
         				}
 	        		}
-              		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 230 - listePhotosPrincATraiter : "+listePhotosPrincATraiter.size());
+              		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 230 - listePhotosPrincATraiter : "+collectPhotosPrincATraiter.size());
              	   
         	    	// Si que des P0 et P1 pas de téléchargement de photos non principales, on passe donc
         	    	if (! Outils.isPrecharModeOnlyP0orP1(context)) {
@@ -324,7 +347,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		        					if(imageType != null) {
 		        						if (! Outils.isAvailableImagePhotoFiche(context, photoFiche, imageType)) {
 				        					photoFiche.setContextDB(dorisDBHelper);
-					        				listePhotosATraiter.add(new PhotoATraiter(photoFiche, imageType, false));
+				        					collectPhotosATraiter.add(new PhotoATraiter(photoFiche, imageType, false));
 		        						}
 		        					}
 		        				}
@@ -332,33 +355,177 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	        			}
         	    	}
         	    	
-              		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 240 - listePhotosATraiter : "+listePhotosATraiter.size());
+              		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 240 - listePhotosATraiter : "+collectPhotosATraiter.size());
               		 
 				}
 	    	} // Fin isPrecharModeOnlyP0
 	    	
 			// once done, you should indicates to the notificationHelper how many item will be processed
-			String initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
-			String notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
+			initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
+			notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
 	        mNotificationHelper.setContentTitle(notificationTitle);
-	    	int nbPhotosATraiter = listePhotosPrincATraiter.size()+listePhotosATraiter.size();
+	    	int nbPhotosATraiter = collectPhotosPrincATraiter.size()+collectPhotosATraiter.size();
 	        mNotificationHelper.setMaxItemToProcess(""+nbPhotosATraiter);
 			Log.d(LOG_TAG, "nombre max de photo à télécharger : "+nbPhotosATraiter);
 
 			// On commence par les principales
-			nbPhotoRetreived = recupPhotoSurInternet(listePhotosPrincATraiter);
+			nbPhotoRetreived = recupPhotoSurInternet(collectPhotosPrincATraiter);
 			Log.d(LOG_TAG, "Debug - 800 - nbPhotoRetreived : "+nbPhotoRetreived);
 			
 			// Puis toutes les autres
-			nbPhotoRetreived += recupPhotoSurInternet(listePhotosATraiter);
+			nbPhotoRetreived += recupPhotoSurInternet(collectPhotosATraiter);
 
 			Log.d(LOG_TAG, "Debug - 900 - nbPhotoRetreived : "+nbPhotoRetreived);
 			Log.d(LOG_TAG, "Debug - 910 - pour voir durée");
 			
     		if( this.isCancelled()) return nbPhotoRetreived;
-	    	
-		// --- Fin Algo avec Zones et qualités ---
     	}
+		// --- Fin Algo avec Zones et qualités ---
+    	
+		// --- Algo avec Zones et qualités avec Télépchargement au fur et à mesure ---
+    	if (PreferenceManager.getDefaultSharedPreferences(context).getString("debug_algo_sync", "A1").equals("A2") ) {
+    		
+    		CloseableIterator<Fiche> itFiches = dbHelper.getFicheDao().closeableIterator();
+    		
+    		Log.d(LOG_TAG, "Debug - 010 - pour voir durée");
+    		
+    		mNotificationHelper.setMaxItemToProcess(""+dbHelper.getFicheDao().countOf());
+    		
+    		Collection<PhotoATraiter> collectPhotosPrincATraiter = new ArrayList<PhotoATraiter>();
+    		Collection<PhotoATraiter> collectPhotosATraiter = new ArrayList<PhotoATraiter>();
+	    	List<ZoneGeographique> listeZoneGeo = dbHelper.getZoneGeographiqueDao().queryForAll();
+	    	
+	    	// zoneGeo : 1 - Faune et flore marines de France métropolitaine
+	    	// zoneGeo : 2 - Faune et flore dulcicoles de France métropolitaine
+	    	// zoneGeo : 3 - Faune et flore subaquatiques de l'Indo-Pacifique
+	    	// zoneGeo : 4 - Faune et flore subaquatiques des Caraïbes
+	    	// zoneGeo : 5 - Faune et flore subaquatiques de l'Atlantique Nord-Ouest
+
+	    	Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
+	    	for (ZoneGeographique zoneGeo : listeZoneGeo) {
+	    		Log.d(LOG_TAG, "zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
+	    		if ( Outils.getPrecharMode(context, zoneGeo) == Outils.PrecharMode.P0 ) listeZoneGeo.remove(zoneGeo);
+	    	}
+	    	Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
+	    	
+	    	int nbFichesAnalysees = 0;
+	    	int nbFichesdebug2 = 0;
+	    	
+	    	Log.d(LOG_TAG, "Debug - 110 - pour voir durée");
+	    	
+	    	
+	    	// Si que des P0 pas la peine de travailler
+	    	if (! Outils.isPrecharModeOnlyP0(context)) {
+		    	// en priorité toutes les photos principales (pour les vignettes)
+	    		while(itFiches.hasNext()){
+	    			Fiche fiche = itFiches.next();
+	        		if( this.isCancelled()) return 0;
+	        		
+	        		nbFichesAnalysees ++;
+	        		if((nbFichesAnalysees % 10) == 0) {
+	        			publishProgress(nbFichesAnalysees);
+          			}
+	        		
+	        		// Debug
+	        		if( PreferenceManager.getDefaultSharedPreferences(context).getBoolean("limit_download", false)
+	        				&& nbFichesAnalysees >  Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("sync_max_card_number", "10") ) ) return 0;
+	        		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 210 - nbFichesAnalysees : "+nbFichesAnalysees);		
+	        		fiche.setContextDB(dorisDBHelper);
+	        		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 211");
+	        		PhotoFiche photoFichePrinc = fiche.getPhotoPrincipale();
+	        		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 212 - photoFichePrinc : "+photoFichePrinc.getCleURL());
+	        		listeZoneGeo = fiche.getZonesGeographiques();
+	        		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 213 - listeZoneGeo : "+listeZoneGeo.size());
+	        		Collection<PhotoFiche> listePhotosFiche = fiche.getPhotosFiche();
+	        		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 214 - listePhotosFiche : "+listePhotosFiche.size());
+	        		// fin debug
+	        		
+        			if(photoFichePrinc != null){
+        				listeZoneGeo = fiche.getZonesGeographiques();
+        				Collection<Outils.ImageType> typesImagesARecuperer = new HashSet<Outils.ImageType>(3); // hashset pour n'ajouter les type qu'une seule fois;
+        				// Temporaire : on télécharge toujours le format vignette afin d'accélrer l'affichage des listes
+        				typesImagesARecuperer.add(Outils.ImageType.VIGNETTE);
+        				for (ZoneGeographique zoneGeo : listeZoneGeo) {
+        					Outils.ImageType imageType = Outils.getImageQualityToDownload(context, true, zoneGeo);
+        					if(imageType != null) {
+        						typesImagesARecuperer.add(imageType);
+        					}
+        				}	
+        				for(Outils.ImageType imageType :typesImagesARecuperer){
+    						nbFichesdebug2 ++;
+    						if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 220 - nbFichesdebug2 : "+nbFichesdebug2);
+        					if (! Outils.isAvailableImagePhotoFiche(context, photoFichePrinc, imageType)) {
+    							photoFichePrinc.setContextDB(dorisDBHelper);
+    							collectPhotosPrincATraiter.add(new PhotoATraiter(photoFichePrinc, imageType, true));
+    						}
+        				}
+	        		}
+              		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 230 - listePhotosPrincATraiter : "+collectPhotosPrincATraiter.size());
+             	   
+        	    	// Si que des P0 et P1 pas de téléchargement de photos non principales, on passe donc
+        	    	if (! Outils.isPrecharModeOnlyP0orP1(context)) {
+	        			for (PhotoFiche photoFiche : listePhotosFiche) {
+	        				if (photoFiche != photoFichePrinc) {
+		        				for (ZoneGeographique zoneGeo : listeZoneGeo) {
+		        					Outils.ImageType imageType = Outils.getImageQualityToDownload(context, false, zoneGeo);
+		        					if(imageType != null) {
+		        						if (! Outils.isAvailableImagePhotoFiche(context, photoFiche, imageType)) {
+				        					photoFiche.setContextDB(dorisDBHelper);
+				        					collectPhotosATraiter.add(new PhotoATraiter(photoFiche, imageType, false));
+		        						}
+		        					}
+		        				}
+	        				}
+	        			}
+        	    	}
+        	    	
+              		if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 240 - listePhotosATraiter : "+collectPhotosATraiter.size());
+              		 
+				}
+	    	} // Fin isPrecharModeOnlyP0
+	    	
+			// once done, you should indicates to the notificationHelper how many item will be processed
+			initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
+			notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
+	        mNotificationHelper.setContentTitle(notificationTitle);
+	    	int nbPhotosATraiter = collectPhotosPrincATraiter.size()+collectPhotosATraiter.size();
+	        mNotificationHelper.setMaxItemToProcess(""+nbPhotosATraiter);
+			Log.d(LOG_TAG, "nombre max de photo à télécharger : "+nbPhotosATraiter);
+
+			// On commence par les principales
+			nbPhotoRetreived = recupPhotoSurInternet(collectPhotosPrincATraiter);
+			Log.d(LOG_TAG, "Debug - 800 - nbPhotoRetreived : "+nbPhotoRetreived);
+			
+			// Puis toutes les autres
+			nbPhotoRetreived += recupPhotoSurInternet(collectPhotosATraiter);
+
+			Log.d(LOG_TAG, "Debug - 900 - nbPhotoRetreived : "+nbPhotoRetreived);
+			Log.d(LOG_TAG, "Debug - 910 - pour voir durée");
+			
+    		if( this.isCancelled()) return nbPhotoRetreived;
+    	}
+		// --- Fin Algo avec Zones et qualités avec Télépchargement au fur et à mesure ---
+    	
+    	// --- Algo avec Zones et qualités Optimisé ---
+    	if (PreferenceManager.getDefaultSharedPreferences(context).getString("debug_algo_sync", "A1").equals("A3") ) {
+    		
+    		CloseableIterator<Fiches_ZonesGeographiques> itZonesFiches = dbHelper.getFiches_ZonesGeographiquesDao().closeableIterator();
+    		int nbFichesAnalysees = 0;
+    		
+    		while(itZonesFiches.hasNext()){
+    			Fiches_ZonesGeographiques zoneFiches = itZonesFiches.next();
+    			nbFichesAnalysees++;
+    			
+    			if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 300 - zoneFiches : "
+    					+zoneFiches.getZoneGeographique().getNom()
+    					+" - "
+    					+zoneFiches.getFiche().getNomCommun()
+					);
+			}
+     	}
+		// --- Fin Algo avec Zones et qualités Optimisé ---
+    	
+    		
 		// End of user code
         
 		// Start of user code end of task TelechargePhotosFiches_BgActivity
@@ -375,16 +542,19 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         return nbPhotoRetreived;
 		// End of user code
     }
+    	
     protected void onProgressUpdate(Integer... progress) {
         //This method runs on the UI thread, it receives progress updates
         //from the background thread and publishes them to the status bar
         mNotificationHelper.progressUpdate(progress[0]);
     }
+    
 	@Override
 	protected void onCancelled() {
 		super.onCancelled();
 		mNotificationHelper.completed();
 	}
+	
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
@@ -413,7 +583,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     	int nbPhotoRetreived = 0;
     	for (PhotoATraiter photoATraiter : inListePhotosATraiter) {
 	    	try{
-	    		PhotoFiche photo = dbHelper.getPhotoFicheDao().queryForId(photoATraiter.photoATraiterId);
+	    		PhotoFiche photo = dbHelper.getPhotoFicheDao().queryForId(photoATraiter.id);
 				Outils.getOrDownloadFile(context, photo, photoATraiter.imageType);
 				Log.i(LOG_TAG, "image "+photoATraiter.imageType+" "+photo.getCleURL()+" téléchargée");
 				nbPhotoRetreived = nbPhotoRetreived+1;

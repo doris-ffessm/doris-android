@@ -119,6 +119,19 @@
     
 	<string name="mode_precharg_region_ttzones_prompt">Mode Précharg. ancien Algo</string>	
     
+	<string-array name="debug_new_algo_sync_values">
+        <item>A0</item>
+        <item>A1</item>
+        <item>A2</item>
+        <item>A3</item>
+    </string-array>
+	<string-array name="debug_new_algo_sync_lib">
+        <item>Algo Initial (pas complet)</item>
+        <item>Algo complet (Vitesse à optimiser)</item>
+        <item>Algo complet (Téléch. au fur et à mesure)</item>
+        <item>Algo complet (En cours d\'optim)</item>
+    </string-array>
+    
 	<string name="sync_fresh_water_prompt">Fiches eau douce</string>
     <string name="sync_fresh_water_summary"></string>
     

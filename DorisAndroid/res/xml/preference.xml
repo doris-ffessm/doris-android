@@ -116,12 +116,14 @@
             android:defaultValue="false"
             android:layout="@layout/preference_layout_preference"
             />
-        <CheckBoxPreference android:key="debug_new_algo_sync"
+        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+            android:key="debug_algo_sync"
             android:title="Test du nouvel algo sync"
-            android:summary="(nécessite redémarrage après changement)" 
-            android:defaultValue="false"
-            android:layout="@layout/preference_layout_preference"
-            />
+			android:entryValues="@array/debug_new_algo_sync_values"
+			android:entries="@array/debug_new_algo_sync_lib"
+			android:defaultValue="A1"
+			android:layout="@layout/preference_layout_preference"
+			/>
         <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
             android:entries="@array/mode_precharg_answers_lib"
             android:title="@string/mode_precharg_region_ttzones_prompt"
