@@ -186,10 +186,10 @@ public class Outils {
 	}
 	
 	public static File getOrDownloadVignetteFile(Context inContext, PhotoFiche photo) throws IOException{
-		return getOrDownloadFile(inContext, photo, ImageType.VIGNETTE);
+		return getOrDownloadPhotoFile(inContext, photo, ImageType.VIGNETTE);
 	}
 	
-	public static File getOrDownloadFile(Context inContext, PhotoFiche photo, ImageType imageType) throws IOException{
+	public static File getOrDownloadPhotoFile(Context inContext, PhotoFiche photo, ImageType imageType) throws IOException{
 		File result = null;	
 		String imageFolderName="";
 		String baseUrl="";
