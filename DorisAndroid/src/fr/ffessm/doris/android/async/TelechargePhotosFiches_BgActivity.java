@@ -43,6 +43,7 @@ package fr.ffessm.doris.android.async;
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -55,6 +56,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+
 // Start of user code additional imports TelechargePhotosFiches_BgActivity
 import java.util.ArrayList;
 import java.util.Collection;
@@ -67,7 +69,6 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
-
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
@@ -527,6 +528,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    		HashSet<PhotoFiche> hsImagesPrincHiRes = new HashSet<PhotoFiche>(100);
 	    		HashSet<PhotoFiche> hsImages = new HashSet<PhotoFiche>(100);
 	    		
+	    		HashSet<File> hsImagesVigAllreadyAvailable = Outils.getAllVignettesPhotoFicheAvailable(context);
+	    		
 	    		PhotoATraiter photo = new PhotoATraiter();
 	    		
 	    		List<ZoneGeographique> listeZoneGeo = dbHelper.getZoneGeographiqueDao().queryForAll();
@@ -556,9 +559,15 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		        			if(photoFichePrinc != null){
 		        				// Temporaire : on télécharge toujours le format vignette afin d'accélérer l'affichage des listes
 		        				if ( !hsImagesPrincVig.contains(photoFichePrinc) ){
-		        					hsImagesPrincVig.add(photoFichePrinc);
+		        					// Vérification que pas déjà téléchargée
+		        					File fichierPhoto = new File(Outils.getImageFolderVignette(context), photoFichePrinc.getCleURL());
+		        					if ( !hsImagesVigAllreadyAvailable.contains(fichierPhoto) ){
+		        						hsImagesPrincVig.add(photoFichePrinc);
+		        					} else {
+		        						Log.d(LOG_TAG, "photo déjà téléchargée : "+photoFichePrinc.toString());
+		        					}
 		        				} else {
-		        					Log.d(LOG_TAG, "photo déjà présente : "+photoFichePrinc.toString());
+		        					Log.d(LOG_TAG, "photo déjà présente dans la liste : "+photoFichePrinc.toString());
 		        				}
 		        				
 		        				if ( imageTypeImagePrinc == Outils.ImageType.MED_RES) {

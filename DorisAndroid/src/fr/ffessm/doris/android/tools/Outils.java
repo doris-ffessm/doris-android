@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -75,6 +76,29 @@ public class Outils {
 		// result = BitmapFactory.decodeResource(inContext.getResources(), R.drawable.ic_launcher);
 		return result;
 	}
+	
+	public static File getImageFolder(Context inContext, ImageType inImageType) { 
+		switch (inImageType) {
+		case VIGNETTE :
+			return getImageFolderVignette(inContext);
+		case MED_RES :
+			return getImageFolderVignette(inContext);
+		case HI_RES :
+			return getImageFolderVignette(inContext);
+			default:
+		return null;
+		}
+	}
+	public static File getImageFolderVignette(Context inContext) { 
+		return inContext.getDir( VIGNETTES_FICHE_FOLDER , Context.MODE_PRIVATE);
+	}
+	public static File getImageFolderMedRes(Context inContext) { 
+		return inContext.getDir( MED_RES_FICHE_FOLDER , Context.MODE_PRIVATE);
+	}
+	public static File getImageFolderHiRes(Context inContext) { 
+		return inContext.getDir( HI_RES_FICHE_FOLDER , Context.MODE_PRIVATE);
+	}
+
 	
 	public static boolean isAvailableImagePrincipaleFiche(Context inContext, Fiche fiche){
 		
@@ -184,7 +208,16 @@ public class Outils {
 		File imageFolder = inContext.getDir(HI_RES_FICHE_FOLDER, Context.MODE_PRIVATE);		
 		return new File(imageFolder, photo.getCleURL());
 	}
-	
+
+	public static HashSet getAllVignettesPhotoFicheAvailable(Context inContext){
+		HashSet hsPhotoFicheAvailable = new HashSet<File>();
+		File imageFolder = getImageFolderVignette(inContext);		
+		for (File file : imageFolder.listFiles()) {
+			hsPhotoFicheAvailable.add(file);
+		}
+		return hsPhotoFicheAvailable;
+	}
+		
 	public static File getOrDownloadVignetteFile(Context inContext, PhotoFiche photo) throws IOException{
 		return getOrDownloadPhotoFile(inContext, photo, ImageType.VIGNETTE);
 	}
@@ -262,15 +295,15 @@ public class Outils {
 	}
 	
 	public static int getVignetteCount(Context inContext){
-		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);
+		File imageFolder = getImageFolderVignette(inContext);
 		return imageFolder.list().length;
 	}
 	public static int getMedResCount(Context inContext){
-		File imageFolder = inContext.getDir(MED_RES_FICHE_FOLDER, Context.MODE_PRIVATE);
+		File imageFolder = getImageFolderMedRes(inContext);
 		return imageFolder.list().length;
 	}
 	public static int getHiResCount(Context inContext){
-		File imageFolder = inContext.getDir(HI_RES_FICHE_FOLDER, Context.MODE_PRIVATE);
+		File imageFolder = getImageFolderHiRes(inContext);
 		return imageFolder.list().length;
 	}
 	
@@ -278,19 +311,19 @@ public class Outils {
     	return getVignettesDiskUsage(inContext) + getMedResDiskUsage(inContext) + getHiResDiskUsage(inContext);
 	}
 	public static long getVignettesDiskUsage(Context inContext){
-		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);
+		File imageFolder = getImageFolderVignette(inContext);
 		DiskUsage du = new DiskUsage();
     	du.accept(imageFolder);
     	return du.getSize();
 	}
 	public static long getMedResDiskUsage(Context inContext){
-		File imageFolder = inContext.getDir(MED_RES_FICHE_FOLDER, Context.MODE_PRIVATE);
+		File imageFolder = getImageFolderMedRes(inContext);
 		DiskUsage du = new DiskUsage();
     	du.accept(imageFolder);
     	return du.getSize();
 	}
 	public static long getHiResDiskUsage(Context inContext){
-		File imageFolder = inContext.getDir(HI_RES_FICHE_FOLDER, Context.MODE_PRIVATE);
+		File imageFolder = getImageFolderHiRes(inContext);
 		DiskUsage du = new DiskUsage();
     	du.accept(imageFolder);
     	return du.getSize();
