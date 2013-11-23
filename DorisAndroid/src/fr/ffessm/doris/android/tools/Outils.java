@@ -217,7 +217,23 @@ public class Outils {
 		}
 		return hsPhotoFicheAvailable;
 	}
-		
+	public static HashSet getAllMedResPhotoFicheAvailable(Context inContext){
+		HashSet hsPhotoFicheAvailable = new HashSet<File>();
+		File imageFolder = getImageFolderMedRes(inContext);		
+		for (File file : imageFolder.listFiles()) {
+			hsPhotoFicheAvailable.add(file);
+		}
+		return hsPhotoFicheAvailable;
+	}
+	public static HashSet getAllHiResPhotoFicheAvailable(Context inContext){
+		HashSet hsPhotoFicheAvailable = new HashSet<File>();
+		File imageFolder = getImageFolderVignette(inContext);		
+		for (File file : imageFolder.listFiles()) {
+			hsPhotoFicheAvailable.add(file);
+		}
+		return hsPhotoFicheAvailable;
+	}
+	
 	public static File getOrDownloadVignetteFile(Context inContext, PhotoFiche photo) throws IOException{
 		return getOrDownloadPhotoFile(inContext, photo, ImageType.VIGNETTE);
 	}

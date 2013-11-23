@@ -55,6 +55,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
 // Start of user code additional imports TelechargePhotosFiches_BgActivity
@@ -529,6 +530,9 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    		HashSet<PhotoFiche> hsImages = new HashSet<PhotoFiche>(100);
 	    		
 	    		HashSet<File> hsImagesVigAllreadyAvailable = Outils.getAllVignettesPhotoFicheAvailable(context);
+	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - "+hsImagesVigAllreadyAvailable.size() );
+	    		HashSet<File> hsImagesMedResAllreadyAvailable = Outils.getAllMedResPhotoFicheAvailable(context);
+	    		HashSet<File> hsImagesHiResAllreadyAvailable = Outils.getAllHiResPhotoFicheAvailable(context);
 	    		
 	    		PhotoATraiter photo = new PhotoATraiter();
 	    		
@@ -572,12 +576,18 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		        				
 		        				if ( imageTypeImagePrinc == Outils.ImageType.MED_RES) {
 		        					if ( !hsImagesPrincMedRes.contains(photoFichePrinc) ){
-		        						hsImagesPrincMedRes.add(photoFichePrinc);
+		        						File fichierPhoto = new File(Outils.getImageFolderMedRes(context), photoFichePrinc.getCleURL());
+			        					if ( !hsImagesVigAllreadyAvailable.contains(fichierPhoto) ){
+			        						hsImagesPrincMedRes.add(photoFichePrinc);
+			        					}
 			        				}
 		        				}
 		        				if ( imageTypeImagePrinc == Outils.ImageType.HI_RES) {
 		        					if ( !hsImagesPrincHiRes.contains(photoFichePrinc) ){
-		        						hsImagesPrincHiRes.add(photoFichePrinc);
+		        						File fichierPhoto = new File(Outils.getImageFolderHiRes(context), photoFichePrinc.getCleURL());
+			        					if ( !hsImagesVigAllreadyAvailable.contains(fichierPhoto) ){
+			        						hsImagesPrincHiRes.add(photoFichePrinc);
+			        					}
 			        				}
 		        				}
 	        				}
