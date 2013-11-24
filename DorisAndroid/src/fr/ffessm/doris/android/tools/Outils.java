@@ -227,7 +227,7 @@ public class Outils {
 	}
 	public static HashSet getAllHiResPhotoFicheAvailable(Context inContext){
 		HashSet hsPhotoFicheAvailable = new HashSet<File>();
-		File imageFolder = getImageFolderVignette(inContext);		
+		File imageFolder = getImageFolderHiRes(inContext);		
 		for (File file : imageFolder.listFiles()) {
 			hsPhotoFicheAvailable.add(file);
 		}

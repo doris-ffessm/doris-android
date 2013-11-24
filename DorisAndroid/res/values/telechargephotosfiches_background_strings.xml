@@ -8,6 +8,9 @@
 	<string name="telechargephotosfiches_bg_initialTickerText">Télécharge les photos des fiches</string>
 	<string name="analysefiches_bg_notificationTitle">Analyse des fiches</string>
 	<string name="telechargephotosfiches_bg_notificationTitle">Télécharge les photos</string>
+	
+	<string name="bg_initialTickerText_">Analyse des fiches</string>
+	<string name="bg_initialTickerText">Télécharge les photos des fiches</string>
 	<!--End of user code
 	-->
 </resources>
