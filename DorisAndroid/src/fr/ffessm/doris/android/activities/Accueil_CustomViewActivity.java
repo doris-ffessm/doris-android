@@ -240,10 +240,39 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		texte.append(System.getProperty("line.separator")); 
 				
 		texte.append(getContext().getString(R.string.a_propos_txt_2));
-		texte.append(Outils.getAppVersion(this)); 
+		texte.append(Outils.getAppVersion(this));
+		texte.append(System.getProperty("line.separator")); 
 				
-		affichageMessageHTML( texte.toString(),
-			"file:///android_res/raw/apropos.html");		
+		StringBuffer sizeFolderTexte =  new StringBuffer();
+		if (Outils.getVignetteCount(this.getApplicationContext())!=0 ) {
+			sizeFolderTexte.append("\t");
+			sizeFolderTexte.append(Outils.getVignetteCount(this.getApplicationContext()));
+			sizeFolderTexte.append(getContext().getString(R.string.a_propos_foldersize_vignettes));
+			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getVignettesDiskUsage(this.getApplicationContext()) ) );
+			sizeFolderTexte.append(System.getProperty("line.separator")); 
+		}
+		if (Outils.getMedResCount(this.getApplicationContext())!=0 ) {
+			sizeFolderTexte.append("\t");
+			sizeFolderTexte.append(Outils.getMedResCount(this.getApplicationContext()));
+			sizeFolderTexte.append(getContext().getString(R.string.a_propos_foldersize_med_res));
+			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getMedResDiskUsage(this.getApplicationContext()) ) );
+			sizeFolderTexte.append(System.getProperty("line.separator")); 
+		}
+		if (Outils.getHiResCount(this.getApplicationContext())!=0 ) {
+			sizeFolderTexte.append("\t");
+			sizeFolderTexte.append(Outils.getHiResCount(this.getApplicationContext()));
+			sizeFolderTexte.append(getContext().getString(R.string.a_propos_foldersize_hi_res));
+			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getHiResDiskUsage(this.getApplicationContext()) ) );
+			sizeFolderTexte.append(System.getProperty("line.separator")); 
+		}
+		if (sizeFolderTexte.length()!=0) {
+			texte.append(System.getProperty("line.separator"));
+			texte.append(getContext().getString(R.string.a_propos_foldersize_titre));
+			texte.append(System.getProperty("line.separator"));
+			texte.append(sizeFolderTexte);
+		}
+			
+		affichageMessageHTML( texte.toString(),	"file:///android_res/raw/apropos.html");		
 	}
 	/* *********************************************************************
      * fonction permettant d'afficher des pages web locales comme l'Apropos par exemple

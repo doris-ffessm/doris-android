@@ -344,7 +344,23 @@ public class Outils {
     	du.accept(imageFolder);
     	return du.getSize();
 	}
-	
+	public static String getHumanDiskUsage(long inSize){
+		String sizeTexte = "";
+		// octet => ko
+		inSize = inSize/1024;
+        if ( inSize < 1024 ) {
+        	sizeTexte = String.valueOf(Math.round(inSize)) + " Ko";
+        } else {
+        	inSize = inSize / 1024;
+        	if ( inSize < 1024 ) {
+        		sizeTexte = String.valueOf(Math.round(inSize)) + " Mo";
+        	} else {
+        		inSize = inSize / 1024;
+        		sizeTexte = String.valueOf(Math.round(inSize)) + " Go";
+        	}
+        }
+    	return sizeTexte;
+	}
 	/* *********************************************************************
      * isOnline permet de vérifier que l'appli a bien accès à Internet
      * si Que Wifi en paramètre envoie faux si pas sur Wifi
