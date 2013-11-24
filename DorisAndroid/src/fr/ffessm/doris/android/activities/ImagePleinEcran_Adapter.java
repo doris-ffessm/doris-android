@@ -157,7 +157,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 	    			.into(imgDisplay);
     		}
     	}
-        
+         
         imgDisplay.setOnClickListener(new PhotoClickListener(photoFiche));
         // close button click event
         btnClose.setOnClickListener(new View.OnClickListener() {           
