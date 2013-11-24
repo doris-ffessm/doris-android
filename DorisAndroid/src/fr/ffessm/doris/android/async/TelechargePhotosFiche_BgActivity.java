@@ -82,8 +82,8 @@ public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer,
     protected DataChangedListener listener;
     
     public TelechargePhotosFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper, Fiche fiche, DataChangedListener listener){
-		String initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
-		String notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
+		String initialTickerText = context.getString(R.string.analysefiches00_bg_initialTickerText);
+		String notificationTitle = context.getString(R.string.analysefiches00_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
         this.dbHelper = dbHelper;
 		this.context = context;
@@ -94,8 +94,8 @@ public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer,
     
 	/** constructor */
     public TelechargePhotosFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper){
-		String initialTickerText = context.getString(R.string.telechargephotosfiche_bg_initialTickerText);
-		String notificationTitle = context.getString(R.string.telechargephotosfiche_bg_notificationTitle);
+		String initialTickerText = context.getString(R.string.analysefiches00_bg_initialTickerText);
+		String notificationTitle = context.getString(R.string.analysefiches00_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
         this.dbHelper = dbHelper;
 		this.context = context;

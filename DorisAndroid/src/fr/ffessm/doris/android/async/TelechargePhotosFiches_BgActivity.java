@@ -118,8 +118,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 
 		
     public TelechargePhotosFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper, DataChangedListener listener){
-		String initialTickerText = context.getString(R.string.analysefiches_bg_initialTickerText);
-		String notificationTitle = context.getString(R.string.analysefiches_bg_notificationTitle);
+    	String notificationTitle = context.getString(R.string.bg_notifTitle_initial);
+    	String initialTickerText = context.getString(R.string.bg_notifText_initial);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
         this.dbHelper = dbHelper;
 		this.context = context;
@@ -139,8 +139,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     
 	/** constructor */
     public TelechargePhotosFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper){
-		String initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
-		String notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
+		String initialTickerText = context.getString(R.string.bg_notifTitle_initial);
+		String notificationTitle = context.getString(R.string.bg_notifText_initial);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
         this.dbHelper = dbHelper;
 		this.context = context;
@@ -171,7 +171,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     	// et d'en développer un plus avancé
     	if (PreferenceManager.getDefaultSharedPreferences(context).getString("debug_algo_sync", "A1").equals("A0") ) {
     	// --- Algo initial ---
-			notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
+			notificationTitle = context.getString(R.string.analysefiches00_bg_initialTickerText);
 	        mNotificationHelper.setContentTitle(notificationTitle);
 	        
 	    	List<Fiche> listeFiches = dbHelper.getFicheDao().queryForAll();
@@ -352,19 +352,19 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    	} // Fin !isPrecharModeOnlyP0
 	    	
 			// once done, you should indicates to the notificationHelper how many item will be processed
-			initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
-			notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
+			initialTickerText = context.getString(R.string.telechargephotosfiches01_bg_initialTickerText);
+			notificationTitle = context.getString(R.string.telechargephotosfiches01_bg_notificationTitle);
 	        mNotificationHelper.setContentTitle(notificationTitle);
 	    	int nbPhotosATraiter = collectPhotosPrincATraiter.size()+collectPhotosATraiter.size();
 	        mNotificationHelper.setMaxItemToProcess(""+nbPhotosATraiter);
 			Log.d(LOG_TAG, "nombre max de photo à télécharger : "+nbPhotosATraiter);
 
 			// On commence par les principales
-			nbPhotoRetreived = recupPhotoSurInternet(collectPhotosPrincATraiter);
+			nbPhotoRetreived = recupPhotoSurInternet(collectPhotosPrincATraiter, 0);
 			Log.d(LOG_TAG, "Debug - 800 - nbPhotoRetreived : "+nbPhotoRetreived);
 			
 			// Puis toutes les autres
-			nbPhotoRetreived += recupPhotoSurInternet(collectPhotosATraiter);
+			nbPhotoRetreived += recupPhotoSurInternet(collectPhotosATraiter, 0);
 
 			Log.d(LOG_TAG, "Debug - 900 - nbPhotoRetreived : "+nbPhotoRetreived);
 			Log.d(LOG_TAG, "Debug - 910 - pour voir durée");
@@ -397,15 +397,14 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    	if (! Outils.isPrecharModeOnlyP0(context)) {
 	    		
 	    		Log.d(LOG_TAG, "Debug - 010 - pour voir durée");
-	    		
-	    		notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
-		        mNotificationHelper.setContentTitle(notificationTitle);
-	    		mNotificationHelper.setMaxItemToProcess(""+dbHelper.getFicheDao().countOf());
-	    			    		
+	    			    			    		
 	    		PhotoATraiter photoATraiter;
 	    		File fichierPhoto;
-	    		HashSet<String> ficheTraitee = new HashSet<String>(100);
+	    		HashSet<Integer> ficheTraitee = new HashSet<Integer>(100);
+	    		Integer idFiche;
 	    		Outils.ImageType imageTypeImage;
+	    		int compteurAvancement = 0;
+	    		int nbPhotosATraiter = 0;
 	    		
 	    		List<ZoneGeographique> listeZoneGeo = dbHelper.getZoneGeographiqueDao().queryForAll();
 		    	// zoneGeo : 1 - Faune et flore marines de France métropolitaine
@@ -413,15 +412,23 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		    	// zoneGeo : 3 - Faune et flore subaquatiques de l'Indo-Pacifique
 		    	// zoneGeo : 4 - Faune et flore subaquatiques des Caraïbes
 		    	// zoneGeo : 5 - Faune et flore subaquatiques de l'Atlantique Nord-Ouest
-	
-		    	Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
+	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
+		    	
+		    	
 		    	// -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 				// On commence par les photos principales
+	    		
 		    	PhotoFiche photoFichePrinc;
 	    		HashSet<PhotoFiche> hsImagesPrincVig = new HashSet<PhotoFiche>(100);
 	    		HashSet<PhotoFiche> hsImagesPrincMedRes = new HashSet<PhotoFiche>(100);
 	    		HashSet<PhotoFiche> hsImagesPrincHiRes = new HashSet<PhotoFiche>(100);
-	    		
+
+	    		// Affiche : Analyse Fiche et Nb de Zones à analyser
+	    		notificationTitle = context.getString(R.string.bg_notifTitle03_analysefiche_imagesprinc);
+		        mNotificationHelper.setContentTitle(notificationTitle);
+        		mNotificationHelper.setMaxItemToProcess(""+listeZoneGeo.size());
+        		compteurAvancement = 0;
+        		
 	    		HashSet<File> hsImagesVigAllreadyAvailable = Outils.getAllVignettesPhotoFicheAvailable(context);
 	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - VigAllreadyAvailable : "+hsImagesVigAllreadyAvailable.size() );
 	    		HashSet<File> hsImagesMedResAllreadyAvailable = Outils.getAllMedResPhotoFicheAvailable(context);
@@ -429,8 +436,13 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    		HashSet<File> hsImagesHiResAllreadyAvailable = Outils.getAllHiResPhotoFicheAvailable(context);
 	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - HiResAllreadyAvailable : "+hsImagesHiResAllreadyAvailable.size() );
 
+		        
 		    	for (ZoneGeographique zoneGeo : listeZoneGeo) {
 		    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
+		    		
+        			compteurAvancement ++;
+        			publishProgress( compteurAvancement );
+        			
 		    		if ( Outils.getPrecharMode(context, zoneGeo) != Outils.PrecharMode.P0 ) {
 		    			
 		    			imageTypeImage = Outils.getImageQualityToDownload(context, true, zoneGeo);
@@ -440,9 +452,11 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		        		Log.d(LOG_TAG, "Debug - 301 - listeAssoc.size() : "+listeFichesZone.size());
 		        		
 		        		if(listeFichesZone !=  null)	for (Fiches_ZonesGeographiques fiche_ZonesGeographiques : listeFichesZone) {
-		    				
-		        			if (!ficheTraitee.contains(fiche_ZonesGeographiques.FICHE_ID_FIELD_NAME) ) {
-		        				ficheTraitee.add(fiche_ZonesGeographiques.FICHE_ID_FIELD_NAME);
+		        			idFiche = Integer.valueOf( fiche_ZonesGeographiques.getFiche().getId() );
+		        			
+		        			if ( !ficheTraitee.contains(idFiche) ) {
+		        				
+		        				ficheTraitee.add( idFiche );
 		        				
 			        			fiche_ZonesGeographiques.setContextDB(dbHelper.getDorisDBHelper());
 			    				Fiche fiche = fiche_ZonesGeographiques.getFiche();
@@ -474,40 +488,40 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 				        				}
 			        				}
 			        			}
-	        				}
+	        				} // fin Fiches par Zone
 		        		}
 		    				
 		    		}
-		    	}
+		    	} // fin ZoneGeo
 		    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - ImagesPrincVig : "+hsImagesPrincVig.size() );
 		    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - ImagesPrincMedRes : "+hsImagesPrincMedRes.size() );
 		    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - ImagesPrincHiRes : "+hsImagesPrincHiRes.size() );
 		    
 		    	
 				// Indication de l'avancement pour utilisateur
-				initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
-				notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
+				notificationTitle = context.getString(R.string.bg_notifTitle03_telecharge_imagesprinc);
 		        mNotificationHelper.setContentTitle(notificationTitle);
-		    	int nbPhotosATraiter = hsImagesPrincVig.size()+hsImagesPrincMedRes.size()+hsImagesPrincHiRes.size();
+		    	nbPhotosATraiter = hsImagesPrincVig.size()+hsImagesPrincMedRes.size()+hsImagesPrincHiRes.size();
 		        mNotificationHelper.setMaxItemToProcess(""+nbPhotosATraiter);
 		        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "nombre max de photo à télécharger : "+nbPhotosATraiter);
 
 				// On commence par les vignettes de photos principales
 				if (hsImagesPrincVig.size() != 0){
-					nbPhotoRetreived = recupPhotoSurInternet(hsImagesPrincVig, Outils.ImageType.VIGNETTE);
+					nbPhotoRetreived = recupPhotoSurInternet(hsImagesPrincVig, Outils.ImageType.VIGNETTE, 0);
 					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - nb vignettes récupérées : "+nbPhotoRetreived);
 				}
 				if (hsImagesPrincMedRes.size() != 0){
-					nbPhotoRetreived = recupPhotoSurInternet(hsImagesPrincMedRes, Outils.ImageType.MED_RES);
+					nbPhotoRetreived = recupPhotoSurInternet(hsImagesPrincMedRes, Outils.ImageType.MED_RES, nbPhotoRetreived);
 					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - nb med res récupérées : "+nbPhotoRetreived);
 				}
 				if (hsImagesPrincHiRes.size() != 0){
-					nbPhotoRetreived = recupPhotoSurInternet(hsImagesPrincHiRes, Outils.ImageType.HI_RES);
+					nbPhotoRetreived = recupPhotoSurInternet(hsImagesPrincHiRes, Outils.ImageType.HI_RES, nbPhotoRetreived);
 					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - nb hi res récupérées : "+nbPhotoRetreived);
 				}
 	    		hsImagesPrincVig = null;
 	    		hsImagesPrincMedRes = null;
 	    		hsImagesPrincHiRes = null;
+	    		ficheTraitee.clear();
 
 	    		// -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 				// -- Puis toutes les autres (pas principales) --
@@ -524,25 +538,41 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 
 		    	for (ZoneGeographique zoneGeo : listeZoneGeo) {
 		    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
-		    		if ( Outils.getPrecharMode(context, zoneGeo) != Outils.PrecharMode.P0 ) {
+	        		
+		    		notificationTitle = context.getString(R.string.bg_notifTitle03_analysefiche_images)
+		    				+" "+zoneGeo.getNom();
+			        mNotificationHelper.setContentTitle(notificationTitle);
+			        
+		    		if ( Outils.getPrecharMode(context, zoneGeo) != Outils.PrecharMode.P0 
+		    				&& Outils.getPrecharMode(context, zoneGeo) != Outils.PrecharMode.P1 ) {
 
 		    			imageTypeImage = Outils.getImageQualityToDownload(context, false, zoneGeo);
 		    			
 		    			List<Fiches_ZonesGeographiques> listeFichesZone 
 		    				= dbHelper.getFiches_ZonesGeographiquesDao().queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, zoneGeo.getId());
 		        		Log.d(LOG_TAG, "Debug - 301 - listeAssoc.size() : "+listeFichesZone.size());
+				        
+		        		mNotificationHelper.setMaxItemToProcess(""+listeFichesZone.size());
+		        		compteurAvancement = 0;
 		        		
 		        		if(listeFichesZone !=  null)	for (Fiches_ZonesGeographiques fiche_ZonesGeographiques : listeFichesZone) {
-		        			if (!ficheTraitee.contains(fiche_ZonesGeographiques.FICHE_ID_FIELD_NAME) ) {
-		        				ficheTraitee.add(fiche_ZonesGeographiques.FICHE_ID_FIELD_NAME);
-			        			fiche_ZonesGeographiques.setContextDB(dbHelper.getDorisDBHelper());
+		        			
+		        			compteurAvancement ++;
+		        			if( (compteurAvancement % 10) == 0) publishProgress( compteurAvancement );
+		        			
+		        			idFiche = Integer.valueOf(fiche_ZonesGeographiques.getFiche().getId());
+		        			if (!ficheTraitee.contains( idFiche ) ) {
+		        				
+		        				ficheTraitee.add( idFiche );
+			        			
+		        				fiche_ZonesGeographiques.setContextDB(dbHelper.getDorisDBHelper());
 			    				Fiche fiche = fiche_ZonesGeographiques.getFiche();
 			    				
 			    				for (PhotoFiche photoFiche : fiche.getPhotosFiche()) {
 		
 				        			if(photoFiche != null){
-				        				// Temporaire : on télécharge toujours le format vignette afin d'accélérer l'affichage des listes
-				        				if ( !hsImagesVig.contains(photoFiche) ){
+				        				
+				        				if ( imageTypeImage == Outils.ImageType.VIGNETTE ){
 				        					// Vérification que pas déjà téléchargée
 				        					fichierPhoto = new File(Outils.getImageFolderVignette(context), photoFiche.getCleURL());
 				        					if ( !hsImagesVigAllreadyAvailable.contains(fichierPhoto) ){
@@ -578,8 +608,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		    
 		    	
 				// Indication de l'avancement pour utilisateur
-				initialTickerText = context.getString(R.string.telechargephotosfiches_bg_initialTickerText);
-				notificationTitle = context.getString(R.string.telechargephotosfiches_bg_notificationTitle);
+				notificationTitle = context.getString(R.string.bg_notifTitle03_telecharge_images);
 		        mNotificationHelper.setContentTitle(notificationTitle);
 		    	nbPhotosATraiter = hsImagesVig.size()+hsImagesMedRes.size()+hsImagesHiRes.size();
 		        mNotificationHelper.setMaxItemToProcess(""+nbPhotosATraiter);
@@ -587,15 +616,15 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 
 				// On commence par les vignettes de photos principales
 				if (hsImagesVig.size() != 0){
-					nbPhotoRetreived = recupPhotoSurInternet(hsImagesVig, Outils.ImageType.VIGNETTE);
+					nbPhotoRetreived = recupPhotoSurInternet(hsImagesVig, Outils.ImageType.VIGNETTE, 0);
 					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - nb vignettes récupérées : "+nbPhotoRetreived);
 				}
 				if (hsImagesMedRes.size() != 0){
-					nbPhotoRetreived = recupPhotoSurInternet(hsImagesMedRes, Outils.ImageType.MED_RES);
+					nbPhotoRetreived = recupPhotoSurInternet(hsImagesMedRes, Outils.ImageType.MED_RES, nbPhotoRetreived);
 					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - nb med res récupérées : "+nbPhotoRetreived);
 				}
 				if (hsImagesHiRes.size() != 0){
-					nbPhotoRetreived = recupPhotoSurInternet(hsImagesHiRes, Outils.ImageType.HI_RES);
+					nbPhotoRetreived = recupPhotoSurInternet(hsImagesHiRes, Outils.ImageType.HI_RES, nbPhotoRetreived);
 					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - nb hi res récupérées : "+nbPhotoRetreived);
 				}
 				
@@ -663,15 +692,16 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     
     
     // recupération de la photo sur internet
-    private int recupPhotoSurInternet(Collection<PhotoATraiter> inListePhotosATraiter) {
-    	int nbPhotoRetreived = 0;
+    private int recupPhotoSurInternet(Collection<PhotoATraiter> inListePhotosATraiter, int nbPhotoRetreived) {
+
     	for (PhotoATraiter photoATraiter : inListePhotosATraiter) {
 	    	try{
 	    		PhotoFiche photo = dbHelper.getPhotoFicheDao().queryForId(photoATraiter.id);
 				Outils.getOrDownloadPhotoFile(context, photo, photoATraiter.imageType);
 				Log.i(LOG_TAG, "image "+photoATraiter.imageType+" "+photo.getCleURL()+" téléchargée");
+				
 				nbPhotoRetreived = nbPhotoRetreived+1;
-				publishProgress(nbPhotoRetreived);
+				if( (nbPhotoRetreived % 10) == 0) publishProgress(nbPhotoRetreived);
 				// laisse un peu de temps entre chaque téléchargement 
 		        Thread.sleep(10);
 		        // notify les listener toutes les 10 photos
@@ -705,8 +735,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     }
     
     // recupération de la photo sur internet
-    private int recupPhotoSurInternet(HashSet<PhotoFiche> inListePhotos, Outils.ImageType inImageType) {
-    	int nbPhotoRetreived = 0;
+    private int recupPhotoSurInternet(HashSet<PhotoFiche> inListePhotos, Outils.ImageType inImageType, int nbPhotoRetreived) {
+
     	Iterator<PhotoFiche> itPhoto = inListePhotos.iterator();
     	while (itPhoto.hasNext()) {
     		PhotoFiche photo = itPhoto.next();
@@ -714,8 +744,9 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    		
 				Outils.getOrDownloadPhotoFile(context, photo, inImageType);
 				Log.i(LOG_TAG, "image "+inImageType+" "+photo.getCleURL()+" téléchargée");
+				
 				nbPhotoRetreived = nbPhotoRetreived+1;
-				publishProgress(nbPhotoRetreived);
+				if( (nbPhotoRetreived % 10) == 0) publishProgress(nbPhotoRetreived);
 				// laisse un peu de temps entre chaque téléchargement 
 		        Thread.sleep(10);
 		        // notify les listener toutes les 10 photos

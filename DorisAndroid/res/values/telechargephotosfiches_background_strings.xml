@@ -4,13 +4,24 @@
 	<!--Start of user code BackgroundActivity_stringstelechargephotosfiches
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
-	<string name="analysefiches_bg_initialTickerText">Analyse des fiches</string>
-	<string name="telechargephotosfiches_bg_initialTickerText">Télécharge les photos des fiches</string>
-	<string name="analysefiches_bg_notificationTitle">Analyse des fiches</string>
-	<string name="telechargephotosfiches_bg_notificationTitle">Télécharge les photos</string>
+	<string name="bg_notifTitle_initial">Mise à jour en tache de fond</string>
+	<string name="bg_notifText_initial">Synch. avec doris.ffessm.fr</string>
 	
-	<string name="bg_initialTickerText_">Analyse des fiches</string>
-	<string name="bg_initialTickerText">Télécharge les photos des fiches</string>
+	<string name="analysefiches00_bg_initialTickerText">Analyse des fiches</string>
+	<string name="telechargephotosfiches00_bg_initialTickerText">Télécharge les photos des fiches</string>
+	<string name="analysefiches00_bg_notificationTitle">Analyse des fiches</string>
+	<string name="telechargephotosfiches00_bg_notificationTitle">Télécharge les photos</string>
+	
+	<string name="analysefiches01_bg_notificationTitle">Analyse des fiches</string>
+	<string name="analysefiches01_bg_initialTickerText">Analyse des fiches</string>
+	<string name="telechargephotosfiches01_bg_notificationTitle">Télécharge les photos</string>
+	<string name="telechargephotosfiches01_bg_initialTickerText">Télécharge les photos des fiches</string>
+	
+	<string name="bg_notifTitle03_analysefiche_imagesprinc">Analyse fiches / Zone</string>
+	<!-- Attention ici Vignette dans libellé correspond à Image Principale mais me parait plus clair pour utilisateur -->
+	<string name="bg_notifTitle03_telecharge_imagesprinc">Téléchargement vignettes</string>
+	<string name="bg_notifTitle03_analysefiche_images">Analyse images :</string>
+	<string name="bg_notifTitle03_telecharge_images">Téléchargement images</string>
 	<!--End of user code
 	-->
 </resources>
