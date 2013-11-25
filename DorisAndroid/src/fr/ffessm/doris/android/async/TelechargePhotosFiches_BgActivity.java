@@ -398,7 +398,6 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    		
 	    		Log.d(LOG_TAG, "Debug - 010 - pour voir durée");
 	    			    			    		
-	    		PhotoATraiter photoATraiter;
 	    		File fichierPhoto;
 	    		HashSet<Integer> ficheTraitee = new HashSet<Integer>(100);
 	    		Integer idFiche;
@@ -424,8 +423,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    		HashSet<PhotoFiche> hsImagesPrincHiRes = new HashSet<PhotoFiche>(100);
 
 	    		// Affiche : Analyse Fiche et Nb de Zones à analyser
-	    		notificationTitle = context.getString(R.string.bg_notifTitle03_analysefiche_imagesprinc);
-		        mNotificationHelper.setContentTitle(notificationTitle);
+		        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitle03_analysefiche_imagesprinc) );
+		        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTitre03_analysefiche_imagesprinc) );
         		mNotificationHelper.setMaxItemToProcess(""+listeZoneGeo.size());
         		compteurAvancement = 0;
         		
@@ -499,8 +498,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		    
 		    	
 				// Indication de l'avancement pour utilisateur
-				notificationTitle = context.getString(R.string.bg_notifTitle03_telecharge_imagesprinc);
-		        mNotificationHelper.setContentTitle(notificationTitle);
+		        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitle03_telecharge_imagesprinc) );
+		        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTitre03_telecharge_imagesprinc) );
 		    	nbPhotosATraiter = hsImagesPrincVig.size()+hsImagesPrincMedRes.size()+hsImagesPrincHiRes.size();
 		        mNotificationHelper.setMaxItemToProcess(""+nbPhotosATraiter);
 		        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "nombre max de photo à télécharger : "+nbPhotosATraiter);
@@ -542,6 +541,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		    		notificationTitle = context.getString(R.string.bg_notifTitle03_analysefiche_images)
 		    				+" "+zoneGeo.getNom();
 			        mNotificationHelper.setContentTitle(notificationTitle);
+			        mNotificationHelper.setRacineTickerText(context.getString(R.string.bg_racineTitre03_analysefiche_images));
 			        
 		    		if ( Outils.getPrecharMode(context, zoneGeo) != Outils.PrecharMode.P0 
 		    				&& Outils.getPrecharMode(context, zoneGeo) != Outils.PrecharMode.P1 ) {
@@ -608,8 +608,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		    
 		    	
 				// Indication de l'avancement pour utilisateur
-				notificationTitle = context.getString(R.string.bg_notifTitle03_telecharge_images);
-		        mNotificationHelper.setContentTitle(notificationTitle);
+		        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitle03_telecharge_images) );
+		        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTitre03_telecharge_images) );
 		    	nbPhotosATraiter = hsImagesVig.size()+hsImagesMedRes.size()+hsImagesHiRes.size();
 		        mNotificationHelper.setMaxItemToProcess(""+nbPhotosATraiter);
 		        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "nombre max de photo à télécharger : "+nbPhotosATraiter);
@@ -648,10 +648,12 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     		}
     		catch(Exception e){
     			Log.d(LOG_TAG, "Listener n'est plus à l'écoute, arrét du téléchargement");
+    			mNotificationHelper.completed();
     			return nbPhotoRetreived;
     		}
     	}
 		// return the number of item processed
+    	mNotificationHelper.completed();
         return nbPhotoRetreived;
 		// End of user code
     }
