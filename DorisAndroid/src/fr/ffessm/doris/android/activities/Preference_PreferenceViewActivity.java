@@ -44,6 +44,8 @@ package fr.ffessm.doris.android.activities;
 import java.io.File;
 import java.util.Date;
 
+import com.squareup.picasso.Picasso;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -127,8 +129,10 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         	btnVideCache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                  @Override
                  public boolean onPreferenceClick(Preference arg0) {
-                	 int deletedFiles = Outils.clearFolder(getApplicationContext().getCacheDir(), 0);
-                	//TODO Je n'arrive pas à faire fonctionner le raffraichissement ici 
+                	 //TODO : Picasso.with(getApplicationContext()).
+                	 // Pas compris comment faire ici : https://github.com/square/picasso/pull/77
+                	 
+                	//TODO : Je n'arrive pas à faire fonctionner le raffraichissement ici 
                 	 //btnVideVig.setSummary(getCacheSummary());
                 	 return true;
                  }
@@ -137,6 +141,11 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         
     }
 
+    @Override
+	protected void onResume() {
+		super.onResume();
+    }
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		//Start of user code preference specific menu definition
@@ -185,7 +194,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     	String txt = getApplicationContext().getString(R.string.mode_precharg_reset_cache_summary); 
      	txt = txt.replace("@nb", ""+Outils.getFileCount(getApplicationContext(), getApplicationContext().getCacheDir() ) ) ;
      	txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getDiskUsage(getApplicationContext(), getApplicationContext().getCacheDir() ) ) ) ;
-        return txt;
+     	return txt;
     }
     
     

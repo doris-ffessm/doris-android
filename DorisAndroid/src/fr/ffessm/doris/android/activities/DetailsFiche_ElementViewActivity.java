@@ -50,13 +50,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
@@ -64,8 +60,6 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_import
 import fr.ffessm.doris.android.BuildConfig;
 import android.widget.ImageView;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -78,7 +72,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView.BufferType;
@@ -91,8 +84,6 @@ import java.util.Collection;
 import java.util.List;
 
 import fr.ffessm.doris.android.activities.view.FoldableClickListener;
-import fr.ffessm.doris.android.async.TelechargePhotosFiche_BgActivity;
-import fr.ffessm.doris.android.async.TelechargePhotosFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
@@ -237,12 +228,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			}
 			
 		}
-		List<ZoneGeographique> zonesGeo = entry.getZonesGeographiques();
-		if(zonesGeo!= null){			
-			for (ZoneGeographique zoneGeographique : zonesGeo) {
-				sbDebugText.append("\nzone doris="+zoneGeographique.getNom()+"\n");
-			}
-		}
 		
 		if(isOnCreate){
 			// do only on first creation
@@ -301,7 +286,12 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_credit_label),richtext);
 			isOnCreate = false;
 		}
-		((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setText(sbDebugText.toString());
+		
+		
+		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    	// Debbug
+    	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+		//((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setText(sbDebugText.toString());
 		
 		// End of user code
     	

@@ -12,14 +12,7 @@
         android:layout_height="wrap_content"
         android:onClick="onClickBtnListeFiches"
         android:text="@string/accueil_customview_listefiches_btn_label" />
-
-    <TextView
-        android:id="@+id/accueil_debug_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="3dip" />
-
-    <ImageView
+     <ImageView
         android:id="@+id/accueil_logo_Doris"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,6 +34,25 @@
         android:contentDescription="Logo Biologie Accueil"
         android:src="@drawable/logo_biologie" >
     </ImageView>
+
+	<LinearLayout
+        android:id="@+id/avancements_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+	<ScrollView
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:layout_weight="1" >
+
+	    <TextView
+	        android:id="@+id/accueil_debug_text"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:padding="3dip" />
+	</ScrollView>
+
 
 </LinearLayout><!-- End of user code
 -->
