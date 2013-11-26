@@ -9,9 +9,11 @@
 	<string name="telecharge_photofiches_menu_option">Télécharge photos des fiches</string>
 	<string name="verifie_nouvelles_fiches_menu_option">Cherche nouvelles fiches</string>
 	<string name="reinitialise_a_partir_du_xml_menu_option">Réinitialise Base</string>
+	
 	<string name="a_propos_label">À propos</string>
 	<string name="a_propos_txt_1">"À propos - "</string>
 	<string name="a_propos_txt_2">Version\u00A0:\u00A0</string>
+	<string name="a_propos_base_date">"Dernière MaJ le : "</string>
 	<string name="a_propos_foldersize_titre">Nb Images et Taille Dossiers :</string>
 	<string name="a_propos_foldersize_vignettes">" vignettes - "</string>
 	<string name="a_propos_foldersize_med_res">" images Qualité Intermédiaire - "</string>

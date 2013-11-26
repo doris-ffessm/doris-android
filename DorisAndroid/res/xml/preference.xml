@@ -33,55 +33,94 @@
             android:defaultValue="true"
             android:layout="@layout/preference_layout_preference"
             />
-        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:entries="@array/mode_precharg_answers_lib"
-            android:title="@string/mode_precharg_region_france_prompt"
-			android:key="@string/pref_mode_precharg_region_france"
-			android:entryValues="@array/mode_precharg_answers_values"
-			android:defaultValue="@string/mode_precharg_region_defaut"
-			android:layout="@layout/preference_layout_preference"
-			/>
-        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:entries="@array/mode_precharg_answers_lib"
-            android:title="@string/mode_precharg_region_eaudouce_prompt"
-			android:key="@string/pref_mode_precharg_region_eaudouce"
-			android:entryValues="@array/mode_precharg_answers_values"
-			android:defaultValue="@string/mode_precharg_region_defaut"
-			android:layout="@layout/preference_layout_preference"
-			/>
-        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:entries="@array/mode_precharg_answers_lib"
-            android:title="@string/mode_precharg_region_atlantno_prompt"
-			android:key="@string/pref_mode_precharg_region_atlantno"
-			android:entryValues="@array/mode_precharg_answers_values"
-			android:defaultValue="@string/mode_precharg_region_defaut"
-			android:layout="@layout/preference_layout_preference"
-			/>
-        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:entries="@array/mode_precharg_answers_lib"
-            android:title="@string/mode_precharg_region_indopac_prompt"
-			android:key="@string/pref_mode_precharg_region_indopac"
-			android:entryValues="@array/mode_precharg_answers_values"
-			android:defaultValue="@string/mode_precharg_region_defaut"
-			android:layout="@layout/preference_layout_preference"
-			/>
-        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:entries="@array/mode_precharg_answers_lib"
-            android:title="@string/mode_precharg_region_caraibes_prompt"
-			android:key="@string/pref_mode_precharg_region_caraibes"
-			android:entryValues="@array/mode_precharg_answers_values"
-			android:defaultValue="@string/mode_precharg_region_defaut"
-			android:layout="@layout/preference_layout_preference"
-			/>
-        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:key="@string/pref_mode_precharg_region_favorite"
-            android:title="@string/mode_precharg_favorite_prompt"
-            android:entryValues="@array/mode_precharg_answers_values"
-            android:entries="@array/mode_precharg_answers_lib"
-			android:defaultValue="@string/mode_precharg_region_defaut"
-			android:layout="@layout/preference_layout_preference"
-			/>
-   	</PreferenceCategory>
+        <PreferenceScreen
+	        android:key="button_qualtite_images_zones_key"
+	        android:title="@string/mode_precharg_region_prompt"
+	        android:persistent="false">
+	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+	            android:entries="@array/mode_precharg_answers_lib"
+	            android:title="@string/mode_precharg_region_france_prompt"
+				android:key="@string/pref_mode_precharg_region_france"
+				android:entryValues="@array/mode_precharg_answers_values"
+				android:defaultValue="@string/mode_precharg_region_defaut"
+				android:layout="@layout/preference_layout_preference"
+				/>
+	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+	            android:entries="@array/mode_precharg_answers_lib"
+	            android:title="@string/mode_precharg_region_eaudouce_prompt"
+				android:key="@string/pref_mode_precharg_region_eaudouce"
+				android:entryValues="@array/mode_precharg_answers_values"
+				android:defaultValue="@string/mode_precharg_region_defaut"
+				android:layout="@layout/preference_layout_preference"
+				/>
+	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+	            android:entries="@array/mode_precharg_answers_lib"
+	            android:title="@string/mode_precharg_region_atlantno_prompt"
+				android:key="@string/pref_mode_precharg_region_atlantno"
+				android:entryValues="@array/mode_precharg_answers_values"
+				android:defaultValue="@string/mode_precharg_region_defaut"
+				android:layout="@layout/preference_layout_preference"
+				/>
+	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+	            android:entries="@array/mode_precharg_answers_lib"
+	            android:title="@string/mode_precharg_region_indopac_prompt"
+				android:key="@string/pref_mode_precharg_region_indopac"
+				android:entryValues="@array/mode_precharg_answers_values"
+				android:defaultValue="@string/mode_precharg_region_defaut"
+				android:layout="@layout/preference_layout_preference"
+				/>
+	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+	            android:entries="@array/mode_precharg_answers_lib"
+	            android:title="@string/mode_precharg_region_caraibes_prompt"
+				android:key="@string/pref_mode_precharg_region_caraibes"
+				android:entryValues="@array/mode_precharg_answers_values"
+				android:defaultValue="@string/mode_precharg_region_defaut"
+				android:layout="@layout/preference_layout_preference"
+				/>
+	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+	            android:key="@string/pref_mode_precharg_region_favorite"
+	            android:title="@string/mode_precharg_favorite_prompt"
+	            android:entryValues="@array/mode_precharg_answers_values"
+	            android:entries="@array/mode_precharg_answers_lib"
+				android:defaultValue="@string/mode_precharg_region_defaut"
+				android:layout="@layout/preference_layout_preference"
+				/>
+        </PreferenceScreen>
+        <PreferenceScreen
+	        android:key="button_mode_precharg_reset"
+	        android:title="@string/mode_precharg_reset_title"
+	        android:summary="@string/mode_precharg_reset_summary"
+	        android:persistent="false">
+	        <Preference
+	           	android:key="btn_reset_vig"
+	           	android:title="@string/mode_precharg_reset_vig_title"
+	           	android:summary="@string/mode_precharg_reset_vig_summary"
+				android:enabled="true"
+				android:selectable="true"
+				android:layout="@layout/preference_layout_preference"/>
+	        <Preference
+	           	android:key="btn_reset_med_res"
+	           	android:title="@string/mode_precharg_reset_med_res_title"
+	           	android:summary="@string/mode_precharg_reset_med_res_summary"
+				android:enabled="true"
+				android:selectable="true"
+				android:layout="@layout/preference_layout_preference"/>
+	        <Preference
+	           	android:key="btn_reset_hi_res"
+	           	android:title="@string/mode_precharg_reset_hi_res_title"
+	           	android:summary="@string/mode_precharg_reset_hi_res_summary"
+				android:enabled="true"
+				android:selectable="true"
+				android:layout="@layout/preference_layout_preference"/>
+	        <Preference
+	           	android:key="btn_reset_cache"
+	           	android:title="@string/mode_precharg_reset_cache_title"
+	           	android:summary="@string/mode_precharg_reset_cache_summary"
+				android:enabled="true"
+				android:selectable="true"
+				android:layout="@layout/preference_layout_preference"/>
+        </PreferenceScreen>
+	</PreferenceCategory>
 
 	<PreferenceCategory
 	        android:title="@string/presentation_preference_category"
@@ -104,34 +143,39 @@
 	        android:key="debug_category"
 	        android:layout="@layout/preference_layout_category"
 	        >
-        <EditTextPreference android:key="sync_max_card_number" 
-        	android:title="@string/sync_max_card_number_prompt" 
-        	android:summary="@string/sync_max_card_number_summary" 
-        	android:defaultValue="@string/sync_max_card_number_default"
-        	android:layout="@layout/preference_layout_preference"
-        	/>
-        <CheckBoxPreference android:key="@string/pref_id_limit_download"
-            android:summary="réduit les download (utile pour le debug de l'application)" 
-            android:title="Limitation des downloads" 
-            android:defaultValue="false"
-            android:layout="@layout/preference_layout_preference"
-            />
-        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:key="debug_algo_sync"
-            android:title="Test du nouvel algo sync"
-			android:entryValues="@array/debug_new_algo_sync_values"
-			android:entries="@array/debug_new_algo_sync_lib"
-			android:defaultValue="A1"
-			android:layout="@layout/preference_layout_preference"
-			/>
-        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:entries="@array/mode_precharg_answers_lib"
-            android:title="@string/mode_precharg_region_ttzones_prompt"
-			android:key="@string/pref_mode_precharg_region_ttzones"
-			android:entryValues="@array/mode_precharg_answers_values"
-			android:defaultValue="P1"
-			android:layout="@layout/preference_layout_preference"
-			/>
+        <PreferenceScreen
+	        android:key="button_debug_preferences_key"
+	        android:title="@string/debug_preferences"
+	        android:persistent="false">
+	        <EditTextPreference android:key="sync_max_card_number" 
+	        	android:title="@string/sync_max_card_number_prompt" 
+	        	android:summary="@string/sync_max_card_number_summary" 
+	        	android:defaultValue="@string/sync_max_card_number_default"
+	        	android:layout="@layout/preference_layout_preference"
+	        	/>
+	        <CheckBoxPreference android:key="@string/pref_id_limit_download"
+	            android:summary="réduit les download (utile pour le debug de l'application)" 
+	            android:title="Limitation des downloads" 
+	            android:defaultValue="false"
+	            android:layout="@layout/preference_layout_preference"
+	            />
+	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+	            android:key="debug_algo_sync"
+	            android:title="Test du nouvel algo sync"
+				android:entryValues="@array/debug_new_algo_sync_values"
+				android:entries="@array/debug_new_algo_sync_lib"
+				android:defaultValue="A2"
+				android:layout="@layout/preference_layout_preference"
+				/>
+	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+	            android:entries="@array/mode_precharg_answers_lib"
+	            android:title="@string/mode_precharg_region_ttzones_prompt"
+				android:key="@string/pref_mode_precharg_region_ttzones"
+				android:entryValues="@array/mode_precharg_answers_values"
+				android:defaultValue="P1"
+				android:layout="@layout/preference_layout_preference"
+				/>
+	        </PreferenceScreen>
      </PreferenceCategory>
  
 

@@ -242,7 +242,14 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		texte.append(getContext().getString(R.string.a_propos_txt_2));
 		texte.append(Outils.getAppVersion(this));
 		texte.append(System.getProperty("line.separator")); 
-				
+		
+		texte.append(System.getProperty("line.separator"));
+		CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
+    	while (it.hasNext()) {
+    		texte.append(getContext().getString(R.string.a_propos_base_date) + it.next().getDateBase());
+    		texte.append(System.getProperty("line.separator"));
+		}
+    	
 		StringBuffer sizeFolderTexte =  new StringBuffer();
 		if (Outils.getVignetteCount(this.getApplicationContext())!=0 ) {
 			sizeFolderTexte.append("\t");
@@ -266,7 +273,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 			sizeFolderTexte.append(System.getProperty("line.separator")); 
 		}
 		if (sizeFolderTexte.length()!=0) {
-			texte.append(System.getProperty("line.separator"));
 			texte.append(getContext().getString(R.string.a_propos_foldersize_titre));
 			texte.append(System.getProperty("line.separator"));
 			texte.append(sizeFolderTexte);

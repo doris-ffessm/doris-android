@@ -26,6 +26,7 @@
 	<string name="bg_racineTitre03_analysefiche_images">"Fiche : "</string>
 	<string name="bg_notifTitle03_telecharge_images">Téléchargement images</string>
 	<string name="bg_racineTitre03_telecharge_images">"Image : "</string>
+
 	<!--End of user code
 	-->
 </resources>

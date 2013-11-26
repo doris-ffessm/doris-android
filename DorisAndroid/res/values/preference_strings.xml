@@ -61,6 +61,7 @@
 	<string name="mode_precharg_preference_category">Préchargement photos en Mode hors ligne</string>
     
 	<string name="mode_precharg_wifi_only_prompt">Précharg. en wifi uniquement ?</string>
+	<string name="mode_precharg_region_prompt">Qualité Images par Zone</string>
     <string name="mode_precharg_region_france_prompt">- France Métropolitaine ?</string>
     <string name="mode_precharg_region_eaudouce_prompt">- Eau douce ?</string>
     <string name="mode_precharg_region_atlantno_prompt">- Atlantique Nord-Ouest ?</string>
@@ -92,7 +93,18 @@
         <item>La photo principale en haute résolution, les autres en intermédiaire</item>
         <item>Toutes les photos en haute résolution</item>
     </string-array>
-
+	<string name="mode_precharg_reset_title">Ré-Initialisation données</string>
+	<string name="mode_precharg_reset_summary">Permet d\'effacer toutes les fiches et images en mémoire avant de les re-télécharger.</string>
+	<string name="mode_precharg_reset_vig_title">Suppression vignettes</string>
+	<string name="mode_precharg_reset_vig_summary">Suppression des @nb vignettes téléchargées (@size)</string>
+	<string name="mode_precharg_reset_med_res_title">Suppression images de qualité intermédiaire</string>
+	<string name="mode_precharg_reset_med_res_summary">Suppression des @nb images téléchargées (@size)</string>
+	<string name="mode_precharg_reset_hi_res_title">Suppression images en haute résolution</string>
+	<string name="mode_precharg_reset_hi_res_summary">Suppression des @nb images téléchargées (@size)</string>
+	<string name="mode_precharg_reset_cache_title">Vider le cache</string>
+	<string name="mode_precharg_reset_cache_summary">Vider le cache du mode connecté : @nb fichiers (@size)</string>
+	
+	
 	<string name="presentation_preference_category">Options de présentation</string>
     <string name="list_icon_size_prompt">Taille des icones dans les listes</string>
     <string name="list_icon_size_default">128</string>
@@ -111,8 +123,8 @@
         <item>192</item>
     </string-array>
     
-	<string name="debug_preference_category">Debug Application</string>
-	
+	<string name="debug_preference_category">Debug et Dev.</string>
+	<string name="debug_preferences">Paramètres</string>
 	<string name="sync_max_card_number_prompt">Nombre max de fiches à télécharger</string>
 	<string name="sync_max_card_number_summary">(ex: 1, 5, 100 ou * pour toutes les fiches)</string>
     <string name="sync_max_card_number_default">5</string>
@@ -123,13 +135,11 @@
         <item>A0</item>
         <item>A1</item>
         <item>A2</item>
-        <item>A3</item>
     </string-array>
 	<string-array name="debug_new_algo_sync_lib">
         <item>Algo Initial (pas complet)</item>
         <item>Algo complet (Vitesse à optimiser)</item>
-        <item>Algo complet (Téléch. au fur et à mesure)</item>
-        <item>Algo complet (En cours d\'optim)</item>
+        <item>Algo complet optimisé</item>
     </string-array>
     
 	<string name="sync_fresh_water_prompt">Fiches eau douce</string>
