@@ -22,6 +22,12 @@
 	<string name="bg_notifTitle03_telecharge_imagesprinc">Téléchargement vignettes</string>
 	<string name="bg_notifTitle03_analysefiche_images">Analyse images :</string>
 	<string name="bg_notifTitle03_telecharge_images">Téléchargement images</string>
+	
+	<string name="bg_racineTitre03_analysefiche_imagesprinc">oubli commit</string>
+	<string name="bg_racineTitre03_telecharge_imagesprinc">oubli commit</string>
+	<string name="bg_racineTitre03_analysefiche_images">oubli commit</string>
+	<string name="bg_racineTitre03_telecharge_images">oubli commit</string>
+	
 	<!--End of user code
 	-->
 </resources>

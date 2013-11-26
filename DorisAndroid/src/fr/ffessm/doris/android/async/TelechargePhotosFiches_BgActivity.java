@@ -169,7 +169,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     	
     	//Test Temporaire permettant de conserver l'algo initial
     	// et d'en développer un plus avancé
-    	if (PreferenceManager.getDefaultSharedPreferences(context).getString("debug_algo_sync", "A1").equals("A0") ) {
+    	if (PreferenceManager.getDefaultSharedPreferences(context).getString("debug_algo_sync", "A2").equals("A0") ) {
     	// --- Algo initial ---
 			notificationTitle = context.getString(R.string.analysefiches00_bg_initialTickerText);
 	        mNotificationHelper.setContentTitle(notificationTitle);
@@ -248,7 +248,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     	// --- Fin Algo initial ---	
 	    
 		// --- Algo avec Zones et qualités ---
-    	if (PreferenceManager.getDefaultSharedPreferences(context).getString("debug_algo_sync", "A1").equals("A1") ) {
+    	if (PreferenceManager.getDefaultSharedPreferences(context).getString("debug_algo_sync", "A2").equals("A1") ) {
     		//List<Fiche> listeFiches = dbHelper.getFicheDao().queryForAll();
     		
     		CloseableIterator<Fiche> itFiches = dbHelper.getFicheDao().closeableIterator();
@@ -375,7 +375,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     	
     	
     	// --- Algo avec Zones et qualités Optimisé ---
-    	if (PreferenceManager.getDefaultSharedPreferences(context).getString("debug_algo_sync", "A1").equals("A3") ) {
+    	if (PreferenceManager.getDefaultSharedPreferences(context).getString("debug_algo_sync", "A2").equals("A2") ) {
     		
     		// Question pour Didier
     		List<Fiches_ZonesGeographiques> listeAssoc1= dbHelper.getFiches_ZonesGeographiquesDao().queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, "1");

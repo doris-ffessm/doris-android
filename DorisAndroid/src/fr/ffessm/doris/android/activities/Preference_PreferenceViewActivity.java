@@ -41,31 +41,100 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
+import java.io.File;
+import java.util.Date;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import fr.ffessm.doris.android.R;
 
 //Start of user code Preference preference activity additional imports
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.text.format.DateUtils;
 import android.util.Log;
 import fr.ffessm.doris.android.BuildConfig;
 //End of user code
+import fr.ffessm.doris.android.tools.Outils;
 
 public class Preference_PreferenceViewActivity  extends android.preference.PreferenceActivity {
 
 	
 	//Start of user code Preference preference activity additional attributes
+	private static final String LOG_TAG = Outils.class.getCanonicalName();
 	//End of user code
 
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preference); 
+        addPreferencesFromResource(R.xml.preference);
+        
+        Preference btnVideVig = (Preference)getPreferenceManager().findPreference("btn_reset_vig");
+        if(btnVideVig != null) {
+	        btnVideVig.setSummary(getVigSummary());
+        
+        	btnVideVig.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                 @Override
+                 public boolean onPreferenceClick(Preference arg0) {
+                	 int deletedFiles = Outils.clearFolder(Outils.getImageFolderVignette(getApplicationContext()), 0);
+                	 //TODO Je n'arrive pas à faire fonctionner le raffraichissement ici 
+                	 //btnVideVig.setSummary(getVigSummary());
+                	 return true;
+                 }
+             });     
+         }
+        
+        Preference btnVideMedRes = (Preference)getPreferenceManager().findPreference("btn_reset_med_res");      
+        if(btnVideMedRes != null) {
+	        btnVideMedRes.setSummary(getMedResSummary());
+
+        	btnVideMedRes.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                 @Override
+                 public boolean onPreferenceClick(Preference arg0) {
+                	 int deletedFiles = Outils.clearFolder(Outils.getImageFolderMedRes(getApplicationContext()), 0);
+                	//TODO Je n'arrive pas à faire fonctionner le raffraichissement ici 
+                	 //btnVideVig.setSummary(getMedResSummary());
+                	 return true;
+                 }
+             });     
+         }
+        
+        Preference btnVideHiRes = (Preference)getPreferenceManager().findPreference("btn_reset_hi_res");      
+        if(btnVideHiRes != null) {
+        	btnVideHiRes.setSummary(getHiResSummary());
+        
+        	btnVideHiRes.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                 @Override
+                 public boolean onPreferenceClick(Preference arg0) {
+                	 int deletedFiles = Outils.clearFolder(Outils.getImageFolderHiRes(getApplicationContext()), 0);
+                	//TODO Je n'arrive pas à faire fonctionner le raffraichissement ici 
+                	 //btnVideVig.setSummary(getHiResSummary());
+                	 return true;
+                 }
+             });     
+         }
+        
+        Preference btnVideCache = (Preference)getPreferenceManager().findPreference("btn_reset_cache");      
+        if(btnVideCache != null) {
+        	
+	        btnVideCache.setSummary(getCacheSummary());
+
+        	btnVideCache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                 @Override
+                 public boolean onPreferenceClick(Preference arg0) {
+                	 int deletedFiles = Outils.clearFolder(getApplicationContext().getCacheDir(), 0);
+                	//TODO Je n'arrive pas à faire fonctionner le raffraichissement ici 
+                	 //btnVideVig.setSummary(getCacheSummary());
+                	 return true;
+                 }
+             });     
+         }
+        
     }
 
     @Override
@@ -93,5 +162,32 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 
 	
 	//Start of user code Preference preference activity additional operations
+    
+    private String getVigSummary() {
+    	String txt = getApplicationContext().getString(R.string.mode_precharg_reset_vig_summary); 
+    	txt = txt.replace("@nb", ""+Outils.getVignetteCount(getApplicationContext()) ) ;
+    	txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getVignettesDiskUsage(getApplicationContext()) ) ) ;
+    	return txt;
+    }
+    private String getMedResSummary() {
+        String txt = getApplicationContext().getString(R.string.mode_precharg_reset_med_res_summary); 
+        txt = txt.replace("@nb", ""+Outils.getMedResCount(getApplicationContext()) ) ;
+        txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getMedResDiskUsage(getApplicationContext()) ) ) ;
+    	return txt;
+    }
+    private String getHiResSummary() {
+        String txt = getApplicationContext().getString(R.string.mode_precharg_reset_hi_res_summary); 
+        txt = txt.replace("@nb", ""+Outils.getHiResCount(getApplicationContext()) ) ;
+        txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getHiResDiskUsage(getApplicationContext()) ) ) ;
+    	return txt;
+    }
+    private String getCacheSummary() {
+    	String txt = getApplicationContext().getString(R.string.mode_precharg_reset_cache_summary); 
+     	txt = txt.replace("@nb", ""+Outils.getFileCount(getApplicationContext(), getApplicationContext().getCacheDir() ) ) ;
+     	txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getDiskUsage(getApplicationContext(), getApplicationContext().getCacheDir() ) ) ) ;
+        return txt;
+    }
+    
+    
 	//End of user code
 }

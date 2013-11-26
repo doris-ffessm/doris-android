@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -27,9 +28,11 @@ import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+import android.widget.Toast;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
@@ -126,20 +129,20 @@ public class Outils {
 	}
 	
 	public static boolean isAvailableImagePhotoFiche(Context inContext, PhotoFiche photofiche){
-		//if (BuildConfig.DEBUG) Log.d("Outils", "isAvailableImagePhotoFiche() - photofiche : "+ photofiche );
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - photofiche : "+ photofiche );
     	
 		switch(PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_ttzones,"P1"))){
 		case P1 :
 		case P2 :
-			if (BuildConfig.DEBUG) Log.d("Outils", "isAvailableImagePhotoFiche() - Vignettes" );
+			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - Vignettes" );
 			return isAvailableVignettePhotoFiche(inContext, photofiche);
 		case P3 :
 		case P4 :
-			if (BuildConfig.DEBUG) Log.d("Outils", "isAvailableImagePhotoFiche() - Medium" );
+			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - Medium" );
 			return isAvailableMedResPhotoFiche(inContext, photofiche);
 		case P5 :
 		case P6 :
-			if (BuildConfig.DEBUG) Log.d("Outils", "isAvailableImagePhotoFiche() - Hight" );
+			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - Hight" );
 	    	return isAvailableHiResPhotoFiche(inContext, photofiche);
 		default:
 			return false;
@@ -147,7 +150,7 @@ public class Outils {
 	}
 
 	public static boolean isAvailableImagePhotoFiche(Context inContext, PhotoFiche inPhotofiche, ImageType inImageType){
-		//if (BuildConfig.DEBUG) Log.d("Outils", "isAvailableImagePhotoFiche() - photofiche : "+ photofiche + " - ImageType : " + inImageType);
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - photofiche : "+ photofiche + " - ImageType : " + inImageType);
     	
 		switch(inImageType){
 		case VIGNETTE :
@@ -195,17 +198,17 @@ public class Outils {
 	}
 	
 	public static File getVignetteFile(Context inContext, PhotoFiche photo) throws IOException{		
-		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);		
+		File imageFolder = getImageFolderVignette(inContext);		
 		return new File(imageFolder, photo.getCleURL());
 	}
 	
 	public static File getMedResFile(Context inContext, PhotoFiche photo) throws IOException{		
-		File imageFolder = inContext.getDir(MED_RES_FICHE_FOLDER, Context.MODE_PRIVATE);		
+		File imageFolder = getImageFolderMedRes(inContext);		
 		return new File(imageFolder, photo.getCleURL());
 	}
 	
 	public static File getHiResFile(Context inContext, PhotoFiche photo) throws IOException{		
-		File imageFolder = inContext.getDir(HI_RES_FICHE_FOLDER, Context.MODE_PRIVATE);		
+		File imageFolder = getImageFolderHiRes(inContext);	;		
 		return new File(imageFolder, photo.getCleURL());
 	}
 
@@ -311,37 +314,33 @@ public class Outils {
 	}
 	
 	public static int getVignetteCount(Context inContext){
-		File imageFolder = getImageFolderVignette(inContext);
-		return imageFolder.list().length;
+		return getFileCount(inContext, getImageFolderVignette(inContext));
 	}
 	public static int getMedResCount(Context inContext){
-		File imageFolder = getImageFolderMedRes(inContext);
-		return imageFolder.list().length;
+		return getFileCount(inContext, getImageFolderMedRes(inContext));
 	}
 	public static int getHiResCount(Context inContext){
-		File imageFolder = getImageFolderHiRes(inContext);
-		return imageFolder.list().length;
+		return getFileCount(inContext, getImageFolderHiRes(inContext));
+	}
+	public static int getFileCount(Context inContext, File inImageFolder){
+		return inImageFolder.list().length;
 	}
 	
 	public static long getPhotosDiskUsage(Context inContext){
     	return getVignettesDiskUsage(inContext) + getMedResDiskUsage(inContext) + getHiResDiskUsage(inContext);
 	}
 	public static long getVignettesDiskUsage(Context inContext){
-		File imageFolder = getImageFolderVignette(inContext);
-		DiskUsage du = new DiskUsage();
-    	du.accept(imageFolder);
-    	return du.getSize();
+    	return getDiskUsage(inContext, getImageFolderVignette(inContext) );
 	}
 	public static long getMedResDiskUsage(Context inContext){
-		File imageFolder = getImageFolderMedRes(inContext);
-		DiskUsage du = new DiskUsage();
-    	du.accept(imageFolder);
-    	return du.getSize();
+    	return getDiskUsage(inContext, getImageFolderMedRes(inContext) );
 	}
 	public static long getHiResDiskUsage(Context inContext){
-		File imageFolder = getImageFolderHiRes(inContext);
+    	return getDiskUsage(inContext, getImageFolderHiRes(inContext) );
+	}
+	public static long getDiskUsage(Context inContext, File inImageFolder){
 		DiskUsage du = new DiskUsage();
-    	du.accept(imageFolder);
+    	du.accept(inImageFolder);
     	return du.getSize();
 	}
 	public static String getHumanDiskUsage(long inSize){
@@ -368,23 +367,23 @@ public class Outils {
      ********************************************************************** */	
 	/* Guillaume : Ne doit plus servir, cf. : connectionType() */
 	public static boolean isOnline(Context context) {
-		if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - Début");
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - Début");
 	    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
 	    
 	    if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-	    	if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - isOnline : true");
+	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - isOnline : true");
 	    	
 	    	NetworkInfo mWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-	    	if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - mWifi.isConnected() : "+ mWifi.isConnected() );
+	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - mWifi.isConnected() : "+ mWifi.isConnected() );
 	    	
 	    	if (! PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_sync_auto_wifi_only), true) || mWifi.isConnected() ) {
-	    		if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - Wifi = True or OnlyWifi = false");
-		    	if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - Fin");
+	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - Wifi = True or OnlyWifi = false");
+		    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - Fin");
 		    	return true;
 	    	} else {
-	    		if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - mais pas en Wifi et OnlyWifi = True");
-		    	if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - Fin");
+	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - mais pas en Wifi et OnlyWifi = True");
+		    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - Fin");
 		        return false;
 	    	}
 	    } else {
@@ -393,8 +392,8 @@ public class Outils {
 	    	//Toast toast = Toast.makeText(mContext, text, Toast.LENGTH_LONG);
 			//toast.show();
 			
-	    	if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - isOnline : false");
-	    	if (BuildConfig.DEBUG) Log.d("Outils", "isOnline() - Fin");
+	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - isOnline : false");
+	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - Fin");
 	    	return false;
 	    }
 	}
@@ -407,10 +406,10 @@ public class Outils {
 	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
 	    
 	    if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-	    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - isOnline : true");
+	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "connectionType() - isOnline : true");
 	    	
 	    	NetworkInfo mWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-	    	if (BuildConfig.DEBUG) Log.d("Outils", "connectionType() - mWifi.isConnected() : "+ mWifi.isConnected() );
+	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "connectionType() - mWifi.isConnected() : "+ mWifi.isConnected() );
 	    	
 	    	if (mWifi.isConnected() ) {
 		    	return ConnectionType.WIFI;
@@ -423,7 +422,7 @@ public class Outils {
 	}
 	
 	public static long getNbVignettesAPrecharger(Context inContext,  OrmLiteDBHelper helper){
-		if (BuildConfig.DEBUG) Log.d("Outils", "getNbVignettesAPrecharger() - début" );
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getNbVignettesAPrecharger() - début" );
     	
 		long nbPhotosAPrecharger;
  	
@@ -438,12 +437,12 @@ public class Outils {
 		default:
 			nbPhotosAPrecharger = 0;
 		}
-		if (BuildConfig.DEBUG) Log.d("Outils", "getNbVignettesAPrecharger() - nbPhotosAPrecharger : " + nbPhotosAPrecharger );
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getNbVignettesAPrecharger() - nbPhotosAPrecharger : " + nbPhotosAPrecharger );
 		return nbPhotosAPrecharger;
 	}
 	
 	public static long getNbMedResAPrecharger(Context inContext,  OrmLiteDBHelper helper){
-		if (BuildConfig.DEBUG) Log.d("Outils", "getNbMedResAPrecharger() - début" );
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getNbMedResAPrecharger() - début" );
     	
 		long nbPhotosAPrecharger;
  
@@ -458,11 +457,11 @@ public class Outils {
 		default:
 			nbPhotosAPrecharger = 0;
 		}
-		if (BuildConfig.DEBUG) Log.d("Outils", "getNbMedResAPrecharger() - nbPhotosAPrecharger : " + nbPhotosAPrecharger );
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getNbMedResAPrecharger() - nbPhotosAPrecharger : " + nbPhotosAPrecharger );
 		return nbPhotosAPrecharger;
 	}
 	public static long getNbHiResAPrecharger(Context inContext,  OrmLiteDBHelper helper){
-		if (BuildConfig.DEBUG) Log.d("Outils", "getNbHiResAPrecharger() - début" );
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getNbHiResAPrecharger() - début" );
     	
 		long nbPhotosAPrecharger;
  
@@ -476,7 +475,7 @@ public class Outils {
 		default:
 			nbPhotosAPrecharger = 0;
 		}
-		if (BuildConfig.DEBUG) Log.d("Outils", "getNbHiResAPrecharger() - nbPhotosAPrecharger : " + nbPhotosAPrecharger );
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getNbHiResAPrecharger() - nbPhotosAPrecharger : " + nbPhotosAPrecharger );
 		return nbPhotosAPrecharger;
 	}
 	
@@ -492,7 +491,7 @@ public class Outils {
 	}
 	
 	public static ImageType getImageQualityToDownload(Context inContext, boolean inPhotoPrincipale, ZoneGeographique inZoneGeo){
-		//if (BuildConfig.DEBUG) Log.d("Outils", "getImageQualityToDownload() - Début" );
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageQualityToDownload() - Début" );
     	
 		ImageType imageType;
 		PrecharMode prechargementMode = getPrecharMode(inContext, inZoneGeo);
@@ -529,7 +528,7 @@ public class Outils {
 	}
 	
 	public static PrecharMode getPrecharMode(Context inContext, ZoneGeographique inZoneGeo){
-		//if (BuildConfig.DEBUG) Log.d("Outils", "getPrecharMode() - Début" );
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharMode() - Début" );
 		
 		switch(inZoneGeo.getId()){
 		case 1 :
@@ -548,7 +547,7 @@ public class Outils {
 	}
 	
 	public static boolean isPrecharModeOnlyP0(Context inContext){
-		//if (BuildConfig.DEBUG) Log.d("Outils", "getPrecharMode() - Début" );
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharMode() - Début" );
 		
 		if ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_france,"P1")) == PrecharMode.P0 
 			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_eaudouce,"P1")) == PrecharMode.P0
@@ -560,7 +559,7 @@ public class Outils {
 	}
 	
 	public static boolean isPrecharModeOnlyP0orP1(Context inContext){
-		//if (BuildConfig.DEBUG) Log.d("Outils", "getPrecharMode() - Début" );
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharMode() - Début" );
 		
 		if ( ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_france,"P1")) == PrecharMode.P0 
 				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_france,"P1")) == PrecharMode.P1 )
@@ -588,5 +587,35 @@ public class Outils {
     		return "";
     	}
 	}
+	
+
+	
+    public static int clearFolder(File inFolder, int inNbJours){
+		int deletedFiles = 0;
+	    if (inFolder!= null && inFolder.isDirectory()) {
+	        try {
+	            for (File child:inFolder.listFiles()) {
+
+	                //first delete subdirectories recursively
+	                if (child.isDirectory()) {
+	                    deletedFiles += clearFolder(child, inNbJours);
+	                }
+
+	                //then delete the files and subdirectories in this dir
+	                //only empty directories can be deleted, so subdirs have been done first
+	                if (child.lastModified() < new Date().getTime() - inNbJours * DateUtils.DAY_IN_MILLIS) {
+	                    if (child.delete()) {
+	                        deletedFiles++;
+	                    }
+	                }
+	            }
+	        }
+	        catch(Exception e) {
+	        	Log.e(LOG_TAG, String.format("Failed to clean the folder, error %s", e.getMessage()));
+	        }
+	    }
+	    return deletedFiles;
+	}
+	
 	
 }

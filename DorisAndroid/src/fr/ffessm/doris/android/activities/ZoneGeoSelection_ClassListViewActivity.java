@@ -83,7 +83,7 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteBaseActivity<
         list.setClickable(false);
         adapter = new ZoneGeoSelection_Adapter(this, getHelper().getDorisDBHelper());
 
-		// avoid opening the keayboard on view opening
+		// avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         list.setOnItemClickListener(this);
 
