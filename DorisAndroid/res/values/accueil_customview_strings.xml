@@ -4,11 +4,21 @@
 	<!-- Start of user code customView_strings accueil
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
+	<string name="accueil_customview_texte1_text">Du texte ici</string>
+	<string name="accueil_customview_texte2_text">et encore ici ...</string>
 	<string name="accueil_customview_listefiches_btn_label">Toutes les fiches</string>
 	<string name="telecharge_fiches_menu_option">Télécharge fiches</string>
 	<string name="telecharge_photofiches_menu_option">Télécharge photos des fiches</string>
 	<string name="verifie_nouvelles_fiches_menu_option">Cherche nouvelles fiches</string>
 	<string name="reinitialise_a_partir_du_xml_menu_option">Réinitialise Base</string>
+	
+	<string name="avancement_titre">Avancement préchargement photos</string>
+	<string name="avancement_progressbar_summary">"@nb photos téléchargées sur @total"</string>
+	<string name="avancement_progressbar_limite1">33</string>
+	<string name="avancement_progressbar_couleur1">RED</string>
+	<string name="avancement_progressbar_limite2">80</string>
+	<string name="avancement_progressbar_couleur2">YELLOW</string>
+	<string name="avancement_progressbar_couleur3">GREEN</string>
 	
 	<string name="a_propos_label">À propos</string>
 	<string name="a_propos_txt_1">"À propos - "</string>

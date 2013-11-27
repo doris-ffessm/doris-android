@@ -43,6 +43,7 @@ package fr.ffessm.doris.android.activities;
 
 
 import java.io.File;
+import java.util.List;
 
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
@@ -75,6 +76,8 @@ import android.preference.PreferenceManager;
 
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff.Mode;
 import android.net.Uri;
 import android.os.AsyncTask.Status;
 import android.os.AsyncTask;
@@ -96,9 +99,11 @@ import fr.ffessm.doris.android.async.TelechargeFiches_BgActivity;
 import fr.ffessm.doris.android.async.TelechargePhotosFiches_BgActivity;
 import fr.ffessm.doris.android.async.VerifieNouvellesFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.Outils.PrecharMode;
 //End of user code
@@ -136,6 +141,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     		showToast("Veuillez patienter que la base de donnée s'initialise.");
 		}*/
         
+        
+        
+        
         // Defines a Handler object that's attached to the UI thread
         mHandler = new Handler(Looper.getMainLooper()) {
         	/*
@@ -152,6 +160,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
             }
 
         };
+
         
         //Lors du 1er démarrage de l'application dans la version actuelle,
         //on affiche la boite d'A Propos
@@ -341,22 +350,41 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
      */
     public void refreshScreenData() {
     	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
-    	LinearLayout containerLayout =  (LinearLayout) findViewById(R.id.avancements_layout);
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - 010");
-    	addProgressBarView(containerLayout, "Test 1");
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - 020");
-    	addProgressBarView(containerLayout, "Test 2");
+    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
     	
+    	LinearLayout llContainerLayout =  (LinearLayout) findViewById(R.id.avancements_layout);
+    	String summaryTexte = getContext().getString(R.string.avancement_progressbar_summary);
+    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - summaryTexte"+summaryTexte);
+    	summaryTexte = summaryTexte.replace("@total", ""+100 ) ;
     	
+    	String summaryTexte1 = summaryTexte.replace("@nb", ""+25 );
+    	addProgressBarView(llContainerLayout, "Titre 1", summaryTexte1, R.drawable.icone_france, 25);
+
+    	DorisDBHelper dorisDBHelper = this.getHelper().getDorisDBHelper();
+    	List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
+		for (ZoneGeographique zoneGeo : listeZoneGeo) {
+			
+			String uri = "drawable/"+ Outils.getZoneIcone(zoneGeo.getId()); 
+	    	int imageResource = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
+			
+	    	
+	    	
+	    	addProgressBarView(llContainerLayout, zoneGeo.getNom(), "summaryTexte1", imageResource, 25);
+		}
+		
+		
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     	// Debbug
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     	StringBuffer sb = new StringBuffer();
+    	sb.append("- - Debbug - -\n");
+    	
     	CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
     	while (it.hasNext()) {
     		sb.append("Date base locale : " + it.next().getDateBase()+"\n");
 		}
+    	
     	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
     	sb.append("Nombres de fiches dans la base locale : "+ficheDao.countOf());
      	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
@@ -451,20 +479,51 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 	
-	protected void addProgressBarView(LinearLayout inContainerLayout, String inSummary){
-	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - 010");  	
+	protected void addProgressBarZone(){
+		   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");  
+		   
+		   
+		   
+	}
+	
+	protected void addProgressBarView(LinearLayout inContainerLayout, String inTitre, String inSummary, int inIcone, int inAvancement){
+	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Début");  	
 	   LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	   View convertView = inflater.inflate(R.layout.avancement, null);
+	   
+	   TextView tvTitleText = (TextView) convertView.findViewById(R.id.title);
+	   tvTitleText.setText(inTitre);
+	   
+	   ImageView ivIcone = (ImageView) convertView.findViewById(R.id.icon);
+	   ivIcone.setImageResource(inIcone);
 		
-	   ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
-	   icon.setImageResource(R.drawable.icone_france);
+	   TextView tvSummaryText = (TextView) convertView.findViewById(R.id.summary);
+	   tvSummaryText.setText(inSummary);
 		
-	   TextView summaryText = (TextView) convertView.findViewById(R.id.summary);
-	   summaryText.setText(inSummary);
-		
-	   ProgressBar progressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
-	   progressBar.setProgress(50);
-		
+	   ProgressBar pbProgressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
+	   pbProgressBar.setProgress(inAvancement);
+	   
+	   // Changement couleur de la barre en fonction de l'avancement
+	   int limite1 = Integer.parseInt(getContext().getString(R.string.avancement_progressbar_limite1) );
+	   int limite2 = Integer.parseInt(getContext().getString(R.string.avancement_progressbar_limite2) );
+	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - limites : "+limite1+" - "+limite2);
+	   
+	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Couleur1 :"+getContext().getString(R.string.avancement_progressbar_couleur1));
+	   
+	   int couleur;
+	   if (inAvancement <= limite1) {
+		   	couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur1) );   
+	   } else {
+		   if (inAvancement <= limite2) {
+			   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur2) );
+		   } else {
+			   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur3) );
+		   }
+	   }
+	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - couleur : "+couleur);
+	   //pbProgressBar.getProgressDrawable().setColorFilter(couleur, Mode.MULTIPLY);
+	   pbProgressBar.getProgressDrawable().setColorFilter(couleur, Mode.SRC_IN);
+	   
 	   inContainerLayout.addView(convertView);
 	}
 }

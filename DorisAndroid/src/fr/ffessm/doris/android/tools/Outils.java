@@ -617,5 +617,21 @@ public class Outils {
 	    return deletedFiles;
 	}
 	
-	
+    // En attendant d'obtenir la nouvelle version de Common
+	public static String getZoneIcone(int inId) {
+	   	switch (inId) {
+    	case 1:
+    		return "icone_france";
+		case 2:
+			return "icone_eau_douce";
+		case 3:
+			return "icone_indo_pac";
+		case 4:
+			return "icone_caraibes";
+		case 5:
+			return "icone_atl_n_o";
+		default:
+			return "";
+		}
+	}
 }

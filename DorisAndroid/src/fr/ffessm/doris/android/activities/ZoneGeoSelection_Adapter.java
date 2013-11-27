@@ -49,6 +49,7 @@ import java.util.List;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
+import fr.ffessm.doris.android.tools.Outils;
 
 
 import android.content.Context;
@@ -185,10 +186,14 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
         	defaultIconSize = Integer.parseInt(defaultIconSizeString);
         }catch(Exception e){}
     	ivIcon.setMaxHeight(defaultIconSize);
-        // pas trés propre mais fonctionne
+        // TODO : pas trés propre mais fonctionne => Modifier Outils ... vers entry.getIcone qd sera dispo
+    	String uri = "drawable/"+ Outils.getZoneIcone(entry.getId()); 
+    	int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
+    	ivIcon.setImageResource(imageResource);
+/*
     	switch (entry.getId()) {
     	case 1:
-    		ivIcon.setImageResource(R.drawable.icone_france);
+    		ivIcon.setImageResource(imageResource);
     		break;
 		case 2:
 			ivIcon.setImageResource(R.drawable.icone_eau_douce);
@@ -204,7 +209,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 			break;
 		default:
 			break;
-		}
+		}*/
     	
 		// End of user code
 
