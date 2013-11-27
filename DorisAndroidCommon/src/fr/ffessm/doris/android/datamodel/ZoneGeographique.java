@@ -128,6 +128,25 @@ public class ZoneGeographique {
 				
 
 	// Start of user code ZoneGeographique additional user properties
+	
+	// Ce serait mieux dans la base mais en attendant ce sera en dur ici
+	public java.lang.String getIcone() {
+	   	switch (_id) {
+    	case 1:
+    		return "icone_france";
+		case 2:
+			return "icone_eau_douce";
+		case 3:
+			return "icone_indo_pac";
+		case 4:
+			return "icone_caraibes";
+		case 5:
+			return "icone_atl_n_o";
+		default:
+			return "";
+		}
+	}
+	
 	// End of user code
 	
 	public ZoneGeographique() {} // needed by ormlite
