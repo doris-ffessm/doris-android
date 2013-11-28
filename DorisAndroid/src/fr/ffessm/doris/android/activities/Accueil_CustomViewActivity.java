@@ -131,7 +131,10 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		PreferenceManager.setDefaultValues(this, R.xml.preference, false);
+		
+        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - Début");
+        
+        PreferenceManager.setDefaultValues(this, R.xml.preference, false);
         setContentView(R.layout.accueil_customview);
         //Start of user code onCreate Accueil_CustomViewActivity
 	/*	// si pas de fiche alors il faut initialiser la base à partir du prefetched_DB
@@ -142,7 +145,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     		showToast("Veuillez patienter que la base de donnée s'initialise.");
 		}*/
         
-        
+        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - isOnCreate : "+isOnCreate);
         
         
         // Defines a Handler object that's attached to the UI thread
@@ -158,7 +161,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
             		showToast((String) inputMessage.obj);
             	}
             	refreshScreenData();
-            	isOnCreate = false;
             }
 
         };
@@ -353,8 +355,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
      */
     public void refreshScreenData() {
     	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
-    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
-
+    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
+    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate);
+    	
     	if (isOnCreate) {
 	    	llContainerLayout =  (LinearLayout) findViewById(R.id.avancements_layout);
 	    	
@@ -429,6 +432,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	// Fin Debbug
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     	
+    	isOnCreate = false;
     	//End of user code
 	}
 

@@ -539,11 +539,11 @@ public class Outils {
 		case 2 :
 			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_eaudouce,"P1"));
 		case 3 :
-			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_atlantno,"P1"));
-		case 4 :
 			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_indopac,"P1"));
-		case 5 :
+		case 4 :
 			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_caraibes,"P1"));
+		case 5 :
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_atlantno,"P1"));
 		default :
 			return null;
 		}
@@ -553,22 +553,38 @@ public class Outils {
 		
 		switch(inIdZoneGeo){
 		case -1 :
-			int nbAPrechar = PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_france,""), 0 );
-			nbAPrechar += PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_eaudouce,""), 0 );
-			nbAPrechar += PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_atlantno,""), 0 );
-			nbAPrechar += PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_indopac,""), 0 );
-			nbAPrechar += PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_caraibes,""), 0 );
+			int nbAPrechar = PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_france), 0 );
+			nbAPrechar += PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_eaudouce), 0 );
+			nbAPrechar += PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_atlantno), 0 );
+			nbAPrechar += PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_indopac), 0 );
+			nbAPrechar += PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_caraibes), 0 );
 			return nbAPrechar;
 		case 1 :
-			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_france,""), 0 );
+			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_france), 0 );
 		case 2 :
-			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_eaudouce,""), 0 );
+			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_eaudouce), 0 );
 		case 3 :
-			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_atlantno,""), 0 );
+			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_indopac), 0 );
 		case 4 :
-			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_indopac,""), 0 );
+			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_caraibes), 0 );
 		case 5 :
-			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_caraibes,""), 0 );
+			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_atlantno), 0 );
+		default :
+			return 0;
+		}
+	}
+	public static int getKeyDataAPrecharZoneGeo(Context inContext, int inIdZoneGeo){
+		switch(inIdZoneGeo){
+		case 1 :
+			return R.string.data_nbphotos_atelecharger_france;
+		case 2 :
+			return R.string.data_nbphotos_atelecharger_eaudouce;
+		case 3 :
+			return R.string.data_nbphotos_atelecharger_indopac;
+		case 4 :
+			return R.string.data_nbphotos_atelecharger_caraibes;
+		case 5 :
+			return R.string.data_nbphotos_atelecharger_atlantno;
 		default :
 			return 0;
 		}

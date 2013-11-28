@@ -19,18 +19,6 @@
 	<string name="pref_key_mode_precharg_region_indopac">mode_precharg_region_indopac</string>
 	<string name="pref_key_mode_precharg_region_caraibes">mode_precharg_region_caraibes</string>
 	<string name="pref_key_mode_precharg_region_favorite">mode_precharg_region_favorite</string>
-	<string name="pref_key_nbphotos_atelecharger_france">mode_precharg_favorite</string>
-	<string name="pref_key_nbphotos_atelecharger_eaudouce">mode_precharg_favorite</string>
-	<string name="pref_key_nbphotos_atelecharger_atlantno">mode_precharg_favorite</string>
-	<string name="pref_key_nbphotos_atelecharger_indopac">mode_precharg_favorite</string>
-	<string name="pref_key_nbphotos_atelecharger_caraibes">mode_precharg_favorite</string>
-	<string name="pref_key_nbphotos_atelecharger_favorite">mode_precharg_favorite</string>
-	<string name="pref_key_nbphotos_recues_france">mode_precharg_favorite</string>
-	<string name="pref_key_nbphotos_recues_eaudouce">mode_precharg_favorite</string>
-	<string name="pref_key_nbphotos_recues_atlantno">mode_precharg_favorite</string>
-	<string name="pref_key_nbphotos_recues_indopac">mode_precharg_favorite</string>
-	<string name="pref_key_nbphotos_recues_caraibes">mode_precharg_favorite</string>
-	<string name="pref_key_nbphotos_recues_favorite">mode_precharg_favorite</string>
 	
 	<string name="pref_key_mode_precharg_sizemax">mode_precharg_sizemax</string>
 

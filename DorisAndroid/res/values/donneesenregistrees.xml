@@ -1,0 +1,16 @@
+<resources>
+
+	<string name="data_nbphotos_atelecharger_france"></string>
+	<string name="data_nbphotos_atelecharger_eaudouce"></string>
+	<string name="data_nbphotos_atelecharger_atlantno"></string>
+	<string name="data_nbphotos_atelecharger_indopac"></string>
+	<string name="data_nbphotos_atelecharger_caraibes"></string>
+	<string name="data_nbphotos_atelecharger_favorite"></string>
+	<string name="data_nbphotos_recues_france"></string>
+	<string name="data_nbphotos_recues_eaudouce"></string>
+	<string name="data_nbphotos_recues_atlantno"></string>
+	<string name="data_nbphotos_recues_indopac"></string>
+	<string name="data_nbphotos_recues_caraibes"></string>
+	<string name="data_nbphotos_recues_favorite"></string>
+
+</resources>

@@ -52,6 +52,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
@@ -397,13 +398,18 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    	if (! Outils.isPrecharModeOnlyP0(context)) {
 	    		
 	    		Log.d(LOG_TAG, "Debug - 010 - pour voir durée");
-	    			    			    		
+	    		
+	    		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+                SharedPreferences.Editor prefEdit = preferences.edit(); 
+                
 	    		File fichierPhoto;
 	    		HashSet<Integer> ficheTraitee = new HashSet<Integer>(100);
 	    		Integer idFiche;
 	    		Outils.ImageType imageTypeImage;
 	    		int compteurAvancement = 0;
 	    		int nbPhotosATraiter = 0;
+	    		int nbPhotosATelechargerPourZone;
+	    		int nbPhotosDejaLaPourZone;
 	    		
 	    		List<ZoneGeographique> listeZoneGeo = dbHelper.getZoneGeographiqueDao().queryForAll();
 		    	// zoneGeo : 1 - Faune et flore marines de France métropolitaine
@@ -426,8 +432,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitle03_analysefiche_imagesprinc) );
 		        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTitre03_analysefiche_imagesprinc) );
         		mNotificationHelper.setMaxItemToProcess(""+listeZoneGeo.size());
-        		compteurAvancement = 0;
-        		
+        	        		
 	    		HashSet<File> hsImagesVigAllreadyAvailable = Outils.getAllVignettesPhotoFicheAvailable(context);
 	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - VigAllreadyAvailable : "+hsImagesVigAllreadyAvailable.size() );
 	    		HashSet<File> hsImagesMedResAllreadyAvailable = Outils.getAllMedResPhotoFicheAvailable(context);
@@ -441,7 +446,9 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		    		
         			compteurAvancement ++;
         			publishProgress( compteurAvancement );
-        			
+        			nbPhotosATelechargerPourZone = 0;
+    	    		nbPhotosDejaLaPourZone = 0;
+    	    		
 		    		if ( Outils.getPrecharModeZoneGeo(context, zoneGeo.getId()) != Outils.PrecharMode.P0 ) {
 		    			
 		    			imageTypeImage = Outils.getImageQualityToDownload(context, true, zoneGeo.getId());
@@ -463,6 +470,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 			    				photoFichePrinc = fiche.getPhotoPrincipale();
 			        			if(photoFichePrinc != null){
 			        				// Temporaire : on télécharge toujours le format vignette afin d'accélérer l'affichage des listes
+			        				nbPhotosATelechargerPourZone++;
 			        				if ( !hsImagesPrincVig.contains(photoFichePrinc) ){
 			        					// Vérification que pas déjà téléchargée
 			        					fichierPhoto = new File(Outils.getImageFolderVignette(context), photoFichePrinc.getCleURL());
@@ -471,6 +479,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 			        					}
 			        				}
 			        				if ( imageTypeImage == Outils.ImageType.MED_RES) {
+			        					nbPhotosATelechargerPourZone++;
 			        					if ( !hsImagesPrincMedRes.contains(photoFichePrinc) ){
 			        						fichierPhoto = new File(Outils.getImageFolderMedRes(context), photoFichePrinc.getCleURL());
 				        					if ( !hsImagesMedResAllreadyAvailable.contains(fichierPhoto) ){
@@ -479,6 +488,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 				        				}
 			        				}
 			        				if ( imageTypeImage == Outils.ImageType.HI_RES) {
+			        					nbPhotosATelechargerPourZone++;
 			        					if ( !hsImagesPrincHiRes.contains(photoFichePrinc) ){
 			        						fichierPhoto = new File(Outils.getImageFolderHiRes(context), photoFichePrinc.getCleURL());
 				        					if ( !hsImagesHiResAllreadyAvailable.contains(fichierPhoto) ){
@@ -489,7 +499,10 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 			        			}
 	        				} // fin Fiches par Zone
 		        		}
-		    				
+		    			//Enregistrement du nombre total de photos à télécharger pour afficher avancement
+		        		 
+		            	prefEdit.putInt(context.getString(R.string.pref_key_a_propos_version), nbPhotosATelechargerPourZone);
+		            	prefEdit.commit();
 		    		}
 		    	} // fin ZoneGeo
 		    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - ImagesPrincVig : "+hsImagesPrincVig.size() );
