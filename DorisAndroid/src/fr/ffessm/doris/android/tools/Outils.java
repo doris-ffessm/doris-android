@@ -489,12 +489,15 @@ public class Outils {
 	public static long getParamLong(Context context, int param, Long valDef) {
 		return PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getApplicationContext().getString(param), valDef);
 	}
+	public static int getParamInt(Context context, int param, int valDef) {
+		return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getApplicationContext().getString(param), valDef);
+	}
 	
-	public static ImageType getImageQualityToDownload(Context inContext, boolean inPhotoPrincipale, ZoneGeographique inZoneGeo){
+	public static ImageType getImageQualityToDownload(Context inContext, boolean inPhotoPrincipale, int inIdZoneGeo){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageQualityToDownload() - Début" );
     	
 		ImageType imageType;
-		PrecharMode prechargementMode = getPrecharMode(inContext, inZoneGeo);
+		PrecharMode prechargementMode = getPrecharModeZoneGeo(inContext, inIdZoneGeo);
 		
 		if (inPhotoPrincipale) {
 			switch(prechargementMode){
@@ -527,33 +530,57 @@ public class Outils {
 		
 	}
 	
-	public static PrecharMode getPrecharMode(Context inContext, ZoneGeographique inZoneGeo){
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharMode() - Début" );
+	public static PrecharMode getPrecharModeZoneGeo(Context inContext, int inIdZoneGeo){
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharModeZoneGeo() - Début" );
 		
-		switch(inZoneGeo.getId()){
+		switch(inIdZoneGeo){
 		case 1 :
-			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_france,"P1"));
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_france,"P1"));
 		case 2 :
-			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_eaudouce,"P1"));
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_eaudouce,"P1"));
 		case 3 :
-			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_atlantno,"P1"));
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_atlantno,"P1"));
 		case 4 :
-			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_indopac,"P1"));
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_indopac,"P1"));
 		case 5 :
-			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_caraibes,"P1"));
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_caraibes,"P1"));
 		default :
 			return null;
 		}
 	}
-	
+	public static int getAPrecharQteZoneGeo(Context inContext, int inIdZoneGeo){
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
+		
+		switch(inIdZoneGeo){
+		case -1 :
+			int nbAPrechar = PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_france,""), 0 );
+			nbAPrechar += PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_eaudouce,""), 0 );
+			nbAPrechar += PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_atlantno,""), 0 );
+			nbAPrechar += PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_indopac,""), 0 );
+			nbAPrechar += PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_caraibes,""), 0 );
+			return nbAPrechar;
+		case 1 :
+			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_france,""), 0 );
+		case 2 :
+			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_eaudouce,""), 0 );
+		case 3 :
+			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_atlantno,""), 0 );
+		case 4 :
+			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_indopac,""), 0 );
+		case 5 :
+			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(getParamString(inContext, R.string.pref_key_nbphotos_atelecharger_caraibes,""), 0 );
+		default :
+			return 0;
+		}
+	}
 	public static boolean isPrecharModeOnlyP0(Context inContext){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharMode() - Début" );
 		
-		if ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_france,"P1")) == PrecharMode.P0 
-			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_eaudouce,"P1")) == PrecharMode.P0
-			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_atlantno,"P1")) == PrecharMode.P0
-			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_indopac,"P1")) == PrecharMode.P0
-			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_caraibes,"P1")) == PrecharMode.P0
+		if ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_france,"P1")) == PrecharMode.P0 
+			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_eaudouce,"P1")) == PrecharMode.P0
+			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_atlantno,"P1")) == PrecharMode.P0
+			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_indopac,"P1")) == PrecharMode.P0
+			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_caraibes,"P1")) == PrecharMode.P0
 			) return true;
 		return false;	
 	}
@@ -561,16 +588,16 @@ public class Outils {
 	public static boolean isPrecharModeOnlyP0orP1(Context inContext){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharMode() - Début" );
 		
-		if ( ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_france,"P1")) == PrecharMode.P0 
-				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_france,"P1")) == PrecharMode.P1 )
-			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_eaudouce,"P1")) == PrecharMode.P0
-				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_eaudouce,"P1")) == PrecharMode.P1 )
-			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_atlantno,"P1")) == PrecharMode.P0
-				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_atlantno,"P1")) == PrecharMode.P1 )
-			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_indopac,"P1")) == PrecharMode.P0
-				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_indopac,"P1")) == PrecharMode.P1 )
-			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_caraibes,"P1")) == PrecharMode.P0
-				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_caraibes,"P1")) == PrecharMode.P1 )
+		if ( ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_france,"P1")) == PrecharMode.P0 
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_france,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_eaudouce,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_eaudouce,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_atlantno,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_atlantno,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_indopac,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_indopac,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_caraibes,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_caraibes,"P1")) == PrecharMode.P1 )
 			) return true;
 		return false;	
 	}
@@ -620,6 +647,8 @@ public class Outils {
     // En attendant d'obtenir la nouvelle version de Common
 	public static String getZoneIcone(int inId) {
 	   	switch (inId) {
+	   	case -1:
+    		return "icone_toutes_zones";
     	case 1:
     		return "icone_france";
 		case 2:

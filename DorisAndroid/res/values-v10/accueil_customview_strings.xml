@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resource Strings specific to accueil Custom View -->
+<resources>	
+	<!-- Start of user code customView_strings accueil
+	-->
+	<!-- freely add here the desired resource String for your custom view -->
+	
+	<string name="avancement_progressbar_mode">MULTIPLY</string>
+	
+	<!-- End of user code
+	-->
+</resources>

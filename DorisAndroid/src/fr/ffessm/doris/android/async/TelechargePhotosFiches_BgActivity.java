@@ -270,7 +270,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    	Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
 	    	for (ZoneGeographique zoneGeo : listeZoneGeo) {
 	    		Log.d(LOG_TAG, "zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
-	    		if ( Outils.getPrecharMode(context, zoneGeo) == Outils.PrecharMode.P0 ) listeZoneGeo.remove(zoneGeo);
+	    		if ( Outils.getPrecharModeZoneGeo(context, zoneGeo.getId()) == Outils.PrecharMode.P0 ) listeZoneGeo.remove(zoneGeo);
 	    	}
 	    	Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
 	    	
@@ -310,7 +310,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         				// Temporaire : on télécharge toujours le format vignette afin d'accélérer l'affichage des listes
         				typesImagesARecuperer.add(Outils.ImageType.VIGNETTE);
         				for (ZoneGeographique zoneGeo : listeZoneGeo) {
-        					Outils.ImageType imageType = Outils.getImageQualityToDownload(context, true, zoneGeo);
+        					Outils.ImageType imageType = Outils.getImageQualityToDownload(context, true, zoneGeo.getId());
         					if(imageType != null) {
         						typesImagesARecuperer.add(imageType);
         					}
@@ -334,7 +334,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         	    		for (PhotoFiche photoFiche : listePhotosFiche) {
 	        				if (photoFiche != photoFichePrinc) {
 		        				for (ZoneGeographique zoneGeo : listeZoneGeo) {
-		        					Outils.ImageType imageType = Outils.getImageQualityToDownload(context, false, zoneGeo);
+		        					Outils.ImageType imageType = Outils.getImageQualityToDownload(context, false, zoneGeo.getId());
 		        					if(imageType != null) {
 		        						if (! Outils.isAvailableImagePhotoFiche(context, photoFiche, imageType)) {
 				        					photoFiche.setContextDB(dorisDBHelper);
@@ -442,9 +442,9 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         			compteurAvancement ++;
         			publishProgress( compteurAvancement );
         			
-		    		if ( Outils.getPrecharMode(context, zoneGeo) != Outils.PrecharMode.P0 ) {
+		    		if ( Outils.getPrecharModeZoneGeo(context, zoneGeo.getId()) != Outils.PrecharMode.P0 ) {
 		    			
-		    			imageTypeImage = Outils.getImageQualityToDownload(context, true, zoneGeo);
+		    			imageTypeImage = Outils.getImageQualityToDownload(context, true, zoneGeo.getId());
 		    			
 		    			List<Fiches_ZonesGeographiques> listeFichesZone 
 		    				= dbHelper.getFiches_ZonesGeographiquesDao().queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, zoneGeo.getId());
@@ -543,10 +543,10 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 			        mNotificationHelper.setContentTitle(notificationTitle);
 			        mNotificationHelper.setRacineTickerText(context.getString(R.string.bg_racineTitre03_analysefiche_images));
 			        
-		    		if ( Outils.getPrecharMode(context, zoneGeo) != Outils.PrecharMode.P0 
-		    				&& Outils.getPrecharMode(context, zoneGeo) != Outils.PrecharMode.P1 ) {
+		    		if ( Outils.getPrecharModeZoneGeo(context, zoneGeo.getId()) != Outils.PrecharMode.P0 
+		    				&& Outils.getPrecharModeZoneGeo(context, zoneGeo.getId()) != Outils.PrecharMode.P1 ) {
 
-		    			imageTypeImage = Outils.getImageQualityToDownload(context, false, zoneGeo);
+		    			imageTypeImage = Outils.getImageQualityToDownload(context, false, zoneGeo.getId());
 		    			
 		    			List<Fiches_ZonesGeographiques> listeFichesZone 
 		    				= dbHelper.getFiches_ZonesGeographiquesDao().queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, zoneGeo.getId());

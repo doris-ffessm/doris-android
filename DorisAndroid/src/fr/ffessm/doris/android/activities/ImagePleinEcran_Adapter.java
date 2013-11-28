@@ -137,7 +137,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     		else{
 	    		// pas préchargée en local pour l'instant, cherche sur internet
     			String dossier_photo;
-    			switch(Outils.ImageType.valueOf(Outils.getParamString(_activity, R.string.pref_mode_connecte_qualite_photo,""))){
+    			switch(Outils.ImageType.valueOf(Outils.getParamString(_activity, R.string.pref_key_mode_connecte_qualite_photo,""))){
     			case MED_RES :
     				dossier_photo = PhotoFiche.MOYENNE_BASE_URL;
     				break;

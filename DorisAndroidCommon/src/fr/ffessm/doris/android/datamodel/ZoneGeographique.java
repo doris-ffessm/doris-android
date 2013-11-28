@@ -132,7 +132,9 @@ public class ZoneGeographique {
 	// Ce serait mieux dans la base mais en attendant ce sera en dur ici
 	public java.lang.String getIcone() {
 	   	switch (_id) {
-    	case 1:
+	   	case -1:
+    		return "icone_toutes_zones";
+	   	case 1:
     		return "icone_france";
 		case 2:
 			return "icone_eau_douce";
@@ -146,7 +148,7 @@ public class ZoneGeographique {
 			return "";
 		}
 	}
-	
+
 	// End of user code
 	
 	public ZoneGeographique() {} // needed by ormlite

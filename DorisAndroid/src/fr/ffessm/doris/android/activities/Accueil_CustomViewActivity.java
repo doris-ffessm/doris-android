@@ -123,7 +123,8 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	
 	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getCanonicalName();
 	Handler mHandler;
-	
+	LinearLayout llContainerLayout;
+	boolean isOnCreate = true;
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -157,6 +158,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
             		showToast((String) inputMessage.obj);
             	}
             	refreshScreenData();
+            	isOnCreate = false;
             }
 
         };
@@ -192,7 +194,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         	// démarre ou pas un téléchargement de photos au démarrage	
         	Outils.ConnectionType connectionType = Outils.getConnectionType(this.getApplicationContext());
         	Log.d(LOG_TAG, "onCreate() - connectionType : "+connectionType);
-        	boolean wifiOnly = Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_mode_precharg_wifi_only, true);
+        	boolean wifiOnly = Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_mode_precharg_wifi_only, true);
         	Log.d(LOG_TAG, "onCreate() - wifiOnly : "+wifiOnly);
         	if ( connectionType == Outils.ConnectionType.WIFI 
 	        		|| (! wifiOnly && connectionType == Outils.ConnectionType.GSM)){
@@ -201,7 +203,8 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
 
 	        }
-        }        
+        }
+        
         
 		//End of user code
     }
@@ -351,28 +354,30 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     public void refreshScreenData() {
     	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
     	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
-    	
-    	LinearLayout llContainerLayout =  (LinearLayout) findViewById(R.id.avancements_layout);
-    	String summaryTexte = getContext().getString(R.string.avancement_progressbar_summary);
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - summaryTexte"+summaryTexte);
-    	summaryTexte = summaryTexte.replace("@total", ""+100 ) ;
-    	
-    	String summaryTexte1 = summaryTexte.replace("@nb", ""+25 );
-    	addProgressBarView(llContainerLayout, "Titre 1", summaryTexte1, R.drawable.icone_france, 25);
 
-    	DorisDBHelper dorisDBHelper = this.getHelper().getDorisDBHelper();
-    	List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
-		for (ZoneGeographique zoneGeo : listeZoneGeo) {
-			
-			String uri = "drawable/"+ Outils.getZoneIcone(zoneGeo.getId()); 
-	    	int imageResource = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
-			
+    	if (isOnCreate) {
+	    	llContainerLayout =  (LinearLayout) findViewById(R.id.avancements_layout);
 	    	
+	    	// Avancement et Affichage toutes Zones
+	    	ZoneGeographique zoneToutesZones = new ZoneGeographique();
+	    	zoneToutesZones.setId(-1);
+	    	zoneToutesZones.setNom(getContext().getString(R.string.accueil_customview_zonegeo_touteszones));;
+	    	addProgressBarZone(zoneToutesZones);
 	    	
-	    	addProgressBarView(llContainerLayout, zoneGeo.getNom(), "summaryTexte1", imageResource, 25);
-		}
-		
+	    	// Avancement par Zone
+	    	//DorisDBHelper dorisDBHelper = this.getHelper().getDorisDBHelper();
+	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avant ");
+	    	List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
+	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - après");
+			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
+			
+			for (ZoneGeographique zoneGeo : listeZoneGeo) {
+				addProgressBarZone(zoneGeo);
+			}
+    	} else {
+    		
+    		
+    	}
 		
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     	// Debbug
@@ -433,10 +438,10 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
 
 		//Start of user code additional onCreateOptionsMenu Accueil_CustomViewActivity
-	//	menu.add(Menu.NONE, TELECHARGE_FICHE_MENU_ID, 1, R.string.telecharge_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
-		menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.telecharge_photofiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
-    //    menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 4, R.string.verifie_nouvelles_fiches_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
-    //    menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 5, R.string.reinitialise_a_partir_du_xml_menu_option).setIcon(android.R.drawable.ic_menu_preferences);
+	//	menu.add(Menu.NONE, TELECHARGE_FICHE_MENU_ID, 1, R.string.menu_option_telecharge_fiches).setIcon(android.R.drawable.ic_menu_preferences);
+		menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.menu_option_telecharge_photofiches).setIcon(android.R.drawable.ic_menu_preferences);
+    //    menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 4, R.string.menu_option_verifie_nouvelles_fiches).setIcon(android.R.drawable.ic_menu_preferences);
+    //    menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 5, R.string.menu_option_reinitialise_a_partir_du_xml).setIcon(android.R.drawable.ic_menu_preferences);
 		menu.add(Menu.NONE, APROPOS, 2, R.string.a_propos_label).setIcon(android.R.drawable.ic_menu_info_details);
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -479,14 +484,36 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 	
-	protected void addProgressBarZone(){
-		   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");  
-		   
-		   
-		   
+	protected void addProgressBarZone(ZoneGeographique inZoneGeo){
+	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");  
+	   
+	   String uri = "drawable/"+ Outils.getZoneIcone(inZoneGeo.getId()); 
+	   int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
+
+	   boolean affichageBarre = false;
+	   String summaryTexte = getContext().getString(R.string.avancement_progressbar_aucune_summary);
+	   if ( Outils.getPrecharModeZoneGeo(getContext(), inZoneGeo.getId()) != Outils.PrecharMode.P0 ) {
+		   int nbPhotosATelecharger = Outils.getAPrecharQteZoneGeo(getContext(), inZoneGeo.getId());
+		   int nbPhotosRecuees = 0;
+		   affichageBarre = true;
+
+		   if ( nbPhotosATelecharger== 0){
+			   summaryTexte = getContext().getString(R.string.avancement_progressbar_jamais_summary);
+		   } else {
+			   summaryTexte = summaryTexte.replace("@total", ""+nbPhotosATelecharger ) ;
+			   summaryTexte = summaryTexte.replace("@nb", ""+nbPhotosRecuees/nbPhotosATelecharger );
+		   }
+
+	   }
+	   
+	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - summaryTexte"+summaryTexte);
+
+ 
+	   addProgressBarView(llContainerLayout, inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarre, 25);
+
 	}
 	
-	protected void addProgressBarView(LinearLayout inContainerLayout, String inTitre, String inSummary, int inIcone, int inAvancement){
+	protected void addProgressBarView(LinearLayout inContainerLayout, String inTitre, String inSummary, int inIcone, boolean inAffBarre, int inAvancement){
 	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Début");  	
 	   LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	   View convertView = inflater.inflate(R.layout.avancement, null);
@@ -499,9 +526,13 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		
 	   TextView tvSummaryText = (TextView) convertView.findViewById(R.id.summary);
 	   tvSummaryText.setText(inSummary);
-		
+	   
 	   ProgressBar pbProgressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
-	   pbProgressBar.setProgress(inAvancement);
+	   if ( inAffBarre ) {
+		   pbProgressBar.setProgress(inAvancement);
+	   } else {
+		   pbProgressBar.setVisibility(View.GONE);
+	   }
 	   
 	   // Changement couleur de la barre en fonction de l'avancement
 	   int limite1 = Integer.parseInt(getContext().getString(R.string.avancement_progressbar_limite1) );
@@ -521,8 +552,11 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		   }
 	   }
 	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - couleur : "+couleur);
-	   //pbProgressBar.getProgressDrawable().setColorFilter(couleur, Mode.MULTIPLY);
-	   pbProgressBar.getProgressDrawable().setColorFilter(couleur, Mode.SRC_IN);
+	   // API 10 : pbProgressBar.getProgressDrawable().setColorFilter(couleur, Mode.MULTIPLY);
+	   // TODO : API 14 (Vérifier la version qui nécessite effectivement le changement) : pbProgressBar.getProgressDrawable().setColorFilter(couleur, Mode.SRC_IN);
+   
+	   pbProgressBar.getProgressDrawable().setColorFilter(couleur, 
+			   Mode.valueOf(getContext().getString(R.string.avancement_progressbar_mode) ) );
 	   
 	   inContainerLayout.addView(convertView);
 	}

@@ -8,13 +8,13 @@
 	        android:key="mode_connecte_category"
 	        android:layout="@layout/preference_layout_category"
 	        >
-        <CheckBoxPreference android:key="@string/pref_mode_connecte_wifi_only"
+        <CheckBoxPreference android:key="@string/pref_key_mode_connecte_wifi_only"
             android:title="@string/mode_connecte_wifi_only_prompt" 
             android:defaultValue="false"
             android:layout="@layout/preference_layout_preference"
             />
          <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:key="@string/pref_mode_connecte_qualite_photo"
+            android:key="@string/pref_key_mode_connecte_qualite_photo"
             android:title="@string/mode_connecte_qualite_photo_prompt"
             android:entryValues="@array/mode_connecte_qualite_photo_values"
             android:entries="@array/mode_connecte_qualite_photo_lib"
@@ -28,7 +28,7 @@
 	        android:key="mode_precharg_category"
 	        android:layout="@layout/preference_layout_category"
 	        >
-        <CheckBoxPreference android:key="@string/pref_mode_precharg_wifi_only"
+        <CheckBoxPreference android:key="@string/pref_key_mode_precharg_wifi_only"
             android:title="@string/mode_precharg_wifi_only_prompt" 
             android:defaultValue="true"
             android:layout="@layout/preference_layout_preference"
@@ -40,7 +40,7 @@
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
 	            android:entries="@array/mode_precharg_answers_lib"
 	            android:title="@string/mode_precharg_region_france_prompt"
-				android:key="@string/pref_mode_precharg_region_france"
+				android:key="@string/pref_key_mode_precharg_region_france"
 				android:entryValues="@array/mode_precharg_answers_values"
 				android:defaultValue="@string/mode_precharg_region_defaut"
 				android:layout="@layout/preference_layout_preference"
@@ -48,7 +48,7 @@
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
 	            android:entries="@array/mode_precharg_answers_lib"
 	            android:title="@string/mode_precharg_region_eaudouce_prompt"
-				android:key="@string/pref_mode_precharg_region_eaudouce"
+				android:key="@string/pref_key_mode_precharg_region_eaudouce"
 				android:entryValues="@array/mode_precharg_answers_values"
 				android:defaultValue="@string/mode_precharg_region_defaut"
 				android:layout="@layout/preference_layout_preference"
@@ -56,7 +56,7 @@
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
 	            android:entries="@array/mode_precharg_answers_lib"
 	            android:title="@string/mode_precharg_region_atlantno_prompt"
-				android:key="@string/pref_mode_precharg_region_atlantno"
+				android:key="@string/pref_key_mode_precharg_region_atlantno"
 				android:entryValues="@array/mode_precharg_answers_values"
 				android:defaultValue="@string/mode_precharg_region_defaut"
 				android:layout="@layout/preference_layout_preference"
@@ -64,7 +64,7 @@
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
 	            android:entries="@array/mode_precharg_answers_lib"
 	            android:title="@string/mode_precharg_region_indopac_prompt"
-				android:key="@string/pref_mode_precharg_region_indopac"
+				android:key="@string/pref_key_mode_precharg_region_indopac"
 				android:entryValues="@array/mode_precharg_answers_values"
 				android:defaultValue="@string/mode_precharg_region_defaut"
 				android:layout="@layout/preference_layout_preference"
@@ -72,13 +72,13 @@
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
 	            android:entries="@array/mode_precharg_answers_lib"
 	            android:title="@string/mode_precharg_region_caraibes_prompt"
-				android:key="@string/pref_mode_precharg_region_caraibes"
+				android:key="@string/pref_key_mode_precharg_region_caraibes"
 				android:entryValues="@array/mode_precharg_answers_values"
 				android:defaultValue="@string/mode_precharg_region_defaut"
 				android:layout="@layout/preference_layout_preference"
 				/>
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:key="@string/pref_mode_precharg_region_favorite"
+	            android:key="@string/pref_key_mode_precharg_region_favorite"
 	            android:title="@string/mode_precharg_favorite_prompt"
 	            android:entryValues="@array/mode_precharg_answers_values"
 	            android:entries="@array/mode_precharg_answers_lib"

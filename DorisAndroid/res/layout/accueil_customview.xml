@@ -8,11 +8,11 @@
     android:paddingTop="8dp" >
 
 	<TextView
-        android:id="@+id/accueil_texte1"
+        android:id="@+id/accueil_texte"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="3dip"
-		android:text="@string/accueil_customview_texte1_text"/>
+		android:text="@string/accueil_customview_texte_text"/>
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
@@ -33,12 +33,7 @@
 		    android:text="@string/accueil_customview_listefiches_btn_label"
 		    android:textColor="@android:color/darker_gray" />
 	</LinearLayout>
-   	<TextView
-        android:id="@+id/accueil_texte2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="3dip"
-		android:text="@string/accueil_customview_texte2_text"/>
+	<!-- Désactivation Temporaire pour gagner de la place sur l'écran
 	<ImageView
         android:id="@+id/accueil_logo_Doris"
         android:layout_width="match_parent"
@@ -59,21 +54,25 @@
         android:adjustViewBounds="true"
         android:contentDescription="Logo Biologie Accueil"
         android:src="@drawable/logo_biologie" />
+         -->
+
 	<ScrollView
-		    android:layout_width="fill_parent"
-		    android:layout_height="fill_parent"
-		    android:layout_weight="1" >
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:layout_weight="2" >
+
 		<LinearLayout
 	        android:id="@+id/avancements_layout"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical" />
 	</ScrollView>
+
 	<ScrollView
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
-	    android:layout_weight="1"
-		android:background="#404040">
+	    android:layout_weight="3"
+	    android:background="#404040" >
 
 	    <TextView
 	        android:id="@+id/accueil_debug_text"
