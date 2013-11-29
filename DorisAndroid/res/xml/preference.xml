@@ -147,13 +147,19 @@
 	        android:key="button_debug_preferences_key"
 	        android:title="@string/debug_preferences"
 	        android:persistent="false">
-	        <EditTextPreference android:key="sync_max_card_number" 
+	        <CheckBoxPreference android:key="@string/pref_key_affichage_debbug"
+	            android:title="Affichage infos. debbug"
+	            android:summary="Permet de montrer aux utilisateurs finaux la future interface"  
+	            android:defaultValue="false"
+	            android:layout="@layout/preference_layout_preference"
+	            />
+	        <EditTextPreference android:key="@string/pref_key_sync_max_card_number" 
 	        	android:title="@string/sync_max_card_number_prompt" 
 	        	android:summary="@string/sync_max_card_number_summary" 
 	        	android:defaultValue="@string/sync_max_card_number_default"
 	        	android:layout="@layout/preference_layout_preference"
 	        	/>
-	        <CheckBoxPreference android:key="@string/pref_id_limit_download"
+	        <CheckBoxPreference android:key="@string/pref_key_limit_download"
 	            android:summary="réduit les download (utile pour le debug de l'application)" 
 	            android:title="Limitation des downloads" 
 	            android:defaultValue="false"
@@ -168,9 +174,9 @@
 				android:layout="@layout/preference_layout_preference"
 				/>
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+	            android:key="@string/pref_key_mode_precharg_region_ttzones"
 	            android:entries="@array/mode_precharg_answers_lib"
 	            android:title="@string/mode_precharg_region_ttzones_prompt"
-				android:key="@string/pref_mode_precharg_region_ttzones"
 				android:entryValues="@array/mode_precharg_answers_values"
 				android:defaultValue="P1"
 				android:layout="@layout/preference_layout_preference"

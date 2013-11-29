@@ -240,7 +240,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    			continue;
 				}
 	    		// DEBUG arret avant la fin
-	    		if(nbPhotoRetreived > 10 && PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_id_limit_download), false)) {
+	    		if(nbPhotoRetreived > 10 && PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_key_limit_download), false)) {
 	    			Log.d(LOG_TAG, "DEBUG mode : nombre max de photo téléchargé : Arret du téléchargement");
 	    			break;
 	    		}
@@ -408,8 +408,6 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    		Outils.ImageType imageTypeImage;
 	    		int compteurAvancement = 0;
 	    		int nbPhotosATraiter = 0;
-	    		int nbPhotosATelechargerPourZone;
-	    		int nbPhotosDejaLaPourZone;
 	    		
 	    		List<ZoneGeographique> listeZoneGeo = dbHelper.getZoneGeographiqueDao().queryForAll();
 		    	// zoneGeo : 1 - Faune et flore marines de France métropolitaine
@@ -428,6 +426,9 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    		HashSet<PhotoFiche> hsImagesPrincMedRes = new HashSet<PhotoFiche>(100);
 	    		HashSet<PhotoFiche> hsImagesPrincHiRes = new HashSet<PhotoFiche>(100);
 
+	    		int nbPhotosPrincATelechargerPourZone;
+	    		int nbPhotosPrincDejaLaPourZone;
+	    		
 	    		// Affiche : Analyse Fiche et Nb de Zones à analyser
 		        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitle03_analysefiche_imagesprinc) );
 		        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTitre03_analysefiche_imagesprinc) );
@@ -446,8 +447,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		    		
         			compteurAvancement ++;
         			publishProgress( compteurAvancement );
-        			nbPhotosATelechargerPourZone = 0;
-    	    		nbPhotosDejaLaPourZone = 0;
+        			nbPhotosPrincATelechargerPourZone = 0;
+    	    		nbPhotosPrincDejaLaPourZone = 0;
     	    		
 		    		if ( Outils.getPrecharModeZoneGeo(context, zoneGeo.getId()) != Outils.PrecharMode.P0 ) {
 		    			
@@ -470,39 +471,40 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 			    				photoFichePrinc = fiche.getPhotoPrincipale();
 			        			if(photoFichePrinc != null){
 			        				// Temporaire : on télécharge toujours le format vignette afin d'accélérer l'affichage des listes
-			        				nbPhotosATelechargerPourZone++;
+			        				nbPhotosPrincATelechargerPourZone++;
+			        				
 			        				if ( !hsImagesPrincVig.contains(photoFichePrinc) ){
 			        					// Vérification que pas déjà téléchargée
 			        					fichierPhoto = new File(Outils.getImageFolderVignette(context), photoFichePrinc.getCleURL());
 			        					if ( !hsImagesVigAllreadyAvailable.contains(fichierPhoto) ){
 			        						hsImagesPrincVig.add(photoFichePrinc);
-			        					}
-			        				}
+			        					}  else nbPhotosPrincDejaLaPourZone++;
+			        				} else nbPhotosPrincDejaLaPourZone++;
+			        				
 			        				if ( imageTypeImage == Outils.ImageType.MED_RES) {
-			        					nbPhotosATelechargerPourZone++;
+			        					nbPhotosPrincATelechargerPourZone++;
 			        					if ( !hsImagesPrincMedRes.contains(photoFichePrinc) ){
 			        						fichierPhoto = new File(Outils.getImageFolderMedRes(context), photoFichePrinc.getCleURL());
 				        					if ( !hsImagesMedResAllreadyAvailable.contains(fichierPhoto) ){
 				        						hsImagesPrincMedRes.add(photoFichePrinc);
-				        					}
-				        				}
+				        					} else nbPhotosPrincDejaLaPourZone++;
+				        				} else nbPhotosPrincDejaLaPourZone++;
 			        				}
 			        				if ( imageTypeImage == Outils.ImageType.HI_RES) {
-			        					nbPhotosATelechargerPourZone++;
+			        					nbPhotosPrincATelechargerPourZone++;
 			        					if ( !hsImagesPrincHiRes.contains(photoFichePrinc) ){
 			        						fichierPhoto = new File(Outils.getImageFolderHiRes(context), photoFichePrinc.getCleURL());
 				        					if ( !hsImagesHiResAllreadyAvailable.contains(fichierPhoto) ){
 				        						hsImagesPrincHiRes.add(photoFichePrinc);
-				        					}
-				        				}
+				        					} else nbPhotosPrincDejaLaPourZone++;
+				        				} else nbPhotosPrincDejaLaPourZone++;
 			        				}
 			        			}
 	        				} // fin Fiches par Zone
 		        		}
 		    			//Enregistrement du nombre total de photos à télécharger pour afficher avancement
-		        		 
-		            	prefEdit.putInt(context.getString(R.string.pref_key_a_propos_version), nbPhotosATelechargerPourZone);
-		            	prefEdit.commit();
+		        		Outils.setParamInt(context, Outils.getKeyDataAPrecharZoneGeo(context, zoneGeo.getId(), true), nbPhotosPrincATelechargerPourZone);
+		        		Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneGeo.getId(), true), nbPhotosPrincDejaLaPourZone);
 		    		}
 		    	} // fin ZoneGeo
 		    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - ImagesPrincVig : "+hsImagesPrincVig.size() );

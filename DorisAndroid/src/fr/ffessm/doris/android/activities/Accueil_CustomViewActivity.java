@@ -168,7 +168,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         
         //Lors du 1er démarrage de l'application dans la version actuelle,
         //on affiche la boite d'A Propos
-        String VersionAffichageAPropos = Outils.getParamString(this.getApplicationContext(), R.string.pref_key_a_propos_version, "jamais");
+        String VersionAffichageAPropos = Outils.getParamString(this.getApplicationContext(), R.string.pref_key_a_propos_version, "");
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - VersionAffichageAPropos : "+VersionAffichageAPropos);
     	
         //Récupération du numéro de Version de DORIS
@@ -179,10 +179,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         	if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Affichage A Propos");
         	aPropos();
         	
-        	SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            SharedPreferences.Editor prefEdit = preferences.edit();  
-        	prefEdit.putString(this.getApplicationContext().getString(R.string.pref_key_a_propos_version), appVersionName);
-        	prefEdit.commit();
+            Outils.setParamString(this.getApplicationContext(), R.string.pref_key_a_propos_version, appVersionName);
         }
         
         if(DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null){
@@ -356,8 +353,17 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     public void refreshScreenData() {
     	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
     	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate);
+
+    	StringBuffer sbTexte = new StringBuffer();
+    	sbTexte.append(getContext().getString(R.string.accueil_customview_texte_text));
     	
+    	CloseableIterator<DorisDB_metadata> itDorisDB = getHelper().getDorisDB_metadataDao().iterator();
+    	while (itDorisDB.hasNext()) {
+    		sbTexte.append(itDorisDB.next().getDateBase());
+		}
+    	((TextView) findViewById(R.id.accueil_texte)).setText(sbTexte.toString());
+    	
+    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate);    	
     	if (isOnCreate) {
 	    	llContainerLayout =  (LinearLayout) findViewById(R.id.avancements_layout);
 	    	
@@ -493,19 +499,57 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	   
 	   String uri = "drawable/"+ Outils.getZoneIcone(inZoneGeo.getId()); 
 	   int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
-
-	   boolean affichageBarre = false;
-	   String summaryTexte = getContext().getString(R.string.avancement_progressbar_aucune_summary);
-	   if ( Outils.getPrecharModeZoneGeo(getContext(), inZoneGeo.getId()) != Outils.PrecharMode.P0 ) {
-		   int nbPhotosATelecharger = Outils.getAPrecharQteZoneGeo(getContext(), inZoneGeo.getId());
-		   int nbPhotosRecuees = 0;
+	   
+	   boolean affichageBarre;
+	   String summaryTexte = "";
+	   int avancement1 =0;
+	   int avancement2 =0;
+	   
+	   Outils.PrecharMode precharModeZoneGeo = Outils.getPrecharModeZoneGeo(getContext(), inZoneGeo.getId());
+	   
+	   if ( precharModeZoneGeo == Outils.PrecharMode.P0 ) {
+		   affichageBarre = false;
+		   summaryTexte = getContext().getString(R.string.avancement_progressbar_aucune_summary);
+	   } else {
+		   int nbPhotosPrincATelecharger = Outils.getAPrecharQteZoneGeo(getContext(), inZoneGeo.getId(), true);
+		   int nbPhotosATelecharger = Outils.getAPrecharQteZoneGeo(getContext(), inZoneGeo.getId(), false);
+		   int nbPhotosPrincDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), inZoneGeo.getId(), true);
+		   int nbPhotosDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), inZoneGeo.getId(), false);
+		   
 		   affichageBarre = true;
 
-		   if ( nbPhotosATelecharger== 0){
+		   if ( nbPhotosPrincATelecharger== 0){
 			   summaryTexte = getContext().getString(R.string.avancement_progressbar_jamais_summary);
 		   } else {
-			   summaryTexte = summaryTexte.replace("@total", ""+nbPhotosATelecharger ) ;
-			   summaryTexte = summaryTexte.replace("@nb", ""+nbPhotosRecuees/nbPhotosATelecharger );
+			   
+			   if ( precharModeZoneGeo == Outils.PrecharMode.P1 ) {
+			   
+				   summaryTexte = getContext().getString(R.string.avancement_progressbar_P1_summary);
+				   summaryTexte = summaryTexte.replace("@total", ""+nbPhotosPrincATelecharger ) ;
+				   summaryTexte = summaryTexte.replace("@nb", ""+nbPhotosPrincDejaLa );
+				   
+				   avancement1 = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
+				   avancement2 = 0;
+				   
+			   } else {
+				   summaryTexte = getContext().getString(R.string.avancement_progressbar_PX_summary1);
+				   summaryTexte = summaryTexte.replace("@total", ""+nbPhotosPrincATelecharger ) ;
+				   summaryTexte = summaryTexte.replace("@nb", ""+nbPhotosPrincDejaLa );
+				   
+				   if (nbPhotosATelecharger == 0) {
+					   summaryTexte += getContext().getString(R.string.avancement_progressbar_PX_jamais_summary2);
+					   
+					   avancement1 = 0;
+					   avancement2 = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
+				   } else {
+					   summaryTexte += getContext().getString(R.string.avancement_progressbar_PX_summary2);
+					   summaryTexte = summaryTexte.replace("@total", ""+nbPhotosATelecharger ) ;
+					   summaryTexte = summaryTexte.replace("@nb", ""+nbPhotosDejaLa );
+					   
+					   avancement1 = 100 * nbPhotosDejaLa / nbPhotosATelecharger;
+					   avancement2 = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
+				   }
+			   }
 		   }
 
 	   }
@@ -513,11 +557,11 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - summaryTexte"+summaryTexte);
 
  
-	   addProgressBarView(llContainerLayout, inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarre, 25);
+	   addProgressBarView(llContainerLayout, inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarre, avancement1, avancement2);
 
 	}
 	
-	protected void addProgressBarView(LinearLayout inContainerLayout, String inTitre, String inSummary, int inIcone, boolean inAffBarre, int inAvancement){
+	protected void addProgressBarView(LinearLayout inContainerLayout, String inTitre, String inSummary, int inIcone, boolean inAffBarre, int inAvancPrinc, int inAvancSecond){
 	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Début");  	
 	   LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	   View convertView = inflater.inflate(R.layout.avancement, null);
@@ -533,7 +577,8 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	   
 	   ProgressBar pbProgressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
 	   if ( inAffBarre ) {
-		   pbProgressBar.setProgress(inAvancement);
+		   pbProgressBar.setProgress(inAvancPrinc);
+		   pbProgressBar.setSecondaryProgress(inAvancSecond);
 	   } else {
 		   pbProgressBar.setVisibility(View.GONE);
 	   }
@@ -546,10 +591,10 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Couleur1 :"+getContext().getString(R.string.avancement_progressbar_couleur1));
 	   
 	   int couleur;
-	   if (inAvancement <= limite1) {
+	   if (inAvancPrinc <= limite1) {
 		   	couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur1) );   
 	   } else {
-		   if (inAvancement <= limite2) {
+		   if (inAvancPrinc <= limite2) {
 			   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur2) );
 		   } else {
 			   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur3) );

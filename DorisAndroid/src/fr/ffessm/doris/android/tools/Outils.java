@@ -20,6 +20,7 @@ import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -131,7 +132,7 @@ public class Outils {
 	public static boolean isAvailableImagePhotoFiche(Context inContext, PhotoFiche photofiche){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - photofiche : "+ photofiche );
     	
-		switch(PrecharMode.valueOf(getParamString(inContext, R.string.pref_mode_precharg_region_ttzones,"P1"))){
+		switch(PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_ttzones,"P1"))){
 		case P1 :
 		case P2 :
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - Vignettes" );
@@ -360,43 +361,7 @@ public class Outils {
         }
     	return sizeTexte;
 	}
-	/* *********************************************************************
-     * isOnline permet de vérifier que l'appli a bien accès à Internet
-     * si Que Wifi en paramètre envoie faux si pas sur Wifi
-     * TODO : type de connection
-     ********************************************************************** */	
-	/* Guillaume : Ne doit plus servir, cf. : connectionType() */
-	public static boolean isOnline(Context context) {
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - Début");
-	    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
-	    
-	    if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - isOnline : true");
-	    	
-	    	NetworkInfo mWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - mWifi.isConnected() : "+ mWifi.isConnected() );
-	    	
-	    	if (! PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_sync_auto_wifi_only), true) || mWifi.isConnected() ) {
-	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - Wifi = True or OnlyWifi = false");
-		    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - Fin");
-		    	return true;
-	    	} else {
-	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - mais pas en Wifi et OnlyWifi = True");
-		    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - Fin");
-		        return false;
-	    	}
-	    } else {
-	    	//String text = "Aucune Connection Internet disponible";
-	    	//if (LOG) Log.e(TAG, "isOnline() - " + text);
-	    	//Toast toast = Toast.makeText(mContext, text, Toast.LENGTH_LONG);
-			//toast.show();
-			
-	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - isOnline : false");
-	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isOnline() - Fin");
-	    	return false;
-	    }
-	}
+
 	
 	/* *********************************************************************
      * Type de connection : aucune, wifi, gsm 
@@ -426,7 +391,7 @@ public class Outils {
     	
 		long nbPhotosAPrecharger;
  	
-		switch(PrecharMode.valueOf(Outils.getParamString(inContext, R.string.pref_mode_precharg_region_ttzones,"P1"))) {
+		switch(PrecharMode.valueOf(Outils.getParamString(inContext, R.string.pref_key_mode_precharg_region_ttzones,"P1"))) {
 		case P1 :
 			nbPhotosAPrecharger = helper.getFicheDao().countOf();
 			break;
@@ -446,7 +411,7 @@ public class Outils {
     	
 		long nbPhotosAPrecharger;
  
-		switch(PrecharMode.valueOf(Outils.getParamString(inContext, R.string.pref_mode_precharg_region_ttzones,"P1"))) {
+		switch(PrecharMode.valueOf(Outils.getParamString(inContext, R.string.pref_key_mode_precharg_region_ttzones,"P1"))) {
 		case P3 :
 			nbPhotosAPrecharger = helper.getFicheDao().countOf();
 			break;
@@ -465,7 +430,7 @@ public class Outils {
     	
 		long nbPhotosAPrecharger;
  
-		switch(PrecharMode.valueOf(Outils.getParamString(inContext, R.string.pref_mode_precharg_region_ttzones,"P1"))) {
+		switch(PrecharMode.valueOf(Outils.getParamString(inContext, R.string.pref_key_mode_precharg_region_ttzones,"P1"))) {
 		case P5 :
 			nbPhotosAPrecharger = helper.getFicheDao().countOf();
 			break;
@@ -480,18 +445,49 @@ public class Outils {
 	}
 	
 	/* Lecture Paramètres */
-	public static boolean getParamBoolean(Context context, int param, boolean valDef) {
-		return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getApplicationContext().getString(param), valDef);
+	public static String getStringKeyParam(Context inContext, int inParam) {
+		return inContext.getResources().getResourceEntryName(inParam);
 	}
-	public static String getParamString(Context context, int param, String valDef) {
-		return PreferenceManager.getDefaultSharedPreferences(context).getString(context.getApplicationContext().getString(param), valDef);
+	public static String getStringNameParam(Context inContext, int inParam) {
+		return inContext.getString(inParam);
 	}
-	public static long getParamLong(Context context, int param, Long valDef) {
-		return PreferenceManager.getDefaultSharedPreferences(context).getLong(context.getApplicationContext().getString(param), valDef);
+	public static boolean getParamBoolean(Context inContext, int inParam, boolean inValDef) {
+		return PreferenceManager.getDefaultSharedPreferences(inContext).getBoolean(inContext.getString(inParam), inValDef);
 	}
-	public static int getParamInt(Context context, int param, int valDef) {
-		return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getApplicationContext().getString(param), valDef);
+	public static String getParamString(Context inContext, int inParam, String inValDef) {
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getParamString() - param : " + inParam + "-" + inContext.getString(inParam) );
+		return PreferenceManager.getDefaultSharedPreferences(inContext).getString(inContext.getString(inParam), inValDef);
 	}
+	public static long getParamLong(Context inContext, int inParam, Long inValDef) {
+		return PreferenceManager.getDefaultSharedPreferences(inContext).getLong(inContext.getString(inParam), inValDef);
+	}
+	public static int getParamInt(Context inContext, int inParam, int inValDef) {
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getParamInt() - param : " + inParam );
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getParamInt() - param : " + inContext.getString(inParam) );
+		return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getString(inParam), inValDef);
+	}
+	/* Enregistrement paramètres */
+	public static void setParamString(Context inContext, int inParam, String inVal) {
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(inContext);
+	    SharedPreferences.Editor prefEdit = preferences.edit();
+	    //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setParamString() - param : " + inContext.getString(inParam) );
+	    //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setParamString() - getStringKeyParam : " + Outils.getStringKeyParam(inContext,inParam) );
+	    prefEdit.putString(inContext.getString(inParam), inVal);
+		prefEdit.commit();
+	}
+	public static void setParamInt(Context inContext, int inParam, int inVal) {
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(inContext);
+	    SharedPreferences.Editor prefEdit = preferences.edit();  
+		prefEdit.putInt(inContext.getString(inParam), inVal);
+		prefEdit.commit();
+	}
+	public static void setParamBoolean(Context inContext, int inParam, Boolean inVal) {
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(inContext);
+	    SharedPreferences.Editor prefEdit = preferences.edit();  
+		prefEdit.putBoolean(inContext.getString(inParam), inVal);
+		prefEdit.commit();
+	}
+	
 	
 	public static ImageType getImageQualityToDownload(Context inContext, boolean inPhotoPrincipale, int inIdZoneGeo){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageQualityToDownload() - Début" );
@@ -548,47 +544,178 @@ public class Outils {
 			return null;
 		}
 	}
-	public static int getAPrecharQteZoneGeo(Context inContext, int inIdZoneGeo){
+	public static int getAPrecharQteZoneGeo(Context inContext, int inIdZoneGeo, Boolean inPrincipale){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
-		
-		switch(inIdZoneGeo){
-		case -1 :
-			int nbAPrechar = PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_france), 0 );
-			nbAPrechar += PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_eaudouce), 0 );
-			nbAPrechar += PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_atlantno), 0 );
-			nbAPrechar += PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_indopac), 0 );
-			nbAPrechar += PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_caraibes), 0 );
-			return nbAPrechar;
-		case 1 :
-			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_france), 0 );
-		case 2 :
-			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_eaudouce), 0 );
-		case 3 :
-			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_indopac), 0 );
-		case 4 :
-			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_caraibes), 0 );
-		case 5 :
-			return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getResources().getString(R.string.data_nbphotos_atelecharger_atlantno), 0 );
-		default :
-			return 0;
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inIdZoneGeo );
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - data_nbphotos_atelecharger_france : "+getParamInt(inContext, R.string.pref_key_nbphotos_atelecharger_france, 0) );
+		if (inPrincipale) {
+			switch(inIdZoneGeo){
+			case -1 :
+				int nbAPrechar = getParamInt(inContext, R.string.pref_key_nbphotosprinc_atelecharger_france, 0 );
+				nbAPrechar += getParamInt(inContext, R.string.pref_key_nbphotosprinc_atelecharger_eaudouce, 0 );
+				nbAPrechar += getParamInt(inContext, R.string.pref_key_nbphotosprinc_atelecharger_atlantno, 0 );
+				nbAPrechar += getParamInt(inContext, R.string.pref_key_nbphotosprinc_atelecharger_indopac, 0 );
+				nbAPrechar += getParamInt(inContext, R.string.pref_key_nbphotosprinc_atelecharger_caraibes, 0 );
+				return nbAPrechar;
+			case 1 :
+				return getParamInt(inContext, R.string.pref_key_nbphotosprinc_atelecharger_france, 0 );
+			case 2 :
+				return getParamInt(inContext, R.string.pref_key_nbphotosprinc_atelecharger_eaudouce, 0 );
+			case 3 :
+				return getParamInt(inContext, R.string.pref_key_nbphotosprinc_atelecharger_indopac, 0 );
+			case 4 :
+				return getParamInt(inContext, R.string.pref_key_nbphotosprinc_atelecharger_caraibes, 0 );
+			case 5 :
+				return getParamInt(inContext, R.string.pref_key_nbphotosprinc_atelecharger_atlantno, 0 );
+			default :
+				return 0;
+			}
+		} else {
+			switch(inIdZoneGeo){
+			case -1 :
+				int nbAPrechar = getParamInt(inContext, R.string.pref_key_nbphotos_atelecharger_france, 0 );
+				nbAPrechar += getParamInt(inContext, R.string.pref_key_nbphotos_atelecharger_eaudouce, 0 );
+				nbAPrechar += getParamInt(inContext, R.string.pref_key_nbphotos_atelecharger_atlantno, 0 );
+				nbAPrechar += getParamInt(inContext, R.string.pref_key_nbphotos_atelecharger_indopac, 0 );
+				nbAPrechar += getParamInt(inContext, R.string.pref_key_nbphotos_atelecharger_caraibes, 0 );
+				return nbAPrechar;
+			case 1 :
+				return getParamInt(inContext, R.string.pref_key_nbphotos_atelecharger_france, 0 );
+			case 2 :
+				return getParamInt(inContext, R.string.pref_key_nbphotos_atelecharger_eaudouce, 0 );
+			case 3 :
+				return getParamInt(inContext, R.string.pref_key_nbphotos_atelecharger_indopac, 0 );
+			case 4 :
+				return getParamInt(inContext, R.string.pref_key_nbphotos_atelecharger_caraibes, 0 );
+			case 5 :
+				return getParamInt(inContext, R.string.pref_key_nbphotos_atelecharger_atlantno, 0 );
+			default :
+				return 0;
+			}
 		}
 	}
-	public static int getKeyDataAPrecharZoneGeo(Context inContext, int inIdZoneGeo){
-		switch(inIdZoneGeo){
-		case 1 :
-			return R.string.data_nbphotos_atelecharger_france;
-		case 2 :
-			return R.string.data_nbphotos_atelecharger_eaudouce;
-		case 3 :
-			return R.string.data_nbphotos_atelecharger_indopac;
-		case 4 :
-			return R.string.data_nbphotos_atelecharger_caraibes;
-		case 5 :
-			return R.string.data_nbphotos_atelecharger_atlantno;
-		default :
-			return 0;
+	public static int getDejaLaQteZoneGeo(Context inContext, int inIdZoneGeo, Boolean inPrincipale){
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inIdZoneGeo );
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - data_nbphotos_recues_france : "+getParamInt(inContext, R.string.pref_key_nbphotos_recues_france, 0) );
+		if (inPrincipale) {
+			switch(inIdZoneGeo){
+			case -1 :
+				int nbAPrechar = getParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_france, 0 );
+				nbAPrechar += getParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_eaudouce, 0 );
+				nbAPrechar += getParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_atlantno, 0 );
+				nbAPrechar += getParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_indopac, 0 );
+				nbAPrechar += getParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_caraibes, 0 );
+				return nbAPrechar;
+			case 1 :
+				return getParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_france, 0 );
+			case 2 :
+				return getParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_eaudouce, 0 );
+			case 3 :
+				return getParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_indopac, 0 );
+			case 4 :
+				return getParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_caraibes, 0 );
+			case 5 :
+				return getParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_atlantno, 0 );
+			default :
+				return 0;
+			}
+		} else {
+			switch(inIdZoneGeo){
+			case -1 :
+				int nbAPrechar = getParamInt(inContext, R.string.pref_key_nbphotos_recues_france, 0 );
+				nbAPrechar += getParamInt(inContext, R.string.pref_key_nbphotos_recues_eaudouce, 0 );
+				nbAPrechar += getParamInt(inContext, R.string.pref_key_nbphotos_recues_atlantno, 0 );
+				nbAPrechar += getParamInt(inContext, R.string.pref_key_nbphotos_recues_indopac, 0 );
+				nbAPrechar += getParamInt(inContext, R.string.pref_key_nbphotos_recues_caraibes, 0 );
+				return nbAPrechar;
+			case 1 :
+				return getParamInt(inContext, R.string.pref_key_nbphotos_recues_france, 0 );
+			case 2 :
+				return getParamInt(inContext, R.string.pref_key_nbphotos_recues_eaudouce, 0 );
+			case 3 :
+				return getParamInt(inContext, R.string.pref_key_nbphotos_recues_indopac, 0 );
+			case 4 :
+				return getParamInt(inContext, R.string.pref_key_nbphotos_recues_caraibes, 0 );
+			case 5 :
+				return getParamInt(inContext, R.string.pref_key_nbphotos_recues_atlantno, 0 );
+			default :
+				return 0;
+			}
 		}
 	}
+	
+	// TODO : C'est crado mais c'est rassemblé ici
+	public static int getKeyDataAPrecharZoneGeo(Context inContext, int inIdZoneGeo, Boolean inPrincipale){
+		if (inPrincipale) {
+			switch(inIdZoneGeo){
+			case 1 :
+				return R.string.pref_key_nbphotosprinc_atelecharger_france;
+			case 2 :
+				return R.string.pref_key_nbphotosprinc_atelecharger_eaudouce;
+			case 3 :
+				return R.string.pref_key_nbphotosprinc_atelecharger_indopac;
+			case 4 :
+				return R.string.pref_key_nbphotosprinc_atelecharger_caraibes;
+			case 5 :
+				return R.string.pref_key_nbphotosprinc_atelecharger_atlantno;
+			default :
+				return 0;
+			}
+		} else {
+			switch(inIdZoneGeo){
+			case 1 :
+				return R.string.pref_key_nbphotos_atelecharger_france;
+			case 2 :
+				return R.string.pref_key_nbphotos_atelecharger_eaudouce;
+			case 3 :
+				return R.string.pref_key_nbphotos_atelecharger_indopac;
+			case 4 :
+				return R.string.pref_key_nbphotos_atelecharger_caraibes;
+			case 5 :
+				return R.string.pref_key_nbphotos_atelecharger_atlantno;
+			default :
+				return 0;
+			}
+		}
+	}
+	// TODO : Crado aussi
+	public static int getKeyDataDejaLaZoneGeo(Context inContext, int inIdZoneGeo, Boolean inPrincipale){
+		if (inPrincipale) {
+			switch(inIdZoneGeo){
+			case 1 :
+				return R.string.pref_key_nbphotosprinc_recues_france;
+			case 2 :
+				return R.string.pref_key_nbphotosprinc_recues_eaudouce;
+			case 3 :
+				return R.string.pref_key_nbphotosprinc_recues_indopac;
+			case 4 :
+				return R.string.pref_key_nbphotosprinc_recues_caraibes;
+			case 5 :
+				return R.string.pref_key_nbphotosprinc_recues_atlantno;
+			default :
+				return 0;
+			}
+		} else {
+			switch(inIdZoneGeo){
+			case 1 :
+				return R.string.pref_key_nbphotos_recues_france;
+			case 2 :
+				return R.string.pref_key_nbphotos_recues_eaudouce;
+			case 3 :
+				return R.string.pref_key_nbphotos_recues_indopac;
+			case 4 :
+				return R.string.pref_key_nbphotos_recues_caraibes;
+			case 5 :
+				return R.string.pref_key_nbphotos_recues_atlantno;
+			default :
+				return 0;
+			}
+		}
+	}
+	
+	
+	
 	public static boolean isPrecharModeOnlyP0(Context inContext){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharMode() - Début" );
 		
@@ -660,7 +787,7 @@ public class Outils {
 	    return deletedFiles;
 	}
 	
-    // En attendant d'obtenir la nouvelle version de Common
+    // TODO : En attendant d'obtenir la nouvelle version de Common
 	public static String getZoneIcone(int inId) {
 	   	switch (inId) {
 	   	case -1:

@@ -170,7 +170,7 @@ public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer,
     			continue;
 			}
     		// DEBUG arret avant la fin
-    		if(nbPhotoRetreived > 10 && PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_id_limit_download), true)) {
+    		if(nbPhotoRetreived > 10 && PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(R.string.pref_key_limit_download), true)) {
     			Log.d(LOG_TAG, "DEBUG mode : nombre max de photo téléchargé : Arret du téléchargement");
     			break;
     		}

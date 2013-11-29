@@ -5,32 +5,28 @@
 		-->
 		
 	<!-- ids -->
-	<string name="pref_key_a_propos_version">a_propos_version</string>
 	<string name="pref_key_mode_connecte_wifi_only">mode_connecte_wifi_only</string>
 	<string name="pref_key_mode_connecte_qualite_photo">mode_connecte_qualite_photo</string>
-	<!-- GMo : tjrs utile ?  -->
-	<string name="pref_key_mode_connecte_sizemax">mode_connecte_sizemax</string>
 
 	<string name="pref_key_mode_precharg_wifi_only">mode_precharg_wifi_only</string>
-
 	<string name="pref_key_mode_precharg_region_france">mode_precharg_region_france</string>
 	<string name="pref_key_mode_precharg_region_eaudouce">mode_precharg_region_eaudouce</string>
 	<string name="pref_key_mode_precharg_region_atlantno">mode_precharg_region_atlantno</string>
 	<string name="pref_key_mode_precharg_region_indopac">mode_precharg_region_indopac</string>
 	<string name="pref_key_mode_precharg_region_caraibes">mode_precharg_region_caraibes</string>
 	<string name="pref_key_mode_precharg_region_favorite">mode_precharg_region_favorite</string>
-	
-	<string name="pref_key_mode_precharg_sizemax">mode_precharg_sizemax</string>
 
 	<string name="pref_key_list_icon_size">pref_key_list_icon_size</string>
 	<string name="pref_key_filtre_groupe">pref_key_filtre_groupe</string>
 	<string name="pref_key_filtre_zonegeo">pref_key_filtre_zone_geographique</string>
 			
-	<!-- Debug -->
-	<string name="pref_id_limit_download">limit_download</string>
-	<string name="pref_sync_auto_wifi_only">sync_auto_wifi_only</string>
-	<string name="pref_sync_auto">sync_auto</string>
-	<string name="pref_mode_precharg_region_ttzones">mode_precharg_region_ttzones</string>
+	<!-- ids Debug -->
+	<string name="pref_key_affichage_debbug">affichage_debbug</string>
+	<string name="pref_key_sync_max_card_number">sync_max_card_number</string>
+	<string name="pref_key_limit_download">limit_download</string>
+	<string name="pref_key_mode_precharg_sizemax">mode_precharg_sizemax</string>
+	<string name="pref_key_mode_precharg_region_ttzones">mode_precharg_region_ttzones</string>
+	<string name="pref_key_debug_algo_sync">debug_algo_sync</string>
 	
     <!-- Options text -->
     <string name="preference_menu_title">Préférences</string>

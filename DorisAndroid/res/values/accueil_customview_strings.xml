@@ -4,7 +4,7 @@
 	<!-- Start of user code customView_strings accueil
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
-	<string name="accueil_customview_texte_text">Du texte ici</string>
+	<string name="accueil_customview_texte_text">"Dernière mise à jour de la base le : "</string>
 	<string name="accueil_customview_listefiches_btn_label">Toutes les fiches</string>
 		
 	<string name="accueil_customview_zonegeo_touteszones">Toutes Zones</string>
@@ -15,9 +15,12 @@
 	<string name="menu_option_reinitialise_a_partir_du_xml">Réinitialise Base</string>
 	
 	<string name="avancement_titre">Avancement préchargement photos</string>
-	<string name="avancement_progressbar_summary">"@nb photos téléchargées sur @total"</string>
 	<string name="avancement_progressbar_aucune_summary">"Aucune photos ne doit être téléchargées pour cette zone"</string>
 	<string name="avancement_progressbar_jamais_summary">Le préchargement des photos n\'a jamais été lancé depuis la modification des paramètres.</string>
+	<string name="avancement_progressbar_P1_summary">"@nb photos principales téléchargées sur @total"</string>
+	<string name="avancement_progressbar_PX_summary1">"@nb photos principales sur @total"</string>
+	<string name="avancement_progressbar_PX_jamais_summary2">" et aucune photo téléchargées"</string>
+	<string name="avancement_progressbar_PX_summary2">" et @nb photos sur @total téléchargées"</string>
 	<string name="avancement_progressbar_limite1">33</string>
 	<string name="avancement_progressbar_couleur1">RED</string>
 	<string name="avancement_progressbar_limite2">80</string>
