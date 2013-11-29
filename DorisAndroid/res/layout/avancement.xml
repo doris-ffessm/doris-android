@@ -6,17 +6,17 @@
     android:paddingLeft="4dip"
     android:paddingRight="?android:attr/scrollbarSize" >
 
-     <ImageView
-         android:id="@+id/icon"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:maxHeight="48dip"
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dip"
         android:layout_marginLeft="2dip"
         android:layout_marginRight="2dip"
         android:layout_marginTop="2dip"
-        android:layout_marginBottom="2dip"
-         android:src="@drawable/ic_launcher" />
+        android:adjustViewBounds="true"
+        android:maxHeight="48dip"
+        android:src="@drawable/ic_launcher" />
     
     <RelativeLayout
         android:layout_width="match_parent"
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="4dip"
             android:paddingRight="4dip"
-            android:paddingTop="4dip"
+            android:paddingTop="2dip"
             android:layout_below="@id/progressBar"
             android:maxLines="4"
             android:textAppearance="?android:attr/textAppearanceSmall"

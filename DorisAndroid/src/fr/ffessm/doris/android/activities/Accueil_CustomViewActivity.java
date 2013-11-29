@@ -60,6 +60,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ScrollView;
 import android.widget.TextView.BufferType;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -165,7 +166,15 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 
         };
 
-        
+        // Affichage Debbug
+        if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debbug, false)){
+        	if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Affichage Debbug");
+        	((ImageView) findViewById(R.id.accueil_logo_Doris)).setVisibility(View.GONE);
+        	((ImageView) findViewById(R.id.accueil_logo_biologie)).setVisibility(View.GONE);
+        	((ScrollView) findViewById(R.id.accueil_debug)).setVisibility(View.VISIBLE);
+        }
+
+
         //Lors du 1er démarrage de l'application dans la version actuelle,
         //on affiche la boite d'A Propos
         String VersionAffichageAPropos = Outils.getParamString(this.getApplicationContext(), R.string.pref_key_a_propos_version, "");
@@ -391,49 +400,51 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     	// Debbug
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    	StringBuffer sb = new StringBuffer();
-    	sb.append("- - Debbug - -\n");
-    	
-    	CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
-    	while (it.hasNext()) {
-    		sb.append("Date base locale : " + it.next().getDateBase()+"\n");
-		}
-    	
-    	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
-    	sb.append("Nombres de fiches dans la base locale : "+ficheDao.countOf());
-     	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
-    	sb.append("\nNombres de photos référencées : "+photoFicheDao.countOf());
-    	sb.append("\n\tNombres de photos téléchargées : "+Outils.getVignetteCount(this.getApplicationContext()));
-    	double sizeInMiB = Outils.getPhotosDiskUsage(getApplicationContext())/(double)(1024.0*1024.0);
-    	sb.append("\t("+String.format("%.2f", sizeInMiB)+" MiB)");
-    	
-    	
-    	// Test pour voir où est le cache Picasso
-    	sb.append("\n- - - - - -\n");
-    	sb.append(getApplicationContext().getCacheDir().getAbsolutePath()+"\n");
-     	for (File child:getApplicationContext().getCacheDir().listFiles()) {
-     		sb.append(child.getAbsolutePath()+"\n");
-     		if (child.getName().equals("picasso-cache") ) {
-     			int i = 0;
-     			for (File subchild:child.listFiles()) {
-     	     		sb.append("\t\t"+subchild.getName()+"\n");
-     	     		i++;
-     	     		if ( i >5) break;
-     			}
-     		}
-     	}
-     	
-     	sb.append("- - - - - -\n");
-     	sb.append(getApplicationContext().getFilesDir().getAbsolutePath()+"\n");
-     	for (File child:getApplicationContext().getFilesDir().listFiles()) {
-     		sb.append(child.getAbsolutePath()+"\n");
-     	}
-     	// TODO : Piste pour sauvegarder les images après téléchargement
-     	// Cf. http://stackoverflow.com/questions/19345576/cannot-draw-recycled-bitmaps-exception-with-picasso
-     	// et surtout : http://www.basic4ppc.com/android/forum/threads/picasso-image-downloading-and-caching-library.31495/
-    	// Fin test
-    	
-    	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());
+    	if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debbug, false)){
+	    	StringBuffer sb = new StringBuffer();
+	    	sb.append("- - Debbug - -\n");
+	    	
+	    	CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
+	    	while (it.hasNext()) {
+	    		sb.append("Date base locale : " + it.next().getDateBase()+"\n");
+			}
+	    	
+	    	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
+	    	sb.append("Nombres de fiches dans la base locale : "+ficheDao.countOf());
+	     	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
+	    	sb.append("\nNombres de photos référencées : "+photoFicheDao.countOf());
+	    	sb.append("\n\tNombres de photos téléchargées : "+Outils.getVignetteCount(this.getApplicationContext()));
+	    	double sizeInMiB = Outils.getPhotosDiskUsage(getApplicationContext())/(double)(1024.0*1024.0);
+	    	sb.append("\t("+String.format("%.2f", sizeInMiB)+" MiB)");
+	    	
+	    	
+	    	// Test pour voir où est le cache Picasso
+	    	sb.append("\n- - - - - -\n");
+	    	sb.append(getApplicationContext().getCacheDir().getAbsolutePath()+"\n");
+	     	for (File child:getApplicationContext().getCacheDir().listFiles()) {
+	     		sb.append(child.getAbsolutePath()+"\n");
+	     		if (child.getName().equals("picasso-cache") ) {
+	     			int i = 0;
+	     			for (File subchild:child.listFiles()) {
+	     	     		sb.append("\t\t"+subchild.getName()+"\n");
+	     	     		i++;
+	     	     		if ( i >5) break;
+	     			}
+	     		}
+	     	}
+	     	
+	     	sb.append("- - - - - -\n");
+	     	sb.append(getApplicationContext().getFilesDir().getAbsolutePath()+"\n");
+	     	for (File child:getApplicationContext().getFilesDir().listFiles()) {
+	     		sb.append(child.getAbsolutePath()+"\n");
+	     	}
+	     	// TODO : Piste pour sauvegarder les images après téléchargement
+	     	// Cf. http://stackoverflow.com/questions/19345576/cannot-draw-recycled-bitmaps-exception-with-picasso
+	     	// et surtout : http://www.basic4ppc.com/android/forum/threads/picasso-image-downloading-and-caching-library.31495/
+	    	// Fin test
+	    	
+	    	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());
+    	}
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     	// Fin Debbug
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
