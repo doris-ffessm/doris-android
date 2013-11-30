@@ -187,6 +187,14 @@
 				android:defaultValue="P1"
 				android:layout="@layout/preference_layout_preference"
 				/>
+	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+	            android:key="@string/pref_key_test_progressbar"
+	            android:title="@string/test_progressbar_prompt"
+				android:entryValues="@array/test_progressbar_values"
+				android:entries="@array/test_progressbar_lib"
+				android:defaultValue="@string/test_progressbar_defaut"
+				android:layout="@layout/preference_layout_preference"
+				/>
 	        </PreferenceScreen>
      </PreferenceCategory>
  

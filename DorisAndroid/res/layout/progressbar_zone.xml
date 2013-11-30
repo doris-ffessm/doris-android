@@ -17,6 +17,7 @@
         android:adjustViewBounds="true"
         android:maxHeight="48dip"
         android:paddingTop="4dp"
+        android:onClick="onClickAfficherListe"
         android:src="@drawable/ic_launcher" />
     
     <RelativeLayout
@@ -41,7 +42,26 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@id/title"
-            android:minHeight="5dp" />
+            android:minHeight="5dp"/>
+		<ProgressBar
+            android:id="@+id/progressBarPhotoPrinc"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/title"
+            android:minHeight="4dp"
+            android:visibility="gone"/>
+		<ProgressBar
+            android:id="@+id/progressBarPhoto"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="1dip"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/progressBarPhotoPrinc"
+            android:minHeight="4dp"
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/summary"
             android:layout_width="match_parent"
@@ -49,7 +69,7 @@
             android:paddingLeft="4dip"
             android:paddingRight="4dip"
             android:paddingTop="2dip"
-            android:layout_below="@id/progressBar"
+            android:layout_below="@id/progressBarPhoto"
             android:maxLines="4"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary" />

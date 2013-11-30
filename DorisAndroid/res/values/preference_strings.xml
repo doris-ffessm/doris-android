@@ -26,6 +26,7 @@
 	<string name="pref_key_mode_precharg_sizemax">mode_precharg_sizemax</string>
 	<string name="pref_key_mode_precharg_region_ttzones">mode_precharg_region_ttzones</string>
 	<string name="pref_key_debug_algo_sync">debug_algo_sync</string>
+	<string name="pref_key_test_progressbar">test_progressbar</string>
 	
     <!-- Options text -->
     <string name="preference_menu_title">Préférences</string>
@@ -112,7 +113,7 @@
 	
 	<string name="presentation_preference_category">Options de présentation</string>
     <string name="list_icon_size_prompt">Taille des icones dans les listes</string>
-    <string name="list_icon_size_default">128</string>
+    <string name="list_icon_size_default">64</string>
 	<string-array name="list_icon_size_values">
         <item>48</item>
         <item>64</item>
@@ -150,6 +151,17 @@
         <item>Algo Initial (pas complet)</item>
         <item>Algo complet (Vitesse à optimiser)</item>
         <item>Algo complet optimisé</item>
+    </string-array>
+    
+    <string name="test_progressbar_prompt">Test Type de Progress Bar</string>
+    <string name="test_progressbar_defaut">1</string>
+    <string-array name="test_progressbar_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+	<string-array name="test_progressbar_lib">
+        <item>1 Barre (Utilisat° Barre second.)</item>
+        <item>2 Barres</item>
     </string-array>
     
 	<string name="sync_fresh_water_prompt">Fiches eau douce</string>
