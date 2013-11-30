@@ -65,6 +65,7 @@ import android.widget.TextView.BufferType;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -166,11 +167,15 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 
         };
 
+        // Affichage Icones Fédé.
+        if (!Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_aff_iconesfede, false)){
+        	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
+        }
+        
         // Affichage Debbug
         if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debbug, false)){
         	if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Affichage Debbug");
-        	((ImageView) findViewById(R.id.accueil_logo_Doris)).setVisibility(View.GONE);
-        	((ImageView) findViewById(R.id.accueil_logo_biologie)).setVisibility(View.GONE);
+        	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
         	((ScrollView) findViewById(R.id.accueil_debug)).setVisibility(View.VISIBLE);
         }
 
@@ -213,7 +218,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	        }
         }
         
-        
+
 		//End of user code
     }
     
@@ -246,7 +251,25 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	public void onClickBtnListeFiches(View view){
 		startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
     }
-	
+	public void onClickBtnIconeSiteWeb1(View view){
+		String url = getString(R.string.accueil_customview_logo1_url);
+		if (!url.isEmpty()) {
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setData(Uri.parse(url));
+			startActivity(intent);
+		}
+    }
+	public void onClickBtnIconeSiteWeb2(View view){
+		String url = getString(R.string.accueil_customview_logo2_url);
+		if (!url.isEmpty()) {
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setData(Uri.parse(url));
+			startActivity(intent);
+		}
+    }
+	public void onClickBtnFermer(View view){
+    	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
+    }
 	/*public void reinitializeDBFromPrefetched(){
 		//XMLHelper.loadDBFromXMLFile(getHelper().getDorisDBHelper(), this.getResources().openRawResource(R.raw.prefetched_db));
 
@@ -389,6 +412,8 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - après");
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
 			
+			//TODO : GMo : Je n'ai pas su créer un objet ProgressBar_Zone qui aurait été bien plus propre
+			// J'ai tout basé sur la Zone et son Id afin que sa réaliation soit "simple"
 			for (ZoneGeographique zoneGeo : listeZoneGeo) {
 				addProgressBarZone(zoneGeo);
 			}
@@ -508,7 +533,8 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	protected void addProgressBarZone(ZoneGeographique inZoneGeo){
 	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");  
 	   
-	   String uri = "drawable/"+ Outils.getZoneIcone(inZoneGeo.getId()); 
+	   String uri = Outils.getZoneIcone(this.getApplicationContext(), inZoneGeo.getId());
+	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
 	   int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
 	   
 	   boolean affichageBarre;
@@ -575,14 +601,17 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	protected void addProgressBarView(LinearLayout inContainerLayout, String inTitre, String inSummary, int inIcone, boolean inAffBarre, int inAvancPrinc, int inAvancSecond){
 	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Début");  	
 	   LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	   View convertView = inflater.inflate(R.layout.avancement, null);
+	   View convertView = inflater.inflate(R.layout.progressbar_zone, null);
 	   
 	   TextView tvTitleText = (TextView) convertView.findViewById(R.id.title);
 	   tvTitleText.setText(inTitre);
 	   
 	   ImageView ivIcone = (ImageView) convertView.findViewById(R.id.icon);
 	   ivIcone.setImageResource(inIcone);
-		
+       
+	   int iconeZine = Integer.valueOf(Outils.getParamString(this.getApplicationContext(), R.string.pref_key_list_icon_size, "128"));
+       ivIcone.setMaxHeight(iconeZine);
+   	
 	   TextView tvSummaryText = (TextView) convertView.findViewById(R.id.summary);
 	   tvSummaryText.setText(inSummary);
 	   

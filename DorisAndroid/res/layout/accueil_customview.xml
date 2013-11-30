@@ -45,32 +45,52 @@
 	        android:orientation="vertical" />
 	</ScrollView>
 	
-	<LinearLayout
+	<RelativeLayout
+	    android:id="@+id/accueil_logos"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
+	    android:layout_height="130dp"
 	    android:gravity="center_horizontal"
-	    android:orientation="vertical">
+	    android:orientation="vertical" >
+
 		<ImageView
-	        android:id="@+id/accueil_logo_Doris"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginLeft="4dip"
-	        android:layout_marginRight="4dip"
-	        android:layout_marginTop="4dip"
-	        android:adjustViewBounds="true"
-	        android:contentDescription="Logo Doris Accueil"
-	        android:src="@drawable/logo_doris" />
+		    android:id="@+id/accueil_logo1"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentTop="true"
+		    android:layout_marginLeft="4dip"
+		    android:layout_marginRight="4dip"
+		    android:layout_marginTop="4dip"
+		    android:adjustViewBounds="true"
+		    android:contentDescription="@string/accueil_customview_logo1_description"
+		    android:maxHeight="60dp"
+		    android:onClick="onClickBtnIconeSiteWeb1"
+		    android:src="@drawable/logo_doris" />
+
 	    <ImageView
-	        android:id="@+id/accueil_logo_biologie"
+	        android:id="@+id/accueil_logo2"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
 	        android:layout_marginLeft="4dip"
 	        android:layout_marginRight="4dip"
 	        android:layout_marginTop="4dip"
 	        android:adjustViewBounds="true"
-	        android:contentDescription="Logo Biologie Accueil"
+	        android:contentDescription="@string/accueil_customview_logo2_description"
+	        android:maxHeight="60dp"
+	        android:onClick="onClickBtnIconeSiteWeb2"
 	        android:src="@drawable/logo_biologie" />
-	</LinearLayout>
+
+	    <ImageView
+	        android:id="@+id/btn_close"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true"
+	        android:layout_alignParentTop="true"
+	        android:contentDescription="Fermer"
+	        android:onClick="onClickBtnFermer"
+			android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+	</RelativeLayout>
 	<ScrollView
 	    android:id="@+id/accueil_debug"
 	    android:layout_width="fill_parent"

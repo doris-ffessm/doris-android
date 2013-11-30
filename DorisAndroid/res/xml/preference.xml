@@ -4,10 +4,10 @@
     <!--Start of user code protected PreferenceViewActivity preference
 		-->
 	<PreferenceCategory
-	        android:title="@string/mode_connecte_preference_category"
-	        android:key="mode_connecte_category"
-	        android:layout="@layout/preference_layout_category"
-	        >
+	    android:key="mode_connecte_category"
+	    android:title="@string/mode_connecte_preference_category"
+        android:layout="@layout/preference_layout_category">
+        
         <CheckBoxPreference android:key="@string/pref_key_mode_connecte_wifi_only"
             android:title="@string/mode_connecte_wifi_only_prompt" 
             android:defaultValue="false"
@@ -24,10 +24,10 @@
    	</PreferenceCategory>
 
 	<PreferenceCategory
-	        android:title="@string/mode_precharg_preference_category"
-	        android:key="mode_precharg_category"
-	        android:layout="@layout/preference_layout_category"
-	        >
+	    android:key="mode_precharg_category"
+        android:title="@string/mode_precharg_preference_category"
+        android:layout="@layout/preference_layout_category">
+         
         <CheckBoxPreference android:key="@string/pref_key_mode_precharg_wifi_only"
             android:title="@string/mode_precharg_wifi_only_prompt" 
             android:defaultValue="true"
@@ -38,42 +38,42 @@
 	        android:title="@string/mode_precharg_region_prompt"
 	        android:persistent="false">
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:entries="@array/mode_precharg_answers_lib"
+	            android:key="@string/pref_key_mode_precharg_region_france"
 	            android:title="@string/mode_precharg_region_france_prompt"
-				android:key="@string/pref_key_mode_precharg_region_france"
 				android:entryValues="@array/mode_precharg_answers_values"
+				android:entries="@array/mode_precharg_answers_lib"
 				android:defaultValue="@string/mode_precharg_region_defaut"
 				android:layout="@layout/preference_layout_preference"
 				/>
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:entries="@array/mode_precharg_answers_lib"
+   				android:key="@string/pref_key_mode_precharg_region_eaudouce"
 	            android:title="@string/mode_precharg_region_eaudouce_prompt"
-				android:key="@string/pref_key_mode_precharg_region_eaudouce"
-				android:entryValues="@array/mode_precharg_answers_values"
+	            android:entryValues="@array/mode_precharg_answers_values"
+	            android:entries="@array/mode_precharg_answers_lib"
 				android:defaultValue="@string/mode_precharg_region_defaut"
 				android:layout="@layout/preference_layout_preference"
 				/>
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:entries="@array/mode_precharg_answers_lib"
-	            android:title="@string/mode_precharg_region_atlantno_prompt"
-				android:key="@string/pref_key_mode_precharg_region_atlantno"
-				android:entryValues="@array/mode_precharg_answers_values"
-				android:defaultValue="@string/mode_precharg_region_defaut"
-				android:layout="@layout/preference_layout_preference"
-				/>
-	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:entries="@array/mode_precharg_answers_lib"
+   				android:key="@string/pref_key_mode_precharg_region_indopac"
 	            android:title="@string/mode_precharg_region_indopac_prompt"
-				android:key="@string/pref_key_mode_precharg_region_indopac"
-				android:entryValues="@array/mode_precharg_answers_values"
+   				android:entryValues="@array/mode_precharg_answers_values"
+	            android:entries="@array/mode_precharg_answers_lib"
 				android:defaultValue="@string/mode_precharg_region_defaut"
 				android:layout="@layout/preference_layout_preference"
 				/>
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:entries="@array/mode_precharg_answers_lib"
+	            android:key="@string/pref_key_mode_precharg_region_caraibes"
 	            android:title="@string/mode_precharg_region_caraibes_prompt"
-				android:key="@string/pref_key_mode_precharg_region_caraibes"
+	            android:entryValues="@array/mode_precharg_answers_values"
+				android:entries="@array/mode_precharg_answers_lib"
+				android:defaultValue="@string/mode_precharg_region_defaut"
+				android:layout="@layout/preference_layout_preference"
+				/>
+   	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+   	            android:key="@string/pref_key_mode_precharg_region_atlantno"
+	            android:title="@string/mode_precharg_region_atlantno_prompt"
 				android:entryValues="@array/mode_precharg_answers_values"
+				android:entries="@array/mode_precharg_answers_lib"
 				android:defaultValue="@string/mode_precharg_region_defaut"
 				android:layout="@layout/preference_layout_preference"
 				/>
@@ -123,10 +123,9 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory
-	        android:title="@string/presentation_preference_category"
-	        android:key="presentation_category"
-	        android:layout="@layout/preference_layout_category"
-	        >
+	    android:key="presentation_category"
+		android:title="@string/presentation_preference_category"
+	    android:layout="@layout/preference_layout_category">
 	         
         <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
             android:key="@string/pref_key_list_icon_size" 
@@ -136,6 +135,13 @@
         	android:defaultValue="@string/list_icon_size_default"
         	android:layout="@layout/preference_layout_preference"
         	/>
+		<CheckBoxPreference
+		    android:key="@string/pref_key_aff_iconesfede"
+			android:title="@string/pref_aff_iconesfede_prompt"
+			android:summary="@string/pref_aff_iconesfede_summary"
+			android:defaultValue="true"
+			android:layout="@layout/preference_layout_preference"
+			/>
     </PreferenceCategory>
     
 	<PreferenceCategory

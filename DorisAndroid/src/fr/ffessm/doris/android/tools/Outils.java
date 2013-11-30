@@ -788,20 +788,20 @@ public class Outils {
 	}
 	
     // TODO : En attendant d'obtenir la nouvelle version de Common
-	public static String getZoneIcone(int inId) {
+	public static String getZoneIcone(Context inContext, int inId) {
 	   	switch (inId) {
 	   	case -1:
-    		return "icone_toutes_zones";
+    		return inContext.getString(R.string.icone_touteszones);
     	case 1:
-    		return "icone_france";
+    		return inContext.getString(R.string.icone_france);
 		case 2:
-			return "icone_eau_douce";
+			return inContext.getString(R.string.icone_eaudouce);
 		case 3:
-			return "icone_indo_pac";
+			return inContext.getString(R.string.icone_indopac);
 		case 4:
-			return "icone_caraibes";
+			return inContext.getString(R.string.icone_caraibes);
 		case 5:
-			return "icone_atl_n_o";
+			return inContext.getString(R.string.icone_atlantno);
 		default:
 			return "";
 		}

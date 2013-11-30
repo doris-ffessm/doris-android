@@ -139,6 +139,13 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
              });     
          }
         
+        /* Ne peut pas fonctionner comme si dessous avec API10 */
+        /*
+        String uri = Outils.getZoneIcone(getApplicationContext(), 1); 
+    	int imageResource = getApplicationContext().getResources().getIdentifier(uri, null, getApplicationContext().getPackageName());
+    	Preference btnPrechargRegionFrance = (Preference)getPreferenceManager().findPreference("pref_key_mode_precharg_region_france");   
+    	btnPrechargRegionFrance.setIcon(imageResource);
+        */
     }
 
     @Override
