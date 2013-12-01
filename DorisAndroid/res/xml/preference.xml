@@ -136,10 +136,17 @@
         	android:layout="@layout/preference_layout_preference"
         	/>
 		<CheckBoxPreference
-		    android:key="@string/pref_key_aff_iconesfede"
-			android:title="@string/pref_aff_iconesfede_prompt"
-			android:summary="@string/pref_aff_iconesfede_summary"
+		    android:key="@string/pref_key_accueil_aff_iconesfede"
+			android:title="@string/pref_accueil_aff_iconesfede_prompt"
+			android:summary="@string/pref_accueil_aff_iconesfede_summary"
 			android:defaultValue="true"
+			android:layout="@layout/preference_layout_preference"
+			/>
+		<CheckBoxPreference
+		    android:key="@string/pref_key_fiche_aff_details_pardefaut"
+			android:title="@string/pref_fiche_aff_details_pardefaut_prompt"
+			android:summary="@string/pref_fiche_aff_details_pardefaut_summary"
+			android:defaultValue="false"
 			android:layout="@layout/preference_layout_preference"
 			/>
     </PreferenceCategory>

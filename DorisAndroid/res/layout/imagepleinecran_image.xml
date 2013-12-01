@@ -9,20 +9,20 @@
         android:layout_height="fill_parent"
         android:scaleType="fitCenter" />
  
-    <Button
+    <ImageView
         android:id="@+id/imagepleinecran_image_btnClose"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
-        android:background="@drawable/button_background"
-        android:textColor="@android:color/darker_gray"
-        android:text=" Fermer " />
-
+        android:contentDescription="Fermer"
+        android:onClick="onClickBtnFermer"
+		android:src="@android:drawable/ic_menu_close_clear_cancel" />
+    
      <Button
          android:id="@+id/imagepleinecran_image_titre"
          android:layout_width="wrap_content"

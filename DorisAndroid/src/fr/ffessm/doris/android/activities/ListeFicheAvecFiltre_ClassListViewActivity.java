@@ -98,6 +98,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 
 		// avoid opening the keayboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        
         list.setOnItemClickListener(this);
 
         list.setAdapter(adapter);
@@ -127,7 +128,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
             }
         });
 		//Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
-        searchButton = (ImageButton)findViewById(R.id.btnOtherFilter_listeficheavecfiltre_listviewsearchrow);
+        searchButton = (ImageButton) findViewById(R.id.btnOtherFilter_listeficheavecfiltre_listviewsearchrow);
         // crée le manager de popup
         searchPopupButtonManager = new SearchPopupButtonManager(this);
 		//End of user code
@@ -263,7 +264,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 			popup.showAsDropDown(searchButton,0,0);
 			
 			
-			// boutoun filtre espèce 
+			// bouton filtre espèce 
 			Button btnFiltreEspece = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 	        int filtreCourantId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);	        

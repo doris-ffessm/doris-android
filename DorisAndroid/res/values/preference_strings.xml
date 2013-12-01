@@ -17,7 +17,8 @@
 	<string name="pref_key_mode_precharg_region_favorite">mode_precharg_region_favorite</string>
 
 	<string name="pref_key_list_icon_size">pref_list_icon_size</string>
-	<string name="pref_key_aff_iconesfede">pref_aff_iconesfede</string>
+	<string name="pref_key_accueil_aff_iconesfede">pref_accueil_aff_iconesfede</string>
+	<string name="pref_key_fiche_aff_details_pardefaut">pref_fiche_aff_details_pardefaut</string>
 			
 	<!-- ids Debug -->
 	<string name="pref_key_affichage_debbug">affichage_debbug</string>
@@ -129,8 +130,11 @@
         <item>192</item>
     </string-array>
     
-	<string name="pref_aff_iconesfede_prompt">Affichage Icônes Fédé.</string>
-	<string name="pref_aff_iconesfede_summary">"Permet de gagner de la place sur l'écran d'accueil"</string>
+	<string name="pref_accueil_aff_iconesfede_prompt">Affichage Icônes Fédé. ?</string>
+	<string name="pref_accueil_aff_iconesfede_summary">"Permet de gagner de la place sur l'écran d'accueil"</string>
+	
+	<string name="pref_fiche_aff_details_pardefaut_prompt">Fiche : montrer détails ?</string>
+	<string name="pref_fiche_aff_details_pardefaut_summary">"Les détails de la fiche sont tous affichés par défaut"</string>
 	
 	<string name="imagepleinecran_titre_longmax">25</string>
 		

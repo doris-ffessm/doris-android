@@ -455,7 +455,7 @@ public class Outils {
 		return PreferenceManager.getDefaultSharedPreferences(inContext).getBoolean(inContext.getString(inParam), inValDef);
 	}
 	public static String getParamString(Context inContext, int inParam, String inValDef) {
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getParamString() - param : " + inParam + "-" + inContext.getString(inParam) );
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getParamString() - param : " + inParam + "-" + inContext.getString(inParam) );
 		return PreferenceManager.getDefaultSharedPreferences(inContext).getString(inContext.getString(inParam), inValDef);
 	}
 	public static long getParamLong(Context inContext, int inParam, Long inValDef) {

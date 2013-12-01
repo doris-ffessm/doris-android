@@ -60,6 +60,7 @@
 		                android:layout_width="0dp"
 		                android:maxLines="4"
 		                android:gravity="left"
+		                android:text="Nom Commun"
 		                android:padding="3dip"
 		                />
 
@@ -67,7 +68,7 @@
 			            android:id="@+id/detailsfiche_elementview_numerofiche"
 			            android:layout_width="wrap_content"
 			            android:gravity="right"
-		                android:text="hkfhdkfhk"
+		                android:text="9999"
 			            android:padding="3dip"
 			            />
 		        </TableRow>
@@ -83,6 +84,7 @@
 		                android:gravity="left"
 		                android:padding="3dip"
 		                android:textStyle="italic"
+		                android:text="Nom Scientifique"
 		                />
 					<LinearLayout
 					    android:layout_height="wrap_content"
@@ -90,7 +92,7 @@
 			            android:gravity="right"
 	        			android:layout_marginRight="2dp"
 					    >
-					    <TextView
+				    <TextView
 			            android:id="@+id/detailsfiche_elementview_etatfiche"
 			            android:gravity="right"
 			            android:padding="3dip"
@@ -98,11 +100,17 @@
 		            	android:layout_width="wrap_content"
 	        			android:layout_marginRight="2dp"
 	        			android:background="@drawable/button_background"
-	        			android:textColor="@android:color/darker_gray" />
+	        			android:textColor="@android:color/darker_gray"
+	        			android:text="EtatFiche"/>
 					</LinearLayout>
-		            
+
             	 </TableRow>
-		    </TableLayout>
+
+		            <View
+		                style="@style/Separateur"
+		                android:layout_marginBottom="2dp"
+		                android:layout_marginTop="2dp" />
+   		    </TableLayout>
             <!-- <TableLayout
 		        android:layout_width="match_parent"
 		        android:layout_height="fill_parent" 
@@ -117,7 +125,9 @@
                 android:id="@+id/detailsfiche_elementview_debug_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:padding="3dip" />
+                android:padding="3dip"
+                android:background="#404040"
+				android:text="Debug"/>
             
 <!-- End of user code
 -->

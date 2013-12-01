@@ -170,7 +170,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         };
 
         // Affichage Icones Fédé.
-        if (!Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_aff_iconesfede, false)){
+        if (!Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_accueil_aff_iconesfede, true)){
         	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
         }
         
@@ -537,10 +537,10 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     }
 	
 	protected void addProgressBarZone(ZoneGeographique inZoneGeo){
-	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
+	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
 	   
 	   String uri = Outils.getZoneIcone(this.getApplicationContext(), inZoneGeo.getId());
-	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
+	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
 	   int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
 	   
 	   boolean affichageBarre;
@@ -612,8 +612,10 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 
 	   }
 	   
-	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - summaryTexte"+summaryTexte);
-
+	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - summaryTexte : "+summaryTexte);
+	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avancementPhotoPrinc : "+avancementPhotoPrinc);
+	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avancementPhoto : "+avancementPhoto);
+	   
 	 //TODO : Test Affichage 2 Barres
 	   if (!Outils.getParamString(getContext(), R.string.pref_key_test_progressbar, "1").equals("2")){
 		   addProgressBarView(llContainerLayout, inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarre, avancementPhotoPrinc, avancementPhoto);
@@ -623,7 +625,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	}
 	
 	protected void addProgressBarView(LinearLayout inContainerLayout, String inTitre, String inSummary, int inIcone, boolean inAffBarre, int inAvancPhotoPrinc, int inAvancPhoto){
-	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Début");  	
+	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Début");  	
 	   LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	   View convertView = inflater.inflate(R.layout.progressbar_zone, null);
 	   
@@ -666,7 +668,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur4) );
 	   }
 
-	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - couleur : "+couleur);
+	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - couleur : "+couleur);
 	   // API 10 : pbProgressBar.getProgressDrawable().setColorFilter(couleur, Mode.MULTIPLY);
 	   // TODO : API 14 (Vérifier la version qui nécessite effectivement le changement) : pbProgressBar.getProgressDrawable().setColorFilter(couleur, Mode.SRC_IN);
 	   pbProgressBar.getProgressDrawable().setColorFilter(couleur, 
@@ -677,8 +679,8 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	
 	//TODO : Test Affichage 2 Barres
 	protected void addProgressBarView2Barres(LinearLayout inContainerLayout, String inTitre, String inSummary, int inIcone, boolean inAffBarrePhotoPrinc, int inAvancPhotoPrinc, boolean inAffBarrePhoto, int inAvancPhoto){
-		   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView2Barres() - Début");
-		   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Avances : "+inAvancPhotoPrinc+" - "+inAvancPhoto);
+		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView2Barres() - Début");
+		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Avances : "+inAvancPhotoPrinc+" - "+inAvancPhoto);
 		   
 		   LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		   View convertView = inflater.inflate(R.layout.progressbar_zone, null);
