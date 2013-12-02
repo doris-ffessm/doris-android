@@ -104,6 +104,12 @@ public class Participant {
 	protected Fiche fichesVerifiees;
 
 	// Start of user code Participant additional user properties
+	
+	
+	
+	
+	
+	
 	// End of user code
 	
 	public Participant() {} // needed by ormlite

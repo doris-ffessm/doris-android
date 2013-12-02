@@ -253,7 +253,44 @@ public class PrefetchDorisWebSite {
 				log.debug("doMain() - listeFiches.size : "+listeFiches.size());
 				
 				// TODO : Il faudra ici, pour les modes où on complète la base, reconstruire
-				// la table des fiches déjà connues
+				// la table des fiches déjà connues 
+				
+				
+				// TODO : en cours par GMo : la construction de la liste des Participants
+				// On boucle sur les initailes des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
+				String listeFiltres="abcdefghijklmnopqrstuvwxyz";
+				List<Participant> listeParticipants = new ArrayList<Participant>(0);
+				
+				for (char initiale : listeFiltres.toCharArray()){
+					log.debug("doMain() - Recup Participants : "+initiale);
+					
+					String listeParticipantsFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeParticipants-"+initiale+".html";
+					log.info("Récup. Liste des Participants : " + listeParticipantsFichier);
+					
+					if (! action.equals("NODWNLD")){
+						if (Outils.getFichierUrl(Constants.getListeParticipantsUrl(""+initiale), listeParticipantsFichier)) {
+							contenuFichierHtml = Outils.getFichier(new File(listeParticipantsFichier));
+							
+						} else {
+							log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
+							System.exit(0);
+						}
+					} else {
+						contenuFichierHtml = Outils.getFichier(new File(listeParticipantsFichier));
+		
+					}
+					List<Participant> listeParticipantsFromHTML = SiteDoris.getListeParticipantsParInitiale(contenuFichierHtml);
+					log.info("Creation de "+listeParticipantsFromHTML.size()+" participants pour la lettre : "+initiale);
+					for (Participant participant : listeParticipantsFromHTML){
+						
+						dbContext.participantDao.create(participant);
+					}
+					listeParticipants.addAll(dbContext.participantDao.queryForAll());
+					log.debug("doMain() - " + initiale + " - listeParticipants.size : "+listeParticipants.size());
+					
+				}
+				
+				log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
 				
 				
 				// Pour chaque fiche de la liste de travail :

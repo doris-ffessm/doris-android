@@ -53,6 +53,7 @@ public class Constants {
     private final static String LISTE_FICHES_CARAIBES_URL = "nom_scientifique.asp?numero_fichier=4&fichier=Faune%20et%20flore%20subaquatiques%20des%20Cara%EFbes";
     private final static String LISTE_FICHES_ATL_NORD_OUEST_URL = "nom_scientifique.asp?numero_fichier=5&fichier=Faune%20et%20flore%20marines%20et%20dulcicoles%20de%20l'Atlantique%20Nord-Ouest";
     private final static String LISTE_FICHES_INDO_PACIFIQUE_URL = "nom_scientifique.asp?numero_fichier=3&fichier=Faune%20et%20flore%20marines%20et%20dulcicoles%20de%20l'Indo-Pacifique";
+    private final static String PARTICIPANTS_RACINE_URL = "contacts.asp?filtre=";
     
     public enum ZoneGeographiqueKind {
     	FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE,
@@ -71,6 +72,11 @@ public class Constants {
     public static String getListeFichesUrl() {
 		String listeFichesUrl = SITE_RACINE_URL + LISTE_TOUTES_FICHES_URL;
     	return listeFichesUrl;
+    }
+    
+    public static String getListeParticipantsUrl(String inInitiale) {
+ 		String listeParticipantsUrl = SITE_RACINE_URL + PARTICIPANTS_RACINE_URL + inInitiale;
+     	return listeParticipantsUrl;
     }
     
     public static String getListeFichesUrl(ZoneGeographiqueKind zoneKing) {

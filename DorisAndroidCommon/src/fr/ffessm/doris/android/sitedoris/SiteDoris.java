@@ -54,6 +54,7 @@ import org.apache.commons.logging.LogFactory;
 
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
+import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 
 public class SiteDoris {
@@ -123,7 +124,7 @@ public class SiteDoris {
     	int nivPrecedent = 0;
     	
     	// Création du groupe racine qui contiendra récurcivement tout l'arbre
-    	// TODO : Supprimer sur les Créations de Groupe ci-dessous le commentaire tempo aidaant à debbeuger
+    	// TODO : Supprimer sur les Créations de Groupe ci-dessous le commentaire tempo aidant à debbeuger
     	Groupe groupe = new Groupe(0, 0, "racine","Tempo pour debug : 0-0");
     	Groupe groupeRacine = groupe;
     	Groupe groupeNiveau1Courant = null;
@@ -217,6 +218,12 @@ public class SiteDoris {
 	
 													groupe.setGroupePere(groupeNiveau1Courant);
 													
+													// Récupération de la vignette du Groupe
+													// TODO : Prévoir dans la base de donnée son URL et son nom (son nom = en fait le numéro du Groupe)
+													// (attention il faudra l'afficher sur fond blanc : sinon pas propre visuellement
+													String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
+													
+													
 													groupeNiveau2Courant = groupe;
 											    	nivPrecedent = 2;
 												} else if (nivPrecedent >= 2){
@@ -227,6 +234,9 @@ public class SiteDoris {
 
 													groupe.setGroupePere(groupeNiveau2Courant);
 
+													// Récupération de la vignette du Groupe
+													String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
+													
 													groupeNiveau3Courant = groupe;
 											    	nivPrecedent = 3;
 												}
@@ -255,6 +265,9 @@ public class SiteDoris {
 												
 												groupe.setGroupePere(groupeNiveau3Courant);
 												
+												// Récupération de la vignette du Groupe
+												String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
+				
 										    	nivPrecedent = 4;
 
 											}
@@ -355,4 +368,184 @@ public class SiteDoris {
 		return listePhotosFiche;
 	}
     
+	
+
+    public static List<Participant> getListeParticipantsParInitiale(String inCodePageHtml){
+    	log.trace("getListeParticipantsParInitiale() - Début");
+    	
+    	List<Participant> listeParticipants = new ArrayList<Participant>(0);
+    	
+    	
+    	
+    	
+    	
+    	
+    	/* --- Exemple pour les Groupes sous la main */
+    	/*
+    	int nivPrecedent = 0;
+    	
+    	// Création du groupe racine qui contiendra récurcivement tout l'arbre
+    	// TODO : Supprimer sur les Créations de Groupe ci-dessous le commentaire tempo aidant à debbeuger
+    	Groupe groupe = new Groupe(0, 0, "racine","Tempo pour debug : 0-0");
+    	Groupe groupeRacine = groupe;
+    	Groupe groupeNiveau1Courant = null;
+    	Groupe groupeNiveau2Courant = null;
+    	Groupe groupeNiveau3Courant = null;
+    	
+    	listeGroupes.add(groupe);
+    	
+    	Source source=new Source(inCodePageHtml);
+    	source.fullSequentialParse();
+    	log.debug("getGroupes()- source.length() : " + source.length());
+    	
+    	List<? extends Element> listeElementsTable;
+    	List<? extends Element> listeElementsA;
+    	
+    	Element elementTD;
+    	Element ElementNormal;
+    	
+    	Element elementTitreGrandsGroupes = source.getFirstElementByClass("titre3");
+    	
+    	Element elementTable = elementTitreGrandsGroupes.getParentElement().getParentElement().getParentElement();
+    	
+		listeElementsTable = elementTable.getAllElements(HTMLElementName.TR);
+		int profondeurTRlignes = elementTable.getFirstElement(HTMLElementName.TR).getDepth();
+		
+		for (Element elementTR : listeElementsTable) {
+			if ( elementTR.getDepth() == profondeurTRlignes ) {
+				log.info("getGroupes() - elementTR : "+elementTR.toString().substring(0, Math.min(100, elementTR.toString().length())));
+				//Groupes Niveau 1 et Niveau 2
+				elementTD = elementTR.getFirstElementByClass("titre2");
+				if (elementTD != null) {
+					log.info("getGroupes() - elementTD : "+elementTD.toString().substring(0, Math.min(100, elementTD.toString().length())));
+					//Groupes Niveau 1
+					Element elementIMG = elementTD.getFirstElement(HTMLElementName.IMG);
+					if (elementIMG != null) {
+						if (elementIMG.getAttributeValue("src").contains("pucecarre.gif")) {
+							log.info("getGroupes() - groupe 1 : "+elementTD.getRenderer().toString());
+							
+							groupe = new Groupe(0, 0, elementTD.getRenderer().toString(),"Tempo pour debug : 1-0");
+							listeGroupes.add(groupe);
+							groupe.setGroupePere(groupeRacine);
+							
+							groupeNiveau1Courant = groupe;
+							nivPrecedent = 1;
+						}
+					} else {
+						//Groupes Niveau 2
+						if (nivPrecedent != 0) {
+							log.info("getGroupes() - groupe 2 : "+elementTD.getRenderer().toString());
+							
+							groupe = new Groupe(0, 0, elementTD.getRenderer().toString(),"Tempo pour debug : 2-0");
+							listeGroupes.add(groupe);
+							
+							if (nivPrecedent >= 1) {
+								groupe.setGroupePere(groupeNiveau1Courant);
+							} else {
+								groupe.setGroupePere(groupeRacine);
+							}
+							
+							groupeNiveau2Courant = groupe;
+							nivPrecedent = 2;
+						}
+					}
+					elementIMG = null;
+				} else {
+					//Groupes Niveau 3 et Niveau 4
+					if (nivPrecedent != 0) {
+						ElementNormal = elementTR.getFirstElementByClass("normal");
+						if (ElementNormal != null){
+
+							for (Element elementIMG : elementTR.getAllElements(HTMLElementName.IMG)) {
+							
+								log.info("getGroupes() - groupe 3 - 4 ? elementIMG : "+elementIMG.getAttributeValue("src"));
+								
+								if (elementIMG.getAttributeValue("src").contains("/images_groupe/")) {
+									listeElementsA = elementIMG.getParentElement().getParentElement().getParentElement().getAllElements(HTMLElementName.A);
+									
+									for (Element elementA : listeElementsA) {
+										log.info("getGroupes() - elementA : "+elementA.toString());
+										
+										String elementAClass = elementA.getAttributeValue("class");
+										if (elementAClass != null){
+											//Groupes Niveau 3
+											if (elementAClass.toString().equals("normal")){
+																						
+												if (nivPrecedent == 1){
+													log.info("getGroupes() - groupe 3 : "+elementA.getRenderer().toString());
+													
+													groupe = new Groupe(Integer.parseInt(elementA.getAttributeValue("href").toString().replaceAll(".*=", "")), 0, elementA.getRenderer().toString(),"Tempo pour debug : 3-1");
+													listeGroupes.add(groupe);
+	
+													groupe.setGroupePere(groupeNiveau1Courant);
+													
+													// Récupération de la vignette du Groupe
+													// TODO : Prévoir dans la base de donnée son URL et son nom (son nom = en fait le numéro du Groupe)
+													// (attention il faudra l'afficher sur fond blanc : sinon pas propre visuellement
+													String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
+													
+													
+													groupeNiveau2Courant = groupe;
+											    	nivPrecedent = 2;
+												} else if (nivPrecedent >= 2){
+													log.info("getGroupes() - groupe 3 : "+elementA.getRenderer().toString());
+													
+													groupe = new Groupe(Integer.parseInt(elementA.getAttributeValue("href").toString().replaceAll(".*=", "")), 0, elementA.getRenderer().toString(),"Tempo pour debug : 3-2");
+													listeGroupes.add(groupe);
+
+													groupe.setGroupePere(groupeNiveau2Courant);
+
+													// Récupération de la vignette du Groupe
+													String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
+													
+													groupeNiveau3Courant = groupe;
+											    	nivPrecedent = 3;
+												}
+											}
+										}	
+									}
+								}
+								log.info("getGroupes() - test  0");
+								if (elementIMG.getAttributeValue("src").contains("/images_sousgroupe/")) {
+									log.info("getGroupes() - test  1 - "+elementIMG.toString());
+									
+									listeElementsA = elementIMG.getParentElement().getParentElement().getParentElement().getAllElements(HTMLElementName.A);
+									
+									for (Element elementAG4 : listeElementsA) {
+										log.info("getGroupes() - elementA : "+elementAG4.toString());
+										
+										String elementAClassG4 = elementAG4.getAttributeValue("class");
+										if (elementAClassG4 != null){
+											//Groupes Niveau 4
+											if (elementAClassG4.toString().equals("normalgris2")){
+
+												log.info("getGroupes() - groupe 4 : "+elementAG4.getRenderer().toString());
+												
+												groupe = new Groupe(groupeNiveau3Courant.getNumeroGroupe(), Integer.parseInt(elementAG4.getAttributeValue("href").toString().replaceAll(".*sousgroupe_numero=(\\d+)&groupe_numero.*", "$1")), elementAG4.getRenderer().toString(),"Tempo pour debug : 4-0");
+												listeGroupes.add(groupe);
+												
+												groupe.setGroupePere(groupeNiveau3Courant);
+												
+												// Récupération de la vignette du Groupe
+												String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
+				
+										    	nivPrecedent = 4;
+
+											}
+										}										
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}*/
+    	
+		log.trace("getListeParticipantsParInitiale() - Fin");
+		return listeParticipants;
+    }
+
+	
+	
 }

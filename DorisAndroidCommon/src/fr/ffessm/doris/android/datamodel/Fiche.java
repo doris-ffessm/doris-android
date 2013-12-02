@@ -279,6 +279,13 @@ public class Fiche {
 						i = 0;
 						for (Element elementTR : listeElementsHG_TR) {
 							i++;
+							if (i == 1) {
+								//TODO: pour chaque img contenu on a un petit logo indiquant si l'espèce est protégée, réglementée, dangeureuse
+								List<? extends Element> listeElementsTR_IMG = elementTR.getAllElements(HTMLElementName.IMG);
+								for (Element elementImg : listeElementsTR_IMG) {
+									log.info("getFiche() - ficheTagInfo : " + elementImg.getAttributeValue("alt")+" + "+elementImg.getAttributeValue("src"));
+								}
+							}
 							if (i == 2) {
 								log.info("getFiche() - ficheNomLatin : " + elementTR.getRenderer().toString());
 								setNomScientifique( Outils.nettoyageCaracteres(elementTR.getRenderer().toString().trim()) );
@@ -443,8 +450,13 @@ public class Fiche {
 									log.info("getFiche() - urlImageDansFiche : " + urlImageDansFiche);
 									break;
 								}
+
 							}
 						}
+						
+					// Devenue inutile avec recherche des photos par la page de prévisualisation
+					/*
+
 						if (elementImg != null) {
 							//Recup Texte
 							Element elementImgTexte = elementEntoureDeGris.getFirstElementByClass("normal2");
@@ -455,7 +467,8 @@ public class Fiche {
 								// ficheListeImages.add(new Image(element2.getRenderer().toString(),urlImageDansFiche));
 							}
 						}
-
+					*/
+					
 					
 						// Les participants
 						// On vérifie que le cadre Gris contient la rubrique Participants
@@ -466,8 +479,11 @@ public class Fiche {
 								// On parcourt les TD
 								// Si class=gris_gras et contenu texte != vide => qualité de la personne ci-après
 								// Si class=normal et contenu texte != vide => nom de la personne
+								// TODO : Si class=normal et contenu texte = vide  et Contient <A> => 
+								//    ref de la personne = echo href | grep "s/.*contact_numero=(.*)/$1/"
 								String intervenantQualite = null;
 								String intervenantNom = null;
+								String intervenantRef = null;
 								
 								List<? extends Element> listeElementsTDinEntoureDeGris = elementRubriqueinEntoureDeGris.getAllElements(HTMLElementName.TD);
 								for (Element elementTDParticipants : listeElementsTDinEntoureDeGris) {
@@ -479,7 +495,11 @@ public class Fiche {
 									if (elementTDParticipants.getClass().toString().equals("normal") &&
 											!elementTDParticipants.getRenderer().toString().isEmpty() ) {
 										intervenantNom = elementTDParticipants.getRenderer().toString();
+										// TODO : Ajouter ici calcul de la référence de l'intervenant.
+										
 										// TODO : C'est ici qu'il faudra ajouter l'init
+										
+										
 										
 									}
 									
