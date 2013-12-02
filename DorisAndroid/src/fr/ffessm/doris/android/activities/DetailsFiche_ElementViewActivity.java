@@ -39,6 +39,7 @@ Le fait que vous puissiez accéder à cet en-tête signifie que vous avez
 pris connaissance de la licence CeCILL-B, et que vous en avez accepté les
 termes.
 * ********************************************************************* */
+
 package fr.ffessm.doris.android.activities;
 
 
@@ -53,6 +54,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
@@ -284,6 +286,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			//richtext.setSpan(new RelativeSizeSpan(2f), 0, urlString.length(), 0);
 			richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
 			addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_credit_label),richtext);
+			
+			
 			isOnCreate = false;
 		}
 		
@@ -291,8 +295,14 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     	// Debbug
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		//((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setText(sbDebugText.toString());
-		
+		if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debbug, false)){
+			
+			((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setVisibility(View.VISIBLE);
+			((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setText(sbDebugText.toString());
+	
+		} else {
+			((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setVisibility(View.GONE);
+		}
 		// End of user code
     	
 	}
@@ -303,8 +313,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
 
 		//Start of user code additional onCreateOptionsMenu
-        menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.ic_expand_close);
-		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.ic_expand_open);
+        menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.expander_ic_maximized);
+		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.expander_ic_minimized);
 
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -362,15 +372,21 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         titreText.setText(titre);
         
         TextView contenuText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletext);
-        contenuText.setVisibility(View.GONE); // par défault invisible
+        
+        if (!Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_fiche_aff_details_pardefaut, false)){
+        	contenuText.setVisibility(View.GONE); // par défault invisible
+        } else {
+        	contenuText.setVisibility(View.VISIBLE);
+        }
+        
         contenuText.setText(texte, BufferType.SPANNABLE);
         // make our ClickableSpans and URLSpans work 
         contenuText.setMovementMethod(LinkMovementMethod.getInstance());
        // contenuText.
         
-        ImageButton foldButton = (ImageButton)convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
+        ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
         
-        FoldableClickListener foldable = new FoldableClickListener(contenuText);
+        FoldableClickListener foldable = new FoldableClickListener(contenuText, foldButton);
         allFoldable.add(foldable);
         foldButton.setOnClickListener(foldable);
         titreText.setOnClickListener(foldable);

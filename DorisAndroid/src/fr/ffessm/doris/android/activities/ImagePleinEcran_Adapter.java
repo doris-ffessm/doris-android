@@ -98,7 +98,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
     	fr.ffessm.doris.android.tools.TouchImageView imgDisplay;
-        Button btnClose;
+    	ImageView btnClose;
         Button imgTitre;
         
         inflater = (LayoutInflater) _activity
@@ -107,7 +107,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
                 false);
   
         imgDisplay = (fr.ffessm.doris.android.tools.TouchImageView) viewLayout.findViewById(R.id.imagepleinecran_image_imgDisplay);
-        btnClose = (Button) viewLayout.findViewById(R.id.imagepleinecran_image_btnClose);
+        btnClose = (ImageView) viewLayout.findViewById(R.id.imagepleinecran_image_btnClose);
         imgTitre = (Button) viewLayout.findViewById(R.id.imagepleinecran_image_titre);
         
         int hauteur = ScreenTools.getScreenHeight(_activity);
@@ -159,6 +159,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     	}
          
         imgDisplay.setOnClickListener(new PhotoClickListener(photoFiche));
+
         // close button click event
         btnClose.setOnClickListener(new View.OnClickListener() {           
             @Override
@@ -190,13 +191,32 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
      
     class PhotoClickListener implements View.OnClickListener{
     	PhotoFiche photoFiche;
+    	private long lastTouchTime = -1;
+    	
     	public PhotoClickListener(PhotoFiche photoFiche){
     		this.photoFiche = photoFiche;
-    	}	
+    	}
+    	
     	@Override
         public void onClick(View v) {
-    		showDescription(photoFiche);
+    		long thisTime = System.currentTimeMillis();
+    		if (thisTime - lastTouchTime < 250) {
+    			// Double Click on affiche la Description de l'image
+    			
+        		String texteAff = "Double Click - j'aurais aimé zommer x2 (comme Google Photo)";
+        		Toast.makeText(_activity, texteAff, Toast.LENGTH_LONG).show();
+        		
+        		lastTouchTime = -1;
+    		} else if (lastTouchTime != -1){
+    			// Double Click Lent on affiche la Description de l'image
+    			showDescription(photoFiche);
+    			
+    			lastTouchTime = -1;
+    		} else {
+    			lastTouchTime = thisTime;
+    		}
         }
+    	
     }
     
     @Override

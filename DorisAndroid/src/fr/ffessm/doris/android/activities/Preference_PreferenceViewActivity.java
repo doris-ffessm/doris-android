@@ -48,8 +48,11 @@ import com.squareup.picasso.Picasso;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import fr.ffessm.doris.android.R;
@@ -57,6 +60,7 @@ import fr.ffessm.doris.android.R;
 //Start of user code Preference preference activity additional imports
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 import android.text.format.DateUtils;
 import android.util.Log;
 import fr.ffessm.doris.android.BuildConfig;
@@ -68,6 +72,8 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	
 	//Start of user code Preference preference activity additional attributes
 	private static final String LOG_TAG = Outils.class.getCanonicalName();
+
+	private SharedPreferences prefs;
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -76,6 +82,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preference);
         
+         
         Preference btnVideVig = (Preference)getPreferenceManager().findPreference("btn_reset_vig");
         if(btnVideVig != null) {
 	        btnVideVig.setSummary(getVigSummary());
@@ -139,6 +146,14 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
              });     
          }
         
+        /* Ne peut pas fonctionner comme si dessous avec API10 */
+        /*
+        String uri = Outils.getZoneIcone(getApplicationContext(), 1); 
+    	int imageResource = getApplicationContext().getResources().getIdentifier(uri, null, getApplicationContext().getPackageName());
+    	Preference btnPrechargRegionFrance = (Preference)getPreferenceManager().findPreference("pref_key_mode_precharg_region_france");   
+    	btnPrechargRegionFrance.setIcon(imageResource);
+        */
+        
     }
 
     @Override
@@ -156,10 +171,17 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         return super.onCreateOptionsMenu(menu);
     }
  
+    
+  
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
 		//Start of user code preference specific menu action
+    	String message = ""+item.getItemId()+" - "+item.getGroupId()+" - "+item.toString();
+    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onOptionsItemSelected() - menu : "+message);  
+    	Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    	
         /* switch (item.getItemId()) {
             case 0:
                 startActivity(new Intent(this, AndroidDiveManagerMainActivity.class));
@@ -168,8 +190,8 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 		//End of user code
         return false;
     }
-
-	
+    
+    
 	//Start of user code Preference preference activity additional operations
     
     private String getVigSummary() {

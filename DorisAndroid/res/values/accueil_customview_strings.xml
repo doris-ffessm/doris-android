@@ -9,23 +9,32 @@
 		
 	<string name="accueil_customview_zonegeo_touteszones">Toutes Zones</string>
 	
+	<string name="accueil_customview_logo1_icone">@drawable/logo_doris</string>
+	<string name="accueil_customview_logo1_description">Logo Doris Accueil</string>
+	<string name="accueil_customview_logo1_url">http://doris.ffessm.fr</string>
+	<string name="accueil_customview_logo2_icone">@drawable/logo_biologie</string>
+	<string name="accueil_customview_logo2_description">Logo Biologie Accueil</string>
+	<string name="accueil_customview_logo2_url">http://biologie.ffessm.fr</string>
+	
 	<string name="menu_option_telecharge_fiches">Télécharge fiches</string>
 	<string name="menu_option_telecharge_photofiches">Préchargement photos</string>
 	<string name="menu_option_verifie_nouvelles_fiches">Cherche nouvelles fiches</string>
 	<string name="menu_option_reinitialise_a_partir_du_xml">Réinitialise Base</string>
 	
 	<string name="avancement_titre">Avancement préchargement photos</string>
-	<string name="avancement_progressbar_aucune_summary">"Aucune photos ne doit être téléchargées pour cette zone"</string>
+	<string name="avancement_progressbar_aucune_summary">"Aucune photo ne doit être téléchargée pour cette zone"</string>
 	<string name="avancement_progressbar_jamais_summary">Le préchargement des photos n\'a jamais été lancé depuis la modification des paramètres.</string>
-	<string name="avancement_progressbar_P1_summary">"@nb photos principales téléchargées sur @total"</string>
-	<string name="avancement_progressbar_PX_summary1">"@nb photos principales sur @total"</string>
+	<string name="avancement_progressbar_P1_summary">"@nb sur @total photos principales téléchargées"</string>
+	<string name="avancement_progressbar_PX_summary1">"@nb sur @total photos principales"</string>
 	<string name="avancement_progressbar_PX_jamais_summary2">" et aucune photo téléchargées"</string>
-	<string name="avancement_progressbar_PX_summary2">" et @nb photos sur @total téléchargées"</string>
-	<string name="avancement_progressbar_limite1">33</string>
+	<string name="avancement_progressbar_PX_summary2">" et @nb sur @total photos téléchargées"</string>
+	<string name="avancement_progressbar_limite1">25</string>
 	<string name="avancement_progressbar_couleur1">RED</string>
-	<string name="avancement_progressbar_limite2">80</string>
-	<string name="avancement_progressbar_couleur2">YELLOW</string>
-	<string name="avancement_progressbar_couleur3">GREEN</string>
+	<string name="avancement_progressbar_limite2">50</string>
+	<string name="avancement_progressbar_couleur2">#FFA500</string>
+	<string name="avancement_progressbar_limite3">75</string>
+	<string name="avancement_progressbar_couleur3">YELLOW</string>
+	<string name="avancement_progressbar_couleur4">GREEN</string>
 	
 	<string name="a_propos_label">À propos</string>
 	<string name="a_propos_txt_1">"À propos - "</string>

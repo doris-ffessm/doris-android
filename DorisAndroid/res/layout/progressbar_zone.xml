@@ -2,21 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="bottom"
+    android:gravity="top"
     android:paddingLeft="4dip"
     android:paddingRight="?android:attr/scrollbarSize" >
 
-     <ImageView
-         android:id="@+id/icon"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:maxHeight="48dip"
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dip"
         android:layout_marginLeft="2dip"
         android:layout_marginRight="2dip"
         android:layout_marginTop="2dip"
-        android:layout_marginBottom="2dip"
-         android:src="@drawable/ic_launcher" />
+        android:adjustViewBounds="true"
+        android:maxHeight="48dip"
+        android:paddingTop="4dp"
+        android:onClick="onClickAfficherListe"
+        android:src="@drawable/ic_launcher" />
     
     <RelativeLayout
         android:layout_width="match_parent"
@@ -24,14 +26,16 @@
         android:paddingBottom="6dip"
         android:paddingLeft="4dip"
         android:paddingRight="4dip"
-        android:paddingTop="6dip">
+        android:paddingTop="2dp"
+		android:onClick="onClickAfficherListe">
+
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:fadingEdge="horizontal"
-            android:singleLine="true"
+            android:text="Nom Commun"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
         <ProgressBar
             android:id="@+id/progressBar"
@@ -40,7 +44,26 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@id/title"
-            android:minHeight="5dp" />
+            android:minHeight="5dp"/>
+		<ProgressBar
+            android:id="@+id/progressBarPhotoPrinc"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/title"
+            android:minHeight="4dp"
+            android:visibility="gone"/>
+		<ProgressBar
+            android:id="@+id/progressBarPhoto"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="1dip"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/progressBarPhotoPrinc"
+            android:minHeight="4dp"
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/summary"
             android:layout_width="match_parent"
@@ -48,9 +71,10 @@
             android:paddingLeft="4dip"
             android:paddingRight="4dip"
             android:paddingTop="4dip"
-            android:layout_below="@id/progressBar"
+            android:layout_below="@id/progressBarPhoto"
             android:maxLines="4"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:attr/textColorSecondary" />
+            android:textColor="?android:attr/textColorSecondary"
+			android:text="Nom Scientifique"/>
     </RelativeLayout>
 </LinearLayout>

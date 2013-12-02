@@ -16,9 +16,9 @@
 	<string name="pref_key_mode_precharg_region_caraibes">mode_precharg_region_caraibes</string>
 	<string name="pref_key_mode_precharg_region_favorite">mode_precharg_region_favorite</string>
 
-	<string name="pref_key_list_icon_size">pref_key_list_icon_size</string>
-	<string name="pref_key_filtre_groupe">pref_key_filtre_groupe</string>
-	<string name="pref_key_filtre_zonegeo">pref_key_filtre_zone_geographique</string>
+	<string name="pref_key_list_icon_size">pref_list_icon_size</string>
+	<string name="pref_key_accueil_aff_iconesfede">pref_accueil_aff_iconesfede</string>
+	<string name="pref_key_fiche_aff_details_pardefaut">pref_fiche_aff_details_pardefaut</string>
 			
 	<!-- ids Debug -->
 	<string name="pref_key_affichage_debbug">affichage_debbug</string>
@@ -27,6 +27,7 @@
 	<string name="pref_key_mode_precharg_sizemax">mode_precharg_sizemax</string>
 	<string name="pref_key_mode_precharg_region_ttzones">mode_precharg_region_ttzones</string>
 	<string name="pref_key_debug_algo_sync">debug_algo_sync</string>
+	<string name="pref_key_test_progressbar">test_progressbar</string>
 	
     <!-- Options text -->
     <string name="preference_menu_title">Préférences</string>
@@ -65,9 +66,19 @@
     <string name="mode_precharg_region_caraibes_prompt">- Caraïbes ?</string>
     <string name="mode_precharg_favorite_prompt">- Fiches préférées ? (A FAIRE)</string>
     <string name="mode_precharg_region_defaut">P1</string>
+    
+    <!-- Encore Utile ? -->
     <string name="mode_precharg_sizemax_prompt">Limite de d\'occupation disque (Mo) ?</string>
     
-    <!-- GMo : A effacer ? -->
+	<string name="icone_touteszones">drawable/icone_toutes_zones</string>
+	<string name="icone_france">drawable/icone_france</string>
+	<string name="icone_eaudouce">drawable/icone_eau_douce</string>
+	<string name="icone_indopac">drawable/icone_indo_pac</string>
+	<string name="icone_caraibes">drawable/icone_caraibes</string>
+	<string name="icone_atlantno">drawable/icone_atl_n_o</string>
+
+			
+    <!-- GMo : A effacer ? dpot être lié à l'algo A1-->
 	<string name="sync_auto_wifi_only_prompt">Synchro. Auto en Wifi seulement</string>
 	<string name="sync_auto_wifi_only_summary">Permet d\'épargner le forfait data</string>
 
@@ -103,22 +114,30 @@
 	
 	<string name="presentation_preference_category">Options de présentation</string>
     <string name="list_icon_size_prompt">Taille des icones dans les listes</string>
-    <string name="list_icon_size_default">128</string>
-	<string name="imagepleinecran_titre_longmax">25</string>
-	
+    <string name="list_icon_size_default">64</string>
 	<string-array name="list_icon_size_values">
+        <item>48</item>
         <item>64</item>
         <item>96</item>
         <item>128</item>
         <item>192</item>
     </string-array>
 	<string-array name="list_icon_size_lib">
+	    <item>48</item>
         <item>64</item>
         <item>96</item>
         <item>128</item>
         <item>192</item>
     </string-array>
     
+	<string name="pref_accueil_aff_iconesfede_prompt">Affichage Icônes Fédé. ?</string>
+	<string name="pref_accueil_aff_iconesfede_summary">"Permet de gagner de la place sur l'écran d'accueil"</string>
+	
+	<string name="pref_fiche_aff_details_pardefaut_prompt">Fiche : montrer détails ?</string>
+	<string name="pref_fiche_aff_details_pardefaut_summary">"Les détails de la fiche sont tous affichés par défaut"</string>
+	
+	<string name="imagepleinecran_titre_longmax">25</string>
+		
 	<string name="debug_preference_category">Debug et Dev.</string>
 	<string name="debug_preferences">Paramètres</string>
 	<string name="sync_max_card_number_prompt">Nombre max de fiches à télécharger</string>
@@ -136,6 +155,17 @@
         <item>Algo Initial (pas complet)</item>
         <item>Algo complet (Vitesse à optimiser)</item>
         <item>Algo complet optimisé</item>
+    </string-array>
+    
+    <string name="test_progressbar_prompt">Test Type de Progress Bar</string>
+    <string name="test_progressbar_defaut">1</string>
+    <string-array name="test_progressbar_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+	<string-array name="test_progressbar_lib">
+        <item>1 Barre (Utilisat° Barre second.)</item>
+        <item>2 Barres</item>
     </string-array>
     
 	<string name="sync_fresh_water_prompt">Fiches eau douce</string>

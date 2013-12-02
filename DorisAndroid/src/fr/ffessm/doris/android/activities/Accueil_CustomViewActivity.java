@@ -50,6 +50,7 @@ import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
+import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -60,10 +61,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ScrollView;
 import android.widget.TextView.BufferType;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -78,6 +81,7 @@ import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.drawable.shapes.Shape;
 import android.net.Uri;
 import android.os.AsyncTask.Status;
 import android.os.AsyncTask;
@@ -165,7 +169,19 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 
         };
 
+        // Affichage Icones Fédé.
+        if (!Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_accueil_aff_iconesfede, true)){
+        	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
+        }
         
+        // Affichage Debbug
+        if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debbug, false)){
+        	if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Affichage Debbug");
+        	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
+        	((ScrollView) findViewById(R.id.accueil_debug)).setVisibility(View.VISIBLE);
+        }
+
+
         //Lors du 1er démarrage de l'application dans la version actuelle,
         //on affiche la boite d'A Propos
         String VersionAffichageAPropos = Outils.getParamString(this.getApplicationContext(), R.string.pref_key_a_propos_version, "");
@@ -204,7 +220,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	        }
         }
         
-        
+
 		//End of user code
     }
     
@@ -234,10 +250,32 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	
     }
     
+    
+    public void onClickAfficherListe(View view){
+    	showToast("L'idée est d'afficher directement la liste filtrée depuis ici, mais il faudrait que la ProgressionBar soit un objet plus propre.");
+    }
 	public void onClickBtnListeFiches(View view){
 		startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
     }
-	
+	public void onClickBtnIconeSiteWeb1(View view){
+		String url = getString(R.string.accueil_customview_logo1_url);
+		if (!url.isEmpty()) {
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setData(Uri.parse(url));
+			startActivity(intent);
+		}
+    }
+	public void onClickBtnIconeSiteWeb2(View view){
+		String url = getString(R.string.accueil_customview_logo2_url);
+		if (!url.isEmpty()) {
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setData(Uri.parse(url));
+			startActivity(intent);
+		}
+    }
+	public void onClickBtnFermer(View view){
+    	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
+    }
 	/*public void reinitializeDBFromPrefetched(){
 		//XMLHelper.loadDBFromXMLFile(getHelper().getDorisDBHelper(), this.getResources().openRawResource(R.raw.prefetched_db));
 
@@ -380,6 +418,8 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - après");
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
 			
+			//TODO : GMo : Je n'ai pas su créer un objet ProgressBar_Zone qui aurait été bien plus propre
+			// J'ai tout basé sur la Zone et son Id afin que sa réaliation soit "simple"
 			for (ZoneGeographique zoneGeo : listeZoneGeo) {
 				addProgressBarZone(zoneGeo);
 			}
@@ -391,49 +431,51 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     	// Debbug
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    	StringBuffer sb = new StringBuffer();
-    	sb.append("- - Debbug - -\n");
-    	
-    	CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
-    	while (it.hasNext()) {
-    		sb.append("Date base locale : " + it.next().getDateBase()+"\n");
-		}
-    	
-    	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
-    	sb.append("Nombres de fiches dans la base locale : "+ficheDao.countOf());
-     	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
-    	sb.append("\nNombres de photos référencées : "+photoFicheDao.countOf());
-    	sb.append("\n\tNombres de photos téléchargées : "+Outils.getVignetteCount(this.getApplicationContext()));
-    	double sizeInMiB = Outils.getPhotosDiskUsage(getApplicationContext())/(double)(1024.0*1024.0);
-    	sb.append("\t("+String.format("%.2f", sizeInMiB)+" MiB)");
-    	
-    	
-    	// Test pour voir où est le cache Picasso
-    	sb.append("\n- - - - - -\n");
-    	sb.append(getApplicationContext().getCacheDir().getAbsolutePath()+"\n");
-     	for (File child:getApplicationContext().getCacheDir().listFiles()) {
-     		sb.append(child.getAbsolutePath()+"\n");
-     		if (child.getName().equals("picasso-cache") ) {
-     			int i = 0;
-     			for (File subchild:child.listFiles()) {
-     	     		sb.append("\t\t"+subchild.getName()+"\n");
-     	     		i++;
-     	     		if ( i >5) break;
-     			}
-     		}
-     	}
-     	
-     	sb.append("- - - - - -\n");
-     	sb.append(getApplicationContext().getFilesDir().getAbsolutePath()+"\n");
-     	for (File child:getApplicationContext().getFilesDir().listFiles()) {
-     		sb.append(child.getAbsolutePath()+"\n");
-     	}
-     	// TODO : Piste pour sauvegarder les images après téléchargement
-     	// Cf. http://stackoverflow.com/questions/19345576/cannot-draw-recycled-bitmaps-exception-with-picasso
-     	// et surtout : http://www.basic4ppc.com/android/forum/threads/picasso-image-downloading-and-caching-library.31495/
-    	// Fin test
-    	
-    	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());
+    	if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debbug, false)){
+	    	StringBuffer sb = new StringBuffer();
+	    	sb.append("- - Debbug - -\n");
+	    	
+	    	CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
+	    	while (it.hasNext()) {
+	    		sb.append("Date base locale : " + it.next().getDateBase()+"\n");
+			}
+	    	
+	    	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
+	    	sb.append("Nombres de fiches dans la base locale : "+ficheDao.countOf());
+	     	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
+	    	sb.append("\nNombres de photos référencées : "+photoFicheDao.countOf());
+	    	sb.append("\n\tNombres de photos téléchargées : "+Outils.getVignetteCount(this.getApplicationContext()));
+	    	double sizeInMiB = Outils.getPhotosDiskUsage(getApplicationContext())/(double)(1024.0*1024.0);
+	    	sb.append("\t("+String.format("%.2f", sizeInMiB)+" MiB)");
+	    	
+	    	
+	    	// Test pour voir où est le cache Picasso
+	    	sb.append("\n- - - - - -\n");
+	    	sb.append(getApplicationContext().getCacheDir().getAbsolutePath()+"\n");
+	     	for (File child:getApplicationContext().getCacheDir().listFiles()) {
+	     		sb.append(child.getAbsolutePath()+"\n");
+	     		if (child.getName().equals("picasso-cache") ) {
+	     			int i = 0;
+	     			for (File subchild:child.listFiles()) {
+	     	     		sb.append("\t\t"+subchild.getName()+"\n");
+	     	     		i++;
+	     	     		if ( i >5) break;
+	     			}
+	     		}
+	     	}
+	     	
+	     	sb.append("- - - - - -\n");
+	     	sb.append(getApplicationContext().getFilesDir().getAbsolutePath()+"\n");
+	     	for (File child:getApplicationContext().getFilesDir().listFiles()) {
+	     		sb.append(child.getAbsolutePath()+"\n");
+	     	}
+	     	// TODO : Piste pour sauvegarder les images après téléchargement
+	     	// Cf. http://stackoverflow.com/questions/19345576/cannot-draw-recycled-bitmaps-exception-with-picasso
+	     	// et surtout : http://www.basic4ppc.com/android/forum/threads/picasso-image-downloading-and-caching-library.31495/
+	    	// Fin test
+	    	
+	    	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());
+    	}
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     	// Fin Debbug
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -449,7 +491,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 
 		//Start of user code additional onCreateOptionsMenu Accueil_CustomViewActivity
 	//	menu.add(Menu.NONE, TELECHARGE_FICHE_MENU_ID, 1, R.string.menu_option_telecharge_fiches).setIcon(android.R.drawable.ic_menu_preferences);
-		menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.menu_option_telecharge_photofiches).setIcon(android.R.drawable.ic_menu_preferences);
+		menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.menu_option_telecharge_photofiches).setIcon(android.R.drawable.ic_menu_set_as);
     //    menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 4, R.string.menu_option_verifie_nouvelles_fiches).setIcon(android.R.drawable.ic_menu_preferences);
     //    menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 5, R.string.menu_option_reinitialise_a_partir_du_xml).setIcon(android.R.drawable.ic_menu_preferences);
 		menu.add(Menu.NONE, APROPOS, 2, R.string.a_propos_label).setIcon(android.R.drawable.ic_menu_info_details);
@@ -495,20 +537,29 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     }
 	
 	protected void addProgressBarZone(ZoneGeographique inZoneGeo){
-	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");  
+	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
 	   
-	   String uri = "drawable/"+ Outils.getZoneIcone(inZoneGeo.getId()); 
+	   String uri = Outils.getZoneIcone(this.getApplicationContext(), inZoneGeo.getId());
+	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
 	   int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
 	   
 	   boolean affichageBarre;
+	   //TODO : Test Affichage 2 Barres
+	   boolean affichageBarrePhotoPrinc;
+	   boolean affichageBarrePhoto;
 	   String summaryTexte = "";
-	   int avancement1 =0;
-	   int avancement2 =0;
+	   int avancementPhotoPrinc =0;
+	   int avancementPhoto =0;
 	   
 	   Outils.PrecharMode precharModeZoneGeo = Outils.getPrecharModeZoneGeo(getContext(), inZoneGeo.getId());
 	   
 	   if ( precharModeZoneGeo == Outils.PrecharMode.P0 ) {
 		   affichageBarre = false;
+		   
+		   //TODO : Test Affichage 2 Barres
+		   affichageBarrePhotoPrinc = false;
+		   affichageBarrePhoto = false;
+		   
 		   summaryTexte = getContext().getString(R.string.avancement_progressbar_aucune_summary);
 	   } else {
 		   int nbPhotosPrincATelecharger = Outils.getAPrecharQteZoneGeo(getContext(), inZoneGeo.getId(), true);
@@ -517,7 +568,11 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		   int nbPhotosDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), inZoneGeo.getId(), false);
 		   
 		   affichageBarre = true;
-
+		   
+		   //TODO : Test Affichage 2 Barres
+		   affichageBarrePhotoPrinc = true;
+		   affichageBarrePhoto = true;
+		   
 		   if ( nbPhotosPrincATelecharger== 0){
 			   summaryTexte = getContext().getString(R.string.avancement_progressbar_jamais_summary);
 		   } else {
@@ -528,8 +583,11 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 				   summaryTexte = summaryTexte.replace("@total", ""+nbPhotosPrincATelecharger ) ;
 				   summaryTexte = summaryTexte.replace("@nb", ""+nbPhotosPrincDejaLa );
 				   
-				   avancement1 = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
-				   avancement2 = 0;
+				   avancementPhoto = 0;
+				   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
+				   
+				 //TODO : Test Affichage 2 Barres
+				   affichageBarrePhoto = false;
 				   
 			   } else {
 				   summaryTexte = getContext().getString(R.string.avancement_progressbar_PX_summary1);
@@ -539,46 +597,54 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 				   if (nbPhotosATelecharger == 0) {
 					   summaryTexte += getContext().getString(R.string.avancement_progressbar_PX_jamais_summary2);
 					   
-					   avancement1 = 0;
-					   avancement2 = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
+					   avancementPhoto = 0;
+					   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
 				   } else {
 					   summaryTexte += getContext().getString(R.string.avancement_progressbar_PX_summary2);
 					   summaryTexte = summaryTexte.replace("@total", ""+nbPhotosATelecharger ) ;
 					   summaryTexte = summaryTexte.replace("@nb", ""+nbPhotosDejaLa );
 					   
-					   avancement1 = 100 * nbPhotosDejaLa / nbPhotosATelecharger;
-					   avancement2 = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
+					   avancementPhoto = 100 * nbPhotosDejaLa / nbPhotosATelecharger;
+					   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
 				   }
 			   }
 		   }
 
 	   }
 	   
-	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - summaryTexte"+summaryTexte);
-
- 
-	   addProgressBarView(llContainerLayout, inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarre, avancement1, avancement2);
-
+	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - summaryTexte : "+summaryTexte);
+	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avancementPhotoPrinc : "+avancementPhotoPrinc);
+	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avancementPhoto : "+avancementPhoto);
+	   
+	 //TODO : Test Affichage 2 Barres
+	   if (!Outils.getParamString(getContext(), R.string.pref_key_test_progressbar, "1").equals("2")){
+		   addProgressBarView(llContainerLayout, inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarre, avancementPhotoPrinc, avancementPhoto);
+	   } else {
+		   addProgressBarView2Barres(llContainerLayout, inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto);
+	   }
 	}
 	
-	protected void addProgressBarView(LinearLayout inContainerLayout, String inTitre, String inSummary, int inIcone, boolean inAffBarre, int inAvancPrinc, int inAvancSecond){
-	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Début");  	
+	protected void addProgressBarView(LinearLayout inContainerLayout, String inTitre, String inSummary, int inIcone, boolean inAffBarre, int inAvancPhotoPrinc, int inAvancPhoto){
+	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Début");  	
 	   LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	   View convertView = inflater.inflate(R.layout.avancement, null);
+	   View convertView = inflater.inflate(R.layout.progressbar_zone, null);
 	   
 	   TextView tvTitleText = (TextView) convertView.findViewById(R.id.title);
 	   tvTitleText.setText(inTitre);
 	   
 	   ImageView ivIcone = (ImageView) convertView.findViewById(R.id.icon);
 	   ivIcone.setImageResource(inIcone);
-		
+
+	   int iconeZine = Integer.valueOf(Outils.getParamString(this.getApplicationContext(), R.string.pref_key_list_icon_size, "128"));
+       ivIcone.setMaxHeight(iconeZine);
+   	
 	   TextView tvSummaryText = (TextView) convertView.findViewById(R.id.summary);
 	   tvSummaryText.setText(inSummary);
 	   
 	   ProgressBar pbProgressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
 	   if ( inAffBarre ) {
-		   pbProgressBar.setProgress(inAvancPrinc);
-		   pbProgressBar.setSecondaryProgress(inAvancSecond);
+		   pbProgressBar.setProgress(inAvancPhoto);
+		   pbProgressBar.setSecondaryProgress(inAvancPhotoPrinc);
 	   } else {
 		   pbProgressBar.setVisibility(View.GONE);
 	   }
@@ -586,27 +652,103 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	   // Changement couleur de la barre en fonction de l'avancement
 	   int limite1 = Integer.parseInt(getContext().getString(R.string.avancement_progressbar_limite1) );
 	   int limite2 = Integer.parseInt(getContext().getString(R.string.avancement_progressbar_limite2) );
-	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - limites : "+limite1+" - "+limite2);
+	   int limite3 = Integer.parseInt(getContext().getString(R.string.avancement_progressbar_limite3) );
+	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - limites : "+limite1+" - "+limite2);
 	   
-	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Couleur1 :"+getContext().getString(R.string.avancement_progressbar_couleur1));
+	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Couleur1 :"+getContext().getString(R.string.avancement_progressbar_couleur1));
 	   
 	   int couleur;
-	   if (inAvancPrinc <= limite1) {
-		   	couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur1) );   
+	   if (inAvancPhoto <= limite1) {
+		   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur1) );   
+	   } else if (inAvancPhoto <= limite2) {
+		   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur2) );
+	   } else if (inAvancPhoto <= limite3) {
+		   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur3) );
 	   } else {
-		   if (inAvancPrinc <= limite2) {
-			   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur2) );
-		   } else {
-			   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur3) );
-		   }
+		   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur4) );
 	   }
-	   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - couleur : "+couleur);
+
+	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - couleur : "+couleur);
 	   // API 10 : pbProgressBar.getProgressDrawable().setColorFilter(couleur, Mode.MULTIPLY);
 	   // TODO : API 14 (Vérifier la version qui nécessite effectivement le changement) : pbProgressBar.getProgressDrawable().setColorFilter(couleur, Mode.SRC_IN);
-   
 	   pbProgressBar.getProgressDrawable().setColorFilter(couleur, 
 			   Mode.valueOf(getContext().getString(R.string.avancement_progressbar_mode) ) );
-	   
+
 	   inContainerLayout.addView(convertView);
 	}
+	
+	//TODO : Test Affichage 2 Barres
+	protected void addProgressBarView2Barres(LinearLayout inContainerLayout, String inTitre, String inSummary, int inIcone, boolean inAffBarrePhotoPrinc, int inAvancPhotoPrinc, boolean inAffBarrePhoto, int inAvancPhoto){
+		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView2Barres() - Début");
+		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Avances : "+inAvancPhotoPrinc+" - "+inAvancPhoto);
+		   
+		   LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		   View convertView = inflater.inflate(R.layout.progressbar_zone, null);
+		   
+		   TextView tvTitleText = (TextView) convertView.findViewById(R.id.title);
+		   tvTitleText.setText(inTitre);
+		   
+		   ImageView ivIcone = (ImageView) convertView.findViewById(R.id.icon);
+		   ivIcone.setImageResource(inIcone);
+
+		   int iconeZine = Integer.valueOf(Outils.getParamString(this.getApplicationContext(), R.string.pref_key_list_icon_size, "128"));
+	       ivIcone.setMaxHeight(iconeZine);
+	   	
+		   TextView tvSummaryText = (TextView) convertView.findViewById(R.id.summary);
+		   tvSummaryText.setText(inSummary);
+		   
+		   ProgressBar pbProgressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
+		   pbProgressBar.setVisibility(View.GONE);
+		   
+		   ProgressBar pbProgressBarPhotoPrinc = (ProgressBar) convertView.findViewById(R.id.progressBarPhotoPrinc);
+		   ProgressBar pbProgressBarPhoto = (ProgressBar) convertView.findViewById(R.id.progressBarPhoto);
+		   
+		   if ( inAffBarrePhotoPrinc ) {
+			   pbProgressBarPhotoPrinc.setVisibility(View.VISIBLE);
+			   pbProgressBarPhotoPrinc.setProgress(inAvancPhotoPrinc);
+		   }
+		   if ( inAffBarrePhoto ) {
+			   pbProgressBarPhoto.setVisibility(View.VISIBLE);
+			   pbProgressBarPhoto.setProgress(inAvancPhoto);
+		   }
+		   
+		   // Changement couleur de la barre en fonction de l'avancement
+		   int limite1 = Integer.parseInt(getContext().getString(R.string.avancement_progressbar_limite1) );
+		   int limite2 = Integer.parseInt(getContext().getString(R.string.avancement_progressbar_limite2) );
+		   int limite3 = Integer.parseInt(getContext().getString(R.string.avancement_progressbar_limite3) );
+		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - limites : "+limite1+" - "+limite2);
+		   
+		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Couleur1 :"+getContext().getString(R.string.avancement_progressbar_couleur1));
+		   
+		   int couleurPhotoPrinc;
+		   if (inAvancPhotoPrinc <= limite1) {
+			   couleurPhotoPrinc = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur1) );   
+		   } else if (inAvancPhotoPrinc <= limite2) {
+			   couleurPhotoPrinc = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur2) );
+		   } else if (inAvancPhotoPrinc <= limite3) {
+			   couleurPhotoPrinc = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur3) );
+		   } else {
+			   couleurPhotoPrinc = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur4) );
+		   }
+		   
+		   int couleurPhoto;
+		   if (inAvancPhoto <= limite1) {
+			   couleurPhoto = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur1) );   
+		   } else if (inAvancPhoto <= limite2) {
+			   couleurPhoto = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur2) );
+		   } else if (inAvancPhoto <= limite3) {
+			   couleurPhoto = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur3) );
+		   } else {
+			   couleurPhoto = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur4) );
+		   }
+		   
+		   // API 10 : pbProgressBar.getProgressDrawable().setColorFilter(couleur, Mode.MULTIPLY);
+		   // TODO : API 14 (Vérifier la version qui nécessite effectivement le changement) : pbProgressBar.getProgressDrawable().setColorFilter(couleur, Mode.SRC_IN);
+		   pbProgressBarPhotoPrinc.getProgressDrawable().setColorFilter(couleurPhotoPrinc, 
+				   Mode.valueOf(getContext().getString(R.string.avancement_progressbar_mode) ) );
+		   pbProgressBarPhoto.getProgressDrawable().setColorFilter(couleurPhoto, 
+				   Mode.valueOf(getContext().getString(R.string.avancement_progressbar_mode) ) );
+		   
+		   inContainerLayout.addView(convertView);
+		}
 }
