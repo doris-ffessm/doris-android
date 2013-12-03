@@ -43,7 +43,6 @@ package fr.ffessm.doris.android.async;
 
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -52,14 +51,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
-
 // Start of user code additional imports TelechargePhotosFiches_BgActivity
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -71,6 +68,8 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.content.SharedPreferences;
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
@@ -140,9 +139,11 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     
 	/** constructor */
     public TelechargePhotosFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper){
-		String initialTickerText = context.getString(R.string.bg_notifTitle_initial);
-		String notificationTitle = context.getString(R.string.bg_notifText_initial);
+		// Start of user code additional attribute declarations TelechargePhotosFiches_BgActivity constructor
+		String initialTickerText = context.getString(R.string.bg_notifText_initial);
+		String notificationTitle = context.getString(R.string.bg_notifTitle_initial);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
+		// End of user code
         this.dbHelper = dbHelper;
 		this.context = context;
     }
@@ -154,7 +155,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 
     @Override
     protected Integer doInBackground(String... arg0) {
- 
+    	
+
 		// Start of user code initialization of the task TelechargePhotosFiches_BgActivity
 		// do the initialization of the task here
     	// Téléchargement en tache de fond de toutes les photos de toutes les fiches correspondants aux critères de l'utilisateur
@@ -686,19 +688,16 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         return nbPhotoRetreived;
 		// End of user code
     }
-    	
     protected void onProgressUpdate(Integer... progress) {
         //This method runs on the UI thread, it receives progress updates
         //from the background thread and publishes them to the status bar
         mNotificationHelper.progressUpdate(progress[0]);
     }
-    
 	@Override
 	protected void onCancelled() {
 		super.onCancelled();
 		mNotificationHelper.completed();
 	}
-	
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();

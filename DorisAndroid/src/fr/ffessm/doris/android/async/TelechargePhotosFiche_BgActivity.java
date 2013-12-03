@@ -94,9 +94,11 @@ public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer,
     
 	/** constructor */
     public TelechargePhotosFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper){
-		String initialTickerText = context.getString(R.string.analysefiches00_bg_initialTickerText);
-		String notificationTitle = context.getString(R.string.analysefiches00_bg_notificationTitle);
+		// Start of user code additional attribute declarations TelechargePhotosFiche_BgActivity constructor
+		String initialTickerText = context.getString(R.string.telechargephotosfiche_bg_initialTickerText);
+		String notificationTitle = context.getString(R.string.telechargephotosfiche_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
+		// End of user code
         this.dbHelper = dbHelper;
 		this.context = context;
     }

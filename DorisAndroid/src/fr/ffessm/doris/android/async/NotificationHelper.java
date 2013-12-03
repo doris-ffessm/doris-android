@@ -59,13 +59,16 @@ public class NotificationHelper {
     private CharSequence mContentTitle;
     
     private String maxItemToProcess = "???";
+
+	// Start of user code notification helper additional attributes
+	/** Racine du texte qui apparait dans la status bar */
+    private String racineTickerText = "";
+
+	// End of user code
     
 	/** Initial text that appears in the status bar */
     private String initialTickerText;
  
-	/** Racine du texte qui apparait dans la status bar */
-    private String racineTickerText = "";
-    
 	/** Full title of the notification in the pull down */
 	private String notificationContentTitle;
 
@@ -123,7 +126,10 @@ public class NotificationHelper {
      */
     public void progressUpdate(int nbItemsComplete) {
         //build up the new status message
-        CharSequence contentText = racineTickerText+nbItemsComplete + " / " +maxItemToProcess;
+
+		// Start of user code notification helper additional status message
+        CharSequence contentText = nbItemsComplete + " / " +maxItemToProcess;
+		// End of user code
         //publish it to the status bar
         //mNotification.setLatestEventInfo(mContext, mContentTitle, contentText, mContentIntent);
         //mNotificationManager.notify(NOTIFICATION_ID, mNotification);
@@ -155,6 +161,7 @@ public class NotificationHelper {
 	}
 	
 	public void setContentTitle(String contentTitle) {
+		
 		this.notificationContentTitle = contentTitle;
 		mNotifyBuilder.setContentTitle(contentTitle);
 		
@@ -162,9 +169,10 @@ public class NotificationHelper {
         		NOTIFICATION_ID,
                 mNotifyBuilder.build());
 	}
-	
+
+	// Start of user code notification helper additional operations
 	public void setRacineTickerText(String racineTickerText) {
 		this.racineTickerText = racineTickerText;
 	}
-	
+	// End of user code
 }

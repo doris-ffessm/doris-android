@@ -42,8 +42,8 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.*;
-import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
@@ -96,9 +96,8 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
         list.setClickable(true);
         adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper());
 
-		// avoid opening the keayboard on view opening
+		// avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        
         list.setOnItemClickListener(this);
 
         list.setAdapter(adapter);

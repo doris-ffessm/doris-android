@@ -49,7 +49,6 @@ import java.util.List;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
-import fr.ffessm.doris.android.tools.Outils;
 
 
 import android.content.Context;
@@ -64,7 +63,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,6 +72,8 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 //Start of user code protected additional ZoneGeoSelection_Adapter imports
 // additional imports
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import fr.ffessm.doris.android.tools.Outils;
 //End of user code
 
 public class ZoneGeoSelection_Adapter extends BaseAdapter  {

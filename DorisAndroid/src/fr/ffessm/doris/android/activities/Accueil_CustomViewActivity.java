@@ -42,33 +42,21 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import java.io.File;
-import java.util.List;
-
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
-import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ScrollView;
-import android.widget.TextView.BufferType;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
@@ -76,8 +64,11 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import android.preference.PreferenceManager;
 //Start of user code additional imports Accueil_CustomViewActivity
+import java.io.File;
+import java.util.List;
 
 import android.app.AlertDialog;
+import android.content.ClipData.Item;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
@@ -88,10 +79,18 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ScrollView;
+import android.widget.TextView.BufferType;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.squareup.picasso.Picasso;
 
@@ -135,10 +134,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		
-        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - Début");
-        
-        PreferenceManager.setDefaultValues(this, R.xml.preference, false);
+			PreferenceManager.setDefaultValues(this, R.xml.preference, false);
         setContentView(R.layout.accueil_customview);
         //Start of user code onCreate Accueil_CustomViewActivity
 	/*	// si pas de fiche alors il faut initialiser la base à partir du prefetched_DB
@@ -384,157 +380,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Fin");
 	}
 	
-	//End of user code
-
-    /** refresh screen from data 
-     */
-    public void refreshScreenData() {
-    	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
-
-    	StringBuffer sbTexte = new StringBuffer();
-    	sbTexte.append(getContext().getString(R.string.accueil_customview_texte_text));
-    	
-    	CloseableIterator<DorisDB_metadata> itDorisDB = getHelper().getDorisDB_metadataDao().iterator();
-    	while (itDorisDB.hasNext()) {
-    		sbTexte.append(itDorisDB.next().getDateBase());
-		}
-    	((TextView) findViewById(R.id.accueil_texte)).setText(sbTexte.toString());
-    	
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate);    	
-    	if (isOnCreate) {
-	    	llContainerLayout =  (LinearLayout) findViewById(R.id.avancements_layout);
-	    	
-	    	// Avancement et Affichage toutes Zones
-	    	ZoneGeographique zoneToutesZones = new ZoneGeographique();
-	    	zoneToutesZones.setId(-1);
-	    	zoneToutesZones.setNom(getContext().getString(R.string.accueil_customview_zonegeo_touteszones));;
-	    	addProgressBarZone(zoneToutesZones);
-	    	
-	    	// Avancement par Zone
-	    	//DorisDBHelper dorisDBHelper = this.getHelper().getDorisDBHelper();
-	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avant ");
-	    	List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
-	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - après");
-			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
-			
-			//TODO : GMo : Je n'ai pas su créer un objet ProgressBar_Zone qui aurait été bien plus propre
-			// J'ai tout basé sur la Zone et son Id afin que sa réaliation soit "simple"
-			for (ZoneGeographique zoneGeo : listeZoneGeo) {
-				addProgressBarZone(zoneGeo);
-			}
-    	} else {
-    		
-    		
-    	}
-		
-    	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    	// Debbug
-    	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    	if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debbug, false)){
-	    	StringBuffer sb = new StringBuffer();
-	    	sb.append("- - Debbug - -\n");
-	    	
-	    	CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
-	    	while (it.hasNext()) {
-	    		sb.append("Date base locale : " + it.next().getDateBase()+"\n");
-			}
-	    	
-	    	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
-	    	sb.append("Nombres de fiches dans la base locale : "+ficheDao.countOf());
-	     	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
-	    	sb.append("\nNombres de photos référencées : "+photoFicheDao.countOf());
-	    	sb.append("\n\tNombres de photos téléchargées : "+Outils.getVignetteCount(this.getApplicationContext()));
-	    	double sizeInMiB = Outils.getPhotosDiskUsage(getApplicationContext())/(double)(1024.0*1024.0);
-	    	sb.append("\t("+String.format("%.2f", sizeInMiB)+" MiB)");
-	    	
-	    	
-	    	// Test pour voir où est le cache Picasso
-	    	sb.append("\n- - - - - -\n");
-	    	sb.append(getApplicationContext().getCacheDir().getAbsolutePath()+"\n");
-	     	for (File child:getApplicationContext().getCacheDir().listFiles()) {
-	     		sb.append(child.getAbsolutePath()+"\n");
-	     		if (child.getName().equals("picasso-cache") ) {
-	     			int i = 0;
-	     			for (File subchild:child.listFiles()) {
-	     	     		sb.append("\t\t"+subchild.getName()+"\n");
-	     	     		i++;
-	     	     		if ( i >5) break;
-	     			}
-	     		}
-	     	}
-	     	
-	     	sb.append("- - - - - -\n");
-	     	sb.append(getApplicationContext().getFilesDir().getAbsolutePath()+"\n");
-	     	for (File child:getApplicationContext().getFilesDir().listFiles()) {
-	     		sb.append(child.getAbsolutePath()+"\n");
-	     	}
-	     	// TODO : Piste pour sauvegarder les images après téléchargement
-	     	// Cf. http://stackoverflow.com/questions/19345576/cannot-draw-recycled-bitmaps-exception-with-picasso
-	     	// et surtout : http://www.basic4ppc.com/android/forum/threads/picasso-image-downloading-and-caching-library.31495/
-	    	// Fin test
-	    	
-	    	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());
-    	}
-    	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    	// Fin Debbug
-    	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    	
-    	isOnCreate = false;
-    	//End of user code
-	}
-
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-		// add options in the menu
-		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
-
-		//Start of user code additional onCreateOptionsMenu Accueil_CustomViewActivity
-	//	menu.add(Menu.NONE, TELECHARGE_FICHE_MENU_ID, 1, R.string.menu_option_telecharge_fiches).setIcon(android.R.drawable.ic_menu_preferences);
-		menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.menu_option_telecharge_photofiches).setIcon(android.R.drawable.ic_menu_set_as);
-    //    menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 4, R.string.menu_option_verifie_nouvelles_fiches).setIcon(android.R.drawable.ic_menu_preferences);
-    //    menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 5, R.string.menu_option_reinitialise_a_partir_du_xml).setIcon(android.R.drawable.ic_menu_preferences);
-		menu.add(Menu.NONE, APROPOS, 2, R.string.a_propos_label).setIcon(android.R.drawable.ic_menu_info_details);
-		//End of user code
-        return super.onCreateOptionsMenu(menu);
-    }
-    
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	// behavior of option menu
-        switch (item.getItemId()) {
-			case 777:
-		            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-		            return true;
-		
-		//Start of user code additional menu action Accueil_CustomViewActivity
-		/*	case TELECHARGE_FICHE_MENU_ID:
-				new TelechargeFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
-				break; */
-			case TELECHARGE_PHOTO_FICHES_MENU_ID:
-				TelechargePhotosFiches_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
-				if(telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING)
-					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = 
-						(TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
-				break;
-		/*	case VERIFIE_NOUVELLES_FICHES_MENU_ID:
-				new VerifieNouvellesFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
-				break;
-			case RESET_DB_FROM_XML_MENU_ID:
-				reinitializeDBFromPrefetched();
-				break; */
-			case APROPOS:
-				aPropos();				
-				break;
-		//End of user code
-        }
-        return false;
-    }
-
-	private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
 	
 	protected void addProgressBarZone(ZoneGeographique inZoneGeo){
 	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
@@ -751,4 +596,156 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		   
 		   inContainerLayout.addView(convertView);
 		}
+	
+	//End of user code
+
+    /** refresh screen from data 
+     */
+    public void refreshScreenData() {
+    	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
+    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
+
+    	StringBuffer sbTexte = new StringBuffer();
+    	sbTexte.append(getContext().getString(R.string.accueil_customview_texte_text));
+    	
+    	CloseableIterator<DorisDB_metadata> itDorisDB = getHelper().getDorisDB_metadataDao().iterator();
+    	while (itDorisDB.hasNext()) {
+    		sbTexte.append(itDorisDB.next().getDateBase());
+		}
+    	((TextView) findViewById(R.id.accueil_texte)).setText(sbTexte.toString());
+    	
+    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate);    	
+    	if (isOnCreate) {
+	    	llContainerLayout =  (LinearLayout) findViewById(R.id.avancements_layout);
+	    	
+	    	// Avancement et Affichage toutes Zones
+	    	ZoneGeographique zoneToutesZones = new ZoneGeographique();
+	    	zoneToutesZones.setId(-1);
+	    	zoneToutesZones.setNom(getContext().getString(R.string.accueil_customview_zonegeo_touteszones));;
+	    	addProgressBarZone(zoneToutesZones);
+	    	
+	    	// Avancement par Zone
+	    	//DorisDBHelper dorisDBHelper = this.getHelper().getDorisDBHelper();
+	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avant ");
+	    	List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
+	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - après");
+			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
+			
+			//TODO : GMo : Je n'ai pas su créer un objet ProgressBar_Zone qui aurait été bien plus propre
+			// J'ai tout basé sur la Zone et son Id afin que sa réaliation soit "simple"
+			for (ZoneGeographique zoneGeo : listeZoneGeo) {
+				addProgressBarZone(zoneGeo);
+			}
+    	} else {
+    		
+    		
+    	}
+		
+    	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    	// Debbug
+    	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    	if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debbug, false)){
+	    	StringBuffer sb = new StringBuffer();
+	    	sb.append("- - Debbug - -\n");
+	    	
+	    	CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
+	    	while (it.hasNext()) {
+	    		sb.append("Date base locale : " + it.next().getDateBase()+"\n");
+			}
+	    	
+	    	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
+	    	sb.append("Nombres de fiches dans la base locale : "+ficheDao.countOf());
+	     	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
+	    	sb.append("\nNombres de photos référencées : "+photoFicheDao.countOf());
+	    	sb.append("\n\tNombres de photos téléchargées : "+Outils.getVignetteCount(this.getApplicationContext()));
+	    	double sizeInMiB = Outils.getPhotosDiskUsage(getApplicationContext())/(double)(1024.0*1024.0);
+	    	sb.append("\t("+String.format("%.2f", sizeInMiB)+" MiB)");
+	    	
+	    	
+	    	// Test pour voir où est le cache Picasso
+	    	sb.append("\n- - - - - -\n");
+	    	sb.append(getApplicationContext().getCacheDir().getAbsolutePath()+"\n");
+	     	for (File child:getApplicationContext().getCacheDir().listFiles()) {
+	     		sb.append(child.getAbsolutePath()+"\n");
+	     		if (child.getName().equals("picasso-cache") ) {
+	     			int i = 0;
+	     			for (File subchild:child.listFiles()) {
+	     	     		sb.append("\t\t"+subchild.getName()+"\n");
+	     	     		i++;
+	     	     		if ( i >5) break;
+	     			}
+	     		}
+	     	}
+	     	
+	     	sb.append("- - - - - -\n");
+	     	sb.append(getApplicationContext().getFilesDir().getAbsolutePath()+"\n");
+	     	for (File child:getApplicationContext().getFilesDir().listFiles()) {
+	     		sb.append(child.getAbsolutePath()+"\n");
+	     	}
+	     	// TODO : Piste pour sauvegarder les images après téléchargement
+	     	// Cf. http://stackoverflow.com/questions/19345576/cannot-draw-recycled-bitmaps-exception-with-picasso
+	     	// et surtout : http://www.basic4ppc.com/android/forum/threads/picasso-image-downloading-and-caching-library.31495/
+	    	// Fin test
+	    	
+	    	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());
+    	}
+    	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    	// Fin Debbug
+    	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    	
+    	isOnCreate = false;
+    	//End of user code
+	}
+
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+		// add options in the menu
+		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
+
+		//Start of user code additional onCreateOptionsMenu Accueil_CustomViewActivity
+	//	menu.add(Menu.NONE, TELECHARGE_FICHE_MENU_ID, 1, R.string.menu_option_telecharge_fiches).setIcon(android.R.drawable.ic_menu_preferences);
+		menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.menu_option_telecharge_photofiches).setIcon(android.R.drawable.ic_menu_set_as);
+    //    menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 4, R.string.menu_option_verifie_nouvelles_fiches).setIcon(android.R.drawable.ic_menu_preferences);
+    //    menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 5, R.string.menu_option_reinitialise_a_partir_du_xml).setIcon(android.R.drawable.ic_menu_preferences);
+		menu.add(Menu.NONE, APROPOS, 2, R.string.a_propos_label).setIcon(android.R.drawable.ic_menu_info_details);
+		//End of user code
+        return super.onCreateOptionsMenu(menu);
+    }
+    
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	// behavior of option menu
+        switch (item.getItemId()) {
+			case 777:
+		            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+		            return true;
+		
+		//Start of user code additional menu action Accueil_CustomViewActivity
+		/*	case TELECHARGE_FICHE_MENU_ID:
+				new TelechargeFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+				break; */
+			case TELECHARGE_PHOTO_FICHES_MENU_ID:
+				TelechargePhotosFiches_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
+				if(telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING)
+					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = 
+						(TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+				break;
+		/*	case VERIFIE_NOUVELLES_FICHES_MENU_ID:
+				new VerifieNouvellesFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+				break;
+			case RESET_DB_FROM_XML_MENU_ID:
+				reinitializeDBFromPrefetched();
+				break; */
+			case APROPOS:
+				aPropos();				
+				break;
+		//End of user code
+        }
+        return false;
+    }
+
+	private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
 }

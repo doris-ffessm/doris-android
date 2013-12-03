@@ -41,31 +41,33 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import fr.ffessm.doris.android.R;
+
+//Start of user code Preference preference activity additional imports
 import java.io.File;
 import java.util.Date;
 
 import com.squareup.picasso.Picasso;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuItem;
-import fr.ffessm.doris.android.R;
-
-//Start of user code Preference preference activity additional imports
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.text.format.DateUtils;
 import android.util.Log;
 import fr.ffessm.doris.android.BuildConfig;
-//End of user code
 import fr.ffessm.doris.android.tools.Outils;
+
+//End of user code
 
 public class Preference_PreferenceViewActivity  extends android.preference.PreferenceActivity {
 
@@ -80,9 +82,10 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preference);
+        addPreferencesFromResource(R.xml.preference); 
+		//Start of user code Preference preference activity additional onCreate
         
-         
+        
         Preference btnVideVig = (Preference)getPreferenceManager().findPreference("btn_reset_vig");
         if(btnVideVig != null) {
 	        btnVideVig.setSummary(getVigSummary());
@@ -154,13 +157,16 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     	btnPrechargRegionFrance.setIcon(imageResource);
         */
         
+		//End of user code
     }
 
     @Override
 	protected void onResume() {
-		super.onResume();
+		super.onResume(); 
+		//Start of user code Preference preference activity additional onResume
+		//End of user code
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		//Start of user code preference specific menu definition
@@ -171,9 +177,6 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         return super.onCreateOptionsMenu(menu);
     }
  
-    
-  
-    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -190,8 +193,8 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 		//End of user code
         return false;
     }
-    
-    
+
+	
 	//Start of user code Preference preference activity additional operations
     
     private String getVigSummary() {
