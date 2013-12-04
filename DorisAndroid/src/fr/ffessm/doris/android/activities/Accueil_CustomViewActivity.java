@@ -98,6 +98,7 @@ import com.squareup.picasso.Picasso;
 import fr.ffessm.doris.android.DorisApplication;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.activities.view.FoldableClickListener;
+import fr.ffessm.doris.android.activities.view.MultiProgressBar;
 import fr.ffessm.doris.android.activities.view.ProgressBarZone;
 import fr.ffessm.doris.android.activities.view.ProgressBarZone.NbBar;
 import fr.ffessm.doris.android.async.InitialisationApplication_BgActivity;
@@ -133,7 +134,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	boolean isOnCreate = true;
 	
 	
-	protected HashMap<Integer, ProgressBarZone> progressBarZones = new HashMap<Integer, ProgressBarZone>(); 
+	protected HashMap<Integer, MultiProgressBar> progressBarZones = new HashMap<Integer, MultiProgressBar>(); 
 	
 	
 	//End of user code
@@ -255,9 +256,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     }
     
     
-    public void onClickAfficherListe(View view){
+    /*public void onClickAfficherListe(View view){
     	showToast("L'idée est d'afficher directement la liste filtrée depuis ici, mais il faudrait que la ProgressionBar soit un objet plus propre.");
-    }
+    }*/
 	public void onClickBtnListeFiches(View view){
 		startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
     }
@@ -387,7 +388,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	
     	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Fin");
 	}
-	
+	/*
 	protected void updateProgressBarZone(ZoneGeographique inZoneGeo, ProgressBarZone progressBarZone){
 		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
 		   
@@ -464,6 +465,89 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 
 		   }
 		   progressBarZone.update(inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto);
+	}*/
+	protected void updateProgressBarZone(ZoneGeographique inZoneGeo, MultiProgressBar progressBarZone){
+		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
+		   
+		   String uri = Outils.getZoneIcone(this.getApplicationContext(), inZoneGeo.getId());
+		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
+		   int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
+		   
+		   boolean affichageBarre;
+		   //TODO : Test Affichage 2 Barres
+		   boolean affichageBarrePhotoPrinc;
+		   boolean affichageBarrePhoto;
+		   String summaryTexte = "";
+		   int avancementPhotoPrinc =0;
+		   int avancementPhoto =0;
+		   
+		   Outils.PrecharMode precharModeZoneGeo = Outils.getPrecharModeZoneGeo(getContext(), inZoneGeo.getId());
+		   
+		   if ( precharModeZoneGeo == Outils.PrecharMode.P0 ) {
+			   affichageBarre = false;
+			   
+			   //TODO : Test Affichage 2 Barres
+			   affichageBarrePhotoPrinc = false;
+			   affichageBarrePhoto = false;
+			   
+			   summaryTexte = getContext().getString(R.string.avancement_progressbar_aucune_summary);
+		   } else {
+			   int nbPhotosPrincATelecharger = Outils.getAPrecharQteZoneGeo(getContext(), inZoneGeo.getId(), true);
+			   int nbPhotosATelecharger = Outils.getAPrecharQteZoneGeo(getContext(), inZoneGeo.getId(), false);
+			   int nbPhotosPrincDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), inZoneGeo.getId(), true);
+			   int nbPhotosDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), inZoneGeo.getId(), false);
+			   
+			   affichageBarre = true;
+			   
+			   //TODO : Test Affichage 2 Barres
+			   affichageBarrePhotoPrinc = true;
+			   affichageBarrePhoto = true;
+			   
+			   if ( nbPhotosPrincATelecharger== 0){
+				   summaryTexte = getContext().getString(R.string.avancement_progressbar_jamais_summary);
+			   } else {
+				   
+				   if ( precharModeZoneGeo == Outils.PrecharMode.P1 ) {
+				   
+					   summaryTexte = getContext().getString(R.string.avancement_progressbar_P1_summary);
+					   summaryTexte = summaryTexte.replace("@total", ""+nbPhotosPrincATelecharger ) ;
+					   summaryTexte = summaryTexte.replace("@nb", ""+nbPhotosPrincDejaLa );
+					   
+					   avancementPhoto = 0;
+					   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
+					   
+					 //TODO : Test Affichage 2 Barres
+					   affichageBarrePhoto = false;
+					   
+				   } else {
+					   summaryTexte = getContext().getString(R.string.avancement_progressbar_PX_summary1);
+					   summaryTexte = summaryTexte.replace("@total", ""+nbPhotosPrincATelecharger ) ;
+					   summaryTexte = summaryTexte.replace("@nb", ""+nbPhotosPrincDejaLa );
+					   
+					   if (nbPhotosATelecharger == 0) {
+						   summaryTexte += getContext().getString(R.string.avancement_progressbar_PX_jamais_summary2);
+						   
+						   avancementPhoto = 0;
+						   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
+					   } else {
+						   summaryTexte += getContext().getString(R.string.avancement_progressbar_PX_summary2);
+						   summaryTexte = summaryTexte.replace("@total", ""+nbPhotosATelecharger ) ;
+						   summaryTexte = summaryTexte.replace("@nb", ""+nbPhotosDejaLa );
+						   
+						   avancementPhoto = 100 * nbPhotosDejaLa / nbPhotosATelecharger;
+						   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
+					   }
+				   }
+			   }
+
+		   }
+		   // TODO calculate download in progress
+		   boolean downloadInProgress = false;
+		   if(inZoneGeo.getId() == -1 && DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null){
+			   downloadInProgress = true;
+		   }
+		   
+		   progressBarZone.update(inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto, downloadInProgress);
 	}
 	
 	protected ProgressBarZone addProgressBarZone(ZoneGeographique inZoneGeo){
@@ -636,11 +720,20 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	    	// Avancement et Affichage toutes Zones
 	    	
 	    	if (!Outils.getParamString(getContext(), R.string.pref_key_test_progressbar, "1").equals("2")){
-	    		progressBarZones.put(zoneToutesZones.getId(),  addProgressBarZone(zoneToutesZones));
+	    		addProgressBarZone(zoneToutesZones);
 	 	   } else {
-	 		  ProgressBarZone progressBarZoneGenerale = new ProgressBarZone(this, llContainerLayout,NbBar.TwoBar);
+	 		  MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this);
 	 		  updateProgressBarZone(zoneToutesZones, progressBarZoneGenerale);
 	 		  progressBarZones.put(zoneToutesZones.getId(), progressBarZoneGenerale); 
+	 		  final Context context = this;
+	 		  progressBarZoneGenerale.pbProgressBar_running.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							Toast.makeText(context, "Arrêt des téléchargements", Toast.LENGTH_LONG).show();
+							DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
+						}
+					});
+	 		  llContainerLayout.addView(progressBarZoneGenerale);
 	 	   }
 	    	
 	    	// Avancement par Zone
@@ -661,11 +754,23 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		    	List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
 		    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - après");
 				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
+				final Context context = this;
 				
 				for (ZoneGeographique zoneGeo : listeZoneGeo) {
-					ProgressBarZone progressBarZone = new ProgressBarZone(this, llContainerLayout,NbBar.TwoBar);
-			 		  updateProgressBarZone(zoneGeo, progressBarZone);
-			 		  progressBarZones.put(zoneGeo.getId(), progressBarZone); 
+					MultiProgressBar progressBarZone = new MultiProgressBar(this);
+		 		    updateProgressBarZone(zoneGeo, progressBarZone);
+		 		    final int zoneGeoId = zoneGeo.getId();
+		 		    progressBarZone.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+							ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zoneGeoId);
+					        ed.commit();
+							startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+						}
+					});
+		 		    progressBarZones.put(zoneGeo.getId(), progressBarZone); 
+			 		llContainerLayout.addView(progressBarZone);
 				} 
 	 	   }
 	    	

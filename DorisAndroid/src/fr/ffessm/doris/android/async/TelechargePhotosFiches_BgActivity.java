@@ -220,15 +220,25 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     	
 
 		// Start of user code initialization of the task TelechargePhotosFiches_BgActivity
+    int nbPhotoRetreived = 0;
+    try{
 		// do the initialization of the task here
     	// Téléchargement en tache de fond de toutes les photos de toutes les fiches correspondants aux critères de l'utilisateur
     	if(!isOnline()){
         	Log.d(LOG_TAG, "pas connexion internet : annulation du téléchargement");
         	return 0;
         }
-    	
+    	if(listener != null ){
+    		try{
+    			listener.dataHasChanged(null);
+    		}
+    		catch(Exception e){
+    			Log.d(LOG_TAG, "Listener n'est plus à l'écoute, arrét du téléchargement");
+    			return nbPhotoRetreived;
+    		}
+    	}
     	DorisDBHelper dorisDBHelper = dbHelper.getDorisDBHelper();
-    	int nbPhotoRetreived = 0;
+    	
     	String notificationTitle = "";
     	String initialTickerText = "";
     	
@@ -738,19 +748,19 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		// End of user code
         
 		// Start of user code end of task TelechargePhotosFiches_BgActivity
-    	if(listener != null && nbPhotoRetreived != 0){
+    }finally{
+    	if(listener != null ){
     		try{
     			listener.dataHasChanged(null);
     		}
     		catch(Exception e){
     			Log.d(LOG_TAG, "Listener n'est plus à l'écoute, arrét du téléchargement");
-    			mNotificationHelper.completed();
-    			return nbPhotoRetreived;
     		}
     	}
-		// return the number of item processed
+    	
     	mNotificationHelper.completed();
-        return nbPhotoRetreived;
+    }
+    return nbPhotoRetreived;
 		// End of user code
     }
     protected void onProgressUpdate(Integer... progress) {
@@ -762,6 +772,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	protected void onCancelled() {
 		super.onCancelled();
 		mNotificationHelper.completed();
+        DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = null;
 	}
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
@@ -837,7 +848,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     		PhotoATraiterOptim photoATraiter = itPhoto.next();
     		PhotoFiche photo = photoATraiter.getPhotoFiche();
 	    	try{
-	    		
+	    		if( this.isCancelled()) return nbPhotoRetreived;
 				Outils.getOrDownloadPhotoFile(context, photo, inImageType);
 				Log.i(LOG_TAG, "image "+inImageType+" "+photo.getCleURL()+" téléchargée");
 				// fait avancer la barre de la zone concernée // TODO pas trés optimal, mais fonctionne
