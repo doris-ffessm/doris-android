@@ -544,6 +544,16 @@ public class Outils {
 			return null;
 		}
 	}
+	
+	/**
+	 * récupère le nombre déclaré de photo à précharger
+	 * La déclaration est stockée dans les préférences
+	 * zone par zone, principale ou pas
+	 * @param inContext context permettant de récupérer l'info depuis les préférences
+	 * @param inIdZoneGeo 
+	 * @param inPrincipale concerne la photo prinicipale ou n'importe quelle photo
+	 * @return
+	 */
 	public static int getAPrecharQteZoneGeo(Context inContext, int inIdZoneGeo, Boolean inPrincipale){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inIdZoneGeo );
@@ -594,6 +604,15 @@ public class Outils {
 			}
 		}
 	}
+	
+	/**
+	 * récupère le nombre de photos déclarées présentes (stockées dansles préférences)
+	 * zone par zone, principale ou pas
+	 * @param inContext
+	 * @param inIdZoneGeo
+	 * @param inPrincipale concerne la photo prinicipale ou n'importe quelle photo
+	 * @return
+	 */
 	public static int getDejaLaQteZoneGeo(Context inContext, int inIdZoneGeo, Boolean inPrincipale){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inIdZoneGeo );
@@ -644,7 +663,73 @@ public class Outils {
 			}
 		}
 	}
+	/**
+	 * enregistre le nombre de photos déclarées présentes (stockées dansles préférences)
+	 * @param inContext
+	 * @param inIdZoneGeo
+	 * @param inPrincipale
+	 * @param nouvelleValeur
+	 */
+	public static void setDejaLaQteZoneGeo(Context inContext, int inIdZoneGeo, Boolean inPrincipale, int nouvelleValeur){
+		if (inPrincipale) {
+			switch(inIdZoneGeo){
+			case -1 :
+				// ERREUR, pas possible pour la zone générale, calculé à partir des autres zones
+				// TODO probablement pas terrible comme précision à cause des photos des fiches présentes dans plusieurs zone
+				break;
+			case 1 :
+				setParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_france, nouvelleValeur);
+				break;
+			case 2 :
+				setParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_eaudouce, nouvelleValeur);
+				break;
+			case 3 :
+				setParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_indopac, nouvelleValeur);
+				break;
+			case 4 :
+				setParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_caraibes, nouvelleValeur);
+				break;
+			case 5 :
+				setParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_atlantno, nouvelleValeur);
+				break;
+			default :
+				break;
+			}
+		} else {
+			switch(inIdZoneGeo){
+			case -1 :
+				// ERREUR, pas possible pour la zone générale, calculé à partir des autres zones
+				// TODO probablement pas terrible comme précision à cause des photos des fiches présentes dans plusieurs zone
+			case 1 :
+				setParamInt(inContext, R.string.pref_key_nbphotos_recues_france, nouvelleValeur);
+				break;
+			case 2 :
+				setParamInt(inContext, R.string.pref_key_nbphotos_recues_eaudouce, nouvelleValeur);
+				break;
+			case 3 :
+				setParamInt(inContext, R.string.pref_key_nbphotos_recues_indopac, nouvelleValeur);
+				break;
+			case 4 :
+				setParamInt(inContext, R.string.pref_key_nbphotos_recues_caraibes, nouvelleValeur);
+				break;
+			case 5 :
+				setParamInt(inContext, R.string.pref_key_nbphotos_recues_atlantno, nouvelleValeur);
+				break;
+			default :
+				break;
+			}
+		}
+	}
 	
+	
+	/**
+	 * récupère l'id de la resource textuelle pour les clé des préférences pour récupérer ou stocker des info de photo à télécharger ou déjà téléchargée
+	 * zone par zone, photo principale ou pas
+	 * @param inContext
+	 * @param inIdZoneGeo
+	 * @param inPrincipale
+	 * @return
+	 */
 	// TODO : C'est crado mais c'est rassemblé ici
 	public static int getKeyDataAPrecharZoneGeo(Context inContext, int inIdZoneGeo, Boolean inPrincipale){
 		if (inPrincipale) {

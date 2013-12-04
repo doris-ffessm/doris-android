@@ -62,143 +62,111 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class ProgressBarZone extends LinearLayout{
+public class ProgressBarZone {
 	
-	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getCanonicalName();
+	public enum NbBar {OneBar, TwoBar}
 	
-	private ZoneGeographique zoneGeo;
-	private LayoutInflater inflater;
+	private static final String LOG_TAG = ProgressBarZone.class.getCanonicalName();
+	
+	private Context inContext;
+	
+	TextView tvTitleText;
+	ImageView ivIcone;
+	TextView tvSummaryText;
+	ProgressBar pbProgressBar;
+	ProgressBar pbProgressBarPhotoPrinc;
+	ProgressBar pbProgressBarPhoto;
+	NbBar nbbars;
 	 
-	public ProgressBarZone(Context inContext, AttributeSet inAttrs) {
-		super(inContext, inAttrs);
-	}
 	 
-	public ProgressBarZone(Context inContext) {
-		super(inContext);
-	}
-	
-	public ProgressBarZone(Context inContext, ZoneGeographique inZoneGeo) {
-		super(inContext);
-		this.zoneGeo = inZoneGeo;
-	}
-	/*
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-    	fr.ffessm.doris.android.tools.TouchImageView imgDisplay;
-        Button btnClose;
-        Button imgTitre;
-        
-        inflater = (LayoutInflater) _activity
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View viewLayout = inflater.inflate(R.layout.imagepleinecran_image, container,
-                false);
-  
-        imgDisplay = (fr.ffessm.doris.android.tools.TouchImageView) viewLayout.findViewById(R.id.imagepleinecran_image_imgDisplay);
-        btnClose = (Button) viewLayout.findViewById(R.id.imagepleinecran_image_btnClose);
-        imgTitre = (Button) viewLayout.findViewById(R.id.imagepleinecran_image_titre);
-        
-		String uri = Outils.getZoneIcone(getContext(), zoneGeo.getId());
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
-		int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
-	   
-		boolean affichageBarre;
-		String summaryTexte = "";
-		int avancement1 =0;
-		int avancement2 =0;
-	   
-		Outils.PrecharMode precharModeZoneGeo = Outils.getPrecharModeZoneGeo(getContext(), zoneGeo.getId());
-	   
-		if ( precharModeZoneGeo == Outils.PrecharMode.P0 ) {
-			affichageBarre = false;
-			summaryTexte = getContext().getString(R.string.avancement_progressbar_aucune_summary);
-		} else {
-			int nbPhotosPrincATelecharger = Outils.getAPrecharQteZoneGeo(getContext(), zoneGeo.getId(), true);
-			int nbPhotosATelecharger = Outils.getAPrecharQteZoneGeo(getContext(), zoneGeo.getId(), false);
-			int nbPhotosPrincDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), zoneGeo.getId(), true);
-			int nbPhotosDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), zoneGeo.getId(), false);
-		   
-			affichageBarre = true;
-
-			if ( nbPhotosPrincATelecharger== 0){
-				summaryTexte = getContext().getString(R.string.avancement_progressbar_jamais_summary);
-			} else {
-			   
-				if ( precharModeZoneGeo == Outils.PrecharMode.P1 ) {
-					summaryTexte = getContext().getString(R.string.avancement_progressbar_P1_summary);
-					summaryTexte = summaryTexte.replace("@total", ""+nbPhotosPrincATelecharger ) ;
-					summaryTexte = summaryTexte.replace("@nb", ""+nbPhotosPrincDejaLa );
-				   
-					avancement1 = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
-					avancement2 = 0;
-				   
-				} else {
-					summaryTexte = getContext().getString(R.string.avancement_progressbar_PX_summary1);
-					summaryTexte = summaryTexte.replace("@total", ""+nbPhotosPrincATelecharger ) ;
-					summaryTexte = summaryTexte.replace("@nb", ""+nbPhotosPrincDejaLa );
-				   
-					if (nbPhotosATelecharger == 0) {
-						summaryTexte += getContext().getString(R.string.avancement_progressbar_PX_jamais_summary2);
-					   
-						avancement1 = 0;
-						avancement2 = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
-					} else {
-						summaryTexte += getContext().getString(R.string.avancement_progressbar_PX_summary2);
-						summaryTexte = summaryTexte.replace("@total", ""+nbPhotosATelecharger ) ;
-						summaryTexte = summaryTexte.replace("@nb", ""+nbPhotosDejaLa );
-					   
-						avancement1 = 100 * nbPhotosDejaLa / nbPhotosATelecharger;
-						avancement2 = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
-					}
-				}
-			}
-		}
-	   
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - summaryTexte"+summaryTexte);
+	public ProgressBarZone(Context inContext, LinearLayout inContainerLayout, NbBar nbbars) {
+		this.inContext = inContext;
+		this.nbbars = nbbars;
+		LayoutInflater inflater = (LayoutInflater) inContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View convertView = inflater.inflate(R.layout.progressbar_zone, null);
+		tvTitleText = (TextView) convertView.findViewById(R.id.title);
+		ivIcone = (ImageView) convertView.findViewById(R.id.icon);
+		tvSummaryText = (TextView) convertView.findViewById(R.id.summary);
+		pbProgressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
 		
-	   
-	   TextView tvTitleText = (TextView) convertView.findViewById(R.id.title);
-   		tvTitleText.setText(inTitre);
 		   
-		   ImageView ivIcone = (ImageView) convertView.findViewById(R.id.icon);
+		pbProgressBarPhotoPrinc = (ProgressBar) convertView.findViewById(R.id.progressBarPhotoPrinc);
+		pbProgressBarPhoto = (ProgressBar) convertView.findViewById(R.id.progressBarPhoto);
+		   
+		
+		inContainerLayout.addView(convertView);
+		
+	}
+	
+	public ProgressBarZone(Context inContext, LinearLayout inContainerLayout, NbBar nbbars, String inTitre, String inSummary, int inIcone, boolean inAffBarrePhotoPrinc, int inAvancPhotoPrinc, boolean inAffBarrePhoto, int inAvancPhoto) {
+		this(inContext, inContainerLayout, nbbars);
+		update(inSummary, inSummary, inAvancPhoto, inAffBarrePhoto, inAvancPhoto, inAffBarrePhoto, inAvancPhoto);
+	}
+
+	public void update(String inTitre, String inSummary, int inIcone, boolean inAffBarrePhotoPrinc, int inAvancPhotoPrinc, boolean inAffBarrePhoto, int inAvancPhoto){
+		
+		   tvTitleText.setText(inTitre);
+		   
+		   
 		   ivIcone.setImageResource(inIcone);
-			
-		   TextView tvSummaryText = (TextView) convertView.findViewById(R.id.summary);
+
+		   int iconeZine = Integer.valueOf(Outils.getParamString(inContext.getApplicationContext(), R.string.pref_key_list_icon_size, "128"));
+	       ivIcone.setMaxHeight(iconeZine);
+	   	
+		   
 		   tvSummaryText.setText(inSummary);
 		   
-		   ProgressBar pbProgressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
-		   if ( inAffBarre ) {
-			   pbProgressBar.setProgress(inAvancPrinc);
-			   pbProgressBar.setSecondaryProgress(inAvancSecond);
-		   } else {
-			   pbProgressBar.setVisibility(View.GONE);
+		   
+		   pbProgressBar.setVisibility(View.GONE);
+		   
+		   
+		   if ( inAffBarrePhotoPrinc ) {
+			   pbProgressBarPhotoPrinc.setVisibility(View.VISIBLE);
+			   pbProgressBarPhotoPrinc.setProgress(inAvancPhotoPrinc);
+		   }
+		   if ( inAffBarrePhoto ) {
+			   pbProgressBarPhoto.setVisibility(View.VISIBLE);
+			   pbProgressBarPhoto.setProgress(inAvancPhoto);
 		   }
 		   
 		   // Changement couleur de la barre en fonction de l'avancement
-		   int limite1 = Integer.parseInt(getContext().getString(R.string.avancement_progressbar_limite1) );
-		   int limite2 = Integer.parseInt(getContext().getString(R.string.avancement_progressbar_limite2) );
-		   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - limites : "+limite1+" - "+limite2);
+		   int limite1 = Integer.parseInt(inContext.getString(R.string.avancement_progressbar_limite1) );
+		   int limite2 = Integer.parseInt(inContext.getString(R.string.avancement_progressbar_limite2) );
+		   int limite3 = Integer.parseInt(inContext.getString(R.string.avancement_progressbar_limite3) );
+		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - limites : "+limite1+" - "+limite2);
 		   
-		   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Couleur1 :"+getContext().getString(R.string.avancement_progressbar_couleur1));
+		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Couleur1 :"+getContext().getString(R.string.avancement_progressbar_couleur1));
 		   
-		   int couleur;
-		   if (inAvancPrinc <= limite1) {
-			   	couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur1) );   
+		   int couleurPhotoPrinc;
+		   if (inAvancPhotoPrinc <= limite1) {
+			   couleurPhotoPrinc = Color.parseColor( inContext.getString(R.string.avancement_progressbar_couleur1) );   
+		   } else if (inAvancPhotoPrinc <= limite2) {
+			   couleurPhotoPrinc = Color.parseColor( inContext.getString(R.string.avancement_progressbar_couleur2) );
+		   } else if (inAvancPhotoPrinc <= limite3) {
+			   couleurPhotoPrinc = Color.parseColor( inContext.getString(R.string.avancement_progressbar_couleur3) );
 		   } else {
-			   if (inAvancPrinc <= limite2) {
-				   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur2) );
-			   } else {
-				   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur3) );
-			   }
+			   couleurPhotoPrinc = Color.parseColor( inContext.getString(R.string.avancement_progressbar_couleur4) );
 		   }
-		   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - couleur : "+couleur);
+		   
+		   int couleurPhoto;
+		   if (inAvancPhoto <= limite1) {
+			   couleurPhoto = Color.parseColor( inContext.getString(R.string.avancement_progressbar_couleur1) );   
+		   } else if (inAvancPhoto <= limite2) {
+			   couleurPhoto = Color.parseColor( inContext.getString(R.string.avancement_progressbar_couleur2) );
+		   } else if (inAvancPhoto <= limite3) {
+			   couleurPhoto = Color.parseColor( inContext.getString(R.string.avancement_progressbar_couleur3) );
+		   } else {
+			   couleurPhoto = Color.parseColor( inContext.getString(R.string.avancement_progressbar_couleur4) );
+		   }
+		   
 		   // API 10 : pbProgressBar.getProgressDrawable().setColorFilter(couleur, Mode.MULTIPLY);
 		   // TODO : API 14 (Vérifier la version qui nécessite effectivement le changement) : pbProgressBar.getProgressDrawable().setColorFilter(couleur, Mode.SRC_IN);
-	   
-		   pbProgressBar.getProgressDrawable().setColorFilter(couleur, 
-				   Mode.valueOf(getContext().getString(R.string.avancement_progressbar_mode) ) );
+		   pbProgressBarPhotoPrinc.getProgressDrawable().setColorFilter(couleurPhotoPrinc, 
+				   Mode.valueOf(inContext.getString(R.string.avancement_progressbar_mode) ) );
+		   pbProgressBarPhoto.getProgressDrawable().setColorFilter(couleurPhoto, 
+				   Mode.valueOf(inContext.getString(R.string.avancement_progressbar_mode) ) );
 		   
-		   inContainerLayout.addView(convertView);
+		   
 	}
 	
-	*/
 }

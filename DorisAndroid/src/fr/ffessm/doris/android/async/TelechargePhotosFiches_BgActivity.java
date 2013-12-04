@@ -94,18 +94,26 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     
     protected DataChangedListener listener;
     
+    
+    /**
+     * version qui ne conserve que l'id de la photo, permet de libérer de la mémoire plus de mémoire, mais oblige à refaire une réquète
+     * pour retrouver l'url de la photo
+     */
 	class PhotoATraiter
 	{
 		int id;
 		Outils.ImageType imageType;
 		boolean imagePrincipale;
 		
+		int idZoneConcernee = -1;
+
 		public PhotoATraiter(){}
 
-		public PhotoATraiter(PhotoFiche inPhotoFiche, ImageType inImageType, boolean inImagePrincipale) {
+		public PhotoATraiter(PhotoFiche inPhotoFiche, ImageType inImageType, boolean inImagePrincipale, int idZoneConcernee) {
 			id = inPhotoFiche.getId();
 			imageType = inImageType;
 			imagePrincipale = inImagePrincipale;
+			this.idZoneConcernee = idZoneConcernee;
 		}
 		
 		public int getId() {
@@ -114,6 +122,60 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		public String getIdStr() {
 			return ""+this.id;
 		}
+		public int getIdZoneConcernee() {
+			return idZoneConcernee;
+		}
+
+		public void setIdZoneConcernee(int idZoneConcernee) {
+			this.idZoneConcernee = idZoneConcernee;
+		}
+	}
+	
+	/**
+     * version qui ne conserve que la PhotoFiche, (pour algo optimisé)
+     * pour retrouver l'url de la photo
+     */
+	class PhotoATraiterOptim
+	{
+		PhotoFiche photoFiche;
+		boolean imagePrincipale;
+		
+		int idZoneConcernee;  // Pour l'instant, avec cet algo, la photo n'est comptabilisée que dans une seule zone
+
+		public PhotoATraiterOptim(){}
+
+		public PhotoATraiterOptim(PhotoFiche inPhotoFiche,  boolean inImagePrincipale, int idZoneConcernee) {
+			photoFiche = inPhotoFiche;
+			imagePrincipale = inImagePrincipale;
+			this.idZoneConcernee = idZoneConcernee;
+		}
+		
+		public PhotoFiche getPhotoFiche() {
+			return this.photoFiche;
+		}
+		public int getIdZoneConcernee() {
+			return idZoneConcernee;
+		}
+
+		/** assure que le hasset va bien trouver les doublons
+		 * 
+		 */
+		@Override
+		public boolean equals(Object o) {
+			if(o instanceof PhotoATraiterOptim){
+				return photoFiche.getId() == ((PhotoATraiterOptim)o).getPhotoFiche().getId() && 
+					   imagePrincipale == ((PhotoATraiterOptim)o).imagePrincipale;
+			}
+			else
+				return super.equals(o);
+		}
+
+		@Override
+		public int hashCode() {
+			// utilise l'id de la photo pour trier
+			return photoFiche.getId();
+		}
+		
 	}
 
 		
@@ -312,18 +374,21 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         				Collection<Outils.ImageType> typesImagesARecuperer = new HashSet<Outils.ImageType>(3); // hashset pour n'ajouter les type qu'une seule fois;
         				// Temporaire : on télécharge toujours le format vignette afin d'accélérer l'affichage des listes
         				typesImagesARecuperer.add(Outils.ImageType.VIGNETTE);
+        				// pas idéal mais considère la fiche pour une seule zone pour l'instant
+        				int idZoneConcernee=-1;
         				for (ZoneGeographique zoneGeo : listeZoneGeo) {
         					Outils.ImageType imageType = Outils.getImageQualityToDownload(context, true, zoneGeo.getId());
         					if(imageType != null) {
         						typesImagesARecuperer.add(imageType);
         					}
+        					idZoneConcernee = zoneGeo.getId();
         				}	
         				for(Outils.ImageType imageType :typesImagesARecuperer){
     						nbFichesdebug2 ++;
     						if((nbFichesAnalysees % 100) == 0) Log.d(LOG_TAG, "Debug - 220 - nbFichesdebug2 : "+nbFichesdebug2);
         					if (! Outils.isAvailableImagePhotoFiche(context, photoFichePrinc, imageType)) {
     							photoFichePrinc.setContextDB(dorisDBHelper);
-    							collectPhotosPrincATraiter.add(new PhotoATraiter(photoFichePrinc, imageType, true));
+    							collectPhotosPrincATraiter.add(new PhotoATraiter(photoFichePrinc, imageType, true, idZoneConcernee));
     						}
         				}
 	        		}
@@ -341,7 +406,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		        					if(imageType != null) {
 		        						if (! Outils.isAvailableImagePhotoFiche(context, photoFiche, imageType)) {
 				        					photoFiche.setContextDB(dorisDBHelper);
-				        					collectPhotosATraiter.add(new PhotoATraiter(photoFiche, imageType, false));
+				        					collectPhotosATraiter.add(new PhotoATraiter(photoFiche, imageType, false, zoneGeo.getId()));
 		        						}
 		        					}
 		        				}
@@ -424,9 +489,9 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 				// On commence par les photos principales
 	    		
 		    	PhotoFiche photoFichePrinc;
-	    		HashSet<PhotoFiche> hsImagesPrincVig = new HashSet<PhotoFiche>(100);
-	    		HashSet<PhotoFiche> hsImagesPrincMedRes = new HashSet<PhotoFiche>(100);
-	    		HashSet<PhotoFiche> hsImagesPrincHiRes = new HashSet<PhotoFiche>(100);
+	    		HashSet<PhotoATraiterOptim> hsImagesPrincVig = new HashSet<PhotoATraiterOptim>(100);
+	    		HashSet<PhotoATraiterOptim> hsImagesPrincMedRes = new HashSet<PhotoATraiterOptim>(100);
+	    		HashSet<PhotoATraiterOptim> hsImagesPrincHiRes = new HashSet<PhotoATraiterOptim>(100);
 
 	    		int nbPhotosPrincATelechargerPourZone;
 	    		int nbPhotosPrincDejaLaPourZone;
@@ -479,7 +544,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 			        					// Vérification que pas déjà téléchargée
 			        					fichierPhoto = new File(Outils.getImageFolderVignette(context), photoFichePrinc.getCleURL());
 			        					if ( !hsImagesVigAllreadyAvailable.contains(fichierPhoto) ){
-			        						hsImagesPrincVig.add(photoFichePrinc);
+			        						hsImagesPrincVig.add(new PhotoATraiterOptim(photoFichePrinc, true, zoneGeo.getId()));
 			        					}  else nbPhotosPrincDejaLaPourZone++;
 			        				} else nbPhotosPrincDejaLaPourZone++;
 			        				
@@ -488,7 +553,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 			        					if ( !hsImagesPrincMedRes.contains(photoFichePrinc) ){
 			        						fichierPhoto = new File(Outils.getImageFolderMedRes(context), photoFichePrinc.getCleURL());
 				        					if ( !hsImagesMedResAllreadyAvailable.contains(fichierPhoto) ){
-				        						hsImagesPrincMedRes.add(photoFichePrinc);
+				        						hsImagesPrincMedRes.add(new PhotoATraiterOptim(photoFichePrinc, true, zoneGeo.getId()));
 				        					} else nbPhotosPrincDejaLaPourZone++;
 				        				} else nbPhotosPrincDejaLaPourZone++;
 			        				}
@@ -497,7 +562,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 			        					if ( !hsImagesPrincHiRes.contains(photoFichePrinc) ){
 			        						fichierPhoto = new File(Outils.getImageFolderHiRes(context), photoFichePrinc.getCleURL());
 				        					if ( !hsImagesHiResAllreadyAvailable.contains(fichierPhoto) ){
-				        						hsImagesPrincHiRes.add(photoFichePrinc);
+				        						hsImagesPrincHiRes.add(new PhotoATraiterOptim(photoFichePrinc, true, zoneGeo.getId()));
 				        					} else nbPhotosPrincDejaLaPourZone++;
 				        				} else nbPhotosPrincDejaLaPourZone++;
 			        				}
@@ -541,9 +606,9 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 
 	    		// -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 				// -- Puis toutes les autres (pas principales) --
-	    		HashSet<PhotoFiche> hsImagesVig = new HashSet<PhotoFiche>(100);
-	    		HashSet<PhotoFiche> hsImagesMedRes = new HashSet<PhotoFiche>(100);
-	    		HashSet<PhotoFiche> hsImagesHiRes = new HashSet<PhotoFiche>(100);
+	    		HashSet<PhotoATraiterOptim> hsImagesVig = new HashSet<PhotoATraiterOptim>(100);
+	    		HashSet<PhotoATraiterOptim> hsImagesMedRes = new HashSet<PhotoATraiterOptim>(100);
+	    		HashSet<PhotoATraiterOptim> hsImagesHiRes = new HashSet<PhotoATraiterOptim>(100);
 	    		
 	    		int nbPhotosATelechargerPourZone;
 	    		int nbPhotosDejaLaPourZone;
@@ -600,7 +665,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 				        					// Vérification que pas déjà téléchargée
 				        					fichierPhoto = new File(Outils.getImageFolderVignette(context), photoFiche.getCleURL());
 				        					if ( !hsImagesVigAllreadyAvailable.contains(fichierPhoto) ){
-				        						hsImagesVig.add(photoFiche);
+				        						hsImagesVig.add(new PhotoATraiterOptim(photoFiche, false, zoneGeo.getId()));
 				        					} else nbPhotosDejaLaPourZone++;
 				        				}
 				        				if ( imageTypeImage == Outils.ImageType.MED_RES) {
@@ -608,7 +673,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 				        					if ( !hsImagesMedRes.contains(photoFiche) ){
 				        						fichierPhoto = new File(Outils.getImageFolderMedRes(context), photoFiche.getCleURL());
 					        					if ( !hsImagesMedResAllreadyAvailable.contains(fichierPhoto) ){
-					        						hsImagesMedRes.add(photoFiche);
+					        						hsImagesMedRes.add(new PhotoATraiterOptim(photoFiche, false, zoneGeo.getId()));
 					        					} else nbPhotosDejaLaPourZone++;
 					        				}
 				        				}
@@ -617,7 +682,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 				        					if ( !hsImagesHiRes.contains(photoFiche) ){
 				        						fichierPhoto = new File(Outils.getImageFolderHiRes(context), photoFiche.getCleURL());
 					        					if ( !hsImagesHiResAllreadyAvailable.contains(fichierPhoto) ){
-					        						hsImagesHiRes.add(photoFiche);
+					        						hsImagesHiRes.add(new PhotoATraiterOptim(photoFiche, false, zoneGeo.getId()));
 					        					} else nbPhotosDejaLaPourZone++;
 					        				}
 				        				}
@@ -765,16 +830,20 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     }
     
     // recupération de la photo sur internet
-    private int recupPhotoSurInternet(HashSet<PhotoFiche> inListePhotos, Outils.ImageType inImageType, int nbPhotoRetreived) {
-
-    	Iterator<PhotoFiche> itPhoto = inListePhotos.iterator();
+    private int recupPhotoSurInternet(HashSet<PhotoATraiterOptim> inListePhotos, Outils.ImageType inImageType, int nbPhotoRetreived) {
+    	
+    	Iterator<PhotoATraiterOptim> itPhoto = inListePhotos.iterator();
     	while (itPhoto.hasNext()) {
-    		PhotoFiche photo = itPhoto.next();
+    		PhotoATraiterOptim photoATraiter = itPhoto.next();
+    		PhotoFiche photo = photoATraiter.getPhotoFiche();
 	    	try{
 	    		
 				Outils.getOrDownloadPhotoFile(context, photo, inImageType);
 				Log.i(LOG_TAG, "image "+inImageType+" "+photo.getCleURL()+" téléchargée");
-				
+				// fait avancer la barre de la zone concernée // TODO pas trés optimal, mais fonctionne
+				Outils.setDejaLaQteZoneGeo(context, photoATraiter.getIdZoneConcernee(), photoATraiter.imagePrincipale, 
+						Outils.getDejaLaQteZoneGeo(context, photoATraiter.getIdZoneConcernee(), photoATraiter.imagePrincipale)+1);        		
+        		
 				nbPhotoRetreived = nbPhotoRetreived+1;
 				if( (nbPhotoRetreived % 10) == 0) publishProgress(nbPhotoRetreived);
 				// laisse un peu de temps entre chaque téléchargement 
