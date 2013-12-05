@@ -143,26 +143,4 @@ public class Fiches_ZonesGeographiques {
 	public void setContextDB(DorisDBHelper contextDB){
 		this._contextDB = contextDB;
 	}
-	
-	@Override
-	public boolean equals(Object obj)
-	{	// Vérification de la référence
-		if (obj==this)
-			return true;
- 
-		//Vérification du type du paramètre puis de ses attributs.
-		if (obj instanceof Fiches_ZonesGeographiques)
-		{
-			Fiches_ZonesGeographiques objBis = (Fiches_ZonesGeographiques) obj;
-			return this.fiche.equals(objBis.getFiche());
- 
-		} else
-			return false;
-	}
-	
-	@Override
-	public int hashCode()
-    {
-		return this.fiche.hashCode();
-	}
 }

@@ -89,6 +89,7 @@ public class Fiche {
 	public static final String XML_ATT_ETATFICHE = "etatFiche";
 	public static final String XML_ATT_DATECREATION = "dateCreation";
 	public static final String XML_ATT_DATEMODIFICATION = "dateModification";
+	public static final String XML_ATT_NUMEROFICHESLIEES = "numerofichesLiees";
 	public static final String XML_REF_REDACTEURS = "redacteurs";
 	public static final String XML_REF_PHOTOSFICHE = "photosFiche";
 	public static final String XML_REF_ZONESGEOGRAPHIQUES = "zonesGeographiques";
@@ -135,6 +136,10 @@ public class Fiche {
 
 	@DatabaseField
 	protected java.lang.String dateModification;
+
+	/** numéros des fiches liées séparé par des point virgules */ 
+	@DatabaseField
+	protected java.lang.String numerofichesLiees;
 	
 
 	@DatabaseField(foreign = true)
@@ -754,12 +759,21 @@ public class Fiche {
 		
 	}
 	
-	
+	/**
+	 * @return liste des numeroFiche des fiches liées
+	 */
+	public List<Integer> getNumerosFicheLiees(){
+		ArrayList<Integer> result = new ArrayList<Integer>();
+		for(String  s : this.numerofichesLiees.split(";")){
+			result.add(Integer.parseInt(s));
+		}
+		return result;
+	}
 	
 	// End of user code
 	
 	public Fiche() {} // needed by ormlite
-	public Fiche(java.lang.String nomScientifique, java.lang.String nomCommun, int numeroFiche, int etatFiche, java.lang.String dateCreation, java.lang.String dateModification) {
+	public Fiche(java.lang.String nomScientifique, java.lang.String nomCommun, int numeroFiche, int etatFiche, java.lang.String dateCreation, java.lang.String dateModification, java.lang.String numerofichesLiees) {
 		super();
 		this.nomScientifique = nomScientifique;
 		this.nomCommun = nomCommun;
@@ -767,6 +781,7 @@ public class Fiche {
 		this.etatFiche = etatFiche;
 		this.dateCreation = dateCreation;
 		this.dateModification = dateModification;
+		this.numerofichesLiees = numerofichesLiees;
 	} 
 
 	public int getId() {
@@ -818,6 +833,12 @@ public class Fiche {
 	}
 	public void setDateModification(java.lang.String dateModification) {
 		this.dateModification = dateModification;
+	}
+	public java.lang.String getNumerofichesLiees() {
+		return this.numerofichesLiees;
+	}
+	public void setNumerofichesLiees(java.lang.String numerofichesLiees) {
+		this.numerofichesLiees = numerofichesLiees;
 	}
 
 	public Participant getRedacteurs() {
@@ -963,6 +984,9 @@ public class Fiche {
 		sb.append("\n"+indent+"\t<"+XML_ATT_DATEMODIFICATION+">");
 		sb.append(StringEscapeUtils.escapeXml(this.dateModification));
     	sb.append("</"+XML_ATT_DATEMODIFICATION+">");
+		sb.append("\n"+indent+"\t<"+XML_ATT_NUMEROFICHESLIEES+">");
+		sb.append(StringEscapeUtils.escapeXml(this.numerofichesLiees));
+    	sb.append("</"+XML_ATT_NUMEROFICHESLIEES+">");
 
 		if(this.redacteurs!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_REDACTEURS+">");

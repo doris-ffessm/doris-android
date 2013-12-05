@@ -18,6 +18,7 @@
       <dataAttributes name="etatFiche" documentation="Etat Avancement de la fiche &#xD;&#xA;4 : Fiche Publiée - 1, 2, 3 : En cours de Rédaction - 5 : Fiche Proposée" type="//@dataModel/@dataClasses.12" simpleXmlType="true"/>
       <dataAttributes name="dateCreation" lowerbound="1" type="//@dataModel/@dataClasses.10"/>
       <dataAttributes name="dateModification" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="numerofichesLiees" documentation="numéros des fiches liées séparé par des point virgules" type="//@dataModel/@dataClasses.10"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="AutreDenomination">
       <dataReferences name="fiche" opposite="//@dataModel/@dataAssociations.6" type="//@dataModel/@dataClasses.0"/>

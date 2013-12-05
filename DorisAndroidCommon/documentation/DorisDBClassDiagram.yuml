@@ -1,4 +1,4 @@
-[Fiche|nomScientifique : String;nomCommun : String;numeroFiche : Integer;etatFiche : Integer;dateCreation : String;dateModification : String]		
+[Fiche|nomScientifique : String;nomCommun : String;numeroFiche : Integer;etatFiche : Integer;dateCreation : String;dateModification : String;numerofichesLiees : String]		
 [AutreDenomination|denomination : String;langue : String]		
 [PhotoFiche|cleURL : String;/imageVignette : File;/imageMoyenne : File;/imageGrande : File;titre : String;description : LongString]		
 [SectionFiche|titre : String;texte : String]		
