@@ -125,7 +125,7 @@ public class SiteDoris {
     	
     	// Création du groupe racine qui contiendra récurcivement tout l'arbre
     	// TODO : Supprimer sur les Créations de Groupe ci-dessous le commentaire tempo aidant à debbeuger
-    	Groupe groupe = new Groupe(0, 0, "racine","Tempo pour debug : 0-0");
+    	Groupe groupe = new Groupe(0, 0, "racine","Tempo pour debug : 0-0", "", "");
     	Groupe groupeRacine = groupe;
     	Groupe groupeNiveau1Courant = null;
     	Groupe groupeNiveau2Courant = null;
@@ -163,7 +163,7 @@ public class SiteDoris {
 						if (elementIMG.getAttributeValue("src").contains("pucecarre.gif")) {
 							log.info("getGroupes() - groupe 1 : "+elementTD.getRenderer().toString());
 							
-							groupe = new Groupe(0, 0, elementTD.getRenderer().toString(),"Tempo pour debug : 1-0");
+							groupe = new Groupe(0, 0, elementTD.getRenderer().toString(),"Tempo pour debug : 1-0", "", "");
 							listeGroupes.add(groupe);
 							groupe.setGroupePere(groupeRacine);
 							
@@ -175,7 +175,7 @@ public class SiteDoris {
 						if (nivPrecedent != 0) {
 							log.info("getGroupes() - groupe 2 : "+elementTD.getRenderer().toString());
 							
-							groupe = new Groupe(0, 0, elementTD.getRenderer().toString(),"Tempo pour debug : 2-0");
+							groupe = new Groupe(0, 0, elementTD.getRenderer().toString(),"Tempo pour debug : 2-0", "", "");
 							listeGroupes.add(groupe);
 							
 							if (nivPrecedent >= 1) {
@@ -213,15 +213,17 @@ public class SiteDoris {
 												if (nivPrecedent == 1){
 													log.info("getGroupes() - groupe 3 : "+elementA.getRenderer().toString());
 													
-													groupe = new Groupe(Integer.parseInt(elementA.getAttributeValue("href").toString().replaceAll(".*=", "")), 0, elementA.getRenderer().toString(),"Tempo pour debug : 3-1");
-													listeGroupes.add(groupe);
-	
-													groupe.setGroupePere(groupeNiveau1Courant);
-													
 													// Récupération de la vignette du Groupe
 													// TODO : Prévoir dans la base de donnée son URL et son nom (son nom = en fait le numéro du Groupe)
 													// (attention il faudra l'afficher sur fond blanc : sinon pas propre visuellement
 													String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
+													
+													groupe = new Groupe(Integer.parseInt(elementA.getAttributeValue("href").toString().replaceAll(".*=", "")), 0, elementA.getRenderer().toString(),"Tempo pour debug : 3-1", urlPhotoGroupe, "");
+													listeGroupes.add(groupe);
+	
+													groupe.setGroupePere(groupeNiveau1Courant);
+													
+													
 													
 													
 													groupeNiveau2Courant = groupe;
@@ -229,13 +231,16 @@ public class SiteDoris {
 												} else if (nivPrecedent >= 2){
 													log.info("getGroupes() - groupe 3 : "+elementA.getRenderer().toString());
 													
-													groupe = new Groupe(Integer.parseInt(elementA.getAttributeValue("href").toString().replaceAll(".*=", "")), 0, elementA.getRenderer().toString(),"Tempo pour debug : 3-2");
+													// Récupération de la vignette du Groupe
+													// TODO : Prévoir dans la base de donnée son URL et son nom (son nom = en fait le numéro du Groupe)
+													// (attention il faudra l'afficher sur fond blanc : sinon pas propre visuellement
+													String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
+													
+													groupe = new Groupe(Integer.parseInt(elementA.getAttributeValue("href").toString().replaceAll(".*=", "")), 0, elementA.getRenderer().toString(),"Tempo pour debug : 3-2", urlPhotoGroupe, "");
 													listeGroupes.add(groupe);
 
 													groupe.setGroupePere(groupeNiveau2Courant);
 
-													// Récupération de la vignette du Groupe
-													String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
 													
 													groupeNiveau3Courant = groupe;
 											    	nivPrecedent = 3;
@@ -259,14 +264,15 @@ public class SiteDoris {
 											if (elementAClassG4.toString().equals("normalgris2")){
 
 												log.info("getGroupes() - groupe 4 : "+elementAG4.getRenderer().toString());
+
+												// Récupération de la vignette du Groupe
+												String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
 												
-												groupe = new Groupe(groupeNiveau3Courant.getNumeroGroupe(), Integer.parseInt(elementAG4.getAttributeValue("href").toString().replaceAll(".*sousgroupe_numero=(\\d+)&groupe_numero.*", "$1")), elementAG4.getRenderer().toString(),"Tempo pour debug : 4-0");
+												groupe = new Groupe(groupeNiveau3Courant.getNumeroGroupe(), Integer.parseInt(elementAG4.getAttributeValue("href").toString().replaceAll(".*sousgroupe_numero=(\\d+)&groupe_numero.*", "$1")), elementAG4.getRenderer().toString(),"Tempo pour debug : 4-0", urlPhotoGroupe, "");
 												listeGroupes.add(groupe);
 												
 												groupe.setGroupePere(groupeNiveau3Courant);
 												
-												// Récupération de la vignette du Groupe
-												String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
 				
 										    	nivPrecedent = 4;
 

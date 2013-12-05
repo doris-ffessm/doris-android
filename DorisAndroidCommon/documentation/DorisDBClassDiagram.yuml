@@ -6,7 +6,7 @@
 [PhotoParticipant|cleURL : String;/image : File]		
 [ZoneGeographique|nom : String;description : String]		
 [ZoneObservation|nom : String]		
-[Groupe|numeroGroupe : Integer;numeroSousGroupe : Integer;nomGroupe : String;descriptionGroupe : String]		
+[Groupe|numeroGroupe : Integer;numeroSousGroupe : Integer;nomGroupe : String;descriptionGroupe : String;cleURLImage : String;nomImage : String]		
 [DorisDB_metadata|dateBase : String]		
 [Fiche]
 [Fiche]-redacteurs 0..1>[Participant]

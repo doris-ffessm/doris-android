@@ -65,6 +65,8 @@
       <dataAttributes name="numeroSousGroupe" documentation="XXX de sousgroupe_numero=XXX dans l'url permettant avec le numero de groupe d'afficher le groupe.&#xA;Seuls certains groupes de plus bas niveau ont le numéro de sous-groupe" type="//@dataModel/@dataClasses.12"/>
       <dataAttributes name="nomGroupe" lowerbound="1" type="//@dataModel/@dataClasses.10" simpleXmlType="true"/>
       <dataAttributes name="descriptionGroupe" documentation="En haut des pages de groupe, il y a un petit texte expliquant les grandes caractéristques du groupe.&#xA;C'est ce texte." type="//@dataModel/@dataClasses.10" simpleXmlType="true"/>
+      <dataAttributes name="cleURLImage" documentation="url de base pour les images de ce groupe" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="nomImage" documentation="nom de l'image de ce groupe" type="//@dataModel/@dataClasses.10"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="DorisDB_metadata" documentation="données complémentaires sur la base Doris">
       <dataAttributes name="dateBase" documentation="Date de récupération de la base DORIS" type="//@dataModel/@dataClasses.10"/>

@@ -192,6 +192,10 @@ public class DorisDBXMLParser {
 	public static final String DATAATT_GROUPE_NUMEROGROUPE = "NUMEROGROUPE";
 	public static final String DATAATT_GROUPE_numeroSousGroupe = "numeroSousGroupe";
 	public static final String DATAATT_GROUPE_NUMEROSOUSGROUPE = "NUMEROSOUSGROUPE";
+	public static final String DATAATT_GROUPE_cleURLImage = "cleURLImage";
+	public static final String DATAATT_GROUPE_CLEURLIMAGE = "CLEURLIMAGE";
+	public static final String DATAATT_GROUPE_nomImage = "nomImage";
+	public static final String DATAATT_GROUPE_NOMIMAGE = "NOMIMAGE";
 	public static final String DATAREF_GROUPE_groupesFils = "groupesFils";
 	public static final String DATAREF_GROUPE_groupePere = "groupePere";
 	public static final String DATAATT_DORISDB_METADATA_dateBase = "dateBase";
@@ -819,6 +823,16 @@ public class DorisDBXMLParser {
 			//TODO if (currentTagName.equals(DATAATT_GROUPE_NUMEROSOUSGROUPE)) {
 	        //    title = readTitle(parser);
 	        //} else	
+			if (currentTagName.equals(DATAATT_GROUPE_cleURLImage)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_GROUPE_cleURLImage);
+	            result.setCleURLImage(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_GROUPE_cleURLImage);
+	        } else
+			if (currentTagName.equals(DATAATT_GROUPE_nomImage)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_GROUPE_nomImage);
+	            result.setNomImage(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_GROUPE_nomImage);
+	        } else
 			if (currentTagName.equals(DATAREF_GROUPE_groupesFils)) {
 				List<Groupe> entries = readGroupes(parser,DATAREF_GROUPE_groupesFils);	
 				groupes.addAll(entries); // add for inclusion in the DB
