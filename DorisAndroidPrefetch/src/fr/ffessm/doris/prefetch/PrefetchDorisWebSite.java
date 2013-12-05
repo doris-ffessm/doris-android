@@ -153,8 +153,9 @@ public class PrefetchDorisWebSite {
 		if (action.equals("TEST")) {
 			log.debug("doMain() - Début TEST");
 			
+			/*
 			String listeParticipantsFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeParticipants-a.html";
-			log.info("Récup. Liste Groupes Doris : " + listeParticipantsFichier);
+			log.debug("Récup. Liste Groupes Doris : " + listeParticipantsFichier);
 			
 			String contenuFichierHtml = null;
 			contenuFichierHtml = Outils.getFichier(new File(listeParticipantsFichier));
@@ -163,6 +164,12 @@ public class PrefetchDorisWebSite {
 			
 			List<Participant> listeParticipants = new ArrayList<Participant>(0);
 			listeParticipants = SiteDoris.getListeParticipantsParInitiale(contenuFichierHtml);
+			
+			log.debug("Nb Participants : "+listeParticipants.size());
+			for (Participant participant : listeParticipants) {
+				log.debug("Participant : " + participant.getId()+" "+participant.getNom());
+			}
+			*/
 			
 		} else {
 
@@ -202,6 +209,7 @@ public class PrefetchDorisWebSite {
 					dbContext.groupeDao.create(groupe);
 				}
 				dbContext.groupeDao.commit(connection_groupeDao);
+				dbContext.ficheDao.setAutoCommit(connection_groupeDao,true);
 				listeGroupes = dbContext.groupeDao.queryForAll();
 				log.debug("doMain() - listeGroupes.size : "+listeGroupes.size());
 				
@@ -233,7 +241,8 @@ public class PrefetchDorisWebSite {
 					dbContext.ficheDao.create(fiche);
 				}
 				dbContext.ficheDao.commit(connection_ficheDao);
-
+				dbContext.ficheDao.setAutoCommit(connection_ficheDao,true);
+				
 				listeFiches = dbContext.ficheDao.queryForAll();
 				log.debug("doMain() - listeFiches.size : "+listeFiches.size());
 				
@@ -243,9 +252,8 @@ public class PrefetchDorisWebSite {
 				
 				// TODO : en cours par GMo : la construction de la liste des Participants
 				// On boucle sur les initailes des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
-				//String listeFiltres="abcdefghijklmnopqrstuvwxyz";
-				String listeFiltres="ab";
-				List<Participant> listeParticipants = new ArrayList<Participant>(0);
+				String listeFiltres="abcdefghijklmnopqrstuvwxyz";
+				//String listeFiltres="ab";
 				
 				for (char initiale : listeFiltres.toCharArray()){
 					log.debug("doMain() - Recup Participants : "+initiale);
@@ -267,18 +275,18 @@ public class PrefetchDorisWebSite {
 					}
 					List<Participant> listeParticipantsFromHTML = SiteDoris.getListeParticipantsParInitiale(contenuFichierHtml);
 					log.info("Creation de "+listeParticipantsFromHTML.size()+" participants pour la lettre : "+initiale);
+					
 					DatabaseConnection connection_participantDao = dbContext.participantDao.startThreadConnection();
 					dbContext.participantDao.setAutoCommit(connection_participantDao,false);
 					for (Participant participant : listeParticipantsFromHTML){
-						
 						dbContext.participantDao.create(participant);
 					}
 					dbContext.participantDao.commit(connection_participantDao);
-					listeParticipants.addAll(dbContext.participantDao.queryForAll());
-					log.debug("doMain() - " + initiale + " - listeParticipants.size : "+listeParticipants.size());
+					dbContext.participantDao.setAutoCommit(connection_participantDao,true);
 					
 				}
-				
+				List<Participant> listeParticipants = new ArrayList<Participant>(0);
+				listeParticipants.addAll(dbContext.participantDao.queryForAll());
 				log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
 				
 				
@@ -360,7 +368,7 @@ public class PrefetchDorisWebSite {
 						}
 					}
 					else{
-						log.info("Nombre max de fiches à traiter atteind.");
+						log.info("Nombre max de fiches à traiter atteint.");
 						break; // ignore les fiches suivantes
 					}
 				}
@@ -422,21 +430,32 @@ public class PrefetchDorisWebSite {
 		
 		List<Fiche> listFicheFromHTML = SiteDoris.getListeFiches(contenuFichierHtml);
 		log.info("Création des "+listFicheFromHTML.size()+" associations pour la Zone : " + listeFichesFichier);
-		for (Fiche fiche : listFicheFromHTML) {
-			// retrouve la fiche dans la base
-			try {
-				Fiche queryFiche = new Fiche();
-				queryFiche.setNumeroFiche(fiche.getNumeroFiche());
-				List<Fiche> fichesDeLaBase = dbContext.ficheDao.queryForMatching(queryFiche);
-				if(fichesDeLaBase.size() != 1){
-					log.error("Pb pour retrouver la fiche n°"+queryFiche.getNumeroFiche()+ " dans la base qui en matche "+fichesDeLaBase.size());
-					continue;
+		
+		try {
+			DatabaseConnection connection_ficheDao = dbContext.ficheDao.startThreadConnection();
+			dbContext.ficheDao.setAutoCommit(connection_ficheDao,false);
+	
+			for (Fiche fiche : listFicheFromHTML) {
+				// retrouve la fiche dans la base
+				try {
+					Fiche queryFiche = new Fiche();
+					queryFiche.setNumeroFiche(fiche.getNumeroFiche());
+					List<Fiche> fichesDeLaBase = dbContext.ficheDao.queryForMatching(queryFiche);
+					if(fichesDeLaBase.size() != 1){
+						log.error("Pb pour retrouver la fiche n°"+queryFiche.getNumeroFiche()+ " dans la base qui en matche "+fichesDeLaBase.size());
+						continue;
+					}
+					fichesDeLaBase.get(0).setContextDB(dbContext);
+					fichesDeLaBase.get(0).addZoneGeographique(zoneGeographique);
+				} catch (SQLException e) {
+					log.error("erreur pendant la requete sur la fiche "+fiche.getNumeroFiche()+ " dans la base", e);
 				}
-				fichesDeLaBase.get(0).setContextDB(dbContext);
-				fichesDeLaBase.get(0).addZoneGeographique(zoneGeographique);
-			} catch (SQLException e) {
-				log.error("erreur pendant la requete sur la fiche "+fiche.getNumeroFiche()+ " dans la base", e);
 			}
+		
+			dbContext.ficheDao.commit(connection_ficheDao);
+			dbContext.ficheDao.setAutoCommit(connection_ficheDao,true);
+		} catch (SQLException e) {
+			log.error("impossible d'associer Fiches et Zone Géographique", e);
 		}
 	}
 	
