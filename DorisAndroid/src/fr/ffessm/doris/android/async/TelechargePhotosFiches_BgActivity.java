@@ -772,7 +772,6 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	protected void onCancelled() {
 		super.onCancelled();
 		mNotificationHelper.completed();
-        DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = null;
 	}
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it

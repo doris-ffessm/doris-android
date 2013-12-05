@@ -7,6 +7,7 @@
 (ImagePleinEcran)-><ImagePleinEcranChoice>
 (GroupSelection)-><GroupSelectionChoice>
 (ZoneGeoSelection)-><ZoneGeoSelectionChoice>
+(GroupeSelection)-><GroupeSelectionChoice>
 (TelechargeFiches)->(end)
 (VerifieNouvellesFiches)->(end)
 (VerifieMAJFiches)->(end)

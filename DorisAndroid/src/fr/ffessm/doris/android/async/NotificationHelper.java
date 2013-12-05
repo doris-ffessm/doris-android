@@ -94,7 +94,7 @@ public class NotificationHelper {
        
         
         //create the content which is shown in the notification pulldown
-        CharSequence contentText = racineTickerText+"0 / "+maxItemToProcess; //Text of the notification in the pull down
+        CharSequence contentText = "0 / "+maxItemToProcess; //Text of the notification in the pull down
 
         //you have to set a PendingIntent on a notification to tell the system what you want it to do when the notification is selected
         //I don't want to use this here so I'm just creating a blank one

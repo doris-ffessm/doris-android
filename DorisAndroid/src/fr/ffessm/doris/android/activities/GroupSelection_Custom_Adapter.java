@@ -25,9 +25,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class GroupSelection_Adapter extends BaseExpandableListAdapter {
+public class GroupSelection_Custom_Adapter extends BaseExpandableListAdapter {
 
-	public static final String LOG_TAG = GroupSelection_Adapter.class.getName();
+	public static final String LOG_TAG = GroupSelection_Custom_Adapter.class.getName();
 	
 	protected ArrayList<Groupe> rawGroupes;
 	
@@ -60,7 +60,7 @@ public class GroupSelection_Adapter extends BaseExpandableListAdapter {
 		}
 	}*/
 	
-	public GroupSelection_Adapter(GroupSelection_CustomViewActivity context, ArrayList<Groupe> rawGroupes, Groupe rootGroupe){
+	public GroupSelection_Custom_Adapter(GroupSelection_CustomViewActivity context, ArrayList<Groupe> rawGroupes, Groupe rootGroupe){
 		super();
 		_context = context;
 		this.rawGroupes = rawGroupes;

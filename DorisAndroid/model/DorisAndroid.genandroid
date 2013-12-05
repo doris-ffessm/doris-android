@@ -93,8 +93,10 @@
     <viewActivities xsi:type="genandroid:CustomViewActivity" name="ImagePleinEcran" documentation="Affiche une image en plein écran"/>
     <viewActivities xsi:type="genandroid:CustomViewActivity" name="GroupSelection" documentation="Vue permettant de sélectionner un groupe,&#xD;&#xA;utilisé par les filtres"/>
     <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ZoneGeoSelection" documentation="Vue permettant de sélectionner la zone géographique pour le filtrage" isFilterable="false" listedElement="//@dataModel/@dataClasses.6" presentedDetail="//@presentationModel/@classDetails.1"/>
+    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="GroupeSelection" documentation="Liste présentant les Groupe de manière hiérarchique (le filtre en haut assure la gestion de la profondeur)" isFilterable="false" listedElement="//@dataModel/@dataClasses.8" presentedDetail="//@presentationModel/@classDetails.2"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.0/@dataAttributes.1" name="ContenuListeFiche" secondaryAttributes="//@dataModel/@dataClasses.0/@dataAttributes.0"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.6/@dataAttributes.0" name="ContenuListeZoneGeographique" secondaryAttributes="//@dataModel/@dataClasses.6/@dataAttributes.1"/>
+    <classDetails mainAttributes="//@dataModel/@dataClasses.8/@dataAttributes.2" name="ContenuListeGroupeSelection" secondaryAttributes="//@dataModel/@dataClasses.8/@dataAttributes.3"/>
     <backgroundActivities name="TelechargeFiches" documentation="Tache responsable du téléchargement des données des fiches. &#xD;&#xA;Cela inclue les données croisées telles que les zones géographiqes et d'observation.&#xD;&#xA;Elle vérifie le niveau de détails requis pour chaque fiche."/>
     <backgroundActivities name="VerifieNouvellesFiches" documentation="Tache responsable de la vérification de la disponibilité de nouvelles fiches."/>
     <backgroundActivities name="VerifieMAJFiches" documentation="Tache responsable de vérifier s'il existe une version plus récente des fiches déjà connues."/>
