@@ -371,11 +371,13 @@ public class SiteDoris {
 	
 
     public static List<Participant> getListeParticipantsParInitiale(String inCodePageHtml){
-    	log.trace("getListeParticipantsParInitiale() - Début");
+    	log.debug("getListeParticipantsParInitiale() - Début");
     	
     	List<Participant> listeParticipants = new ArrayList<Participant>(0);
     	
-    	
+    	Source source=new Source(inCodePageHtml);
+    	source.fullSequentialParse();
+    	log.debug("getListeParticipantsParInitiale()- source.length() : " + source.length());
     	
     	
     	
@@ -542,7 +544,7 @@ public class SiteDoris {
 			}
 		}*/
     	
-		log.trace("getListeParticipantsParInitiale() - Fin");
+		log.debug("getListeParticipantsParInitiale() - Fin");
 		return listeParticipants;
     }
 
