@@ -151,11 +151,6 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 			labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
 
-        TextView tvDetails = (TextView) convertView.findViewById(R.id.zonegeoselection_listviewrow_details);
-		StringBuilder detailsSB = new StringBuilder();
-		detailsSB.append(entry.getDescription().toString());
-		detailsSB.append(" ");
-        tvDetails.setText(detailsSB.toString());
 		
         // assign the entry to the row in order to ease GUI interactions
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.zonegeoselection_listviewrow);

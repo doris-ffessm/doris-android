@@ -88,7 +88,7 @@ public class ZoneObservation {
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
-	public boolean _mayNeedDBRefresh = true;
+	public boolean fiches_mayNeedDBRefresh = true;
 	
 
 	// NOT Implemented<java.lang.String> nom;
@@ -122,9 +122,9 @@ public class ZoneObservation {
 
 	public Fiche getFiches() {
 		try {
-			if(_mayNeedDBRefresh && _contextDB != null){
+			if(fiches_mayNeedDBRefresh && _contextDB != null){
 				_contextDB.ficheDao.refresh(this.fiches);
-				_mayNeedDBRefresh = false;
+				fiches_mayNeedDBRefresh = false;
 			}
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);

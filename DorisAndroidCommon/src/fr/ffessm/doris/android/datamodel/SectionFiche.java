@@ -89,7 +89,7 @@ public class SectionFiche {
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
-	public boolean _mayNeedDBRefresh = true;
+	public boolean fiche_mayNeedDBRefresh = true;
 	
 
 	@DatabaseField
@@ -141,9 +141,9 @@ public class SectionFiche {
 
 	public Fiche getFiche() {
 		try {
-			if(_mayNeedDBRefresh && _contextDB != null){
+			if(fiche_mayNeedDBRefresh && _contextDB != null){
 				_contextDB.ficheDao.refresh(this.fiche);
-				_mayNeedDBRefresh = false;
+				fiche_mayNeedDBRefresh = false;
 			}
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);

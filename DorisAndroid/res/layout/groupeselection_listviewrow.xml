@@ -41,20 +41,21 @@
 		</LinearLayout>
 		<!-- Start of user code protected
 			-->
-		<TextView
-		    android:id="@+id/groupeselection__btnEtatFiche"
-	        android:layout_width="wrap_content"
-	        android:layout_height="20dp"
+		
+		<ImageButton
+		    android:id="@+id/groupeselection_btnSelect"
+		    android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
 	        android:layout_alignParentRight="true"
-	        android:layout_alignParentTop="true"
-	        android:layout_marginRight="2dp"
-	        android:layout_marginTop="1dp"
-	        android:paddingTop="2dp"
-	        android:paddingBottom="2dp"
-	        android:background="@drawable/button_background"
-	        android:textColor="#ffffff"
-	        android:text=" fp " >
-		</TextView>
+	        android:layout_marginRight="0dp"
+	        android:padding="5dp"
+	        android:layout_margin="0dp"
+		    android:text=""
+		    android:drawablePadding="0dp"
+		    android:src="@android:drawable/ic_menu_set_as"
+		    android:scaleType="fitCenter"
+	        android:background="@android:color/transparent"
+	     />
 
 		<!-- End of user code
 			-->

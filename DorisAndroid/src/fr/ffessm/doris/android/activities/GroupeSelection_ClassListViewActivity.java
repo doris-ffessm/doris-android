@@ -42,6 +42,7 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 
@@ -62,11 +63,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedGroupeSelection_ClassListViewActivity_additionalimports
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 // End of user code
 
 public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
@@ -110,12 +111,41 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<O
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 		//Start of user code onItemClick additions GroupeSelection_ClassListViewActivity
-		showToast(view.toString() + ", "+ view.getId());
+		//showToast(view.toString() + ", "+ view.getId());
+		
+		GroupeSelection_Adapter groupeSelection_adapter = (GroupeSelection_Adapter)arg0.getAdapter();
+		
+		
+		
+		Groupe clickedGroupe = groupeSelection_adapter.getGroupeFromPosition(position);
+		if(clickedGroupe.getContextDB() == null){
+			Log.w(this.getClass().getSimpleName(),"workaround clickedGroupe.getContextDB() == null "+clickedGroupe.getId());
+			clickedGroupe.setContextDB(getHelper().getDorisDBHelper());
+		}
+		if(clickedGroupe.getGroupesFils().size() > 0){	
+			for(Groupe g : clickedGroupe.getGroupesFils()){
+				if(g.getContextDB() == null){
+					Log.w(this.getClass().getSimpleName(),"workaround Groupe.fils.getContextDB() == null "+g.getId());
+					g.setContextDB(getHelper().getDorisDBHelper());
+				}
+			}
+			groupeSelection_adapter.currentRootGroupe = clickedGroupe;
+			groupeSelection_adapter.updateList();
+			groupeSelection_adapter.notifyDataSetChanged();
+		}
+	
 		//End of user code		
     }
 
 	//Start of user code additional  GroupeSelection_ClassListViewActivity methods
 
+	public void onRemoveCurrentFilterClick(View view){
+    	Toast.makeText(this, "Filtre espèces supprimé", Toast.LENGTH_SHORT).show();
+		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
+		ed.putInt(this.getString(R.string.pref_key_filtre_groupe), 1);
+        ed.commit();
+		finish();
+    }
 	//End of user code
 
 	@Override

@@ -13,7 +13,7 @@ import fr.ffessm.doris.android.datamodel.Groupe;
 public class OutilsGroupe {
 
 	public static final String LOG_TAG = OutilsGroupe.class.getSimpleName();
-	public static Groupe getroot(ArrayList<Groupe> allGroupes){
+	public static Groupe getroot(List<Groupe> allGroupes){
 		// trouve le groupe racine
 		Groupe rootGroupe = null;
 		for(Groupe groupe : allGroupes){
@@ -51,7 +51,7 @@ public class OutilsGroupe {
 		return nextLevelGroups;
 	}
 	public static List<Groupe> getAllGroupesForNextLevel(
-			ArrayList<Groupe> rawGroupes, Groupe rootGroupe) {
+			List<Groupe> rawGroupes, Groupe rootGroupe) {
 		ArrayList<Groupe> nextLevelGroups = new ArrayList<Groupe>();
 		nextLevelGroups.addAll(rootGroupe.getGroupesFils());
 		return nextLevelGroups;

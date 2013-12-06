@@ -213,7 +213,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
     	PhotoFiche photoPrincipale = entry.getPhotoPrincipale();
     	if(photoPrincipale == null){
 	    	//try {
-	    		Log.w(LOG_TAG, "bizarre photoprincipale="+photoPrincipale.getCleURL()+" application d'un workaround temporaire");
+	    		Log.w(LOG_TAG, "bizarre photoprincipale="+photoPrincipale+" application d'un workaround temporaire");
 	    		//((ListeFicheAvecFiltre_ClassListViewActivity)context).getHelper().getFicheDao()
 	    		Fiche fiche =((ListeFicheAvecFiltre_ClassListViewActivity)context).getHelper().getFicheDao().queryForId(entry.getId());
 	    		fiche.setContextDB(_contextDB);
@@ -248,6 +248,10 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 					.error(R.drawable.doris_large_pas_connecte)
         			.into(ivIcon);
         	}
+        }
+        else{
+        	// remet l'icone de base
+        	ivIcon.setImageResource(R.drawable.ic_launcher);
         }
        
         

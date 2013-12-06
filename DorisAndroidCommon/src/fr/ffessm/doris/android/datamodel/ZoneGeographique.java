@@ -89,7 +89,6 @@ public class ZoneGeographique {
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
-	public boolean _mayNeedDBRefresh = true;
 	
 
 	@DatabaseField

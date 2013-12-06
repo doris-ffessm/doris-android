@@ -95,7 +95,7 @@ public class Groupe {
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
-	public boolean _mayNeedDBRefresh = true;
+	public boolean groupePere_mayNeedDBRefresh = true;
 	
 
 	/** XXX de groupe_numero=XXX dans l'url permettant d'afficher le groupe.
@@ -208,9 +208,9 @@ C'est ce texte. */
 	}					
 	public Groupe getGroupePere() {
 		try {
-			if(_mayNeedDBRefresh && _contextDB != null){
+			if(groupePere_mayNeedDBRefresh && _contextDB != null){
 				_contextDB.groupeDao.refresh(this.groupePere);
-				_mayNeedDBRefresh = false;
+				groupePere_mayNeedDBRefresh = false;
 			}
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);

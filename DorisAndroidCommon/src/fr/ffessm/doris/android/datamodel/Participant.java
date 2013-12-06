@@ -89,7 +89,8 @@ public class Participant {
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
-	public boolean _mayNeedDBRefresh = true;
+	public boolean photo_mayNeedDBRefresh = true;
+	public boolean fichesVerifiees_mayNeedDBRefresh = true;
 	
 
 	@DatabaseField
@@ -145,9 +146,9 @@ public class Participant {
 	/** photo du participant */ 
 	public PhotoParticipant getPhoto() {
 		try {
-			if(_mayNeedDBRefresh && _contextDB != null){
+			if(photo_mayNeedDBRefresh && _contextDB != null){
 				_contextDB.photoParticipantDao.refresh(this.photo);
-				_mayNeedDBRefresh = false;
+				photo_mayNeedDBRefresh = false;
 			}
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);
@@ -162,9 +163,9 @@ public class Participant {
 	}			
 	public Fiche getFichesVerifiees() {
 		try {
-			if(_mayNeedDBRefresh && _contextDB != null){
+			if(fichesVerifiees_mayNeedDBRefresh && _contextDB != null){
 				_contextDB.ficheDao.refresh(this.fichesVerifiees);
-				_mayNeedDBRefresh = false;
+				fichesVerifiees_mayNeedDBRefresh = false;
 			}
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);

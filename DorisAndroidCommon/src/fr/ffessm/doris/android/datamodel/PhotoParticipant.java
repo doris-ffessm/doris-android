@@ -89,7 +89,7 @@ public class PhotoParticipant {
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
-	public boolean _mayNeedDBRefresh = true;
+	public boolean participant_mayNeedDBRefresh = true;
 	
 
 	@DatabaseField
@@ -141,9 +141,9 @@ public class PhotoParticipant {
 
 	public Participant getParticipant() {
 		try {
-			if(_mayNeedDBRefresh && _contextDB != null){
+			if(participant_mayNeedDBRefresh && _contextDB != null){
 				_contextDB.participantDao.refresh(this.participant);
-				_mayNeedDBRefresh = false;
+				participant_mayNeedDBRefresh = false;
 			}
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);

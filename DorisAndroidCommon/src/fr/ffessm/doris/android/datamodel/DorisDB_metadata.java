@@ -87,7 +87,6 @@ public class DorisDB_metadata {
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
-	public boolean _mayNeedDBRefresh = true;
 	
 
 	/** Date de récupération de la base DORIS */ 

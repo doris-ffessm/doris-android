@@ -280,7 +280,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 					popup.setFocusable(true);
 					searchbuttonstatus=0;
 					popup.dismiss();
-					startActivity(new Intent(context, GroupSelection_CustomViewActivity.class));
+					startActivity(new Intent(context, GroupeSelection_ClassListViewActivity.class));
 				  }
 				});
 	

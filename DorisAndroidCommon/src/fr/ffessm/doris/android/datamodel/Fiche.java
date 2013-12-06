@@ -113,7 +113,11 @@ public class Fiche {
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
-	public boolean _mayNeedDBRefresh = true;
+	public boolean redacteurs_mayNeedDBRefresh = true;
+	public boolean verificateurs_mayNeedDBRefresh = true;
+	public boolean responsableRegional_mayNeedDBRefresh = true;
+	public boolean photoPrincipale_mayNeedDBRefresh = true;
+	public boolean groupe_mayNeedDBRefresh = true;
 	
 
 	@DatabaseField
@@ -843,9 +847,9 @@ public class Fiche {
 
 	public Participant getRedacteurs() {
 		try {
-			if(_mayNeedDBRefresh && _contextDB != null){
+			if(redacteurs_mayNeedDBRefresh && _contextDB != null){
 				_contextDB.participantDao.refresh(this.redacteurs);
-				_mayNeedDBRefresh = false;
+				redacteurs_mayNeedDBRefresh = false;
 			}
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);
@@ -869,9 +873,9 @@ public class Fiche {
 	/** listes des personnes ayant vérifié la fiche */ 
 	public Participant getVerificateurs() {
 		try {
-			if(_mayNeedDBRefresh && _contextDB != null){
+			if(verificateurs_mayNeedDBRefresh && _contextDB != null){
 				_contextDB.participantDao.refresh(this.verificateurs);
-				_mayNeedDBRefresh = false;
+				verificateurs_mayNeedDBRefresh = false;
 			}
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);
@@ -887,9 +891,9 @@ public class Fiche {
 	/** responsable régional de la fiche */ 
 	public Participant getResponsableRegional() {
 		try {
-			if(_mayNeedDBRefresh && _contextDB != null){
+			if(responsableRegional_mayNeedDBRefresh && _contextDB != null){
 				_contextDB.participantDao.refresh(this.responsableRegional);
-				_mayNeedDBRefresh = false;
+				responsableRegional_mayNeedDBRefresh = false;
 			}
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);
@@ -909,9 +913,9 @@ public class Fiche {
 	/** Photo par défaut de l'espèce présentée par cette fiche. Elle est aussi présente dans la liste "photosFiche". */ 
 	public PhotoFiche getPhotoPrincipale() {
 		try {
-			if(_mayNeedDBRefresh && _contextDB != null){
+			if(photoPrincipale_mayNeedDBRefresh && _contextDB != null){
 				_contextDB.photoFicheDao.refresh(this.photoPrincipale);
-				_mayNeedDBRefresh = false;
+				photoPrincipale_mayNeedDBRefresh = false;
 			}
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);
@@ -931,9 +935,9 @@ public class Fiche {
 	/** Permet d'identifier avec le sous-groupe (optionel) le groupe auquel est rattaché la fiche */ 
 	public Groupe getGroupe() {
 		try {
-			if(_mayNeedDBRefresh && _contextDB != null){
+			if(groupe_mayNeedDBRefresh && _contextDB != null){
 				_contextDB.groupeDao.refresh(this.groupe);
-				_mayNeedDBRefresh = false;
+				groupe_mayNeedDBRefresh = false;
 			}
 		} catch (SQLException e) {
 			log.error(e.getMessage(),e);
