@@ -74,6 +74,7 @@ import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.table.TableUtils;
 
@@ -149,45 +150,29 @@ public class PrefetchDorisWebSite {
 		// Vérification, Création, Sauvegarde des dossiers de travails
 		checkDossiers(action);
 		
-	/*	if (action.equals("TEST")) {
-	    	//String test = "\"\"\"\"\"\"\"<a href=\"fiche2.asp?fiche_numero=3527&fiche_espece=\"Montereina\" (Discodoris) coerulescens&fiche_etat=5&origine=scientifique\"><em>\"Montereina\" (Discodoris) coerulescens</em>&nbsp;&nbsp;-&nbsp;&nbsp;Discodoris azurée</a>";
-	    	
-	    	//log.debug(test);
-	    	
-	    	//log.debug(fr.ffessm.doris.android.sitedoris.Outils.nettoyageBalises(test));
-	    	
-	    	//log.debug(fr.ffessm.doris.android.sitedoris.Outils.nettoyageBalises(fr.ffessm.doris.android.sitedoris.Outils.nettoyageBalises(test)));
-			ConnectionSource connectionSource = null;
-			try {
-			// create our data-source for the database
-			connectionSource = new JdbcConnectionSource(DATABASE_URL);
-			// setup our database and DAOs
-			setupDatabase(connectionSource);
-			String fichierXML = DOSSIER_BASE + "/" + DOSSIER_RESULTATS + "/" + Constants.getFichierDorisXML();
-			log.debug("loadDBFromXMLFile() - fichierXML : "+fichierXML);
+		if (action.equals("TEST")) {
+			log.debug("doMain() - Début TEST");
 			
-			XMLHelper.loadDBFromXMLFile(dbContext, new File(fichierXML));
+			/*
+			String listeParticipantsFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeParticipants-a.html";
+			log.debug("Récup. Liste Groupes Doris : " + listeParticipantsFichier);
 			
+			String contenuFichierHtml = null;
+			contenuFichierHtml = Outils.getFichier(new File(listeParticipantsFichier));
 			
-			Fiche f =dbContext.ficheDao.queryForAll().get(0);
-			f.setContextDB(dbContext);
-			f.getPhotosFiche();
-			for (PhotoFiche p : f.getPhotosFiche()) {
-				p.getCleURL();
+			log.debug("doMain() - contenuFichierHtml : "+contenuFichierHtml.length() );
+			
+			List<Participant> listeParticipants = new ArrayList<Participant>(0);
+			listeParticipants = SiteDoris.getListeParticipantsParInitiale(contenuFichierHtml);
+			
+			log.debug("Nb Participants : "+listeParticipants.size());
+			for (Participant participant : listeParticipants) {
+				log.debug("Participant : " + participant.getId()+" "+participant.getNom());
 			}
-			PhotoFiche photo = f.getPhotoPrincipale();
-			
-			dbContext.photoFicheDao.refresh(photo);
-			f.getPhotosFiche();
-			} finally {
-				// destroy the data source which should close underlying connections
-				if (connectionSource != null) {
-					connectionSource.close();
-				}
-			}
+			*/
 			
 		} else {
-		*/
+
 			ConnectionSource connectionSource = null;
 			try {
 				// create empty DB and initialize it for Android
@@ -197,7 +182,7 @@ public class PrefetchDorisWebSite {
 				connectionSource = new JdbcConnectionSource(DATABASE_URL);
 				// setup our database and DAOs
 				setupDatabase(connectionSource);
-		
+				
 				// Récupération de la liste des groupes sur le site de DORIS
 				String listeGroupesFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeGroupes.html";
 				log.info("Récup. Liste Groupes Doris : " + listeGroupesFichier);
@@ -217,10 +202,14 @@ public class PrefetchDorisWebSite {
 					contenuFichierHtml = Outils.getFichier(new File(listeGroupesFichier));
 					
 				}
+				DatabaseConnection connection_groupeDao = dbContext.groupeDao.startThreadConnection();
+				dbContext.groupeDao.setAutoCommit(connection_groupeDao,false);
 				for (Groupe groupe : SiteDoris.getListeGroupes(contenuFichierHtml)){
 					
 					dbContext.groupeDao.create(groupe);
 				}
+				dbContext.groupeDao.commit(connection_groupeDao);
+				dbContext.ficheDao.setAutoCommit(connection_groupeDao,true);
 				listeGroupes = dbContext.groupeDao.queryForAll();
 				log.debug("doMain() - listeGroupes.size : "+listeGroupes.size());
 				
@@ -245,10 +234,15 @@ public class PrefetchDorisWebSite {
 				}
 				List<Fiche> listFicheFromHTML = SiteDoris.getListeFiches(contenuFichierHtml);
 				log.info("Creation de "+listFicheFromHTML.size()+" fiches dans la base...");
+				
+				DatabaseConnection connection_ficheDao = dbContext.ficheDao.startThreadConnection();
+				dbContext.ficheDao.setAutoCommit(connection_ficheDao,false);
 				for (Fiche fiche : listFicheFromHTML){
-					
 					dbContext.ficheDao.create(fiche);
 				}
+				dbContext.ficheDao.commit(connection_ficheDao);
+				dbContext.ficheDao.setAutoCommit(connection_ficheDao,true);
+				
 				listeFiches = dbContext.ficheDao.queryForAll();
 				log.debug("doMain() - listeFiches.size : "+listeFiches.size());
 				
@@ -259,7 +253,7 @@ public class PrefetchDorisWebSite {
 				// TODO : en cours par GMo : la construction de la liste des Participants
 				// On boucle sur les initailes des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
 				String listeFiltres="abcdefghijklmnopqrstuvwxyz";
-				List<Participant> listeParticipants = new ArrayList<Participant>(0);
+				//String listeFiltres="ab";
 				
 				for (char initiale : listeFiltres.toCharArray()){
 					log.debug("doMain() - Recup Participants : "+initiale);
@@ -281,15 +275,18 @@ public class PrefetchDorisWebSite {
 					}
 					List<Participant> listeParticipantsFromHTML = SiteDoris.getListeParticipantsParInitiale(contenuFichierHtml);
 					log.info("Creation de "+listeParticipantsFromHTML.size()+" participants pour la lettre : "+initiale);
+					
+					DatabaseConnection connection_participantDao = dbContext.participantDao.startThreadConnection();
+					dbContext.participantDao.setAutoCommit(connection_participantDao,false);
 					for (Participant participant : listeParticipantsFromHTML){
-						
 						dbContext.participantDao.create(participant);
 					}
-					listeParticipants.addAll(dbContext.participantDao.queryForAll());
-					log.debug("doMain() - " + initiale + " - listeParticipants.size : "+listeParticipants.size());
+					dbContext.participantDao.commit(connection_participantDao);
+					dbContext.participantDao.setAutoCommit(connection_participantDao,true);
 					
 				}
-				
+				List<Participant> listeParticipants = new ArrayList<Participant>(0);
+				listeParticipants.addAll(dbContext.participantDao.queryForAll());
 				log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
 				
 				
@@ -371,7 +368,7 @@ public class PrefetchDorisWebSite {
 						}
 					}
 					else{
-						log.info("Nombre max de fiches à traiter atteind.");
+						log.info("Nombre max de fiches à traiter atteint.");
 						break; // ignore les fiches suivantes
 					}
 				}
@@ -402,7 +399,7 @@ public class PrefetchDorisWebSite {
 			}
 			
 			
-	//	} // Fin de <> TEST
+		} // Fin de <> TEST
 		log.info("doMain() - Fin");
 	}
 
@@ -433,21 +430,32 @@ public class PrefetchDorisWebSite {
 		
 		List<Fiche> listFicheFromHTML = SiteDoris.getListeFiches(contenuFichierHtml);
 		log.info("Création des "+listFicheFromHTML.size()+" associations pour la Zone : " + listeFichesFichier);
-		for (Fiche fiche : listFicheFromHTML) {
-			// retrouve la fiche dans la base
-			try {
-				Fiche queryFiche = new Fiche();
-				queryFiche.setNumeroFiche(fiche.getNumeroFiche());
-				List<Fiche> fichesDeLaBase = dbContext.ficheDao.queryForMatching(queryFiche);
-				if(fichesDeLaBase.size() != 1){
-					log.error("Pb pour retrouver la fiche n°"+queryFiche.getNumeroFiche()+ " dans la base qui en matche "+fichesDeLaBase.size());
-					continue;
+		
+		try {
+			DatabaseConnection connection_ficheDao = dbContext.ficheDao.startThreadConnection();
+			dbContext.ficheDao.setAutoCommit(connection_ficheDao,false);
+	
+			for (Fiche fiche : listFicheFromHTML) {
+				// retrouve la fiche dans la base
+				try {
+					Fiche queryFiche = new Fiche();
+					queryFiche.setNumeroFiche(fiche.getNumeroFiche());
+					List<Fiche> fichesDeLaBase = dbContext.ficheDao.queryForMatching(queryFiche);
+					if(fichesDeLaBase.size() != 1){
+						log.error("Pb pour retrouver la fiche n°"+queryFiche.getNumeroFiche()+ " dans la base qui en matche "+fichesDeLaBase.size());
+						continue;
+					}
+					fichesDeLaBase.get(0).setContextDB(dbContext);
+					fichesDeLaBase.get(0).addZoneGeographique(zoneGeographique);
+				} catch (SQLException e) {
+					log.error("erreur pendant la requete sur la fiche "+fiche.getNumeroFiche()+ " dans la base", e);
 				}
-				fichesDeLaBase.get(0).setContextDB(dbContext);
-				fichesDeLaBase.get(0).addZoneGeographique(zoneGeographique);
-			} catch (SQLException e) {
-				log.error("erreur pendant la requete sur la fiche "+fiche.getNumeroFiche()+ " dans la base", e);
 			}
+		
+			dbContext.ficheDao.commit(connection_ficheDao);
+			dbContext.ficheDao.setAutoCommit(connection_ficheDao,true);
+		} catch (SQLException e) {
+			log.error("impossible d'associer Fiches et Zone Géographique", e);
 		}
 	}
 	
@@ -755,6 +763,7 @@ public class PrefetchDorisWebSite {
 		log.debug("checkDossiers() - Dossier de base : " + DOSSIER_BASE);
 		log.debug("checkDossiers() - Dossier html : " + DOSSIER_HTML);
 		log.debug("checkDossiers() - Dossier Resultats : " + DOSSIER_RESULTATS);
+		log.debug("checkDossiers() - Fichier de la Base : " + DATABASE_URL);
 		
 		// Si le dossier principal de travail n'existe pas, on le créé
 		File dossierBase = new File(DOSSIER_BASE);
@@ -775,7 +784,7 @@ public class PrefetchDorisWebSite {
 		if(inAction.equals("INIT")){
 			File dossierHtml = new File(DOSSIER_BASE + "/" + DOSSIER_HTML);
 			if (dossierHtml.exists()){
-				File dossierHtmlNew = new File(DOSSIER_BASE + "/" + DOSSIER_HTML + suffixe);
+				File dossierHtmlNew = new File(DOSSIER_BASE + "/" + DOSSIER_HTML +"_"+ suffixe);
 				if(dossierHtml.renameTo(dossierHtmlNew)){
 					log.info("Sauvegarde du dossier download : " + dossierHtmlNew.getAbsolutePath());
 				}else{
@@ -795,7 +804,7 @@ public class PrefetchDorisWebSite {
 		if(inAction.equals("INIT") || inAction.equals("INITSSIMG")){
 			File dossierImg = new File(DOSSIER_BASE + "/" + DOSSIER_IMG);
 			if (dossierImg.exists()){
-				File dossierImgNew = new File(DOSSIER_BASE + "/" + DOSSIER_IMG + suffixe);
+				File dossierImgNew = new File(DOSSIER_BASE + "/" + DOSSIER_IMG +"_"+ suffixe);
 				if(dossierImg.renameTo(dossierImgNew)){
 					log.info("Sauvegarde du dossier download : " + dossierImgNew.getAbsolutePath());
 				}else{
@@ -816,7 +825,7 @@ public class PrefetchDorisWebSite {
 		if( inAction.equals("INIT") || inAction.equals("NODWNLD") ){
 			File dossierResultats = new File(DOSSIER_BASE + "/" + DOSSIER_RESULTATS);
 			if (dossierResultats.exists()){
-				File dossierResultatsNew = new File(DOSSIER_BASE + "/" + DOSSIER_RESULTATS + suffixe);
+				File dossierResultatsNew = new File(DOSSIER_BASE + "/" + DOSSIER_RESULTATS +"_"+ suffixe);
 				if(dossierResultats.renameTo(dossierResultatsNew)){
 					log.info("Sauvegarde du dossier résultats : " + dossierResultatsNew.getAbsolutePath());
 				}else{
@@ -832,7 +841,21 @@ public class PrefetchDorisWebSite {
 			}
 		}
 		
-		
+		// Le fichier de la base de données
+		if(inAction.equals("INIT") || inAction.equals("INITSSIMG")){
+			String dataBaseName = DATABASE_URL.substring(DATABASE_URL.lastIndexOf(":")+1, DATABASE_URL.lastIndexOf(".") );
+			log.debug("dataBaseName : " + dataBaseName);
+			File fichierDB= new File(dataBaseName+".db");
+			if (fichierDB.exists()){
+				File fichierDBNew = new File(dataBaseName+"_"+suffixe+".db");
+				if(fichierDB.renameTo(fichierDBNew)){
+					log.info("Sauvegarde du fichier de la base : " + fichierDB.getAbsolutePath());
+				}else{
+					log.error("Echec renommage du fichier de la base en : " + fichierDBNew.getAbsolutePath());
+					System.exit(0);
+				}
+			}
+		}
 		
 		log.debug("checkDossiers() - Fin");
 	}

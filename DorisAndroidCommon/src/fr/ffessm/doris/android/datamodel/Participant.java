@@ -105,8 +105,11 @@ public class Participant {
 
 	// Start of user code Participant additional user properties
 	
-	
-	
+	public Participant(int id, java.lang.String nom) {
+		super();
+		this._id = id;
+		this.nom = nom;
+	} 
 	
 	
 	
