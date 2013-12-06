@@ -209,10 +209,11 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
         tvLabel.setText(labelSB.toString());
 
         TextView tvDetails = (TextView) convertView.findViewById(R.id.groupeselection_listviewrow_details);
-		StringBuilder detailsSB = new StringBuilder();
+		/*StringBuilder detailsSB = new StringBuilder();
 		detailsSB.append(entry.getDescriptionGroupe().toString());
 		detailsSB.append(" ");
-        tvDetails.setText(detailsSB.toString());
+        tvDetails.setText(detailsSB.toString());*/
+        tvDetails.setText("");
 		
         // assign the entry to the row in order to ease GUI interactions
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.groupeselection_listviewrow);
