@@ -42,10 +42,7 @@ termes.
 
 package fr.ffessm.doris.prefetch;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -53,29 +50,17 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.logging.Logger;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
-import org.apache.log4j.Priority;
 
-import net.htmlparser.jericho.Element;
-
-import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.misc.TransactionManager;
-import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.support.DatabaseConnection;
-import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.table.TableUtils;
 
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
@@ -92,9 +77,9 @@ import fr.ffessm.doris.android.datamodel.ZoneObservation;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesObservations;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_verificateurs_Participants;
-import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
+import fr.ffessm.doris.android.sitedoris.Outils;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 
 
@@ -257,8 +242,12 @@ public class PrefetchDorisWebSite {
 				
 				// TODO : en cours par GMo : la construction de la liste des Participants
 				// On boucle sur les initailes des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
-				String listeFiltres="abcdefghijklmnopqrstuvwxyz";
-				//String listeFiltres="ab";
+				String listeFiltres;
+				if (nbMaxFichesTraitees == 0){
+					listeFiltres="abcdefghijklmnopqrstuvwxyz";
+				} else {
+					listeFiltres="ab";
+				}
 				
 				for (char initiale : listeFiltres.toCharArray()){
 					log.debug("doMain() - Recup Participants : "+initiale);
@@ -416,12 +405,14 @@ public class PrefetchDorisWebSite {
 			
 			
 		} // Fin de <> TEST
-		log.info("doMain() - Fin");
+		log.debug("doMain() - Fin");
 	}
 
 	private void majZoneGeographique(ConnectionSource connectionSource, ZoneGeographiqueKind zoneKing, String action){
+		log.debug("majZoneGeographique() - Début");
+		
 		String listeFichesFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeFiches"+zoneKing.name()+".html";
-		log.info("Récup. Liste Fiches Doris Zone : " + listeFichesFichier);
+		log.debug("Récup. Liste Fiches Doris Zone : " + listeFichesFichier);
 		//List<Fiche> listeFiches = new ArrayList<Fiche>(0);
 		String contenuFichierHtml = "";
 		if (! action.equals("NODWNLD")){
@@ -473,13 +464,11 @@ public class PrefetchDorisWebSite {
 							return null;
 					    }
 					});
-	
-			
-		
 
 		} catch (SQLException e) {
 			log.error("impossible d'associer Fiches et Zone Géographique", e);
 		}
+		log.debug("majZoneGeographique() - Fin");
 	}
 	
 	

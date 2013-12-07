@@ -79,20 +79,20 @@ public class SiteDoris {
     	//log.debug("getListeFiches()- elementTableracine : " + elementTableracine.toString().substring(0, Math.min(100, elementTableracine.toString().length())));
 
     	List<? extends Element> listeElementsTD = elementTableracine.getAllElements(HTMLElementName.TD);
-    	//log.debug("getGroupes() - listeElementsTD.size() : " + listeElementsTD.size());
+    	//log.debug("getListeFiches() - listeElementsTD.size() : " + listeElementsTD.size());
 		
     	for (Element elementTD : listeElementsTD) {
-    		//log.debug("getGroupes() - elementTD.length() : " + elementTD.length());
+    		//log.debug("getListeFiches() - elementTD.length() : " + elementTD.length());
     		//log.debug("getListeFiches()- elementTD : " + elementTD.toString().substring(0, Math.min(100, elementTD.toString().length())));
     		
     		String elementTDwidth = elementTD.getAttributeValue("width");
 			if (elementTDwidth != null){
     			if (elementTDwidth.toString().equals("75%")) {
-    				//log.debug("getGroupes() - elementTD : "+elementTD.getRenderer());
+    				//log.debug("getListeFiches() - elementTD : "+elementTD.getRenderer());
     				Element elementTDA = elementTD.getFirstElement(HTMLElementName.A);
     				
     				String contenu = elementTDA.getRenderer().toString();
-    				//log.debug("getGroupes() - contenu : "+contenu);
+    				//log.debug("getListeFiches() - contenu : "+contenu);
     				
     				String ficheNomScientifique = contenu.replaceAll("([^-]*)-(.*)", "$1").trim();
     				String ficheNomCommun = contenu.replaceAll("([^-]*)-(.*)", "$2").trim();
@@ -101,7 +101,7 @@ public class SiteDoris {
     				
     				String dateCreation = ""; //TODO : Ça aurait été bien que la date de modif. apparaisse dans la page des noms scientifiques
     				String dateModification = "";
-    				log.info("getGroupes() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
+    				log.info("getListeFiches() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
     				
     				Fiche fiche = new Fiche(ficheNomScientifique, ficheNomCommun, ficheId, ficheEtat, dateCreation, dateModification, "");
       				
@@ -420,20 +420,20 @@ public class SiteDoris {
 			if ( elementTR.getDepth() == profondeurTRlignes ) {
 				numeroTR++;
 				
-				//log.info("getGroupes() - elementTR : "+numeroTR+" - "+elementTR.toString().substring(0, Math.min(100, elementTR.toString().length())));
+				//log.info("getListeParticipantsParInitiale() - elementTR : "+numeroTR+" - "+elementTR.toString().substring(0, Math.min(100, elementTR.toString().length())));
 				
 				if (numeroTR % 4 == 1){
 					Element elementTDTitre2ParticipantNom = elementTR.getFirstElementByClass("titre2");
-					log.info("getGroupes() - Nom Participant : "+elementTDTitre2ParticipantNom.getRenderer() );
+					log.info("getListeParticipantsParInitiale() - Nom Participant : "+elementTDTitre2ParticipantNom.getRenderer() );
 					participantNom = ""+elementTDTitre2ParticipantNom.getRenderer();
 				}
 				
 				if (numeroTR % 4 == 3){
 					Element elementAlien_emailParticipantId = elementTR.getFirstElementByClass("lien_email");
-					//log.info("getGroupes() - id Participant : "+elementAlien_emailParticipantId.getAttributeValue("href") );
+					//log.info("getListeParticipantsParInitiale() - id Participant : "+elementAlien_emailParticipantId.getAttributeValue("href") );
 					String href = ""+elementAlien_emailParticipantId.getAttributeValue("href");
 					participantId = href.substring(Math.min(href.length(), href.indexOf("=")+1 ) );
-					//log.info("getGroupes() - debug : "+participantId+" - href : "+href+" - "+ href.indexOf("=") );
+					//log.info("getListeParticipantsParInitiale() - debug : "+participantId+" - href : "+href+" - "+ href.indexOf("=") );
 					if (href.indexOf("=")==-1){
 						Element elementAlien_fichecontactParticipantId = elementTR.getFirstElementByClass("lien_fichecontact");
 						href = ""+elementAlien_fichecontactParticipantId.getAttributeValue("href");
@@ -442,7 +442,7 @@ public class SiteDoris {
 					if (participantId.indexOf("&")!=-1){
 						participantId=participantId.substring(1, participantId.indexOf("&") );
 					}
-					log.info("getGroupes() - id Participant : "+participantId);
+					log.info("getListeParticipantsParInitiale() - id Participant : "+participantId);
 				}
 				if (numeroTR % 4 == 3){
 					listeParticipants.add(new Participant(Integer.valueOf(participantId), participantNom) );

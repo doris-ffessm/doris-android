@@ -69,6 +69,7 @@ import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
 
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.Constants.ParticipantKind;
 import fr.ffessm.doris.android.sitedoris.Outils;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 // End of user code
@@ -367,11 +368,11 @@ public class Fiche {
 									
 									// suppression des sauts de ligne
 									autresDenominationsTexte = autresDenominationsTexte.replaceAll("\r\n", " ").replaceAll("\n", " ");
-									log.debug("getFiche() - autresDenominations(B1) : " + autresDenominations);
+									log.debug("getFiche() - autresDenominations(B1) : " + autresDenominationsTexte);
 	
 									// suppression des blancs multiples
 									autresDenominationsTexte = autresDenominationsTexte.replaceAll("\\s{2,}"," ");
-									log.debug("getFiche() - autresDenominations(B2) : " + autresDenominations);
+									log.debug("getFiche() - autresDenominations(B2) : " + autresDenominationsTexte);
 									
 									// permet d'enlever les Liens et de les remplacer par (*)
 									autresDenominationsTexte = autresDenominationsTexte.replaceAll("<[^>]*>", "(*)").trim();
@@ -431,12 +432,11 @@ public class Fiche {
 					
 					//Recup du TD qui contient les infos DROITE (images et qui a fait la fiche)
 					//Recup du TR dont le 3ème TD fils contient les infos DROITE (images et qui a fait la fiche)
-					
 					List<? extends Element> listeElementsEntoureDeGris = elementTable_TABLE.getAllElementsByClass("trait_cadregris");
 					//log.debug("getFiche() -  element : " + " - " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),30)));
 					
 					for (Element elementEntoureDeGris : listeElementsEntoureDeGris) {
-						log.debug("getFiche() - vignette 1: " + elementEntoureDeGris.toString().substring(0, Math.min(100,elementEntoureDeGris.toString().toString().length())));
+						//log.debug("getFiche() - vignette 1: " + elementEntoureDeGris.toString().substring(0, Math.min(100,elementEntoureDeGris.toString().toString().length())));
 						
 						// Les images de la fiche sont dans les liens (A)
 						/*
@@ -480,33 +480,35 @@ public class Fiche {
 						// On vérifie que le cadre Gris contient la rubrique Participants
 						Element elementRubriqueinEntoureDeGris= elementEntoureDeGris.getFirstElementByClass("rubrique");
 						if (elementRubriqueinEntoureDeGris != null) {
-							if (elementRubriqueinEntoureDeGris.getRenderer().toString().equals("Participants")) {
-								
+							log.debug("getFiche() - 520 - "+elementRubriqueinEntoureDeGris.getRenderer().toString());
+							if (elementRubriqueinEntoureDeGris.getRenderer().toString().trim().equals("Participants")) {
 								// On parcourt les TD
 								// Si class=gris_gras et contenu texte != vide => qualité de la personne ci-après
 								// Si class=normal et contenu texte != vide => nom de la personne
 								// TODO : Si class=normal et contenu texte = vide  et Contient <A> => 
 								//    ref de la personne = echo href | grep "s/.*contact_numero=(.*)/$1/"
-								String intervenantQualite = null;
-								String intervenantNom = null;
+								ParticipantKind intervenantQualite = null;
 								String intervenantRef = null;
 								
-								List<? extends Element> listeElementsTDinEntoureDeGris = elementRubriqueinEntoureDeGris.getAllElements(HTMLElementName.TD);
-								for (Element elementTDParticipants : listeElementsTDinEntoureDeGris) {
-									if (elementTDParticipants.getClass().toString().equals("gris_gras") &&
-											!elementTDParticipants.getRenderer().toString().isEmpty() ) {
-										intervenantQualite = elementTDParticipants.getRenderer().toString();
+								String listeParticipantsTexteBrute = elementRubriqueinEntoureDeGris.getParentElement().getParentElement().getFirstElement(HTMLElementName.TABLE).getRenderer().toString();
+								//log.debug("getFiche() - 525 - "+listeParticipantsTexteBrute);
+				
+								String[] listeParticipantsTexte = listeParticipantsTexteBrute.split("\n");
+								//log.debug("getFiche() - 530 - "+listeParticipantsTexte.length);
+								
+								for (String ligne : listeParticipantsTexte) {
+									//log.debug("getFiche() - 535 - "+ligne.trim());
+									
+									if ( Constants.getTypeParticipant(ligne.trim()) != null ){
+										intervenantQualite = Constants.getTypeParticipant(ligne.trim() );
+										log.debug("getFiche() - Type Intervenant: " + intervenantQualite);
 									}
 									
-									if (elementTDParticipants.getClass().toString().equals("normal") &&
-											!elementTDParticipants.getRenderer().toString().isEmpty() ) {
-										intervenantNom = elementTDParticipants.getRenderer().toString();
-										// TODO : Ajouter ici calcul de la référence de l'intervenant.
+									if ( ligne.trim().contains("contact_numero=") ){
+										intervenantRef = ligne.trim().replaceAll(".*contact_fiche.*contact_numero=(.*)>", "$1");
+										log.debug("getFiche() - Ref Intervenant: " + intervenantRef);
 										
-										// TODO : C'est ici qu'il faudra ajouter l'init
-										
-										
-										
+										// TODO : C'est ici qu'il faudra ajouter la MAJ de la Base
 									}
 									
 								}
