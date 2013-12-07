@@ -45,6 +45,9 @@ package fr.ffessm.doris.android.sitedoris;
 
 public class Constants {
 
+	/*
+	 * URL
+	 */
     private final static String SITE_RACINE_URL = "http://doris.ffessm.fr/";
     private final static String LISTE_TOUTES_FICHES_URL = "nom_scientifique.asp?numero_fichier=10";
     private final static String GROUPES_URL = "groupes.asp?numero_fichier=10";
@@ -55,6 +58,9 @@ public class Constants {
     private final static String LISTE_FICHES_INDO_PACIFIQUE_URL = "nom_scientifique.asp?numero_fichier=3&fichier=Faune%20et%20flore%20marines%20et%20dulcicoles%20de%20l'Indo-Pacifique";
     private final static String PARTICIPANTS_RACINE_URL = "contacts.asp?filtre=";
     
+	/*
+	 * Liste des Types de Zone géographique, Participant, etc.
+	 */
     public enum ZoneGeographiqueKind {
     	FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE,
     	FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE,
@@ -62,8 +68,25 @@ public class Constants {
     	FAUNE_FLORE_SUBAQUATIQUES_CARAIBES,
     	FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST
     }
-	private final static String FICHIER_DORIS_XML = "prefetchedDorisDB.xml";
 	
+    public enum ParticipantKind {
+    	REDACTEUR_PRINCIPAL,
+    	REDACTEUR,
+    	VERIFICATEUR,
+    	CORRECTEUR_SCIENTIFIQUE,
+    	RESPONSABLE_REGIONAL,
+    	RESPONSABLE_NATIONAL
+    }
+    private final static String REDACTEUR_PRINCIPAL_LIB = "Rédacteur Principal";
+	private final static String REDACTEUR_LIB = "Rédacteur";
+	private final static String VERIFICATEUR_LIB = "Vérificateur";
+	private final static String CORRECTEUR_SCIENTIFIQUE_LIB = "Correcteur Scientifique";
+	private final static String RESPONSABLE_REGIONAL_LIB = "Responsable Régional";
+	private final static String RESPONSABLE_NATIONAL_LIB = "responsable National";
+    
+	/*
+	 * Accession aux URL
+	 */
     public static String getSiteUrl() {
 		String listeFichesUrl = SITE_RACINE_URL;
 		return listeFichesUrl;
@@ -96,6 +119,15 @@ public class Constants {
 		}
     } 
     
+    public static String getGroupesUrl() {
+		String listeFichesUrl = SITE_RACINE_URL + GROUPES_URL;
+    	return listeFichesUrl;
+    }
+    
+    
+	/*
+	 * Gestion Zones Géographiques
+	 */
     public static String getTitreZoneGeographique(ZoneGeographiqueKind zoneKing) {
     	switch (zoneKing) {
 		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
@@ -129,10 +161,38 @@ public class Constants {
 		}
     }
     
-    public static String getGroupesUrl() {
-		String listeFichesUrl = SITE_RACINE_URL + GROUPES_URL;
-    	return listeFichesUrl;
+	/*
+	 * Gestion Participants
+	 */
+    public static String getTitreParticipant(ParticipantKind participantKing) {
+    	switch (participantKing) {
+		case REDACTEUR_PRINCIPAL:
+			return REDACTEUR_PRINCIPAL_LIB;
+		case REDACTEUR:
+			return REDACTEUR_LIB;
+		case VERIFICATEUR:
+			return VERIFICATEUR_LIB;
+		case CORRECTEUR_SCIENTIFIQUE:
+			return CORRECTEUR_SCIENTIFIQUE_LIB;
+		case RESPONSABLE_REGIONAL:
+			return RESPONSABLE_REGIONAL_LIB;
+		case RESPONSABLE_NATIONAL:
+			return RESPONSABLE_NATIONAL_LIB;
+		default:
+			return "Type d'intervenant inconnu";
+		}
     }
     
+    public static ParticipantKind getTypeParticipant(String typeParticipant) {
+    	typeParticipant.trim();
+    	if (typeParticipant.equalsIgnoreCase(REDACTEUR_PRINCIPAL_LIB)) return ParticipantKind.REDACTEUR_PRINCIPAL;
+    	if (typeParticipant.equalsIgnoreCase(REDACTEUR_LIB)) return ParticipantKind.REDACTEUR;
+    	if (typeParticipant.equalsIgnoreCase(VERIFICATEUR_LIB)) return ParticipantKind.VERIFICATEUR;
+    	if (typeParticipant.equalsIgnoreCase(CORRECTEUR_SCIENTIFIQUE_LIB)) return ParticipantKind.CORRECTEUR_SCIENTIFIQUE;
+    	if (typeParticipant.equalsIgnoreCase(RESPONSABLE_REGIONAL_LIB)) return ParticipantKind.RESPONSABLE_REGIONAL;
+    	if (typeParticipant.equalsIgnoreCase(RESPONSABLE_NATIONAL_LIB)) return ParticipantKind.RESPONSABLE_NATIONAL;
+		
+		return null;
+    }
 	
 }
