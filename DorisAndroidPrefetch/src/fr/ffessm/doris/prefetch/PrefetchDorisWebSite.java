@@ -557,8 +557,7 @@ public class PrefetchDorisWebSite {
 			}
 		}
 
-			
-			
+		
 		// Vérification que le dernier argument est une des actions prévues
 		String action = inArgs[inArgs.length - 1];
 		log.debug("checkArgs() - argument action : " + action);
@@ -645,94 +644,7 @@ public class PrefetchDorisWebSite {
 		log.debug("setupDatabase() - Fin");
 	}
 
-	/**
-	 * Ecriture Fichier de données au format xml
-	 */
-	private void ecritureDataXML(List<Fiche> inListeFiches, List<Groupe> inListeGroupes) throws Exception {
-		log.debug("ecritureDataXML() - Début");
-		log.debug("ecritureDataXML() - inListeFiches.size() : "+inListeFiches.size());
-		log.debug("ecritureDataXML() - inListeGroupes.size() : "+inListeGroupes.size());
-		
-		// Sera à supprimer
-		// -------------------
-		//File f = new File(DOSSIER_BASE + "/" + DOSSIER_RESULTATS + "/" + "prefetchedDorisDB1.xml");
-		//sauveXML(f, inListeFiches, inListeGroupes);
-		// -------------------
-		
-		/*for (Fiche fiche : inListeFiches){
-			
-			dbContext.ficheDao.create(fiche);
-		}
-			
 
-		for (Groupe groupe : inListeGroupes){
-			
-			dbContext.groupeDao.create(groupe);
-		}*/
-
-		String fichierXML = DOSSIER_BASE + "/" + DOSSIER_RESULTATS + "/" + Constants.getFichierDorisXML();
-		log.debug("ecritureDataXML() - fichierXML : "+fichierXML);
-		
-		XMLHelper.saveDBToFile(new File(fichierXML), dbContext);
-		
-		log.debug("ecritureDataXML() - Fin");
-	}
-
-	/**
-	 * Sauves toutes les fiches dans un fichier
-	 * 
-	 * @param fiches
-	 */
-	public void sauveXML(File file, List<Fiche> fiches, List<Groupe> groupes) {
-		try {
-			// Create file
-			FileWriter fstream = new FileWriter(file);
-			BufferedWriter out = new BufferedWriter(fstream);
-			
-			out.write("<");
-			out.write(XML_BASE);
-			out.write(" ");
-			out.write(XML_ATT_DATE_CREAT);
-			out.write("=\"");
-			SimpleDateFormat formatDate = new SimpleDateFormat ("dd/MM/yyyy HH:mm:ss" );
-			out.write(formatDate.format(new Date()));
-			out.write("\" ");
-			out.write(XML_ATT_SITE_URL);
-			out.write("=\"");
-			out.write(Constants.getSiteUrl());
-			out.write("\"");
-			out.write(">\n");
-			out.write("<");
-			out.write(XML_FICHES);
-			out.write(">\n");
-			for (Fiche fiche : fiches) {
-				out.write(fiche.toXML("",dbContext)+"\n");
-				//out.write(fiche.toXML()+"\n");
-			}
-			out.write("</");
-			out.write(XML_FICHES);
-			out.write(">\n");
-			out.write("<");
-			out.write(XML_GROUPES);
-			out.write(">\n");
-			for (Groupe groupe : groupes) {
-				out.write(groupe.toXML("",dbContext)+"\n");
-				//out.write(fiche.toXML()+"\n");
-			}
-			out.write("</");
-			out.write(XML_GROUPES);
-			out.write(">\n");
-			out.write("</");
-			out.write(XML_BASE);
-			out.write(">\n");
-			// Close the output stream
-			out.close();
-		} catch (Exception e) {// Catch exception if any
-			log.error(e.getMessage(), e);
-			//System.err.println("Error: " + e.getMessage());
-		}
-	}
-	
 	/**
      * Afficher l'aide de l'application
      **/	

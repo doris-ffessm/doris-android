@@ -134,9 +134,5 @@ public class Constants {
     	return listeFichesUrl;
     }
     
-    public static String getFichierDorisXML() {
-		String refFichierDorisXML = FICHIER_DORIS_XML;
-    	return refFichierDorisXML;
-    }
 	
 }
