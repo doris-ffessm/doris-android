@@ -72,27 +72,27 @@ public class SiteDoris {
     	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
     	source.fullSequentialParse();
     	log.debug("getListeFiches()- source.length() : " + source.length());
-    	log.debug("getListeFiches()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
+    	//log.debug("getListeFiches()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
 
     	Element elementTableracine=source.getFirstElementByClass("titre_page").getParentElement().getParentElement();
-    	log.debug("getListeFiches()- elementTableracine.length() : " + elementTableracine.length());
-    	log.debug("getListeFiches()- elementTableracine : " + elementTableracine.toString().substring(0, Math.min(100, elementTableracine.toString().length())));
+    	//log.debug("getListeFiches()- elementTableracine.length() : " + elementTableracine.length());
+    	//log.debug("getListeFiches()- elementTableracine : " + elementTableracine.toString().substring(0, Math.min(100, elementTableracine.toString().length())));
 
     	List<? extends Element> listeElementsTD = elementTableracine.getAllElements(HTMLElementName.TD);
-    	log.debug("getGroupes() - listeElementsTD.size() : " + listeElementsTD.size());
+    	//log.debug("getGroupes() - listeElementsTD.size() : " + listeElementsTD.size());
 		
     	for (Element elementTD : listeElementsTD) {
-    		log.debug("getGroupes() - elementTD.length() : " + elementTD.length());
-    		log.debug("getListeFiches()- elementTD : " + elementTD.toString().substring(0, Math.min(100, elementTD.toString().length())));
+    		//log.debug("getGroupes() - elementTD.length() : " + elementTD.length());
+    		//log.debug("getListeFiches()- elementTD : " + elementTD.toString().substring(0, Math.min(100, elementTD.toString().length())));
     		
     		String elementTDwidth = elementTD.getAttributeValue("width");
 			if (elementTDwidth != null){
     			if (elementTDwidth.toString().equals("75%")) {
-    				log.debug("getGroupes() - elementTD : "+elementTD.getRenderer());
+    				//log.debug("getGroupes() - elementTD : "+elementTD.getRenderer());
     				Element elementTDA = elementTD.getFirstElement(HTMLElementName.A);
     				
     				String contenu = elementTDA.getRenderer().toString();
-    				log.debug("getGroupes() - contenu : "+contenu);
+    				//log.debug("getGroupes() - contenu : "+contenu);
     				
     				String ficheNomScientifique = contenu.replaceAll("([^-]*)-(.*)", "$1").trim();
     				String ficheNomCommun = contenu.replaceAll("([^-]*)-(.*)", "$2").trim();
@@ -135,7 +135,7 @@ public class SiteDoris {
     	
     	Source source=new Source(inCodePageHtml);
     	source.fullSequentialParse();
-    	log.debug("getGroupes()- source.length() : " + source.length());
+    	//log.debug("getGroupes()- source.length() : " + source.length());
     	
     	List<? extends Element> listeElementsTable;
     	List<? extends Element> listeElementsA;
@@ -152,11 +152,11 @@ public class SiteDoris {
 		
 		for (Element elementTR : listeElementsTable) {
 			if ( elementTR.getDepth() == profondeurTRlignes ) {
-				log.info("getGroupes() - elementTR : "+elementTR.toString().substring(0, Math.min(100, elementTR.toString().length())));
+				//log.info("getGroupes() - elementTR : "+elementTR.toString().substring(0, Math.min(100, elementTR.toString().length())));
 				//Groupes Niveau 1 et Niveau 2
 				elementTD = elementTR.getFirstElementByClass("titre2");
 				if (elementTD != null) {
-					log.info("getGroupes() - elementTD : "+elementTD.toString().substring(0, Math.min(100, elementTD.toString().length())));
+					//log.info("getGroupes() - elementTD : "+elementTD.toString().substring(0, Math.min(100, elementTD.toString().length())));
 					//Groupes Niveau 1
 					Element elementIMG = elementTD.getFirstElement(HTMLElementName.IMG);
 					if (elementIMG != null) {
@@ -197,13 +197,13 @@ public class SiteDoris {
 
 							for (Element elementIMG : elementTR.getAllElements(HTMLElementName.IMG)) {
 							
-								log.info("getGroupes() - groupe 3 - 4 ? elementIMG : "+elementIMG.getAttributeValue("src"));
+								//log.info("getGroupes() - groupe 3 - 4 ? elementIMG : "+elementIMG.getAttributeValue("src"));
 								
 								if (elementIMG.getAttributeValue("src").contains("/images_groupe/")) {
 									listeElementsA = elementIMG.getParentElement().getParentElement().getParentElement().getAllElements(HTMLElementName.A);
 									
 									for (Element elementA : listeElementsA) {
-										log.info("getGroupes() - elementA : "+elementA.toString());
+										//log.info("getGroupes() - elementA : "+elementA.toString());
 										
 										String elementAClass = elementA.getAttributeValue("class");
 										if (elementAClass != null){
@@ -249,14 +249,14 @@ public class SiteDoris {
 										}	
 									}
 								}
-								log.info("getGroupes() - test  0");
+								//log.info("getGroupes() - test  0");
 								if (elementIMG.getAttributeValue("src").contains("/images_sousgroupe/")) {
-									log.info("getGroupes() - test  1 - "+elementIMG.toString());
+									//log.info("getGroupes() - test  1 - "+elementIMG.toString());
 									
 									listeElementsA = elementIMG.getParentElement().getParentElement().getParentElement().getAllElements(HTMLElementName.A);
 									
 									for (Element elementAG4 : listeElementsA) {
-										log.info("getGroupes() - elementA : "+elementAG4.toString());
+										//log.info("getGroupes() - elementA : "+elementAG4.toString());
 										
 										String elementAClassG4 = elementAG4.getAttributeValue("class");
 										if (elementAClassG4 != null){
@@ -325,12 +325,12 @@ public class SiteDoris {
     	
     	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
     	source.fullSequentialParse();
-    	log.debug("getListePhotosFiche()- source.length() : " + source.length());
-    	log.debug("getListePhotosFiche()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
+    	//log.debug("getListePhotosFiche()- source.length() : " + source.length());
+    	//log.debug("getListePhotosFiche()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
     	
     	Element elementTableracine=source.getFirstElementByClass("titre2").getParentElement().getParentElement();
     	List<? extends Element> listeElementsTD = elementTableracine.getAllElements(HTMLElementName.TD);
-    	log.debug("getListePhotosFiche() - listeElementsTD.size() : " + listeElementsTD.size());
+    	//log.debug("getListePhotosFiche() - listeElementsTD.size() : " + listeElementsTD.size());
     	
     	// titre de la photo courante
     	String titrePhotoCourante = null;

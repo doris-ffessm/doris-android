@@ -59,6 +59,14 @@ public class Constants {
     private final static String PARTICIPANTS_RACINE_URL = "contacts.asp?filtre=";
     
 	/*
+	 * Autres Constantes
+	 */
+    // Texte inséré dans le Texte de la fiche pour montrer qu'un lien vers une fiche était ici.
+    // Si c'est possible un jour il faudra mettre un lien dans la fiche directement sur le mot 
+    private final static String CONTENU_LIEN_TEXTE = "(Fiche Liée)";
+    
+    
+	/*
 	 * Liste des Types de Zone géographique, Participant, etc.
 	 */
     public enum ZoneGeographiqueKind {
@@ -82,12 +90,13 @@ public class Constants {
 	private final static String VERIFICATEUR_LIB = "Vérificateur";
 	private final static String CORRECTEUR_SCIENTIFIQUE_LIB = "Correcteur Scientifique";
 	private final static String RESPONSABLE_REGIONAL_LIB = "Responsable Régional";
-	private final static String RESPONSABLE_NATIONAL_LIB = "responsable National";
+	private final static String RESPONSABLE_NATIONAL_LIB = "Responsable National";
     
 	/*
-	 * Accession aux URL
+	 * Accession aux Constantes
 	 */
-    public static String getSiteUrl() {
+    
+	public static String getSiteUrl() {
 		String listeFichesUrl = SITE_RACINE_URL;
 		return listeFichesUrl;
     }
@@ -124,6 +133,10 @@ public class Constants {
     	return listeFichesUrl;
     }
     
+    public static String getContenuLienTexte() {
+ 		String contenuLienTexte = CONTENU_LIEN_TEXTE;
+ 		return contenuLienTexte;
+     }
     
 	/*
 	 * Gestion Zones Géographiques

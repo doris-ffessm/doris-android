@@ -217,7 +217,7 @@ public class Fiche {
 		log.trace("getFiche() - Début");
 		
     	int i;
-    	//String listeLienRencontre = "";
+    	String listeLiensVersFiches = "";
     	
     	htmlFiche = Outils.nettoyageBalises(htmlFiche);
     	
@@ -230,7 +230,7 @@ public class Fiche {
 		}
     	
     	
-    	log.debug("getFiche() - htmlFiche : " + htmlFiche.substring(0, 200));
+    	//log.debug("getFiche() - htmlFiche : " + htmlFiche.substring(0, 200));
     	
 		// Utilisation du parser Jericho
 		Source source=new Source(htmlFiche);
@@ -243,7 +243,7 @@ public class Fiche {
 		Element ElementTDcode_fiche;
 		ElementTDcode_fiche = source.getFirstElementByClass("code_fiche");
 		
-		log.debug("getFiche() - ElementTDcode_fiche.toString() : " + ElementTDcode_fiche.toString());
+		//log.debug("getFiche() - ElementTDcode_fiche.toString() : " + ElementTDcode_fiche.toString());
 
 		String ficheRef = ElementTDcode_fiche.getFirstElementByClass("normalgris").getRenderer().toString().trim();
 		ficheRef = ficheRef.replace("(N°", "").replace(")", "");
@@ -268,15 +268,15 @@ public class Fiche {
 			// La 4ème contient la classification et la suite
 			
 			ElementTable=source.getFirstElementByClass("trait_cadregris").getFirstElement();
-			log.debug("getFiche() - ElementTable : " + ElementTable.toString().substring(0, Math.min(ElementTable.toString().length(),200)));
+			//log.debug("getFiche() - ElementTable : " + ElementTable.toString().substring(0, Math.min(ElementTable.toString().length(),200)));
 			
 			listeElementsTable_TABLE = ElementTable.getFirstElement(HTMLElementName.TABLE).getChildElements();
-			log.debug("getFiche() - listeElementsTable_TABLE.size : " + listeElementsTable_TABLE.size());
+			//log.debug("getFiche() - listeElementsTable_TABLE.size : " + listeElementsTable_TABLE.size());
 
 			for (Element elementTable_TABLE : listeElementsTable_TABLE) {
 				num_table++;
-				log.debug("getFiche() - ligneTable_TR :" + num_table);
-				log.debug("getFiche() - elementTable_TR : " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),100)));
+				//log.debug("getFiche() - ligneTable_TR :" + num_table);
+				//log.debug("getFiche() - elementTable_TR : " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),100)));
 				switch(num_table) {
 				//Entête de la Fiche
 				case 1 :
@@ -336,7 +336,7 @@ public class Fiche {
 					
 					//Le grand pere du 1er TD de class Normal est le TBODY des Détails
 					Element ElementsMG_normal=elementTable_TABLE.getFirstElementByClass("normal");
-					log.debug("getFiche() - ElementsMG_rubrique : " + ElementsMG_normal.toString().substring(0, Math.min(ElementsMG_normal.toString().length(),20)));
+					//log.debug("getFiche() - ElementsMG_rubrique : " + ElementsMG_normal.toString().substring(0, Math.min(ElementsMG_normal.toString().length(),20)));
 					Element ElementsMG=ElementsMG_normal.getParentElement().getParentElement();
 					List<? extends Element> listeElementsMG_TD = ElementsMG.getAllElements(HTMLElementName.TD);
 
@@ -344,7 +344,7 @@ public class Fiche {
 					String rubrique = "";
 	
 					for (Element elementTD : listeElementsMG_TD) {
-						log.debug("getFiche() - listeElementsMG_TD : " + elementTD.toString().substring(0, Math.min(elementTD.toString().length(),50)));
+						//log.debug("getFiche() - listeElementsMG_TD : " + elementTD.toString().substring(0, Math.min(elementTD.toString().length(),50)));
 						listeAttributs=elementTD.getAttributes();
 						for (Attribute attribut : listeAttributs) {
 							// Récupération du Titre de la rubrique
@@ -379,23 +379,22 @@ public class Fiche {
 									AutreDenomination autreDenomination = new AutreDenomination(autresDenominationsTexte, "");									
 									autreDenomination.setFiche(this);
 									_contextDB.autreDenominationDao.create(autreDenomination);
-									//this.autresDenominations.add(autreDenomination);
 									
 									
 								} else {
 									String contenuTexte = elementTD.getRenderer().toString();
-									log.debug("getFiche() - contenu(initial) : " + contenu);
+									//log.debug("getFiche() - contenu(initial) : " + contenu);
 									
 									// suppression des sauts de ligne
 									contenuTexte = contenuTexte.replaceAll("\r\n", " ").replaceAll("\n", " ");
-									log.debug("getFiche() - contenu(1) : " + contenuTexte);
+									//log.debug("getFiche() - contenu(1) : " + contenuTexte);
 	
 									// suppression des blancs multiples
 									contenuTexte = contenuTexte.replaceAll("\\s{2,}"," ");
-									log.debug("getFiche() - contenu(2) : " + contenuTexte);
+									//log.debug("getFiche() - contenu(2) : " + contenuTexte);
 									
 									// permet d'enlever les Liens et de les remplacer par (*)
-									contenuTexte = contenuTexte.replaceAll("<[^>]*>", "(*)").trim();
+									contenuTexte = contenuTexte.replaceAll("<[^>]*>", Constants.getContenuLienTexte()).trim();
 	
 									log.info("getFiche() - rubrique : " + rubrique);
 									log.info("getFiche() - contenu(après nettoyage) : " + contenuTexte);
@@ -403,13 +402,12 @@ public class Fiche {
 									SectionFiche contenu = new SectionFiche(rubrique, contenuTexte);
 									contenu.setFiche(this);
 									_contextDB.sectionFicheDao.create(contenu);
-									//this.getContenu().add(contenu);
 								}
 							}
 						}
 						
 						// Création de la liste des Liens (url vers d'autres fiches)
-						/* non utilisé dans la version android
+						
 						for (Element elementTDA : elementTD.getAllElements(HTMLElementName.A)) {
 							String hrefValue = elementTDA.getAttributeValue("href");
 							log.debug("getFiche() - A : " + elementTDA.getRenderer().toString().trim() + " - lien : " + hrefValue);
@@ -418,31 +416,30 @@ public class Fiche {
 							
 								if (elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "") != "" && elementTDA.getRenderer().toString().trim() != "") {
 								
-									String tempLien = elementTDA.getRenderer().toString().trim();
-									log.info("getFiche() - listeLienRencontre : " + listeLienRencontre );
+									String tempLien = elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "");
 									
-									if (!listeLienRencontre.contains(tempLien + "£")) {
-										listeLienRencontre += tempLien + "£";
-										
-										//TODO :
-										//ficheListeLiensUrl.add(elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", ""));
-										//ficheListeLiensTexte.add(tempLien);
+									if (!listeLiensVersFiches.contains(tempLien + ";")) {
+										listeLiensVersFiches += tempLien + ";";
 									}
+									log.info("getFiche() - listeLienRencontre : " + listeLiensVersFiches );
 								}
 							}
-						}*/
+						}
 					}
+					
+					
 					
 					//Recup du TD qui contient les infos DROITE (images et qui a fait la fiche)
 					//Recup du TR dont le 3ème TD fils contient les infos DROITE (images et qui a fait la fiche)
 					
 					List<? extends Element> listeElementsEntoureDeGris = elementTable_TABLE.getAllElementsByClass("trait_cadregris");
-					log.debug("getFiche() -  element : " + " - " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),30)));
+					//log.debug("getFiche() -  element : " + " - " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),30)));
 					
 					for (Element elementEntoureDeGris : listeElementsEntoureDeGris) {
 						log.debug("getFiche() - vignette 1: " + elementEntoureDeGris.toString().substring(0, Math.min(100,elementEntoureDeGris.toString().toString().length())));
 						
 						// Les images de la fiche sont dans les liens (A)
+						/*
 						Element elementAinEntoureDeGris= elementEntoureDeGris.getFirstElement(HTMLElementName.A);
 						Element elementImg = null;
 						String urlImageDansFiche = "";
@@ -456,12 +453,12 @@ public class Fiche {
 							for (Attribute attribut : listeAttributs) {
 								if (attribut.getName().equalsIgnoreCase("src") && attribut.getValue().contains("gestionenligne")){
 									urlImageDansFiche = attribut.getValue().replaceAll(Constants.getSiteUrl(), "");
-									log.info("getFiche() - urlImageDansFiche : " + urlImageDansFiche);
+									log.debug("getFiche() - urlImageDansFiche : " + urlImageDansFiche);
 									break;
 								}
 
 							}
-						}
+						}*/
 						
 					// Devenue inutile avec recherche des photos par la page de prévisualisation
 					/*
@@ -521,11 +518,12 @@ public class Fiche {
 					// Les dates de Créations et de nodifications
 					// Elles sont dans le seul TD de class = normalgris
 					Element ElementDates=elementTable_TABLE.getFirstElementByClass("normalgris");
-					log.info("getFiche() - Bloc Dates : " + ElementDates.getRenderer().toString());
+					//log.info("getFiche() - Bloc Dates : " + ElementDates.getRenderer().toString());
 					
 					dateCreation = ElementDates.getRenderer().toString().replaceAll("Création le : ([^ ]*).*", "$1").trim();
 					dateModification = ElementDates.getRenderer().toString().replaceAll(".*modification le(.*)", "$1").trim();
-					
+					log.debug("getFiche() - dateCreation : " + dateCreation);
+					log.debug("getFiche() - dateModification : " + dateModification);
 					break; // Fin de la recherche d'infos dans le bloc principal
 					
 				//Ligne blanche => rien à faire mais à garder pour ne pas passer dans le default
@@ -577,19 +575,19 @@ public class Fiche {
 		if ( getEtatFiche() == 1 || getEtatFiche() == 2 || getEtatFiche() == 3
 				|| getEtatFiche() == 5 ) {
 			ElementTable=source.getFirstElementByClass("trait_cadregris");
-			log.debug("getFiche() - ElementTable : " + ElementTable.toString().substring(0, Math.min(ElementTable.toString().length(),200)));
+			//log.debug("getFiche() - ElementTable : " + ElementTable.toString().substring(0, Math.min(ElementTable.toString().length(),200)));
 
 			listeElementsTable_TABLE = ElementTable.getAllElements(HTMLElementName.TABLE);
-			log.debug("getFiche() - listeElementsTable_TABLE.size : " + listeElementsTable_TABLE.size());
+			//log.debug("getFiche() - listeElementsTable_TABLE.size : " + listeElementsTable_TABLE.size());
 
 			for (Element elementTable_TABLE : listeElementsTable_TABLE) {
 				num_table++;
-				log.debug("getFiche() - num_table :" + num_table);
-				log.debug("getFiche() - elementTable_TABLE.length() : " + elementTable_TABLE.toString().length());
-				log.debug("getFiche() - elementTable_TABLE : " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),100)));
+				//log.debug("getFiche() - num_table :" + num_table);
+				//log.debug("getFiche() - elementTable_TABLE.length() : " + elementTable_TABLE.toString().length());
+				//log.debug("getFiche() - elementTable_TABLE : " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),100)));
 
 				String largeurTable = elementTable_TABLE.getAttributeValue("width");
-				log.debug("getFiche() - largeurTable :" + largeurTable);
+				//log.debug("getFiche() - largeurTable :" + largeurTable);
 				String urlImageDansFiche = "";
 				
 				//Entête de la Fiche
@@ -643,7 +641,7 @@ public class Fiche {
 				}
 					
 				if (largeurTable!=null && largeurTable.equals("372")) {
-					log.debug("getFiche() - Recup. Images");
+					//log.debug("getFiche() - Recup. Images");
 					
 					//Recup du TR dont le 3ème TD fils contient les infos DROITE (images et qui a fait la fiche)
 					List<? extends Element> ListeelementTable_IMG = elementTable_TABLE.getAllElements(HTMLElementName.IMG);
@@ -653,8 +651,8 @@ public class Fiche {
 						for (Attribute attribut : listeAttributsTableImg) {
 							if (attribut.getName().equalsIgnoreCase("src") && attribut.getValue().contains("gestionenligne")){
 								// TODO :
-								// urlImageDansFiche = attribut.getValue().replaceAll(Extraction.racineSite, "");
-								log.info("getFiche() - urlImageDansFiche : " + urlImageDansFiche);
+								//urlImageDansFiche = attribut.getValue().replaceAll(Constants.getSiteUrl(), "");
+								//log.info("getFiche() - urlImageDansFiche : " + urlImageDansFiche);
 														
 								break;
 							}
@@ -662,28 +660,28 @@ public class Fiche {
 						}
 					}
 						
-					//Recup Texte
+					//Recup Texte Image
+					/*
 					Element element2 = elementTable_TABLE.getFirstElementByClass("normal2");
 					if (element2 != null)
 					{
 						log.info("getFiche() - Texte : " + element2.getRenderer().toString());
 						// TODO :
 						// ficheListeImages.add(new Image(element2.getRenderer().toString(), urlImageDansFiche));
-					}
+					}*/
 					break;
-				
+			
 				}
-				
 
 			}
 			
 			//Recup du sous-Groupe auquel appartient l'espèce
-			log.debug("getFiche() - Recup du sous-Groupe auquel appartient l'espèce");
+			//log.debug("getFiche() - Recup du sous-Groupe auquel appartient l'espèce");
 			List<? extends Element> listeElementsTDSousGroupe = source.getAllElementsByClass("sousgroupe_fiche");
 			
 			for (Element element : listeElementsTDSousGroupe) {
 				int index = listeElementsTDSousGroupe.indexOf(element);
-				log.debug("getFiche() - index : " + index);
+				//log.debug("getFiche() - index : " + index);
 				
 				if (index == 1) {
 				}
@@ -703,6 +701,10 @@ public class Fiche {
 			}
 			
 			
+		}
+		
+		if (!listeLiensVersFiches.isEmpty()){
+			setNumerofichesLiees(listeLiensVersFiches);									
 		}
 		
 		listeElementsTable_TABLE = null;
@@ -769,10 +771,11 @@ public class Fiche {
 	public List<Integer> getNumerosFicheLiees(){
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		for(String  s : this.numerofichesLiees.split(";")){
-			result.add(Integer.parseInt(s));
+			if (!s.isEmpty()) result.add(Integer.parseInt(s));
 		}
 		return result;
 	}
+	
 	
 	// End of user code
 	
