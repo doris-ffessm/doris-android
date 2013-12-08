@@ -179,9 +179,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
         }
         
-        // Affichage Debbug
-        if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debbug, false)){
-        	if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Affichage Debbug");
+        // Affichage Debug
+        if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debug, false)){
+        	if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Affichage Debug");
         	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
         	((ScrollView) findViewById(R.id.accueil_debug)).setVisibility(View.VISIBLE);
         }
@@ -473,8 +473,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
 		   int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
 		   
-		   boolean affichageBarre;
-		   //TODO : Test Affichage 2 Barres
 		   boolean affichageBarrePhotoPrinc;
 		   boolean affichageBarrePhoto;
 		   String summaryTexte = "";
@@ -484,9 +482,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		   Outils.PrecharMode precharModeZoneGeo = Outils.getPrecharModeZoneGeo(getContext(), inZoneGeo.getId());
 		   
 		   if ( precharModeZoneGeo == Outils.PrecharMode.P0 ) {
-			   affichageBarre = false;
-			   
-			   //TODO : Test Affichage 2 Barres
+
 			   affichageBarrePhotoPrinc = false;
 			   affichageBarrePhoto = false;
 			   
@@ -497,9 +493,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 			   int nbPhotosPrincDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), inZoneGeo.getId(), true);
 			   int nbPhotosDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), inZoneGeo.getId(), false);
 			   
-			   affichageBarre = true;
-			   
-			   //TODO : Test Affichage 2 Barres
 			   affichageBarrePhotoPrinc = true;
 			   affichageBarrePhoto = true;
 			   
@@ -515,8 +508,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 					   
 					   avancementPhoto = 0;
 					   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
-					   
-					 //TODO : Test Affichage 2 Barres
+
 					   affichageBarrePhoto = false;
 					   
 				   } else {
@@ -557,8 +549,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
 	   int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
 	   
-	   boolean affichageBarre;
-	   //TODO : Test Affichage 2 Barres
 	   boolean affichageBarrePhotoPrinc;
 	   boolean affichageBarrePhoto;
 	   String summaryTexte = "";
@@ -568,9 +558,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	   Outils.PrecharMode precharModeZoneGeo = Outils.getPrecharModeZoneGeo(getContext(), inZoneGeo.getId());
 	   
 	   if ( precharModeZoneGeo == Outils.PrecharMode.P0 ) {
-		   affichageBarre = false;
-		   
-		   //TODO : Test Affichage 2 Barres
+
 		   affichageBarrePhotoPrinc = false;
 		   affichageBarrePhoto = false;
 		   
@@ -581,9 +569,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		   int nbPhotosPrincDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), inZoneGeo.getId(), true);
 		   int nbPhotosDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), inZoneGeo.getId(), false);
 		   
-		   affichageBarre = true;
-		   
-		   //TODO : Test Affichage 2 Barres
 		   affichageBarrePhotoPrinc = true;
 		   affichageBarrePhoto = true;
 		   
@@ -766,7 +751,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     	// Debbug
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    	if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debbug, false)){
+    	if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debug, false)){
 	    	StringBuffer sb = new StringBuffer();
 	    	sb.append("- - Debbug - -\n");
 	    	

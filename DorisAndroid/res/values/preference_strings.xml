@@ -21,7 +21,7 @@
 	<string name="pref_key_fiche_aff_details_pardefaut">pref_fiche_aff_details_pardefaut</string>
 			
 	<!-- ids Debug -->
-	<string name="pref_key_affichage_debbug">affichage_debbug</string>
+	<string name="pref_key_affichage_debug">affichage_debug</string>
 	<string name="pref_key_sync_max_card_number">sync_max_card_number</string>
 	<string name="pref_key_limit_download">limit_download</string>
 	<string name="pref_key_mode_precharg_sizemax">mode_precharg_sizemax</string>
@@ -50,9 +50,6 @@
         <item>Haute résolution</item>
     </string-array>
     
-    <!-- GMo : tjrs utile ?  -->
-    <string name="mode_connecte_sizemax_prompt">Taille du cache à la demande (Mo) ?</string>
-    
     
 	<string name="mode_precharg_preference_category">Préchargement photos en Mode hors ligne</string>
     
@@ -66,8 +63,6 @@
     <string name="mode_precharg_favorite_prompt">- Fiches préférées ? (A FAIRE)</string>
     <string name="mode_precharg_region_defaut">P1</string>
     
-    <!-- Encore Utile ? -->
-    <string name="mode_precharg_sizemax_prompt">Limite de d\'occupation disque (Mo) ?</string>
     
 	<string name="icone_touteszones">drawable/icone_toutes_zones</string>
 	<string name="icone_france">drawable/icone_france</string>
@@ -76,10 +71,6 @@
 	<string name="icone_caraibes">drawable/icone_caraibes</string>
 	<string name="icone_atlantno">drawable/icone_atl_n_o</string>
 
-			
-    <!-- GMo : A effacer ? dpot être lié à l'algo A1-->
-	<string name="sync_auto_wifi_only_prompt">Synchro. Auto en Wifi seulement</string>
-	<string name="sync_auto_wifi_only_summary">Permet d\'épargner le forfait data</string>
 
 	<string-array name="mode_precharg_answers_values">
         <item>P0</item>
@@ -139,25 +130,14 @@
 		
 	<string name="debug_preference_category">Debug et Dev.</string>
 	<string name="debug_preferences">Paramètres</string>
+	<string name="debug_preferences_affichage_prompt">Affichage infos. debug</string>
+	<string name="debug_preferences_affichage_summary">"Permet d'afficher les infos Debug sur l'accueil"</string>
+	
 	<string name="sync_max_card_number_prompt">Nombre max de fiches à télécharger</string>
 	<string name="sync_max_card_number_summary">(ex: 1, 5, 100 ou * pour toutes les fiches)</string>
     <string name="sync_max_card_number_default">5</string>
     
     
-	<string name="sync_fresh_water_prompt">Fiches eau douce</string>
-    <string name="sync_fresh_water_summary"></string>
-    
-    <string name="sync_france_prompt">Fiches France</string>
-    <string name="sync_france_summary"></string>
-	
-    <string name="sync_atl_nothwest_prompt">Fiches Atl. Nord/Ouest</string>
-    <string name="sync_atl_nothwest_summary"></string>
-	
-    <string name="sync_indo_pacific_prompt">Fiches Indo-Pacifique</string>
-    <string name="sync_indo_pacific_summary"></string>    
-    
-    <string name="sync_carabean_prompt">Fiches Caraïbes</string>
-    <string name="sync_carabean_summary"></string> 
     <!--End of user code
 		-->
 </resources>

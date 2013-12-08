@@ -430,6 +430,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	        			if( (compteurAvancement % 10) == 0) publishProgress( compteurAvancement );
 	        			
 	        			idFiche = Integer.valueOf(fiche_ZonesGeographiques.getFiche().getId());
+	        			// Les compteurs des photos à télécharger sont moins ergonomiques
+	        			// mais ainsi on ne traite qu'une fois chaque fiche ce qui fait gagner bcq de temps de traitement
 	        			if (!ficheTraitee.contains( idFiche ) ) {
 	        				
 	        				ficheTraitee.add( idFiche );

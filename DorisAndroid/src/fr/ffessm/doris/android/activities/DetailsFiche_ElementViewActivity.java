@@ -295,9 +295,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		
 		
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    	// Debbug
+    	// Debug
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debbug, false)){
+		if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debug, false)){
 			
 			((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setVisibility(View.VISIBLE);
 			((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setText(sbDebugText.toString());

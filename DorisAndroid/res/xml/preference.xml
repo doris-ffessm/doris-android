@@ -160,9 +160,9 @@
 	        android:key="button_debug_preferences_key"
 	        android:title="@string/debug_preferences"
 	        android:persistent="false">
-	        <CheckBoxPreference android:key="@string/pref_key_affichage_debbug"
-	            android:title="Affichage infos. debbug"
-	            android:summary="Permet de montrer aux utilisateurs finaux la future interface"  
+	        <CheckBoxPreference android:key="@string/pref_key_affichage_debug"
+	            android:title="@string/debug_preferences_affichage_prompt"
+	            android:summary="@string/debug_preferences_affichage_summary"  
 	            android:defaultValue="false"
 	            android:layout="@layout/preference_layout_preference"
 	            />
