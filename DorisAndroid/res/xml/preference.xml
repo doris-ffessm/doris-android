@@ -178,30 +178,6 @@
 	            android:defaultValue="false"
 	            android:layout="@layout/preference_layout_preference"
 	            />
-	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:key="debug_algo_sync"
-	            android:title="Test du nouvel algo sync"
-				android:entryValues="@array/debug_new_algo_sync_values"
-				android:entries="@array/debug_new_algo_sync_lib"
-				android:defaultValue="A2"
-				android:layout="@layout/preference_layout_preference"
-				/>
-	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:key="@string/pref_key_mode_precharg_region_ttzones"
-	            android:entries="@array/mode_precharg_answers_lib"
-	            android:title="@string/mode_precharg_region_ttzones_prompt"
-				android:entryValues="@array/mode_precharg_answers_values"
-				android:defaultValue="P1"
-				android:layout="@layout/preference_layout_preference"
-				/>
-	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:key="@string/pref_key_test_progressbar"
-	            android:title="@string/test_progressbar_prompt"
-				android:entryValues="@array/test_progressbar_values"
-				android:entries="@array/test_progressbar_lib"
-				android:defaultValue="@string/test_progressbar_defaut"
-				android:layout="@layout/preference_layout_preference"
-				/>
 	        </PreferenceScreen>
      </PreferenceCategory>
  

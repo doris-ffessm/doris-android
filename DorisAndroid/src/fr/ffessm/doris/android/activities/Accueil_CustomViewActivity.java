@@ -629,13 +629,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - summaryTexte : "+summaryTexte);
 	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avancementPhotoPrinc : "+avancementPhotoPrinc);
 	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avancementPhoto : "+avancementPhoto);
-	   
-	 //TODO : Test Affichage 2 Barres
-	   if (!Outils.getParamString(getContext(), R.string.pref_key_test_progressbar, "1").equals("2")){
-		   return addProgressBarView(llContainerLayout, inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarre, avancementPhotoPrinc, avancementPhoto);
-	   } else {
-		   return new ProgressBarZone(this, llContainerLayout, NbBar.TwoBar, inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto);
-	   }
+
+	   return new ProgressBarZone(this, llContainerLayout, NbBar.TwoBar, inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto);
+
 	}
 	
 	protected ProgressBarZone addProgressBarView(LinearLayout inContainerLayout, String inTitre, String inSummary, int inIcone, boolean inAffBarre, int inAvancPhotoPrinc, int inAvancPhoto){
@@ -718,61 +714,43 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	    	llContainerLayout =  (LinearLayout) findViewById(R.id.avancements_layout);
 	    	
 	    	// Avancement et Affichage toutes Zones
-	    	
-	    	if (!Outils.getParamString(getContext(), R.string.pref_key_test_progressbar, "1").equals("2")){
-	    		addProgressBarZone(zoneToutesZones);
-	 	   } else {
-	 		  MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this);
-	 		  updateProgressBarZone(zoneToutesZones, progressBarZoneGenerale);
-	 		  progressBarZones.put(zoneToutesZones.getId(), progressBarZoneGenerale); 
-	 		  final Context context = this;
-	 		  progressBarZoneGenerale.pbProgressBar_running.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							Toast.makeText(context, "Arrêt des téléchargements", Toast.LENGTH_LONG).show();
-							DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
-						}
-					});
-	 		  llContainerLayout.addView(progressBarZoneGenerale);
-	 	   }
+	    	MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this);
+	    	updateProgressBarZone(zoneToutesZones, progressBarZoneGenerale);
+	    	progressBarZones.put(zoneToutesZones.getId(), progressBarZoneGenerale); 
+	    	final Context context = this;
+	    	progressBarZoneGenerale.pbProgressBar_running.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(context, "Arrêt des téléchargements", Toast.LENGTH_LONG).show();
+					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
+				}
+			});
+	    	llContainerLayout.addView(progressBarZoneGenerale);
+
 	    	
 	    	// Avancement par Zone
-	    	if (!Outils.getParamString(getContext(), R.string.pref_key_test_progressbar, "1").equals("2")){
-	    		//DorisDBHelper dorisDBHelper = this.getHelper().getDorisDBHelper();
-		    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avant ");
-		    	List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
-		    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - après");
-				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
+	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avant ");
+	    	List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
+	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - après");
+			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
 				
-				//TODO : GMo : Je n'ai pas su créer un objet ProgressBar_Zone qui aurait été bien plus propre
-				// J'ai tout basé sur la Zone et son Id afin que sa réaliation soit "simple"
-				for (ZoneGeographique zoneGeo : listeZoneGeo) {
-					addProgressBarZone(zoneGeo);
-				}
-	 	   } else {
-		    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avant ");
-		    	List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
-		    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - après");
-				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
-				final Context context = this;
-				
-				for (ZoneGeographique zoneGeo : listeZoneGeo) {
-					MultiProgressBar progressBarZone = new MultiProgressBar(this);
-		 		    updateProgressBarZone(zoneGeo, progressBarZone);
-		 		    final int zoneGeoId = zoneGeo.getId();
-		 		    progressBarZone.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-							ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zoneGeoId);
-					        ed.commit();
-							startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
-						}
-					});
-		 		    progressBarZones.put(zoneGeo.getId(), progressBarZone); 
-			 		llContainerLayout.addView(progressBarZone);
-				} 
-	 	   }
+			for (ZoneGeographique zoneGeo : listeZoneGeo) {
+				MultiProgressBar progressBarZone = new MultiProgressBar(this);
+	 		    updateProgressBarZone(zoneGeo, progressBarZone);
+	 		    final int zoneGeoId = zoneGeo.getId();
+	 		    progressBarZone.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+						ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zoneGeoId);
+				        ed.commit();
+						startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+					}
+				});
+	 		    progressBarZones.put(zoneGeo.getId(), progressBarZone); 
+		 		llContainerLayout.addView(progressBarZone);
+			} 
+
 	    	
     	} else {
     		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - update progress bar : ");

@@ -26,8 +26,7 @@
 	<string name="pref_key_limit_download">limit_download</string>
 	<string name="pref_key_mode_precharg_sizemax">mode_precharg_sizemax</string>
 	<string name="pref_key_mode_precharg_region_ttzones">mode_precharg_region_ttzones</string>
-	<string name="pref_key_debug_algo_sync">debug_algo_sync</string>
-	<string name="pref_key_test_progressbar">test_progressbar</string>
+
 	
     <!-- Options text -->
     <string name="preference_menu_title">Préférences</string>
@@ -144,29 +143,6 @@
 	<string name="sync_max_card_number_summary">(ex: 1, 5, 100 ou * pour toutes les fiches)</string>
     <string name="sync_max_card_number_default">5</string>
     
-	<string name="mode_precharg_region_ttzones_prompt">Mode Précharg. ancien Algo</string>	
-    
-	<string-array name="debug_new_algo_sync_values">
-        <item>A0</item>
-        <item>A1</item>
-        <item>A2</item>
-    </string-array>
-	<string-array name="debug_new_algo_sync_lib">
-        <item>Algo Initial (pas complet)</item>
-        <item>Algo complet (Vitesse à optimiser)</item>
-        <item>Algo complet optimisé</item>
-    </string-array>
-    
-    <string name="test_progressbar_prompt">Test Type de Progress Bar</string>
-    <string name="test_progressbar_defaut">1</string>
-    <string-array name="test_progressbar_values">
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-	<string-array name="test_progressbar_lib">
-        <item>1 Barre (Utilisat° Barre second.)</item>
-        <item>2 Barres</item>
-    </string-array>
     
 	<string name="sync_fresh_water_prompt">Fiches eau douce</string>
     <string name="sync_fresh_water_summary"></string>
