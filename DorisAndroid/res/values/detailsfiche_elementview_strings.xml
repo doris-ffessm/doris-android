@@ -10,6 +10,7 @@
 	<string name="detailsfiche_elementview_datecreation_label">"Création : "</string>
 	<string name="detailsfiche_elementview_datemodification_label">"Dernière modification : "</string>
 	<string name="detailsfiche_elementview_autresdenominations_label">Autres dénominations</string>
+	<string name="detailsfiche_elementview_fichesliees_label">Fiches Liées</string>
 	<string name="detailsfiche_elementview_credit_label">Crédits</string>
 	<string name="detailsfiche_elementview_zonesgeo_label">Zones Doris</string>
 	<string name="detailsfiche_elementview_nomscientifique_hint_text"></string>

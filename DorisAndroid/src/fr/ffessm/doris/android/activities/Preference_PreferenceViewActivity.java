@@ -52,7 +52,9 @@ import fr.ffessm.doris.android.R;
 import java.io.File;
 import java.util.Date;
 
+import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Picasso.Builder;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -86,52 +88,52 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 		//Start of user code Preference preference activity additional onCreate
         
         
-        Preference btnVideVig = (Preference)getPreferenceManager().findPreference("btn_reset_vig");
+        final Preference btnVideVig = (Preference)getPreferenceManager().findPreference("btn_reset_vig");
         if(btnVideVig != null) {
 	        btnVideVig.setSummary(getVigSummary());
         
         	btnVideVig.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                  @Override
                  public boolean onPreferenceClick(Preference arg0) {
-                	 int deletedFiles = Outils.clearFolder(Outils.getImageFolderVignette(getApplicationContext()), 0);
-                	 //TODO Je n'arrive pas à faire fonctionner le raffraichissement ici 
-                	 //btnVideVig.setSummary(getVigSummary());
+                	 Outils.clearFolder(Outils.getImageFolderVignette(getApplicationContext()), 0);
+
+                	 btnVideVig.setSummary(getVigSummary());
                 	 return true;
                  }
              });     
          }
         
-        Preference btnVideMedRes = (Preference)getPreferenceManager().findPreference("btn_reset_med_res");      
+        final Preference btnVideMedRes = (Preference)getPreferenceManager().findPreference("btn_reset_med_res");      
         if(btnVideMedRes != null) {
 	        btnVideMedRes.setSummary(getMedResSummary());
 
         	btnVideMedRes.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                  @Override
                  public boolean onPreferenceClick(Preference arg0) {
-                	 int deletedFiles = Outils.clearFolder(Outils.getImageFolderMedRes(getApplicationContext()), 0);
-                	//TODO Je n'arrive pas à faire fonctionner le raffraichissement ici 
-                	 //btnVideVig.setSummary(getMedResSummary());
+                	 Outils.clearFolder(Outils.getImageFolderMedRes(getApplicationContext()), 0);
+
+                	 btnVideMedRes.setSummary(getMedResSummary());
                 	 return true;
                  }
              });     
          }
         
-        Preference btnVideHiRes = (Preference)getPreferenceManager().findPreference("btn_reset_hi_res");      
+        final Preference btnVideHiRes = (Preference)getPreferenceManager().findPreference("btn_reset_hi_res");      
         if(btnVideHiRes != null) {
         	btnVideHiRes.setSummary(getHiResSummary());
         
         	btnVideHiRes.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                  @Override
                  public boolean onPreferenceClick(Preference arg0) {
-                	 int deletedFiles = Outils.clearFolder(Outils.getImageFolderHiRes(getApplicationContext()), 0);
-                	//TODO Je n'arrive pas à faire fonctionner le raffraichissement ici 
-                	 //btnVideVig.setSummary(getHiResSummary());
+                	 Outils.clearFolder(Outils.getImageFolderHiRes(getApplicationContext()), 0);
+
+                	 btnVideHiRes.setSummary(getHiResSummary());
                 	 return true;
                  }
              });     
          }
         
-        Preference btnVideCache = (Preference)getPreferenceManager().findPreference("btn_reset_cache");      
+        final Preference btnVideCache = (Preference)getPreferenceManager().findPreference("btn_reset_cache");      
         if(btnVideCache != null) {
         	
 	        btnVideCache.setSummary(getCacheSummary());
@@ -139,12 +141,18 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         	btnVideCache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                  @Override
                  public boolean onPreferenceClick(Preference arg0) {
-                	 //TODO : Picasso.with(getApplicationContext()).
+                	 //TODO : Picasso.with(getApplicationContext()).evictAll()
+                	 LruCache cache = new LruCache(getApplicationContext());
+                	
+                	 //cache.evictAll();
+                	 cache.clear();
+                	 //Picasso.with(getApplicationContext()).
                 	 // Pas compris comment faire ici : https://github.com/square/picasso/pull/77
                 	 
-                	//TODO : Je n'arrive pas à faire fonctionner le raffraichissement ici 
-                	 //btnVideVig.setSummary(getCacheSummary());
-                	 return true;
+                	 btnVideCache.setSummary(getCacheSummary());
+                 	 Toast.makeText(getApplicationContext(), "Ne marche pas pour l'instant :-(", Toast.LENGTH_LONG).show();
+                 	
+                	return true;
                  }
              });     
          }
@@ -216,8 +224,15 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     	return txt;
     }
     private String getCacheSummary() {
+    	int nbFichiersDansCache = 0;
+    	for (File child:getApplicationContext().getCacheDir().listFiles()) {
+     		if (child.getName().equals("picasso-cache") ) {
+     			nbFichiersDansCache = child.listFiles().length;
+  	     		break;
+     		}
+     	}
     	String txt = getApplicationContext().getString(R.string.mode_precharg_reset_cache_summary); 
-     	txt = txt.replace("@nbPh", ""+Outils.getFileCount(getApplicationContext(), getApplicationContext().getCacheDir() ) ) ;
+     	txt = txt.replace("@nbPh", ""+nbFichiersDansCache) ;
      	txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getDiskUsage(getApplicationContext(), getApplicationContext().getCacheDir() ) ) ) ;
      	return txt;
     }
