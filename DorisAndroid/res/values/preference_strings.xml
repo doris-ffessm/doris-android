@@ -93,13 +93,13 @@
 	<string name="mode_precharg_reset_title">Ré-Initialisation données</string>
 	<string name="mode_precharg_reset_summary">Permet d\'effacer toutes les fiches et images en mémoire avant de les re-télécharger.</string>
 	<string name="mode_precharg_reset_vig_title">Suppression vignettes</string>
-	<string name="mode_precharg_reset_vig_summary">Suppression des @nb vignettes téléchargées (@size)</string>
+	<string name="mode_precharg_reset_vig_summary">Suppression des @nbPh vignettes téléchargées (@size)</string>
 	<string name="mode_precharg_reset_med_res_title">Suppression images de qualité intermédiaire</string>
-	<string name="mode_precharg_reset_med_res_summary">Suppression des @nb images téléchargées (@size)</string>
+	<string name="mode_precharg_reset_med_res_summary">Suppression des @nbPh images téléchargées (@size)</string>
 	<string name="mode_precharg_reset_hi_res_title">Suppression images en haute résolution</string>
-	<string name="mode_precharg_reset_hi_res_summary">Suppression des @nb images téléchargées (@size)</string>
+	<string name="mode_precharg_reset_hi_res_summary">Suppression des @nbPh images téléchargées (@size)</string>
 	<string name="mode_precharg_reset_cache_title">Vider le cache</string>
-	<string name="mode_precharg_reset_cache_summary">Vider le cache du mode connecté : @nb fichiers (@size)</string>
+	<string name="mode_precharg_reset_cache_summary">Vider le cache du mode connecté : @nbPh fichiers (@size)</string>
 	
 	
 	<string name="presentation_preference_category">Options de présentation</string>

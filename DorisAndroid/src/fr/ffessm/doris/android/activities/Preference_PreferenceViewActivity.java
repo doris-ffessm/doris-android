@@ -199,25 +199,25 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     
     private String getVigSummary() {
     	String txt = getApplicationContext().getString(R.string.mode_precharg_reset_vig_summary); 
-    	txt = txt.replace("@nb", ""+Outils.getVignetteCount(getApplicationContext()) ) ;
+    	txt = txt.replace("@nbPh", ""+Outils.getVignetteCount(getApplicationContext()) ) ;
     	txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getVignettesDiskUsage(getApplicationContext()) ) ) ;
     	return txt;
     }
     private String getMedResSummary() {
         String txt = getApplicationContext().getString(R.string.mode_precharg_reset_med_res_summary); 
-        txt = txt.replace("@nb", ""+Outils.getMedResCount(getApplicationContext()) ) ;
+        txt = txt.replace("@nbPh", ""+Outils.getMedResCount(getApplicationContext()) ) ;
         txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getMedResDiskUsage(getApplicationContext()) ) ) ;
     	return txt;
     }
     private String getHiResSummary() {
         String txt = getApplicationContext().getString(R.string.mode_precharg_reset_hi_res_summary); 
-        txt = txt.replace("@nb", ""+Outils.getHiResCount(getApplicationContext()) ) ;
+        txt = txt.replace("@nbPh", ""+Outils.getHiResCount(getApplicationContext()) ) ;
         txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getHiResDiskUsage(getApplicationContext()) ) ) ;
     	return txt;
     }
     private String getCacheSummary() {
     	String txt = getApplicationContext().getString(R.string.mode_precharg_reset_cache_summary); 
-     	txt = txt.replace("@nb", ""+Outils.getFileCount(getApplicationContext(), getApplicationContext().getCacheDir() ) ) ;
+     	txt = txt.replace("@nbPh", ""+Outils.getFileCount(getApplicationContext(), getApplicationContext().getCacheDir() ) ) ;
      	txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getDiskUsage(getApplicationContext(), getApplicationContext().getCacheDir() ) ) ) ;
      	return txt;
     }
