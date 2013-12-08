@@ -213,6 +213,18 @@ public class Fiche {
 
 	// Start of user code Fiche additional user properties
 	
+	public String getAutreDenominationTxt(){
+		String autreDenominations = "";
+		Collection<AutreDenomination> listeAutreDenominations = getAutresDenominations();
+		
+		for (AutreDenomination autreDenomination:listeAutreDenominations) {
+			autreDenominations+=autreDenomination.toString()+" ";
+		}
+		
+		return autreDenominations;
+	}
+	
+	
 	
 	public void getFiche(String htmlFiche, List<Groupe> listeGroupes) throws SQLException{
 		log.trace("getFiche() - Début");

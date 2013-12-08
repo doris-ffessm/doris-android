@@ -131,7 +131,6 @@ public class PrefetchDorisWebSite {
 		log.info("action : " + action);
 		log.info("Nb. Fiches Max : " + nbMaxFichesTraitees);
 		
-	
 		// Vérification, Création, Sauvegarde des dossiers de travails
 		checkDossiers(action);
 		
@@ -286,7 +285,6 @@ public class PrefetchDorisWebSite {
 				listeParticipants.addAll(dbContext.participantDao.queryForAll());
 				log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
 				
-				
 				// Pour chaque fiche de la liste de travail :
 				// TODO : on vérifie qu'il faut la traiter
 				// On la télécharge (et sauvegarde le fichier original)
@@ -323,7 +321,6 @@ public class PrefetchDorisWebSite {
 						fiche.setContextDB(dbContext);
 						fiche.getFiche(contenuFichierHtml, listeGroupes);
 						dbContext.ficheDao.update(fiche);
-						
 						
 						// mise à jour des champs inverse
 						//dbContext.ficheDao.refresh(fiche);
