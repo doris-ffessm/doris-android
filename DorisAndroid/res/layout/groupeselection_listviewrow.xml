@@ -41,7 +41,22 @@
 		</LinearLayout>
 		<!-- Start of user code protected
 			-->
-		
+		<ImageView
+	        android:id="@+id/groupeselection_has_child_group"
+	        android:contentDescription="Groupe contient des sous groupes"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:adjustViewBounds="true"
+	        android:layout_toLeftOf="@+id/groupeselection_btnSelect"
+	        android:layout_alignTop="@+id/groupeselection_btnSelect"
+	        android:layout_alignBottom="@+id/groupeselection_btnSelect"
+	        
+	        android:maxHeight="32dip"
+	        android:layout_marginLeft="4dip"
+	        android:layout_marginRight="4dip"
+	        android:layout_marginTop="4dip"
+	        android:src="@drawable/expander_ic_minimized" >
+    	</ImageView>
 		<ImageButton
 		    android:id="@+id/groupeselection_btnSelect"
 		    android:layout_width="wrap_content"

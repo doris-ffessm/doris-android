@@ -200,6 +200,9 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
             convertView = inflater.inflate(R.layout.groupeselection_listviewrow, null);
         }
        
+        
+        
+        
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.groupeselection_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
@@ -248,6 +251,16 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			}
 		});
         
+        
+        // ajout de l'image "expand" si contient des sous groupes
+        ImageView ivHasChildGroup = (ImageView) convertView.findViewById(R.id.groupeselection_has_child_group);
+        
+        if(entry.getGroupesFils().size() > 0){
+        	ivHasChildGroup.setVisibility(View.VISIBLE);
+        }
+        else {
+        	ivHasChildGroup.setVisibility(View.GONE);
+        }
 		// End of user code
 
         return convertView;
