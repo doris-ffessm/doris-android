@@ -136,6 +136,8 @@ public class DorisDBXMLParser {
 	public static final String DATAATT_FICHE_DATEMODIFICATION = "DATEMODIFICATION";
 	public static final String DATAATT_FICHE_numerofichesLiees = "numerofichesLiees";
 	public static final String DATAATT_FICHE_NUMEROFICHESLIEES = "NUMEROFICHESLIEES";
+	public static final String DATAATT_FICHE_textePourRechercheRapide = "textePourRechercheRapide";
+	public static final String DATAATT_FICHE_TEXTEPOURRECHERCHERAPIDE = "TEXTEPOURRECHERCHERAPIDE";
 	public static final String DATAREF_FICHE_redacteurs = "redacteurs";
 	public static final String DATAREF_FICHE_photosFiche = "photosFiche";
 	public static final String DATAREF_FICHE_zonesGeographiques = "zonesGeographiques";
@@ -507,6 +509,11 @@ public class DorisDBXMLParser {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_FICHE_numerofichesLiees);
 	            result.setNumerofichesLiees(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_FICHE_numerofichesLiees);
+	        } else
+			if (currentTagName.equals(DATAATT_FICHE_textePourRechercheRapide)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_FICHE_textePourRechercheRapide);
+	            result.setTextePourRechercheRapide(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_FICHE_textePourRechercheRapide);
 	        } else
 			if (currentTagName.equals(DATAREF_FICHE_redacteurs)) {	
 				parser.require(XmlPullParser.START_TAG, ns, DATAREF_FICHE_redacteurs);

@@ -91,6 +91,7 @@ public class Fiche {
 	public static final String XML_ATT_DATECREATION = "dateCreation";
 	public static final String XML_ATT_DATEMODIFICATION = "dateModification";
 	public static final String XML_ATT_NUMEROFICHESLIEES = "numerofichesLiees";
+	public static final String XML_ATT_TEXTEPOURRECHERCHERAPIDE = "textePourRechercheRapide";
 	public static final String XML_REF_REDACTEURS = "redacteurs";
 	public static final String XML_REF_PHOTOSFICHE = "photosFiche";
 	public static final String XML_REF_ZONESGEOGRAPHIQUES = "zonesGeographiques";
@@ -145,6 +146,10 @@ public class Fiche {
 	/** numéros des fiches liées séparé par des point virgules */ 
 	@DatabaseField
 	protected java.lang.String numerofichesLiees;
+
+	/** Texte précalculé pour optimiser les recherches (sans accents, sans majuscules) avec autres dénominations */ 
+	@DatabaseField(dataType = com.j256.ormlite.field.DataType.LONG_STRING)
+	protected java.lang.String textePourRechercheRapide;
 	
 
 	@DatabaseField(foreign = true)
@@ -425,7 +430,7 @@ public class Fiche {
 							String hrefValue = elementTDA.getAttributeValue("href");
 							log.debug("getFiche() - A : " + elementTDA.getRenderer().toString().trim() + " - lien : " + hrefValue);
 							
-							if (hrefValue != null && hrefValue.startsWith("../") || hrefValue.startsWith("http://doris.ffessm.fr") ) {
+							if (hrefValue != null && (hrefValue.startsWith("../") || hrefValue.startsWith("http://doris.ffessm.fr")) ) {
 							
 								if (elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "") != "" && elementTDA.getRenderer().toString().trim() != "") {
 								
@@ -794,7 +799,7 @@ public class Fiche {
 	// End of user code
 	
 	public Fiche() {} // needed by ormlite
-	public Fiche(java.lang.String nomScientifique, java.lang.String nomCommun, int numeroFiche, int etatFiche, java.lang.String dateCreation, java.lang.String dateModification, java.lang.String numerofichesLiees) {
+	public Fiche(java.lang.String nomScientifique, java.lang.String nomCommun, int numeroFiche, int etatFiche, java.lang.String dateCreation, java.lang.String dateModification, java.lang.String numerofichesLiees, java.lang.String textePourRechercheRapide) {
 		super();
 		this.nomScientifique = nomScientifique;
 		this.nomCommun = nomCommun;
@@ -803,6 +808,7 @@ public class Fiche {
 		this.dateCreation = dateCreation;
 		this.dateModification = dateModification;
 		this.numerofichesLiees = numerofichesLiees;
+		this.textePourRechercheRapide = textePourRechercheRapide;
 	} 
 
 	public int getId() {
@@ -860,6 +866,12 @@ public class Fiche {
 	}
 	public void setNumerofichesLiees(java.lang.String numerofichesLiees) {
 		this.numerofichesLiees = numerofichesLiees;
+	}
+	public java.lang.String getTextePourRechercheRapide() {
+		return this.textePourRechercheRapide;
+	}
+	public void setTextePourRechercheRapide(java.lang.String textePourRechercheRapide) {
+		this.textePourRechercheRapide = textePourRechercheRapide;
 	}
 
 	public Participant getRedacteurs() {
@@ -1008,6 +1020,9 @@ public class Fiche {
 		sb.append("\n"+indent+"\t<"+XML_ATT_NUMEROFICHESLIEES+">");
 		sb.append(StringEscapeUtils.escapeXml(this.numerofichesLiees));
     	sb.append("</"+XML_ATT_NUMEROFICHESLIEES+">");
+		sb.append("\n"+indent+"\t<"+XML_ATT_TEXTEPOURRECHERCHERAPIDE+">");
+		sb.append(StringEscapeUtils.escapeXml(this.textePourRechercheRapide));
+    	sb.append("</"+XML_ATT_TEXTEPOURRECHERCHERAPIDE+">");
 
 		if(this.redacteurs!= null){
 			sb.append("\n"+indent+"\t<"+XML_REF_REDACTEURS+">");

@@ -103,7 +103,7 @@ public class SiteDoris {
     				String dateModification = "";
     				log.info("getListeFiches() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
     				
-    				Fiche fiche = new Fiche(ficheNomScientifique, ficheNomCommun, ficheId, ficheEtat, dateCreation, dateModification, "");
+    				Fiche fiche = new Fiche(ficheNomScientifique, ficheNomCommun, ficheId, ficheEtat, dateCreation, dateModification, "", ficheNomScientifique+" "+ficheNomCommun);
       				
     				listeFiches.add(fiche);
     			}
