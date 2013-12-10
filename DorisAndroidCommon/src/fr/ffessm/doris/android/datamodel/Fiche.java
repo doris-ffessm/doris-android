@@ -223,15 +223,15 @@ public class Fiche {
 		Collection<AutreDenomination> listeAutreDenominations = getAutresDenominations();
 		
 		for (AutreDenomination autreDenomination:listeAutreDenominations) {
-			autreDenominations+=autreDenomination.toString()+" ";
+			autreDenominations+=autreDenomination.denomination+" ";
 		}
 		
-		return autreDenominations;
+		return autreDenominations.trim();
 	}
 	
 	
 	
-	public void getFiche(String htmlFiche, List<Groupe> listeGroupes) throws SQLException{
+	public void getFicheFromHtml(String htmlFiche, List<Groupe> listeGroupes) throws SQLException{
 		log.trace("getFiche() - Début");
 		
     	int i;
@@ -391,8 +391,8 @@ public class Fiche {
 									autresDenominationsTexte = autresDenominationsTexte.replaceAll("\\s{2,}"," ");
 									log.debug("getFiche() - autresDenominations(B2) : " + autresDenominationsTexte);
 									
-									// permet d'enlever les Liens et de les remplacer par (*)
-									autresDenominationsTexte = autresDenominationsTexte.replaceAll("<[^>]*>", "(*)").trim();
+									// permet d'enlever les Liens et de les remplacer par un texte, par exemple "(Fiche)"
+									autresDenominationsTexte = autresDenominationsTexte.replaceAll("<[^>]*>", Constants.getContenuLienTexte()).trim();
 										
 									AutreDenomination autreDenomination = new AutreDenomination(autresDenominationsTexte, "");									
 									autreDenomination.setFiche(this);
@@ -725,6 +725,11 @@ public class Fiche {
 		if (!listeLiensVersFiches.isEmpty()){
 			setNumerofichesLiees(listeLiensVersFiches);									
 		}
+		
+		String textePourRechercheRapide = getNomCommun();
+		textePourRechercheRapide += getNomScientifique();
+		textePourRechercheRapide += getAutreDenominationTxt();
+		setTextePourRechercheRapide(Outils.formatStringNormalizer(textePourRechercheRapide).toLowerCase());
 		
 		listeElementsTable_TABLE = null;
 		

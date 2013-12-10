@@ -319,7 +319,7 @@ public class PrefetchDorisWebSite {
 							
 						}
 						fiche.setContextDB(dbContext);
-						fiche.getFiche(contenuFichierHtml, listeGroupes);
+						fiche.getFicheFromHtml(contenuFichierHtml, listeGroupes);
 						dbContext.ficheDao.update(fiche);
 						
 						// mise à jour des champs inverse
