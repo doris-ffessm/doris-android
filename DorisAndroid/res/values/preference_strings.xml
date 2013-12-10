@@ -19,6 +19,8 @@
 	<string name="pref_key_list_icon_size">pref_list_icon_size</string>
 	<string name="pref_key_accueil_aff_iconesfede">pref_accueil_aff_iconesfede</string>
 	<string name="pref_key_fiche_aff_details_pardefaut">pref_fiche_aff_details_pardefaut</string>
+	
+	<string name="pref_key_last_version_run">LAST_VERSION_RUN</string>
 			
 	<!-- ids Debug -->
 	<string name="pref_key_affichage_debug">affichage_debug</string>

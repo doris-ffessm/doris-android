@@ -8,6 +8,11 @@ import org.acra.annotation.*;
 import fr.ffessm.doris.android.datamodel.SQLiteDataBaseHelper;
 
 import android.app.Application;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 
 @ReportsCrashes(
 	    formKey = "", // This is required for backward compatibility but not used
@@ -25,6 +30,7 @@ public class DorisApplication extends Application {
         ACRA.init(this);
         
         
+      /*  
         // The following initialize the DB from file
         SQLiteDataBaseHelper myDbHelper = new SQLiteDataBaseHelper(this);
         //myDbHelper = new DataBaseHelper(this);
@@ -38,6 +44,7 @@ public class DorisApplication extends Application {
         	throw new Error("Unable to create database");
          
         }
+*/
     }
 	
 	

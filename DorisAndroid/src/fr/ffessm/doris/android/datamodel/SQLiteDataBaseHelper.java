@@ -1,5 +1,6 @@
 package fr.ffessm.doris.android.datamodel;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -83,7 +84,7 @@ public class SQLiteDataBaseHelper extends SQLiteOpenHelper {
 	 * 
 	 * @return true if it exists, false if it doesn't
 	 */
-	private boolean checkDataBase() {
+	public static boolean checkDataBase() {
 
 		SQLiteDatabase checkDB = null;
 
@@ -105,6 +106,19 @@ public class SQLiteDataBaseHelper extends SQLiteOpenHelper {
 		}
 
 		return checkDB != null ? true : false;
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	public static void removeOldDataBase() {
+
+		SQLiteDatabase checkDB = null;
+
+		String myPath = DB_PATH + DB_NAME;
+		File oldDB = new File(myPath);
+		if(oldDB.exists())
+			oldDB.delete();
 	}
 
 	/**
