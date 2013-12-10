@@ -315,49 +315,6 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		}
 	}
 	
-	static public String formatStringNormalizer(String string) {
-	    char[] charsData = new char[string.length()];
-	    string.getChars(0, charsData.length, charsData, 0);
-	 
-	    char c;
-	    for (int i = 0; i < charsData.length; i++) {
-	        if ((c = charsData[i]) >= 'A' && c <= 'Z') {
-	            charsData[i] = (char) (c - 'A' + 'a');
-	        } else {
-	            switch (c) {
-	            case '\u00e0':
-	            case '\u00e2':
-	            case '\u00e4':
-	                charsData[i] = 'a';
-	                break;
-	            case '\u00e7':
-	                charsData[i] = 'c';
-	                break;
-	            case '\u00e8':
-	            case '\u00e9':
-	            case '\u00ea':
-	            case '\u00eb':
-	                charsData[i] = 'e';
-	                break;
-	            case '\u00ee':
-	            case '\u00ef':
-	                charsData[i] = 'i';
-	                break;
-	            case '\u00f4':
-	            case '\u00f6':
-	                charsData[i] = 'o';
-	                break;
-	            case '\u00f9':
-	            case '\u00fb':
-	            case '\u00fc':
-	                charsData[i] = 'u';
-	                break;
-	            }
-	        }
-	    }
-	 
-	    return new String(charsData);
-	}
 	//End of user code
 	protected boolean sortAfterFilter() {
 		return false;
@@ -367,28 +324,13 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		// Start of user code protected additional ListeFicheAvecFiltre_Adapter filter code
 		// TODO probablement faire en sorte d'ignorer les accents pour la recherche
 		// chercher séparement les mots (séparés par un blanc) et faire un "ET" 
-		String[] patterns = pattern.toLowerCase().split(" ");
+		String[] patterns = fr.ffessm.doris.android.sitedoris.Outils.formatStringNormalizer(pattern).toLowerCase().split(" ");
 		boolean isValid = true;
 		for (String patt : patterns) {
 			if(patt.isEmpty()) continue; // en cas de blanc multiples
 			if(patt.equals("*")) break;  // accepte tout; aussi utilisé pour le filtre en retour de sélection de filtre
-			if(fiche.getNomCommun().toLowerCase().contains(patt))
+			if(fiche.getTextePourRechercheRapide().contains(patt))
 				continue;
-			else if(fiche.getNomScientifique().toLowerCase().contains(patt)) 
-				continue;
-			/* Plus lent que le spécifique ci-dessus
-			else if ( Normalizer.normalize(fiche.getNomCommun().toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").contains(Normalizer.normalize(patt, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "")) )
-				continue;
-			else if ( Normalizer.normalize(fiche.getNomScientifique().toLowerCase(), Normalizer.Form.NFD).contains(Normalizer.normalize(patt, Normalizer.Form.NFD)) )
-				continue;
-			*/
-			else if ( formatStringNormalizer(fiche.getNomCommun().toLowerCase()).contains(formatStringNormalizer(patt)) )
-				continue;
-			else if ( formatStringNormalizer(fiche.getNomScientifique().toLowerCase()).contains(formatStringNormalizer(patt)) )
-				continue;
-			//else if( fiche.getAutreDenominationTxt().toLowerCase().contains(patt) )
-			//	continue;
-			//else if(fiche.getAutresDenominations().contains(pattern)) return 1; 
 			else isValid = false;
 		}
 		

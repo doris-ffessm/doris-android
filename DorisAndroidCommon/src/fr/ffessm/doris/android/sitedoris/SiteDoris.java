@@ -103,7 +103,8 @@ public class SiteDoris {
     				String dateModification = "";
     				log.info("getListeFiches() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
     				
-    				Fiche fiche = new Fiche(ficheNomScientifique, ficheNomCommun, ficheId, ficheEtat, dateCreation, dateModification, "", ficheNomScientifique+" "+ficheNomCommun);
+    				String textePourRechercheRapide = ficheNomCommun+" "+ficheNomScientifique;
+    				Fiche fiche = new Fiche(ficheNomScientifique, ficheNomCommun, ficheId, ficheEtat, dateCreation, dateModification, "", Outils.formatStringNormalizer(textePourRechercheRapide).toLowerCase() );
       				
     				listeFiches.add(fiche);
     			}
@@ -343,6 +344,9 @@ public class SiteDoris {
     	    	Element titrePhotoCouranteElem = null;
     			titrePhotoCouranteElem = elementTD;
     			titrePhotoCourante = titrePhotoCouranteElem.getRenderer().toString();
+    			titrePhotoCourante = titrePhotoCouranteElem.getRenderer().toString().trim();
+    			titrePhotoCourante = titrePhotoCourante.replaceAll("[0-9].-", "").trim();
+    			titrePhotoCourante = titrePhotoCourante.replaceAll("[0-9].", "").trim();
     		}
     		if(elementTD.getAttributeValue("class").equals("normal")){
     			// c'est la description
