@@ -62,7 +62,6 @@ import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
-import android.preference.PreferenceManager;
 //Start of user code additional imports Accueil_CustomViewActivity
 import java.io.File;
 import java.util.HashMap;
@@ -80,6 +79,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -144,7 +144,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-			PreferenceManager.setDefaultValues(this, R.xml.preference, false);
         setContentView(R.layout.accueil_customview);
         //Start of user code onCreate Accueil_CustomViewActivity
 	/*	// si pas de fiche alors il faut initialiser la base à partir du prefetched_DB

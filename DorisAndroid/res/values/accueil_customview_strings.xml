@@ -46,8 +46,6 @@
 	<string name="a_propos_foldersize_hi_res">" images Haute Qualité - "</string>
 	
 	
-	<string name="splashscreen_initialisation_base">"Initialisation en cours..."</string>
-	<string name="splashscreen_maj_base">"Mise à jour en cours..."</string>
 	<!-- End of user code
 	-->
 </resources>

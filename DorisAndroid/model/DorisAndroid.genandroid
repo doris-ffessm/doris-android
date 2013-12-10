@@ -85,7 +85,7 @@
     <dataAssociations name="Fiche_Denominations" references="//@dataModel/@dataClasses.0/@dataReferences.8 //@dataModel/@dataClasses.1/@dataReferences.0"/>
     <dataAssociations name="Groupe_Pere_Groupe_Fils" references="//@dataModel/@dataClasses.8/@dataReferences.0 //@dataModel/@dataClasses.8/@dataReferences.1"/>
   </dataModel>
-  <presentationModel preferenceView="//@presentationModel/@viewActivities.1" welcomeView="//@presentationModel/@viewActivities.0">
+  <presentationModel preferenceView="//@presentationModel/@viewActivities.1" welcomeView="//@presentationModel/@viewActivities.8">
     <viewActivities xsi:type="genandroid:CustomViewActivity" name="Accueil" accessibleViews="//@presentationModel/@viewActivities.2 //@presentationModel/@viewActivities.3" triggerableBackgroundActivities="//@presentationModel/@backgroundActivities.1 //@presentationModel/@backgroundActivities.2 //@presentationModel/@backgroundActivities.3"/>
     <viewActivities xsi:type="genandroid:PreferenceViewActivity" name="Preference"/>
     <viewActivities xsi:type="genandroid:CustomViewActivity" name="RechercheGuidee" accessibleViews="//@presentationModel/@viewActivities.3"/>
@@ -94,6 +94,7 @@
     <viewActivities xsi:type="genandroid:CustomViewActivity" name="ImagePleinEcran" documentation="Affiche une image en plein écran"/>
     <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ZoneGeoSelection" documentation="Vue permettant de sélectionner la zone géographique pour le filtrage" isFilterable="false" listedElement="//@dataModel/@dataClasses.6" presentedDetail="//@presentationModel/@classDetails.1"/>
     <viewActivities xsi:type="genandroid:ClassListViewActivity" name="GroupeSelection" documentation="Liste présentant les Groupe de manière hiérarchique (le filtre en haut assure la gestion de la profondeur)" isFilterable="false" listedElement="//@dataModel/@dataClasses.8" presentedDetail="//@presentationModel/@classDetails.2"/>
+    <viewActivities xsi:type="genandroid:CustomViewActivity" name="SplashScreen" documentation="Vue spéciale pour le splash screen, &#xD;&#xA;sert de détecteur de mise à jour de la base" accessibleViews="//@presentationModel/@viewActivities.0"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.0/@dataAttributes.1" name="ContenuListeFiche" secondaryAttributes="//@dataModel/@dataClasses.0/@dataAttributes.0"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.6/@dataAttributes.0" name="ContenuListeZoneGeographique"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.8/@dataAttributes.2" name="ContenuListeGroupeSelection" secondaryAttributes="//@dataModel/@dataClasses.8/@dataAttributes.3"/>

@@ -200,9 +200,6 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
             convertView = inflater.inflate(R.layout.groupeselection_listviewrow, null);
         }
        
-        
-        
-        
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.groupeselection_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
@@ -212,11 +209,10 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
         tvLabel.setText(labelSB.toString());
 
         TextView tvDetails = (TextView) convertView.findViewById(R.id.groupeselection_listviewrow_details);
-		/*StringBuilder detailsSB = new StringBuilder();
+		StringBuilder detailsSB = new StringBuilder();
 		detailsSB.append(entry.getDescriptionGroupe().toString());
 		detailsSB.append(" ");
-        tvDetails.setText(detailsSB.toString());*/
-        tvDetails.setText("");
+        tvDetails.setText(detailsSB.toString());
 		
         // assign the entry to the row in order to ease GUI interactions
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.groupeselection_listviewrow);

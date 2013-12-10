@@ -1,4 +1,4 @@
-(start)->(Accueil)
+(start)->(SplashScreen)
 (Accueil)-><AccueilChoice>
 (Preference)-><PreferenceChoice>
 (RechercheGuidee)-><RechercheGuideeChoice>
@@ -7,6 +7,7 @@
 (ImagePleinEcran)-><ImagePleinEcranChoice>
 (ZoneGeoSelection)-><ZoneGeoSelectionChoice>
 (GroupeSelection)-><GroupeSelectionChoice>
+(SplashScreen)-><SplashScreenChoice>
 (TelechargeFiches)->(end)
 (VerifieNouvellesFiches)->(end)
 (VerifieMAJFiches)->(end)
@@ -21,3 +22,4 @@
 (ListeFicheAvecFiltre)->(DetailsFiche)		
 <DetailsFicheChoice>->(ImagePleinEcran)
 <DetailsFicheChoice>->(TelechargePhotosFiche)
+<SplashScreenChoice>->(Accueil)

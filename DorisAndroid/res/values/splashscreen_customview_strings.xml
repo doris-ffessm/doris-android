@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resource Strings specific to splashscreen Custom View -->
+<resources>	
+	<!-- Start of user code customView_strings splashscreen
+	-->
+	<!-- freely add here the desired resource String for your custom view -->
+	<string name="splashscreen_initialisation_base">"Initialisation en cours..."</string>
+	<string name="splashscreen_maj_base">"Mise à jour en cours..."</string>
+	<!-- End of user code
+	-->
+</resources>

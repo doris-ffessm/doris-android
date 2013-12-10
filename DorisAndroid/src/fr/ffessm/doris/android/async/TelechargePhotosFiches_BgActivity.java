@@ -515,6 +515,22 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     	
     		
 		// End of user code
+    	
+    	// Start of user code main loop of task TelechargePhotosFiches_BgActivity
+		// This is where we would do the actual job
+		// you should indicates the progression using publishProgress()
+		for (int i=10;i<=100;i += 10)
+            {
+                try {
+					// simply sleep for one second
+                    Thread.sleep(1000);
+                    publishProgress(i);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+		// End of user code
         
 		// Start of user code end of task TelechargePhotosFiches_BgActivity
     }finally{
