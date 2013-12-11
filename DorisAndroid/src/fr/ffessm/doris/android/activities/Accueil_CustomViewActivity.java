@@ -299,7 +299,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	
 	
 	private void aPropos() {
-		StringBuffer texte = new StringBuffer();
+		StringBuilder texte = new StringBuilder();
 		texte.append(getContext().getString(R.string.a_propos_txt_1));
 		texte.append(DorisApplication.class.getSimpleName());
 		texte.append(System.getProperty("line.separator")); 
@@ -774,7 +774,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	// Debbug
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     	if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debug, false)){
-	    	StringBuffer sb = new StringBuffer();
+	    	StringBuilder sb = new StringBuilder();
 	    	sb.append("- - Debbug - -\n");
 	    	
 	    	CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();

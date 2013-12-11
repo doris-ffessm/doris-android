@@ -219,14 +219,14 @@ public class Fiche {
 	// Start of user code Fiche additional user properties
 	
 	public String getAutreDenominationTxt(){
-		String autreDenominations = "";
+		StringBuilder sbAutreDenominations = new StringBuilder();
 		Collection<AutreDenomination> listeAutreDenominations = getAutresDenominations();
 		
 		for (AutreDenomination autreDenomination:listeAutreDenominations) {
-			autreDenominations+=autreDenomination.denomination+" ";
+			sbAutreDenominations.append(autreDenomination.denomination+" ");
 		}
 		
-		return autreDenominations.trim();
+		return sbAutreDenominations.toString().trim();
 	}
 	
 	
@@ -235,7 +235,7 @@ public class Fiche {
 		log.trace("getFiche() - Début");
 		
     	int i;
-    	String listeLiensVersFiches = "";
+    	StringBuilder sbListeLiensVersFiches = new StringBuilder();
     	
     	htmlFiche = Outils.nettoyageBalises(htmlFiche);
     	
@@ -436,10 +436,10 @@ public class Fiche {
 								
 									String tempLien = elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "");
 									
-									if (!listeLiensVersFiches.contains(tempLien + ";")) {
-										listeLiensVersFiches += tempLien + ";";
+									if (!sbListeLiensVersFiches.toString().contains(tempLien + ";")) {
+										sbListeLiensVersFiches.append(tempLien + ";");
 									}
-									log.info("getFiche() - listeLienRencontre : " + listeLiensVersFiches );
+									log.info("getFiche() - listeLienRencontre : " + sbListeLiensVersFiches.toString() );
 								}
 							}
 						}
@@ -722,14 +722,14 @@ public class Fiche {
 			
 		}
 		
-		if (!listeLiensVersFiches.isEmpty()){
-			setNumerofichesLiees(listeLiensVersFiches);									
+		if (sbListeLiensVersFiches.length() !=0){
+			setNumerofichesLiees(sbListeLiensVersFiches.toString());									
 		}
 		
-		String textePourRechercheRapide = getNomCommun();
-		textePourRechercheRapide += getNomScientifique();
-		textePourRechercheRapide += getAutreDenominationTxt();
-		setTextePourRechercheRapide(Outils.formatStringNormalizer(textePourRechercheRapide).toLowerCase());
+		StringBuilder sbTextePourRechercheRapide = new StringBuilder(getNomCommun());
+		sbTextePourRechercheRapide.append(getNomScientifique());
+		sbTextePourRechercheRapide.append(getAutreDenominationTxt());
+		setTextePourRechercheRapide(Outils.formatStringNormalizer(sbTextePourRechercheRapide.toString()).toLowerCase());
 		
 		listeElementsTable_TABLE = null;
 		
