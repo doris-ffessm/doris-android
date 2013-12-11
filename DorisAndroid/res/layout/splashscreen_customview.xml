@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Start of user code customView_layout for SplashScreen
+-->
+<!-- freely adapt here the desired layout for your custom view -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+	<RelativeLayout
+	    android:id="@+id/accueil_logos"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center_horizontal"
+	    android:orientation="vertical">
+
+		<ImageView
+		    android:id="@+id/splashscreen_logo1"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentTop="true"
+		    android:layout_marginLeft="4dip"
+		    android:layout_marginRight="4dip"
+		    android:layout_marginTop="4dip"
+		    android:adjustViewBounds="true"
+		    android:contentDescription="@string/accueil_customview_logo1_description"
+		    android:maxHeight="60dp"
+		    android:src="@drawable/logo_doris" />
+
+	    <ImageView
+	        android:id="@+id/splashscreen_logo2"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@+id/splashscreen_logo1"
+	        android:layout_marginLeft="4dip"
+	        android:layout_marginRight="4dip"
+	        android:layout_marginTop="4dip"
+	        android:adjustViewBounds="true"
+	        android:contentDescription="@string/accueil_customview_logo2_description"
+	        android:maxHeight="60dp"
+	        android:src="@drawable/logo_biologie" />
+
+	    <LinearLayout
+	        android:id="@+id/splashscreen_progressLayout"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center_horizontal" 
+		    android:layout_centerHorizontal="true"
+	        android:layout_below="@+id/splashscreen_logo2"
+			android:visibility="gone">
+	
+			<TextView
+			    android:id="@+id/splashscreen_textView"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:text=""
+			    android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+		    <ProgressBar
+		        android:id="@+id/splashscreen_progressBar"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"/>
+		</LinearLayout>
+
+	</RelativeLayout>
+</LinearLayout>
+<!--End of user code
+-->
