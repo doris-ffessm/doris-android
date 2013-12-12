@@ -370,8 +370,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	    	
     	    	if (inUrl.startsWith("http")){
 	    	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Lancement navigateur Android Défaut");
-	        		
+	    	    	
 	    	    	Intent intent = new Intent(Intent.ACTION_VIEW);
+	    	    	intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					intent.setData(Uri.parse(inUrl));
 					context.startActivity(intent);
 	
