@@ -142,7 +142,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		    }
 		
 		};
-		Picasso.with(this).setDebugging(BuildConfig.DEBUG);
+		
+		// info de debug de Picasso
+		if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debug, false)){
+			Picasso.with(this).setDebugging(BuildConfig.DEBUG);
+		}
 		// End of user code
     }
     

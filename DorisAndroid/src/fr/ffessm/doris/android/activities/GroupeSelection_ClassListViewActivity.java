@@ -140,7 +140,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<O
 	//Start of user code additional  GroupeSelection_ClassListViewActivity methods
 
 	public void onRemoveCurrentFilterClick(View view){
-    	Toast.makeText(this, "Filtre espèces supprimé", Toast.LENGTH_SHORT).show();
+    	Toast.makeText(this, R.string.groupselection_filtre_supprime, Toast.LENGTH_SHORT).show();
 		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
 		ed.putInt(this.getString(R.string.pref_key_filtre_groupe), 1);
         ed.commit();
