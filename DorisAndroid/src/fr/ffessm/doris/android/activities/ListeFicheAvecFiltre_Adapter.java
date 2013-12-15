@@ -72,7 +72,6 @@ import android.widget.Toast;
 
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.j256.ormlite.stmt.QueryBuilder;
 
 //Start of user code protected additional ListeFicheAvecFiltre_Adapter imports
 // additional imports
@@ -106,11 +105,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
 	private static final String LOG_TAG = ListeFicheAvecFiltre_Adapter.class.getCanonicalName();
 
-    // private List<Fiche> ficheList;
-    // private List<Fiche> filteredFicheList;
-	private List<Integer> ficheIdList;
-	private List<Integer> filteredFicheIdList;
-	
+    private List<Integer> ficheIdList;
+    private List<Integer> filteredFicheIdList;
+	LruCache<Integer, Fiche> ficheCache =  new LruCache<Integer, Fiche>(100);
 	private final Object mLock = new Object();
 	private SimpleFilter mFilter;
 	SharedPreferences prefs;
@@ -203,7 +200,6 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	@Override
 	public Object getItem(int position) {
 		return filteredFicheIdList.get(position);
-
 	}
 
 	@Override
@@ -213,19 +209,15 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-		if (convertView == null) {
+		
+        if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.listeficheavecfiltre_listviewrow, null);
         }
-		
-		Integer ficheId = filteredFicheIdList.get(position);
-		
-		Fiche entry = getFicheForId(ficheId);
+
+		final Fiche entry = getFicheForId(filteredFicheIdList.get(position));
 		if(entry == null) return convertView;
-		if(_contextDB != null) entry.setContextDB(_contextDB);
-		entry.setContextDB(_contextDB);
-        
        
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_label);
@@ -339,6 +331,19 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
 	}
 
+	protected Fiche getFicheForId(Integer ficheId){
+		Fiche f = ficheCache.get(ficheId);
+		if(f != null) return f;
+		try {
+			f = _contextDB.ficheDao.queryForId(ficheId);
+			ficheCache.put(ficheId, f);
+			if(_contextDB != null) f.setContextDB(_contextDB);
+			return f;
+		} catch (SQLException e1) {
+			Log.e(LOG_TAG, "Cannot retreive fiche with _id = "+ficheId+" "+e1.getMessage(), e1);
+			return null;
+		}
+	}
 	//Start of user code protected additional ListeFicheAvecFiltre_Adapter methods
 	// additional methods
 	public void refreshFilter(){
@@ -358,21 +363,6 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 			}
 		} catch (SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(),e);
-		}
-	}
-	
-	LruCache<Integer, Fiche> ficheCache =  new LruCache<Integer, Fiche>(100);
-	
-	protected Fiche getFicheForId(Integer ficheId){
-		Fiche f = ficheCache.get(ficheId);
-		if(f != null) return f;
-		try {
-			f = _contextDB.ficheDao.queryForId(ficheId);
-			ficheCache.put(ficheId, f);
-			return f;
-		} catch (SQLException e1) {
-			Log.e(LOG_TAG, "Cannot retreive fiche with _id = "+ficheId+" "+e1.getMessage(), e1);
-			return null;
 		}
 	}
 	
@@ -450,31 +440,26 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 			} else {
 				String prefixString = prefix.toString().toLowerCase();
 				boolean sort = sortAfterFilter();
-
 				final List<Integer> values = ficheIdList;
 				final int count = values.size();
-				
+		
 				final ArrayList<Integer> newValues = new ArrayList<Integer>(count);
 				final int[] orders = sort ? new int[count] : null;
 
 				for (int i = 0; i < count; i++) {
-					//final Fiche value = values.get(i);
 					final Integer valueId =  values.get(i);
-					Fiche ficheValue = getFicheForId(valueId);
-						if(ficheValue != null){
-						int order = ListeFicheAvecFiltre_Adapter.this.filter(i, ficheValue, prefixString);
+					Fiche value = getFicheForId(valueId);
+					if(value != null){
+						int order = ListeFicheAvecFiltre_Adapter.this.filter(i, value, prefixString);
 						if (order >= 0) {
 							if (sort)
 								orders[newValues.size()] = order;
 							newValues.add(valueId);
 						}
 					}
-					
-					
 				}
-				
-			/*	A faire : fonction de tri  ?
-			    if (sort) {
+				/* TODO implement a sort
+				if (sort) {
 					Comparator<Fiche> c = new Comparator<Fiche>() {
 						public int compare(Fiche object1, Fiche object2) {
 							// Start of user code protected additional ListeFicheAvecFiltre_Adapter compare code
@@ -485,8 +470,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 						}
 					};
 					Collections.sort(newValues, c);
-				}*/
-
+				}
+				*/
 				results.values = newValues;
 				results.count = newValues.size();
 			}

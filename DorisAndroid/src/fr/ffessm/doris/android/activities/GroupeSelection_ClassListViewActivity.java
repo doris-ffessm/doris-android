@@ -82,8 +82,9 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<O
 
 		ListView list = (ListView) findViewById(R.id.groupeselection_listview);
         list.setClickable(false);
-        adapter = new GroupeSelection_Adapter(this, getHelper().getDorisDBHelper());
-
+		//Start of user code onCreate GroupeSelection_ClassListViewActivity adapter creation
+        adapter = new GroupeSelection_Adapter(this, getHelper().getDorisDBHelper());		
+		//End of user code
 		// avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         list.setOnItemClickListener(this);

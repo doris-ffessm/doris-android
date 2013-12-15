@@ -81,8 +81,9 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteBaseActivity<
 
 		ListView list = (ListView) findViewById(R.id.zonegeoselection_listview);
         list.setClickable(false);
-        adapter = new ZoneGeoSelection_Adapter(this, getHelper().getDorisDBHelper());
-
+		//Start of user code onCreate ZoneGeoSelection_ClassListViewActivity adapter creation
+        adapter = new ZoneGeoSelection_Adapter(this, getHelper().getDorisDBHelper());		
+		//End of user code
 		// avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         list.setOnItemClickListener(this);

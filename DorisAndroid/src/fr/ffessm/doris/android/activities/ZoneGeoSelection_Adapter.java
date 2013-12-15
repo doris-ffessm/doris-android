@@ -67,6 +67,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code protected additional ZoneGeoSelection_Adapter imports
@@ -124,7 +125,6 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 	@Override
 	public Object getItem(int position) {
 		return filteredZoneGeographiqueList.get(position);
-
 	}
 
 	@Override
@@ -134,14 +134,15 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-		final ZoneGeographique entry = filteredZoneGeographiqueList.get(position);
-		if(_contextDB != null) entry.setContextDB(_contextDB);
-		entry.setContextDB(_contextDB);
+		
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.zonegeoselection_listviewrow, null);
         }
+
+		final ZoneGeographique entry = filteredZoneGeographiqueList.get(position);
+		if(_contextDB != null) entry.setContextDB(_contextDB); 		
        
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.zonegeoselection_listviewrow_label);

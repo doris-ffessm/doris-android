@@ -67,6 +67,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code protected additional GroupeSelection_Adapter imports
@@ -181,7 +182,6 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	@Override
 	public Object getItem(int position) {
 		return filteredGroupeList.get(position);
-
 	}
 
 	@Override
@@ -191,14 +191,15 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-		final Groupe entry = filteredGroupeList.get(position);
-		if(_contextDB != null) entry.setContextDB(_contextDB);
-		entry.setContextDB(_contextDB);
+		
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.groupeselection_listviewrow, null);
         }
+
+		final Groupe entry = filteredGroupeList.get(position);
+		if(_contextDB != null) entry.setContextDB(_contextDB); 		
        
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.groupeselection_listviewrow_label);
