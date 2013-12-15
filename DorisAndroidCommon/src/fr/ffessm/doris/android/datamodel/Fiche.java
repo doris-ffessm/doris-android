@@ -226,7 +226,6 @@ public class Fiche {
 				sbAutreDenominations.append(autreDenomination.denomination+" ");
 			}
 		}
-				
 		return sbAutreDenominations.toString().trim();
 	}
 	
