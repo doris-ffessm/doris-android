@@ -60,6 +60,7 @@ import org.apache.log4j.Level;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.misc.TransactionManager;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
@@ -86,7 +87,7 @@ import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 public class PrefetchDorisWebSite {
 
 	// Pourrait être un jour utile, on verra
-	private final static String VERSION = "0.01";
+	private final static String VERSION = "alpha 3.1";
 	
 	// we are using the in-memory H2 database
 	//private final static String DATABASE_URL = "jdbc:h2:mem:fiche";
@@ -94,9 +95,10 @@ public class PrefetchDorisWebSite {
 	private final static String DATABASE_URL = "jdbc:sqlite:run/DorisAndroid.db";
 
 	// Dossiers liés au fonctionnement de l'appli prefetch
-	private final static String DOSSIER_BASE = "./run";
+	private final static String DOSSIER_RACINE = "./run";
 	// Ces dossiers seront renommés qd nécessaire
 	private final static String DOSSIER_HTML = "html";
+	private final static String DOSSIER_HTML_REF = "html_ref";
 	private final static String DOSSIER_IMG = "img";
 	private final static String DOSSIER_RESULTATS = "result";
 	
@@ -105,6 +107,7 @@ public class PrefetchDorisWebSite {
 	
 	// Nombre maximum de fiches traitées (--max=K permet de changer cette valeur)
 	private static int nbMaxFichesTraitees = 9999;
+	private static String action = "";
 	
 	// Balises et Attributs des fichiers XML
 	public static final String XML_BASE = "Doris";
@@ -127,7 +130,7 @@ public class PrefetchDorisWebSite {
 		
 		// Vérification et lecture des arguments
 		log.debug("doMain() : Vérification et lecture des arguments");
-		String action = checkArgs(args);
+		action = checkArgs(args);
 		log.info("action : " + action);
 		log.info("Nb. Fiches Max : " + nbMaxFichesTraitees);
 		
@@ -137,43 +140,67 @@ public class PrefetchDorisWebSite {
 		if (action.equals("TEST")) {
 			log.debug("doMain() - Début TEST");
 			
-			/*
-			String listeParticipantsFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeParticipants-a.html";
-			log.debug("Récup. Liste Groupes Doris : " + listeParticipantsFichier);
-			
-			String contenuFichierHtml = null;
-			contenuFichierHtml = Outils.getFichier(new File(listeParticipantsFichier));
-			
-			log.debug("doMain() - contenuFichierHtml : "+contenuFichierHtml.length() );
-			
-			List<Participant> listeParticipants = new ArrayList<Participant>(0);
-			listeParticipants = SiteDoris.getListeParticipantsParInitiale(contenuFichierHtml);
-			
-			log.debug("Nb Participants : "+listeParticipants.size());
-			for (Participant participant : listeParticipants) {
-				log.debug("Participant : " + participant.getId()+" "+participant.getNom());
+			ConnectionSource connectionSource = null;
+			try {
+				
+				// create our data-source for the database
+				connectionSource = new JdbcConnectionSource(DATABASE_URL);
+				dbContext = new DorisDBHelper();
+				dbContext.ficheDao = DaoManager.createDao(connectionSource, Fiche.class);
+				
+				String listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeFiches.html";
+				log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
+				
+				String contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+
+				final List<Fiche> listFicheFromHTML = SiteDoris.getListeFiches(contenuFichierHtml);
+				log.info("Creation de "+listFicheFromHTML.size()+" fiches dans la base...");
+				
+				final List<Fiche> listeFiches = SiteDoris.getListeFichesUpdated(dbContext.ficheDao.queryForAll(), listFicheFromHTML);
+				
+				log.debug("doMain() - listeFiches.size : "+listeFiches.size());
+				TransactionManager.callInTransaction(connectionSource,
+						new Callable<Void>() {
+							public Void call() throws Exception {
+								for (Fiche fiche : listeFiches){
+									dbContext.ficheDao.create(fiche);
+								}
+								return null;
+						    }
+						});
+				
+			} finally {
+				// destroy the data source which should close underlying connections
+				if (connectionSource != null) {
+					connectionSource.close();
+				}
 			}
-			*/
-			
+
+
+			log.debug("doMain() - Fin TEST");
 		} else {
 
 			ConnectionSource connectionSource = null;
 			try {
 				// create empty DB and initialize it for Android
-				initializeEmptySQLite(DATABASE_URL);
+				initializeSQLite(DATABASE_URL);
 				
 				// create our data-source for the database
 				connectionSource = new JdbcConnectionSource(DATABASE_URL);
 				// setup our database and DAOs
 				setupDatabase(connectionSource);
+				if (! action.equals("UPDATE")){
+					databaseInitialisation(connectionSource);
+				}
 				
 				// Récupération de la liste des groupes sur le site de DORIS
-				String listeGroupesFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeGroupes.html";
-				log.info("Récup. Liste Groupes Doris : " + listeGroupesFichier);
-				
+				String listeGroupesFichier = "";
 				String contenuFichierHtml = null;
 				
 				if (! action.equals("NODWNLD")){
+					listeGroupesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeGroupes.html";
+					log.info("Récup. Liste Groupes Doris : " + listeGroupesFichier);
+					
 					if (Outils.getFichierUrl(Constants.getGroupesUrl(), listeGroupesFichier)) {
 						contenuFichierHtml = Outils.getFichier(new File(listeGroupesFichier));
 						
@@ -182,17 +209,28 @@ public class PrefetchDorisWebSite {
 						System.exit(0);
 					}
 				} else {
-					contenuFichierHtml = Outils.getFichier(new File(listeGroupesFichier));
-					
+					// NODWNLD
+					listeGroupesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeGroupes.html";
+					if (new File(listeGroupesFichier).exists()) {
+						contenuFichierHtml = Outils.getFichier(new File(listeGroupesFichier));
+					} else {
+						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
+						System.exit(0);
+					}
 				}
 				
 				final List<Groupe> listeGroupes =SiteDoris.getListeGroupes(contenuFichierHtml);
 				log.debug("doMain() - listeGroupes.size : "+listeGroupes.size());
+				
 				TransactionManager.callInTransaction(connectionSource,
 					new Callable<Void>() {
 						public Void call() throws Exception {
+							// Pour les groupes on efface tout et on recommence en UPDATE (+ simple)
+							if (action.equals("UPDATE")){
+								DeleteBuilder<Groupe, Integer> deleteBuilder = dbContext.groupeDao.deleteBuilder();
+								deleteBuilder.delete();
+							}
 							for (Groupe groupe : listeGroupes){
-								
 								dbContext.groupeDao.create(groupe);
 							}
 							return null;
@@ -202,10 +240,8 @@ public class PrefetchDorisWebSite {
 	
 				// Récupération de la liste des fiches sur le site de DORIS
 				
-				String listeFichesFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeFiches.html";
+				String listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeFiches.html";
 				log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
-				
-				List<Fiche> listeFiches = new ArrayList<Fiche>(0);
 				
 				if (! action.equals("NODWNLD")){
 					if (Outils.getFichierUrl(Constants.getListeFichesUrl(), listeFichesFichier)) {
@@ -216,83 +252,133 @@ public class PrefetchDorisWebSite {
 						System.exit(0);
 					}
 				} else {
-					contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
-	
+					// NODWNLD
+					listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeFiches.html";
+					if (new File(listeFichesFichier).exists()) {
+						contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+					} else {
+						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
+						System.exit(0);
+					}
 				}
 				
-				final List<Fiche> listFicheFromHTML = SiteDoris.getListeFiches(contenuFichierHtml);
-				log.info("Creation de "+listFicheFromHTML.size()+" fiches dans la base...");
+				List<Fiche> listFicheFromHTML = SiteDoris.getListeFiches(contenuFichierHtml);
+				log.info("Nb Fiches sur le site : "+listFicheFromHTML.size());
+
+				if (action.equals("UPDATE")) {
+					listFicheFromHTML = SiteDoris.getListeFichesUpdated(dbContext.ficheDao.queryForAll(), listFicheFromHTML);
+				}
+				
+				final List<Fiche> listeFichesATraiter = listFicheFromHTML;
+				
+				// Suppression de l'ensemble des informations liées aux fiches à traiter
 				TransactionManager.callInTransaction(connectionSource,
 						new Callable<Void>() {
 							public Void call() throws Exception {
-								for (Fiche fiche : listFicheFromHTML){
-									dbContext.ficheDao.create(fiche);
+								for (Fiche fiche : listeFichesATraiter){
+									DeleteBuilder<Fiche, Integer> deleteFicheBuilder = dbContext.ficheDao.deleteBuilder();
+									deleteFicheBuilder.where().eq("numeroFiche", fiche.getNumeroFiche());
+									deleteFicheBuilder.delete();
+									
+									DeleteBuilder<AutreDenomination, Integer> deleteAutreDenominationBuilder = dbContext.autreDenominationDao.deleteBuilder();
+									deleteAutreDenominationBuilder.where().eq("fiche_id", fiche.getNumeroFiche());
+									deleteAutreDenominationBuilder.delete();
+									
+									DeleteBuilder<PhotoFiche, Integer> deletePhotoFicheBuilder = dbContext.photoFicheDao.deleteBuilder();
+									deletePhotoFicheBuilder.where().eq("fiche_id", fiche.getNumeroFiche());
+									deletePhotoFicheBuilder.delete();
+									
+									DeleteBuilder<Fiches_ZonesGeographiques, Integer> deleteFicheZoneGeoBuilder = dbContext.fiches_ZonesGeographiquesDao.deleteBuilder();
+									deleteFicheZoneGeoBuilder.where().eq("Fiche_id", fiche.getNumeroFiche());
+									deleteFicheZoneGeoBuilder.delete();
 								}
 								return null;
 						    }
 						});
 				
-				listeFiches = dbContext.ficheDao.queryForAll();
-				log.debug("doMain() - listeFiches.size : "+listeFiches.size());
+				// Création de l'entête des fiches
+				TransactionManager.callInTransaction(connectionSource,
+					new Callable<Void>() {
+						public Void call() throws Exception {
+							for (Fiche fiche : listeFichesATraiter){
+								dbContext.ficheDao.create(fiche);
+							}
+							return null;
+					    }
+					});
 				
-				// TODO : Il faudra ici, pour les modes où on complète la base, reconstruire
-				// la table des fiches déjà connues 
+
+				log.debug("doMain() - listeFichesATraiter.size : "+listeFichesATraiter.size());
 				
-				
-				// TODO : en cours par GMo : la construction de la liste des Participants
 				// On boucle sur les initailes des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
 				String listeFiltres;
-				if (nbMaxFichesTraitees == 0){
+				if (nbMaxFichesTraitees == 9999){
 					listeFiltres="abcdefghijklmnopqrstuvwxyz";
 				} else {
 					listeFiltres="ab";
 				}
 				
+				// Pour les participants on efface tout et on recommence en UPDATE (+ simple)
+				if (action.equals("UPDATE")){
+					TransactionManager.callInTransaction(connectionSource,
+						new Callable<Void>() {
+							public Void call() throws Exception {
+								DeleteBuilder<Participant, Integer> deleteBuilder = dbContext.participantDao.deleteBuilder();
+								deleteBuilder.delete();
+								return null;
+						    }
+						});
+				}
+				
 				for (char initiale : listeFiltres.toCharArray()){
 					log.debug("doMain() - Recup Participants : "+initiale);
 					
-					String listeParticipantsFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeParticipants-"+initiale+".html";
+					String listeParticipantsFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeParticipants-"+initiale+".html";
 					log.info("Récup. Liste des Participants : " + listeParticipantsFichier);
 					
 					if (! action.equals("NODWNLD")){
 						if (Outils.getFichierUrl(Constants.getListeParticipantsUrl(""+initiale), listeParticipantsFichier)) {
 							contenuFichierHtml = Outils.getFichier(new File(listeParticipantsFichier));
-							
 						} else {
-							log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
+							log.error("Une erreur est survenue lors de la récupération de la liste des Participants : "+initiale);
 							System.exit(0);
 						}
 					} else {
-						contenuFichierHtml = Outils.getFichier(new File(listeParticipantsFichier));
-		
+						// NODWNLD
+						listeParticipantsFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeParticipants-"+initiale+".html";
+						if (new File(listeParticipantsFichier).exists()) {
+							contenuFichierHtml = Outils.getFichier(new File(listeParticipantsFichier));
+						} else {
+							log.error("Une erreur est survenue lors de la récupération de la liste des Participants : "+initiale);
+							System.exit(0);
+						}
 					}
 					
 					final List<Participant> listeParticipantsFromHTML = SiteDoris.getListeParticipantsParInitiale(contenuFichierHtml);
 					log.info("Creation de "+listeParticipantsFromHTML.size()+" participants pour la lettre : "+initiale);
 					TransactionManager.callInTransaction(connectionSource,
-							new Callable<Void>() {
-								public Void call() throws Exception {
-									for (Participant participant : listeParticipantsFromHTML){
+						new Callable<Void>() {
+							public Void call() throws Exception {
+								for (Participant participant : listeParticipantsFromHTML){
+									if (!dbContext.participantDao.idExists(participant.getId()))
 										dbContext.participantDao.create(participant);
-									}
-									return null;
-							    }
-							});
-					
-				}
+								}
+								return null;
+						    }
+						});
+				}	
 				
 				List<Participant> listeParticipants = new ArrayList<Participant>(0);
 				listeParticipants.addAll(dbContext.participantDao.queryForAll());
 				log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
 				
 				// Pour chaque fiche de la liste de travail :
-				// TODO : on vérifie qu'il faut la traiter
 				// On la télécharge (et sauvegarde le fichier original)
 				// On la traite
 
-				log.info("Mise à jours des "+listeFiches.size()+" fiches présentes dans la base...");
+				log.info("Mise à jours de "+listeFichesATraiter.size()+" fiches.");
 				int nbFichesTraitees = 0;
-				for (Fiche fiche : listeFiches) {
+				for (Fiche fiche : listeFichesATraiter) {
 					nbFichesTraitees += 1;
 					
 					if (  (nbFichesTraitees % 50) == 0) {
@@ -305,7 +391,7 @@ public class PrefetchDorisWebSite {
 						log.debug("doMain() - Traitement Fiche : "+fiche.getNomCommun());
 						
 						String urlFiche = "http://doris.ffessm.fr/fiche2.asp?fiche_numero="+fiche.getNumeroFiche();
-						String fichierLocalFiche = DOSSIER_BASE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+".html";
+						String fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+".html";
 						if (! action.equals("NODWNLD")) {
 							if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
 								contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
@@ -315,25 +401,33 @@ public class PrefetchDorisWebSite {
 								continue;
 							}
 						} else {
-							contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
-							
+							// NODWNLD
+							fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/fiche"+fiche.getNumeroFiche()+".html";
+							if (new File(fichierLocalFiche).exists()) {
+								contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
+							} else {
+								log.error("La récupération de la fiche : "+urlFiche+" a échoué.");
+							}
 						}
+						
 						fiche.setContextDB(dbContext);
+						log.debug("doMain() - 0500");
 						fiche.getFicheFromHtml(contenuFichierHtml, listeGroupes);
+						log.debug("doMain() - 0510");
 						dbContext.ficheDao.update(fiche);
 						
 						// mise à jour des champs inverse
 						//dbContext.ficheDao.refresh(fiche);
 						
 
-						log.debug("doMain() - Info Fiche {");
-						log.debug("doMain() -      - ref : "+fiche.getNumeroFiche());
-						log.debug("doMain() -      - nom : "+fiche.getNomCommun());
-						log.debug("doMain() -      - etat : "+fiche.getEtatFiche());
-						log.debug("doMain() - }");
+						log.info("doMain() - Info Fiche {");
+						log.info("doMain() -      - ref : "+fiche.getNumeroFiche());
+						log.info("doMain() -      - nom : "+fiche.getNomCommun());
+						log.info("doMain() -      - etat : "+fiche.getEtatFiche());
+						log.info("doMain() - }");
 						
 						String urlListePhotos = "http://doris.ffessm.fr/fiche_photo_liste_apercu.asp?fiche_numero="+fiche.getNumeroFiche();
-						String fichierLocalListePhotos = DOSSIER_BASE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+"_listePhotos.html";
+						String fichierLocalListePhotos = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+"_listePhotos.html";
 						String contenuFichierHtmlListePhotos = null;
 						if (! action.equals("NODWNLD")) {
 							if (Outils.getFichierUrl(urlListePhotos, fichierLocalListePhotos)) {
@@ -344,28 +438,32 @@ public class PrefetchDorisWebSite {
 								//continue;
 							}
 						} else {
-							contenuFichierHtmlListePhotos = Outils.getFichier(new File(fichierLocalListePhotos));
-							
+							// NODWNLD
+							fichierLocalListePhotos = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/fiche"+fiche.getNumeroFiche()+"_listePhotos.html";
+							if (new File(fichierLocalListePhotos).exists()) {
+								contenuFichierHtmlListePhotos = Outils.getFichier(new File(fichierLocalListePhotos));
+							} else {
+								log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
+							}
 						}
 						if(contenuFichierHtmlListePhotos != null){
 							// TODO update liste photos for fiche
 							final List<PhotoFiche> listePhotoFiche = SiteDoris.getListePhotosFiche(fiche, contenuFichierHtmlListePhotos);
 							final Fiche ficheMaj = fiche;
 							TransactionManager.callInTransaction(connectionSource,
-									new Callable<Void>() {
-										public Void call() throws Exception {
-											for (PhotoFiche photoFiche : listePhotoFiche){
-												photoFiche.setFiche(ficheMaj);
-												dbContext.photoFicheDao.create(photoFiche);
-												//fiche.getPhotosFiche().add(photoFiche);
-											}
-											if(listePhotoFiche.size() > 0){
-												ficheMaj.setPhotoPrincipale(listePhotoFiche.get(0));
-												dbContext.ficheDao.update(ficheMaj);
-											}
-											return null;
-									    }
-									});
+								new Callable<Void>() {
+									public Void call() throws Exception {
+										for (PhotoFiche photoFiche : listePhotoFiche){
+											photoFiche.setFiche(ficheMaj);
+											dbContext.photoFicheDao.create(photoFiche);
+										}
+										if(listePhotoFiche.size() > 0){
+											ficheMaj.setPhotoPrincipale(listePhotoFiche.get(0));
+											dbContext.ficheDao.update(ficheMaj);
+										}
+										return null;
+								    }
+								});
 
 						}
 					}
@@ -378,15 +476,15 @@ public class PrefetchDorisWebSite {
 				
 				// mise à jour des zones geographiques
 				// zone France Métropolitaine Marines
-				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE, action);
+				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE);
 				// zone France Métropolitaine Eau douce
-				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE, action);
+				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE);
 				// zone indo pacifique
-				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE, action);
+				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE);
 				// zone Caraibes
-				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES, action);
+				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES);
 				// zone atlantique nordOuest
-				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST, action);
+				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST);
 			
 				Date date = new Date();
 				SimpleDateFormat ft =  new SimpleDateFormat ("dd/MM/yyyy  HH:mm");
@@ -405,10 +503,10 @@ public class PrefetchDorisWebSite {
 		log.debug("doMain() - Fin");
 	}
 
-	private void majZoneGeographique(ConnectionSource connectionSource, ZoneGeographiqueKind zoneKing, String action){
+	private void majZoneGeographique(ConnectionSource connectionSource, ZoneGeographiqueKind zoneKing){
 		log.debug("majZoneGeographique() - Début");
 		
-		String listeFichesFichier = DOSSIER_BASE + "/" + DOSSIER_HTML + "/listeFiches"+zoneKing.name()+".html";
+		String listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeFiches"+zoneKing.name()+".html";
 		log.debug("Récup. Liste Fiches Doris Zone : " + listeFichesFichier);
 		//List<Fiche> listeFiches = new ArrayList<Fiche>(0);
 		String contenuFichierHtml = "";
@@ -421,8 +519,14 @@ public class PrefetchDorisWebSite {
 				return;
 			}
 		} else {
-			contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
-
+			// NODWNLD
+			listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeFiches"+zoneKing.name()+".html";
+			if (new File(listeFichesFichier).exists()) {
+				contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+			} else {
+				log.error("Une erreur est survenue lors de la récupération de la liste des fiches de la zone ");
+				return;
+			}
 		}
 		
 		final ZoneGeographique zoneGeographique = new ZoneGeographique(Constants.getTitreZoneGeographique(zoneKing), 
@@ -439,23 +543,12 @@ public class PrefetchDorisWebSite {
 		try {
 			TransactionManager.callInTransaction(connectionSource,
 					new Callable<Void>() {
-						public Void call() throws Exception {
-							
+						public Void call() throws Exception { 
+
 							for (Fiche fiche : listFicheFromHTML) {
-								// retrouve la fiche dans la base
-								try {
-									Fiche queryFiche = new Fiche();
-									queryFiche.setNumeroFiche(fiche.getNumeroFiche());
-									List<Fiche> fichesDeLaBase = dbContext.ficheDao.queryForMatching(queryFiche);
-									if(fichesDeLaBase.size() != 1){
-										log.error("Pb pour retrouver la fiche n°"+queryFiche.getNumeroFiche()+ " dans la base qui en matche "+fichesDeLaBase.size());
-										continue;
-									}
-									fichesDeLaBase.get(0).setContextDB(dbContext);
-									fichesDeLaBase.get(0).addZoneGeographique(zoneGeographique);
-								} catch (SQLException e) {
-									log.error("erreur pendant la requete sur la fiche "+fiche.getNumeroFiche()+ " dans la base", e);
-								}
+								Fiche fichesDeLaBase = queryFicheByNumeroFiche(fiche.getNumeroFiche());
+								fichesDeLaBase.setContextDB(dbContext);
+								fichesDeLaBase.addZoneGeographique(zoneGeographique);
 							}
 							
 							return null;
@@ -567,23 +660,24 @@ public class PrefetchDorisWebSite {
 		return action;
 	}
 	
-	private void initializeEmptySQLite(String url) throws ClassNotFoundException, SQLException{
+	private void initializeSQLite(String url) throws ClassNotFoundException, SQLException{
 		
 		Class.forName("org.sqlite.JDBC");
 		Connection c = DriverManager.getConnection(url);
 		log.debug("Opened database successfully");
 		
-		Statement  stmt = c.createStatement();
-		String sql = "CREATE TABLE \"android_metadata\" (\"locale\" TEXT DEFAULT 'en_US')"; 
-		stmt.executeUpdate(sql);
-		stmt.close();
-		
-		stmt = c.createStatement();
-		sql = "    INSERT INTO \"android_metadata\" VALUES ('en_US')"; 
-		stmt.executeUpdate(sql);
-		stmt.close();
-		c.close();
-      
+		if (! action.equals("UPDATE") ) {
+			Statement  stmt = c.createStatement();
+			String sql = "CREATE TABLE \"android_metadata\" (\"locale\" TEXT DEFAULT 'en_US')"; 
+			stmt.executeUpdate(sql);
+			stmt.close();
+			
+			stmt = c.createStatement();
+			sql = "    INSERT INTO \"android_metadata\" VALUES ('en_US')"; 
+			stmt.executeUpdate(sql);
+			stmt.close();
+			c.close();
+		}
 	}
 	
 	/**
@@ -610,8 +704,14 @@ public class PrefetchDorisWebSite {
 		dbContext.fiches_ZonesGeographiquesDao = DaoManager.createDao(connectionSource, Fiches_ZonesGeographiques.class);
 		//dbContext.fiches_ZonesObservationsDao = DaoManager.createDao(connectionSource, Fiches_ZonesObservations.class);
 		dbContext.dorisDB_metadataDao = DaoManager.createDao(connectionSource, DorisDB_metadata.class);
+	}
 		
-		
+	/**
+	 * Création des Tables
+	 */
+	private void databaseInitialisation(ConnectionSource connectionSource)
+			throws Exception {
+		log.debug("databaseInitialisation() - Début");	
 		
 		// if you need to create the table
 		TableUtils.createTable(connectionSource, Fiche.class);
@@ -627,7 +727,7 @@ public class PrefetchDorisWebSite {
 		TableUtils.createTable(connectionSource, Fiches_ZonesObservations.class);
 		TableUtils.createTable(connectionSource, DorisDB_metadata.class);
 		
-		log.debug("setupDatabase() - Fin");
+		log.debug("databaseInitialisation() - Fin");
 	}
 
 
@@ -651,9 +751,9 @@ public class PrefetchDorisWebSite {
 		System.out.println("ACTION :");
 		System.out.println("  INIT               Toutes les fiches sont retéléchargées sur doris.ffessm.fr et retraitées pour créer la base (images comprises)");
 		System.out.println("  NODWNLD	         Pas de téléchargement, travail sur ce qui est dispo. uniquement (utile en dev.)");
-		System.out.println("  NEWFICHES          Ne télécharge que les nouvelles fiches");
+		System.out.println("  NEWFICHES    TODO: Ne télécharge que les nouvelles fiches");
 		System.out.println("  UPDATE             En plus des nouvelles fiches, on retélécharge les fiches qui ont changées de statut");
-		System.out.println("  INITSSIMG          Comme INIT sauf que l'on ne retélécharge pas une image déjà connue");
+		System.out.println("  INITSSIMG    OBSOL:Comme INIT sauf que l'on ne retélécharge pas une image déjà connue");
 		System.out.println("  TEST          	 Pour les développeurs");
 		
 		log.debug("help() - Fin");
@@ -681,31 +781,30 @@ public class PrefetchDorisWebSite {
 		
 		log.debug("checkDossiers() - Action : " + inAction);
 		
-		log.debug("checkDossiers() - Dossier de base : " + DOSSIER_BASE);
+		log.debug("checkDossiers() - Dossier de base : " + DOSSIER_RACINE);
 		log.debug("checkDossiers() - Dossier html : " + DOSSIER_HTML);
 		log.debug("checkDossiers() - Dossier Resultats : " + DOSSIER_RESULTATS);
 		log.debug("checkDossiers() - Fichier de la Base : " + DATABASE_URL);
 		
+		
+		
 		// Si le dossier principal de travail n'existe pas, on le créé
-		File dossierBase = new File(DOSSIER_BASE);
+		File dossierBase = new File(DOSSIER_RACINE);
 		if (dossierBase.mkdirs()) {
 			log.info("Création du dossier : " + dossierBase.getAbsolutePath());
-		} else {
-			log.error("Echec de la Création du dossier : " + dossierBase.getAbsolutePath());
-		}
-		
+		} 
+
 		// Si les dossiers download (html et img) et résultats existent déjà, ils sont renommés
 		// avant d'être recréé vide
-		// TODO : dans le cas NODWNLD il faudrait vérifier dans les dossiers existent
 		Date maintenant = new Date(); 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyMMddhhmmss");
 		String suffixe = sdf.format(maintenant);
 		
 		// Le dossier des fichiers html téléchargés
 		if(inAction.equals("INIT")){
-			File dossierHtml = new File(DOSSIER_BASE + "/" + DOSSIER_HTML);
+			File dossierHtml = new File(DOSSIER_RACINE + "/" + DOSSIER_HTML);
 			if (dossierHtml.exists()){
-				File dossierHtmlNew = new File(DOSSIER_BASE + "/" + DOSSIER_HTML +"_"+ suffixe);
+				File dossierHtmlNew = new File(DOSSIER_RACINE + "/" + DOSSIER_HTML +"_"+ suffixe);
 				if(dossierHtml.renameTo(dossierHtmlNew)){
 					log.info("Sauvegarde du dossier download : " + dossierHtmlNew.getAbsolutePath());
 				}else{
@@ -721,11 +820,25 @@ public class PrefetchDorisWebSite {
 			}
 		}
 		
+		//	Vérification que le dossier Référence existe
+		if(inAction.equals("NODWNLD") || inAction.equals("UPDATE") ){
+			final File dossierReference = new File(DOSSIER_RACINE + "/" + DOSSIER_HTML_REF);
+			if (!dossierReference.exists()){
+				log.error("Le dossier Référence : " + dossierReference.getAbsolutePath() + "n'a pas été créé.");
+				System.exit(0);
+			} else {
+				if (!dossierReference.isDirectory()){
+					log.error("Le dossier Référence : " + dossierReference.getAbsolutePath() + "n'a pas été créé.");
+					System.exit(0);
+					}
+				}
+		}
+		
 		// Le dossier des fichiers image téléchargés
 		if(inAction.equals("INIT") || inAction.equals("INITSSIMG")){
-			File dossierImg = new File(DOSSIER_BASE + "/" + DOSSIER_IMG);
+			File dossierImg = new File(DOSSIER_RACINE + "/" + DOSSIER_IMG);
 			if (dossierImg.exists()){
-				File dossierImgNew = new File(DOSSIER_BASE + "/" + DOSSIER_IMG +"_"+ suffixe);
+				File dossierImgNew = new File(DOSSIER_RACINE + "/" + DOSSIER_IMG +"_"+ suffixe);
 				if(dossierImg.renameTo(dossierImgNew)){
 					log.info("Sauvegarde du dossier download : " + dossierImgNew.getAbsolutePath());
 				}else{
@@ -743,10 +856,10 @@ public class PrefetchDorisWebSite {
 				
 		// Le dossier des résultats
 		// TODO : Il faudra être capable de lire le fichier précédement généré
-		if( inAction.equals("INIT") || inAction.equals("NODWNLD") ){
-			File dossierResultats = new File(DOSSIER_BASE + "/" + DOSSIER_RESULTATS);
+		if( inAction.equals("INIT") || inAction.equals("UPDATE") ){
+			File dossierResultats = new File(DOSSIER_RACINE + "/" + DOSSIER_RESULTATS);
 			if (dossierResultats.exists()){
-				File dossierResultatsNew = new File(DOSSIER_BASE + "/" + DOSSIER_RESULTATS +"_"+ suffixe);
+				File dossierResultatsNew = new File(DOSSIER_RACINE + "/" + DOSSIER_RESULTATS +"_"+ suffixe);
 				if(dossierResultats.renameTo(dossierResultatsNew)){
 					log.info("Sauvegarde du dossier résultats : " + dossierResultatsNew.getAbsolutePath());
 				}else{
@@ -763,7 +876,7 @@ public class PrefetchDorisWebSite {
 		}
 		
 		// Le fichier de la base de données
-		if(inAction.equals("INIT") || inAction.equals("INITSSIMG")){
+		if(inAction.equals("INIT") || inAction.equals("NODWNLD")){
 			String dataBaseName = DATABASE_URL.substring(DATABASE_URL.lastIndexOf(":")+1, DATABASE_URL.lastIndexOf(".") );
 			log.debug("dataBaseName : " + dataBaseName);
 			File fichierDB= new File(dataBaseName+".db");
@@ -780,6 +893,22 @@ public class PrefetchDorisWebSite {
 		
 		log.debug("checkDossiers() - Fin");
 	}
-	
+
+	// Retrouve la fiche dans la base
+	public Fiche queryFicheByNumeroFiche(int inNumeroFiche) {
+		try {
+			Fiche queryFiche = new Fiche();
+			queryFiche.setNumeroFiche(inNumeroFiche);
+			List<Fiche> fichesDeLaBase = dbContext.ficheDao.queryForMatching(queryFiche);
+			if(fichesDeLaBase.size() != 1){
+				log.debug("La fiche n°"+queryFiche.getNumeroFiche()+ " n'existe pas dans la base");
+				return null;
+			}
+			return fichesDeLaBase.get(0);
+		} catch (SQLException e) {
+			log.error("erreur pendant la requete sur la fiche "+inNumeroFiche+ " dans la base", e);
+		}
+		return null;
+	}
 	
 }

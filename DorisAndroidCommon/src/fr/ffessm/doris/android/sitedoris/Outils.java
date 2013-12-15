@@ -131,7 +131,7 @@ public class Outils {
 
 	public static String getFichier(File inFichier) {
     	log.debug("getFichier()- Début");
-    	log.debug("getFichier()- htmlFiche : " + inFichier);
+    	log.debug("getFichier()- Fichier : " + inFichier);
     	
     	FileInputStream objFile = null;
 		try {
@@ -175,8 +175,6 @@ public class Outils {
 	/* *********************************************************************
      * ciblePage permet de supprimer tout le superflu de la page HTML
      ********************************************************************* */
-	
-
     public static String ciblePage(String inCodeHtml, String inTypePage) throws IOException{
     	log.debug("ciblePage() - Début");
     	//log.debug("ciblePage() - codeHtml : " + inCodeHtml.substring(0, Math.min(50, inCodeHtml.length())));
@@ -294,7 +292,9 @@ public class Outils {
 		return texteNettoye;
 	}
     
-    // Permet d'enlever les accents, cédilles et autres
+    /* *********************************************************************
+     * Permet d'enlever les accents, cédilles et autres
+     *  ********************************************************************* */
 	static public String formatStringNormalizer(String string) {
 	    char[] charsData = new char[string.length()];
 	    string.getChars(0, charsData.length, charsData, 0);
@@ -339,4 +339,7 @@ public class Outils {
 	    return new String(charsData);
 	}
    
+	/* *********************************************************************
+	 * Permet d'obternir la liste des Nouvelles Fiches ou des Fiches ayant changées de statut  
+	 ********************************************************************* */
 }

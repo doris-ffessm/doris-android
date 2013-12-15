@@ -43,6 +43,7 @@ termes.
 package fr.ffessm.doris.android.sitedoris;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.htmlparser.jericho.Element;
@@ -162,9 +163,9 @@ public class SiteDoris {
 					Element elementIMG = elementTD.getFirstElement(HTMLElementName.IMG);
 					if (elementIMG != null) {
 						if (elementIMG.getAttributeValue("src").contains("pucecarre.gif")) {
-							log.info("getGroupes() - groupe 1 : "+elementTD.getRenderer().toString());
+							log.info("getGroupes() - groupe 1 : "+elementTD.getRenderer().toString().trim());
 							
-							groupe = new Groupe(0, 0, elementTD.getRenderer().toString(),"Tempo pour debug : 1-0", "", "");
+							groupe = new Groupe(0, 0, elementTD.getRenderer().toString().trim(),"Tempo pour debug : 1-0", "", "");
 							listeGroupes.add(groupe);
 							groupe.setGroupePere(groupeRacine);
 							
@@ -174,9 +175,9 @@ public class SiteDoris {
 					} else {
 						//Groupes Niveau 2
 						if (nivPrecedent != 0) {
-							log.info("getGroupes() - groupe 2 : "+elementTD.getRenderer().toString());
+							log.info("getGroupes() - groupe 2 : "+elementTD.getRenderer().toString().trim());
 							
-							groupe = new Groupe(0, 0, elementTD.getRenderer().toString(),"Tempo pour debug : 2-0", "", "");
+							groupe = new Groupe(0, 0, elementTD.getRenderer().toString().trim(),"Tempo pour debug : 2-0", "", "");
 							listeGroupes.add(groupe);
 							
 							if (nivPrecedent >= 1) {
@@ -212,14 +213,14 @@ public class SiteDoris {
 											if (elementAClass.toString().equals("normal")){
 																						
 												if (nivPrecedent == 1){
-													log.info("getGroupes() - groupe 3 : "+elementA.getRenderer().toString());
+													log.info("getGroupes() - groupe 3 : "+Integer.parseInt(elementA.getAttributeValue("href").toString().replaceAll(".*=", ""))+" - "+elementA.getRenderer().toString().trim());
 													
 													// Récupération de la vignette du Groupe
 													// TODO : Prévoir dans la base de donnée son URL et son nom (son nom = en fait le numéro du Groupe)
 													// (attention il faudra l'afficher sur fond blanc : sinon pas propre visuellement
 													String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
 													
-													groupe = new Groupe(Integer.parseInt(elementA.getAttributeValue("href").toString().replaceAll(".*=", "")), 0, elementA.getRenderer().toString(),"Tempo pour debug : 3-1", urlPhotoGroupe, "");
+													groupe = new Groupe(Integer.parseInt(elementA.getAttributeValue("href").toString().replaceAll(".*=", "")), 0, elementA.getRenderer().toString().trim(),"Tempo pour debug : 3-1", urlPhotoGroupe, "");
 													listeGroupes.add(groupe);
 	
 													groupe.setGroupePere(groupeNiveau1Courant);
@@ -230,14 +231,14 @@ public class SiteDoris {
 													groupeNiveau2Courant = groupe;
 											    	nivPrecedent = 2;
 												} else if (nivPrecedent >= 2){
-													log.info("getGroupes() - groupe 3 : "+elementA.getRenderer().toString());
+													log.info("getGroupes() - groupe 3 : "+Integer.parseInt(elementA.getAttributeValue("href").toString().replaceAll(".*=", ""))+" - "+elementA.getRenderer().toString().trim());
 													
 													// Récupération de la vignette du Groupe
 													// TODO : Prévoir dans la base de donnée son URL et son nom (son nom = en fait le numéro du Groupe)
 													// (attention il faudra l'afficher sur fond blanc : sinon pas propre visuellement
 													String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
 													
-													groupe = new Groupe(Integer.parseInt(elementA.getAttributeValue("href").toString().replaceAll(".*=", "")), 0, elementA.getRenderer().toString(),"Tempo pour debug : 3-2", urlPhotoGroupe, "");
+													groupe = new Groupe(Integer.parseInt(elementA.getAttributeValue("href").toString().replaceAll(".*=", "")), 0, elementA.getRenderer().toString().trim(),"Tempo pour debug : 3-2", urlPhotoGroupe, "");
 													listeGroupes.add(groupe);
 
 													groupe.setGroupePere(groupeNiveau2Courant);
@@ -264,12 +265,12 @@ public class SiteDoris {
 											//Groupes Niveau 4
 											if (elementAClassG4.toString().equals("normalgris2")){
 
-												log.info("getGroupes() - groupe 4 : "+elementAG4.getRenderer().toString());
+												log.info("getGroupes() - groupe 4 : "+groupeNiveau3Courant.getNumeroGroupe()+" - "+elementAG4.getRenderer().toString().trim());
 
 												// Récupération de la vignette du Groupe
 												String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
 												
-												groupe = new Groupe(groupeNiveau3Courant.getNumeroGroupe(), Integer.parseInt(elementAG4.getAttributeValue("href").toString().replaceAll(".*sousgroupe_numero=(\\d+)&groupe_numero.*", "$1")), elementAG4.getRenderer().toString(),"Tempo pour debug : 4-0", urlPhotoGroupe, "");
+												groupe = new Groupe(groupeNiveau3Courant.getNumeroGroupe(), Integer.parseInt(elementAG4.getAttributeValue("href").toString().replaceAll(".*sousgroupe_numero=(\\d+)&groupe_numero.*", "$1")), elementAG4.getRenderer().toString().trim(),"Tempo pour debug : 4-0", urlPhotoGroupe, "");
 												listeGroupes.add(groupe);
 												
 												groupe.setGroupePere(groupeNiveau3Courant);
@@ -462,5 +463,42 @@ public class SiteDoris {
     }
 
 	
-	
+    public static List<Fiche> getListeFichesUpdated(List<Fiche> inListeBase, List<Fiche> inListeSite) {
+    	log.debug("getListeFichesUpdated()- Début");
+    	
+    	List<Fiche> listeUpdated = new ArrayList<Fiche>(0);
+    	
+    	log.debug("getListeFichesUpdated()- Liste Base : "+inListeBase.size());
+    	log.debug("getListeFichesUpdated()- Liste Site : "+inListeSite.size());
+    	
+    	List<Integer> listeIntBase = new ArrayList<Integer>(0);
+    	List<Integer> listeIntEtatFiche = new ArrayList<Integer>(0);
+    	for (Fiche fiche:inListeBase){
+    		listeIntBase.add(new Integer (fiche.getNumeroFiche()) );
+    		listeIntEtatFiche.add(new Integer (fiche.getEtatFiche()) );
+    	}
+    	
+    	Iterator<Fiche> iterator = inListeSite.iterator();
+    	while (iterator.hasNext()) {
+    		Fiche interatorFiche = iterator.next();
+    		// Nouvelle Fiche
+    		if ( ! listeIntBase.contains(new Integer (interatorFiche.getNumeroFiche()) ) ){
+    			listeUpdated.add(interatorFiche);
+    		} else {
+    			// Fiche ayant changée de statut
+    			//log.debug("Base EF : "+listeIntEtatFiche.get(listeIntBase.indexOf(new Integer (interatorFiche.getNumeroFiche()) ) ) );
+    			//log.debug("Site EF : "+interatorFiche.getEtatFiche() );
+    			if (listeIntEtatFiche.get(listeIntBase.indexOf(new Integer (interatorFiche.getNumeroFiche()) ) )!=interatorFiche.getEtatFiche() ){
+    				listeUpdated.add(interatorFiche);
+    			}
+    		}
+    	}
+    	log.debug("getListeFichesUpdated()- Liste Site Updated : "+listeUpdated.size());
+    	
+		log.debug("getListeFichesUpdated()- Fin");
+		return listeUpdated;
+    }
+    
+
+    
 }
