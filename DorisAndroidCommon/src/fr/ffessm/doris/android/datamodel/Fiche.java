@@ -221,24 +221,24 @@ public class Fiche {
 	public String getAutreDenominationTxt(){
 		StringBuilder sbAutreDenominations = new StringBuilder();
 		Collection<AutreDenomination> listeAutreDenominations = getAutresDenominations();
-		
-		for (AutreDenomination autreDenomination:listeAutreDenominations) {
-			sbAutreDenominations.append(autreDenomination.denomination+" ");
+		if (listeAutreDenominations != null) {
+			for (AutreDenomination autreDenomination:listeAutreDenominations) {
+				sbAutreDenominations.append(autreDenomination.denomination+" ");
+			}
 		}
-		
+				
 		return sbAutreDenominations.toString().trim();
 	}
 	
 	
 	
 	public void getFicheFromHtml(String htmlFiche, List<Groupe> listeGroupes) throws SQLException{
-		log.trace("getFiche() - Début");
+		log.trace("getFicheFromHtml() - Début");
 		
     	int i;
     	StringBuilder sbListeLiensVersFiches = new StringBuilder();
     	
     	htmlFiche = Outils.nettoyageBalises(htmlFiche);
-    	
     	
     	try {
 			htmlFiche = Outils.ciblePage(htmlFiche, "FICHE");
@@ -266,7 +266,7 @@ public class Fiche {
 		String ficheRef = ElementTDcode_fiche.getFirstElementByClass("normalgris").getRenderer().toString().trim();
 		ficheRef = ficheRef.replace("(N°", "").replace(")", "");
 		setNumeroFiche(Integer.parseInt(ficheRef));
-		log.info("getFiche() - ref : " + ficheRef);		
+		log.info("getFicheFromHtml() - ref : " + ficheRef);		
 				
 		//Centrage sur la TABLE qui contient tout le texte et les images
 		Element ElementTable;
@@ -310,20 +310,20 @@ public class Fiche {
 								//TODO: pour chaque img contenu on a un petit logo indiquant si l'espèce est protégée, réglementée, dangeureuse
 								List<? extends Element> listeElementsTR_IMG = elementTR.getAllElements(HTMLElementName.IMG);
 								for (Element elementImg : listeElementsTR_IMG) {
-									log.info("getFiche() - ficheTagInfo : " + elementImg.getAttributeValue("alt")+" + "+elementImg.getAttributeValue("src"));
+									log.info("getFicheFromHtml() - ficheTagInfo : " + elementImg.getAttributeValue("alt")+" + "+elementImg.getAttributeValue("src"));
 								}
 							}
 							if (i == 2) {
-								log.info("getFiche() - ficheNomLatin : " + elementTR.getRenderer().toString());
+								log.info("getFicheFromHtml() - ficheNomLatin : " + elementTR.getRenderer().toString());
 								setNomScientifique( Outils.nettoyageCaracteres(elementTR.getRenderer().toString().trim()) );
 							}
 							if (i == 3) {
-								log.info("getFiche() - ficheRegion : " + elementTR.getRenderer().toString());
+								log.info("getFicheFromHtml() - ficheRegion : " + elementTR.getRenderer().toString());
 								// TODO :
 								//ficheRegion = elementTR.getRenderer().toString().trim();
 							}
 							if (i == 5) {
-								log.info("getFiche() - ficheNomFrancais : " + elementTR.getRenderer().toString());
+								log.info("getFicheFromHtml() - ficheNomFrancais : " + elementTR.getRenderer().toString());
 								setNomCommun( Outils.nettoyageCaracteres(elementTR.getRenderer().toString().trim()) );
 							}
 						}
@@ -339,7 +339,7 @@ public class Fiche {
 								// Certaines fiches appartiennent à un groupe sans être dans un sous-groupe
 								// c'est pourquoi, on initialise d'abord le groupe
 								groupeRef = Integer.parseInt(attribut.getValue().toString().replaceAll(".*images_groupe/([0-9]*).gif","$1"));
-								log.info("getFiche() - groupeRef : " + groupeRef);
+								log.info("getFicheFromHtml() - groupeRef : " + groupeRef);
 
 								groupe = SiteDoris.getGroupeFromListeGroupes(listeGroupes, groupeRef, 0);
 							}
@@ -379,17 +379,17 @@ public class Fiche {
 							}
 							
 							if (attribut.getName().equals("class") && attribut.getValue().equals("normal") ) {
-								log.debug("getFiche() - rubrique : " + rubrique);
+								log.debug("getFicheFromHtml() - rubrique : " + rubrique);
 								if (autresDenominationsFlag) {
 									String autresDenominationsTexte  = elementTD.getRenderer().toString().trim();
 									
 									// suppression des sauts de ligne
 									autresDenominationsTexte = autresDenominationsTexte.replaceAll("\r\n", " ").replaceAll("\n", " ");
-									log.debug("getFiche() - autresDenominations(B1) : " + autresDenominationsTexte);
+									log.debug("getFicheFromHtml() - autresDenominations(B1) : " + autresDenominationsTexte);
 	
 									// suppression des blancs multiples
 									autresDenominationsTexte = autresDenominationsTexte.replaceAll("\\s{2,}"," ");
-									log.debug("getFiche() - autresDenominations(B2) : " + autresDenominationsTexte);
+									log.debug("getFicheFromHtml() - autresDenominations(B2) : " + autresDenominationsTexte);
 									
 									// permet d'enlever les Liens et de les remplacer par un texte, par exemple "(Fiche)"
 									autresDenominationsTexte = autresDenominationsTexte.replaceAll("<[^>]*>", Constants.getContenuLienTexte()).trim();
@@ -414,8 +414,8 @@ public class Fiche {
 									// permet d'enlever les Liens et de les remplacer par (*)
 									contenuTexte = contenuTexte.replaceAll("<[^>]*>", Constants.getContenuLienTexte()).trim();
 	
-									log.info("getFiche() - rubrique : " + rubrique);
-									log.info("getFiche() - contenu(après nettoyage) : " + contenuTexte);
+									log.info("getFicheFromHtml() - rubrique : " + rubrique);
+									log.info("getFicheFromHtml() - contenu(après nettoyage) : " + contenuTexte);
 									
 									SectionFiche contenu = new SectionFiche(rubrique, contenuTexte);
 									contenu.setFiche(this);
@@ -428,7 +428,7 @@ public class Fiche {
 						
 						for (Element elementTDA : elementTD.getAllElements(HTMLElementName.A)) {
 							String hrefValue = elementTDA.getAttributeValue("href");
-							log.debug("getFiche() - A : " + elementTDA.getRenderer().toString().trim() + " - lien : " + hrefValue);
+							log.debug("getFicheFromHtml() - A : " + elementTDA.getRenderer().toString().trim() + " - lien : " + hrefValue);
 							
 							if (hrefValue != null && (hrefValue.startsWith("../") || hrefValue.startsWith("http://doris.ffessm.fr")) ) {
 							
@@ -439,7 +439,7 @@ public class Fiche {
 									if (!sbListeLiensVersFiches.toString().contains(tempLien + ";")) {
 										sbListeLiensVersFiches.append(tempLien + ";");
 									}
-									log.info("getFiche() - listeLienRencontre : " + sbListeLiensVersFiches.toString() );
+									log.info("getFicheFromHtml() - listeLienRencontre : " + sbListeLiensVersFiches.toString() );
 								}
 							}
 						}
@@ -497,7 +497,7 @@ public class Fiche {
 						// On vérifie que le cadre Gris contient la rubrique Participants
 						Element elementRubriqueinEntoureDeGris= elementEntoureDeGris.getFirstElementByClass("rubrique");
 						if (elementRubriqueinEntoureDeGris != null) {
-							log.debug("getFiche() - 520 - "+elementRubriqueinEntoureDeGris.getRenderer().toString());
+							log.debug("getFicheFromHtml() - 520 - "+elementRubriqueinEntoureDeGris.getRenderer().toString());
 							if (elementRubriqueinEntoureDeGris.getRenderer().toString().trim().equals("Participants")) {
 								// On parcourt les TD
 								// Si class=gris_gras et contenu texte != vide => qualité de la personne ci-après
@@ -518,12 +518,12 @@ public class Fiche {
 									
 									if ( Constants.getTypeParticipant(ligne.trim()) != null ){
 										intervenantQualite = Constants.getTypeParticipant(ligne.trim() );
-										log.debug("getFiche() - Type Intervenant: " + intervenantQualite);
+										log.debug("getFicheFromHtml() - Type Intervenant: " + intervenantQualite);
 									}
 									
 									if ( ligne.trim().contains("contact_numero=") ){
 										intervenantRef = ligne.trim().replaceAll(".*contact_fiche.*contact_numero=(.*)>", "$1");
-										log.debug("getFiche() - Ref Intervenant: " + intervenantRef);
+										log.debug("getFicheFromHtml() - Ref Intervenant: " + intervenantRef);
 										
 										// TODO : C'est ici qu'il faudra ajouter la MAJ de la Base
 									}
@@ -541,8 +541,8 @@ public class Fiche {
 					
 					dateCreation = ElementDates.getRenderer().toString().replaceAll("Création le : ([^ ]*).*", "$1").trim();
 					dateModification = ElementDates.getRenderer().toString().replaceAll(".*modification le(.*)", "$1").trim();
-					log.debug("getFiche() - dateCreation : " + dateCreation);
-					log.debug("getFiche() - dateModification : " + dateModification);
+					log.debug("getFicheFromHtml() - dateCreation : " + dateCreation);
+					log.debug("getFicheFromHtml() - dateModification : " + dateModification);
 					break; // Fin de la recherche d'infos dans le bloc principal
 					
 				//Ligne blanche => rien à faire mais à garder pour ne pas passer dans le default
@@ -562,7 +562,7 @@ public class Fiche {
 			List<? extends Element> listeElementsTDSousGroupe = source.getAllElementsByClass("sousgroupe_fiche");
 			for (Element element : listeElementsTDSousGroupe) {
 				int index = listeElementsTDSousGroupe.indexOf(element);
-				log.debug("getFiche() - index : " + index);
+				log.debug("getFicheFromHtml() - index : " + index);
 				
 				if (index == 1) {					
 					// Texte du sous-groupe (inutile pour nous)
@@ -577,7 +577,7 @@ public class Fiche {
 							// c'est pourquoi, on a d'abord initialiser les groupes
 							// et qu'on l'écrase ici. (on a l'arborescence des groupes par ailleurs)
 							sousgroupeRef = Integer.parseInt(attribut.getValue().toString().toLowerCase().replaceAll(".*images_sousgroupe/([0-9]*).(gif|jpg)","$1"));
-							log.info("getFiche() - sousgroupeRef : " + sousgroupeRef);
+							log.info("getFicheFromHtml() - sousgroupeRef : " + sousgroupeRef);
 
 							groupe = SiteDoris.getGroupeFromListeGroupes(listeGroupes, groupeRef, sousgroupeRef);
 							
@@ -616,27 +616,27 @@ public class Fiche {
 					
 					try	{
 						Element ElementNomLatin = ElementInfosGauche.getFirstElementByClass("texte_bandeau").getFirstElement();
-						log.info("getFiche() - ElementNomLatin : " + ElementNomLatin.getRenderer().toString().trim());
+						log.info("getFicheFromHtml() - ElementNomLatin : " + ElementNomLatin.getRenderer().toString().trim());
 						setNomScientifique( ElementNomLatin.getRenderer().toString().trim() );
 					} catch (Exception e) {
-		        		log.debug("getFiche() - le nom latin n'est pas toujours renseigné");
+		        		log.debug("getFicheFromHtml() - le nom latin n'est pas toujours renseigné");
 		        	}
 					
 					try	{
 						Element ElementDistribution = ElementInfosGauche.getFirstElementByClass("normal").getFirstElement();
-						log.info("getFiche() - ElementDistribution : " + ElementDistribution.getRenderer().toString().trim());
+						log.info("getFicheFromHtml() - ElementDistribution : " + ElementDistribution.getRenderer().toString().trim());
 						// TODO :
 						//ficheRegion = ElementDistribution.getRenderer().toString().trim();
 					} catch (Exception e) {
-		        		log.debug("getFiche() - la Distribution n'est pas toujours renseignée");
+		        		log.debug("getFicheFromHtml() - la Distribution n'est pas toujours renseignée");
 		        	}
 					
 					try	{
 						Element ElementNomCommun = ElementInfosGauche.getFirstElementByClass("titre2").getFirstElement();
-						log.info("getFiche() - ElementNomCommun : " + ElementNomCommun.getRenderer().toString().trim());
+						log.info("getFicheFromHtml() - ElementNomCommun : " + ElementNomCommun.getRenderer().toString().trim());
 						setNomCommun( ElementNomCommun.getRenderer().toString().trim() );
 					} catch (Exception e) {
-		        		log.debug("getFiche() - le nom français n'est pas toujours renseigné");
+		        		log.debug("getFicheFromHtml() - le nom français n'est pas toujours renseigné");
 		        	}
 					
 					//Recup TRs Haut Droit contenant le Groupe auquel appartient l'espèce
@@ -648,7 +648,7 @@ public class Fiche {
 							if (attribut.getName().equals("src") && attribut.getValue().toString().startsWith("gestionenligne/images_groupe/") ) {
 
 								groupeRef = Integer.parseInt(attribut.getValue().toString().replaceAll(".*images_groupe/([0-9]*).gif","$1"));
-								log.info("getFiche() - groupeRef : " + groupeRef);
+								log.info("getFicheFromHtml() - groupeRef : " + groupeRef);
 
 								groupe = SiteDoris.getGroupeFromListeGroupes(listeGroupes, groupeRef, 0);
 
@@ -711,15 +711,14 @@ public class Fiche {
 						
 						if (attribut.getName().equals("src") && attribut.getValue().toString().startsWith("gestionenligne/images_sousgroupe/") ) {
 							sousgroupeRef = Integer.parseInt(attribut.getValue().toString().toLowerCase().replaceAll(".*images_sousgroupe/([0-9]*).(gif|jpg)","$1"));
-							log.info("getFiche() - sousgroupeRef : " + sousgroupeRef);
+							log.info("getFicheFromHtml() - sousgroupeRef : " + sousgroupeRef);
 
 							groupe = SiteDoris.getGroupeFromListeGroupes(listeGroupes, groupeRef, sousgroupeRef);
 						}
 					}
 				}
 			}
-			
-			
+
 		}
 		
 		if (sbListeLiensVersFiches.length() !=0){
@@ -733,7 +732,7 @@ public class Fiche {
 		
 		listeElementsTable_TABLE = null;
 		
-    	log.trace("getFiche() - Fin");
+    	log.trace("getFicheFromHtml() - Fin");
 	}
 	
 	
