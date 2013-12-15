@@ -159,6 +159,19 @@ public class XMLHelper {
 			e.printStackTrace();
 		}
 		sb.append("\n\t</SECTIONFICHES>\n");
+		sb.append("\n\t<INTERVENANTFICHES>");
+		try {	
+			List<IntervenantFiche> intervenantFiches = dbContext.intervenantFicheDao.queryForAll();
+			for(IntervenantFiche  intervenantFiche : intervenantFiches){
+				// TODO find if contained by another element, if not put it there
+					sb.append("\n");
+					sb.append(intervenantFiche.toXML("\t\t", dbContext));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sb.append("\n\t</INTERVENANTFICHES>\n");
 		sb.append("\n\t<PARTICIPANTS>");
 		try {	
 			List<Participant> participants = dbContext.participantDao.queryForAll();
@@ -296,6 +309,14 @@ public class XMLHelper {
 					log.error("cannot create SectionFiche "+e.getMessage(),e);
 				}
 			}
+			log.info("starting creation of IntervenantFiche...");
+			for(IntervenantFiche intervenantFiche : parser.intervenantFiches){
+				try {
+					dbContext.intervenantFicheDao.create(intervenantFiche);
+				} catch (SQLException e) {
+					log.error("cannot create IntervenantFiche "+e.getMessage(),e);
+				}
+			}
 			log.info("starting creation of Participant...");
 			for(Participant participant : parser.participants){
 				try {
@@ -381,6 +402,14 @@ public class XMLHelper {
 					dbContext.sectionFicheDao.update(elem);
 				} catch (SQLException e) {
 					log.error("cannot update SectionFiche "+e.getMessage(),e);
+				}
+			}
+			log.info("starting update DB of IntervenantFiche...");
+			for(IntervenantFiche elem : parser.intervenantFichesToUpdate){
+				try {
+					dbContext.intervenantFicheDao.update(elem);
+				} catch (SQLException e) {
+					log.error("cannot update IntervenantFiche "+e.getMessage(),e);
 				}
 			}
 			log.info("starting update DB of Participant...");

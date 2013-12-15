@@ -94,7 +94,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 
 		ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
         list.setClickable(true);
-        adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper());
+        // charge juste la zone si besoin
+        // TODO mettre ça en zone protégée !!! ou alors s'assurer que le updateList n'est appelé qu'au besoin, aprés initialisation complete
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper(), prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), 0));
 
 		// avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -164,6 +167,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 	        ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(searchedText);
 	        
 	        // mise à jour de l'image du bouton de filtre
+	        ((BitmapDrawable)searchButton.getDrawable()).getBitmap().recycle(); // assure de récupérer la mémoire
 	        searchButton.setImageResource(R.drawable.filter_settings_actif_32);
 		}
 		else{
