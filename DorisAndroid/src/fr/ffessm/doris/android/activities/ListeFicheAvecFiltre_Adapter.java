@@ -54,6 +54,7 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +70,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code protected additional ListeFicheAvecFiltre_Adapter imports
@@ -103,8 +105,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
 	private static final String LOG_TAG = ListeFicheAvecFiltre_Adapter.class.getCanonicalName();
 
-    private List<Fiche> ficheList;
-    private List<Fiche> filteredFicheList;
+    private List<Integer> ficheIdList;
+    private List<Integer> filteredFicheIdList;
+	LruCache<Integer, Fiche> ficheCache =  new LruCache<Integer, Fiche>(100);
 	private final Object mLock = new Object();
 	private SimpleFilter mFilter;
 	SharedPreferences prefs;
@@ -116,6 +119,14 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	protected ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
 	int filteredZoneGeoId = 0;
 
+	public ListeFicheAvecFiltre_Adapter(Context context, DorisDBHelper contextDB, int filteredZoneGeoId) {
+		super();
+		this.context = context;
+		this._contextDB = contextDB;
+		this.filteredZoneGeoId = filteredZoneGeoId;
+		updateList();
+		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+	} 
 	//End of user code
 
 	public ListeFicheAvecFiltre_Adapter(Context context, DorisDBHelper contextDB) {
@@ -132,21 +143,49 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		try{
 			
 			if(filteredZoneGeoId == 0){
-				this.ficheList = _contextDB.ficheDao.queryForAll();
+				Log.d(LOG_TAG,  "_contextDB.ficheDao.queryForAll() - début "+ _contextDB.ficheDao.countOf());
+				//this.ficheList = _contextDB.ficheDao.queryForAll();
+				this.ficheIdList = new ArrayList<Integer>((int) _contextDB.ficheDao.countOf());
+				
+				
+				// récupère les id seulement des fiches
+				GenericRawResults<String[]> rawResults =
+						_contextDB.ficheDao.queryRaw("SELECT _id FROM fiche");
+				for (String[] resultColumns : rawResults) {
+				    String iDString = resultColumns[0];
+				    this.ficheIdList.add(Integer.parseInt(iDString));
+				}
+				
+				/*for(Fiche f : _contextDB.ficheDao){
+					
+					//à investiguer : http://stackoverflow.com/questions/7159816/android-cursor-with-ormlite-to-use-in-cursoradapter
+					//ou querry builder
+					
+					
+					
+					QueryBuilder<Fiche, String> queryBuilder;
+					queryBuilder.selectColumns("_id"); // pour récupérer juste les id
+					queryBuilder.prepare();
+					_contextDB.ficheDao.iterator().
+					this.ficheIdList.add(f);
+				}*/
+				Log.d(LOG_TAG,  "_contextDB.ficheDao.queryForAll() - fin");
 			}
 			else{
 				//Log.d(LOG_TAG,  "_contextDB= "+_contextDB);
 				//Log.d(LOG_TAG,  "_contextDB.fiches_ZonesGeographiquesDao= "+_contextDB.fiches_ZonesGeographiquesDao);
+				Log.d(LOG_TAG,  "_contextDB.ficheDao.queryForEq() - début");
 				List<Fiches_ZonesGeographiques> listeAssoc= _contextDB.fiches_ZonesGeographiquesDao.queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, filteredZoneGeoId);
-				this.ficheList = new ArrayList<Fiche>(listeAssoc.size());
+				Log.d(LOG_TAG,  "_contextDB.ficheDao.queryForEq() - fin");
+				this.ficheIdList = new ArrayList<Integer>(listeAssoc.size());
 				if(listeAssoc !=  null)	for (Fiches_ZonesGeographiques fiches_ZonesGeographiques : listeAssoc) {
 					if(_contextDB !=null) fiches_ZonesGeographiques.setContextDB(_contextDB);
 					Fiche fiche = fiches_ZonesGeographiques.getFiche();
 					fiche.getPhotoPrincipale(); // bizarre besoin de faire cela ici pour s'assurer que la photo principâle soit bien chargée !?
-					this.ficheList.add(fiche);
+					this.ficheIdList.add(fiche.getId());
 				}
 			}
-			this.filteredFicheList = this.ficheList;
+			this.filteredFicheIdList = this.ficheIdList;
 		} catch (java.sql.SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
 		}
@@ -155,13 +194,12 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
 	@Override
 	public int getCount() {
-		return filteredFicheList.size();
+		return filteredFicheIdList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return filteredFicheList.get(position);
-
+		return filteredFicheIdList.get(position);
 	}
 
 	@Override
@@ -171,14 +209,15 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-		final Fiche entry = filteredFicheList.get(position);
-		if(_contextDB != null) entry.setContextDB(_contextDB);
-		entry.setContextDB(_contextDB);
+		
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.listeficheavecfiltre_listviewrow, null);
         }
+
+		final Fiche entry = getFicheForId(filteredFicheIdList.get(position));
+		if(entry == null) return convertView;
        
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_label);
@@ -292,6 +331,19 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
 	}
 
+	protected Fiche getFicheForId(Integer ficheId){
+		Fiche f = ficheCache.get(ficheId);
+		if(f != null) return f;
+		try {
+			f = _contextDB.ficheDao.queryForId(ficheId);
+			ficheCache.put(ficheId, f);
+			if(_contextDB != null) f.setContextDB(_contextDB);
+			return f;
+		} catch (SQLException e1) {
+			Log.e(LOG_TAG, "Cannot retreive fiche with _id = "+ficheId+" "+e1.getMessage(), e1);
+			return null;
+		}
+	}
 	//Start of user code protected additional ListeFicheAvecFiltre_Adapter methods
 	// additional methods
 	public void refreshFilter(){
@@ -381,30 +433,32 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
 			if (prefix == null || prefix.length() == 0) {
 				synchronized (mLock) {
-					ArrayList<Fiche> list = new ArrayList<Fiche>(ficheList);
+					ArrayList<Integer> list = new ArrayList<Integer>(ficheIdList);
 					results.values = list;
 					results.count = list.size();
 				}
 			} else {
 				String prefixString = prefix.toString().toLowerCase();
 				boolean sort = sortAfterFilter();
-
-				final List<Fiche> values = ficheList;
+				final List<Integer> values = ficheIdList;
 				final int count = values.size();
-				
-				final ArrayList<Fiche> newValues = new ArrayList<Fiche>(count);
+		
+				final ArrayList<Integer> newValues = new ArrayList<Integer>(count);
 				final int[] orders = sort ? new int[count] : null;
 
 				for (int i = 0; i < count; i++) {
-					final Fiche value = values.get(i);
-					int order = ListeFicheAvecFiltre_Adapter.this.filter(i, value, prefixString);
-					if (order >= 0) {
-						if (sort)
-							orders[newValues.size()] = order;
-						newValues.add(value);
+					final Integer valueId =  values.get(i);
+					Fiche value = getFicheForId(valueId);
+					if(value != null){
+						int order = ListeFicheAvecFiltre_Adapter.this.filter(i, value, prefixString);
+						if (order >= 0) {
+							if (sort)
+								orders[newValues.size()] = order;
+							newValues.add(valueId);
+						}
 					}
 				}
-				
+				/* TODO implement a sort
 				if (sort) {
 					Comparator<Fiche> c = new Comparator<Fiche>() {
 						public int compare(Fiche object1, Fiche object2) {
@@ -417,7 +471,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 					};
 					Collections.sort(newValues, c);
 				}
-
+				*/
 				results.values = newValues;
 				results.count = newValues.size();
 			}
@@ -429,10 +483,10 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		@Override
 		protected void publishResults(CharSequence constraint, FilterResults results) {
 			if (results.count > 0) {
-				filteredFicheList = (List<Fiche>) results.values;
+				filteredFicheIdList = (List<Integer>) results.values;
 				notifyDataSetChanged();
 			} else {
-				filteredFicheList = new ArrayList<Fiche>();
+				filteredFicheIdList = new ArrayList<Integer>();
 				notifyDataSetInvalidated();
 			}
 		}

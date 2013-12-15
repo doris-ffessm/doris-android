@@ -69,6 +69,7 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
+import fr.ffessm.doris.android.datamodel.IntervenantFiche;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.PhotoParticipant;
@@ -77,7 +78,6 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.ZoneObservation;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesObservations;
-import fr.ffessm.doris.android.datamodel.associations.Fiches_verificateurs_Participants;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Outils;
@@ -693,6 +693,7 @@ public class PrefetchDorisWebSite {
 		
 		dbContext.photoFicheDao = DaoManager.createDao(connectionSource, PhotoFiche.class);
 		dbContext.participantDao = DaoManager.createDao(connectionSource, Participant.class);
+		dbContext.intervenantFicheDao = DaoManager.createDao(connectionSource, IntervenantFiche.class);
 		dbContext.photoParticipantDao = DaoManager.createDao(connectionSource, PhotoParticipant.class);
 		dbContext.zoneGeographiqueDao = DaoManager.createDao(connectionSource, ZoneGeographique.class);
 		dbContext.zoneObservationDao = DaoManager.createDao(connectionSource, ZoneObservation.class);
@@ -715,14 +716,13 @@ public class PrefetchDorisWebSite {
 		// if you need to create the table
 		TableUtils.createTable(connectionSource, Fiche.class);
 		TableUtils.createTable(connectionSource, Groupe.class);
-		
 		TableUtils.createTable(connectionSource, Participant.class);
+		TableUtils.createTable(connectionSource, IntervenantFiche.class);
 		TableUtils.createTable(connectionSource, PhotoFiche.class);
 		TableUtils.createTable(connectionSource, ZoneGeographique.class);
 		TableUtils.createTable(connectionSource, ZoneObservation.class);
 		TableUtils.createTable(connectionSource, SectionFiche.class);
 		TableUtils.createTable(connectionSource, AutreDenomination.class);
-		TableUtils.createTable(connectionSource, Fiches_verificateurs_Participants.class);
 		TableUtils.createTable(connectionSource, Fiches_ZonesGeographiques.class);
 		TableUtils.createTable(connectionSource, Fiches_ZonesObservations.class);
 		TableUtils.createTable(connectionSource, DorisDB_metadata.class);

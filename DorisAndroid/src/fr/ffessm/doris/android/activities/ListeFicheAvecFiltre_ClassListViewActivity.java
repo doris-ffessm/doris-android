@@ -94,8 +94,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 
 		ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
         list.setClickable(true);
-        adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper());
-
+		//Start of user code onCreate ListeFicheAvecFiltre_ClassListViewActivity adapter creation
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper(), prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), 0));
+        //End of user code
 		// avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         list.setOnItemClickListener(this);

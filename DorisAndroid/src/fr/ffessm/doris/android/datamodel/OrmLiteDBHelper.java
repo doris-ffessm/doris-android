@@ -80,6 +80,9 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	// private Dao<SectionFiche, Integer> sectionFicheDao = null;
 	private RuntimeExceptionDao<SectionFiche, Integer> sectionFicheRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
+	// private Dao<IntervenantFiche, Integer> intervenantFicheDao = null;
+	private RuntimeExceptionDao<IntervenantFiche, Integer> intervenantFicheRuntimeDao = null;
+	// the DAO object we use to access the diveBudies table
 	// private Dao<Participant, Integer> participantDao = null;
 	private RuntimeExceptionDao<Participant, Integer> participantRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
@@ -212,6 +215,17 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	}
 
 	/**
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our IntervenantFiche class. It will
+	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
+	 */
+	public RuntimeExceptionDao<IntervenantFiche, Integer> getIntervenantFicheDao() {
+		if (intervenantFicheRuntimeDao == null) {
+			intervenantFicheRuntimeDao = getRuntimeExceptionDao(IntervenantFiche.class);
+		}
+		return intervenantFicheRuntimeDao;
+	}
+
+	/**
 	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our Participant class. It will
 	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
 	 */
@@ -301,6 +315,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		autreDenominationRuntimeDao = null;
 		photoFicheRuntimeDao = null;
 		sectionFicheRuntimeDao = null;
+		intervenantFicheRuntimeDao = null;
 		participantRuntimeDao = null;
 		photoParticipantRuntimeDao = null;
 		zoneGeographiqueRuntimeDao = null;
@@ -321,6 +336,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 			helper.autreDenominationDao = getDao(AutreDenomination.class);
 			helper.photoFicheDao = getDao(PhotoFiche.class);
 			helper.sectionFicheDao = getDao(SectionFiche.class);
+			helper.intervenantFicheDao = getDao(IntervenantFiche.class);
 			helper.participantDao = getDao(Participant.class);
 			helper.photoParticipantDao = getDao(PhotoParticipant.class);
 			helper.zoneGeographiqueDao = getDao(ZoneGeographique.class);
