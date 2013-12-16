@@ -96,7 +96,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
         list.setClickable(true);
 		//Start of user code onCreate ListeFicheAvecFiltre_ClassListViewActivity adapter creation
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper(), prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), 0));
+        adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper(), prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1));
         //End of user code
 		// avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -155,7 +155,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 		ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter(); 
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if((prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1) != 1) ||
-		   (prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), 0) != 0)){
+		   (prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1) != -1)){
 			// on a un filtre actif
 	    	String searchedText = inputSearch.getText().toString();
 	    	if(!searchedText.isEmpty()){
@@ -284,8 +284,8 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 	
 			// bouton filtre zone géographique
 			Button btnZoneGeo = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_ZoneGeoButton);
-			int currentFilterId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), 0);
-	        if(currentFilterId == 0){
+			int currentFilterId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), -1);
+	        if(currentFilterId == -1){
 	        	btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_sans));
 	        }
 	        else{

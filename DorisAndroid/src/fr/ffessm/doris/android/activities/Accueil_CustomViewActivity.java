@@ -186,6 +186,8 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         	((ScrollView) findViewById(R.id.accueil_debug)).setVisibility(View.VISIBLE);
         }
 
+        // affichage zone géo
+        createNavigationZonesGeoViews();
 
         //Lors du 1er démarrage de l'application dans la version actuelle,
         //on affiche la boite d'A Propos
@@ -255,6 +257,59 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	
     }
     
+    protected View createNavigationZoneView(ZoneGeographique zone){
+    	LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View viewZone = inflater.inflate(R.layout.zonegeoselection_listviewrow, null);
+        TextView tvLabel = (TextView) viewZone.findViewById(R.id.zonegeoselection_listviewrow_label);
+        tvLabel.setText(zone.getNom());
+        TextView tvLDetails = (TextView) viewZone.findViewById(R.id.zonegeoselection_listviewrow_details);
+        tvLDetails.setText(zone.getDescription());
+        viewZone.findViewById(R.id.zonegeoselection__selectBtn).setVisibility(View.GONE);
+        
+        String uri = Outils.getZoneIcone(this.getApplicationContext(), zone.getId()); 
+        int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
+        ImageView ivIcon = (ImageView)viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
+        ivIcon.setImageResource(imageZone);   
+        
+        final Context context = this;
+        final int zoneId = zone.getId();
+        viewZone.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+				// positionne la recherche pour cette zone
+				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zoneId);
+				// réinitialise le filtre espèce
+				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), 1);
+		        ed.commit();
+				startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+			}
+		});
+    	return viewZone;
+    }
+    
+    protected void createNavigationZonesGeoViews(){
+
+    	LinearLayout llContainerLayout =  (LinearLayout) findViewById(R.id.accueil_navigation_zones_layout);
+    	// Affichage lien vers "toutes Zones"
+    	ZoneGeographique zoneToutesZones = new ZoneGeographique();
+    	zoneToutesZones.setId(-1);
+    	zoneToutesZones.setNom(getContext().getString(R.string.accueil_customview_zonegeo_touteszones));
+        
+        llContainerLayout.addView(createNavigationZoneView(zoneToutesZones));
+    	
+    	// affichage lien vers les zones 
+    	
+        List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
+    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - après");
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
+			
+		for (ZoneGeographique zoneGeo : listeZoneGeo) {
+			llContainerLayout.addView(createNavigationZoneView(zoneGeo));
+		}
+        
+        
+    }
     
     /*public void onClickAfficherListe(View view){
     	showToast("L'idée est d'afficher directement la liste filtrée depuis ici, mais il faudrait que la ProgressionBar soit un objet plus propre.");
@@ -722,7 +777,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	zoneToutesZones.setId(-1);
     	zoneToutesZones.setNom(getContext().getString(R.string.accueil_customview_zonegeo_touteszones));
     	if (isOnCreate) {
-	    	llContainerLayout =  (LinearLayout) findViewById(R.id.avancements_layout);
+	    	llContainerLayout =  (LinearLayout) findViewById(R.id.accueil_progress_layout);
 	    	
 	    	// Avancement et Affichage toutes Zones
 	    	MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this);
@@ -742,48 +797,17 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	    	progressBarZoneGenerale.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					/*SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-					ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), -1);
-			        ed.commit();*/
 					startActivity(new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 				}
 			});
 	    	llContainerLayout.addView(progressBarZoneGenerale);
 
 	    	
-	    	// Avancement par Zone
-	    /*	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avant ");
-	    	List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
-	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - après");
-			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
-				
-			for (ZoneGeographique zoneGeo : listeZoneGeo) {
-				MultiProgressBar progressBarZone = new MultiProgressBar(this);
-	 		    updateProgressBarZone(zoneGeo, progressBarZone);
-	 		    final int zoneGeoId = zoneGeo.getId();
-	 		    progressBarZone.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-						ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zoneGeoId);
-				        ed.commit();
-						startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
-					}
-				});
-	 		    progressBarZones.put(zoneGeo.getId(), progressBarZone); 
-		 		llContainerLayout.addView(progressBarZone);
-			} 
-			*/
 	    	
     	} else {
     		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - update progress bar : ");
     		updateProgressBarZone(zoneToutesZones, progressBarZones.get(zoneToutesZones.getId()));
-    	/*	List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
-	    	
-			for (ZoneGeographique zoneGeo : listeZoneGeo) {
-				updateProgressBarZone(zoneGeo, progressBarZones.get(zoneGeo.getId()));
-			}
-    		*/
+    	
     	}
 		
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

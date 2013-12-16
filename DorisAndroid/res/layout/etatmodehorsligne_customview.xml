@@ -28,19 +28,7 @@
         android:layout_height="wrap_content"
         android:text="@string/etatmodehorsligne_customview_description_text_2" />
     
-	<TextView
-        android:id="@+id/etatmodehorsligne_customview_etat_photos_titre_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/etatmodehorsligne_customview_etat_photos_titre_text" />
-    <LinearLayout
-	        android:id="@+id/etatmodehorsligne_customview_avancements_layout"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="vertical" >
-
-	</LinearLayout>
+	
 	<TextView
         android:id="@+id/etatmodehorsligne_customview_etat_base_titre_textView"
         android:layout_width="wrap_content"
@@ -53,6 +41,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/etatmodehorsligne_customview_etat_base_description_text" />
+    <TextView
+        android:id="@+id/etatmodehorsligne_customview_etat_photos_titre_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/etatmodehorsligne_customview_etat_photos_titre_text" />
+    <LinearLayout
+	        android:id="@+id/etatmodehorsligne_customview_avancements_layout"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical" >
+
+	</LinearLayout>
 	
 </LinearLayout>
 <!--End of user code

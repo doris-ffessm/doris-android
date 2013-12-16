@@ -13,37 +13,51 @@
         android:layout_height="wrap_content"
         android:padding="3dip"
 		android:text="@string/accueil_customview_texte_text"/>
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:gravity="center_horizontal"
-	    android:orientation="vertical">
-		<Button
-		    android:id="@+id/btnListeFichesAccueil"
-		    android:layout_width="wrap_content"
-		    android:layout_height="30dp"
-		    android:layout_marginRight="15dp"
-		    android:layout_marginTop="15dp"
-		    android:background="@drawable/button_background"
-		    android:onClick="onClickBtnListeFiches"
-		    android:paddingBottom="4dp"
-		    android:paddingLeft="8dp"
-		    android:paddingRight="8dp"
-		    android:paddingTop="4dp"
-		    android:text="@string/accueil_customview_listefiches_btn_label"
-		    android:textColor="@android:color/darker_gray" />
-	</LinearLayout>
 
 	<ScrollView
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    android:layout_weight="2">
 		<LinearLayout
-	        android:id="@+id/avancements_layout"
+	        android:id="@+id/accueil_scroll_layout"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical" >
+			<Button
+			    android:id="@+id/btnListeFichesAccueil"
+			    android:layout_width="wrap_content"
+			    android:layout_height="30dp"
+			    android:layout_marginRight="15dp"
+			    android:layout_marginTop="15dp"
+			    android:background="@drawable/button_background"
+			    android:onClick="onClickBtnListeFiches"
+			    android:paddingBottom="4dp"
+			    android:paddingLeft="8dp"
+			    android:paddingRight="8dp"
+			    android:paddingTop="4dp"
+			    android:text="@string/accueil_customview_listefiches_btn_label"
+			    android:textColor="@android:color/darker_gray" />
+			<LinearLayout
+		        android:id="@+id/accueil_navigation_zones_layout"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:orientation="vertical" >
+	        </LinearLayout>
 
+			<TextView
+		        android:id="@+id/accueil_etat_hors_ligne_titre"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:padding="3dip"
+	    		android:textAppearance="?android:attr/textAppearanceMedium" 
+				android:text="@string/accueil_etat_hors_ligne_titre_text"/>
+			
+			<LinearLayout
+		        android:id="@+id/accueil_progress_layout"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:orientation="vertical" >
+	        </LinearLayout>
 		</LinearLayout>
 	</ScrollView>
 	

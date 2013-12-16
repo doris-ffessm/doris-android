@@ -122,7 +122,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	protected Groupe filtreGroupe;
 	// vide signifie que l'on accepte tout
 	protected ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
-	int filteredZoneGeoId = 0;
+	int filteredZoneGeoId = -1;
 	int filteredGroupeId = 1;
 
 	public ListeFicheAvecFiltre_Adapter(Context context, DorisDBHelper contextDB, int filteredZoneGeoId) {
@@ -148,7 +148,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		// TODO find a way to query in a lazier way
 		try{
 			
-			if(filteredZoneGeoId == 0){
+			if(filteredZoneGeoId == -1){
 				Log.d(LOG_TAG,  "_contextDB.ficheDao.queryForAll() - début "+ _contextDB.ficheDao.countOf());
 				//this.ficheList = _contextDB.ficheDao.queryForAll();
 				this.ficheIdList = new ArrayList<Integer>((int) _contextDB.ficheDao.countOf());
@@ -372,7 +372,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	public void refreshFilter(){
 		
 		int oldFilteredZoneGeoId = filteredZoneGeoId;
-		filteredZoneGeoId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), 0);
+		filteredZoneGeoId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), -1);
 		int oldFilteredGroupeId = filteredGroupeId;
 		filteredGroupeId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);
 		if((oldFilteredZoneGeoId != filteredZoneGeoId) | (oldFilteredGroupeId != filteredGroupeId)){

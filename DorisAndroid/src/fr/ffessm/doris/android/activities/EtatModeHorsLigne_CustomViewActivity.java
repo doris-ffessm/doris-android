@@ -257,7 +257,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
 				pbRunningBarLayout.setVisibility(View.GONE);
 			}
 		});
-    	progressBarZoneGenerale.setOnClickListener(new View.OnClickListener() {
+    	/*progressBarZoneGenerale.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
@@ -265,7 +265,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
 		        ed.commit();
 				startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
 			}
-		});
+		});*/
     	llContainerLayout.addView(progressBarZoneGenerale);
 
     	
@@ -279,7 +279,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
 			MultiProgressBar progressBarZone = new MultiProgressBar(this);
  		    updateProgressBarZone(zoneGeo, progressBarZone);
  		    final int zoneGeoId = zoneGeo.getId();
- 		    progressBarZone.setOnClickListener(new View.OnClickListener() {
+ 		   /* progressBarZone.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
@@ -287,8 +287,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
 			        ed.commit();
 					startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
 				}
-			});
- 		    progressBarZones.put(zoneGeo.getId(), progressBarZone); 
+			}); */
+ 		    progressBarZones.put(zoneGeoId, progressBarZone); 
 	 		llContainerLayout.addView(progressBarZone);
 		} 
     }
