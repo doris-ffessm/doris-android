@@ -26,6 +26,10 @@
 			android:label="@string/app_name">
 		</activity>
 		<activity 
+			android:name=".activities.EtatModeHorsLigne_CustomViewActivity" 
+			android:label="@string/app_name">
+		</activity>
+		<activity 
 			android:name=".activities.RechercheGuidee_CustomViewActivity" 
 			android:label="@string/app_name">
 		</activity>

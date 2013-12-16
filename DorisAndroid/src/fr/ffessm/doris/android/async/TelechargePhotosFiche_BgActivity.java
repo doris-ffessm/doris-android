@@ -54,7 +54,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports TelechargePhotosFiche_BgActivity
 import java.util.ArrayList;
@@ -62,6 +61,7 @@ import java.util.Collection;
 
 import android.preference.PreferenceManager;
 
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;

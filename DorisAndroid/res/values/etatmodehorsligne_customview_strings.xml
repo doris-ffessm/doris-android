@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resource Strings specific to etatmodehorsligne Custom View -->
+<resources>	
+	<!-- Start of user code customView_strings etatmodehorsligne
+	-->
+	<!-- freely add here the desired resource String for your custom view -->
+	<string name="etatmodehorsligne_customview_titre_text">Etat du mode hors ligne</string>
+	<string name="etatmodehorsligne_customview_description_text">DorisAndroid peut fonctionner en mode hors ligne pour économiser votre forfait ou bien lorsque le réseau n\'est pas disponible.</string>
+	<string name="etatmodehorsligne_customview_description_text_2">Ajustez vos paramètres en fonction de vos besoins et de votre espace disque disponible.</string>
+	<string name="etatmodehorsligne_customview_etat_photos_titre_text">Télécharg. photos</string>
+	<string name="etatmodehorsligne_customview_etat_base_titre_text">Fiches et textes</string>
+	<string name="etatmodehorsligne_customview_etat_base_description_text">Les textes des fiches correspondent à la base Doris du :  </string>
+	<!-- End of user code
+	-->
+</resources>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Start of user code customView_layout for EtatModeHorsLigne
+-->
+<!-- freely adapt here the desired layout for your custom view -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+	>
+
+    <TextView
+        android:id="@+id/etatmodehorsligne_customview_titre_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/etatmodehorsligne_customview_titre_text" />
+
+    <TextView
+        android:id="@+id/etatmodehorsligne_customview_description_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/etatmodehorsligne_customview_description_text" />
+    
+    
+    <TextView
+        android:id="@+id/etatmodehorsligne_customview_description_textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/etatmodehorsligne_customview_description_text_2" />
+    
+	<TextView
+        android:id="@+id/etatmodehorsligne_customview_etat_photos_titre_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/etatmodehorsligne_customview_etat_photos_titre_text" />
+    <LinearLayout
+	        android:id="@+id/etatmodehorsligne_customview_avancements_layout"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical" >
+
+	</LinearLayout>
+	<TextView
+        android:id="@+id/etatmodehorsligne_customview_etat_base_titre_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/etatmodehorsligne_customview_etat_base_titre_text" />
+
+    <TextView
+        android:id="@+id/etatmodehorsligne_customview_etat_base_description_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/etatmodehorsligne_customview_etat_base_description_text" />
+	
+</LinearLayout>
+<!--End of user code
+-->

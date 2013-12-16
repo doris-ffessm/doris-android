@@ -223,7 +223,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 
 	        }
-        }
+        } 
         DorisApplicationContext.getInstance().addDataChangeListeners(this);
 
 		//End of user code
@@ -555,7 +555,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		   
 		   progressBarZone.update(inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto, downloadInProgress);
 	}
-	
+	/*
 	protected ProgressBarZone addProgressBarZone(ZoneGeographique inZoneGeo){
 	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
 	   
@@ -698,7 +698,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	   inContainerLayout.addView(convertView);
 	   return null;
 	}
-		
+	*/	
 	
 	//End of user code
 
@@ -742,17 +742,17 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	    	progressBarZoneGenerale.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+					/*SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 					ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), -1);
-			        ed.commit();
-					startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+			        ed.commit();*/
+					startActivity(new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 				}
 			});
 	    	llContainerLayout.addView(progressBarZoneGenerale);
 
 	    	
 	    	// Avancement par Zone
-	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avant ");
+	    /*	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avant ");
 	    	List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
 	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - après");
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
@@ -773,17 +773,17 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	 		    progressBarZones.put(zoneGeo.getId(), progressBarZone); 
 		 		llContainerLayout.addView(progressBarZone);
 			} 
-
+			*/
 	    	
     	} else {
     		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - update progress bar : ");
     		updateProgressBarZone(zoneToutesZones, progressBarZones.get(zoneToutesZones.getId()));
-    		List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
+    	/*	List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
 	    	
 			for (ZoneGeographique zoneGeo : listeZoneGeo) {
 				updateProgressBarZone(zoneGeo, progressBarZones.get(zoneGeo.getId()));
 			}
-    		
+    		*/
     	}
 		
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

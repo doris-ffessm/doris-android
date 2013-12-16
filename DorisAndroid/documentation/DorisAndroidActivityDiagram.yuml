@@ -1,6 +1,7 @@
 (start)->(SplashScreen)
 (Accueil)-><AccueilChoice>
 (Preference)-><PreferenceChoice>
+(EtatModeHorsLigne)-><EtatModeHorsLigneChoice>
 (RechercheGuidee)-><RechercheGuideeChoice>
 (ListeFicheAvecFiltre)-><ListeFicheAvecFiltreChoice>
 (DetailsFiche)-><DetailsFicheChoice>
@@ -15,9 +16,11 @@
 (TelechargePhotosFiche)->(end)
 <AccueilChoice>->(RechercheGuidee)
 <AccueilChoice>->(ListeFicheAvecFiltre)
+<AccueilChoice>->(EtatModeHorsLigne)
 <AccueilChoice>->(VerifieNouvellesFiches)
 <AccueilChoice>->(VerifieMAJFiches)
 <AccueilChoice>->(TelechargePhotosFiches)
+<EtatModeHorsLigneChoice>->(TelechargePhotosFiches)
 <RechercheGuideeChoice>->(ListeFicheAvecFiltre)
 (ListeFicheAvecFiltre)->(DetailsFiche)		
 <DetailsFicheChoice>->(ImagePleinEcran)
