@@ -117,14 +117,14 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteBaseActivity<
         	findViewById(R.id.zonegeoselection_listview_filtre_courant__suppFiltreBtn).setVisibility(View.GONE);
         }
         else{
-        	ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
+        	ZoneGeographique currentZoneFilter = getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
         	currentFilterText.setText(currentZoneFilter.getNom());
         	findViewById(R.id.zonegeoselection_listview_filtre_courant__suppFiltreBtn).setVisibility(View.VISIBLE);
         }
 	}
 	
 	public void onRemoveCurrentFilterClick(View view){
-    	Toast.makeText(this, "Filtre de zone géographique supprimé", Toast.LENGTH_SHORT).show();
+    	Toast.makeText(this, R.string.zonegeoselection_filtre_supprime, Toast.LENGTH_SHORT).show();
 		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
 		ed.putInt(this.getString(R.string.pref_key_filtre_zonegeo), 0);
         ed.commit();

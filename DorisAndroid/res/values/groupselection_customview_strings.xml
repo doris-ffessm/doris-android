@@ -4,8 +4,9 @@
 	<!-- Start of user code customView_strings groupselection
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
-	<string name="groupselection_customview_filtre_espece_courant_label">Filtre actuel : </string>
+	<string name="groupselection_customview_filtre_espece_courant_label">"Filtre actuel : "</string>
 	<string name="groupselection_customview_suppression_filtre_espece_courant_descBtn">Suppression filtre espèce actuel</string>
+	<string name="groupselection_filtre_supprime">Filtre espèce supprimé</string>
 	<!-- End of user code
 	-->
 </resources>

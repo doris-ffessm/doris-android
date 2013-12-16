@@ -71,6 +71,7 @@ import java.util.Collection;
 
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.BuildConfig;
 //End of user code
 public class ImagePleinEcran_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
@@ -119,7 +120,9 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteBaseActivity<OrmL
      	viewPager.setCurrentItem(position);
      	
      	// info de debug de Picasso
-     	Picasso.with(this).setDebugging(BuildConfig.DEBUG);
+     	if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debug, false)){
+     		Picasso.with(this).setDebugging(BuildConfig.DEBUG);
+     	}
 		//End of user code
     }
     
