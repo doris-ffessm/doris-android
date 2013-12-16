@@ -149,22 +149,18 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - onResume");
 		// refresh on resume, the preferences and filter may have changed 
 		// TODO peut être qu'il y a moyen de s'abonner aux changements de préférence et de ne le faire que dans ce cas ?
-		ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter();
+		ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter(); 
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if((prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1) != 1) ||
 		   (prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), 0) != 0)){
 			// on a un filtre actif
 	    	String searchedText = inputSearch.getText().toString();
-	    	if(searchedText.isEmpty()){
-	    		// workaround filter problem, if no text searched, then the filter isn't launched, but we need it for filtering group
-	    		// (the google filtering class is quite convinient because it is done asynchronously)
-	    		// so let's search for "*" that'll activate the filter process
-	    		searchedText = "*";
-	    	}
-	        ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(searchedText);
-	        
+	    	if(!searchedText.isEmpty()){
+	    		ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(searchedText);
+	    	}	        
 	        // mise à jour de l'image du bouton de filtre
 	        searchButton.setImageResource(R.drawable.filter_settings_actif_32);
 		}

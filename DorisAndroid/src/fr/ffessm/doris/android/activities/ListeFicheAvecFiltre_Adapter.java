@@ -44,7 +44,9 @@ package fr.ffessm.doris.android.activities;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
@@ -79,6 +81,10 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.sql.SQLException;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.text.StrBuilder;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.Button;
@@ -107,7 +113,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
     private List<Integer> ficheIdList;
     private List<Integer> filteredFicheIdList;
-	LruCache<Integer, Fiche> ficheCache =  new LruCache<Integer, Fiche>(100);
+	LruCache<Integer, Fiche> ficheCache =  new LruCache<Integer, Fiche>(400);
 	private final Object mLock = new Object();
 	private SimpleFilter mFilter;
 	SharedPreferences prefs;
@@ -118,14 +124,15 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	// vide signifie que l'on accepte tout
 	protected ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
 	int filteredZoneGeoId = 0;
+	int filteredGroupeId = 1;
 
 	public ListeFicheAvecFiltre_Adapter(Context context, DorisDBHelper contextDB, int filteredZoneGeoId) {
 		super();
 		this.context = context;
 		this._contextDB = contextDB;
 		this.filteredZoneGeoId = filteredZoneGeoId;
-		updateList();
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		updateList();
 	} 
 	//End of user code
 
@@ -133,11 +140,11 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		super();
 		this.context = context;
 		this._contextDB = contextDB;
-		updateList();
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		updateList();
 	}
 	
-	protected void updateList(){
+	public void updateList(){
 		// Start of user code protected ListeFicheAvecFiltre_Adapter updateList
 		// TODO find a way to query in a lazier way
 		try{
@@ -156,36 +163,53 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				    this.ficheIdList.add(Integer.parseInt(iDString));
 				}
 				
-				/*for(Fiche f : _contextDB.ficheDao){
-					
-					//à investiguer : http://stackoverflow.com/questions/7159816/android-cursor-with-ormlite-to-use-in-cursoradapter
-					//ou querry builder
-					
-					
-					
-					QueryBuilder<Fiche, String> queryBuilder;
-					queryBuilder.selectColumns("_id"); // pour récupérer juste les id
-					queryBuilder.prepare();
-					_contextDB.ficheDao.iterator().
-					this.ficheIdList.add(f);
-				}*/
 				Log.d(LOG_TAG,  "_contextDB.ficheDao.queryForAll() - fin");
 			}
 			else{
-				//Log.d(LOG_TAG,  "_contextDB= "+_contextDB);
-				//Log.d(LOG_TAG,  "_contextDB.fiches_ZonesGeographiquesDao= "+_contextDB.fiches_ZonesGeographiquesDao);
-				Log.d(LOG_TAG,  "_contextDB.ficheDao.queryForEq() - début");
-				List<Fiches_ZonesGeographiques> listeAssoc= _contextDB.fiches_ZonesGeographiquesDao.queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, filteredZoneGeoId);
-				Log.d(LOG_TAG,  "_contextDB.ficheDao.queryForEq() - fin");
-				this.ficheIdList = new ArrayList<Integer>(listeAssoc.size());
-				if(listeAssoc !=  null)	for (Fiches_ZonesGeographiques fiches_ZonesGeographiques : listeAssoc) {
-					if(_contextDB !=null) fiches_ZonesGeographiques.setContextDB(_contextDB);
-					Fiche fiche = fiches_ZonesGeographiques.getFiche();
-					fiche.getPhotoPrincipale(); // bizarre besoin de faire cela ici pour s'assurer que la photo principâle soit bien chargée !?
-					this.ficheIdList.add(fiche.getId());
+				final String queryFichesForZone = "SELECT Fiche_id FROM fiches_ZonesGeographiques WHERE ZoneGeographique_id="+filteredZoneGeoId;
+				Log.d(LOG_TAG,  "queryFichesForZone - début - "+queryFichesForZone);
+				GenericRawResults<String[]> rawResults =
+						_contextDB.ficheDao.queryRaw(queryFichesForZone);
+				this.ficheIdList = new ArrayList<Integer>();
+				for (String[] resultColumns : rawResults) {
+				    String iDString = resultColumns[0];
+				    this.ficheIdList.add(Integer.parseInt(iDString));
 				}
+				Log.d(LOG_TAG,  "queryFichesForZone - fin");
+			}
+			
+			// TODO si filtre espèce actif, récupérer la liste des fiches pour les groupes accepté, puis faire un diff
+			if(prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1) != 1){
+				// récupère la liste des groupes acceptés
+				Groupe searchedGroupe = _contextDB.groupeDao.queryForId(prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1));
+				//Log.d(LOG_TAG, "filter _contextDB="+_contextDB);
+				searchedGroupe.setContextDB(_contextDB);
+				acceptedGroupeId = new ArrayList<Integer>();
+				for (Groupe groupe : OutilsGroupe.getAllSubGroupesForGroupe(searchedGroupe)) {
+					acceptedGroupeId.add(groupe.getId());
+				}
+				StrBuilder queryIdForGroupes = new StrBuilder("SELECT _id FROM fiche WHERE groupe_id IN (");
+				queryIdForGroupes.appendWithSeparators(acceptedGroupeId, ", ");
+				queryIdForGroupes.append(");");
+				Log.d(LOG_TAG,  "queryIdForGroupes = "+queryIdForGroupes);
+				GenericRawResults<String[]> rawResults =
+						_contextDB.ficheDao.queryRaw(queryIdForGroupes.toString());
+				Set<Integer> ficheIdForGroupeList = new HashSet<Integer>();
+				for (String[] resultColumns : rawResults) {
+				    String iDString = resultColumns[0];
+				    ficheIdForGroupeList.add(Integer.parseInt(iDString));
+				}
+				// conserve uniquement les id des fiches qui sont dans les 2 filtres
+				List<Integer> groupFilteredFicheIdList = new ArrayList<Integer>();
+				for(Integer i : this.ficheIdList){
+					if(ficheIdForGroupeList.contains(i)) groupFilteredFicheIdList.add(i);
+				}
+				// remplace la liste par celle filtrée pour les groupes aussi
+				this.ficheIdList = groupFilteredFicheIdList;
 			}
 			this.filteredFicheIdList = this.ficheIdList;
+			
+			
 		} catch (java.sql.SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
 		}
@@ -347,22 +371,19 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	//Start of user code protected additional ListeFicheAvecFiltre_Adapter methods
 	// additional methods
 	public void refreshFilter(){
-		try {
-			Groupe searchedGroupe = _contextDB.groupeDao.queryForId(prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1));
-			//Log.d(LOG_TAG, "filter _contextDB="+_contextDB);
-			searchedGroupe.setContextDB(_contextDB);
-			acceptedGroupeId = new ArrayList<Integer>();
-			for (Groupe groupe : OutilsGroupe.getAllSubGroupesForGroupe(searchedGroupe)) {
-				acceptedGroupeId.add(groupe.getId());
+		
+		int oldFilteredZoneGeoId = filteredZoneGeoId;
+		filteredZoneGeoId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), 0);
+		int oldFilteredGroupeId = filteredGroupeId;
+		filteredGroupeId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);
+		if((oldFilteredZoneGeoId != filteredZoneGeoId) | (oldFilteredGroupeId != filteredGroupeId)){
+			//need full query
+			updateList();
+			if (filteredFicheIdList.size() > 0) {
+				notifyDataSetChanged();
+			} else {
+				notifyDataSetInvalidated();
 			}
-			int oldFilteredZoneGeoId = filteredZoneGeoId;
-			filteredZoneGeoId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), 0);
-			if(oldFilteredZoneGeoId != filteredZoneGeoId){
-				//need full query
-				updateList();
-			}
-		} catch (SQLException e) {
-			Log.e(LOG_TAG, e.getMessage(),e);
 		}
 	}
 	
@@ -375,7 +396,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		// Start of user code protected additional ListeFicheAvecFiltre_Adapter filter code
 		// TODO probablement faire en sorte d'ignorer les accents pour la recherche
 		// chercher séparement les mots (séparés par un blanc) et faire un "ET" 
-		String[] patterns = fr.ffessm.doris.android.sitedoris.Outils.formatStringNormalizer(pattern).toLowerCase().split(" ");
+		String[] patterns = pattern.split(" ");
 		boolean isValid = true;
 		for (String patt : patterns) {
 			if(patt.isEmpty()) continue; // en cas de blanc multiples
@@ -383,29 +404,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 			if(fiche.getTextePourRechercheRapide().contains(patt))
 				continue;
 			else isValid = false;
-		}
-		
-		if(isValid){
-			Groupe groupeFiche = fiche.getGroupe();
-			if(groupeFiche != null)
-			{
-				groupeFiche.setContextDB(_contextDB);
-				if(!acceptedGroupeId.isEmpty() && !acceptedGroupeId.contains(Integer.valueOf(groupeFiche.getId()))){
-					isValid = false;
-				}
-			}
-		}
-		/*if(isValid){
-			// vérifie si la zone doit être filtrée
-			
-			if(filteredZoneGeoId != 0){
-				isValid = false;
-				for(ZoneGeographique zoneFiche : fiche.getZonesGeographiques()){
-					if(zoneFiche.getId() == filteredZoneGeoId) isValid = true;
-					break;
-				}
-			}
-		}*/
+		}		
 		if(isValid) return 1;		
 		else return -1;
 		// End of user code
@@ -438,7 +437,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 					results.count = list.size();
 				}
 			} else {
-				String prefixString = prefix.toString().toLowerCase();
+		// Start of user code protected ListeFicheAvecFiltre_Adapter filter prefix customisation
+				final String prefixString = fr.ffessm.doris.android.sitedoris.Outils.formatStringNormalizer(prefix.toString().toLowerCase());
+		// End of user code
 				boolean sort = sortAfterFilter();
 				final List<Integer> values = ficheIdList;
 				final int count = values.size();
