@@ -109,6 +109,7 @@ import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
@@ -763,7 +764,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
     	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
 
-    	StringBuffer sbTexte = new StringBuffer();
+    	StringBuilder sbTexte = new StringBuilder();
     	sbTexte.append(getContext().getString(R.string.accueil_customview_texte_text));
     	
     	CloseableIterator<DorisDB_metadata> itDorisDB = getHelper().getDorisDB_metadataDao().iterator();
@@ -771,6 +772,30 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     		sbTexte.append(itDorisDB.next().getDateBase());
 		}
     	((TextView) findViewById(R.id.accueil_texte)).setText(sbTexte.toString());
+    	
+    	// recherche précédente
+    	StringBuilder sbRecherchePrecedente = new StringBuilder(); 
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int filtreCourantId = prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1);	        
+		if(filtreCourantId==1){
+			sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreEspece_sans));
+        }
+		else{
+			Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
+			sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec)+" "+groupeFiltreCourant.getNomGroupe().trim());
+		}
+		sbRecherchePrecedente.append("; ");
+		int currentFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
+        if(currentFilterId == -1){
+        	sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreGeographique_sans));
+        }
+        else{
+        	ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
+        	sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec)+" "+currentZoneFilter.getNom().trim());
+        }
+        // TODO rappeler le dernier text recherché
+    	TextView tvRecherchePrecedente = (TextView)findViewById(R.id.accueil_recherche_precedente_details);
+    	tvRecherchePrecedente.setText(sbRecherchePrecedente.toString());
     	
     	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate); 
     	ZoneGeographique zoneToutesZones = new ZoneGeographique();

@@ -23,7 +23,7 @@
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical" >
-			<Button
+			<!--  <Button
 			    android:id="@+id/btnListeFichesAccueil"
 			    android:layout_width="wrap_content"
 			    android:layout_height="30dp"
@@ -37,6 +37,55 @@
 			    android:paddingTop="4dp"
 			    android:text="@string/accueil_customview_listefiches_btn_label"
 			    android:textColor="@android:color/darker_gray" />
+			-->
+			<LinearLayout 
+			    android:id="@+android:id/accueil_recherche_precedente_ll"
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:orientation="horizontal"
+			    android:onClick="onClickBtnListeFiches" >
+			    
+			    <ImageView
+			        android:id="@+id/accueil_recherche_precedente_icon"
+			        android:contentDescription="recherche précédente"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:adjustViewBounds="true"
+			        android:maxHeight="48dip"
+			        android:layout_marginLeft="4dip"
+			        android:layout_marginRight="4dip"
+			        android:layout_marginTop="4dip"
+			        android:src="@drawable/ic_launcher" >
+			    </ImageView>
+			    <RelativeLayout
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content" >
+					
+					<LinearLayout 
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:orientation="vertical" >
+				
+						<TextView
+					        android:id="@+id/accueil_recherche_precedente_label"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:textSize="20sp" 
+					        android:text="@string/accueil_recherche_precedente_label_text">
+					    </TextView>
+					    <TextView
+					        android:id="@+id/accueil_recherche_precedente_details"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:textSize="16sp" >
+					    </TextView>
+					</LinearLayout>
+			
+				</RelativeLayout>
+			</LinearLayout>
+			
+			
+			
 			<LinearLayout
 		        android:id="@+id/accueil_navigation_zones_layout"
 		        android:layout_width="fill_parent"

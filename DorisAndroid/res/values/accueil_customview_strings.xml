@@ -9,6 +9,9 @@
 	
 	<string name="accueil_etat_hors_ligne_titre_text">Etat mode hors ligne</string>
 		
+	<string name="accueil_recherche_precedente_label_text">Recherche précédente</string>
+	<string name="accueil_recherche_precedente_filtreEspece_sans">Toutes les espèces</string>
+	<string name="accueil_recherche_precedente_filtreGeographique_sans">Toutes les zones géographiques</string>
 	<string name="accueil_customview_zonegeo_touteszones">Toutes Zones</string>
 	
 	<string name="accueil_customview_logo1_icone">@drawable/logo_doris</string>
