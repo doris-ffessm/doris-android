@@ -120,7 +120,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	implements DataChangedListener
 //End of user code
 {
-
+	
 	//Start of user code constants Accueil_CustomViewActivity
 //	static final int TELECHARGE_FICHE_MENU_ID = 1;	
 	static final int TELECHARGE_PHOTO_FICHES_MENU_ID = 2;
@@ -732,7 +732,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	    	progressBarZoneGenerale.pbProgressBar_running.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Toast.makeText(context, "Arrêt des téléchargements", Toast.LENGTH_LONG).show();
+					Toast.makeText(context, "Arrêt des téléchargements demandé", Toast.LENGTH_LONG).show();
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 					
 					ProgressBar pbRunningBarLayout =  (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);
@@ -743,7 +743,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 				@Override
 				public void onClick(View v) {
 					SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-					ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), 0);
+					ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), -1);
 			        ed.commit();
 					startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
 				}

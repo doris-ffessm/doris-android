@@ -196,6 +196,8 @@ public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer,
 	protected void onCancelled() {
 		super.onCancelled();
 		mNotificationHelper.completed();
+		// Start of user code TelechargePhotosFiche onCancelled
+		// End of user code
 	}
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it

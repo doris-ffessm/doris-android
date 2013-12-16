@@ -557,6 +557,17 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	protected void onCancelled() {
 		super.onCancelled();
 		mNotificationHelper.completed();
+		// Start of user code TelechargePhotosFiches onCancelled
+		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = null;
+        // termine de notifier les vues qui pouvaient être interressées
+        if(listener != null ){
+    		try{
+    			listener.dataHasChanged(null);
+    		}
+    		catch(Exception e){
+    		}
+    	}
+		// End of user code
 	}
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
@@ -564,6 +575,14 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		// Start of user code TelechargePhotosFiches onPostExecute
         // retire l'activité qui est maintenant finie
         DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = null;
+        // termine de notifier les vues qui pouvaient être interressées
+        if(listener != null ){
+    		try{
+    			listener.dataHasChanged(null);
+    		}
+    		catch(Exception e){
+    		}
+    	}
 		// End of user code
     }
 

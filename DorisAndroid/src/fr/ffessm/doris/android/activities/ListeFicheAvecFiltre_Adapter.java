@@ -44,9 +44,7 @@ package fr.ffessm.doris.android.activities;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
@@ -81,8 +79,9 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.text.StrBuilder;
 
 import android.graphics.Bitmap;
@@ -113,7 +112,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
     private List<Integer> ficheIdList;
     private List<Integer> filteredFicheIdList;
-	LruCache<Integer, Fiche> ficheCache =  new LruCache<Integer, Fiche>(400);
+	LruCache<Integer, Fiche> ficheCache =  new LruCache<Integer, Fiche>(100);
 	private final Object mLock = new Object();
 	private SimpleFilter mFilter;
 	SharedPreferences prefs;
@@ -144,7 +143,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		updateList();
 	}
 	
-	public void updateList(){
+	protected void updateList(){
 		// Start of user code protected ListeFicheAvecFiltre_Adapter updateList
 		// TODO find a way to query in a lazier way
 		try{
@@ -178,7 +177,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				Log.d(LOG_TAG,  "queryFichesForZone - fin");
 			}
 			
-			// TODO si filtre espèce actif, récupérer la liste des fiches pour les groupes accepté, puis faire un diff
+			// si filtre espèce actif, récupérer la liste des fiches pour les groupes accepté, puis faire un diff avec le filtre précédent
 			if(prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1) != 1){
 				// récupère la liste des groupes acceptés
 				Groupe searchedGroupe = _contextDB.groupeDao.queryForId(prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1));

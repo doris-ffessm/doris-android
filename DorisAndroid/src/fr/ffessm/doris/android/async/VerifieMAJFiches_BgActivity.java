@@ -125,6 +125,8 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 	protected void onCancelled() {
 		super.onCancelled();
 		mNotificationHelper.completed();
+		// Start of user code VerifieMAJFiches onCancelled
+		// End of user code
 	}
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it

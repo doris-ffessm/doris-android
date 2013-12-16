@@ -150,8 +150,8 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		super();
 		this.context = context;
 		this._contextDB = contextDB;
-		updateList();
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		updateList();
 	}
 	
 	protected void updateList(){
