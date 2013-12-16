@@ -92,7 +92,6 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     
     // Start of user code additional attribute declarations TelechargePhotosFiches_BgActivity
     
-    protected DataChangedListener listener;
     
     
     /**
@@ -178,25 +177,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		
 	}
 
-		
-    public TelechargePhotosFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper, DataChangedListener listener){
-    	String notificationTitle = context.getString(R.string.bg_notifTitle_initial);
-    	String initialTickerText = context.getString(R.string.bg_notifText_initial);
-        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
-        this.dbHelper = dbHelper;
-		this.context = context;
-		this.listener = listener;
-    }
+	
     
-    public void removeListener(DataChangedListener listener){
-    	listener= null;
-    }
-    public void removeAllListeners(){
-    	listener= null;
-    }
-    public void addListener(DataChangedListener listener){
-    	this.listener= listener;
-    }
 	// End of user code
     
 	/** constructor */
@@ -228,15 +210,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         	Log.d(LOG_TAG, "pas connexion internet : annulation du téléchargement");
         	return 0;
         }
-    	if(listener != null ){
-    		try{
-    			listener.dataHasChanged(null);
-    		}
-    		catch(Exception e){
-    			Log.d(LOG_TAG, "Listener n'est plus à l'écoute, arrét du téléchargement");
-    			return nbPhotoRetreived;
-    		}
-    	}
+    	DorisApplicationContext.getInstance().notifyDataHasChanged(null);
     	DorisDBHelper dorisDBHelper = dbHelper.getDorisDBHelper();
     	
     	String notificationTitle = "";
@@ -534,14 +508,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         
 		// Start of user code end of task TelechargePhotosFiches_BgActivity
     }finally{
-    	if(listener != null ){
-    		try{
-    			listener.dataHasChanged(null);
-    		}
-    		catch(Exception e){
-    			Log.d(LOG_TAG, "Listener n'est plus à l'écoute, arrét du téléchargement");
-    		}
-    	}
+    	DorisApplicationContext.getInstance().notifyDataHasChanged(null);
     	
     	mNotificationHelper.completed();
     }
@@ -560,13 +527,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		// Start of user code TelechargePhotosFiches onCancelled
 		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = null;
         // termine de notifier les vues qui pouvaient être interressées
-        if(listener != null ){
-    		try{
-    			listener.dataHasChanged(null);
-    		}
-    		catch(Exception e){
-    		}
-    	}
+		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 		// End of user code
 	}
     protected void onPostExecute(Integer result)    {
@@ -576,13 +537,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         // retire l'activité qui est maintenant finie
         DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = null;
         // termine de notifier les vues qui pouvaient être interressées
-        if(listener != null ){
-    		try{
-    			listener.dataHasChanged(null);
-    		}
-    		catch(Exception e){
-    		}
-    	}
+        DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 		// End of user code
     }
 
@@ -620,14 +575,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 				// laisse un peu de temps entre chaque téléchargement 
 		        Thread.sleep(10);
 		        // notify les listener toutes les 10 photos
-		        if(((nbPhotoRetreived % 10) == 0) && listener != null){
-		        	try{
-		    			listener.dataHasChanged(null);
-		    		}
-		    		catch(Exception e){
-		    			Log.d(LOG_TAG, "Listener n'est plus à l'écoute, Arrét du téléchargement");
-		    			return nbPhotoRetreived;
-		    		}
+		        if(((nbPhotoRetreived % 10) == 0) ){
+		        	DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 		    		// vérifie de temps en temps la connexion
 		    		if(!isOnline()){
 		            	Log.d(LOG_TAG, "pas connexion internet : Arret du téléchargement");

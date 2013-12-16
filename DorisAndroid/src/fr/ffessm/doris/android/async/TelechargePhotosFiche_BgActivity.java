@@ -54,6 +54,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports TelechargePhotosFiche_BgActivity
 import java.util.ArrayList;
@@ -79,15 +80,13 @@ public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer,
     // Start of user code additional attribute declarations TelechargePhotosFiche_BgActivity
     
     protected Fiche fiche;
-    protected DataChangedListener listener;
     
-    public TelechargePhotosFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper, Fiche fiche, DataChangedListener listener){
+    public TelechargePhotosFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper, Fiche fiche){
 		String initialTickerText = context.getString(R.string.analysefiches00_bg_initialTickerText);
 		String notificationTitle = context.getString(R.string.analysefiches00_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
         this.dbHelper = dbHelper;
 		this.context = context;
-		this.listener = listener;
 		this.fiche = fiche;
     }
 	// End of user code
@@ -156,14 +155,8 @@ public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer,
     			// laisse un peu de temps entre chaque téléchargement 
                 //Thread.sleep(10);
                 // notify les listener toutes les 2 photos
-                if(((nbPhotoRetreived % 2) == 0) && listener != null){
-                	try{
-            			listener.dataHasChanged(null);
-            		}
-            		catch(Exception e){
-            			Log.d(LOG_TAG, "Listener n'est plus à l'écoute, Arrét du téléchargement");
-            			return nbPhotoRetreived;
-            		}
+                if(((nbPhotoRetreived % 2) == 0) ){
+                	DorisApplicationContext.getInstance().notifyDataHasChanged(null);
             	}
     		//} catch (InterruptedException e) {
     		//	Log.i(LOG_TAG, e.getMessage(), e);
@@ -180,8 +173,8 @@ public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer,
 		// End of user code
         
 		// Start of user code end of task TelechargePhotosFiche_BgActivity
-    	if(listener != null && nbPhotoRetreived != 0){
-    		listener.dataHasChanged(null);
+    	if( nbPhotoRetreived != 0){
+    		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
     	}
 		// return the number of item processed
         return nbPhotoRetreived;

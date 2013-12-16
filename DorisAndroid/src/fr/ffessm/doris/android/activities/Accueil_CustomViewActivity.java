@@ -207,7 +207,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         	// une tache précédente est en cours, on se réabonne aux évènements 
         	// (on est probablement sur une rotation d'écran)
         	Log.d(LOG_TAG, "onCreate() - une tache précédente est en cours, on se réabonne aux évènements");
-        	DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.addListener(this);
+        	
         }
         else{
 	        // pas de tache précédente en cours
@@ -220,11 +220,11 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	        		|| (! wifiOnly && connectionType == Outils.ConnectionType.GSM)){
 		
         		Log.d(LOG_TAG, "onCreate() - Lancement préchargement");
-        		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+        		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 
 	        }
         }
-        
+        DorisApplicationContext.getInstance().addDataChangeListeners(this);
 
 		//End of user code
     }
@@ -242,9 +242,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     @Override
     protected void onDestroy(){
     	Log.d(LOG_TAG, "onDestroy()");
+    	 DorisApplicationContext.getInstance().removeDataChangeListeners(this);
     	TelechargePhotosFiches_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;
-    	if(telechargePhotosFiches_BgActivity != null && telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING){
-    		((TelechargePhotosFiches_BgActivity)telechargePhotosFiches_BgActivity).removeListener(this);    		
+    	if(telechargePhotosFiches_BgActivity != null && telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING){ 		
     		// TODO déterminer si c'est une rotation ou une vrai fin de l'appli pour tuer les taches background ou pas
     		Log.d(LOG_TAG, "onDestroy() - isFinishing() : "+isFinishing());
     		if(isFinishing())
@@ -874,7 +874,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 				TelechargePhotosFiches_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
 				if(telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING)
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = 
-						(TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
+						(TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 				break;
 		/*	case VERIFIE_NOUVELLES_FICHES_MENU_ID:
 				new VerifieNouvellesFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
