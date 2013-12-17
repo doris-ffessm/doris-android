@@ -499,6 +499,28 @@ public class SiteDoris {
 		return listeUpdated;
     }
     
-
+    public static Participant getParticipantFromListeParticipants(List<Participant> listeParticipants, int numParticipant){
+    	log.trace("getParticipantFromListeParticipants() - Début");
+    	log.debug("getParticipantFromListeParticipants() - numParticipant : "+numParticipant);
+    	
+    	// Contrôle basique des entrées
+    	if (numParticipant == 0) {
+    		log.error("getParticipantFromListeParticipants() - numParticipant ne peut être égal à 0");
+    		return null;
+    	}
+    	
+    	for (Participant participant : listeParticipants) {
+    	
+    		if ( participant.getId() == numParticipant) {
+    			log.debug("getParticipantFromListeParticipants() - Participant Trouvé : "+participant.getId());
+    			log.trace("getParticipantFromListeParticipants() - Fin");
+    			return participant;
+    		}
+    		
+    	}
+    	
+    	log.debug("getParticipantFromListeParticipants() - Fin (sans avoir trouvé de Participant correspondant)");
+		return null;
+    }
     
 }

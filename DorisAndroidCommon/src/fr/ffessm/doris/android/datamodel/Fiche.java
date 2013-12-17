@@ -219,7 +219,7 @@ public class Fiche {
 	
 	
 	
-	public void getFicheFromHtml(String htmlFiche, List<Groupe> listeGroupes) throws SQLException{
+	public void getFicheFromHtml(String htmlFiche, List<Groupe> listeGroupes, List<Participant> listeParticipants) throws SQLException{
 		log.trace("getFicheFromHtml() - Début");
 		
     	int i;
@@ -512,7 +512,12 @@ public class Fiche {
 										intervenantRef = ligne.trim().replaceAll(".*contact_fiche.*contact_numero=(.*)>", "$1");
 										log.debug("getFicheFromHtml() - Ref Intervenant: " + intervenantRef);
 										
-										// TODO : C'est ici qu'il faudra ajouter la MAJ de la Base
+										Participant participant = SiteDoris.getParticipantFromListeParticipants(listeParticipants, Integer.valueOf(intervenantRef) );
+										if (participant != null) {
+											IntervenantFiche intervenantFiche = new IntervenantFiche(  participant, intervenantQualite.ordinal());
+											intervenantFiche.setFiche(this);
+											_contextDB.intervenantFicheDao.create(intervenantFiche);
+										}				
 									}
 									
 								}

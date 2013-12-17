@@ -105,6 +105,14 @@ public class IntervenantFiche {
 	protected Fiche fiche;
 
 	// Start of user code IntervenantFiche additional user properties
+	
+	public IntervenantFiche(Participant participant, int roleIntervenant) {
+		super();
+		this.participant = participant;
+		this.roleIntervenant = roleIntervenant;
+	} 
+	
+	
 	// End of user code
 	
 	public IntervenantFiche() {} // needed by ormlite
