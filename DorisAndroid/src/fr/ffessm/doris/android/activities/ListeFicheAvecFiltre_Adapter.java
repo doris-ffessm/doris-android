@@ -319,7 +319,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         
         TextView btnEtatFiche = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow__btnEtatFiche);
         switch(entry.getEtatFiche()){
-        case 1:
+        case 1: case 2 : case 3 :
         	btnEtatFiche.setVisibility(View.VISIBLE);
         	btnEtatFiche.setText(" R ");
         	btnEtatFiche.setOnClickListener(new OnClickListener() {

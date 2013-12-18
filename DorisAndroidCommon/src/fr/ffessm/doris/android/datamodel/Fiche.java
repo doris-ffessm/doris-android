@@ -201,8 +201,8 @@ public class Fiche {
 	protected Groupe groupe;
 
 	/** intervenants sur une fiche */ 
-//	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
-//	protected ForeignCollection<IntervenantFiche> intervenants;
+	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
+	protected ForeignCollection<IntervenantFiche> intervenants;
 
 	// Start of user code Fiche additional user properties
 	
@@ -923,9 +923,9 @@ public class Fiche {
 		this.groupe = groupe;
 	}			
 	/** intervenants sur une fiche */
-/*	public Collection<IntervenantFiche> getIntervenants() {
+	public Collection<IntervenantFiche> getIntervenants() {
 		return this.intervenants;
-	}	*/				
+	}				
 
 
 

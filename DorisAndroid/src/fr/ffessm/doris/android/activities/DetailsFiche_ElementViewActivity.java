@@ -90,6 +90,8 @@ import java.util.List;
 import fr.ffessm.doris.android.activities.view.FoldableClickListener;
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
+import fr.ffessm.doris.android.datamodel.IntervenantFiche;
+import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
@@ -170,8 +172,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer)entry.getEtatFiche()).toString());	
 		TextView btnEtatFiche = (TextView)  findViewById(R.id.detailsfiche_elementview_etatfiche);
 		final DetailsFiche_ElementViewActivity context = this;
-        switch(entry.getEtatFiche()){
-        case 1:
+        
+		//1-Fiche en cours de rédaction;2-Fiche en cours de rédaction;3-Fiche en cours de rédaction;4-Fiche Publiée;5-Fiche proposée
+		switch(entry.getEtatFiche()){
+        case 1 : case 2 : case 3 :
         	btnEtatFiche.setVisibility(View.VISIBLE);
         	btnEtatFiche.setText(" R ");
         	btnEtatFiche.setOnClickListener(new OnClickListener() {
@@ -193,7 +197,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         	break;
         case 4:
         	btnEtatFiche.setVisibility(View.GONE);
-        	
         	break;
         default:
         	btnEtatFiche.setVisibility(View.VISIBLE);
@@ -288,9 +291,20 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			sbCreditText.append(entry.getDateCreation()+"\n");
 			sbCreditText.append(getString(R.string.detailsfiche_elementview_datemodification_label));
 			sbCreditText.append(entry.getDateModification());
+			
+			//TODO : Toujours vide ?
+			sbCreditText.append("\n - "+entry.getIntervenants().size());
+			
+			for (IntervenantFiche intervenant : entry.getIntervenants()) {
+				sbCreditText.append("\n"+intervenant.getParticipant().getNom());
+				sbCreditText.append(" - "+intervenant.getId());
+				sbCreditText.append(" - "+intervenant.getRoleIntervenant());
+			}
+			
 			SpannableString richtext = new SpannableString(sbCreditText.toString());
 			//richtext.setSpan(new RelativeSizeSpan(2f), 0, urlString.length(), 0);
 			richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
+			
 			addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_credit_label),richtext);
 			
 			
