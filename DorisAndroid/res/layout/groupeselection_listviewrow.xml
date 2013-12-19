@@ -21,9 +21,10 @@
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content" >
 		
-		<LinearLayout 
+		<LinearLayout
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
+		    android:layout_toLeftOf="@+id/groupeselection_btnHasChildGroup"
 		    android:orientation="vertical" >
 	
 			<TextView
@@ -42,7 +43,7 @@
 		<!-- Start of user code protected
 			-->
 		<ImageView
-	        android:id="@+id/groupeselection_has_child_group"
+	        android:id="@+id/groupeselection_btnHasChildGroup"
 	        android:contentDescription="Groupe contient des sous groupes"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"

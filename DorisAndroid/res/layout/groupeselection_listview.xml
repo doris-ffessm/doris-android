@@ -25,10 +25,8 @@
             android:layout_height="30dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/button_background"
-            android:paddingBottom="2dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingTop="2dp"
             android:text="Button"
             android:textColor="@android:color/darker_gray" />
     </LinearLayout>

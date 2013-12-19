@@ -784,7 +784,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 			Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
 			sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec)+" "+groupeFiltreCourant.getNomGroupe().trim());
 		}
-		sbRecherchePrecedente.append("; ");
+		sbRecherchePrecedente.append(" ; ");
 		int currentFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
         if(currentFilterId == -1 || currentFilterId == 0){ // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
         	sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreGeographique_sans));

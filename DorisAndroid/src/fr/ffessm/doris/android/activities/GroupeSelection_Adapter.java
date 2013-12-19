@@ -53,6 +53,7 @@ import fr.ffessm.doris.android.datamodel.Groupe;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -250,7 +251,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
         
         
         // ajout de l'image "expand" si contient des sous groupes
-        ImageView ivHasChildGroup = (ImageView) convertView.findViewById(R.id.groupeselection_has_child_group);
+        ImageView ivHasChildGroup = (ImageView) convertView.findViewById(R.id.groupeselection_btnHasChildGroup);
         
         if(entry.getGroupesFils().size() > 0){
         	ivHasChildGroup.setVisibility(View.VISIBLE);
@@ -311,7 +312,6 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			layoutParams.leftMargin =2;
 			layoutParams.rightMargin = 2;
 			backToParentButton.setLayoutParams(layoutParams);
-			backToParentButton.setMaxHeight(30);
 			backToParentButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -333,7 +333,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			layoutParams.leftMargin =2;
 			layoutParams.rightMargin = 2;
 			backToParentButton.setLayoutParams(layoutParams);
-			backToParentButton.setHeight(30);
+			backToParentButton.setHeight(BitmapFactory.decodeResource(context.getResources(),R.drawable.arbre_phylogenetique_gris).getHeight());
 			backToParentButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {

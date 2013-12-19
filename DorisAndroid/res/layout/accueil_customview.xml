@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:padding="3dip"
 		android:text="@string/accueil_customview_texte_text"/>
-
+	<View style="@style/Separateur"/>
 	<ScrollView
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
@@ -92,11 +92,12 @@
 		        android:layout_height="wrap_content"
 		        android:orientation="vertical" >
 	        </LinearLayout>
-
+			<View style="@style/Separateur"/>
 			<TextView
 		        android:id="@+id/accueil_etat_hors_ligne_titre"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="4dip"
 		        android:padding="3dip"
 	    		android:textAppearance="?android:attr/textAppearanceMedium" 
 				android:text="@string/accueil_etat_hors_ligne_titre_text"/>

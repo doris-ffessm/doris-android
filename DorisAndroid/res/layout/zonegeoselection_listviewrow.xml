@@ -3,60 +3,70 @@
     android:id="@+android:id/zonegeoselection_listviewrow"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
+    android:orientation="vertical" >
     
-    <ImageView
-        android:id="@+id/zonegeoselection_listviewrow_icon"
-        android:contentDescription="ZoneGeographique icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:maxHeight="48dip"
-        android:layout_marginLeft="4dip"
-        android:layout_marginRight="4dip"
-        android:layout_marginTop="4dip"
-        android:src="@drawable/ic_launcher" >
-    </ImageView>
-    <RelativeLayout
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content" >
-		
-		<LinearLayout 
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:orientation="vertical" >
-	
-			<TextView
-		        android:id="@+id/zonegeoselection_listviewrow_label"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textSize="20sp" >
-		    </TextView>
-		    <TextView
-		        android:id="@+id/zonegeoselection_listviewrow_details"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textSize="16sp" >
-		    </TextView>
-		</LinearLayout>
-		<!-- Start of user code protected
-			-->		
-		<ImageButton
-		    android:id="@+id/zonegeoselection__selectBtn"
-		    android:layout_width="wrap_content"
+    <View style="@style/Separateur"/>
+    
+    <LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="horizontal" >
+    
+    	<ImageView
+	        android:id="@+id/zonegeoselection_listviewrow_icon"
+	        android:contentDescription="ZoneGeographique icon"
+	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_alignParentRight="true"
-	        android:layout_marginRight="0dp"
-	        android:padding="5dp"
-	        android:layout_margin="0dp"
-		    android:text=""
-		    android:drawablePadding="0dp"
-		    android:src="@android:drawable/ic_menu_set_as"
-		    android:scaleType="fitCenter"
-	        android:background="@android:color/transparent"
-		     />
+	        android:adjustViewBounds="true"
+	        android:maxHeight="48dip"
+	        android:layout_marginLeft="4dip"
+	        android:layout_marginRight="4dip"
+	        android:layout_marginTop="4dip"
+	        android:src="@drawable/ic_launcher" >
+	    </ImageView>
+	    <RelativeLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content" >
+			
+			<LinearLayout 
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical" >
+		
+				<TextView
+			        android:id="@+id/zonegeoselection_listviewrow_label"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textSize="20sp" >
+			    </TextView>
+			    <TextView
+			        android:id="@+id/zonegeoselection_listviewrow_details"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textSize="16sp" >
+			    </TextView>
+			</LinearLayout>
+			<!-- Start of user code protected
+				-->		
+			<ImageButton
+			    android:id="@+id/zonegeoselection__selectBtn"
+			    android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentRight="true"
+		        android:layout_marginRight="0dp"
+		        android:padding="5dp"
+		        android:layout_margin="0dp"
+			    android:text=""
+			    android:drawablePadding="0dp"
+			    android:src="@android:drawable/ic_menu_set_as"
+			    android:scaleType="fitCenter"
+		        android:background="@android:color/transparent"
+			     />
 
 		<!-- End of user code
 			-->
 	</RelativeLayout>
+	</LinearLayout>
 </LinearLayout>
