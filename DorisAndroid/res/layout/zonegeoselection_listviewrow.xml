@@ -39,13 +39,15 @@
 			        android:id="@+id/zonegeoselection_listviewrow_label"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
-			        android:textSize="20sp" >
+			        android:textAppearance="?android:attr/textAppearanceMedium"
+				    android:textColor="?android:attr/textColorPrimary">
 			    </TextView>
 			    <TextView
 			        android:id="@+id/zonegeoselection_listviewrow_details"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
-			        android:textSize="16sp" >
+			        android:textAppearance="?android:attr/textAppearanceSmall"
+       				android:textColor="?android:attr/textColorSecondary">
 			    </TextView>
 			</LinearLayout>
 			<!-- Start of user code protected

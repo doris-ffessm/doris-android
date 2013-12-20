@@ -409,10 +409,12 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         FoldableClickListener foldable = new FoldableClickListener(contenuText, foldButton);
         allFoldable.add(foldable);
         foldButton.setOnClickListener(foldable);
-        titreText.setOnClickListener(foldable);
+        
+        LinearLayout titreLinearLayout = (LinearLayout) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_linearlayout);
+        titreLinearLayout.setOnClickListener(foldable);
         // enregistre pour réagir au click long
         registerForContextMenu(foldButton);
-        registerForContextMenu(titreText);
+        registerForContextMenu(titreLinearLayout);
         
         containerLayout.addView(convertView);
     }

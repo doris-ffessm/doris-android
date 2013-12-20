@@ -63,6 +63,7 @@
 		                android:text="Nom Commun"
 		                android:padding="3dip"
 		                android:textAppearance="?android:attr/textAppearanceMedium"
+		                android:textColor="?android:attr/textColorPrimary"
 		                />
 
 		            <TextView
@@ -71,6 +72,8 @@
 			            android:gravity="right"
 		                android:text="9999"
 			            android:padding="3dip"
+			            android:textAppearance="?android:attr/textAppearanceSmall"
+            			android:textColor="?android:attr/textColorSecondary"
 			            />
 		        </TableRow>
 
@@ -103,7 +106,7 @@
 		            	android:layout_width="wrap_content"
 	        			android:layout_marginRight="2dp"
 	        			android:background="@drawable/button_background"
-	        			android:textColor="@android:color/darker_gray"
+	        			android:textColor="?android:attr/textColorSecondary"
 	        			android:text="EtatFiche"/>
 					</LinearLayout>
 

@@ -6,6 +6,7 @@
     android:orientation="vertical" >
     
 	<LinearLayout
+	    android:id="@+id/detailsfiche_elementview_fold_unflod_section_linearlayout"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginTop="2dp"
@@ -29,7 +30,8 @@
 		    android:layout_marginTop="4dp"
 		    android:layout_marginLeft="4dp"
 		    android:text="Titre"
-		    android:textSize="16sp"/>
+		    android:textAppearance="?android:attr/textAppearanceMedium"
+		    android:textColor="?android:attr/textColorPrimary"/>
     </LinearLayout>
 
     <TextView
@@ -39,6 +41,8 @@
         android:layout_marginBottom="2dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="4dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+		android:textColor="?android:attr/textColorSecondary"
         android:text="Contenu" />
 
     <View style="@style/Separateur"/>

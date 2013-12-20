@@ -15,12 +15,15 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:textAppearance="?android:attr/textAppearanceMedium"
+	        android:textColor="?android:attr/textColorPrimary"
 	        android:text="@string/etatmodehorsligne_customview_titre_text" />
 	
 	    <TextView
 	        android:id="@+id/etatmodehorsligne_customview_description_textView"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="?android:attr/textColorSecondary"
 	        android:text="@string/etatmodehorsligne_customview_description_text" />
 	    
 	    
@@ -28,6 +31,8 @@
 	        android:id="@+id/etatmodehorsligne_customview_description_textView2"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="?android:attr/textColorSecondary"
 	        android:text="@string/etatmodehorsligne_customview_description_text_2" />
 	    
 		
@@ -36,18 +41,22 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:textAppearance="?android:attr/textAppearanceMedium"
+	        android:textColor="?android:attr/textColorPrimary"
 	        android:text="@string/etatmodehorsligne_customview_etat_base_titre_text" />
 	
 	    <TextView
 	        android:id="@+id/etatmodehorsligne_customview_etat_base_description_textView"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="?android:attr/textColorSecondary"
 	        android:text="@string/etatmodehorsligne_customview_etat_base_description_text" />
 	    <TextView
 	        android:id="@+id/etatmodehorsligne_customview_etat_photos_titre_textView"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:textAppearance="?android:attr/textAppearanceMedium"
+	        android:textColor="?android:attr/textColorPrimary"
 	        android:text="@string/etatmodehorsligne_customview_etat_photos_titre_text" />
 	    <LinearLayout
 		        android:id="@+id/etatmodehorsligne_customview_avancements_layout"

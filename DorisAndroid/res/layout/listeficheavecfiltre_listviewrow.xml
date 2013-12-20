@@ -7,15 +7,16 @@
     
     <ImageView
         android:id="@+id/listeficheavecfiltre_listviewrow_icon"
-        android:contentDescription="Fiche icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:maxHeight="48dip"
         android:layout_marginLeft="4dip"
         android:layout_marginRight="4dip"
         android:layout_marginTop="4dip"
+        android:adjustViewBounds="true"
+        android:contentDescription="Fiche icon"
+        android:maxHeight="48dip"
         android:src="@drawable/ic_launcher" >
+
     </ImageView>
     <RelativeLayout
 		    android:layout_width="match_parent"
@@ -30,13 +31,15 @@
 		        android:id="@+id/listeficheavecfiltre_listviewrow_label"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:textSize="20sp" >
+		        android:textAppearance="?android:attr/textAppearanceMedium"
+			    android:textColor="?android:attr/textColorPrimary" >
 		    </TextView>
 		    <TextView
 		        android:id="@+id/listeficheavecfiltre_listviewrow_details"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:textSize="16sp" >
+		        android:textAppearance="?android:attr/textAppearanceSmall"
+   				android:textColor="?android:attr/textColorSecondary">
 		    </TextView>
 		</LinearLayout>
 		<!-- Start of user code protected
@@ -52,7 +55,7 @@
 	        android:paddingTop="2dp"
 	        android:paddingBottom="2dp"
 	        android:background="@drawable/button_background"
-	        android:textColor="@android:color/darker_gray" >
+	        android:textColor="?android:attr/textColorSecondary" >
 		</TextView>
 
 		<!-- End of user code
