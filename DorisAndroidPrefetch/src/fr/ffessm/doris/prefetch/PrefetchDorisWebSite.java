@@ -139,43 +139,25 @@ public class PrefetchDorisWebSite {
 		
 		if (action.equals("TEST")) {
 			log.debug("doMain() - Début TEST");
+						
+			String listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeFiches.html";
+			log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
+				
+			String urlFiche = "http://doris.ffessm.fr/fiche2.asp?fiche_numero=1260";
+			String fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche1260.html";
 			
-			ConnectionSource connectionSource = null;
-			try {
+			if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
+				log.info("OK - fiche2");
+			} else {
+				log.info("KO - fiche2");
+				urlFiche = "http://doris.ffessm.fr/fiche3.asp?nomcommun=Corallimorphaire jongleur";
 				
-				// create our data-source for the database
-				connectionSource = new JdbcConnectionSource(DATABASE_URL);
-				dbContext = new DorisDBHelper();
-				dbContext.ficheDao = DaoManager.createDao(connectionSource, Fiche.class);
-				
-				String listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeFiches.html";
-				log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
-				
-				String contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
-
-				final List<Fiche> listFicheFromHTML = SiteDoris.getListeFiches(contenuFichierHtml);
-				log.info("Creation de "+listFicheFromHTML.size()+" fiches dans la base...");
-				
-				final List<Fiche> listeFiches = SiteDoris.getListeFichesUpdated(dbContext.ficheDao.queryForAll(), listFicheFromHTML);
-				
-				log.debug("doMain() - listeFiches.size : "+listeFiches.size());
-				TransactionManager.callInTransaction(connectionSource,
-						new Callable<Void>() {
-							public Void call() throws Exception {
-								for (Fiche fiche : listeFiches){
-									dbContext.ficheDao.create(fiche);
-								}
-								return null;
-						    }
-						});
-				
-			} finally {
-				// destroy the data source which should close underlying connections
-				if (connectionSource != null) {
-					connectionSource.close();
+				if (Outils.getFichierUrl(Outils.formatStringNormalizer(urlFiche).replace(" ", "%20"), fichierLocalFiche)) {
+					log.info("OK - fiche3");
+				} else {
+					log.info("KO - fiche3");
 				}
 			}
-
 
 			log.debug("doMain() - Fin TEST");
 		} else {
@@ -394,11 +376,23 @@ public class PrefetchDorisWebSite {
 						String fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+".html";
 						if (! action.equals("NODWNLD")) {
 							if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
+								
 								contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
 							
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
-								continue;
+								
+								urlFiche = "http://doris.ffessm.fr/fiche3.asp?nomcommun="+fiche.getNomCommun();
+								log.error("=> Tentative sur : "+urlFiche);
+								if (Outils.getFichierUrl(Outils.formatStringNormalizer(urlFiche).replace(" ", "%20"), fichierLocalFiche)) {
+									
+									contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
+									
+								} else {
+									log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
+									continue;
+								}
+	
 							}
 						} else {
 							// NODWNLD

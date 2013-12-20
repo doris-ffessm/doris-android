@@ -164,9 +164,9 @@ public class Constants {
 		case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
 			return "Fleuves, rivières, lacs et étangs, ...";
 		case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
-			return "La Réunion, Mayotte, Nouvelle-Calédonie, Polynésie et autres...";
+			return "La Réunion, Mayotte, Nouvelle-Calédonie, Polynésie et autres";
 		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
-			return "Guadeloupe, Martinique et autress";
+			return "Guadeloupe, Martinique et autres";
 		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
 			return "Côte est du Canada, embouchure du St Laurent, archipel de St Pierre-et-Miquelon";
 		default:
