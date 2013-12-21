@@ -210,7 +210,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         	// une tache précédente est en cours, on se réabonne aux évènements 
         	// (on est probablement sur une rotation d'écran)
         	Log.d(LOG_TAG, "onCreate() - une tache précédente est en cours, on se réabonne aux évènements");
-        	
         }
         else{
 	        // pas de tache précédente en cours
@@ -261,16 +260,23 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     protected View createNavigationZoneView(ZoneGeographique zone){
     	LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewZone = inflater.inflate(R.layout.zonegeoselection_listviewrow, null);
+        
         TextView tvLabel = (TextView) viewZone.findViewById(R.id.zonegeoselection_listviewrow_label);
         tvLabel.setText(zone.getNom());
+        
         TextView tvLDetails = (TextView) viewZone.findViewById(R.id.zonegeoselection_listviewrow_details);
         tvLDetails.setText(zone.getDescription());
+        
         viewZone.findViewById(R.id.zonegeoselection__selectBtn).setVisibility(View.GONE);
         
         String uri = Outils.getZoneIcone(this.getApplicationContext(), zone.getId()); 
         int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
-        ImageView ivIcon = (ImageView)viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
-        ivIcon.setImageResource(imageZone);   
+        
+        ImageView ivIcone = (ImageView)viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
+        ivIcone.setImageResource(imageZone);   
+        int iconeZine = Integer.valueOf(Outils.getParamString(this.getApplicationContext(), R.string.pref_key_list_icon_size, "128"));
+	    ivIcone.setMaxHeight(iconeZine);
+        
         
         final Context context = this;
         final int zoneId = zone.getId();
@@ -445,84 +451,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	
     	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Fin");
 	}
-	/*
-	protected void updateProgressBarZone(ZoneGeographique inZoneGeo, ProgressBarZone progressBarZone){
-		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
-		   
-		   String uri = Outils.getZoneIcone(this.getApplicationContext(), inZoneGeo.getId());
-		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
-		   int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
-		   
-		   boolean affichageBarre;
-		   //TODO : Test Affichage 2 Barres
-		   boolean affichageBarrePhotoPrinc;
-		   boolean affichageBarrePhoto;
-		   String summaryTexte = "";
-		   int avancementPhotoPrinc =0;
-		   int avancementPhoto =0;
-		   
-		   Outils.PrecharMode precharModeZoneGeo = Outils.getPrecharModeZoneGeo(getContext(), inZoneGeo.getId());
-		   
-		   if ( precharModeZoneGeo == Outils.PrecharMode.P0 ) {
-			   affichageBarre = false;
-			   
-			   //TODO : Test Affichage 2 Barres
-			   affichageBarrePhotoPrinc = false;
-			   affichageBarrePhoto = false;
-			   
-			   summaryTexte = getContext().getString(R.string.avancement_progressbar_aucune_summary);
-		   } else {
-			   int nbPhotosPrincATelecharger = Outils.getAPrecharQteZoneGeo(getContext(), inZoneGeo.getId(), true);
-			   int nbPhotosATelecharger = Outils.getAPrecharQteZoneGeo(getContext(), inZoneGeo.getId(), false);
-			   int nbPhotosPrincDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), inZoneGeo.getId(), true);
-			   int nbPhotosDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), inZoneGeo.getId(), false);
-			   
-			   affichageBarre = true;
-			   
-			   //TODO : Test Affichage 2 Barres
-			   affichageBarrePhotoPrinc = true;
-			   affichageBarrePhoto = true;
-			   
-			   if ( nbPhotosPrincATelecharger== 0){
-				   summaryTexte = getContext().getString(R.string.avancement_progressbar_jamais_summary);
-			   } else {
-				   
-				   if ( precharModeZoneGeo == Outils.PrecharMode.P1 ) {
-				   
-					   summaryTexte = getContext().getString(R.string.avancement_progressbar_P1_summary);
-					   summaryTexte = summaryTexte.replace("@total", ""+nbPhotosPrincATelecharger ) ;
-					   summaryTexte = summaryTexte.replace("@nb", ""+nbPhotosPrincDejaLa );
-					   
-					   avancementPhoto = 0;
-					   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
-					   
-					 //TODO : Test Affichage 2 Barres
-					   affichageBarrePhoto = false;
-					   
-				   } else {
-					   summaryTexte = getContext().getString(R.string.avancement_progressbar_PX_summary1);
-					   summaryTexte = summaryTexte.replace("@total", ""+nbPhotosPrincATelecharger ) ;
-					   summaryTexte = summaryTexte.replace("@nb", ""+nbPhotosPrincDejaLa );
-					   
-					   if (nbPhotosATelecharger == 0) {
-						   summaryTexte += getContext().getString(R.string.avancement_progressbar_PX_jamais_summary2);
-						   
-						   avancementPhoto = 0;
-						   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
-					   } else {
-						   summaryTexte += getContext().getString(R.string.avancement_progressbar_PX_summary2);
-						   summaryTexte = summaryTexte.replace("@total", ""+nbPhotosATelecharger ) ;
-						   summaryTexte = summaryTexte.replace("@nb", ""+nbPhotosDejaLa );
-						   
-						   avancementPhoto = 100 * nbPhotosDejaLa / nbPhotosATelecharger;
-						   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
-					   }
-				   }
-			   }
 
-		   }
-		   progressBarZone.update(inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto);
-	}*/
 	protected void updateProgressBarZone(ZoneGeographique inZoneGeo, MultiProgressBar progressBarZone){
 		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
 		   
@@ -611,150 +540,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		   
 		   progressBarZone.update(inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto, downloadInProgress);
 	}
-	/*
-	protected ProgressBarZone addProgressBarZone(ZoneGeographique inZoneGeo){
-	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
-	   
-	   String uri = Outils.getZoneIcone(this.getApplicationContext(), inZoneGeo.getId());
-	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
-	   int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
-	   
-	   boolean affichageBarrePhotoPrinc;
-	   boolean affichageBarrePhoto;
-	   String summaryTexte = "";
-	   int nbFichesZoneGeo = 0;
-	   int avancementPhotoPrinc =0;
-	   int avancementPhoto =0;
-	   
-	   if (inZoneGeo.getId() == -1){
-		   nbFichesZoneGeo = (int)getHelper().getFicheDao().countOf();
-	   } else {
-		   nbFichesZoneGeo = getHelper().getFiches_ZonesGeographiquesDao().queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, inZoneGeo.getId()).size();
-	   }
-	   
-	   Outils.PrecharMode precharModeZoneGeo = Outils.getPrecharModeZoneGeo(getContext(), inZoneGeo.getId());
-	   
-	   if ( precharModeZoneGeo == Outils.PrecharMode.P0 ) {
-
-		   affichageBarrePhotoPrinc = false;
-		   affichageBarrePhoto = false;
-		   
-		   summaryTexte = getContext().getString(R.string.avancement_progressbar_aucune_summary);
-		   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
-	   } else {
-		   int nbPhotosPrincATelecharger = Outils.getAPrecharQteZoneGeo(getContext(), inZoneGeo.getId(), true);
-		   int nbPhotosATelecharger = Outils.getAPrecharQteZoneGeo(getContext(), inZoneGeo.getId(), false);
-		   int nbPhotosPrincDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), inZoneGeo.getId(), true);
-		   int nbPhotosDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), inZoneGeo.getId(), false);
-		   
-		   affichageBarrePhotoPrinc = true;
-		   affichageBarrePhoto = true;
-		   
-		   if ( nbPhotosPrincATelecharger== 0){
-			   summaryTexte = getContext().getString(R.string.avancement_progressbar_jamais_summary);
-			   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
-		   } else {
-			   
-			   if ( precharModeZoneGeo == Outils.PrecharMode.P1 ) {
-			   
-				   summaryTexte = getContext().getString(R.string.avancement_progressbar_P1_summary);
-				   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
-				   summaryTexte = summaryTexte.replace("@totalPh", ""+nbPhotosPrincATelecharger ) ;
-				   summaryTexte = summaryTexte.replace("@nbPh", ""+nbPhotosPrincDejaLa );
-				   
-				   avancementPhoto = 0;
-				   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
-				   
-				 //TODO : Test Affichage 2 Barres
-				   affichageBarrePhoto = false;
-				   
-			   } else {
-				   summaryTexte = getContext().getString(R.string.avancement_progressbar_PX_summary1);
-				   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
-				   summaryTexte = summaryTexte.replace("@totalPh", ""+nbPhotosPrincATelecharger ) ;
-				   summaryTexte = summaryTexte.replace("@nbPh", ""+nbPhotosPrincDejaLa );
-				   
-				   if (nbPhotosATelecharger == 0) {
-					   summaryTexte += getContext().getString(R.string.avancement_progressbar_PX_jamais_summary2);
-					   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
-					   avancementPhoto = 0;
-					   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
-				   } else {
-					   summaryTexte += getContext().getString(R.string.avancement_progressbar_PX_summary2);
-					   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
-					   summaryTexte = summaryTexte.replace("@totalPh", ""+nbPhotosATelecharger ) ;
-					   summaryTexte = summaryTexte.replace("@nbPh", ""+nbPhotosDejaLa );
-					   
-					   avancementPhoto = 100 * nbPhotosDejaLa / nbPhotosATelecharger;
-					   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
-				   }
-			   }
-		   }
-
-	   }
-	   
-	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - summaryTexte : "+summaryTexte);
-	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avancementPhotoPrinc : "+avancementPhotoPrinc);
-	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avancementPhoto : "+avancementPhoto);
-
-	   return new ProgressBarZone(this, llContainerLayout, NbBar.TwoBar, inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto);
-
-	}
-	
-	protected ProgressBarZone addProgressBarView(LinearLayout inContainerLayout, String inTitre, String inSummary, int inIcone, boolean inAffBarre, int inAvancPhotoPrinc, int inAvancPhoto){
-	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Début");  	
-	   LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	   View convertView = inflater.inflate(R.layout.progressbar_zone, null);
-	   
-	   TextView tvTitleText = (TextView) convertView.findViewById(R.id.title);
-	   tvTitleText.setText(inTitre);
-	   
-	   ImageView ivIcone = (ImageView) convertView.findViewById(R.id.icon);
-	   ivIcone.setImageResource(inIcone);
-
-	   int iconeZine = Integer.valueOf(Outils.getParamString(this.getApplicationContext(), R.string.pref_key_list_icon_size, "128"));
-       ivIcone.setMaxHeight(iconeZine);
-   	
-	   TextView tvSummaryText = (TextView) convertView.findViewById(R.id.summary);
-	   tvSummaryText.setText(inSummary);
-	   
-	   ProgressBar pbProgressBar = (ProgressBar) convertView.findViewById(R.id.progressBar);
-	   if ( inAffBarre ) {
-		   pbProgressBar.setProgress(inAvancPhoto);
-		   pbProgressBar.setSecondaryProgress(inAvancPhotoPrinc);
-	   } else {
-		   pbProgressBar.setVisibility(View.GONE);
-	   }
-	   
-	   // Changement couleur de la barre en fonction de l'avancement
-	   int limite1 = Integer.parseInt(getContext().getString(R.string.avancement_progressbar_limite1) );
-	   int limite2 = Integer.parseInt(getContext().getString(R.string.avancement_progressbar_limite2) );
-	   int limite3 = Integer.parseInt(getContext().getString(R.string.avancement_progressbar_limite3) );
-	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - limites : "+limite1+" - "+limite2);
-	   
-	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - Couleur1 :"+getContext().getString(R.string.avancement_progressbar_couleur1));
-	   
-	   int couleur;
-	   if (inAvancPhoto <= limite1) {
-		   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur1) );   
-	   } else if (inAvancPhoto <= limite2) {
-		   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur2) );
-	   } else if (inAvancPhoto <= limite3) {
-		   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur3) );
-	   } else {
-		   couleur = Color.parseColor( getContext().getString(R.string.avancement_progressbar_couleur4) );
-	   }
-
-	   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarView() - couleur : "+couleur);
-	   // API 10 : pbProgressBar.getProgressDrawable().setColorFilter(couleur, Mode.MULTIPLY);
-	   // TODO : API 14 (Vérifier la version qui nécessite effectivement le changement) : pbProgressBar.getProgressDrawable().setColorFilter(couleur, Mode.SRC_IN);
-	   pbProgressBar.getProgressDrawable().setColorFilter(couleur, 
-			   Mode.valueOf(getContext().getString(R.string.avancement_progressbar_mode) ) );
-
-	   inContainerLayout.addView(convertView);
-	   return null;
-	}
-	*/	
 	
 	//End of user code
 
@@ -774,6 +559,10 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	((TextView) findViewById(R.id.accueil_texte)).setText(sbTexte.toString());
     	
     	// recherche précédente
+    	//ImageView ivIcone = (ImageView) findViewById(R.id.accueil_recherche_precedente_icone);
+        int iconeZine = Integer.valueOf(Outils.getParamString(this.getApplicationContext(), R.string.pref_key_list_icon_size, "64"));
+        ((ImageView) findViewById(R.id.accueil_recherche_precedente_icone)).setMaxHeight(iconeZine);
+        
     	StringBuilder sbRecherchePrecedente = new StringBuilder(); 
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         int filtreCourantId = prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1);	        
@@ -797,10 +586,11 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	TextView tvRecherchePrecedente = (TextView)findViewById(R.id.accueil_recherche_precedente_details);
     	tvRecherchePrecedente.setText(sbRecherchePrecedente.toString());
     	
+    	// Affichage de chaque Zones - Toutes Zones en 1er
     	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate); 
     	ZoneGeographique zoneToutesZones = new ZoneGeographique();
     	zoneToutesZones.setId(-1);
-    	zoneToutesZones.setNom(getContext().getString(R.string.accueil_customview_zonegeo_touteszones));
+    	zoneToutesZones.setNom(getContext().getString(R.string.avancement_touteszones_titre));
     	if (isOnCreate) {
 	    	llContainerLayout =  (LinearLayout) findViewById(R.id.accueil_progress_layout);
 	    	

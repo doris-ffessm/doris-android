@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:paddingLeft="4dip"
+    android:minHeight="42dp"
+    android:paddingLeft="12dip"
     android:paddingRight="?android:attr/scrollbarSize" >
 
     <LinearLayout
@@ -24,16 +25,14 @@
             android:minWidth="48dp"
             android:paddingRight="8dip" />
     </LinearLayout>
-    
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingBottom="4dip"
-        android:paddingLeft="4dip"
-        android:paddingRight="4dip"
-        android:paddingTop="4dip"
-		android:background="#404040" >
+        android:paddingBottom="2dip"
+        android:paddingRight="8dip"
+        android:paddingTop="2dip" >
 
         <TextView
             android:id="@+android:id/title"
@@ -42,19 +41,30 @@
             android:ellipsize="marquee"
             android:fadingEdge="horizontal"
             android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-			android:textColor="?android:attr/textColorPrimary"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+android:id/summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@android:id/title"
+            android:paddingLeft="8dip"
             android:layout_below="@android:id/title"
             android:maxLines="4"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary" />
     </RelativeLayout>
+
+    <!-- Preference should place its actual preference widget here. -->
+
+    <LinearLayout
+        android:id="@+android:id/widget_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:minWidth="48dp"
+        android:orientation="vertical" />
+
 </LinearLayout>
 <!-- End of user code
 -->

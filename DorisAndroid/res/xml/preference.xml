@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	android:key="pref_racine">
 
     <!--Start of user code protected PreferenceViewActivity preference
 		-->
@@ -34,9 +35,10 @@
             android:layout="@layout/preference_layout_preference"
             />
         <PreferenceScreen
-	        android:key="button_qualtite_images_zones_key"
+	        android:key="button_qualite_images_zones_key"
 	        android:title="@string/mode_precharg_region_prompt"
-	        android:persistent="false">
+	        android:persistent="false"
+	        android:layout="@layout/preference_layout_preferencescreen">
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
 	            android:key="@string/pref_key_mode_precharg_region_france"
 	            android:title="@string/mode_precharg_region_france_prompt"
@@ -90,7 +92,8 @@
 	        android:key="button_mode_precharg_reset"
 	        android:title="@string/mode_precharg_reset_title"
 	        android:summary="@string/mode_precharg_reset_summary"
-	        android:persistent="false">
+	        android:persistent="false"
+			android:layout="@layout/preference_layout_preferencescreen">
 	        <Preference
 	           	android:key="btn_reset_vig"
 	           	android:title="@string/mode_precharg_reset_vig_title"
@@ -159,7 +162,8 @@
         <PreferenceScreen
 	        android:key="button_debug_preferences_key"
 	        android:title="@string/debug_preferences"
-	        android:persistent="false">
+	        android:persistent="false"
+	        android:layout="@layout/preference_layout_preferencescreen">
 	        <CheckBoxPreference android:key="@string/pref_key_affichage_debug"
 	            android:title="@string/debug_preferences_affichage_prompt"
 	            android:summary="@string/debug_preferences_affichage_summary"  

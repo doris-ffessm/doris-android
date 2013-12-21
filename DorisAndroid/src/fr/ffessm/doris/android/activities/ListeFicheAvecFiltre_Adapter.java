@@ -270,7 +270,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         }catch(Exception e){}
         
         ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_icon);
-    	ivIcon.setMaxHeight(defaultIconSize);
+    	ivIcon.getLayoutParams().height = defaultIconSize;
+    	ivIcon.getLayoutParams().width = defaultIconSize;
     	
     	PhotoFiche photoPrincipale = entry.getPhotoPrincipale();
     	if(photoPrincipale == null){

@@ -7,11 +7,10 @@
 	<string name="accueil_customview_texte_text">"Dernière mise à jour de la base le : "</string>
 	<string name="accueil_customview_listefiches_btn_label">Toutes les fiches</string>
 	
-	<string name="accueil_etat_hors_ligne_titre_text">Etat mode hors ligne</string>
-		
 	<string name="accueil_recherche_precedente_label_text">Recherche précédente</string>
 	<string name="accueil_recherche_precedente_filtreEspece_sans">Toutes les espèces</string>
 	<string name="accueil_recherche_precedente_filtreGeographique_sans">Toutes les zones géographiques</string>
+	
 	<string name="accueil_customview_zonegeo_touteszones">Toutes Zones</string>
 	
 	<string name="accueil_customview_logo1_icone">@drawable/logo_doris</string>
@@ -25,22 +24,7 @@
 	<string name="menu_option_telecharge_photofiches">Préchargement photos</string>
 	<string name="menu_option_verifie_nouvelles_fiches">Cherche nouvelles fiches</string>
 	<string name="menu_option_reinitialise_a_partir_du_xml">Réinitialise Base</string>
-	
-	<string name="avancement_titre">Avancement préchargement photos</string>
-	<string name="avancement_progressbar_aucune_summary">"@nbF Fiches ; aucune photo ne doit être téléchargée pour cette zone"</string>
-	<string name="avancement_progressbar_jamais_summary">"@nbF Fiches ; le préchargement des photos n\'a jamais été lancé depuis la modification des paramètres."</string>
-	<string name="avancement_progressbar_P1_summary">"@nbF Fiches ; @nbPh sur @totalPh photos principales téléchargées"</string>
-	<string name="avancement_progressbar_PX_summary1">"@nbF Fiches ; @nbPh sur @totalPh photos principales"</string>
-	<string name="avancement_progressbar_PX_jamais_summary2">" et aucune photo téléchargées"</string>
-	<string name="avancement_progressbar_PX_summary2">" et @nbPh sur @totalPh photos téléchargées"</string>
-	<string name="avancement_progressbar_limite1">25</string>
-	<string name="avancement_progressbar_couleur1">RED</string>
-	<string name="avancement_progressbar_limite2">50</string>
-	<string name="avancement_progressbar_couleur2">#FFA500</string>
-	<string name="avancement_progressbar_limite3">75</string>
-	<string name="avancement_progressbar_couleur3">YELLOW</string>
-	<string name="avancement_progressbar_couleur4">GREEN</string>
-	
+		
 	<string name="a_propos_label">À propos</string>
 	<string name="a_propos_txt_1">"À propos - "</string>
 	<string name="a_propos_txt_2">Version\u00A0:\u00A0</string>

@@ -242,10 +242,12 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
     	// Avancement et Affichage toutes Zones
     	ZoneGeographique zoneToutesZones = new ZoneGeographique();
     	zoneToutesZones.setId(-1);
-    	zoneToutesZones.setNom(getContext().getString(R.string.accueil_customview_zonegeo_touteszones));
+    	zoneToutesZones.setNom(getContext().getString(R.string.avancement_touteszones_titre));
+    	
     	MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this);
     	updateProgressBarZone(zoneToutesZones, progressBarZoneGenerale);
     	progressBarZones.put(zoneToutesZones.getId(), progressBarZoneGenerale); 
+    	
     	final Context context = this;
     	progressBarZoneGenerale.pbProgressBar_running.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -257,15 +259,16 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
 				pbRunningBarLayout.setVisibility(View.GONE);
 			}
 		});
-    	/*progressBarZoneGenerale.setOnClickListener(new View.OnClickListener() {
+    	progressBarZoneGenerale.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), -1);
-		        ed.commit();
-				startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+				
+				Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, Preference_PreferenceViewActivity.class);
+				intent.putExtra("type_parametre", "mode_precharg_toutesregions");
+				//intent.putExtra("parametre", id);
+				startActivity(intent);
 			}
-		});*/
+		});
     	llContainerLayout.addView(progressBarZoneGenerale);
 
     	
@@ -288,6 +291,33 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
 					startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
 				}
 			}); */
+ 		   progressBarZone.setOnClickListener(new View.OnClickListener() {
+ 				@Override
+ 				public void onClick(View v) {
+ 					
+ 					Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, Preference_PreferenceViewActivity.class);
+ 					intent.putExtra("type_parametre", "mode_precharg_region");
+ 					String param = null;
+ 					switch (zoneGeoId){
+ 					case 1 :
+ 						param = "france"; break;
+ 					case 2 :
+ 						param = "eaudouce"; break;
+ 					case 3 :
+ 						param = "atlantno"; break;
+ 					case 4 :
+ 						param = "indopac"; break;
+ 					case 5 :
+ 						param = "caraibes"; break;
+ 					}
+
+ 					if (param != null){
+ 						intent.putExtra("parametre", param);
+ 					}
+ 					
+ 					startActivity(intent);
+ 				}
+ 			});
  		    progressBarZones.put(zoneGeoId, progressBarZone); 
 	 		llContainerLayout.addView(progressBarZone);
 		} 
@@ -310,7 +340,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
 		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - update progress bar : ");
 		ZoneGeographique zoneToutesZones = new ZoneGeographique();
     	zoneToutesZones.setId(-1);
-    	zoneToutesZones.setNom(getContext().getString(R.string.accueil_customview_zonegeo_touteszones));
+    	zoneToutesZones.setNom(getContext().getString(R.string.avancement_touteszones_titre));
 		updateProgressBarZone(zoneToutesZones, progressBarZones.get(zoneToutesZones.getId()));
 		List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
     	

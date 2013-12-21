@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="8dp" >
+    android:paddingTop="4dip" >
 
 	<TextView
         android:id="@+id/accueil_texte"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="3dip"
+        android:padding="4dip"
 		android:text="@string/accueil_customview_texte_text"/>
 	<View style="@style/Separateur"/>
 	<ScrollView
@@ -46,20 +46,24 @@
 			    android:onClick="onClickBtnListeFiches" >
 			    
 			    <ImageView
-			        android:id="@+id/accueil_recherche_precedente_icon"
-			        android:contentDescription="recherche précédente"
+			        android:id="@+id/accueil_recherche_precedente_icone"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
+			        android:layout_marginBottom="8dip"
+			        android:layout_marginLeft="2dip"
+			        android:layout_marginRight="2dip"
+			        android:layout_marginTop="2dip"
 			        android:adjustViewBounds="true"
-			        android:maxHeight="48dip"
-			        android:layout_marginLeft="4dip"
-			        android:layout_marginRight="4dip"
-			        android:layout_marginTop="4dip"
-			        android:src="@drawable/ic_launcher" >
+			        android:contentDescription="recherche précédente"
+			        android:maxHeight="64dip"
+			        android:src="@drawable/doris_large" >
+
 			    </ImageView>
 			    <RelativeLayout
 					    android:layout_width="match_parent"
-					    android:layout_height="wrap_content" >
+					    android:layout_height="wrap_content"
+						android:paddingLeft="4dip"
+        				android:paddingRight="4dip" >
 					
 					<LinearLayout 
 					    android:layout_width="match_parent"
@@ -79,6 +83,7 @@
 					        android:id="@+id/accueil_recherche_precedente_details"
 					        android:layout_width="wrap_content"
 					        android:layout_height="wrap_content"
+					        android:paddingLeft="4dip"
 					        android:textAppearance="?android:attr/textAppearanceSmall"
             				android:textColor="?android:attr/textColorSecondary">
 					    </TextView>
@@ -100,10 +105,11 @@
 		        android:id="@+id/accueil_etat_hors_ligne_titre"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:layout_marginLeft="4dip"
+		        android:layout_marginLeft="8dip"
 		        android:padding="3dip"
 	    		android:textAppearance="?android:attr/textAppearanceMedium" 
-				android:text="@string/accueil_etat_hors_ligne_titre_text"/>
+	    		android:textColor="?android:attr/textColorPrimary"
+				android:text="@string/etatmodehorsligne_customview_titre_text"/>
 			
 			<LinearLayout
 		        android:id="@+id/accueil_progress_layout"

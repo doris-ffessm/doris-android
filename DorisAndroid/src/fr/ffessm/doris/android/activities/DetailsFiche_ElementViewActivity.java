@@ -291,14 +291,12 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			sbCreditText.append(entry.getDateCreation()+"\n");
 			sbCreditText.append(getString(R.string.detailsfiche_elementview_datemodification_label));
 			sbCreditText.append(entry.getDateModification());
-			
-			//TODO : Toujours vide ?
-			sbCreditText.append("\n - "+entry.getIntervenants().size());
-			
+						
 			for (IntervenantFiche intervenant : entry.getIntervenants()) {
-				sbCreditText.append("\n"+intervenant.getParticipant().getNom());
-				sbCreditText.append(" - "+intervenant.getId());
+				sbCreditText.append("\n"+intervenant.getId());
 				sbCreditText.append(" - "+intervenant.getRoleIntervenant());
+				sbCreditText.append(" - "+intervenant.getParticipant().getId());
+				sbCreditText.append(" - "+intervenant.getParticipant().getNom());
 			}
 			
 			SpannableString richtext = new SpannableString(sbCreditText.toString());

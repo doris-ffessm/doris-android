@@ -35,6 +35,7 @@
 			android:textColor="?android:attr/textColorSecondary"
 	        android:text="@string/etatmodehorsligne_customview_description_text_2" />
 	    
+		<View style="@style/Separateur"/>
 		
 		<TextView
 	        android:id="@+id/etatmodehorsligne_customview_etat_base_titre_textView"
@@ -51,6 +52,7 @@
 	        android:textAppearance="?android:attr/textAppearanceSmall"
 			android:textColor="?android:attr/textColorSecondary"
 	        android:text="@string/etatmodehorsligne_customview_etat_base_description_text" />
+	    <View style="@style/Separateur"/>
 	    <TextView
 	        android:id="@+id/etatmodehorsligne_customview_etat_photos_titre_textView"
 	        android:layout_width="wrap_content"

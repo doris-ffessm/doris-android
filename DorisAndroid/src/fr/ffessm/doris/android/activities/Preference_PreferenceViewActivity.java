@@ -42,6 +42,7 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,7 +61,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -87,6 +90,31 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         addPreferencesFromResource(R.xml.preference); 
 		//Start of user code Preference preference activity additional onCreate
         
+        
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+	        String typeParam = bundle.getString("type_parametre");
+	        String param = bundle.getString("parametre");
+	        
+	        if (typeParam != null) {
+	        	if (typeParam.equals("mode_precharg_region")) {
+	        		if (param != null) {
+			        	PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference("button_qualite_images_zones_key");
+			        	int pos = findPreference("mode_precharg_region_"+param).getOrder();
+			        	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - pos "+param+" : "+pos);
+			        	preferenceScreen.onItemClick( null, null, pos, 0 ); 
+	        		}
+	        	}
+	        	if (typeParam.equals("mode_precharg_toutesregions")) {
+		        	PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference("pref_racine");
+			        /*int pos = findPreference("button_qualite_images_zones_key").getOrder();
+			        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - pos : "+pos); */
+		        	// TODO : Je pensais utiliser  Preference findPreferenceInHierarchy mais je n'y arrive pas
+		        	// Alors 5 en dur :-/
+			        preferenceScreen.onItemClick( null, null, 5, 0 ); 
+	        	}
+	        }
+        }
         
         final Preference btnVideVig = (Preference)getPreferenceManager().findPreference("btn_reset_vig");
         if(btnVideVig != null) {

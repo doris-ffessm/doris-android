@@ -4,12 +4,30 @@
 	<!-- Start of user code customView_strings etatmodehorsligne
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
-	<string name="etatmodehorsligne_customview_titre_text">Etat du mode hors ligne</string>
-	<string name="etatmodehorsligne_customview_description_text">DorisAndroid peut fonctionner en mode hors ligne pour économiser votre forfait ou bien lorsque le réseau n\'est pas disponible.</string>
+	<string name="etatmodehorsligne_customview_titre_text">État du Mode Hors Ligne</string>
+	<string name="etatmodehorsligne_customview_description_text">"DorisAndroid peut fonctionner sans internet. Pour cela vous devez avoir téléchargé les fiches et images à l'avance. Pour économiser votre forfait faites le en Wifi."</string>
 	<string name="etatmodehorsligne_customview_description_text_2">Ajustez vos paramètres en fonction de vos besoins et de votre espace disque disponible.</string>
-	<string name="etatmodehorsligne_customview_etat_photos_titre_text">Télécharg. photos</string>
+	<string name="etatmodehorsligne_customview_etat_photos_titre_text">Téléchargement photos</string>
 	<string name="etatmodehorsligne_customview_etat_base_titre_text">Fiches et textes</string>
-	<string name="etatmodehorsligne_customview_etat_base_description_text">Les textes des fiches correspondent à la base Doris du :  </string>
+	<string name="etatmodehorsligne_customview_etat_base_description_text">"Les textes des fiches correspondent à la base Doris du : "</string>
+	
+	<string name="avancement_titre">Avancement préchargement photos</string>
+	<string name="avancement_touteszones_titre">Avancement global</string>
+	<string name="avancement_progressbar_aucune_summary">"@nbF Fiches ; aucune photo ne doit être téléchargée pour cette zone"</string>
+	<string name="avancement_progressbar_jamais_summary">"@nbF Fiches ; le préchargement des photos n\'a jamais été lancé depuis la modification des paramètres."</string>
+	<string name="avancement_progressbar_P1_summary">"@nbF Fiches ; @nbPh sur @totalPh photos principales téléchargées"</string>
+	<string name="avancement_progressbar_PX_summary1">"@nbF Fiches ; @nbPh sur @totalPh photos principales"</string>
+	<string name="avancement_progressbar_PX_jamais_summary2">" et aucune photo téléchargées"</string>
+	<string name="avancement_progressbar_PX_summary2">" et @nbPh sur @totalPh photos téléchargées"</string>
+	<string name="avancement_progressbar_limite1">25</string>
+	<string name="avancement_progressbar_couleur1">RED</string>
+	<string name="avancement_progressbar_limite2">50</string>
+	<string name="avancement_progressbar_couleur2">#FFA500</string>
+	<string name="avancement_progressbar_limite3">75</string>
+	<string name="avancement_progressbar_couleur3">YELLOW</string>
+	<string name="avancement_progressbar_couleur4">GREEN</string>
+	
+	
 	<!-- End of user code
 	-->
 </resources>

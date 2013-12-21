@@ -176,36 +176,18 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
         
         
         ImageView ivIcon = (ImageView) convertView.findViewById(R.id.zonegeoselection_listviewrow_icon);
-        String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
-        int defaultIconSize = 48;
+        String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "128");
+        Log.e(LOG_TAG, "getView() - defaultIconSizeString : "+defaultIconSizeString);
+        int defaultIconSize = 128;
         try{
         	defaultIconSize = Integer.parseInt(defaultIconSizeString);
         }catch(Exception e){}
     	ivIcon.setMaxHeight(defaultIconSize);
+    	
         // TODO : pas trés propre mais fonctionne => Modifier Outils ... vers entry.getIcone qd sera dispo
     	String uri = Outils.getZoneIcone(context, entry.getId()); 
     	int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
     	ivIcon.setImageResource(imageResource);
-/*
-    	switch (entry.getId()) {
-    	case 1:
-    		ivIcon.setImageResource(imageResource);
-    		break;
-		case 2:
-			ivIcon.setImageResource(R.drawable.icone_eau_douce);
-			break;
-		case 3:
-			ivIcon.setImageResource(R.drawable.icone_indo_pac);
-			break;
-		case 4:
-			ivIcon.setImageResource(R.drawable.icone_caraibes);
-			break;
-		case 5:
-			ivIcon.setImageResource(R.drawable.icone_atl_n_o);
-			break;
-		default:
-			break;
-		}*/
     	
 		// End of user code
 
