@@ -42,18 +42,13 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,7 +56,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
@@ -112,11 +106,9 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<O
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 		//Start of user code onItemClick additions GroupeSelection_ClassListViewActivity
-		//showToast(view.toString() + ", "+ view.getId());
+		//showToast("Groupe : "+position + " - "+ index);
 		
 		GroupeSelection_Adapter groupeSelection_adapter = (GroupeSelection_Adapter)arg0.getAdapter();
-		
-		
 		
 		Groupe clickedGroupe = groupeSelection_adapter.getGroupeFromPosition(position);
 		if(clickedGroupe.getContextDB() == null){
@@ -133,6 +125,12 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<O
 			groupeSelection_adapter.currentRootGroupe = clickedGroupe;
 			groupeSelection_adapter.updateList();
 			groupeSelection_adapter.notifyDataSetChanged();
+		} else {
+			Toast.makeText(this, "Filtre espèces : "+clickedGroupe.getNomGroupe(), Toast.LENGTH_SHORT).show();
+			SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
+			ed.putInt(this.getString(R.string.pref_key_filtre_groupe), clickedGroupe.getId());
+	        ed.commit();
+			((GroupeSelection_ClassListViewActivity)this).finish();
 		}
 	
 		//End of user code		

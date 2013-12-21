@@ -8,13 +8,14 @@
     <LinearLayout
         android:id="@+id/groupselection_listview_navigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:minHeight="40dp" >
 
         <ImageButton
             android:id="@+id/groupselection_listview_imageButton1"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:background="@drawable/button_background"
+            android:background="@drawable/button_selected_background"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:src="@drawable/arbre_phylogenetique_gris" />
@@ -24,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginRight="5dp"
-            android:background="@drawable/button_background"
+            android:background="@drawable/button_selected_background"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="Button"
@@ -42,7 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/groupselection_listview_filtre_espece_courant_suppFiltreBtn"
             android:text="@string/groupselection_customview_filtre_espece_courant_label"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <ImageButton
             android:id="@+id/groupselection_listview_filtre_espece_courant_suppFiltreBtn"
@@ -54,6 +56,7 @@
             android:onClick="onRemoveCurrentFilterClick"
             android:src="@android:drawable/ic_delete" />
     </RelativeLayout>
+    <View style="@style/Separateur"/>
 <!-- End of user code -->
 	<ListView 
 	    android:id="@+android:id/groupeselection_listview"

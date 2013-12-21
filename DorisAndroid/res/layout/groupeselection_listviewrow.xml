@@ -7,15 +7,17 @@
     
     <ImageView
         android:id="@+id/groupeselection_listviewrow_icon"
-        android:contentDescription="Groupe icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="2dip"
+        android:layout_marginLeft="2dip"
+        android:layout_marginRight="2dip"
+        android:layout_marginTop="2dip"
         android:adjustViewBounds="true"
-        android:maxHeight="48dip"
-        android:layout_marginLeft="4dip"
-        android:layout_marginRight="4dip"
-        android:layout_marginTop="4dip"
+        android:contentDescription="Groupe icon"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_launcher" >
+
     </ImageView>
     <RelativeLayout
 		    android:layout_width="match_parent"
@@ -31,13 +33,16 @@
 		        android:id="@+id/groupeselection_listviewrow_label"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:textSize="20sp" >
+		        android:textAppearance="?android:attr/textAppearanceMedium"
+			    android:textColor="?android:attr/textColorPrimary" >
 		    </TextView>
 		    <TextView
 		        android:id="@+id/groupeselection_listviewrow_details"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:textSize="16sp" >
+		        android:paddingLeft="4dip"
+		        android:textAppearance="?android:attr/textAppearanceSmall"
+   				android:textColor="?android:attr/textColorSecondary" >
 		    </TextView>
 		</LinearLayout>
 		<!-- Start of user code protected
@@ -51,7 +56,6 @@
 	        android:layout_toLeftOf="@+id/groupeselection_btnSelect"
 	        android:layout_alignTop="@+id/groupeselection_btnSelect"
 	        android:layout_alignBottom="@+id/groupeselection_btnSelect"
-	        
 	        android:maxHeight="32dip"
 	        android:layout_marginLeft="4dip"
 	        android:layout_marginRight="4dip"

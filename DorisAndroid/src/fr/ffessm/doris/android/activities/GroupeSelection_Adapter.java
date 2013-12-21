@@ -276,14 +276,14 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
     	
     	navigationLayout.removeAllViews();
     	addBackToParentGroupButton(navigationLayout, currentRootGroupe.getGroupePere());
-    	if(currentRootGroupe.getId() ==1){
+    	if(currentRootGroupe.getId() == 1){
 			// ajout du nouveau bouton standard
 			ImageView rootImage = new ImageView(context);
 			navigationLayout.addView(rootImage);
 			rootImage.setImageResource(R.drawable.arbre_phylogenetique_gris);
 			rootImage.setPadding(5, 5, 5, 5);
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) rootImage.getLayoutParams();
-			layoutParams.leftMargin =2;
+			layoutParams.leftMargin = 2;
 			layoutParams.rightMargin = 2;
 			rootImage.setLayoutParams(layoutParams);
 			rootImage.setMaxHeight(30);
@@ -292,6 +292,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		else{
 	    	TextView groupeNavigationText = new TextView(context);
 	    	groupeNavigationText.setText(currentRootGroupe.getNomGroupe());
+	    	groupeNavigationText.setPadding(2, 5, 5, 2);
 	    	navigationLayout.addView(groupeNavigationText);
 		}
 	}
@@ -306,7 +307,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			ImageButton backToParentButton = new ImageButton(context);
 			navigationLayout.addView(backToParentButton);
 			backToParentButton.setImageResource(R.drawable.arbre_phylogenetique_gris);
-			backToParentButton.setBackgroundResource(R.drawable.button_background);
+			backToParentButton.setBackgroundResource(R.drawable.button_selected_background);
 			backToParentButton.setPadding(5, 5, 5, 5);
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
 			layoutParams.leftMargin =2;
@@ -326,14 +327,15 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			Log.w(LOG_TAG,"addBackToParentGroupButton parent="+parent);
 			Log.d(LOG_TAG,"addBackToParentGroupButton parent.getNomGroupe="+parent.getNomGroupe());
 			backToParentButton.setText(parent.getNomGroupe().trim());
-			backToParentButton.setBackgroundResource(R.drawable.button_background);
+			backToParentButton.setBackgroundResource(R.drawable.button_selected_background);
 			backToParentButton.setTextColor(context.getResources().getColor(android.R.color.darker_gray));
-			backToParentButton.setPadding(5, 5, 5, 5);
+			backToParentButton.setPadding(5, 5, 5, 0);
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
 			layoutParams.leftMargin =2;
 			layoutParams.rightMargin = 2;
+			layoutParams.bottomMargin = 5;
 			backToParentButton.setLayoutParams(layoutParams);
-			backToParentButton.setHeight(BitmapFactory.decodeResource(context.getResources(),R.drawable.arbre_phylogenetique_gris).getHeight());
+			backToParentButton.setHeight(BitmapFactory.decodeResource(context.getResources(),R.drawable.arbre_phylogenetique_gris).getHeight()+10);
 			backToParentButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
