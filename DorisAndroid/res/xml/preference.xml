@@ -182,6 +182,12 @@
 	            android:defaultValue="false"
 	            android:layout="@layout/preference_layout_preference"
 	            />
+	        <CheckBoxPreference android:key="@string/pref_key_debug_maj_base_prochain_demarrage"
+	            android:summary="Permet de forcer la mise à jour de la base au prochain démarrage de l'appli." 
+	            android:title="MAJ Base" 
+	            android:defaultValue="false"
+	            android:layout="@layout/preference_layout_preference"
+	            />
 	        </PreferenceScreen>
      </PreferenceCategory>
  

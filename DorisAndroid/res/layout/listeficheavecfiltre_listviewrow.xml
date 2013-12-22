@@ -9,13 +9,13 @@
         android:id="@+id/listeficheavecfiltre_listviewrow_icon"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginBottom="2dip"
         android:layout_marginLeft="2dip"
         android:layout_marginRight="2dip"
         android:layout_marginTop="2dip"
-        android:layout_marginBottom="2dip"
         android:adjustViewBounds="true"
         android:contentDescription="Fiche icon"
-        android:scaleType="centerInside"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_launcher" >
 
     </ImageView>

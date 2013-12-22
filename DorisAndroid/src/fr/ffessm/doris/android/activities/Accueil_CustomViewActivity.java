@@ -271,7 +271,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         ivIcone.setImageResource(imageZone);   
         int iconeZine = Integer.valueOf(Outils.getParamString(this.getApplicationContext(), R.string.pref_key_list_icon_size, "128"));
 	    ivIcone.setMaxHeight(iconeZine);
-        
+	    ivIcone.setMaxWidth(iconeZine);
         
         final Context context = this;
         final int zoneId = zone.getId();

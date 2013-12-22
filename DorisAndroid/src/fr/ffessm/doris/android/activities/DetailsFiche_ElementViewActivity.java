@@ -68,7 +68,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -95,6 +97,7 @@ import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
+import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
 
@@ -103,7 +106,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	implements DataChangedListener
 // End of user code
 {
-	
+	protected int ficheNumero;
 	protected int ficheId;
 	
 	private static final String LOG_TAG = DetailsFiche_ElementViewActivity.class.getCanonicalName();
@@ -125,7 +128,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detailsfiche_elementview);
+        
         ficheId = getIntent().getExtras().getInt("ficheId");
+        ficheNumero = getIntent().getExtras().getInt("ficheNumero");
         
 		// Start of user code protectedDetailsFiche_ElementViewActivity_onCreate        
         // Defines a Handler object that's attached to the UI thread
@@ -162,8 +167,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     private void refreshScreenData() {
     	// get our dao
     	RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
-    	Fiche entry = entriesDao.queryForId(ficheId);
-    	entry.setContextDB(getHelper().getDorisDBHelper());
+    	Fiche entry = null;
+    	if (ficheId != 0) entry = entriesDao.queryForId(ficheId);
+    	else if (ficheNumero != 0) entry = entriesDao.queryForEq("numeroFiche", ficheNumero).get(0);
+	    entry.setContextDB(getHelper().getDorisDBHelper());
 
 		// Start of user code protectedDetailsFiche_ElementViewActivity.refreshScreenData
     	((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText(entry.getNomScientifique());
@@ -294,7 +301,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 						
 			for (IntervenantFiche intervenant : entry.getIntervenants()) {
 				sbCreditText.append("\n"+intervenant.getId());
-				sbCreditText.append(" - "+intervenant.getRoleIntervenant());
+				sbCreditText.append(" - "+Constants.getTitreParticipant(intervenant.getRoleIntervenant() ) );
 				sbCreditText.append(" - "+intervenant.getParticipant().getId());
 				sbCreditText.append(" - "+intervenant.getParticipant().getNom());
 			}
@@ -304,7 +311,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
 			
 			addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_credit_label),richtext);
-			
 			
 			isOnCreate = false;
 		}
@@ -397,7 +403,75 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         	contenuText.setVisibility(View.VISIBLE);
         }
         
-        contenuText.setText(texte, BufferType.SPANNABLE);
+        //TODO : Test remplacement (Fiche Liée) par une action
+        //Le but sera ensuite d'ouvrire la dite fiche
+        SpannableString richtext = null;
+        //TODO : {{ ! }}
+        
+        Log.d(LOG_TAG, "addFoldableView() - titre : "+titre);
+        if ( !texte.toString().matches(".*\\{\\{.*\\}\\}.*")) {
+        	richtext = new SpannableString(texte);
+        } else {
+        	final Context context = this; 
+        	
+        	// TODO : doit être améliorable mais je n'arrive pas à manipuler directement SpannableString
+        	// donc pas de concat, pas de regexp.
+	        int positionDep = 1;
+	        int positionFin = 1;
+	        int listeFicheNumero[] = new int[10];
+	        int i = 0;
+	        //Création de la liste des Fiches liées
+	        while (texte.toString().indexOf("{{", positionFin+1) != -1 ) {
+	        	i +=1;
+	        	
+	        	positionDep = texte.toString().indexOf("{{", positionFin+3);
+	        	positionFin = texte.toString().indexOf("}}", positionDep);
+	        	
+		        String refFiche = texte.toString().substring(positionDep+2, positionFin);
+		        Log.d(LOG_TAG, "addFoldableView() - refFiche : "+refFiche);
+		        
+		        listeFicheNumero[i] = Integer.valueOf(refFiche);
+	        }
+	        
+	        
+	        //On enlève les liens significatifs et on met (Fiche)
+	        texte = texte.toString().replaceAll("\\{\\{[0-9]*\\}\\}", "(Fiche)");
+	        Log.d(LOG_TAG, "addFoldableView() - texte : "+texte);
+	        richtext = new SpannableString(texte);
+	        
+	        
+	        // On met le lien avec le bon numéro de fiche sur chaque (Fiche)
+	        positionDep = 1;
+	        positionFin = 1;
+	        i = 0;
+	        while (texte.toString().indexOf("(Fiche)", positionFin) != -1 ) {
+	        	i +=1;
+	        	
+	        	positionDep = texte.toString().indexOf("(Fiche)", positionFin);
+	        	positionFin = texte.toString().indexOf("(Fiche)", positionDep)+7;
+	        	
+	        	final int listeFicheNumeroInt = listeFicheNumero[i];
+		        ClickableSpan clickableSpan = new ClickableSpan() {  
+		            @Override  
+		            public void onClick(View view) {  
+		                //Toast.makeText(context, "Test (Fiche Liée) : "+ficheId, Toast.LENGTH_LONG).show();
+		            	Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
+		                Bundle b = new Bundle();
+		                b.putInt("ficheNumero", listeFicheNumeroInt);
+		        		toDetailView.putExtras(b);
+		                startActivity(toDetailView);
+		            }  
+		        };  
+		        
+		        //Log.d(LOG_TAG, "addFoldableView() - SpannableString : "+positionDep + " - " + positionFin);
+		    	
+				richtext.setSpan(clickableSpan, positionDep, positionDep+7, 0);
+	        }
+	        
+	        
+        }
+                
+        contenuText.setText(richtext, BufferType.SPANNABLE);
         // make our ClickableSpans and URLSpans work 
         contenuText.setMovementMethod(LinkMovementMethod.getInstance());
        // contenuText.

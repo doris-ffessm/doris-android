@@ -28,7 +28,7 @@
 	<string name="pref_key_limit_download">limit_download</string>
 	<string name="pref_key_mode_precharg_sizemax">mode_precharg_sizemax</string>
 	<string name="pref_key_mode_precharg_region_ttzones">mode_precharg_region_ttzones</string>
-
+	<string name="pref_key_debug_maj_base_prochain_demarrage">debug_maj_base_prochain_demarrage</string>
 	
     <!-- Options text -->
     <string name="preference_menu_title">Préférences</string>
