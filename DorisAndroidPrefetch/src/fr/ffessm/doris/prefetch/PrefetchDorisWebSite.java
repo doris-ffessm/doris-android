@@ -327,7 +327,7 @@ public class PrefetchDorisWebSite {
 						}
 					} else {
 						// NODWNLD
-						listeParticipantsFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeParticipants-"+initiale+".html";
+						listeParticipantsFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeParticipants-"+initiale+".html";
 						if (new File(listeParticipantsFichier).exists()) {
 							contenuFichierHtml = Outils.getFichier(new File(listeParticipantsFichier));
 						} else {
