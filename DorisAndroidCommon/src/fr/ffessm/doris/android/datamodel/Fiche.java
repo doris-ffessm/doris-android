@@ -379,7 +379,7 @@ public class Fiche {
 									log.debug("getFicheFromHtml() - autresDenominations(B2) : " + autresDenominationsTexte);
 									
 									// permet d'enlever les Liens et de les remplacer par un texte, par exemple "(Fiche)"
-									autresDenominationsTexte = autresDenominationsTexte.replaceAll("<[^>]*>", Constants.getContenuLienTexte()).trim();
+									autresDenominationsTexte = autresDenominationsTexte.replaceAll("<[^>]*fiche_numero=([^>]*)>", "{{$1}}").trim();
 										
 									AutreDenomination autreDenomination = new AutreDenomination(autresDenominationsTexte, "");									
 									autreDenomination.setFiche(this);
@@ -387,8 +387,9 @@ public class Fiche {
 									
 									
 								} else {
+									
 									String contenuTexte = elementTD.getRenderer().toString();
-									//log.debug("getFiche() - contenu(initial) : " + contenu);
+									//log.debug("getFiche() - contenu(initial) : " + contenuTexte);
 									
 									// suppression des sauts de ligne
 									contenuTexte = contenuTexte.replaceAll("\r\n", " ").replaceAll("\n", " ");
@@ -399,7 +400,8 @@ public class Fiche {
 									//log.debug("getFiche() - contenu(2) : " + contenuTexte);
 									
 									// permet d'enlever les Liens et de les remplacer par (*)
-									contenuTexte = contenuTexte.replaceAll("<[^>]*>", Constants.getContenuLienTexte()).trim();
+									//<../fiche2.asp?fiche_numero=289>
+									contenuTexte = contenuTexte.replaceAll("<[^>]*fiche_numero=([^>]*)>", "{{$1}}").trim();
 	
 									log.info("getFicheFromHtml() - rubrique : " + rubrique);
 									log.info("getFicheFromHtml() - contenu(après nettoyage) : " + contenuTexte);
@@ -412,7 +414,6 @@ public class Fiche {
 						}
 						
 						// Création de la liste des Liens (url vers d'autres fiches)
-						
 						for (Element elementTDA : elementTD.getAllElements(HTMLElementName.A)) {
 							String hrefValue = elementTDA.getAttributeValue("href");
 							log.debug("getFicheFromHtml() - A : " + elementTDA.getRenderer().toString().trim() + " - lien : " + hrefValue);

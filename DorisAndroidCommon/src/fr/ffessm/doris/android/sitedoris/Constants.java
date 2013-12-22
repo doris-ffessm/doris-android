@@ -61,10 +61,7 @@ public class Constants {
 	/*
 	 * Autres Constantes
 	 */
-    // Texte inséré dans le Texte de la fiche pour montrer qu'un lien vers une fiche était ici.
-    // Si c'est possible un jour il faudra mettre un lien dans la fiche directement sur le mot 
-    private final static String CONTENU_LIEN_TEXTE = "(Fiche Liée)";
-    
+  
     
 	/*
 	 * Liste des Types de Zone géographique, Participant, etc.
@@ -132,12 +129,7 @@ public class Constants {
 		String listeFichesUrl = SITE_RACINE_URL + GROUPES_URL;
     	return listeFichesUrl;
     }
-    
-    public static String getContenuLienTexte() {
- 		String contenuLienTexte = CONTENU_LIEN_TEXTE;
- 		return contenuLienTexte;
-     }
-    
+        
 	/*
 	 * Gestion Zones Géographiques
 	 */
@@ -190,6 +182,25 @@ public class Constants {
 		case RESPONSABLE_REGIONAL:
 			return RESPONSABLE_REGIONAL_LIB;
 		case RESPONSABLE_NATIONAL:
+			return RESPONSABLE_NATIONAL_LIB;
+		default:
+			return "Type d'intervenant inconnu";
+		}
+    }
+    
+    public static String getTitreParticipant(int participantKingInt) {
+    	switch (participantKingInt) {
+		case 0:
+			return REDACTEUR_PRINCIPAL_LIB;
+		case 1:
+			return REDACTEUR_LIB;
+		case 2:
+			return VERIFICATEUR_LIB;
+		case 3:
+			return CORRECTEUR_SCIENTIFIQUE_LIB;
+		case 4:
+			return RESPONSABLE_REGIONAL_LIB;
+		case 5:
 			return RESPONSABLE_NATIONAL_LIB;
 		default:
 			return "Type d'intervenant inconnu";
