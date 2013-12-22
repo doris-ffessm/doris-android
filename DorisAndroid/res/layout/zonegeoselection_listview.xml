@@ -5,30 +5,26 @@
     android:orientation="vertical" >
 	<!--	Start of user code protectedzonegeoselection_listviewheader 
       -->
-      
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/zonegeoselection_header_label"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+	    android:textColor="?android:attr/textColorPrimary" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-        <LinearLayout
-            android:id="@+android:id/zonegeoselection_listview_filtre_courant_textlayout"
-		   	android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_alignParentLeft="true"
-		    android:layout_alignRight="@+id/zonegeoselection_listview_filtre_courant__suppFiltreBtn" >
-	
-		    <TextView
-		        android:layout_width="120dp"
-		        android:layout_height="wrap_content"
-		        android:text="@string/zonegeoselection_header_label"
-		        android:textAppearance="?android:attr/textAppearance" />
-		    <TextView
-		    	android:id="@+android:id/zonegeoselection_listview_filtre_courant"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_marginRight="34sp"
-		        android:text="hjkhdgfdhgdgdlk jhgfkhdslkg jjmljds"
-		        android:textAppearance="?android:attr/textAppearance" />
-		</LinearLayout>
+		    
+	    <TextView
+	    	android:id="@+android:id/zonegeoselection_listview_filtre_courant"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="4dip"
+	        android:layout_marginRight="34sp"
+	        android:text="hjkhdgfdhgdgdlk jhgfkhdslkg jjmljds"
+	        android:textAppearance="?android:attr/textAppearanceSmall"
+			android:textColor="#ffa500" />
+
 		<ImageButton
 	            android:id="@+id/zonegeoselection_listview_filtre_courant__suppFiltreBtn"
 	            android:layout_width="32sp"
@@ -39,8 +35,7 @@
 	            android:src="@android:drawable/ic_delete" 
 	            android:onClick="onRemoveCurrentFilterClick"/>
     </RelativeLayout>
-	<!--	
-End of user code -->
+
 	<ListView 
 	    android:id="@+android:id/zonegeoselection_listview"
 	    android:layout_width="match_parent"

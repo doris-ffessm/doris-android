@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 	<Button
-        android:id="@+id/btnSampleRechercheGuidee"
+        android:id="@+id/btnSampleRechercheGuidee_utileoupas"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/rechercheguidee_customview_sample_btn_label"

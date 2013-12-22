@@ -177,7 +177,6 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
         
         ImageView ivIcon = (ImageView) convertView.findViewById(R.id.zonegeoselection_listviewrow_icon);
         String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "128");
-        Log.e(LOG_TAG, "getView() - defaultIconSizeString : "+defaultIconSizeString);
         int defaultIconSize = 128;
         try{
         	defaultIconSize = Integer.parseInt(defaultIconSizeString);

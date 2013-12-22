@@ -121,7 +121,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	implements DataChangedListener
 //End of user code
 {
-	
 	//Start of user code constants Accueil_CustomViewActivity
 //	static final int TELECHARGE_FICHE_MENU_ID = 1;	
 	static final int TELECHARGE_PHOTO_FICHES_MENU_ID = 2;
@@ -135,9 +134,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	LinearLayout llContainerLayout;
 	boolean isOnCreate = true;
 	
-	
 	protected HashMap<Integer, MultiProgressBar> progressBarZones = new HashMap<Integer, MultiProgressBar>(); 
-	
 	
 	//End of user code
 
@@ -157,7 +154,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         
         if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - isOnCreate : "+isOnCreate);
         
-        
         // Defines a Handler object that's attached to the UI thread
         mHandler = new Handler(Looper.getMainLooper()) {
         	/*
@@ -172,7 +168,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
             	}
             	refreshScreenData();
             }
-
         };
 
         // Affichage Icones Fédé.

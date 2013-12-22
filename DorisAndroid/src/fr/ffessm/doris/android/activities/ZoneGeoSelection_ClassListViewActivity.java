@@ -42,8 +42,8 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.*;
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
@@ -74,7 +74,8 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteBaseActivity<
 	//Start of user code constants ZoneGeoSelection_ClassListViewActivity
 	//End of user code
     ZoneGeoSelection_Adapter adapter;
-
+    private static final String LOG_TAG = ZoneGeoSelection_ClassListViewActivity.class.getCanonicalName();
+    
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.zonegeoselection_listview);
@@ -112,7 +113,10 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteBaseActivity<
 		
 		TextView currentFilterText = (TextView) findViewById(R.id.zonegeoselection_listview_filtre_courant);
 		int currentFilterId = pref.getInt(this.getString(R.string.pref_key_filtre_zonegeo), 0);
-        if(currentFilterId == 0){
+		
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onResume() - currentFilterId : "+currentFilterId);
+
+        if(currentFilterId == -1){
         	currentFilterText.setText("");
         	findViewById(R.id.zonegeoselection_listview_filtre_courant__suppFiltreBtn).setVisibility(View.GONE);
         }
@@ -126,7 +130,7 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteBaseActivity<
 	public void onRemoveCurrentFilterClick(View view){
     	Toast.makeText(this, R.string.zonegeoselection_filtre_supprime, Toast.LENGTH_SHORT).show();
 		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
-		ed.putInt(this.getString(R.string.pref_key_filtre_zonegeo), 0);
+		ed.putInt(this.getString(R.string.pref_key_filtre_zonegeo), -1);
         ed.commit();
 		finish();
     }
