@@ -333,9 +333,8 @@ public class Fiche {
 						}
 					}
 
-					
-					
 					break;
+					
 				//Description Gauche et Droite
 				case 2 :
 					
@@ -380,11 +379,12 @@ public class Fiche {
 									
 									// permet d'enlever les Liens et de les remplacer par un texte, par exemple "(Fiche)"
 									autresDenominationsTexte = autresDenominationsTexte.replaceAll("<[^>]*fiche_numero=([^>]*)>", "{{$1}}").trim();
-										
-									AutreDenomination autreDenomination = new AutreDenomination(autresDenominationsTexte, "");									
-									autreDenomination.setFiche(this);
-									_contextDB.autreDenominationDao.create(autreDenomination);
 									
+									if ( ! autresDenominationsTexte.isEmpty() ){
+										AutreDenomination autreDenomination = new AutreDenomination(autresDenominationsTexte, "");									
+										autreDenomination.setFiche(this);
+										_contextDB.autreDenominationDao.create(autreDenomination);
+									}
 									
 								} else {
 									
@@ -392,23 +392,31 @@ public class Fiche {
 									//log.debug("getFiche() - contenu(initial) : " + contenuTexte);
 									
 									// suppression des sauts de ligne
-									contenuTexte = contenuTexte.replaceAll("\r\n", " ").replaceAll("\n", " ");
+									contenuTexte = contenuTexte.replaceAll("\r\n([^A-Z\\-])", " $1").replaceAll("\n([^A-Z\\-])", " $1");
 									//log.debug("getFiche() - contenu(1) : " + contenuTexte);
 	
 									// suppression des blancs multiples
-									contenuTexte = contenuTexte.replaceAll("\\s{2,}"," ");
+									contenuTexte = contenuTexte.replaceAll(" {2,}"," ");
 									//log.debug("getFiche() - contenu(2) : " + contenuTexte);
 									
-									// permet d'enlever les Liens et de les remplacer par (*)
+									
+									
+									// permet d'enlever les Liens et de les remplacer par une balise qui sera réutilisée dans l'appli.
 									//<../fiche2.asp?fiche_numero=289>
 									contenuTexte = contenuTexte.replaceAll("<[^>]*fiche_numero=([^>]*)>", "{{$1}}").trim();
 	
+									// parfois il y a encore d'autre <a ...> qui pointent vers rien
+									// On les enlève
+									contenuTexte = contenuTexte.replaceAll("<[^>]*>", "").trim();
+									
 									log.info("getFicheFromHtml() - rubrique : " + rubrique);
 									log.info("getFicheFromHtml() - contenu(après nettoyage) : " + contenuTexte);
 									
-									SectionFiche contenu = new SectionFiche(rubrique, contenuTexte);
-									contenu.setFiche(this);
-									_contextDB.sectionFicheDao.create(contenu);
+									if ( ! contenuTexte.isEmpty() ){
+										SectionFiche contenu = new SectionFiche(rubrique, contenuTexte);
+										contenu.setFiche(this);
+										_contextDB.sectionFicheDao.create(contenu);
+									}
 								}
 							}
 						}
@@ -443,44 +451,6 @@ public class Fiche {
 					for (Element elementEntoureDeGris : listeElementsEntoureDeGris) {
 						//log.debug("getFiche() - vignette 1: " + elementEntoureDeGris.toString().substring(0, Math.min(100,elementEntoureDeGris.toString().toString().length())));
 						
-						// Les images de la fiche sont dans les liens (A)
-						/*
-						Element elementAinEntoureDeGris= elementEntoureDeGris.getFirstElement(HTMLElementName.A);
-						Element elementImg = null;
-						String urlImageDansFiche = "";
-						
-						if (elementAinEntoureDeGris != null)
-						{
-							elementImg = elementAinEntoureDeGris.getFirstElement(HTMLElementName.IMG);
-							log.debug("getFiche() - vignette 2: " + elementImg.toString().substring(0, Math.min(100,elementImg.toString().toString().length())));
-							
-							listeAttributs=elementImg.getAttributes();
-							for (Attribute attribut : listeAttributs) {
-								if (attribut.getName().equalsIgnoreCase("src") && attribut.getValue().contains("gestionenligne")){
-									urlImageDansFiche = attribut.getValue().replaceAll(Constants.getSiteUrl(), "");
-									log.debug("getFiche() - urlImageDansFiche : " + urlImageDansFiche);
-									break;
-								}
-
-							}
-						}*/
-						
-					// Devenue inutile avec recherche des photos par la page de prévisualisation
-					/*
-
-						if (elementImg != null) {
-							//Recup Texte
-							Element elementImgTexte = elementEntoureDeGris.getFirstElementByClass("normal2");
-							if (elementImgTexte != null)
-							{
-								log.info("getFiche() - Texte : " + elementImgTexte.getRenderer().toString());
-								// TODO :
-								// ficheListeImages.add(new Image(element2.getRenderer().toString(),urlImageDansFiche));
-							}
-						}
-					*/
-					
-					
 						// Les participants
 						// On vérifie que le cadre Gris contient la rubrique Participants
 						Element elementRubriqueinEntoureDeGris= elementEntoureDeGris.getFirstElementByClass("rubrique");
@@ -578,8 +548,6 @@ public class Fiche {
 					}
 				}
 			}
-
-			
 		}
 		
 		
@@ -648,8 +616,6 @@ public class Fiche {
 							}
 						}
 					}
-
-								
 				}
 					
 				if (largeurTable!=null && largeurTable.equals("372")) {
@@ -657,32 +623,6 @@ public class Fiche {
 					
 					//Recup du TR dont le 3ème TD fils contient les infos DROITE (images et qui a fait la fiche)
 					List<? extends Element> ListeelementTable_IMG = elementTable_TABLE.getAllElements(HTMLElementName.IMG);
-					
-					for (Element elementTableImg : ListeelementTable_IMG) {
-						List<? extends Attribute> listeAttributsTableImg=elementTableImg.getAttributes();
-						for (Attribute attribut : listeAttributsTableImg) {
-							if (attribut.getName().equalsIgnoreCase("src") && attribut.getValue().contains("gestionenligne")){
-								// TODO :
-								//urlImageDansFiche = attribut.getValue().replaceAll(Constants.getSiteUrl(), "");
-								//log.info("getFiche() - urlImageDansFiche : " + urlImageDansFiche);
-														
-								break;
-							}
-							
-						}
-					}
-						
-					//Recup Texte Image
-					/*
-					Element element2 = elementTable_TABLE.getFirstElementByClass("normal2");
-					if (element2 != null)
-					{
-						log.info("getFiche() - Texte : " + element2.getRenderer().toString());
-						// TODO :
-						// ficheListeImages.add(new Image(element2.getRenderer().toString(), urlImageDansFiche));
-					}*/
-					break;
-			
 				}
 
 			}
@@ -711,7 +651,6 @@ public class Fiche {
 					}
 				}
 			}
-
 		}
 		
 		if (sbListeLiensVersFiches.length() !=0){
@@ -728,58 +667,6 @@ public class Fiche {
     	log.trace("getFicheFromHtml() - Fin");
 	}
 	
-	
-	public class Detail {
-
-		public String titre;
-		public String contenu;
-		public boolean affiche;
-		
-		public Detail(String inTitre, String inContenu, boolean inAffiche) {
-			log.trace("Detail() - Début");
-			log.debug("Detail() - Titre : " + inTitre);
-			log.debug("Detail() - Contenu : " + inContenu);
-			log.debug("Detail() - Affiche : " + inAffiche);
-			titre = inTitre;
-			contenu = inContenu;
-			affiche = inAffiche;
-			log.trace("Detail() - Fin");
-		}
-	}
-	
-	public class Image {
-
-		public String titre;
-		public boolean principale;
-		public String urlVignette;
-		public String urlImage;
-		
-		public Image(String inTitre, String inUrl) {
-			log.debug("Image() - Début");
-			log.debug("Image() - Titre : " + inTitre);
-			log.debug("Image() - Url : " + inUrl);
-
-			titre = inTitre;
-			
-			//Les remplacements si dessous permettent de "calculer" simplement la référence de la grande image
-			urlImage = inUrl.replace("/photos_fiche_moy/","/photos/").replace("/photos_fiche_vig/","/photos/");
-			//ou de la vignette
-			urlVignette = inUrl.replace("/photos_fiche_moy/","/photos_fiche_vig/");
-			
-			//Si c'est l'image principale alors c'est l'image : photos_fiche_moy
-			if (inUrl.contains("/photos_fiche_moy/")) {
-				principale = true;
-			}else {
-				principale = false;
-			}
-			
-			log.debug("Image() - principale : " + principale);
-			log.debug("Image() - urlImage : " + urlImage);
-			log.debug("Image() - urlVignette : " + urlVignette);
-			log.debug("Image() - Fin");
-		}
-		
-	}
 	
 	/**
 	 * @return liste des numeroFiche des fiches liées

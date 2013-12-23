@@ -143,8 +143,8 @@ public class PrefetchDorisWebSite {
 			String listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeFiches.html";
 			log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
 				
-			String urlFiche = "http://doris.ffessm.fr/fiche2.asp?fiche_numero=1260";
-			String fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche1260.html";
+			String urlFiche = "http://doris.ffessm.fr/fiche2.asp?fiche_numero=2617";
+			String fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche2617.html";
 			
 			if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
 				log.info("OK - fiche2");
@@ -159,6 +159,8 @@ public class PrefetchDorisWebSite {
 				}
 			}
 
+			//String contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
+			//fiche.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
 			log.debug("doMain() - Fin TEST");
 		} else {
 
@@ -364,8 +366,10 @@ public class PrefetchDorisWebSite {
 					nbFichesTraitees += 1;
 					
 					if (  (nbFichesTraitees % 50) == 0) {
-						log.info("fiche traitées = "+nbFichesTraitees+", pause de 5s...");
-						Thread.sleep(1000);
+						if (! action.equals("NODWNLD")) {
+							log.info("fiche traitées = "+nbFichesTraitees+", pause de 1s...");
+							Thread.sleep(1000);
+						}
 					}
 					if (  nbFichesTraitees <= nbMaxFichesTraitees ) {
 						// TODO : Ne pas traiter dans certain cas
