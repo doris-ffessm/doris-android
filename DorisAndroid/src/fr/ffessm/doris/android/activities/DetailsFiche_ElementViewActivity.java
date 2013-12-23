@@ -271,6 +271,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			if(entry.getContenu() != null){
 				
 				for (SectionFiche sectionFiche : entry.getContenu()) {
+					//Log.d(LOG_TAG, "refreshScreenData() - titre : "+sectionFiche.getTitre());
+					//Log.d(LOG_TAG, "refreshScreenData() - texte : "+sectionFiche.getTexte());
 					addFoldableView(containerLayout, sectionFiche.getTitre(), sectionFiche.getTexte());
 				}
 			}
@@ -403,16 +405,18 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         	contenuText.setVisibility(View.VISIBLE);
         }
         
-        //TODO : Test remplacement (Fiche Liée) par une action
-        //Le but sera ensuite d'ouvrire la dite fiche
+        // Si le texte contient {{999}} alors on remplace par (Fiche) est on met un lien vers la fiche sur (Fiche)
         SpannableString richtext = null;
-        //TODO : {{ ! }}
         
         Log.d(LOG_TAG, "addFoldableView() - titre : "+titre);
-        if ( !texte.toString().matches(".*\\{\\{.*\\}\\}.*")) {
+        if ( !texte.toString().replaceAll("\\s", "").matches(".*\\{\\{.*\\}\\}.*")) {
+        	//Log.d(LOG_TAG, "addFoldableView() - 010");
         	richtext = new SpannableString(texte);
+        	
         } else {
-        	final Context context = this; 
+        	//Log.d(LOG_TAG, "addFoldableView() - 020");
+        	
+        	final Context context = this;         	
         	
         	// TODO : doit être améliorable mais je n'arrive pas à manipuler directement SpannableString
         	// donc pas de concat, pas de regexp.
@@ -428,7 +432,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	        	positionFin = texte.toString().indexOf("}}", positionDep);
 	        	
 		        String refFiche = texte.toString().substring(positionDep+2, positionFin);
-		        Log.d(LOG_TAG, "addFoldableView() - refFiche : "+refFiche);
+		        //Log.d(LOG_TAG, "addFoldableView() - refFiche : "+refFiche);
 		        
 		        listeFicheNumero[i] = Integer.valueOf(refFiche);
 	        }
@@ -436,7 +440,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	        
 	        //On enlève les liens significatifs et on met (Fiche)
 	        texte = texte.toString().replaceAll("\\{\\{[0-9]*\\}\\}", "(Fiche)");
-	        Log.d(LOG_TAG, "addFoldableView() - texte : "+texte);
+	        //Log.d(LOG_TAG, "addFoldableView() - texte : "+texte);
 	        richtext = new SpannableString(texte);
 	        
 	        
@@ -470,11 +474,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	        
 	        
         }
+        //Log.d(LOG_TAG, "addFoldableView() - richtext : "+richtext);
                 
         contenuText.setText(richtext, BufferType.SPANNABLE);
         // make our ClickableSpans and URLSpans work 
         contenuText.setMovementMethod(LinkMovementMethod.getInstance());
-       // contenuText.
         
         ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
         

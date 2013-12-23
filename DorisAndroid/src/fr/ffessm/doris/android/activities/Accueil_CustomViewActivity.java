@@ -152,6 +152,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     		showToast("Veuillez patienter que la base de donnée s'initialise.");
 		}*/
         
+        
         if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - isOnCreate : "+isOnCreate);
         
         // Defines a Handler object that's attached to the UI thread
