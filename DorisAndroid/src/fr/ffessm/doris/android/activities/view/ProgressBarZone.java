@@ -110,7 +110,7 @@ public class ProgressBarZone {
 		   
 		   ivIcone.setImageResource(inIcone);
 
-		   int iconeZine = Integer.valueOf(Outils.getParamString(inContext.getApplicationContext(), R.string.pref_key_list_icon_size, "128"));
+		   int iconeZine = Integer.valueOf(Outils.getParamString(inContext.getApplicationContext(), R.string.pref_key_accueil_icon_size, "64"));
 	       ivIcone.setMaxHeight(iconeZine);
 		   
 		   tvSummaryText.setText(inSummary);

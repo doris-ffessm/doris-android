@@ -128,12 +128,19 @@
 	    android:key="presentation_category"
 		android:title="@string/presentation_preference_category"
 	    android:layout="@layout/preference_layout_category">
-	         
+	    <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+            android:key="@string/pref_key_accueil_icon_size" 
+        	android:title="@string/accueil_icon_size_prompt" 
+        	android:entryValues="@array/icon_size_values"
+        	android:entries="@array/icon_size_lib" 
+        	android:defaultValue="@string/list_icon_size_default"
+        	android:layout="@layout/preference_layout_preference"
+        	/>
         <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
             android:key="@string/pref_key_list_icon_size" 
         	android:title="@string/list_icon_size_prompt" 
-        	android:entryValues="@array/list_icon_size_values"
-        	android:entries="@array/list_icon_size_lib" 
+        	android:entryValues="@array/icon_size_values"
+        	android:entries="@array/icon_size_lib" 
         	android:defaultValue="@string/list_icon_size_default"
         	android:layout="@layout/preference_layout_preference"
         	/>

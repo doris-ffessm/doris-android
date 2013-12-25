@@ -95,7 +95,7 @@ public class MultiProgressBar extends LinearLayout {
 
 		int iconeZine = Integer.valueOf(Outils.getParamString(
 				context.getApplicationContext(),
-				R.string.pref_key_list_icon_size, "128"));
+				R.string.pref_key_accueil_icon_size, "64"));
 		ivIcon.setMaxHeight(iconeZine);
 
 		tvSummaryText.setText(inSummary);
