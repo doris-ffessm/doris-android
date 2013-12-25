@@ -1,4 +1,5 @@
 (start)->(SplashScreen)
+(SplashScreen)-><SplashScreenChoice>
 (Accueil)-><AccueilChoice>
 (Preference)-><PreferenceChoice>
 (EtatModeHorsLigne)-><EtatModeHorsLigneChoice>
@@ -6,17 +7,20 @@
 (ListeFicheAvecFiltre)-><ListeFicheAvecFiltreChoice>
 (DetailsFiche)-><DetailsFicheChoice>
 (ImagePleinEcran)-><ImagePleinEcranChoice>
+(ListeParticipantAvecFiltre)-><ListeParticipantAvecFiltreChoice>
+(DetailsParticipant)-><DetailsParticipantChoice>
 (ZoneGeoSelection)-><ZoneGeoSelectionChoice>
 (GroupeSelection)-><GroupeSelectionChoice>
-(SplashScreen)-><SplashScreenChoice>
 (TelechargeFiches)->(end)
 (VerifieNouvellesFiches)->(end)
 (VerifieMAJFiches)->(end)
 (TelechargePhotosFiches)->(end)
 (TelechargePhotosFiche)->(end)
+<SplashScreenChoice>->(Accueil)
 <AccueilChoice>->(RechercheGuidee)
 <AccueilChoice>->(ListeFicheAvecFiltre)
 <AccueilChoice>->(EtatModeHorsLigne)
+<AccueilChoice>->(ListeParticipantAvecFiltre)
 <AccueilChoice>->(VerifieNouvellesFiches)
 <AccueilChoice>->(VerifieMAJFiches)
 <AccueilChoice>->(TelechargePhotosFiches)
@@ -25,4 +29,4 @@
 (ListeFicheAvecFiltre)->(DetailsFiche)		
 <DetailsFicheChoice>->(ImagePleinEcran)
 <DetailsFicheChoice>->(TelechargePhotosFiche)
-<SplashScreenChoice>->(Accueil)
+(ListeParticipantAvecFiltre)->(DetailsParticipant)		

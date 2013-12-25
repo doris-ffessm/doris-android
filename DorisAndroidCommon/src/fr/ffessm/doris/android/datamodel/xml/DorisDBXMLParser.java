@@ -180,6 +180,8 @@ public class DorisDBXMLParser {
 	public static final String DATAREF_INTERVENANTFICHE_fiche = "fiche";
 	public static final String DATAATT_PARTICIPANT_nom = "nom";
 	public static final String DATAATT_PARTICIPANT_NOM = "NOM";
+	public static final String DATAATT_PARTICIPANT_numeroParticipant = "numeroParticipant";
+	public static final String DATAATT_PARTICIPANT_NUMEROPARTICIPANT = "NUMEROPARTICIPANT";
 	public static final String DATAREF_PARTICIPANT_photo = "photo";
 	public static final String DATAREF_PARTICIPANT_intervenantFiches = "intervenantFiches";
 	public static final String DATAATT_PHOTOPARTICIPANT_cleURL = "cleURL";
@@ -209,6 +211,8 @@ public class DorisDBXMLParser {
 	public static final String DATAREF_GROUPE_groupePere = "groupePere";
 	public static final String DATAATT_DORISDB_METADATA_dateBase = "dateBase";
 	public static final String DATAATT_DORISDB_METADATA_DATEBASE = "DATEBASE";
+	public static final String DATAATT_DORISDB_METADATA_dateMAJPartielle = "dateMAJPartielle";
+	public static final String DATAATT_DORISDB_METADATA_DATEMAJPARTIELLE = "DATEMAJPARTIELLE";
 
 
 
@@ -756,6 +760,9 @@ public class DorisDBXMLParser {
 	            result.setNom(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_PARTICIPANT_nom);
 	        } else
+			//TODO if (currentTagName.equals(DATAATT_PARTICIPANT_NUMEROPARTICIPANT)) {
+	        //    title = readTitle(parser);
+	        //} else	
 					// TODO deal with owned ref photo
 					// TODO deal with ref intervenantFiches
 	        {
@@ -918,6 +925,11 @@ public class DorisDBXMLParser {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_DORISDB_METADATA_dateBase);
 	            result.setDateBase(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_DORISDB_METADATA_dateBase);
+	        } else
+			if (currentTagName.equals(DATAATT_DORISDB_METADATA_dateMAJPartielle)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_DORISDB_METADATA_dateMAJPartielle);
+	            result.setDateMAJPartielle(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_DORISDB_METADATA_dateMAJPartielle);
 	        } else
 	        {
 	            skip(parser);

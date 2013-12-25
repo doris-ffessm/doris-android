@@ -205,9 +205,8 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.groupeselection_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
-				labelSB.append(entry.getNomGroupe());
-			
-			labelSB.append(" ");
+		labelSB.append(entry.getNomGroupe());
+		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
 
         TextView tvDetails = (TextView) convertView.findViewById(R.id.groupeselection_listviewrow_details);

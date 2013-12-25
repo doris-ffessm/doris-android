@@ -18,6 +18,14 @@
 <!--End of user code-->
 	
 		<activity 
+			android:name=".activities.SplashScreen_CustomViewActivity" 
+			android:label="@string/app_name">
+			<intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+		</activity>
+		<activity 
 			android:name=".activities.Accueil_CustomViewActivity" 
 			android:label="@string/app_name">
 		</activity>
@@ -46,20 +54,20 @@
 			android:label="@string/app_name">
 		</activity>
 		<activity 
+			android:name=".activities.ListeParticipantAvecFiltre_ClassListViewActivity" 
+			android:label="@string/app_name">
+		</activity>
+		<activity 
+			android:name=".activities.DetailsParticipant_ElementViewActivity" 
+			android:label="@string/app_name">
+		</activity>
+		<activity 
 			android:name=".activities.ZoneGeoSelection_ClassListViewActivity" 
 			android:label="@string/app_name">
 		</activity>
 		<activity 
 			android:name=".activities.GroupeSelection_ClassListViewActivity" 
 			android:label="@string/app_name">
-		</activity>
-		<activity 
-			android:name=".activities.SplashScreen_CustomViewActivity" 
-			android:label="@string/app_name">
-			<intent-filter >
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 		</activity>
     </application>
 

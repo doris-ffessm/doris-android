@@ -245,9 +245,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
-				labelSB.append(entry.getNomCommun());
-			
-			labelSB.append(" ");
+		labelSB.append(entry.getNomCommun());
+		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
 
         TextView tvDetails = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_details);
@@ -392,20 +391,19 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		return false;
 	}
 	
-	public int filter(int position, Fiche fiche, String pattern){
+	public int filter(int position, Fiche entry, String pattern){
 		// Start of user code protected additional ListeFicheAvecFiltre_Adapter filter code
-		// TODO probablement faire en sorte d'ignorer les accents pour la recherche
 		// chercher séparement les mots (séparés par un blanc) et faire un "ET" 
 		String[] patterns = pattern.split(" ");
 		boolean isValid = true;
 		for (String patt : patterns) {
 			if(patt.isEmpty()) continue; // en cas de blanc multiples
 			if(patt.equals("*")) break;  // accepte tout; aussi utilisé pour le filtre en retour de sélection de filtre
-			if(fiche.getTextePourRechercheRapide().contains(patt))
+			if(entry.getTextePourRechercheRapide().contains(patt))
 				continue;
 			else isValid = false;
 		}		
-		if(isValid) return 1;		
+		if(isValid) return 1;
 		else return -1;
 		// End of user code
 	}
