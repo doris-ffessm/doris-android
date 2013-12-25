@@ -53,7 +53,6 @@ import fr.ffessm.doris.android.datamodel.Groupe;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -73,6 +72,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code protected additional GroupeSelection_Adapter imports
 // additional imports
+import android.graphics.BitmapFactory;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;

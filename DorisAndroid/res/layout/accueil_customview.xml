@@ -94,13 +94,13 @@
 			
 			
 			
+			<View style="@style/Separateur"/>
 			<LinearLayout
 		        android:id="@+id/accueil_navigation_zones_layout"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
 		        android:orientation="vertical" >
 	        </LinearLayout>
-			<View style="@style/Separateur"/>
 			<TextView
 		        android:id="@+id/accueil_etat_hors_ligne_titre"
 		        android:layout_width="wrap_content"

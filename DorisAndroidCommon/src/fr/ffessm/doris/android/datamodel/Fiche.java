@@ -813,7 +813,7 @@ public class Fiche {
 	/** intervenants sur une fiche */
 	public Collection<IntervenantFiche> getIntervenants() {
 		return this.intervenants;
-	}				
+	}					
 
 
 
@@ -906,14 +906,14 @@ public class Fiche {
 			sb.append(this.groupe.getId());
 	    	sb.append("</"+XML_REF_GROUPE+">");
 		}
-	/*	if(this.intervenants != null){
+		if(this.intervenants != null){
 			for(IntervenantFiche ref : this.intervenants){
 					
 	    		sb.append("\n"+indent+"\t<"+XML_REF_INTERVENANTS+" id=\"");
 	    		sb.append(ref._id);
 	        	sb.append("\"/>");
 	    	}		
-		}*/
+		}
 		// TODO deal with other case
 
 		sb.append("</"+XML_FICHE+">");
