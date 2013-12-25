@@ -53,7 +53,6 @@ import fr.ffessm.doris.android.datamodel.Groupe;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -73,6 +72,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code protected additional GroupeSelection_Adapter imports
 // additional imports
+import android.graphics.BitmapFactory;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -205,9 +205,8 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.groupeselection_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
-				labelSB.append(entry.getNomGroupe());
-			
-			labelSB.append(" ");
+		labelSB.append(entry.getNomGroupe());
+		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
 
         TextView tvDetails = (TextView) convertView.findViewById(R.id.groupeselection_listviewrow_details);

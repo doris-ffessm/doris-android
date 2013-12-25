@@ -47,6 +47,7 @@
       <dataReferences name="photo" documentation="photo du participant" containment="true" opposite="//@dataModel/@dataAssociations.3" type="//@dataModel/@dataClasses.6"/>
       <dataReferences name="intervenantFiches" upperBound="-1" opposite="//@dataModel/@dataAssociations.8" type="//@dataModel/@dataClasses.4"/>
       <dataAttributes name="nom" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="numeroParticipant" documentation="identifiant du participant sur le site Doris" lowerbound="1" type="//@dataModel/@dataClasses.13"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="PhotoParticipant">
       <dataReferences name="participant" opposite="//@dataModel/@dataAssociations.3" type="//@dataModel/@dataClasses.5"/>
@@ -74,6 +75,7 @@
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="DorisDB_metadata" documentation="données complémentaires sur la base Doris">
       <dataAttributes name="dateBase" documentation="Date de récupération de la base DORIS" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="dateMAJPartielle" documentation="Date d'une éventuelle mise à jour partielle de la base &#xD;&#xA;(ie. plus récente que la copie fournie avec l'application)" type="//@dataModel/@dataClasses.11"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:NativeDataClass" name="String" instanceClassName="java.lang.String"/>
     <dataClasses xsi:type="genandroid:NativeDataClass" name="LongString" instanceClassName="java.lang.String" databaseType="com.j256.ormlite.field.DataType.LONG_STRING"/>
@@ -89,18 +91,21 @@
     <dataAssociations name="Fiche_IntervenantFiche" references="//@dataModel/@dataClasses.4/@dataReferences.1 //@dataModel/@dataClasses.0/@dataReferences.7"/>
     <dataAssociations name="IntervenantFiche_Participant" references="//@dataModel/@dataClasses.5/@dataReferences.1 //@dataModel/@dataClasses.4/@dataReferences.0"/>
   </dataModel>
-  <presentationModel preferenceView="//@presentationModel/@viewActivities.1" welcomeView="//@presentationModel/@viewActivities.9">
-    <viewActivities xsi:type="genandroid:CustomViewActivity" name="Accueil" accessibleViews="//@presentationModel/@viewActivities.3 //@presentationModel/@viewActivities.4 //@presentationModel/@viewActivities.2" triggerableBackgroundActivities="//@presentationModel/@backgroundActivities.1 //@presentationModel/@backgroundActivities.2 //@presentationModel/@backgroundActivities.3"/>
+  <presentationModel preferenceView="//@presentationModel/@viewActivities.2" welcomeView="//@presentationModel/@viewActivities.0">
+    <viewActivities xsi:type="genandroid:CustomViewActivity" name="SplashScreen" documentation="Vue spéciale pour le splash screen, &#xD;&#xA;sert de détecteur de mise à jour de la base" accessibleViews="//@presentationModel/@viewActivities.1"/>
+    <viewActivities xsi:type="genandroid:CustomViewActivity" name="Accueil" accessibleViews="//@presentationModel/@viewActivities.4 //@presentationModel/@viewActivities.5 //@presentationModel/@viewActivities.3 //@presentationModel/@viewActivities.8" triggerableBackgroundActivities="//@presentationModel/@backgroundActivities.1 //@presentationModel/@backgroundActivities.2 //@presentationModel/@backgroundActivities.3"/>
     <viewActivities xsi:type="genandroid:PreferenceViewActivity" name="Preference"/>
     <viewActivities xsi:type="genandroid:CustomViewActivity" name="EtatModeHorsLigne" documentation="Vue présentant les détails de l'état du mode hors ligne" triggerableBackgroundActivities="//@presentationModel/@backgroundActivities.3"/>
-    <viewActivities xsi:type="genandroid:CustomViewActivity" name="RechercheGuidee" accessibleViews="//@presentationModel/@viewActivities.4"/>
-    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ListeFicheAvecFiltre" documentation="Cette liste déroulante de fiche, dispose d'un filtre:&#xD;&#xA;Ce filtre permet d'entrer du texte, un zone géographique et une zone d'observation" accessibleViews="//@presentationModel/@viewActivities.5" selectItemAction="//@presentationModel/@viewActivities.5" isLargeList="true" listedElement="//@dataModel/@dataClasses.0" presentedDetail="//@presentationModel/@classDetails.0"/>
-    <viewActivities xsi:type="genandroid:ElementViewActivity" name="DetailsFiche" documentation="Affiche les détails d'une fiche" accessibleViews="//@presentationModel/@viewActivities.6" triggerableBackgroundActivities="//@presentationModel/@backgroundActivities.4" element="//@dataModel/@dataClasses.0"/>
+    <viewActivities xsi:type="genandroid:CustomViewActivity" name="RechercheGuidee" accessibleViews="//@presentationModel/@viewActivities.5"/>
+    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ListeFicheAvecFiltre" documentation="Cette liste déroulante de fiche, dispose d'un filtre:&#xD;&#xA;Ce filtre permet d'entrer du texte, un zone géographique et une zone d'observation" accessibleViews="//@presentationModel/@viewActivities.6" selectItemAction="//@presentationModel/@viewActivities.6" isLargeList="true" listedElement="//@dataModel/@dataClasses.0" presentedDetail="//@presentationModel/@classDetails.0"/>
+    <viewActivities xsi:type="genandroid:ElementViewActivity" name="DetailsFiche" documentation="Affiche les détails d'une fiche" accessibleViews="//@presentationModel/@viewActivities.7" triggerableBackgroundActivities="//@presentationModel/@backgroundActivities.4" element="//@dataModel/@dataClasses.0"/>
     <viewActivities xsi:type="genandroid:CustomViewActivity" name="ImagePleinEcran" documentation="Affiche une image en plein écran"/>
-    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ZoneGeoSelection" documentation="Vue permettant de sélectionner la zone géographique pour le filtrage" isFilterable="false" listedElement="//@dataModel/@dataClasses.7" presentedDetail="//@presentationModel/@classDetails.1"/>
-    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="GroupeSelection" documentation="Liste présentant les Groupe de manière hiérarchique (le filtre en haut assure la gestion de la profondeur)" isFilterable="false" listedElement="//@dataModel/@dataClasses.9" presentedDetail="//@presentationModel/@classDetails.2"/>
-    <viewActivities xsi:type="genandroid:CustomViewActivity" name="SplashScreen" documentation="Vue spéciale pour le splash screen, &#xD;&#xA;sert de détecteur de mise à jour de la base" accessibleViews="//@presentationModel/@viewActivities.0"/>
+    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ListeParticipantAvecFiltre" documentation="Vue présentant les participants Doris" accessibleViews="//@presentationModel/@viewActivities.9" selectItemAction="//@presentationModel/@viewActivities.9" listedElement="//@dataModel/@dataClasses.5" presentedDetail="//@presentationModel/@classDetails.1"/>
+    <viewActivities xsi:type="genandroid:ElementViewActivity" name="DetailsParticipant" documentation="Vue présentant les détails d'un participant" element="//@dataModel/@dataClasses.5"/>
+    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ZoneGeoSelection" documentation="Vue permettant de sélectionner la zone géographique pour le filtrage" isFilterable="false" listedElement="//@dataModel/@dataClasses.7" presentedDetail="//@presentationModel/@classDetails.2"/>
+    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="GroupeSelection" documentation="Liste présentant les Groupe de manière hiérarchique (le filtre en haut assure la gestion de la profondeur)" isFilterable="false" listedElement="//@dataModel/@dataClasses.9" presentedDetail="//@presentationModel/@classDetails.3"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.0/@dataAttributes.1" name="ContenuListeFiche" secondaryAttributes="//@dataModel/@dataClasses.0/@dataAttributes.0"/>
+    <classDetails mainAttributes="//@dataModel/@dataClasses.5/@dataAttributes.0" name="ContenuListeParticipant"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.7/@dataAttributes.0" name="ContenuListeZoneGeographique"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.9/@dataAttributes.2" name="ContenuListeGroupeSelection" secondaryAttributes="//@dataModel/@dataClasses.9/@dataAttributes.3"/>
     <backgroundActivities name="TelechargeFiches" documentation="Tache responsable du téléchargement des données des fiches. &#xD;&#xA;Cela inclue les données croisées telles que les zones géographiqes et d'observation.&#xD;&#xA;Elle vérifie le niveau de détails requis pour chaque fiche."/>

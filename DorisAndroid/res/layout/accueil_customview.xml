@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:padding="4dip"
 		android:text="@string/accueil_customview_texte_text"/>
+	
 	<View style="@style/Separateur"/>
 	<ScrollView
 	    android:layout_width="fill_parent"
@@ -94,13 +95,13 @@
 			
 			
 			
+			<View style="@style/Separateur"/>
 			<LinearLayout
 		        android:id="@+id/accueil_navigation_zones_layout"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
 		        android:orientation="vertical" >
 	        </LinearLayout>
-			<View style="@style/Separateur"/>
 			<TextView
 		        android:id="@+id/accueil_etat_hors_ligne_titre"
 		        android:layout_width="wrap_content"
@@ -110,13 +111,51 @@
 	    		android:textAppearance="?android:attr/textAppearanceMedium" 
 	    		android:textColor="?android:attr/textColorPrimary"
 				android:text="@string/etatmodehorsligne_customview_titre_text"/>
-			
+			<!-- layout that will receive the progress -->
 			<LinearLayout
 		        android:id="@+id/accueil_progress_layout"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
 		        android:orientation="vertical" >
 	        </LinearLayout>
+	        
+			<!-- layout for  -->
+			<HorizontalScrollView
+			    android:id="@+id/horizontalScrollView1"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content" >
+
+			    <LinearLayout
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent"
+			        android:orientation="horizontal"
+					android:background="@drawable/groupe_icon_background" >
+					<LinearLayout
+				        android:layout_width="match_parent"
+				        android:layout_height="match_parent"
+				        android:orientation="vertical"
+						android:onClick="onClickBtnListeParticipants" >
+				        <ImageView
+					        android:id="@+id/accueil_participants_icone"
+					        android:layout_width="fill_parent"
+					        android:layout_height="wrap_content"
+					        android:adjustViewBounds="true"
+					        android:contentDescription="Participants"
+					        android:maxHeight="64dip"
+					        android:src="@drawable/participant_button" />
+				        <TextView
+					        android:id="@+id/accueil_participants_text"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:layout_marginLeft="2dp"
+					        android:layout_marginRight="2dp"
+				    		android:textAppearance="?android:attr/textAppearanceSmall" 
+				    		android:textColor="?android:attr/textColorPrimaryInverse"
+							android:text="@string/accueil_liste_participants_text"/>
+					</LinearLayout>
+			    </LinearLayout>
+
+			</HorizontalScrollView>
 		</LinearLayout>
 	</ScrollView>
 	

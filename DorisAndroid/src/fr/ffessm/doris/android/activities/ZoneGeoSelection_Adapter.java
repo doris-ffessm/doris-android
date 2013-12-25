@@ -147,9 +147,8 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.zonegeoselection_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
-				labelSB.append(entry.getNom());
-			
-			labelSB.append(" ");
+		labelSB.append(entry.getNom());
+		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
 
 		

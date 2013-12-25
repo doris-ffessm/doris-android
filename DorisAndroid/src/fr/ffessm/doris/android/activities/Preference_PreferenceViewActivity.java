@@ -42,7 +42,6 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;

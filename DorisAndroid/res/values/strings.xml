@@ -9,6 +9,7 @@
     
     <string name="btnOtherFiler_listeficheavecfiltre_listviewsearchrow_btn_label">Filtres</string>
     <string name="searchHint_listeficheavecfiltre_listviewsearchrow">Chercher...</string>
+    <string name="searchHint_listeparticipantavecfiltre_listviewsearchrow">Chercher...</string>
 	<!--End of user code
 	  -->
 </resources>

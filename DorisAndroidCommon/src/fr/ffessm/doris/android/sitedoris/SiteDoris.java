@@ -465,7 +465,7 @@ public class SiteDoris {
 					log.info("getListeParticipantsParInitiale() - id Participant : "+participantId);
 				}
 				if (numeroTR % 4 == 3){
-					listeParticipants.add(new Participant(Integer.valueOf(participantId), participantNom) );
+					listeParticipants.add(new Participant( participantNom, Integer.valueOf(participantId)) );
 					participantNom = "";
 					participantId = "";
 				}

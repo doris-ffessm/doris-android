@@ -35,7 +35,9 @@
 	            android:src="@android:drawable/ic_delete" 
 	            android:onClick="onRemoveCurrentFilterClick"/>
     </RelativeLayout>
-
+    <View style="@style/Separateur" />
+	<!--	
+End of user code -->
 	<ListView 
 	    android:id="@+android:id/zonegeoselection_listview"
 	    android:layout_width="match_parent"

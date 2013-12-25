@@ -106,12 +106,14 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	implements DataChangedListener
 // End of user code
 {
-	protected int ficheNumero;
+	
 	protected int ficheId;
 	
 	private static final String LOG_TAG = DetailsFiche_ElementViewActivity.class.getCanonicalName();
 
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_attributes
+	protected int ficheNumero;
+	
 	static final int FOLD_SECTIONS_MENU_ID = 1;	
 	static final int UNFOLD_SECTIONS_MENU_ID = 2;
 	
@@ -128,11 +130,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detailsfiche_elementview);
-        
         ficheId = getIntent().getExtras().getInt("ficheId");
-        ficheNumero = getIntent().getExtras().getInt("ficheNumero");
         
-		// Start of user code protectedDetailsFiche_ElementViewActivity_onCreate        
+		// Start of user code protectedDetailsFiche_ElementViewActivity_onCreate
+
+        ficheNumero = getIntent().getExtras().getInt("ficheNumero");
         // Defines a Handler object that's attached to the UI thread
 		mHandler = new Handler(Looper.getMainLooper()) {
 			/*
@@ -167,12 +169,12 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     private void refreshScreenData() {
     	// get our dao
     	RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
+		// Start of user code protectedDetailsFiche_ElementViewActivity.refreshScreenData
     	Fiche entry = null;
     	if (ficheId != 0) entry = entriesDao.queryForId(ficheId);
     	else if (ficheNumero != 0) entry = entriesDao.queryForEq("numeroFiche", ficheNumero).get(0);
 	    entry.setContextDB(getHelper().getDorisDBHelper());
-
-		// Start of user code protectedDetailsFiche_ElementViewActivity.refreshScreenData
+	    
     	((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText(entry.getNomScientifique());
 		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun());
 		((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText("N° "+((Integer)entry.getNumeroFiche()).toString());					
@@ -306,10 +308,14 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			sbCreditText.append(entry.getDateModification());
 						
 			for (IntervenantFiche intervenant : entry.getIntervenants()) {
+				intervenant.setContextDB(getHelper().getDorisDBHelper());
 				sbCreditText.append("\n"+intervenant.getId());
-				sbCreditText.append(" - "+Constants.getTitreParticipant(intervenant.getRoleIntervenant() ) );
-				sbCreditText.append(" - "+intervenant.getParticipant().getId());
-				sbCreditText.append(" - "+intervenant.getParticipant().getNom());
+				sbCreditText.append(" - "+Constants.getTitreParticipant(intervenant.getRoleIntervenant() ) );				
+				intervenant.setContextDB(getHelper().getDorisDBHelper());
+				Participant participant = intervenant.getParticipant();
+				participant.setContextDB(getHelper().getDorisDBHelper());
+				sbCreditText.append(" - "+participant.getId());
+				sbCreditText.append(" - "+participant.getNom());
 			}
 			
 			SpannableString richtext = new SpannableString(sbCreditText.toString());

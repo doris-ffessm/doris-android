@@ -482,7 +482,7 @@ public class PrefetchDorisWebSite {
 			
 				Date date = new Date();
 				SimpleDateFormat ft =  new SimpleDateFormat ("dd/MM/yyyy  HH:mm");
-				dbContext.dorisDB_metadataDao.create(new DorisDB_metadata(ft.format(date)));
+				dbContext.dorisDB_metadataDao.create(new DorisDB_metadata(ft.format(date),""));
 				
 	
 			} finally {

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resource Strings specific to detailsparticipant Element View and EditableElement View -->
+<resources>
+	<!--Start of user code protecteddetailsparticipant_elementview_strings.xml
+	-->	
+	<string name="detailsparticipant_elementview_nom_label">Nom : </string>
+	<string name="detailsparticipant_elementview_numeroparticipant_label">NumeroParticipant : </string>
+	<string name="detailsparticipant_elementview_nom_hint_text"></string>
+	<string name="detailsparticipant_elementview_numeroparticipant_hint_text"></string>
+	<!-- End of user code
+	-->
+</resources>

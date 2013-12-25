@@ -42,8 +42,8 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.*;
-import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
@@ -67,15 +67,17 @@ import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedZoneGeoSelection_ClassListViewActivity_additionalimports
 import android.widget.TextView;
+
+import fr.ffessm.doris.android.BuildConfig;
 // End of user code
 
 public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
 	
 	//Start of user code constants ZoneGeoSelection_ClassListViewActivity
+    private static final String LOG_TAG = ZoneGeoSelection_ClassListViewActivity.class.getCanonicalName();
 	//End of user code
     ZoneGeoSelection_Adapter adapter;
-    private static final String LOG_TAG = ZoneGeoSelection_ClassListViewActivity.class.getCanonicalName();
-    
+
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.zonegeoselection_listview);
