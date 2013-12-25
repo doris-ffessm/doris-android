@@ -3,16 +3,17 @@
 <resources>
 	<!--Start of user code protecteddetailsfiche_elementview_strings.xml
 	-->	
-	<string name="detailsfiche_elementview_nomscientifique_label">NomScientifique : </string>
-	<string name="detailsfiche_elementview_nomcommun_label">NomCommun : </string>
-	<string name="detailsfiche_elementview_numerofiche_label">NumeroFiche : </string>
-	<string name="detailsfiche_elementview_etatfiche_label">EtatFiche : </string>
-	<string name="detailsfiche_elementview_datecreation_label">"Création : "</string>
-	<string name="detailsfiche_elementview_datemodification_label">"Dernière modification : "</string>
+	<string name="detailsfiche_elementview_nomscientifique_label">NomScientifique\u00A0: </string>
+	<string name="detailsfiche_elementview_nomcommun_label">NomCommun\u00A0: </string>
+	<string name="detailsfiche_elementview_numerofiche_label">NumeroFiche\u00A0: </string>
+	<string name="detailsfiche_elementview_etatfiche_label">EtatFiche\u00A0: </string>
+	<string name="detailsfiche_elementview_datecreation_label">"Création\u00A0: "</string>
+	<string name="detailsfiche_elementview_datemodification_label">"Dernière modification\u00A0: "</string>
 	<string name="detailsfiche_elementview_autresdenominations_label">Autres dénominations</string>
 	<string name="detailsfiche_elementview_fichesliees_label">Fiches Liées</string>
 	<string name="detailsfiche_elementview_credit_label">Crédits</string>
 	<string name="detailsfiche_elementview_zonesgeo_label">Zones Doris</string>
+	<string name="detailsfiche_elementview_zonesgeo_aucune_label">"Aucune zone Doris n'est renseignée sur cette fiche"</string>
 	<string name="detailsfiche_elementview_nomscientifique_hint_text"></string>
 	<string name="detailsfiche_elementview_nomcommun_hint_text"></string>
 	<string name="detailsfiche_elementview_numerofiche_hint_text"></string>
