@@ -254,7 +254,8 @@ public class Fiche {
 		ficheRef = ficheRef.replace("(N°", "").replace(")", "");
 		setNumeroFiche(Integer.parseInt(ficheRef));
 		log.info("getFicheFromHtml() - ref : " + ficheRef);		
-				
+		log.info("getFicheFromHtml() - Etat Fiche : " + getEtatFiche());		
+		
 		//Centrage sur la TABLE qui contient tout le texte et les images
 		Element ElementTable;
 		List<? extends Element> listeElementsTable_TABLE;
@@ -586,8 +587,13 @@ public class Fiche {
 					try	{
 						Element ElementDistribution = ElementInfosGauche.getFirstElementByClass("normal").getFirstElement();
 						log.info("getFicheFromHtml() - ElementDistribution : " + ElementDistribution.getRenderer().toString().trim());
-						// TODO :
-						//ficheRegion = ElementDistribution.getRenderer().toString().trim();
+
+						String ficheRegion = ElementDistribution.getRenderer().toString().trim();
+						if ( ! ficheRegion.isEmpty() ){
+							SectionFiche contenu = new SectionFiche("Distribution", ficheRegion);
+							contenu.setFiche(this);
+							_contextDB.sectionFicheDao.create(contenu);
+						}
 					} catch (Exception e) {
 		        		log.debug("getFicheFromHtml() - la Distribution n'est pas toujours renseignée");
 		        	}

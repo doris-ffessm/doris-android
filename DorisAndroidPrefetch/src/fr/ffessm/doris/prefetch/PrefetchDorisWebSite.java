@@ -99,8 +99,6 @@ public class PrefetchDorisWebSite {
 	// Ces dossiers seront renommés qd nécessaire
 	private final static String DOSSIER_HTML = "html";
 	private final static String DOSSIER_HTML_REF = "html_ref";
-	private final static String DOSSIER_IMG = "img";
-	private final static String DOSSIER_RESULTATS = "result";
 	
 	// Inititalisation de la Gestion des Log 
 	public static Log log = LogFactory.getLog(PrefetchDorisWebSite.class);
@@ -779,7 +777,6 @@ public class PrefetchDorisWebSite {
 		
 		log.debug("checkDossiers() - Dossier de base : " + DOSSIER_RACINE);
 		log.debug("checkDossiers() - Dossier html : " + DOSSIER_HTML);
-		log.debug("checkDossiers() - Dossier Resultats : " + DOSSIER_RESULTATS);
 		log.debug("checkDossiers() - Fichier de la Base : " + DATABASE_URL);
 		
 		
@@ -830,46 +827,6 @@ public class PrefetchDorisWebSite {
 				}
 		}
 		
-		// Le dossier des fichiers image téléchargés
-		if(inAction.equals("INIT") || inAction.equals("INITSSIMG")){
-			File dossierImg = new File(DOSSIER_RACINE + "/" + DOSSIER_IMG);
-			if (dossierImg.exists()){
-				File dossierImgNew = new File(DOSSIER_RACINE + "/" + DOSSIER_IMG +"_"+ suffixe);
-				if(dossierImg.renameTo(dossierImgNew)){
-					log.info("Sauvegarde du dossier download : " + dossierImgNew.getAbsolutePath());
-				}else{
-					log.error("Echec renommage du dossier download : " + dossierImg.getAbsolutePath());
-					System.exit(0);
-				}
-			}
-			if (dossierImg.mkdir()) {
-				log.info("Création du dossier download : " + dossierImg.getAbsolutePath());
-			} else {
-				log.error("Echec de la Création du dossier download : " + dossierImg.getAbsolutePath());
-				System.exit(0);
-			}
-		}
-				
-		// Le dossier des résultats
-		// TODO : Il faudra être capable de lire le fichier précédement généré
-		if( inAction.equals("INIT") || inAction.equals("UPDATE") ){
-			File dossierResultats = new File(DOSSIER_RACINE + "/" + DOSSIER_RESULTATS);
-			if (dossierResultats.exists()){
-				File dossierResultatsNew = new File(DOSSIER_RACINE + "/" + DOSSIER_RESULTATS +"_"+ suffixe);
-				if(dossierResultats.renameTo(dossierResultatsNew)){
-					log.info("Sauvegarde du dossier résultats : " + dossierResultatsNew.getAbsolutePath());
-				}else{
-					log.error("Echec renommage du dossier résultats : " + dossierResultats.getAbsolutePath());
-					System.exit(0);
-				}
-			}
-			if (dossierResultats.mkdir()) {
-				log.info("Création du dossier résultats : " + dossierResultats.getAbsolutePath());
-			} else {
-				log.error("Echec de la Création du dossier résultats : " + dossierResultats.getAbsolutePath());
-				System.exit(0);
-			}
-		}
 		
 		// Le fichier de la base de données
 		if(inAction.equals("INIT") || inAction.equals("NODWNLD")){
