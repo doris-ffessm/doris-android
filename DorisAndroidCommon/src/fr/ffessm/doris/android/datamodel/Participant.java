@@ -109,15 +109,7 @@ public class Participant {
 	protected ForeignCollection<IntervenantFiche> intervenantFiches;
 
 	// Start of user code Participant additional user properties
-	
-	public Participant(int id, java.lang.String nom) {
-		super();
-		this._id = id;
-		this.nom = nom;
-	} 
-	
-	
-	
+	 
 	// End of user code
 	
 	public Participant() {} // needed by ormlite

@@ -304,10 +304,14 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			sbCreditText.append(entry.getDateModification());
 						
 			for (IntervenantFiche intervenant : entry.getIntervenants()) {
+				intervenant.setContextDB(getHelper().getDorisDBHelper());
 				sbCreditText.append("\n"+intervenant.getId());
-				sbCreditText.append(" - "+Constants.getTitreParticipant(intervenant.getRoleIntervenant() ) );
-				sbCreditText.append(" - "+intervenant.getParticipant().getId());
-				sbCreditText.append(" - "+intervenant.getParticipant().getNom());
+				sbCreditText.append(" - "+Constants.getTitreParticipant(intervenant.getRoleIntervenant() ) );				
+				intervenant.setContextDB(getHelper().getDorisDBHelper());
+				Participant participant = intervenant.getParticipant();
+				participant.setContextDB(getHelper().getDorisDBHelper());
+				sbCreditText.append(" - "+participant.getId());
+				sbCreditText.append(" - "+participant.getNom());
 			}
 			
 			SpannableString richtext = new SpannableString(sbCreditText.toString());
