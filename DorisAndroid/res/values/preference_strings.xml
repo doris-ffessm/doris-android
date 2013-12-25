@@ -40,8 +40,8 @@
 	<!-- Preferences -->
 	<string name="mode_connecte_preference_category">Mode connecté / à la demande</string>
 	
-	<string name="mode_connecte_wifi_only_prompt">Téléch. photos en wifi uniquement ?</string>
-    <string name="mode_connecte_qualite_photo_prompt">Qualité photos téléch. ?</string>
+	<string name="mode_connecte_wifi_only_prompt">Téléch. photos en wifi uniquement\u00A0?</string>
+    <string name="mode_connecte_qualite_photo_prompt">Qualité photos téléch.\u00A0?</string>
     <string name="mode_connecte_qualite_photo_defaut">MED_RES</string>
     <string-array name="mode_connecte_qualite_photo_values">
         <item>MED_RES</item>
@@ -55,13 +55,13 @@
     
 	<string name="mode_precharg_preference_category">Précharg. photos pour Mode Hors Ligne</string>
     
-	<string name="mode_precharg_wifi_only_prompt">Précharg. en wifi uniquement ?</string>
+	<string name="mode_precharg_wifi_only_prompt">Précharg. en wifi uniquement\u00A0?</string>
 	<string name="mode_precharg_region_prompt">Qualité Images par Zone</string>
-    <string name="mode_precharg_region_france_prompt">- France Métropolitaine ?</string>
-    <string name="mode_precharg_region_eaudouce_prompt">- Eau douce ?</string>
-    <string name="mode_precharg_region_atlantno_prompt">- Atlantique Nord-Ouest ?</string>
-    <string name="mode_precharg_region_indopac_prompt">- Indo-Pacifique ?</string>
-    <string name="mode_precharg_region_caraibes_prompt">- Caraïbes ?</string>
+    <string name="mode_precharg_region_france_prompt">- France Métropolitaine\u00A0?</string>
+    <string name="mode_precharg_region_eaudouce_prompt">- Eau douce\u00A0?</string>
+    <string name="mode_precharg_region_atlantno_prompt">- Atlantique Nord-Ouest\u00A0?</string>
+    <string name="mode_precharg_region_indopac_prompt">- Indo-Pacifique\u00A0?</string>
+    <string name="mode_precharg_region_caraibes_prompt">- Caraïbes\u00A0?</string>
     <string name="mode_precharg_favorite_prompt">- Fiches préférées ? (A FAIRE)</string>
     <string name="mode_precharg_region_defaut">P1</string>
     
@@ -101,7 +101,7 @@
 	<string name="mode_precharg_reset_hi_res_title">Suppression images en haute résolution</string>
 	<string name="mode_precharg_reset_hi_res_summary">Suppression des @nbPh images téléchargées (@size)</string>
 	<string name="mode_precharg_reset_cache_title">Vider le cache</string>
-	<string name="mode_precharg_reset_cache_summary">Vider le cache du mode connecté : @nbPh fichiers (@size)</string>
+	<string name="mode_precharg_reset_cache_summary">Vider le cache du mode connecté\u00A0: @nbPh fichiers (@size)</string>
 	
 	
 	<string name="presentation_preference_category">Options de présentation</string>
@@ -125,7 +125,7 @@
 	<string name="pref_accueil_aff_iconesfede_prompt">Affichage Icônes Fédé. ?</string>
 	<string name="pref_accueil_aff_iconesfede_summary">"Permet de gagner de la place sur l'écran d'accueil"</string>
 	
-	<string name="pref_fiche_aff_details_pardefaut_prompt">Fiche : montrer détails ?</string>
+	<string name="pref_fiche_aff_details_pardefaut_prompt">Fiche\u00A0: montrer détails ?</string>
 	<string name="pref_fiche_aff_details_pardefaut_summary">"Les détails de la fiche sont tous affichés par défaut"</string>
 	
 	<string name="imagepleinecran_titre_longmax">25</string>

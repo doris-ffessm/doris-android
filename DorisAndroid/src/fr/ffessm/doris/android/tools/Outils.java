@@ -349,14 +349,14 @@ public class Outils {
 		// octet => ko
 		inSize = inSize/1024;
         if ( inSize < 1024 ) {
-        	sizeTexte = String.valueOf(Math.round(inSize)) + " Ko";
+        	sizeTexte = String.valueOf(Math.round(inSize)) + "\u00A0Ko";
         } else {
         	inSize = inSize / 1024;
         	if ( inSize < 1024 ) {
-        		sizeTexte = String.valueOf(Math.round(inSize)) + " Mo";
+        		sizeTexte = String.valueOf(Math.round(inSize)) + "\u00A0Mo";
         	} else {
         		inSize = inSize / 1024;
-        		sizeTexte = String.valueOf(Math.round(inSize)) + " Go";
+        		sizeTexte = String.valueOf(Math.round(inSize)) + "\u00A0Go";
         	}
         }
     	return sizeTexte;

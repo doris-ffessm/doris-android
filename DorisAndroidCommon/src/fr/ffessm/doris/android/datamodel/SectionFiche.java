@@ -103,6 +103,15 @@ public class SectionFiche {
 	protected Fiche fiche;
 
 	// Start of user code SectionFiche additional user properties
+	
+	public java.lang.String getTexteAffichable() {
+		String texte = this.texte;
+		
+		texte = texte.replace(" :", "\u00A0:").replace(" ;", "\u00A0;");
+		
+		return texte;
+	}
+	
 	// End of user code
 	
 	public SectionFiche() {} // needed by ormlite

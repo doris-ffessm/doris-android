@@ -394,7 +394,6 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	
 	public int filter(int position, Fiche fiche, String pattern){
 		// Start of user code protected additional ListeFicheAvecFiltre_Adapter filter code
-		// TODO probablement faire en sorte d'ignorer les accents pour la recherche
 		// chercher séparement les mots (séparés par un blanc) et faire un "ET" 
 		String[] patterns = pattern.split(" ");
 		boolean isValid = true;

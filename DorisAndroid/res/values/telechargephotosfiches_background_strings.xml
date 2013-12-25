@@ -18,14 +18,14 @@
 	<string name="telechargephotosfiches01_bg_initialTickerText">Télécharge les photos des fiches</string>
 	
 	<string name="bg_notifTitle03_analysefiche_imagesprinc">Analyse fiches / Zone</string>
-	<string name="bg_racineTitre03_analysefiche_imagesprinc">"Zone : "</string>
+	<string name="bg_racineTitre03_analysefiche_imagesprinc">"Zone\u00A0: "</string>
 	<!-- Attention ici Vignette dans libellé correspond à Image Principale mais me parait plus clair pour utilisateur -->
 	<string name="bg_notifTitle03_telecharge_imagesprinc">Téléchargement vignettes</string>
-	<string name="bg_racineTitre03_telecharge_imagesprinc">"Image : "</string>
+	<string name="bg_racineTitre03_telecharge_imagesprinc">"Image\u00A0: "</string>
 	<string name="bg_notifTitle03_analysefiche_images">Analyse images :</string>
-	<string name="bg_racineTitre03_analysefiche_images">"Fiche : "</string>
+	<string name="bg_racineTitre03_analysefiche_images">"Fiche\u00A0: "</string>
 	<string name="bg_notifTitle03_telecharge_images">Téléchargement images</string>
-	<string name="bg_racineTitre03_telecharge_images">"Image : "</string>
+	<string name="bg_racineTitre03_telecharge_images">"Image\u00A0: "</string>
 
 	<!--End of user code
 	-->

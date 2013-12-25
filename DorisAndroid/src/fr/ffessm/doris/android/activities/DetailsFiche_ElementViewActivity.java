@@ -289,7 +289,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 					}
 					i++;
 				}
-				addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_zonesgeo_label), sbZonesGeographiques.toString());
+				if (sbZonesGeographiques.toString().length() != 0) {
+					addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_zonesgeo_label), sbZonesGeographiques.toString());
+				} else {
+					addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_zonesgeo_label), getString(R.string.detailsfiche_elementview_zonesgeo_aucune_label));
+				}
 			}
 			
 			// section "Crédits"

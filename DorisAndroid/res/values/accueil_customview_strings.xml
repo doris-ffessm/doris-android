@@ -4,7 +4,7 @@
 	<!-- Start of user code customView_strings accueil
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
-	<string name="accueil_customview_texte_text">"Dernière mise à jour de la base le : "</string>
+	<string name="accueil_customview_texte_text">"Dernière mise à jour de la base le\u00A0: "</string>
 	<string name="accueil_customview_listefiches_btn_label">Toutes les fiches</string>
 	
 	<string name="accueil_recherche_precedente_label_text">Recherche précédente</string>
@@ -26,13 +26,13 @@
 	<string name="menu_option_reinitialise_a_partir_du_xml">Réinitialise Base</string>
 		
 	<string name="a_propos_label">À propos</string>
-	<string name="a_propos_txt_1">"À propos - "</string>
-	<string name="a_propos_txt_2">Version\u00A0:\u00A0</string>
-	<string name="a_propos_base_date">"Dernière MaJ le : "</string>
-	<string name="a_propos_foldersize_titre">Nb Images et Taille Dossiers :</string>
-	<string name="a_propos_foldersize_vignettes">" vignettes - "</string>
-	<string name="a_propos_foldersize_med_res">" images Qualité Intermédiaire - "</string>
-	<string name="a_propos_foldersize_hi_res">" images Haute Qualité - "</string>
+	<string name="a_propos_txt_1">"À propos\u00A0- "</string>
+	<string name="a_propos_txt_2">Version\u00A0:</string>
+	<string name="a_propos_base_date">"Dernière MaJ le\u00A0: "</string>
+	<string name="a_propos_foldersize_titre">Nb Images et Taille Dossiers\u00A0:</string>
+	<string name="a_propos_foldersize_vignettes">" vignettes\u00A0- "</string>
+	<string name="a_propos_foldersize_med_res">" images Qualité Intermédiaire\u00A0- "</string>
+	<string name="a_propos_foldersize_hi_res">" images Haute Qualité\u00A0- "</string>
 	
 	
 	<!-- End of user code
