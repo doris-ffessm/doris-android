@@ -295,7 +295,7 @@ public class Outils {
 		// suppression des blancs multiples
 		texteNettoye = texteNettoye.replaceAll("\\s{2,}"," ");
 		
-		
+		texteNettoye = texteNettoye.trim();
 		//log.debug("nettoyageTextes() - texteNettoye : " + texteNettoye);
 		
 		//log.debug("nettoyageTextes() - Fin");

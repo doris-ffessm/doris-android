@@ -309,13 +309,15 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 						
 			for (IntervenantFiche intervenant : entry.getIntervenants()) {
 				intervenant.setContextDB(getHelper().getDorisDBHelper());
-				sbCreditText.append("\n"+intervenant.getId());
-				sbCreditText.append(" - "+Constants.getTitreParticipant(intervenant.getRoleIntervenant() ) );				
+				//sbCreditText.append("\n"+intervenant.getId());
+				sbCreditText.append("\n"+Constants.getTitreParticipant(intervenant.getRoleIntervenant() ) );				
+				
 				intervenant.setContextDB(getHelper().getDorisDBHelper());
 				Participant participant = intervenant.getParticipant();
 				participant.setContextDB(getHelper().getDorisDBHelper());
-				sbCreditText.append(" - "+participant.getId());
-				sbCreditText.append(" - "+participant.getNom());
+				
+				//sbCreditText.append(" - "+participant.getId());
+				sbCreditText.append(" : "+participant.getNom());
 			}
 			
 			SpannableString richtext = new SpannableString(sbCreditText.toString());
@@ -472,6 +474,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		            	Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
 		                Bundle b = new Bundle();
 		                b.putInt("ficheNumero", listeFicheNumeroInt);
+		                
+		                RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
+		                b.putInt("ficheId", entriesDao.queryForEq("numeroFiche", listeFicheNumeroInt).get(0).getId() );
+		                
 		        		toDetailView.putExtras(b);
 		                startActivity(toDetailView);
 		            }  
@@ -570,6 +576,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
  
         @Override
         public void onClick(View v) {
+        	Log.d(LOG_TAG, "onClick() - v : "+v.toString());
+        	Log.d(LOG_TAG, "onClick() - _position : "+_position+" - _ficheID : "+_ficheID);
             // on selecting grid view image
             // launch full screen activity
             Intent i = new Intent(_activity, ImagePleinEcran_CustomViewActivity.class);
