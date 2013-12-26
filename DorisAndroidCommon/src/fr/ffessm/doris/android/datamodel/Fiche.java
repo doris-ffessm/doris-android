@@ -303,7 +303,7 @@ public class Fiche {
 							}
 							if (i == 2) {
 								log.info("getFicheFromHtml() - ficheNomLatin : " + elementTR.getRenderer().toString());
-								setNomScientifique( Outils.nettoyageCaracteres(elementTR.getRenderer().toString().trim()) );
+								setNomScientifique( Outils.nettoyageTextes(elementTR.getRenderer().toString().trim()) );
 							}
 							if (i == 3) {
 								log.info("getFicheFromHtml() - ficheRegion : " + elementTR.getRenderer().toString());
@@ -312,7 +312,7 @@ public class Fiche {
 							}
 							if (i == 5) {
 								log.info("getFicheFromHtml() - ficheNomFrancais : " + elementTR.getRenderer().toString());
-								setNomCommun( Outils.nettoyageCaracteres(elementTR.getRenderer().toString().trim()) );
+								setNomCommun( Outils.nettoyageTextes(elementTR.getRenderer().toString().trim()) );
 							}
 						}
 					}
@@ -370,13 +370,7 @@ public class Fiche {
 								if (autresDenominationsFlag) {
 									String autresDenominationsTexte  = elementTD.getRenderer().toString().trim();
 									
-									// suppression des sauts de ligne
-									autresDenominationsTexte = autresDenominationsTexte.replaceAll("\r\n", " ").replaceAll("\n", " ");
-									log.debug("getFicheFromHtml() - autresDenominations(B1) : " + autresDenominationsTexte);
-	
-									// suppression des blancs multiples
-									autresDenominationsTexte = autresDenominationsTexte.replaceAll("\\s{2,}"," ");
-									log.debug("getFicheFromHtml() - autresDenominations(B2) : " + autresDenominationsTexte);
+									autresDenominationsTexte = Outils.nettoyageTextes(autresDenominationsTexte);
 									
 									// permet d'enlever les Liens et de les remplacer par un texte, par exemple "(Fiche)"
 									autresDenominationsTexte = autresDenominationsTexte.replaceAll("<[^>]*fiche_numero=([^>]*)>", "{{$1}}").trim();
@@ -392,15 +386,7 @@ public class Fiche {
 									String contenuTexte = elementTD.getRenderer().toString();
 									//log.debug("getFiche() - contenu(initial) : " + contenuTexte);
 									
-									// suppression des sauts de ligne
-									contenuTexte = contenuTexte.replaceAll("\r\n([^A-Z\\-])", " $1").replaceAll("\n([^A-Z\\-])", " $1");
-									//log.debug("getFiche() - contenu(1) : " + contenuTexte);
-	
-									// suppression des blancs multiples
-									contenuTexte = contenuTexte.replaceAll(" {2,}"," ");
-									//log.debug("getFiche() - contenu(2) : " + contenuTexte);
-									
-									
+									contenuTexte = Outils.nettoyageTextes(contenuTexte);
 									
 									// permet d'enlever les Liens et de les remplacer par une balise qui sera réutilisée dans l'appli.
 									//<../fiche2.asp?fiche_numero=289>

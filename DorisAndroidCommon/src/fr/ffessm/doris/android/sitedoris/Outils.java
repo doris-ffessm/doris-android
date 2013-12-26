@@ -271,9 +271,9 @@ public class Outils {
 	}
 
 	
-    public static String nettoyageCaracteres(String texteANettoye) {
-    	log.debug("nettoyageCaracteres() - Début");
-    	log.debug("nettoyageCaracteres() - texteANettoye : " + texteANettoye);
+    public static String nettoyageTextes(String texteANettoye) {
+    	//log.debug("nettoyageTextes() - Début");
+    	//log.debug("nettoyageTextes() - texteANettoye : " + texteANettoye);
 		String texteNettoye = texteANettoye;
 		
 		//if (LOG) Log.v(TAG, "nettoyageCaracteres() - texteNettoye : " + texteNettoye.charAt(7) + " - " + texteNettoye.codePointAt(7));
@@ -285,10 +285,20 @@ public class Outils {
 		texteNettoye = texteNettoye.replaceAll("\u009C", "\u0153");
 		//Œ OE
 		texteNettoye = texteNettoye.replaceAll("\u008C", "\u0152");
-				
-		log.debug("nettoyageCaracteres() - texteNettoye : " + texteNettoye);
+
+		// ⊃2; => ² \u00B2
+		texteNettoye = texteNettoye.replaceAll("\u22832;", "\u00B2");
 		
-		log.debug("nettoyageCaracteres() - Fin");
+		// suppression des sauts de ligne si pas avant une majuscule ou un - (puce)
+		texteNettoye = texteNettoye.replaceAll("\r\n([^A-Z\\-])", " $1").replaceAll("\n([^A-Z\\-])", " $1");
+
+		// suppression des blancs multiples
+		texteNettoye = texteNettoye.replaceAll("\\s{2,}"," ");
+		
+		
+		//log.debug("nettoyageTextes() - texteNettoye : " + texteNettoye);
+		
+		//log.debug("nettoyageTextes() - Fin");
 		return texteNettoye;
 	}
     
@@ -339,7 +349,5 @@ public class Outils {
 	    return new String(charsData);
 	}
    
-	/* *********************************************************************
-	 * Permet d'obternir la liste des Nouvelles Fiches ou des Fiches ayant changées de statut  
-	 ********************************************************************* */
+
 }

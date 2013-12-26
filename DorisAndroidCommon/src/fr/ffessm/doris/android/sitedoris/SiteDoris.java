@@ -370,6 +370,12 @@ public class SiteDoris {
     	    	Element descritionPhotoCouranteElem = null;
     			descritionPhotoCouranteElem = elementTD;
     			descritionPhotoCourante = descritionPhotoCouranteElem.getRenderer().toString();
+    			
+    			descritionPhotoCourante = Outils.nettoyageTextes(descritionPhotoCourante);
+    			
+    			//Suppression Balises (A en particulier)
+    			//TODO : Mettre un lien un jour si ergonomie le permet
+    			descritionPhotoCourante = descritionPhotoCourante.replaceAll("<[^>]*>", "").trim();
     		}
     		if(elementTD.getAttributeValue("class").equals("liste1")){
     			// c'est l'image
