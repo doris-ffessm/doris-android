@@ -9,8 +9,6 @@
     android:layout_marginTop="2dp"
     android:orientation="vertical" >
 
-    <View style="@style/Separateur" />
-
     <RelativeLayout
         android:id="@+id/RelativeLayout1"
         android:layout_width="match_parent"
@@ -76,7 +74,9 @@
             android:src="@android:drawable/ic_menu_set_as" />
                 
     </RelativeLayout>
-
+    
+    <View style="@style/Separateur" />
+    
 </LinearLayout>
 <!-- End of user code
 	-->
