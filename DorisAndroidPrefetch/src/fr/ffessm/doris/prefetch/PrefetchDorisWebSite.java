@@ -138,24 +138,34 @@ public class PrefetchDorisWebSite {
 		if (action.equals("TEST")) {
 			log.debug("doMain() - Début TEST");
 						
-			String listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeFiches.html";
-			log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
-				
-			String urlFiche = "http://doris.ffessm.fr/fiche2.asp?fiche_numero=2617";
-			String fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche2617.html";
+			// On boucle sur les initailes des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
+			String listeFiltres;
+
+			listeFiltres="ab";
+			String contenuFichierHtml = "";
 			
-			if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
-				log.info("OK - fiche2");
-			} else {
-				log.info("KO - fiche2");
-				urlFiche = "http://doris.ffessm.fr/fiche3.asp?nomcommun=Corallimorphaire jongleur";
+			for (char initiale : listeFiltres.toCharArray()){
+				log.debug("doMain() - Recup Définitions : "+initiale);
 				
-				if (Outils.getFichierUrl(Outils.formatStringNormalizer(urlFiche).replace(" ", "%20"), fichierLocalFiche)) {
-					log.info("OK - fiche3");
+				String listeDefinitionsFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeDefinitions-"+initiale+".html";
+				log.info("Récup. Liste des Définitions : " + listeDefinitionsFichier);
+
+				if (Outils.getFichierUrl(Constants.getListeDefinitionsUrl(""+initiale), listeDefinitionsFichier)) {
+					contenuFichierHtml = Outils.getFichier(new File(listeDefinitionsFichier));
 				} else {
-					log.info("KO - fiche3");
+					log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale);
+					System.exit(0);
 				}
-			}
+				
+				//final List<Participant> listeDefinitionsFromHTML = SiteDoris.getListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
+				SiteDoris.getListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
+				//log.info("Creation de "+listeDefinitionsFromHTML.size()+" Définitions pour la lettre : "+initiale);
+				
+			}	
+			
+			List<Participant> listeParticipants = new ArrayList<Participant>(0);
+			listeParticipants.addAll(dbContext.participantDao.queryForAll());
+			log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
 
 			//String contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
 			//fiche.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
@@ -201,7 +211,7 @@ public class PrefetchDorisWebSite {
 					}
 				}
 				
-				final List<Groupe> listeGroupes =SiteDoris.getListeGroupes(contenuFichierHtml);
+				final List<Groupe> listeGroupes =SiteDoris.getListeGroupesFromHtml(contenuFichierHtml);
 				log.debug("doMain() - listeGroupes.size : "+listeGroupes.size());
 				
 				TransactionManager.callInTransaction(connectionSource,
@@ -244,7 +254,7 @@ public class PrefetchDorisWebSite {
 					}
 				}
 				
-				List<Fiche> listFicheFromHTML = SiteDoris.getListeFiches(contenuFichierHtml);
+				List<Fiche> listFicheFromHTML = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
 				log.info("Nb Fiches sur le site : "+listFicheFromHTML.size());
 
 				if (action.equals("UPDATE")) {
@@ -336,7 +346,7 @@ public class PrefetchDorisWebSite {
 						}
 					}
 					
-					final List<Participant> listeParticipantsFromHTML = SiteDoris.getListeParticipantsParInitiale(contenuFichierHtml);
+					final List<Participant> listeParticipantsFromHTML = SiteDoris.getListeParticipantsParInitialeFromHtml(contenuFichierHtml);
 					log.info("Creation de "+listeParticipantsFromHTML.size()+" participants pour la lettre : "+initiale);
 					TransactionManager.callInTransaction(connectionSource,
 						new Callable<Void>() {
@@ -374,7 +384,7 @@ public class PrefetchDorisWebSite {
 						
 						log.debug("doMain() - Traitement Fiche : "+fiche.getNomCommun());
 						
-						String urlFiche = "http://doris.ffessm.fr/fiche2.asp?fiche_numero="+fiche.getNumeroFiche();
+						String urlFiche =  Constants.getFicheFromIdUrl( fiche.getNumeroFiche() );
 						String fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+".html";
 						if (! action.equals("NODWNLD")) {
 							if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
@@ -384,9 +394,9 @@ public class PrefetchDorisWebSite {
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 								
-								urlFiche = "http://doris.ffessm.fr/fiche3.asp?nomcommun="+fiche.getNomCommun();
+								urlFiche = Constants.getFicheFromNomCommunUrl(fiche.getNomCommun());
 								log.error("=> Tentative sur : "+urlFiche);
-								if (Outils.getFichierUrl(Outils.formatStringNormalizer(urlFiche).replace(" ", "%20"), fichierLocalFiche)) {
+								if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
 									
 									contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
 									
@@ -442,7 +452,7 @@ public class PrefetchDorisWebSite {
 						}
 						if(contenuFichierHtmlListePhotos != null){
 							// TODO update liste photos for fiche
-							final List<PhotoFiche> listePhotoFiche = SiteDoris.getListePhotosFiche(fiche, contenuFichierHtmlListePhotos);
+							final List<PhotoFiche> listePhotoFiche = SiteDoris.getListePhotosFicheFromHtml(fiche, contenuFichierHtmlListePhotos);
 							final Fiche ficheMaj = fiche;
 							TransactionManager.callInTransaction(connectionSource,
 								new Callable<Void>() {
@@ -531,7 +541,7 @@ public class PrefetchDorisWebSite {
 			log.error("impossible de créer la zone dans la base", e);
 		}
 		
-		final List<Fiche> listFicheFromHTML = SiteDoris.getListeFiches(contenuFichierHtml);
+		final List<Fiche> listFicheFromHTML = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
 		log.info("Création des "+listFicheFromHTML.size()+" associations pour la Zone : " + listeFichesFichier);
 		
 		try {

@@ -42,6 +42,7 @@ termes.
 
 package fr.ffessm.doris.android.sitedoris;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -65,7 +66,7 @@ public class SiteDoris {
 	
 
     
-    public static List<Fiche> getListeFiches(String inCodePageHtml) {
+    public static List<Fiche> getListeFichesFromHtml(String inCodePageHtml) {
     	log.trace("getListeFiches()- Début");
     	
     	List<Fiche> listeFiches = new ArrayList<Fiche>(0);
@@ -118,7 +119,7 @@ public class SiteDoris {
 	
 	
     
-    public static List<Groupe> getListeGroupes(String inCodePageHtml){
+    public static List<Groupe> getListeGroupesFromHtml(String inCodePageHtml){
     	log.trace("getGroupes() - Début");
     	
     	List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
@@ -334,7 +335,7 @@ public class SiteDoris {
 
 
 
-	public static List<PhotoFiche> getListePhotosFiche(Fiche fiche,
+	public static List<PhotoFiche> getListePhotosFicheFromHtml(Fiche fiche,
 			String inCodePageHtml) {
 		log.trace("getListePhotosFiche()- Début");
     	
@@ -396,7 +397,7 @@ public class SiteDoris {
     
 	
 
-    public static List<Participant> getListeParticipantsParInitiale(String inCodePageHtml){
+    public static List<Participant> getListeParticipantsParInitialeFromHtml(String inCodePageHtml){
     	log.debug("getListeParticipantsParInitiale() - Début");
     	
     	List<Participant> listeParticipants = new ArrayList<Participant>(0);
@@ -538,4 +539,64 @@ public class SiteDoris {
 		return null;
     }
     
+    //TODO : void => List<Definition>
+    public static void getListeDefinitionsParInitialeFromHtml(String inCodePageHtml){
+    	log.debug("getListeDefinitionsParInitialeFromHtml() - Début");
+    	
+    	//List<Definition> listeDefinitions = new ArrayList<Definition>(0);
+    	
+    	Source source=new Source(inCodePageHtml);
+    	source.fullSequentialParse();
+    	log.debug("getListeDefinitionsParInitialeFromHtml()- source.length() : " + source.length());
+    	
+    	List<? extends Element> listeElementsTD = source.getAllElementsByClass("liste0");
+    			
+    	for (Element elementTD : listeElementsTD) {
+    		log.debug("getListeDefinitionsParInitialeFromHtml()- elementTD : " +elementTD.getRenderer().toString());
+			if (elementTD.getRenderer().toString().trim().replaceAll("<[^>]*>", "").isEmpty() ) {
+				String numeroDefinition =  elementTD.getRenderer().toString().trim().replaceAll(".*glossaire_numero=([^&]*)&.*", "$1");
+				log.debug("getListeDefinitionsParInitialeFromHtml()- numeroDefinition : " +numeroDefinition);
+			
+				//TODO : ici plutôt création de la liste
+				// Le télechargement étant géré dans Prefectch ou Appli android
+				//glossaire_numero=1087
+				String urlDefinition = Constants.getDefinitionUrl(numeroDefinition );
+				String definitionFichier = "./run/html/definition-"+numeroDefinition+".html";
+				String contenuFichierHtml;
+				if (Outils.getFichierUrl(urlDefinition, definitionFichier) ){
+					contenuFichierHtml = Outils.getFichier(new File(definitionFichier));
+					
+					getDefinitionsFromHtml(contenuFichierHtml);
+				} else {
+					log.error("Une erreur est survenue lors de la récupération de la définition : "+numeroDefinition);
+					System.exit(0);
+				}
+			
+			}
+    	} // Fin Pour Chaque TR
+    	
+    	//log.debug("getListeDefinitionsParInitialeFromHtml() - listeDefinitions : "+listeDefinitions.size());
+		log.debug("getListeDefinitionsParInitialeFromHtml() - Fin");
+		//return listeParticipants;
+    }
+    
+    // TODO : void => Définition
+    // Pourraiq être mis dans l'objet Definition
+    public static void getDefinitionsFromHtml(String inCodePageHtml){
+    	log.debug("getDefinitionsFromHtml() - Début");
+    
+    	Source source=new Source(inCodePageHtml);
+    	source.fullSequentialParse();
+    	log.debug("getDefinitionsFromHtml()- source.length() : " + source.length());
+    	
+    	Element elementsTDTitre2 = source.getFirstElementByClass("titre2");
+    	String motDefini = elementsTDTitre2.getRenderer().toString().replace(":", "").trim();
+    	log.debug("getDefinitionsFromHtml()- motDefini : " + motDefini);
+    	
+    	String definition = elementsTDTitre2.getParentElement().getParentElement().getFirstElementByClass("normal").getRenderer().toString();
+    	definition = definition.replaceAll("\r\n", " ").replaceAll("\n", " ").replaceAll("\\s{2,}"," ").trim();
+    	log.debug("getDefinitionsFromHtml()- Définition : " + definition);
+    	
+    	log.debug("getDefinitionsFromHtml() - Fin");
+    }
 }

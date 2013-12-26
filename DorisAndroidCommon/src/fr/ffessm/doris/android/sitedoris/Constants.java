@@ -49,6 +49,7 @@ public class Constants {
 	 * URL
 	 */
     private final static String SITE_RACINE_URL = "http://doris.ffessm.fr/";
+    
     private final static String LISTE_TOUTES_FICHES_URL = "nom_scientifique.asp?numero_fichier=10";
     private final static String GROUPES_URL = "groupes.asp?numero_fichier=10";
     private final static String LISTE_FICHES_FRANCE_METROPOLITAINE_URL = "nom_scientifique.asp?numero_fichier=1&fichier=Faune%20et%20flore%20marines%20de%20France%20m%E9tropolitaine";
@@ -56,7 +57,12 @@ public class Constants {
     private final static String LISTE_FICHES_CARAIBES_URL = "nom_scientifique.asp?numero_fichier=4&fichier=Faune%20et%20flore%20subaquatiques%20des%20Cara%EFbes";
     private final static String LISTE_FICHES_ATL_NORD_OUEST_URL = "nom_scientifique.asp?numero_fichier=5&fichier=Faune%20et%20flore%20marines%20et%20dulcicoles%20de%20l'Atlantique%20Nord-Ouest";
     private final static String LISTE_FICHES_INDO_PACIFIQUE_URL = "nom_scientifique.asp?numero_fichier=3&fichier=Faune%20et%20flore%20marines%20et%20dulcicoles%20de%20l'Indo-Pacifique";
+    
+    private final static String FICHE_RACINE_URL_ID = "fiche2.asp?fiche_numero=";
+    private final static String FICHE_RACINE_URL_NOM_COMMUN = "fiche3.asp?nomcommun=";
     private final static String PARTICIPANTS_RACINE_URL = "contacts.asp?filtre=";
+    private final static String GLOSSAIRE_RACINE_URL = "glossaire.asp?filtre=";
+    private final static String DEFINITION_RACINE_URL = "glossaire_detail.asp?glossaire_numero=";
     
 	/*
 	 * Autres Constantes
@@ -103,9 +109,29 @@ public class Constants {
     	return listeFichesUrl;
     }
     
+    public static String getFicheFromIdUrl(int inId) {
+		String ficheUrl = SITE_RACINE_URL + FICHE_RACINE_URL_ID + inId;
+    	return ficheUrl;
+    }
+    
+    public static String getFicheFromNomCommunUrl(String inNomCommun) {
+		String ficheUrl = SITE_RACINE_URL + FICHE_RACINE_URL_NOM_COMMUN + Outils.formatStringNormalizer(inNomCommun.replace(" ", "%20") );
+    	return ficheUrl;
+    }
+    
     public static String getListeParticipantsUrl(String inInitiale) {
  		String listeParticipantsUrl = SITE_RACINE_URL + PARTICIPANTS_RACINE_URL + inInitiale;
      	return listeParticipantsUrl;
+    }
+    
+    public static String getListeDefinitionsUrl(String inInitiale) {
+ 		String listeDefinitionsUrl = SITE_RACINE_URL + GLOSSAIRE_RACINE_URL + inInitiale;
+     	return listeDefinitionsUrl;
+    }
+    
+    public static String getDefinitionUrl(String inId) {
+ 		String definitionsUrl = SITE_RACINE_URL + DEFINITION_RACINE_URL + inId;
+     	return definitionsUrl;
     }
     
     public static String getListeFichesUrl(ZoneGeographiqueKind zoneKing) {
