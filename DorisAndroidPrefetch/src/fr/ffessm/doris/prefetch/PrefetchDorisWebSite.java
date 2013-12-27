@@ -72,7 +72,6 @@ import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.IntervenantFiche;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
-import fr.ffessm.doris.android.datamodel.PhotoParticipant;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.ZoneObservation;
@@ -681,7 +680,6 @@ public class PrefetchDorisWebSite {
 		dbContext.photoFicheDao = DaoManager.createDao(connectionSource, PhotoFiche.class);
 		dbContext.participantDao = DaoManager.createDao(connectionSource, Participant.class);
 		dbContext.intervenantFicheDao = DaoManager.createDao(connectionSource, IntervenantFiche.class);
-		dbContext.photoParticipantDao = DaoManager.createDao(connectionSource, PhotoParticipant.class);
 		dbContext.zoneGeographiqueDao = DaoManager.createDao(connectionSource, ZoneGeographique.class);
 		dbContext.zoneObservationDao = DaoManager.createDao(connectionSource, ZoneObservation.class);
 		dbContext.sectionFicheDao = DaoManager.createDao(connectionSource, SectionFiche.class);

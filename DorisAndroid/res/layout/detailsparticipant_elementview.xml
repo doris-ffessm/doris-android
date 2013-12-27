@@ -18,16 +18,18 @@
 
 	<!--Start of user code elementView_layout for DetailsParticipant
 -->
-<!--<ImageView
-        android:id="@+id/divelist_viewrow_icon"
+	<ImageView
+        android:id="@+id/detailsparticipant_elementview_icon"
         android:contentDescription="Dive icon"
-        android:layout_width="22px"
-        android:layout_height="22px"
-        android:layout_marginLeft="4px"
-        android:layout_marginRight="10px"
-        android:layout_marginTop="4px"
-        android:src="@drawable/ic_launcher" >
-    </ImageView>-->
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:maxWidth="48dip"
+        android:maxHeight="48dip"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_marginTop="1dp"
+        android:src="@drawable/ic_participant_small" >
+    </ImageView>
 
 
 		    <TableLayout
@@ -57,6 +59,35 @@
 		        </TableRow>
 
 			</TableLayout>
+			<LinearLayout
+			        android:layout_width="wrap_content"
+			        android:layout_height="match_parent"
+			        android:orientation="horizontal"
+					android:background="@drawable/groupe_icon_background" >
+					<LinearLayout
+				        android:layout_width="match_parent"
+				        android:layout_height="match_parent"
+				        android:orientation="vertical"
+						android:onClick="onClickBioComplete" >
+				        <ImageView
+					        android:id="@+id/accueil_participants_icone"
+					        android:layout_width="fill_parent"
+					        android:layout_height="wrap_content"
+					        android:adjustViewBounds="true"
+					        android:contentDescription="Participants"
+					        android:maxHeight="64dip"
+					        android:src="@drawable/ic_launcher" />
+				        <TextView
+					        android:id="@+id/accueil_participants_text"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:layout_marginLeft="2dp"
+					        android:layout_marginRight="2dp"
+				    		android:textAppearance="?android:attr/textAppearanceSmall" 
+				    		android:textColor="?android:attr/textColorPrimaryInverse"
+							android:text="@string/detailsparticipant_elementview_bio_textbutton"/>
+					</LinearLayout>
+			    </LinearLayout>
 <!--End of user code
 -->
         </LinearLayout>

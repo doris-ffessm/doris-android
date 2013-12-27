@@ -7,6 +7,7 @@
 	<string name="detailsparticipant_elementview_numeroparticipant_label">NumeroParticipant : </string>
 	<string name="detailsparticipant_elementview_nom_hint_text"></string>
 	<string name="detailsparticipant_elementview_numeroparticipant_hint_text"></string>
+	<string name="detailsparticipant_elementview_bio_textbutton">Bio complète</string>
 	<!-- End of user code
 	-->
 </resources>

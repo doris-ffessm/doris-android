@@ -185,25 +185,6 @@ public class XMLHelper {
 			e.printStackTrace();
 		}
 		sb.append("\n\t</PARTICIPANTS>\n");
-		sb.append("\n\t<PHOTOPARTICIPANTS>");
-		try {	
-			List<PhotoParticipant> photoParticipants = dbContext.photoParticipantDao.queryForAll();
-			for(PhotoParticipant  photoParticipant : photoParticipants){
-				// TODO find if contained by another element, if not put it there
-				boolean isContained = false;
-				if(photoParticipant.getParticipant() != null){
-					isContained = true;
-				}
-				if(!isContained){
-					sb.append("\n");
-					sb.append(photoParticipant.toXML("\t\t", dbContext));
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		sb.append("\n\t</PHOTOPARTICIPANTS>\n");
 		sb.append("\n\t<ZONEGEOGRAPHIQUES>");
 		try {	
 			List<ZoneGeographique> zoneGeographiques = dbContext.zoneGeographiqueDao.queryForAll();
@@ -325,14 +306,6 @@ public class XMLHelper {
 					log.error("cannot create Participant "+e.getMessage(),e);
 				}
 			}
-			log.info("starting creation of PhotoParticipant...");
-			for(PhotoParticipant photoParticipant : parser.photoParticipants){
-				try {
-					dbContext.photoParticipantDao.create(photoParticipant);
-				} catch (SQLException e) {
-					log.error("cannot create PhotoParticipant "+e.getMessage(),e);
-				}
-			}
 			log.info("starting creation of ZoneGeographique...");
 			for(ZoneGeographique zoneGeographique : parser.zoneGeographiques){
 				try {
@@ -418,14 +391,6 @@ public class XMLHelper {
 					dbContext.participantDao.update(elem);
 				} catch (SQLException e) {
 					log.error("cannot update Participant "+e.getMessage(),e);
-				}
-			}
-			log.info("starting update DB of PhotoParticipant...");
-			for(PhotoParticipant elem : parser.photoParticipantsToUpdate){
-				try {
-					dbContext.photoParticipantDao.update(elem);
-				} catch (SQLException e) {
-					log.error("cannot update PhotoParticipant "+e.getMessage(),e);
 				}
 			}
 			log.info("starting update DB of ZoneGeographique...");

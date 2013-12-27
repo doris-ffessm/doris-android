@@ -472,7 +472,8 @@ public class SiteDoris {
 					log.info("getListeParticipantsParInitiale() - id Participant : "+participantId);
 				}
 				if (numeroTR % 4 == 3){
-					listeParticipants.add(new Participant( participantNom, Integer.valueOf(participantId)) );
+					// TODO trouver l'url de l'image du participant
+					listeParticipants.add(new Participant( participantNom, Integer.valueOf(participantId), "") );
 					participantNom = "";
 					participantId = "";
 				}

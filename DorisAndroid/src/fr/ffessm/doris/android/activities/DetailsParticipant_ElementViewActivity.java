@@ -44,11 +44,14 @@ package fr.ffessm.doris.android.activities;
 
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -71,9 +74,11 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteBaseActivity<
 	
 	protected int participantId;
 	
+	
 	private static final String LOG_TAG = DetailsParticipant_ElementViewActivity.class.getCanonicalName();
 
 // Start of user code protectedDetailsParticipant_ElementViewActivity_additional_attributes
+	protected int participantNumeroDoris;
 // End of user code
 	
 	/** Called when the activity is first created. */
@@ -102,7 +107,8 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteBaseActivity<
     	entry.setContextDB(getHelper().getDorisDBHelper());
 
 		((TextView) findViewById(R.id.detailsparticipant_elementview_nom)).setText(entry.getNom());
-		((TextView) findViewById(R.id.detailsparticipant_elementview_numeroparticipant)).setText(((Integer)entry.getNumeroParticipant()).toString());					
+		participantNumeroDoris = entry.getNumeroParticipant();
+		((TextView) findViewById(R.id.detailsparticipant_elementview_numeroparticipant)).setText(((Integer)participantNumeroDoris).toString());					
 		
 		
 		/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
@@ -146,6 +152,15 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteBaseActivity<
     }
 
 	// Start of user code protectedDetailsParticipant_ElementViewActivity_additional_operations
+    
+    public void onClickBioComplete(View view){
+		String url = Constants.getParticipantUrl(((Integer)participantNumeroDoris).toString());
+		if (!url.isEmpty()) {
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setData(Uri.parse(url));
+			startActivity(intent);
+		}
+    }
 	// End of user code
 
 	private void showToast(String message) {

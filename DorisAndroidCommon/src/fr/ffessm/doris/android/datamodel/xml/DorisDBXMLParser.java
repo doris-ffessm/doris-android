@@ -73,7 +73,6 @@ public class DorisDBXMLParser {
 	List<SectionFiche> sectionFiches = new ArrayList<SectionFiche>();
 	List<IntervenantFiche> intervenantFiches = new ArrayList<IntervenantFiche>();
 	List<Participant> participants = new ArrayList<Participant>();
-	List<PhotoParticipant> photoParticipants = new ArrayList<PhotoParticipant>();
 	List<ZoneGeographique> zoneGeographiques = new ArrayList<ZoneGeographique>();
 	List<ZoneObservation> zoneObservations = new ArrayList<ZoneObservation>();
 	List<Groupe> groupes = new ArrayList<Groupe>();
@@ -84,7 +83,6 @@ public class DorisDBXMLParser {
 	Set<SectionFiche> sectionFichesToUpdate = new HashSet<SectionFiche>();
 	Set<IntervenantFiche> intervenantFichesToUpdate = new HashSet<IntervenantFiche>();
 	Set<Participant> participantsToUpdate = new HashSet<Participant>();
-	Set<PhotoParticipant> photoParticipantsToUpdate = new HashSet<PhotoParticipant>();
 	Set<ZoneGeographique> zoneGeographiquesToUpdate = new HashSet<ZoneGeographique>();
 	Set<ZoneObservation> zoneObservationsToUpdate = new HashSet<ZoneObservation>();
 	Set<Groupe> groupesToUpdate = new HashSet<Groupe>();
@@ -95,7 +93,6 @@ public class DorisDBXMLParser {
 	Hashtable<String, SectionFiche> xmlId2SectionFiche = new Hashtable<String, SectionFiche>();
 	Hashtable<String, IntervenantFiche> xmlId2IntervenantFiche = new Hashtable<String, IntervenantFiche>();
 	Hashtable<String, Participant> xmlId2Participant = new Hashtable<String, Participant>();
-	Hashtable<String, PhotoParticipant> xmlId2PhotoParticipant = new Hashtable<String, PhotoParticipant>();
 	Hashtable<String, ZoneGeographique> xmlId2ZoneGeographique = new Hashtable<String, ZoneGeographique>();
 	Hashtable<String, ZoneObservation> xmlId2ZoneObservation = new Hashtable<String, ZoneObservation>();
 	Hashtable<String, Groupe> xmlId2Groupe = new Hashtable<String, Groupe>();
@@ -116,8 +113,6 @@ public class DorisDBXMLParser {
 	public static final String DATACLASSIFIER_INTERVENANTFICHE  = "INTERVENANTFICHE";
 	public static final String DATACLASSIFIER_PARTICIPANTS = "PARTICIPANTS";
 	public static final String DATACLASSIFIER_PARTICIPANT  = "PARTICIPANT";
-	public static final String DATACLASSIFIER_PHOTOPARTICIPANTS = "PHOTOPARTICIPANTS";
-	public static final String DATACLASSIFIER_PHOTOPARTICIPANT  = "PHOTOPARTICIPANT";
 	public static final String DATACLASSIFIER_ZONEGEOGRAPHIQUES = "ZONEGEOGRAPHIQUES";
 	public static final String DATACLASSIFIER_ZONEGEOGRAPHIQUE  = "ZONEGEOGRAPHIQUE";
 	public static final String DATACLASSIFIER_ZONEOBSERVATIONS = "ZONEOBSERVATIONS";
@@ -182,13 +177,9 @@ public class DorisDBXMLParser {
 	public static final String DATAATT_PARTICIPANT_NOM = "NOM";
 	public static final String DATAATT_PARTICIPANT_numeroParticipant = "numeroParticipant";
 	public static final String DATAATT_PARTICIPANT_NUMEROPARTICIPANT = "NUMEROPARTICIPANT";
-	public static final String DATAREF_PARTICIPANT_photo = "photo";
+	public static final String DATAATT_PARTICIPANT_cleURLPhotoParticipant = "cleURLPhotoParticipant";
+	public static final String DATAATT_PARTICIPANT_CLEURLPHOTOPARTICIPANT = "CLEURLPHOTOPARTICIPANT";
 	public static final String DATAREF_PARTICIPANT_intervenantFiches = "intervenantFiches";
-	public static final String DATAATT_PHOTOPARTICIPANT_cleURL = "cleURL";
-	public static final String DATAATT_PHOTOPARTICIPANT_CLEURL = "CLEURL";
-	public static final String DATAATT_PHOTOPARTICIPANT_image = "image";
-	public static final String DATAATT_PHOTOPARTICIPANT_IMAGE = "IMAGE";
-	public static final String DATAREF_PHOTOPARTICIPANT_participant = "participant";
 	public static final String DATAATT_ZONEGEOGRAPHIQUE_nom = "nom";
 	public static final String DATAATT_ZONEGEOGRAPHIQUE_NOM = "NOM";
 	public static final String DATAATT_ZONEGEOGRAPHIQUE_description = "description";
@@ -265,10 +256,6 @@ public class DorisDBXMLParser {
 		 	if (name.equals(DATACLASSIFIER_PARTICIPANTS)) {
 				participants = readParticipants(parser,DATACLASSIFIER_PARTICIPANTS);
 	            // participants.addAll(readParticipants(parser,DATACLASSIFIER_PARTICIPANTS));
-	        } else 
-		 	if (name.equals(DATACLASSIFIER_PHOTOPARTICIPANTS)) {
-				photoParticipants = readPhotoParticipants(parser,DATACLASSIFIER_PHOTOPARTICIPANTS);
-	            // photoParticipants.addAll(readPhotoParticipants(parser,DATACLASSIFIER_PHOTOPARTICIPANTS));
 	        } else 
 		 	if (name.equals(DATACLASSIFIER_ZONEGEOGRAPHIQUES)) {
 				zoneGeographiques = readZoneGeographiques(parser,DATACLASSIFIER_ZONEGEOGRAPHIQUES);
@@ -406,26 +393,6 @@ public class DorisDBXMLParser {
 	        String name = parser.getName();
 			if (name.equals(DATACLASSIFIER_PARTICIPANT)) {
 	            entries.add(readParticipant(parser));
-	        } else {
-	            skip(parser);
-	        }
-	    }
-		entries.trimToSize();
-		return entries;
-	}
-	/**
-     * parser for a group of PhotoParticipant
-     */
-	List<PhotoParticipant> readPhotoParticipants(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
-		ArrayList<PhotoParticipant> entries = new ArrayList<PhotoParticipant>();
-		parser.require(XmlPullParser.START_TAG, ns, containingTag);
-	    while (parser.next() != XmlPullParser.END_TAG) {
-	        if (parser.getEventType() != XmlPullParser.START_TAG) {
-	            continue;
-	        }
-	        String name = parser.getName();
-			if (name.equals(DATACLASSIFIER_PHOTOPARTICIPANT)) {
-	            entries.add(readPhotoParticipant(parser));
 	        } else {
 	            skip(parser);
 	        }
@@ -763,41 +730,12 @@ public class DorisDBXMLParser {
 			//TODO if (currentTagName.equals(DATAATT_PARTICIPANT_NUMEROPARTICIPANT)) {
 	        //    title = readTitle(parser);
 	        //} else	
-					// TODO deal with owned ref photo
+			if (currentTagName.equals(DATAATT_PARTICIPANT_cleURLPhotoParticipant)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_PARTICIPANT_cleURLPhotoParticipant);
+	            result.setCleURLPhotoParticipant(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_PARTICIPANT_cleURLPhotoParticipant);
+	        } else
 					// TODO deal with ref intervenantFiches
-	        {
-	            skip(parser);
-	        }
-	    }
-
-		return result;
-	}
-	PhotoParticipant readPhotoParticipant(XmlPullParser parser)  throws XmlPullParserException, IOException{
-		PhotoParticipant result = new PhotoParticipant();
-
-		parser.require(XmlPullParser.START_TAG, ns, DATACLASSIFIER_PHOTOPARTICIPANT);
-    	String currentTagName = parser.getName();
-    			
-    	xmlId2PhotoParticipant.put(parser.getAttributeValue(null, ID_STRING),result);		
-		while (parser.next() != XmlPullParser.END_TAG) {
-	        if (parser.getEventType() != XmlPullParser.START_TAG) {
-	            continue;
-	        }
-	        currentTagName = parser.getName();
-			if (currentTagName.equals(DATAATT_PHOTOPARTICIPANT_cleURL)) {
-				parser.require(XmlPullParser.START_TAG, ns, DATAATT_PHOTOPARTICIPANT_cleURL);
-	            result.setCleURL(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, DATAATT_PHOTOPARTICIPANT_cleURL);
-	        } else
-			//TODO if (currentTagName.equals(DATAATT_PHOTOPARTICIPANT_IMAGE)) {
-	        //    title = readTitle(parser);
-	        //} else	
-			if (currentTagName.equals(DATAREF_PHOTOPARTICIPANT_participant)) {	
-				parser.require(XmlPullParser.START_TAG, ns, DATAREF_PHOTOPARTICIPANT_participant);
-	            String id = readText(parser);
-				refCommands.add(new PhotoParticipant_setParticipant_RefCommand(result,id, this));
-				parser.require(XmlPullParser.END_TAG, ns, DATAREF_PHOTOPARTICIPANT_participant);	    
-	        } else
 	        {
 	            skip(parser);
 	        }
@@ -1141,44 +1079,7 @@ public class DorisDBXMLParser {
 			intervenantFichesToUpdate.add(self);
 		}
 	}
-	class Participant_setContainedPhoto_RefCommand extends RefCommand{
-	Participant container;
-		PhotoParticipant containedElement;
-		
-		public Participant_setContainedPhoto_RefCommand(Participant container,
-				PhotoParticipant containedElement) {
-			super();
-			this.container = container;
-			this.containedElement = containedElement;
-		}
-
-		@Override
-		public void run() {
-			containedElement.setParticipant(container);
-			photoParticipantsToUpdate.add(containedElement);			
-		}
-		
-	}
 	// class Participant_addIntervenantFiches_RefCommand extends RefCommand{
-	class PhotoParticipant_setParticipant_RefCommand extends RefCommand{
-		PhotoParticipant self;
-		String referencedElementID;
-		DorisDBXMLParser parser;
-		
-		public PhotoParticipant_setParticipant_RefCommand(PhotoParticipant self,
-				String referencedElementID, DorisDBXMLParser parser) {
-			super();
-			this.self = self;
-			this.referencedElementID = referencedElementID;
-			this.parser = parser;
-		}
-
-		@Override
-		public void run() {
-			self.setParticipant(parser.xmlId2Participant.get(referencedElementID));
-			photoParticipantsToUpdate.add(self);
-		}
-	}
 	// class ZoneGeographique_addFiches_RefCommand extends RefCommand{
 	class ZoneObservation_setFiches_RefCommand extends RefCommand{
 		ZoneObservation self;

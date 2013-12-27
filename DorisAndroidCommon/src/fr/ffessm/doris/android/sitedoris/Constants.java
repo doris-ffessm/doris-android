@@ -63,6 +63,7 @@ public class Constants {
     private final static String PARTICIPANTS_RACINE_URL = "contacts.asp?filtre=";
     private final static String GLOSSAIRE_RACINE_URL = "glossaire.asp?filtre=";
     private final static String DEFINITION_RACINE_URL = "glossaire_detail.asp?glossaire_numero=";
+    private final static String PARTICIPANT_RACINE_URL = "contact_fiche.asp?contact_numero=";
     
 	/*
 	 * Autres Constantes
@@ -121,6 +122,10 @@ public class Constants {
     
     public static String getListeParticipantsUrl(String inInitiale) {
  		String listeParticipantsUrl = SITE_RACINE_URL + PARTICIPANTS_RACINE_URL + inInitiale;
+     	return listeParticipantsUrl;
+    }
+    public static String getParticipantUrl(String numeroParticipantDoris) {
+ 		String listeParticipantsUrl = SITE_RACINE_URL + PARTICIPANT_RACINE_URL + numeroParticipantDoris;
      	return listeParticipantsUrl;
     }
     

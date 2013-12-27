@@ -67,8 +67,6 @@ public class DorisDBHelper {
 	//public RuntimeExceptionDao<IntervenantFiche, Integer> intervenantFicheDao;
 	public Dao<Participant, Integer> participantDao;
 	//public RuntimeExceptionDao<Participant, Integer> participantDao;
-	public Dao<PhotoParticipant, Integer> photoParticipantDao;
-	//public RuntimeExceptionDao<PhotoParticipant, Integer> photoParticipantDao;
 	public Dao<ZoneGeographique, Integer> zoneGeographiqueDao;
 	//public RuntimeExceptionDao<ZoneGeographique, Integer> zoneGeographiqueDao;
 	public Dao<ZoneObservation, Integer> zoneObservationDao;
@@ -91,7 +89,6 @@ public class DorisDBHelper {
 		Dao<SectionFiche, Integer> sectionFicheDao,
 		Dao<IntervenantFiche, Integer> intervenantFicheDao,
 		Dao<Participant, Integer> participantDao,
-		Dao<PhotoParticipant, Integer> photoParticipantDao,
 		Dao<ZoneGeographique, Integer> zoneGeographiqueDao,
 		Dao<ZoneObservation, Integer> zoneObservationDao,
 		Dao<Groupe, Integer> groupeDao,
@@ -104,7 +101,6 @@ public class DorisDBHelper {
 		this.sectionFicheDao = sectionFicheDao;
 		this.intervenantFicheDao = intervenantFicheDao;
 		this.participantDao = participantDao;
-		this.photoParticipantDao = photoParticipantDao;
 		this.zoneGeographiqueDao = zoneGeographiqueDao;
 		this.zoneObservationDao = zoneObservationDao;
 		this.groupeDao = groupeDao;
