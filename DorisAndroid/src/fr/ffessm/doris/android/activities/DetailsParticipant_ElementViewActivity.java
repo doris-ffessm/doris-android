@@ -44,14 +44,11 @@ package fr.ffessm.doris.android.activities;
 
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -65,6 +62,8 @@ import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 // Start of user code protectedDetailsParticipant_ElementViewActivity_additional_import
+import android.net.Uri;
+import fr.ffessm.doris.android.sitedoris.Constants;
 // End of user code
 
 public class DetailsParticipant_ElementViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
@@ -73,7 +72,6 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteBaseActivity<
 {
 	
 	protected int participantId;
-	
 	
 	private static final String LOG_TAG = DetailsParticipant_ElementViewActivity.class.getCanonicalName();
 

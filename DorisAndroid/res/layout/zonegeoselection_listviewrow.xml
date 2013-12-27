@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Start of user code protected zonegeoselection_listviewrow linearlayout additions
-		TENTATIVE DE PROTECTION DE GUILLAUME	-->
+<!-- Start of user code protected zonegeoselection_listviewrow linearlayout full_customization
+			-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+android:id/zonegeoselection_listviewrow"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="2dp"
+    android:layout_height="match_parent"    
+	android:layout_marginBottom="2dp"
     android:layout_marginTop="2dp"
     android:orientation="vertical" >
-
-    <RelativeLayout
+	<RelativeLayout
         android:id="@+id/RelativeLayout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -76,8 +75,6 @@
     </RelativeLayout>
     
     <View style="@style/Separateur" />
-    
 </LinearLayout>
 <!-- End of user code
 			-->
-		
