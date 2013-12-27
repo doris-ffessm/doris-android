@@ -301,12 +301,16 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			// section "Crédits"
 			StringBuilder sbCreditText = new StringBuilder();
 			final String urlString = "http://doris.ffessm.fr/fiche2.asp?fiche_numero="+entry.getNumeroFiche(); 
-			sbCreditText.append(urlString+"\n");
-			sbCreditText.append(getString(R.string.detailsfiche_elementview_datecreation_label));
-			sbCreditText.append(entry.getDateCreation()+"\n");
-			sbCreditText.append(getString(R.string.detailsfiche_elementview_datemodification_label));
-			sbCreditText.append(entry.getDateModification());
-						
+			sbCreditText.append(urlString);
+			
+			sbCreditText.append("\n"+getString(R.string.detailsfiche_elementview_datecreation_label));
+			sbCreditText.append(entry.getDateCreation());
+			
+			if (!entry.getDateModification().isEmpty()) {
+				sbCreditText.append("\n"+getString(R.string.detailsfiche_elementview_datemodification_label));
+				sbCreditText.append(entry.getDateModification());
+			}
+			
 			for (IntervenantFiche intervenant : entry.getIntervenants()) {
 				intervenant.setContextDB(getHelper().getDorisDBHelper());
 				//sbCreditText.append("\n"+intervenant.getId());

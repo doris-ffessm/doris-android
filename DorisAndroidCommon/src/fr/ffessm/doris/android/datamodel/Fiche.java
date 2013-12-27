@@ -456,7 +456,7 @@ public class Fiche {
 								//log.debug("getFiche() - 525 - "+listeParticipantsTexteBrute);
 				
 								String[] listeParticipantsTexte = listeParticipantsTexteBrute.split("\n");
-								//log.debug("getFiche() - 530 - "+listeParticipantsTexte.length);
+								log.debug("getFiche() - 530 - "+listeParticipantsTexte.length);
 								
 								for (String ligne : listeParticipantsTexte) {
 									//log.debug("getFiche() - 535 - "+ligne.trim());
@@ -635,74 +635,72 @@ public class Fiche {
 					}
 				}
 			} // Fin recherche Sous-Groupe
-		}
-		
-
-		//Recup du TD qui contient les infos DROITE (images et qui a fait la fiche)
-		//Recup du TR dont le 3ème TD fils contient les infos DROITE (images et qui a fait la fiche)
-		List<? extends Element> listeElementsEntoureDeGris = source.getAllElementsByClass("trait_cadregris");
-		//log.debug("getFiche() -  element : " + " - " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),30)));
-		
-		for (Element elementEntoureDeGris : listeElementsEntoureDeGris) {
-			log.debug("getFiche() - elementEntoureDeGris : " + elementEntoureDeGris.toString().substring(0, Math.min(100,elementEntoureDeGris.toString().toString().length())));
-			
-			// Les participants
-			// On vérifie que le cadre Gris contient la rubrique Participants
-			Element elementRubriqueinEntoureDeGris= elementEntoureDeGris.getFirstElementByClass("rubrique");
-			if (elementRubriqueinEntoureDeGris != null) {
-				//log.debug("getFicheFromHtml() - 550 - "+elementRubriqueinEntoureDeGris.getRenderer().toString());
-				if (elementRubriqueinEntoureDeGris.getRenderer().toString().trim().equals("Participants")) {
-					// On parcourt les TD
-					// Si class=gris_gras et contenu texte != vide => qualité de la personne ci-après
-					// Si class=normal et contenu texte != vide => nom de la personne
-					// TODO : Si class=normal et contenu texte = vide  et Contient <A> => 
-					//    ref de la personne = echo href | grep "s/.*contact_numero=(.*)/$1/"
-					ParticipantKind intervenantQualite = null;
-					String intervenantRef = null;
-					
-					String listeParticipantsTexteBrute = elementRubriqueinEntoureDeGris.getParentElement().getParentElement().getFirstElement(HTMLElementName.TABLE).getRenderer().toString();
-					//log.debug("getFiche() - 555 - "+listeParticipantsTexteBrute);
 	
-					String[] listeParticipantsTexte = listeParticipantsTexteBrute.split("\n");
-					//log.debug("getFiche() - 560 - "+listeParticipantsTexte.length);
-					
-					for (String ligne : listeParticipantsTexte) {
-						//log.debug("getFiche() - 565 - "+ligne.trim());
+			//Recup du TD qui contient les infos DROITE (images et qui a fait la fiche)
+			//Recup du TR dont le 3ème TD fils contient les infos DROITE (images et qui a fait la fiche)
+			List<? extends Element> listeElementsEntoureDeGris = source.getAllElementsByClass("trait_cadregris");
+			//log.debug("getFiche() -  element : " + " - " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),30)));
+			
+			for (Element elementEntoureDeGris : listeElementsEntoureDeGris) {
+				//log.debug("getFiche() - elementEntoureDeGris : " + elementEntoureDeGris.toString().substring(0, Math.min(100,elementEntoureDeGris.toString().toString().length())));
+				
+				// Les participants
+				// On vérifie que le cadre Gris contient la rubrique Participants
+				Element elementRubriqueinEntoureDeGris= elementEntoureDeGris.getFirstElementByClass("rubrique");
+				if (elementRubriqueinEntoureDeGris != null) {
+					//log.debug("getFicheFromHtml() - 550 - "+elementRubriqueinEntoureDeGris.getRenderer().toString());
+					if (elementRubriqueinEntoureDeGris.getRenderer().toString().trim().equals("Participants")) {
+						// On parcourt les TD
+						// Si class=gris_gras et contenu texte != vide => qualité de la personne ci-après
+						// Si class=normal et contenu texte != vide => nom de la personne
+						// TODO : Si class=normal et contenu texte = vide  et Contient <A> => 
+						//    ref de la personne = echo href | grep "s/.*contact_numero=(.*)/$1/"
+						ParticipantKind intervenantQualite = null;
+						String intervenantRef = null;
 						
-						if ( Constants.getTypeParticipant(ligne.trim()) != null ){
-							intervenantQualite = Constants.getTypeParticipant(ligne.trim() );
-							log.debug("getFicheFromHtml() - Type Intervenant: " + intervenantQualite);
-						}
+						String listeParticipantsTexteBrute = elementRubriqueinEntoureDeGris.getParentElement().getParentElement().getFirstElement(HTMLElementName.TABLE).getRenderer().toString();
+						//log.debug("getFiche() - 555 - "+listeParticipantsTexteBrute);
+		
+						String[] listeParticipantsTexte = listeParticipantsTexteBrute.split("\n");
+						//log.debug("getFiche() - 560 - "+listeParticipantsTexte.length);
 						
-						if ( ligne.trim().contains("contact_numero=") ){
-							intervenantRef = ligne.trim().replaceAll(".*contact_fiche.*contact_numero=(.*)>", "$1");
-							log.debug("getFicheFromHtml() - Ref Intervenant: " + intervenantRef);
+						for (String ligne : listeParticipantsTexte) {
+							//log.debug("getFiche() - 565 - "+ligne.trim());
 							
-							Participant participant = SiteDoris.getParticipantFromListeParticipants(listeParticipants, Integer.valueOf(intervenantRef) );
-							if (participant != null) {
-								IntervenantFiche intervenantFiche = new IntervenantFiche(  participant, intervenantQualite.ordinal());
-								intervenantFiche.setFiche(this);
-								_contextDB.intervenantFicheDao.create(intervenantFiche);
-							}				
+							if ( Constants.getTypeParticipant(ligne.trim()) != null ){
+								intervenantQualite = Constants.getTypeParticipant(ligne.trim() );
+								log.debug("getFicheFromHtml() - Type Intervenant: " + intervenantQualite);
+							}
+							
+							if ( ligne.trim().contains("contact_numero=") ){
+								intervenantRef = ligne.trim().replaceAll(".*contact_fiche.*contact_numero=(.*)>", "$1");
+								log.debug("getFicheFromHtml() - Ref Intervenant: " + intervenantRef);
+								
+								Participant participant = SiteDoris.getParticipantFromListeParticipants(listeParticipants, Integer.valueOf(intervenantRef) );
+								if (participant != null) {
+									IntervenantFiche intervenantFiche = new IntervenantFiche(  participant, intervenantQualite.ordinal());
+									intervenantFiche.setFiche(this);
+									_contextDB.intervenantFicheDao.create(intervenantFiche);
+								}				
+							}
+							
 						}
-						
 					}
 				}
-			}
-							
-		} // Fin parcourt des Cadres Gris
+								
+			} // Fin parcourt des Cadres Gris
+			
+			// Les dates de Créations et de nodifications
+			// Elles sont dans le seul TD de class = normalgris
+			Element ElementDates=source.getFirstElementByClass("normalgris2");
+			log.info("getFiche() - Bloc Dates : " + ElementDates.getRenderer().toString());
+			
+			dateCreation = ElementDates.getRenderer().toString().replaceAll("\r\n", " ").replaceAll("\n", " ").replaceAll(".*DORIS,([^:]*):.*", "$1").trim();
+			//dateModification = ElementDates.getRenderer().toString().replaceAll(".*modification le(.*)", "$1").trim();
+			log.debug("getFicheFromHtml() - dateCreation : " + dateCreation);
+			//log.debug("getFicheFromHtml() - dateModification : " + dateModification);
 		
-		// Les dates de Créations et de nodifications
-		// Elles sont dans le seul TD de class = normalgris
-		Element ElementDates=source.getFirstElementByClass("normalgris2");
-		log.info("getFiche() - Bloc Dates : " + ElementDates.getRenderer().toString());
-		
-		dateCreation = ElementDates.getRenderer().toString().replaceAll("\r\n", " ").replaceAll("\n", " ").replaceAll(".*DORIS,([^:]*):.*", "$1").trim();
-		//dateModification = ElementDates.getRenderer().toString().replaceAll(".*modification le(.*)", "$1").trim();
-		log.debug("getFicheFromHtml() - dateCreation : " + dateCreation);
-		//log.debug("getFicheFromHtml() - dateModification : " + dateModification);
-		
-		
+		}
 		
 		
 		
