@@ -139,34 +139,17 @@ public class PrefetchDorisWebSite {
 			log.debug("doMain() - Début TEST");
 						
 			// On boucle sur les initailes des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
-			String listeFiltres;
+			String testPhrase;
 
-			listeFiltres="ab";
-			String contenuFichierHtml = "";
+			testPhrase="Polymastia boletiformis <../fiche2.asp?fiche_numero=449> : prolongements \nplus hauts en doigts de gant, couleur jaune orangé.\nAaptos aaptos : couleur différente (jaune brun à jaune pâle) et papilles\n moins nombreuses et plus petites. Cependant, seule une observation des\n spicules* au microscope permettra de faire la différence.";
+			Outils.nettoyageTextes(testPhrase);
+
+			testPhrase="Test : \n- Puce 1\n- Puce 2\n";
+			Outils.nettoyageTextes(testPhrase);
+
+			testPhrase="Test : \nABC\nDEF\nghi\n";
+			Outils.nettoyageTextes(testPhrase);
 			
-			for (char initiale : listeFiltres.toCharArray()){
-				log.debug("doMain() - Recup Définitions : "+initiale);
-				
-				String listeDefinitionsFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeDefinitions-"+initiale+".html";
-				log.info("Récup. Liste des Définitions : " + listeDefinitionsFichier);
-
-				if (Outils.getFichierUrl(Constants.getListeDefinitionsUrl(""+initiale), listeDefinitionsFichier)) {
-					contenuFichierHtml = Outils.getFichier(new File(listeDefinitionsFichier));
-				} else {
-					log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale);
-					System.exit(0);
-				}
-				
-				//final List<Participant> listeDefinitionsFromHTML = SiteDoris.getListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
-				SiteDoris.getListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
-				//log.info("Creation de "+listeDefinitionsFromHTML.size()+" Définitions pour la lettre : "+initiale);
-				
-			}	
-			
-			List<Participant> listeParticipants = new ArrayList<Participant>(0);
-			listeParticipants.addAll(dbContext.participantDao.queryForAll());
-			log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
-
 			//String contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
 			//fiche.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
 			log.debug("doMain() - Fin TEST");
