@@ -136,7 +136,7 @@ public class SiteDoris {
     	
     	listeGroupes.add(groupe);
     	
-    	Source source=new Source(inCodePageHtml);
+    	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
     	source.fullSequentialParse();
     	//log.debug("getGroupes()- source.length() : " + source.length());
     	
@@ -408,7 +408,7 @@ public class SiteDoris {
     	
     	List<Participant> listeParticipants = new ArrayList<Participant>(0);
     	
-    	Source source=new Source(inCodePageHtml);
+    	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
     	source.fullSequentialParse();
     	log.debug("getListeParticipantsParInitiale()- source.length() : " + source.length());
     	
@@ -552,7 +552,7 @@ public class SiteDoris {
     	
     	//List<Definition> listeDefinitions = new ArrayList<Definition>(0);
     	
-    	Source source=new Source(inCodePageHtml);
+    	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
     	source.fullSequentialParse();
     	log.debug("getListeDefinitionsParInitialeFromHtml()- source.length() : " + source.length());
     	
@@ -592,7 +592,7 @@ public class SiteDoris {
     public static void getDefinitionsFromHtml(String inCodePageHtml){
     	log.debug("getDefinitionsFromHtml() - Début");
     
-    	Source source=new Source(inCodePageHtml);
+    	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
     	source.fullSequentialParse();
     	log.debug("getDefinitionsFromHtml()- source.length() : " + source.length());
     	

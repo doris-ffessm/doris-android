@@ -234,6 +234,9 @@ public class Fiche {
 			e1.printStackTrace();
 		}
     	
+    	// Permet ensuite de d'utiliser la mise ne forme
+    	// mais le prix à payer est de supprimer à la main partout où elle n'est pas necessaire
+    	htmlFiche = Outils.remplacementBalises(htmlFiche);
     	
     	//log.debug("getFiche() - htmlFiche : " + htmlFiche.substring(0, 200));
     	
@@ -251,9 +254,9 @@ public class Fiche {
 		//log.debug("getFiche() - ElementTDcode_fiche.toString() : " + ElementTDcode_fiche.toString());
 
 		String ficheRef = ElementTDcode_fiche.getFirstElementByClass("normalgris").getRenderer().toString().trim();
-		ficheRef = ficheRef.replace("(N°", "").replace(")", "");
+		ficheRef = ficheRef.replaceAll("\\{\\{[^\\}*]\\}\\}", "").replace("(N°", "").replace(")", "").trim();
 		setNumeroFiche(Integer.parseInt(ficheRef));
-		log.info("getFicheFromHtml() - ref : " + ficheRef);		
+		log.info("getFicheFromHtml() - ref : " + ficheRef);
 		log.info("getFicheFromHtml() - Etat Fiche : " + getEtatFiche());		
 		
 		//Centrage sur la TABLE qui contient tout le texte et les images

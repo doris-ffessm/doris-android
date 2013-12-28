@@ -244,20 +244,12 @@ public class Outils {
 
 
     public static String nettoyageBalises(String texteANettoye) {
-    	log.debug("nettoyageBalises() - Début");
-    	log.trace("nettoyageBalises() - texteANettoye : " + texteANettoye);
+    	//log.debug("nettoyageBalises() - Début");
+    	//log.debug("nettoyageBalises() - texteANettoye : " + texteANettoye);
 		String texteNettoye = texteANettoye;
 		
 		texteNettoye = texteNettoye.replace("&nbsp;</td>", "</td>");
-    	
-    	
-		texteNettoye = texteNettoye.replace("<strong>", "");
-		texteNettoye = texteNettoye.replace("</strong>", "");
-		texteNettoye = texteNettoye.replace("<em>", "");
-		texteNettoye = texteNettoye.replace("</em>", "");
-		texteNettoye = texteNettoye.replace("<br>", "");
-		texteNettoye = texteNettoye.replace("<br/>", "");
-		
+    			
 		// Certaines fiches comme : http://doris.ffessm.fr/fiche2.asp?fiche_numero=3527 (au 30 mars 13)
 		// contiennent des " dans le nom de l'animal, or les " ne sont pas échappés donc ça met le
 		// bazard dans le code html
@@ -265,11 +257,30 @@ public class Outils {
 		// et qui ne contiennent pas de = ? < >
 		texteNettoye = texteNettoye.replaceAll("(href=\"[^\"]*)\"([^\"=?<>]*)\"([^\"]*\")", "$1$2$3");
 		
-		log.trace("nettoyageBalises() - texteNettoye : " + texteNettoye);
-		log.debug("nettoyageBalises() - Fin");
+		//log.debug("nettoyageBalises() - texteNettoye : " + texteNettoye);
+		//log.debug("nettoyageBalises() - Fin");
 		return texteNettoye;
 	}
 
+    public static String remplacementBalises(String texteANettoye) {
+    	log.debug("remplacementBalises() - Début");
+    	log.debug("remplacementBalises() - texteANettoye : " + texteANettoye);
+		String texteNettoye = texteANettoye;
+
+		//Difficile des les mettre ailleurs
+		// Nous les retirons ensuite pour les sections où ils ne sont pas nécessaires
+		texteNettoye = texteNettoye.replace("<strong>", "{{b}}");
+		texteNettoye = texteNettoye.replace("</strong>", "{{/b}}");
+		texteNettoye = texteNettoye.replace("<em>", "{{i}}");
+		texteNettoye = texteNettoye.replace("</em>", "{{/i}}");
+		texteNettoye = texteNettoye.replace("<br>", "{{n}}");
+		texteNettoye = texteNettoye.replace("<br/>", "{{n}}");
+		texteNettoye = texteNettoye.replace("<br />", "{{n}}");
+			
+		log.debug("remplacementBalises() - texteNettoye : " + texteNettoye);
+		log.debug("remplacementBalises() - Fin");
+		return texteNettoye;
+	}
 	
     public static String nettoyageTextes(String texteANettoye) {
     	//log.debug("nettoyageTextes() - Début");

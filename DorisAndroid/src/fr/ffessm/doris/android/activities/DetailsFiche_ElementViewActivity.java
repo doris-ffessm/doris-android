@@ -547,6 +547,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	    	// TODO : doit être améliorable mais je n'arrive pas à manipuler directement SpannableString
 	    	// donc pas de concat, pas de regexp.
 	        List<TextSpan> listeFicheNumero = new ArrayList<TextSpan>();
+	        List<String> pileDerniereBalise = new ArrayList<String>();
 	        
 	        String texteInter = texte.toString();
 	        StringBuilder texteFinal = new StringBuilder();
