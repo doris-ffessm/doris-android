@@ -273,7 +273,7 @@ public class Outils {
 	
     public static String nettoyageTextes(String texteANettoye) {
     	//log.debug("nettoyageTextes() - Début");
-    	log.debug("nettoyageTextes() - texteANettoye : " + texteANettoye);
+    	//log.debug("nettoyageTextes() - texteANettoye : " + texteANettoye);
 		String texteNettoye = texteANettoye;
 		
 		//if (LOG) Log.v(TAG, "nettoyageCaracteres() - texteNettoye : " + texteNettoye.charAt(7) + " - " + texteNettoye.codePointAt(7));
@@ -289,24 +289,28 @@ public class Outils {
 		// ⊃2; => ² \u00B2
 		texteNettoye = texteNettoye.replaceAll("\u22832;", "\u00B2");
 		
-		// " *" => "*"
+		// Parfois les liens vers le Glossaire sont mal placés " *" => "*"
 		texteNettoye = texteNettoye.replace(" *", "*");
 				
 		// suppression des sauts de ligne si pas avant une majuscule ou un - (puce)
 		texteNettoye = texteNettoye.replaceAll("\r\n([^A-Z\\-])", " $1");
-		log.debug("nettoyageTextes() - 010 : " + texteNettoye);
+		//log.debug("nettoyageTextes() - 010 : " + texteNettoye);
 		texteNettoye = texteNettoye.replaceAll("\n([^A-Z\\-])", " $1");
-		log.debug("nettoyageTextes() - 020 : " + texteNettoye);
+		//log.debug("nettoyageTextes() - 020 : " + texteNettoye);
 		
 		// suppression des blancs multiples
 		texteNettoye = texteNettoye.replaceAll("[ \t]{2,}"," ");
 		
 		texteNettoye = texteNettoye.trim();
-		log.debug("nettoyageTextes() - texteNettoye : " + texteNettoye);
+		//log.debug("nettoyageTextes() - texteNettoye : " + texteNettoye);
 		
 		//log.debug("nettoyageTextes() - Fin");
 		return texteNettoye;
 	}
+    
+ 
+
+
     
     /* *********************************************************************
      * Permet d'enlever les accents, cédilles et autres
@@ -354,6 +358,5 @@ public class Outils {
 	 
 	    return new String(charsData);
 	}
-   
 
 }

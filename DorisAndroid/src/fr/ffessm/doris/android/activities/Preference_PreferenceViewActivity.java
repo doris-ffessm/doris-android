@@ -41,16 +41,20 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 
 import fr.ffessm.doris.android.R;
 
 //Start of user code Preference preference activity additional imports
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
@@ -85,7 +89,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    	super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preference); 
 		//Start of user code Preference preference activity additional onCreate
         
@@ -232,6 +236,8 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	
 	//Start of user code Preference preference activity additional operations
     
+
+    
     private String getVigSummary() {
     	String txt = getApplicationContext().getString(R.string.mode_precharg_reset_vig_summary); 
     	txt = txt.replace("@nbPh", ""+Outils.getVignetteCount(getApplicationContext()) ) ;
@@ -258,8 +264,10 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
   	     		break;
      		}
      	}
-    	String txt = getApplicationContext().getString(R.string.mode_precharg_reset_cache_summary); 
-     	txt = txt.replace("@nbPh", ""+nbFichiersDansCache) ;
+    	String txt = getApplicationContext().getString(R.string.mode_precharg_reset_cache_summary);
+    	// La division par 2 est très sale mais c'est bien le plus rapide :-)
+    	// En le dossier est bizarrement structué avec des dossiers renommés, mais en gros il y en a 2 par fichiers en cache
+     	txt = txt.replace("@nbPh", ""+ Math.round(nbFichiersDansCache/2) );
      	txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getDiskUsage(getApplicationContext(), getApplicationContext().getCacheDir() ) ) ) ;
      	return txt;
     }

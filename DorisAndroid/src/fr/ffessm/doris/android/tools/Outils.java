@@ -2,7 +2,9 @@ package fr.ffessm.doris.android.tools;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -323,8 +325,9 @@ public class Outils {
 	public static int getHiResCount(Context inContext){
 		return getFileCount(inContext, getImageFolderHiRes(inContext));
 	}
-	public static int getFileCount(Context inContext, File inImageFolder){
-		return inImageFolder.list().length;
+	
+	public static int getFileCount(Context inContext, File inFolder){
+		return inFolder.list().length;
 	}
 	
 	public static long getPhotosDiskUsage(Context inContext){
