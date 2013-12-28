@@ -561,6 +561,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	        	
 	        	Log.d(LOG_TAG, "textToSpannableStringDoris() - texteInter : "+texteInter
 	        			+ " - " + posDepTexteInter + "-" + posFinTexteInter + " -> " + balise);
+	        	
 	        	if (balise.equals("i")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
 	        		int posDepTexteFinal = texteFinal.length();
@@ -591,6 +592,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	        		
 	        		texteInter = texteInter.substring(posDepTexteInter+6, texteInter.length());
 	        	}
+	        	else if (balise.equals("n")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) + "\n");
+	        			        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	}
 	        	else if (balise.matches("[0-9]*")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) + "(Fiche)");
 	        		
@@ -598,11 +604,23 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	        		int posFinTexteFinal = texteFinal.length();
 	        		Log.d(LOG_TAG, "textToSpannableStringDoris() - texteFinal : "+texteFinal);
 	        		
-	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.CLIC,posDepTexteFinal,posFinTexteFinal,balise));
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.FICHE,posDepTexteFinal,posFinTexteFinal,
+	        				balise));
 	        		
-	        		texteInter = texteInter.substring(posDepTexteInter+7, texteInter.length());
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
 	        	}
-	        	
+	        	else if (balise.startsWith("D:")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) + "(*)");
+	        		
+	        		int posDepTexteFinal = texteFinal.length() - 3;
+	        		int posFinTexteFinal = texteFinal.length();
+	        		Log.d(LOG_TAG, "textToSpannableStringDoris() - texteFinal : "+texteFinal);
+	        		
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.DEFINITION,posDepTexteFinal,posFinTexteFinal,
+	        				balise.substring(2, balise.length())));
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	}
 	        } // fin du While
 	        
 	        texteFinal.append(texteInter);
@@ -612,13 +630,16 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	        richtext = new SpannableString(texteFinal);
 	        
 	        for (final TextSpan ts : listeFicheNumero) {
+	        	Log.d(LOG_TAG, "textToSpannableStringDoris() - ts : "+ts.spanType.name()+" - "+ts.info);
+	        	
 	        	if ( ts.spanType == TextSpan.SpanType.ITALIQUE ) {
 	        		richtext.setSpan(new StyleSpan(Typeface.ITALIC), ts.positionDebut, ts.positionFin, 0);  
 	        	}
 	        	else if ( ts.spanType == TextSpan.SpanType.GRAS ) {
-	        		richtext.setSpan(new StyleSpan(Typeface.BOLD), ts.positionDebut, ts.positionFin, 0);  
+	        		richtext.setSpan(new StyleSpan(Typeface.BOLD), ts.positionDebut, ts.positionFin, 0);
+	        		richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_gras))), ts.positionDebut, ts.positionFin, 0);
 	        	}
-	        	else if ( ts.spanType == TextSpan.SpanType.CLIC ) {
+	        	else if ( ts.spanType == TextSpan.SpanType.FICHE ) {
 
 	        		ClickableSpan clickableSpan = new ClickableSpan() {  
 			            @Override  
@@ -638,65 +659,35 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			     	Log.d(LOG_TAG, "addFoldableView() - SpannableString : "+ts.positionDebut + " - " + ts.positionFin);
 			    	
 					richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
-					richtext.setSpan(new ForegroundColorSpan(Color.RED), ts.positionDebut, ts.positionFin, 0);  
+					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_lienfiche))), ts.positionDebut, ts.positionFin, 0);  
 	        	}
-		        
+	        	else if ( ts.spanType == TextSpan.SpanType.DEFINITION) {
+
+	        		ClickableSpan clickableSpan = new ClickableSpan() {  
+			            @Override  
+			            public void onClick(View view) {  
+			                Toast.makeText(context, "Test Définition : "+ts.info, Toast.LENGTH_LONG).show();
+			            	/*
+			                Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
+			                Bundle b = new Bundle();
+			                b.putInt("ficheNumero", Integer.valueOf(ts.info) );
+			                
+			                RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
+			                b.putInt("ficheId", entriesDao.queryForEq("numeroFiche", Integer.valueOf(ts.info)).get(0).getId() );
+			                
+			        		toDetailView.putExtras(b);
+			                startActivity(toDetailView);
+			                */
+			            }  
+			        };
+			     	Log.d(LOG_TAG, "addFoldableView() - SpannableString : "+ts.positionDebut + " - " + ts.positionFin);
+			    	
+					richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
+					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_liendefinition))), ts.positionDebut, ts.positionFin, 0);
+	        	}
 	        }
 	        
 	        return richtext;
-	        /*
-	        
-	        //Création de la liste des Fiches liées
-	        while (texte.toString().indexOf("{{", positionFin+1) != -1 ) {
-	        	i +=1;
-	        	
-	        	positionDep = texte.toString().indexOf("{{", positionFin+3);
-	        	positionFin = texte.toString().indexOf("}}", positionDep);
-	        	
-		        String refFiche = texte.toString().substring(positionDep+2, positionFin);
-		        //Log.d(LOG_TAG, "addFoldableView() - refFiche : "+refFiche);
-		        
-		        listeFicheNumero[i] = Integer.valueOf(refFiche);
-	        }
-	        
-	        
-	        //On enlève les liens significatifs et on met (Fiche)
-	        texte = texte.toString().replaceAll("\\{\\{[0-9]*\\}\\}", "(Fiche)");
-	        //Log.d(LOG_TAG, "addFoldableView() - texte : "+texte);
-	        richtext = new SpannableString(texte);
-	        
-	        
-	        // On met le lien avec le bon numéro de fiche sur chaque (Fiche)
-	        positionDep = 1;
-	        positionFin = 1;
-	        i = 0;
-	        while (texte.toString().indexOf("(Fiche)", positionFin) != -1 ) {
-	        	i +=1;
-	        	
-	        	positionDep = texte.toString().indexOf("(Fiche)", positionFin);
-	        	positionFin = texte.toString().indexOf("(Fiche)", positionDep)+7;
-	        	
-	        	final int listeFicheNumeroInt = listeFicheNumero[i];
-		        ClickableSpan clickableSpan = new ClickableSpan() {  
-		            @Override  
-		            public void onClick(View view) {  
-		                //Toast.makeText(context, "Test (Fiche Liée) : "+ficheId, Toast.LENGTH_LONG).show();
-		            	Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
-		                Bundle b = new Bundle();
-		                b.putInt("ficheNumero", listeFicheNumeroInt);
-		                
-		                RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
-		                b.putInt("ficheId", entriesDao.queryForEq("numeroFiche", listeFicheNumeroInt).get(0).getId() );
-		                
-		        		toDetailView.putExtras(b);
-		                startActivity(toDetailView);
-		            }  
-		        };  
-		        
-		        //Log.d(LOG_TAG, "addFoldableView() - SpannableString : "+positionDep + " - " + positionFin);
-		    	
-				richtext.setSpan(clickableSpan, positionDep, positionDep+7, 0);
-	        }*/
 	    }
 
     }
@@ -704,7 +695,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     public static class TextSpan {
     	
     	public enum SpanType {
-    	    CLIC, ITALIQUE, GRAS 
+    	    FICHE, ITALIQUE, GRAS, SAUTDELIGNE, DEFINITION
     	} 
     	
     	SpanType spanType = null;
