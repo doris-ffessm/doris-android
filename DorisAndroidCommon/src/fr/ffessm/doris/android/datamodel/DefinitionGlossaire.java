@@ -54,11 +54,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collection;
 
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.Source;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import fr.ffessm.doris.android.datamodel.associations.*;
+import fr.ffessm.doris.android.sitedoris.Outils;
 
 // Start of user code additional import for DefinitionGlossaire
 // End of user code
@@ -135,6 +139,26 @@ public class DefinitionGlossaire {
 				
 
 	// Start of user code DefinitionGlossaire additional user properties
+
+    public void getDefinitionsFromHtml(String inCodePageHtml){
+    	log.debug("getDefinitionsFromHtml() - Début");
+    
+    	Source source=new Source(inCodePageHtml);
+    	source.fullSequentialParse();
+    	log.debug("getDefinitionsFromHtml()- source.length() : " + source.length());
+    	
+    	Element elementsTDTitre2 = source.getFirstElementByClass("titre2");
+    	terme = Outils.nettoyageTextes( elementsTDTitre2.getRenderer().toString().replace(":", "").trim() );
+    	log.debug("getDefinitionsFromHtml()- motDefini : " + terme);
+    	
+    	definition = Outils.nettoyageTextes( elementsTDTitre2.getParentElement().getParentElement().getFirstElementByClass("normal").getRenderer().toString() );
+    	definition = definition.replaceAll("\r\n", " ").replaceAll("\n", " ").replaceAll("\\s{2,}"," ").trim();
+    	log.debug("getDefinitionsFromHtml()- Définition : " + definition);
+    	
+    	log.debug("getDefinitionsFromHtml() - Fin");
+    }
+	
+	
 	// End of user code
 	
 	public DefinitionGlossaire() {} // needed by ormlite

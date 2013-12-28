@@ -54,6 +54,7 @@ import net.htmlparser.jericho.Source;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.Participant;
@@ -67,13 +68,13 @@ public class SiteDoris {
 
     
     public static List<Fiche> getListeFichesFromHtml(String inCodePageHtml) {
-    	log.trace("getListeFiches()- Début");
+    	log.trace("getListeFichesFromHtml()- Début");
     	
     	List<Fiche> listeFiches = new ArrayList<Fiche>(0);
     	
     	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
     	source.fullSequentialParse();
-    	log.debug("getListeFiches()- source.length() : " + source.length());
+    	log.debug("getListeFichesFromHtml()- source.length() : " + source.length());
     	//log.debug("getListeFiches()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
 
     	Element elementTableracine=source.getFirstElementByClass("titre_page").getParentElement().getParentElement();
@@ -81,7 +82,7 @@ public class SiteDoris {
     	//log.debug("getListeFiches()- elementTableracine : " + elementTableracine.toString().substring(0, Math.min(100, elementTableracine.toString().length())));
 
     	List<? extends Element> listeElementsTD = elementTableracine.getAllElements(HTMLElementName.TD);
-    	//log.debug("getListeFiches() - listeElementsTD.size() : " + listeElementsTD.size());
+    	log.debug("getListeFichesFromHtml() - listeElementsTD.size() : " + listeElementsTD.size());
 		
     	for (Element elementTD : listeElementsTD) {
     		//log.debug("getListeFiches() - elementTD.length() : " + elementTD.length());
@@ -103,7 +104,7 @@ public class SiteDoris {
     				
     				String dateCreation = ""; //TODO : Ça aurait été bien que la date de modif. apparaisse dans la page des noms scientifiques
     				String dateModification = "";
-    				log.info("getListeFiches() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
+    				log.info("getListeFichesFromHtml() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
     				
     				String textePourRechercheRapide = ficheNomCommun+" "+ficheNomScientifique;
     				Fiche fiche = new Fiche(ficheNomScientifique, ficheNomCommun, ficheId, ficheEtat, dateCreation, dateModification, "", Outils.formatStringNormalizer(textePourRechercheRapide).toLowerCase() );
@@ -113,7 +114,7 @@ public class SiteDoris {
 			}
 			
 		}
-		log.trace("getListeFiches()- Fin");
+		log.trace("getListeFichesFromHtml()- Fin");
 		return listeFiches;
     }
 	
@@ -523,8 +524,8 @@ public class SiteDoris {
     }
     
     public static Participant getParticipantFromListeParticipants(List<Participant> listeParticipants, int numParticipant){
-    	log.trace("getParticipantFromListeParticipants() - Début");
-    	log.debug("getParticipantFromListeParticipants() - numParticipant : "+numParticipant);
+    	//log.trace("getParticipantFromListeParticipants() - Début");
+    	//log.debug("getParticipantFromListeParticipants() - numParticipant : "+numParticipant);
     	
     	// Contrôle basique des entrées
     	if (numParticipant == 0) {
@@ -536,74 +537,43 @@ public class SiteDoris {
     	
     		if ( participant.getId() == numParticipant) {
     			log.debug("getParticipantFromListeParticipants() - Participant Trouvé : "+participant.getId());
-    			log.trace("getParticipantFromListeParticipants() - Fin");
+    			//log.trace("getParticipantFromListeParticipants() - Fin");
     			return participant;
     		}
     		
     	}
     	
-    	log.debug("getParticipantFromListeParticipants() - Fin (sans avoir trouvé de Participant correspondant)");
+    	//log.debug("getParticipantFromListeParticipants() - Fin (sans avoir trouvé de Participant correspondant)");
 		return null;
     }
     
-    //TODO : void => List<Definition>
-    public static void getListeDefinitionsParInitialeFromHtml(String inCodePageHtml){
-    	log.debug("getListeDefinitionsParInitialeFromHtml() - Début");
+
+    public static List<DefinitionGlossaire> getListeDefinitionsParInitialeFromHtml(String inCodePageHtml){
+    	//log.debug("getListeDefinitionsParInitialeFromHtml() - Début");
     	
-    	//List<Definition> listeDefinitions = new ArrayList<Definition>(0);
+    	List<DefinitionGlossaire> listeDefinitions = new ArrayList<DefinitionGlossaire>(0);
     	
     	Source source=new Source(inCodePageHtml);
     	source.fullSequentialParse();
-    	log.debug("getListeDefinitionsParInitialeFromHtml()- source.length() : " + source.length());
+    	//log.debug("getListeDefinitionsParInitialeFromHtml()- source.length() : " + source.length());
     	
     	List<? extends Element> listeElementsTD = source.getAllElementsByClass("liste0");
     			
     	for (Element elementTD : listeElementsTD) {
-    		log.debug("getListeDefinitionsParInitialeFromHtml()- elementTD : " +elementTD.getRenderer().toString());
+    		//log.debug("getListeDefinitionsParInitialeFromHtml()- elementTD : " +elementTD.getRenderer().toString());
 			if (elementTD.getRenderer().toString().trim().replaceAll("<[^>]*>", "").isEmpty() ) {
 				String numeroDefinition =  elementTD.getRenderer().toString().trim().replaceAll(".*glossaire_numero=([^&]*)&.*", "$1");
 				log.debug("getListeDefinitionsParInitialeFromHtml()- numeroDefinition : " +numeroDefinition);
 			
-				//TODO : ici plutôt création de la liste
-				// Le télechargement étant géré dans Prefectch ou Appli android
-				//glossaire_numero=1087
-				String urlDefinition = Constants.getDefinitionUrl(numeroDefinition );
-				String definitionFichier = "./run/html/definition-"+numeroDefinition+".html";
-				String contenuFichierHtml;
-				if (Outils.getFichierUrl(urlDefinition, definitionFichier) ){
-					contenuFichierHtml = Outils.getFichier(new File(definitionFichier));
-					
-					getDefinitionsFromHtml(contenuFichierHtml);
-				} else {
-					log.error("Une erreur est survenue lors de la récupération de la définition : "+numeroDefinition);
-					System.exit(0);
-				}
+				listeDefinitions.add(new DefinitionGlossaire(Integer.valueOf(numeroDefinition),"",""));
 			
 			}
     	} // Fin Pour Chaque TR
     	
     	//log.debug("getListeDefinitionsParInitialeFromHtml() - listeDefinitions : "+listeDefinitions.size());
-		log.debug("getListeDefinitionsParInitialeFromHtml() - Fin");
-		//return listeParticipants;
+		//log.debug("getListeDefinitionsParInitialeFromHtml() - Fin");
+		return listeDefinitions;
     }
     
-    // TODO : void => Définition
-    // Pourraiq être mis dans l'objet Definition
-    public static void getDefinitionsFromHtml(String inCodePageHtml){
-    	log.debug("getDefinitionsFromHtml() - Début");
-    
-    	Source source=new Source(inCodePageHtml);
-    	source.fullSequentialParse();
-    	log.debug("getDefinitionsFromHtml()- source.length() : " + source.length());
-    	
-    	Element elementsTDTitre2 = source.getFirstElementByClass("titre2");
-    	String motDefini = elementsTDTitre2.getRenderer().toString().replace(":", "").trim();
-    	log.debug("getDefinitionsFromHtml()- motDefini : " + motDefini);
-    	
-    	String definition = elementsTDTitre2.getParentElement().getParentElement().getFirstElementByClass("normal").getRenderer().toString();
-    	definition = definition.replaceAll("\r\n", " ").replaceAll("\n", " ").replaceAll("\\s{2,}"," ").trim();
-    	log.debug("getDefinitionsFromHtml()- Définition : " + definition);
-    	
-    	log.debug("getDefinitionsFromHtml() - Fin");
-    }
+
 }

@@ -75,8 +75,8 @@ public class Outils {
 
     public static boolean getFichierUrl(String inUrl, String inFichierRetour) {
     	log.debug("getFichierUrl()- Début");
-    	log.debug("getFichierUrl()- url : " + inUrl);
-    	log.debug("getFichierUrl()- Fichier à Retourner : " + inFichierRetour);
+    	log.info("getFichierUrl()- url : " + inUrl);
+    	log.info("getFichierUrl()- Fichier à Retourner : " + inFichierRetour);
     	
     	InputStream flux = null;
         FileOutputStream fichierUrl = null;
@@ -131,7 +131,7 @@ public class Outils {
 
 	public static String getFichier(File inFichier) {
     	log.debug("getFichier()- Début");
-    	log.debug("getFichier()- Fichier : " + inFichier);
+    	log.info("getFichier()- Fichier : " + inFichier);
     	
     	FileInputStream objFile = null;
 		try {
@@ -245,34 +245,42 @@ public class Outils {
 
     public static String nettoyageBalises(String texteANettoye) {
     	log.debug("nettoyageBalises() - Début");
-    	log.trace("nettoyageBalises() - texteANettoye : " + texteANettoye);
+    	log.debug("nettoyageBalises() - texteANettoye : " + texteANettoye);
 		String texteNettoye = texteANettoye;
 		
 		texteNettoye = texteNettoye.replace("&nbsp;</td>", "</td>");
     	
-    	
+    	/*
 		texteNettoye = texteNettoye.replace("<strong>", "");
 		texteNettoye = texteNettoye.replace("</strong>", "");
 		texteNettoye = texteNettoye.replace("<em>", "");
 		texteNettoye = texteNettoye.replace("</em>", "");
 		texteNettoye = texteNettoye.replace("<br>", "");
 		texteNettoye = texteNettoye.replace("<br/>", "");
-		
+		*/
+		texteNettoye = texteNettoye.replace("<strong>", "")
+				.replace("</strong>", "")
+				.replace("<em>", "")
+				.replace("</em>", "")
+				.replace("<br>", "")
+				.replace("<br/>", "");
 		// Certaines fiches comme : http://doris.ffessm.fr/fiche2.asp?fiche_numero=3527 (au 30 mars 13)
 		// contiennent des " dans le nom de l'animal, or les " ne sont pas échappés donc ça met le
 		// bazard dans le code html
 		// Je retire donc ici les paires de " qui sont à l'intérieure d'une autre paire de "
 		// et qui ne contiennent pas de = ? < >
+		log.debug("nettoyageBalises() - vitesse 1");
 		texteNettoye = texteNettoye.replaceAll("(href=\"[^\"]*)\"([^\"=?<>]*)\"([^\"]*\")", "$1$2$3");
+		log.debug("nettoyageBalises() - vitesse 2");
 		
-		log.trace("nettoyageBalises() - texteNettoye : " + texteNettoye);
+		log.debug("nettoyageBalises() - texteNettoye : " + texteNettoye);
 		log.debug("nettoyageBalises() - Fin");
 		return texteNettoye;
 	}
 
 	
     public static String nettoyageTextes(String texteANettoye) {
-    	//log.debug("nettoyageTextes() - Début");
+    	log.debug("nettoyageTextes() - Début");
     	log.debug("nettoyageTextes() - texteANettoye : " + texteANettoye);
 		String texteNettoye = texteANettoye;
 		
@@ -294,9 +302,9 @@ public class Outils {
 				
 		// suppression des sauts de ligne si pas avant une majuscule ou un - (puce)
 		texteNettoye = texteNettoye.replaceAll("\r\n([^A-Z\\-])", " $1");
-		log.debug("nettoyageTextes() - 010 : " + texteNettoye);
+		//log.debug("nettoyageTextes() - 010 : " + texteNettoye);
 		texteNettoye = texteNettoye.replaceAll("\n([^A-Z\\-])", " $1");
-		log.debug("nettoyageTextes() - 020 : " + texteNettoye);
+		//log.debug("nettoyageTextes() - 020 : " + texteNettoye);
 		
 		// suppression des blancs multiples
 		texteNettoye = texteNettoye.replaceAll("[ \t]{2,}"," ");
@@ -304,7 +312,7 @@ public class Outils {
 		texteNettoye = texteNettoye.trim();
 		log.debug("nettoyageTextes() - texteNettoye : " + texteNettoye);
 		
-		//log.debug("nettoyageTextes() - Fin");
+		log.debug("nettoyageTextes() - Fin");
 		return texteNettoye;
 	}
     
