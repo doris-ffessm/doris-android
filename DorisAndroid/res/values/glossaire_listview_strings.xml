@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resource Strings specific to detailentreeglossaire Element View and EditableElement View -->
+<resources>
+	
+	<string name="searchHint_glossaire_listviewsearchrow">Chercher...</string>
+	<string name="btnZoneGeo_glossaire_listviewsearchrow_btn_label">Terme : </string>
+	<string name="btnZone_glossaire_listviewsearchrow_btn_label">Definition : </string>
+	
+</resources>

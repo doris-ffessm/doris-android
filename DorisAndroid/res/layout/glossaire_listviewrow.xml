@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+android:id/glossaire_listviewrow"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"    
+	android:layout_marginBottom="2dp"
+    android:layout_marginTop="2dp"
+    android:orientation="horizontal" >
+    <ImageView
+        android:id="@+id/glossaire_listviewrow_icon"
+		android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="2dip"
+        android:layout_marginLeft="2dip"
+        android:layout_marginRight="2dip"
+        android:layout_marginTop="2dip"
+        android:adjustViewBounds="true"
+        android:contentDescription="DefinitionGlossaire icon"
+		android:scaleType="fitCenter"
+        android:src="@drawable/ic_launcher" >
+    </ImageView>
+    <RelativeLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+			android:paddingLeft="4dip"
+       		android:paddingRight="4dip" >
+		<!-- Start of user code protected glossaire_listviewrow linearlayout customization
+			-->
+		<LinearLayout 
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_toLeftOf="@+id/glossaire_btn"
+		    android:orientation="vertical" >
+	
+		<!-- End of user code
+			-->
+			<TextView
+		        android:id="@+id/glossaire_listviewrow_label"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textAppearance="?android:attr/textAppearanceMedium"
+			    android:textColor="?android:attr/textColorPrimary" >
+		    </TextView>
+		    <TextView
+		        android:id="@+id/glossaire_listviewrow_details"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:paddingLeft="4dip"
+		        android:textAppearance="?android:attr/textAppearanceSmall"
+   				android:textColor="?android:attr/textColorSecondary" >
+		    </TextView>
+		</LinearLayout>
+		<!-- Start of user code protected glossaire_listviewrow linearlayout additions
+			-->
+		<TextView
+		    android:id="@+id/glossaire_btn"
+	        android:layout_width="wrap_content"
+	        android:layout_height="20dp"
+	        android:layout_alignParentRight="true"
+	        android:layout_alignParentTop="true"
+	        android:layout_marginRight="2dp"
+	        android:layout_marginTop="1dp"
+	        android:paddingTop="2dp"
+	        android:paddingBottom="2dp"
+	        android:background="@drawable/button_background"
+	        android:textColor="?android:attr/textColorSecondary" >
+		</TextView>
+
+		<!-- End of user code
+			-->
+		
+	</RelativeLayout>
+</LinearLayout>

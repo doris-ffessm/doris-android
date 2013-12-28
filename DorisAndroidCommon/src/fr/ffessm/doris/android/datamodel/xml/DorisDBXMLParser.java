@@ -76,6 +76,7 @@ public class DorisDBXMLParser {
 	List<ZoneGeographique> zoneGeographiques = new ArrayList<ZoneGeographique>();
 	List<ZoneObservation> zoneObservations = new ArrayList<ZoneObservation>();
 	List<Groupe> groupes = new ArrayList<Groupe>();
+	List<DefinitionGlossaire> definitionGlossaires = new ArrayList<DefinitionGlossaire>();
 	List<DorisDB_metadata> dorisDB_metadatas = new ArrayList<DorisDB_metadata>();
 	Set<Fiche> fichesToUpdate = new HashSet<Fiche>();
 	Set<AutreDenomination> autreDenominationsToUpdate = new HashSet<AutreDenomination>();
@@ -86,6 +87,7 @@ public class DorisDBXMLParser {
 	Set<ZoneGeographique> zoneGeographiquesToUpdate = new HashSet<ZoneGeographique>();
 	Set<ZoneObservation> zoneObservationsToUpdate = new HashSet<ZoneObservation>();
 	Set<Groupe> groupesToUpdate = new HashSet<Groupe>();
+	Set<DefinitionGlossaire> definitionGlossairesToUpdate = new HashSet<DefinitionGlossaire>();
 	Set<DorisDB_metadata> dorisDB_metadatasToUpdate = new HashSet<DorisDB_metadata>();
 	Hashtable<String, Fiche> xmlId2Fiche = new Hashtable<String, Fiche>();
 	Hashtable<String, AutreDenomination> xmlId2AutreDenomination = new Hashtable<String, AutreDenomination>();
@@ -96,6 +98,7 @@ public class DorisDBXMLParser {
 	Hashtable<String, ZoneGeographique> xmlId2ZoneGeographique = new Hashtable<String, ZoneGeographique>();
 	Hashtable<String, ZoneObservation> xmlId2ZoneObservation = new Hashtable<String, ZoneObservation>();
 	Hashtable<String, Groupe> xmlId2Groupe = new Hashtable<String, Groupe>();
+	Hashtable<String, DefinitionGlossaire> xmlId2DefinitionGlossaire = new Hashtable<String, DefinitionGlossaire>();
 	Hashtable<String, DorisDB_metadata> xmlId2DorisDB_metadata = new Hashtable<String, DorisDB_metadata>();
 
 	// minimize memory footprint by using static Strings
@@ -119,6 +122,8 @@ public class DorisDBXMLParser {
 	public static final String DATACLASSIFIER_ZONEOBSERVATION  = "ZONEOBSERVATION";
 	public static final String DATACLASSIFIER_GROUPES = "GROUPES";
 	public static final String DATACLASSIFIER_GROUPE  = "GROUPE";
+	public static final String DATACLASSIFIER_DEFINITIONGLOSSAIRES = "DEFINITIONGLOSSAIRES";
+	public static final String DATACLASSIFIER_DEFINITIONGLOSSAIRE  = "DEFINITIONGLOSSAIRE";
 	public static final String DATACLASSIFIER_DORISDB_METADATAS = "DORISDB_METADATAS";
 	public static final String DATACLASSIFIER_DORISDB_METADATA  = "DORISDB_METADATA";
 
@@ -146,6 +151,7 @@ public class DorisDBXMLParser {
 	public static final String DATAREF_FICHE_autresDenominations = "autresDenominations";
 	public static final String DATAREF_FICHE_groupe = "groupe";
 	public static final String DATAREF_FICHE_intervenants = "intervenants";
+	public static final String DATAREF_FICHE_definitionsUtilisees = "definitionsUtilisees";
 	public static final String DATAATT_AUTREDENOMINATION_denomination = "denomination";
 	public static final String DATAATT_AUTREDENOMINATION_DENOMINATION = "DENOMINATION";
 	public static final String DATAATT_AUTREDENOMINATION_langue = "langue";
@@ -200,6 +206,13 @@ public class DorisDBXMLParser {
 	public static final String DATAATT_GROUPE_NOMIMAGE = "NOMIMAGE";
 	public static final String DATAREF_GROUPE_groupesFils = "groupesFils";
 	public static final String DATAREF_GROUPE_groupePere = "groupePere";
+	public static final String DATAATT_DEFINITIONGLOSSAIRE_numeroDoris = "numeroDoris";
+	public static final String DATAATT_DEFINITIONGLOSSAIRE_NUMERODORIS = "NUMERODORIS";
+	public static final String DATAATT_DEFINITIONGLOSSAIRE_terme = "terme";
+	public static final String DATAATT_DEFINITIONGLOSSAIRE_TERME = "TERME";
+	public static final String DATAATT_DEFINITIONGLOSSAIRE_definition = "definition";
+	public static final String DATAATT_DEFINITIONGLOSSAIRE_DEFINITION = "DEFINITION";
+	public static final String DATAREF_DEFINITIONGLOSSAIRE_fichesConcernees = "fichesConcernees";
 	public static final String DATAATT_DORISDB_METADATA_dateBase = "dateBase";
 	public static final String DATAATT_DORISDB_METADATA_DATEBASE = "DATEBASE";
 	public static final String DATAATT_DORISDB_METADATA_dateMAJPartielle = "dateMAJPartielle";
@@ -268,6 +281,10 @@ public class DorisDBXMLParser {
 		 	if (name.equals(DATACLASSIFIER_GROUPES)) {
 				groupes = readGroupes(parser,DATACLASSIFIER_GROUPES);
 	            // groupes.addAll(readGroupes(parser,DATACLASSIFIER_GROUPES));
+	        } else 
+		 	if (name.equals(DATACLASSIFIER_DEFINITIONGLOSSAIRES)) {
+				definitionGlossaires = readDefinitionGlossaires(parser,DATACLASSIFIER_DEFINITIONGLOSSAIRES);
+	            // definitionGlossaires.addAll(readDefinitionGlossaires(parser,DATACLASSIFIER_DEFINITIONGLOSSAIRES));
 	        } else 
 		 	if (name.equals(DATACLASSIFIER_DORISDB_METADATAS)) {
 				dorisDB_metadatas = readDorisDB_metadatas(parser,DATACLASSIFIER_DORISDB_METADATAS);
@@ -461,6 +478,26 @@ public class DorisDBXMLParser {
 		return entries;
 	}
 	/**
+     * parser for a group of DefinitionGlossaire
+     */
+	List<DefinitionGlossaire> readDefinitionGlossaires(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
+		ArrayList<DefinitionGlossaire> entries = new ArrayList<DefinitionGlossaire>();
+		parser.require(XmlPullParser.START_TAG, ns, containingTag);
+	    while (parser.next() != XmlPullParser.END_TAG) {
+	        if (parser.getEventType() != XmlPullParser.START_TAG) {
+	            continue;
+	        }
+	        String name = parser.getName();
+			if (name.equals(DATACLASSIFIER_DEFINITIONGLOSSAIRE)) {
+	            entries.add(readDefinitionGlossaire(parser));
+	        } else {
+	            skip(parser);
+	        }
+	    }
+		entries.trimToSize();
+		return entries;
+	}
+	/**
      * parser for a group of DorisDB_metadata
      */
 	List<DorisDB_metadata> readDorisDB_metadatas(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
@@ -550,6 +587,7 @@ public class DorisDBXMLParser {
 				parser.require(XmlPullParser.END_TAG, ns, DATAREF_FICHE_groupe);	    
 	        } else
 					// TODO deal with ref intervenants
+					// TODO deal with ref definitionsUtilisees
 	        {
 	            skip(parser);
 	        }
@@ -847,6 +885,39 @@ public class DorisDBXMLParser {
 
 		return result;
 	}
+	DefinitionGlossaire readDefinitionGlossaire(XmlPullParser parser)  throws XmlPullParserException, IOException{
+		DefinitionGlossaire result = new DefinitionGlossaire();
+
+		parser.require(XmlPullParser.START_TAG, ns, DATACLASSIFIER_DEFINITIONGLOSSAIRE);
+    	String currentTagName = parser.getName();
+    			
+    	xmlId2DefinitionGlossaire.put(parser.getAttributeValue(null, ID_STRING),result);		
+		while (parser.next() != XmlPullParser.END_TAG) {
+	        if (parser.getEventType() != XmlPullParser.START_TAG) {
+	            continue;
+	        }
+	        currentTagName = parser.getName();
+			//TODO if (currentTagName.equals(DATAATT_DEFINITIONGLOSSAIRE_NUMERODORIS)) {
+	        //    title = readTitle(parser);
+	        //} else	
+			if (currentTagName.equals(DATAATT_DEFINITIONGLOSSAIRE_terme)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_terme);
+	            result.setTerme(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_terme);
+	        } else
+			if (currentTagName.equals(DATAATT_DEFINITIONGLOSSAIRE_definition)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_definition);
+	            result.setDefinition(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_definition);
+	        } else
+					// TODO deal with ref fichesConcernees
+	        {
+	            skip(parser);
+	        }
+	    }
+
+		return result;
+	}
 	DorisDB_metadata readDorisDB_metadata(XmlPullParser parser)  throws XmlPullParserException, IOException{
 		DorisDB_metadata result = new DorisDB_metadata();
 
@@ -984,6 +1055,7 @@ public class DorisDBXMLParser {
 		}
 	}
 	// class Fiche_addIntervenants_RefCommand extends RefCommand{
+	// class Fiche_addDefinitionsUtilisees_RefCommand extends RefCommand{
 	class AutreDenomination_setFiche_RefCommand extends RefCommand{
 		AutreDenomination self;
 		String referencedElementID;
@@ -1139,6 +1211,7 @@ public class DorisDBXMLParser {
 			groupesToUpdate.add(self);
 		}
 	}
+	// class DefinitionGlossaire_addFichesConcernees_RefCommand extends RefCommand{
 
 	// ---------- Additional helper methods
 	private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {

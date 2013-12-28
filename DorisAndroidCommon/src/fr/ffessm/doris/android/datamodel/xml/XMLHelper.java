@@ -227,6 +227,19 @@ public class XMLHelper {
 			e.printStackTrace();
 		}
 		sb.append("\n\t</GROUPES>\n");
+		sb.append("\n\t<DEFINITIONGLOSSAIRES>");
+		try {	
+			List<DefinitionGlossaire> definitionGlossaires = dbContext.definitionGlossaireDao.queryForAll();
+			for(DefinitionGlossaire  definitionGlossaire : definitionGlossaires){
+				// TODO find if contained by another element, if not put it there
+					sb.append("\n");
+					sb.append(definitionGlossaire.toXML("\t\t", dbContext));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sb.append("\n\t</DEFINITIONGLOSSAIRES>\n");
 		sb.append("\n\t<DORISDB_METADATAS>");
 		try {	
 			List<DorisDB_metadata> dorisDB_metadatas = dbContext.dorisDB_metadataDao.queryForAll();
@@ -330,6 +343,14 @@ public class XMLHelper {
 					log.error("cannot create Groupe "+e.getMessage(),e);
 				}
 			}
+			log.info("starting creation of DefinitionGlossaire...");
+			for(DefinitionGlossaire definitionGlossaire : parser.definitionGlossaires){
+				try {
+					dbContext.definitionGlossaireDao.create(definitionGlossaire);
+				} catch (SQLException e) {
+					log.error("cannot create DefinitionGlossaire "+e.getMessage(),e);
+				}
+			}
 			log.info("starting creation of DorisDB_metadata...");
 			for(DorisDB_metadata dorisDB_metadata : parser.dorisDB_metadatas){
 				try {
@@ -415,6 +436,14 @@ public class XMLHelper {
 					dbContext.groupeDao.update(elem);
 				} catch (SQLException e) {
 					log.error("cannot update Groupe "+e.getMessage(),e);
+				}
+			}
+			log.info("starting update DB of DefinitionGlossaire...");
+			for(DefinitionGlossaire elem : parser.definitionGlossairesToUpdate){
+				try {
+					dbContext.definitionGlossaireDao.update(elem);
+				} catch (SQLException e) {
+					log.error("cannot update DefinitionGlossaire "+e.getMessage(),e);
 				}
 			}
 			log.info("starting update DB of DorisDB_metadata...");

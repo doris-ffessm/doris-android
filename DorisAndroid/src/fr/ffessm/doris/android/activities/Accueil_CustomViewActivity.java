@@ -324,6 +324,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	public void onClickBtnListeParticipants(View view){
 		startActivity(new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class));
 	}
+	public void onClickBtnGlossaire(View view){
+		startActivity(new Intent(this, Glossaire_ClassListViewActivity.class));
+	}
 	public void onClickBtnIconeSiteWeb1(View view){
 		String url = getString(R.string.accueil_customview_logo1_url);
 		if (!url.isEmpty()) {

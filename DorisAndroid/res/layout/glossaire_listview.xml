@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    <!-- Search row -->
+    <LinearLayout
+        android:id="@+android:id/glossaire_listviewsearchrow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <!-- Editext for Search -->
+
+        <EditText
+            android:id="@+id/inputSearch_glossaire_listviewsearchrow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.67"
+            android:hint="@string/searchHint_glossaire_listviewsearchrow"
+            android:inputType="textVisiblePassword" />
+	<!--	Start of user code protectedglossaire_listviewsearchrow 
+      -->
+        <!-- <Button
+            android:id="@+id/btnZoneGeo_glossaire_listviewsearchrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickSearcBtn1"
+            android:text="@string/btnZoneGeo_glossaire_listviewsearchrow_btn_label" />
+
+        <Button
+            android:id="@+id/btnZone_glossaire_listviewsearchrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickSearcBtn2"
+            android:text="@string/btnZone_glossaire_listviewsearchrow_btn_label" />
+             -->
+	<!--	
+End of user code -->
+    </LinearLayout>
+	<ListView 
+	    android:id="@+android:id/glossaire_listview"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent" >
+	</ListView>
+</LinearLayout>

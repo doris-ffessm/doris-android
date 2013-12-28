@@ -128,12 +128,14 @@
 			    <LinearLayout
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
-			        android:orientation="horizontal"
-					android:background="@drawable/groupe_icon_background" >
+			        android:orientation="horizontal" >
 					<LinearLayout
 				        android:layout_width="match_parent"
 				        android:layout_height="match_parent"
 				        android:orientation="vertical"
+					    android:layout_marginLeft="2dp"
+				        android:layout_marginRight="4dp"
+						android:background="@drawable/groupe_icon_background"
 						android:onClick="onClickBtnListeParticipants" >
 				        <ImageView
 					        android:id="@+id/accueil_participants_icone"
@@ -152,6 +154,31 @@
 				    		android:textAppearance="?android:attr/textAppearanceSmall" 
 				    		android:textColor="?android:attr/textColorPrimaryInverse"
 							android:text="@string/accueil_liste_participants_text"/>
+					</LinearLayout>
+					<LinearLayout
+				        android:layout_width="match_parent"
+				        android:layout_height="match_parent"
+				        android:orientation="vertical"
+				        android:layout_marginRight="4dp"
+						android:background="@drawable/groupe_icon_background"
+						android:onClick="onClickBtnGlossaire" >
+				        <ImageView
+					        android:id="@+id/accueil_glossaire_icone"
+					        android:layout_width="fill_parent"
+					        android:layout_height="wrap_content"
+					        android:adjustViewBounds="true"
+					        android:contentDescription="Glossaire"
+					        android:maxHeight="64dip"
+					        android:src="@drawable/glossaire" />
+				        <TextView
+					        android:id="@+id/accueil_glossaire_text"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:layout_marginLeft="2dp"
+					        android:layout_marginRight="2dp"
+				    		android:textAppearance="?android:attr/textAppearanceSmall" 
+				    		android:textColor="?android:attr/textColorPrimaryInverse"
+							android:text="@string/accueil_glossaire_text"/>
 					</LinearLayout>
 			    </LinearLayout>
 

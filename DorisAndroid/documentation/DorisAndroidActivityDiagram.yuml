@@ -11,6 +11,8 @@
 (DetailsParticipant)-><DetailsParticipantChoice>
 (ZoneGeoSelection)-><ZoneGeoSelectionChoice>
 (GroupeSelection)-><GroupeSelectionChoice>
+(Glossaire)-><GlossaireChoice>
+(DetailEntreeGlossaire)-><DetailEntreeGlossaireChoice>
 (TelechargeFiches)->(end)
 (VerifieNouvellesFiches)->(end)
 (VerifieMAJFiches)->(end)
@@ -21,6 +23,7 @@
 <AccueilChoice>->(ListeFicheAvecFiltre)
 <AccueilChoice>->(EtatModeHorsLigne)
 <AccueilChoice>->(ListeParticipantAvecFiltre)
+<AccueilChoice>->(Glossaire)
 <AccueilChoice>->(VerifieNouvellesFiches)
 <AccueilChoice>->(VerifieMAJFiches)
 <AccueilChoice>->(TelechargePhotosFiches)
@@ -30,3 +33,4 @@
 <DetailsFicheChoice>->(ImagePleinEcran)
 <DetailsFicheChoice>->(TelechargePhotosFiche)
 (ListeParticipantAvecFiltre)->(DetailsParticipant)		
+(Glossaire)->(DetailEntreeGlossaire)		

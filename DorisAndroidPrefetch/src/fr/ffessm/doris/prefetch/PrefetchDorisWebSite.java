@@ -65,6 +65,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
+import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -75,6 +76,7 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.ZoneObservation;
+import fr.ffessm.doris.android.datamodel.associations.Fiches_DefinitionsGlossaire;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesObservations;
 import fr.ffessm.doris.android.sitedoris.Constants;
@@ -684,9 +686,11 @@ public class PrefetchDorisWebSite {
 		dbContext.zoneObservationDao = DaoManager.createDao(connectionSource, ZoneObservation.class);
 		dbContext.sectionFicheDao = DaoManager.createDao(connectionSource, SectionFiche.class);
 		dbContext.autreDenominationDao = DaoManager.createDao(connectionSource, AutreDenomination.class);
+		dbContext.definitionGlossaireDao = DaoManager.createDao(connectionSource, DefinitionGlossaire.class);
 		
 		//dbContext.fiches_verificateurs_ParticipantsDao = DaoManager.createDao(connectionSource, Fiches_verificateurs_Participants.class);
 		dbContext.fiches_ZonesGeographiquesDao = DaoManager.createDao(connectionSource, Fiches_ZonesGeographiques.class);
+		dbContext.fiches_DefinitionsGlossaireDao = DaoManager.createDao(connectionSource, Fiches_DefinitionsGlossaire.class);
 		//dbContext.fiches_ZonesObservationsDao = DaoManager.createDao(connectionSource, Fiches_ZonesObservations.class);
 		dbContext.dorisDB_metadataDao = DaoManager.createDao(connectionSource, DorisDB_metadata.class);
 	}
@@ -708,8 +712,10 @@ public class PrefetchDorisWebSite {
 		TableUtils.createTable(connectionSource, ZoneObservation.class);
 		TableUtils.createTable(connectionSource, SectionFiche.class);
 		TableUtils.createTable(connectionSource, AutreDenomination.class);
+		TableUtils.createTable(connectionSource, DefinitionGlossaire.class);
 		TableUtils.createTable(connectionSource, Fiches_ZonesGeographiques.class);
 		TableUtils.createTable(connectionSource, Fiches_ZonesObservations.class);
+		TableUtils.createTable(connectionSource, Fiches_DefinitionsGlossaire.class);
 		TableUtils.createTable(connectionSource, DorisDB_metadata.class);
 		
 		log.debug("databaseInitialisation() - Fin");

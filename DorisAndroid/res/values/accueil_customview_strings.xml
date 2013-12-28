@@ -11,6 +11,7 @@
 	<string name="accueil_recherche_precedente_filtreEspece_sans">Toutes les espèces</string>
 	<string name="accueil_recherche_precedente_filtreGeographique_sans">Toutes les zones géographiques</string>
 	<string name="accueil_liste_participants_text">Participants</string>
+	<string name="accueil_glossaire_text">Glossaire</string>
 	
 	<string name="accueil_customview_zonegeo_touteszones">Toutes Zones</string>
 	

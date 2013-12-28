@@ -73,10 +73,14 @@ public class DorisDBHelper {
 	//public RuntimeExceptionDao<ZoneObservation, Integer> zoneObservationDao;
 	public Dao<Groupe, Integer> groupeDao;
 	//public RuntimeExceptionDao<Groupe, Integer> groupeDao;
+	public Dao<DefinitionGlossaire, Integer> definitionGlossaireDao;
+	//public RuntimeExceptionDao<DefinitionGlossaire, Integer> definitionGlossaireDao;
 	public Dao<DorisDB_metadata, Integer> dorisDB_metadataDao;
 	//public RuntimeExceptionDao<DorisDB_metadata, Integer> dorisDB_metadataDao;
 	public Dao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesDao;
 	//public RuntimeExceptionDao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesDao;
+	public Dao<Fiches_DefinitionsGlossaire, Integer> fiches_DefinitionsGlossaireDao;
+	//public RuntimeExceptionDao<Fiches_DefinitionsGlossaire, Integer> fiches_DefinitionsGlossaireDao;
 
 	
 	public DorisDBHelper(){
@@ -92,8 +96,10 @@ public class DorisDBHelper {
 		Dao<ZoneGeographique, Integer> zoneGeographiqueDao,
 		Dao<ZoneObservation, Integer> zoneObservationDao,
 		Dao<Groupe, Integer> groupeDao,
+		Dao<DefinitionGlossaire, Integer> definitionGlossaireDao,
 		Dao<DorisDB_metadata, Integer> dorisDB_metadataDao,
-        Dao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesDao
+        Dao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesDao,
+		Dao<Fiches_DefinitionsGlossaire, Integer> fiches_DefinitionsGlossaireDao
 	){
 		this.ficheDao = ficheDao;
 		this.autreDenominationDao = autreDenominationDao;
@@ -104,8 +110,10 @@ public class DorisDBHelper {
 		this.zoneGeographiqueDao = zoneGeographiqueDao;
 		this.zoneObservationDao = zoneObservationDao;
 		this.groupeDao = groupeDao;
+		this.definitionGlossaireDao = definitionGlossaireDao;
 		this.dorisDB_metadataDao = dorisDB_metadataDao;
 		this.fiches_ZonesGeographiquesDao = fiches_ZonesGeographiquesDao;
+		this.fiches_DefinitionsGlossaireDao = fiches_DefinitionsGlossaireDao;
 	}
 
 	
