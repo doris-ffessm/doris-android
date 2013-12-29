@@ -489,7 +489,6 @@ public class PrefetchDorisWebSite {
 						}
 					}
 					if (  nbFichesTraitees <= nbMaxFichesTraitees ) {
-						// TODO : Ne pas traiter dans certain cas
 						
 						log.debug("doMain() - Traitement Fiche : "+fiche.getNomCommun());
 						
