@@ -163,6 +163,15 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
         
 		// Start of user code protected additional Glossaire_Adapter getView code
 		//	additional code
+        int longueurMax = 80;
+        String texteRow = entry.getDefinition().toString().replaceAll("[^\\)]*\\)\\.", "").trim();
+        if (texteRow.length() > longueurMax ) {
+        	detailsSB = new StringBuilder(texteRow.substring(0, longueurMax)+" ...");
+        } else {
+        	detailsSB = new StringBuilder(texteRow);
+        }
+        tvDetails.setText(detailsSB.toString());
+        
 		// End of user code
 
         return convertView;
