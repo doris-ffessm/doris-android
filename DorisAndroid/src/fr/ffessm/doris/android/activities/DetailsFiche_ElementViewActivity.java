@@ -541,13 +541,169 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	    	Log.d(LOG_TAG, "textToSpannableStringDoris() - Aucun bloc {{*}}");
 	    	return new SpannableString(texte);
 	    	
+	    } else if (texte.toString().startsWith("Test2")) {
+	    	Log.d(LOG_TAG, "textToSpannableStringDoris() - Traitement récurrent des blocs {{*}}");
+	    	
+	    	// TODO : doit être améliorable mais je n'arrive pas à manipuler directement SpannableString
+	    	// donc pas de concat, pas de regexp.
+	        List<TextSpan> listeFicheNumero = new ArrayList<TextSpan>();
+	        List<TextSpan> pileDerniereBalise = new ArrayList<TextSpan>();
+	        
+	        String texteInter = texte.toString();
+	        StringBuilder texteFinal = new StringBuilder();
+	        int iTmp = 0;
+	        while (texteInter.contains("{{") && iTmp < 20 ) {
+	        	iTmp ++;
+	        	
+	        	// Recherche 1ère Balise à traiter
+	        	int posDepTexteInter = texteInter.indexOf("{{");
+	        	int posFinTexteInter = texteInter.indexOf("}}");
+	        	
+	        	String balise = texteInter.substring(posDepTexteInter+2, posFinTexteInter);
+	        	
+	        	Log.d(LOG_TAG, "textToSpannableStringDoris() - texteInter : "+texteInter
+	        			+ " - " + posDepTexteInter + "-" + posFinTexteInter + " -> " + balise);
+	        	
+	        	if (balise.equals("i")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posDepTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	
+	        		pileDerniereBalise.add(new TextSpan(TextSpan.SpanType.ITALIQUE,posDepTexteFinal,0));
+	        	}
+	        	else if (balise.equals("/i")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posFinTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        		
+	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+	        		
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.ITALIQUE,ts.positionDebut,posFinTexteFinal));
+	        	}
+	        	else if (balise.equals("g")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posDepTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	
+	        		pileDerniereBalise.add(new TextSpan(TextSpan.SpanType.GRAS,posDepTexteFinal,0));
+	        	}
+	        	else if (balise.equals("/g")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posFinTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        		
+	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+	        		
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.GRAS,ts.positionDebut,posFinTexteFinal));
+	        	}
+	        	else if (balise.equals("n")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) + "\n");
+	        			        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	}
+	        	else if (balise.matches("[0-9]*")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) + "(Fiche)");
+	        		
+	        		int posDepTexteFinal = texteFinal.length() - 7;
+	        		int posFinTexteFinal = texteFinal.length();
+	        		Log.d(LOG_TAG, "textToSpannableStringDoris() - texteFinal : "+texteFinal);
+	        		
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.FICHE,posDepTexteFinal,posFinTexteFinal,
+	        				balise));
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	}
+	        	else if (balise.startsWith("D:")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) + "(*)");
+	        		
+	        		int posDepTexteFinal = texteFinal.length() - 3;
+	        		int posFinTexteFinal = texteFinal.length();
+	        		Log.d(LOG_TAG, "textToSpannableStringDoris() - texteFinal : "+texteFinal);
+	        		
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.DEFINITION,posDepTexteFinal,posFinTexteFinal,
+	        				balise.substring(2, balise.length())));
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	}
+	        } // fin du While
+	        
+	        texteFinal.append(texteInter);
+	        Log.d(LOG_TAG, "textToSpannableStringDoris() - texteFinal après while : "+texteFinal);
+	        Log.d(LOG_TAG, "textToSpannableStringDoris() - longueur : "+texteFinal.length());
+	        
+	        richtext = new SpannableString(texteFinal);
+	        
+	        for (final TextSpan ts : listeFicheNumero) {
+	        	Log.d(LOG_TAG, "textToSpannableStringDoris() - ts : "+ts.spanType.name()+" - "+ts.info);
+	        	
+	        	if ( ts.spanType == TextSpan.SpanType.ITALIQUE ) {
+	        		richtext.setSpan(new StyleSpan(Typeface.ITALIC), ts.positionDebut, ts.positionFin, 0);  
+	        	}
+	        	else if ( ts.spanType == TextSpan.SpanType.GRAS ) {
+	        		richtext.setSpan(new StyleSpan(Typeface.BOLD), ts.positionDebut, ts.positionFin, 0);
+	        		richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_gras))), ts.positionDebut, ts.positionFin, 0);
+	        	}
+	        	else if ( ts.spanType == TextSpan.SpanType.FICHE ) {
+
+	        		ClickableSpan clickableSpan = new ClickableSpan() {  
+			            @Override  
+			            public void onClick(View view) {  
+			                //Toast.makeText(context, "Test (Fiche Liée) : "+ficheId, Toast.LENGTH_LONG).show();
+			            	Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
+			                Bundle b = new Bundle();
+			                b.putInt("ficheNumero", Integer.valueOf(ts.info) );
+			                
+			                RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
+			                b.putInt("ficheId", entriesDao.queryForEq("numeroFiche", Integer.valueOf(ts.info)).get(0).getId() );
+			                
+			        		toDetailView.putExtras(b);
+			                startActivity(toDetailView);
+			            }  
+			        };
+			     	Log.d(LOG_TAG, "addFoldableView() - SpannableString : "+ts.positionDebut + " - " + ts.positionFin);
+			    	
+					richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
+					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_lienfiche))), ts.positionDebut, ts.positionFin, 0);  
+	        	}
+	        	else if ( ts.spanType == TextSpan.SpanType.DEFINITION) {
+
+	        		ClickableSpan clickableSpan = new ClickableSpan() {  
+			            @Override  
+			            public void onClick(View view) {  
+			                Toast.makeText(context, "Test Définition : "+ts.info, Toast.LENGTH_LONG).show();
+			            	/*
+			                Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
+			                Bundle b = new Bundle();
+			                b.putInt("ficheNumero", Integer.valueOf(ts.info) );
+			                
+			                RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
+			                b.putInt("ficheId", entriesDao.queryForEq("numeroFiche", Integer.valueOf(ts.info)).get(0).getId() );
+			                
+			        		toDetailView.putExtras(b);
+			                startActivity(toDetailView);
+			                */
+			            }  
+			        };
+			     	Log.d(LOG_TAG, "addFoldableView() - SpannableString : "+ts.positionDebut + " - " + ts.positionFin);
+			    	
+					richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
+					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_liendefinition))), ts.positionDebut, ts.positionFin, 0);
+	        	}
+	        }
+	        
+	        return richtext;
 	    } else {
 	    	Log.d(LOG_TAG, "textToSpannableStringDoris() - Traitement blocs {{*}}");
 	    	
 	    	// TODO : doit être améliorable mais je n'arrive pas à manipuler directement SpannableString
 	    	// donc pas de concat, pas de regexp.
 	        List<TextSpan> listeFicheNumero = new ArrayList<TextSpan>();
-	        List<String> pileDerniereBalise = new ArrayList<String>();
 	        
 	        String texteInter = texte.toString();
 	        StringBuilder texteFinal = new StringBuilder();
