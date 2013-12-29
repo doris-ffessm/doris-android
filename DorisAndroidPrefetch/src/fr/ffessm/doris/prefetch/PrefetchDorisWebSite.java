@@ -99,7 +99,6 @@ public class PrefetchDorisWebSite {
 	private final static String DOSSIER_RACINE = "./run";
 	// Ces dossiers seront renommés qd nécessaire
 	private final static String DOSSIER_HTML = "html";
-	private final static String DOSSIER_HTML_REF = "html_ref";
 	
 	// Inititalisation de la Gestion des Log 
 	public static Log log = LogFactory.getLog(PrefetchDorisWebSite.class);
@@ -107,6 +106,7 @@ public class PrefetchDorisWebSite {
 	// Nombre maximum de fiches traitées (--max=K permet de changer cette valeur)
 	private static int nbMaxFichesTraitees = 9999;
 	private static String action = "";
+	private static String dossier_ref = "";
 	
 	// Balises et Attributs des fichiers XML
 	public static final String XML_BASE = "Doris";
@@ -187,7 +187,7 @@ public class PrefetchDorisWebSite {
 					}
 				} else {
 					// NODWNLD
-					listeGroupesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeGroupes.html";
+					listeGroupesFichier = DOSSIER_RACINE + "/" + dossier_ref + "/listeGroupes.html";
 					if (new File(listeGroupesFichier).exists()) {
 						contenuFichierHtml = Outils.getFichier(new File(listeGroupesFichier));
 					} else {
@@ -230,7 +230,7 @@ public class PrefetchDorisWebSite {
 					}
 				} else {
 					// NODWNLD
-					listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeFiches.html";
+					listeFichesFichier = DOSSIER_RACINE + "/" + dossier_ref + "/listeFiches.html";
 					if (new File(listeFichesFichier).exists()) {
 						contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
 					} else {
@@ -331,7 +331,7 @@ public class PrefetchDorisWebSite {
 						}
 					} else {
 						// NODWNLD
-						listeParticipantsFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeParticipants-"+initiale+".html";
+						listeParticipantsFichier = DOSSIER_RACINE + "/" + dossier_ref + "/listeParticipants-"+initiale+".html";
 						if (new File(listeParticipantsFichier).exists()) {
 							contenuFichierHtml = Outils.getFichier(new File(listeParticipantsFichier));
 						} else {
@@ -396,7 +396,7 @@ public class PrefetchDorisWebSite {
 						}
 					} else {
 						// NODWNLD
-						listeDefinitionsFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeDefinitions-"+initiale+".html";
+						listeDefinitionsFichier = DOSSIER_RACINE + "/" + dossier_ref + "/listeDefinitions-"+initiale+".html";
 						if (new File(listeDefinitionsFichier).exists()) {
 							contenuFichierHtml = Outils.getFichier(new File(listeDefinitionsFichier));
 						} else {
@@ -458,7 +458,7 @@ public class PrefetchDorisWebSite {
 						}
 					} else {
 						// NODWNLD
-						fichierLocalDefinition = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/definition-"+definition.getNumeroDoris()+".html";
+						fichierLocalDefinition = DOSSIER_RACINE + "/" + dossier_ref + "/definition-"+definition.getNumeroDoris()+".html";
 						if (new File(fichierLocalDefinition).exists()) {
 							contenuFichierHtml = Outils.getFichier(new File(fichierLocalDefinition));
 						} else {
@@ -516,7 +516,7 @@ public class PrefetchDorisWebSite {
 							}
 						} else {
 							// NODWNLD
-							fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+".html";
+							fichierLocalFiche = DOSSIER_RACINE + "/" + dossier_ref + "/fiche-"+fiche.getNumeroFiche()+".html";
 							if (new File(fichierLocalFiche).exists()) {
 								contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
 							} else {
@@ -551,7 +551,7 @@ public class PrefetchDorisWebSite {
 							}
 						} else {
 							// NODWNLD
-							fichierLocalListePhotos = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
+							fichierLocalListePhotos = DOSSIER_RACINE + "/" + dossier_ref + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
 							if (new File(fichierLocalListePhotos).exists()) {
 								contenuFichierHtmlListePhotos = Outils.getFichier(new File(fichierLocalListePhotos));
 							} else {
@@ -632,7 +632,7 @@ public class PrefetchDorisWebSite {
 			}
 		} else {
 			// NODWNLD
-			listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeFiches"+zoneKing.name()+".html";
+			listeFichesFichier = DOSSIER_RACINE + "/" + dossier_ref + "/listeFiches"+zoneKing.name()+".html";
 			if (new File(listeFichesFichier).exists()) {
 				contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
 			} else {
@@ -750,16 +750,27 @@ public class PrefetchDorisWebSite {
 
 		
 		// Vérification que le dernier argument est une des actions prévues
-		String action = inArgs[inArgs.length - 1];
-		log.debug("checkArgs() - argument action : " + action);
-		
-		if (action.equals("INIT")) {
-		} else if (action.equals("NODWNLD")) {
-		} else if (action.equals("NEWFICHES")) {
-		} else if (action.equals("UPDATE")) {
-		} else if (action.equals("INITSSIMG")) {
-		} else if (action.equals("TEST")) {
-		} else {
+		String action = "";
+		log.debug("checkArgs() - argument action");
+		for (String arg : inArgs) {
+			if (arg.equals("INIT")) {
+				action = arg;
+			} else if (arg.startsWith("NODWNLD")) {
+				action = "NODWNLD";
+				dossier_ref = inArgs[inArgs.length - 1].trim();
+				if (dossier_ref.isEmpty()){
+					log.error("Le dossier de référence n'est pas renseigné");
+					System.exit(0);
+				}
+			} else if (arg.equals("NEWFICHES")) {
+				action = arg;
+			} else if (arg.equals("UPDATE")) {
+				action = arg;
+			} else if (arg.equals("TEST")) {
+				action = arg;
+			}
+		}
+		if (action == "") {
 			help();
 			String listeArgs = "";
 			for (String arg : inArgs) {
@@ -770,6 +781,7 @@ public class PrefetchDorisWebSite {
 			System.exit(0);
 		}
 		return action;
+
 	}
 	
 	private void initializeSQLite(String url) throws ClassNotFoundException, SQLException{
@@ -856,7 +868,7 @@ public class PrefetchDorisWebSite {
 		System.out.println("Usage: java -jar PrefetchDorisWebSite.jar [OPTIONS] [ACTION]");
 		System.out.println("");
 		System.out.println("OPTIONS :");
-		System.out.println("  -M, --max=K      on limite le travail au K 1ères fiches (utile en dev.)");
+		System.out.println("  -M, --max=K		on limite le travail au K 1ères fiches (utile en dev.)");
 		System.out.println("  -V, --version     afficher la version de l'application et quitter");
 		System.out.println("  -h, --help        afficher cette aide");
 		System.out.println("  -d, --debug       messages detinés aux développeurs de cette application");
@@ -865,10 +877,9 @@ public class PrefetchDorisWebSite {
 		System.out.println("");
 		System.out.println("ACTION :");
 		System.out.println("  INIT               Toutes les fiches sont retéléchargées sur doris.ffessm.fr et retraitées pour créer la base (images comprises)");
-		System.out.println("  NODWNLD	         Pas de téléchargement, travail sur ce qui est dispo. uniquement (utile en dev.)");
+		System.out.println("  NODWNLD dossier    Pas de téléchargement, travail sur un dossier de référznce (utile en dév.)");
 		System.out.println("  NEWFICHES    TODO: Ne télécharge que les nouvelles fiches");
 		System.out.println("  UPDATE             En plus des nouvelles fiches, on retélécharge les fiches qui ont changées de statut");
-		System.out.println("  INITSSIMG    OBSOL:Comme INIT sauf que l'on ne retélécharge pas une image déjà connue");
 		System.out.println("  TEST          	 Pour les développeurs");
 		
 		log.debug("help() - Fin");
@@ -936,7 +947,7 @@ public class PrefetchDorisWebSite {
 		
 		//	Vérification que le dossier Référence existe
 		if(inAction.equals("NODWNLD") || inAction.equals("UPDATE") ){
-			final File dossierReference = new File(DOSSIER_RACINE + "/" + DOSSIER_HTML_REF);
+			final File dossierReference = new File(DOSSIER_RACINE + "/" + dossier_ref);
 			if (!dossierReference.exists()){
 				log.error("Le dossier Référence : " + dossierReference.getAbsolutePath() + "n'a pas été créé.");
 				System.exit(0);
