@@ -212,6 +212,8 @@ public class DorisDBXMLParser {
 	public static final String DATAATT_DEFINITIONGLOSSAIRE_TERME = "TERME";
 	public static final String DATAATT_DEFINITIONGLOSSAIRE_definition = "definition";
 	public static final String DATAATT_DEFINITIONGLOSSAIRE_DEFINITION = "DEFINITION";
+	public static final String DATAATT_DEFINITIONGLOSSAIRE_cleURLIllustration = "cleURLIllustration";
+	public static final String DATAATT_DEFINITIONGLOSSAIRE_CLEURLILLUSTRATION = "CLEURLILLUSTRATION";
 	public static final String DATAREF_DEFINITIONGLOSSAIRE_fichesConcernees = "fichesConcernees";
 	public static final String DATAATT_DORISDB_METADATA_dateBase = "dateBase";
 	public static final String DATAATT_DORISDB_METADATA_DATEBASE = "DATEBASE";
@@ -909,6 +911,11 @@ public class DorisDBXMLParser {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_definition);
 	            result.setDefinition(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_definition);
+	        } else
+			if (currentTagName.equals(DATAATT_DEFINITIONGLOSSAIRE_cleURLIllustration)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_cleURLIllustration);
+	            result.setCleURLIllustration(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_cleURLIllustration);
 	        } else
 					// TODO deal with ref fichesConcernees
 	        {

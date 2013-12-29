@@ -7,7 +7,7 @@
 [ZoneGeographique|nom : String;description : String]		
 [ZoneObservation|nom : String]		
 [Groupe|numeroGroupe : Integer;numeroSousGroupe : Integer;nomGroupe : String;descriptionGroupe : String;cleURLImage : String;nomImage : String]		
-[DefinitionGlossaire|numeroDoris : Integer;terme : String;definition : LongString]		
+[DefinitionGlossaire|numeroDoris : Integer;terme : String;definition : LongString;cleURLIllustration : String]		
 [DorisDB_metadata|dateBase : String;dateMAJPartielle : String]		
 [Fiche]
 [Fiche]-photoPrincipale 0..1>[PhotoFiche]

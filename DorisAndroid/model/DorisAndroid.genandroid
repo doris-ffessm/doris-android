@@ -74,6 +74,7 @@
       <dataAttributes name="numeroDoris" documentation="numéro de la définition sur le site Doris" lowerbound="1" type="//@dataModel/@dataClasses.13"/>
       <dataAttributes name="terme" documentation="terme de l'entrée" lowerbound="1" type="//@dataModel/@dataClasses.11"/>
       <dataAttributes name="definition" documentation="définition de cette entrée" lowerbound="1" type="//@dataModel/@dataClasses.12"/>
+      <dataAttributes name="cleURLIllustration" documentation="URL de l'illustration éventuelle de la définition" type="//@dataModel/@dataClasses.11"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="DorisDB_metadata" documentation="données complémentaires sur la base Doris">
       <dataAttributes name="dateBase" documentation="Date de récupération de la base DORIS" type="//@dataModel/@dataClasses.11"/>

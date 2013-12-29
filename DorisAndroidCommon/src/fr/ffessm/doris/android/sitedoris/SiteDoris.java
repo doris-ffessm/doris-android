@@ -565,7 +565,7 @@ public class SiteDoris {
 				String numeroDefinition =  elementTD.getRenderer().toString().trim().replaceAll(".*glossaire_numero=([^&]*)&.*", "$1");
 				log.debug("getListeDefinitionsParInitialeFromHtml()- numeroDefinition : " +numeroDefinition);
 			
-				listeDefinitions.add(new DefinitionGlossaire(Integer.valueOf(numeroDefinition),"",""));
+				listeDefinitions.add(new DefinitionGlossaire(Integer.valueOf(numeroDefinition),"","",""));
 			
 			}
     	} // Fin Pour Chaque TR
