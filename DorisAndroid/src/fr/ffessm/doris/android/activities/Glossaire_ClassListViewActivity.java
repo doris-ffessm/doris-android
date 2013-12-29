@@ -124,7 +124,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLite
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
         Intent toDetailView = new Intent(this, DetailEntreeGlossaire_ElementViewActivity.class);
         Bundle b = new Bundle();
-        b.putInt("definitionglossaireId", ((DefinitionGlossaire)view.getTag()).getId());
+        b.putInt("definitionGlossaireId", ((DefinitionGlossaire)view.getTag()).getId());
 		toDetailView.putExtras(b);
         startActivity(toDetailView);
     }
