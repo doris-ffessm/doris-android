@@ -44,6 +44,7 @@ package fr.ffessm.doris.android.activities;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import fr.ffessm.doris.android.R;
@@ -111,7 +112,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	private static final String LOG_TAG = ListeFicheAvecFiltre_Adapter.class.getCanonicalName();
 
     private List<Integer> ficheIdList;
-    private List<Integer> filteredFicheIdList;
+    public List<Integer> filteredFicheIdList;
 	LruCache<Integer, Fiche> ficheCache =  new LruCache<Integer, Fiche>(100);
 	private final Object mLock = new Object();
 	private SimpleFilter mFilter;
@@ -367,6 +368,33 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 			return null;
 		}
 	}
+	
+	public HashMap<Character, Integer> getUsedAlphabetHashMap(){
+		HashMap<Character, Integer> alphabetToIndex = new HashMap<Character, Integer>();
+		//if(filteredFicheIdList.size() != ficheIdList.size()){
+			// the base has been filtered so return the element from the filtered one
+			alphabetToIndex=new HashMap<Character, Integer>();
+			//String base_list[]=getResources().getStringArray(R.array.base_array);
+			int base_list_length=filteredFicheIdList.size();
+			
+			for(int i=0; i < base_list_length; i++){
+				Fiche entry = getFicheForId(filteredFicheIdList.get(i));
+				char firstCharacter=entry.getNomScientifique().charAt(0);
+				boolean presentOrNot=alphabetToIndex.containsKey(firstCharacter);
+				if(!presentOrNot){
+					alphabetToIndex.put(firstCharacter, i);
+					//Log.d(TAG,"Character="+firstCharacter+"  position="+i);
+				}
+			}
+			
+		/*}
+		else{
+			// unfiltered list
+			// need to be careful if large list
+		}*/
+		return alphabetToIndex;
+	}
+	
 	//Start of user code protected additional ListeFicheAvecFiltre_Adapter methods
 	// additional methods
 	public void refreshFilter(){
@@ -478,6 +506,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 			return results;
 		}
 
+		
+		
+		
 		@SuppressWarnings("unchecked")
 		@Override
 		protected void publishResults(CharSequence constraint, FilterResults results) {

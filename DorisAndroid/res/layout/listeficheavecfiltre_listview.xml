@@ -33,9 +33,47 @@
 
 <!-- End of user code -->
     </LinearLayout>
-	<ListView 
+	<!-- <ListView 
 	    android:id="@+android:id/listeficheavecfiltre_listview"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent" >
-	</ListView>
+	</ListView> -->
+	<include layout="@layout/indexbar_alphabtes_row"
+    	 	android:id="@+id/alphabet_row_layout"
+    	 	android:visibility="invisible"/>
+	 	 
+	<RelativeLayout
+        android:layout_height="match_parent"
+		android:layout_width="match_parent" 
+		android:id="@+id/listeficheavecfiltre_relativeLayout2"> 
+		
+	    <fr.ffessm.doris.android.activities.view.indexbar.CustomListView 
+		 	android:layout_height="fill_parent"
+			android:layout_width="match_parent" 
+			android:id="@+id/listeficheavecfiltre_listview"
+			android:scrollingCache="false" 
+			android:scrollbarAlwaysDrawVerticalTrack="true" 
+			android:footerDividersEnabled="false" 
+			android:headerDividersEnabled="false" 
+			>
+	    </fr.ffessm.doris.android.activities.view.indexbar.CustomListView >
+			
+		<ListView 
+			android:layout_height="wrap_content"
+			android:id="@+id/listeficheavecfiltre_listView_alphabets"
+			android:layout_alignParentRight="true"
+			android:scrollingCache="false"
+			android:scrollbarAlwaysDrawVerticalTrack="false"
+			android:footerDividersEnabled="false" 
+			android:headerDividersEnabled="false" 
+			android:layout_width="28dip"
+			
+			android:divider="@android:color/black"
+			android:scrollbars="none"
+			android:background="@drawable/roundbackground"
+			android:listSelector="@android:color/darker_gray"
+			android:layout_centerVertical="true"
+			>
+		</ListView>	
+	</RelativeLayout>
 </LinearLayout>

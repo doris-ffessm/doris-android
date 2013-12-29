@@ -42,7 +42,10 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import java.util.HashMap;
+
+import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
+import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 
@@ -51,6 +54,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -76,8 +80,10 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 // End of user code
+import android.widget.TextView;
 
-public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
+public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> 
+	implements OnItemClickListener, ActivityWithIndexBar{
 	
 	//Start of user code constants ListeFicheAvecFiltre_ClassListViewActivity
 	SearchPopupButtonManager searchPopupButtonManager;
@@ -87,6 +93,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 	// Search EditText
     EditText inputSearch;
     ListeFicheAvecFiltre_Adapter adapter;
+    
+    Handler mHandler;
+    HashMap<Character, Integer> alphabetToIndex;
+	int number_of_alphabets=-1;
 
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
@@ -128,6 +138,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
                 // TODO Auto-generated method stub                         
             }
         });
+        
+        // add handler for indexBar
+        mHandler = new IndexBarHandler(this);
+        
 		//Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
         searchButton = (ImageButton) findViewById(R.id.btnOtherFilter_listeficheavecfiltre_listviewsearchrow);
         // crée le manager de popup
@@ -138,11 +152,31 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
-        Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
-        Bundle b = new Bundle();
-        b.putInt("ficheId", ((Fiche)view.getTag()).getId());
-		toDetailView.putExtras(b);
-        startActivity(toDetailView);
+		Log.d(LOG_TAG, "onItemClick "+view);
+		if(view instanceof LinearLayout && view.getId() == R.id.listeficheavecfiltre_listviewrow){
+			// normal case on main item
+	        Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
+	        Bundle b = new Bundle();
+	        b.putInt("ficheId", ((Fiche)view.getTag()).getId());
+			toDetailView.putExtras(b);
+	        startActivity(toDetailView);
+		}
+		else if(view instanceof TextView && view.getId() == R.id.indexbar_alphabtes_row_textview){
+			// click on indexBar
+			TextView rowview=(TextView)view;
+			
+			CharSequence alpahbet=rowview.getText();
+			
+			if(alpahbet==null || alpahbet.equals(""))
+				return;
+			
+			String selected_alpahbet=alpahbet.toString().trim();
+			Integer newPosition=alphabetToIndex.get(selected_alpahbet.charAt(0));
+			Log.d(LOG_TAG, "Selected Alphabet is:"+selected_alpahbet+"   position is:"+newPosition);
+					
+			ListView listview=(ListView)findViewById(R.id.listeficheavecfiltre_listview);
+			listview.setSelection(newPosition);
+		}
     }
 
 	//Start of user code additional  ListeFicheAvecFiltre_ClassListViewActivity methods
@@ -170,8 +204,13 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 	        searchButton.setImageResource(R.drawable.filter_settings_32);
 	        
 		}
+		populateIndexBarHashMap();
 	}
 	//End of user code
+
+	
+
+
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -318,4 +357,45 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
+
+	
+
+	@Override
+	public Handler getHandler() {
+		return mHandler;
+	}
+	
+	private void populateIndexBarHashMap() {
+		alphabetToIndex= adapter.getUsedAlphabetHashMap();
+		number_of_alphabets=alphabetToIndex.size();		//Number of enteries in the map is equal to number of letters that would necessarily display on the right.
+		
+		/*Now I am making an entry of those alphabets which are not there in the Map*/
+		String alphabets[]=getResources().getStringArray(R.array.alphabtes_array);
+		int index=-1;
+		
+		for(String alpha1: alphabets){
+			char alpha=alpha1.charAt(0);
+			index++;
+			
+			if(alphabetToIndex.containsKey(alpha))
+				continue;
+
+			/*Start searching the next character position. Example, here alpha is E. Since there is no entry for E, we need to find the position of next Character, F.*/
+			for(int i=index+1  ; i< 26 ;i++){		//start from next character to last character
+				char searchAlphabet=alphabets[i].charAt(0);   
+				
+				/*If we find the position of F character, then on click event on E should take the user to F*/	
+				if(  alphabetToIndex.containsKey(searchAlphabet)){
+					alphabetToIndex.put(alpha, alphabetToIndex.get(searchAlphabet));
+					break;
+				}
+				else
+					if(i==25) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
+						alphabetToIndex.put(alpha, adapter.filteredFicheIdList.size()-1);
+					else
+						continue;
+					
+			}//
+		}//
+	}
 }
