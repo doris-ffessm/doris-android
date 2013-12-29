@@ -262,22 +262,30 @@ public class Outils {
 		return texteNettoye;
 	}
 
-    public static String remplacementBalises(String texteANettoye) {
+    public static String remplacementBalises(String texteANettoye, boolean avecMiseEnForme) {
     	log.debug("remplacementBalises() - Début");
-    	log.debug("remplacementBalises() - texteANettoye : " + texteANettoye);
+    	//log.debug("remplacementBalises() - texteANettoye : " + texteANettoye);
 		String texteNettoye = texteANettoye;
 
 		//Difficile des les mettre ailleurs
-		// Nous les retirons ensuite pour les sections où ils ne sont pas nécessaires
-		texteNettoye = texteNettoye.replace("<strong>", "{{b}}");
-		texteNettoye = texteNettoye.replace("</strong>", "{{/b}}");
-		texteNettoye = texteNettoye.replace("<em>", "{{i}}");
-		texteNettoye = texteNettoye.replace("</em>", "{{/i}}");
-		texteNettoye = texteNettoye.replace("<br>", "{{n}}");
-		texteNettoye = texteNettoye.replace("<br/>", "{{n}}");
-		texteNettoye = texteNettoye.replace("<br />", "{{n}}");
-			
-		log.debug("remplacementBalises() - texteNettoye : " + texteNettoye);
+		if (avecMiseEnForme) {
+			texteNettoye = texteNettoye.replace("<strong>", "{{g}}");
+			texteNettoye = texteNettoye.replace("</strong>", "{{/g}}");
+			texteNettoye = texteNettoye.replace("<em>", "{{i}}");
+			texteNettoye = texteNettoye.replace("</em>", "{{/i}}");
+			texteNettoye = texteNettoye.replace("<br>", "{{n}}");
+			texteNettoye = texteNettoye.replace("<br/>", "{{n}}");
+			texteNettoye = texteNettoye.replace("<br />", "{{n}}");
+		} else {
+			texteNettoye = texteNettoye.replace("<strong>", "");
+			texteNettoye = texteNettoye.replace("</strong>", "");
+			texteNettoye = texteNettoye.replace("<em>", "");
+			texteNettoye = texteNettoye.replace("</em>", "");
+			texteNettoye = texteNettoye.replace("<br>", "");
+			texteNettoye = texteNettoye.replace("<br/>", "");
+			texteNettoye = texteNettoye.replace("<br />", "");
+		}
+		//log.debug("remplacementBalises() - texteNettoye : " + texteNettoye);
 		log.debug("remplacementBalises() - Fin");
 		return texteNettoye;
 	}

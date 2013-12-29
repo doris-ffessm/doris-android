@@ -71,7 +71,7 @@ public class SiteDoris {
     	
     	List<Fiche> listeFiches = new ArrayList<Fiche>(0);
     	
-    	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
+    	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml),false ) );
     	source.fullSequentialParse();
     	log.debug("getListeFiches()- source.length() : " + source.length());
     	//log.debug("getListeFiches()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
@@ -136,7 +136,7 @@ public class SiteDoris {
     	
     	listeGroupes.add(groupe);
     	
-    	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
+    	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
     	//log.debug("getGroupes()- source.length() : " + source.length());
     	
@@ -341,7 +341,7 @@ public class SiteDoris {
     	
     	List<PhotoFiche> listePhotosFiche = new ArrayList<PhotoFiche>(0);
     	
-    	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
+    	Source source=new Source( Outils.remplacementBalises( Outils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
     	//log.debug("getListePhotosFiche()- source.length() : " + source.length());
     	//log.debug("getListePhotosFiche()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
@@ -408,7 +408,7 @@ public class SiteDoris {
     	
     	List<Participant> listeParticipants = new ArrayList<Participant>(0);
     	
-    	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
+    	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
     	log.debug("getListeParticipantsParInitiale()- source.length() : " + source.length());
     	
@@ -552,7 +552,7 @@ public class SiteDoris {
     	
     	//List<Definition> listeDefinitions = new ArrayList<Definition>(0);
     	
-    	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
+    	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
     	log.debug("getListeDefinitionsParInitialeFromHtml()- source.length() : " + source.length());
     	
@@ -592,7 +592,7 @@ public class SiteDoris {
     public static void getDefinitionsFromHtml(String inCodePageHtml){
     	log.debug("getDefinitionsFromHtml() - Début");
     
-    	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
+    	Source source=new Source( Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), true ) );
     	source.fullSequentialParse();
     	log.debug("getDefinitionsFromHtml()- source.length() : " + source.length());
     	

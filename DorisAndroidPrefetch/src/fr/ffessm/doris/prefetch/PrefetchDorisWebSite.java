@@ -367,7 +367,7 @@ public class PrefetchDorisWebSite {
 						log.debug("doMain() - Traitement Fiche : "+fiche.getNomCommun());
 						
 						String urlFiche =  Constants.getFicheFromIdUrl( fiche.getNumeroFiche() );
-						String fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+".html";
+						String fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche-"+fiche.getNumeroFiche()+".html";
 						if (! action.equals("NODWNLD")) {
 							if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
 								
@@ -390,11 +390,11 @@ public class PrefetchDorisWebSite {
 							}
 						} else {
 							// NODWNLD
-							fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/fiche"+fiche.getNumeroFiche()+".html";
+							fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+".html";
 							if (new File(fichierLocalFiche).exists()) {
 								contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
 							} else {
-								log.error("La récupération de la fiche : "+urlFiche+" a échoué.");
+								log.error("La récupération de la fiche : "+fichierLocalFiche+" a échoué.");
 							}
 						}
 						
@@ -413,7 +413,7 @@ public class PrefetchDorisWebSite {
 						log.info("doMain() - }");
 						
 						String urlListePhotos = "http://doris.ffessm.fr/fiche_photo_liste_apercu.asp?fiche_numero="+fiche.getNumeroFiche();
-						String fichierLocalListePhotos = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche"+fiche.getNumeroFiche()+"_listePhotos.html";
+						String fichierLocalListePhotos = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
 						String contenuFichierHtmlListePhotos = null;
 						if (! action.equals("NODWNLD")) {
 							if (Outils.getFichierUrl(urlListePhotos, fichierLocalListePhotos)) {
@@ -425,7 +425,7 @@ public class PrefetchDorisWebSite {
 							}
 						} else {
 							// NODWNLD
-							fichierLocalListePhotos = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/fiche"+fiche.getNumeroFiche()+"_listePhotos.html";
+							fichierLocalListePhotos = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
 							if (new File(fichierLocalListePhotos).exists()) {
 								contenuFichierHtmlListePhotos = Outils.getFichier(new File(fichierLocalListePhotos));
 							} else {
