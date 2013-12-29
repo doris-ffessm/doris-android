@@ -675,7 +675,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			            @Override  
 			            public void onClick(View view) {  
 			                Toast.makeText(context, "Test Définition : "+ts.info, Toast.LENGTH_LONG).show();
-			            	/*
+			            	
+			                /*
 			                Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
 			                Bundle b = new Bundle();
 			                b.putInt("ficheNumero", Integer.valueOf(ts.info) );
