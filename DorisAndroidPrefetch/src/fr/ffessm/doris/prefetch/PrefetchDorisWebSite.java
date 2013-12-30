@@ -517,10 +517,11 @@ public class PrefetchDorisWebSite {
 						} else {
 							// NODWNLD
 							fichierLocalFiche = DOSSIER_RACINE + "/" + dossier_ref + "/fiche-"+fiche.getNumeroFiche()+".html";
+
 							if (new File(fichierLocalFiche).exists()) {
 								contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
 							} else {
-								log.error("La récupération de la fiche : "+urlFiche+" a échoué.");
+								log.error("La récupération de la fiche : "+fichierLocalFiche+" a échoué.");
 							}
 						}
 						
@@ -552,6 +553,7 @@ public class PrefetchDorisWebSite {
 						} else {
 							// NODWNLD
 							fichierLocalListePhotos = DOSSIER_RACINE + "/" + dossier_ref + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
+
 							if (new File(fichierLocalListePhotos).exists()) {
 								contenuFichierHtmlListePhotos = Outils.getFichier(new File(fichierLocalListePhotos));
 							} else {

@@ -264,6 +264,9 @@ public class Fiche {
 			e1.printStackTrace();
 		}
     	
+    	// Permet ensuite de d'utiliser la mise ne forme
+    	// mais le prix à payer est de supprimer à la main partout où elle n'est pas necessaire
+    	htmlFiche = Outils.remplacementBalises(htmlFiche, true);
     	
     	//log.debug("getFiche() - htmlFiche : " + htmlFiche.substring(0, 200));
     	
@@ -281,9 +284,9 @@ public class Fiche {
 		//log.debug("getFiche() - ElementTDcode_fiche.toString() : " + ElementTDcode_fiche.toString());
 
 		String ficheRef = ElementTDcode_fiche.getFirstElementByClass("normalgris").getRenderer().toString().trim();
-		ficheRef = ficheRef.replace("(N°", "").replace(")", "");
+		ficheRef = ficheRef.replaceAll("\\{\\{[^\\}]*\\}\\}", "").replace("(N°", "").replace(")", "").trim();
 		setNumeroFiche(Integer.parseInt(ficheRef));
-		log.info("getFicheFromHtml() - ref : " + ficheRef);		
+		log.info("getFicheFromHtml() - ref : " + ficheRef);
 		log.info("getFicheFromHtml() - Etat Fiche : " + getEtatFiche());		
 		
 		//Centrage sur la TABLE qui contient tout le texte et les images
@@ -332,16 +335,16 @@ public class Fiche {
 								}
 							}
 							if (i == 2) {
-								log.info("getFicheFromHtml() - ficheNomLatin : " + elementTR.getRenderer().toString());
+								log.info("getFicheFromHtml() - ficheNomLatin : " + elementTR.getRenderer().toString().trim());
 								setNomScientifique( Outils.nettoyageTextes(elementTR.getRenderer().toString().trim()) );
 							}
 							if (i == 3) {
-								log.info("getFicheFromHtml() - ficheRegion : " + elementTR.getRenderer().toString());
+								log.info("getFicheFromHtml() - ficheRegion : " + elementTR.getRenderer().toString().trim());
 								// TODO :
 								//ficheRegion = elementTR.getRenderer().toString().trim();
 							}
 							if (i == 5) {
-								log.info("getFicheFromHtml() - ficheNomFrancais : " + elementTR.getRenderer().toString());
+								log.info("getFicheFromHtml() - ficheNomFrancais : " + elementTR.getRenderer().toString().trim());
 								setNomCommun( Outils.nettoyageTextes(elementTR.getRenderer().toString().trim()) );
 							}
 						}
@@ -398,9 +401,8 @@ public class Fiche {
 							if (attribut.getName().equals("class") && attribut.getValue().equals("normal") ) {
 								log.debug("getFicheFromHtml() - rubrique : " + rubrique);
 								if (autresDenominationsFlag) {
-									String autresDenominationsTexte  = elementTD.getRenderer().toString().trim();
 									
-									autresDenominationsTexte = Outils.nettoyageTextes(autresDenominationsTexte);
+									String autresDenominationsTexte = Outils.nettoyageTextes(elementTD.getRenderer().toString().trim());
 									
 									// permet d'enlever les Liens et de les remplacer par un texte, par exemple "(Fiche)"
 									autresDenominationsTexte = autresDenominationsTexte.replaceAll("<[^>]*fiche_numero=([^>]*)>", "{{$1}}").trim();
@@ -413,7 +415,7 @@ public class Fiche {
 									
 								} else {
 									
-									String contenuTexte = elementTD.getRenderer().toString();
+									String contenuTexte = elementTD.getRenderer().toString().trim();
 									//log.debug("getFiche() - contenu(initial) : " + contenuTexte);
 									
 									contenuTexte = Outils.nettoyageTextes(contenuTexte);
@@ -447,7 +449,7 @@ public class Fiche {
 							
 								if (elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "") != "" && elementTDA.getRenderer().toString().trim() != "") {
 								
-									String tempLien = elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "");
+									String tempLien = elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "").replaceAll("&.*", "");
 									
 									if (!sbListeLiensVersFiches.toString().contains(tempLien + ";")) {
 										sbListeLiensVersFiches.append(tempLien + ";");
@@ -473,7 +475,7 @@ public class Fiche {
 						Element elementRubriqueinEntoureDeGris= elementEntoureDeGris.getFirstElementByClass("rubrique");
 						if (elementRubriqueinEntoureDeGris != null) {
 							//log.debug("getFicheFromHtml() - 520 - "+elementRubriqueinEntoureDeGris.getRenderer().toString());
-							if (elementRubriqueinEntoureDeGris.getRenderer().toString().trim().equals("Participants")) {
+							if (elementRubriqueinEntoureDeGris.getRenderer().toString().trim().contains("Participants")) {
 								// On parcourt les TD
 								// Si class=gris_gras et contenu texte != vide => qualité de la personne ci-après
 								// Si class=normal et contenu texte != vide => nom de la personne
@@ -725,7 +727,7 @@ public class Fiche {
 			Element ElementDates=source.getFirstElementByClass("normalgris2");
 			log.info("getFiche() - Bloc Dates : " + ElementDates.getRenderer().toString());
 			
-			dateCreation = ElementDates.getRenderer().toString().replaceAll("\r\n", " ").replaceAll("\n", " ").replaceAll(".*DORIS,([^:]*):.*", "$1").trim();
+			dateCreation = ElementDates.getRenderer().toString().replaceAll("\r\n", " ").replaceAll("\n", " ").replaceAll(".*DORIS[^,]*,([^:]*):.*", "$1").trim();
 			//dateModification = ElementDates.getRenderer().toString().replaceAll(".*modification le(.*)", "$1").trim();
 			log.debug("getFicheFromHtml() - dateCreation : " + dateCreation);
 			//log.debug("getFicheFromHtml() - dateModification : " + dateModification);
@@ -742,6 +744,7 @@ public class Fiche {
 		StringBuilder sbTextePourRechercheRapide = new StringBuilder(getNomCommun());
 		sbTextePourRechercheRapide.append(getNomScientifique());
 		sbTextePourRechercheRapide.append(getAutreDenominationTxt());
+		sbTextePourRechercheRapide = new StringBuilder(sbTextePourRechercheRapide.toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "") );
 		setTextePourRechercheRapide(Outils.formatStringNormalizer(sbTextePourRechercheRapide.toString()).toLowerCase());
 		
 		listeElementsTable_TABLE = null;
@@ -753,7 +756,7 @@ public class Fiche {
 	/**
 	 * @return liste des numeroFiche des fiches liées
 	 */
-	public List<Integer> getNumerosFicheLiees(){
+	public List<Integer> getNumerosFichesLiees(){
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		for(String  s : this.numerofichesLiees.split(";")){
 			if (!s.isEmpty()) result.add(Integer.parseInt(s));

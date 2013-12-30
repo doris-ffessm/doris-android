@@ -244,26 +244,13 @@ public class Outils {
 
 
     public static String nettoyageBalises(String texteANettoye) {
-    	log.debug("nettoyageBalises() - Début");
-    	log.debug("nettoyageBalises() - texteANettoye : " + texteANettoye);
+    	//log.debug("nettoyageBalises() - Début");
+    	//log.debug("nettoyageBalises() - texteANettoye : " + texteANettoye);
+
 		String texteNettoye = texteANettoye;
 		
 		texteNettoye = texteNettoye.replace("&nbsp;</td>", "</td>");
-    	
-    	/*
-		texteNettoye = texteNettoye.replace("<strong>", "");
-		texteNettoye = texteNettoye.replace("</strong>", "");
-		texteNettoye = texteNettoye.replace("<em>", "");
-		texteNettoye = texteNettoye.replace("</em>", "");
-		texteNettoye = texteNettoye.replace("<br>", "");
-		texteNettoye = texteNettoye.replace("<br/>", "");
-		*/
-		texteNettoye = texteNettoye.replace("<strong>", "")
-				.replace("</strong>", "")
-				.replace("<em>", "")
-				.replace("</em>", "")
-				.replace("<br>", "")
-				.replace("<br/>", "");
+
 		// Certaines fiches comme : http://doris.ffessm.fr/fiche2.asp?fiche_numero=3527 (au 30 mars 13)
 		// contiennent des " dans le nom de l'animal, or les " ne sont pas échappés donc ça met le
 		// bazard dans le code html
@@ -272,16 +259,45 @@ public class Outils {
 		log.debug("nettoyageBalises() - vitesse 1");
 		texteNettoye = texteNettoye.replaceAll("(href=\"[^\"]*)\"([^\"=?<>]*)\"([^\"]*\")", "$1$2$3");
 		log.debug("nettoyageBalises() - vitesse 2");
-		
-		log.debug("nettoyageBalises() - texteNettoye : " + texteNettoye);
-		log.debug("nettoyageBalises() - Fin");
+
+		//log.debug("nettoyageBalises() - texteNettoye : " + texteNettoye);
+		//log.debug("nettoyageBalises() - Fin");
+
 		return texteNettoye;
 	}
 
+    public static String remplacementBalises(String texteANettoye, boolean avecMiseEnForme) {
+    	log.debug("remplacementBalises() - Début");
+    	//log.debug("remplacementBalises() - texteANettoye : " + texteANettoye);
+		String texteNettoye = texteANettoye;
+
+		//Difficile des les mettre ailleurs
+		if (avecMiseEnForme) {
+			texteNettoye = texteNettoye.replace("<strong>", "{{g}}");
+			texteNettoye = texteNettoye.replace("</strong>", "{{/g}}");
+			texteNettoye = texteNettoye.replace("<em>", "{{i}}");
+			texteNettoye = texteNettoye.replace("</em>", "{{/i}}");
+			texteNettoye = texteNettoye.replace("<br>", "{{n}}");
+			texteNettoye = texteNettoye.replace("<br/>", "{{n}}");
+			texteNettoye = texteNettoye.replace("<br />", "{{n}}");
+		} else {
+			texteNettoye = texteNettoye.replace("<strong>", "");
+			texteNettoye = texteNettoye.replace("</strong>", "");
+			texteNettoye = texteNettoye.replace("<em>", "");
+			texteNettoye = texteNettoye.replace("</em>", "");
+			texteNettoye = texteNettoye.replace("<br>", "");
+			texteNettoye = texteNettoye.replace("<br/>", "");
+			texteNettoye = texteNettoye.replace("<br />", "");
+		}
+		//log.debug("remplacementBalises() - texteNettoye : " + texteNettoye);
+		log.debug("remplacementBalises() - Fin");
+		return texteNettoye;
+	}
 	
     public static String nettoyageTextes(String texteANettoye) {
-    	log.debug("nettoyageTextes() - Début");
-    	log.debug("nettoyageTextes() - texteANettoye : " + texteANettoye);
+    	//log.debug("nettoyageTextes() - Début");
+    	//log.debug("nettoyageTextes() - texteANettoye : " + texteANettoye);
+
 		String texteNettoye = texteANettoye;
 		
 		//if (LOG) Log.v(TAG, "nettoyageCaracteres() - texteNettoye : " + texteNettoye.charAt(7) + " - " + texteNettoye.codePointAt(7));
@@ -297,7 +313,7 @@ public class Outils {
 		// ⊃2; => ² \u00B2
 		texteNettoye = texteNettoye.replaceAll("\u22832;", "\u00B2");
 		
-		// " *" => "*"
+		// Parfois les liens vers le Glossaire sont mal placés " *" => "*"
 		texteNettoye = texteNettoye.replace(" *", "*");
 				
 		// suppression des sauts de ligne si pas avant une majuscule ou un - (puce)
@@ -310,11 +326,15 @@ public class Outils {
 		texteNettoye = texteNettoye.replaceAll("[ \t]{2,}"," ");
 		
 		texteNettoye = texteNettoye.trim();
-		log.debug("nettoyageTextes() - texteNettoye : " + texteNettoye);
+		//log.debug("nettoyageTextes() - texteNettoye : " + texteNettoye);
 		
 		log.debug("nettoyageTextes() - Fin");
 		return texteNettoye;
 	}
+    
+ 
+
+
     
     /* *********************************************************************
      * Permet d'enlever les accents, cédilles et autres
@@ -362,6 +382,5 @@ public class Outils {
 	 
 	    return new String(charsData);
 	}
-   
 
 }

@@ -49,6 +49,8 @@ import fr.ffessm.doris.android.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -68,9 +70,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -112,6 +115,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	private static final String LOG_TAG = DetailsFiche_ElementViewActivity.class.getCanonicalName();
 
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_attributes
+	
+	final Context context = this;  
+	
 	protected int ficheNumero;
 	
 	static final int FOLD_SECTIONS_MENU_ID = 1;	
@@ -123,6 +129,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     LinearLayout photoGallery;
     Collection<String> insertedPhotosFiche = new ArrayList<String>();
     boolean askedBgDownload = false;
+    
 // End of user code
 	
 	/** Called when the activity is first created. */
@@ -175,8 +182,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     	else if (ficheNumero != 0) entry = entriesDao.queryForEq("numeroFiche", ficheNumero).get(0);
 	    entry.setContextDB(getHelper().getDorisDBHelper());
 	    
-    	((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText(entry.getNomScientifique());
-		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun());
+    	((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText(entry.getNomScientifique().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
+		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
 		((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText("N° "+((Integer)entry.getNumeroFiche()).toString());					
 		((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer)entry.getEtatFiche()).toString());	
 		TextView btnEtatFiche = (TextView)  findViewById(R.id.detailsfiche_elementview_etatfiche);
@@ -422,78 +429,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         }
         
         // Si le texte contient {{999}} alors on remplace par (Fiche) est on met un lien vers la fiche sur (Fiche)
-        SpannableString richtext = null;
+        SpannableString richtext = textToSpannableStringDoris(texte);
         
-        Log.d(LOG_TAG, "addFoldableView() - titre : "+titre);
-        if ( !texte.toString().replaceAll("\\s", "").matches(".*\\{\\{.*\\}\\}.*")) {
-        	//Log.d(LOG_TAG, "addFoldableView() - 010");
-        	richtext = new SpannableString(texte);
-        	
-        } else {
-        	//Log.d(LOG_TAG, "addFoldableView() - 020");
-        	
-        	final Context context = this;         	
-        	
-        	// TODO : doit être améliorable mais je n'arrive pas à manipuler directement SpannableString
-        	// donc pas de concat, pas de regexp.
-	        int positionDep = 1;
-	        int positionFin = 1;
-	        int listeFicheNumero[] = new int[10];
-	        int i = 0;
-	        //Création de la liste des Fiches liées
-	        while (texte.toString().indexOf("{{", positionFin+1) != -1 ) {
-	        	i +=1;
-	        	
-	        	positionDep = texte.toString().indexOf("{{", positionFin+3);
-	        	positionFin = texte.toString().indexOf("}}", positionDep);
-	        	
-		        String refFiche = texte.toString().substring(positionDep+2, positionFin);
-		        //Log.d(LOG_TAG, "addFoldableView() - refFiche : "+refFiche);
-		        
-		        listeFicheNumero[i] = Integer.valueOf(refFiche);
-	        }
-	        
-	        
-	        //On enlève les liens significatifs et on met (Fiche)
-	        texte = texte.toString().replaceAll("\\{\\{[0-9]*\\}\\}", "(Fiche)");
-	        //Log.d(LOG_TAG, "addFoldableView() - texte : "+texte);
-	        richtext = new SpannableString(texte);
-	        
-	        
-	        // On met le lien avec le bon numéro de fiche sur chaque (Fiche)
-	        positionDep = 1;
-	        positionFin = 1;
-	        i = 0;
-	        while (texte.toString().indexOf("(Fiche)", positionFin) != -1 ) {
-	        	i +=1;
-	        	
-	        	positionDep = texte.toString().indexOf("(Fiche)", positionFin);
-	        	positionFin = texte.toString().indexOf("(Fiche)", positionDep)+7;
-	        	
-	        	final int listeFicheNumeroInt = listeFicheNumero[i];
-		        ClickableSpan clickableSpan = new ClickableSpan() {  
-		            @Override  
-		            public void onClick(View view) {  
-		                //Toast.makeText(context, "Test (Fiche Liée) : "+ficheId, Toast.LENGTH_LONG).show();
-		            	Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
-		                Bundle b = new Bundle();
-		                b.putInt("ficheNumero", listeFicheNumeroInt);
-		                
-		                RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
-		                b.putInt("ficheId", entriesDao.queryForEq("numeroFiche", listeFicheNumeroInt).get(0).getId() );
-		                
-		        		toDetailView.putExtras(b);
-		                startActivity(toDetailView);
-		            }  
-		        };  
-		        
-		        //Log.d(LOG_TAG, "addFoldableView() - SpannableString : "+positionDep + " - " + positionFin);
-		    	
-				richtext.setSpan(clickableSpan, positionDep, positionDep+7, 0);
-	        }
-	        
-	        
-        }
+        
         //Log.d(LOG_TAG, "addFoldableView() - richtext : "+richtext);
                 
         contenuText.setText(richtext, BufferType.SPANNABLE);
@@ -590,6 +528,202 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
             _activity.startActivity(i);
         }
  
+    }
+    
+    public final SpannableString textToSpannableStringDoris(CharSequence texte) {
+	    Log.d(LOG_TAG, "textToSpannableStringDoris() - texte : "+texte);
+	    
+	    SpannableString richtext = new SpannableString("");
+	    
+	    if ( !texte.toString().replaceAll("\\s", "").matches(".*\\{\\{[^\\}]*\\}\\}.*")) {
+	    	Log.d(LOG_TAG, "textToSpannableStringDoris() - Aucun bloc {{*}}");
+	    	return new SpannableString(texte);
+	    	
+	    } else {
+	    	Log.d(LOG_TAG, "textToSpannableStringDoris() - Traitement récurrent des blocs {{*}}");
+	    	
+	    	// TODO : doit être améliorable mais je n'arrive pas à manipuler directement SpannableString
+	    	// donc pas de concat, pas de regexp.
+	        List<TextSpan> listeFicheNumero = new ArrayList<TextSpan>();
+	        List<TextSpan> pileDerniereBalise = new ArrayList<TextSpan>();
+	        
+	        String texteInter = texte.toString();
+	        StringBuilder texteFinal = new StringBuilder();
+	        int iTmp = 0;
+	        while (texteInter.contains("{{") && iTmp < 50 ) {
+	        	iTmp ++;
+	        	
+	        	// Recherche 1ère Balise à traiter
+	        	int posDepTexteInter = texteInter.indexOf("{{");
+	        	int posFinTexteInter = texteInter.indexOf("}}");
+	        	
+	        	String balise = texteInter.substring(posDepTexteInter+2, posFinTexteInter);
+	        	
+	        	Log.d(LOG_TAG, "textToSpannableStringDoris() - texteInter : "+texteInter
+	        			+ " - " + posDepTexteInter + "-" + posFinTexteInter + " -> " + balise);
+	        	
+	        	if (balise.equals("i")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posDepTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	
+	        		pileDerniereBalise.add(new TextSpan(TextSpan.SpanType.ITALIQUE,posDepTexteFinal,0));
+	        	}
+	        	else if (balise.equals("/i")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posFinTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        		
+	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+	        		
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.ITALIQUE,ts.positionDebut,posFinTexteFinal));
+	        	}
+	        	else if (balise.equals("g")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posDepTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	
+	        		pileDerniereBalise.add(new TextSpan(TextSpan.SpanType.GRAS,posDepTexteFinal,0));
+	        	}
+	        	else if (balise.equals("/g")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posFinTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        		
+	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+	        		
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.GRAS,ts.positionDebut,posFinTexteFinal));
+	        	}
+	        	else if (balise.equals("n")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) + "\n");
+	        			        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	}
+	        	else if (balise.matches("[0-9]*")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) + "(Fiche)");
+	        		
+	        		int posDepTexteFinal = texteFinal.length() - 7;
+	        		int posFinTexteFinal = texteFinal.length();
+	        		Log.d(LOG_TAG, "textToSpannableStringDoris() - texteFinal : "+texteFinal);
+	        		
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.FICHE,posDepTexteFinal,posFinTexteFinal,
+	        				balise));
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	}
+	        	else if (balise.startsWith("D:")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) + "(*)");
+	        		
+	        		int posDepTexteFinal = texteFinal.length() - 3;
+	        		int posFinTexteFinal = texteFinal.length();
+	        		Log.d(LOG_TAG, "textToSpannableStringDoris() - texteFinal : "+texteFinal);
+	        		
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.DEFINITION,posDepTexteFinal,posFinTexteFinal,
+	        				balise.substring(2, balise.length())));
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	}
+	        } // fin du While
+	        
+	        texteFinal.append(texteInter);
+	        Log.d(LOG_TAG, "textToSpannableStringDoris() - texteFinal après while : "+texteFinal);
+	        Log.d(LOG_TAG, "textToSpannableStringDoris() - longueur : "+texteFinal.length());
+	        
+	        richtext = new SpannableString(texteFinal);
+	        
+	        for (final TextSpan ts : listeFicheNumero) {
+	        	Log.d(LOG_TAG, "textToSpannableStringDoris() - ts : "+ts.spanType.name()+" - "+ts.info);
+	        	
+	        	if ( ts.spanType == TextSpan.SpanType.ITALIQUE ) {
+	        		richtext.setSpan(new StyleSpan(Typeface.ITALIC), ts.positionDebut, ts.positionFin, 0);  
+	        	}
+	        	else if ( ts.spanType == TextSpan.SpanType.GRAS ) {
+	        		richtext.setSpan(new StyleSpan(Typeface.BOLD), ts.positionDebut, ts.positionFin, 0);
+	        		richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_gras))), ts.positionDebut, ts.positionFin, 0);
+	        	}
+	        	else if ( ts.spanType == TextSpan.SpanType.FICHE ) {
+
+	        		ClickableSpan clickableSpan = new ClickableSpan() {  
+			            @Override  
+			            public void onClick(View view) {  
+			                //Toast.makeText(context, "Test (Fiche Liée) : "+ficheId, Toast.LENGTH_LONG).show();
+			            	Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
+			                Bundle b = new Bundle();
+			                b.putInt("ficheNumero", Integer.valueOf(ts.info) );
+			                
+			                RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
+			                b.putInt("ficheId", entriesDao.queryForEq("numeroFiche", Integer.valueOf(ts.info)).get(0).getId() );
+			                
+			        		toDetailView.putExtras(b);
+			                startActivity(toDetailView);
+			            }  
+			        };
+			     	Log.d(LOG_TAG, "addFoldableView() - SpannableString : "+ts.positionDebut + " - " + ts.positionFin);
+			    	
+					richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
+					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_lienfiche))), ts.positionDebut, ts.positionFin, 0);  
+	        	}
+	        	else if ( ts.spanType == TextSpan.SpanType.DEFINITION) {
+
+	        		ClickableSpan clickableSpan = new ClickableSpan() {  
+			            @Override  
+			            public void onClick(View view) {  
+			                Toast.makeText(context, "Test Définition : "+ts.info, Toast.LENGTH_LONG).show();
+			            	
+			                /*
+			                Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
+			                Bundle b = new Bundle();
+			                b.putInt("ficheNumero", Integer.valueOf(ts.info) );
+			                
+			                RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
+			                b.putInt("ficheId", entriesDao.queryForEq("numeroFiche", Integer.valueOf(ts.info)).get(0).getId() );
+			                
+			        		toDetailView.putExtras(b);
+			                startActivity(toDetailView);
+			                */
+			            }  
+			        };
+			     	Log.d(LOG_TAG, "addFoldableView() - SpannableString : "+ts.positionDebut + " - " + ts.positionFin);
+			    	
+					richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
+					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_liendefinition))), ts.positionDebut, ts.positionFin, 0);
+	        	}
+	        }
+	        
+	        return richtext;
+	    }
+
+    }
+    
+    public static class TextSpan {
+    	
+    	public enum SpanType {
+    	    FICHE, ITALIQUE, GRAS, SAUTDELIGNE, DEFINITION
+    	} 
+    	
+    	SpanType spanType = null;
+    	int positionDebut;
+    	int positionFin;
+    	String info = ""; 
+    	
+    	public TextSpan(SpanType spanType, int positionDebut, int positionFin) {
+    		this.spanType = spanType;
+    		this.positionDebut = positionDebut;
+    		this.positionFin = positionFin;
+    	}
+    	
+    	public TextSpan(SpanType spanType, int positionDebut, int positionFin, String info) {
+    		this.spanType = spanType;
+    		this.positionDebut = positionDebut;
+    		this.positionFin = positionFin;
+    		this.info = info;
+    	}
     }
     
     // End of user code

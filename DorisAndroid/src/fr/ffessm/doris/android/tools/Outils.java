@@ -9,31 +9,23 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
-import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
-import android.widget.Toast;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
@@ -213,24 +205,24 @@ public class Outils {
 		return new File(imageFolder, photo.getCleURL());
 	}
 
-	public static HashSet getAllVignettesPhotoFicheAvailable(Context inContext){
-		HashSet hsPhotoFicheAvailable = new HashSet<File>();
+	public static HashSet<File> getAllVignettesPhotoFicheAvailable(Context inContext){
+		HashSet<File> hsPhotoFicheAvailable = new HashSet<File>();
 		File imageFolder = getImageFolderVignette(inContext);		
 		for (File file : imageFolder.listFiles()) {
 			hsPhotoFicheAvailable.add(file);
 		}
 		return hsPhotoFicheAvailable;
 	}
-	public static HashSet getAllMedResPhotoFicheAvailable(Context inContext){
-		HashSet hsPhotoFicheAvailable = new HashSet<File>();
+	public static HashSet<File> getAllMedResPhotoFicheAvailable(Context inContext){
+		HashSet<File> hsPhotoFicheAvailable = new HashSet<File>();
 		File imageFolder = getImageFolderMedRes(inContext);		
 		for (File file : imageFolder.listFiles()) {
 			hsPhotoFicheAvailable.add(file);
 		}
 		return hsPhotoFicheAvailable;
 	}
-	public static HashSet getAllHiResPhotoFicheAvailable(Context inContext){
-		HashSet hsPhotoFicheAvailable = new HashSet<File>();
+	public static HashSet<File> getAllHiResPhotoFicheAvailable(Context inContext){
+		HashSet<File> hsPhotoFicheAvailable = new HashSet<File>();
 		File imageFolder = getImageFolderHiRes(inContext);		
 		for (File file : imageFolder.listFiles()) {
 			hsPhotoFicheAvailable.add(file);
@@ -271,8 +263,6 @@ public class Outils {
 				result = vignetteImage;
 			}
 			else{
-				StringBuffer stringBuffer = new StringBuffer("");
-		    	BufferedReader bufferedReader = null;
 		    
 				URL urlHtml;
 				try {
@@ -284,19 +274,14 @@ public class Outils {
 			        urlConnection.setReadTimeout(10000);
 			        
 			        urlConnection.connect();
-		            // this will be useful so that you can show a typical 0-100% progress bar
-		            int fileLength = urlConnection.getContentLength();
-
 		            
 		            // download the file
 		            InputStream input = urlConnection.getInputStream();
 		            OutputStream output = new FileOutputStream(vignetteImage);
 
 		            byte data[] = new byte[1024];
-		            long total = 0;
 		            int count;
 		            while ((count = input.read(data)) != -1) {
-		                total += count;
 		                output.write(data, 0, count);
 		            }
 
@@ -323,8 +308,9 @@ public class Outils {
 	public static int getHiResCount(Context inContext){
 		return getFileCount(inContext, getImageFolderHiRes(inContext));
 	}
-	public static int getFileCount(Context inContext, File inImageFolder){
-		return inImageFolder.list().length;
+	
+	public static int getFileCount(Context inContext, File inFolder){
+		return inFolder.list().length;
 	}
 	
 	public static long getPhotosDiskUsage(Context inContext){
@@ -491,8 +477,7 @@ public class Outils {
 	
 	public static ImageType getImageQualityToDownload(Context inContext, boolean inPhotoPrincipale, int inIdZoneGeo){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageQualityToDownload() - Début" );
-    	
-		ImageType imageType;
+
 		PrecharMode prechargementMode = getPrecharModeZoneGeo(inContext, inIdZoneGeo);
 		
 		if (inPhotoPrincipale) {

@@ -251,7 +251,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	}
     	super.onDestroy();
     	
-    	
     }
     
     protected View createNavigationZoneView(ZoneGeographique zone){
@@ -655,6 +654,8 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	     	for (File child:getApplicationContext().getCacheDir().listFiles()) {
 	     		sb.append(child.getAbsolutePath()+"\n");
 	     		if (child.getName().equals("picasso-cache") ) {
+	     			sb.append(""+String.format("%.2f", Outils.getDiskUsage(getApplicationContext(), child)/(double)(1024.0*1024.0) )+" MiB)\n");
+	     			
 	     			int i = 0;
 	     			for (File subchild:child.listFiles()) {
 	     	     		sb.append("\t\t"+subchild.getName()+"\n");
