@@ -345,7 +345,7 @@ public class Fiche {
 							}
 							if (i == 5) {
 								log.info("getFicheFromHtml() - ficheNomFrancais : " + elementTR.getRenderer().toString().trim());
-								setNomCommun( Outils.nettoyageTextes(elementTR.getRenderer().toString().trim()) );
+								setNomCommun( Outils.nettoyageTextes(elementTR.getRenderer().toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "")).trim() );
 							}
 						}
 					}
@@ -521,8 +521,8 @@ public class Fiche {
 					Element ElementDates=elementTable_TABLE.getFirstElementByClass("normalgris");
 					//log.info("getFiche() - Bloc Dates : " + ElementDates.getRenderer().toString());
 					
-					dateCreation = ElementDates.getRenderer().toString().replaceAll("Création le : ([^ ]*).*", "$1").trim();
-					dateModification = ElementDates.getRenderer().toString().replaceAll(".*modification le(.*)", "$1").trim();
+					dateCreation = Outils.nettoyageTextes(ElementDates.getRenderer().toString()).replaceAll("Création le : ([^ ]*).*", "$1").trim();
+					dateModification = Outils.nettoyageTextes(ElementDates.getRenderer().toString()).replaceAll(".*modification le(.*) [^ ]*", "$1").trim();
 					log.debug("getFicheFromHtml() - dateCreation : " + dateCreation);
 					log.debug("getFicheFromHtml() - dateModification : " + dateModification);
 					break; // Fin de la recherche d'infos dans le bloc principal
@@ -616,7 +616,7 @@ public class Fiche {
 					try	{
 						Element ElementNomCommun = ElementInfosGauche.getFirstElementByClass("titre2").getFirstElement();
 						log.info("getFicheFromHtml() - ElementNomCommun : " + ElementNomCommun.getRenderer().toString().trim());
-						setNomCommun( ElementNomCommun.getRenderer().toString().trim() );
+						setNomCommun( Outils.nettoyageTextes(ElementNomCommun.getRenderer().toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "")).trim() );
 					} catch (Exception e) {
 		        		log.debug("getFicheFromHtml() - le nom français n'est pas toujours renseigné");
 		        	}

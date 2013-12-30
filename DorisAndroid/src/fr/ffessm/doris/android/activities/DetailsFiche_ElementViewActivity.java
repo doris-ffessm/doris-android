@@ -600,34 +600,52 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	        		
 	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.GRAS,ts.positionDebut,posFinTexteFinal));
 	        	}
-	        	else if (balise.equals("n")){
+	        	else if (balise.equals("n/")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) + "\n");
 	        			        		
 	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
 	        	}
-	        	else if (balise.matches("[0-9]*")){
-	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) + "(Fiche)");
-	        		
-	        		int posDepTexteFinal = texteFinal.length() - 7;
-	        		int posFinTexteFinal = texteFinal.length();
-	        		Log.d(LOG_TAG, "textToSpannableStringDoris() - texteFinal : "+texteFinal);
-	        		
-	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.FICHE,posDepTexteFinal,posFinTexteFinal,
-	        				balise));
+	        	else if (balise.startsWith("F:")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posDepTexteFinal = texteFinal.length();
 	        		
 	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	
+	        		pileDerniereBalise.add(new TextSpan(TextSpan.SpanType.FICHE,posDepTexteFinal,0,
+	        				balise.substring(2, balise.length())));
+	        	}
+	        	else if (balise.equals("/F")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posFinTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        		
+	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+	        		
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.FICHE,ts.positionDebut,posFinTexteFinal,
+	        				ts.info));
 	        	}
 	        	else if (balise.startsWith("D:")){
-	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) + "(*)");
-	        		
-	        		int posDepTexteFinal = texteFinal.length() - 3;
-	        		int posFinTexteFinal = texteFinal.length();
-	        		Log.d(LOG_TAG, "textToSpannableStringDoris() - texteFinal : "+texteFinal);
-	        		
-	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.DEFINITION,posDepTexteFinal,posFinTexteFinal,
-	        				balise.substring(2, balise.length())));
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posDepTexteFinal = texteFinal.length();
 	        		
 	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	
+	        		pileDerniereBalise.add(new TextSpan(TextSpan.SpanType.DEFINITION,posDepTexteFinal,0,
+	        				balise.substring(2, balise.length())));
+	        	}
+	        	else if (balise.equals("/D")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posFinTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        		
+	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+	        		
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.DEFINITION,ts.positionDebut,posFinTexteFinal,
+	        				ts.info));
 	        	}
 	        } // fin du While
 	        
@@ -645,7 +663,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	        	}
 	        	else if ( ts.spanType == TextSpan.SpanType.GRAS ) {
 	        		richtext.setSpan(new StyleSpan(Typeface.BOLD), ts.positionDebut, ts.positionFin, 0);
-	        		richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_gras))), ts.positionDebut, ts.positionFin, 0);
+	        		if ( !context.getString(R.string.detailsfiche_elementview_couleur_gras).isEmpty() ){
+	        			richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_gras))), ts.positionDebut, ts.positionFin, 0);
+	        		}
 	        	}
 	        	else if ( ts.spanType == TextSpan.SpanType.FICHE ) {
 
@@ -675,7 +695,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			            @Override  
 			            public void onClick(View view) {  
 			                Toast.makeText(context, "Test Définition : "+ts.info, Toast.LENGTH_LONG).show();
-			            	
 			                /*
 			                Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
 			                Bundle b = new Bundle();

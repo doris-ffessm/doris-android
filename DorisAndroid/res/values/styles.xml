@@ -24,4 +24,9 @@
 	    <item name="android:background">?android:attr/listDivider</item>
 	</style>
     
+	<!-- Les couleurs peuvent être RED, YELLOW ou #FFFFFF -->
+	<string name="detailsfiche_elementview_couleur_gras"></string>
+	<string name="detailsfiche_elementview_couleur_lienfiche">#0168A1</string>
+	<string name="detailsfiche_elementview_couleur_liendefinition">#80AA00</string>
+	
 </resources>

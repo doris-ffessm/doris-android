@@ -288,7 +288,7 @@ public class Outils {
 			//Lien vers autres fiches
 			texteNettoye = texteNettoye.replaceAll("<[^>]*fiche_numero=([0-9]*)\"[^>]*>([^<]*)</a>", "{{F:$1}}$2{{/F}}");
 			//Lien vers termes du glossaire
-			texteNettoye = texteNettoye.replaceAll(" ([^ ]*)\\*", " {{D:$1}}$1{{/D}}");
+			texteNettoye = texteNettoye.replaceAll(" ([^ >]*)\\*", " {{D:$1}}$1{{/D}}");
 			
 		} else {
 			texteNettoye = texteNettoye.replace("<strong>", "");
