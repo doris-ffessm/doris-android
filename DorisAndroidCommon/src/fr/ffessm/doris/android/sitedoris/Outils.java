@@ -250,15 +250,20 @@ public class Outils {
 		String texteNettoye = texteANettoye;
 		
 		texteNettoye = texteNettoye.replace("&nbsp;</td>", "</td>");
+		
+		texteNettoye = texteNettoye.replace("<br>", "<br/>")
+				.replace("<br />", "<br/>")
+				.replace("<br/><br/>", "<br/>");
+		
+		// Ca arrive
+		texteNettoye = texteNettoye.replaceAll("<em>[\\s]*</em>", "");
 
 		// Certaines fiches comme : http://doris.ffessm.fr/fiche2.asp?fiche_numero=3527 (au 30 mars 13)
 		// contiennent des " dans le nom de l'animal, or les " ne sont pas échappés donc ça met le
 		// bazard dans le code html
 		// Je retire donc ici les paires de " qui sont à l'intérieure d'une autre paire de "
 		// et qui ne contiennent pas de = ? < >
-		log.debug("nettoyageBalises() - vitesse 1");
 		texteNettoye = texteNettoye.replaceAll("(href=\"[^\"]*)\"([^\"=?<>]*)\"([^\"]*\")", "$1$2$3");
-		log.debug("nettoyageBalises() - vitesse 2");
 
 		//log.debug("nettoyageBalises() - texteNettoye : " + texteNettoye);
 		//log.debug("nettoyageBalises() - Fin");
@@ -271,23 +276,26 @@ public class Outils {
     	//log.debug("remplacementBalises() - texteANettoye : " + texteANettoye);
 		String texteNettoye = texteANettoye;
 
-		//Difficile des les mettre ailleurs
 		if (avecMiseEnForme) {
+			//Gras
 			texteNettoye = texteNettoye.replace("<strong>", "{{g}}");
 			texteNettoye = texteNettoye.replace("</strong>", "{{/g}}");
+			//Italique
 			texteNettoye = texteNettoye.replace("<em>", "{{i}}");
 			texteNettoye = texteNettoye.replace("</em>", "{{/i}}");
-			texteNettoye = texteNettoye.replace("<br>", "{{n}}");
-			texteNettoye = texteNettoye.replace("<br/>", "{{n}}");
-			texteNettoye = texteNettoye.replace("<br />", "{{n}}");
+			//Sauts de ligne
+			texteNettoye = texteNettoye.replace("<br/>", "{{n/}}");
+			//Lien vers autres fiches
+			texteNettoye = texteNettoye.replaceAll("<[^>]*fiche_numero=([0-9]*)\"[^>]*>([^<]*)</a>", "{{F:$1}}$2{{/F}}");
+			//Lien vers termes du glossaire
+			texteNettoye = texteNettoye.replaceAll(" ([^ ]*)\\*", " {{D:$1}}$1{{/D}}");
+			
 		} else {
 			texteNettoye = texteNettoye.replace("<strong>", "");
 			texteNettoye = texteNettoye.replace("</strong>", "");
 			texteNettoye = texteNettoye.replace("<em>", "");
 			texteNettoye = texteNettoye.replace("</em>", "");
-			texteNettoye = texteNettoye.replace("<br>", "");
-			texteNettoye = texteNettoye.replace("<br/>", "");
-			texteNettoye = texteNettoye.replace("<br />", "");
+			texteNettoye = texteNettoye.replace("<br/>", " ");
 		}
 		//log.debug("remplacementBalises() - texteNettoye : " + texteNettoye);
 		log.debug("remplacementBalises() - Fin");
@@ -310,17 +318,13 @@ public class Outils {
 		//Œ OE
 		texteNettoye = texteNettoye.replaceAll("\u008C", "\u0152");
 
+		// Le 2 est transformé en 2 caractères par le parseur
 		// ⊃2; => ² \u00B2
 		texteNettoye = texteNettoye.replaceAll("\u22832;", "\u00B2");
-		
-		// Parfois les liens vers le Glossaire sont mal placés " *" => "*"
-		texteNettoye = texteNettoye.replace(" *", "*");
-				
-		// suppression des sauts de ligne si pas avant une majuscule ou un - (puce)
-		texteNettoye = texteNettoye.replaceAll("\r\n([^A-Z\\-])", " $1");
-		//log.debug("nettoyageTextes() - 010 : " + texteNettoye);
-		texteNettoye = texteNettoye.replaceAll("\n([^A-Z\\-])", " $1");
-		//log.debug("nettoyageTextes() - 020 : " + texteNettoye);
+						
+		// suppression des sauts de ligne car gérés avant grace aux {{n/}}
+		texteNettoye = texteNettoye.replaceAll("\r\n", "");
+		texteNettoye = texteNettoye.replaceAll("\n", "");
 		
 		// suppression des blancs multiples
 		texteNettoye = texteNettoye.replaceAll("[ \t]{2,}"," ");

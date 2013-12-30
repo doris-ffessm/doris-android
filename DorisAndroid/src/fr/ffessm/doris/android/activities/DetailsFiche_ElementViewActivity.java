@@ -307,7 +307,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			
 			// section "Crédits"
 			StringBuilder sbCreditText = new StringBuilder();
-			final String urlString = "http://doris.ffessm.fr/fiche2.asp?fiche_numero="+entry.getNumeroFiche(); 
+			final String urlString = Constants.getFicheFromIdUrl( entry.getNumeroFiche() ); 
 			sbCreditText.append(urlString);
 			
 			sbCreditText.append("\n"+getString(R.string.detailsfiche_elementview_datecreation_label));
