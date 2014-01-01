@@ -249,12 +249,17 @@ public class Outils {
 
 		String texteNettoye = texteANettoye;
 		
-		texteNettoye = texteNettoye.replace("&nbsp;</td>", "</td>");
+		texteNettoye = texteNettoye.replace("&nbsp;", " ");
 		
 		texteNettoye = texteNettoye.replace("<br>", "<br/>")
 				.replace("<br />", "<br/>")
 				.replace("<br/><br/>", "<br/>");
 		
+		//Permet que la recherche des définitions fonctionne mieux ensuite
+		texteNettoye = texteNettoye.replace("**", "##")
+				.replace("</strong>*", "*</strong>")
+				.replace("</em>*", "*</em>");
+				
 		// Ca arrive
 		texteNettoye = texteNettoye.replaceAll("<em>[\\s]*</em>", "");
 
@@ -286,9 +291,21 @@ public class Outils {
 			//Sauts de ligne
 			texteNettoye = texteNettoye.replace("<br/>", "{{n/}}");
 			//Lien vers autres fiches
-			texteNettoye = texteNettoye.replaceAll("<[^>]*fiche_numero=([0-9]*)\"[^>]*>([^<]*)</a>", "{{F:$1}}$2{{/F}}");
+			texteNettoye = texteNettoye.replaceAll("<[^<]*fiche_numero=([0-9]*)\"[^>]*>([^<]*)</a>", "{{F:$1}}$2{{/F}}");
 			//Lien vers termes du glossaire
-			texteNettoye = texteNettoye.replaceAll(" ([^ >]*)\\*", " {{D:$1}}$1{{/D}}");
+			texteNettoye = texteNettoye.replaceAll("([ >\\}'])([^ >\\}']*)\\*", "$1{{D:$2}}$2{{/D}}");
+			
+			// Après cela on nettoie un peu et met en ordre
+			// Mieux vaut le faire dans le prefetch qd on a le temps qu'à la présentation
+			texteNettoye = texteNettoye.replace("{{/i}}{{i}}","");
+			texteNettoye = texteNettoye.replace("{{/g}}{{g}}","");
+			
+			texteNettoye = texteNettoye.replace("{{/i}} {{i}}"," ");
+			texteNettoye = texteNettoye.replace("{{/g}} {{g}}"," ");
+			
+			// Le Gras ne doit pas être à l'intérieure d'un lieu mais l'entourer
+			texteNettoye = texteNettoye.replace("{{/g}}{{/F}}", "{{/F}}{{/g}}");
+			texteNettoye = texteNettoye.replaceAll("\\{\\{F:([0-9]*)\\}\\}\\{\\{g\\}\\}", "{{g}}{{F:$1}}");
 			
 		} else {
 			texteNettoye = texteNettoye.replace("<strong>", "");

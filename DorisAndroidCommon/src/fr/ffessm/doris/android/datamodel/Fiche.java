@@ -725,7 +725,7 @@ public class Fiche {
 			// Les dates de Créations et de nodifications
 			// Elles sont dans le seul TD de class = normalgris
 			Element ElementDates=source.getFirstElementByClass("normalgris2");
-			log.info("getFiche() - Bloc Dates : " + ElementDates.getRenderer().toString());
+			//log.info("getFiche() - Bloc Dates : " + ElementDates.getRenderer().toString());
 			
 			dateCreation = ElementDates.getRenderer().toString().replaceAll("\r\n", " ").replaceAll("\n", " ").replaceAll(".*DORIS[^,]*,([^:]*):.*", "$1").trim();
 			//dateModification = ElementDates.getRenderer().toString().replaceAll(".*modification le(.*)", "$1").trim();
