@@ -87,7 +87,6 @@
 		                android:maxLines="4"
 		                android:gravity="left"
 		                android:padding="3dip"
-		                android:textStyle="italic"
 		                android:text="Nom Scientifique"
 		                android:textAppearance="?android:attr/textAppearanceSmall"
             			android:textColor="?android:attr/textColorSecondary"
