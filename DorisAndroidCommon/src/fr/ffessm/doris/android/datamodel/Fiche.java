@@ -55,6 +55,8 @@ import java.util.List;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.StrMatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -235,6 +237,14 @@ public class Fiche {
 				
 
 	// Start of user code Fiche additional user properties
+	
+	/** renvoie le texte brut
+	 * 
+	 * @return
+	 */
+	public String getNomScientifiqueTxt(){
+		return StringUtils.replaceEach(this.nomScientifique, new String[]{"{{g}}","{{/g}}","{{i}}","{{/i}}"}, new String[]{"","","",""});
+	}
 	
 	public String getAutreDenominationTxt(){
 		StringBuilder sbAutreDenominations = new StringBuilder();

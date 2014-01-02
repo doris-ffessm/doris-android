@@ -379,7 +379,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 			
 			for(int i=0; i < base_list_length; i++){
 				Fiche entry = getFicheForId(filteredFicheIdList.get(i));
-				char firstCharacter=entry.getNomScientifique().charAt(0);
+				char firstCharacter=entry.getNomScientifiqueTxt().charAt(0);
 				boolean presentOrNot=alphabetToIndex.containsKey(firstCharacter);
 				if(!presentOrNot){
 					alphabetToIndex.put(firstCharacter, i);

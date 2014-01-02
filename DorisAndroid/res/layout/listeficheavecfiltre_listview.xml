@@ -58,22 +58,22 @@
 			>
 	    </fr.ffessm.doris.android.activities.view.indexbar.CustomListView >
 			
-		<ListView 
-			android:layout_height="wrap_content"
-			android:id="@+id/listeficheavecfiltre_listView_alphabets"
-			android:layout_alignParentRight="true"
-			android:scrollingCache="false"
-			android:scrollbarAlwaysDrawVerticalTrack="false"
-			android:footerDividersEnabled="false" 
-			android:headerDividersEnabled="false" 
-			android:layout_width="28dip"
-			
-			android:divider="@android:color/black"
-			android:scrollbars="none"
-			android:background="@drawable/roundbackground"
-			android:listSelector="@android:color/darker_gray"
-			android:layout_centerVertical="true"
-			>
+		<ListView
+		    android:id="@+id/listeficheavecfiltre_listView_alphabets"
+		    android:layout_width="28dip"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentRight="true"
+		    android:layout_marginRight="6dp"
+		    android:layout_centerVertical="true"
+		    android:background="@drawable/roundbackground"
+		    android:divider="@android:color/black"
+		    android:footerDividersEnabled="false"
+		    android:headerDividersEnabled="false"
+		    android:listSelector="@android:color/darker_gray"
+		    android:scrollbarAlwaysDrawVerticalTrack="false"
+		    android:scrollbars="none"
+		    android:scrollingCache="false" >
+
 		</ListView>	
 	</RelativeLayout>
 </LinearLayout>
