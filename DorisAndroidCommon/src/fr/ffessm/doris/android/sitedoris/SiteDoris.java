@@ -575,4 +575,19 @@ public class SiteDoris {
 		return listeDefinitions;
     }
 
+    public static boolean getContinuerListeDefinitionsParInitialeFromHtml(String inCodePageHtml){
+    	log.debug("getContinuerListeDefinitionsParInitialeFromHtml() - Début");
+    	boolean continuer = true;
+    	
+    	String indexPage = inCodePageHtml.replaceAll("\n", "").replaceAll(".*>Page ([^<>]*)<.*", "$1").trim();
+    	log.debug("getContinuerListeDefinitionsParInitialeFromHtml() - indexPage :"+indexPage);
+    	String numeroPageCourante = indexPage.replaceAll("/.*", "");
+    	log.debug("getContinuerListeDefinitionsParInitialeFromHtml() - numeroPageCourante :"+numeroPageCourante);
+    	String nbPages = indexPage.replaceAll(".*/", "");
+    	log.debug("getContinuerListeDefinitionsParInitialeFromHtml() - nbPages :"+nbPages);
+    	if (numeroPageCourante.equals(nbPages)) continuer = false;
+    	
+    	log.debug("getContinuerListeDefinitionsParInitialeFromHtml() - continuer :"+continuer);
+    	return continuer;
+    }
 }

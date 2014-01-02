@@ -384,40 +384,48 @@ public class PrefetchDorisWebSite {
 				for (char initiale : listeFiltres.toCharArray()){
 					log.debug("doMain() - Recup Page de définitions pour la lettre : "+initiale);
 					
-					String listeDefinitionsFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeDefinitions-"+initiale+".html";
-					log.info("Récup. Liste des Définitions : " + listeDefinitionsFichier);
-					
-					if (! action.equals("NODWNLD")){
-						if (Outils.getFichierUrl(Constants.getListeDefinitionsUrl(""+initiale), listeDefinitionsFichier)) {
-							contenuFichierHtml = Outils.getFichier(new File(listeDefinitionsFichier));
+					int numero = 1;
+					boolean continuer;
+					do {
+						String listeDefinitionsFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeDefinitions-"+initiale+"-"+numero+".html";
+						log.info("Récup. Liste des Définitions : " + listeDefinitionsFichier);
+						
+						if (! action.equals("NODWNLD")){
+							if (Outils.getFichierUrl(Constants.getListeDefinitionsUrl(""+initiale,""+numero ), listeDefinitionsFichier)) {
+								contenuFichierHtml = Outils.getFichier(new File(listeDefinitionsFichier));
+							} else {
+								log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale);
+								System.exit(0);
+							}
 						} else {
-							log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale);
-							System.exit(0);
+							// NODWNLD
+							listeDefinitionsFichier = DOSSIER_RACINE + "/" + dossier_ref + "/listeDefinitions-"+initiale+".html";
+							if (new File(listeDefinitionsFichier).exists()) {
+								contenuFichierHtml = Outils.getFichier(new File(listeDefinitionsFichier));
+							} else {
+								log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale);
+								System.exit(0);
+							}
 						}
-					} else {
-						// NODWNLD
-						listeDefinitionsFichier = DOSSIER_RACINE + "/" + dossier_ref + "/listeDefinitions-"+initiale+".html";
-						if (new File(listeDefinitionsFichier).exists()) {
-							contenuFichierHtml = Outils.getFichier(new File(listeDefinitionsFichier));
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale);
-							System.exit(0);
-						}
-					}
-					
-					final List<DefinitionGlossaire> listeDefinitionsFromHTML = SiteDoris.getListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
-					log.info("Creation de "+listeDefinitionsFromHTML.size()+" définitions pour la lettre : "+initiale);
-					TransactionManager.callInTransaction(connectionSource,
-						new Callable<Void>() {
-							public Void call() throws Exception {
-								for (DefinitionGlossaire definition : listeDefinitionsFromHTML){
-									if (!dbContext.definitionGlossaireDao.idExists(definition.getId()))
-										dbContext.definitionGlossaireDao.create(definition);
-								}
-								return null;
-						    }
-						});
-				}	
+						
+						continuer = SiteDoris.getContinuerListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
+						
+						final List<DefinitionGlossaire> listeDefinitionsFromHTML = SiteDoris.getListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
+						log.info("Creation de "+listeDefinitionsFromHTML.size()+" définitions pour la lettre : "+initiale);
+						TransactionManager.callInTransaction(connectionSource,
+							new Callable<Void>() {
+								public Void call() throws Exception {
+									for (DefinitionGlossaire definition : listeDefinitionsFromHTML){
+										if (!dbContext.definitionGlossaireDao.idExists(definition.getId()))
+											dbContext.definitionGlossaireDao.create(definition);
+									}
+									return null;
+							    }
+							});
+						
+						numero ++;
+					} while (continuer && numero < 10);
+				} 
 				
 				List<DefinitionGlossaire> listeDefinitions = new ArrayList<DefinitionGlossaire>(0);
 				listeDefinitions.addAll(dbContext.definitionGlossaireDao.queryForAll());
