@@ -288,6 +288,8 @@ public class Outils {
 			//Italique
 			texteNettoye = texteNettoye.replace("<em>", "{{i}}");
 			texteNettoye = texteNettoye.replace("</em>", "{{/i}}");
+			//Souligné
+			texteNettoye = texteNettoye.replaceAll("<span style=\"text-decoration: underline;\">([^<>]*)</span>","{{s}}$1{{/s}}");
 			//Sauts de ligne
 			texteNettoye = texteNettoye.replace("<br/>", "{{n/}}");
 			//Lien vers autres fiches
@@ -349,7 +351,7 @@ public class Outils {
 		texteNettoye = texteNettoye.trim();
 		//log.debug("nettoyageTextes() - texteNettoye : " + texteNettoye);
 		
-		log.debug("nettoyageTextes() - Fin");
+		//log.debug("nettoyageTextes() - Fin");
 		return texteNettoye;
 	}
     

@@ -147,7 +147,11 @@ public class DefinitionGlossaire {
 
     public void getDefinitionsFromHtml(String inCodePageHtml){
     	log.debug("getDefinitionsFromHtml() - Début");
-    
+
+    	inCodePageHtml = Outils.nettoyageBalises(inCodePageHtml);
+
+    	inCodePageHtml = Outils.remplacementBalises(inCodePageHtml, true);
+    	
     	Source source=new Source(inCodePageHtml);
     	source.fullSequentialParse();
     	log.debug("getDefinitionsFromHtml()- source.length() : " + source.length());
@@ -156,8 +160,8 @@ public class DefinitionGlossaire {
     	terme = Outils.nettoyageTextes( elementsTDTitre2.getRenderer().toString().replace(":", "").trim() );
     	log.debug("getDefinitionsFromHtml()- motDefini : " + terme);
     	
-    	definition = Outils.nettoyageTextes( elementsTDTitre2.getParentElement().getParentElement().getFirstElementByClass("normal").getRenderer().toString() );
-    	definition = definition.replaceAll("\r\n", " ").replaceAll("\n", " ").replaceAll("\\s{2,}"," ").trim();
+    	definition = elementsTDTitre2.getParentElement().getParentElement().getFirstElementByClass("normal").getRenderer().toString();
+    	definition = Outils.nettoyageTextes(definition);
     	log.debug("getDefinitionsFromHtml()- Définition : " + definition);
     	
     	log.debug("getDefinitionsFromHtml() - Fin");

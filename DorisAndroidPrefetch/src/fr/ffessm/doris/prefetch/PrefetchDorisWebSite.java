@@ -394,16 +394,16 @@ public class PrefetchDorisWebSite {
 							if (Outils.getFichierUrl(Constants.getListeDefinitionsUrl(""+initiale,""+numero ), listeDefinitionsFichier)) {
 								contenuFichierHtml = Outils.getFichier(new File(listeDefinitionsFichier));
 							} else {
-								log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale);
+								log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale+"-"+numero);
 								System.exit(0);
 							}
 						} else {
 							// NODWNLD
-							listeDefinitionsFichier = DOSSIER_RACINE + "/" + dossier_ref + "/listeDefinitions-"+initiale+".html";
+							listeDefinitionsFichier = DOSSIER_RACINE + "/" + dossier_ref + "/listeDefinitions-"+initiale+"-"+numero+".html";
 							if (new File(listeDefinitionsFichier).exists()) {
 								contenuFichierHtml = Outils.getFichier(new File(listeDefinitionsFichier));
 							} else {
-								log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale);
+								log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale+"-"+numero);
 								System.exit(0);
 							}
 						}

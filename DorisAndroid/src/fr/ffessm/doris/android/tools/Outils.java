@@ -44,6 +44,7 @@ import android.text.format.DateUtils;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -920,7 +921,7 @@ public class Outils {
 	        String texteInter = texte.toString();
 	        StringBuilder texteFinal = new StringBuilder();
 	        int iTmp = 0;
-	        while (texteInter.contains("{{") && iTmp < 50 ) {
+	        while (texteInter.contains("{{") && iTmp < 100 ) {
 	        	iTmp ++;
 	        	
 	        	// Recherche 1ère Balise à traiter
@@ -969,6 +970,25 @@ public class Outils {
 	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
 	        		
 	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.GRAS,ts.positionDebut,posFinTexteFinal));
+	        	}
+	        	else if (balise.equals("s")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posDepTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	
+	        		pileDerniereBalise.add(new TextSpan(TextSpan.SpanType.SOULIGNE,posDepTexteFinal,0));
+	        	}
+	        	else if (balise.equals("/s")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posFinTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        		
+	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+	        		
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.SOULIGNE,ts.positionDebut,posFinTexteFinal));
 	        	}
 	        	else if (balise.equals("n/")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) + "\n");
@@ -1036,6 +1056,9 @@ public class Outils {
 	        		if ( !context.getString(R.string.detailsfiche_elementview_couleur_gras).isEmpty() ){
 	        			richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_gras))), ts.positionDebut, ts.positionFin, 0);
 	        		}
+	        	}
+	        	else if ( ts.spanType == TextSpan.SpanType.SOULIGNE ) {
+	        		richtext.setSpan(new UnderlineSpan(), ts.positionDebut, ts.positionFin, 0);
 	        	}
 	        	else if ( ts.spanType == TextSpan.SpanType.FICHE ) {
 
@@ -1115,7 +1138,7 @@ public class Outils {
     public static class TextSpan {
     	
     	public enum SpanType {
-    	    FICHE, ITALIQUE, GRAS, SAUTDELIGNE, DEFINITION
+    	    FICHE, ITALIQUE, GRAS, SOULIGNE, SAUTDELIGNE, DEFINITION
     	} 
     	
     	SpanType spanType = null;
