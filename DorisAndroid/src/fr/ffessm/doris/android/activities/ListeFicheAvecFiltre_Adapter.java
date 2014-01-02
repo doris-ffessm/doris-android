@@ -151,6 +151,20 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		String orderByClause = "";
 		if (ordreTri.equals("Commun")) orderByClause = " ORDER BY Fiche.NomCommun";
 		
+		String filtreEtat = prefs.getString(context.getString(R.string.pref_key_accueil_etat_fiches_affiche), "toutes");
+		String whereSuffixClauseWHERE = "";
+		String whereSuffixClauseAND = "";
+		//Fiches Publiées + En cours de Rédaction
+		if (filtreEtat.equals("pr")) {
+			whereSuffixClauseWHERE = " WHERE Fiche.etatFiche <> 5";
+			whereSuffixClauseAND = " AND Fiche.etatFiche <> 5";
+		}
+		//Fiches Publiées seulement
+		if (filtreEtat.equals("p")) {
+			whereSuffixClauseWHERE = " WHERE Fiche.etatFiche = 4";
+			whereSuffixClauseAND = " AND Fiche.etatFiche = 4";
+		}
+		
 		try{
 			
 			if(filteredZoneGeoId == -1){
@@ -161,7 +175,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				
 				// récupère les id seulement des fiches
 				GenericRawResults<String[]> rawResults =
-						_contextDB.ficheDao.queryRaw("SELECT _id FROM fiche"+orderByClause);
+						_contextDB.ficheDao.queryRaw("SELECT _id FROM fiche"+whereSuffixClauseWHERE+orderByClause);
 				for (String[] resultColumns : rawResults) {
 				    String iDString = resultColumns[0];
 				    this.ficheIdList.add(Integer.parseInt(iDString));
@@ -170,7 +184,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				Log.d(LOG_TAG,  "_contextDB.ficheDao.queryForAll() - fin");
 			}
 			else{
-				final String queryFichesForZone = "SELECT Fiche_id FROM fiches_ZonesGeographiques , Fiche WHERE ZoneGeographique_id="+filteredZoneGeoId+" and fiches_ZonesGeographiques.Fiche_id = Fiche._id"+orderByClause;
+				final String queryFichesForZone = "SELECT Fiche_id FROM fiches_ZonesGeographiques , Fiche WHERE ZoneGeographique_id="+filteredZoneGeoId+whereSuffixClauseAND+" AND fiches_ZonesGeographiques.Fiche_id = Fiche._id"+orderByClause;
 				Log.d(LOG_TAG,  "queryFichesForZone - début - "+queryFichesForZone);
 				GenericRawResults<String[]> rawResults =
 						_contextDB.ficheDao.queryRaw(queryFichesForZone);
@@ -194,7 +208,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				}
 				StrBuilder queryIdForGroupes = new StrBuilder("SELECT _id FROM fiche WHERE groupe_id IN (");
 				queryIdForGroupes.appendWithSeparators(acceptedGroupeId, ", ");
-				queryIdForGroupes.append(")"+orderByClause+";");
+				queryIdForGroupes.append(")"+whereSuffixClauseAND+orderByClause+";");
 				Log.d(LOG_TAG,  "queryIdForGroupes = "+queryIdForGroupes);
 				GenericRawResults<String[]> rawResults =
 						_contextDB.ficheDao.queryRaw(queryIdForGroupes.toString());
