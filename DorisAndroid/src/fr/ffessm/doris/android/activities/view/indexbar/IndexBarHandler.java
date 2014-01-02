@@ -41,7 +41,8 @@ public class IndexBarHandler extends Handler {
 
 			height_of_listview	=	(Integer)msg.obj;			//Height of the ListView in pixels
 			
-			View view=indexbar.findViewById(R.id.alphabet_row_layout);
+			//View view=indexbar.findViewById(R.id.alphabet_row_layout);
+			View view=indexbar.getAlphabetRowView();
 			
 			if(view !=null && view instanceof TextView){
 				 TextView row=(TextView)view;
@@ -59,7 +60,9 @@ public class IndexBarHandler extends Handler {
 			
 			//Alphabets listview is populated
 			// TODO triuver un moyen indenpendant de la vue
-			ListView alphabets_listview=(ListView)indexbar.findViewById(R.id.listeficheavecfiltre_listView_alphabets);
+			
+			//ListView alphabets_listview=(ListView)indexbar.findViewById(R.id.listeficheavecfiltre_listView_alphabets);
+			ListView alphabets_listview=indexbar.getAlphabetListView();
 			/*Populating the Alphabet List*/			
 			ArrayList<String> alphabets_list=new ArrayList<String>();
 			String alphabet_array[]    =	indexbar.getResources().getStringArray(R.array.alphabtes_array);

@@ -368,7 +368,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 			return null;
 		}
 	}
-	
+
 	public HashMap<Character, Integer> getUsedAlphabetHashMap(){
 		HashMap<Character, Integer> alphabetToIndex = new HashMap<Character, Integer>();
 		Log.d(LOG_TAG,"getUsedAlphabetHashMap - début");
@@ -380,7 +380,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 			
 			for(int i=0; i < base_list_length; i++){
 				Fiche entry = getFicheForId(filteredFicheIdList.get(i));
-				char firstCharacter=entry.getNomScientifiqueTxt().charAt(0);
+				char firstCharacter=getFirstCharForIndex(entry);
 				boolean presentOrNot=alphabetToIndex.containsKey(firstCharacter);
 				if(!presentOrNot){
 					alphabetToIndex.put(firstCharacter, i);
@@ -406,6 +406,13 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		return alphabetToIndex;
 	}
 	
+	protected char getFirstCharForIndex(Fiche entry){
+		//Start of user code protected ListeFicheAvecFiltre_Adapter binarySearch custom
+    	return entry.getNomScientifiqueTxt().charAt(0);
+	  	//End of user code
+	}
+
+
 	/**
 	 * 
 	 * @param key to be searched
@@ -419,13 +426,14 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	   while (bot <= top) {
 	      int mid = bot + (top - bot) / 2;
 	      Fiche entry = getFicheForId(filteredFicheIdList.get(mid));
-	      char midCharacter=entry.getNomScientifiqueTxt().charAt(0);
+		  char midCharacter=getFirstCharForIndex(entry);
 	      if      (key < midCharacter) top = mid - 1;
 	      else if (key > midCharacter) bot = mid + 1;
 	      else return mid;
 	   }
 	   return -1;
 	} 
+		
 	
 	//Start of user code protected additional ListeFicheAvecFiltre_Adapter methods
 	// additional methods
@@ -538,9 +546,6 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 			return results;
 		}
 
-		
-		
-		
 		@SuppressWarnings("unchecked")
 		@Override
 		protected void publishResults(CharSequence constraint, FilterResults results) {

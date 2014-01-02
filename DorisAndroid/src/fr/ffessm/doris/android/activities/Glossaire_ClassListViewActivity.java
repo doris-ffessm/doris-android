@@ -42,7 +42,6 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 
@@ -68,13 +67,14 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedGlossaire_ClassListViewActivity_additionalimports
 // End of user code
 
-public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
+public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener {
 	
 	//Start of user code constants Glossaire_ClassListViewActivity
 	//End of user code
 	// Search EditText
     EditText inputSearch;
     Glossaire_Adapter adapter;
+
 
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
@@ -122,11 +122,11 @@ public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLite
 
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
-        Intent toDetailView = new Intent(this, DetailEntreeGlossaire_ElementViewActivity.class);
-        Bundle b = new Bundle();
-        b.putInt("definitionGlossaireId", ((DefinitionGlossaire)view.getTag()).getId());
-		toDetailView.putExtras(b);
-        startActivity(toDetailView);
+	        Intent toDetailView = new Intent(this, DetailEntreeGlossaire_ElementViewActivity.class);
+	        Bundle b = new Bundle();
+	        b.putInt("definitionGlossaireId", ((DefinitionGlossaire)view.getTag()).getId());
+			toDetailView.putExtras(b);
+	        startActivity(toDetailView);
     }
 
 	//Start of user code additional  Glossaire_ClassListViewActivity methods

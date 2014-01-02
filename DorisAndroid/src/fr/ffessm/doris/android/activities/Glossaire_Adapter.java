@@ -169,6 +169,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 
 	}
 
+	
 	//Start of user code protected additional Glossaire_Adapter methods
 	// additional methods
 	//End of user code

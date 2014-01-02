@@ -33,11 +33,6 @@
 
 <!-- End of user code -->
     </LinearLayout>
-	<!-- <ListView 
-	    android:id="@+android:id/listeficheavecfiltre_listview"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent" >
-	</ListView> -->
 	<include layout="@layout/indexbar_alphabtes_row"
     	 	android:id="@+id/alphabet_row_layout"
     	 	android:visibility="invisible"/>

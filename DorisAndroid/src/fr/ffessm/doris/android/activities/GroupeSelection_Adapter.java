@@ -264,6 +264,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 
 	}
 
+	
 	//Start of user code protected additional GroupeSelection_Adapter methods
 	// additional methods
 	public Groupe getGroupeFromPosition(int position) {

@@ -164,6 +164,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 
 	}
 
+	
 	//Start of user code protected additional ListeParticipantAvecFiltre_Adapter methods
 	// additional methods
 	//End of user code

@@ -43,7 +43,6 @@ package fr.ffessm.doris.android.activities;
 
 
 import java.util.HashMap;
-
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
 import fr.ffessm.doris.android.datamodel.*;
@@ -67,6 +66,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity_additionalimports
@@ -80,10 +80,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 // End of user code
-import android.widget.TextView;
 
-public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> 
-	implements OnItemClickListener, ActivityWithIndexBar{
+public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener , ActivityWithIndexBar{
 	
 	//Start of user code constants ListeFicheAvecFiltre_ClassListViewActivity
 	SearchPopupButtonManager searchPopupButtonManager;
@@ -93,8 +91,8 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 	// Search EditText
     EditText inputSearch;
     ListeFicheAvecFiltre_Adapter adapter;
-    
-    Handler mHandler;
+
+	Handler mHandler;
     HashMap<Character, Integer> alphabetToIndex;
 	int number_of_alphabets=-1;
 
@@ -138,10 +136,8 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
                 // TODO Auto-generated method stub                         
             }
         });
-        
-        // add handler for indexBar
+		// add handler for indexBar
         mHandler = new IndexBarHandler(this);
-        
 		//Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
         searchButton = (ImageButton) findViewById(R.id.btnOtherFilter_listeficheavecfiltre_listviewsearchrow);
         // crée le manager de popup
@@ -208,10 +204,6 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 	}
 	//End of user code
 
-	
-
-
-
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		// add options in the menu
@@ -239,6 +231,52 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
         return false;
     }
 
+	@Override
+	public Handler getHandler() {
+		return mHandler;
+	}
+	
+	private void populateIndexBarHashMap() {
+		alphabetToIndex= adapter.getUsedAlphabetHashMap();
+		number_of_alphabets=alphabetToIndex.size();		//Number of enteries in the map is equal to number of letters that would necessarily display on the right.
+		
+		/*Now I am making an entry of those alphabets which are not there in the Map*/
+		String alphabets[]=getResources().getStringArray(R.array.alphabtes_array);
+		int index=-1;
+		
+		for(String alpha1: alphabets){
+			char alpha=alpha1.charAt(0);
+			index++;
+			
+			if(alphabetToIndex.containsKey(alpha))
+				continue;
+
+			/*Start searching the next character position. Example, here alpha is E. Since there is no entry for E, we need to find the position of next Character, F.*/
+			for(int i=index+1  ; i< 26 ;i++){		//start from next character to last character
+				char searchAlphabet=alphabets[i].charAt(0);   
+				
+				/*If we find the position of F character, then on click event on E should take the user to F*/	
+				if(  alphabetToIndex.containsKey(searchAlphabet)){
+					alphabetToIndex.put(alpha, alphabetToIndex.get(searchAlphabet));
+					break;
+				}
+				else
+					if(i==25) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
+						alphabetToIndex.put(alpha, adapter.filteredFicheIdList.size()-1);
+					else
+						continue;
+					
+			}//
+		}//
+	}
+	
+	@Override
+	public ListView getAlphabetListView() {
+		return (ListView)findViewById(R.id.listeficheavecfiltre_listView_alphabets);
+	}
+	public View getAlphabetRowView(){
+		return findViewById(R.id.alphabet_row_layout);
+	}
 
 	// Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity
 	public void onClickFilterBtn(View view){
@@ -357,45 +395,4 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
-
-	
-
-	@Override
-	public Handler getHandler() {
-		return mHandler;
-	}
-	
-	private void populateIndexBarHashMap() {
-		alphabetToIndex= adapter.getUsedAlphabetHashMap();
-		number_of_alphabets=alphabetToIndex.size();		//Number of enteries in the map is equal to number of letters that would necessarily display on the right.
-		
-		/*Now I am making an entry of those alphabets which are not there in the Map*/
-		String alphabets[]=getResources().getStringArray(R.array.alphabtes_array);
-		int index=-1;
-		
-		for(String alpha1: alphabets){
-			char alpha=alpha1.charAt(0);
-			index++;
-			
-			if(alphabetToIndex.containsKey(alpha))
-				continue;
-
-			/*Start searching the next character position. Example, here alpha is E. Since there is no entry for E, we need to find the position of next Character, F.*/
-			for(int i=index+1  ; i< 26 ;i++){		//start from next character to last character
-				char searchAlphabet=alphabets[i].charAt(0);   
-				
-				/*If we find the position of F character, then on click event on E should take the user to F*/	
-				if(  alphabetToIndex.containsKey(searchAlphabet)){
-					alphabetToIndex.put(alpha, alphabetToIndex.get(searchAlphabet));
-					break;
-				}
-				else
-					if(i==25) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
-						alphabetToIndex.put(alpha, adapter.filteredFicheIdList.size()-1);
-					else
-						continue;
-					
-			}//
-		}//
-	}
 }
