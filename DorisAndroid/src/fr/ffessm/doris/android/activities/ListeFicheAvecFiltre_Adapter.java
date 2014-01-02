@@ -371,11 +371,12 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	
 	public HashMap<Character, Integer> getUsedAlphabetHashMap(){
 		HashMap<Character, Integer> alphabetToIndex = new HashMap<Character, Integer>();
-		//if(filteredFicheIdList.size() != ficheIdList.size()){
+		Log.d(LOG_TAG,"getUsedAlphabetHashMap - début");
+		int base_list_length=filteredFicheIdList.size();
+		if(filteredFicheIdList.size() < 100 ){
 			// the base has been filtered so return the element from the filtered one
 			alphabetToIndex=new HashMap<Character, Integer>();
-			//String base_list[]=getResources().getStringArray(R.array.base_array);
-			int base_list_length=filteredFicheIdList.size();
+			
 			
 			for(int i=0; i < base_list_length; i++){
 				Fiche entry = getFicheForId(filteredFicheIdList.get(i));
@@ -387,13 +388,44 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				}
 			}
 			
-		/*}
+		}
 		else{
-			// unfiltered list
-			// need to be careful if large list
-		}*/
+			// large list
+			// use binarysearch if large list
+			String alphabet_list[]= context.getResources().getStringArray(R.array.alphabtes_array);
+			int startSearchPos = 0;
+			for (int i = 0; i < alphabet_list.length; i++) {
+				int foundPosition = binarySearch(alphabet_list[i].charAt(0), startSearchPos, base_list_length);
+				if(foundPosition != -1){
+					alphabetToIndex.put(alphabet_list[i].charAt(0), foundPosition);
+					startSearchPos = foundPosition; // mini optimisation, no need to look before for former chars
+				}
+			}
+		}
+		Log.d(LOG_TAG,"getUsedAlphabetHashMap - fin");
 		return alphabetToIndex;
 	}
+	
+	/**
+	 * 
+	 * @param key to be searched
+	 * @param startBottom initial value for bottom, default = 0
+	 * @param startTop initial top value, default = array.length -1
+	 * @return
+	 */
+	public int binarySearch( char key, int startBottom, int startTop) {
+	   int bot = startBottom;
+	   int top = startTop;
+	   while (bot <= top) {
+	      int mid = bot + (top - bot) / 2;
+	      Fiche entry = getFicheForId(filteredFicheIdList.get(mid));
+	      char midCharacter=entry.getNomScientifiqueTxt().charAt(0);
+	      if      (key < midCharacter) top = mid - 1;
+	      else if (key > midCharacter) bot = mid + 1;
+	      else return mid;
+	   }
+	   return -1;
+	} 
 	
 	//Start of user code protected additional ListeFicheAvecFiltre_Adapter methods
 	// additional methods
