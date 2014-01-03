@@ -196,7 +196,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 			String alphabet_list[]= context.getResources().getStringArray(R.array.alphabtes_array);
 			int startSearchPos = 0;
 			for (int i = 0; i < alphabet_list.length; i++) {
-				int foundPosition = binarySearch(alphabet_list[i].charAt(0), startSearchPos, base_list_length);
+				int foundPosition = binarySearch(alphabet_list[i].charAt(0), startSearchPos, base_list_length-1);
 				if(foundPosition != -1){
 					alphabetToIndex.put(alphabet_list[i].charAt(0), foundPosition);
 					startSearchPos = foundPosition; // mini optimisation, no need to look before for former chars
