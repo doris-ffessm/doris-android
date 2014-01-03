@@ -54,7 +54,7 @@ public class IndexBarHandler extends Handler {
 				return;
 			Log.d(TAG,"Height of List= "+height_of_listview+"    height of one row="+height_of_alphabet_row);
 			number_of_characters_shown=height_of_listview/height_of_alphabet_row; 				//Number of Characters to be shown
-			number_of_characters_omit=26-number_of_characters_shown;							//Number of Characters to be omited	
+			number_of_characters_omit=27-number_of_characters_shown;							//Number of Characters to be omited	
 			Log.d(TAG,"Number of Characters="+number_of_characters_shown+"  omits="+number_of_characters_omit);
 			
 			
@@ -222,14 +222,65 @@ public class IndexBarHandler extends Handler {
 				removeAlphabet(alphabets_list, 7, 3);	//I,J,K	
 				alphabets_list.add(7,".");	
 				
-				removeAlphabet(alphabets_list, 12, 3);		
+				removeAlphabet(alphabets_list, 12, 3);		//P,Q,R
 				alphabets_list.add(12,".");		
 				
 				removeAlphabet(alphabets_list, 17, 3);		//W,X,Y		
 				alphabets_list.add(17,".");	
 			}
 		}
-	
+		else if(number_of_characters_omit>8 & number_of_characters_omit<=10){
+				removeAlphabet(alphabets_list, 3, 4);	//C,D,E,F		
+				alphabets_list.add(3,".");		
+
+				removeAlphabet(alphabets_list, 6, 3);	//I,J,K	
+				alphabets_list.add(6,".");	
+				
+				removeAlphabet(alphabets_list, 11, 3);		//P,Q,R
+				alphabets_list.add(11,".");		
+				
+				removeAlphabet(alphabets_list, 16, 3);		//V,W,X,Y		
+				alphabets_list.add(16,".");
+		}
+		else if(number_of_characters_omit>10 & number_of_characters_omit<=12){
+			removeAlphabet(alphabets_list, 3, 4);	//C,D,E,F		
+			alphabets_list.add(3,".");		
+
+			removeAlphabet(alphabets_list, 6, 4);	//I,J,K,L	
+			alphabets_list.add(6,".");	
+			
+			removeAlphabet(alphabets_list, 9, 4);	//O,P,Q,R 	
+			alphabets_list.add(9,".");		
+			
+			removeAlphabet(alphabets_list, 12, 4);		//V,W,X,Y		
+			alphabets_list.add(12,".");
+		}
+		else if(number_of_characters_omit>12 & number_of_characters_omit<=14){
+			removeAlphabet(alphabets_list, 3, 4);	//C,D,E,F		
+			alphabets_list.add(3,".");		
+
+			removeAlphabet(alphabets_list, 6, 4);	//I,J,K,L	
+			alphabets_list.add(6,".");	
+			
+			removeAlphabet(alphabets_list, 9, 4);	//O,P,Q,R 	
+			alphabets_list.add(9,".");		
+			
+			removeAlphabet(alphabets_list, 12, 4);		//V,W,X,Y		
+			alphabets_list.add(12,".");
+		}
+		else if(number_of_characters_omit>14 & number_of_characters_omit<=16){
+			removeAlphabet(alphabets_list, 2, 5);	//B,C,D,E,F		
+			alphabets_list.add(2,".");		
+
+			removeAlphabet(alphabets_list, 5, 4);	//I,J,K,L	
+			alphabets_list.add(5,".");	
+			
+			removeAlphabet(alphabets_list, 8, 4);	//O,P,Q,R 	
+			alphabets_list.add(8,".");		
+			
+			removeAlphabet(alphabets_list, 11, 5);		//U,V,W,X,Y		
+			alphabets_list.add(11,".");
+		}
 	}
 	
 	public int convertDipToPx(int dp, Context context){	//10dp=15px
