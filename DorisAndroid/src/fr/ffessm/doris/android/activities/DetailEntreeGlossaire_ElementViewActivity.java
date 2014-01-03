@@ -44,6 +44,7 @@ package fr.ffessm.doris.android.activities;
 
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
@@ -74,6 +75,8 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteBaseActivi
 	private static final String LOG_TAG = DetailEntreeGlossaire_ElementViewActivity.class.getCanonicalName();
 
 // Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_additional_attributes
+	final Context context = this;
+	
 // End of user code
 	
 	/** Called when the activity is first created. */
@@ -106,18 +109,9 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteBaseActivi
   */  	
 		((TextView) findViewById(R.id.detailentreeglossaire_elementview_numerodoris)).setText(((Integer)entry.getNumeroDoris()).toString());					
 		((TextView) findViewById(R.id.detailentreeglossaire_elementview_terme)).setText(entry.getTerme());
-		((TextView) findViewById(R.id.detailentreeglossaire_elementview_definition)).setText(entry.getDefinition());
+		((TextView) findViewById(R.id.detailentreeglossaire_elementview_definition)).setText(Outils.textToSpannableStringDoris(context, entry.getDefinition()) );
 		
-		
-		/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-    	((TextView) findViewById(R.id.detail_divedate)).setText(dateFormatter.format(entry.getDate()));
-		
-    	((TextView) findViewById(R.id.detail_divelocation)).setText(entry.getLocation());
-    	
-    	((TextView) findViewById(R.id.detail_divedepth)).setText(entry.getMaxdepth().toString());
-    	
-    	((TextView) findViewById(R.id.detail_diveduration)).setText(entry.getDuration().toString());
-    	*/	
+	
 		// End of user code
     	
 	}

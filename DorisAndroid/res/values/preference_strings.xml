@@ -16,6 +16,8 @@
 	<string name="pref_key_mode_precharg_region_caraibes">mode_precharg_region_caraibes</string>
 	<string name="pref_key_mode_precharg_region_favorite">mode_precharg_region_favorite</string>
 
+	<string name="pref_key_accueil_fiches_ordre">pref_accueil_fiches_ordre</string>
+	<string name="pref_key_accueil_etat_fiches_affiche">pref_accueil_etat_fiches_affiche</string>
 	<string name="pref_key_accueil_icon_size">pref_accueil_icon_size</string>
 	<string name="pref_key_list_icon_size">pref_list_icon_size</string>
 	<string name="pref_key_accueil_aff_iconesfede">pref_accueil_aff_iconesfede</string>
@@ -106,6 +108,31 @@
 	
 	
 	<string name="presentation_preference_category">Options de présentation</string>
+	
+	<string name="accueil_fiches_ordre_prompt">"Ordre de tri des fiches"</string>
+	<string name="accueil_fiches_ordre_default">Commun</string>
+	<string-array name="accueil_fiches_ordre_values">
+        <item>Commun</item>
+        <item>Scientifique</item>
+    </string-array>
+	<string-array name="accueil_fiches_ordre_lib">
+	    <item>Par le Nom Commun</item>
+        <item>Par le Nom Scientifique</item>
+    </string-array>
+    
+	<string name="accueil_etat_fiches_affiche_prompt">"Fiches Affichées"</string>
+	<string name="accueil_etat_fiches_affiche_default">toutes</string>
+	<string-array name="accueil_etat_fiches_affiche_values">
+        <item>toutes</item>
+        <item>pr</item>
+        <item>p</item>
+    </string-array>
+	<string-array name="accueil_etat_fiches_affiche_lib">
+	    <item>Toutes les fiches</item>
+        <item>Les fiches publiées et en cours de rédaction</item>
+        <item>Les fiches publiées</item>
+    </string-array>
+	
     <string name="accueil_icon_size_prompt">"Taille des icones de la page d'accueil"</string>
     <string name="accueil_icon_size_default">64</string>
     <string name="list_icon_size_prompt">Taille des icones dans les listes</string>

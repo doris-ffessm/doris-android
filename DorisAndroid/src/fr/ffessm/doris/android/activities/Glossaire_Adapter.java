@@ -50,6 +50,7 @@ import java.util.List;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
+import fr.ffessm.doris.android.tools.Outils;
 
 
 import android.content.Context;
@@ -166,6 +167,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 		//	additional code
         int longueurMax = 80;
         String texteRow = entry.getDefinition().toString().replaceAll("^[^\\)]*\\)\\.", "").trim();
+        texteRow = texteRow.replaceAll("\\{\\{[^\\}]*\\}\\}", "");
         if (texteRow.length() > longueurMax ) {
         	texteRow = texteRow.substring(0, longueurMax);
         	texteRow = texteRow.replaceAll(" [^ ]*$", "");
