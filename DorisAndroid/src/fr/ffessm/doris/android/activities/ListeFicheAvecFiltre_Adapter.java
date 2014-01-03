@@ -373,7 +373,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		HashMap<Character, Integer> alphabetToIndex = new HashMap<Character, Integer>();
 		Log.d(LOG_TAG,"getUsedAlphabetHashMap - début");
 		int base_list_length=filteredFicheIdList.size();
-		if(filteredFicheIdList.size() < 100 ){
+		if(base_list_length < 100 ){
 			// the base has been filtered so return the element from the filtered one
 			alphabetToIndex=new HashMap<Character, Integer>();
 			
@@ -425,8 +425,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	   int top = startTop;
 	   while (bot <= top) {
 	      int mid = bot + (top - bot) / 2;
-	      Fiche entry = getFicheForId(filteredFicheIdList.get(mid));
-		  char midCharacter=getFirstCharForIndex(entry);
+		  Fiche entry = getFicheForId(filteredFicheIdList.get(mid));		  
+	      char midCharacter=getFirstCharForIndex(entry);
 	      if      (key < midCharacter) top = mid - 1;
 	      else if (key > midCharacter) bot = mid + 1;
 	      else return mid;

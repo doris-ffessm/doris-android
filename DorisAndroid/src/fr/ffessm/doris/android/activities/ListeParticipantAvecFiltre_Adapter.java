@@ -89,7 +89,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 	private static final String LOG_TAG = ListeParticipantAvecFiltre_Adapter.class.getCanonicalName();
 
     private List<Participant> participantList;
-    private List<Participant> filteredParticipantList;
+    public List<Participant> filteredParticipantList;
 	private final Object mLock = new Object();
 	private SimpleFilter mFilter;
 	SharedPreferences prefs;

@@ -354,9 +354,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		// add options in the menu
         menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
 
-		//Start of user code additional onCreateOptionsMenu
-        menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.expander_ic_maximized);
-		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.expander_ic_minimized);
+		//Start of user code additional onCreateOptionsMenu DetailsFiche_EditableElementViewActivity
 
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -371,13 +369,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
                     startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
                     return true;
         
-		//Start of user code additional menu action
-        	case FOLD_SECTIONS_MENU_ID:
-        		foldAll();
-				break;
-        	case UNFOLD_SECTIONS_MENU_ID:
-        		unfoldAll();
-				break;
+		//Start of user code additional menu actionDetailsFiche_ElementViewActivity
+
 		//End of user code
         }
         return false;

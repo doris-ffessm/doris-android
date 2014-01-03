@@ -127,7 +127,7 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteBaseActivity<
 		// add options in the menu
         menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
 
-		//Start of user code additional onCreateOptionsMenu
+		//Start of user code additional onCreateOptionsMenu DetailsParticipant_EditableElementViewActivity
 
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -142,7 +142,7 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteBaseActivity<
                     startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
                     return true;
         
-		//Start of user code additional menu action
+		//Start of user code additional menu actionDetailsParticipant_ElementViewActivity
 
 		//End of user code
         }

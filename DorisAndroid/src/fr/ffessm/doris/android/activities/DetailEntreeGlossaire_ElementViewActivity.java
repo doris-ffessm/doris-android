@@ -124,7 +124,7 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteBaseActivi
 		// add options in the menu
         menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
 
-		//Start of user code additional onCreateOptionsMenu
+		//Start of user code additional onCreateOptionsMenu DetailEntreeGlossaire_EditableElementViewActivity
 
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -139,7 +139,7 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteBaseActivi
                     startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
                     return true;
         
-		//Start of user code additional menu action
+		//Start of user code additional menu actionDetailEntreeGlossaire_ElementViewActivity
 
 		//End of user code
         }

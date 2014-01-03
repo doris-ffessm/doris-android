@@ -90,7 +90,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 	private static final String LOG_TAG = ZoneGeoSelection_Adapter.class.getCanonicalName();
 
     private List<ZoneGeographique> zoneGeographiqueList;
-    private List<ZoneGeographique> filteredZoneGeographiqueList;
+    public List<ZoneGeographique> filteredZoneGeographiqueList;
 	SharedPreferences prefs;
 	//Start of user code protected additional ZoneGeoSelection_Adapter attributes
 	// additional attributes

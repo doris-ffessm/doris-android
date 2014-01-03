@@ -54,6 +54,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.LinearLayout;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -77,15 +78,15 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 // End of user code
 
 public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener , ActivityWithIndexBar{
 	
+	private static final String LOG_TAG = ListeFicheAvecFiltre_ClassListViewActivity.class.getSimpleName();
+
 	//Start of user code constants ListeFicheAvecFiltre_ClassListViewActivity
 	SearchPopupButtonManager searchPopupButtonManager;
-	private static final String LOG_TAG = ListeFicheAvecFiltre_ClassListViewActivity.class.getSimpleName();
     ImageButton searchButton;
 	//End of user code
 	// Search EditText
@@ -145,7 +146,34 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 		//End of user code
 	}
 	
-
+	@Override
+	protected void onResume() {
+		super.onResume();
+		//Start of user code onResume additions ListeFicheAvecFiltre_ClassListViewActivity
+		Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - onResume");
+		// refresh on resume, the preferences and filter may have changed 
+		// TODO peut être qu'il y a moyen de s'abonner aux changements de préférence et de ne le faire que dans ce cas ?
+		ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter(); 
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if((prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1) != 1) ||
+		   (prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1) != -1)){
+			// on a un filtre actif
+	    	String searchedText = inputSearch.getText().toString();
+	    	if(!searchedText.isEmpty()){
+	    		ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(searchedText);
+	    	}	        
+	        // mise à jour de l'image du bouton de filtre
+	        searchButton.setImageResource(R.drawable.filter_settings_actif_32);
+		}
+		else{
+			// pas de filtre actif
+			// remet l'imaged efiltre inactif
+	        searchButton.setImageResource(R.drawable.filter_settings_32);
+	        
+		}
+		//End of user code
+		populateIndexBarHashMap();
+	}
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 		Log.d(LOG_TAG, "onItemClick "+view);
@@ -176,32 +204,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
     }
 
 	//Start of user code additional  ListeFicheAvecFiltre_ClassListViewActivity methods
-	@Override
-	protected void onResume() {
-		super.onResume();
-		Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - onResume");
-		// refresh on resume, the preferences and filter may have changed 
-		// TODO peut être qu'il y a moyen de s'abonner aux changements de préférence et de ne le faire que dans ce cas ?
-		ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter(); 
-    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if((prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1) != 1) ||
-		   (prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1) != -1)){
-			// on a un filtre actif
-	    	String searchedText = inputSearch.getText().toString();
-	    	if(!searchedText.isEmpty()){
-	    		ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(searchedText);
-	    	}	        
-	        // mise à jour de l'image du bouton de filtre
-	        searchButton.setImageResource(R.drawable.filter_settings_actif_32);
-		}
-		else{
-			// pas de filtre actif
-			// remet l'imaged efiltre inactif
-	        searchButton.setImageResource(R.drawable.filter_settings_32);
-	        
-		}
-		populateIndexBarHashMap();
-	}
+	
 	//End of user code
 
 	@Override

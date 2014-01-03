@@ -71,6 +71,8 @@ import android.widget.TextView;
 
 public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener {
 	
+	private static final String LOG_TAG = GroupeSelection_ClassListViewActivity.class.getSimpleName();
+
 	//Start of user code constants GroupeSelection_ClassListViewActivity
 	//End of user code
     GroupeSelection_Adapter adapter;
@@ -108,7 +110,12 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<O
 		//End of user code
 	}
 	
-
+	@Override
+	protected void onResume() {
+		super.onResume();
+		//Start of user code onResume additions GroupeSelection_ClassListViewActivity
+		//End of user code
+	}
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 			//Start of user code onItemClick additions GroupeSelection_ClassListViewActivity

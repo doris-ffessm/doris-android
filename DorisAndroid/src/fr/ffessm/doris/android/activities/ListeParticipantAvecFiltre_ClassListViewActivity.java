@@ -69,6 +69,8 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 
 public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener {
 	
+	private static final String LOG_TAG = ListeParticipantAvecFiltre_ClassListViewActivity.class.getSimpleName();
+
 	//Start of user code constants ListeParticipantAvecFiltre_ClassListViewActivity
 	//End of user code
 	// Search EditText
@@ -119,7 +121,12 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteBas
 		//End of user code
 	}
 	
-
+	@Override
+	protected void onResume() {
+		super.onResume();
+		//Start of user code onResume additions ListeParticipantAvecFiltre_ClassListViewActivity
+		//End of user code
+	}
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 	        Intent toDetailView = new Intent(this, DetailsParticipant_ElementViewActivity.class);

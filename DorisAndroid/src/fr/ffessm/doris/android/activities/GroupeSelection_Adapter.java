@@ -94,7 +94,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	private static final String LOG_TAG = GroupeSelection_Adapter.class.getCanonicalName();
 
     private List<Groupe> groupeList;
-    private List<Groupe> filteredGroupeList;
+    public List<Groupe> filteredGroupeList;
 	SharedPreferences prefs;
 	//Start of user code protected additional GroupeSelection_Adapter attributes
 	
