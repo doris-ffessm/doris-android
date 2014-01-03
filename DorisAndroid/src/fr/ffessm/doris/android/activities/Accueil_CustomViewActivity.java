@@ -133,6 +133,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getCanonicalName();
 	Handler mHandler;
 	LinearLayout llContainerLayout;
+	
 	boolean isOnCreate = true;
 	
 	protected HashMap<Integer, MultiProgressBar> progressBarZones = new HashMap<Integer, MultiProgressBar>(); 
@@ -250,7 +251,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     			Log.d(LOG_TAG, "onDestroy() - telechargePhotosFiches_BgActivity.cancel(true) : "+telechargePhotosFiches_BgActivity.cancel(true) );
     	}
     	super.onDestroy();
-    	
     	
     }
     
@@ -655,6 +655,8 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	     	for (File child:getApplicationContext().getCacheDir().listFiles()) {
 	     		sb.append(child.getAbsolutePath()+"\n");
 	     		if (child.getName().equals("picasso-cache") ) {
+	     			sb.append(""+String.format("%.2f", Outils.getDiskUsage(getApplicationContext(), child)/(double)(1024.0*1024.0) )+" MiB)\n");
+	     			
 	     			int i = 0;
 	     			for (File subchild:child.listFiles()) {
 	     	     		sb.append("\t\t"+subchild.getName()+"\n");

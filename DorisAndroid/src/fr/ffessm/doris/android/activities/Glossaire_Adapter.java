@@ -164,6 +164,15 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
         
 		// Start of user code protected additional Glossaire_Adapter getView code
 		//	additional code
+        int longueurMax = 80;
+        String texteRow = entry.getDefinition().toString().replaceAll("^[^\\)]*\\)\\.", "").trim();
+        if (texteRow.length() > longueurMax ) {
+        	texteRow = texteRow.substring(0, longueurMax);
+        	texteRow = texteRow.replaceAll(" [^ ]*$", "");
+        	texteRow = texteRow + "\u00A0\u2026";
+        }
+        tvDetails.setText(texteRow);
+        
 		// End of user code
 
         return convertView;

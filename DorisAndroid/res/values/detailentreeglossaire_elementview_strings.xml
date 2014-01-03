@@ -3,8 +3,8 @@
 <resources>
 	<!--Start of user code protecteddetailentreeglossaire_elementview_strings.xml
 	-->	
-	<string name="detailentreeglossaire_elementview_numerodoris_label">NumeroDoris : </string>
-	<string name="detailentreeglossaire_elementview_terme_label">Terme : </string>
+	<string name="detailentreeglossaire_elementview_numerodoris_label">N°</string>
+	<string name="detailentreeglossaire_elementview_terme_label"></string>
 	<string name="detailentreeglossaire_elementview_definition_label">Definition : </string>
 	<string name="detailentreeglossaire_elementview_numerodoris_hint_text"></string>
 	<string name="detailentreeglossaire_elementview_terme_hint_text"></string>

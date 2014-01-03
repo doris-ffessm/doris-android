@@ -72,7 +72,7 @@ public class SiteDoris {
     	
     	List<Fiche> listeFiches = new ArrayList<Fiche>(0);
     	
-    	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
+    	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml),false ) );
     	source.fullSequentialParse();
     	log.debug("getListeFichesFromHtml()- source.length() : " + source.length());
     	//log.debug("getListeFiches()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
@@ -137,7 +137,7 @@ public class SiteDoris {
     	
     	listeGroupes.add(groupe);
     	
-    	Source source=new Source(inCodePageHtml);
+    	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
     	//log.debug("getGroupes()- source.length() : " + source.length());
     	
@@ -342,7 +342,7 @@ public class SiteDoris {
     	
     	List<PhotoFiche> listePhotosFiche = new ArrayList<PhotoFiche>(0);
     	
-    	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml));
+    	Source source=new Source( Outils.remplacementBalises( Outils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
     	//log.debug("getListePhotosFiche()- source.length() : " + source.length());
     	//log.debug("getListePhotosFiche()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
@@ -409,7 +409,7 @@ public class SiteDoris {
     	
     	List<Participant> listeParticipants = new ArrayList<Participant>(0);
     	
-    	Source source=new Source(inCodePageHtml);
+    	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
     	log.debug("getListeParticipantsParInitiale()- source.length() : " + source.length());
     	
@@ -553,14 +553,14 @@ public class SiteDoris {
     	
     	List<DefinitionGlossaire> listeDefinitions = new ArrayList<DefinitionGlossaire>(0);
     	
-    	Source source=new Source(inCodePageHtml);
+    	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
     	//log.debug("getListeDefinitionsParInitialeFromHtml()- source.length() : " + source.length());
     	
     	List<? extends Element> listeElementsTD = source.getAllElementsByClass("liste0");
     			
     	for (Element elementTD : listeElementsTD) {
-    		//log.debug("getListeDefinitionsParInitialeFromHtml()- elementTD : " +elementTD.getRenderer().toString());
+    		log.debug("getListeDefinitionsParInitialeFromHtml()- elementTD : " +elementTD.getRenderer().toString());
 			if (elementTD.getRenderer().toString().trim().replaceAll("<[^>]*>", "").isEmpty() ) {
 				String numeroDefinition =  elementTD.getRenderer().toString().trim().replaceAll(".*glossaire_numero=([^&]*)&.*", "$1");
 				log.debug("getListeDefinitionsParInitialeFromHtml()- numeroDefinition : " +numeroDefinition);
@@ -574,6 +574,20 @@ public class SiteDoris {
 		//log.debug("getListeDefinitionsParInitialeFromHtml() - Fin");
 		return listeDefinitions;
     }
-    
 
+    public static boolean getContinuerListeDefinitionsParInitialeFromHtml(String inCodePageHtml){
+    	log.debug("getContinuerListeDefinitionsParInitialeFromHtml() - Début");
+    	boolean continuer = true;
+    	
+    	String indexPage = inCodePageHtml.replaceAll("\n", "").replaceAll(".*>Page ([^<>]*)<.*", "$1").trim();
+    	log.debug("getContinuerListeDefinitionsParInitialeFromHtml() - indexPage :"+indexPage);
+    	String numeroPageCourante = indexPage.replaceAll("/.*", "");
+    	log.debug("getContinuerListeDefinitionsParInitialeFromHtml() - numeroPageCourante :"+numeroPageCourante);
+    	String nbPages = indexPage.replaceAll(".*/", "");
+    	log.debug("getContinuerListeDefinitionsParInitialeFromHtml() - nbPages :"+nbPages);
+    	if (numeroPageCourante.equals(nbPages)) continuer = false;
+    	
+    	log.debug("getContinuerListeDefinitionsParInitialeFromHtml() - continuer :"+continuer);
+    	return continuer;
+    }
 }

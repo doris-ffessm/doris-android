@@ -100,7 +100,10 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteBaseActivi
 		// Start of user code protectedDetailEntreeGlossaire_ElementViewActivity.refreshScreenData
     	DefinitionGlossaire entry = entriesDao.queryForId(definitionGlossaireId);
     	entry.setContextDB(getHelper().getDorisDBHelper());
-
+/*
+    	Log.d(LOG_TAG, "refreshScreenData() - id : " + ((Integer)entry.getNumeroDoris()).toString());
+    	Log.d(LOG_TAG, "refreshScreenData() - terme : " + entry.getTerme());
+  */  	
 		((TextView) findViewById(R.id.detailentreeglossaire_elementview_numerodoris)).setText(((Integer)entry.getNumeroDoris()).toString());					
 		((TextView) findViewById(R.id.detailentreeglossaire_elementview_terme)).setText(entry.getTerme());
 		((TextView) findViewById(R.id.detailentreeglossaire_elementview_definition)).setText(entry.getDefinition());

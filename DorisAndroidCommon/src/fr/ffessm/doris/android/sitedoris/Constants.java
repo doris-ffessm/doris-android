@@ -61,7 +61,7 @@ public class Constants {
     private final static String FICHE_RACINE_URL_ID = "fiche2.asp?fiche_numero=";
     private final static String FICHE_RACINE_URL_NOM_COMMUN = "fiche3.asp?nomcommun=";
     private final static String PARTICIPANTS_RACINE_URL = "contacts.asp?filtre=";
-    private final static String GLOSSAIRE_RACINE_URL = "glossaire.asp?filtre=";
+    private final static String GLOSSAIRE_RACINE_URL = "glossaire.asp?filtre=@lettre&mapage=@numero";
     private final static String DEFINITION_RACINE_URL = "glossaire_detail.asp?glossaire_numero=";
     private final static String PARTICIPANT_RACINE_URL = "contact_fiche.asp?contact_numero=";
     
@@ -129,8 +129,8 @@ public class Constants {
      	return listeParticipantsUrl;
     }
     
-    public static String getListeDefinitionsUrl(String inInitiale) {
- 		String listeDefinitionsUrl = SITE_RACINE_URL + GLOSSAIRE_RACINE_URL + inInitiale;
+    public static String getListeDefinitionsUrl(String inInitiale, String numero) {
+ 		String listeDefinitionsUrl = SITE_RACINE_URL + GLOSSAIRE_RACINE_URL.replace("@lettre", inInitiale).replace("@numero", numero);
      	return listeDefinitionsUrl;
     }
     

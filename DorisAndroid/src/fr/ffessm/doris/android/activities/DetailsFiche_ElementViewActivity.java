@@ -49,6 +49,8 @@ import fr.ffessm.doris.android.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -68,9 +70,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -112,6 +115,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	private static final String LOG_TAG = DetailsFiche_ElementViewActivity.class.getCanonicalName();
 
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_attributes
+	
+	final Context context = this;
+	//TODO :
+	Activity activity = this;
+	
 	protected int ficheNumero;
 	
 	static final int FOLD_SECTIONS_MENU_ID = 1;	
@@ -123,6 +131,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     LinearLayout photoGallery;
     Collection<String> insertedPhotosFiche = new ArrayList<String>();
     boolean askedBgDownload = false;
+    
 // End of user code
 	
 	/** Called when the activity is first created. */
@@ -175,8 +184,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     	else if (ficheNumero != 0) entry = entriesDao.queryForEq("numeroFiche", ficheNumero).get(0);
 	    entry.setContextDB(getHelper().getDorisDBHelper());
 	    
-    	((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText(entry.getNomScientifique());
-		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun());
+    	((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText( Outils.textToSpannableStringDoris(context, entry.getNomScientifique()) );
+		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
 		((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText("N° "+((Integer)entry.getNumeroFiche()).toString());					
 		((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer)entry.getEtatFiche()).toString());	
 		TextView btnEtatFiche = (TextView)  findViewById(R.id.detailsfiche_elementview_etatfiche);
@@ -300,7 +309,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			
 			// section "Crédits"
 			StringBuilder sbCreditText = new StringBuilder();
-			final String urlString = "http://doris.ffessm.fr/fiche2.asp?fiche_numero="+entry.getNumeroFiche(); 
+			final String urlString = Constants.getFicheFromIdUrl( entry.getNumeroFiche() ); 
 			sbCreditText.append(urlString);
 			
 			sbCreditText.append("\n"+getString(R.string.detailsfiche_elementview_datecreation_label));
@@ -415,78 +424,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         }
         
         // Si le texte contient {{999}} alors on remplace par (Fiche) est on met un lien vers la fiche sur (Fiche)
-        SpannableString richtext = null;
+        SpannableString richtext = Outils.textToSpannableStringDoris(context, texte);
         
-        Log.d(LOG_TAG, "addFoldableView() - titre : "+titre);
-        if ( !texte.toString().replaceAll("\\s", "").matches(".*\\{\\{.*\\}\\}.*")) {
-        	//Log.d(LOG_TAG, "addFoldableView() - 010");
-        	richtext = new SpannableString(texte);
-        	
-        } else {
-        	//Log.d(LOG_TAG, "addFoldableView() - 020");
-        	
-        	final Context context = this;         	
-        	
-        	// TODO : doit être améliorable mais je n'arrive pas à manipuler directement SpannableString
-        	// donc pas de concat, pas de regexp.
-	        int positionDep = 1;
-	        int positionFin = 1;
-	        int listeFicheNumero[] = new int[10];
-	        int i = 0;
-	        //Création de la liste des Fiches liées
-	        while (texte.toString().indexOf("{{", positionFin+1) != -1 ) {
-	        	i +=1;
-	        	
-	        	positionDep = texte.toString().indexOf("{{", positionFin+3);
-	        	positionFin = texte.toString().indexOf("}}", positionDep);
-	        	
-		        String refFiche = texte.toString().substring(positionDep+2, positionFin);
-		        //Log.d(LOG_TAG, "addFoldableView() - refFiche : "+refFiche);
-		        
-		        listeFicheNumero[i] = Integer.valueOf(refFiche);
-	        }
-	        
-	        
-	        //On enlève les liens significatifs et on met (Fiche)
-	        texte = texte.toString().replaceAll("\\{\\{[0-9]*\\}\\}", "(Fiche)");
-	        //Log.d(LOG_TAG, "addFoldableView() - texte : "+texte);
-	        richtext = new SpannableString(texte);
-	        
-	        
-	        // On met le lien avec le bon numéro de fiche sur chaque (Fiche)
-	        positionDep = 1;
-	        positionFin = 1;
-	        i = 0;
-	        while (texte.toString().indexOf("(Fiche)", positionFin) != -1 ) {
-	        	i +=1;
-	        	
-	        	positionDep = texte.toString().indexOf("(Fiche)", positionFin);
-	        	positionFin = texte.toString().indexOf("(Fiche)", positionDep)+7;
-	        	
-	        	final int listeFicheNumeroInt = listeFicheNumero[i];
-		        ClickableSpan clickableSpan = new ClickableSpan() {  
-		            @Override  
-		            public void onClick(View view) {  
-		                //Toast.makeText(context, "Test (Fiche Liée) : "+ficheId, Toast.LENGTH_LONG).show();
-		            	Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
-		                Bundle b = new Bundle();
-		                b.putInt("ficheNumero", listeFicheNumeroInt);
-		                
-		                RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
-		                b.putInt("ficheId", entriesDao.queryForEq("numeroFiche", listeFicheNumeroInt).get(0).getId() );
-		                
-		        		toDetailView.putExtras(b);
-		                startActivity(toDetailView);
-		            }  
-		        };  
-		        
-		        //Log.d(LOG_TAG, "addFoldableView() - SpannableString : "+positionDep + " - " + positionFin);
-		    	
-				richtext.setSpan(clickableSpan, positionDep, positionDep+7, 0);
-	        }
-	        
-	        
-        }
+        
         //Log.d(LOG_TAG, "addFoldableView() - richtext : "+richtext);
                 
         contenuText.setText(richtext, BufferType.SPANNABLE);
@@ -584,6 +524,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         }
  
     }
+    
+    
     
     // End of user code
 

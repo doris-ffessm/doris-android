@@ -2,7 +2,7 @@
 <!-- Resource Strings specific to detailsfiche Element View and EditableElement View -->
 <resources>
 	<!--Start of user code protecteddetailsfiche_elementview_strings.xml
-	-->	
+	-->
 	<string name="detailsfiche_elementview_nomscientifique_label">NomScientifique\u00A0: </string>
 	<string name="detailsfiche_elementview_nomcommun_label">NomCommun\u00A0: </string>
 	<string name="detailsfiche_elementview_numerofiche_label">NumeroFiche\u00A0: </string>
