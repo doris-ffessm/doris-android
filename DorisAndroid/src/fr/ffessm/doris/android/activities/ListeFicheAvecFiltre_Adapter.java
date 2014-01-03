@@ -44,6 +44,7 @@ package fr.ffessm.doris.android.activities;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import fr.ffessm.doris.android.R;
@@ -111,7 +112,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	private static final String LOG_TAG = ListeFicheAvecFiltre_Adapter.class.getCanonicalName();
 
     private List<Integer> ficheIdList;
-    private List<Integer> filteredFicheIdList;
+    public List<Integer> filteredFicheIdList;
 	LruCache<Integer, Fiche> ficheCache =  new LruCache<Integer, Fiche>(100);
 	private final Object mLock = new Object();
 	private SimpleFilter mFilter;
@@ -264,13 +265,10 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
-		labelSB.append(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
+		labelSB.append(entry.getNomCommun());
 		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
 
-        TextView tvDetails = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_details);
-		StringBuilder detailsSB = new StringBuilder();
-        tvDetails.setText( Outils.textToSpannableStringDoris(context,entry.getNomScientifique().toString()) );
 		
         // assign the entry to the row in order to ease GUI interactions
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.listeficheavecfiltre_listviewrow);
@@ -278,7 +276,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         
 		// Start of user code protected additional ListeFicheAvecFiltre_Adapter getView code
 		//	additional code
-        
+        TextView tvDetails = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_details);
+		tvDetails.setText( Outils.textToSpannableStringDoris(context,entry.getNomScientifique().toString()) );
+		
         String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
         int defaultIconSize = 48;
         try{
@@ -384,6 +384,74 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 			return null;
 		}
 	}
+
+	public HashMap<Character, Integer> getUsedAlphabetHashMap(){
+		HashMap<Character, Integer> alphabetToIndex = new HashMap<Character, Integer>();
+		Log.d(LOG_TAG,"getUsedAlphabetHashMap - début");
+		int base_list_length=filteredFicheIdList.size();
+		if(base_list_length < 100 ){
+			// the base has been filtered so return the element from the filtered one
+			alphabetToIndex=new HashMap<Character, Integer>();
+			
+			
+			for(int i=0; i < base_list_length; i++){
+				Fiche entry = getFicheForId(filteredFicheIdList.get(i));
+				char firstCharacter=getFirstCharForIndex(entry);
+				boolean presentOrNot=alphabetToIndex.containsKey(firstCharacter);
+				if(!presentOrNot){
+					alphabetToIndex.put(firstCharacter, i);
+					//Log.d(TAG,"Character="+firstCharacter+"  position="+i);
+				}
+			}
+			
+		}
+		else{
+			// large list
+			// use binarysearch if large list
+			String alphabet_list[]= context.getResources().getStringArray(R.array.alphabtes_array);
+			int startSearchPos = 0;
+			for (int i = 0; i < alphabet_list.length; i++) {
+				int foundPosition = binarySearch(alphabet_list[i].charAt(0), startSearchPos, base_list_length-1);
+				if(foundPosition != -1){
+					alphabetToIndex.put(alphabet_list[i].charAt(0), foundPosition);
+					startSearchPos = foundPosition; // mini optimisation, no need to look before for former chars
+				}
+			}
+		}
+		Log.d(LOG_TAG,"getUsedAlphabetHashMap - fin");
+		return alphabetToIndex;
+	}
+	
+	protected char getFirstCharForIndex(Fiche entry){
+		//Start of user code protected ListeFicheAvecFiltre_Adapter binarySearch custom
+		if(entry.getNomCommun().length() == 0) return '#';
+    	return entry.getNomCommun().charAt(0);
+	  	//End of user code
+	}
+
+
+	/**
+	 * 
+	 * @param key to be searched
+	 * @param startBottom initial value for bottom, default = 0
+	 * @param startTop initial top value, default = array.length -1
+	 * @return
+	 */
+	public int binarySearch( char key, int startBottom, int startTop) {
+	   int bot = startBottom;
+	   int top = startTop;
+	   while (bot <= top) {
+	      int mid = bot + (top - bot) / 2;
+		  Fiche entry = getFicheForId(filteredFicheIdList.get(mid));		  
+	      char midCharacter=getFirstCharForIndex(entry);
+	      if      (key < midCharacter) top = mid - 1;
+	      else if (key > midCharacter) bot = mid + 1;
+	      else return mid;
+	   }
+	   return -1;
+	} 
+		
+	
 	//Start of user code protected additional ListeFicheAvecFiltre_Adapter methods
 	// additional methods
 	public void refreshFilter(){

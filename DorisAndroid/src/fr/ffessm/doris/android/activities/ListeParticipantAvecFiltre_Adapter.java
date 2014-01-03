@@ -44,6 +44,7 @@ package fr.ffessm.doris.android.activities;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import fr.ffessm.doris.android.R;
@@ -89,7 +90,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 	private static final String LOG_TAG = ListeParticipantAvecFiltre_Adapter.class.getCanonicalName();
 
     private List<Participant> participantList;
-    private List<Participant> filteredParticipantList;
+    public List<Participant> filteredParticipantList;
 	private final Object mLock = new Object();
 	private SimpleFilter mFilter;
 	SharedPreferences prefs;
@@ -164,6 +165,72 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 
 	}
 
+	public HashMap<Character, Integer> getUsedAlphabetHashMap(){
+		HashMap<Character, Integer> alphabetToIndex = new HashMap<Character, Integer>();
+		Log.d(LOG_TAG,"getUsedAlphabetHashMap - début");
+		int base_list_length=filteredParticipantList.size();
+		if(base_list_length < 100 ){
+			// the base has been filtered so return the element from the filtered one
+			alphabetToIndex=new HashMap<Character, Integer>();
+			
+			
+			for(int i=0; i < base_list_length; i++){
+				Participant entry = filteredParticipantList.get(i);
+				char firstCharacter=getFirstCharForIndex(entry);
+				boolean presentOrNot=alphabetToIndex.containsKey(firstCharacter);
+				if(!presentOrNot){
+					alphabetToIndex.put(firstCharacter, i);
+					//Log.d(TAG,"Character="+firstCharacter+"  position="+i);
+				}
+			}
+			
+		}
+		else{
+			// large list
+			// use binarysearch if large list
+			String alphabet_list[]= context.getResources().getStringArray(R.array.alphabtes_array);
+			int startSearchPos = 0;
+			for (int i = 0; i < alphabet_list.length; i++) {
+				int foundPosition = binarySearch(alphabet_list[i].charAt(0), startSearchPos, base_list_length-1);
+				if(foundPosition != -1){
+					alphabetToIndex.put(alphabet_list[i].charAt(0), foundPosition);
+					startSearchPos = foundPosition; // mini optimisation, no need to look before for former chars
+				}
+			}
+		}
+		Log.d(LOG_TAG,"getUsedAlphabetHashMap - fin");
+		return alphabetToIndex;
+	}
+	
+	protected char getFirstCharForIndex(Participant entry){
+		//Start of user code protected ListeParticipantAvecFiltre_Adapter binarySearch custom
+    	return entry.getNom().trim().charAt(0); // il y a un blanc au début, devrait être nettoyé dans le prefecth
+	  	//End of user code
+	}
+
+
+	/**
+	 * 
+	 * @param key to be searched
+	 * @param startBottom initial value for bottom, default = 0
+	 * @param startTop initial top value, default = array.length -1
+	 * @return
+	 */
+	public int binarySearch( char key, int startBottom, int startTop) {
+	   int bot = startBottom;
+	   int top = startTop;
+	   while (bot <= top) {
+	      int mid = bot + (top - bot) / 2;
+		  Participant entry = filteredParticipantList.get(mid);
+	      char midCharacter=getFirstCharForIndex(entry);
+	      if      (key < midCharacter) top = mid - 1;
+	      else if (key > midCharacter) bot = mid + 1;
+	      else return mid;
+	   }
+	   return -1;
+	} 
+		
+	
 	//Start of user code protected additional ListeParticipantAvecFiltre_Adapter methods
 	// additional methods
 	//End of user code

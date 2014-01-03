@@ -44,7 +44,6 @@ package fr.ffessm.doris.android.activities;
 
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
@@ -63,6 +62,7 @@ import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 // Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_additional_import
+import fr.ffessm.doris.android.tools.Outils;
 // End of user code
 
 public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
@@ -121,7 +121,7 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteBaseActivi
 		// add options in the menu
         menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
 
-		//Start of user code additional onCreateOptionsMenu
+		//Start of user code additional onCreateOptionsMenu DetailEntreeGlossaire_EditableElementViewActivity
 
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -136,7 +136,7 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteBaseActivi
                     startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
                     return true;
         
-		//Start of user code additional menu action
+		//Start of user code additional menu actionDetailEntreeGlossaire_ElementViewActivity
 
 		//End of user code
         }

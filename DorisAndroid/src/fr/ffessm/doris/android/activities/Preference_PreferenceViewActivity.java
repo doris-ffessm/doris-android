@@ -41,13 +41,10 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 
 import fr.ffessm.doris.android.R;
 
@@ -89,7 +86,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preference); 
 		//Start of user code Preference preference activity additional onCreate
         

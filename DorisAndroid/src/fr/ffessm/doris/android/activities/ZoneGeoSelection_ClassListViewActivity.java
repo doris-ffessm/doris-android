@@ -42,7 +42,6 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 
@@ -71,12 +70,14 @@ import android.widget.TextView;
 import fr.ffessm.doris.android.BuildConfig;
 // End of user code
 
-public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener{
+public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener {
 	
+	private static final String LOG_TAG = ZoneGeoSelection_ClassListViewActivity.class.getSimpleName();
+
 	//Start of user code constants ZoneGeoSelection_ClassListViewActivity
-    private static final String LOG_TAG = ZoneGeoSelection_ClassListViewActivity.class.getCanonicalName();
 	//End of user code
     ZoneGeoSelection_Adapter adapter;
+
 
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
@@ -97,20 +98,10 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteBaseActivity<
 		//End of user code
 	}
 	
-
-
-	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
-		//Start of user code onItemClick additions ZoneGeoSelection_ClassListViewActivity
-		//showToast(view.toString() + ", "+ view.getId());
-		//End of user code		
-    }
-
-	//Start of user code additional  ZoneGeoSelection_ClassListViewActivity methods
-	
-
 	@Override
 	protected void onResume() {
 		super.onResume();
+		//Start of user code onResume additions ZoneGeoSelection_ClassListViewActivity
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		TextView currentFilterText = (TextView) findViewById(R.id.zonegeoselection_listview_filtre_courant);
@@ -127,7 +118,16 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteBaseActivity<
         	currentFilterText.setText(currentZoneFilter.getNom());
         	findViewById(R.id.zonegeoselection_listview_filtre_courant__suppFiltreBtn).setVisibility(View.VISIBLE);
         }
+		//End of user code
 	}
+
+	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
+			//Start of user code onItemClick additions ZoneGeoSelection_ClassListViewActivity
+		//showToast(view.toString() + ", "+ view.getId());
+		//End of user code		
+    }
+
+	//Start of user code additional  ZoneGeoSelection_ClassListViewActivity methods
 	
 	public void onRemoveCurrentFilterClick(View view){
     	Toast.makeText(this, R.string.zonegeoselection_filtre_supprime, Toast.LENGTH_SHORT).show();
