@@ -50,6 +50,8 @@ End of user code -->
 		    android:layout_height="wrap_content"
 		    android:layout_alignParentRight="true"
 		    android:layout_centerVertical="true"
+		    android:paddingTop="7dp"
+		    android:paddingBottom="7dp"
 		    android:background="@drawable/roundbackground"
 		    android:divider="@android:color/black"
 		    android:footerDividersEnabled="false"
