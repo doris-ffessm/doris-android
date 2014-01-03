@@ -295,7 +295,7 @@ public class Outils {
 			//Lien vers autres fiches
 			texteNettoye = texteNettoye.replaceAll("<[^<]*fiche_numero=([0-9]*)\"[^>]*>([^<]*)</a>", "{{F:$1}}$2{{/F}}");
 			//Lien vers termes du glossaire
-			texteNettoye = texteNettoye.replaceAll("([ >\\}'])([^ >\\}']*)\\*", "$1{{D:$2}}$2{{/D}}");
+			texteNettoye = texteNettoye.replaceAll("([ >\\}'\\(])([^ >\\}'\\(]*)\\*", "$1{{D:$2}}$2{{/D}}");
 			
 			// Après cela on nettoie un peu et met en ordre
 			// Mieux vaut le faire dans le prefetch qd on a le temps qu'à la présentation
@@ -340,7 +340,7 @@ public class Outils {
 		// Le 2 est transformé en 2 caractères par le parseur
 		// ⊃2; => ² \u00B2
 		texteNettoye = texteNettoye.replaceAll("\u22832;", "\u00B2");
-						
+
 		// suppression des sauts de ligne car gérés avant grace aux {{n/}}
 		texteNettoye = texteNettoye.replaceAll("\r\n", "");
 		texteNettoye = texteNettoye.replaceAll("\n", "");

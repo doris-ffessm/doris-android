@@ -1096,20 +1096,52 @@ public class Outils {
 			                
 			                OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(context);
 			                RuntimeExceptionDao<DefinitionGlossaire, Integer> entriesDao = ormLiteDBHelper.getDefinitionGlossaireDao();
-			                List<DefinitionGlossaire> listeDefinition = new ArrayList<DefinitionGlossaire>();
-							try {
-								listeDefinition = entriesDao.query(
-										entriesDao.queryBuilder().where().like("terme", "%"+terme+"%").prepare()
-										);
+			                List<DefinitionGlossaire> listeDefinitions = new ArrayList<DefinitionGlossaire>();
+			                int idDefinition = 0;
+			                try {
+			                	//Commence par le terme au singulier
+			                	listeDefinitions = entriesDao.query(
+										entriesDao.queryBuilder().where().like("terme", terme+"%").prepare() );
+								if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
+								else {
+									//Commence par le terme au masculin singulier
+									listeDefinitions = entriesDao.query(
+											entriesDao.queryBuilder().where().like("terme", terme.replaceAll("e$", "")+"%").prepare() );
+									if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
+									else {
+										//Contient le terme au singulier
+										listeDefinitions = entriesDao.query(
+												entriesDao.queryBuilder().where().like("terme", "%"+terme+"%").prepare() );
+										if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
+										else {
+											//Contient le terme au masculin singulier
+											listeDefinitions = entriesDao.query(
+													entriesDao.queryBuilder().where().like("terme", "%"+terme.replaceAll("e$", "")+"%").prepare() );
+											if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
+											else {
+												//le É par exemple ne fonctionne pas avec LIKE dans SQLite
+												// Bug connu : http://www.sqlite.org/lang_expr.html#like
+												listeDefinitions = entriesDao.queryForAll();
+												String texteRecherche = terme.replaceAll("e$", "").toLowerCase();
+												for (DefinitionGlossaire definition : listeDefinitions){
+													if (definition.getTerme().toString().toLowerCase().contains(texteRecherche)) {
+														idDefinition = definition.getId();
+														break;
+													}
+												}
+												
+											}
+										}
+									}
+								}
+								
 							} catch (SQLException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-			                		//"SELECT _id FROM definitionGlossaire WHERE terme LIKE "+ts.info).get(0).getId();
 
 			                
-			                if(!listeDefinition.isEmpty()){
-		                    	int idDefinition = listeDefinition.get(0).getId();
+			                if(idDefinition != 0){
+		                    	
 		                    	bundle.putInt("definitionGlossaireId", idDefinition );
 		                    	
 				            	Intent toDefinitionlView = new Intent(context, DetailEntreeGlossaire_ElementViewActivity.class);
