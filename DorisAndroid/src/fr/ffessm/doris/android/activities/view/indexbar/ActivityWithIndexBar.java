@@ -20,5 +20,7 @@ public interface ActivityWithIndexBar  {
 	public ListView getAlphabetListView();
 	
 	public View getAlphabetRowView();
+	
+	public void populateIndexBarHashMap();
 
 }

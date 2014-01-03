@@ -205,7 +205,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLite
 		return mHandler;
 	}
 	
-	private void populateIndexBarHashMap() {
+	public void populateIndexBarHashMap() {
 		alphabetToIndex= adapter.getUsedAlphabetHashMap();
 		number_of_alphabets=alphabetToIndex.size();		//Number of enteries in the map is equal to number of letters that would necessarily display on the right.
 		

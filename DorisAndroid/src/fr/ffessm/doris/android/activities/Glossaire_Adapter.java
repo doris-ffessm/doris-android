@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 
@@ -363,6 +364,8 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 				filteredDefinitionGlossaireList = new ArrayList<DefinitionGlossaire>();
 				notifyDataSetInvalidated();
 			}
+			// update hashmap for index
+			((ActivityWithIndexBar)context).populateIndexBarHashMap();
 		}
 	}
 }

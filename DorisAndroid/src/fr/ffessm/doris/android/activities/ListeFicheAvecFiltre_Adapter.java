@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 
@@ -596,6 +597,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				filteredFicheIdList = new ArrayList<Integer>();
 				notifyDataSetInvalidated();
 			}
+			// update hashmap for index
+			((ActivityWithIndexBar)context).populateIndexBarHashMap();
 		}
 	}
 }
