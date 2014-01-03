@@ -46,7 +46,7 @@ public class AlphabetListviewAdapter extends ArrayAdapter<String> {
 		
 		if(omit==1 ||omit==2 ){		//Adjusting the height of the row
 		
-			if(height_of_row<=26)
+			if(height_of_row<=27)
 				reduce_height_by_pixels=1;
 			
 			else if(height_of_row <= 52)

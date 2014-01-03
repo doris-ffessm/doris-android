@@ -44,7 +44,6 @@ package fr.ffessm.doris.android.activities;
 
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
@@ -63,6 +62,7 @@ import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 // Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_additional_import
+import fr.ffessm.doris.android.tools.Outils;
 // End of user code
 
 public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>

@@ -162,9 +162,10 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteBas
 			String selected_alpahbet=alpahbet.toString().trim();
 			Integer newPosition=alphabetToIndex.get(selected_alpahbet.charAt(0));
 			Log.d(LOG_TAG, "Selected Alphabet is:"+selected_alpahbet+"   position is:"+newPosition);
-					
-			ListView listview=(ListView)findViewById(R.id.listeparticipantavecfiltre_listview);
-			listview.setSelection(newPosition);
+			if(	newPosition != null){	
+				ListView listview=(ListView)findViewById(R.id.listeparticipantavecfiltre_listview);
+				listview.setSelection(newPosition);
+			}
 		}
     }
 

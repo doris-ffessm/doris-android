@@ -50,7 +50,6 @@ import java.util.List;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
-import fr.ffessm.doris.android.tools.Outils;
 
 
 import android.content.Context;

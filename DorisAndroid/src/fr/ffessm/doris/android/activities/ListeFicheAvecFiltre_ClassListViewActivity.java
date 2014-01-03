@@ -197,9 +197,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 			String selected_alpahbet=alpahbet.toString().trim();
 			Integer newPosition=alphabetToIndex.get(selected_alpahbet.charAt(0));
 			Log.d(LOG_TAG, "Selected Alphabet is:"+selected_alpahbet+"   position is:"+newPosition);
-					
-			ListView listview=(ListView)findViewById(R.id.listeficheavecfiltre_listview);
-			listview.setSelection(newPosition);
+			if(	newPosition != null){	
+				ListView listview=(ListView)findViewById(R.id.listeficheavecfiltre_listview);
+				listview.setSelection(newPosition);
+			}
 		}
     }
 
@@ -255,7 +256,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 				continue;
 
 			/*Start searching the next character position. Example, here alpha is E. Since there is no entry for E, we need to find the position of next Character, F.*/
-			for(int i=index+1  ; i< 26 ;i++){		//start from next character to last character
+			for(int i=index+1  ; i< 27 ;i++){		//start from next character to last character
 				char searchAlphabet=alphabets[i].charAt(0);   
 				
 				/*If we find the position of F character, then on click event on E should take the user to F*/	
@@ -264,7 +265,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 					break;
 				}
 				else
-					if(i==25) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
+					if(i==26) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
 						alphabetToIndex.put(alpha, adapter.filteredFicheIdList.size()-1);
 					else
 						continue;

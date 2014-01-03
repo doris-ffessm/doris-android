@@ -2,6 +2,7 @@
 <resources>
 
     <string-array name="alphabtes_array">
+        <item>#</item>
 	    <item>A</item>
 	    <item>B</item>
 	    <item>C</item>

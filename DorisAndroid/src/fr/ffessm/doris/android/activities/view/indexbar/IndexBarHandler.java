@@ -66,7 +66,7 @@ public class IndexBarHandler extends Handler {
 			/*Populating the Alphabet List*/			
 			ArrayList<String> alphabets_list=new ArrayList<String>();
 			String alphabet_array[]    =	indexbar.getResources().getStringArray(R.array.alphabtes_array);
-			for(int i=0; i<26 ; i++){
+			for(int i=0; i<27 ; i++){
 				alphabets_list.add(alphabet_array[i]);
 			}
 			/*Main Task*/	
@@ -89,14 +89,14 @@ public class IndexBarHandler extends Handler {
 		}
 		if(number_of_characters_omit<=4){					//Two groups shown. For 3,4 characters remove 4,5 characters
 		
-			removeAlphabet(alphabets_list, 5, 2);		//F,G
-			alphabets_list.add(5, ".");	
+			removeAlphabet(alphabets_list, 6, 2);		//F,G
+			alphabets_list.add(6, ".");	
 			
-			removeAlphabet(alphabets_list, 17, 2);		//S,T
+			removeAlphabet(alphabets_list, 18, 2);		//S,T
 			
 			if(number_of_characters_omit==4)
-				alphabets_list.remove(17);				//U
-			alphabets_list.add(17, ".");
+				alphabets_list.remove(18);				//U
+			alphabets_list.add(18, ".");
 			
 		}
 		if(number_of_characters_omit>4 & number_of_characters_omit<=6){  			//5,6
@@ -112,42 +112,42 @@ public class IndexBarHandler extends Handler {
 			if((number_of_characters_omit==5 && eliminate==2) || (number_of_characters_omit==6 && eliminate==1))  {
 				
 			}
-			removeAlphabet(alphabets_list, 5, 2);		//F,G
-			alphabets_list.add(5, ".");	
+			removeAlphabet(alphabets_list, 6, 2);		//F,G
+			alphabets_list.add(6, ".");	
 
-			alphabets_list.remove(13);  				//O
+			alphabets_list.remove(14);  				//O
 			if(number_of_characters_omit==6)
-				alphabets_list.remove(13);				//P			
-			alphabets_list.add(13, ".");
+				alphabets_list.remove(14);				//P			
+			alphabets_list.add(14, ".");
 			
 			if(number_of_characters_omit==5){
-				removeAlphabet(alphabets_list, 22, 2);	//X,Y
-				alphabets_list.add(22, ".");
+				removeAlphabet(alphabets_list, 23, 2);	//X,Y
+				alphabets_list.add(23, ".");
 			}else{
-				removeAlphabet(alphabets_list, 21, 2);
-				alphabets_list.add(21, ".");
+				removeAlphabet(alphabets_list, 22, 2);
+				alphabets_list.add(22, ".");
 			}
 				
 			if(eliminate==1)
-				alphabets_list.remove(14);		//P  / Q
+				alphabets_list.remove(15);		//P  / Q
 			else if(eliminate==2){
 				if(number_of_characters_omit==5){
-					removeAlphabet(alphabets_list, 14, 2);		//P,Q
+					removeAlphabet(alphabets_list, 15, 2);		//P,Q
 				}
 				else{
-					alphabets_list.remove(6);		//H
-					alphabets_list.remove(13);		//Q 
+					alphabets_list.remove(7);		//H
+					alphabets_list.remove(14);		//Q 
 				}
 			}
 			else{
 				if(number_of_characters_omit==5){
-					alphabets_list.remove(6);		//H
-					removeAlphabet(alphabets_list, 13, 2);		//P,Q
+					alphabets_list.remove(7);		//H
+					removeAlphabet(alphabets_list, 14, 2);		//P,Q
 				}
 				else{
-					alphabets_list.remove(6);		//H
-					alphabets_list.remove(13);		//Q
-					alphabets_list.remove(18);		//W
+					alphabets_list.remove(7);		//H
+					alphabets_list.remove(14);		//Q
+					alphabets_list.remove(19);		//W
 				}
 			}
 		}
@@ -162,71 +162,71 @@ public class IndexBarHandler extends Handler {
 				eliminate=1;
 			if( (number_of_characters_omit==7 && eliminate==2) || (number_of_characters_omit==8 && eliminate==1)){
 					
-				removeAlphabet(alphabets_list, 2, 3);	//C,D,E
-				alphabets_list.add(2,".");		
+				removeAlphabet(alphabets_list, 3, 3);	//C,D,E
+				alphabets_list.add(3,".");		
 				
-				removeAlphabet(alphabets_list, 7, 2);	//J,K
-				alphabets_list.add(7,".");		
+				removeAlphabet(alphabets_list, 8, 2);	//J,K
+				alphabets_list.add(8,".");		
 				
-				removeAlphabet(alphabets_list, 13, 2);	//Q,R
-				alphabets_list.add(13,".");		
+				removeAlphabet(alphabets_list, 14, 2);	//Q,R
+				alphabets_list.add(14,".");		
 				
-				removeAlphabet(alphabets_list, 19, 2);	//X,Y
-				alphabets_list.add(19,".");	
+				removeAlphabet(alphabets_list, 20, 2);	//X,Y
+				alphabets_list.add(20,".");	
 			}
 			else if( (number_of_characters_omit==7 && eliminate==3) || (number_of_characters_omit==8 && eliminate==2)){
-				removeAlphabet(alphabets_list, 2, 3);		//C,D,E
-				alphabets_list.add(2,".");		
+				removeAlphabet(alphabets_list, 3, 3);		//C,D,E
+				alphabets_list.add(3,".");		
 				
-				removeAlphabet(alphabets_list, 6, 3);		//I,J,K
-				alphabets_list.add(6,".");		
+				removeAlphabet(alphabets_list, 7, 3);		//I,J,K
+				alphabets_list.add(7,".");		
 				
-				removeAlphabet(alphabets_list, 12, 2);		//Q,R		
-				alphabets_list.add(12,".");		
+				removeAlphabet(alphabets_list, 13, 2);		//Q,R		
+				alphabets_list.add(13,".");		
 				
-				removeAlphabet(alphabets_list, 18, 2);		//X,Y		
-				alphabets_list.add(18,".");	
+				removeAlphabet(alphabets_list, 19, 2);		//X,Y		
+				alphabets_list.add(19,".");	
 			}
 			else if( (number_of_characters_omit==7 && eliminate==4) || (number_of_characters_omit==8 && eliminate==3)){
-				removeAlphabet(alphabets_list, 2, 3);		//C,D,E		
-				alphabets_list.add(2,".");		
+				removeAlphabet(alphabets_list, 3, 3);		//C,D,E		
+				alphabets_list.add(3,".");		
 				
-				removeAlphabet(alphabets_list, 6, 3);		//I,J,K
-				alphabets_list.add(6,".");		
+				removeAlphabet(alphabets_list, 7, 3);		//I,J,K
+				alphabets_list.add(7,".");		
 				
-				removeAlphabet(alphabets_list, 11, 3);		//P,Q,R		
-				alphabets_list.add(11,".");		
+				removeAlphabet(alphabets_list, 12, 3);		//P,Q,R		
+				alphabets_list.add(12,".");		
 				
-				removeAlphabet(alphabets_list, 17, 2);		//X,Y
-				alphabets_list.add(17,".");	
+				removeAlphabet(alphabets_list, 18, 2);		//X,Y
+				alphabets_list.add(18,".");	
 			}
 			else if( number_of_characters_omit==7 && eliminate==1){
 				
-				removeAlphabet(alphabets_list, 3, 2);	//D,E		
-				alphabets_list.add(3,".");		
+				removeAlphabet(alphabets_list, 4, 2);	//D,E		
+				alphabets_list.add(4,".");		
 				
-				removeAlphabet(alphabets_list, 8, 2);	//J,K		
-				alphabets_list.add(8,".");
+				removeAlphabet(alphabets_list, 9, 2);	//J,K		
+				alphabets_list.add(9,".");
 				
-				removeAlphabet(alphabets_list, 14, 2);	//Q,R		
-				alphabets_list.add(14,".");
+				removeAlphabet(alphabets_list, 15, 2);	//Q,R		
+				alphabets_list.add(15,".");
 				
-				removeAlphabet(alphabets_list, 20, 2);	//X,Y		
-				alphabets_list.add(20,".");	
+				removeAlphabet(alphabets_list, 21, 2);	//X,Y		
+				alphabets_list.add(21,".");	
 			}
 			else if( number_of_characters_omit==8 && eliminate==4){
 						
-				removeAlphabet(alphabets_list, 2, 3);	//C,D,E		
-				alphabets_list.add(2,".");		
+				removeAlphabet(alphabets_list, 3, 3);	//C,D,E		
+				alphabets_list.add(3,".");		
 
-				removeAlphabet(alphabets_list, 6, 3);	//I,J,K	
-				alphabets_list.add(6,".");	
+				removeAlphabet(alphabets_list, 7, 3);	//I,J,K	
+				alphabets_list.add(7,".");	
 				
-				removeAlphabet(alphabets_list, 11, 3);		
-				alphabets_list.add(11,".");		
+				removeAlphabet(alphabets_list, 12, 3);		
+				alphabets_list.add(12,".");		
 				
-				removeAlphabet(alphabets_list, 16, 3);		//W,X,Y		
-				alphabets_list.add(16,".");	
+				removeAlphabet(alphabets_list, 17, 3);		//W,X,Y		
+				alphabets_list.add(17,".");	
 			}
 		}
 	

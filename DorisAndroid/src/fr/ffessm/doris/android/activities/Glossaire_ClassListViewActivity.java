@@ -162,9 +162,10 @@ public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLite
 			String selected_alpahbet=alpahbet.toString().trim();
 			Integer newPosition=alphabetToIndex.get(selected_alpahbet.charAt(0));
 			Log.d(LOG_TAG, "Selected Alphabet is:"+selected_alpahbet+"   position is:"+newPosition);
-					
-			ListView listview=(ListView)findViewById(R.id.glossaire_listview);
-			listview.setSelection(newPosition);
+			if(	newPosition != null){	
+				ListView listview=(ListView)findViewById(R.id.glossaire_listview);
+				listview.setSelection(newPosition);
+			}
 		}
     }
 
