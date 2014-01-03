@@ -221,7 +221,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLite
 				continue;
 
 			/*Start searching the next character position. Example, here alpha is E. Since there is no entry for E, we need to find the position of next Character, F.*/
-			for(int i=index+1  ; i< 26 ;i++){		//start from next character to last character
+			for(int i=index+1  ; i< 27 ;i++){		//start from next character to last character
 				char searchAlphabet=alphabets[i].charAt(0);   
 				
 				/*If we find the position of F character, then on click event on E should take the user to F*/	
@@ -230,7 +230,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLite
 					break;
 				}
 				else
-					if(i==25) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
+					if(i==26) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
 						alphabetToIndex.put(alpha, adapter.filteredDefinitionGlossaireList.size()-1);
 					else
 						continue;
