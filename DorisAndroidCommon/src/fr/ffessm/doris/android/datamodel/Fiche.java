@@ -531,7 +531,7 @@ public class Fiche {
 					Element ElementDates=elementTable_TABLE.getFirstElementByClass("normalgris");
 					//log.info("getFiche() - Bloc Dates : " + ElementDates.getRenderer().toString());
 					
-					dateCreation = Outils.nettoyageTextes(ElementDates.getRenderer().toString()).replaceAll("Création le : ([^ ]*).*", "$1").trim();
+					dateCreation = Outils.nettoyageTextes(ElementDates.getRenderer().toString()).replaceAll("Création le.: ([^ ]*).*", "$1").trim();
 					dateModification = Outils.nettoyageTextes(ElementDates.getRenderer().toString()).replaceAll(".*modification le(.*) [^ ]*", "$1").trim();
 					log.debug("getFicheFromHtml() - dateCreation : " + dateCreation);
 					log.debug("getFicheFromHtml() - dateModification : " + dateModification);

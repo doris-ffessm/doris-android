@@ -288,6 +288,8 @@ public class Outils {
 			//Italique
 			texteNettoye = texteNettoye.replace("<em>", "{{i}}");
 			texteNettoye = texteNettoye.replace("</em>", "{{/i}}");
+			texteNettoye = texteNettoye.replace("<i>", "{{i}}");
+			texteNettoye = texteNettoye.replace("</i>", "{{/i}}");
 			//Souligné
 			texteNettoye = texteNettoye.replaceAll("<span style=\"text-decoration: underline;\">([^<>]*)</span>","{{s}}$1{{/s}}");
 			//Sauts de ligne
@@ -314,6 +316,8 @@ public class Outils {
 			texteNettoye = texteNettoye.replace("</strong>", "");
 			texteNettoye = texteNettoye.replace("<em>", "");
 			texteNettoye = texteNettoye.replace("</em>", "");
+			texteNettoye = texteNettoye.replace("<i>", "");
+			texteNettoye = texteNettoye.replace("</i>", "");
 			texteNettoye = texteNettoye.replace("<br/>", " ");
 		}
 		//log.debug("remplacementBalises() - texteNettoye : " + texteNettoye);
@@ -347,6 +351,12 @@ public class Outils {
 		
 		// suppression des blancs multiples
 		texteNettoye = texteNettoye.replaceAll("[ \t]{2,}"," ");
+		
+		// remplacement de l'espace inséquable devant : ; ! ?
+		texteNettoye = texteNettoye.replaceAll(" :", "\u00A0:")
+				.replaceAll(" ;", "\u00A0;")
+				.replaceAll(" !", "\u00A0!")
+				.replaceAll(" \\?", "\u00A0?");
 		
 		texteNettoye = texteNettoye.trim();
 		//log.debug("nettoyageTextes() - texteNettoye : " + texteNettoye);

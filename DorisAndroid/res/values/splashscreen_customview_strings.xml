@@ -4,8 +4,8 @@
 	<!-- Start of user code customView_strings splashscreen
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
-	<string name="splashscreen_initialisation_base">"Initialisation en cours..."</string>
-	<string name="splashscreen_maj_base">"Mise à jour en cours..."</string>
+	<string name="splashscreen_initialisation_base">"Initialisation en cours\u00A0\u2026"</string>
+	<string name="splashscreen_maj_base">"Mise à jour en cours\u00A0\u2026"</string>
 	<!-- End of user code
 	-->
 </resources>

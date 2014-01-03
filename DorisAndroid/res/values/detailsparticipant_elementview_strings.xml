@@ -3,8 +3,8 @@
 <resources>
 	<!--Start of user code protecteddetailsparticipant_elementview_strings.xml
 	-->	
-	<string name="detailsparticipant_elementview_nom_label">Nom : </string>
-	<string name="detailsparticipant_elementview_numeroparticipant_label">NumeroParticipant : </string>
+	<string name="detailsparticipant_elementview_nom_label">Nom\u00A0: </string>
+	<string name="detailsparticipant_elementview_numeroparticipant_label">NumeroParticipant\u00A0: </string>
 	<string name="detailsparticipant_elementview_nom_hint_text"></string>
 	<string name="detailsparticipant_elementview_numeroparticipant_hint_text"></string>
 	<string name="detailsparticipant_elementview_bio_textbutton">Bio complète</string>

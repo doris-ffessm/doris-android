@@ -1109,27 +1109,33 @@ public class Outils {
 											entriesDao.queryBuilder().where().like("terme", terme.replaceAll("e$", "")+"%").prepare() );
 									if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
 									else {
-										//Contient le terme au singulier
+										//Commence par le terme au masculin singulier ...al => ...aux (le féminin plurielle étant trouvé car ...ales contient ...al) 
 										listeDefinitions = entriesDao.query(
-												entriesDao.queryBuilder().where().like("terme", "%"+terme+"%").prepare() );
+												entriesDao.queryBuilder().where().like("terme", terme.replaceAll("aux$", "al")+"%").prepare() );
 										if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
 										else {
-											//Contient le terme au masculin singulier
+											//Contient le terme au singulier
 											listeDefinitions = entriesDao.query(
-													entriesDao.queryBuilder().where().like("terme", "%"+terme.replaceAll("e$", "")+"%").prepare() );
+													entriesDao.queryBuilder().where().like("terme", "%"+terme+"%").prepare() );
 											if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
 											else {
-												//le É par exemple ne fonctionne pas avec LIKE dans SQLite
-												// Bug connu : http://www.sqlite.org/lang_expr.html#like
-												listeDefinitions = entriesDao.queryForAll();
-												String texteRecherche = terme.replaceAll("e$", "").toLowerCase();
-												for (DefinitionGlossaire definition : listeDefinitions){
-													if (definition.getTerme().toString().toLowerCase().contains(texteRecherche)) {
-														idDefinition = definition.getId();
-														break;
+												//Contient le terme au masculin singulier
+												listeDefinitions = entriesDao.query(
+														entriesDao.queryBuilder().where().like("terme", "%"+terme.replaceAll("e$", "")+"%").prepare() );
+												if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
+												else {
+													//le É par exemple ne fonctionne pas avec LIKE dans SQLite
+													// Bug connu : http://www.sqlite.org/lang_expr.html#like
+													listeDefinitions = entriesDao.queryForAll();
+													String texteRecherche = terme.replaceAll("e$", "").replaceAll("ux$", "").toLowerCase();
+													for (DefinitionGlossaire definition : listeDefinitions){
+														if (definition.getTerme().toString().toLowerCase().contains(texteRecherche)) {
+															idDefinition = definition.getId();
+															break;
+														}
 													}
+													
 												}
-												
 											}
 										}
 									}

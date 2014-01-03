@@ -2,8 +2,8 @@
 <!-- Resource Strings specific to detailentreeglossaire Element View and EditableElement View -->
 <resources>
 	
-	<string name="searchHint_glossaire_listviewsearchrow">Chercher...</string>
-	<string name="btnZoneGeo_glossaire_listviewsearchrow_btn_label">Terme : </string>
-	<string name="btnZone_glossaire_listviewsearchrow_btn_label">Definition : </string>
+	<string name="searchHint_glossaire_listviewsearchrow">Chercher\u00A0\u2026</string>
+	<string name="btnZoneGeo_glossaire_listviewsearchrow_btn_label">Terme\u00A0: </string>
+	<string name="btnZone_glossaire_listviewsearchrow_btn_label">Definition\u00A0: </string>
 	
 </resources>

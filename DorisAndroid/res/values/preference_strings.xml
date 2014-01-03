@@ -152,10 +152,10 @@
         <item>192</item>
     </string-array>
     
-	<string name="pref_accueil_aff_iconesfede_prompt">Affichage Icônes Fédé. ?</string>
+	<string name="pref_accueil_aff_iconesfede_prompt">Affichage Icônes Fédé.\u00A0?</string>
 	<string name="pref_accueil_aff_iconesfede_summary">"Permet de gagner de la place sur l'écran d'accueil"</string>
 	
-	<string name="pref_fiche_aff_details_pardefaut_prompt">Fiche\u00A0: montrer détails ?</string>
+	<string name="pref_fiche_aff_details_pardefaut_prompt">Fiche\u00A0: montrer détails\u00A0?</string>
 	<string name="pref_fiche_aff_details_pardefaut_summary">"Les détails de la fiche sont tous affichés par défaut"</string>
 	
 	<string name="imagepleinecran_titre_longmax">25</string>
