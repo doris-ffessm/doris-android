@@ -109,7 +109,7 @@
     <viewActivities xsi:type="genandroid:ClassListViewActivity" name="GroupeSelection" documentation="Liste présentant les Groupe de manière hiérarchique (le filtre en haut assure la gestion de la profondeur)" isFilterable="false" listedElement="//@dataModel/@dataClasses.8" presentedDetail="//@presentationModel/@classDetails.3"/>
     <viewActivities xsi:type="genandroid:ClassListViewActivity" name="Glossaire" documentation="Liste présentant les entrées du glossaire" accessibleViews="//@presentationModel/@viewActivities.13" selectItemAction="//@presentationModel/@viewActivities.13" useIndexSearch="true" listedElement="//@dataModel/@dataClasses.9" presentedDetail="//@presentationModel/@classDetails.4"/>
     <viewActivities xsi:type="genandroid:ElementViewActivity" name="DetailEntreeGlossaire" documentation="Vue présentant une entrée du glossaire en détail (texte complet, image éventuelle, liens vers le fiches utilisatrices, etc)" element="//@dataModel/@dataClasses.9"/>
-    <classDetails mainAttributes="//@dataModel/@dataClasses.0/@dataAttributes.1" name="ContenuListeFiche" secondaryAttributes="//@dataModel/@dataClasses.0/@dataAttributes.0"/>
+    <classDetails mainAttributes="//@dataModel/@dataClasses.0/@dataAttributes.1" name="ContenuListeFiche"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.5/@dataAttributes.0" name="ContenuListeParticipant"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.6/@dataAttributes.0" name="ContenuListeZoneGeographique"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.8/@dataAttributes.2" name="ContenuListeGroupeSelection" secondaryAttributes="//@dataModel/@dataClasses.8/@dataAttributes.3"/>

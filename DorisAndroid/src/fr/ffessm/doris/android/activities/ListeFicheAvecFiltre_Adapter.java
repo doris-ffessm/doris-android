@@ -246,13 +246,10 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
-		labelSB.append(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
+		labelSB.append(entry.getNomCommun());
 		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
 
-        TextView tvDetails = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_details);
-		StringBuilder detailsSB = new StringBuilder();
-        tvDetails.setText( Outils.textToSpannableStringDoris(context,entry.getNomScientifique().toString()) );
 		
         // assign the entry to the row in order to ease GUI interactions
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.listeficheavecfiltre_listviewrow);
@@ -260,7 +257,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         
 		// Start of user code protected additional ListeFicheAvecFiltre_Adapter getView code
 		//	additional code
-        
+        TextView tvDetails = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_details);
+		tvDetails.setText( Outils.textToSpannableStringDoris(context,entry.getNomScientifique().toString()) );
+		
         String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
         int defaultIconSize = 48;
         try{
