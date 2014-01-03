@@ -234,15 +234,37 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 	public int binarySearch( char key, int startBottom, int startTop) {
 	   int bot = startBottom;
 	   int top = startTop;
+	   int mid =  startBottom;
+	   boolean found = false;
 	   while (bot <= top) {
-	      int mid = bot + (top - bot) / 2;
+	      mid = bot + (top - bot) / 2;
 		  DefinitionGlossaire entry = filteredDefinitionGlossaireList.get(mid);
 	      char midCharacter=getFirstCharForIndex(entry);
 	      if      (key < midCharacter) top = mid - 1;
 	      else if (key > midCharacter) bot = mid + 1;
-	      else return mid;
+	      else {
+	    	  found = true;
+	    	  break;
+	      };
 	   }
-	   return -1;
+	   if(found){
+		  // search for the first occurence
+		  int best= mid;
+		  for (int i = mid; i > startBottom; i--) {
+		      DefinitionGlossaire entry = filteredDefinitionGlossaireList.get(i);
+		      char midCharacter=getFirstCharForIndex(entry);
+			  if(midCharacter == key){
+				  best = i;
+			  }
+			  else {
+				  //previous is differents so we stop here
+				  break;
+			  }
+			
+		  }
+		  return best;
+	   }
+	   else return -1;
 	} 
 		
 	
