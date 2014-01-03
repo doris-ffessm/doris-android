@@ -100,20 +100,19 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	        String param = bundle.getString("parametre");
 	        
 	        if (typeParam != null) {
+	        	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - typeParam : "+typeParam);
+	        	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - param : "+param);
+	        	
 	        	if (typeParam.equals("mode_precharg_region")) {
 	        		if (param != null) {
 			        	PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference("button_qualite_images_zones_key");
 			        	int pos = findPreference("mode_precharg_region_"+param).getOrder();
-			        	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - pos "+param+" : "+pos);
+			        	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - pos "+param+" : "+pos);
 			        	preferenceScreen.onItemClick( null, null, pos, 0 ); 
 	        		}
 	        	}
 	        	if (typeParam.equals("mode_precharg_toutesregions")) {
-		        	PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference("pref_racine");
-			        /*int pos = findPreference("button_qualite_images_zones_key").getOrder();
-			        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - pos : "+pos); */
-		        	// TODO : Je pensais utiliser  Preference findPreferenceInHierarchy mais je n'y arrive pas
-		        	// Alors 5 en dur :-/
+	        		PreferenceScreen preferenceScreen = (PreferenceScreen) getPreferenceScreen();
 			        preferenceScreen.onItemClick( null, null, 5, 0 ); 
 	        	}
 	        }

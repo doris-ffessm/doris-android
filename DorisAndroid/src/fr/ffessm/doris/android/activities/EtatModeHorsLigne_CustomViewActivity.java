@@ -273,15 +273,13 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
 
     	
     	// Avancement par Zone
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - avant ");
     	List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - après");
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
-			
+ 			
 		for (ZoneGeographique zoneGeo : listeZoneGeo) {
 			MultiProgressBar progressBarZone = new MultiProgressBar(this);
  		    updateProgressBarZone(zoneGeo, progressBarZone);
  		    final int zoneGeoId = zoneGeo.getId();
+
  		   /* progressBarZone.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -294,10 +292,11 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
  		   progressBarZone.setOnClickListener(new View.OnClickListener() {
  				@Override
  				public void onClick(View v) {
- 					
+ 					//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setOnClickListener() - zoneGeoId : "+zoneGeoId);
  					Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, Preference_PreferenceViewActivity.class);
  					intent.putExtra("type_parametre", "mode_precharg_region");
  					String param = null;
+ 					
  					switch (zoneGeoId){
  					case 1 :
  						param = "france"; break;
@@ -337,17 +336,15 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
     		//sb.append("Date base locale : " + it.next().getDateBase()+"\n");
 		}
     	// mise à jour des progress bar
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - update progress bar : ");
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - update progress bar : ");
 		ZoneGeographique zoneToutesZones = new ZoneGeographique();
     	zoneToutesZones.setId(-1);
     	zoneToutesZones.setNom(getContext().getString(R.string.avancement_touteszones_titre));
 		updateProgressBarZone(zoneToutesZones, progressBarZones.get(zoneToutesZones.getId()));
 		List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
-    	
 		for (ZoneGeographique zoneGeo : listeZoneGeo) {
 			updateProgressBarZone(zoneGeo, progressBarZones.get(zoneGeo.getId()));
 		}
-    		
 		//End of user code
 	}
 
