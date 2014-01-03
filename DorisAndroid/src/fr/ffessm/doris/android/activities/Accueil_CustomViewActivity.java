@@ -366,7 +366,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	private void aPropos() {
 		StringBuilder texte = new StringBuilder();
 		texte.append(getContext().getString(R.string.a_propos_txt_1));
-		texte.append(DorisApplication.class.getSimpleName());
+		texte.append(getContext().getString(R.string.app_name));
 		texte.append(System.getProperty("line.separator")); 
 				
 		texte.append(getContext().getString(R.string.a_propos_txt_2));
@@ -541,7 +541,18 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 			   downloadInProgress = true;
 		   }
 		   
-		   progressBarZone.update(inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto, downloadInProgress);
+		   // ajout au résumé de la date de la base
+		   StringBuilder sbTexte = new StringBuilder();
+		   sbTexte.append(getContext().getString(R.string.accueil_customview_texte_text));
+	    	
+		   CloseableIterator<DorisDB_metadata> itDorisDB = getHelper().getDorisDB_metadataDao().iterator();
+		   while (itDorisDB.hasNext()) {
+			   sbTexte.append(itDorisDB.next().getDateBase());
+		   }
+		   sbTexte.append("\n");
+		   sbTexte.append(summaryTexte);
+		   
+		   progressBarZone.update(inZoneGeo.getNom(), sbTexte.toString(), imageZone, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto, downloadInProgress);
 	}
 	
 	//End of user code
@@ -552,6 +563,8 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
     	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
 
+    	/* 
+    	DVK 
     	StringBuilder sbTexte = new StringBuilder();
     	sbTexte.append(getContext().getString(R.string.accueil_customview_texte_text));
     	
@@ -560,7 +573,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     		sbTexte.append(itDorisDB.next().getDateBase());
 		}
     	((TextView) findViewById(R.id.accueil_texte)).setText(sbTexte.toString());
-    	
+    	*/
     	// recherche précédente
     	//ImageView ivIcone = (ImageView) findViewById(R.id.accueil_recherche_precedente_icone);
         int iconeZine = Integer.valueOf(Outils.getParamString(this.getApplicationContext(), R.string.pref_key_accueil_icon_size, "64"));

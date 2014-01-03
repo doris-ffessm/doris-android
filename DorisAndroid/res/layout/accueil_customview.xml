@@ -7,13 +7,13 @@
     android:orientation="vertical"
     android:paddingTop="4dip" >
 
-	<TextView
+	<!-- <TextView
         android:id="@+id/accueil_texte"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="4dip"
 		android:text="@string/accueil_customview_texte_text"/>
-	
+	 -->
 	<View style="@style/Separateur"/>
 	<ScrollView
 	    android:layout_width="fill_parent"
