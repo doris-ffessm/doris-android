@@ -74,7 +74,7 @@ public class Outils {
     
 
     public static boolean getFichierUrl(String inUrl, String inFichierRetour) {
-    	log.debug("getFichierUrl()- Début");
+    	//log.debug("getFichierUrl()- Début");
     	log.info("getFichierUrl()- url : " + inUrl);
     	log.info("getFichierUrl()- Fichier à Retourner : " + inFichierRetour);
     	
@@ -124,13 +124,13 @@ public class Outils {
         }
     	
     	
-    	log.debug("getFichierUrl()- Fin");
+    	//log.debug("getFichierUrl()- Fin");
     	return true;
     }
 
 
 	public static String getFichier(File inFichier) {
-    	log.debug("getFichier()- Début");
+    	//log.debug("getFichier()- Début");
     	log.info("getFichier()- Fichier : " + inFichier);
     	
     	FileInputStream objFile = null;
@@ -149,7 +149,7 @@ public class Outils {
 				try {
 					objFile.close();
 					
-					log.debug("getFichier()- Fin");
+					//log.debug("getFichier()- Fin");
 			    	return (objBuffer.toString());
 			    	
 				} catch (IOException e) {
@@ -168,7 +168,7 @@ public class Outils {
 			e.printStackTrace();
 		}
 		log.error("Erreur lors de la lecture du fichier : " + inFichier);
-     	log.debug("getFichier()- Fin");
+     	//log.debug("getFichier()- Fin");
 		return null;
 	}
 
@@ -178,8 +178,10 @@ public class Outils {
 
 		String texteNettoye = texteANettoye;
 		
+		//TODO : je me demande bien pour j'ai fait cela : GMo 04/01/2014
 		texteNettoye = texteNettoye.replace("&nbsp;", " ");
 		
+		// Tous les sauts de ligne de la même façon + gain de place en auteur pour l'interface Android
 		texteNettoye = texteNettoye.replace("<br>", "<br/>")
 				.replace("<br />", "<br/>")
 				.replace("<br/><br/>", "<br/>");
@@ -189,10 +191,16 @@ public class Outils {
 				.replace("</strong>*", "*</strong>")
 				.replace("</em>*", "*</em>")
 				.replace("</i>*", "*</i>");
-				
-		// Ca arrive
-		texteNettoye = texteNettoye.replaceAll("<em>[\\s]*</em>", "");
-
+		
+		//L'adresse du site n'apporte rien et pose des problèmes qd on va recherche les liens
+		// vers les sites extérieurs
+		texteNettoye = texteNettoye.replace(Constants.getSiteUrl(), "");
+		//De même pour les site : www.ffessm.fr et www.security.fr qui sont sur toutes les pages
+		texteNettoye = texteNettoye.replace("href=\"http://www.ffessm.fr\"", "")
+				.replace("href=\"http://biologie.ffessm.fr/\"", "")
+				.replace("href=\"http://www.security.fr/\"", "");
+		
+		
 		// Certaines fiches comme : http://doris.ffessm.fr/fiche2.asp?fiche_numero=3527 (au 30 mars 13)
 		// contiennent des " dans le nom de l'animal, or les " ne sont pas échappés donc ça met le
 		// bazard dans le code html
@@ -200,14 +208,22 @@ public class Outils {
 		// et qui ne contiennent pas de = ? < >
 		texteNettoye = texteNettoye.replaceAll("(href=\"[^\"]*)\"([^\"=?<>]*)\"([^\"]*\")", "$1$2$3");
 
+		//Il arrive très souvent qu'une balise ouverte soit aussitôt refermée
+		// ce doit sans doute être dû à l'interface de saisie ou des outils utlisés en amont
+		// Toujours est-il que ça peut gêner ensuite, que ça fait perdre du temps et de la place
+		texteNettoye = texteNettoye.replace("<strong></strong>", "")
+				.replace("<em></em>", "")
+				.replace("<i></i>", "");
+		texteNettoye = texteNettoye.replaceAll("<a href=\"http://[^>]*></a>", "");
+				
+				
 		//log.debug("nettoyageBalises() - texteNettoye : " + texteNettoye);
 		//log.debug("nettoyageBalises() - Fin");
-
 		return texteNettoye;
 	}
 
     public static String remplacementBalises(String texteANettoye, boolean avecMiseEnForme) {
-    	log.debug("remplacementBalises() - Début");
+    	//log.debug("remplacementBalises() - Début");
     	//log.debug("remplacementBalises() - texteANettoye : " + texteANettoye);
 		String texteNettoye = texteANettoye;
 
@@ -229,6 +245,9 @@ public class Outils {
 			//Lien vers termes du glossaire
 			texteNettoye = texteNettoye.replaceAll("([ >\\}'\\(])([^ >\\}'\\(]*)\\*", "$1{{D:$2}}$2{{/D}}");
 			
+			//Lien vers site extérieur : oiseaux.net, fishbase.org, etc ...
+			texteNettoye = texteNettoye.replaceAll("<a href=\"http://([^\"]*)\"[^>]*>([^<]*)</a>", "{{A:$1}}$2{{/A}}");
+			
 			// Après cela on nettoie un peu et met en ordre
 			// Mieux vaut le faire dans le prefetch qd on a le temps qu'à la présentation
 			texteNettoye = texteNettoye.replace("{{/i}}{{i}}","");
@@ -237,10 +256,11 @@ public class Outils {
 			texteNettoye = texteNettoye.replace("{{/i}} {{i}}"," ");
 			texteNettoye = texteNettoye.replace("{{/g}} {{g}}"," ");
 			
-			// Le Gras ne doit pas être à l'intérieure d'un lieu mais l'entourer
+			// Le Gras ne doit pas être à l'intérieure d'un lien mais l'entourer
+			// ça ne semble arriver que pour ce cas, i.. pas pour les termes du glossaire, l'italique etc..
 			texteNettoye = texteNettoye.replace("{{/g}}{{/F}}", "{{/F}}{{/g}}");
 			texteNettoye = texteNettoye.replaceAll("\\{\\{F:([0-9]*)\\}\\}\\{\\{g\\}\\}", "{{g}}{{F:$1}}");
-			
+				
 		} else {
 			texteNettoye = texteNettoye.replace("<strong>", "");
 			texteNettoye = texteNettoye.replace("</strong>", "");
@@ -250,8 +270,9 @@ public class Outils {
 			texteNettoye = texteNettoye.replace("</i>", "");
 			texteNettoye = texteNettoye.replace("<br/>", " ");
 		}
+		
 		//log.debug("remplacementBalises() - texteNettoye : " + texteNettoye);
-		log.debug("remplacementBalises() - Fin");
+		//log.debug("remplacementBalises() - Fin");
 		return texteNettoye;
 	}
 	

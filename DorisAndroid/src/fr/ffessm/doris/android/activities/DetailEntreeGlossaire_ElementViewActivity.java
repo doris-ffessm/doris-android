@@ -122,11 +122,8 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteBaseActivi
 		richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
 		TextView contenuUrl = (TextView) findViewById(R.id.detailentreeglossaire_elementview_liensite);
 		contenuUrl.setText(richtext);
-		//contenuUrl.setText(richtext, BufferType.SPANNABLE);
-        // make our ClickableSpans and URLSpans work 
 		contenuUrl.setMovementMethod(LinkMovementMethod.getInstance());
-		
-		
+				
 		// End of user code
     	
 	}

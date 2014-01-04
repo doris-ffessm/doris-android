@@ -467,6 +467,7 @@ public class Fiche {
 						}
 						
 						// Création de la liste des Liens (url vers d'autres fiches)
+						/*
 						for (Element elementTDA : elementTD.getAllElements(HTMLElementName.A)) {
 							String hrefValue = elementTDA.getAttributeValue("href");
 							log.debug("getFicheFromHtml() - A : " + elementTDA.getRenderer().toString().trim() + " - lien : " + hrefValue);
@@ -483,7 +484,7 @@ public class Fiche {
 									log.info("getFicheFromHtml() - listeLienRencontre : " + sbListeLiensVersFiches.toString() );
 								}
 							}
-						}
+						}*/
 					}
 					
 					

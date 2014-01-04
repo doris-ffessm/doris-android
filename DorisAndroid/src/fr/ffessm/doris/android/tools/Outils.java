@@ -41,12 +41,15 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.format.DateUtils;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
@@ -1037,6 +1040,28 @@ public class Outils {
 	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.DEFINITION,ts.positionDebut,posFinTexteFinal,
 	        				ts.info));
 	        	}
+	        	else if (balise.startsWith("A:")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posDepTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	
+	        		pileDerniereBalise.add(new TextSpan(TextSpan.SpanType.LIENWEB,posDepTexteFinal,0,
+	        				balise.substring(2, balise.length())));
+	        	}
+	        	else if (balise.equals("/A")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posFinTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        		
+	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+	        		
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.LIENWEB,ts.positionDebut,posFinTexteFinal,
+	        				ts.info));
+	        	}
+	        	
 	        } // fin du While
 	        
 	        texteFinal.append(texteInter);
@@ -1164,6 +1189,9 @@ public class Outils {
 			    	
 					richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
 					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_liendefinition))), ts.positionDebut, ts.positionFin, 0);
+	        	} // Fin else DEFINITION
+	        	else if ( ts.spanType == TextSpan.SpanType.LIENWEB) {
+	        		richtext.setSpan(new URLSpan("http://"+ts.info), ts.positionDebut, ts.positionFin, 0);  
 	        	}
 	        }
 	        
@@ -1176,7 +1204,7 @@ public class Outils {
     public static class TextSpan {
     	
     	public enum SpanType {
-    	    FICHE, ITALIQUE, GRAS, SOULIGNE, SAUTDELIGNE, DEFINITION
+    	    FICHE, ITALIQUE, GRAS, SOULIGNE, SAUTDELIGNE, DEFINITION, LIENWEB
     	} 
     	
     	SpanType spanType = null;

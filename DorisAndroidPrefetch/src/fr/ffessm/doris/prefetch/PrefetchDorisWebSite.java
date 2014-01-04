@@ -139,14 +139,10 @@ public class PrefetchDorisWebSite {
 			// On boucle sur les initailes des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
 			String testPhrase;
 
-			testPhrase="Polymastia boletiformis <../fiche2.asp?fiche_numero=449> : prolongements \nplus hauts en doigts de gant, couleur jaune orangé.\nAaptos aaptos : couleur différente (jaune brun à jaune pâle) et papilles\n moins nombreuses et plus petites. Cependant, seule une observation des\n spicules* au microscope permettra de faire la différence.";
-			Outils.nettoyageTextes(testPhrase);
+			testPhrase="les oiseaux (<a href=\"http://www.oiseaux.net/oiseaux/pingouin.torda.html\" target=\"_blank\" title=\"Alca torda\">Oiseaux.net</a>).";
+			Outils.remplacementBalises(testPhrase, true);
 
-			testPhrase="Test : \n- Puce 1\n- Puce 2\n";
-			Outils.nettoyageTextes(testPhrase);
 
-			testPhrase="Test : \nABC\nDEF\nghi\n";
-			Outils.nettoyageTextes(testPhrase);
 			
 			//String contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
 			//fiche.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
