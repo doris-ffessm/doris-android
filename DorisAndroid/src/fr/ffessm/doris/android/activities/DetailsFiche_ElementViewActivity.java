@@ -235,6 +235,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			for (PhotoFiche photoFiche : photosFiche) {
 				View photoView = insertPhoto(photoFiche);
 				photoView.setOnClickListener(new OnImageClickListener(this.ficheId,pos,this));
+				photoView.setPadding(0, 0, 2, 0);
 				photoGallery.addView(photoView);
 				
 				
