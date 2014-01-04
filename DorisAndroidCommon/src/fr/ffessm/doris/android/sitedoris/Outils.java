@@ -187,7 +187,8 @@ public class Outils {
 		//Permet que la recherche des définitions fonctionne mieux ensuite
 		texteNettoye = texteNettoye.replace("**", "##")
 				.replace("</strong>*", "*</strong>")
-				.replace("</em>*", "*</em>");
+				.replace("</em>*", "*</em>")
+				.replace("</i>*", "*</i>");
 				
 		// Ca arrive
 		texteNettoye = texteNettoye.replaceAll("<em>[\\s]*</em>", "");
@@ -277,6 +278,10 @@ public class Outils {
 		// suppression des sauts de ligne car gérés avant grace aux {{n/}}
 		texteNettoye = texteNettoye.replaceAll("\r\n", "");
 		texteNettoye = texteNettoye.replaceAll("\n", "");
+		
+		// Certains Textes contiennent des Guillemets de type PRIVATE USE TWO (C292 UTF8, 0092 en Java)
+		// au lieu de ' - sous Android les TextView les remplacent par des espaces
+		texteNettoye = texteNettoye.replaceAll("\u0092", "'");
 		
 		// suppression des blancs multiples
 		texteNettoye = texteNettoye.replaceAll("[ \t]{2,}"," ");
