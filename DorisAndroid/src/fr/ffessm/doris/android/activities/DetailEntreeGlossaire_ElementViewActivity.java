@@ -50,17 +50,23 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView.BufferType;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import fr.ffessm.doris.android.sitedoris.Constants;
 // Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_additional_import
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
@@ -110,8 +116,17 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteBaseActivi
 		((TextView) findViewById(R.id.detailentreeglossaire_elementview_numerodoris)).setText(((Integer)entry.getNumeroDoris()).toString());					
 		((TextView) findViewById(R.id.detailentreeglossaire_elementview_terme)).setText(entry.getTerme());
 		((TextView) findViewById(R.id.detailentreeglossaire_elementview_definition)).setText(Outils.textToSpannableStringDoris(context, entry.getDefinition()) );
-		
 	
+		String urlString = Constants.getDefinitionUrl( ""+entry.getNumeroDoris() ); 
+		SpannableString richtext = new SpannableString(urlString);
+		richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
+		TextView contenuUrl = (TextView) findViewById(R.id.detailentreeglossaire_elementview_liensite);
+		contenuUrl.setText(richtext);
+		//contenuUrl.setText(richtext, BufferType.SPANNABLE);
+        // make our ClickableSpans and URLSpans work 
+		contenuUrl.setMovementMethod(LinkMovementMethod.getInstance());
+		
+		
 		// End of user code
     	
 	}

@@ -5,6 +5,66 @@
     android:orientation="vertical" >
 <!--Start of user code elementView_layout for DetailEntreeGlossaire_before_scroll
 -->
+
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:shrinkColumns="1"
+        android:stretchColumns="1" >
+
+		<TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_gravity="left"
+                android:padding="3dip"
+                android:text="@string/detailentreeglossaire_elementview_terme_label"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?android:attr/textColorPrimary" />
+
+            <TextView
+                android:id="@+id/detailentreeglossaire_elementview_terme"
+                android:layout_width="wrap_content"
+                android:layout_gravity="left"
+                android:padding="3dip"
+                android:text="Terme"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?android:attr/textColorPrimary" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_gravity="right"
+                android:padding="3dip"
+                android:text="@string/detailentreeglossaire_elementview_numerodoris_label"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="?android:attr/textColorSecondary" />
+
+	        <TextView
+	            android:id="@+id/detailentreeglossaire_elementview_numerodoris"
+	            android:layout_width="wrap_content"
+	            android:layout_gravity="right"
+	            android:padding="3dip"
+	            android:text="999"
+	            android:textAppearance="?android:attr/textAppearanceSmall"
+	            android:textColor="?android:attr/textColorSecondary" />
+
+        </TableRow>
+	</TableLayout>
+	<TextView
+		android:id="@+id/detailentreeglossaire_elementview_liensite"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="left"
+		android:padding="1dip"
+		android:text="Lien vers le site"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:textColor="?android:attr/textColorSecondary" />
+	
+	<View style="@style/Separateur"/>
+		
 <!--End of user code
 -->
     <ScrollView 
@@ -29,54 +89,6 @@
         android:src="@drawable/ic_launcher" >
     </ImageView>-->
 
-		    <TableLayout
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:shrinkColumns="1"
-		        android:stretchColumns="1" >
-
-				<TableRow
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content" >
-
-		            <TextView
-		                android:layout_width="wrap_content"
-		                android:layout_gravity="left"
-		                android:padding="3dip"
-		                android:text="@string/detailentreeglossaire_elementview_terme_label"
-		                android:textAppearance="?android:attr/textAppearanceMedium"
-		                android:textColor="?android:attr/textColorPrimary" />
-
-		            <TextView
-		                android:id="@+id/detailentreeglossaire_elementview_terme"
-		                android:layout_width="wrap_content"
-		                android:layout_gravity="left"
-		                android:padding="3dip"
-		                android:text="Terme"
-		                android:textAppearance="?android:attr/textAppearanceMedium"
-		                android:textColor="?android:attr/textColorPrimary" />
-
-		            <TextView
-		                android:layout_width="wrap_content"
-		                android:layout_gravity="right"
-		                android:padding="3dip"
-		                android:text="@string/detailentreeglossaire_elementview_numerodoris_label"
-		                android:textAppearance="?android:attr/textAppearanceSmall"
-		                android:textColor="?android:attr/textColorSecondary" />
-
-			        <TextView
-			            android:id="@+id/detailentreeglossaire_elementview_numerodoris"
-			            android:layout_width="wrap_content"
-			            android:layout_gravity="right"
-			            android:padding="3dip"
-			            android:text="999"
-			            android:textAppearance="?android:attr/textAppearanceSmall"
-			            android:textColor="?android:attr/textColorSecondary" />
-
-		        </TableRow>
-		</TableLayout>
-
-		<View style="@style/Separateur"/>
 
         <TextView
             android:text="@string/detailentreeglossaire_elementview_definition_label"
