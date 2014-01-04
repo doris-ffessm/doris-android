@@ -87,9 +87,6 @@ import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 
 public class PrefetchDorisWebSite {
 
-	// Pourrait être un jour utile, on verra
-	private final static String VERSION = "alpha 3.1";
-	
 	// we are using the in-memory H2 database
 	//private final static String DATABASE_URL = "jdbc:h2:mem:fiche";
 	// we are using the created SQLite database
@@ -728,11 +725,6 @@ public class PrefetchDorisWebSite {
 				help();
 				System.exit(0);
 			}
-			if ( arg.equals("-V") || arg.equals("--version")) {
-				log.debug("checkArgs() - arg : " + arg);
-				version();
-				System.exit(0);
-			}
 		}
 		
 		// paramètre qui permet de limiter le nombre de fiches à traiter
@@ -874,12 +866,11 @@ public class PrefetchDorisWebSite {
 	private static void help(){
 		log.debug("help() - Début");
 		
-		System.out.println("Récupération de la base de fiches pour DorisAndroid, Version : " + VERSION);
+		System.out.println("Récupération de la base de fiches pour DorisAndroid");
 		System.out.println("Usage: java -jar PrefetchDorisWebSite.jar [OPTIONS] [ACTION]");
 		System.out.println("");
 		System.out.println("OPTIONS :");
 		System.out.println("  -M, --max=K		on limite le travail au K 1ères fiches (utile en dev.)");
-		System.out.println("  -V, --version     afficher la version de l'application et quitter");
 		System.out.println("  -h, --help        afficher cette aide");
 		System.out.println("  -d, --debug       messages detinés aux développeurs de cette application");
 		System.out.println("  -v, --verbose     messages permettant de suivre l'avancé des traitements");
@@ -895,17 +886,6 @@ public class PrefetchDorisWebSite {
 		log.debug("help() - Fin");
 	}
 	
-	/**
-     * Afficher la version de l'application
-     * */	
-	private static void version(){
-		log.debug("version() - Début");
-		
-		System.out.println("Version : " + VERSION);
-		
-		log.debug("version() - Fin");
-	}
-
 	/**
 	 * Création, Sauvegarde des dossiers de travail de l'application
 	 * Selon l'action choisie

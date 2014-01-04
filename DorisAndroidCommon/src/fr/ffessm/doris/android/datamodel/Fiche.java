@@ -267,13 +267,29 @@ public class Fiche {
     	
     	htmlFiche = Outils.nettoyageBalises(htmlFiche);
     	
-    	try {
-			htmlFiche = Outils.ciblePage(htmlFiche, "FICHE");
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+    	// -- Cible de la page en enlevant tout débord tout ce qui est totalement superflu --
+    	// -- Issue de la Version 1 : ca fonctionne => je garde / GMo
+		Source source=new Source(htmlFiche);
+		source.fullSequentialParse();
+		Element tableResultats = null;
+
+		// Récupération de la Table des Résultats
+		List<? extends Element> listeElementsTable=source.getAllElements(HTMLElementName.TABLE);
+		for (Element elementTable : listeElementsTable) {
+			//log.debug("ciblePage() - elementTable : " + elementTable.toString().substring(0, Math.min(100, elementTable.toString().length())));
+			
+			List<? extends Attribute> listeAttributs=elementTable.getAttributes();
+			for (Attribute attribut : listeAttributs) {
+				if (attribut.getName().toLowerCase().equals("width") &  attribut.getValue().equals("820")) {
+					//log.debug("ciblePage() - Table Trouvée : " + attribut.getName() + " = " +  attribut.getValue());
+					tableResultats = elementTable;
+					break;
+				}
+			}
+			if (tableResultats != null) break;
 		}
-    	
+		htmlFiche = tableResultats.toString();
+				
     	// Permet ensuite de d'utiliser la mise ne forme
     	// mais le prix à payer est de supprimer à la main partout où elle n'est pas necessaire
     	htmlFiche = Outils.remplacementBalises(htmlFiche, true);
@@ -281,7 +297,7 @@ public class Fiche {
     	//log.debug("getFiche() - htmlFiche : " + htmlFiche.substring(0, 200));
     	
 		// Utilisation du parser Jericho
-		Source source=new Source(htmlFiche);
+		source=new Source(htmlFiche);
 		
 		// Necessaire pour trouver ensuite les pères
 		source.fullSequentialParse();
