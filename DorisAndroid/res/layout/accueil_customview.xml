@@ -13,8 +13,9 @@
         android:layout_height="wrap_content"
         android:padding="4dip"
 		android:text="@string/accueil_customview_texte_text"/>
+		<View style="@style/Separateur"/>
 	 -->
-	<View style="@style/Separateur"/>
+
 	<ScrollView
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
@@ -128,7 +129,8 @@
 			    <LinearLayout
 			        android:layout_width="match_parent"
 			        android:layout_height="match_parent"
-			        android:orientation="horizontal" >
+			        android:orientation="horizontal"
+					android:layout_marginTop="2dip">
 					<LinearLayout
 				        android:layout_width="match_parent"
 				        android:layout_height="match_parent"

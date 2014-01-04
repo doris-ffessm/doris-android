@@ -902,16 +902,16 @@ public class Outils {
 	
 
     public final static SpannableString textToSpannableStringDoris(final Context context, CharSequence texte) {
-	    Log.d(LOG_TAG, "textToSpannableStringDoris() - texte : "+texte);
+	    //Log.d(LOG_TAG, "textToSpannableStringDoris() - texte : "+texte);
 	    
 	    SpannableString richtext = new SpannableString("");
 	    
 	    if ( !texte.toString().replaceAll("\\s", "").matches(".*\\{\\{[^\\}]*\\}\\}.*")) {
-	    	Log.d(LOG_TAG, "textToSpannableStringDoris() - Aucun bloc {{*}}");
+	    	//Log.d(LOG_TAG, "textToSpannableStringDoris() - Aucun bloc {{*}}");
 	    	return new SpannableString(texte);
 	    	
 	    } else {
-	    	Log.d(LOG_TAG, "textToSpannableStringDoris() - Traitement récurrent des blocs {{*}}");
+	    	//Log.d(LOG_TAG, "textToSpannableStringDoris() - Traitement récurrent des blocs {{*}}");
 	    	
 	    	// TODO : doit être améliorable mais je n'arrive pas à manipuler directement SpannableString
 	    	// donc pas de concat, pas de regexp.
@@ -930,8 +930,8 @@ public class Outils {
 	        	
 	        	String balise = texteInter.substring(posDepTexteInter+2, posFinTexteInter);
 	        	
-	        	Log.d(LOG_TAG, "textToSpannableStringDoris() - texteInter : "+texteInter
-	        			+ " - " + posDepTexteInter + "-" + posFinTexteInter + " -> " + balise);
+	        	//Log.d(LOG_TAG, "textToSpannableStringDoris() - texteInter : "+texteInter
+	        	//		+ " - " + posDepTexteInter + "-" + posFinTexteInter + " -> " + balise);
 	        	
 	        	if (balise.equals("i")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
@@ -1040,13 +1040,13 @@ public class Outils {
 	        } // fin du While
 	        
 	        texteFinal.append(texteInter);
-	        Log.d(LOG_TAG, "textToSpannableStringDoris() - texteFinal après while : "+texteFinal);
-	        Log.d(LOG_TAG, "textToSpannableStringDoris() - longueur : "+texteFinal.length());
+	        //Log.d(LOG_TAG, "textToSpannableStringDoris() - texteFinal après while : "+texteFinal);
+	        //Log.d(LOG_TAG, "textToSpannableStringDoris() - longueur : "+texteFinal.length());
 	        
 	        richtext = new SpannableString(texteFinal);
 	        
 	        for (final TextSpan ts : listeFicheNumero) {
-	        	Log.d(LOG_TAG, "textToSpannableStringDoris() - ts : "+ts.spanType.name()+" - "+ts.info);
+	        	//Log.d(LOG_TAG, "textToSpannableStringDoris() - ts : "+ts.spanType.name()+" - "+ts.info);
 	        	
 	        	if ( ts.spanType == TextSpan.SpanType.ITALIQUE ) {
 	        		richtext.setSpan(new StyleSpan(Typeface.ITALIC), ts.positionDebut, ts.positionFin, 0);  
@@ -1077,7 +1077,7 @@ public class Outils {
 			        		context.startActivity(toDetailView);
 			            }  
 			        };
-			     	Log.d(LOG_TAG, "addFoldableView() - SpannableString : "+ts.positionDebut + " - " + ts.positionFin);
+			     	//Log.d(LOG_TAG, "addFoldableView() - SpannableString : "+ts.positionDebut + " - " + ts.positionFin);
 			    	
 					richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
 					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_lienfiche))), ts.positionDebut, ts.positionFin, 0);  
@@ -1160,7 +1160,7 @@ public class Outils {
 
 			            }  
 			        };
-			     	Log.d(LOG_TAG, "addFoldableView() - SpannableString : "+ts.positionDebut + " - " + ts.positionFin);
+			     	//Log.d(LOG_TAG, "addFoldableView() - SpannableString : "+ts.positionDebut + " - " + ts.positionFin);
 			    	
 					richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
 					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_liendefinition))), ts.positionDebut, ts.positionFin, 0);

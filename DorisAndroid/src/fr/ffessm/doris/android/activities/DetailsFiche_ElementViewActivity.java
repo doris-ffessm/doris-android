@@ -122,6 +122,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	
 	static final int FOLD_SECTIONS_MENU_ID = 1;	
 	static final int UNFOLD_SECTIONS_MENU_ID = 2;
+	static final int GLOSSAIRE_MENU_ID = 3;
 	
     boolean isOnCreate = true;
     List<FoldableClickListener> allFoldable = new ArrayList<FoldableClickListener>();
@@ -360,10 +361,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     public boolean onCreateOptionsMenu(Menu menu) {
 		// add options in the menu
         menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
-
+       
 		//Start of user code additional onCreateOptionsMenu DetailsFiche_EditableElementViewActivity
         menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.expander_ic_maximized);
 		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.expander_ic_minimized);
+		menu.add(Menu.NONE, GLOSSAIRE_MENU_ID, 0, R.string.accueil_glossaire_text).setIcon(R.drawable.glossaire_64);
 
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -384,6 +386,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 				break;
         	case UNFOLD_SECTIONS_MENU_ID:
         		unfoldAll();
+				break;
+        	case GLOSSAIRE_MENU_ID:
+        		Intent toDefinitionlView = new Intent(context, Glossaire_ClassListViewActivity.class);
+            	context.startActivity(toDefinitionlView);
 				break;
 		//End of user code
         }
