@@ -365,8 +365,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		//Start of user code additional onCreateOptionsMenu DetailsFiche_EditableElementViewActivity
         menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.expander_ic_maximized);
 		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.expander_ic_minimized);
-		menu.add(Menu.NONE, GLOSSAIRE_MENU_ID, 0, R.string.accueil_glossaire_text).setIcon(R.drawable.glossaire_64);
-
+		menu.add(Menu.NONE, GLOSSAIRE_MENU_ID, 0, R.string.accueil_glossaire_text).setIcon(R.drawable.glossaire);
+		
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
