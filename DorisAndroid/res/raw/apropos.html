@@ -5,25 +5,32 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<style type="text/css">
 			h1, h2, h3, h4, h5, h6 { margin-bottom : 0.2em; margin-top : 1em;}
-			h3 { border-bottom: 2px solid #0000DD; padding: 0 0 0.1em;}
+			h3 { border-bottom: 2px solid #0000DD; padding: 0 0 0.1em; margin-right: 32px;}
 			a { line-height : 2em; }
 			span.Changements { font-size : small;}
+			span.Aide { font-size : small;}
+			ul.Aide { font-size : small;}
+			ul.Retour { float: right; list-style: none outside none;}
 		</style>
 	</head>
 	<body>
-		<p>
-		Cette application permet d'utiliser les données du site DORIS sur les terminaux Android.<br />
+		<p><a name="TableMatieres"></a>
+		Cette application permet d'utiliser les données du site <b>DORIS</b> sur les terminaux Android.<br />
 		Plus précisément, cette application mobile vise à être un guide pouvant être emmené "presque" partout.<br />
-		Il apporte une aide à l'identification et à l'observation des espèces marines et d'eau douce pour profiter au mieux de vos plongées et ballades sur l'estran.<br />
+		Elle apporte une <b>aide à l'identification et à l'observation des espèces marines et d'eau douce</b> pour profiter au mieux de vos plongées et ballades sur l'estran.<br />
 		</p>
 		<p>
 			<h3>Table des matières</h3>
 			<ul>
 				<li><a href="#LiensImportants">Liens Importants</a></li>
-				<li><a href="#Changements">Changements</a></li>
+				<li><a href="#Aide">Guide Utilisateur</a></li>
+				<li><a href="#Changements">Versions - Changements</a></li>
 			</ul>
 		</p>
 		<p>
+			<ul class="Retour">
+				<li><a href="#TableMatieres"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
+			</ul>
 			<h3><a name="LiensImportants"></a>Liens Importants</h3>
 			<a href="http://doris.ffessm.fr"><img src="logo_doris.gif" alt="DORIS" width="45%" style="border: 1px solid blue;"/></a>
 			<a href="http://biologie.ffessm.fr/"><img src="logo_biologie.gif" alt="Commission Biologie de la FFESSM" width="45%" style="border: 1px solid blue;"/></a>
@@ -35,8 +42,67 @@
 			</ul>
 		</p>
 		<p>
+			<ul class="Retour">
+				<li><a href="#LiensImportants"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
+			</ul>
+			<h3><a name="Aide"></a>Guide Utilisateur</h3>
+			<h4>Sommaire de l'Aide</h4>
+			<ul class="Aide">
+				<li><a href="#AidePrincipe">Principes</a></li>
+				<li><a href="#AideNavigation">Navigation</a></li>
+				<li><a href="#AideParametres">Paramètres</a></li>
+				<ul class="Aide">
+					<li><a href="#AideParamModeConnecte">Mode Connecté</a></li>
+					<li><a href="#AideParamHorsLigne">Précharg. Photo pour Mode Hors Ligne</a></li>
+					<li><a href="#AideParamPresentation">Options de Présentation</a></li>
+				</ul>
+			</ul>
+			<h4><a name="AidePrincipe"></a>Principes</h4>
+			<span class="Aide">
+				Les <b>Fiches</b>, les <b>termes du Glossaire</b> et les informations sur les <b>Participants</b> du site <b>DORIS</b> sont comprises dans l'application.
+				Dans cette Version (<i>Beta 1</i>) ces informations ne peuvent pas encore être mises à jour depuis le terminal.<br />
+				<i>C'est une évolution prévue.</i><br />
+				<br />
+				Les <b>Photos</b>, elles, doivent être téléchargées. Si vous avez un accès à internet cela peut être fait durant la navigation dans les fiches. Mais pour économiser votre forfait et gagner en fluidité vous pouvez les télécharger préalablement en WIFI.<br />
+				Tout cela est <a href="#AideParametres">paramétrable</a>.
+			</span>
+			<h4><a name="AideNavigation"></a>Navigation</h4>
+			<span class="Aide">
+				À compléter ...
+			</span>
+			<h4><a name="AideParametres"></a>Paramètres</h4>
+			<span class="Aide">
+				<img src="ic_menu_preferences.png" alt="Icône Paramètre" align="left"/>
+				Les <b>Paramètres</b> sont accessibles avec la touche <b>Menu</b> de votre appareil depuis l'ensemble de l'application.
+			</span>
+			<h4><a name="AideParamModeConnecte"></a>Mode Connecté</h4>
+			<span class="Aide">
+				Par défaut, les vignettes des listes et, lors de leur affichage, les photos de qualité intermédiaire sont téléchargées <span style="text-decoration: underline;">si elles ne sont pas disponibles sur l'appareil</span>.<br />
+				Il est possible de n'autoriser ces téléchargements que quand l'appareil est connecté à internet en WIFI.<br />
+				Par ailleurs, les photos peuvent être téléchargées dans la meilleure qualité disponible sur le site.<br />
+				<br />
+				<i>Ces images sont enregistrées dans un cache vidé au besoin automatiquement. IE, il n'est pas garanti qu'elles soient disponibles lors d'un prochain visionage hors ligne.</i>
+			</span>
+			<h4><a name="AideParamHorsLigne"></a>Préchargement Photo pour le Mode Hors Ligne</h4>
+			<span class="Aide">
+				Par défaut, les vignettes de la photo principale sont téléchargées lorsque l'application est lancée alors que l'appareil est connecté à internet en WIFI.<br />
+				À compléter ...
+			</span>
+			<h4><a name="AideParamPresentation"></a>Options de Présentation</h4>
+			<span class="Aide">
+				À compléter ...
+			</span>
+		</p>
+		<p>
+			<ul class="Retour">
+				<li><a href="#Aide"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
+			</ul>
 			<h3><a name="Changements"></a>Versions - Changements</h3>
-			<h4>Alpha</h4>
+			<h4>Beta 1 - 01/2014</h4>
+			<span class="Changements">
+				- 1ère Proposition<br />
+			</span>
+			<h4>Alpha - */2013</h4>
 			<span class="Changements">
 				- En cours de développement<br />
 			</span>

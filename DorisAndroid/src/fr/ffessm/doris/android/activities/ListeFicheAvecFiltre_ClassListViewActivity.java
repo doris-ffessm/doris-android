@@ -323,12 +323,19 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 			LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View layout = layoutInflater.inflate(R.layout.listeficheavecfiltre_filtrespopup, viewGroup);
 			
-			popup = new PopupWindow(layout, 300, 300);
-			//popup.setContentView(layout);
 			
 			//int popupWidth = layout.getWidth(); 
 			//int popupHeight = layout.getHeight();
-			//Log.d(LOG_TAG," width="+popupWidth+", height="+popupHeight);
+			//Log.d(LOG_TAG,"showPopup() - width="+popupWidth+", height="+popupHeight);
+			
+			ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
+			int popupWidth = list.getWidth(); 
+			
+			popup = new PopupWindow(layout, popupWidth, 300);
+			//popup = new PopupWindow(layout);
+			//popup.setContentView(layout);
+			
+			
 			searchbuttonstatus=1;
 			//popup.setWidth(popupWidth);
 			//popup.setHeight(popupHeight);

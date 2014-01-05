@@ -300,9 +300,12 @@ public class Outils {
 		texteNettoye = texteNettoye.replaceAll("\r\n", "");
 		texteNettoye = texteNettoye.replaceAll("\n", "");
 		
-		// Certains Textes contiennent des Guillemets de type PRIVATE USE TWO (C292 UTF8, 0092 en Java)
+		// Certains Textes contiennent des Guillemets de type :
+		// PRIVATE USE TWO (C292 UTF8, 0092 en Java)
+		// de même : RIGHT SINGLE QUOTATION MARK (E28099 UTF8, \u2019 en Java)
 		// au lieu de ' - sous Android les TextView les remplacent par des espaces
 		texteNettoye = texteNettoye.replaceAll("\u0092", "'");
+		texteNettoye = texteNettoye.replaceAll("\u2019", "'");
 		
 		// suppression des blancs multiples
 		texteNettoye = texteNettoye.replaceAll("[ \t]{2,}"," ");

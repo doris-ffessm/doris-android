@@ -68,45 +68,28 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.AlertDialog;
-import android.content.ClipData.Item;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.drawable.shapes.Shape;
 import android.net.Uri;
 import android.os.AsyncTask.Status;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ScrollView;
-import android.widget.TextView.BufferType;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import com.j256.ormlite.dao.CloseableIterator;
-import com.squareup.picasso.Picasso;
 
-import fr.ffessm.doris.android.DorisApplication;
 import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.activities.view.FoldableClickListener;
 import fr.ffessm.doris.android.activities.view.MultiProgressBar;
-import fr.ffessm.doris.android.activities.view.ProgressBarZone;
-import fr.ffessm.doris.android.activities.view.ProgressBarZone.NbBar;
-import fr.ffessm.doris.android.async.InitialisationApplication_BgActivity;
-import fr.ffessm.doris.android.async.TelechargeFiches_BgActivity;
 import fr.ffessm.doris.android.async.TelechargePhotosFiches_BgActivity;
-import fr.ffessm.doris.android.async.VerifieNouvellesFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
-import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
@@ -114,7 +97,7 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.tools.Outils;
-import fr.ffessm.doris.android.tools.Outils.PrecharMode;
+
 //End of user code
 public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
 //Start of user code additional implements Accueil_CustomViewActivity
@@ -714,7 +697,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         return super.onCreateOptionsMenu(menu);
     }
     
-    
+  
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	// behavior of option menu

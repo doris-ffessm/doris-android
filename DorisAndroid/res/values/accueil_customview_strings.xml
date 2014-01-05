@@ -29,7 +29,7 @@
 		
 	<string name="a_propos_label">À propos</string>
 	<string name="a_propos_txt_1">"À propos\u00A0- "</string>
-	<string name="a_propos_txt_2">Version\u00A0:</string>
+	<string name="a_propos_txt_2">""Version\u00A0: "</string>
 	<string name="a_propos_base_date">"Dernière MaJ le\u00A0: "</string>
 	<string name="a_propos_foldersize_titre">Nb Images et Taille Dossiers\u00A0:</string>
 	<string name="a_propos_foldersize_vignettes">" vignettes\u00A0- "</string>
