@@ -62,6 +62,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -88,6 +89,9 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 	//Start of user code constants ListeFicheAvecFiltre_ClassListViewActivity
 	SearchPopupButtonManager searchPopupButtonManager;
     ImageButton searchButton;
+    
+    
+    final Context testContext = this;
 	//End of user code
 	// Search EditText
     EditText inputSearch;
@@ -106,6 +110,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 		//Start of user code onCreate ListeFicheAvecFiltre_ClassListViewActivity adapter creation
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper(), prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1));
+
         //End of user code
 		// avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -310,35 +315,19 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 	    }
 		
 		public  void showPopup() {
-			
-			//WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
-		    //Display display1 = getWindowManager().getDefaultDisplay();
-		    //int Twidth = display1.getWidth();
-		    //int Theight = display1.getHeight();
-			 
-			 
-			//int popupWidth = 200;
-			//int popupHeight =300;
+
 			LinearLayout viewGroup = (LinearLayout) context.findViewById(R.id.listeavecfiltre_filtrespopup);
 			LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View layout = layoutInflater.inflate(R.layout.listeficheavecfiltre_filtrespopup, viewGroup);
 			
-			
-			//int popupWidth = layout.getWidth(); 
-			//int popupHeight = layout.getHeight();
+			int popupWidth =  getResources().getDimensionPixelSize(R.dimen.listeficheavecfiltre_popup_width); 
+			int popupHeight = getResources().getDimensionPixelSize(R.dimen.listeficheavecfiltre_popup_height); 
 			//Log.d(LOG_TAG,"showPopup() - width="+popupWidth+", height="+popupHeight);
 			
-			ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
-			int popupWidth = list.getWidth(); 
-			
-			popup = new PopupWindow(layout, popupWidth, 300);
-			//popup = new PopupWindow(layout);
-			//popup.setContentView(layout);
-			
-			
+			popup = new PopupWindow(layout, popupWidth, popupHeight);
+
 			searchbuttonstatus=1;
-			//popup.setWidth(popupWidth);
-			//popup.setHeight(popupHeight);
+
 			popup.setFocusable(false);
 	
 			//int OFFSET_X =(Twidth);

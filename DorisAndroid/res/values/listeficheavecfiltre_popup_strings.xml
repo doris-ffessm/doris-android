@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<dimen name="listeficheavecfiltre_popup_width">250dp</dimen>
+	<dimen name="listeficheavecfiltre_popup_height">250dp</dimen>
 
     <string name="listeficheavecfiltre_popup_filtreEspece_sans">Filtrer par espèces</string>
     <string name="listeficheavecfiltre_popup_filtreEspece_avec">Uniquement les </string>
