@@ -76,6 +76,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import com.j256.ormlite.dao.CloseableIterator;
 import fr.ffessm.doris.android.DorisApplicationContext;
+import fr.ffessm.doris.android.activities.view.APropos;
 import fr.ffessm.doris.android.activities.view.MultiProgressBar;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
@@ -90,7 +91,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
 {
 	
 	//Start of user code constants EtatModeHorsLigne_CustomViewActivity
-
+	static final int APROPOS = 6;
+	
 	private static final String LOG_TAG = EtatModeHorsLigne_CustomViewActivity.class.getCanonicalName();
 	Handler mHandler;
 	
@@ -103,9 +105,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
         super.onCreate(savedInstanceState);
         setContentView(R.layout.etatmodehorsligne_customview);
         //Start of user code onCreate EtatModeHorsLigne_CustomViewActivity
-        
-        
-        
+
         createProgressZone();
         
         // Defines a Handler object that's attached to the UI thread
@@ -139,7 +139,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
     //Start of user code additional code EtatModeHorsLigne_CustomViewActivity
     public void dataHasChanged(String textmessage){
 		 Message completeMessage = mHandler.obtainMessage(1, textmessage);
-        completeMessage.sendToTarget();
+		 completeMessage.sendToTarget();
 	}
     
     public Context getContext(){
@@ -354,7 +354,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
 		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
 
 		//Start of user code additional onCreateOptionsMenu EtatModeHorsLigne_CustomViewActivity
-
+		menu.add(Menu.NONE, APROPOS, 2, R.string.a_propos_label).setIcon(android.R.drawable.ic_menu_info_details);
+		
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
@@ -369,7 +370,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
 		            return true;
 		
 		//Start of user code additional menu action EtatModeHorsLigne_CustomViewActivity
-
+			case APROPOS:
+				APropos aPropos = new APropos(getContext(), (Activity) getContext(), getHelper());
+				aPropos.aProposAff();				
+				break;
 		//End of user code
         }
         return false;

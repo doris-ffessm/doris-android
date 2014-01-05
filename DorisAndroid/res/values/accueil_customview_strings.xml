@@ -26,15 +26,6 @@
 	<string name="menu_option_telecharge_photofiches">Préchargement photos</string>
 	<string name="menu_option_verifie_nouvelles_fiches">Cherche nouvelles fiches</string>
 	<string name="menu_option_reinitialise_a_partir_du_xml">Réinitialise Base</string>
-		
-	<string name="a_propos_label">À propos</string>
-	<string name="a_propos_txt_1">"À propos\u00A0- "</string>
-	<string name="a_propos_txt_2">""Version\u00A0: "</string>
-	<string name="a_propos_base_date">"Dernière MaJ le\u00A0: "</string>
-	<string name="a_propos_foldersize_titre">Nb Images et Taille Dossiers\u00A0:</string>
-	<string name="a_propos_foldersize_vignettes">" vignettes\u00A0- "</string>
-	<string name="a_propos_foldersize_med_res">" images Qualité Intermédiaire\u00A0- "</string>
-	<string name="a_propos_foldersize_hi_res">" images Haute Qualité\u00A0- "</string>
 	
 	
 	<!-- End of user code
