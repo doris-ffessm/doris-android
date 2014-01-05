@@ -304,6 +304,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	public void onClickBtnListeFiches(View view){
 		startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
     }
+	public void onClickBtnRechercheGuidee(View view){
+		startActivity(new Intent(this, GroupeSelection_ClassListViewActivity.class));
+	}
 	public void onClickBtnListeParticipants(View view){
 		startActivity(new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class));
 	}
