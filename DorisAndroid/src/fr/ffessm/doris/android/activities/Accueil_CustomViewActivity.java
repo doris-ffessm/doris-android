@@ -305,7 +305,12 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
     }
 	public void onClickBtnRechercheGuidee(View view){
-		startActivity(new Intent(this, GroupeSelection_ClassListViewActivity.class));
+		//Permet de revenir à l'accueil après recherche par le groupe, si false on irait dans la liste en quittant
+		Intent toGroupeSelectionView = new Intent(this, GroupeSelection_ClassListViewActivity.class);
+        Bundle b = new Bundle();
+        b.putBoolean("GroupeSelection_depuisAccueil", true);
+        toGroupeSelectionView.putExtras(b);
+        startActivity(toGroupeSelectionView);
 	}
 	public void onClickBtnListeParticipants(View view){
 		startActivity(new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class));

@@ -43,6 +43,7 @@ package fr.ffessm.doris.android.activities;
 
 
 import fr.ffessm.doris.android.datamodel.*;
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
@@ -74,10 +75,12 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<O
 	private static final String LOG_TAG = GroupeSelection_ClassListViewActivity.class.getSimpleName();
 
 	//Start of user code constants GroupeSelection_ClassListViewActivity
+	boolean depuisAccueil = false;
+	
 	//End of user code
     GroupeSelection_Adapter adapter;
 
-
+    @Override
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.groupeselection_listview);
@@ -85,7 +88,9 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<O
 		ListView list = (ListView) findViewById(R.id.groupeselection_listview);
         list.setClickable(false);
 		//Start of user code onCreate GroupeSelection_ClassListViewActivity adapter creation
-        adapter = new GroupeSelection_Adapter(this, getHelper().getDorisDBHelper());		
+        depuisAccueil = getIntent().getExtras().getBoolean("GroupeSelection_depuisAccueil", false);
+        
+        adapter = new GroupeSelection_Adapter(this, getHelper().getDorisDBHelper(), depuisAccueil);		
 		//End of user code
 		// avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -93,7 +98,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<O
 
         list.setAdapter(adapter);
 		//Start of user code onCreate additions GroupeSelection_ClassListViewActivity
-        // affiche ou cahce le filtre espèce actuel (+ son bouton de suppression)
+        // affiche ou cache le filtre espèce actuel (+ son bouton de suppression)
         RelativeLayout currentFilterInfoLayout = (RelativeLayout)findViewById(R.id.groupselection_listview_filtre_espece_courant_layout);
     	
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -116,7 +121,8 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<O
 		//Start of user code onResume additions GroupeSelection_ClassListViewActivity
 		//End of user code
 	}
-
+	
+	@Override
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 			//Start of user code onItemClick additions GroupeSelection_ClassListViewActivity
 		//showToast("Groupe : "+position + " - "+ index);
@@ -143,7 +149,12 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<O
 			SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
 			ed.putInt(this.getString(R.string.pref_key_filtre_groupe), clickedGroupe.getId());
 	        ed.commit();
-			((GroupeSelection_ClassListViewActivity)this).finish();
+	        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onItemClick() - depuisAccueil : " + depuisAccueil);
+	        if (!depuisAccueil) {
+	        	((GroupeSelection_ClassListViewActivity)this).finish();
+	        } else {
+	        	startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
+	        }
 		}
 	
 		//End of user code		

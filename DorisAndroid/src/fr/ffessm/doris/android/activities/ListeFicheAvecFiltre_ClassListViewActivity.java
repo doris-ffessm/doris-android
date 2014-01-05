@@ -91,7 +91,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
     ImageButton searchButton;
     
     
-    final Context testContext = this;
+    final Context context = this;
 	//End of user code
 	// Search EditText
     EditText inputSearch;
@@ -355,7 +355,13 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 					popup.setFocusable(true);
 					searchbuttonstatus=0;
 					popup.dismiss();
-					startActivity(new Intent(context, GroupeSelection_ClassListViewActivity.class));
+					
+					//Permet de revenir à cette liste après choix du groupe, True on retournerait à l'accueil
+					Intent toGroupeSelectionView = new Intent(context, GroupeSelection_ClassListViewActivity.class);
+			        Bundle b = new Bundle();
+			        b.putBoolean("GroupeSelection_depuisAccueil", false);
+			        toGroupeSelectionView.putExtras(b);
+			        startActivity(toGroupeSelectionView);
 				  }
 				});
 	

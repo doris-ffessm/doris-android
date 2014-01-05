@@ -46,13 +46,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Groupe;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -97,8 +100,17 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
     public List<Groupe> filteredGroupeList;
 	SharedPreferences prefs;
 	//Start of user code protected additional GroupeSelection_Adapter attributes
+	boolean depuisAccueil = false;
 	
-	
+	public GroupeSelection_Adapter(Context context, DorisDBHelper contextDB, boolean depuisAccueil) {
+		super();
+		this.context = context;
+		this._contextDB = contextDB;
+		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		updateList();
+		
+		this.depuisAccueil = depuisAccueil;
+	}
 	
 	// additional attributes
 	// niveau de profondeur utilisé pour le listGroup par rapport au Groupe 
@@ -244,7 +256,14 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId());
 		        ed.commit();
-				((GroupeSelection_ClassListViewActivity)context).finish();
+		        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onClick() - depuisAccueil : " + depuisAccueil);
+		        if (!depuisAccueil) {
+		            ((GroupeSelection_ClassListViewActivity)context).finish();
+		        } else {
+		        	Intent toListeFiche_View = new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class);
+		        	toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		        	context.getApplicationContext().startActivity(toListeFiche_View);
+		        }
 			}
 		});
         
