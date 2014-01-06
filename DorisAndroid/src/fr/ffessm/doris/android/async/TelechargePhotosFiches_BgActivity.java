@@ -280,53 +280,63 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    				= dbHelper.getFiches_ZonesGeographiquesDao().queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, zoneGeo.getId());
 	        		Log.d(LOG_TAG, "Debug - 301 - listeAssoc.size() : "+listeFichesZone.size());
 	        		
-	        		if(listeFichesZone !=  null)	for (Fiches_ZonesGeographiques fiche_ZonesGeographiques : listeFichesZone) {
-	        			idFiche = Integer.valueOf( fiche_ZonesGeographiques.getFiche().getId() );
-	        			
-	        			if ( !ficheTraitee.contains(idFiche) ) {
-	        				
-	        				ficheTraitee.add( idFiche );
-	        				
-		        			fiche_ZonesGeographiques.setContextDB(dbHelper.getDorisDBHelper());
-		    				Fiche fiche = fiche_ZonesGeographiques.getFiche();
-		    				
-		    				photoFichePrinc = fiche.getPhotoPrincipale();
-		        			if(photoFichePrinc != null){
-		        				// Temporaire : on télécharge toujours le format vignette afin d'accélérer l'affichage des listes
-		        				nbPhotosPrincATelechargerPourZone++;
+	        		if(listeFichesZone !=  null)	{
+	        			for (Fiches_ZonesGeographiques fiche_ZonesGeographiques : listeFichesZone) {
+	        		
+		        			idFiche = Integer.valueOf( fiche_ZonesGeographiques.getFiche().getId() );
+		        			
+		        			if ( !ficheTraitee.contains(idFiche) ) {
 		        				
-		        				if ( !hsImagesPrincVig.contains(photoFichePrinc) ){
-		        					// Vérification que pas déjà téléchargée
-		        					fichierPhoto = new File(Outils.getImageFolderVignette(context), photoFichePrinc.getCleURL());
-		        					if ( !hsImagesVigAllreadyAvailable.contains(fichierPhoto) ){
-		        						hsImagesPrincVig.add(new PhotoATraiterOptim(photoFichePrinc, true, zoneGeo.getId()));
-		        					}  else nbPhotosPrincDejaLaPourZone++;
-		        				} else nbPhotosPrincDejaLaPourZone++;
+		        				ficheTraitee.add( idFiche );
 		        				
-		        				if ( imageTypeImage == Outils.ImageType.MED_RES) {
-		        					nbPhotosPrincATelechargerPourZone++;
-		        					if ( !hsImagesPrincMedRes.contains(photoFichePrinc) ){
-		        						fichierPhoto = new File(Outils.getImageFolderMedRes(context), photoFichePrinc.getCleURL());
-			        					if ( !hsImagesMedResAllreadyAvailable.contains(fichierPhoto) ){
-			        						hsImagesPrincMedRes.add(new PhotoATraiterOptim(photoFichePrinc, true, zoneGeo.getId()));
-			        					} else nbPhotosPrincDejaLaPourZone++;
+			        			fiche_ZonesGeographiques.setContextDB(dbHelper.getDorisDBHelper());
+			    				Fiche fiche = fiche_ZonesGeographiques.getFiche();
+			    				
+			    				photoFichePrinc = fiche.getPhotoPrincipale();
+			        			if(photoFichePrinc != null){
+			        				// Temporaire : on télécharge toujours le format vignette afin d'accélérer l'affichage des listes
+			        				nbPhotosPrincATelechargerPourZone++;
+			        				
+			        				if ( !hsImagesPrincVig.contains(photoFichePrinc) ){
+			        					// Vérification que pas déjà téléchargée
+			        					fichierPhoto = new File(Outils.getImageFolderVignette(context), photoFichePrinc.getCleURL());
+			        					if ( !hsImagesVigAllreadyAvailable.contains(fichierPhoto) ){
+			        						hsImagesPrincVig.add(new PhotoATraiterOptim(photoFichePrinc, true, zoneGeo.getId()));
+			        					}  else nbPhotosPrincDejaLaPourZone++;
 			        				} else nbPhotosPrincDejaLaPourZone++;
-		        				}
-		        				if ( imageTypeImage == Outils.ImageType.HI_RES) {
-		        					nbPhotosPrincATelechargerPourZone++;
-		        					if ( !hsImagesPrincHiRes.contains(photoFichePrinc) ){
-		        						fichierPhoto = new File(Outils.getImageFolderHiRes(context), photoFichePrinc.getCleURL());
-			        					if ( !hsImagesHiResAllreadyAvailable.contains(fichierPhoto) ){
-			        						hsImagesPrincHiRes.add(new PhotoATraiterOptim(photoFichePrinc, true, zoneGeo.getId()));
-			        					} else nbPhotosPrincDejaLaPourZone++;
-			        				} else nbPhotosPrincDejaLaPourZone++;
-		        				}
-		        			}
-        				} // fin Fiches par Zone
+			        				
+			        				if ( imageTypeImage == Outils.ImageType.MED_RES) {
+			        					nbPhotosPrincATelechargerPourZone++;
+			        					if ( !hsImagesPrincMedRes.contains(photoFichePrinc) ){
+			        						fichierPhoto = new File(Outils.getImageFolderMedRes(context), photoFichePrinc.getCleURL());
+				        					if ( !hsImagesMedResAllreadyAvailable.contains(fichierPhoto) ){
+				        						hsImagesPrincMedRes.add(new PhotoATraiterOptim(photoFichePrinc, true, zoneGeo.getId()));
+				        					} else nbPhotosPrincDejaLaPourZone++;
+				        				} else nbPhotosPrincDejaLaPourZone++;
+			        				}
+			        				if ( imageTypeImage == Outils.ImageType.HI_RES) {
+			        					nbPhotosPrincATelechargerPourZone++;
+			        					if ( !hsImagesPrincHiRes.contains(photoFichePrinc) ){
+			        						fichierPhoto = new File(Outils.getImageFolderHiRes(context), photoFichePrinc.getCleURL());
+				        					if ( !hsImagesHiResAllreadyAvailable.contains(fichierPhoto) ){
+				        						hsImagesPrincHiRes.add(new PhotoATraiterOptim(photoFichePrinc, true, zoneGeo.getId()));
+				        					} else nbPhotosPrincDejaLaPourZone++;
+				        				} else nbPhotosPrincDejaLaPourZone++;
+			        				}
+			        			}
+			        			if((hsImagesPrincHiRes.size()+hsImagesPrincMedRes.size()+hsImagesPrincVig.size()) % 200 ==0){
+			        				// toutes les 200 images ajoutées fait une micro pause pour économiser le CPU pour l'UI
+			        				Thread.sleep(100); // wait for 100 milliseconds before running another loop
+			        			}
+	        				} // fin Fiches par Zone
+	        			}
 	        		}
 	    			//Enregistrement du nombre total de photos à télécharger pour afficher avancement
 	        		Outils.setParamInt(context, Outils.getKeyDataAPrecharZoneGeo(context, zoneGeo.getId(), true), nbPhotosPrincATelechargerPourZone);
 	        		Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneGeo.getId(), true), nbPhotosPrincDejaLaPourZone);
+	        		
+	        		// tempo pour économiser le CPU
+	        		Thread.sleep(50); // wait for 50 milliseconds before running another loop
 	    		}
 	    	} // fin ZoneGeo
 	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - ImagesPrincVig : "+hsImagesPrincVig.size() );
@@ -398,54 +408,59 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	        		mNotificationHelper.setMaxItemToProcess(""+listeFichesZone.size());
 	        		compteurAvancement = 0;
 	        		
-	        		if(listeFichesZone !=  null)	for (Fiches_ZonesGeographiques fiche_ZonesGeographiques : listeFichesZone) {
-	        			
-	        			compteurAvancement ++;
-	        			if( (compteurAvancement % 10) == 0) publishProgress( compteurAvancement );
-	        			
-	        			idFiche = Integer.valueOf(fiche_ZonesGeographiques.getFiche().getId());
-	        			// Les compteurs des photos à télécharger sont moins ergonomiques
-	        			// mais ainsi on ne traite qu'une fois chaque fiche ce qui fait gagner bcq de temps de traitement
-	        			if (!ficheTraitee.contains( idFiche ) ) {
-	        				
-	        				ficheTraitee.add( idFiche );
-		        			
-	        				fiche_ZonesGeographiques.setContextDB(dbHelper.getDorisDBHelper());
-		    				Fiche fiche = fiche_ZonesGeographiques.getFiche();
-		    				
-		    				for (PhotoFiche photoFiche : fiche.getPhotosFiche()) {
-	
-			        			if(photoFiche != null){
-			        				
-			        				if ( imageTypeImage == Outils.ImageType.VIGNETTE ){
-			        					nbPhotosATelechargerPourZone++;
-			        					// Vérification que pas déjà téléchargée
-			        					fichierPhoto = new File(Outils.getImageFolderVignette(context), photoFiche.getCleURL());
-			        					if ( !hsImagesVigAllreadyAvailable.contains(fichierPhoto) ){
-			        						hsImagesVig.add(new PhotoATraiterOptim(photoFiche, false, zoneGeo.getId()));
-			        					} else nbPhotosDejaLaPourZone++;
-			        				}
-			        				if ( imageTypeImage == Outils.ImageType.MED_RES) {
-			        					nbPhotosATelechargerPourZone++;
-			        					if ( !hsImagesMedRes.contains(photoFiche) ){
-			        						fichierPhoto = new File(Outils.getImageFolderMedRes(context), photoFiche.getCleURL());
-				        					if ( !hsImagesMedResAllreadyAvailable.contains(fichierPhoto) ){
-				        						hsImagesMedRes.add(new PhotoATraiterOptim(photoFiche, false, zoneGeo.getId()));
-				        					} else nbPhotosDejaLaPourZone++;
-				        				}
-			        				}
-			        				if ( imageTypeImage == Outils.ImageType.HI_RES) {
-			        					nbPhotosATelechargerPourZone++;
-			        					if ( !hsImagesHiRes.contains(photoFiche) ){
-			        						fichierPhoto = new File(Outils.getImageFolderHiRes(context), photoFiche.getCleURL());
-				        					if ( !hsImagesHiResAllreadyAvailable.contains(fichierPhoto) ){
-				        						hsImagesHiRes.add(new PhotoATraiterOptim(photoFiche, false, zoneGeo.getId()));
-				        					} else nbPhotosDejaLaPourZone++;
-				        				}
-			        				}
-			        			}
-		    				}
-        				}
+	        		if(listeFichesZone !=  null)	{
+	        			for (Fiches_ZonesGeographiques fiche_ZonesGeographiques : listeFichesZone) {
+	        				compteurAvancement ++;
+	        				if( (compteurAvancement % 10) == 0) publishProgress( compteurAvancement );
+
+	        				idFiche = Integer.valueOf(fiche_ZonesGeographiques.getFiche().getId());
+	        				// Les compteurs des photos à télécharger sont moins ergonomiques
+	        				// mais ainsi on ne traite qu'une fois chaque fiche ce qui fait gagner bcq de temps de traitement
+	        				if (!ficheTraitee.contains( idFiche ) ) {
+
+	        					ficheTraitee.add( idFiche );
+
+	        					fiche_ZonesGeographiques.setContextDB(dbHelper.getDorisDBHelper());
+	        					Fiche fiche = fiche_ZonesGeographiques.getFiche();
+
+	        					for (PhotoFiche photoFiche : fiche.getPhotosFiche()) {
+
+	        						if(photoFiche != null){
+
+	        							if ( imageTypeImage == Outils.ImageType.VIGNETTE ){
+	        								nbPhotosATelechargerPourZone++;
+	        								// Vérification que pas déjà téléchargée
+	        								fichierPhoto = new File(Outils.getImageFolderVignette(context), photoFiche.getCleURL());
+	        								if ( !hsImagesVigAllreadyAvailable.contains(fichierPhoto) ){
+	        									hsImagesVig.add(new PhotoATraiterOptim(photoFiche, false, zoneGeo.getId()));
+	        								} else nbPhotosDejaLaPourZone++;
+	        							}
+	        							if ( imageTypeImage == Outils.ImageType.MED_RES) {
+	        								nbPhotosATelechargerPourZone++;
+	        								if ( !hsImagesMedRes.contains(photoFiche) ){
+	        									fichierPhoto = new File(Outils.getImageFolderMedRes(context), photoFiche.getCleURL());
+	        									if ( !hsImagesMedResAllreadyAvailable.contains(fichierPhoto) ){
+	        										hsImagesMedRes.add(new PhotoATraiterOptim(photoFiche, false, zoneGeo.getId()));
+	        									} else nbPhotosDejaLaPourZone++;
+	        								}
+	        							}
+	        							if ( imageTypeImage == Outils.ImageType.HI_RES) {
+	        								nbPhotosATelechargerPourZone++;
+	        								if ( !hsImagesHiRes.contains(photoFiche) ){
+	        									fichierPhoto = new File(Outils.getImageFolderHiRes(context), photoFiche.getCleURL());
+	        									if ( !hsImagesHiResAllreadyAvailable.contains(fichierPhoto) ){
+	        										hsImagesHiRes.add(new PhotoATraiterOptim(photoFiche, false, zoneGeo.getId()));
+	        									} else nbPhotosDejaLaPourZone++;
+	        								}
+	        							}
+	        						}
+	        						if((hsImagesHiRes.size() +hsImagesMedRes.size() +hsImagesVig.size()) % 200 ==0){
+				        				// toutes les 200 images ajoutées fait une micro pause pour économiser le CPU pour l'UI
+				        				Thread.sleep(100); // wait for 100 milliseconds before running another loop
+				        			}
+	        					}
+	        				}
+	        			}
 	        		}
 	    				
 	    		}
@@ -493,7 +508,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     	// Start of user code main loop of task TelechargePhotosFiches_BgActivity
 		// This is where we would do the actual job
 		// you should indicates the progression using publishProgress()
-		for (int i=10;i<=100;i += 10)
+		/*for (int i=10;i<=100;i += 10)
             {
                 try {
 					// simply sleep for one second
@@ -503,11 +518,13 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
+            }*/
 		// End of user code
         
 		// Start of user code end of task TelechargePhotosFiches_BgActivity
-    }finally{
+    } catch (InterruptedException e) {
+    	Log.d(LOG_TAG, "Interrupted"+e.getMessage());
+	}finally{
     	DorisApplicationContext.getInstance().notifyDataHasChanged(null);
     	
     	mNotificationHelper.completed();
@@ -570,13 +587,13 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 				Outils.setDejaLaQteZoneGeo(context, photoATraiter.getIdZoneConcernee(), photoATraiter.imagePrincipale, 
 						Outils.getDejaLaQteZoneGeo(context, photoATraiter.getIdZoneConcernee(), photoATraiter.imagePrincipale)+1);        		
         		
-				nbPhotoRetreived = nbPhotoRetreived+1;
-				if( (nbPhotoRetreived % 10) == 0) publishProgress(nbPhotoRetreived);
-				// laisse un peu de temps entre chaque téléchargement 
-		        Thread.sleep(10);
+				nbPhotoRetreived = nbPhotoRetreived+1;;
 		        // notify les listener toutes les 10 photos
 		        if(((nbPhotoRetreived % 10) == 0) ){
+		        	publishProgress(nbPhotoRetreived);
 		        	DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+		        	// laisse un peu de temps pour l'UI 
+			        Thread.sleep(50);
 		    		// vérifie de temps en temps la connexion
 		    		if(!isOnline()){
 		            	Log.d(LOG_TAG, "pas connexion internet : Arret du téléchargement");
