@@ -92,7 +92,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     
     // Start of user code additional attribute declarations TelechargePhotosFiches_BgActivity
     
-    
+    int tempo = 50;
     
     /**
      * version qui ne conserve que l'id de la photo, permet de libérer de la mémoire plus de mémoire, mais oblige à refaire une réquète
@@ -190,6 +190,15 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		// End of user code
         this.dbHelper = dbHelper;
 		this.context = context;
+		
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        final SharedPreferences.Editor prefEdit = preferences.edit(); 
+    	
+		// TODO : Tempo pour ralentir traitement : temporaire
+		tempo = 50;
+        try{
+        	tempo = Integer.valueOf(preferences.getString(context.getString(R.string.pref_key_asynch_tempo), "50") );
+        }catch(Exception e){}
     }
 
     protected void onPreExecute(){
@@ -220,10 +229,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     	if (! Outils.isPrecharModeOnlyP0(context)) {
     		
     		Log.d(LOG_TAG, "Debug - 010 - pour voir durée");
-    		
-    		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-            SharedPreferences.Editor prefEdit = preferences.edit(); 
-            
+    		 
     		File fichierPhoto;
     		HashSet<Integer> ficheTraitee = new HashSet<Integer>(100);
     		Integer idFiche;
@@ -238,8 +244,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    	// zoneGeo : 4 - Faune et flore subaquatiques des Caraïbes
 	    	// zoneGeo : 5 - Faune et flore subaquatiques de l'Atlantique Nord-Ouest
     		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
-	    	
-	    	
+    		
 	    	// -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 			// On commence par les photos principales
     		
@@ -326,7 +331,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 			        			}
 			        			if((hsImagesPrincHiRes.size()+hsImagesPrincMedRes.size()+hsImagesPrincVig.size()) % 200 ==0){
 			        				// toutes les 200 images ajoutées fait une micro pause pour économiser le CPU pour l'UI
-			        				Thread.sleep(100); // wait for 100 milliseconds before running another loop
+			        				Thread.sleep(2 * tempo); // wait for 100 milliseconds before running another loop
 			        			}
 	        				} // fin Fiches par Zone
 	        			}
@@ -336,7 +341,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	        		Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneGeo.getId(), true), nbPhotosPrincDejaLaPourZone);
 	        		
 	        		// tempo pour économiser le CPU
-	        		Thread.sleep(50); // wait for 50 milliseconds before running another loop
+	        		Thread.sleep(tempo); // wait for 50 milliseconds before running another loop
 	    		}
 	    	} // fin ZoneGeo
 	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - ImagesPrincVig : "+hsImagesPrincVig.size() );
@@ -456,7 +461,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	        						}
 	        						if((hsImagesHiRes.size() +hsImagesMedRes.size() +hsImagesVig.size()) % 200 ==0){
 				        				// toutes les 200 images ajoutées fait une micro pause pour économiser le CPU pour l'UI
-				        				Thread.sleep(100); // wait for 100 milliseconds before running another loop
+				        				Thread.sleep(2 * tempo); // wait for 100 milliseconds before running another loop
 				        			}
 	        					}
 	        				}
@@ -593,7 +598,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		        	publishProgress(nbPhotoRetreived);
 		        	DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 		        	// laisse un peu de temps pour l'UI 
-			        Thread.sleep(50);
+			        Thread.sleep(tempo);
 		    		// vérifie de temps en temps la connexion
 		    		if(!isOnline()){
 		            	Log.d(LOG_TAG, "pas connexion internet : Arret du téléchargement");
