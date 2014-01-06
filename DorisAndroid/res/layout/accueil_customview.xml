@@ -95,7 +95,6 @@
 			</LinearLayout>
 			
 			
-			
 			<View style="@style/Separateur"/>
 			<LinearLayout
 		        android:id="@+id/accueil_navigation_zones_layout"
@@ -103,6 +102,64 @@
 		        android:layout_height="wrap_content"
 		        android:orientation="vertical" >
 	        </LinearLayout>
+			
+			
+			<LinearLayout 
+			    android:id="@+android:id/accueil_recherche_guidee_ll"
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:orientation="horizontal"
+			    android:onClick="onClickBtnRechercheGuidee" >
+			    
+			    <ImageView
+			        android:id="@+id/accueil_recherche_guidee_icone"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginBottom="8dip"
+			        android:layout_marginLeft="2dip"
+			        android:layout_marginRight="2dip"
+			        android:layout_marginTop="2dip"
+			        android:adjustViewBounds="true"
+			        android:contentDescription="recherche guidée"
+			        android:maxHeight="64dip"
+			        android:src="@drawable/icone_plongeur" >
+
+			    </ImageView>
+			    <RelativeLayout
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+						android:paddingLeft="4dip"
+        				android:paddingRight="4dip" >
+					
+					<LinearLayout 
+					    android:layout_width="match_parent"
+					    android:layout_height="wrap_content"
+					    android:orientation="vertical" >
+				
+						<TextView
+						    android:id="@+id/accueil_recherche_guidee_label"
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:text="@string/accueil_recherche_guidee_label_text"
+						    android:textAppearance="?android:attr/textAppearanceMedium"
+						    android:textColor="?android:attr/textColorPrimary" >
+
+					    </TextView>
+					    <TextView
+					        android:id="@+id/accueil_recherche_guidee_details"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:paddingLeft="4dip"
+					        android:text="@string/accueil_recherche_guidee_label_details"
+					        android:textAppearance="?android:attr/textAppearanceSmall"
+            				android:textColor="?android:attr/textColorSecondary">
+					    </TextView>
+					</LinearLayout>
+			
+				</RelativeLayout>
+			</LinearLayout>
+			<View style="@style/Separateur"/>
+			
 			<TextView
 		        android:id="@+id/accueil_etat_hors_ligne_titre"
 		        android:layout_width="wrap_content"
