@@ -1129,37 +1129,52 @@ public class Outils {
 										entriesDao.queryBuilder().where().like("terme", terme+"%").prepare() );
 								if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
 								else {
-									//Commence par le terme au masculin singulier
+									//#Commence par# le terme au masculin singulier
+									String termeTmp1 = terme;
+									termeTmp1 = termeTmp1.replaceAll("elle$", "el");
+									termeTmp1 = termeTmp1.replaceAll("ienne$", "ien");
+									termeTmp1 = termeTmp1.replaceAll("euse$", "eur");
+									termeTmp1 = termeTmp1.replaceAll("e$", "");
 									listeDefinitions = entriesDao.query(
-											entriesDao.queryBuilder().where().like("terme", terme.replaceAll("e$", "")+"%").prepare() );
+											entriesDao.queryBuilder().where().like("terme", termeTmp1+"%").prepare() );
 									if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
 									else {
-										//Commence par le terme au masculin singulier ...al => ...aux (le féminin plurielle étant trouvé car ...ales contient ...al) 
+										//#Commence par# le terme au masculin singulier ...al => ...aux
+										String termeTmp2 = terme;
+										termeTmp2 = termeTmp2.replaceAll("aux$", "al");
+										termeTmp2 = termeTmp2.replaceAll("eaux$", "eau");
+										termeTmp2 = termeTmp2.replaceAll("ale$", "al");
+										termeTmp2 = termeTmp2.replaceAll("ive$", "if");
 										listeDefinitions = entriesDao.query(
-												entriesDao.queryBuilder().where().like("terme", terme.replaceAll("aux$", "al")+"%").prepare() );
+												entriesDao.queryBuilder().where().like("terme", termeTmp2+"%").prepare() );
 										if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
 										else {
-											//Contient le terme au singulier
+											//#Contient# le terme au singulier
 											listeDefinitions = entriesDao.query(
 													entriesDao.queryBuilder().where().like("terme", "%"+terme+"%").prepare() );
 											if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
 											else {
-												//Contient le terme au masculin singulier
+												//#Contient# le terme au masculin singulier
 												listeDefinitions = entriesDao.query(
-														entriesDao.queryBuilder().where().like("terme", "%"+terme.replaceAll("e$", "")+"%").prepare() );
+														entriesDao.queryBuilder().where().like("terme", "%"+termeTmp1+"%").prepare() );
 												if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
 												else {
-													//le É par exemple ne fonctionne pas avec LIKE dans SQLite
-													// Bug connu : http://www.sqlite.org/lang_expr.html#like
-													listeDefinitions = entriesDao.queryForAll();
-													String texteRecherche = terme.replaceAll("e$", "").replaceAll("ux$", "").toLowerCase();
-													for (DefinitionGlossaire definition : listeDefinitions){
-														if (definition.getTerme().toString().toLowerCase().contains(texteRecherche)) {
-															idDefinition = definition.getId();
-															break;
+													//#Contient# le terme au masculin singulier
+													listeDefinitions = entriesDao.query(
+															entriesDao.queryBuilder().where().like("terme", "%"+termeTmp2+"%").prepare() );
+													if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
+													else {
+														//le É par exemple ne fonctionne pas avec LIKE dans SQLite
+														// Bug connu : http://www.sqlite.org/lang_expr.html#like
+														listeDefinitions = entriesDao.queryForAll();
+														String texteRecherche = terme.replaceAll("e$", "").replaceAll("ux$", "").toLowerCase();
+														for (DefinitionGlossaire definition : listeDefinitions){
+															if (definition.getTerme().toString().toLowerCase().contains(texteRecherche)) {
+																idDefinition = definition.getId();
+																break;
+															}
 														}
 													}
-													
 												}
 											}
 										}
