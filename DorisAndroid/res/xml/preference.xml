@@ -210,6 +210,12 @@
 	            android:defaultValue="false"
 	            android:layout="@layout/preference_layout_preference"
 	            />
+	        <EditTextPreference android:key="@string/pref_key_asynch_tempo"
+	            android:summary="Tempo pour garder application fluide durant traitement Fiches" 
+	            android:title="Limitation Vitesse" 
+	            android:defaultValue="50"
+	            android:layout="@layout/preference_layout_preference"
+	            />
 	        </PreferenceScreen>
      </PreferenceCategory>
  

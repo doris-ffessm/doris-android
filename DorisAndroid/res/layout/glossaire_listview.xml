@@ -61,7 +61,7 @@ End of user code -->
 		<ListView
 		    android:id="@+id/glossaire_listView_alphabets"
 		    android:layout_width="20dip"
-		    android:layout_height="wrap_content"
+		    android:layout_height="match_parent"
 		    android:layout_alignParentRight="true"
 		    android:layout_centerVertical="true"
 		    android:paddingTop="7dp"
