@@ -187,10 +187,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		String initialTickerText = context.getString(R.string.bg_notifText_initial);
 		String notificationTitle = context.getString(R.string.bg_notifTitle_initial);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
-		// End of user code
-        this.dbHelper = dbHelper;
-		this.context = context;
-		
+
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         final SharedPreferences.Editor prefEdit = preferences.edit(); 
     	
@@ -199,6 +196,9 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         try{
         	tempo = Integer.valueOf(preferences.getString(context.getString(R.string.pref_key_asynch_tempo), "50") );
         }catch(Exception e){}
+		// End of user code
+        this.dbHelper = dbHelper;
+		this.context = context;
     }
 
     protected void onPreExecute(){

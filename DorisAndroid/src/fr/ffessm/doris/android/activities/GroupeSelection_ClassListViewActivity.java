@@ -43,7 +43,6 @@ package fr.ffessm.doris.android.activities;
 
 
 import fr.ffessm.doris.android.datamodel.*;
-import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
@@ -68,6 +67,7 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedGroupeSelection_ClassListViewActivity_additionalimports
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import fr.ffessm.doris.android.BuildConfig;
 // End of user code
 
 public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener {
@@ -80,7 +80,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<O
 	//End of user code
     GroupeSelection_Adapter adapter;
 
-    @Override
+
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.groupeselection_listview);
@@ -121,8 +121,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<O
 		//Start of user code onResume additions GroupeSelection_ClassListViewActivity
 		//End of user code
 	}
-	
-	@Override
+
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 			//Start of user code onItemClick additions GroupeSelection_ClassListViewActivity
 		//showToast("Groupe : "+position + " - "+ index);
