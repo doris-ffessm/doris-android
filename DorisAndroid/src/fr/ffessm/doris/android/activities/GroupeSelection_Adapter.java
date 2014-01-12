@@ -46,16 +46,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Groupe;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -75,11 +72,14 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code protected additional GroupeSelection_Adapter imports
 // additional imports
+
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.OutilsGroupe;
 //End of user code
