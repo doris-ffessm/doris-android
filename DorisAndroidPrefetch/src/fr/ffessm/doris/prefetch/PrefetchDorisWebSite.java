@@ -58,10 +58,15 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
 
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.field.FieldType;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.misc.SqlExceptionUtil;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.stmt.DeleteBuilder;
+import com.j256.ormlite.stmt.StatementBuilder.StatementType;
+import com.j256.ormlite.support.CompiledStatement;
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
 
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
@@ -851,6 +856,52 @@ public class PrefetchDorisWebSite {
 		TableUtils.createTable(connectionSource, Fiches_ZonesObservations.class);
 		TableUtils.createTable(connectionSource, Fiches_DefinitionsGlossaire.class);
 		TableUtils.createTable(connectionSource, DorisDB_metadata.class);
+		
+		
+		// TODO : Reprendre par Didier plus proprement
+		// CREATE INDEX fiches_ZoneGeographiques_Id ON fiches_ZonesGeographiques(ZoneGeographique_id ASC);
+		// CREATE INDEX photoFiche_I_ficheId ON photoFiche(fiche_id ASC);
+		
+		DatabaseConnection connection = connectionSource.getReadWriteConnection();
+		List<String> statements = new ArrayList<String>();
+		final FieldType[] noFieldTypes = new FieldType[0];
+		Boolean ignoreErrors = false;
+		Boolean returnsNegative  = false;
+		Boolean expectingZero  = false;
+		statements.add("CREATE INDEX fiches_ZoneGeographiques_I_id ON fiches_ZonesGeographiques(ZoneGeographique_id ASC)");
+		statements.add("CREATE INDEX photoFiche_I_ficheId ON photoFiche(fiche_id ASC)");
+		
+
+		for (String statement : statements) {
+			int rowC = 0;
+			CompiledStatement compiledStmt = null;
+			try {
+				compiledStmt = connection.compileStatement(statement, StatementType.EXECUTE, noFieldTypes);
+				rowC = compiledStmt.runExecute();
+				log.info("executed {} table statement changed {} rows: {}" + rowC + " - " + statement);
+
+			} catch (SQLException e) {
+				if (ignoreErrors) {
+					log.info("ignoring {} error '{}' for statement: {}" + rowC + " - " + statement);
+				} else {
+					throw SqlExceptionUtil.create("SQL statement failed: " + statement, e);
+				}
+			} finally {
+				if (compiledStmt != null) {
+					compiledStmt.close();
+				}
+			}
+			// sanity check
+			if (rowC < 0) {
+				if (!returnsNegative) {
+					throw new SQLException("SQL statement " + statement + " updated " + rowC
+							+ " rows, we were expecting >= 0");
+				}
+			} else if (rowC > 0 && expectingZero) {
+				throw new SQLException("SQL statement updated " + rowC + " rows, we were expecting == 0: " + statement);
+			}
+		}
+		// Fin Création index
 		
 		log.debug("databaseInitialisation() - Fin");
 	}

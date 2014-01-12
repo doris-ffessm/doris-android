@@ -164,6 +164,22 @@ public class Constants {
 	/*
 	 * Gestion Zones Géographiques
 	 */
+    public static ZoneGeographiqueKind getZoneGeographiqueFromId(int zoneId) {
+    	switch (zoneId) {
+		case 1 :
+			return ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE;
+		case 2 :
+			return ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE;
+		case 3 :
+			return ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE;
+		case 4 :
+			return ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES;
+		case 5 :
+			return ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST;
+		default:
+			return null;
+		}
+    }
     public static String getTitreZoneGeographique(ZoneGeographiqueKind zoneKing) {
     	switch (zoneKing) {
 		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
@@ -196,7 +212,22 @@ public class Constants {
 			return "Faune et flore subaquatiques de toutes les zones DORIS";
 		}
     }
-    
+    public static String getTitreCourtZoneGeographique(ZoneGeographiqueKind zoneKing) {
+    	switch (zoneKing) {
+		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
+			return "France - Marines";
+		case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
+			return "France - Dulcicoles";
+		case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
+			return "Indo-Pacifique";
+		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
+			return "Caraïbes";
+		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
+			return "Atlant. Nord-Ouest";
+		default:
+			return "Toutes Zones DORIS";
+		}
+    }
 	/*
 	 * Gestion Participants
 	 */
