@@ -354,11 +354,15 @@ public class Outils {
 			}
 			else{
 		    
-				URL urlHtml;
+				URL urlHtml = null;
 				try {
 					String urlNettoyee = baseUrl+photoUrl;
 					urlNettoyee = urlNettoyee.replaceAll(" ", "%20");
 					urlHtml = new URL(urlNettoyee);
+				} catch (MalformedURLException e ) {
+					Log.w(LOG_TAG, e.getMessage(), e);
+				}
+				try {
 					HttpURLConnection urlConnection = (HttpURLConnection) urlHtml.openConnection();
 			        urlConnection.setConnectTimeout(3000);
 			        urlConnection.setReadTimeout(10000);
@@ -379,7 +383,7 @@ public class Outils {
 		            output.close();
 		            input.close();
 			        
-				} catch (MalformedURLException e) {
+				} catch (IOException e) {
 					Log.w(LOG_TAG, e.getMessage(), e);
 				}
 				

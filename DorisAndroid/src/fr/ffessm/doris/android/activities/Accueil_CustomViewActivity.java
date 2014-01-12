@@ -462,7 +462,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
      */
     public void refreshScreenData() {
     	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
+    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
 
     	/* 
     	DVK 
@@ -508,7 +508,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	
     	
     	// Affichage de chaque Zones - Toutes Zones en 1er
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate); 
+    	// if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate); 
     	ZoneGeographique zoneToutesZones = new ZoneGeographique();
     	zoneToutesZones.setId(-1);
     	zoneToutesZones.setNom(getContext().getString(R.string.avancement_touteszones_titre));
@@ -541,7 +541,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	    	
 	    	
     	} else {
-    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - update progress bar : ");
+    		// if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - update progress bar : ");
     		updateProgressBarZone(zoneToutesZones, progressBarZones.get(zoneToutesZones.getId()));
     	
     	}

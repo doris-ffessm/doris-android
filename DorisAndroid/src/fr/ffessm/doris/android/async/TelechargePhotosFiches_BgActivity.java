@@ -213,7 +213,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     	
 
 		// Start of user code initialization of the task TelechargePhotosFiches_BgActivity
-	    int nbPhotoRetreived = 0;
+
 	    try{
 			// do the initialization of the task here
 	    	// Téléchargement en tache de fond de toutes les photos de toutes les fiches correspondants aux critères de l'utilisateur
@@ -248,12 +248,56 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    	// zoneGeo : 5 - Faune et flore subaquatiques de l'Atlantique Nord-Ouest
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
 			
+			// On commence par compter les photos à télécharger pour que les indicateurs d'avancement soient
+			// juste et ergonomique
+			Integer nbPhotosPrincATelechargerPourZone[] = new Integer[10];
+			Integer nbPhotosATelechargerPourZone[] = new Integer[10];
+	    	for (ZoneGeographique zoneGeo : listeZoneGeo) {
+			
+	    		List<String[]> countPhoto = new ArrayList<String[]>(2);
+	    		
+	    			    		
+	    		int zoneId = zoneGeo.getId();
+	    		nbPhotosPrincATelechargerPourZone[zoneId] = 0;
+	    		nbPhotosATelechargerPourZone[zoneId] = 0;
+	    		
+	    		if ( Outils.getPrecharModeZoneGeo(context, zoneId) != Outils.PrecharMode.P0 ) {
+	        		try{
+						rawResults =
+							dorisDBHelper.photoFicheDao.queryRaw("SELECT count(*) FROM fiches_ZonesGeographiques, fiche, photoFiche "
+								+ "WHERE ZoneGeographique_id = " + zoneId + " "
+								+ "AND  fiches_ZonesGeographiques.Fiche_id = fiche._id "
+								+ "AND photoFiche._id =  fiche.photoPrincipale_id" );
+						countPhoto = rawResults.getResults();
+		        		rawResults.close();
+	        		} catch (java.sql.SQLException e) {
+	        			Log.e(LOG_TAG, e.getMessage(), e);
+	        		}
+	        		nbPhotosPrincATelechargerPourZone[zoneId] = Integer.valueOf(countPhoto.get(0)[0]);
+	    		}
+	    		Outils.setParamInt(context, Outils.getKeyDataAPrecharZoneGeo(context, zoneId, true), nbPhotosPrincATelechargerPourZone[zoneId]);
+
+	    		if ( Outils.getPrecharModeZoneGeo(context, zoneId) != Outils.PrecharMode.P0 
+	    				&& Outils.getPrecharModeZoneGeo(context, zoneId) != Outils.PrecharMode.P1 ) {
+	        		try{
+						rawResults =
+							dorisDBHelper.photoFicheDao.queryRaw("SELECT count(*) FROM fiches_ZonesGeographiques, photoFiche "
+									+ "WHERE ZoneGeographique_id = " + zoneId + " "
+									+ "AND  fiches_ZonesGeographiques.Fiche_id = photoFiche.fiche_id ");
+						countPhoto = rawResults.getResults();
+		        		rawResults.close();
+	        		} catch (java.sql.SQLException e) {
+	        			Log.e(LOG_TAG, e.getMessage(), e);
+	        		}
+	        		nbPhotosATelechargerPourZone[zoneId] = Integer.valueOf(countPhoto.get(0)[0]);
+	    		}
+	    		Outils.setParamInt(context, Outils.getKeyDataAPrecharZoneGeo(context, zoneId, false), nbPhotosATelechargerPourZone[zoneId]);
+	    	
+	    	}
+	    	DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+	    	
 	    	// -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 			// On commence par les photos principales
-			
-	
-			int nbPhotosPrincATelechargerPourZone;
-			int nbPhotosPrincDejaLaPourZone;
 			
 			// Photos déjà sur l'appareil
 			HashSet<String> hsImagesVigAllreadyAvailable = Outils.getAllVignettesPhotoFicheAvailable(context);
@@ -265,38 +309,19 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 			
 	    	for (ZoneGeographique zoneGeo : listeZoneGeo) {
 	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
-				
-				nbPhotosPrincATelechargerPourZone = 0;
-	    		nbPhotosPrincDejaLaPourZone = 0;
-	    			    		
+	    		
+				int nbPhotosPrinRecuesPourZone = 0;
 	    		int zoneId = zoneGeo.getId();
 	    		
 	    		if ( Outils.getPrecharModeZoneGeo(context, zoneId) != Outils.PrecharMode.P0 ) {
-	    			
-		    		List<String[]> countPhotoPrinc = new ArrayList<String[]>(100);
-	        		try{
-						rawResults =
-							dorisDBHelper.photoFicheDao.queryRaw("SELECT count(*) FROM fiches_ZonesGeographiques, fiche, photoFiche "
-								+ "WHERE ZoneGeographique_id = " + zoneId + " "
-								+ "AND  fiches_ZonesGeographiques.Fiche_id = fiche._id "
-								+ "AND photoFiche._id =  fiche.photoPrincipale_id" );
-						countPhotoPrinc = rawResults.getResults();
-		        		rawResults.close();
-	        		} catch (java.sql.SQLException e) {
-	        			Log.e(LOG_TAG, e.getMessage(), e);
-	        		}
-	        		
-	        		nbPhotosPrincATelechargerPourZone = Integer.valueOf(countPhotoPrinc.get(0)[0]);
-	        		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - countNbPhotoPrincZone : "+nbPhotosPrincATelechargerPourZone );
+
+	        		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - countNbPhotoPrincZone : "+nbPhotosPrincATelechargerPourZone[zoneId] );
 			        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_imagesprinc)
 			        		+ Constants.getTitreCourtZoneGeographique(Constants.getZoneGeographiqueFromId(zoneId)));
 			        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_imagesprinc) );
-		    		mNotificationHelper.setMaxItemToProcess(""+nbPhotosPrincATelechargerPourZone);
+		    		mNotificationHelper.setMaxItemToProcess(""+nbPhotosPrincATelechargerPourZone[zoneId]);
 	    			publishProgress( 0 );
-	    			
-	    			//Enregistrement du nombre total de photos à télécharger pour afficher avancement
-	        		Outils.setParamInt(context, Outils.getKeyDataAPrecharZoneGeo(context, zoneId, true), nbPhotosPrincATelechargerPourZone);
-	
+		
 	    			imageTypeImage = Outils.getImageQualityToDownload(context, true, zoneId);
 	    			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneId : "+zoneId+" - Type Image : "+imageTypeImage);
 	
@@ -305,216 +330,188 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	
 					// récupère les id seulement des fiches
 	
-		        		List<String[]> listePhotoPrinc = new ArrayList<String[]>(100);
-		        		try{
-							rawResults =
-							dorisDBHelper.photoFicheDao.queryRaw(
-										"SELECT cleURL FROM fiches_ZonesGeographiques, fiche, photoFiche "
-										+ "WHERE ZoneGeographique_id = " + zoneId + " "
-										+ "AND  fiches_ZonesGeographiques.Fiche_id = fiche._id "
-										+ "AND photoFiche._id =  fiche.photoPrincipale_id" );
-								listePhotoPrinc = rawResults.getResults();
-				        		rawResults.close();
-			        		} catch (java.sql.SQLException e) {
-			        			Log.e(LOG_TAG, e.getMessage(), e);
-			        		}
-	
-	        				try{
-	
-								for (String[] resultColumns : listePhotoPrinc) {
-									
-									String photoPrincURL = resultColumns[0];
+	        		List<String[]> listePhotoPrinc = new ArrayList<String[]>(100);
+	        		try{
+						rawResults = dorisDBHelper.photoFicheDao.queryRaw(
+							"SELECT cleURL FROM fiches_ZonesGeographiques, fiche, photoFiche "
+							+ "WHERE ZoneGeographique_id = " + zoneId + " "
+							+ "AND  fiches_ZonesGeographiques.Fiche_id = fiche._id "
+							+ "AND photoFiche._id =  fiche.photoPrincipale_id" );
+							listePhotoPrinc = rawResults.getResults();
+			        		rawResults.close();
+	        		} catch (java.sql.SQLException e) {
+	        			Log.e(LOG_TAG, e.getMessage(), e);
+	        		}
+
+    				try {
+
+						for (String[] resultColumns : listePhotoPrinc) {
+							
+							String photoPrincURL = resultColumns[0];
+    					
+	    					// Les vignettes des Photos Principales sont toujours téléchargées (si pas P0)
+	    					if ( !hsImagesVigAllreadyAvailable.contains(photoPrincURL) ){
+	    						Outils.getOrDownloadPhotoFile(context, photoPrincURL, Outils.ImageType.VIGNETTE);
+	    					}
+							// Comme on télécharge toujours la vignette, on ne fait avancer le compteur 
+							// que si c'est la qualité demandée
+							if ( imageTypeImage == Outils.ImageType.VIGNETTE) {
+								nbPhotosPrinRecuesPourZone++;
+							}
+							
+	        				if ( imageTypeImage == Outils.ImageType.MED_RES) {
+	    						if ( !hsImagesMedResAllreadyAvailable.contains(photoPrincURL) ){
+	        						Outils.getOrDownloadPhotoFile(context, photoPrincURL, Outils.ImageType.MED_RES);
+		        				}
+	    						nbPhotosPrinRecuesPourZone++;
+	        				}
+	        				
+	        				if ( imageTypeImage == Outils.ImageType.HI_RES) {
+	    						if ( !hsImagesHiResAllreadyAvailable.contains(photoPrincURL) ){
+	        						Outils.getOrDownloadPhotoFile(context, photoPrincURL, Outils.ImageType.HI_RES);
+		        				}
+	    						nbPhotosPrinRecuesPourZone++;
+	        				}
 		    					
-			    					// Les vignettes des Photos Principales sont toujours téléchargées (si pas P0)
-			    					if ( !hsImagesVigAllreadyAvailable.contains(photoPrincURL) ){
-			    						Outils.getOrDownloadPhotoFile(context, photoPrincURL, Outils.ImageType.VIGNETTE);
-			    					}
-									// Comme on télécharge toujours la vignette, on ne fait avancer le compteur 
-									// que si c'est la qualité demandée
-									if ( imageTypeImage == Outils.ImageType.VIGNETTE) {
-										nbPhotosPrincDejaLaPourZone++;
-									}
-									
-			        				if ( imageTypeImage == Outils.ImageType.MED_RES) {
-			    						if ( !hsImagesMedResAllreadyAvailable.contains(photoPrincURL) ){
-			        						Outils.getOrDownloadPhotoFile(context, photoPrincURL, Outils.ImageType.MED_RES);
-				        				}
-			        					nbPhotosPrincDejaLaPourZone++;
-			        				}
-			        				
-			        				if ( imageTypeImage == Outils.ImageType.HI_RES) {
-			    						if ( !hsImagesHiResAllreadyAvailable.contains(photoPrincURL) ){
-			        						Outils.getOrDownloadPhotoFile(context, photoPrincURL, Outils.ImageType.HI_RES);
-				        				}
-			        					nbPhotosPrincDejaLaPourZone++;
-			        				}
-				    					
-			    					if (nbPhotosPrincDejaLaPourZone % 10 == 0) publishProgress( nbPhotosPrincDejaLaPourZone );	
-			        			
-					    			//Enregistrement du nombre total de photos téléchargée pour afficher avancement au fur et à mesure
-			    					if (nbPhotosPrincDejaLaPourZone % 200 == 0){
-			    						Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneId, true), nbPhotosPrincDejaLaPourZone);
-			    						DorisApplicationContext.getInstance().notifyDataHasChanged(null);
-			    					}
-			
-			    					if( this.isCancelled()) return nbPhotoRetreived;
-								}
-			        		} catch (IOException e) {
-			        			Log.e(LOG_TAG, e.getMessage(), e);
-			        		}
-							listePhotoPrinc.clear();
-							/*
+	    					if (nbPhotosPrinRecuesPourZone % 10 == 0) publishProgress( nbPhotosPrinRecuesPourZone );	
+	        			
+			    			//Enregistrement du nombre total de photos téléchargée pour afficher avancement au fur et à mesure
+	    					if (nbPhotosPrinRecuesPourZone % 50 == 0){
+	    						Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneId, true), nbPhotosPrinRecuesPourZone);
+	    						DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+	    					}
+	
+	    					if( this.isCancelled()) return nbPhotosPrinRecuesPourZone;
+						}
+	        		} catch (IOException e) {
+	        			Log.e(LOG_TAG, e.getMessage(), e);
+	        		}
+					listePhotoPrinc.clear();
+						/*
 			    			if((hsImagesPrincHiRes.size()+hsImagesPrincMedRes.size()+hsImagesPrincVig.size()) % 200 ==0){
 			    				// toutes les 200 images ajoutées fait une micro pause pour économiser le CPU pour l'UI
 			    				Thread.sleep(2 * tempo); // wait for 100 milliseconds before running another loop
 			    			}
-			    			*/
+		    			*/
 			        			
-			    			//Enregistrement du nombre total de photos téléchargée pour afficher avancement
-			        		
-							Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneId, true), nbPhotosPrincDejaLaPourZone);
-							if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - nbPhotosPrincDejaLaPourZone : "+nbPhotosPrincDejaLaPourZone );
-				    		
-			        		// tempo pour économiser le CPU
-			        		Thread.sleep(tempo); // wait for 50 milliseconds before running another loop
-			    		}
+	    			//Enregistrement du nombre total de photos téléchargée pour afficher avancement
+	        		
+					Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneId, true), nbPhotosPrinRecuesPourZone);
+					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - nbPhotosPrincDejaLaPourZone : "+nbPhotosPrinRecuesPourZone );
+		    		
+	        		// tempo pour économiser le CPU
+	        		Thread.sleep(tempo); // wait for 50 milliseconds before running another loop
+	    		}
 		
-			    	} // fin ZoneGeo Images Principales
+	    	} // fin ZoneGeo Images Principales
 			    	
-		    		// -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
-					// -- Puis toutes les autres (pas principales) --
-			    	
-			        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitle_initial));
-			        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_notifText_initial) );
-		    		mNotificationHelper.setMaxItemToProcess(""+0);
-		    			    		
-		    		int nbPhotosATelechargerPourZone;
-		    		int nbPhotosDejaLaPourZone;
-		    		
-		    		hsImagesVigAllreadyAvailable = Outils.getAllVignettesPhotoFicheAvailable(context);
-		    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - VigAllreadyAvailable : "+hsImagesVigAllreadyAvailable.size() );
-		    		hsImagesMedResAllreadyAvailable = Outils.getAllMedResPhotoFicheAvailable(context);
-		    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - MedResAllreadyAvailable : "+hsImagesMedResAllreadyAvailable.size() );
-		    		hsImagesHiResAllreadyAvailable = Outils.getAllHiResPhotoFicheAvailable(context);
-		    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - HiResAllreadyAvailable : "+hsImagesHiResAllreadyAvailable.size() );
-		    		
-		    		
-			    	for (ZoneGeographique zoneGeo : listeZoneGeo) {
-			    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
-	
-			    		nbPhotosATelechargerPourZone = 0;
-			    		nbPhotosDejaLaPourZone = 0;
-		    			
-			    		int zoneId = zoneGeo.getId();
+    		// -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+			// -- Puis toutes les autres (pas principales) --
+	    	
+	        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitle_initial));
+	        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_notifText_initial) );
+    		mNotificationHelper.setMaxItemToProcess(""+0);
+    			    		
+    		hsImagesVigAllreadyAvailable = Outils.getAllVignettesPhotoFicheAvailable(context);
+    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - VigAllreadyAvailable : "+hsImagesVigAllreadyAvailable.size() );
+    		hsImagesMedResAllreadyAvailable = Outils.getAllMedResPhotoFicheAvailable(context);
+    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - MedResAllreadyAvailable : "+hsImagesMedResAllreadyAvailable.size() );
+    		hsImagesHiResAllreadyAvailable = Outils.getAllHiResPhotoFicheAvailable(context);
+    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - HiResAllreadyAvailable : "+hsImagesHiResAllreadyAvailable.size() );
+    		
+    		
+	    	for (ZoneGeographique zoneGeo : listeZoneGeo) {
+	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
+    			
+	    		int nbPhotosRecuesPourZone = 0;
+	    		
+	    		int zoneId = zoneGeo.getId();
 				        
-			    		if ( Outils.getPrecharModeZoneGeo(context, zoneId) != Outils.PrecharMode.P0 
-			    				&& Outils.getPrecharModeZoneGeo(context, zoneId) != Outils.PrecharMode.P1 ) {
+	    		if ( Outils.getPrecharModeZoneGeo(context, zoneId) != Outils.PrecharMode.P0 
+	    				&& Outils.getPrecharModeZoneGeo(context, zoneId) != Outils.PrecharMode.P1 ) {
+	        		
+	        		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - countNbPhotoPrincZone : "+nbPhotosATelechargerPourZone );
+			        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_images)
+			        		+ Constants.getTitreCourtZoneGeographique(Constants.getZoneGeographiqueFromId(zoneId)));
+			        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_images) );
+		    		mNotificationHelper.setMaxItemToProcess(""+nbPhotosATelechargerPourZone[zoneId]);
+		    		publishProgress( 0 );
+		    				        		
+	    			imageTypeImage = Outils.getImageQualityToDownload(context, false, zoneId);
+	    			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneId : "+zoneId+" - Type Image : "+imageTypeImage);
+	        		
+    		
+    				// SELECT cleURL FROM fiches_ZonesGeographiques, photoFiche WHERE ZoneGeographique_id = 1
+    				// AND  fiches_ZonesGeographiques.Fiche_id = photoFiche.fiche_id
+    					
+    				// Création Index : 
+    				// CREATE INDEX fiches_ZoneGeographiques_Id ON fiches_ZonesGeographiques(ZoneGeographique_id ASC);
+    				// CREATE INDEX photoFiche_I_ficheId ON photoFiche(fiche_id ASC);
+		    		
+		    		// récupère les id seulement des fiches
+	        		List<String[]> listePhotos = new ArrayList<String[]>(100);
+	        		try{
+						rawResults =
+							dorisDBHelper.fiches_ZonesGeographiquesDao.queryRaw(
+								"SELECT cleURL FROM fiches_ZonesGeographiques, photoFiche "
+								+ "WHERE ZoneGeographique_id = " + zoneId + " "
+								+ "AND  fiches_ZonesGeographiques.Fiche_id = photoFiche.fiche_id "
+								);
+						listePhotos = rawResults.getResults();
+		        		rawResults.close();
+	        		} catch (java.sql.SQLException e) {
+	        			Log.e(LOG_TAG, e.getMessage(), e);
+	        		}
 			        		
-			    			List<String[]> countPhoto = new ArrayList<String[]>(100);
-			        		try{
-								rawResults =
-									dorisDBHelper.photoFicheDao.queryRaw("SELECT count(*) FROM fiches_ZonesGeographiques, photoFiche "
-											+ "WHERE ZoneGeographique_id = " + zoneId + " "
-											+ "AND  fiches_ZonesGeographiques.Fiche_id = photoFiche.fiche_id ");
-								countPhoto = rawResults.getResults();
-				        		rawResults.close();
-			        		} catch (java.sql.SQLException e) {
-			        			Log.e(LOG_TAG, e.getMessage(), e);
-			        		}
+				    try{
+						for (String[] resultColumns : listePhotos) {
+						    
+							String photoURL = resultColumns[0];
 			        		
-			        		nbPhotosATelechargerPourZone = Integer.valueOf(countPhoto.get(0)[0]);
-			        		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - countNbPhotoPrincZone : "+nbPhotosATelechargerPourZone );
-					        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_images)
-					        		+ Constants.getTitreCourtZoneGeographique(Constants.getZoneGeographiqueFromId(zoneId)));
-					        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_images) );
-				    		mNotificationHelper.setMaxItemToProcess(""+nbPhotosATelechargerPourZone);
-				    		publishProgress( 0 );
-				    		
-				    		//Enregistrement du nombre total de photos à télécharger pour afficher avancement
-			        		Outils.setParamInt(context, Outils.getKeyDataAPrecharZoneGeo(context, zoneId, false), nbPhotosATelechargerPourZone);
-			        		
-			    			imageTypeImage = Outils.getImageQualityToDownload(context, false, zoneId);
-			    			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneId : "+zoneId+" - Type Image : "+imageTypeImage);
-			        		
-				    		
-		    				// SELECT cleURL FROM fiches_ZonesGeographiques, photoFiche WHERE ZoneGeographique_id = 1
-		    				// AND  fiches_ZonesGeographiques.Fiche_id = photoFiche.fiche_id
-		    					
-		    				// Création Index : 
-		    				// CREATE INDEX fiches_ZoneGeographiques_Id ON fiches_ZonesGeographiques(ZoneGeographique_id ASC);
-		    				// CREATE INDEX photoFiche_I_ficheId ON photoFiche(fiche_id ASC);
-				    		
-				    		// récupère les id seulement des fiches
-			        		List<String[]> listePhotos = new ArrayList<String[]>(100);
-			        		try{
-								rawResults =
-									dorisDBHelper.fiches_ZonesGeographiquesDao.queryRaw(
-										"SELECT cleURL FROM fiches_ZonesGeographiques, photoFiche "
-										+ "WHERE ZoneGeographique_id = " + zoneId + " "
-										+ "AND  fiches_ZonesGeographiques.Fiche_id = photoFiche.fiche_id "
-										);
-								listePhotos = rawResults.getResults();
-				        		rawResults.close();
-			        		} catch (java.sql.SQLException e) {
-			        			Log.e(LOG_TAG, e.getMessage(), e);
-			        		}
-			        		
-						    try{
-								for (String[] resultColumns : listePhotos) {
-								    
-									String photoURL = resultColumns[0];
-					        		
-		        					if ( imageTypeImage == Outils.ImageType.VIGNETTE ){
-		        						if ( !hsImagesVigAllreadyAvailable.contains(photoURL) ){
-			        						Outils.getOrDownloadPhotoFile(context, photoURL, Outils.ImageType.VIGNETTE);
-				        				}
-		        						nbPhotosDejaLaPourZone++;
-	    							}
-		        					if ( imageTypeImage == Outils.ImageType.MED_RES) {
-		        						if ( !hsImagesMedResAllreadyAvailable.contains(photoURL) ){
-			        						Outils.getOrDownloadPhotoFile(context, photoURL, Outils.ImageType.MED_RES);
-				        				}
-			        					nbPhotosDejaLaPourZone++;
-			        				}
-			        				
-			        				if ( imageTypeImage == Outils.ImageType.HI_RES) {
-		        						if ( !hsImagesHiResAllreadyAvailable.contains(photoURL) ){
-			        						Outils.getOrDownloadPhotoFile(context, photoURL, Outils.ImageType.HI_RES);
-				        				}
-		        						nbPhotosDejaLaPourZone++;
-			        				}
-		        					
-			        				if (nbPhotosDejaLaPourZone % 10 == 0) publishProgress( nbPhotosDejaLaPourZone );
-			        				
-	        						if (nbPhotosDejaLaPourZone % 200 == 0){
-	        							//Enregistrement du nombre total de photos téléchargée pour afficher avancement
-	        			        		Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneId, false), nbPhotosDejaLaPourZone);
-	        			        		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
-	        							// toutes les 200 images ajoutées fait une micro pause pour économiser le CPU pour l'UI
-				        				Thread.sleep(2 * tempo); // wait for 100 milliseconds before running another loop
-				        			}
-	
-	        						if( this.isCancelled()) return nbPhotoRetreived;
-								}
-			        		} catch (IOException e) {
-			        			Log.e(LOG_TAG, e.getMessage(), e);
-			        		}
-						    listePhotos.clear();
-	
-			    				
-		    			}
-			    	
-			    		//Enregistrement du nombre total de photos téléchargée pour afficher avancement
-		        		Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneId, false), nbPhotosDejaLaPourZone);
-		        		
-		        		
-		        		
-    	} // Fin Pour Chaque ZoneGeo Toutes Photos
+        					if ( imageTypeImage == Outils.ImageType.VIGNETTE ){
+        						if ( !hsImagesVigAllreadyAvailable.contains(photoURL) ){
+	        						Outils.getOrDownloadPhotoFile(context, photoURL, Outils.ImageType.VIGNETTE);
+		        				}
+        						nbPhotosRecuesPourZone++;
+							}
+        					if ( imageTypeImage == Outils.ImageType.MED_RES) {
+        						if ( !hsImagesMedResAllreadyAvailable.contains(photoURL) ){
+	        						Outils.getOrDownloadPhotoFile(context, photoURL, Outils.ImageType.MED_RES);
+		        				}
+        						nbPhotosRecuesPourZone++;
+	        				}
+	        				
+	        				if ( imageTypeImage == Outils.ImageType.HI_RES) {
+        						if ( !hsImagesHiResAllreadyAvailable.contains(photoURL) ){
+	        						Outils.getOrDownloadPhotoFile(context, photoURL, Outils.ImageType.HI_RES);
+		        				}
+        						nbPhotosRecuesPourZone++;
+	        				}
+        					
+	        				if (nbPhotosRecuesPourZone % 10 == 0) publishProgress( nbPhotosRecuesPourZone );
+	        				
+    						if (nbPhotosRecuesPourZone % 50 == 0){
+    							//Enregistrement du nombre total de photos téléchargée pour afficher avancement
+    			        		Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneId, false), nbPhotosRecuesPourZone);
+    			        		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+    							// toutes les 200 images ajoutées fait une micro pause pour économiser le CPU pour l'UI
+		        				Thread.sleep(2 * tempo); // wait for 100 milliseconds before running another loop
+		        			}
 
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - nbPhotoRetreived : "+nbPhotoRetreived);
-		Log.d(LOG_TAG, "Debug - 910 - pour voir durée");
+    						if( this.isCancelled()) return nbPhotosRecuesPourZone;
+						}
+	        		} catch (IOException e) {
+	        			Log.e(LOG_TAG, e.getMessage(), e);
+	        		}
+				    listePhotos.clear();
+    			}
+	    	
+	    		//Enregistrement du nombre total de photos téléchargée pour afficher avancement
+        		Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneId, false), nbPhotosRecuesPourZone);
+
+    	} // Fin Pour Chaque ZoneGeo Toutes Photos
 		
-		if( this.isCancelled()) return nbPhotoRetreived;
+		if( this.isCancelled()) return 0;
 		// End of user code
         
 		// Start of user code end of task TelechargePhotosFiches_BgActivity
@@ -525,7 +522,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    	
 	    	mNotificationHelper.completed();
 	    }
-	    return nbPhotoRetreived;
+	    return 0;
 		// End of user code
     }
 
@@ -534,6 +531,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         //from the background thread and publishes them to the status bar
         mNotificationHelper.progressUpdate(progress[0]);
     }
+    
 	@Override
 	protected void onCancelled() {
 		super.onCancelled();
@@ -544,6 +542,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 		// End of user code
 	}
+	
+	@Override
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
