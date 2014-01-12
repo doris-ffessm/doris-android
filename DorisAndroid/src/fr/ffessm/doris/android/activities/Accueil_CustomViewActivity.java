@@ -52,6 +52,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -98,9 +99,10 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 //End of user code
-public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
+public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 //Start of user code additional implements Accueil_CustomViewActivity
 	implements DataChangedListener
 //End of user code
@@ -603,50 +605,45 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		// add options in the menu
-		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
+		//menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
 
 		//Start of user code additional onCreateOptionsMenu Accueil_CustomViewActivity
 	//	menu.add(Menu.NONE, TELECHARGE_FICHE_MENU_ID, 1, R.string.menu_option_telecharge_fiches).setIcon(android.R.drawable.ic_menu_preferences);
-		menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.menu_option_telecharge_photofiches).setIcon(android.R.drawable.ic_menu_set_as);
+	//	menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.menu_option_telecharge_photofiches).setIcon(android.R.drawable.ic_menu_set_as);
     //    menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 4, R.string.menu_option_verifie_nouvelles_fiches).setIcon(android.R.drawable.ic_menu_preferences);
     //    menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 5, R.string.menu_option_reinitialise_a_partir_du_xml).setIcon(android.R.drawable.ic_menu_preferences);
-		menu.add(Menu.NONE, APROPOS, 2, R.string.a_propos_label).setIcon(android.R.drawable.ic_menu_info_details);
+	//	menu.add(Menu.NONE, APROPOS, 2, R.string.a_propos_label).setIcon(android.R.drawable.ic_menu_info_details);
 		//End of user code
-        return super.onCreateOptionsMenu(menu);
+      //  return super.onCreateOptionsMenu(menu);
+		// Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.accueil_customview_actions, menu);
+	    return super.onCreateOptionsMenu(menu);
+
     }
     
   
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	// behavior of option menu
+    	
+    	// Handle presses on the action bar items
         switch (item.getItemId()) {
-			case 777:
-		            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-		            return true;
-		
-		//Start of user code additional menu action Accueil_CustomViewActivity
-		/*	case TELECHARGE_FICHE_MENU_ID:
-				new TelechargeFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
-				break; */
-			case TELECHARGE_PHOTO_FICHES_MENU_ID:
-				TelechargePhotosFiches_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
+            case R.id.accueil_customview_action_preference:
+            	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+                return true;
+            case R.id.accueil_customview_action_telecharge_photofiches:
+            	TelechargePhotosFiches_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
 				if(telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING)
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = 
 						(TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
-				break;
-		/*	case VERIFIE_NOUVELLES_FICHES_MENU_ID:
-				new VerifieNouvellesFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
-				break;
-			case RESET_DB_FROM_XML_MENU_ID:
-				reinitializeDBFromPrefetched();
-				break; */
-			case APROPOS:
-				APropos aPropos = new APropos(getContext(), (Activity) getContext(), getHelper());
+                return true;
+            case R.id.accueil_customview_action_a_propos:
+            	APropos aPropos = new APropos(getContext(), (Activity) getContext(), getHelper());
 				aPropos.aProposAff();
-				break;
-		//End of user code
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return false;
+
     }
 
 	private void showToast(String message) {

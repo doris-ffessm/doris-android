@@ -47,6 +47,7 @@ import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
+import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -56,6 +57,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.LinearLayout;
 import android.preference.PreferenceManager;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -82,7 +85,7 @@ import android.widget.ImageButton;
 import android.widget.PopupWindow;
 // End of user code
 
-public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener , ActivityWithIndexBar{
+public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener , ActivityWithIndexBar{
 	
 	private static final String LOG_TAG = ListeFicheAvecFiltre_ClassListViewActivity.class.getSimpleName();
 
@@ -104,7 +107,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.listeficheavecfiltre_listview);
-
+		
+		ActionBar actionBar = getSupportActionBar();
+	    actionBar.setDisplayHomeAsUpEnabled(true);
+	    
 		ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
         list.setClickable(true);
 		//Start of user code onCreate ListeFicheAvecFiltre_ClassListViewActivity adapter creation
@@ -240,6 +246,19 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteBaseActiv
         return false;
     }
 
+    
+    //  ------------ dealing with Up button
+	@Override
+	public Intent getSupportParentActivityIntent() {
+		return new Intent(this, Accueil_CustomViewActivity.class);
+	}
+	@Override
+	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+		super.onCreateSupportNavigateUpTaskStack(builder);
+	}
+
+	
+	// -------------- handler (for indexBar)
 	@Override
 	public Handler getHandler() {
 		return mHandler;

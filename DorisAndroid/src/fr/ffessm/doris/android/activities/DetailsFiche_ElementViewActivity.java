@@ -67,6 +67,8 @@ import android.widget.ImageView;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.ActionBar;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
@@ -101,8 +103,9 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
+import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
-public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
+public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_implements
 	implements DataChangedListener
 // End of user code
@@ -140,6 +143,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         setContentView(R.layout.detailsfiche_elementview);
         ficheId = getIntent().getExtras().getInt("ficheId");
         
+
+		ActionBar actionBar = getSupportActionBar();
+	    actionBar.setDisplayHomeAsUpEnabled(true);
+	    
 		// Start of user code protectedDetailsFiche_ElementViewActivity_onCreate
 
         ficheNumero = getIntent().getExtras().getInt("ficheNumero");
@@ -419,6 +426,19 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	    }
 	    return false;
     }
+    
+//  ------------ dealing with Up button
+	@Override
+	public Intent getSupportParentActivityIntent() {
+		return new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class);
+	}
+	@Override
+	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+		super.onCreateSupportNavigateUpTaskStack(builder);
+	}
+
+	
+	// -------------- handler (for indexBar)
     
     protected void addFoldableView(LinearLayout containerLayout, String titre, CharSequence texte){
     	LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
