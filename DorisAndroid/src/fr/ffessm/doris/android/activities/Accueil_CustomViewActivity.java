@@ -105,7 +105,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	implements DataChangedListener
 //End of user code
 {
-	
+ 	
 	//Start of user code constants Accueil_CustomViewActivity
 //	static final int TELECHARGE_FICHE_MENU_ID = 1;	
 	static final int TELECHARGE_PHOTO_FICHES_MENU_ID = 2;
@@ -481,6 +481,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         int iconeZine = Integer.valueOf(Outils.getParamString(this.getApplicationContext(), R.string.pref_key_accueil_icon_size, "64"));
         ((ImageView) findViewById(R.id.accueil_recherche_precedente_icone)).setMaxHeight(iconeZine);
         
+        
     	StringBuilder sbRecherchePrecedente = new StringBuilder(); 
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         int filtreCourantId = prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1);	        
@@ -503,6 +504,9 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         // TODO rappeler le dernier text recherché
     	TextView tvRecherchePrecedente = (TextView)findViewById(R.id.accueil_recherche_precedente_details);
     	tvRecherchePrecedente.setText(sbRecherchePrecedente.toString());
+    	
+    	((ImageView) findViewById(R.id.accueil_recherche_guidee_icone)).setMaxHeight(iconeZine);
+    	
     	
     	// Affichage de chaque Zones - Toutes Zones en 1er
     	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate); 
