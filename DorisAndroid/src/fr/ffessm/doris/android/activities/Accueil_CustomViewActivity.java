@@ -291,7 +291,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	// affichage lien vers les zones 
     	
         List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - après");
 		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
 			
 		for (ZoneGeographique zoneGeo : listeZoneGeo) {
