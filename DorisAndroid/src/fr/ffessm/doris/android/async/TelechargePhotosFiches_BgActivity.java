@@ -348,10 +348,12 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 						for (String[] resultColumns : listePhotoPrinc) {
 							
 							String photoPrincURL = resultColumns[0];
-    					
+							int nbTelechargements = 0;
+							
 	    					// Les vignettes des Photos Principales sont toujours téléchargées (si pas P0)
 	    					if ( !hsImagesVigAllreadyAvailable.contains(photoPrincURL) ){
 	    						Outils.getOrDownloadPhotoFile(context, photoPrincURL, Outils.ImageType.VIGNETTE);
+	    						nbTelechargements++;
 	    					}
 							// Comme on télécharge toujours la vignette, on ne fait avancer le compteur 
 							// que si c'est la qualité demandée
@@ -362,26 +364,32 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	        				if ( imageTypeImage == Outils.ImageType.MED_RES) {
 	    						if ( !hsImagesMedResAllreadyAvailable.contains(photoPrincURL) ){
 	        						Outils.getOrDownloadPhotoFile(context, photoPrincURL, Outils.ImageType.MED_RES);
-		        				}
+	        						nbTelechargements++;
+	    						}
 	    						nbPhotosPrinRecuesPourZone++;
 	        				}
 	        				
 	        				if ( imageTypeImage == Outils.ImageType.HI_RES) {
 	    						if ( !hsImagesHiResAllreadyAvailable.contains(photoPrincURL) ){
 	        						Outils.getOrDownloadPhotoFile(context, photoPrincURL, Outils.ImageType.HI_RES);
-		        				}
+	        						nbTelechargements++;
+	    						}
 	    						nbPhotosPrinRecuesPourZone++;
 	        				}
 		    					
-	    					if (nbPhotosPrinRecuesPourZone % 10 == 0) publishProgress( nbPhotosPrinRecuesPourZone );	
+	    					if (nbPhotosPrinRecuesPourZone % 100 == 0 || nbTelechargements % 10 == 0) publishProgress( nbPhotosPrinRecuesPourZone );	
 	        			
 			    			//Enregistrement du nombre total de photos téléchargée pour afficher avancement au fur et à mesure
-	    					if (nbPhotosPrinRecuesPourZone % 50 == 0){
+	    					if (nbPhotosPrinRecuesPourZone % 200 == 0 || nbTelechargements % 10 == 0){
 	    						Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneId, true), nbPhotosPrinRecuesPourZone);
 	    						DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 	    					}
 	
-	    					if( this.isCancelled()) return nbPhotosPrinRecuesPourZone;
+	    					if (nbPhotosPrinRecuesPourZone % 200 == 0){
+		    	        		// tempo pour économiser le CPU
+		    	        		Thread.sleep(tempo); // wait for 50 milliseconds before running another loop
+		    					if( this.isCancelled()) return nbPhotosPrinRecuesPourZone;
+	    					}
 						}
 	        		} catch (IOException e) {
 	        			Log.e(LOG_TAG, e.getMessage(), e);
@@ -399,8 +407,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 					Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneId, true), nbPhotosPrinRecuesPourZone);
 					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - nbPhotosPrincDejaLaPourZone : "+nbPhotosPrinRecuesPourZone );
 		    		
-	        		// tempo pour économiser le CPU
-	        		Thread.sleep(tempo); // wait for 50 milliseconds before running another loop
+
 	    		}
 		
 	    	} // fin ZoneGeo Images Principales
@@ -467,38 +474,45 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 						for (String[] resultColumns : listePhotos) {
 						    
 							String photoURL = resultColumns[0];
-			        		
+			        		int nbTelechargements = 0;
+							
         					if ( imageTypeImage == Outils.ImageType.VIGNETTE ){
         						if ( !hsImagesVigAllreadyAvailable.contains(photoURL) ){
 	        						Outils.getOrDownloadPhotoFile(context, photoURL, Outils.ImageType.VIGNETTE);
+	        						nbTelechargements++;
 		        				}
         						nbPhotosRecuesPourZone++;
 							}
         					if ( imageTypeImage == Outils.ImageType.MED_RES) {
         						if ( !hsImagesMedResAllreadyAvailable.contains(photoURL) ){
 	        						Outils.getOrDownloadPhotoFile(context, photoURL, Outils.ImageType.MED_RES);
-		        				}
+	        						nbTelechargements++;
+        						}
         						nbPhotosRecuesPourZone++;
 	        				}
 	        				
 	        				if ( imageTypeImage == Outils.ImageType.HI_RES) {
         						if ( !hsImagesHiResAllreadyAvailable.contains(photoURL) ){
 	        						Outils.getOrDownloadPhotoFile(context, photoURL, Outils.ImageType.HI_RES);
-		        				}
+	        						nbTelechargements++;
+        						}
         						nbPhotosRecuesPourZone++;
 	        				}
         					
-	        				if (nbPhotosRecuesPourZone % 10 == 0) publishProgress( nbPhotosRecuesPourZone );
+	        				if (nbPhotosRecuesPourZone % 100 == 0 || nbTelechargements % 10 == 0) publishProgress( nbPhotosRecuesPourZone );
 	        				
-    						if (nbPhotosRecuesPourZone % 50 == 0){
+    						if (nbPhotosRecuesPourZone % 500 == 0 || nbTelechargements % 10 == 0){
     							//Enregistrement du nombre total de photos téléchargée pour afficher avancement
     			        		Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneId, false), nbPhotosRecuesPourZone);
     			        		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
-    							// toutes les 200 images ajoutées fait une micro pause pour économiser le CPU pour l'UI
-		        				Thread.sleep(2 * tempo); // wait for 100 milliseconds before running another loop
-		        			}
-
-    						if( this.isCancelled()) return nbPhotosRecuesPourZone;
+    						}
+    						if (nbPhotosRecuesPourZone % 200 == 0){	
+    							if( this.isCancelled()) return nbPhotosRecuesPourZone;
+     							// toutes les 200 images ajoutées fait une micro pause pour économiser le CPU pour l'UI
+		        				Thread.sleep(4 * tempo); // wait for 200 milliseconds before running another loop
+    						}
+    						
+    						
 						}
 	        		} catch (IOException e) {
 	        			Log.e(LOG_TAG, e.getMessage(), e);
