@@ -107,7 +107,7 @@ public class SiteDoris {
     				log.info("getListeFichesFromHtml() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
     				
     				String textePourRechercheRapide = ficheNomCommun+" "+ficheNomScientifique;
-    				Fiche fiche = new Fiche(ficheNomScientifique, ficheNomCommun, ficheId, ficheEtat, dateCreation, dateModification, "", Outils.formatStringNormalizer(textePourRechercheRapide).toLowerCase() );
+    				Fiche fiche = new Fiche(ficheNomScientifique, ficheNomCommun, ficheId, ficheEtat, dateCreation, dateModification, "", Outils.formatStringNormalizer(textePourRechercheRapide).toLowerCase(), "" );
       				
     				listeFiches.add(fiche);
     			}
