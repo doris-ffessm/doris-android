@@ -230,27 +230,27 @@ public class Outils {
 		return new File(imageFolder, photo.getCleURL());
 	}
 
-	public static HashSet<File> getAllVignettesPhotoFicheAvailable(Context inContext){
-		HashSet<File> hsPhotoFicheAvailable = new HashSet<File>();
+	public static HashSet<String> getAllVignettesPhotoFicheAvailable(Context inContext){
+		HashSet<String> hsPhotoFicheAvailable = new HashSet<String>();
 		File imageFolder = getImageFolderVignette(inContext);		
 		for (File file : imageFolder.listFiles()) {
-			hsPhotoFicheAvailable.add(file);
+			hsPhotoFicheAvailable.add(file.getName());
 		}
 		return hsPhotoFicheAvailable;
 	}
-	public static HashSet<File> getAllMedResPhotoFicheAvailable(Context inContext){
-		HashSet<File> hsPhotoFicheAvailable = new HashSet<File>();
+	public static HashSet<String> getAllMedResPhotoFicheAvailable(Context inContext){
+		HashSet<String> hsPhotoFicheAvailable = new HashSet<String>();
 		File imageFolder = getImageFolderMedRes(inContext);		
 		for (File file : imageFolder.listFiles()) {
-			hsPhotoFicheAvailable.add(file);
+			hsPhotoFicheAvailable.add(file.getName());
 		}
 		return hsPhotoFicheAvailable;
 	}
-	public static HashSet<File> getAllHiResPhotoFicheAvailable(Context inContext){
-		HashSet<File> hsPhotoFicheAvailable = new HashSet<File>();
+	public static HashSet<String> getAllHiResPhotoFicheAvailable(Context inContext){
+		HashSet<String> hsPhotoFicheAvailable = new HashSet<String>();
 		File imageFolder = getImageFolderHiRes(inContext);		
 		for (File file : imageFolder.listFiles()) {
-			hsPhotoFicheAvailable.add(file);
+			hsPhotoFicheAvailable.add(file.getName());
 		}
 		return hsPhotoFicheAvailable;
 	}
@@ -283,9 +283,9 @@ public class Outils {
 		
 		
 		if(photo != null){
-			File vignetteImage = new File(imageFolder, photo.getCleURL());
-			if(vignetteImage.exists()){
-				result = vignetteImage;
+			File fichierImage = new File(imageFolder, photo.getCleURL());
+			if(fichierImage.exists()){
+				result = fichierImage;
 			}
 			else{
 		    
@@ -302,7 +302,7 @@ public class Outils {
 		            
 		            // download the file
 		            InputStream input = urlConnection.getInputStream();
-		            OutputStream output = new FileOutputStream(vignetteImage);
+		            OutputStream output = new FileOutputStream(fichierImage);
 
 		            byte data[] = new byte[1024];
 		            int count;
@@ -315,6 +315,75 @@ public class Outils {
 		            input.close();
 			        
 				} catch (MalformedURLException e) {
+					Log.w(LOG_TAG, e.getMessage(), e);
+				}
+				
+			}
+		}
+		
+		return result;
+	}
+	
+	public static File getOrDownloadPhotoFile(Context inContext, String photoUrl, ImageType imageType) throws IOException{
+		File result = null;	
+		String imageFolderName="";
+		String baseUrl="";
+		switch (imageType) {
+		case VIGNETTE:
+			imageFolderName = VIGNETTES_FICHE_FOLDER;
+			baseUrl=PhotoFiche.VIGNETTE_BASE_URL;
+			break;
+		case MED_RES:
+			imageFolderName = MED_RES_FICHE_FOLDER;
+			baseUrl=PhotoFiche.MOYENNE_BASE_URL;
+			break;
+		case HI_RES:
+			imageFolderName = HI_RES_FICHE_FOLDER;
+			baseUrl=PhotoFiche.GRANDE_BASE_URL;
+			break;
+		default:
+			break;
+		}
+		File imageFolder = inContext.getDir(imageFolderName, Context.MODE_PRIVATE);
+		
+		
+		if(!photoUrl.isEmpty()){
+			File fichierImage = new File(imageFolder, photoUrl);
+			if(fichierImage.exists()){
+				result = fichierImage;
+			}
+			else{
+		    
+				URL urlHtml = null;
+				try {
+					String urlNettoyee = baseUrl+photoUrl;
+					urlNettoyee = urlNettoyee.replaceAll(" ", "%20");
+					urlHtml = new URL(urlNettoyee);
+				} catch (MalformedURLException e ) {
+					Log.w(LOG_TAG, e.getMessage(), e);
+				}
+				try {
+					HttpURLConnection urlConnection = (HttpURLConnection) urlHtml.openConnection();
+			        urlConnection.setConnectTimeout(3000);
+			        urlConnection.setReadTimeout(10000);
+			        
+			        urlConnection.connect();
+		            
+		            // download the file
+		            InputStream input = urlConnection.getInputStream();
+		            OutputStream output = new FileOutputStream(fichierImage);
+
+		            byte data[] = new byte[1024];
+		            int count;
+		            while ((count = input.read(data)) != -1) {
+		                output.write(data, 0, count);
+		            }
+
+		            output.flush();
+		            output.close();
+		            input.close();
+			        
+				} catch (IOException e) {
 					Log.w(LOG_TAG, e.getMessage(), e);
 				}
 				
@@ -1129,37 +1198,52 @@ public class Outils {
 										entriesDao.queryBuilder().where().like("terme", terme+"%").prepare() );
 								if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
 								else {
-									//Commence par le terme au masculin singulier
+									//#Commence par# le terme au masculin singulier
+									String termeTmp1 = terme;
+									termeTmp1 = termeTmp1.replaceAll("elle$", "el");
+									termeTmp1 = termeTmp1.replaceAll("ienne$", "ien");
+									termeTmp1 = termeTmp1.replaceAll("euse$", "eur");
+									termeTmp1 = termeTmp1.replaceAll("e$", "");
 									listeDefinitions = entriesDao.query(
-											entriesDao.queryBuilder().where().like("terme", terme.replaceAll("e$", "")+"%").prepare() );
+											entriesDao.queryBuilder().where().like("terme", termeTmp1+"%").prepare() );
 									if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
 									else {
-										//Commence par le terme au masculin singulier ...al => ...aux (le féminin plurielle étant trouvé car ...ales contient ...al) 
+										//#Commence par# le terme au masculin singulier ...al => ...aux
+										String termeTmp2 = terme;
+										termeTmp2 = termeTmp2.replaceAll("aux$", "al");
+										termeTmp2 = termeTmp2.replaceAll("eaux$", "eau");
+										termeTmp2 = termeTmp2.replaceAll("ale$", "al");
+										termeTmp2 = termeTmp2.replaceAll("ive$", "if");
 										listeDefinitions = entriesDao.query(
-												entriesDao.queryBuilder().where().like("terme", terme.replaceAll("aux$", "al")+"%").prepare() );
+												entriesDao.queryBuilder().where().like("terme", termeTmp2+"%").prepare() );
 										if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
 										else {
-											//Contient le terme au singulier
+											//#Contient# le terme au singulier
 											listeDefinitions = entriesDao.query(
 													entriesDao.queryBuilder().where().like("terme", "%"+terme+"%").prepare() );
 											if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
 											else {
-												//Contient le terme au masculin singulier
+												//#Contient# le terme au masculin singulier
 												listeDefinitions = entriesDao.query(
-														entriesDao.queryBuilder().where().like("terme", "%"+terme.replaceAll("e$", "")+"%").prepare() );
+														entriesDao.queryBuilder().where().like("terme", "%"+termeTmp1+"%").prepare() );
 												if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
 												else {
-													//le É par exemple ne fonctionne pas avec LIKE dans SQLite
-													// Bug connu : http://www.sqlite.org/lang_expr.html#like
-													listeDefinitions = entriesDao.queryForAll();
-													String texteRecherche = terme.replaceAll("e$", "").replaceAll("ux$", "").toLowerCase();
-													for (DefinitionGlossaire definition : listeDefinitions){
-														if (definition.getTerme().toString().toLowerCase().contains(texteRecherche)) {
-															idDefinition = definition.getId();
-															break;
+													//#Contient# le terme au masculin singulier
+													listeDefinitions = entriesDao.query(
+															entriesDao.queryBuilder().where().like("terme", "%"+termeTmp2+"%").prepare() );
+													if(!listeDefinitions.isEmpty()) idDefinition = listeDefinitions.get(0).getId();
+													else {
+														//le É par exemple ne fonctionne pas avec LIKE dans SQLite
+														// Bug connu : http://www.sqlite.org/lang_expr.html#like
+														listeDefinitions = entriesDao.queryForAll();
+														String texteRecherche = terme.replaceAll("e$", "").replaceAll("ux$", "").toLowerCase();
+														for (DefinitionGlossaire definition : listeDefinitions){
+															if (definition.getTerme().toString().toLowerCase().contains(texteRecherche)) {
+																idDefinition = definition.getId();
+																break;
+															}
 														}
 													}
-													
 												}
 											}
 										}

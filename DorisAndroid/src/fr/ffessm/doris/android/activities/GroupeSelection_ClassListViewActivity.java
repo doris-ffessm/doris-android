@@ -43,7 +43,6 @@ package fr.ffessm.doris.android.activities;
 
 
 import fr.ffessm.doris.android.datamodel.*;
-import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
 import android.app.Activity;
@@ -68,6 +67,7 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedGroupeSelection_ClassListViewActivity_additionalimports
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import fr.ffessm.doris.android.BuildConfig;
 // End of user code
 
 public class GroupeSelection_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener {

@@ -76,7 +76,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import com.j256.ormlite.dao.CloseableIterator;
 import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.activities.view.APropos;
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.MultiProgressBar;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
@@ -371,7 +371,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
 		
 		//Start of user code additional menu action EtatModeHorsLigne_CustomViewActivity
 			case APROPOS:
-				APropos aPropos = new APropos(getContext(), (Activity) getContext(), getHelper());
+				AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
 				aPropos.aProposAff();				
 				break;
 		//End of user code

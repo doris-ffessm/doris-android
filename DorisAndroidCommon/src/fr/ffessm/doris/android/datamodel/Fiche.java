@@ -55,20 +55,19 @@ import java.util.List;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.StrMatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import fr.ffessm.doris.android.datamodel.associations.*;
 
 // Start of user code additional import for Fiche
-import java.io.IOException;
 
 import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
+
+import org.apache.commons.lang3.StringUtils;
 
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Constants.ParticipantKind;
@@ -246,17 +245,7 @@ public class Fiche {
 		return StringUtils.replaceEach(this.nomScientifique, new String[]{"{{g}}","{{/g}}","{{i}}","{{/i}}"}, new String[]{"","","",""});
 	}
 	
-	public String getAutreDenominationTxt(){
-		StringBuilder sbAutreDenominations = new StringBuilder();
-		Collection<AutreDenomination> listeAutreDenominations = getAutresDenominations();
-		if (listeAutreDenominations != null) {
-			for (AutreDenomination autreDenomination:listeAutreDenominations) {
-				sbAutreDenominations.append(autreDenomination.denomination+" ");
-			}
-		}
-		return sbAutreDenominations.toString().trim();
-	}
-	
+
 	
 	
 	public void getFicheFromHtml(String htmlFiche, List<Groupe> listeGroupes, List<Participant> listeParticipants) throws SQLException{
@@ -322,6 +311,9 @@ public class Fiche {
 		int num_table = 0;
 		int groupeRef = 0;
 		int sousgroupeRef = 0;
+		
+		//Initialisation Liste des Autres Dénominations
+		String autresDenominationsPourRechercheRapide = "";
 		
 		// Lecture des informations pour une fiche complète
 		if ( getEtatFiche() == 4) {
@@ -432,6 +424,7 @@ public class Fiche {
 									
 									// permet d'enlever les Liens et de les remplacer par un texte, par exemple "(Fiche)"
 									autresDenominationsTexte = autresDenominationsTexte.replaceAll("<[^>]*fiche_numero=([^>]*)>", "{{$1}}").trim();
+									autresDenominationsPourRechercheRapide = autresDenominationsPourRechercheRapide + autresDenominationsTexte.replaceAll("\\([^\\)]*\\)", "")+" ";
 									
 									if ( ! autresDenominationsTexte.isEmpty() ){
 										AutreDenomination autreDenomination = new AutreDenomination(autresDenominationsTexte, "");									
@@ -769,8 +762,8 @@ public class Fiche {
 		}
 		
 		StringBuilder sbTextePourRechercheRapide = new StringBuilder(getNomCommun());
-		sbTextePourRechercheRapide.append(getNomScientifique());
-		sbTextePourRechercheRapide.append(getAutreDenominationTxt());
+		sbTextePourRechercheRapide.append(getNomScientifique().replaceAll("\\([^\\)]*\\)", ""));
+		sbTextePourRechercheRapide.append(" "+autresDenominationsPourRechercheRapide.trim());
 		sbTextePourRechercheRapide = new StringBuilder(sbTextePourRechercheRapide.toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "") );
 		setTextePourRechercheRapide(Outils.formatStringNormalizer(sbTextePourRechercheRapide.toString()).toLowerCase());
 		

@@ -87,7 +87,7 @@ import android.widget.RelativeLayout;
 import com.j256.ormlite.dao.CloseableIterator;
 
 import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.activities.view.APropos;
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.MultiProgressBar;
 import fr.ffessm.doris.android.async.TelechargePhotosFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
@@ -105,7 +105,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	implements DataChangedListener
 //End of user code
 {
-	
+ 	
 	//Start of user code constants Accueil_CustomViewActivity
 //	static final int TELECHARGE_FICHE_MENU_ID = 1;	
 	static final int TELECHARGE_PHOTO_FICHES_MENU_ID = 2;
@@ -113,6 +113,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 //	static final int VERIFIE_NOUVELLES_FICHES_MENU_ID = 4;
 //	static final int RESET_DB_FROM_XML_MENU_ID = 5;
 	static final int APROPOS = 6;
+	static final int AIDE = 7;
 	
 	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getCanonicalName();
 	Handler mHandler;
@@ -183,7 +184,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 
         if (!VersionAffichageAPropos.equals(appVersionName)) {
         	if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Affichage A Propos");
-			APropos aPropos = new APropos(getContext(), (Activity) getContext(), getHelper());
+			AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
 			aPropos.aProposAff();
         	
             Outils.setParamString(this.getApplicationContext(), R.string.pref_key_a_propos_version, appVersionName);
@@ -290,7 +291,6 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	// affichage lien vers les zones 
     	
         List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - après");
 		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
 			
 		for (ZoneGeographique zoneGeo : listeZoneGeo) {
@@ -462,7 +462,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
      */
     public void refreshScreenData() {
     	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
+    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
 
     	/* 
     	DVK 
@@ -479,6 +479,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	//ImageView ivIcone = (ImageView) findViewById(R.id.accueil_recherche_precedente_icone);
         int iconeZine = Integer.valueOf(Outils.getParamString(this.getApplicationContext(), R.string.pref_key_accueil_icon_size, "64"));
         ((ImageView) findViewById(R.id.accueil_recherche_precedente_icone)).setMaxHeight(iconeZine);
+        
         
     	StringBuilder sbRecherchePrecedente = new StringBuilder(); 
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -503,8 +504,11 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
     	TextView tvRecherchePrecedente = (TextView)findViewById(R.id.accueil_recherche_precedente_details);
     	tvRecherchePrecedente.setText(sbRecherchePrecedente.toString());
     	
+    	((ImageView) findViewById(R.id.accueil_recherche_guidee_icone)).setMaxHeight(iconeZine);
+    	
+    	
     	// Affichage de chaque Zones - Toutes Zones en 1er
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate); 
+    	// if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate); 
     	ZoneGeographique zoneToutesZones = new ZoneGeographique();
     	zoneToutesZones.setId(-1);
     	zoneToutesZones.setNom(getContext().getString(R.string.avancement_touteszones_titre));
@@ -537,7 +541,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	    	
 	    	
     	} else {
-    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - update progress bar : ");
+    		// if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - update progress bar : ");
     		updateProgressBarZone(zoneToutesZones, progressBarZones.get(zoneToutesZones.getId()));
     	
     	}
@@ -610,12 +614,12 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.menu_option_telecharge_photofiches).setIcon(android.R.drawable.ic_menu_set_as);
     //    menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 4, R.string.menu_option_verifie_nouvelles_fiches).setIcon(android.R.drawable.ic_menu_preferences);
     //    menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 5, R.string.menu_option_reinitialise_a_partir_du_xml).setIcon(android.R.drawable.ic_menu_preferences);
-		menu.add(Menu.NONE, APROPOS, 2, R.string.a_propos_label).setIcon(android.R.drawable.ic_menu_info_details);
+		menu.add(Menu.NONE, APROPOS, 2, R.string.a_propos_menu).setIcon(android.R.drawable.ic_menu_info_details);
+		menu.add(Menu.NONE, AIDE, 2, R.string.aide_menu).setIcon(android.R.drawable.ic_menu_help);
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
     
-  
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	// behavior of option menu
@@ -641,8 +645,12 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 				reinitializeDBFromPrefetched();
 				break; */
 			case APROPOS:
-				APropos aPropos = new APropos(getContext(), (Activity) getContext(), getHelper());
-				aPropos.aProposAff();
+				AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
+				aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label)+getContext().getString(R.string.app_name), aPropos.aProposAff(),	"file:///android_res/raw/apropos.html");
+				break;
+			case AIDE:
+				AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
+				aide.affichageMessageHTML(getContext().getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
 				break;
 		//End of user code
         }

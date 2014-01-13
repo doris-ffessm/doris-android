@@ -117,9 +117,9 @@ public class PhotoFiche {
 
 	// Start of user code PhotoFiche additional user properties	
 	public static final String SERVEUR_BASE_URL = "http://doris.ffessm.fr/gestionenligne/";
-	public static final String VIGNETTE_BASE_URL = SERVEUR_BASE_URL+ "photos_fiche_vig/";
-	public static final String MOYENNE_BASE_URL = SERVEUR_BASE_URL+ "photos_fiche_moy/";
-	public static final String GRANDE_BASE_URL = SERVEUR_BASE_URL+ "photos/";
+	public static final String VIGNETTE_BASE_URL = SERVEUR_BASE_URL+ "photos_fiche_vig";
+	public static final String MOYENNE_BASE_URL = SERVEUR_BASE_URL+ "photos_fiche_moy";
+	public static final String GRANDE_BASE_URL = SERVEUR_BASE_URL+ "photos";
 	// End of user code
 	
 	public PhotoFiche() {} // needed by ormlite
