@@ -63,6 +63,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,10 +108,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.listeficheavecfiltre_listview);
-		
+
 		ActionBar actionBar = getSupportActionBar();
 	    actionBar.setDisplayHomeAsUpEnabled(true);
-	    
+
 		ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
         list.setClickable(true);
 		//Start of user code onCreate ListeFicheAvecFiltre_ClassListViewActivity adapter creation
@@ -222,8 +223,9 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		// add options in the menu
-		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
-
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.listeficheavecfiltre_classlistview_actions, menu);
+		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu ListeFicheAvecFiltre_ClassListViewActivity
 
 		//End of user code
@@ -233,31 +235,33 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	// behavior of option menu
+		// behavior of option menu
         switch (item.getItemId()) {
-			case 777:
-		            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-		            return true;
-		
-		//Start of user code additional menu action ListeFicheAvecFiltre_ClassListViewActivity
+			case R.id.listeficheavecfiltre_classlistview_action_preference:
+	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+	            return true;
+			//Start of user code additional menu action ListeFicheAvecFiltre_ClassListViewActivity
 
-		//End of user code
+			//End of user code
+			default:
+                return super.onOptionsItemSelected(item);
         }
-        return false;
     }
 
-    
-    //  ------------ dealing with Up button
+	//  ------------ dealing with Up button
 	@Override
 	public Intent getSupportParentActivityIntent() {
+		//Start of user code getSupportParentActivityIntent ListeFicheAvecFiltre_ClassListViewActivity
+		// navigates to the parent activity
 		return new Intent(this, Accueil_CustomViewActivity.class);
+		//End of user code
 	}
 	@Override
 	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+		//Start of user code onCreateSupportNavigateUpTaskStack ListeFicheAvecFiltre_ClassListViewActivity
 		super.onCreateSupportNavigateUpTaskStack(builder);
+		//End of user code
 	}
-
-	
 	// -------------- handler (for indexBar)
 	@Override
 	public Handler getHandler() {

@@ -47,6 +47,7 @@ import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
+import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -56,12 +57,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.LinearLayout;
 import android.preference.PreferenceManager;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -73,7 +78,7 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedGlossaire_ClassListViewActivity_additionalimports
 // End of user code
 
-public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener , ActivityWithIndexBar{
+public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener , ActivityWithIndexBar{
 	
 	private static final String LOG_TAG = Glossaire_ClassListViewActivity.class.getSimpleName();
 
@@ -90,6 +95,9 @@ public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLite
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.glossaire_listview);
+
+		ActionBar actionBar = getSupportActionBar();
+	    actionBar.setDisplayHomeAsUpEnabled(true);
 
 		ListView list = (ListView) findViewById(R.id.glossaire_listview);
         list.setClickable(true);
@@ -176,8 +184,9 @@ public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLite
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		// add options in the menu
-		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
-
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.glossaire_classlistview_actions, menu);
+		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu Glossaire_ClassListViewActivity
 
 		//End of user code
@@ -187,19 +196,34 @@ public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLite
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	// behavior of option menu
+		// behavior of option menu
         switch (item.getItemId()) {
-			case 777:
-		            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-		            return true;
-		
-		//Start of user code additional menu action Glossaire_ClassListViewActivity
+			case R.id.glossaire_classlistview_action_preference:
+	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+	            return true;
+			//Start of user code additional menu action Glossaire_ClassListViewActivity
 
 		//End of user code
+			default:
+                return super.onOptionsItemSelected(item);
         }
-        return false;
     }
 
+	//  ------------ dealing with Up button
+	@Override
+	public Intent getSupportParentActivityIntent() {
+		//Start of user code getSupportParentActivityIntent Glossaire_ClassListViewActivity
+		// navigates to the parent activity
+		return new Intent(this, Accueil_CustomViewActivity.class);
+		//End of user code
+	}
+	@Override
+	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+		//Start of user code onCreateSupportNavigateUpTaskStack Glossaire_ClassListViewActivity
+		super.onCreateSupportNavigateUpTaskStack(builder);
+		//End of user code
+	}
+	// -------------- handler (for indexBar)
 	@Override
 	public Handler getHandler() {
 		return mHandler;

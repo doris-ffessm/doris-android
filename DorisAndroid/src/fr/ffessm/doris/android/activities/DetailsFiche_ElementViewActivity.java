@@ -45,13 +45,17 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -103,7 +107,6 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_implements
@@ -123,10 +126,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	
 	protected int ficheNumero;
 	
-	static final int FOLD_SECTIONS_MENU_ID = 1;	
-	static final int UNFOLD_SECTIONS_MENU_ID = 2;
-	static final int GLOSSAIRE_MENU_ID = 3;
-	
     boolean isOnCreate = true;
     List<FoldableClickListener> allFoldable = new ArrayList<FoldableClickListener>();
     Handler mHandler;
@@ -141,12 +140,12 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detailsfiche_elementview);
-        ficheId = getIntent().getExtras().getInt("ficheId");
-        
 
 		ActionBar actionBar = getSupportActionBar();
 	    actionBar.setDisplayHomeAsUpEnabled(true);
-	    
+
+        ficheId = getIntent().getExtras().getInt("ficheId");
+        
 		// Start of user code protectedDetailsFiche_ElementViewActivity_onCreate
 
         ficheNumero = getIntent().getExtras().getInt("ficheNumero");
@@ -368,13 +367,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		// add options in the menu
-        menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
-       
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.detailsfiche_elementview_actions, menu);
+		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu DetailsFiche_EditableElementViewActivity
-        menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.expander_ic_maximized);
-		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.expander_ic_minimized);
-		menu.add(Menu.NONE, GLOSSAIRE_MENU_ID, 0, R.string.accueil_glossaire_text).setIcon(R.drawable.glossaire);
-		
+       
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
@@ -382,27 +379,42 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	// behavior of option menu
+		// behavior of option menu
         switch (item.getItemId()) {
-        	case 777:
-                    startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-                    return true;
-        
-		//Start of user code additional menu actionDetailsFiche_ElementViewActivity
-        	case FOLD_SECTIONS_MENU_ID:
+			case R.id.detailsfiche_elementview_action_preference:
+	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+	            return true;
+			//Start of user code additional menu action DetailsFiche_ElementViewActivity
+			case R.id.detailsfiche_elementview_action_fold_all_sections:
         		foldAll();
-				break;
-        	case UNFOLD_SECTIONS_MENU_ID:
+				return true;
+        	case R.id.detailsfiche_elementview_action_unfold_all_sections:
         		unfoldAll();
-				break;
-        	case GLOSSAIRE_MENU_ID:
+        		return true;
+        	case R.id.detailsfiche_elementview_action_glossaire:
         		Intent toDefinitionlView = new Intent(context, Glossaire_ClassListViewActivity.class);
             	context.startActivity(toDefinitionlView);
-				break;
-		//End of user code
-        }
-        return false;
+            	return true;
+			//End of user code
+			default:
+                return super.onOptionsItemSelected(item);
+        }    	
     }
+
+	//  ------------ dealing with Up button
+	@Override
+	public Intent getSupportParentActivityIntent() {
+		//Start of user code getSupportParentActivityIntent DetailsFiche_ClassListViewActivity
+		// navigates to the parent activity
+		return new Intent(this, Accueil_CustomViewActivity.class);
+		//End of user code
+	}
+	@Override
+	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+		//Start of user code onCreateSupportNavigateUpTaskStack DetailsFiche_ClassListViewActivity
+		super.onCreateSupportNavigateUpTaskStack(builder);
+		//End of user code
+	}
 
 	// Start of user code protectedDetailsFiche_ElementViewActivity_additional_operations
     // pour le menu sur click long
@@ -410,32 +422,23 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {  
     	super.onCreateContextMenu(menu, v, menuInfo);  
         //menu.setHeaderTitle("Context Menu");  
-        menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.ic_expand_close);
-		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.ic_expand_open);
+        menu.add(Menu.NONE, R.id.detailsfiche_elementview_action_fold_all_sections, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.ic_expand_close);
+		menu.add(Menu.NONE, R.id.detailsfiche_elementview_action_unfold_all_sections, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.ic_expand_open);
 
     }
     @Override  
     public boolean onContextItemSelected(MenuItem item) {  
     	switch (item.getItemId()) {    
-    	case FOLD_SECTIONS_MENU_ID:
+    	case R.id.detailsfiche_elementview_action_fold_all_sections:
     		foldAll();
 			break;
-    	case UNFOLD_SECTIONS_MENU_ID:
+    	case R.id.detailsfiche_elementview_action_unfold_all_sections:
     		unfoldAll();
 			break;
 	    }
 	    return false;
     }
-    
-//  ------------ dealing with Up button
-	@Override
-	public Intent getSupportParentActivityIntent() {
-		return new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class);
-	}
-	@Override
-	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-		super.onCreateSupportNavigateUpTaskStack(builder);
-	}
+  
 
 	
 	// -------------- handler (for indexBar)

@@ -1,14 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:id="@+id/accueil_customview_action_preference"
+	<item android:id="@+id/etatmodehorsligne_customview_action_preference"
 	      android:icon="@android:drawable/ic_menu_preferences"
 	      android:title="@string/preference_menu_title" />
-	<!--Start of user code customView_menu for Accueil
+	<!--Start of user code customView_menu for EtatModeHorsLigne
 	-->
 <!-- freely adapt here the desired layout for yourmenu -->
-	<item android:id="@+id/accueil_customview_action_telecharge_photofiches"
-	      android:icon="@android:drawable/ic_menu_set_as"
-	      android:title="@string/menu_option_telecharge_photofiches" />
-	<item android:id="@+id/accueil_customview_action_a_propos"
+	<item android:id="@+id/etatmodehorsligne_customview_action_a_propos"
 	      android:icon="@android:drawable/ic_menu_info_details"
 	      android:title="@string/a_propos_label" />
 	<!--End of user code

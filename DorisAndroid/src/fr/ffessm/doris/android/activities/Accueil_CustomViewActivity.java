@@ -45,6 +45,7 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -60,7 +61,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code additional imports Accueil_CustomViewActivity
@@ -604,9 +604,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		// add options in the menu
-		//menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
-
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.accueil_customview_actions, menu);
+		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu Accueil_CustomViewActivity
 	//	menu.add(Menu.NONE, TELECHARGE_FICHE_MENU_ID, 1, R.string.menu_option_telecharge_fiches).setIcon(android.R.drawable.ic_menu_preferences);
 	//	menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.menu_option_telecharge_photofiches).setIcon(android.R.drawable.ic_menu_set_as);
@@ -614,36 +614,31 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     //    menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 5, R.string.menu_option_reinitialise_a_partir_du_xml).setIcon(android.R.drawable.ic_menu_preferences);
 	//	menu.add(Menu.NONE, APROPOS, 2, R.string.a_propos_label).setIcon(android.R.drawable.ic_menu_info_details);
 		//End of user code
-      //  return super.onCreateOptionsMenu(menu);
-		// Inflate the menu items for use in the action bar
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.accueil_customview_actions, menu);
-	    return super.onCreateOptionsMenu(menu);
-
+        return super.onCreateOptionsMenu(menu);
     }
     
-  
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	
-    	// Handle presses on the action bar items
+    	// behavior of option menu
         switch (item.getItemId()) {
-            case R.id.accueil_customview_action_preference:
-            	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-                return true;
-            case R.id.accueil_customview_action_telecharge_photofiches:
-            	TelechargePhotosFiches_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
+			case R.id.accueil_customview_action_preference:
+	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+	            return true;
+			//Start of user code additional menu action Accueil_CustomViewActivity
+	        case R.id.accueil_customview_action_telecharge_photofiches:
+	        	TelechargePhotosFiches_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
 				if(telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING)
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = 
 						(TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
-                return true;
-            case R.id.accueil_customview_action_a_propos:
-            	APropos aPropos = new APropos(getContext(), (Activity) getContext(), getHelper());
+	            return true;
+	        case R.id.accueil_customview_action_a_propos:
+	        	APropos aPropos = new APropos(getContext(), (Activity) getContext(), getHelper());
 				aPropos.aProposAff();
-            default:
+		//End of user code
+			default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
 	private void showToast(String message) {
