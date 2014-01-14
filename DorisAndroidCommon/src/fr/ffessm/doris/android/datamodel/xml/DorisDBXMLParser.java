@@ -143,6 +143,8 @@ public class DorisDBXMLParser {
 	public static final String DATAATT_FICHE_NUMEROFICHESLIEES = "NUMEROFICHESLIEES";
 	public static final String DATAATT_FICHE_textePourRechercheRapide = "textePourRechercheRapide";
 	public static final String DATAATT_FICHE_TEXTEPOURRECHERCHERAPIDE = "TEXTEPOURRECHERCHERAPIDE";
+	public static final String DATAATT_FICHE_pictogrammes = "pictogrammes";
+	public static final String DATAATT_FICHE_PICTOGRAMMES = "PICTOGRAMMES";
 	public static final String DATAREF_FICHE_photosFiche = "photosFiche";
 	public static final String DATAREF_FICHE_zonesGeographiques = "zonesGeographiques";
 	public static final String DATAREF_FICHE_zonesObservation = "zonesObservation";
@@ -555,6 +557,11 @@ public class DorisDBXMLParser {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_FICHE_textePourRechercheRapide);
 	            result.setTextePourRechercheRapide(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_FICHE_textePourRechercheRapide);
+	        } else
+			if (currentTagName.equals(DATAATT_FICHE_pictogrammes)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_FICHE_pictogrammes);
+	            result.setPictogrammes(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_FICHE_pictogrammes);
 	        } else
 			if (currentTagName.equals(DATAREF_FICHE_photosFiche)) {
 				List<PhotoFiche> entries = readPhotoFiches(parser,DATAREF_FICHE_photosFiche);	

@@ -93,6 +93,7 @@ public class Fiche {
 	public static final String XML_ATT_DATEMODIFICATION = "dateModification";
 	public static final String XML_ATT_NUMEROFICHESLIEES = "numerofichesLiees";
 	public static final String XML_ATT_TEXTEPOURRECHERCHERAPIDE = "textePourRechercheRapide";
+	public static final String XML_ATT_PICTOGRAMMES = "pictogrammes";
 	public static final String XML_REF_PHOTOSFICHE = "photosFiche";
 	public static final String XML_REF_ZONESGEOGRAPHIQUES = "zonesGeographiques";
 	public static final String XML_REF_ZONESOBSERVATION = "zonesObservation";
@@ -147,6 +148,10 @@ public class Fiche {
 	/** Texte précalculé pour optimiser les recherches (sans accents, sans majuscules) avec autres dénominations */ 
 	@DatabaseField(dataType = com.j256.ormlite.field.DataType.LONG_STRING)
 	protected java.lang.String textePourRechercheRapide;
+
+	/** id des pictogrammes applicables à cette fiche séparés par des points virgules */ 
+	@DatabaseField
+	protected java.lang.String pictogrammes;
 	
 
 	/** Liste des photos de la fiche */ 
@@ -788,7 +793,7 @@ public class Fiche {
 	// End of user code
 	
 	public Fiche() {} // needed by ormlite
-	public Fiche(java.lang.String nomScientifique, java.lang.String nomCommun, int numeroFiche, int etatFiche, java.lang.String dateCreation, java.lang.String dateModification, java.lang.String numerofichesLiees, java.lang.String textePourRechercheRapide) {
+	public Fiche(java.lang.String nomScientifique, java.lang.String nomCommun, int numeroFiche, int etatFiche, java.lang.String dateCreation, java.lang.String dateModification, java.lang.String numerofichesLiees, java.lang.String textePourRechercheRapide, java.lang.String pictogrammes) {
 		super();
 		this.nomScientifique = nomScientifique;
 		this.nomCommun = nomCommun;
@@ -798,6 +803,7 @@ public class Fiche {
 		this.dateModification = dateModification;
 		this.numerofichesLiees = numerofichesLiees;
 		this.textePourRechercheRapide = textePourRechercheRapide;
+		this.pictogrammes = pictogrammes;
 	} 
 
 	public int getId() {
@@ -861,6 +867,12 @@ public class Fiche {
 	}
 	public void setTextePourRechercheRapide(java.lang.String textePourRechercheRapide) {
 		this.textePourRechercheRapide = textePourRechercheRapide;
+	}
+	public java.lang.String getPictogrammes() {
+		return this.pictogrammes;
+	}
+	public void setPictogrammes(java.lang.String pictogrammes) {
+		this.pictogrammes = pictogrammes;
 	}
 
 	/** Liste des photos de la fiche */
@@ -963,6 +975,9 @@ public class Fiche {
 		sb.append("\n"+indent+"\t<"+XML_ATT_TEXTEPOURRECHERCHERAPIDE+">");
 		sb.append(StringEscapeUtils.escapeXml(this.textePourRechercheRapide));
     	sb.append("</"+XML_ATT_TEXTEPOURRECHERCHERAPIDE+">");
+		sb.append("\n"+indent+"\t<"+XML_ATT_PICTOGRAMMES+">");
+		sb.append(StringEscapeUtils.escapeXml(this.pictogrammes));
+    	sb.append("</"+XML_ATT_PICTOGRAMMES+">");
 
 		sb.append("\n"+indent+"\t<"+XML_REF_PHOTOSFICHE+">");
 		if(this.photosFiche != null){
