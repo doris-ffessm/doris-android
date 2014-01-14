@@ -364,9 +364,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
        
 		//Start of user code additional onCreateOptionsMenu DetailsFiche_EditableElementViewActivity
-        menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.expander_ic_maximized);
-		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.expander_ic_minimized);
-		menu.add(Menu.NONE, GLOSSAIRE_MENU_ID, 0, R.string.accueil_glossaire_text).setIcon(R.drawable.glossaire);
+        menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.app_expander_ic_maximized);
+		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.app_expander_ic_minimized);
+		menu.add(Menu.NONE, GLOSSAIRE_MENU_ID, 0, R.string.accueil_glossaire_text).setIcon(R.drawable.app_glossaire);
 		
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -403,8 +403,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {  
     	super.onCreateContextMenu(menu, v, menuInfo);  
         //menu.setHeaderTitle("Context Menu");  
-        menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.ic_expand_close);
-		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.ic_expand_open);
+        menu.add(Menu.NONE, FOLD_SECTIONS_MENU_ID, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.app_ic_expand_close);
+		menu.add(Menu.NONE, UNFOLD_SECTIONS_MENU_ID, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.app_ic_expand_open);
 
     }
     @Override  
@@ -483,8 +483,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
     		// pas préchargée en local pour l'instant, cherche sur internet
     		Picasso.with(this)
     			.load(PhotoFiche.VIGNETTE_BASE_URL+photoFiche.getCleURL())
-				.placeholder(R.drawable.doris_large)  // utilisation de l'image par defaut pour commencer
-				.error(R.drawable.doris_large_pas_connecte)
+				.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
+				.error(R.drawable.doris_icone_doris_large_pas_connecte)
 				.fit()
 				.centerInside()
     			.into(imageView);

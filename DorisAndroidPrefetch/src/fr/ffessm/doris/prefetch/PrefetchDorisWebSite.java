@@ -109,7 +109,7 @@ public class PrefetchDorisWebSite {
 	private final static String SOUSDOSSIER_MED_RES = "medium_res_images_fiches";
 	private final static String SOUSDOSSIER_HI_RES = "hi_res_images_fiches";
 	
-	// Inititalisation de la Gestion des Log 
+	// Initialisation de la Gestion des Log 
 	public static Log log = LogFactory.getLog(PrefetchDorisWebSite.class);
 	
 	// Nombre maximum de fiches traitées (--max=K permet de changer cette valeur)
@@ -148,16 +148,10 @@ public class PrefetchDorisWebSite {
 		if (action.equals("TEST")) {
 			log.debug("doMain() - Début TEST");
 						
-			// On boucle sur les initailes des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
-			String testPhrase;
-
-			testPhrase="les oiseaux (<a href=\"http://www.oiseaux.net/oiseaux/pingouin.torda.html\" target=\"_blank\" title=\"Alca torda\">Oiseaux.net</a>).";
-			Outils.remplacementBalises(testPhrase, true);
 
 
-			
-			//String contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
-			//fiche.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
+
+
 			log.debug("doMain() - Fin TEST");
 		} else {
 
@@ -599,14 +593,14 @@ public class PrefetchDorisWebSite {
 				}
 				
 				
-				// mise à jour des zones geographiques
+				// mise à jour des zones géographiques
 				// zone France Métropolitaine Marines
 				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE);
 				// zone France Métropolitaine Eau douce
 				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE);
 				// zone indo pacifique
 				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE);
-				// zone Caraibes
+				// zone Caraïbes
 				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES);
 				// zone atlantique nordOuest
 				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST);

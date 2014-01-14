@@ -19,10 +19,10 @@
 	
 	<string name="accueil_customview_zonegeo_touteszones">Toutes Zones</string>
 	
-	<string name="accueil_customview_logo1_icone">@drawable/logo_doris</string>
+	<string name="accueil_customview_logo1_icone">@drawable/doris_logo_site_doris</string>
 	<string name="accueil_customview_logo1_description">Logo Doris Accueil</string>
 	<string name="accueil_customview_logo1_url">http://doris.ffessm.fr</string>
-	<string name="accueil_customview_logo2_icone">@drawable/logo_biologie</string>
+	<string name="accueil_customview_logo2_icone">@drawable/doris_logo_site_biologie</string>
 	<string name="accueil_customview_logo2_description">Logo Biologie Accueil</string>
 	<string name="accueil_customview_logo2_url">http://biologie.ffessm.fr</string>
 	

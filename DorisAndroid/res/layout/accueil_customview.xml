@@ -58,7 +58,7 @@
 			        android:adjustViewBounds="true"
 			        android:contentDescription="recherche précédente"
 			        android:maxHeight="64dip"
-			        android:src="@drawable/doris_large" >
+			        android:src="@drawable/doris_icone_doris_large" >
 
 			    </ImageView>
 			    <RelativeLayout
@@ -122,7 +122,7 @@
 			        android:adjustViewBounds="true"
 			        android:contentDescription="recherche guidée"
 			        android:maxHeight="64dip"
-			        android:src="@drawable/icone_plongeur" >
+			        android:src="@drawable/doris_icone_plongeur" >
 
 			    </ImageView>
 			    <RelativeLayout
@@ -203,7 +203,7 @@
 					        android:adjustViewBounds="true"
 					        android:contentDescription="Participants"
 					        android:maxHeight="64dip"
-					        android:src="@drawable/participant_button" />
+					        android:src="@drawable/app_participant_button" />
 				        <TextView
 					        android:id="@+id/accueil_participants_text"
 					        android:layout_width="wrap_content"
@@ -228,7 +228,7 @@
 					        android:adjustViewBounds="true"
 					        android:contentDescription="Glossaire"
 					        android:maxHeight="64dip"
-					        android:src="@drawable/glossaire_button" />
+					        android:src="@drawable/app_glossaire_button" />
 				        <TextView
 					        android:id="@+id/accueil_glossaire_text"
 					        android:layout_width="wrap_content"
@@ -264,7 +264,7 @@
 		    android:contentDescription="@string/accueil_customview_logo1_description"
 		    android:maxHeight="60dp"
 		    android:onClick="onClickBtnIconeSiteWeb1"
-		    android:src="@drawable/logo_doris" />
+		    android:src="@drawable/doris_logo_site_doris" />
 
 	    <ImageView
 	        android:id="@+id/accueil_logo2"
@@ -278,7 +278,7 @@
 	        android:contentDescription="@string/accueil_customview_logo2_description"
 	        android:maxHeight="60dp"
 	        android:onClick="onClickBtnIconeSiteWeb2"
-	        android:src="@drawable/logo_biologie" />
+	        android:src="@drawable/doris_logo_site_biologie" />
 
 	    <ImageView
 	        android:id="@+id/btn_close"

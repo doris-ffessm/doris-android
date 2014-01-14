@@ -68,22 +68,22 @@ public class FoldableClickListener implements OnClickListener {
 	public void onClick(View v) {
 		if(associatedFoldableView.getVisibility() == View.GONE){
 			associatedFoldableView.setVisibility(View.VISIBLE);;
-			foldButton.setImageResource(R.drawable.expander_ic_maximized);
+			foldButton.setImageResource(R.drawable.app_expander_ic_maximized);
 		}
 		else{
 			associatedFoldableView.setVisibility(View.GONE);
-			foldButton.setImageResource(R.drawable.expander_ic_minimized);
+			foldButton.setImageResource(R.drawable.app_expander_ic_minimized);
 		}
 	}
 	
 	public void fold(){
 		associatedFoldableView.setVisibility(View.GONE);
-		foldButton.setImageResource(R.drawable.expander_ic_minimized);
+		foldButton.setImageResource(R.drawable.app_expander_ic_minimized);
 	}
 	
 	public void unfold(){
 		associatedFoldableView.setVisibility(View.VISIBLE);
-		foldButton.setImageResource(R.drawable.expander_ic_maximized);
+		foldButton.setImageResource(R.drawable.app_expander_ic_maximized);
 	}
 
 }

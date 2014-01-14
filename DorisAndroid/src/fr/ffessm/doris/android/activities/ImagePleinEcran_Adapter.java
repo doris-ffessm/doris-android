@@ -117,7 +117,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     		try {
 				Picasso.with(_activity)
 					.load(Outils.getHiResFile(_activity, photoFiche))
-					.placeholder(R.drawable.doris_large)  // utilisation de l'image par defaut pour commencer
+					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
 					.resize(largeur, hauteur)
 					.centerInside()
 					.into(imgDisplay);
@@ -129,7 +129,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         		try {
     				Picasso.with(_activity)
     					.load(Outils.getMedResFile(_activity, photoFiche))
-    					.placeholder(R.drawable.doris_large)  // utilisation de l'image par defaut pour commencer
+    					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
     					.into(imgDisplay);
     			} catch (IOException e) {
     			}
@@ -150,8 +150,8 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     			
 	    		Picasso.with(_activity)
 	    			.load(dossier_photo+photoFiche.getCleURL())
-					.placeholder(R.drawable.doris_large)  // utilisation de l'image par defaut pour commencer
-					.error(R.drawable.doris_large_pas_connecte)
+					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
+					.error(R.drawable.doris_icone_doris_large_pas_connecte)
 					.resize(largeur, hauteur)
 					.centerInside()
 	    			.into(imgDisplay);

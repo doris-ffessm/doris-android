@@ -67,7 +67,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask.Status;
@@ -76,9 +75,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;

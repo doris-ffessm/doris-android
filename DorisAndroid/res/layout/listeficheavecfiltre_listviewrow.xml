@@ -17,7 +17,7 @@
         android:adjustViewBounds="true"
         android:contentDescription="Fiche icon"
 		android:scaleType="fitCenter"
-        android:src="@drawable/ic_launcher" >
+        android:src="@drawable/app_ic_launcher" >
     </ImageView>
     <RelativeLayout
 		    android:layout_width="match_parent"

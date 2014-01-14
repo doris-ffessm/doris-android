@@ -28,7 +28,7 @@
         android:layout_marginLeft="1dp"
         android:layout_marginRight="1dp"
         android:layout_marginTop="1dp"
-        android:src="@drawable/ic_participant_small" >
+        android:src="@drawable/app_ic_participant_small" >
     </ImageView>
 
 
@@ -76,7 +76,7 @@
 					        android:adjustViewBounds="true"
 					        android:contentDescription="Participants"
 					        android:maxHeight="64dip"
-					        android:src="@drawable/ic_launcher" />
+					        android:src="@drawable/app_ic_launcher" />
 				        <TextView
 					        android:id="@+id/accueil_participants_text"
 					        android:layout_width="wrap_content"
