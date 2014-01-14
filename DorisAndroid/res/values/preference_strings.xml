@@ -70,12 +70,12 @@
     <string name="mode_precharg_region_defaut">P1</string>
     
     
-	<string name="icone_touteszones">drawable/icone_toutes_zones</string>
-	<string name="icone_france">drawable/icone_france</string>
-	<string name="icone_eaudouce">drawable/icone_eau_douce</string>
-	<string name="icone_indopac">drawable/icone_indo_pac</string>
-	<string name="icone_caraibes">drawable/icone_caraibes</string>
-	<string name="icone_atlantno">drawable/icone_atl_n_o</string>
+	<string name="icone_touteszones">drawable/doris_icone_toutes_zones</string>
+	<string name="icone_france">drawable/doris_icone_france</string>
+	<string name="icone_eaudouce">drawable/doris_icone_eau_douce</string>
+	<string name="icone_indopac">drawable/doris_icone_indo_pac</string>
+	<string name="icone_caraibes">drawable/doris_icone_caraibes</string>
+	<string name="icone_atlantno">drawable/doris_icone_atl_n_o</string>
 
 
 	<string-array name="mode_precharg_answers_values">

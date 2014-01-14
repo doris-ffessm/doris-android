@@ -187,9 +187,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
 		((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText("N° "+((Integer)entry.getNumeroFiche()).toString());					
 		((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer)entry.getEtatFiche()).toString());	
+		
+		
 		TextView btnEtatFiche = (TextView)  findViewById(R.id.detailsfiche_elementview_etatfiche);
-		final DetailsFiche_ElementViewActivity context = this;
-        
 		//1-Fiche en cours de rédaction;2-Fiche en cours de rédaction;3-Fiche en cours de rédaction;4-Fiche Publiée;5-Fiche proposée
 		switch(entry.getEtatFiche()){
         case 1 : case 2 : case 3 :
@@ -220,11 +220,29 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         	btnEtatFiche.setText(" "+entry.getEtatFiche()+" ");
         }
 		
-		
-		
+		ImageView picoEspeceReglementee = (ImageView)  findViewById(R.id.detailsfiche_elementview_picto_reglementee);
+		ImageView picoEspeceDanger = (ImageView)  findViewById(R.id.detailsfiche_elementview_picto_danger);
+		if (entry.getPictogrammes().contains(Constants.PictoKind.PICTO_ESPECE_REGLEMENTEE.ordinal()+";")) {
+			picoEspeceReglementee.setVisibility(View.VISIBLE);
+			picoEspeceReglementee.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(context, R.string.picto_espece_reglementee_label, Toast.LENGTH_LONG).show();
+				}
+			});
+		}
+		if (entry.getPictogrammes().contains(Constants.PictoKind.PICTO_ESPECE_EN_DANGER.ordinal()+";")) {
+			picoEspeceDanger.setVisibility(View.VISIBLE);
+			picoEspeceDanger.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(context, R.string.picto_espece_en_danger_label, Toast.LENGTH_LONG).show();
+				}
+			});
+		}
+			
+			
 		StringBuffer sbDebugText = new StringBuffer();
-
-		
 		
 		Collection<PhotoFiche> photosFiche = entry.getPhotosFiche(); 
 		if(photosFiche!=null && isOnCreate){
