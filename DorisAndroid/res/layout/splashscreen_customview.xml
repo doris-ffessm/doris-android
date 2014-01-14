@@ -24,7 +24,7 @@
 		    android:adjustViewBounds="true"
 		    android:contentDescription="@string/accueil_customview_logo1_description"
 		    android:maxHeight="60dp"
-		    android:src="@drawable/logo_doris" />
+		    android:src="@drawable/doris_logo_site_doris" />
 
 	    <ImageView
 	        android:id="@+id/splashscreen_logo2"
@@ -37,7 +37,7 @@
 	        android:adjustViewBounds="true"
 	        android:contentDescription="@string/accueil_customview_logo2_description"
 	        android:maxHeight="60dp"
-	        android:src="@drawable/logo_biologie" />
+	        android:src="@drawable/doris_logo_site_biologie" />
 
 	    <LinearLayout
 	        android:id="@+id/splashscreen_progressLayout"

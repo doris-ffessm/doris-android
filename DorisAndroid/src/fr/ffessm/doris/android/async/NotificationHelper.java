@@ -107,7 +107,7 @@ public class NotificationHelper {
         mNotifyBuilder = new NotificationCompat.Builder(mContext)
 		.setWhen(System.currentTimeMillis())
 		.setTicker(initialTickerText)
-		.setSmallIcon(R.drawable.ic_launcher)
+		.setSmallIcon(R.drawable.app_ic_launcher)
 		.setContentTitle(notificationContentTitle)
 		.setContentText(contentText)
 		.setContentIntent(mContentIntent);

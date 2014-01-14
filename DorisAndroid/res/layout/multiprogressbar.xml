@@ -23,7 +23,7 @@
 	        android:adjustViewBounds="true"
 	        android:maxHeight="48dip"
 	        android:paddingTop="4dp"
-	        android:src="@drawable/ic_launcher"/>
+	        android:src="@drawable/app_ic_launcher"/>
 	    
 	    <RelativeLayout
 	        android:layout_width="match_parent"

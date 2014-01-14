@@ -56,15 +56,10 @@ import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports TelechargePhotosFiches_BgActivity
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
-import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.GenericRawResults;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -72,16 +67,10 @@ import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
-import fr.ffessm.doris.android.datamodel.Fiche;
-import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
-import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
-import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
-import fr.ffessm.doris.android.tools.Outils.ImageType;
 // End of user code
 
 public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer, Integer>{
@@ -96,91 +85,6 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     
     int tempo = 50;
     
-    /**
-     * version qui ne conserve que l'id de la photo, permet de libérer de la mémoire plus de mémoire, mais oblige à refaire une réquète
-     * pour retrouver l'url de la photo
-     */
-	class PhotoATraiter
-	{
-		int id;
-		Outils.ImageType imageType;
-		boolean imagePrincipale;
-		
-		int idZoneConcernee = -1;
-
-		public PhotoATraiter(){}
-
-		public PhotoATraiter(PhotoFiche inPhotoFiche, ImageType inImageType, boolean inImagePrincipale, int idZoneConcernee) {
-			id = inPhotoFiche.getId();
-			imageType = inImageType;
-			imagePrincipale = inImagePrincipale;
-			this.idZoneConcernee = idZoneConcernee;
-		}
-		
-		public int getId() {
-			return this.id;
-		}
-		public String getIdStr() {
-			return ""+this.id;
-		}
-		public int getIdZoneConcernee() {
-			return idZoneConcernee;
-		}
-
-		public void setIdZoneConcernee(int idZoneConcernee) {
-			this.idZoneConcernee = idZoneConcernee;
-		}
-	}
-	
-	/**
-     * version qui ne conserve que la PhotoFiche, (pour algo optimisé)
-     * pour retrouver l'url de la photo
-     */
-	class PhotoATraiterOptim
-	{
-		PhotoFiche photoFiche;
-		boolean imagePrincipale;
-		
-		int idZoneConcernee;  // Pour l'instant, avec cet algo, la photo n'est comptabilisée que dans une seule zone
-
-		public PhotoATraiterOptim(){}
-
-		public PhotoATraiterOptim(PhotoFiche inPhotoFiche,  boolean inImagePrincipale, int idZoneConcernee) {
-			photoFiche = inPhotoFiche;
-			imagePrincipale = inImagePrincipale;
-			this.idZoneConcernee = idZoneConcernee;
-		}
-		
-		public PhotoFiche getPhotoFiche() {
-			return this.photoFiche;
-		}
-		public int getIdZoneConcernee() {
-			return idZoneConcernee;
-		}
-
-		/** assure que le hasset va bien trouver les doublons
-		 * 
-		 */
-		@Override
-		public boolean equals(Object o) {
-			if(o instanceof PhotoATraiterOptim){
-				return photoFiche.getId() == ((PhotoATraiterOptim)o).getPhotoFiche().getId() && 
-					   imagePrincipale == ((PhotoATraiterOptim)o).imagePrincipale;
-			}
-			else
-				return super.equals(o);
-		}
-
-		@Override
-		public int hashCode() {
-			// utilise l'id de la photo pour trier
-			return photoFiche.getId();
-		}
-		
-	}
-
-	
-    
 	// End of user code
     
 	/** constructor */
@@ -191,10 +95,8 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
 
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        final SharedPreferences.Editor prefEdit = preferences.edit(); 
     	
-		// TODO : Tempo pour ralentir traitement : temporaire
-		tempo = 50;
+		// TODO : Tempo pour ralentir traitement : lecture paramètre temporaire
         try{
         	tempo = Integer.valueOf(preferences.getString(context.getString(R.string.pref_key_asynch_tempo), "50") );
         }catch(Exception e){}
@@ -210,9 +112,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 
     @Override
     protected Integer doInBackground(String... arg0) {
-    	
-
-		// Start of user code initialization of the task TelechargePhotosFiches_BgActivity
+ 		// Start of user code initialization of the task TelechargePhotosFiches_BgActivity
 
 	    try{
 			// do the initialization of the task here
@@ -381,7 +281,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	        			
 			    			//Enregistrement du nombre total de photos téléchargée pour afficher avancement au fur et à mesure
 	    					if (nbPhotosPrinRecuesPourZone % 200 == 0 || nbTelechargements % 10 == 0){
-	    						Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneId, true), nbPhotosPrinRecuesPourZone);
+	    						Outils.setParamInt(context, Outils.getKeyDataRecuesZoneGeo(context, zoneId, true), nbPhotosPrinRecuesPourZone);
 	    						DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 	    					}
 	
@@ -404,7 +304,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 			        			
 	    			//Enregistrement du nombre total de photos téléchargée pour afficher avancement
 	        		
-					Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneId, true), nbPhotosPrinRecuesPourZone);
+					Outils.setParamInt(context, Outils.getKeyDataRecuesZoneGeo(context, zoneId, true), nbPhotosPrinRecuesPourZone);
 					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - nbPhotosPrincDejaLaPourZone : "+nbPhotosPrinRecuesPourZone );
 		    		
 
@@ -503,7 +403,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	        				
     						if (nbPhotosRecuesPourZone % 500 == 0 || nbTelechargements % 10 == 0){
     							//Enregistrement du nombre total de photos téléchargée pour afficher avancement
-    			        		Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneId, false), nbPhotosRecuesPourZone);
+    			        		Outils.setParamInt(context, Outils.getKeyDataRecuesZoneGeo(context, zoneId, false), nbPhotosRecuesPourZone);
     			        		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
     						}
     						if (nbPhotosRecuesPourZone % 200 == 0){	
@@ -521,7 +421,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     			}
 	    	
 	    		//Enregistrement du nombre total de photos téléchargée pour afficher avancement
-        		Outils.setParamInt(context, Outils.getKeyDataDejaLaZoneGeo(context, zoneId, false), nbPhotosRecuesPourZone);
+        		Outils.setParamInt(context, Outils.getKeyDataRecuesZoneGeo(context, zoneId, false), nbPhotosRecuesPourZone);
 
     	} // Fin Pour Chaque ZoneGeo Toutes Photos
 		
@@ -540,6 +440,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		// End of user code
     }
 
+    @Override
     protected void onProgressUpdate(Integer... progress) {
         //This method runs on the UI thread, it receives progress updates
         //from the background thread and publishes them to the status bar
@@ -582,49 +483,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
         return false;
     }
     
-  
-    // recupération de la photo sur internet
-    private int recupPhotoSurInternet(HashSet<PhotoATraiterOptim> inListePhotos, Outils.ImageType inImageType, int nbPhotoRetreived) {
-    	
-    	Iterator<PhotoATraiterOptim> itPhoto = inListePhotos.iterator();
-    	while (itPhoto.hasNext()) {
-    		PhotoATraiterOptim photoATraiter = itPhoto.next();
-    		PhotoFiche photo = photoATraiter.getPhotoFiche();
-	    	try{
-	    		if( this.isCancelled()) return nbPhotoRetreived;
-				Outils.getOrDownloadPhotoFile(context, photo, inImageType);
-				Log.i(LOG_TAG, "image "+inImageType+" "+photo.getCleURL()+" téléchargée");
-				// fait avancer la barre de la zone concernée // TODO pas trés optimal, mais fonctionne
-				Outils.setDejaLaQteZoneGeo(context, photoATraiter.getIdZoneConcernee(), photoATraiter.imagePrincipale, 
-						Outils.getDejaLaQteZoneGeo(context, photoATraiter.getIdZoneConcernee(), photoATraiter.imagePrincipale)+1);        		
-        		
-				nbPhotoRetreived = nbPhotoRetreived+1;;
-		        // notify les listener toutes les 10 photos
-		        if(((nbPhotoRetreived % 10) == 0) ){
-		        	publishProgress(nbPhotoRetreived);
-		        	DorisApplicationContext.getInstance().notifyDataHasChanged(null);
-		        	// laisse un peu de temps pour l'UI 
-			        Thread.sleep(tempo);
-		    		// vérifie de temps en temps la connexion
-		    		if(!isOnline()){
-		            	Log.d(LOG_TAG, "pas connexion internet : Arret du téléchargement");
-		            	break;
-		            }
-		    	}
-		        
-			} catch (InterruptedException e) {
-				Log.i(LOG_TAG, e.getMessage(), e);
-				Log.d(LOG_TAG, "InterruptedException recue : Arret du téléchargement");
-				// c'est probablement l'application qui se ferme, supprimer la notification
-				mNotificationHelper.completed();
-				break;
-		    } catch (IOException e) {
-				Log.i(LOG_TAG, "Erreur de téléchargement de "+e.getMessage(), e);
-				continue;
-			}
-    	}
-    	return nbPhotoRetreived;
-    }
+
 	// End of user code
 	
 }
