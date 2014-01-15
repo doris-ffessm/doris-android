@@ -134,7 +134,11 @@ C'est ce texte. */
 
 	// Start of user code Groupe additional user properties
 	
-	
+	public String getImageNameOnDisk(){
+		String imageName = cleURLImage.replace("gestionenligne/", "")
+			.replace("images/", "images_groupe/").replace("/","_");
+		return imageName;
+	}
 	
 	
 	

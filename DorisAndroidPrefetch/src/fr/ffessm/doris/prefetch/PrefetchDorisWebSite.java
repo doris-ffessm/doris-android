@@ -169,7 +169,7 @@ public class PrefetchDorisWebSite {
 				
 				// - - - Groupes - - -
 				// Récupération de la liste des groupes sur le site de DORIS
-				// En UPDATE et CDDVD on re-télécharge
+				// En UPDATE et CDDVD on re-télécharge la liste
 				String listeGroupesFichier = "";
 				String contenuFichierHtml = null;
 				
@@ -177,8 +177,8 @@ public class PrefetchDorisWebSite {
 					listeGroupesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeGroupes.html";
 					log.info("Récup. Liste Groupes Doris : " + listeGroupesFichier);
 					
-					if (Outils.getFichierUrl(Constants.getGroupesUrl(), listeGroupesFichier)) {
-						contenuFichierHtml = Outils.getFichier(new File(listeGroupesFichier));
+					if (Outils.getFichierFromUrl(Constants.getGroupesUrl(), listeGroupesFichier)) {
+						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeGroupesFichier));
 						
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
@@ -188,7 +188,7 @@ public class PrefetchDorisWebSite {
 					// NODWNLD
 					listeGroupesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeGroupes.html";
 					if (new File(listeGroupesFichier).exists()) {
-						contenuFichierHtml = Outils.getFichier(new File(listeGroupesFichier));
+						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeGroupesFichier));
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 						System.exit(0);
@@ -209,7 +209,20 @@ public class PrefetchDorisWebSite {
 					});
 
 				//TODO : Téléchargement des icones
-				
+				String fichierIconeRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_ICONES + "/";
+				String fichierIconeRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/" + SOUSDOSSIER_ICONES + "/";
+				if ( action.equals("CDDVD")){
+					for (Groupe groupe : listeGroupes){
+						log.info("Groupe : " + groupe.getNomGroupe()+" - "+groupe.getCleURLImage());
+						if( ! isFileExistingPath( fichierIconeRefRacine+groupe.getImageNameOnDisk() ) ){
+							if (Outils.getFichierFromUrl(groupe.getCleURLImage(), fichierIconeRacine + groupe.getImageNameOnDisk())) {
+							} else {
+								log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
+								System.exit(0);
+							}
+						}
+					}
+				}
 				
 				// - - - Fiches - - -
 				// Récupération de la liste des fiches sur le site de DORIS
@@ -218,8 +231,8 @@ public class PrefetchDorisWebSite {
 				log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
 				
 				if (! action.equals("NODWNLD")){
-					if (Outils.getFichierUrl(Constants.getListeFichesUrl(), listeFichesFichier)) {
-						contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+					if (Outils.getFichierFromUrl(Constants.getListeFichesUrl(), listeFichesFichier)) {
+						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
 						
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
@@ -229,63 +242,28 @@ public class PrefetchDorisWebSite {
 					// NODWNLD
 					listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeFiches.html";
 					if (new File(listeFichesFichier).exists()) {
-						contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 						System.exit(0);
 					}
 				}
 				
-				List<Fiche> listFicheFromHTML = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
+				final List<Fiche> listFicheFromHTML = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
 				log.info("Nb Fiches sur le site : "+listFicheFromHTML.size());
-
-				if (action.equals("UPDATE")) {
-					listFicheFromHTML = SiteDoris.getListeFichesUpdated(dbContext.ficheDao.queryForAll(), listFicheFromHTML);
-				}
-				
-				final List<Fiche> listeFichesATraiter = listFicheFromHTML;
-				
-				
-				// Suppression de l'ensemble des informations liées aux fiches à traiter dans le cas d'un UPDATE
-				// Sinon ne sert à rien et fait perdre du temps
-				if (action.equals("UPDATE")) {
-					TransactionManager.callInTransaction(connectionSource,
-							new Callable<Void>() {
-								public Void call() throws Exception {
-									for (Fiche fiche : listeFichesATraiter){
-										DeleteBuilder<Fiche, Integer> deleteFicheBuilder = dbContext.ficheDao.deleteBuilder();
-										deleteFicheBuilder.where().eq("numeroFiche", fiche.getNumeroFiche());
-										deleteFicheBuilder.delete();
-										
-										DeleteBuilder<AutreDenomination, Integer> deleteAutreDenominationBuilder = dbContext.autreDenominationDao.deleteBuilder();
-										deleteAutreDenominationBuilder.where().eq("fiche_id", fiche.getNumeroFiche());
-										deleteAutreDenominationBuilder.delete();
-										
-										DeleteBuilder<PhotoFiche, Integer> deletePhotoFicheBuilder = dbContext.photoFicheDao.deleteBuilder();
-										deletePhotoFicheBuilder.where().eq("fiche_id", fiche.getNumeroFiche());
-										deletePhotoFicheBuilder.delete();
-										
-										DeleteBuilder<Fiches_ZonesGeographiques, Integer> deleteFicheZoneGeoBuilder = dbContext.fiches_ZonesGeographiquesDao.deleteBuilder();
-										deleteFicheZoneGeoBuilder.where().eq("Fiche_id", fiche.getNumeroFiche());
-										deleteFicheZoneGeoBuilder.delete();
-									}
-									return null;
-							    }
-							});
-				}
 				
 				// Création de l'entête des fiches
 				TransactionManager.callInTransaction(connectionSource,
 					new Callable<Void>() {
 						public Void call() throws Exception {
-							for (Fiche fiche : listeFichesATraiter){
+							for (Fiche fiche : listFicheFromHTML){
 								dbContext.ficheDao.create(fiche);
 							}
 							return null;
 					    }
 					});
 				
-				log.debug("doMain() - listeFichesATraiter.size : "+listeFichesATraiter.size());
+				log.debug("doMain() - listeFichesATraiter.size : "+listFicheFromHTML.size());
 				
 				// Fin pour la Liste des Fiches, les fiches sont traitées une fois la liste des Participants
 				// et la liste des Groupes connues
@@ -301,17 +279,6 @@ public class PrefetchDorisWebSite {
 					listeFiltres="ab";
 				}
 				
-				// Pour les participants on efface tout et on recommence en UPDATE (+ simple)
-				if (action.equals("UPDATE")){
-					TransactionManager.callInTransaction(connectionSource,
-						new Callable<Void>() {
-							public Void call() throws Exception {
-								DeleteBuilder<Participant, Integer> deleteBuilder = dbContext.participantDao.deleteBuilder();
-								deleteBuilder.delete();
-								return null;
-						    }
-						});
-				}
 				
 				for (char initiale : listeFiltres.toCharArray()){
 					log.debug("doMain() - Recup Participants : "+initiale);
@@ -320,8 +287,8 @@ public class PrefetchDorisWebSite {
 					log.info("Récup. Liste des Participants : " + listeParticipantsFichier);
 					
 					if (! action.equals("NODWNLD")){
-						if (Outils.getFichierUrl(Constants.getListeParticipantsUrl(""+initiale), listeParticipantsFichier)) {
-							contenuFichierHtml = Outils.getFichier(new File(listeParticipantsFichier));
+						if (Outils.getFichierFromUrl(Constants.getListeParticipantsUrl(""+initiale), listeParticipantsFichier)) {
+							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeParticipantsFichier));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste des Participants : "+initiale);
 							System.exit(0);
@@ -330,7 +297,7 @@ public class PrefetchDorisWebSite {
 						// NODWNLD
 						listeParticipantsFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeParticipants-"+initiale+".html";
 						if (new File(listeParticipantsFichier).exists()) {
-							contenuFichierHtml = Outils.getFichier(new File(listeParticipantsFichier));
+							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeParticipantsFichier));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste des Participants : "+initiale);
 							System.exit(0);
@@ -365,19 +332,6 @@ public class PrefetchDorisWebSite {
 					listeFiltres="ab";
 				}
 				
-				// TODO : Pour le Glossaire comme il y a bcp de pages à télécharger, il faudra faire comme les fiches
-				// TODO : En attendant on efface tout
-				if (action.equals("UPDATE")){
-					TransactionManager.callInTransaction(connectionSource,
-						new Callable<Void>() {
-							public Void call() throws Exception {
-								DeleteBuilder<DefinitionGlossaire, Integer> deleteBuilder = dbContext.definitionGlossaireDao.deleteBuilder();
-								deleteBuilder.delete();
-								return null;
-						    }
-						});
-				}
-				
 				for (char initiale : listeFiltres.toCharArray()){
 					log.debug("doMain() - Recup Page de définitions pour la lettre : "+initiale);
 					
@@ -388,8 +342,8 @@ public class PrefetchDorisWebSite {
 						log.info("Récup. Liste des Définitions : " + listeDefinitionsFichier);
 						
 						if (! action.equals("NODWNLD")){
-							if (Outils.getFichierUrl(Constants.getListeDefinitionsUrl(""+initiale,""+numero ), listeDefinitionsFichier)) {
-								contenuFichierHtml = Outils.getFichier(new File(listeDefinitionsFichier));
+							if (Outils.getFichierFromUrl(Constants.getListeDefinitionsUrl(""+initiale,""+numero ), listeDefinitionsFichier)) {
+								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeDefinitionsFichier));
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale+"-"+numero);
 								System.exit(0);
@@ -398,7 +352,7 @@ public class PrefetchDorisWebSite {
 							// NODWNLD
 							listeDefinitionsFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeDefinitions-"+initiale+"-"+numero+".html";
 							if (new File(listeDefinitionsFichier).exists()) {
-								contenuFichierHtml = Outils.getFichier(new File(listeDefinitionsFichier));
+								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeDefinitionsFichier));
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale+"-"+numero);
 								System.exit(0);
@@ -452,9 +406,9 @@ public class PrefetchDorisWebSite {
 					String urlDefinition =  Constants.getDefinitionUrl( ""+definition.getNumeroDoris() );
 					String fichierLocalDefinition = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/definition-"+definition.getNumeroDoris()+".html";
 					if (! action.equals("NODWNLD")) {
-						if (Outils.getFichierUrl(urlDefinition, fichierLocalDefinition)) {
+						if (Outils.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
 							
-							contenuFichierHtml = Outils.getFichier(new File(fichierLocalDefinition));
+							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalDefinition));
 						
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la définition : "+urlDefinition);
@@ -465,7 +419,7 @@ public class PrefetchDorisWebSite {
 						// NODWNLD
 						fichierLocalDefinition = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/definition-"+definition.getNumeroDoris()+".html";
 						if (new File(fichierLocalDefinition).exists()) {
-							contenuFichierHtml = Outils.getFichier(new File(fichierLocalDefinition));
+							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalDefinition));
 						} else {
 							log.error("La récupération de la fiche : "+urlDefinition+" a échoué.");
 						}
@@ -482,9 +436,9 @@ public class PrefetchDorisWebSite {
 				// On la télécharge (et sauvegarde le fichier original)
 				// On la traite
 
-				log.info("Mise à jours de "+listeFichesATraiter.size()+" fiches.");
+				log.info("Mise à jours de "+listFicheFromHTML.size()+" fiches.");
 				int nbFichesTraitees = 0;
-				for (Fiche fiche : listeFichesATraiter) {
+				for (Fiche fiche : listFicheFromHTML) {
 					nbFichesTraitees += 1;
 					
 					if (  (nbFichesTraitees % 50) == 0) {
@@ -500,18 +454,18 @@ public class PrefetchDorisWebSite {
 						String urlFiche =  Constants.getFicheFromIdUrl( fiche.getNumeroFiche() );
 						String fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche-"+fiche.getNumeroFiche()+".html";
 						if (! action.equals("NODWNLD")) {
-							if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
+							if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
 								
-								contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
+								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalFiche));
 							
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 								
 								urlFiche = Constants.getFicheFromNomCommunUrl(fiche.getNomCommun());
 								log.error("=> Tentative sur : "+urlFiche);
-								if (Outils.getFichierUrl(urlFiche, fichierLocalFiche)) {
+								if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
 									
-									contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
+									contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalFiche));
 									
 								} else {
 									log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
@@ -524,7 +478,7 @@ public class PrefetchDorisWebSite {
 							fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+".html";
 
 							if (new File(fichierLocalFiche).exists()) {
-								contenuFichierHtml = Outils.getFichier(new File(fichierLocalFiche));
+								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalFiche));
 							} else {
 								log.error("La récupération de la fiche : "+fichierLocalFiche+" a échoué.");
 							}
@@ -548,8 +502,8 @@ public class PrefetchDorisWebSite {
 						String fichierLocalListePhotos = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
 						String contenuFichierHtmlListePhotos = null;
 						if (! action.equals("NODWNLD")) {
-							if (Outils.getFichierUrl(urlListePhotos, fichierLocalListePhotos)) {
-								contenuFichierHtmlListePhotos = Outils.getFichier(new File(fichierLocalListePhotos));
+							if (Outils.getFichierFromUrl(urlListePhotos, fichierLocalListePhotos)) {
+								contenuFichierHtmlListePhotos = Outils.getFichierTxtFromDisk(new File(fichierLocalListePhotos));
 							
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
@@ -560,7 +514,7 @@ public class PrefetchDorisWebSite {
 							fichierLocalListePhotos = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
 
 							if (new File(fichierLocalListePhotos).exists()) {
-								contenuFichierHtmlListePhotos = Outils.getFichier(new File(fichierLocalListePhotos));
+								contenuFichierHtmlListePhotos = Outils.getFichierTxtFromDisk(new File(fichierLocalListePhotos));
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
 							}
@@ -630,8 +584,8 @@ public class PrefetchDorisWebSite {
 		//List<Fiche> listeFiches = new ArrayList<Fiche>(0);
 		String contenuFichierHtml = "";
 		if (! action.equals("NODWNLD")){
-			if (Outils.getFichierUrl(Constants.getListeFichesUrl(zoneKing), listeFichesFichier)) {
-				contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+			if (Outils.getFichierFromUrl(Constants.getListeFichesUrl(zoneKing), listeFichesFichier)) {
+				contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
 				
 			} else {
 				log.error("Une erreur est survenue lors de la récupération de la liste des fiches de la zone ");
@@ -641,7 +595,7 @@ public class PrefetchDorisWebSite {
 			// NODWNLD
 			listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeFiches"+zoneKing.name()+".html";
 			if (new File(listeFichesFichier).exists()) {
-				contenuFichierHtml = Outils.getFichier(new File(listeFichesFichier));
+				contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
 			} else {
 				log.error("Une erreur est survenue lors de la récupération de la liste des fiches de la zone ");
 				return;
@@ -1129,5 +1083,19 @@ public class PrefetchDorisWebSite {
 		}
 		return null;
 	}
+	
+	// Vérifie que le fichier existe
+	public boolean isFileExistingPath(String fichierPath){
+		File fichier = new File(fichierPath);
+		if (!fichier.exists()){
+			return false;
+		} else {
+			if (fichier.isDirectory()){
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	
 }
