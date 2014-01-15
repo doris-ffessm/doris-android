@@ -214,11 +214,13 @@ public class PrefetchDorisWebSite {
 				if ( action.equals("CDDVD")){
 					for (Groupe groupe : listeGroupes){
 						log.info("Groupe : " + groupe.getNomGroupe()+" - "+groupe.getCleURLImage());
-						if( ! isFileExistingPath( fichierIconeRefRacine+groupe.getImageNameOnDisk() ) ){
-							if (Outils.getFichierFromUrl(groupe.getCleURLImage(), fichierIconeRacine + groupe.getImageNameOnDisk())) {
-							} else {
-								log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-								System.exit(0);
+						if ( !groupe.getCleURLImage().isEmpty() ) {
+							if( ! isFileExistingPath( fichierIconeRefRacine+groupe.getImageNameOnDisk() ) ){
+								if (Outils.getFichierFromUrl(Constants.getSiteUrl() + groupe.getCleURLImage(), fichierIconeRacine + groupe.getImageNameOnDisk())) {
+								} else {
+									log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
+									System.exit(0);
+								}
 							}
 						}
 					}
