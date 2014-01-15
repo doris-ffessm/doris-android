@@ -221,7 +221,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         }
 		
 		ImageView picoEspeceReglementee = (ImageView)  findViewById(R.id.detailsfiche_elementview_picto_reglementee);
-		ImageView picoEspeceDanger = (ImageView)  findViewById(R.id.detailsfiche_elementview_picto_danger);
+		ImageView picoEspeceDanger = (ImageView)  findViewById(R.id.detailsfiche_elementview_picto_dangereuse);
 		if (entry.getPictogrammes().contains(Constants.PictoKind.PICTO_ESPECE_REGLEMENTEE.ordinal()+";")) {
 			picoEspeceReglementee.setVisibility(View.VISIBLE);
 			picoEspeceReglementee.setOnClickListener(new OnClickListener() {
@@ -231,7 +231,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 				}
 			});
 		}
-		if (entry.getPictogrammes().contains(Constants.PictoKind.PICTO_ESPECE_EN_DANGER.ordinal()+";")) {
+		if (entry.getPictogrammes().contains(Constants.PictoKind.PICTO_ESPECE_DANGEREUSE.ordinal()+";")) {
 			picoEspeceDanger.setVisibility(View.VISIBLE);
 			picoEspeceDanger.setOnClickListener(new OnClickListener() {
 				@Override

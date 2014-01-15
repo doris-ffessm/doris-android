@@ -99,10 +99,10 @@ public class Constants {
     
     public enum PictoKind {
     	PICTO_ESPECE_REGLEMENTEE,
-    	PICTO_ESPECE_EN_DANGER
+    	PICTO_ESPECE_DANGEREUSE
     }
     private final static String PICTO_ESPECE_REGLEMENTEE_LIB = "Espèce réglementée";
-	private final static String PICTO_ESPECE_EN_DANGER_LIB = "Espèce dangereuse";
+	private final static String PICTO_ESPECE_DANGEREUSE_LIB = "Espèce dangereuse";
 
 	/*
 	 * Accession aux Constantes
@@ -292,7 +292,7 @@ public class Constants {
     public static PictoKind getTypePicto(String pictoTag) {
     	pictoTag.trim();
     	if (pictoTag.equalsIgnoreCase(PICTO_ESPECE_REGLEMENTEE_LIB)) return PictoKind.PICTO_ESPECE_REGLEMENTEE;
-    	if (pictoTag.equalsIgnoreCase(PICTO_ESPECE_EN_DANGER_LIB)) return PictoKind.PICTO_ESPECE_EN_DANGER;
+    	if (pictoTag.equalsIgnoreCase(PICTO_ESPECE_DANGEREUSE_LIB)) return PictoKind.PICTO_ESPECE_DANGEREUSE;
  	
 		return null;
     }

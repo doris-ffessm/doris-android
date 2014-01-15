@@ -108,13 +108,13 @@
 						    android:src="@drawable/doris_picto_espece_reglementee" />
 						
 						<ImageView
-						    android:id="@+id/detailsfiche_elementview_picto_danger"
+						    android:id="@+id/detailsfiche_elementview_picto_dangereuse"
 						    android:layout_width="wrap_content"
 						    android:layout_height="wrap_content"
 						    android:gravity="right"
 				        	android:padding="3dip"
 				        	android:visibility="gone"
-						    android:src="@drawable/doris_picto_espece_en_danger" />
+						    android:src="@drawable/doris_picto_espece_dangereuse" />
 
 					    <TextView
 					        android:id="@+id/detailsfiche_elementview_etatfiche"
