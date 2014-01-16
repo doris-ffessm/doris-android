@@ -544,7 +544,7 @@ public class PrefetchDorisWebSite {
 										if(listePhotoFiche.size() > 0){
 											
 											//TODo : Corriger ce soir
-											ficheMaj.setPhotoPrincipale(listePhotoFiche.get(0));
+											//ficheMaj.setPhotoPrincipale(listePhotoFiche.get(0));
 											dbContext.ficheDao.update(ficheMaj);
 										}
 										return null;
