@@ -44,6 +44,7 @@ package fr.ffessm.doris.android.sitedoris;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -67,10 +68,10 @@ public class SiteDoris {
 	
 
     
-    public static List<Fiche> getListeFichesFromHtml(String inCodePageHtml) {
+    public static HashSet<Fiche> getListeFichesFromHtml(String inCodePageHtml) {
     	log.trace("getListeFichesFromHtml()- Début");
     	
-    	List<Fiche> listeFiches = new ArrayList<Fiche>(0);
+    	HashSet<Fiche> listeFiches = new HashSet<Fiche>(0);
     	
     	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml),false ) );
     	source.fullSequentialParse();
@@ -120,10 +121,10 @@ public class SiteDoris {
 	
 	
     
-    public static List<Groupe> getListeGroupesFromHtml(String inCodePageHtml){
+    public static HashSet<Groupe> getListeGroupesFromHtml(String inCodePageHtml){
     	log.trace("getGroupes() - Début");
     	
-    	List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
+    	HashSet<Groupe> listeGroupes = new HashSet<Groupe>(0);
     	
     	int nivPrecedent = 0;
     	
@@ -309,7 +310,7 @@ public class SiteDoris {
 		return listeGroupes;
     }
 
-    public static Groupe getGroupeFromListeGroupes(List<Groupe> listeGroupes, int numGroupe, int numSousGroupe){
+    public static Groupe getGroupeFromListeGroupes(HashSet<Groupe> listeGroupes, int numGroupe, int numSousGroupe){
     	log.trace("getGroupeFromListeGroupes() - Début");
     	log.debug("getGroupeFromListeGroupes() - numGroupe : "+numGroupe);
     	log.debug("getGroupeFromListeGroupes() - numSousGroupe : "+numSousGroupe);
@@ -336,11 +337,11 @@ public class SiteDoris {
 
 
 
-	public static List<PhotoFiche> getListePhotosFicheFromHtml(Fiche fiche,
+	public static HashSet<PhotoFiche> getListePhotosFicheFromHtml(Fiche fiche,
 			String inCodePageHtml) {
 		log.trace("getListePhotosFiche()- Début");
     	
-    	List<PhotoFiche> listePhotosFiche = new ArrayList<PhotoFiche>(0);
+		HashSet<PhotoFiche> listePhotosFiche = new HashSet<PhotoFiche>(0);
     	
     	Source source=new Source( Outils.remplacementBalises( Outils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
@@ -404,10 +405,10 @@ public class SiteDoris {
     
 	
 
-    public static List<Participant> getListeParticipantsParInitialeFromHtml(String inCodePageHtml){
+    public static HashSet<Participant> getListeParticipantsParInitialeFromHtml(String inCodePageHtml){
     	log.debug("getListeParticipantsParInitiale() - Début");
     	
-    	List<Participant> listeParticipants = new ArrayList<Participant>(0);
+    	HashSet<Participant> listeParticipants = new HashSet<Participant>(0);
     	
     	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
@@ -487,16 +488,16 @@ public class SiteDoris {
     }
 
 	
-    public static List<Fiche> getListeFichesUpdated(List<Fiche> inListeBase, List<Fiche> inListeSite) {
+    public static HashSet<Fiche> getListeFichesUpdated(HashSet<Fiche> inListeBase, HashSet<Fiche> inListeSite) {
     	log.debug("getListeFichesUpdated()- Début");
     	
-    	List<Fiche> listeUpdated = new ArrayList<Fiche>(0);
+    	HashSet<Fiche> listeUpdated = new HashSet<Fiche>(0);
     	
     	log.debug("getListeFichesUpdated()- Liste Base : "+inListeBase.size());
     	log.debug("getListeFichesUpdated()- Liste Site : "+inListeSite.size());
     	
-    	List<Integer> listeIntBase = new ArrayList<Integer>(0);
-    	List<Integer> listeIntEtatFiche = new ArrayList<Integer>(0);
+    	HashSet<Integer> listeIntBase = new HashSet<Integer>(0);
+    	HashSet<Integer> listeIntEtatFiche = new HashSet<Integer>(0);
     	for (Fiche fiche:inListeBase){
     		listeIntBase.add(new Integer (fiche.getNumeroFiche()) );
     		listeIntEtatFiche.add(new Integer (fiche.getEtatFiche()) );
@@ -504,17 +505,20 @@ public class SiteDoris {
     	
     	Iterator<Fiche> iterator = inListeSite.iterator();
     	while (iterator.hasNext()) {
-    		Fiche interatorFiche = iterator.next();
+    		Fiche iteratorFiche = iterator.next();
     		// Nouvelle Fiche
-    		if ( ! listeIntBase.contains(new Integer (interatorFiche.getNumeroFiche()) ) ){
-    			listeUpdated.add(interatorFiche);
+    		if ( ! listeIntBase.contains(new Integer (iteratorFiche.getNumeroFiche()) ) ){
+    			listeUpdated.add(iteratorFiche);
     		} else {
     			// Fiche ayant changée de statut
     			//log.debug("Base EF : "+listeIntEtatFiche.get(listeIntBase.indexOf(new Integer (interatorFiche.getNumeroFiche()) ) ) );
     			//log.debug("Site EF : "+interatorFiche.getEtatFiche() );
-    			if (listeIntEtatFiche.get(listeIntBase.indexOf(new Integer (interatorFiche.getNumeroFiche()) ) )!=interatorFiche.getEtatFiche() ){
-    				listeUpdated.add(interatorFiche);
+    			//TODO :
+    			/*
+    			if (listeIntEtatFiche.get(listeIntBase..indexOf(new Integer (iteratorFiche.getNumeroFiche()) ) ) != iteratorFiche.getEtatFiche() ){
+    				listeUpdated.add(iteratorFiche);
     			}
+    			*/
     		}
     	}
     	log.debug("getListeFichesUpdated()- Liste Site Updated : "+listeUpdated.size());
@@ -523,7 +527,7 @@ public class SiteDoris {
 		return listeUpdated;
     }
     
-    public static Participant getParticipantFromListeParticipants(List<Participant> listeParticipants, int numParticipant){
+    public static Participant getParticipantFromListeParticipants(HashSet<Participant> listeParticipants, int numParticipant){
     	//log.trace("getParticipantFromListeParticipants() - Début");
     	//log.debug("getParticipantFromListeParticipants() - numParticipant : "+numParticipant);
     	
@@ -548,10 +552,10 @@ public class SiteDoris {
     }
     
 
-    public static List<DefinitionGlossaire> getListeDefinitionsParInitialeFromHtml(String inCodePageHtml){
+    public static HashSet<DefinitionGlossaire> getListeDefinitionsParInitialeFromHtml(String inCodePageHtml){
     	//log.debug("getListeDefinitionsParInitialeFromHtml() - Début");
     	
-    	List<DefinitionGlossaire> listeDefinitions = new ArrayList<DefinitionGlossaire>(0);
+    	HashSet<DefinitionGlossaire> listeDefinitions = new HashSet<DefinitionGlossaire>(0);
     	
     	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();

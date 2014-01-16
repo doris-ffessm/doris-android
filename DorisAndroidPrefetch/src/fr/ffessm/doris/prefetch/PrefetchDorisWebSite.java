@@ -50,6 +50,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -101,7 +102,7 @@ public class PrefetchDorisWebSite {
 	private final static String DOSSIER_RACINE = "./run";
 	// Ces dossiers seront renommés qd nécessaire
 	private final static String DOSSIER_HTML = "html";
-	private static String DOSSIER_HTML_REF = "html_ref";
+	private final static String DOSSIER_HTML_REF = "html_ref";
 	private final static String DOSSIER_IMAGES = "images";
 	private final static String DOSSIER_IMAGES_REF = "images_ref";
 	private final static String SOUSDOSSIER_ICONES = "icones";
@@ -195,7 +196,7 @@ public class PrefetchDorisWebSite {
 					}
 				}
 				
-				final List<Groupe> listeGroupes =SiteDoris.getListeGroupesFromHtml(contenuFichierHtml);
+				final HashSet<Groupe> listeGroupes = SiteDoris.getListeGroupesFromHtml(contenuFichierHtml);
 				log.debug("doMain() - listeGroupes.size : "+listeGroupes.size());
 				
 				TransactionManager.callInTransaction(connectionSource,
@@ -208,7 +209,7 @@ public class PrefetchDorisWebSite {
 					    }
 					});
 
-				//TODO : Téléchargement des icones
+				// Téléchargement des icones
 				String fichierIconeRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_ICONES + "/";
 				String fichierIconeRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/" + SOUSDOSSIER_ICONES + "/";
 				if ( action.equals("CDDVD")){
@@ -228,8 +229,9 @@ public class PrefetchDorisWebSite {
 				
 				// - - - Fiches - - -
 				// Récupération de la liste des fiches sur le site de DORIS
-				
+				// Elles sont récupérées dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
 				String listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeFiches.html";
+				String listeFichesRefFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeFiches.html";
 				log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
 				
 				if (! action.equals("NODWNLD")){
@@ -251,8 +253,15 @@ public class PrefetchDorisWebSite {
 					}
 				}
 				
-				final List<Fiche> listFicheFromHTML = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
+				final HashSet<Fiche> listFicheFromHTML = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
 				log.info("Nb Fiches sur le site : "+listFicheFromHTML.size());
+				
+				
+				//TODO : J'en suis ici ce midi
+				//HashSet<Fiche> listFicheFromRef = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);;
+				
+				
+				
 				
 				// Création de l'entête des fiches
 				TransactionManager.callInTransaction(connectionSource,
@@ -274,13 +283,13 @@ public class PrefetchDorisWebSite {
 				
 				// - - - Intervenants - - -
 				// On boucle sur les initiales des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
+				// On récupère la liste des intervants dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
 				String listeFiltres;
 				if (nbMaxFichesTraitees == 9999){
 					listeFiltres="abcdefghijklmnopqrstuvwxyz";
 				} else {
 					listeFiltres="ab";
 				}
-				
 				
 				for (char initiale : listeFiltres.toCharArray()){
 					log.debug("doMain() - Recup Participants : "+initiale);
@@ -306,7 +315,7 @@ public class PrefetchDorisWebSite {
 						}
 					}
 					
-					final List<Participant> listeParticipantsFromHTML = SiteDoris.getListeParticipantsParInitialeFromHtml(contenuFichierHtml);
+					final HashSet<Participant> listeParticipantsFromHTML = SiteDoris.getListeParticipantsParInitialeFromHtml(contenuFichierHtml);
 					log.info("Creation de "+listeParticipantsFromHTML.size()+" participants pour la lettre : "+initiale);
 					TransactionManager.callInTransaction(connectionSource,
 						new Callable<Void>() {
@@ -320,14 +329,16 @@ public class PrefetchDorisWebSite {
 						});
 				}	
 				
-				List<Participant> listeParticipants = new ArrayList<Participant>(0);
+				HashSet<Participant> listeParticipants = new HashSet<Participant>(0);
 				listeParticipants.addAll(dbContext.participantDao.queryForAll());
 				log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
 				
-				
+				//TODO : Récupération de la page de chacun des intervanants
+				// http://doris.ffessm.fr/contact_fiche.asp?contact_numero=
 				
 				// - - - Glossaire - - -
 				// On boucle sur les initiales des définitions (Cf site : doris.ffessm.fr/glossaire.asp?filtre=?)
+				// On récupère la liste des termes dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
 				if (nbMaxFichesTraitees == 9999){
 					listeFiltres="abcdefghijklmnopqrstuvwxyz";
 				} else {
@@ -363,7 +374,7 @@ public class PrefetchDorisWebSite {
 						
 						continuer = SiteDoris.getContinuerListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
 						
-						final List<DefinitionGlossaire> listeDefinitionsFromHTML = SiteDoris.getListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
+						final HashSet<DefinitionGlossaire> listeDefinitionsFromHTML = SiteDoris.getListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
 						log.info("Creation de "+listeDefinitionsFromHTML.size()+" définitions pour la lettre : "+initiale);
 						TransactionManager.callInTransaction(connectionSource,
 							new Callable<Void>() {
@@ -384,98 +395,90 @@ public class PrefetchDorisWebSite {
 				listeDefinitions.addAll(dbContext.definitionGlossaireDao.queryForAll());
 				log.debug("doMain() - listeDefinitions.size : "+listeDefinitions.size());
 				
-				//TODO : ici il faudra traiter dans le cas des updates :
-				// - calculer la liste des définitions à traiter
-				// - les supprimer dans la base
-				List<DefinitionGlossaire> listeDefinitionsATraiter = listeDefinitions;
-				
-				// Pour chaque Définitions de la liste de travail :
-				// On la télécharge (et sauvegarde le fichier original)
-				// On la traite
-				int nbDefinitionTraitees = 0;
-				for (DefinitionGlossaire definition : listeDefinitionsATraiter) {
-					nbDefinitionTraitees += 1;
-					
-					if (  (nbDefinitionTraitees % 50) == 0) {
-						if (! action.equals("NODWNLD")) {
-							log.info("Définitions traitées = "+nbDefinitionTraitees+", pause de 1s...");
-							Thread.sleep(1000);
-						}
-					}
-						
+				// Pour chaque Définitions, on télécharge la page (si nécessaire) puis on la traite
+				int nbDefinitionTelechargees = 0;
+				for (DefinitionGlossaire definition : listeDefinitions) {
 					log.debug("doMain() - Traitement Définition : "+definition.getNumeroDoris());
 					
 					String urlDefinition =  Constants.getDefinitionUrl( ""+definition.getNumeroDoris() );
 					String fichierLocalDefinition = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/definition-"+definition.getNumeroDoris()+".html";
-					if (! action.equals("NODWNLD")) {
+					String fichierRefDefinition = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/definition-"+definition.getNumeroDoris()+".html";
+					if ( action.equals("INIT") ) {
 						if (Outils.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
-							
+							nbDefinitionTelechargees += 1;
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalDefinition));
-						
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la définition : "+urlDefinition);
-							
 							continue;
 						}
-					} else {
-						// NODWNLD
-						fichierLocalDefinition = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/definition-"+definition.getNumeroDoris()+".html";
-						if (new File(fichierLocalDefinition).exists()) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalDefinition));
+					} else if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
+						if ( ! new File(fichierRefDefinition).exists() ) {
+							if (Outils.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
+								nbDefinitionTelechargees += 1;
+								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalDefinition));
+							} else {
+								log.error("Une erreur est survenue lors de la récupération de la définition : "+urlDefinition);
+								continue;
+							}
 						} else {
-							log.error("La récupération de la fiche : "+urlDefinition+" a échoué.");
+							if (new File(fichierRefDefinition).exists()) {
+								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefDefinition));
+							} else {
+								log.error("Une erreur est survenue lors de la récupération de la définition sur le disque : "+fichierRefDefinition+" a échoué.");
+							}
+						}
+					} else if ( action.equals("NODWNLD") ) {
+						if (new File(fichierRefDefinition).exists()) {
+							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefDefinition));
+						} else {
+							log.error("Une erreur est survenue lors de la récupération de la définition sur le disque : "+fichierRefDefinition+" a échoué.");
 						}
 					}
 					
 					definition.setContextDB(dbContext);
 					definition.getDefinitionsFromHtml(contenuFichierHtml);
 					dbContext.definitionGlossaireDao.update(definition);
-
+					
+					if ( nbDefinitionTelechargees !=0 && (nbDefinitionTelechargees % 50) == 0) {
+						log.info("Définitions traitées = "+nbDefinitionTelechargees+", pause de 1s...");
+						Thread.sleep(1000);
+					}
 				}
 
 				// - - - Fiche - - -
-				// Pour chaque fiche de la liste de travail :
-				// On la télécharge (et sauvegarde le fichier original)
-				// On la traite
-
+				// Pour chaque fiche, on télécharge la page (si nécessaire) puis on la traite
 				log.info("Mise à jours de "+listFicheFromHTML.size()+" fiches.");
+				
+				//TODO : j'en suis ici ce midi
+				//HashSet<Fiche> listFichesModif = SiteDoris.getListeFichesUpdated(listFicheFromHTML, listFicheFromRef);
+				
 				int nbFichesTraitees = 0;
 				for (Fiche fiche : listFicheFromHTML) {
-					nbFichesTraitees += 1;
-					
-					if (  (nbFichesTraitees % 50) == 0) {
-						if (! action.equals("NODWNLD")) {
-							log.info("fiche traitées = "+nbFichesTraitees+", pause de 1s...");
-							Thread.sleep(1000);
-						}
-					}
 					if (  nbFichesTraitees <= nbMaxFichesTraitees ) {
-						
 						log.debug("doMain() - Traitement Fiche : "+fiche.getNomCommun());
 						
 						String urlFiche =  Constants.getFicheFromIdUrl( fiche.getNumeroFiche() );
 						String fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche-"+fiche.getNumeroFiche()+".html";
-						if (! action.equals("NODWNLD")) {
+						String fichierRefFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+".html";
+						
+						if ( action.equals("INIT") ) {
 							if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
-								
+								nbFichesTraitees += 1;
 								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalFiche));
-							
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
-								
+								// Solution de contournement désespérée 
 								urlFiche = Constants.getFicheFromNomCommunUrl(fiche.getNomCommun());
 								log.error("=> Tentative sur : "+urlFiche);
 								if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
-									
+									nbFichesTraitees += 1;
 									contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalFiche));
-									
 								} else {
 									log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 									continue;
 								}
-	
 							}
-						} else {
+						} else if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
 							// NODWNLD
 							fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+".html";
 
@@ -483,6 +486,12 @@ public class PrefetchDorisWebSite {
 								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalFiche));
 							} else {
 								log.error("La récupération de la fiche : "+fichierLocalFiche+" a échoué.");
+							}
+						} else if ( action.equals("NODWNLD") ) {
+							if (new File(fichierRefFiche).exists()) {
+								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefFiche));
+							} else {
+								log.error("La récupération de la fiche sur le disque : "+fichierRefFiche+" a échoué.");
 							}
 						}
 						
@@ -523,7 +532,7 @@ public class PrefetchDorisWebSite {
 						}
 						if(contenuFichierHtmlListePhotos != null){
 							// TODO update liste photos for fiche
-							final List<PhotoFiche> listePhotoFiche = SiteDoris.getListePhotosFicheFromHtml(fiche, contenuFichierHtmlListePhotos);
+							final HashSet<PhotoFiche> listePhotoFiche = SiteDoris.getListePhotosFicheFromHtml(fiche, contenuFichierHtmlListePhotos);
 							final Fiche ficheMaj = fiche;
 							TransactionManager.callInTransaction(connectionSource,
 								new Callable<Void>() {
@@ -533,6 +542,8 @@ public class PrefetchDorisWebSite {
 											dbContext.photoFicheDao.create(photoFiche);
 										}
 										if(listePhotoFiche.size() > 0){
+											
+											//TODo : Corriger ce soir
 											ficheMaj.setPhotoPrincipale(listePhotoFiche.get(0));
 											dbContext.ficheDao.update(ficheMaj);
 										}
@@ -541,10 +552,16 @@ public class PrefetchDorisWebSite {
 								});
 
 						}
+						
 					}
-					else{
+					else {
 						log.info("Nombre max de fiches à traiter atteint.");
 						break; // ignore les fiches suivantes
+					}
+					
+					if ( nbFichesTraitees != 0 && (nbFichesTraitees % 50) == 0) {
+						log.info("fiche traitées = "+nbFichesTraitees+", pause de 1s...");
+						Thread.sleep(1000);
 					}
 				}
 				
@@ -612,7 +629,7 @@ public class PrefetchDorisWebSite {
 			log.error("impossible de créer la zone dans la base", e);
 		}
 		
-		final List<Fiche> listFicheFromHTML = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
+		final HashSet<Fiche> listFicheFromHTML = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
 		log.info("Création des "+listFicheFromHTML.size()+" associations pour la Zone : " + listeFichesFichier);
 		
 		try {

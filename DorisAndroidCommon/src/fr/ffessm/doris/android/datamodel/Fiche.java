@@ -51,6 +51,7 @@ import com.j256.ormlite.stmt.SelectArg;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Collection;
 
@@ -59,9 +60,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import fr.ffessm.doris.android.datamodel.associations.*;
-
-// Start of user code additional import for Fiche
-
 import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
@@ -253,7 +251,7 @@ public class Fiche {
 
 	
 	
-	public void getFicheFromHtml(String htmlFiche, List<Groupe> listeGroupes, List<Participant> listeParticipants) throws SQLException{
+	public void getFicheFromHtml(String htmlFiche, HashSet<Groupe> listeGroupes, HashSet<Participant> listeParticipants) throws SQLException{
 		log.trace("getFicheFromHtml() - Début");
 		
     	int i;
