@@ -50,16 +50,15 @@
             </intent-filter>
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
-			android:name=".activities.ListeFicheAvecFiltre_ClassListViewActivity"
-			android:launchMode="singleTop">
+			android:name=".activities.ListeFicheAvecFiltre_ClassListViewActivity" 
+			android:launchMode="singleTop"
+			android:label="">
 			<intent-filter >
-				<action android:name="android.intent.action.SEARCH" />
+				<action android:name="android.intent.action.SEARCH" />				
             	<category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 			<meta-data android:name="android.app.searchable"
                    android:resource="@xml/listeficheavecfiltre_classlistview_searchable"/>
-			<meta-data android:name="android.app.default_searchable"
-                   android:value=".activities.ListeFicheAvecFiltre_ClassListViewActivity" />
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.DetailsFiche_ElementViewActivity" 
@@ -75,9 +74,11 @@
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.ListeParticipantAvecFiltre_ClassListViewActivity" 
+			android:launchMode="singleTop"
 			android:label="">
 			<intent-filter >
-				<action android:name="android.intent.action.SEARCH" />
+				<action android:name="android.intent.action.SEARCH" />				
+            	<category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 			<meta-data android:name="android.app.searchable"
                    android:resource="@xml/listeparticipantavecfiltre_classlistview_searchable"/>
@@ -102,9 +103,11 @@
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.Glossaire_ClassListViewActivity" 
+			android:launchMode="singleTop"
 			android:label="">
 			<intent-filter >
-				<action android:name="android.intent.action.SEARCH" />
+				<action android:name="android.intent.action.SEARCH" />				
+            	<category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 			<meta-data android:name="android.app.searchable"
                    android:resource="@xml/glossaire_classlistview_searchable"/>
@@ -115,9 +118,6 @@
 			<intent-filter >
             </intent-filter>
 		</activity>
-		
-		<meta-data android:name="android.app.default_searchable"
-                   android:value=".activities.ListeFicheAvecFiltre_ClassListViewActivity" />
     </application>
 
 </manifest>

@@ -50,15 +50,20 @@ import fr.ffessm.doris.android.R;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.LinearLayout;
 import android.preference.PreferenceManager;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SearchViewCompat;
+import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -85,7 +90,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 	//Start of user code constants Glossaire_ClassListViewActivity
 	//End of user code
 	// Search EditText
-    EditText inputSearch;
+    //EditText inputSearch;
     Glossaire_Adapter adapter;
 
 	Handler mHandler;
@@ -109,31 +114,10 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
         list.setOnItemClickListener(this);
 
         list.setAdapter(adapter);
-		inputSearch = (EditText) findViewById(R.id.inputSearch_glossaire_listviewsearchrow);
 
-		/**
-         * Enabling Search Filter
-         * */
-        inputSearch.addTextChangedListener(new TextWatcher() {
-             
-            @Override
-            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                // When user changed the Text
-                Glossaire_ClassListViewActivity.this.adapter.getFilter().filter(cs);  
-            }
-             
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-                    int arg3) {
-                // TODO Auto-generated method stub
-                 
-            }
-             
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                // TODO Auto-generated method stub                         
-            }
-        });
+		// Get the intent, verify the action and get the query
+        handleIntent(getIntent());
+
 		// add handler for indexBar
         mHandler = new IndexBarHandler(this);
 		//Start of user code onCreate additions Glossaire_ClassListViewActivity
@@ -146,6 +130,36 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 		//Start of user code onResume additions Glossaire_ClassListViewActivity
 		//End of user code
 		populateIndexBarHashMap();
+	}
+
+	@Override
+    protected void onNewIntent(Intent intent) {
+        // Because this activity has set launchMode="singleTop", the system calls this method
+        // to deliver the intent if this activity is currently the foreground activity when
+        // invoked again (when the user executes a search from this activity, we don't create
+        // a new instance of this activity, so the system delivers the search intent here)
+        handleIntent(intent);
+    }
+	
+	private void handleIntent(Intent intent) {
+		//Log.d(LOG_TAG,"Intent received");
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+           // handles a click on a search suggestion; launches activity to show word
+           //  Intent wordIntent = new Intent(this, WordActivity.class);
+           // wordIntent.setData(intent.getData());
+           // startActivity(wordIntent);
+        } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            // handles a search query
+            String query = intent.getStringExtra(SearchManager.QUERY);
+    		Log.d(LOG_TAG,"ACTION_SEARCH Intent received for "+query);
+            Glossaire_ClassListViewActivity.this.adapter.getFilter().filter(query);
+        }
+    }	
+
+	@Override
+	public boolean onSearchRequested() {
+		Log.d(LOG_TAG,"onSearchRequested received");
+	    return super.onSearchRequested();
 	}
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
@@ -186,6 +200,35 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 		// add options in the menu
 		MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.glossaire_classlistview_actions, menu);
+		// Associate searchable configuration with the SearchView
+		// deal with compat
+		MenuItem  menuItem = (MenuItem ) menu.findItem(R.id.glossaire_classlistview_action_search);
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+	    SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+		searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()));
+	    searchView.setIconifiedByDefault(false);
+    	searchView.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
+			
+			@Override
+			public boolean onQueryTextSubmit(String arg0) {
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					// already done by normal
+				}
+				else{
+					Glossaire_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
+				}
+				return false;
+			}
+			
+			@Override
+			public boolean onQueryTextChange(String arg0) {
+				// TODO must be careful if the request might be long
+				// action on text change
+				Glossaire_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
+				return false;
+			}
+		});
+	    
 		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu Glossaire_ClassListViewActivity
 

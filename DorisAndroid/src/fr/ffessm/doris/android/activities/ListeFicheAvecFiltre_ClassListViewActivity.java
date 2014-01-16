@@ -49,7 +49,6 @@ import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
@@ -61,9 +60,9 @@ import android.os.Handler;
 import android.widget.LinearLayout;
 import android.preference.PreferenceManager;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.ActionBar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SearchViewCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -80,7 +79,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity_additionalimports
 import android.content.SharedPreferences;
@@ -131,36 +129,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         list.setOnItemClickListener(this);
 
         list.setAdapter(adapter);
-        
-        // Get the intent, verify the action and get the query
+
+		// Get the intent, verify the action and get the query
         handleIntent(getIntent());
 
-        
-		//inputSearch = (EditText) findViewById(R.id.inputSearch_listeficheavecfiltre_listviewsearchrow);
-
-		/**
-         * Enabling Search Filter
-         * */
-        /*inputSearch.addTextChangedListener(new TextWatcher() {
-             
-            @Override
-            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                // When user changed the Text
-                ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(cs);  
-            }
-             
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-                    int arg3) {
-                // TODO Auto-generated method stub
-                 
-            }
-             
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                // TODO Auto-generated method stub                         
-            }
-        });*/
 		// add handler for indexBar
         mHandler = new IndexBarHandler(this);
 		//Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
@@ -168,36 +140,6 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         // crée le manager de popup
         searchPopupButtonManager = new SearchPopupButtonManager(this);
 		//End of user code
-	}
-	
-	@Override
-    protected void onNewIntent(Intent intent) {
-        // Because this activity has set launchMode="singleTop", the system calls this method
-        // to deliver the intent if this activity is currently the foreground activity when
-        // invoked again (when the user executes a search from this activity, we don't create
-        // a new instance of this activity, so the system delivers the search intent here)
-        handleIntent(intent);
-    }
-	
-	private void handleIntent(Intent intent) {
-		Log.d(LOG_TAG,"Intent received");
-        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-            // handles a click on a search suggestion; launches activity to show word
-          //  Intent wordIntent = new Intent(this, WordActivity.class);
-           // wordIntent.setData(intent.getData());
-           // startActivity(wordIntent);
-        } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            // handles a search query
-            String query = intent.getStringExtra(SearchManager.QUERY);
-    		Log.d(LOG_TAG,"ACTION_SEARCH Intent received for "+query);
-            ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(query);
-        }
-    }
-	
-	@Override
-	public boolean onSearchRequested() {
-		Log.d(LOG_TAG,"onSearchRequested received");
-	    return super.onSearchRequested();
 	}
 	
 	@Override
@@ -227,6 +169,36 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 		}
 		//End of user code
 		populateIndexBarHashMap();
+	}
+
+	@Override
+    protected void onNewIntent(Intent intent) {
+        // Because this activity has set launchMode="singleTop", the system calls this method
+        // to deliver the intent if this activity is currently the foreground activity when
+        // invoked again (when the user executes a search from this activity, we don't create
+        // a new instance of this activity, so the system delivers the search intent here)
+        handleIntent(intent);
+    }
+	
+	private void handleIntent(Intent intent) {
+		//Log.d(LOG_TAG,"Intent received");
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+           // handles a click on a search suggestion; launches activity to show word
+           //  Intent wordIntent = new Intent(this, WordActivity.class);
+           // wordIntent.setData(intent.getData());
+           // startActivity(wordIntent);
+        } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            // handles a search query
+            String query = intent.getStringExtra(SearchManager.QUERY);
+    		Log.d(LOG_TAG,"ACTION_SEARCH Intent received for "+query);
+            ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(query);
+        }
+    }	
+
+	@Override
+	public boolean onSearchRequested() {
+		Log.d(LOG_TAG,"onSearchRequested received");
+	    return super.onSearchRequested();
 	}
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
@@ -262,60 +234,40 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	
 	//End of user code
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB) @Override
+	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		// add options in the menu
 		MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.listeficheavecfiltre_classlistview_actions, menu);
+		// Associate searchable configuration with the SearchView
+		// deal with compat
+		MenuItem  menuItem = (MenuItem ) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_search);
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+	    SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+		searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()));
+	    searchView.setIconifiedByDefault(false);
+    	searchView.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
+			
+			@Override
+			public boolean onQueryTextSubmit(String arg0) {
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					// already done by normal
+				}
+				else{
+					ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
+				}
+				return false;
+			}
+			
+			@Override
+			public boolean onQueryTextChange(String arg0) {
+				// TODO must be careful if the request might be long
+				// action on text change
+				ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
+				return false;
+			}
+		});
 	    
-	    // Associate searchable configuration with the SearchView
-	    SearchView searchView;
-	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-	        SearchManager searchManager =
-	                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-	        searchView = (SearchView) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_search).getActionView();
-	        searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()));
-	        searchView.setIconifiedByDefault(false);
-	        searchView.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
-				
-				@Override
-				public boolean onQueryTextSubmit(String arg0) {
-					//ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0); already done by the intent ?
-					return false;
-				}
-				
-				@Override
-				public boolean onQueryTextChange(String arg0) {
-					// TODO Auto-generated method stub
-					// TODO must be careful if the request might be long
-					ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
-					return false;
-				}
-			});
-	        		
-	    }
-	    else{
-	    	MenuItem  menuItem = (MenuItem ) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_search);
-	    	searchView = (SearchView) MenuItemCompat
-	                .getActionView(menuItem);
-	    	searchView.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
-				
-				@Override
-				public boolean onQueryTextSubmit(String arg0) {
-					ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
-					return false;
-				}
-				
-				@Override
-				public boolean onQueryTextChange(String arg0) {
-					// TODO Auto-generated method stub
-					// TODO must be careful if the request might be long
-					ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
-					return false;
-				}
-			});
-	    }
-
 		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu ListeFicheAvecFiltre_ClassListViewActivity
 
@@ -328,10 +280,6 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
     public boolean onOptionsItemSelected(MenuItem item) {
 		// behavior of option menu
         switch (item.getItemId()) {
-        	/*case R.id.listeficheavecfiltre_classlistview_action_search:
-	            onSearchRequested();
-	            return true;
-			*/
 			case R.id.listeficheavecfiltre_classlistview_action_preference:
 	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
 	            return true;

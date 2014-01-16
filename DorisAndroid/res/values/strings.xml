@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">DorisAndroid</string>
-    <string name="app_label">DorisAndroid</string>
 	<!--Start of user code remove protected zone to rebuild all default values
 		-->
     <string name="edit_menu">Edit</string>
