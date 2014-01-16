@@ -61,6 +61,7 @@ import android.os.Handler;
 import android.widget.LinearLayout;
 import android.preference.PreferenceManager;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SearchViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
@@ -268,12 +269,51 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	    inflater.inflate(R.menu.listeficheavecfiltre_classlistview_actions, menu);
 	    
 	    // Associate searchable configuration with the SearchView
+	    SearchView searchView;
 	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 	        SearchManager searchManager =
 	                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-	        SearchView searchView = (SearchView) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_search).getActionView();
+	        searchView = (SearchView) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_search).getActionView();
 	        searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()));
 	        searchView.setIconifiedByDefault(false);
+	        searchView.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
+				
+				@Override
+				public boolean onQueryTextSubmit(String arg0) {
+					//ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0); already done by the intent ?
+					return false;
+				}
+				
+				@Override
+				public boolean onQueryTextChange(String arg0) {
+					// TODO Auto-generated method stub
+					// TODO must be careful if the request might be long
+					ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
+					return false;
+				}
+			});
+	        		
+	    }
+	    else{
+	    	MenuItem  menuItem = (MenuItem ) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_search);
+	    	searchView = (SearchView) MenuItemCompat
+	                .getActionView(menuItem);
+	    	searchView.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
+				
+				@Override
+				public boolean onQueryTextSubmit(String arg0) {
+					ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
+					return false;
+				}
+				
+				@Override
+				public boolean onQueryTextChange(String arg0) {
+					// TODO Auto-generated method stub
+					// TODO must be careful if the request might be long
+					ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
+					return false;
+				}
+			});
 	    }
 
 		// add additional programmatic options in the menu
@@ -288,10 +328,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
     public boolean onOptionsItemSelected(MenuItem item) {
 		// behavior of option menu
         switch (item.getItemId()) {
-        	case R.id.listeficheavecfiltre_classlistview_action_search:
+        	/*case R.id.listeficheavecfiltre_classlistview_action_search:
 	            onSearchRequested();
 	            return true;
-
+			*/
 			case R.id.listeficheavecfiltre_classlistview_action_preference:
 	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
 	            return true;

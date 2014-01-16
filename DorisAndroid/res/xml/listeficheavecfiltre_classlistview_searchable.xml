@@ -2,4 +2,10 @@
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
     android:label="@string/app_name"
     android:hint="@string/searchHint_listeficheavecfiltre_classlistview" >
+    <TextView
+    android:id="@+id/myTextViewID"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+/>
 </searchable>
