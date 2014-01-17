@@ -8,5 +8,8 @@
     
     <string name="listeficheavecfiltre_popup_filtreGeographique_sans">Filtrer par zone géographique</string>
     <string name="listeficheavecfiltre_popup_filtreGeographique_avec">Uniquement les </string>
+    
+    
+    <string name="listeficheavecfiltre_classlistview_action_filterpopup_title">Filter</string>
 	
 </resources>
