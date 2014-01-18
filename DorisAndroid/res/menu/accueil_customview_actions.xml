@@ -4,6 +4,16 @@
 	<!--Start of user code customView_menu for Accueil
 	-->
 <!-- freely adapt here the desired layout for yourmenu -->
+	<item android:id="@+id/accueil_customview_action_participant"
+	      android:icon="@drawable/ic_action_participants"
+	      android:title="@string/accueil_liste_participants_text"
+          android:showAsAction="ifRoom"
+    	  dorisandroid:showAsAction="ifRoom" />
+	<item android:id="@+id/accueil_customview_action_glossaire"
+	      android:icon="@drawable/ic_action_glossaire"
+	      android:title="@string/accueil_glossaire_text"
+          android:showAsAction="ifRoom"
+    	  dorisandroid:showAsAction="ifRoom" />
 	<item android:id="@+id/accueil_customview_action_telecharge_photofiches"
 	      android:icon="@android:drawable/ic_menu_set_as"
 	      android:title="@string/menu_option_telecharge_photofiches" />

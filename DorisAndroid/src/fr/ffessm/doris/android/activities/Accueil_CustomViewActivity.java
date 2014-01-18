@@ -635,6 +635,13 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	        case R.id.accueil_customview_action_a_propos:
 	        	APropos aPropos = new APropos(getContext(), (Activity) getContext(), getHelper());
 				aPropos.aProposAff();
+				return true;
+	        case R.id.accueil_customview_action_participant:
+	        	startActivity(new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class));
+	        	return true;
+	        case R.id.accueil_customview_action_glossaire:
+	        	startActivity(new Intent(this, Glossaire_ClassListViewActivity.class));
+	        	return true;
 		//End of user code
 			default:
                 return super.onOptionsItemSelected(item);
