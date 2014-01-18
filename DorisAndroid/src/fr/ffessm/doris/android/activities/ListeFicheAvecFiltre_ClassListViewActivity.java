@@ -98,8 +98,8 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	private static final String LOG_TAG = ListeFicheAvecFiltre_ClassListViewActivity.class.getSimpleName();
 
 	//Start of user code constants ListeFicheAvecFiltre_ClassListViewActivity
-	//SearchPopupButtonManager searchPopupButtonManager;
-    //ImageButton searchButton;
+	SearchPopupButtonManager searchPopupButtonManager;
+    View searchButton;
     MenuItem searchButtonMenuItem;
     
     
@@ -264,6 +264,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 		//Start of user code additional onCreateOptionsMenu ListeFicheAvecFiltre_ClassListViewActivity
     	searchButtonMenuItem = (MenuItem ) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
     	updateFilterInActionBar();
+    	searchPopupButtonManager = new SearchPopupButtonManager(this);
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
@@ -281,7 +282,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 				//showToast("searchPopupButtonManager.onClickFilterBtn(MenuItemCompat.getActionView(item))");
 			//	searchPopupButtonManager.onClickFilterBtn(MenuItemCompat.getActionView(item));
 				View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup); // SAME ID AS MENU ID
-				showFilterPopupMenu(menuItemView);
+				// crée le manager de popup
+		        //searchPopupButtonManager = new SearchPopupButtonManager(this);
+				//showFilterPopupMenu(menuItemView);
+				searchPopupButtonManager.onClickFilterBtn(menuItemView);
 	            return true;
 			//End of user code
 			default:
@@ -352,7 +356,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	}
 
 	// Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity
-	public void showFilterPopupMenu(View view){
+	/*public void showFilterPopupMenu(View view){
 		//showToast("filter button pressed. \nFeature under development ;-)");
 		
 		PopupMenu popup = new PopupMenu(this, view);
@@ -405,7 +409,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         
 	    popup.show();
 
-    }
+    }*/
 	public void updateFilterInActionBar(){
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if((prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1) != 1) ||
@@ -424,38 +428,40 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 		}
 	}
 	
-	/*
+	
 	class SearchPopupButtonManager {
-		Activity context;
+		Activity contextActivity;
 		int searchbuttonstatus=0;
 		PopupWindow popup;
 		
 		public SearchPopupButtonManager(Activity context){
-			this.context = context;
+			this.contextActivity = context;
 		}
 		
 		public void onClickFilterBtn(View view){
-			if(view == MenuItemCompat.getActionView(searchButtonMenuItem)){
-				if(searchbuttonstatus==0){;
-					showPopup();
-				}
-				else{
-					hidePopup();
-				}
+			if(searchbuttonstatus==0){;
+				showPopup();
+			}
+			else{
+				hidePopup();
 			}
 	    }
 		
 		public  void showPopup() {
 
-			LinearLayout viewGroup = (LinearLayout) context.findViewById(R.id.listeavecfiltre_filtrespopup);
-			LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
+			LinearLayout viewGroup = (LinearLayout) contextActivity.findViewById(R.id.listeavecfiltre_filtrespopup);
+			LayoutInflater layoutInflater = (LayoutInflater) contextActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View layout = layoutInflater.inflate(R.layout.listeficheavecfiltre_filtrespopup, viewGroup);
 			
 			int popupWidth =  getResources().getDimensionPixelSize(R.dimen.listeficheavecfiltre_popup_width); 
 			int popupHeight = getResources().getDimensionPixelSize(R.dimen.listeficheavecfiltre_popup_height); 
 			//Log.d(LOG_TAG,"showPopup() - width="+popupWidth+", height="+popupHeight);
-			View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
-			popup = new PopupWindow(menuItemView, popupWidth, popupHeight);
+			
+			//popup = new PopupWindow(context, popupWidth, popupHeight);
+			popup = new PopupWindow(layout);
+			popup.setWidth(popupWidth);
+			popup.setHeight(popupHeight);
 
 			searchbuttonstatus=1;
 
@@ -471,14 +477,16 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 			//searchButtonMenuItem.
 			//popup.s
 			//popup.showAsDropDown(menuItemView);
-			//MenuItemCompat.getActionView(searchButtonMenuItem).getLocationOnScreen(location);
-			//Log.d(LOG_TAG, "menuitem pos ="+location[0]+" "+location[1]);
-			 //popup.showAtLocation(layout,Gravity.TOP,location[0],location[1]);
+			menuItemView.getLocationOnScreen(location);
+			Log.d(LOG_TAG, "menuitem pos ="+location[0]+" "+location[1]);
 			
+			//popup.sh
+			// popup.showAtLocation(layout,Gravity.TOP,location[0],location[1]);
+			popup.showAsDropDown(menuItemView,0,0);
 			// bouton filtre espèce 
 			Button btnFiltreEspece = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-	        int filtreCourantId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);	        
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextActivity);
+	        int filtreCourantId = prefs.getInt(contextActivity.getString(R.string.pref_key_filtre_groupe), 1);	        
 			if(filtreCourantId==1){
 				btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_sans));
 	        }
@@ -494,7 +502,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 					popup.dismiss();
 					
 					//Permet de revenir à cette liste après choix du groupe, True on retournerait à l'accueil
-					Intent toGroupeSelectionView = new Intent(context, GroupeSelection_ClassListViewActivity.class);
+					Intent toGroupeSelectionView = new Intent(contextActivity, GroupeSelection_ClassListViewActivity.class);
 			        Bundle b = new Bundle();
 			        b.putBoolean("GroupeSelection_depuisAccueil", false);
 			        toGroupeSelectionView.putExtras(b);
@@ -504,7 +512,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	
 			// bouton filtre zone géographique
 			Button btnZoneGeo = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_ZoneGeoButton);
-			int currentFilterId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), -1);
+			int currentFilterId = prefs.getInt(contextActivity.getString(R.string.pref_key_filtre_zonegeo), -1);
 	        if(currentFilterId == -1){
 	        	btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_sans));
 	        }
@@ -521,7 +529,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 				popup.dismiss();
 	
 				//Toast.makeText(getApplicationContext(), "Zone géographique", Toast.LENGTH_LONG).show();
-				startActivity(new Intent(context, ZoneGeoSelection_ClassListViewActivity.class));
+				startActivity(new Intent(contextActivity, ZoneGeoSelection_ClassListViewActivity.class));
 				}
 				});
 			   
@@ -533,7 +541,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 			  popup.dismiss();
 		}
 	}
-	*/
+	
 	// End of user code
 
 	private void showToast(String message) {
