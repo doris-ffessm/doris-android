@@ -64,6 +64,8 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code additional imports Accueil_CustomViewActivity
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -553,7 +555,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	    	while (it.hasNext()) {
 	    		sb.append("Date base locale : " + it.next().getDateBase()+"\n");
 			}
-	    	
+	    	/*
 	    	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
 	    	sb.append("Nombres de fiches dans la base locale : "+ficheDao.countOf());
 	     	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
@@ -561,9 +563,10 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	    	sb.append("\n\tNombres de photos téléchargées : "+Outils.getVignetteCount(this.getApplicationContext()));
 	    	double sizeInMiB = Outils.getPhotosDiskUsage(getApplicationContext())/(double)(1024.0*1024.0);
 	    	sb.append("\t("+String.format("%.2f", sizeInMiB)+" MiB)");
-	    	
+	    	*/
 	    	
 	    	// Test pour voir où est le cache Picasso
+	    	/*
 	    	sb.append("\n- - - - - -\n");
 	    	sb.append(getApplicationContext().getCacheDir().getAbsolutePath()+"\n");
 	     	for (File child:getApplicationContext().getCacheDir().listFiles()) {
@@ -579,11 +582,30 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 	     			}
 	     		}
 	     	}
-	     	
+	     	*/
+	    	
 	     	sb.append("- - - - - -\n");
 	     	sb.append(getApplicationContext().getFilesDir().getAbsolutePath()+"\n");
-	     	for (File child:getApplicationContext().getFilesDir().listFiles()) {
-	     		sb.append(child.getAbsolutePath()+"\n");
+	     	sb.append(getApplicationContext().getFilesDir().listFiles().length+"\n");
+	     	sb.append("- - - - - -\n");
+	     	URI uri = null;
+	     	try {
+	     		uri = new URI("file:///android_res/raw/images_groupe_1.gif");
+	     	} catch (URISyntaxException e) {
+	     		
+	     	}
+	     	File file = new File(uri);
+	     	sb.append(file.getAbsolutePath()+"\n");
+	     	sb.append("dir ? : "+file.isDirectory()+" - file ? : "+file.isFile()+"\n");
+	     	if (file.isDirectory()) {
+		     	for (File child:file.listFiles()) {
+		     		sb.append(child.getAbsolutePath()+"\n");
+		     		if (child.isDirectory()) {
+			     		for (File subChild:child.listFiles()) {
+			     			sb.append(" - "+subChild.getAbsolutePath()+"\n");
+			     		}
+		     		}
+		     	}
 	     	}
 	     	// TODO : Piste pour sauvegarder les images après téléchargement
 	     	// Cf. http://stackoverflow.com/questions/19345576/cannot-draw-recycled-bitmaps-exception-with-picasso
