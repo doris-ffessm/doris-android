@@ -248,7 +248,13 @@ public class Fiche {
 		return StringUtils.replaceEach(this.nomScientifique, new String[]{"{{g}}","{{/g}}","{{i}}","{{/i}}"}, new String[]{"","","",""});
 	}
 	
-
+	/** renvoie le couple Ref - État Fiche
+	 * 
+	 * @return
+	 */
+	public String getRefEtatFiche(){
+		return numeroFiche+"-"+etatFiche;
+	}
 	
 	
 	public void getFicheFromHtml(String htmlFiche, HashSet<Groupe> listeGroupes, HashSet<Participant> listeParticipants) throws SQLException{

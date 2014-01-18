@@ -386,9 +386,15 @@ public class SiteDoris {
 	    			String cleURL = elementIMG.getAttributeValue("src");
 	    			cleURL = cleURL.substring(cleURL.lastIndexOf("/"), cleURL.length()); // garde seulement le nom du fichier 
 	    			cleURL = cleURL.replaceAll(" ", "%20");	// on s'assure d'avoir une url valide
-	    			PhotoFiche photoFiche = new PhotoFiche(cleURL,titrePhotoCourante, descritionPhotoCourante);
-	  				
-	    			listePhotosFiche.add(photoFiche);
+	    			if (listePhotosFiche.isEmpty()) {
+	    				//Image Principale
+	    				PhotoFiche photoFiche = new PhotoFiche(cleURL,titrePhotoCourante, descritionPhotoCourante, true);
+	    				listePhotosFiche.add(photoFiche);
+	    			} else {
+	    				PhotoFiche photoFiche = new PhotoFiche(cleURL,titrePhotoCourante, descritionPhotoCourante);
+	    				listePhotosFiche.add(photoFiche);
+	    			}
+	    			
 	    			
 	    			titrePhotoCourante = null;
 	    			descritionPhotoCourante = null;
@@ -486,45 +492,35 @@ public class SiteDoris {
 		log.debug("getListeParticipantsParInitiale() - Fin");
 		return listeParticipants;
     }
-
-	
-    public static HashSet<Fiche> getListeFichesUpdated(HashSet<Fiche> inListeBase, HashSet<Fiche> inListeSite) {
+    
+    public static HashSet<Fiche> getListeFichesUpdated(HashSet<Fiche> inListeFichesRef, HashSet<Fiche> inListeFichesSite) {
     	log.debug("getListeFichesUpdated()- Début");
+    	log.debug("getListeFichesUpdated()- Liste Base : "+inListeFichesRef.size());
+    	log.debug("getListeFichesUpdated()- Liste Site : "+inListeFichesSite.size());
     	
-    	HashSet<Fiche> listeUpdated = new HashSet<Fiche>(0);
-    	
-    	log.debug("getListeFichesUpdated()- Liste Base : "+inListeBase.size());
-    	log.debug("getListeFichesUpdated()- Liste Site : "+inListeSite.size());
-    	
-    	HashSet<Integer> listeIntBase = new HashSet<Integer>(0);
-    	HashSet<Integer> listeIntEtatFiche = new HashSet<Integer>(0);
-    	for (Fiche fiche:inListeBase){
-    		listeIntBase.add(new Integer (fiche.getNumeroFiche()) );
-    		listeIntEtatFiche.add(new Integer (fiche.getEtatFiche()) );
+    	HashSet<Fiche> listeFichesUpdated = new HashSet<Fiche>(0);
+     	
+    	HashSet<String> listeFichesEtatsRef = new HashSet<String>(0);
+    	// On charge une liste de tous les couples : Ref. Fiche - État Fiche
+    	Iterator<Fiche> iFicheRef = inListeFichesRef.iterator();
+    	while (iFicheRef.hasNext()) {
+    		Fiche ficheRef = iFicheRef.next();
+    		listeFichesEtatsRef.add( ficheRef.getRefEtatFiche() );
     	}
     	
-    	Iterator<Fiche> iterator = inListeSite.iterator();
-    	while (iterator.hasNext()) {
-    		Fiche iteratorFiche = iterator.next();
-    		// Nouvelle Fiche
-    		if ( ! listeIntBase.contains(new Integer (iteratorFiche.getNumeroFiche()) ) ){
-    			listeUpdated.add(iteratorFiche);
-    		} else {
-    			// Fiche ayant changée de statut
-    			//log.debug("Base EF : "+listeIntEtatFiche.get(listeIntBase.indexOf(new Integer (interatorFiche.getNumeroFiche()) ) ) );
-    			//log.debug("Site EF : "+interatorFiche.getEtatFiche() );
-    			//TODO :
-    			/*
-    			if (listeIntEtatFiche.get(listeIntBase..indexOf(new Integer (iteratorFiche.getNumeroFiche()) ) ) != iteratorFiche.getEtatFiche() ){
-    				listeUpdated.add(iteratorFiche);
-    			}
-    			*/
+    	Iterator<Fiche> iFicheSite = inListeFichesSite.iterator();
+    	while (iFicheSite.hasNext()) {
+    		// Si Nouvelle Fiche ou Etat a changé alors le couple ne peut être trouvé dans la liste de référence
+    		// Tentative d'optime pour avoir une empreinte mémoire la plus faible
+    		Fiche ficheSite = iFicheSite.next();
+    		if ( ! listeFichesEtatsRef.contains( ficheSite.getRefEtatFiche() ) ){
+    			listeFichesUpdated.add(ficheSite);
     		}
     	}
-    	log.debug("getListeFichesUpdated()- Liste Site Updated : "+listeUpdated.size());
+    	log.debug("getListeFichesUpdated()- Liste Site Updated : "+listeFichesUpdated.size());
     	
 		log.debug("getListeFichesUpdated()- Fin");
-		return listeUpdated;
+		return listeFichesUpdated;
     }
     
     public static Participant getParticipantFromListeParticipants(HashSet<Participant> listeParticipants, int numParticipant){
