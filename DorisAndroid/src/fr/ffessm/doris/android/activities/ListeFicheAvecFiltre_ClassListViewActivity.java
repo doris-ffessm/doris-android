@@ -98,8 +98,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	private static final String LOG_TAG = ListeFicheAvecFiltre_ClassListViewActivity.class.getSimpleName();
 
 	//Start of user code constants ListeFicheAvecFiltre_ClassListViewActivity
-	SearchPopupButtonManager searchPopupButtonManager;
-    View searchButton;
+	
     MenuItem searchButtonMenuItem;
     
     
@@ -139,10 +138,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 		// add handler for indexBar
         mHandler = new IndexBarHandler(this);
 		//Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
-        //searchButton = (ImageButton) findViewById(R.id.btnOtherFilter_listeficheavecfiltre_listviewsearchrow);
-        //searchButtonMenuItem = (MenuItem) findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
-        // crée le manager de popup
-        //searchPopupButtonManager = new SearchPopupButtonManager(this);
+        
 		//End of user code
 	}
 	
@@ -264,7 +260,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 		//Start of user code additional onCreateOptionsMenu ListeFicheAvecFiltre_ClassListViewActivity
     	searchButtonMenuItem = (MenuItem ) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
     	updateFilterInActionBar();
-    	searchPopupButtonManager = new SearchPopupButtonManager(this);
+    	//searchPopupButtonManager = new SearchPopupButtonManager(this);
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
@@ -285,7 +281,8 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 				// crée le manager de popup
 		        //searchPopupButtonManager = new SearchPopupButtonManager(this);
 				//showFilterPopupMenu(menuItemView);
-				searchPopupButtonManager.onClickFilterBtn(menuItemView);
+				//searchPopupButtonManager.onClickFilterBtn(menuItemView);
+				showPopup();
 	            return true;
 			//End of user code
 			default:
@@ -356,60 +353,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	}
 
 	// Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity
-	/*public void showFilterPopupMenu(View view){
-		//showToast("filter button pressed. \nFeature under development ;-)");
-		
-		PopupMenu popup = new PopupMenu(this, view);
-		// creation popup filtre espece ou geo depuis action bar
-		popup.inflate(R.menu.listeficheavecfiltre_classlistview_popupfiltre_actions);
-	    // enregistre action des item du popup
-	    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {			
-			@Override
-			public boolean onMenuItemClick(MenuItem item) {
-				switch (item.getItemId()) {
-		        case R.id.listeficheavecfiltres_classlistview_popupfiltre_action_filtreEspece:
-		        	//Permet de revenir à cette liste après choix du groupe, True on retournerait à l'accueil
-					Intent toGroupeSelectionView = new Intent(context, GroupeSelection_ClassListViewActivity.class);
-			        Bundle b = new Bundle();
-			        b.putBoolean("GroupeSelection_depuisAccueil", false);
-			        toGroupeSelectionView.putExtras(b);
-			        //démarre l'activité du choix du groupe
-			        startActivity(toGroupeSelectionView);
-		            return true;
-		        case R.id.listeficheavecfiltres_classlistview_popupfiltre_action_filtreGeographique:
-		        	startActivity(new Intent(context, ZoneGeoSelection_ClassListViewActivity.class));
-		            return true;
-		        default:
-		            return false;
-		    }
-			}
-		});
-	    
-	    // changes les textes du menu dans le popup en fonction des filtres actuels
-	    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-	    MenuItem menuItemEspece = popup.getMenu().findItem(R.id.listeficheavecfiltres_classlistview_popupfiltre_action_filtreEspece);
-	    
-        int filtreGroupeCourantId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);	        
-		if(filtreGroupeCourantId==1){
-			menuItemEspece.setTitle(R.string.listeficheavecfiltre_popup_filtreEspece_sans);
-        }
-		else{
-			Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreGroupeCourantId);
-			menuItemEspece.setTitle(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec)+" "+groupeFiltreCourant.getNomGroupe().trim());
-		}
-		MenuItem menuItemGeo = popup.getMenu().findItem(R.id.listeficheavecfiltres_classlistview_popupfiltre_action_filtreGeographique);
-		int currentFilterId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), -1);
-        if(currentFilterId == -1){
-        	menuItemGeo.setTitle(R.string.listeficheavecfiltre_popup_filtreGeographique_sans);
-        }
-        else{
-        	ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
-        	menuItemGeo.setTitle(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec)+" "+currentZoneFilter.getNom().trim());
-        }
-        
-	    popup.show();
-
-    }*/
+	
 	public void updateFilterInActionBar(){
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if((prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1) != 1) ||
@@ -428,120 +372,91 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 		}
 	}
 	
-	
-	class SearchPopupButtonManager {
-		Activity contextActivity;
-		int searchbuttonstatus=0;
-		PopupWindow popup;
+	public  void showPopup() {
+
+		View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
+		LinearLayout viewGroup = (LinearLayout) findViewById(R.id.listeavecfiltre_filtrespopup);
+		LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View layout = layoutInflater.inflate(R.layout.listeficheavecfiltre_filtrespopup, viewGroup);
 		
-		public SearchPopupButtonManager(Activity context){
-			this.contextActivity = context;
+		int popupWidth =  getResources().getDimensionPixelSize(R.dimen.listeficheavecfiltre_popup_width); 
+		int popupHeight = getResources().getDimensionPixelSize(R.dimen.listeficheavecfiltre_popup_height); 
+		//Log.d(LOG_TAG,"showPopup() - width="+popupWidth+", height="+popupHeight);
+		
+		//popup = new PopupWindow(context, popupWidth, popupHeight);
+		final PopupWindow popup = new PopupWindow(layout);
+		popup.setWidth(popupWidth);
+		popup.setHeight(popupHeight);
+
+
+		//popup.setOutsideTouchable(true);
+		popup.setFocusable(true);
+
+		//int OFFSET_X =(Twidth);
+		//int OFFSET_Y =Theight-(Theight-100);
+		//Toast.makeText(getApplicationContext(), "Hi", Toast.LENGTH_LONG).show();
+		popup.setBackgroundDrawable(new BitmapDrawable());
+		//popup.showAsDropDown(layout,OFFSET_X,OFFSET_Y);
+		//popup.showAsDropDown(MenuItemCompat.getActionView(searchButtonMenuItem),0,0);
+		int[]  location = new int[2];
+		//searchButtonMenuItem.
+		//popup.s
+		//popup.showAsDropDown(menuItemView);
+		menuItemView.getLocationOnScreen(location);
+		Log.d(LOG_TAG, "menuitem pos ="+location[0]+" "+location[1]);
+		
+		// popup.showAtLocation(layout,Gravity.TOP,location[0],location[1]);
+		popup.showAsDropDown(menuItemView,0,0);
+		// bouton filtre espèce 
+		Button btnFiltreEspece = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int filtreCourantId = prefs.getInt(this.getString(R.string.pref_key_filtre_groupe), 1);	        
+		if(filtreCourantId==1){
+			btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_sans));
+        }
+		else{
+			Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
+			btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec)+" "+groupeFiltreCourant.getNomGroupe().trim());
 		}
 		
-		public void onClickFilterBtn(View view){
-			if(searchbuttonstatus==0){;
-				showPopup();
-			}
-			else{
-				hidePopup();
-			}
-	    }
-		
-		public  void showPopup() {
-
-			View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
-			LinearLayout viewGroup = (LinearLayout) contextActivity.findViewById(R.id.listeavecfiltre_filtrespopup);
-			LayoutInflater layoutInflater = (LayoutInflater) contextActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View layout = layoutInflater.inflate(R.layout.listeficheavecfiltre_filtrespopup, viewGroup);
-			
-			int popupWidth =  getResources().getDimensionPixelSize(R.dimen.listeficheavecfiltre_popup_width); 
-			int popupHeight = getResources().getDimensionPixelSize(R.dimen.listeficheavecfiltre_popup_height); 
-			//Log.d(LOG_TAG,"showPopup() - width="+popupWidth+", height="+popupHeight);
-			
-			//popup = new PopupWindow(context, popupWidth, popupHeight);
-			popup = new PopupWindow(layout);
-			popup.setWidth(popupWidth);
-			popup.setHeight(popupHeight);
-
-			searchbuttonstatus=1;
-
-			popup.setFocusable(false);
-	
-			//int OFFSET_X =(Twidth);
-			//int OFFSET_Y =Theight-(Theight-100);
-			//Toast.makeText(getApplicationContext(), "Hi", Toast.LENGTH_LONG).show();
-			popup.setBackgroundDrawable(new BitmapDrawable());
-			//popup.showAsDropDown(layout,OFFSET_X,OFFSET_Y);
-			//popup.showAsDropDown(MenuItemCompat.getActionView(searchButtonMenuItem),0,0);
-			int[]  location = new int[2];
-			//searchButtonMenuItem.
-			//popup.s
-			//popup.showAsDropDown(menuItemView);
-			menuItemView.getLocationOnScreen(location);
-			Log.d(LOG_TAG, "menuitem pos ="+location[0]+" "+location[1]);
-			
-			//popup.sh
-			// popup.showAtLocation(layout,Gravity.TOP,location[0],location[1]);
-			popup.showAsDropDown(menuItemView,0,0);
-			// bouton filtre espèce 
-			Button btnFiltreEspece = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(contextActivity);
-	        int filtreCourantId = prefs.getInt(contextActivity.getString(R.string.pref_key_filtre_groupe), 1);	        
-			if(filtreCourantId==1){
-				btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_sans));
-	        }
-			else{
-				Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
-				btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec)+" "+groupeFiltreCourant.getNomGroupe().trim());
-			}
-			btnFiltreEspece.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					popup.setFocusable(true);
-					searchbuttonstatus=0;
-					popup.dismiss();
-					
-					//Permet de revenir à cette liste après choix du groupe, True on retournerait à l'accueil
-					Intent toGroupeSelectionView = new Intent(contextActivity, GroupeSelection_ClassListViewActivity.class);
-			        Bundle b = new Bundle();
-			        b.putBoolean("GroupeSelection_depuisAccueil", false);
-			        toGroupeSelectionView.putExtras(b);
-			        startActivity(toGroupeSelectionView);
-				  }
-				});
-	
-			// bouton filtre zone géographique
-			Button btnZoneGeo = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_ZoneGeoButton);
-			int currentFilterId = prefs.getInt(contextActivity.getString(R.string.pref_key_filtre_zonegeo), -1);
-	        if(currentFilterId == -1){
-	        	btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_sans));
-	        }
-	        else{
-	        	ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
-	        	btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec)+" "+currentZoneFilter.getNom().trim());
-	        }
-	        
-	        btnZoneGeo.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
+		btnFiltreEspece.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
 				popup.setFocusable(true);
-				searchbuttonstatus=0;
 				popup.dismiss();
-	
-				//Toast.makeText(getApplicationContext(), "Zone géographique", Toast.LENGTH_LONG).show();
-				startActivity(new Intent(contextActivity, ZoneGeoSelection_ClassListViewActivity.class));
-				}
-				});
-			   
-		}
-		
-		public void hidePopup(){
+				
+				//Permet de revenir à cette liste après choix du groupe, True on retournerait à l'accueil
+				Intent toGroupeSelectionView = new Intent(ListeFicheAvecFiltre_ClassListViewActivity.this, GroupeSelection_ClassListViewActivity.class);
+		        Bundle b = new Bundle();
+		        b.putBoolean("GroupeSelection_depuisAccueil", false);
+		        toGroupeSelectionView.putExtras(b);
+		        startActivity(toGroupeSelectionView);
+			  }
+			});
 
-			  searchbuttonstatus=0;
-			  popup.dismiss();
-		}
+		// bouton filtre zone géographique
+		Button btnZoneGeo = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_ZoneGeoButton);
+		int currentFilterId = prefs.getInt(ListeFicheAvecFiltre_ClassListViewActivity.this.getString(R.string.pref_key_filtre_zonegeo), -1);
+        if(currentFilterId == -1){
+        	btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_sans));
+        }
+        else{
+        	ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
+        	btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec)+" "+currentZoneFilter.getNom().trim());
+        }
+        
+        btnZoneGeo.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+			popup.setFocusable(true);
+			popup.dismiss();
+
+			//Toast.makeText(getApplicationContext(), "Zone géographique", Toast.LENGTH_LONG).show();
+			startActivity(new Intent(ListeFicheAvecFiltre_ClassListViewActivity.this, ZoneGeoSelection_ClassListViewActivity.class));
+			}
+			});
+		   
 	}
-	
 	// End of user code
 
 	private void showToast(String message) {
