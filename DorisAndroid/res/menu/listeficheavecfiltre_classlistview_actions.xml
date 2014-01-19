@@ -1,8 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dorisandroid="http://schemas.android.com/apk/res-auto">
 	
-	
-	 <item android:id="@+id/listeficheavecfiltre_classlistview_action_search"
+	<item android:id="@+id/listeficheavecfiltre_classlistview_action_search"
 	      android:icon="@drawable/ic_action_search"
 	      android:title="@string/searchHint_listeficheavecfiltre_listviewsearchrow"
 	      dorisandroid:showAsAction="ifRoom|collapseActionView"

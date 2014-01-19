@@ -107,7 +107,8 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
 		ListView list = (ListView) findViewById(R.id.listeparticipantavecfiltre_listview);
         list.setClickable(true);
 		//Start of user code onCreate ListeParticipantAvecFiltre_ClassListViewActivity adapter creation
-        adapter = new ListeParticipantAvecFiltre_Adapter(this, getHelper().getDorisDBHelper());		
+        adapter = new ListeParticipantAvecFiltre_Adapter(this, getHelper().getDorisDBHelper());	
+        
 		//End of user code
 		// avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -121,6 +122,7 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
 		// add handler for indexBar
         mHandler = new IndexBarHandler(this);
 		//Start of user code onCreate additions ListeParticipantAvecFiltre_ClassListViewActivity
+	    actionBar.setSubtitle("Participants");
 		//End of user code
 	}
 	

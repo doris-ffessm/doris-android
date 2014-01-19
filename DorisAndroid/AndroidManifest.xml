@@ -19,41 +19,39 @@
 	
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.SplashScreen_CustomViewActivity" 
-			android:label="">
-			<intent-filter >
+        	android:label="@string/app_name">
+			
+			<intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.Accueil_CustomViewActivity" 
-			android:label="">
-			<intent-filter >
-            </intent-filter>
+        	android:label="@string/app_name">
+			
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.Preference_PreferenceViewActivity" 
-			android:label="">
-			<intent-filter >
-            </intent-filter>
+        	android:label="@string/app_name">
+			
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.EtatModeHorsLigne_CustomViewActivity" 
-			android:label="">
-			<intent-filter >
-            </intent-filter>
+        	android:label="@string/app_name">
+			
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.RechercheGuidee_CustomViewActivity" 
-			android:label="">
-			<intent-filter >
-            </intent-filter>
+        	android:label="@string/app_name">
+			
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.ListeFicheAvecFiltre_ClassListViewActivity" 
 			android:launchMode="singleTop"
-			android:label="">
-			<intent-filter >
+        	android:label="@string/app_name">
+			
+			<intent-filter>
 				<action android:name="android.intent.action.SEARCH" />				
             	<category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -62,21 +60,20 @@
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.DetailsFiche_ElementViewActivity" 
-			android:label="">
-			<intent-filter >
-            </intent-filter>
+        	android:label="@string/app_name">
+			
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.ImagePleinEcran_CustomViewActivity" 
-			android:label="">
-			<intent-filter >
-            </intent-filter>
+        	android:label="@string/app_name">
+			
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.ListeParticipantAvecFiltre_ClassListViewActivity" 
 			android:launchMode="singleTop"
-			android:label="">
-			<intent-filter >
+        	android:label="@string/app_name">
+			
+			<intent-filter>
 				<action android:name="android.intent.action.SEARCH" />				
             	<category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -85,27 +82,25 @@
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.DetailsParticipant_ElementViewActivity" 
-			android:label="">
-			<intent-filter >
-            </intent-filter>
+        	android:label="@string/app_name">
+			
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.ZoneGeoSelection_ClassListViewActivity" 
-			android:label="">
-			<intent-filter >
-            </intent-filter>
+        	android:label="@string/app_name">
+			
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.GroupeSelection_ClassListViewActivity" 
-			android:label="">
-			<intent-filter >
-            </intent-filter>
+        	android:label="@string/app_name">
+			
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.Glossaire_ClassListViewActivity" 
 			android:launchMode="singleTop"
-			android:label="">
-			<intent-filter >
+        	android:label="@string/app_name">
+			
+			<intent-filter>
 				<action android:name="android.intent.action.SEARCH" />				
             	<category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -114,9 +109,8 @@
 		</activity>
 		<activity  android:theme="@style/Theme.AppCompat"
 			android:name=".activities.DetailEntreeGlossaire_ElementViewActivity" 
-			android:label="">
-			<intent-filter >
-            </intent-filter>
+        	android:label="@string/app_name">
+			
 		</activity>
     </application>
 

@@ -121,6 +121,8 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 		// add handler for indexBar
         mHandler = new IndexBarHandler(this);
 		//Start of user code onCreate additions Glossaire_ClassListViewActivity
+
+	    actionBar.setSubtitle("Glossaire");
 		//End of user code
 	}
 	

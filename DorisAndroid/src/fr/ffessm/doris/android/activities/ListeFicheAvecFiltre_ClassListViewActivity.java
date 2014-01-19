@@ -63,12 +63,10 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SearchViewCompat;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -219,7 +217,6 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	
 	//End of user code
 
-	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		// add options in the menu
@@ -230,9 +227,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 		MenuItem  menuItem = (MenuItem ) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_search);
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 	    SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-	    	searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()));
-	    }
+		searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()));
 	    searchView.setIconifiedByDefault(false);
     	searchView.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
 			
