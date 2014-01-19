@@ -20,10 +20,12 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import fr.ffessm.doris.android.activities.DetailEntreeGlossaire_ElementViewActivity;
 import fr.ffessm.doris.android.activities.DetailsFiche_ElementViewActivity;
+import fr.ffessm.doris.android.activities.DetailsParticipant_ElementViewActivity;
 import fr.ffessm.doris.android.activities.Glossaire_ClassListViewActivity;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import android.app.Activity;
 import android.content.Context;
@@ -964,6 +966,27 @@ public class Outils {
 	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.LIENWEB,ts.positionDebut,posFinTexteFinal,
 	        				ts.info));
 	        	}
+	        	else if (balise.startsWith("P:")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posDepTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	
+	        		pileDerniereBalise.add(new TextSpan(TextSpan.SpanType.PARTICIPANT,posDepTexteFinal,0,
+	        				balise.substring(2, balise.length())));
+	        	}
+	        	else if (balise.equals("/P")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posFinTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        		
+	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+	        		
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.PARTICIPANT,ts.positionDebut,posFinTexteFinal,
+	        				ts.info));
+	        	}
 	        	
 	        } // fin du While
 	        
@@ -1111,6 +1134,25 @@ public class Outils {
 	        	else if ( ts.spanType == TextSpan.SpanType.LIENWEB) {
 	        		richtext.setSpan(new URLSpan("http://"+ts.info), ts.positionDebut, ts.positionFin, 0);  
 	        	}
+	        	else if ( ts.spanType == TextSpan.SpanType.PARTICIPANT ) {
+
+	        		ClickableSpan clickableSpan = new ClickableSpan() {  
+			            @Override  
+			            public void onClick(View view) {  
+			    	        Intent toDetailView = new Intent(context, DetailsParticipant_ElementViewActivity.class);
+			    	        
+			    	        Bundle b = new Bundle();
+			    	        b.putInt("participantId", Integer.valueOf(ts.info) );
+			    			
+			    	        toDetailView.putExtras(b);
+			    			context.startActivity(toDetailView);
+			            }  
+			        };
+			     	//Log.d(LOG_TAG, "addFoldableView() - SpannableString : "+ts.positionDebut + " - " + ts.positionFin);
+			    	
+					richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
+					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_lienparticipant))), ts.positionDebut, ts.positionFin, 0);  
+	        	}
 	        }
 	        
 	        return richtext;
@@ -1122,7 +1164,7 @@ public class Outils {
     public static class TextSpan {
     	
     	public enum SpanType {
-    	    FICHE, ITALIQUE, GRAS, SOULIGNE, SAUTDELIGNE, DEFINITION, LIENWEB
+    	    FICHE, ITALIQUE, GRAS, SOULIGNE, SAUTDELIGNE, DEFINITION, LIENWEB, PARTICIPANT
     	} 
     	
     	SpanType spanType = null;

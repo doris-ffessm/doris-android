@@ -28,5 +28,7 @@
 	<string name="detailsfiche_elementview_couleur_gras"></string>
 	<string name="detailsfiche_elementview_couleur_lienfiche">#0168A1</string>
 	<string name="detailsfiche_elementview_couleur_liendefinition">#80AA00</string>
+	<string name="detailsfiche_elementview_couleur_lienparticipant">#EE4400</string>
+	
 	
 </resources>

@@ -320,7 +320,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			// section "Crédits"
 			StringBuilder sbCreditText = new StringBuilder();
 			final String urlString = Constants.getFicheFromIdUrl( entry.getNumeroFiche() ); 
+			sbCreditText.append("{{A:"+urlString+"}}");
 			sbCreditText.append(urlString);
+			sbCreditText.append("{{/A}}");
 			
 			sbCreditText.append("\n"+getString(R.string.detailsfiche_elementview_datecreation_label));
 			sbCreditText.append(entry.getDateCreation());
@@ -333,19 +335,21 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			for (IntervenantFiche intervenant : entry.getIntervenants()) {
 				intervenant.setContextDB(getHelper().getDorisDBHelper());
 				//sbCreditText.append("\n"+intervenant.getId());
-				sbCreditText.append("\n"+Constants.getTitreParticipant(intervenant.getRoleIntervenant() ) );				
+				sbCreditText.append("\n"+Constants.getTitreParticipant(intervenant.getRoleIntervenant() )+" : " );				
 				
 				intervenant.setContextDB(getHelper().getDorisDBHelper());
 				Participant participant = intervenant.getParticipant();
 				participant.setContextDB(getHelper().getDorisDBHelper());
 				
-				//sbCreditText.append(" - "+participant.getId());
-				sbCreditText.append(" : "+participant.getNom());
+				sbCreditText.append("{{P:"+participant.getId()+"}}");
+				sbCreditText.append(participant.getNom());
+				sbCreditText.append("{{/P}}");
+				
 			}
 			
-			SpannableString richtext = new SpannableString(sbCreditText.toString());
+			SpannableString richtext = Outils.textToSpannableStringDoris(context, sbCreditText.toString());
 			//richtext.setSpan(new RelativeSizeSpan(2f), 0, urlString.length(), 0);
-			richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
+			//richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
 			
 			addFoldableTextView(containerLayout, getString(R.string.detailsfiche_elementview_credit_label),richtext);
 			
