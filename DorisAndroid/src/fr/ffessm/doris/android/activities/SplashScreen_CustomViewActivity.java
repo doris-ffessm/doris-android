@@ -45,6 +45,7 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -52,6 +53,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -59,7 +61,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import android.preference.PreferenceManager;
@@ -72,7 +73,7 @@ import android.os.AsyncTask;
 import android.widget.LinearLayout;
 import fr.ffessm.doris.android.datamodel.SQLiteDataBaseHelper;
 //End of user code
-public class SplashScreen_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
+public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 //Start of user code additional implements SplashScreen_CustomViewActivity
 //End of user code
 {
@@ -212,9 +213,9 @@ public class SplashScreen_CustomViewActivity extends OrmLiteBaseActivity<OrmLite
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		// add options in the menu
-		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
-
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.splashscreen_customview_actions, menu);
+		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu SplashScreen_CustomViewActivity
 
 		//End of user code
@@ -226,15 +227,15 @@ public class SplashScreen_CustomViewActivity extends OrmLiteBaseActivity<OrmLite
     public boolean onOptionsItemSelected(MenuItem item) {
     	// behavior of option menu
         switch (item.getItemId()) {
-			case 777:
-		            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-		            return true;
-		
-		//Start of user code additional menu action SplashScreen_CustomViewActivity
+			case R.id.splashscreen_customview_action_preference:
+	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+	            return true;
+			//Start of user code additional menu action SplashScreen_CustomViewActivity
 
 		//End of user code
+			default:
+                return super.onOptionsItemSelected(item);
         }
-        return false;
     }
 
 	private void showToast(String message) {

@@ -45,13 +45,17 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -70,7 +74,7 @@ import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
 
-public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
+public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 // Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_additional_implements
 // End of user code
 {
@@ -89,6 +93,10 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteBaseActivi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detailentreeglossaire_elementview);
+
+		ActionBar actionBar = getSupportActionBar();
+	    actionBar.setDisplayHomeAsUpEnabled(true);
+
         definitionGlossaireId = getIntent().getExtras().getInt("definitionGlossaireId");
         
 		// Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_onCreate
@@ -130,8 +138,9 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteBaseActivi
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		// add options in the menu
-        menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
-
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.detailentreeglossaire_elementview_actions, menu);
+		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu DetailEntreeGlossaire_EditableElementViewActivity
 
 		//End of user code
@@ -141,18 +150,33 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteBaseActivi
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	// behavior of option menu
+		// behavior of option menu
         switch (item.getItemId()) {
-        	case 777:
-                    startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-                    return true;
-        
-		//Start of user code additional menu actionDetailEntreeGlossaire_ElementViewActivity
-
-		//End of user code
-        }
-        return false;
+			case R.id.detailentreeglossaire_elementview_action_preference:
+	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+	            return true;
+			//Start of user code additional menu action DetailEntreeGlossaire_ElementViewActivity
+	
+			//End of user code
+			default:
+                return super.onOptionsItemSelected(item);
+        }    	
     }
+
+	//  ------------ dealing with Up button
+	@Override
+	public Intent getSupportParentActivityIntent() {
+		//Start of user code getSupportParentActivityIntent DetailEntreeGlossaire_ClassListViewActivity
+		// navigates to the parent activity
+		return new Intent(this, Accueil_CustomViewActivity.class);
+		//End of user code
+	}
+	@Override
+	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+		//Start of user code onCreateSupportNavigateUpTaskStack DetailEntreeGlossaire_ClassListViewActivity
+		super.onCreateSupportNavigateUpTaskStack(builder);
+		//End of user code
+	}
 
 	// Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_additional_operations
 	// End of user code

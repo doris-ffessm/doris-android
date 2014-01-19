@@ -45,13 +45,17 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -59,7 +63,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code additional imports EtatModeHorsLigne_CustomViewActivity
@@ -84,14 +87,13 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.tools.Outils;
 //End of user code
-public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
+public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 //Start of user code additional implements EtatModeHorsLigne_CustomViewActivity
 	implements DataChangedListener
 //End of user code
 {
 	
 	//Start of user code constants EtatModeHorsLigne_CustomViewActivity
-	static final int APROPOS = 6;
 	
 	private static final String LOG_TAG = EtatModeHorsLigne_CustomViewActivity.class.getCanonicalName();
 	Handler mHandler;
@@ -104,6 +106,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.etatmodehorsligne_customview);
+		ActionBar actionBar = getSupportActionBar();
+	    actionBar.setDisplayHomeAsUpEnabled(true);
+
         //Start of user code onCreate EtatModeHorsLigne_CustomViewActivity
 
         createProgressZone();
@@ -350,13 +355,11 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		// add options in the menu
-		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
-
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.etatmodehorsligne_customview_actions, menu);
+		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu EtatModeHorsLigne_CustomViewActivity
-		menu.add(Menu.NONE, APROPOS, 2, R.string.a_propos_label).setIcon(android.R.drawable.ic_menu_info_details);
-		
-		//End of user code
+				//End of user code
         return super.onCreateOptionsMenu(menu);
     }
     
@@ -365,20 +368,36 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteBaseActivity<Or
     public boolean onOptionsItemSelected(MenuItem item) {
     	// behavior of option menu
         switch (item.getItemId()) {
-			case 777:
-		            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-		            return true;
-		
-		//Start of user code additional menu action EtatModeHorsLigne_CustomViewActivity
-			case APROPOS:
+			case R.id.etatmodehorsligne_customview_action_preference:
+	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+	            return true;
+			//Start of user code additional menu action EtatModeHorsLigne_CustomViewActivity
+        	case R.id.etatmodehorsligne_customview_action_a_propos:
+	        	//APropos aPropos = new APropos(getContext(), (Activity) getContext(), getHelper());
+				//aPropos.aProposAff();
 				AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
 				aPropos.aProposAff();				
-				break;
+				return true;
 		//End of user code
+			default:
+                return super.onOptionsItemSelected(item);
         }
-        return false;
     }
 
+	//  ------------ dealing with Up button
+	@Override
+	public Intent getSupportParentActivityIntent() {
+		//Start of user code getSupportParentActivityIntent EtatModeHorsLigne_CustomViewActivity
+		// navigates to the parent activity
+		return new Intent(this, Accueil_CustomViewActivity.class);
+		//End of user code
+	}
+	@Override
+	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+		//Start of user code onCreateSupportNavigateUpTaskStack EtatModeHorsLigne_CustomViewActivity
+		super.onCreateSupportNavigateUpTaskStack(builder);
+		//End of user code
+	}
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }

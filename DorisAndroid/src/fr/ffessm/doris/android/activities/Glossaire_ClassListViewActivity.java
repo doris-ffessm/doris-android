@@ -47,21 +47,31 @@ import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
+import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.LinearLayout;
 import android.preference.PreferenceManager;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.ActionBar;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SearchViewCompat;
+import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -73,14 +83,14 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedGlossaire_ClassListViewActivity_additionalimports
 // End of user code
 
-public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper> implements OnItemClickListener , ActivityWithIndexBar{
+public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener , ActivityWithIndexBar{
 	
 	private static final String LOG_TAG = Glossaire_ClassListViewActivity.class.getSimpleName();
 
 	//Start of user code constants Glossaire_ClassListViewActivity
 	//End of user code
 	// Search EditText
-    EditText inputSearch;
+    //EditText inputSearch;
     Glossaire_Adapter adapter;
 
 	Handler mHandler;
@@ -90,6 +100,9 @@ public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLite
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.glossaire_listview);
+
+		ActionBar actionBar = getSupportActionBar();
+	    actionBar.setDisplayHomeAsUpEnabled(true);
 
 		ListView list = (ListView) findViewById(R.id.glossaire_listview);
         list.setClickable(true);
@@ -101,34 +114,15 @@ public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLite
         list.setOnItemClickListener(this);
 
         list.setAdapter(adapter);
-		inputSearch = (EditText) findViewById(R.id.inputSearch_glossaire_listviewsearchrow);
 
-		/**
-         * Enabling Search Filter
-         * */
-        inputSearch.addTextChangedListener(new TextWatcher() {
-             
-            @Override
-            public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                // When user changed the Text
-                Glossaire_ClassListViewActivity.this.adapter.getFilter().filter(cs);  
-            }
-             
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-                    int arg3) {
-                // TODO Auto-generated method stub
-                 
-            }
-             
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                // TODO Auto-generated method stub                         
-            }
-        });
+		// Get the intent, verify the action and get the query
+        handleIntent(getIntent());
+
 		// add handler for indexBar
         mHandler = new IndexBarHandler(this);
 		//Start of user code onCreate additions Glossaire_ClassListViewActivity
+
+	    actionBar.setSubtitle("Glossaire");
 		//End of user code
 	}
 	
@@ -138,6 +132,36 @@ public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLite
 		//Start of user code onResume additions Glossaire_ClassListViewActivity
 		//End of user code
 		populateIndexBarHashMap();
+	}
+
+	@Override
+    protected void onNewIntent(Intent intent) {
+        // Because this activity has set launchMode="singleTop", the system calls this method
+        // to deliver the intent if this activity is currently the foreground activity when
+        // invoked again (when the user executes a search from this activity, we don't create
+        // a new instance of this activity, so the system delivers the search intent here)
+        handleIntent(intent);
+    }
+	
+	private void handleIntent(Intent intent) {
+		//Log.d(LOG_TAG,"Intent received");
+        if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+           // handles a click on a search suggestion; launches activity to show word
+           //  Intent wordIntent = new Intent(this, WordActivity.class);
+           // wordIntent.setData(intent.getData());
+           // startActivity(wordIntent);
+        } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            // handles a search query
+            String query = intent.getStringExtra(SearchManager.QUERY);
+    		Log.d(LOG_TAG,"ACTION_SEARCH Intent received for "+query);
+            Glossaire_ClassListViewActivity.this.adapter.getFilter().filter(query);
+        }
+    }	
+
+	@Override
+	public boolean onSearchRequested() {
+		Log.d(LOG_TAG,"onSearchRequested received");
+	    return super.onSearchRequested();
 	}
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
@@ -176,8 +200,38 @@ public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLite
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		// add options in the menu
-		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
-
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.glossaire_classlistview_actions, menu);
+		// Associate searchable configuration with the SearchView
+		// deal with compat
+		MenuItem  menuItem = (MenuItem ) menu.findItem(R.id.glossaire_classlistview_action_search);
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+	    SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+		searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()));
+	    searchView.setIconifiedByDefault(false);
+    	searchView.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
+			
+			@Override
+			public boolean onQueryTextSubmit(String arg0) {
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					// already done by normal
+				}
+				else{
+					Glossaire_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
+				}
+				return false;
+			}
+			
+			@Override
+			public boolean onQueryTextChange(String arg0) {
+				// TODO must be careful if the request might be long
+				// action on text change
+				Glossaire_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
+				return false;
+			}
+		});
+	    
+		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu Glossaire_ClassListViewActivity
 
 		//End of user code
@@ -187,19 +241,34 @@ public class Glossaire_ClassListViewActivity extends OrmLiteBaseActivity<OrmLite
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	// behavior of option menu
+		// behavior of option menu
         switch (item.getItemId()) {
-			case 777:
-		            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-		            return true;
-		
-		//Start of user code additional menu action Glossaire_ClassListViewActivity
+			case R.id.glossaire_classlistview_action_preference:
+	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+	            return true;
+			//Start of user code additional menu action Glossaire_ClassListViewActivity
 
 		//End of user code
+			default:
+                return super.onOptionsItemSelected(item);
         }
-        return false;
     }
 
+	//  ------------ dealing with Up button
+	@Override
+	public Intent getSupportParentActivityIntent() {
+		//Start of user code getSupportParentActivityIntent Glossaire_ClassListViewActivity
+		// navigates to the parent activity
+		return new Intent(this, Accueil_CustomViewActivity.class);
+		//End of user code
+	}
+	@Override
+	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+		//Start of user code onCreateSupportNavigateUpTaskStack Glossaire_ClassListViewActivity
+		super.onCreateSupportNavigateUpTaskStack(builder);
+		//End of user code
+	}
+	// -------------- handler (for indexBar)
 	@Override
 	public Handler getHandler() {
 		return mHandler;

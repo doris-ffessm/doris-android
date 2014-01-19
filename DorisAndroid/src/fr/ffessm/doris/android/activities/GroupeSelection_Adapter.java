@@ -53,7 +53,6 @@ import fr.ffessm.doris.android.datamodel.Groupe;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;

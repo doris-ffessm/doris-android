@@ -45,6 +45,7 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -52,6 +53,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -59,7 +61,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code additional imports Accueil_CustomViewActivity
@@ -96,14 +97,15 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 //End of user code
-public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHelper>
+public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 //Start of user code additional implements Accueil_CustomViewActivity
 	implements DataChangedListener
 //End of user code
 {
- 	
+	
 	//Start of user code constants Accueil_CustomViewActivity
 //	static final int TELECHARGE_FICHE_MENU_ID = 1;	
 	static final int TELECHARGE_PHOTO_FICHES_MENU_ID = 2;
@@ -312,12 +314,12 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         toGroupeSelectionView.putExtras(b);
         startActivity(toGroupeSelectionView);
 	}
-	public void onClickBtnListeParticipants(View view){
+	/*public void onClickBtnListeParticipants(View view){
 		startActivity(new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class));
 	}
 	public void onClickBtnGlossaire(View view){
 		startActivity(new Intent(this, Glossaire_ClassListViewActivity.class));
-	}
+	}*/
 	public void onClickBtnIconeSiteWeb1(View view){
 		String url = getString(R.string.accueil_customview_logo1_url);
 		if (!url.isEmpty()) {
@@ -625,45 +627,58 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		// add options in the menu
-		menu.add(Menu.NONE, 777, 0, R.string.preference_menu_title).setIcon(android.R.drawable.ic_menu_preferences);
-
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.accueil_customview_actions, menu);
+		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu Accueil_CustomViewActivity
 	//	menu.add(Menu.NONE, TELECHARGE_FICHE_MENU_ID, 1, R.string.menu_option_telecharge_fiches).setIcon(android.R.drawable.ic_menu_preferences);
-		menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.menu_option_telecharge_photofiches).setIcon(android.R.drawable.ic_menu_set_as);
+	//	menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.menu_option_telecharge_photofiches).setIcon(android.R.drawable.ic_menu_set_as);
     //    menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 4, R.string.menu_option_verifie_nouvelles_fiches).setIcon(android.R.drawable.ic_menu_preferences);
     //    menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 5, R.string.menu_option_reinitialise_a_partir_du_xml).setIcon(android.R.drawable.ic_menu_preferences);
-		menu.add(Menu.NONE, APROPOS, 2, R.string.a_propos_menu).setIcon(android.R.drawable.ic_menu_info_details);
-		menu.add(Menu.NONE, AIDE, 2, R.string.aide_menu).setIcon(android.R.drawable.ic_menu_help);
+	//	menu.add(Menu.NONE, APROPOS, 2, R.string.a_propos_label).setIcon(android.R.drawable.ic_menu_info_details);
+
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
+    
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	// behavior of option menu
         switch (item.getItemId()) {
-			case 777:
-		            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-		            return true;
-		
-		//Start of user code additional menu action Accueil_CustomViewActivity
-		/*	case TELECHARGE_FICHE_MENU_ID:
-				new TelechargeFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
-				break; */
-			case TELECHARGE_PHOTO_FICHES_MENU_ID:
-				TelechargePhotosFiches_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
+			case R.id.accueil_customview_action_preference:
+	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+	            return true;
+			//Start of user code additional menu action Accueil_CustomViewActivity
+	        case R.id.accueil_customview_action_telecharge_photofiches:
+	        	TelechargePhotosFiches_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
 				if(telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING)
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = 
 						(TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
-				break;
+
+	            return true;
+	        case R.id.accueil_customview_action_a_propos:
+	        	AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
+				aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label)+getContext().getString(R.string.app_name), aPropos.aProposAff(),	"file:///android_res/raw/apropos.html");
+				return true;
+	        case R.id.accueil_customview_action_participant:
+	        	startActivity(new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class));
+	        	return true;
+	        case R.id.accueil_customview_action_glossaire:
+	        	startActivity(new Intent(this, Glossaire_ClassListViewActivity.class));
+	        	return true;
+	        case R.id.accueil_customview_action_aide:
+	        	AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
+				aide.affichageMessageHTML(getContext().getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
+				return true;
+				
 		/*	case VERIFIE_NOUVELLES_FICHES_MENU_ID:
 				new VerifieNouvellesFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 				break;
 			case RESET_DB_FROM_XML_MENU_ID:
 				reinitializeDBFromPrefetched();
 				break; */
-			case APROPOS:
+		/*0000	case APROPOS:
 				AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
 				aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label)+getContext().getString(R.string.app_name), aPropos.aProposAff(),	"file:///android_res/raw/apropos.html");
 				break;
@@ -671,9 +686,11 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 				AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
 				aide.affichageMessageHTML(getContext().getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
 				break;
+				*/
 		//End of user code
+			default:
+                return super.onOptionsItemSelected(item);
         }
-        return false;
     }
 
 	private void showToast(String message) {

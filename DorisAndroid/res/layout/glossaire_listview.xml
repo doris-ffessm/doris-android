@@ -12,13 +12,13 @@
 
         <!-- Editext for Search -->
 
-        <EditText
+        <!--<EditText
             android:id="@+id/inputSearch_glossaire_listviewsearchrow"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.67"
             android:hint="@string/searchHint_glossaire_listviewsearchrow"
-            android:inputType="textVisiblePassword" />
+            android:inputType="textVisiblePassword" />--> 
 	<!--	Start of user code protectedglossaire_listviewsearchrow 
       -->
         <!-- <Button
