@@ -18,7 +18,7 @@
             android:background="@drawable/button_selected_background"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:src="@drawable/app_arbre_phylogenetique_gris" />
+            android:src="@drawable/ic_action_arbre_phylogenetique" />
 
         <Button
             android:id="@+id/groupselection_listview_button2"
