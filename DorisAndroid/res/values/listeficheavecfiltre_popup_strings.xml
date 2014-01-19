@@ -10,6 +10,6 @@
     <string name="listeficheavecfiltre_popup_filtreGeographique_avec">Uniquement les </string>
     
     
-    <string name="listeficheavecfiltre_classlistview_action_filterpopup_title">Filter</string>
+    <string name="listeficheavecfiltre_classlistview_action_filterpopup_title">Filtrer par espèce et zone géo.</string>
 	
 </resources>
