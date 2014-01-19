@@ -28,7 +28,7 @@
             android:contentDescription="ZoneGeographique icon"
             android:maxHeight="48dp"
             android:maxWidth="48dp"
-            android:src="@drawable/ic_launcher" >
+            android:src="@drawable/app_ic_launcher" >
 
         </ImageView>
 

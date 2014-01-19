@@ -50,6 +50,9 @@ import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.support.v4.app.TaskStackBuilder;
@@ -61,6 +64,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
@@ -71,13 +75,11 @@ import android.widget.ImageView;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -99,6 +101,7 @@ import java.util.List;
 import fr.ffessm.doris.android.activities.view.FoldableClickListener;
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
+import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.IntervenantFiche;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
@@ -121,8 +124,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_attributes
 	
 	final Context context = this;
-	//TODO :
-	Activity activity = this;
+	final Activity activity = this;
 	
 	protected int ficheNumero;
 	
@@ -193,9 +195,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
 		((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText("N° "+((Integer)entry.getNumeroFiche()).toString());					
 		((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer)entry.getEtatFiche()).toString());	
+		
+		
 		TextView btnEtatFiche = (TextView)  findViewById(R.id.detailsfiche_elementview_etatfiche);
-		final DetailsFiche_ElementViewActivity context = this;
-        
 		//1-Fiche en cours de rédaction;2-Fiche en cours de rédaction;3-Fiche en cours de rédaction;4-Fiche Publiée;5-Fiche proposée
 		switch(entry.getEtatFiche()){
         case 1 : case 2 : case 3 :
@@ -226,11 +228,29 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         	btnEtatFiche.setText(" "+entry.getEtatFiche()+" ");
         }
 		
-		
-		
+		ImageView picoEspeceReglementee = (ImageView)  findViewById(R.id.detailsfiche_elementview_picto_reglementee);
+		ImageView picoEspeceDanger = (ImageView)  findViewById(R.id.detailsfiche_elementview_picto_dangereuse);
+		if (entry.getPictogrammes().contains(Constants.PictoKind.PICTO_ESPECE_REGLEMENTEE.ordinal()+";")) {
+			picoEspeceReglementee.setVisibility(View.VISIBLE);
+			picoEspeceReglementee.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(context, R.string.picto_espece_reglementee_label, Toast.LENGTH_LONG).show();
+				}
+			});
+		}
+		if (entry.getPictogrammes().contains(Constants.PictoKind.PICTO_ESPECE_DANGEREUSE.ordinal()+";")) {
+			picoEspeceDanger.setVisibility(View.VISIBLE);
+			picoEspeceDanger.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(context, R.string.picto_espece_en_danger_label, Toast.LENGTH_LONG).show();
+				}
+			});
+		}
+			
+			
 		StringBuffer sbDebugText = new StringBuffer();
-
-		
 		
 		Collection<PhotoFiche> photosFiche = entry.getPhotosFiche(); 
 		if(photosFiche!=null && isOnCreate){
@@ -243,22 +263,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 				photoView.setOnClickListener(new OnImageClickListener(this.ficheId,pos,this));
 				photoView.setPadding(0, 0, 2, 0);
 				photoGallery.addView(photoView);
-				
-				
-				//sbDebugText.append("\nPhoto="+photoFiche.getCleURL()+"\n");
-				/*if(!insertedPhotosFiche.contains(photoFiche.getCleURL())){
-					View photoView = insertPhoto(photoFiche);
-					if(photoView!=null){
-						photoView.setOnClickListener(new OnImageClickListener(this.ficheId,pos,this));
-						photoGallery.addView(photoView);
-						insertedPhotosFiche.add(photoFiche.getCleURL());
-					}
-					else if(!askedBgDownload){
-						askedBgDownload = true;
-						new TelechargePhotosFiche_BgActivity(getApplicationContext(), this.getHelper(), entry, this).execute("");
-						break; // les autres ne sont probablement pas là non plus, pas la peine d'essayer
-					}
-				}*/
 				pos++;
 			}
 			
@@ -267,6 +271,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 		if(isOnCreate){
 			// do only on first creation
 			LinearLayout containerLayout =  (LinearLayout) findViewById(R.id.detailsfiche_sections_layout);
+			
 			// section Autres Dénominations
 			if(entry.getAutresDenominations() != null){
 				Collection<AutreDenomination> autresDenominations = entry.getAutresDenominations();
@@ -280,17 +285,22 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 						}
 						i++;
 					}
-					addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_autresdenominations_label), sbAutresDenominations.toString());
+					addFoldableTextView(containerLayout, getString(R.string.detailsfiche_elementview_autresdenominations_label), sbAutresDenominations.toString());
 					
 				}
 			}
-			// section issues de la fiche
+			// Section Groupe Phylogénique
+			if(entry.getGroupe().getNumeroGroupe() != 0){
+				addFoldableGroupeView(containerLayout, getString(R.string.detailsfiche_elementview_groupes_label), entry.getGroupe());
+			}
+			
+			// sections issues de la fiche
 			if(entry.getContenu() != null){
 				
 				for (SectionFiche sectionFiche : entry.getContenu()) {
 					//Log.d(LOG_TAG, "refreshScreenData() - titre : "+sectionFiche.getTitre());
 					//Log.d(LOG_TAG, "refreshScreenData() - texte : "+sectionFiche.getTexte());
-					addFoldableView(containerLayout, sectionFiche.getTitre(), sectionFiche.getTexte());
+					addFoldableTextView(containerLayout, sectionFiche.getTitre(), sectionFiche.getTexte());
 				}
 			}
 			
@@ -307,16 +317,18 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 					i++;
 				}
 				if (sbZonesGeographiques.toString().length() != 0) {
-					addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_zonesgeo_label), sbZonesGeographiques.toString());
+					addFoldableTextView(containerLayout, getString(R.string.detailsfiche_elementview_zonesgeo_label), sbZonesGeographiques.toString());
 				} else {
-					addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_zonesgeo_label), getString(R.string.detailsfiche_elementview_zonesgeo_aucune_label));
+					addFoldableTextView(containerLayout, getString(R.string.detailsfiche_elementview_zonesgeo_label), getString(R.string.detailsfiche_elementview_zonesgeo_aucune_label));
 				}
 			}
 			
 			// section "Crédits"
 			StringBuilder sbCreditText = new StringBuilder();
 			final String urlString = Constants.getFicheFromIdUrl( entry.getNumeroFiche() ); 
+			sbCreditText.append("{{A:"+urlString+"}}");
 			sbCreditText.append(urlString);
+			sbCreditText.append("{{/A}}");
 			
 			sbCreditText.append("\n"+getString(R.string.detailsfiche_elementview_datecreation_label));
 			sbCreditText.append(entry.getDateCreation());
@@ -329,21 +341,23 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			for (IntervenantFiche intervenant : entry.getIntervenants()) {
 				intervenant.setContextDB(getHelper().getDorisDBHelper());
 				//sbCreditText.append("\n"+intervenant.getId());
-				sbCreditText.append("\n"+Constants.getTitreParticipant(intervenant.getRoleIntervenant() ) );				
+				sbCreditText.append("\n"+Constants.getTitreParticipant(intervenant.getRoleIntervenant() )+" : " );				
 				
 				intervenant.setContextDB(getHelper().getDorisDBHelper());
 				Participant participant = intervenant.getParticipant();
 				participant.setContextDB(getHelper().getDorisDBHelper());
 				
-				//sbCreditText.append(" - "+participant.getId());
-				sbCreditText.append(" : "+participant.getNom());
+				sbCreditText.append("{{P:"+participant.getId()+"}}");
+				sbCreditText.append(participant.getNom());
+				sbCreditText.append("{{/P}}");
+				
 			}
 			
-			SpannableString richtext = new SpannableString(sbCreditText.toString());
+			SpannableString richtext = Outils.textToSpannableStringDoris(context, sbCreditText.toString());
 			//richtext.setSpan(new RelativeSizeSpan(2f), 0, urlString.length(), 0);
-			richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
+			//richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
 			
-			addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_credit_label),richtext);
+			addFoldableTextView(containerLayout, getString(R.string.detailsfiche_elementview_credit_label),richtext);
 			
 			isOnCreate = false;
 		}
@@ -371,7 +385,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	    inflater.inflate(R.menu.detailsfiche_elementview_actions, menu);
 		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu DetailsFiche_EditableElementViewActivity
-       
+
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
@@ -425,6 +439,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         menu.add(Menu.NONE, R.id.detailsfiche_elementview_action_fold_all_sections, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.ic_expand_close);
 		menu.add(Menu.NONE, R.id.detailsfiche_elementview_action_unfold_all_sections, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.ic_expand_open);
 
+
     }
     @Override  
     public boolean onContextItemSelected(MenuItem item) {  
@@ -443,7 +458,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	
 	// -------------- handler (for indexBar)
     
-    protected void addFoldableView(LinearLayout containerLayout, String titre, CharSequence texte){
+    protected void addFoldableTextView(LinearLayout containerLayout, String titre, CharSequence texte){
     	LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View convertView = inflater.inflate(R.layout.detailsfiche_elementview_foldablesection, null);
         
@@ -482,10 +497,103 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         
         containerLayout.addView(convertView);
     }
+    protected void foldAll(){
+    	for (FoldableClickListener foldable : allFoldable) {
+			foldable.fold();
+		}
+    }
+    protected void unfoldAll(){
+    	for (FoldableClickListener foldable : allFoldable) {
+			foldable.unfold();
+		}
+    }
+    protected void addFoldableGroupeView(LinearLayout containerLayout, String titre, final Groupe groupe){
+    	LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View convertView = inflater.inflate(R.layout.detailsfiche_elementview_foldablesection_2icones, null);
+        
+        TextView titreText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_titre);
+        titreText.setText(titre);
+        
+        RelativeLayout sectionIcones = (RelativeLayout) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_icones);
+        
+        if (!Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_fiche_aff_details_pardefaut, false)){
+        	sectionIcones.setVisibility(View.GONE); // par défaut invisible
+        } else {
+        	sectionIcones.setVisibility(View.VISIBLE);
+        }
+        
+        final Groupe groupePere = getHelper().getGroupeDao().queryForId(groupe.getGroupePere().getId());
+ 
+        ImageButton icone1 = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldableicone1);
+        TextView texte1 = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletexte1);
+        ImageButton icone2 = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldableicone2);
+        TextView texte2 = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletexte2);
+        
+        if (groupe.getNumeroSousGroupe() == 0){
+        	int identifierIcone1Groupe = context.getResources().getIdentifier(groupe.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw",  context.getPackageName());
+        	Bitmap bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(identifierIcone1Groupe));
+        	icone1.setImageBitmap(bitmap);
+        	icone1.setBackgroundResource(R.drawable.groupe_icon_background);
+        	texte1.setText(groupe.getNomGroupe());
+        	icone1.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+					ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupe.getId());
+			        ed.commit();
+			        startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+				}
+			});
+        	icone2.setVisibility(View.GONE);
+        	texte2.setVisibility(View.GONE);
+        } else {
+        	int identifierIcone1Groupe = context.getResources().getIdentifier(groupePere.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw",  context.getPackageName());
+        	Bitmap bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(identifierIcone1Groupe));
+        	icone1.setImageBitmap(bitmap);
+        	icone1.setBackgroundResource(R.drawable.groupe_icon_background);
+        	texte1.setText(groupePere.getNomGroupe());
+        	icone1.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+					ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupePere.getId());
+			        ed.commit();
+			        startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+				}
+			});
+        	
+           	int identifierIcone2Groupe = context.getResources().getIdentifier(groupe.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw",  context.getPackageName());
+           	bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(identifierIcone2Groupe));
+        	icone2.setImageBitmap(bitmap);
+        	icone2.setBackgroundResource(R.drawable.groupe_icon_background);
+        	texte2.setText(groupe.getNomGroupe());
+        	icone2.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+					ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupe.getId());
+			        ed.commit();
+			        startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+				}
+			});
+        }
+        
+        ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
+        
+        FoldableClickListener foldable = new FoldableClickListener(sectionIcones, foldButton);
+        allFoldable.add(foldable);
+        foldButton.setOnClickListener(foldable);
+        
+        LinearLayout titreLinearLayout = (LinearLayout) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_linearlayout);
+        titreLinearLayout.setOnClickListener(foldable);
+        // enregistre pour réagir au click long
+        registerForContextMenu(foldButton);
+        registerForContextMenu(titreLinearLayout);
+        
+        containerLayout.addView(convertView);
+    }
     
     View insertPhoto(PhotoFiche photoFiche){
-    	
-    	
     	LinearLayout layout = new LinearLayout(getApplicationContext());
         layout.setLayoutParams(new LayoutParams(200, 200));
         layout.setGravity(Gravity.CENTER);
@@ -506,8 +614,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     		// pas préchargée en local pour l'instant, cherche sur internet
     		Picasso.with(this)
     			.load(PhotoFiche.VIGNETTE_BASE_URL+photoFiche.getCleURL())
-				.placeholder(R.drawable.doris_large)  // utilisation de l'image par defaut pour commencer
-				.error(R.drawable.doris_large_pas_connecte)
+				.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
+				.error(R.drawable.doris_icone_doris_large_pas_connecte)
 				.fit()
 				.centerInside()
     			.into(imageView);
@@ -516,16 +624,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         layout.addView(imageView);
         return layout;
    
-    }
-    protected void foldAll(){
-    	for (FoldableClickListener foldable : allFoldable) {
-			foldable.fold();
-		}
-    }
-    protected void unfoldAll(){
-    	for (FoldableClickListener foldable : allFoldable) {
-			foldable.unfold();
-		}
     }
     
     public void dataHasChanged(String textmessage){

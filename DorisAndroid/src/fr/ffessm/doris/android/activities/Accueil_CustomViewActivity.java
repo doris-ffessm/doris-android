@@ -70,7 +70,6 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 
-import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask.Status;
@@ -79,9 +78,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -491,7 +487,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		if(filtreCourantId==1){
 			sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreEspece_sans));
         }
-		else{
+		else {
 			Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
 			sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec)+" "+groupeFiltreCourant.getNomGroupe().trim());
 		}
@@ -504,6 +500,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         	ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
         	sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec)+" "+currentZoneFilter.getNom().trim());
         }
+        
         // TODO rappeler le dernier text recherché
     	TextView tvRecherchePrecedente = (TextView)findViewById(R.id.accueil_recherche_precedente_details);
     	tvRecherchePrecedente.setText(sbRecherchePrecedente.toString());
@@ -561,7 +558,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    	while (it.hasNext()) {
 	    		sb.append("Date base locale : " + it.next().getDateBase()+"\n");
 			}
-	    	
+	    	/*
 	    	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
 	    	sb.append("Nombres de fiches dans la base locale : "+ficheDao.countOf());
 	     	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
@@ -569,9 +566,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    	sb.append("\n\tNombres de photos téléchargées : "+Outils.getVignetteCount(this.getApplicationContext()));
 	    	double sizeInMiB = Outils.getPhotosDiskUsage(getApplicationContext())/(double)(1024.0*1024.0);
 	    	sb.append("\t("+String.format("%.2f", sizeInMiB)+" MiB)");
-	    	
+	    	*/
 	    	
 	    	// Test pour voir où est le cache Picasso
+	    	/*
 	    	sb.append("\n- - - - - -\n");
 	    	sb.append(getApplicationContext().getCacheDir().getAbsolutePath()+"\n");
 	     	for (File child:getApplicationContext().getCacheDir().listFiles()) {
@@ -587,11 +585,30 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	     			}
 	     		}
 	     	}
-	     	
+	     	*/
+	    	
 	     	sb.append("- - - - - -\n");
 	     	sb.append(getApplicationContext().getFilesDir().getAbsolutePath()+"\n");
-	     	for (File child:getApplicationContext().getFilesDir().listFiles()) {
-	     		sb.append(child.getAbsolutePath()+"\n");
+	     	sb.append(getApplicationContext().getFilesDir().listFiles().length+"\n");
+	     	sb.append("- - - - - -\n");
+	     	URI uri = null;
+	     	try {
+	     		uri = new URI("file:///android_res/raw/images_groupe_1.gif");
+	     	} catch (URISyntaxException e) {
+	     		
+	     	}
+	     	File file = new File(uri);
+	     	sb.append(file.getAbsolutePath()+"\n");
+	     	sb.append("dir ? : "+file.isDirectory()+" - file ? : "+file.isFile()+"\n");
+	     	if (file.isDirectory()) {
+		     	for (File child:file.listFiles()) {
+		     		sb.append(child.getAbsolutePath()+"\n");
+		     		if (child.isDirectory()) {
+			     		for (File subChild:child.listFiles()) {
+			     			sb.append(" - "+subChild.getAbsolutePath()+"\n");
+			     		}
+		     		}
+		     	}
 	     	}
 	     	// TODO : Piste pour sauvegarder les images après téléchargement
 	     	// Cf. http://stackoverflow.com/questions/19345576/cannot-draw-recycled-bitmaps-exception-with-picasso

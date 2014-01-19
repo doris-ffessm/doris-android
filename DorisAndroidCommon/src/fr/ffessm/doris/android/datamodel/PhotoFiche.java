@@ -120,6 +120,17 @@ public class PhotoFiche {
 	public static final String VIGNETTE_BASE_URL = SERVEUR_BASE_URL+ "photos_fiche_vig";
 	public static final String MOYENNE_BASE_URL = SERVEUR_BASE_URL+ "photos_fiche_moy";
 	public static final String GRANDE_BASE_URL = SERVEUR_BASE_URL+ "photos";
+	
+	// Pas enregistré sur PhotoFiche mais permet de faire passer l'info "proprement" à Fiche
+	public boolean estPhotoPrincipale = false;
+	public PhotoFiche(java.lang.String cleURL, java.lang.String titre, java.lang.String description,
+			boolean estPhotoPrincipale) {
+		super();
+		this.cleURL = cleURL;
+		this.titre = titre;
+		this.description = description;
+		this.estPhotoPrincipale = estPhotoPrincipale;
+	}
 	// End of user code
 	
 	public PhotoFiche() {} // needed by ormlite

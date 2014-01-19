@@ -97,16 +97,36 @@
 			            android:gravity="right"
 	        			android:layout_marginRight="2dp"
 					    >
-				    <TextView
-			            android:id="@+id/detailsfiche_elementview_etatfiche"
-			            android:gravity="right"
-			            android:padding="3dip"
-					    android:layout_height="wrap_content"
-		            	android:layout_width="wrap_content"
-	        			android:layout_marginRight="2dp"
-	        			android:background="@drawable/button_background"
-	        			android:textColor="?android:attr/textColorSecondary"
-	        			android:text="EtatFiche"/>
+
+						<ImageView
+						    android:id="@+id/detailsfiche_elementview_picto_reglementee"
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:gravity="right"
+				        	android:padding="3dip"
+				        	android:visibility="gone"
+						    android:src="@drawable/doris_picto_espece_reglementee" />
+						
+						<ImageView
+						    android:id="@+id/detailsfiche_elementview_picto_dangereuse"
+						    android:layout_width="wrap_content"
+						    android:layout_height="wrap_content"
+						    android:gravity="right"
+				        	android:padding="3dip"
+				        	android:visibility="gone"
+						    android:src="@drawable/doris_picto_espece_dangereuse" />
+
+					    <TextView
+					        android:id="@+id/detailsfiche_elementview_etatfiche"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:layout_marginRight="2dp"
+					        android:background="@drawable/button_background"
+					        android:gravity="right"
+					        android:padding="3dip"
+					        android:text="EF"
+					        android:textColor="?android:attr/textColorSecondary" />
+
 					</LinearLayout>
 
             	 </TableRow>

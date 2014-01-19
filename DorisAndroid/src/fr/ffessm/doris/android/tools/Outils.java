@@ -20,10 +20,12 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import fr.ffessm.doris.android.activities.DetailEntreeGlossaire_ElementViewActivity;
 import fr.ffessm.doris.android.activities.DetailsFiche_ElementViewActivity;
+import fr.ffessm.doris.android.activities.DetailsParticipant_ElementViewActivity;
 import fr.ffessm.doris.android.activities.Glossaire_ClassListViewActivity;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import android.app.Activity;
 import android.content.Context;
@@ -72,31 +74,6 @@ public class Outils {
 	    P0, P1, P2, P3, P4, P5, P6 
 	}
 	
-	/**
-	 * renvoie l'image principale actuellement disponible pour une fiche donnée, 
-	 * renvoie null si aucune disponible
-	 * @param inContext
-	 * @param fiche
-	 * @return
-	 */
-	public static Bitmap getAvailableImagePrincipaleFiche(Context inContext, Fiche fiche){
-		
-		Bitmap result = null;		
-		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);
-		
-		PhotoFiche imagePrincipale;
-		imagePrincipale = fiche.getPhotoPrincipale();
-		if(imagePrincipale != null){
-			File vignetteImage = new File(imageFolder, imagePrincipale.getCleURL());
-			if(vignetteImage.exists()){
-				result = BitmapFactory.decodeFile(vignetteImage.getPath());
-			}
-		}
-		// utilise l'icone de base en tant que substitut
-		// TODO prendre l'icone du groupe auquel appartient l'espèce ?
-		// result = BitmapFactory.decodeResource(inContext.getResources(), R.drawable.ic_launcher);
-		return result;
-	}
 	
 	public static File getImageFolder(Context inContext, ImageType inImageType) { 
 		switch (inImageType) {
@@ -121,31 +98,6 @@ public class Outils {
 	}
 
 	
-	public static boolean isAvailableImagePrincipaleFiche(Context inContext, Fiche fiche){
-		
-		PhotoFiche imagePrincipale;
-		imagePrincipale = fiche.getPhotoPrincipale();
-		return isAvailableImagePhotoFiche(inContext, imagePrincipale);		
-	}
-	
-	
-	public static Bitmap getAvailableImagePhotoFiche(Context inContext, PhotoFiche photofiche){
-		
-		Bitmap result = null;		
-		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);
-		
-		if(photofiche != null){
-			File vignetteImage = new File(imageFolder, photofiche.getCleURL());
-			if(vignetteImage.exists()){
-				result = BitmapFactory.decodeFile(vignetteImage.getPath());
-			}
-		}
-		// utilise l'icone de base en tant que substitut
-		// TODO prendre l'icone du groupe auquel appartient l'espèce ?
-		// result = BitmapFactory.decodeResource(inContext.getResources(), R.drawable.ic_launcher);
-		return result;
-	}
-	
 	public static boolean isAvailableImagePhotoFiche(Context inContext, PhotoFiche photofiche){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - photofiche : "+ photofiche );
     	
@@ -168,8 +120,6 @@ public class Outils {
 	}
 
 	public static boolean isAvailableImagePhotoFiche(Context inContext, PhotoFiche inPhotofiche, ImageType inImageType){
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - photofiche : "+ photofiche + " - ImageType : " + inImageType);
-    	
 		switch(inImageType){
 		case VIGNETTE :
 			return isAvailableVignettePhotoFiche(inContext, inPhotofiche);
@@ -466,63 +416,6 @@ public class Outils {
 	    }
 	}
 	
-	public static long getNbVignettesAPrecharger(Context inContext,  OrmLiteDBHelper helper){
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getNbVignettesAPrecharger() - début" );
-    	
-		long nbPhotosAPrecharger;
- 	
-		switch(PrecharMode.valueOf(Outils.getParamString(inContext, R.string.pref_key_mode_precharg_region_ttzones,"P1"))) {
-		case P1 :
-			nbPhotosAPrecharger = helper.getFicheDao().countOf();
-			break;
-		case P2 :
-		case P3 :
-			nbPhotosAPrecharger = helper.getPhotoFicheDao().countOf();
-			break;
-		default:
-			nbPhotosAPrecharger = 0;
-		}
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getNbVignettesAPrecharger() - nbPhotosAPrecharger : " + nbPhotosAPrecharger );
-		return nbPhotosAPrecharger;
-	}
-	
-	public static long getNbMedResAPrecharger(Context inContext,  OrmLiteDBHelper helper){
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getNbMedResAPrecharger() - début" );
-    	
-		long nbPhotosAPrecharger;
- 
-		switch(PrecharMode.valueOf(Outils.getParamString(inContext, R.string.pref_key_mode_precharg_region_ttzones,"P1"))) {
-		case P3 :
-			nbPhotosAPrecharger = helper.getFicheDao().countOf();
-			break;
-		case P4 :
-		case P5 :
-			nbPhotosAPrecharger = helper.getPhotoFicheDao().countOf();
-			break;
-		default:
-			nbPhotosAPrecharger = 0;
-		}
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getNbMedResAPrecharger() - nbPhotosAPrecharger : " + nbPhotosAPrecharger );
-		return nbPhotosAPrecharger;
-	}
-	public static long getNbHiResAPrecharger(Context inContext,  OrmLiteDBHelper helper){
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getNbHiResAPrecharger() - début" );
-    	
-		long nbPhotosAPrecharger;
- 
-		switch(PrecharMode.valueOf(Outils.getParamString(inContext, R.string.pref_key_mode_precharg_region_ttzones,"P1"))) {
-		case P5 :
-			nbPhotosAPrecharger = helper.getFicheDao().countOf();
-			break;
-		case P6 :
-			nbPhotosAPrecharger = helper.getPhotoFicheDao().countOf();
-			break;
-		default:
-			nbPhotosAPrecharger = 0;
-		}
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getNbHiResAPrecharger() - nbPhotosAPrecharger : " + nbPhotosAPrecharger );
-		return nbPhotosAPrecharger;
-	}
 	
 	/* Lecture Paramètres */
 	public static String getStringKeyParam(Context inContext, int inParam) {
@@ -742,63 +635,6 @@ public class Outils {
 			}
 		}
 	}
-	/**
-	 * enregistre le nombre de photos déclarées présentes (stockées dansles préférences)
-	 * @param inContext
-	 * @param inIdZoneGeo
-	 * @param inPrincipale
-	 * @param nouvelleValeur
-	 */
-	public static void setDejaLaQteZoneGeo(Context inContext, int inIdZoneGeo, Boolean inPrincipale, int nouvelleValeur){
-		if (inPrincipale) {
-			switch(inIdZoneGeo){
-			case -1 :
-				// ERREUR, pas possible pour la zone générale, calculé à partir des autres zones
-				// TODO probablement pas terrible comme précision à cause des photos des fiches présentes dans plusieurs zone
-				break;
-			case 1 :
-				setParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_france, nouvelleValeur);
-				break;
-			case 2 :
-				setParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_eaudouce, nouvelleValeur);
-				break;
-			case 3 :
-				setParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_indopac, nouvelleValeur);
-				break;
-			case 4 :
-				setParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_caraibes, nouvelleValeur);
-				break;
-			case 5 :
-				setParamInt(inContext, R.string.pref_key_nbphotosprinc_recues_atlantno, nouvelleValeur);
-				break;
-			default :
-				break;
-			}
-		} else {
-			switch(inIdZoneGeo){
-			case -1 :
-				// ERREUR, pas possible pour la zone générale, calculé à partir des autres zones
-				// TODO probablement pas terrible comme précision à cause des photos des fiches présentes dans plusieurs zone
-			case 1 :
-				setParamInt(inContext, R.string.pref_key_nbphotos_recues_france, nouvelleValeur);
-				break;
-			case 2 :
-				setParamInt(inContext, R.string.pref_key_nbphotos_recues_eaudouce, nouvelleValeur);
-				break;
-			case 3 :
-				setParamInt(inContext, R.string.pref_key_nbphotos_recues_indopac, nouvelleValeur);
-				break;
-			case 4 :
-				setParamInt(inContext, R.string.pref_key_nbphotos_recues_caraibes, nouvelleValeur);
-				break;
-			case 5 :
-				setParamInt(inContext, R.string.pref_key_nbphotos_recues_atlantno, nouvelleValeur);
-				break;
-			default :
-				break;
-			}
-		}
-	}
 	
 	
 	/**
@@ -844,7 +680,7 @@ public class Outils {
 		}
 	}
 	// TODO : Crado aussi
-	public static int getKeyDataDejaLaZoneGeo(Context inContext, int inIdZoneGeo, Boolean inPrincipale){
+	public static int getKeyDataRecuesZoneGeo(Context inContext, int inIdZoneGeo, Boolean inPrincipale){
 		if (inPrincipale) {
 			switch(inIdZoneGeo){
 			case 1 :
@@ -1130,6 +966,27 @@ public class Outils {
 	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.LIENWEB,ts.positionDebut,posFinTexteFinal,
 	        				ts.info));
 	        	}
+	        	else if (balise.startsWith("P:")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posDepTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	
+	        		pileDerniereBalise.add(new TextSpan(TextSpan.SpanType.PARTICIPANT,posDepTexteFinal,0,
+	        				balise.substring(2, balise.length())));
+	        	}
+	        	else if (balise.equals("/P")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posFinTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        		
+	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+	        		
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.PARTICIPANT,ts.positionDebut,posFinTexteFinal,
+	        				ts.info));
+	        	}
 	        	
 	        } // fin du While
 	        
@@ -1277,6 +1134,25 @@ public class Outils {
 	        	else if ( ts.spanType == TextSpan.SpanType.LIENWEB) {
 	        		richtext.setSpan(new URLSpan("http://"+ts.info), ts.positionDebut, ts.positionFin, 0);  
 	        	}
+	        	else if ( ts.spanType == TextSpan.SpanType.PARTICIPANT ) {
+
+	        		ClickableSpan clickableSpan = new ClickableSpan() {  
+			            @Override  
+			            public void onClick(View view) {  
+			    	        Intent toDetailView = new Intent(context, DetailsParticipant_ElementViewActivity.class);
+			    	        
+			    	        Bundle b = new Bundle();
+			    	        b.putInt("participantId", Integer.valueOf(ts.info) );
+			    			
+			    	        toDetailView.putExtras(b);
+			    			context.startActivity(toDetailView);
+			            }  
+			        };
+			     	//Log.d(LOG_TAG, "addFoldableView() - SpannableString : "+ts.positionDebut + " - " + ts.positionFin);
+			    	
+					richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
+					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_lienparticipant))), ts.positionDebut, ts.positionFin, 0);  
+	        	}
 	        }
 	        
 	        return richtext;
@@ -1288,7 +1164,7 @@ public class Outils {
     public static class TextSpan {
     	
     	public enum SpanType {
-    	    FICHE, ITALIQUE, GRAS, SOULIGNE, SAUTDELIGNE, DEFINITION, LIENWEB
+    	    FICHE, ITALIQUE, GRAS, SOULIGNE, SAUTDELIGNE, DEFINITION, LIENWEB, PARTICIPANT
     	} 
     	
     	SpanType spanType = null;

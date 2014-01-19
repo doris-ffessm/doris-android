@@ -150,6 +150,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 		ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter(); 
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
     	updateFilterInActionBar();
+
 		//End of user code
 		populateIndexBarHashMap();
 	}

@@ -73,7 +73,7 @@ public class Outils {
 	public static Log log = LogFactory.getLog(Outils.class);
     
 
-    public static boolean getFichierUrl(String inUrl, String inFichierRetour) {
+    public static boolean getFichierFromUrl(String inUrl, String inFichierRetour) {
     	//log.debug("getFichierUrl()- Début");
     	log.info("getFichierUrl()- url : " + inUrl);
     	log.info("getFichierUrl()- Fichier à Retourner : " + inFichierRetour);
@@ -129,7 +129,7 @@ public class Outils {
     }
 
 
-	public static String getFichier(File inFichier) {
+	public static String getFichierTxtFromDisk(File inFichier) {
     	//log.debug("getFichier()- Début");
     	log.info("getFichier()- Fichier : " + inFichier);
     	

@@ -89,6 +89,7 @@ public class Constants {
     	RESPONSABLE_REGIONAL,
     	RESPONSABLE_NATIONAL
     }
+    
     private final static String REDACTEUR_PRINCIPAL_LIB = "Rédacteur Principal";
 	private final static String REDACTEUR_LIB = "Rédacteur";
 	private final static String VERIFICATEUR_LIB = "Vérificateur";
@@ -96,6 +97,13 @@ public class Constants {
 	private final static String RESPONSABLE_REGIONAL_LIB = "Responsable Régional";
 	private final static String RESPONSABLE_NATIONAL_LIB = "Responsable National";
     
+    public enum PictoKind {
+    	PICTO_ESPECE_REGLEMENTEE,
+    	PICTO_ESPECE_DANGEREUSE
+    }
+    private final static String PICTO_ESPECE_REGLEMENTEE_LIB = "Espèce réglementée";
+	private final static String PICTO_ESPECE_DANGEREUSE_LIB = "Espèce dangereuse";
+
 	/*
 	 * Accession aux Constantes
 	 */
@@ -280,5 +288,12 @@ public class Constants {
 		
 		return null;
     }
-	
+    
+    public static PictoKind getTypePicto(String pictoTag) {
+    	pictoTag.trim();
+    	if (pictoTag.equalsIgnoreCase(PICTO_ESPECE_REGLEMENTEE_LIB)) return PictoKind.PICTO_ESPECE_REGLEMENTEE;
+    	if (pictoTag.equalsIgnoreCase(PICTO_ESPECE_DANGEREUSE_LIB)) return PictoKind.PICTO_ESPECE_DANGEREUSE;
+ 	
+		return null;
+    }
 }

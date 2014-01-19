@@ -17,7 +17,7 @@
         android:adjustViewBounds="true"
         android:contentDescription="Groupe icon"
 		android:scaleType="fitCenter"
-        android:src="@drawable/ic_launcher" >
+        android:src="@drawable/app_ic_launcher" >
     </ImageView>
     <RelativeLayout
 		    android:layout_width="match_parent"
@@ -65,7 +65,7 @@
 	        android:layout_marginLeft="4dip"
 	        android:layout_marginRight="4dip"
 	        android:layout_marginTop="4dip"
-	        android:src="@drawable/expander_ic_minimized" >
+	        android:src="@drawable/app_expander_ic_minimized" >
     	</ImageView>
 		<ImageButton
 		    android:id="@+id/groupeselection_btnSelect"

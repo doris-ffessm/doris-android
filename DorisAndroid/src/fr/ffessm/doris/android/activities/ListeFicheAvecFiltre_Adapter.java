@@ -315,7 +315,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 					Picasso.with(context)
 						.load(Outils
 						.getVignetteFile(context, photoPrincipale))
-						.placeholder(R.drawable.ic_launcher)  // utilisation de l'image par defaut pour commencer
+						.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
 						.into(ivIcon);
 				} catch (IOException e) {
 				}
@@ -324,14 +324,14 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         		// pas préchargée en local pour l'instant, cherche sur internet
         		Picasso.with(context)
         			.load(PhotoFiche.VIGNETTE_BASE_URL+photoPrincipale.getCleURL())
-					.placeholder(R.drawable.ic_launcher)  // utilisation de l'image par defaut pour commencer
-					.error(R.drawable.doris_large_pas_connecte)
+					.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
+					.error(R.drawable.doris_icone_doris_large_pas_connecte)
         			.into(ivIcon);
         	}
         }
         else{
         	// remet l'icone de base
-        	ivIcon.setImageResource(R.drawable.ic_launcher);
+        	ivIcon.setImageResource(R.drawable.app_ic_launcher);
         }
        
         

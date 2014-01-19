@@ -51,6 +51,7 @@ import com.j256.ormlite.stmt.SelectArg;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Collection;
 
@@ -59,9 +60,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import fr.ffessm.doris.android.datamodel.associations.*;
-
-// Start of user code additional import for Fiche
-
 import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
@@ -250,13 +248,21 @@ public class Fiche {
 		return StringUtils.replaceEach(this.nomScientifique, new String[]{"{{g}}","{{/g}}","{{i}}","{{/i}}"}, new String[]{"","","",""});
 	}
 	
-
+	/** renvoie le couple Ref - État Fiche
+	 * 
+	 * @return
+	 */
+	public String getRefEtatFiche(){
+		return numeroFiche+"-"+etatFiche;
+	}
 	
 	
-	public void getFicheFromHtml(String htmlFiche, List<Groupe> listeGroupes, List<Participant> listeParticipants) throws SQLException{
+	public void getFicheFromHtml(String htmlFiche, HashSet<Groupe> listeGroupes, HashSet<Participant> listeParticipants) throws SQLException{
 		log.trace("getFicheFromHtml() - Début");
 		
     	int i;
+    	
+		// TODO : si un jour on veut avoir la liste inversée des fiches
     	StringBuilder sbListeLiensVersFiches = new StringBuilder();
     	
     	htmlFiche = Outils.nettoyageBalises(htmlFiche);
@@ -284,8 +290,8 @@ public class Fiche {
 		}
 		htmlFiche = tableResultats.toString();
 				
-    	// Permet ensuite de d'utiliser la mise ne forme
-    	// mais le prix à payer est de supprimer à la main partout où elle n'est pas necessaire
+    	// Permet ensuite d'utiliser la mise en forme
+    	// mais le prix à payer est de supprimer à la main partout où elle n'est pas nécessaire
     	htmlFiche = Outils.remplacementBalises(htmlFiche, true);
     	
     	//log.debug("getFiche() - htmlFiche : " + htmlFiche.substring(0, 200));
@@ -293,7 +299,7 @@ public class Fiche {
 		// Utilisation du parser Jericho
 		source=new Source(htmlFiche);
 		
-		// Necessaire pour trouver ensuite les pères
+		// Nécessaire pour trouver ensuite les pères
 		source.fullSequentialParse();
 
 		// Recherche TD dont la class est code_fiche
@@ -351,10 +357,11 @@ public class Fiche {
 						for (Element elementTR : listeElementsHG_TR) {
 							i++;
 							if (i == 1) {
-								//TODO: pour chaque img contenu on a un petit logo indiquant si l'espèce est protégée, réglementée, dangeureuse
+								//TODO: pour chaque IMG contenu on a un petit logo indiquant si l'espèce est protégée, réglementée, dangereuse
 								List<? extends Element> listeElementsTR_IMG = elementTR.getAllElements(HTMLElementName.IMG);
 								for (Element elementImg : listeElementsTR_IMG) {
 									log.info("getFicheFromHtml() - ficheTagInfo : " + elementImg.getAttributeValue("alt")+" + "+elementImg.getAttributeValue("src"));
+									pictogrammes += Constants.getTypePicto(elementImg.getAttributeValue("alt")).ordinal() + ";";
 								}
 							}
 							if (i == 2) {
@@ -395,7 +402,7 @@ public class Fiche {
 				//Description Gauche et Droite
 				case 2 :
 					
-					//Le grand pere du 1er TD de class Normal est le TBODY des Détails
+					//Le grand-père du 1er TD de class Normal est le TBODY des Détails
 					Element ElementsMG_normal=elementTable_TABLE.getFirstElementByClass("normal");
 					//log.debug("getFiche() - ElementsMG_rubrique : " + ElementsMG_normal.toString().substring(0, Math.min(ElementsMG_normal.toString().length(),20)));
 					Element ElementsMG=ElementsMG_normal.getParentElement().getParentElement();
@@ -448,7 +455,7 @@ public class Fiche {
 									//<../fiche2.asp?fiche_numero=289>
 									contenuTexte = contenuTexte.replaceAll("<[^>]*fiche_numero=([^>]*)>", "{{$1}}").trim();
 	
-									// parfois il y a encore d'autre <a ...> qui pointent vers rien
+									// parfois il y a encore d'autre <A ...> qui pointent vers rien
 									// On les enlève
 									contenuTexte = contenuTexte.replaceAll("<[^>]*>", "").trim();
 									
@@ -761,7 +768,7 @@ public class Fiche {
 		
 		
 		
-		
+		// TODO
 		if (sbListeLiensVersFiches.length() !=0){
 			setNumerofichesLiees(sbListeLiensVersFiches.toString());									
 		}
