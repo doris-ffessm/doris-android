@@ -19,6 +19,7 @@
       <dataAttributes name="dateModification" type="//@dataModel/@dataClasses.11"/>
       <dataAttributes name="numerofichesLiees" documentation="numéros des fiches liées séparé par des point virgules" type="//@dataModel/@dataClasses.11"/>
       <dataAttributes name="textePourRechercheRapide" documentation="Texte précalculé pour optimiser les recherches (sans accents, sans majuscules) avec autres dénominations" type="//@dataModel/@dataClasses.12"/>
+      <dataAttributes name="pictogrammes" documentation="id des pictogrammes applicables à cette fiche séparés par des points virgules" type="//@dataModel/@dataClasses.11"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="AutreDenomination">
       <dataReferences name="fiche" opposite="//@dataModel/@dataAssociations.4" type="//@dataModel/@dataClasses.0"/>

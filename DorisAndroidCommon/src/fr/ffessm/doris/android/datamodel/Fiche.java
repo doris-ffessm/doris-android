@@ -93,6 +93,7 @@ public class Fiche {
 	public static final String XML_ATT_DATEMODIFICATION = "dateModification";
 	public static final String XML_ATT_NUMEROFICHESLIEES = "numerofichesLiees";
 	public static final String XML_ATT_TEXTEPOURRECHERCHERAPIDE = "textePourRechercheRapide";
+	public static final String XML_ATT_PICTOGRAMMES = "pictogrammes";
 	public static final String XML_REF_PHOTOSFICHE = "photosFiche";
 	public static final String XML_REF_ZONESGEOGRAPHIQUES = "zonesGeographiques";
 	public static final String XML_REF_ZONESOBSERVATION = "zonesObservation";
@@ -147,6 +148,10 @@ public class Fiche {
 	/** Texte précalculé pour optimiser les recherches (sans accents, sans majuscules) avec autres dénominations */ 
 	@DatabaseField(dataType = com.j256.ormlite.field.DataType.LONG_STRING)
 	protected java.lang.String textePourRechercheRapide;
+
+	/** id des pictogrammes applicables à cette fiche séparés par des points virgules */ 
+	@DatabaseField
+	protected java.lang.String pictogrammes;
 	
 
 	/** Liste des photos de la fiche */ 
@@ -245,17 +250,7 @@ public class Fiche {
 		return StringUtils.replaceEach(this.nomScientifique, new String[]{"{{g}}","{{/g}}","{{i}}","{{/i}}"}, new String[]{"","","",""});
 	}
 	
-	public String getAutreDenominationTxt(){
-		StringBuilder sbAutreDenominations = new StringBuilder();
-		Collection<AutreDenomination> listeAutreDenominations = getAutresDenominations();
-		if (listeAutreDenominations != null) {
-			for (AutreDenomination autreDenomination:listeAutreDenominations) {
-				sbAutreDenominations.append(autreDenomination.denomination+" ");
-			}
-		}
-		return sbAutreDenominations.toString().trim();
-	}
-	
+
 	
 	
 	public void getFicheFromHtml(String htmlFiche, List<Groupe> listeGroupes, List<Participant> listeParticipants) throws SQLException{
@@ -321,6 +316,9 @@ public class Fiche {
 		int num_table = 0;
 		int groupeRef = 0;
 		int sousgroupeRef = 0;
+		
+		//Initialisation Liste des Autres Dénominations
+		String autresDenominationsPourRechercheRapide = "";
 		
 		// Lecture des informations pour une fiche complète
 		if ( getEtatFiche() == 4) {
@@ -431,6 +429,7 @@ public class Fiche {
 									
 									// permet d'enlever les Liens et de les remplacer par un texte, par exemple "(Fiche)"
 									autresDenominationsTexte = autresDenominationsTexte.replaceAll("<[^>]*fiche_numero=([^>]*)>", "{{$1}}").trim();
+									autresDenominationsPourRechercheRapide = autresDenominationsPourRechercheRapide + autresDenominationsTexte.replaceAll("\\([^\\)]*\\)", "")+" ";
 									
 									if ( ! autresDenominationsTexte.isEmpty() ){
 										AutreDenomination autreDenomination = new AutreDenomination(autresDenominationsTexte, "");									
@@ -768,8 +767,8 @@ public class Fiche {
 		}
 		
 		StringBuilder sbTextePourRechercheRapide = new StringBuilder(getNomCommun());
-		sbTextePourRechercheRapide.append(getNomScientifique());
-		sbTextePourRechercheRapide.append(getAutreDenominationTxt());
+		sbTextePourRechercheRapide.append(getNomScientifique().replaceAll("\\([^\\)]*\\)", ""));
+		sbTextePourRechercheRapide.append(" "+autresDenominationsPourRechercheRapide.trim());
 		sbTextePourRechercheRapide = new StringBuilder(sbTextePourRechercheRapide.toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "") );
 		setTextePourRechercheRapide(Outils.formatStringNormalizer(sbTextePourRechercheRapide.toString()).toLowerCase());
 		
@@ -794,7 +793,7 @@ public class Fiche {
 	// End of user code
 	
 	public Fiche() {} // needed by ormlite
-	public Fiche(java.lang.String nomScientifique, java.lang.String nomCommun, int numeroFiche, int etatFiche, java.lang.String dateCreation, java.lang.String dateModification, java.lang.String numerofichesLiees, java.lang.String textePourRechercheRapide) {
+	public Fiche(java.lang.String nomScientifique, java.lang.String nomCommun, int numeroFiche, int etatFiche, java.lang.String dateCreation, java.lang.String dateModification, java.lang.String numerofichesLiees, java.lang.String textePourRechercheRapide, java.lang.String pictogrammes) {
 		super();
 		this.nomScientifique = nomScientifique;
 		this.nomCommun = nomCommun;
@@ -804,6 +803,7 @@ public class Fiche {
 		this.dateModification = dateModification;
 		this.numerofichesLiees = numerofichesLiees;
 		this.textePourRechercheRapide = textePourRechercheRapide;
+		this.pictogrammes = pictogrammes;
 	} 
 
 	public int getId() {
@@ -867,6 +867,12 @@ public class Fiche {
 	}
 	public void setTextePourRechercheRapide(java.lang.String textePourRechercheRapide) {
 		this.textePourRechercheRapide = textePourRechercheRapide;
+	}
+	public java.lang.String getPictogrammes() {
+		return this.pictogrammes;
+	}
+	public void setPictogrammes(java.lang.String pictogrammes) {
+		this.pictogrammes = pictogrammes;
 	}
 
 	/** Liste des photos de la fiche */
@@ -969,6 +975,9 @@ public class Fiche {
 		sb.append("\n"+indent+"\t<"+XML_ATT_TEXTEPOURRECHERCHERAPIDE+">");
 		sb.append(StringEscapeUtils.escapeXml(this.textePourRechercheRapide));
     	sb.append("</"+XML_ATT_TEXTEPOURRECHERCHERAPIDE+">");
+		sb.append("\n"+indent+"\t<"+XML_ATT_PICTOGRAMMES+">");
+		sb.append(StringEscapeUtils.escapeXml(this.pictogrammes));
+    	sb.append("</"+XML_ATT_PICTOGRAMMES+">");
 
 		sb.append("\n"+indent+"\t<"+XML_REF_PHOTOSFICHE+">");
 		if(this.photosFiche != null){

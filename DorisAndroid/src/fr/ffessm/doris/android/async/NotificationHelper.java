@@ -128,7 +128,12 @@ public class NotificationHelper {
         //build up the new status message
 
 		// Start of user code notification helper additional status message
-        CharSequence contentText = nbItemsComplete + " / " +maxItemToProcess;
+    	CharSequence contentText = "";
+        if (!maxItemToProcess.equals("0")) {
+        	contentText = racineTickerText + nbItemsComplete + " / " +maxItemToProcess;
+        } else {
+        	contentText = racineTickerText;
+        }
 		// End of user code
         //publish it to the status bar
         //mNotification.setLatestEventInfo(mContext, mContentTitle, contentText, mContentIntent);

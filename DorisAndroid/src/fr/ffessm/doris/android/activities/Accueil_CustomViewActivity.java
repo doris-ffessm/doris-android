@@ -65,6 +65,8 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code additional imports Accueil_CustomViewActivity
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -88,7 +90,7 @@ import android.widget.RelativeLayout;
 import com.j256.ormlite.dao.CloseableIterator;
 
 import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.activities.view.APropos;
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.MultiProgressBar;
 import fr.ffessm.doris.android.async.TelechargePhotosFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
@@ -107,7 +109,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	implements DataChangedListener
 //End of user code
 {
-	
+ 	
 	//Start of user code constants Accueil_CustomViewActivity
 //	static final int TELECHARGE_FICHE_MENU_ID = 1;	
 	static final int TELECHARGE_PHOTO_FICHES_MENU_ID = 2;
@@ -115,6 +117,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 //	static final int VERIFIE_NOUVELLES_FICHES_MENU_ID = 4;
 //	static final int RESET_DB_FROM_XML_MENU_ID = 5;
 	static final int APROPOS = 6;
+	static final int AIDE = 7;
 	
 	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getCanonicalName();
 	Handler mHandler;
@@ -185,7 +188,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         if (!VersionAffichageAPropos.equals(appVersionName)) {
         	if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Affichage A Propos");
-			APropos aPropos = new APropos(getContext(), (Activity) getContext(), getHelper());
+			AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
 			aPropos.aProposAff();
         	
             Outils.setParamString(this.getApplicationContext(), R.string.pref_key_a_propos_version, appVersionName);
@@ -292,7 +295,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	// affichage lien vers les zones 
     	
         List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - après");
 		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
 			
 		for (ZoneGeographique zoneGeo : listeZoneGeo) {
@@ -464,7 +466,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
      */
     public void refreshScreenData() {
     	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
+    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
 
     	/* 
     	DVK 
@@ -481,6 +483,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	//ImageView ivIcone = (ImageView) findViewById(R.id.accueil_recherche_precedente_icone);
         int iconeZine = Integer.valueOf(Outils.getParamString(this.getApplicationContext(), R.string.pref_key_accueil_icon_size, "64"));
         ((ImageView) findViewById(R.id.accueil_recherche_precedente_icone)).setMaxHeight(iconeZine);
+        
         
     	StringBuilder sbRecherchePrecedente = new StringBuilder(); 
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -505,8 +508,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	TextView tvRecherchePrecedente = (TextView)findViewById(R.id.accueil_recherche_precedente_details);
     	tvRecherchePrecedente.setText(sbRecherchePrecedente.toString());
     	
+    	((ImageView) findViewById(R.id.accueil_recherche_guidee_icone)).setMaxHeight(iconeZine);
+    	
+    	
     	// Affichage de chaque Zones - Toutes Zones en 1er
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate); 
+    	// if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate); 
     	ZoneGeographique zoneToutesZones = new ZoneGeographique();
     	zoneToutesZones.setId(-1);
     	zoneToutesZones.setNom(getContext().getString(R.string.avancement_touteszones_titre));
@@ -539,7 +545,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    	
 	    	
     	} else {
-    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - update progress bar : ");
+    		// if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - update progress bar : ");
     		updateProgressBarZone(zoneToutesZones, progressBarZones.get(zoneToutesZones.getId()));
     	
     	}
@@ -613,11 +619,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     //    menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 4, R.string.menu_option_verifie_nouvelles_fiches).setIcon(android.R.drawable.ic_menu_preferences);
     //    menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 5, R.string.menu_option_reinitialise_a_partir_du_xml).setIcon(android.R.drawable.ic_menu_preferences);
 	//	menu.add(Menu.NONE, APROPOS, 2, R.string.a_propos_label).setIcon(android.R.drawable.ic_menu_info_details);
+
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
-    
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	// behavior of option menu
@@ -631,10 +637,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 				if(telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING)
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = 
 						(TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+
 	            return true;
 	        case R.id.accueil_customview_action_a_propos:
-	        	APropos aPropos = new APropos(getContext(), (Activity) getContext(), getHelper());
-				aPropos.aProposAff();
+	        	AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
+				aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label)+getContext().getString(R.string.app_name), aPropos.aProposAff(),	"file:///android_res/raw/apropos.html");
 				return true;
 	        case R.id.accueil_customview_action_participant:
 	        	startActivity(new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class));
@@ -642,6 +649,26 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	        case R.id.accueil_customview_action_glossaire:
 	        	startActivity(new Intent(this, Glossaire_ClassListViewActivity.class));
 	        	return true;
+	        case R.id.accueil_customview_action_aide:
+	        	AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
+				aide.affichageMessageHTML(getContext().getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
+				return true;
+				
+		/*	case VERIFIE_NOUVELLES_FICHES_MENU_ID:
+				new VerifieNouvellesFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+				break;
+			case RESET_DB_FROM_XML_MENU_ID:
+				reinitializeDBFromPrefetched();
+				break; */
+		/*0000	case APROPOS:
+				AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
+				aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label)+getContext().getString(R.string.app_name), aPropos.aProposAff(),	"file:///android_res/raw/apropos.html");
+				break;
+			case AIDE:
+				AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
+				aide.affichageMessageHTML(getContext().getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
+				break;
+				*/
 		//End of user code
 			default:
                 return super.onOptionsItemSelected(item);

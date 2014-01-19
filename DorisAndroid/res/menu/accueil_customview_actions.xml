@@ -17,9 +17,12 @@
 	<item android:id="@+id/accueil_customview_action_telecharge_photofiches"
 	      android:icon="@android:drawable/ic_menu_set_as"
 	      android:title="@string/menu_option_telecharge_photofiches" />
+	<item android:id="@+id/accueil_customview_action_aide"
+	      android:icon="@android:drawable/ic_menu_help"
+	      android:title="@string/aide_menu" />
 	<item android:id="@+id/accueil_customview_action_a_propos"
 	      android:icon="@android:drawable/ic_menu_info_details"
-	      android:title="@string/a_propos_label" />
+	      android:title="@string/a_propos_menu" />
 	<!--End of user code
 	-->
 	<item android:id="@+id/accueil_customview_action_preference"

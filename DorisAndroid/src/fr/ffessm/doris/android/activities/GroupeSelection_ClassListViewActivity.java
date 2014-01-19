@@ -86,7 +86,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	//End of user code
     GroupeSelection_Adapter adapter;
 
-
+    @Override
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		setContentView(R.layout.groupeselection_listview);
@@ -132,7 +132,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 		//End of user code
 	}
 
-
+	@Override
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 			//Start of user code onItemClick additions GroupeSelection_ClassListViewActivity
 		//showToast("Groupe : "+position + " - "+ index);
