@@ -1290,6 +1290,7 @@ public class PrefetchDorisWebSite {
 		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/ligne_carre3.gif","images_ligne_carre3.gif"));
 		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/MNHN2.gif","images_MNHN2.gif"));
 		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/Palme3.gif","images_Palme3.gif"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/10x10.gif","images_10x10.gif"));
 		
 		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier1puce.jpg","images_fichier1puce.jpg"));
 		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier2puce.jpg","images_fichier2puce.jpg"));
