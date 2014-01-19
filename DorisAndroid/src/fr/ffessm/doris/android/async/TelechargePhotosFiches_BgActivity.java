@@ -112,7 +112,9 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 
     @Override
     protected Integer doInBackground(String... arg0) {
- 		// Start of user code initialization of the task TelechargePhotosFiches_BgActivity
+    	
+
+		// Start of user code initialization of the task TelechargePhotosFiches_BgActivity
 
 	    try{
 			// do the initialization of the task here
@@ -427,6 +429,12 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		
 		if( this.isCancelled()) return 0;
 		// End of user code
+    	
+    	// Start of user code main loop of task TelechargePhotosFiches_BgActivity
+		// This is where we would do the actual job
+		// you should indicates the progression using publishProgress()
+		
+		// End of user code
         
 		// Start of user code end of task TelechargePhotosFiches_BgActivity
 	    } catch (InterruptedException e) {
@@ -439,14 +447,11 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	    return 0;
 		// End of user code
     }
-
-    @Override
     protected void onProgressUpdate(Integer... progress) {
         //This method runs on the UI thread, it receives progress updates
         //from the background thread and publishes them to the status bar
         mNotificationHelper.progressUpdate(progress[0]);
     }
-    
 	@Override
 	protected void onCancelled() {
 		super.onCancelled();
@@ -457,8 +462,6 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 		// End of user code
 	}
-	
-	@Override
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();

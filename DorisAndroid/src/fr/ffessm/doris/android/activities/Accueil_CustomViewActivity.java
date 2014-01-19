@@ -105,7 +105,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	implements DataChangedListener
 //End of user code
 {
- 	
+	
 	//Start of user code constants Accueil_CustomViewActivity
 //	static final int TELECHARGE_FICHE_MENU_ID = 1;	
 	static final int TELECHARGE_PHOTO_FICHES_MENU_ID = 2;
@@ -640,7 +640,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
-
+    
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	// behavior of option menu
