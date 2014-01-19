@@ -135,6 +135,8 @@ C'est ce texte. */
 	// Start of user code Groupe additional user properties
 	
 	public String getImageNameOnDisk(){
+		//log.warn("getImageNameOnDisk() - groupe : "+_id+" - "+numeroGroupe+" - "+numeroSousGroupe);
+		//log.warn("getImageNameOnDisk() - cleURLImage : "+cleURLImage);
 		String imageName = cleURLImage.replace("gestionenligne/", "")
 			.replace("images/", "images_groupe/").replace("/","_");
 		return imageName;

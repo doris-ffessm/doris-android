@@ -485,7 +485,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
 		if(filtreCourantId==1){
 			sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreEspece_sans));
         }
-		else{
+		else {
 			Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
 			sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec)+" "+groupeFiltreCourant.getNomGroupe().trim());
 		}
@@ -498,6 +498,7 @@ public class Accueil_CustomViewActivity extends OrmLiteBaseActivity<OrmLiteDBHel
         	ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
         	sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec)+" "+currentZoneFilter.getNom().trim());
         }
+        
         // TODO rappeler le dernier text recherché
     	TextView tvRecherchePrecedente = (TextView)findViewById(R.id.accueil_recherche_precedente_details);
     	tvRecherchePrecedente.setText(sbRecherchePrecedente.toString());

@@ -10,6 +10,7 @@
 	<string name="detailsfiche_elementview_datecreation_label">"Création\u00A0: "</string>
 	<string name="detailsfiche_elementview_datemodification_label">"Dernière modification\u00A0: "</string>
 	<string name="detailsfiche_elementview_autresdenominations_label">Autres dénominations</string>
+	<string name="detailsfiche_elementview_groupes_label">Groupes Phylogénétiques</string>
 	<string name="detailsfiche_elementview_fichesliees_label">Fiches Liées</string>
 	<string name="detailsfiche_elementview_credit_label">Crédits</string>
 	<string name="detailsfiche_elementview_zonesgeo_label">Zones Doris</string>

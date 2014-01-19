@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+android:id/detailsfiche_elementview_foldablesection"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/detailsfiche_elementview_fold_unflod_section_linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/detailsfiche_elementview_fold_unflod_section_imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="4dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/detailsfiche_elementview_fold_unflod_section_hint_text"
+            android:scaleType="centerInside"
+            android:src="@drawable/app_expander_ic_minimized" />
+
+        <TextView
+            android:id="@+id/detailsfiche_elementview_foldablesection_titre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/detailsfiche_elementview_groupes_label"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?android:attr/textColorPrimary" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/detailsfiche_elementview_fold_unflod_section_icones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/detailsfiche_elementview_foldablesection_foldableicone1"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="8dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/app_ic_launcher" />
+
+        <TextView
+            android:id="@+id/detailsfiche_elementview_foldablesection_foldabletexte1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/detailsfiche_elementview_foldablesection_foldableicone1"
+            android:layout_toLeftOf="@+id/detailsfiche_elementview_foldablesection_foldableicone2"
+            android:maxLines="4"
+            android:paddingLeft="4dp"
+            android:text="Groupe 1"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="?android:attr/textColorSecondary" />
+
+        <View android:id="@+id/detailsfiche_elementview_foldablesection_foldableview"
+            android:layout_centerHorizontal="true"
+			android:layout_width="0dp"
+            android:layout_height="0dp"/>
+
+        <ImageButton
+            android:id="@+id/detailsfiche_elementview_foldablesection_foldableicone2"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="8dp"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/detailsfiche_elementview_foldablesection_foldableview"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/app_ic_launcher" />
+                
+        <TextView
+            android:id="@+id/detailsfiche_elementview_foldablesection_foldabletexte2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="32dp"
+            android:layout_toRightOf="@+id/detailsfiche_elementview_foldablesection_foldableicone2"
+            android:maxLines="4"
+            android:paddingLeft="4dp"
+            android:text="Groupe 2"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="?android:attr/textColorSecondary" />
+
+    </RelativeLayout>
+
+    <View style="@style/Separateur" />
+
+</LinearLayout>

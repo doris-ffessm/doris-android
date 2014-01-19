@@ -49,6 +49,9 @@ import fr.ffessm.doris.android.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -57,6 +60,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
@@ -67,11 +71,9 @@ import android.widget.ImageView;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -93,6 +95,7 @@ import java.util.List;
 import fr.ffessm.doris.android.activities.view.FoldableClickListener;
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
+import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.IntervenantFiche;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
@@ -115,8 +118,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_attributes
 	
 	final Context context = this;
-	//TODO :
-	Activity activity = this;
+	final Activity activity = this;
 	
 	protected int ficheNumero;
 	
@@ -255,22 +257,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 				photoView.setOnClickListener(new OnImageClickListener(this.ficheId,pos,this));
 				photoView.setPadding(0, 0, 2, 0);
 				photoGallery.addView(photoView);
-				
-				
-				//sbDebugText.append("\nPhoto="+photoFiche.getCleURL()+"\n");
-				/*if(!insertedPhotosFiche.contains(photoFiche.getCleURL())){
-					View photoView = insertPhoto(photoFiche);
-					if(photoView!=null){
-						photoView.setOnClickListener(new OnImageClickListener(this.ficheId,pos,this));
-						photoGallery.addView(photoView);
-						insertedPhotosFiche.add(photoFiche.getCleURL());
-					}
-					else if(!askedBgDownload){
-						askedBgDownload = true;
-						new TelechargePhotosFiche_BgActivity(getApplicationContext(), this.getHelper(), entry, this).execute("");
-						break; // les autres ne sont probablement pas là non plus, pas la peine d'essayer
-					}
-				}*/
 				pos++;
 			}
 			
@@ -279,6 +265,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 		if(isOnCreate){
 			// do only on first creation
 			LinearLayout containerLayout =  (LinearLayout) findViewById(R.id.detailsfiche_sections_layout);
+			
 			// section Autres Dénominations
 			if(entry.getAutresDenominations() != null){
 				Collection<AutreDenomination> autresDenominations = entry.getAutresDenominations();
@@ -292,17 +279,22 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 						}
 						i++;
 					}
-					addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_autresdenominations_label), sbAutresDenominations.toString());
+					addFoldableTextView(containerLayout, getString(R.string.detailsfiche_elementview_autresdenominations_label), sbAutresDenominations.toString());
 					
 				}
 			}
-			// section issues de la fiche
+			// Section Groupe Phylogénique
+			if(entry.getGroupe().getNumeroGroupe() != 0){
+				addFoldableGroupeView(containerLayout, getString(R.string.detailsfiche_elementview_groupes_label), entry.getGroupe());
+			}
+			
+			// sections issues de la fiche
 			if(entry.getContenu() != null){
 				
 				for (SectionFiche sectionFiche : entry.getContenu()) {
 					//Log.d(LOG_TAG, "refreshScreenData() - titre : "+sectionFiche.getTitre());
 					//Log.d(LOG_TAG, "refreshScreenData() - texte : "+sectionFiche.getTexte());
-					addFoldableView(containerLayout, sectionFiche.getTitre(), sectionFiche.getTexte());
+					addFoldableTextView(containerLayout, sectionFiche.getTitre(), sectionFiche.getTexte());
 				}
 			}
 			
@@ -319,9 +311,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 					i++;
 				}
 				if (sbZonesGeographiques.toString().length() != 0) {
-					addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_zonesgeo_label), sbZonesGeographiques.toString());
+					addFoldableTextView(containerLayout, getString(R.string.detailsfiche_elementview_zonesgeo_label), sbZonesGeographiques.toString());
 				} else {
-					addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_zonesgeo_label), getString(R.string.detailsfiche_elementview_zonesgeo_aucune_label));
+					addFoldableTextView(containerLayout, getString(R.string.detailsfiche_elementview_zonesgeo_label), getString(R.string.detailsfiche_elementview_zonesgeo_aucune_label));
 				}
 			}
 			
@@ -355,7 +347,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 			//richtext.setSpan(new RelativeSizeSpan(2f), 0, urlString.length(), 0);
 			richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
 			
-			addFoldableView(containerLayout, getString(R.string.detailsfiche_elementview_credit_label),richtext);
+			addFoldableTextView(containerLayout, getString(R.string.detailsfiche_elementview_credit_label),richtext);
 			
 			isOnCreate = false;
 		}
@@ -438,7 +430,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
 	    return false;
     }
     
-    protected void addFoldableView(LinearLayout containerLayout, String titre, CharSequence texte){
+    protected void addFoldableTextView(LinearLayout containerLayout, String titre, CharSequence texte){
     	LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View convertView = inflater.inflate(R.layout.detailsfiche_elementview_foldablesection, null);
         
@@ -477,10 +469,103 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         
         containerLayout.addView(convertView);
     }
+    protected void foldAll(){
+    	for (FoldableClickListener foldable : allFoldable) {
+			foldable.fold();
+		}
+    }
+    protected void unfoldAll(){
+    	for (FoldableClickListener foldable : allFoldable) {
+			foldable.unfold();
+		}
+    }
+    protected void addFoldableGroupeView(LinearLayout containerLayout, String titre, final Groupe groupe){
+    	LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View convertView = inflater.inflate(R.layout.detailsfiche_elementview_foldablesection_2icones, null);
+        
+        TextView titreText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_titre);
+        titreText.setText(titre);
+        
+        RelativeLayout sectionIcones = (RelativeLayout) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_icones);
+        
+        if (!Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_fiche_aff_details_pardefaut, false)){
+        	sectionIcones.setVisibility(View.GONE); // par défaut invisible
+        } else {
+        	sectionIcones.setVisibility(View.VISIBLE);
+        }
+        
+        final Groupe groupePere = getHelper().getGroupeDao().queryForId(groupe.getGroupePere().getId());
+ 
+        ImageButton icone1 = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldableicone1);
+        TextView texte1 = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletexte1);
+        ImageButton icone2 = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldableicone2);
+        TextView texte2 = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletexte2);
+        
+        if (groupe.getNumeroSousGroupe() == 0){
+        	int identifierIcone1Groupe = context.getResources().getIdentifier(groupe.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw",  context.getPackageName());
+        	Bitmap bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(identifierIcone1Groupe));
+        	icone1.setImageBitmap(bitmap);
+        	icone1.setBackgroundResource(R.drawable.groupe_icon_background);
+        	texte1.setText(groupe.getNomGroupe());
+        	icone1.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+					ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupe.getId());
+			        ed.commit();
+			        startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+				}
+			});
+        	icone2.setVisibility(View.GONE);
+        	texte2.setVisibility(View.GONE);
+        } else {
+        	int identifierIcone1Groupe = context.getResources().getIdentifier(groupePere.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw",  context.getPackageName());
+        	Bitmap bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(identifierIcone1Groupe));
+        	icone1.setImageBitmap(bitmap);
+        	icone1.setBackgroundResource(R.drawable.groupe_icon_background);
+        	texte1.setText(groupePere.getNomGroupe());
+        	icone1.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+					ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupePere.getId());
+			        ed.commit();
+			        startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+				}
+			});
+        	
+           	int identifierIcone2Groupe = context.getResources().getIdentifier(groupe.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw",  context.getPackageName());
+           	bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(identifierIcone2Groupe));
+        	icone2.setImageBitmap(bitmap);
+        	icone2.setBackgroundResource(R.drawable.groupe_icon_background);
+        	texte2.setText(groupe.getNomGroupe());
+        	icone2.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+					ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupe.getId());
+			        ed.commit();
+			        startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+				}
+			});
+        }
+        
+        ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
+        
+        FoldableClickListener foldable = new FoldableClickListener(sectionIcones, foldButton);
+        allFoldable.add(foldable);
+        foldButton.setOnClickListener(foldable);
+        
+        LinearLayout titreLinearLayout = (LinearLayout) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_linearlayout);
+        titreLinearLayout.setOnClickListener(foldable);
+        // enregistre pour réagir au click long
+        registerForContextMenu(foldButton);
+        registerForContextMenu(titreLinearLayout);
+        
+        containerLayout.addView(convertView);
+    }
     
     View insertPhoto(PhotoFiche photoFiche){
-    	
-    	
     	LinearLayout layout = new LinearLayout(getApplicationContext());
         layout.setLayoutParams(new LayoutParams(200, 200));
         layout.setGravity(Gravity.CENTER);
@@ -511,16 +596,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteBaseActivity<OrmLit
         layout.addView(imageView);
         return layout;
    
-    }
-    protected void foldAll(){
-    	for (FoldableClickListener foldable : allFoldable) {
-			foldable.fold();
-		}
-    }
-    protected void unfoldAll(){
-    	for (FoldableClickListener foldable : allFoldable) {
-			foldable.unfold();
-		}
     }
     
     public void dataHasChanged(String textmessage){
