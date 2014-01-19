@@ -54,11 +54,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collection;
 
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.HTMLElementName;
+import net.htmlparser.jericho.Source;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import fr.ffessm.doris.android.datamodel.associations.*;
+import fr.ffessm.doris.android.sitedoris.Outils;
 
 // Start of user code additional import for Groupe
 // End of user code
@@ -142,7 +147,24 @@ C'est ce texte. */
 		return imageName;
 	}
 	
-	
+	public void getGroupeFromHtml(String htmlGroupe) throws SQLException{
+		log.trace("getGroupeFromHtml() - Début");
+		
+		htmlGroupe = Outils.nettoyageBalises(htmlGroupe);
+    	
+    	// -- Cible de la page en enlevant tout débord tout ce qui est totalement superflu --
+    	// -- Issue de la Version 1 : ca fonctionne => je garde / GMo
+		Source source=new Source(htmlGroupe);
+		source.fullSequentialParse();
+		
+		Element elementTDtitre2 = source.getFirstElementByClass("titre2");
+		Element elementTRPere = elementTDtitre2.getParentElement().getParentElement();
+		Element elementTDTexte = elementTRPere.getFirstElementByClass("normal");
+		
+		log.trace("getGroupeFromHtml() - Description Groupe : "+elementTDTexte.toString());
+		
+		log.trace("getGroupeFromHtml() - Fin");
+	}
 	
 	// End of user code
 	

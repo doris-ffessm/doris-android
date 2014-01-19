@@ -51,14 +51,18 @@ import com.j256.ormlite.stmt.SelectArg;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Collection;
+
+import net.htmlparser.jericho.Source;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import fr.ffessm.doris.android.datamodel.associations.*;
+import fr.ffessm.doris.android.sitedoris.Outils;
 
 // Start of user code additional import for Participant
 // End of user code
@@ -108,6 +112,7 @@ public class Participant {
 
 	// Start of user code Participant additional user properties
 	 
+	
 	// End of user code
 	
 	public Participant() {} // needed by ormlite

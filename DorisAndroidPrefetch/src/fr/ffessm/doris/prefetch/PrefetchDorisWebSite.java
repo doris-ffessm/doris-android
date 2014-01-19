@@ -43,6 +43,7 @@ termes.
 package fr.ffessm.doris.prefetch;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -57,6 +58,7 @@ import java.util.concurrent.Callable;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
+import org.apache.commons.io.FileUtils;
 
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.field.FieldType;
@@ -110,6 +112,9 @@ public class PrefetchDorisWebSite {
 	private final static String SOUSDOSSIER_MED_RES = "medium_res_images_fiches";
 	private final static String SOUSDOSSIER_HI_RES = "hi_res_images_fiches";
 	
+	private final static String DOSSIER_CD = "cd";
+	private final static String DOSSIER_DVD = "dvd";
+	
 	// Initialisation de la Gestion des Log 
 	public static Log log = LogFactory.getLog(PrefetchDorisWebSite.class);
 	
@@ -148,8 +153,9 @@ public class PrefetchDorisWebSite {
 		
 		if (action.equals("TEST")) {
 			log.debug("doMain() - Début TEST");
-						
-
+			
+			checkDossiers("CDDVD");
+			creationCD();
 
 
 
@@ -209,11 +215,25 @@ public class PrefetchDorisWebSite {
 					    }
 					});
 
-				// Téléchargement des icones
+				// Téléchargement des pages de Groupes et des Icônes
 				if ( action.equals("CDDVD")){
 					String fichierIconeRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_ICONES + "/";
 					String fichierIconeRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/" + SOUSDOSSIER_ICONES + "/";
+
 					for (Groupe groupe : listeGroupes){
+						log.info("Groupe : " + groupe.getNomGroupe());
+						if (groupe.getNumeroGroupe() != 0) {
+							String fichierLocalGroupe = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/groupe-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+".html";
+							String fichierRefGroupe = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/groupe-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+".html";
+	
+							if( ! isFileExistingPath( fichierRefGroupe ) ){
+								if (Outils.getFichierFromUrl(Constants.getGroupeUrl(groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe()), fichierLocalGroupe)) {
+								} else {
+									log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
+									System.exit(0);
+								}
+							}
+						}
 						log.info("Groupe : " + groupe.getNomGroupe()+" - "+groupe.getCleURLImage());
 						if ( !groupe.getCleURLImage().isEmpty() ) {
 							if( ! isFileExistingPath( fichierIconeRefRacine+groupe.getImageNameOnDisk() ) ){
@@ -279,8 +299,9 @@ public class PrefetchDorisWebSite {
 				listeParticipants.addAll(dbContext.participantDao.queryForAll());
 				log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
 				
-				//TODO : Récupération de la page de chacun des intervanants
-				// http://doris.ffessm.fr/contact_fiche.asp?contact_numero=
+				//Pas la peine de Récupérer la page de chacun des intervenants
+				// Toutes les infos sont dans les listes ci dessus
+
 				
 				// - - - Glossaire - - -
 				// On boucle sur les initiales des définitions (Cf site : doris.ffessm.fr/glossaire.asp?filtre=?)
@@ -638,7 +659,47 @@ public class PrefetchDorisWebSite {
 				SimpleDateFormat ft =  new SimpleDateFormat ("dd/MM/yyyy  HH:mm");
 				dbContext.dorisDB_metadataDao.create(new DorisDB_metadata(ft.format(date),""));
 				
-	
+				
+				// Téléchargement Pages et Images exclusives CD et DVD
+				if ( action.equals("CDDVD") ) {
+					String fichierLocalLien = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/";
+					String fichierRefLien = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/";
+					String fichierIconeRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_ICONES + "/";
+					String fichierIconeRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/" + SOUSDOSSIER_ICONES + "/";
+
+					List<LienATelecharger> liensATelecharger = getLienATelecharger();
+					for (LienATelecharger lienATelecharger : liensATelecharger) {
+						
+						if (lienATelecharger.getLienKind() == LienKind.PAGE) {
+							if( ! isFileExistingPath( fichierRefLien+lienATelecharger.getFichier() ) ){
+								if (Outils.getFichierFromUrl(Constants.getSiteUrl()+lienATelecharger.getUrl(),
+										fichierLocalLien+lienATelecharger.getFichier() ) ) {
+								} else {
+									log.error("Une erreur est survenue lors de la récupération du lien : "+lienATelecharger.getUrl() );
+									System.exit(0);
+								}
+							}
+						}
+						
+						if (lienATelecharger.getLienKind() == LienKind.IMG) {
+							if( ! isFileExistingPath( fichierIconeRefRacine+lienATelecharger.getFichier() ) ){
+								if (Outils.getFichierFromUrl(Constants.getSiteUrl()+lienATelecharger.getUrl(),
+										fichierIconeRacine+lienATelecharger.getFichier() ) ) {
+								} else {
+									log.error("Une erreur est survenue lors de la récupération du lien : "+lienATelecharger.getUrl() );
+									System.exit(0);
+								}
+							}
+						}
+					}
+					
+				}
+				
+				// Création du dossier CD et DVD
+				if ( action.equals("CDDVD") ) {
+					creationCD();
+				}
+				
 			} finally {
 				// destroy the data source which should close underlying connections
 				if (connectionSource != null) {
@@ -1055,6 +1116,42 @@ public class PrefetchDorisWebSite {
 			}
 		}
 		
+		// Le dossier du CD ou DVD
+		if( inAction.equals("CDDVD") ){
+			File dossierCD = new File(DOSSIER_RACINE + "/" + DOSSIER_CD);
+			if (dossierCD.exists()){
+				File dossierCDNew = new File(DOSSIER_RACINE + "/" + DOSSIER_CD +"_"+ suffixe);
+				if(dossierCD.renameTo(dossierCDNew)){
+					log.info("Sauvegarde du dossier CD : " + dossierCDNew.getAbsolutePath());
+				}else{
+					log.error("Echec renommage du dossier CD : " + dossierCDNew.getAbsolutePath());
+					System.exit(0);
+				}
+			}
+			if (dossierCD.mkdir()) {
+				log.info("Création du dossier CD : " + dossierCD.getAbsolutePath());
+			} else {
+				log.error("Echec de la Création du dossier CD : " + dossierCD.getAbsolutePath());
+				System.exit(0);
+			}
+			File dossierDVD = new File(DOSSIER_RACINE + "/" + DOSSIER_DVD);
+			if (dossierDVD.exists()){
+				File dossierDVDNew = new File(DOSSIER_RACINE + "/" + DOSSIER_DVD +"_"+ suffixe);
+				if(dossierDVD.renameTo(dossierDVDNew)){
+					log.info("Sauvegarde du dossier DVD : " + dossierDVDNew.getAbsolutePath());
+				}else{
+					log.error("Echec renommage du dossier DVD : " + dossierDVDNew.getAbsolutePath());
+					System.exit(0);
+				}
+			}
+			if (dossierDVD.mkdir()) {
+				log.info("Création du dossier DVD : " + dossierDVD.getAbsolutePath());
+			} else {
+				log.error("Echec de la Création du dossier DVD : " + dossierDVD.getAbsolutePath());
+				System.exit(0);
+			}
+		}
+		
 		//	Vérification que le dossier Html Référence existe
 		if(inAction.equals("NODWNLD") || inAction.equals("UPDATE")  || inAction.equals("CDDVD") ){
 			final File dossierReference = new File(DOSSIER_RACINE + "/" + DOSSIER_HTML_REF);
@@ -1172,5 +1269,135 @@ public class PrefetchDorisWebSite {
 		return true;
 	}
 	
+	// Liste des Pages et Images à télécharger dans le cas des CD et DVD
+	public List<LienATelecharger> getLienATelecharger(){
+		List<LienATelecharger> lienATelecharger = new ArrayList<LienATelecharger>(0);
+
+		lienATelecharger.add(new LienATelecharger(LienKind.PAGE, "accueil.asp","accueil.html"));
+		lienATelecharger.add(new LienATelecharger(LienKind.PAGE, "styles.css","styles.css"));
+		lienATelecharger.add(new LienATelecharger(LienKind.PAGE, "doris.asp","doris.html"));
+		lienATelecharger.add(new LienATelecharger(LienKind.PAGE, "doris_faq.asp","doris_faq.html"));
+		lienATelecharger.add(new LienATelecharger(LienKind.PAGE, "Copyright.asp","Copyright.html"));
+		lienATelecharger.add(new LienATelecharger(LienKind.PAGE, "liens.asp","liens.html"));
+		
+		
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/carre.jpg","images_carre.jpg"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/pucecarre.gif","images_pucecarre.gif"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fleche_grise.gif","images_fleche_grise.gif"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/logo.gif","images_logo.gif"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/logo-biologie.gif","images_logo-biologie.gif"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/logo_ffessm.gif","images_logo_ffessm.gif"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/ligne_carre3.gif","images_ligne_carre3.gif"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/MNHN2.gif","images_MNHN2.gif"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/Palme3.gif","images_Palme3.gif"));
+		
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier1puce.jpg","images_fichier1puce.jpg"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier2puce.jpg","images_fichier2puce.jpg"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier3puce.jpg","images_fichier3puce.jpg"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier4puce.jpg","images_fichier4puce.jpg"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier5puce.jpg","images_fichier5puce.jpg"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier10puce.jpg","images_fichier10puce.jpg"));
+
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier1.jpg","images_fichier1.jpg"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier2.jpg","images_fichier2.jpg"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier3.jpg","images_fichier3.jpg"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier4.jpg","images_fichier4.jpg"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier5.jpg","images_fichier5.jpg"));
+		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier10.jpg","images_fichier10.jpg"));
+		
+		
+		return lienATelecharger;
+	}
 	
+	public enum LienKind {
+    	PAGE,
+    	IMG
+    }
+	private class LienATelecharger {
+		LienKind lienKind;
+		String url;
+		String fichierSurDisque;
+		
+		LienATelecharger(LienKind lienKind, String url, String fichierSurDisque){
+			this.lienKind = lienKind;
+			this.url = url;
+			this.fichierSurDisque = fichierSurDisque;
+		}
+		public LienKind getLienKind() {
+			return lienKind;
+		}
+		public String getUrl() {
+			return url;
+		}
+		public String getFichier() {
+			return fichierSurDisque;
+		}
+	}
+	private void creationCD(){
+		log.debug("creationCD() - Début");
+		String fichierCDLien = DOSSIER_RACINE + "/" + DOSSIER_CD + "/";
+		String fichierRefLien = DOSSIER_RACINE + "/";
+		
+		// Création Dossier HTML du CD
+		log.info("Création Dossier HTML du CD");
+		File dossierRef = new File(fichierRefLien+DOSSIER_HTML_REF);
+		File dossierCD = new File(fichierCDLien+DOSSIER_HTML);
+		try {
+			FileUtils.copyDirectory(dossierRef, dossierCD);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		log.info("Création Dossier Icones du CD");
+		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES_REF+"/"+SOUSDOSSIER_ICONES);
+		dossierCD = new File(fichierCDLien+SOUSDOSSIER_ICONES);
+		try {
+			FileUtils.copyDirectory(dossierRef, dossierCD);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		log.info("Création Dossier Vignettes du CD");
+		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES_REF+"/"+SOUSDOSSIER_VIGNETTES);
+		dossierCD = new File(fichierCDLien+SOUSDOSSIER_VIGNETTES);
+		try {
+			FileUtils.copyDirectory(dossierRef, dossierCD);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		log.info("Création Dossier Images du CD");
+		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES_REF+"/"+SOUSDOSSIER_MED_RES);
+		dossierCD = new File(fichierCDLien+SOUSDOSSIER_MED_RES);
+		try {
+			FileUtils.copyDirectory(dossierRef, dossierCD);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		// Modification Fichiers HTML : lien, images
+		dossierCD = new File(fichierCDLien+DOSSIER_HTML);
+		for (File fichierHtml:dossierCD.listFiles()) {
+			String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
+			
+			for (LienATelecharger lienTelecharge : getLienATelecharger()){
+				if (lienTelecharge.getLienKind() == LienKind.PAGE) {
+					contenuFichier = contenuFichier.replace("href=\""+lienTelecharge.getUrl()+"\"","href=\""+lienTelecharge.getFichier()+"\"");
+				}
+				if (lienTelecharge.getLienKind() == LienKind.IMG) {
+					contenuFichier = contenuFichier.replace("src=\""+lienTelecharge.getUrl()+"\"","src=\"../"+SOUSDOSSIER_ICONES+"/"+lienTelecharge.getFichier()+"\"");
+				}
+			}
+
+			try {
+				FileUtils.write(fichierHtml, contenuFichier);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		
+		log.debug("creationCD() - Fin");
+	}
+
 }
