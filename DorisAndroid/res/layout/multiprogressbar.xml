@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="top"
     android:paddingLeft="4dip"
-    android:paddingRight="?android:attr/scrollbarSize" >
+    android:paddingRight="?android:attr/scrollbarSize" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -42,24 +41,28 @@
 	            android:text="Nom Commun"
 	            tools:ignore="HardcodedText"
 	            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
 			<ProgressBar
-	            android:id="@+id/multiprogressbar_progressBar1"
-	            style="?android:attr/progressBarStyleHorizontal"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentRight="true"
-	            android:layout_below="@id/multiprogressbar_title"
-	            android:minHeight="4dp"/>
+			    android:id="@+id/multiprogressbar_progressBar1"
+			    style="?android:attr/progressBarStyleHorizontal"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_alignParentRight="true"
+			    android:layout_below="@id/multiprogressbar_title"
+			    android:maxHeight="6dp"
+			    android:minHeight="2dp"
+			    android:visibility="visible" />
+
 			<ProgressBar
-	            android:id="@+id/multiprogressbar_progressBar2"
-	            style="?android:attr/progressBarStyleHorizontal"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:paddingTop="1dip"
-	            android:layout_alignParentRight="true"
-	            android:layout_below="@id/multiprogressbar_progressBar1"
-	            android:minHeight="4dp"
-	            android:visibility="gone"/>
+                android:id="@+id/multiprogressbar_progressBar2"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/multiprogressbar_progressBar1"
+                android:maxHeight="6dp"
+                android:minHeight="2dp"
+                android:visibility="gone" />
 	
 	        <TextView
 	            android:id="@+id/multiprogressbar_summary"
