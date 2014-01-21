@@ -43,6 +43,7 @@ package fr.ffessm.doris.android.activities;
 
 
 import fr.ffessm.doris.android.datamodel.*;
+import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.R;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -104,7 +105,10 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteActionBarActi
         list.setAdapter(adapter);
 
 		//Start of user code onCreate additions ZoneGeoSelection_ClassListViewActivity
-        
+        if(ScreenTools.getScreenWidth(this) > 700)
+        	actionBar.setTitle(getString(R.string.zonegeoselection_listview_title_large));
+        else
+        	actionBar.setTitle(getString(R.string.zonegeoselection_listview_title));
 		//End of user code
 	}
 	

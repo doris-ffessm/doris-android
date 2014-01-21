@@ -67,6 +67,7 @@ import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -371,6 +372,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	public  void showPopup() {
 
 		View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
+		// peut être null si pas visible, ex dans actionbar overfloww si pas assez de place dans l'action bar 
 		LinearLayout viewGroup = (LinearLayout) findViewById(R.id.listeavecfiltre_filtrespopup);
 		LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View layout = layoutInflater.inflate(R.layout.listeficheavecfiltre_filtrespopup, viewGroup);
@@ -379,30 +381,29 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 		int popupHeight = getResources().getDimensionPixelSize(R.dimen.listeficheavecfiltre_popup_height); 
 		//Log.d(LOG_TAG,"showPopup() - width="+popupWidth+", height="+popupHeight);
 		
-		//popup = new PopupWindow(context, popupWidth, popupHeight);
 		final PopupWindow popup = new PopupWindow(layout);
 		popup.setWidth(popupWidth);
 		popup.setHeight(popupHeight);
 
-
 		//popup.setOutsideTouchable(true);
 		popup.setFocusable(true);
 
-		//int OFFSET_X =(Twidth);
-		//int OFFSET_Y =Theight-(Theight-100);
-		//Toast.makeText(getApplicationContext(), "Hi", Toast.LENGTH_LONG).show();
 		popup.setBackgroundDrawable(new BitmapDrawable());
-		//popup.showAsDropDown(layout,OFFSET_X,OFFSET_Y);
-		//popup.showAsDropDown(MenuItemCompat.getActionView(searchButtonMenuItem),0,0);
 		int[]  location = new int[2];
-		//searchButtonMenuItem.
-		//popup.s
-		//popup.showAsDropDown(menuItemView);
-		menuItemView.getLocationOnScreen(location);
-		Log.d(LOG_TAG, "menuitem pos ="+location[0]+" "+location[1]);
-		
-		// popup.showAtLocation(layout,Gravity.TOP,location[0],location[1]);
-		popup.showAsDropDown(menuItemView,0,0);
+		if(menuItemView != null){
+			menuItemView.getLocationOnScreen(location);
+			Log.d(LOG_TAG, "menuitem pos ="+location[0]+" "+location[1]);
+
+			popup.showAsDropDown(menuItemView,0,0);
+		}
+		else{
+			Log.d(LOG_TAG, "menuitem pos not available, anchor to top of the listview");
+			//popup.showAsDropDown(findViewById(R.id.listeficheavecfiltre_listview),0,0);
+			View containerView = findViewById(R.id.listeficheavecfiltre_listview);
+			containerView.getLocationOnScreen(location);
+			Log.d(LOG_TAG, "menuitem pos ="+location[0]+" "+location[1]+ " ");
+			popup.showAtLocation(layout,Gravity.TOP|Gravity.RIGHT,0,location[1]);
+		}
 		// bouton filtre espèce 
 		Button btnFiltreEspece = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

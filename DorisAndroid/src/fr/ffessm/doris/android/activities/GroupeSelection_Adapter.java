@@ -305,7 +305,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			// ajout du nouveau bouton standard
 			ImageView rootImage = new ImageView(context);
 			navigationLayout.addView(rootImage);
-			rootImage.setImageResource(R.drawable.app_arbre_phylogenetique_gris);
+			rootImage.setImageResource(R.drawable.ic_action_arbre_phylogenetique);
 			rootImage.setPadding(5, 5, 5, 5);
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) rootImage.getLayoutParams();
 			layoutParams.leftMargin = 2;
@@ -331,7 +331,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			// ajout du nouveau bouton standard
 			ImageButton backToParentButton = new ImageButton(context);
 			navigationLayout.addView(backToParentButton);
-			backToParentButton.setImageResource(R.drawable.app_arbre_phylogenetique_gris);
+			backToParentButton.setImageResource(R.drawable.ic_action_arbre_phylogenetique);
 			backToParentButton.setBackgroundResource(R.drawable.button_selected_background);
 			backToParentButton.setPadding(5, 5, 5, 5);
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
@@ -360,7 +360,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			layoutParams.rightMargin = 2;
 			layoutParams.bottomMargin = 5;
 			backToParentButton.setLayoutParams(layoutParams);
-			backToParentButton.setHeight(BitmapFactory.decodeResource(context.getResources(),R.drawable.app_arbre_phylogenetique_gris).getHeight()+10);
+			backToParentButton.setHeight(BitmapFactory.decodeResource(context.getResources(),R.drawable.ic_action_arbre_phylogenetique).getHeight()+10);
 			backToParentButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {

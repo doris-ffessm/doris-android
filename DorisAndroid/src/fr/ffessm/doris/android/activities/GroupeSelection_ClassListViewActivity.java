@@ -120,8 +120,9 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
         else{
         	TextView filtreCourantTV = (TextView)findViewById(R.id.groupselection_listview_filtre_espece_courant_textView);
         	currentFilterInfoLayout.setVisibility(View.VISIBLE);
-        	filtreCourantTV.setText(getString(R.string.groupselection_customview_filtre_espece_courant_label)+groupeFiltreCourant.getNomGroupe());
+        	filtreCourantTV.setText(getString(R.string.groupselection_listview_filtre_espece_courant_label)+groupeFiltreCourant.getNomGroupe());
         }
+        actionBar.setTitle(R.string.groupselection_listview_title);
 		//End of user code
 	}
 	
