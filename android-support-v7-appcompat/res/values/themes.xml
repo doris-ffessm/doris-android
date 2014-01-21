@@ -29,6 +29,9 @@
     <style name="Theme.AppCompat" parent="Theme.Base.AppCompat">
         <item name="isLightTheme">false</item>
 
+        <item name="android:windowContentOverlay">@null</item>
+    	<item name="android:windowBackground">@android:color/black</item>
+    
         <!-- Required for use of support_simple_spinner_dropdown_item.xml -->
         <item name="spinnerDropDownItemStyle">
             @style/Widget.AppCompat.DropDownItem.Spinner
