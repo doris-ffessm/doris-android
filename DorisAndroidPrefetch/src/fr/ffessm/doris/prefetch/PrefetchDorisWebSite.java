@@ -54,6 +54,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -606,7 +607,7 @@ public class PrefetchDorisWebSite {
 											if (Outils.getFichierFromUrl(PhotoFiche.VIGNETTE_BASE_URL+photoFiche.getCleURL(), fichierImageRacine+SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL())) {
 											} else {
 												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-												System.exit(0);
+												//System.exit(0);
 											}
 										}
 										// Qualité Intermédiaire
@@ -614,7 +615,7 @@ public class PrefetchDorisWebSite {
 											if (Outils.getFichierFromUrl(PhotoFiche.MOYENNE_BASE_URL+photoFiche.getCleURL(), fichierImageRacine+SOUSDOSSIER_MED_RES+photoFiche.getCleURL())) {
 											} else {
 												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-												System.exit(0);
+												//System.exit(0);
 											}
 										}
 										// Haute Qualité 
@@ -622,7 +623,7 @@ public class PrefetchDorisWebSite {
 											if (Outils.getFichierFromUrl(PhotoFiche.GRANDE_BASE_URL+photoFiche.getCleURL(), fichierImageRacine+SOUSDOSSIER_HI_RES+photoFiche.getCleURL())) {
 											} else {
 												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-												System.exit(0);
+												//System.exit(0);
 											}
 										}
 									}
@@ -667,8 +668,8 @@ public class PrefetchDorisWebSite {
 					String fichierIconeRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_ICONES + "/";
 					String fichierIconeRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/" + SOUSDOSSIER_ICONES + "/";
 
-					List<LienATelecharger> liensATelecharger = getLienATelecharger();
-					for (LienATelecharger lienATelecharger : liensATelecharger) {
+					List<Lien> liensATelecharger = getLienATelecharger();
+					for (Lien lienATelecharger : liensATelecharger) {
 						
 						if (lienATelecharger.getLienKind() == LienKind.PAGE) {
 							if( ! isFileExistingPath( fichierRefLien+lienATelecharger.getFichier() ) ){
@@ -715,7 +716,7 @@ public class PrefetchDorisWebSite {
 	private void majZoneGeographique(ConnectionSource connectionSource, ZoneGeographiqueKind zoneKing){
 		log.debug("majZoneGeographique() - Début");
 		
-		String listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeFiches"+zoneKing.name()+".html";
+		String listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeFiches-"+(zoneKing.ordinal()+1)+".html";
 		log.debug("Récup. Liste Fiches Doris Zone : " + listeFichesFichier);
 		//List<Fiche> listeFiches = new ArrayList<Fiche>(0);
 		String contenuFichierHtml = "";
@@ -729,7 +730,7 @@ public class PrefetchDorisWebSite {
 			}
 		} else {
 			// NODWNLD
-			listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeFiches"+zoneKing.name()+".html";
+			listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeFiches-"+(zoneKing.ordinal()+1)+".html";
 			if (new File(listeFichesFichier).exists()) {
 				contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
 			} else {
@@ -1270,56 +1271,90 @@ public class PrefetchDorisWebSite {
 	}
 	
 	// Liste des Pages et Images à télécharger dans le cas des CD et DVD
-	public List<LienATelecharger> getLienATelecharger(){
-		List<LienATelecharger> lienATelecharger = new ArrayList<LienATelecharger>(0);
+	public List<Lien> getLienATelecharger(){
+		List<Lien> lienATelecharger = new ArrayList<Lien>(0);
 
-		lienATelecharger.add(new LienATelecharger(LienKind.PAGE, "accueil.asp","accueil.html"));
-		lienATelecharger.add(new LienATelecharger(LienKind.PAGE, "styles.css","styles.css"));
-		lienATelecharger.add(new LienATelecharger(LienKind.PAGE, "doris.asp","doris.html"));
-		lienATelecharger.add(new LienATelecharger(LienKind.PAGE, "doris_faq.asp","doris_faq.html"));
-		lienATelecharger.add(new LienATelecharger(LienKind.PAGE, "Copyright.asp","Copyright.html"));
-		lienATelecharger.add(new LienATelecharger(LienKind.PAGE, "liens.asp","liens.html"));
-		
-		
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/carre.jpg","images_carre.jpg"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/pucecarre.gif","images_pucecarre.gif"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fleche_grise.gif","images_fleche_grise.gif"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/logo.gif","images_logo.gif"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/logo-biologie.gif","images_logo-biologie.gif"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/logo_ffessm.gif","images_logo_ffessm.gif"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/ligne_carre3.gif","images_ligne_carre3.gif"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/MNHN2.gif","images_MNHN2.gif"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/Palme3.gif","images_Palme3.gif"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/10x10.gif","images_10x10.gif"));
-		
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier1puce.jpg","images_fichier1puce.jpg"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier2puce.jpg","images_fichier2puce.jpg"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier3puce.jpg","images_fichier3puce.jpg"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier4puce.jpg","images_fichier4puce.jpg"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier5puce.jpg","images_fichier5puce.jpg"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier10puce.jpg","images_fichier10puce.jpg"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "accueil.asp","accueil.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "styles.css","styles.css"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "doris.asp","doris.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "doris_faq.asp","doris_faq.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "Copyright.asp","Copyright.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "liens.asp","liens.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=10","fichier_10.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=1","fichier_1.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=2","fichier_2.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=3","fichier_3.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=4","fichier_4.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=5","fichier_5.html"));
 
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier1.jpg","images_fichier1.jpg"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier2.jpg","images_fichier2.jpg"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier3.jpg","images_fichier3.jpg"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier4.jpg","images_fichier4.jpg"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier5.jpg","images_fichier5.jpg"));
-		lienATelecharger.add(new LienATelecharger(LienKind.IMG, "images/fichier10.jpg","images_fichier10.jpg"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=10","groupes_zone_10.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=1","groupes_zone_1.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=2","groupes_zone_2.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=3","groupes_zone_3.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=4","groupes_zone_4.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=5","groupes_zone_5.html"));
+		
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/favicon.ico","favicon.ico"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/carre.jpg","images_carre.jpg"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/pucecarre.gif","images_pucecarre.gif"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/fleche_grise.gif","images_fleche_grise.gif"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/logo.gif","images_logo.gif"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/logo2.gif","images_logo2.gif"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/logo-biologie.gif","images_logo-biologie.gif"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/logo_ffessm.gif","images_logo_ffessm.gif"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/ligne_carre3.gif","images_ligne_carre3.gif"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/ligne_carre4.gif","images_ligne_carre4.gif"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/MNHN2.gif","images_MNHN2.gif"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/Palme3.gif","images_Palme3.gif"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/10x10.gif","images_10x10.gif"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/pucemenu.gif","images_pucemenu.gif"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/fond_bas.gif","fond_bas.gif"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/fonbandeau.gif","fonbandeau.gif"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/icon_back.gif","icon_back.gif"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/petit_gris.gif","petit_gris.gif"));
+
+		
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier1puce.jpg","images_fichier1puce.jpg"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier2puce.jpg","images_fichier2puce.jpg"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier3puce.jpg","images_fichier3puce.jpg"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier4puce.jpg","images_fichier4puce.jpg"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier5puce.jpg","images_fichier5puce.jpg"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier10puce.jpg","images_fichier10puce.jpg"));
+
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier1.jpg","images_fichier1.jpg"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier2.jpg","images_fichier2.jpg"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier3.jpg","images_fichier3.jpg"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier4.jpg","images_fichier4.jpg"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier5.jpg","images_fichier5.jpg"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier10.jpg","images_fichier10.jpg"));
 		
 		
 		return lienATelecharger;
 	}
 	
+	public List<Lien> getLienANettoyer(){
+		List<Lien> lienANettoyer = new ArrayList<Lien>(0);
+		
+		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=1&","listeFiches-1.html"));
+		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=2&","listeFiches-2.html"));
+		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=3&","listeFiches-3.html"));
+		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=4&","listeFiches-4.html"));
+		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=5&","listeFiches-5.html"));
+	
+		return lienANettoyer;
+	}
+
+	
 	public enum LienKind {
     	PAGE,
     	IMG
     }
-	private class LienATelecharger {
+	private class Lien {
 		LienKind lienKind;
 		String url;
 		String fichierSurDisque;
 		
-		LienATelecharger(LienKind lienKind, String url, String fichierSurDisque){
+		Lien(LienKind lienKind, String url, String fichierSurDisque){
 			this.lienKind = lienKind;
 			this.url = url;
 			this.fichierSurDisque = fichierSurDisque;
@@ -1339,10 +1374,16 @@ public class PrefetchDorisWebSite {
 		String fichierCDLien = DOSSIER_RACINE + "/" + DOSSIER_CD + "/";
 		String fichierRefLien = DOSSIER_RACINE + "/";
 		
-		// Création Dossier HTML du CD
+		// Création Dossiers du CD
 		log.info("Création Dossier HTML du CD");
-		File dossierRef = new File(fichierRefLien+DOSSIER_HTML_REF);
 		File dossierCD = new File(fichierCDLien+DOSSIER_HTML);
+		File dossierRef = new File(fichierRefLien+DOSSIER_HTML_REF);
+		try {
+			FileUtils.copyDirectory(dossierRef, dossierCD);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		dossierRef = new File(fichierRefLien+DOSSIER_HTML);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
 		} catch (IOException e) {
@@ -1350,8 +1391,14 @@ public class PrefetchDorisWebSite {
 		}
 		
 		log.info("Création Dossier Icones du CD");
-		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES_REF+"/"+SOUSDOSSIER_ICONES);
 		dossierCD = new File(fichierCDLien+SOUSDOSSIER_ICONES);
+		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES_REF+"/"+SOUSDOSSIER_ICONES);
+		try {
+			FileUtils.copyDirectory(dossierRef, dossierCD);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES+"/"+SOUSDOSSIER_ICONES);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
 		} catch (IOException e) {
@@ -1359,8 +1406,14 @@ public class PrefetchDorisWebSite {
 		}
 		
 		log.info("Création Dossier Vignettes du CD");
-		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES_REF+"/"+SOUSDOSSIER_VIGNETTES);
 		dossierCD = new File(fichierCDLien+SOUSDOSSIER_VIGNETTES);
+		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES_REF+"/"+SOUSDOSSIER_VIGNETTES);
+		try {
+			FileUtils.copyDirectory(dossierRef, dossierCD);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES+"/"+SOUSDOSSIER_VIGNETTES);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
 		} catch (IOException e) {
@@ -1368,28 +1421,51 @@ public class PrefetchDorisWebSite {
 		}
 		
 		log.info("Création Dossier Images du CD");
-		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES_REF+"/"+SOUSDOSSIER_MED_RES);
 		dossierCD = new File(fichierCDLien+SOUSDOSSIER_MED_RES);
+		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES_REF+"/"+SOUSDOSSIER_MED_RES);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES+"/"+SOUSDOSSIER_MED_RES);
+		try {
+			FileUtils.copyDirectory(dossierRef, dossierCD);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		// Modification Fichiers HTML : lien, images
 		dossierCD = new File(fichierCDLien+DOSSIER_HTML);
 		for (File fichierHtml:dossierCD.listFiles()) {
 			String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
+			contenuFichier = contenuFichier.replace("href=\""+Constants.getSiteUrl(),"href=\"");
 			
-			for (LienATelecharger lienTelecharge : getLienATelecharger()){
+			// Pour chaque Liens à télécharger définis ci-après
+			for (Lien lienTelecharge : getLienATelecharger()){
 				if (lienTelecharge.getLienKind() == LienKind.PAGE) {
-					contenuFichier = contenuFichier.replace("href=\""+lienTelecharge.getUrl()+"\"","href=\""+lienTelecharge.getFichier()+"\"");
+					if ( ! lienTelecharge.getUrl().contains("&")) {
+						contenuFichier = contenuFichier.replace("href=\""+lienTelecharge.getUrl()+"\"","href=\""+lienTelecharge.getFichier()+"\"");
+					} else {
+						contenuFichier = contenuFichier.replaceAll("href=\""+Pattern.quote(lienTelecharge.getUrl())+"[^\"]*\"","href=\""+lienTelecharge.getFichier()+"\"");
+					}
 				}
 				if (lienTelecharge.getLienKind() == LienKind.IMG) {
 					contenuFichier = contenuFichier.replace("src=\""+lienTelecharge.getUrl()+"\"","src=\"../"+SOUSDOSSIER_ICONES+"/"+lienTelecharge.getFichier()+"\"");
+					contenuFichier = contenuFichier.replace("background=\""+lienTelecharge.getUrl()+"\"","background=\"../"+SOUSDOSSIER_ICONES+"/"+lienTelecharge.getFichier()+"\"");
 				}
 			}
 
+			// Liens vers 
+			for (Lien lienANettoyer : getLienANettoyer()){
+				if (lienANettoyer.getLienKind() == LienKind.PAGE) {
+					contenuFichier = contenuFichier.replaceAll("href=\""+Pattern.quote(lienANettoyer.getUrl())+"[^\"]*\"","href=\""+lienANettoyer.getFichier()+"\"");
+				}
+				/*if (lienTelecharge.getLienKind() == LienKind.IMG) {
+					contenuFichier = contenuFichier.replace("src=\""+lienTelecharge.getUrl()+"\"","src=\"../"+SOUSDOSSIER_ICONES+"/"+lienTelecharge.getFichier()+"\"");
+				}*/
+			}
+			
 			try {
 				FileUtils.write(fichierHtml, contenuFichier);
 			} catch (IOException e) {
