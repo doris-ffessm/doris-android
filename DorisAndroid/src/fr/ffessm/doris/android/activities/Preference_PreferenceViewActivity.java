@@ -79,7 +79,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	
 	//Start of user code Preference preference activity additional attributes
 	private static final String LOG_TAG = Outils.class.getCanonicalName();
-
+	final Context context = this;
 	private SharedPreferences prefs;
 	//End of user code
 
@@ -89,8 +89,8 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preference); 
 		//Start of user code Preference preference activity additional onCreate
-        
-        
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        		
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
 	        String typeParam = bundle.getString("type_parametre");
@@ -99,7 +99,6 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	        if (typeParam != null) {
 	        	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - typeParam : "+typeParam);
 	        	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - param : "+param);
-	        	
 	        	if (typeParam.equals("mode_precharg_region")) {
 	        		if (param != null) {
 			        	PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference("button_qualite_images_zones_key");
@@ -114,11 +113,10 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	        	}
 	        }
         }
-        
+
         final Preference btnVideVig = (Preference)getPreferenceManager().findPreference("btn_reset_vig");
         if(btnVideVig != null) {
 	        btnVideVig.setSummary(getVigSummary());
-        
         	btnVideVig.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                  @Override
                  public boolean onPreferenceClick(Preference arg0) {
@@ -127,9 +125,9 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
                 	 btnVideVig.setSummary(getVigSummary());
                 	 return true;
                  }
-             });     
+             }); 
          }
-        
+
         final Preference btnVideMedRes = (Preference)getPreferenceManager().findPreference("btn_reset_med_res");      
         if(btnVideMedRes != null) {
 	        btnVideMedRes.setSummary(getMedResSummary());
@@ -144,7 +142,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
                  }
              });     
          }
-        
+
         final Preference btnVideHiRes = (Preference)getPreferenceManager().findPreference("btn_reset_hi_res");      
         if(btnVideHiRes != null) {
         	btnVideHiRes.setSummary(getHiResSummary());
@@ -159,7 +157,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
                  }
              });     
          }
-        
+
         final Preference btnVideCache = (Preference)getPreferenceManager().findPreference("btn_reset_cache");      
         if(btnVideCache != null) {
         	
@@ -168,18 +166,15 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         	btnVideCache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                  @Override
                  public boolean onPreferenceClick(Preference arg0) {
-                	 //TODO : Picasso.with(getApplicationContext()).evictAll()
-                	 LruCache cache = new LruCache(getApplicationContext());
-                	
-                	 //cache.evictAll();
-                	 cache.clear();
-                	 //Picasso.with(getApplicationContext()).
-                	 // Pas compris comment faire ici : https://github.com/square/picasso/pull/77
+                	 try {
+                	        File dir = context.getCacheDir();
+                	        if (dir != null && dir.isDirectory()) {
+                	            deleteDir(dir);
+                	        }
+                	    } catch (Exception e) {}
                 	 
                 	 btnVideCache.setSummary(getCacheSummary());
-                 	 Toast.makeText(getApplicationContext(), "Ne marche pas pour l'instant :-(", Toast.LENGTH_LONG).show();
-                 	
-                	return true;
+                	 return true;
                  }
              });     
          }
@@ -191,7 +186,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     	Preference btnPrechargRegionFrance = (Preference)getPreferenceManager().findPreference("pref_key_mode_precharg_region_france");   
     	btnPrechargRegionFrance.setIcon(imageResource);
         */
-        
+
 		//End of user code
     }
 
@@ -231,25 +226,36 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 
 	
 	//Start of user code Preference preference activity additional operations
-    
 
-    
     private String getVigSummary() {
-    	String txt = getApplicationContext().getString(R.string.mode_precharg_reset_vig_summary); 
-    	txt = txt.replace("@nbPh", ""+Outils.getVignetteCount(getApplicationContext()) ) ;
-    	txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getVignettesDiskUsage(getApplicationContext()) ) ) ;
+    	String txt = context.getString(R.string.mode_precharg_reset_vig_summary);
+    	//txt = txt.replace("@nbPh", ""+Outils.getParamInt(getApplicationContext(), R.string.pref_key_nbphotos_recues_vignettes, 0)) ;
+    	
+    	String key = context.getString(R.string.pref_key_nbphotos_recues_vignettes);
+    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - key : "+key);
+    	try {
+    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() -  prefs.getInt(key, 0) : "
+				+ prefs.contains("data_nbphotos_recues_vignettes") ); 
+    		long nbPh = prefs.getLong(key, 0);
+    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - nbPh : "+nbPh); 
+	    	txt = txt.replace("@nbPh", ""+nbPh) ;
+    	} catch (ClassCastException	 e){
+    		txt = txt.replace("@nbPh", ""+0) ;
+    	}
+
+    	txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getParamLong(getApplicationContext(), R.string.pref_key_size_recues_vignettes, 0L ) ) ) ;
     	return txt;
     }
     private String getMedResSummary() {
         String txt = getApplicationContext().getString(R.string.mode_precharg_reset_med_res_summary); 
-        txt = txt.replace("@nbPh", ""+Outils.getMedResCount(getApplicationContext()) ) ;
-        txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getMedResDiskUsage(getApplicationContext()) ) ) ;
+        txt = txt.replace("@nbPh", ""+Outils.getParamLong(getApplicationContext(), R.string.pref_key_nbphotos_recues_med_res, 0L)) ;
+        txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getParamLong(getApplicationContext(), R.string.pref_key_size_recues_med_res, 0L ) ) ) ;
     	return txt;
     }
     private String getHiResSummary() {
         String txt = getApplicationContext().getString(R.string.mode_precharg_reset_hi_res_summary); 
-        txt = txt.replace("@nbPh", ""+Outils.getHiResCount(getApplicationContext()) ) ;
-        txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getHiResDiskUsage(getApplicationContext()) ) ) ;
+        txt = txt.replace("@nbPh", ""+Outils.getParamLong(getApplicationContext(), R.string.pref_key_nbphotos_recues_hi_res, 0L)) ;
+        txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getParamLong(getApplicationContext(), R.string.pref_key_size_recues_hi_res, 0L ) ) ) ;
     	return txt;
     }
     private String getCacheSummary() {
@@ -268,6 +274,17 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
      	return txt;
     }
     
-    
+    public static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
+    }
 	//End of user code
 }

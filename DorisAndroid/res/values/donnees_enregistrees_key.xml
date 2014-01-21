@@ -37,4 +37,10 @@
 	<string name="pref_key_nbphotos_recues_caraibes">data_nbphotos_recues_caraibes</string>
 	<string name="pref_key_nbphotos_recues_favorite">data_nbphotos_recues_favorite</string>
 	
+	<string name="pref_key_nbphotos_recues_vignettes">data_nbphotos_recues_vignettes</string>
+	<string name="pref_key_nbphotos_recues_med_res">data_nbphotos_recues_med_res</string>
+	<string name="pref_key_nbphotos_recues_hi_res">data_nbphotos_recues_hi_res</string>
+	<string name="pref_key_size_recues_vignettes">data_nbphotos_recues_vignettes</string>
+	<string name="pref_key_size_recues_med_res">data_nbphotos_recues_med_res</string>
+	<string name="pref_key_size_recues_hi_res">data_nbphotos_recues_hi_res</string>
 </resources>

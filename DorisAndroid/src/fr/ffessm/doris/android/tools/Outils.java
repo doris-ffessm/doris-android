@@ -87,7 +87,8 @@ public class Outils {
 		return null;
 		}
 	}
-	public static File getImageFolderVignette(Context inContext) { 
+	public static File getImageFolderVignette(Context inContext) {
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageFolderVignette() - Début");
 		return inContext.getDir( VIGNETTES_FICHE_FOLDER , Context.MODE_PRIVATE);
 	}
 	public static File getImageFolderMedRes(Context inContext) { 
@@ -432,7 +433,11 @@ public class Outils {
 		return PreferenceManager.getDefaultSharedPreferences(inContext).getString(inContext.getString(inParam), inValDef);
 	}
 	public static long getParamLong(Context inContext, int inParam, Long inValDef) {
-		return PreferenceManager.getDefaultSharedPreferences(inContext).getLong(inContext.getString(inParam), inValDef);
+		if (PreferenceManager.getDefaultSharedPreferences(inContext).contains(inContext.getString(inParam)) ) {
+			return PreferenceManager.getDefaultSharedPreferences(inContext).getLong(inContext.getString(inParam), inValDef);
+		} else {
+			return inValDef;
+		}
 	}
 	public static int getParamInt(Context inContext, int inParam, int inValDef) {
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getParamInt() - param : " + inParam );
@@ -460,7 +465,12 @@ public class Outils {
 		prefEdit.putBoolean(inContext.getString(inParam), inVal);
 		prefEdit.commit();
 	}
-	
+	public static void setParamLong(Context inContext, int inParam, long inVal) {
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(inContext);
+	    SharedPreferences.Editor prefEdit = preferences.edit();  
+		prefEdit.putLong(inContext.getString(inParam), inVal);
+		prefEdit.commit();
+	}	
 	
 	public static ImageType getImageQualityToDownload(Context inContext, boolean inPhotoPrincipale, int inIdZoneGeo){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageQualityToDownload() - Début" );

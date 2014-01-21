@@ -458,8 +458,10 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		mNotificationHelper.completed();
 		// Start of user code TelechargePhotosFiches onCancelled
 		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = null;
-        // termine de notifier les vues qui pouvaient être interressées
+        // termine de notifier les vues qui pouvaient être intéressées
 		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+		
+		majParamNbandSize();
 		// End of user code
 	}
     protected void onPostExecute(Integer result)    {
@@ -468,8 +470,10 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 		// Start of user code TelechargePhotosFiches onPostExecute
         // retire l'activité qui est maintenant finie
         DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = null;
-        // termine de notifier les vues qui pouvaient être interressées
+        // termine de notifier les vues qui pouvaient être intéressées
         DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+        
+        majParamNbandSize();
 		// End of user code
     }
 
@@ -487,6 +491,20 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     }
     
 
+    public void majParamNbandSize() {
+    	int nb;
+    	nb = Outils.getVignetteCount(context);
+    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "majParamNbandSize() - nb Vignettes : "+nb);
+    	Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_vignettes, nb);
+		Outils.setParamLong(context,R.string.pref_key_size_recues_vignettes, Outils.getVignettesDiskUsage(context));
+		Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_med_res, Outils.getMedResCount(context));
+		Outils.setParamLong(context,R.string.pref_key_size_recues_med_res, Outils.getMedResDiskUsage(context));
+		Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_hi_res, Outils.getHiResCount(context));
+		Outils.setParamLong(context,R.string.pref_key_size_recues_hi_res, Outils.getHiResDiskUsage(context));
+
+    }
+    
+    
 	// End of user code
 	
 }
