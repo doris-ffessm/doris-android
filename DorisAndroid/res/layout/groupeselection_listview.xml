@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/groupselection_listview_filtre_espece_courant_suppFiltreBtn"
-            android:text="@string/groupselection_customview_filtre_espece_courant_label"
+            android:text="@string/groupselection_listview_filtre_espece_courant_label"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="?android:attr/textColorPrimary" />
 
@@ -52,7 +52,7 @@
             android:layout_height="32sp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:contentDescription="@string/groupselection_customview_suppression_filtre_espece_courant_descBtn"
+            android:contentDescription="@string/groupselection_listview_suppression_filtre_espece_courant_descBtn"
             android:onClick="onRemoveCurrentFilterClick"
             android:src="@android:drawable/ic_delete" />
     </RelativeLayout>

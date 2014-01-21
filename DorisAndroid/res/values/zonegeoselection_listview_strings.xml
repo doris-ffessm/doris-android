@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<string name="zonegeoselection_listview_title">Sélect. zone géo.</string>
+	<string name="zonegeoselection_listview_title_large">Sélection zone géographique</string>
     <string name="zonegeoselection_header_label">Filtre les fiches pour la zone\u00A0: </string>
     <string name="zonegeoselection_listview_suppression_filtre_courant_descBtn">Supprimer le filtre de zone géographique</string>
 	<string name="zonegeoselection_filtre_supprime">Filtre de zone géographique supprimé</string>
