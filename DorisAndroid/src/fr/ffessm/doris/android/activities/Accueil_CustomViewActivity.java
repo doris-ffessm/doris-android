@@ -58,6 +58,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,6 +98,7 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 //End of user code
@@ -240,17 +242,42 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	
     }
     
-    protected View createNavigationZoneView(ZoneGeographique zone){
+    protected View createNavigationZoneView(final ZoneGeographique zone){
+    	final Context context = this;
+        final int zoneId = zone.getId();
+        
     	LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewZone = inflater.inflate(R.layout.zonegeoselection_listviewrow, null);
         
         TextView tvLabel = (TextView) viewZone.findViewById(R.id.zonegeoselection_listviewrow_label);
         tvLabel.setText(zone.getNom());
         
-        TextView tvLDetails = (TextView) viewZone.findViewById(R.id.zonegeoselection_listviewrow_details);
-        tvLDetails.setText(zone.getDescription());
+        if(ScreenTools.getScreenWidth(context) > 500){ // TODO devra probablement être adpaté lorsque l'on aura des fragments
+	        TextView tvLDetails = (TextView) viewZone.findViewById(R.id.zonegeoselection_listviewrow_details);
+	        tvLDetails.setText(zone.getDescription());
+        }
         
-        viewZone.findViewById(R.id.zonegeoselection__selectBtn).setVisibility(View.GONE);
+        // Utilise le bouton select pour naviguer vers 
+        ImageButton imgSelect = (ImageButton) viewZone.findViewById(R.id.zonegeoselection__selectBtn);
+        imgSelect.setImageResource(R.drawable.ic_action_arbre_phylogenetique);
+        imgSelect.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+				// positionne la recherche pour cette zone
+				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zoneId);
+				// réinitialise le filtre espèce
+				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), 1);
+		        ed.commit();				
+				//Permet de revenir à l'accueil après recherche par le groupe, si false on irait dans la liste en quittant
+				Intent toGroupeSelectionView = new Intent(context, GroupeSelection_ClassListViewActivity.class);
+		        Bundle b = new Bundle();
+		        b.putBoolean("GroupeSelection_depuisAccueil", true);
+		        toGroupeSelectionView.putExtras(b);
+		        showToast(zone.getDescription());
+		        startActivity(toGroupeSelectionView);
+			}
+		});
         
         String uri = Outils.getZoneIcone(this.getApplicationContext(), zone.getId()); 
         int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
@@ -261,8 +288,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    ivIcone.setMaxHeight(iconeZine);
 	    ivIcone.setMaxWidth(iconeZine);
         
-        final Context context = this;
-        final int zoneId = zone.getId();
+        
         viewZone.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -272,6 +298,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 				// réinitialise le filtre espèce
 				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), 1);
 		        ed.commit();
+		        showToast(zone.getDescription());
 				startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
 			}
 		});
