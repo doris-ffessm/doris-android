@@ -125,6 +125,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	
 	protected HashMap<Integer, MultiProgressBar> progressBarZones = new HashMap<Integer, MultiProgressBar>(); 
 	
+	// si false alors c'est que l'utilisateur a cliqué sur la croix pour le fermer, 
+	// tant que l'appli est ouverte elle ne se rouvrira pas, même en cas de rotation
+	public static boolean mustShowLogoFede = true;
+	
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -161,7 +165,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         };
 
         // Affichage Icones Fédé.
-        if (!Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_accueil_aff_iconesfede, true)){
+        if (!mustShowLogoFede || !Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_accueil_aff_iconesfede, true)){
         	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
         }
         
@@ -254,7 +258,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         
         if(ScreenTools.getScreenWidth(context) > 500){ // TODO devra probablement être adpaté lorsque l'on aura des fragments
 	        TextView tvLDetails = (TextView) viewZone.findViewById(R.id.zonegeoselection_listviewrow_details);
+	        tvLDetails.setVisibility(View.VISIBLE);
 	        tvLDetails.setText(zone.getDescription());
+        }
+        else{
+        	viewZone.findViewById(R.id.zonegeoselection_listviewrow_details).setVisibility(View.GONE);
         }
         
         // Utilise le bouton select pour naviguer vers 
@@ -364,6 +372,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		}
     }
 	public void onClickBtnFermer(View view){
+		mustShowLogoFede = false;
     	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
     }
 	/*public void reinitializeDBFromPrefetched(){
