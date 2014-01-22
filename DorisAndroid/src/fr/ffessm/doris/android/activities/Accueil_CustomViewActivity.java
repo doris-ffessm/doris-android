@@ -274,7 +274,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		        Bundle b = new Bundle();
 		        b.putBoolean("GroupeSelection_depuisAccueil", true);
 		        toGroupeSelectionView.putExtras(b);
-		        showToast(zone.getDescription());
+		        showToast(getString(R.string.accueil_recherche_guidee_label_text)+"; "+zone.getDescription());
 		        startActivity(toGroupeSelectionView);
 			}
 		});
@@ -333,14 +333,14 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	public void onClickBtnListeFiches(View view){
 		startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
     }
-	public void onClickBtnRechercheGuidee(View view){
+	/*public void onClickBtnRechercheGuidee(View view){
 		//Permet de revenir à l'accueil après recherche par le groupe, si false on irait dans la liste en quittant
 		Intent toGroupeSelectionView = new Intent(this, GroupeSelection_ClassListViewActivity.class);
         Bundle b = new Bundle();
         b.putBoolean("GroupeSelection_depuisAccueil", true);
         toGroupeSelectionView.putExtras(b);
         startActivity(toGroupeSelectionView);
-	}
+	}*/
 	/*public void onClickBtnListeParticipants(View view){
 		startActivity(new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class));
 	}
@@ -532,7 +532,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	TextView tvRecherchePrecedente = (TextView)findViewById(R.id.accueil_recherche_precedente_details);
     	tvRecherchePrecedente.setText(sbRecherchePrecedente.toString());
     	
-    	((ImageView) findViewById(R.id.accueil_recherche_guidee_icone)).setMaxHeight(iconeZine);
+    	//((ImageView) findViewById(R.id.accueil_recherche_guidee_icone)).setMaxHeight(iconeZine);
     	
     	
     	// Affichage de chaque Zones - Toutes Zones en 1er

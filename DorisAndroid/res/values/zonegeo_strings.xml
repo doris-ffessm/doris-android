@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string-array name="zonegeo_shortname_array">
+      <item>Toutes les zones</item>
+      <item>France</item>
+      <item>Eau douce</item>
+      <item>Indo-Pacifique</item>
+      <item>Caraïbes</item>
+      <item>Atl. Nord-Ouest</item>  
+    </string-array>
+    
+</resources>

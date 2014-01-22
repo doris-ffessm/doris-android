@@ -100,7 +100,6 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	
     MenuItem searchButtonMenuItem;
     
-    
     final Context context = this;
 	//End of user code
 	// Search EditText
@@ -138,6 +137,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         mHandler = new IndexBarHandler(this);
 		//Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
         
+		
 		//End of user code
 	}
 	
@@ -352,8 +352,35 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
 	// Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity
 	
-	public void updateFilterInActionBar(){
+	public void updateFilterInActionBar(){		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		ActionBar actionBar = getSupportActionBar();
+		// mise à jour des titres
+		// Titre = zone
+        int currentZoneFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
+        if(currentZoneFilterId == -1 || currentZoneFilterId == 0){ // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
+        	//actionBar.setTitle(R.string.accueil_recherche_precedente_filtreGeographique_sans);
+        	String zonegeo_shortnames[]=getResources().getStringArray(R.array.zonegeo_shortname_array);
+        	actionBar.setTitle(zonegeo_shortnames[0]);
+        }
+        else{
+        	//ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
+        	//actionBar.setTitle(currentZoneFilter.getNom().trim());
+        	String zonegeo_shortnames[]=getResources().getStringArray(R.array.zonegeo_shortname_array);
+        	actionBar.setTitle(zonegeo_shortnames[currentZoneFilterId]);
+        }
+        
+        // sous titre = espèce 
+        int filtreCourantId = prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1);	        
+		if(filtreCourantId==1){
+			actionBar.setSubtitle(R.string.accueil_recherche_precedente_filtreEspece_sans);
+        }
+		else {
+			Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
+			actionBar.setSubtitle(groupeFiltreCourant.getNomGroupe().trim());
+			
+		}
+		// mise à jour des actions
 		if((prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1) != 1) ||
 			   (prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1) != -1)){       
 			// mise à jour de l'image du bouton de filtre
