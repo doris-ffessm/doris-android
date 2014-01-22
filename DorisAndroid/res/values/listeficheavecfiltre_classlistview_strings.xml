@@ -2,5 +2,6 @@
 <resources>
 	<string name="listeficheavecfiltre_classlistview_titre">Fiches</string>
 	<string name="listeficheavecfiltre_classlistview_debut_soustitre_avecfiltre">Uniquement les </string>
+	<string name="listeficheavecfiltre_classlistview_no_result">Aucune fiche ne correspond à votre recherche.</string>
 	
 </resources>
