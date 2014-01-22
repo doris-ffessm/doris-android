@@ -187,6 +187,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 			Integer newPosition=alphabetToIndex.get(selected_alpahbet.charAt(0));
 			Log.d(LOG_TAG, "Selected Alphabet is:"+selected_alpahbet+"   position is:"+newPosition);
 			if(	newPosition != null){	
+				Toast.makeText(this, selected_alpahbet, Toast.LENGTH_SHORT).show();
 				ListView listview=(ListView)findViewById(R.id.glossaire_listview);
 				listview.setSelection(newPosition);
 			}

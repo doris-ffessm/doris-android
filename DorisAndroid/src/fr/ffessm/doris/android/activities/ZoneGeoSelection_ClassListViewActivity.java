@@ -43,7 +43,6 @@ package fr.ffessm.doris.android.activities;
 
 
 import fr.ffessm.doris.android.datamodel.*;
-import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.R;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -75,6 +74,7 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import android.widget.TextView;
 
 import fr.ffessm.doris.android.BuildConfig;
+import fr.ffessm.doris.android.tools.ScreenTools;
 // End of user code
 
 public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener {

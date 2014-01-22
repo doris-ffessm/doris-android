@@ -67,7 +67,6 @@ import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -86,6 +85,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.preference.PreferenceManager;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -209,6 +209,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 			Integer newPosition=alphabetToIndex.get(selected_alpahbet.charAt(0));
 			Log.d(LOG_TAG, "Selected Alphabet is:"+selected_alpahbet+"   position is:"+newPosition);
 			if(	newPosition != null){	
+				Toast.makeText(this, selected_alpahbet, Toast.LENGTH_SHORT).show();
 				ListView listview=(ListView)findViewById(R.id.listeficheavecfiltre_listview);
 				listview.setSelection(newPosition);
 			}
