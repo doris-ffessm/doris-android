@@ -104,7 +104,7 @@
 	        </LinearLayout>
 			
 			
-			<LinearLayout 
+		<!-- 	<LinearLayout 
 			    android:id="@+android:id/accueil_recherche_guidee_ll"
 			    android:layout_width="match_parent"
 			    android:layout_height="match_parent"
@@ -157,7 +157,7 @@
 					</LinearLayout>
 			
 				</RelativeLayout>
-			</LinearLayout>
+			</LinearLayout>  -->
 			<View style="@style/Separateur"/>
 			
 			<TextView

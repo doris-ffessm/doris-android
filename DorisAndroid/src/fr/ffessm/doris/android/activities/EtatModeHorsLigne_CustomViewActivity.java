@@ -373,10 +373,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	            return true;
 			//Start of user code additional menu action EtatModeHorsLigne_CustomViewActivity
         	case R.id.etatmodehorsligne_customview_action_a_propos:
-	        	//APropos aPropos = new APropos(getContext(), (Activity) getContext(), getHelper());
-				//aPropos.aProposAff();
 				AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
-				aPropos.aProposAff();				
+				aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label)+getContext().getString(R.string.app_name), aPropos.aProposAff(),	"file:///android_res/raw/apropos.html");		
 				return true;
 		//End of user code
 			default:

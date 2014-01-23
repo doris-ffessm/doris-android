@@ -6,7 +6,7 @@
 <!-- freely adapt here the desired layout for yourmenu -->
 	<item android:id="@+id/etatmodehorsligne_customview_action_a_propos"
 	      android:icon="@android:drawable/ic_menu_info_details"
-	      android:title="@string/a_propos_label" />
+	      android:title="@string/a_propos_menu" />
 	<!--End of user code
 	-->
 	<item android:id="@+id/etatmodehorsligne_customview_action_preference"

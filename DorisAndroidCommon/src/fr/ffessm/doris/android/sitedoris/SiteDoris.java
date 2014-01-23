@@ -460,7 +460,19 @@ public class SiteDoris {
 				if (numeroTR % 4 == 1){
 					Element elementTDTitre2ParticipantNom = elementTR.getFirstElementByClass("titre2");
 					log.info("getListeParticipantsParInitiale() - Nom Participant : "+elementTDTitre2ParticipantNom.getRenderer() );
-					participantNom = ""+elementTDTitre2ParticipantNom.getRenderer();
+					participantNom = elementTDTitre2ParticipantNom.getRenderer().toString().trim();
+					
+					//TODO : Vérifier
+					List<? extends Element> listeElementsTDTitre2ParticipantKind = elementTR.getAllElementsByClass("normal_gris_gras");
+					for (Element elementTDTitre2 : listeElementsTDTitre2ParticipantKind) {
+						
+						//TODO : J'hésite entre tests != null et getRenderer.toString = "" 
+						if ( elementTDTitre2.getFirstElement(HTMLElementName.IMG) != null ){
+							log.info("getListeParticipantsParInitiale() - Participant Kind : "+elementTDTitre2.getFirstElement(HTMLElementName.IMG).getAttributeValue("alt") );
+						} else {
+							log.info("getListeParticipantsParInitiale() - Participant Provenance : "+elementTDTitre2.getRenderer().toString().trim() );
+						}
+					}
 				}
 				
 				if (numeroTR % 4 == 3){
@@ -478,6 +490,18 @@ public class SiteDoris {
 						participantId=participantId.substring(1, participantId.indexOf("&") );
 					}
 					log.info("getListeParticipantsParInitiale() - id Participant : "+participantId);
+					
+					//TODO : Vérifier Photo
+					List<? extends Element> listeElementsIMGParticipantPhoto = elementTR.getAllElements(HTMLElementName.IMG);
+					for (Element elementIMG : listeElementsIMGParticipantPhoto) {
+						String elementTDwidth = elementIMG.getAttributeValue("width");
+						if (elementTDwidth != null && elementTDwidth == "150"){
+							log.info("getListeParticipantsParInitiale() - photo : "+elementIMG.getAttributeValue("src"));
+						}
+					}
+					
+					//TODO : Rechercher Ici Description Participant
+					
 				}
 				if (numeroTR % 4 == 3){
 					// TODO trouver l'url de l'image du participant

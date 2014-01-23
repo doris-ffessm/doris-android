@@ -229,33 +229,20 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 
     private String getVigSummary() {
     	String txt = context.getString(R.string.mode_precharg_reset_vig_summary);
-    	//txt = txt.replace("@nbPh", ""+Outils.getParamInt(getApplicationContext(), R.string.pref_key_nbphotos_recues_vignettes, 0)) ;
-    	
-    	String key = context.getString(R.string.pref_key_nbphotos_recues_vignettes);
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - key : "+key);
-    	try {
-    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() -  prefs.getInt(key, 0) : "
-				+ prefs.contains("data_nbphotos_recues_vignettes") ); 
-    		long nbPh = prefs.getLong(key, 0);
-    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - nbPh : "+nbPh); 
-	    	txt = txt.replace("@nbPh", ""+nbPh) ;
-    	} catch (ClassCastException	 e){
-    		txt = txt.replace("@nbPh", ""+0) ;
-    	}
-
-    	txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getParamLong(getApplicationContext(), R.string.pref_key_size_recues_vignettes, 0L ) ) ) ;
+    	txt = txt.replace("@nbPh", ""+Outils.getParamInt(getApplicationContext(), R.string.pref_key_nbphotos_recues_vignettes, 0)) ;
+    	txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getParamLong(getApplicationContext(), R.string.pref_key_size_folder_vignettes, 0L ) ) ) ;
     	return txt;
     }
     private String getMedResSummary() {
         String txt = getApplicationContext().getString(R.string.mode_precharg_reset_med_res_summary); 
-        txt = txt.replace("@nbPh", ""+Outils.getParamLong(getApplicationContext(), R.string.pref_key_nbphotos_recues_med_res, 0L)) ;
-        txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getParamLong(getApplicationContext(), R.string.pref_key_size_recues_med_res, 0L ) ) ) ;
+        txt = txt.replace("@nbPh", ""+Outils.getParamInt(getApplicationContext(), R.string.pref_key_nbphotos_recues_med_res, 0)) ;
+        txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getParamLong(getApplicationContext(), R.string.pref_key_size_folder_med_res, 0L ) ) ) ;
     	return txt;
     }
     private String getHiResSummary() {
         String txt = getApplicationContext().getString(R.string.mode_precharg_reset_hi_res_summary); 
-        txt = txt.replace("@nbPh", ""+Outils.getParamLong(getApplicationContext(), R.string.pref_key_nbphotos_recues_hi_res, 0L)) ;
-        txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getParamLong(getApplicationContext(), R.string.pref_key_size_recues_hi_res, 0L ) ) ) ;
+        txt = txt.replace("@nbPh", ""+Outils.getParamInt(getApplicationContext(), R.string.pref_key_nbphotos_recues_hi_res, 0)) ;
+        txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getParamLong(getApplicationContext(), R.string.pref_key_size_folder_hi_res, 0L ) ) ) ;
     	return txt;
     }
     private String getCacheSummary() {
