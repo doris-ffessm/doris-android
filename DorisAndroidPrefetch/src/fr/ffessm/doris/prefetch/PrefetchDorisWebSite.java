@@ -155,9 +155,9 @@ public class PrefetchDorisWebSite {
 		if (action.equals("TEST")) {
 			log.debug("doMain() - Début TEST");
 			
-			checkDossiers("CDDVD");
-			creationCD();
-
+			//checkDossiers("CDDVD");
+			//creationCD();
+			transfoHtml();
 
 
 			log.debug("doMain() - Fin TEST");
@@ -699,6 +699,7 @@ public class PrefetchDorisWebSite {
 				// Création du dossier CD et DVD
 				if ( action.equals("CDDVD") ) {
 					creationCD();
+					transfoHtml();
 				}
 				
 			} finally {
@@ -1321,7 +1322,7 @@ public class PrefetchDorisWebSite {
 		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier5puce.jpg","images_fichier5puce.jpg"));
 		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier10puce.jpg","images_fichier10puce.jpg"));
 
-		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier1.jpg","images_fichier1.jpg"));
+		lienATelecharger.add(new Lien(LienKind.IMG, "fichier.asp?numero_fichier=1&","images_fichier1.jpg"));
 		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier2.jpg","images_fichier2.jpg"));
 		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier3.jpg","images_fichier3.jpg"));
 		lienATelecharger.add(new Lien(LienKind.IMG, "images/fichier4.jpg","images_fichier4.jpg"));
@@ -1335,15 +1336,23 @@ public class PrefetchDorisWebSite {
 	public List<Lien> getLienANettoyer(){
 		List<Lien> lienANettoyer = new ArrayList<Lien>(0);
 		
+		// dans les href si commence par url, on replace par le nom du fichier
 		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=1&","listeFiches-1.html"));
 		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=2&","listeFiches-2.html"));
 		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=3&","listeFiches-3.html"));
 		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=4&","listeFiches-4.html"));
 		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=5&","listeFiches-5.html"));
-	
+
 		return lienANettoyer;
 	}
 
+	public List<Lien> getRegExpPourNettoyer(){
+		List<Lien> regExpPourNettoyer = new ArrayList<Lien>(0);
+		
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "toto",""));
+
+		return regExpPourNettoyer;
+	}
 	
 	public enum LienKind {
     	PAGE,
@@ -1435,8 +1444,15 @@ public class PrefetchDorisWebSite {
 			e.printStackTrace();
 		}
 		
+		log.debug("creationCD() - Fin");
+	}
+
+	private void transfoHtml(){
+		log.debug("transfoHtml() - Début");
+		String fichierCDLien = DOSSIER_RACINE + "/" + DOSSIER_CD + "/";
+
 		// Modification Fichiers HTML : lien, images
-		dossierCD = new File(fichierCDLien+DOSSIER_HTML);
+		File dossierCD = new File(fichierCDLien+DOSSIER_HTML);
 		for (File fichierHtml:dossierCD.listFiles()) {
 			String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
 			contenuFichier = contenuFichier.replace("href=\""+Constants.getSiteUrl(),"href=\"");
@@ -1444,7 +1460,7 @@ public class PrefetchDorisWebSite {
 			// Pour chaque Liens à télécharger définis ci-après
 			for (Lien lienTelecharge : getLienATelecharger()){
 				if (lienTelecharge.getLienKind() == LienKind.PAGE) {
-					if ( ! lienTelecharge.getUrl().contains("&")) {
+					if ( ! lienTelecharge.getUrl().contains("=")) {
 						contenuFichier = contenuFichier.replace("href=\""+lienTelecharge.getUrl()+"\"","href=\""+lienTelecharge.getFichier()+"\"");
 					} else {
 						contenuFichier = contenuFichier.replaceAll("href=\""+Pattern.quote(lienTelecharge.getUrl())+"[^\"]*\"","href=\""+lienTelecharge.getFichier()+"\"");
@@ -1466,6 +1482,16 @@ public class PrefetchDorisWebSite {
 				}*/
 			}
 			
+			// RegExp
+			for (Lien lienRegExp : getRegExpPourNettoyer()){
+				if (lienRegExp.getLienKind() == LienKind.PAGE) {
+					contenuFichier = contenuFichier.replaceAll(lienRegExp.url,lienRegExp.fichierSurDisque);
+				}
+				/*if (lienTelecharge.getLienKind() == LienKind.IMG) {
+					contenuFichier = contenuFichier.replace("src=\""+lienTelecharge.getUrl()+"\"","src=\"../"+SOUSDOSSIER_ICONES+"/"+lienTelecharge.getFichier()+"\"");
+				}*/
+			}
+			
 			try {
 				FileUtils.write(fichierHtml, contenuFichier);
 			} catch (IOException e) {
@@ -1474,7 +1500,6 @@ public class PrefetchDorisWebSite {
 		}
 
 		
-		log.debug("creationCD() - Fin");
+		log.debug("transfoHtml() - Fin");
 	}
-
 }
