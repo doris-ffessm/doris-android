@@ -87,7 +87,7 @@ public class IndexBarHandler extends Handler {
 		if(number_of_characters_omit==1 || number_of_characters_omit==2 ){
 			//adjusted the height of the row
 		}
-		if(number_of_characters_omit<=4){					//Two groups shown. For 3,4 characters remove 4,5 characters
+		if(number_of_characters_omit>2 && number_of_characters_omit<=4){					//Two groups shown. For 3,4 characters remove 4,5 characters
 		
 			removeAlphabet(alphabets_list, 6, 2);		//F,G
 			alphabets_list.add(6, ".");	
@@ -99,7 +99,7 @@ public class IndexBarHandler extends Handler {
 			alphabets_list.add(18, ".");
 			
 		}
-		if(number_of_characters_omit>4 & number_of_characters_omit<=6){  			//5,6
+		if(number_of_characters_omit>4 && number_of_characters_omit<=6){  			//5,6
 			
 			int total_height_dots=height_of_one_dot*3;					
 			float num_eliminate=(float)total_height_dots/height_of_alphabet_row;
@@ -151,7 +151,7 @@ public class IndexBarHandler extends Handler {
 				}
 			}
 		}
-		else if(number_of_characters_omit>6 & number_of_characters_omit<=8){
+		else if(number_of_characters_omit>6 && number_of_characters_omit<=8){
 			
 			int total_height_dots=height_of_one_dot*4;					
 			float num_eliminate=(float)total_height_dots/height_of_alphabet_row;
@@ -229,7 +229,7 @@ public class IndexBarHandler extends Handler {
 				alphabets_list.add(17,".");	
 			}
 		}
-		else if(number_of_characters_omit>8 & number_of_characters_omit<=10){
+		else if(number_of_characters_omit>8 && number_of_characters_omit<=10){
 				removeAlphabet(alphabets_list, 3, 4);	//C,D,E,F		
 				alphabets_list.add(3,".");		
 
@@ -242,7 +242,7 @@ public class IndexBarHandler extends Handler {
 				removeAlphabet(alphabets_list, 16, 3);		//V,W,X,Y		
 				alphabets_list.add(16,".");
 		}
-		else if(number_of_characters_omit>10 & number_of_characters_omit<=12){
+		else if(number_of_characters_omit>10 && number_of_characters_omit<=12){
 			removeAlphabet(alphabets_list, 3, 4);	//C,D,E,F		
 			alphabets_list.add(3,".");		
 
@@ -255,7 +255,7 @@ public class IndexBarHandler extends Handler {
 			removeAlphabet(alphabets_list, 12, 4);		//V,W,X,Y		
 			alphabets_list.add(12,".");
 		}
-		else if(number_of_characters_omit>12 & number_of_characters_omit<=14){
+		else if(number_of_characters_omit>12 && number_of_characters_omit<=14){
 			removeAlphabet(alphabets_list, 3, 4);	//C,D,E,F		
 			alphabets_list.add(3,".");		
 
@@ -268,7 +268,7 @@ public class IndexBarHandler extends Handler {
 			removeAlphabet(alphabets_list, 12, 4);		//V,W,X,Y		
 			alphabets_list.add(12,".");
 		}
-		else if(number_of_characters_omit>14 & number_of_characters_omit<=16){
+		else if(number_of_characters_omit>14 && number_of_characters_omit<=16){
 			removeAlphabet(alphabets_list, 2, 5);	//B,C,D,E,F		
 			alphabets_list.add(2,".");		
 
