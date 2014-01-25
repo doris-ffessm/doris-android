@@ -1335,6 +1335,7 @@ public class PrefetchDorisWebSite {
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/dorispetit18x18.gif","images_dorispetit18x18.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_faq.gif","images_18_faq.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/rightsign.jpg","images_rightsign.jpg"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/btn_next.gif","images_btn_next.gif"));
 		
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier1puce.jpg","images_fichier1puce.jpg"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier2puce.jpg","images_fichier2puce.jpg"));
@@ -1350,7 +1351,12 @@ public class PrefetchDorisWebSite {
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier5.jpg","images_fichier5.jpg"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier10.jpg","images_fichier10.jpg"));
 		
-		
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier1_gde.jpg","images_fichier1_gde.jpg"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier2_gde.jpg","images_fichier2_gde.jpg"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier3_gde.jpg","images_fichier3_gde.jpg"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier4_gde.jpg","images_fichier4_gde.jpg"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier5_gde.jpg","images_fichier5_gde.jpg"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier10_gde.jpg","images_fichier10_gde.jpg"));
 		return lienATelecharger;
 	}
 	
@@ -1363,22 +1369,49 @@ public class PrefetchDorisWebSite {
 		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=3&","listeFiches-3.html"));
 		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=4&","listeFiches-4.html"));
 		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=5&","listeFiches-5.html"));
+		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=10&","listeFiches.html"));
 		
+		lienANettoyer.add(new Lien(LienKind.PAGE, "glossaire.asp\"","listeDefinitions-a-1.html\""));
+		
+		//TODO : A Faire
+		lienANettoyer.add(new Lien(LienKind.PAGE, "biblio.asp\"","indisponible_CDDVD.html\""));
+				
 		lienANettoyer.add(new Lien(LienKind.VIGNETTE, "http://doris.ffessm.fr/gestionenligne/photos_fiche_vig/","/"));
 		lienANettoyer.add(new Lien(LienKind.MED_RES, "http://doris.ffessm.fr/gestionenligne/photos_fiche_moy/","/"));
 		lienANettoyer.add(new Lien(LienKind.HI_RES, "http://doris.ffessm.fr/gestionenligne/photos/","/"));
 		
 		lienANettoyer.add(new Lien(LienKind.ICONE, "gestionenligne/images_groupe/","/images_groupe_"));
 		lienANettoyer.add(new Lien(LienKind.ICONE, "gestionenligne/images_sousgroupe/","/images_sousgroupe_"));
+				
+		lienANettoyer.add(new Lien(LienKind.PAGE, "fichier.asp","accueil.html"));
+				
+		lienANettoyer.add(new Lien(LienKind.PAGE, "forum_liste.asp","indisponible_CDDVD.html"));
+		lienANettoyer.add(new Lien(LienKind.PAGE, "fiche_imprime.asp","indisponible_CDDVD.html"));
+		lienANettoyer.add(new Lien(LienKind.PAGE, "fiches_liste_recherche.asp","indisponible_CDDVD.html"));
+		lienANettoyer.add(new Lien(LienKind.PAGE, "cle_identification0.asp","indisponible_CDDVD.html"));
+		lienANettoyer.add(new Lien(LienKind.PAGE, "forum_detail.asp","indisponible_CDDVD.html"));
+		
 		return lienANettoyer;
 	}
 
 	public List<Lien> getRegExpPourNettoyer(){
 		List<Lien> regExpPourNettoyer = new ArrayList<Lien>(0);
 		
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche.asp\\?[^&\"<]*&fiche_numero=([^&\"<]*)&[^\"<]*","href=\"fiche-$1.html"));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche2.asp\\?fiche_numero=([^&]*)&[^\"<]*","href=\"fiche-$1.html"));
+		
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"contacts.asp\\?filtre=(.)","href=\"listeParticipants-$1.html"));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"[^\"\\?]*formulaire_contact2.asp\\?contact_numero=([^\"]*)\"","href=\"A FINIR\""));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"[^\"\\?]*formulaire_contact2.asp\\?contact_numero=([^\"]*)\"","href=\"indisponible_CDDVD.html\""));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"contact_fiche.asp?temp=0&amp;contact_numero=([^\">*)\"","href=\"indisponible_CDDVD.html\""));
+				
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp?filtre=(.)[^\"<]*","href=\"listeDefinitions-$1-1.html"));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp?mapage=([^&\"<]*)&[^\"<]*filtre=(.)\"","href=\"listeDefinitions-$2-$1.html"));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire_detail.asp??glossaire_numero=([^&\"<]*)&[^\"<]*","href=\"definition-$1.html"));
+
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "fiches_liste.asp?groupe_numero=[^\"<]*\"","href=\"indisponible_CDDVD.html\""));
+
+		regExpPourNettoyer.add(new Lien(LienKind.ICONE, "http://doris.ffessm.fr/gestionenligne/photos_forum_vig/[^\"]*\"","/doris_icone_doris_large.png\""));
+
 		return regExpPourNettoyer;
 	}
 	
@@ -1530,16 +1563,27 @@ public class PrefetchDorisWebSite {
 			
 			// RegExp
 			for (Lien lienRegExp : getRegExpPourNettoyer()){
-				if (lienRegExp.getLienKind() == LienKind.PAGE) {
-					contenuFichier = contenuFichier.replaceAll(lienRegExp.url,lienRegExp.fichierSurDisque);
+				switch (lienRegExp.getLienKind()) {
+				case PAGE :
+					contenuFichier = contenuFichier.replaceAll(lienRegExp.url,lienRegExp.getFichier());
+				break;
+				case ICONE :
+					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+SOUSDOSSIER_ICONES+lienRegExp.getFichier());
+				break;
+				case VIGNETTE :
+					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+SOUSDOSSIER_VIGNETTES+lienRegExp.getFichier());
+					break;
+				case MED_RES :
+					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+SOUSDOSSIER_MED_RES+lienRegExp.getFichier());
+					break;
+				case HI_RES :
+					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+SOUSDOSSIER_MED_RES+lienRegExp.getFichier());
+					break;
 				}
-				/*if (lienTelecharge.getLienKind() == LienKind.IMG) {
-					contenuFichier = contenuFichier.replace("src=\""+lienTelecharge.getUrl()+"\"","src=\"../"+SOUSDOSSIER_ICONES+"/"+lienTelecharge.getFichier()+"\"");
-				}*/
 			}
 			
 			try {
-				FileUtils.write(fichierHtml, contenuFichier);
+				FileUtils.write(fichierHtml, contenuFichier, "iso-8859-1");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
