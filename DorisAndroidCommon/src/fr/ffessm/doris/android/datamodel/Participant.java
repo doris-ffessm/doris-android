@@ -113,6 +113,10 @@ public class Participant {
 	// Start of user code Participant additional user properties
 	 
 	
+	public String getPhotoNom() {
+		return cleURLPhotoParticipant.replace("gestionenligne/photos_vig/", "").trim();
+	} 
+	
 	// End of user code
 	
 	public Participant() {} // needed by ormlite

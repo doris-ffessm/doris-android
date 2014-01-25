@@ -604,7 +604,7 @@ public class PrefetchDorisWebSite {
 									if ( !photoFiche.getCleURL().isEmpty() ) {
 										// Vignettes
 										if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL() ) ){
-											if (Outils.getFichierFromUrl(PhotoFiche.VIGNETTE_BASE_URL+photoFiche.getCleURL(), fichierImageRacine+SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL())) {
+											if (Outils.getFichierFromUrl(Constants.VIGNETTE_BASE_URL+photoFiche.getCleURL(), fichierImageRacine+SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL())) {
 											} else {
 												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 												//System.exit(0);
@@ -612,7 +612,7 @@ public class PrefetchDorisWebSite {
 										}
 										// Qualité Intermédiaire
 										if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_MED_RES+photoFiche.getCleURL() ) ){
-											if (Outils.getFichierFromUrl(PhotoFiche.MOYENNE_BASE_URL+photoFiche.getCleURL(), fichierImageRacine+SOUSDOSSIER_MED_RES+photoFiche.getCleURL())) {
+											if (Outils.getFichierFromUrl(Constants.MOYENNE_BASE_URL+photoFiche.getCleURL(), fichierImageRacine+SOUSDOSSIER_MED_RES+photoFiche.getCleURL())) {
 											} else {
 												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 												//System.exit(0);
@@ -620,7 +620,7 @@ public class PrefetchDorisWebSite {
 										}
 										// Haute Qualité 
 										if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_HI_RES+photoFiche.getCleURL() ) ){
-											if (Outils.getFichierFromUrl(PhotoFiche.GRANDE_BASE_URL+photoFiche.getCleURL(), fichierImageRacine+SOUSDOSSIER_HI_RES+photoFiche.getCleURL())) {
+											if (Outils.getFichierFromUrl(Constants.GRANDE_BASE_URL+photoFiche.getCleURL(), fichierImageRacine+SOUSDOSSIER_HI_RES+photoFiche.getCleURL())) {
 											} else {
 												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 												//System.exit(0);
@@ -1283,6 +1283,7 @@ public class PrefetchDorisWebSite {
 		lienATelecharger.add(new Lien(LienKind.PAGE, "Copyright.asp","Copyright.html"));
 		lienATelecharger.add(new Lien(LienKind.PAGE, "liens.asp","liens.html"));
 		lienATelecharger.add(new Lien(LienKind.PAGE, "formulaire_contact.asp","formulaire_contact.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "doris_doridiens.asp","doris_doridiens.html"));
 		
 		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=10","fichier_10.html"));
 		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=1","fichier_1.html"));
@@ -1313,6 +1314,7 @@ public class PrefetchDorisWebSite {
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/ligne_carre4.gif","images_ligne_carre4.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/MNHN2.gif","images_MNHN2.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/Palme3.gif","images_Palme3.gif"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/1x1.gif","images_1x1.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/10x10.gif","images_10x10.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/pucemenu.gif","images_pucemenu.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fond_bas.gif","images_fond_bas.gif"));
@@ -1325,8 +1327,14 @@ public class PrefetchDorisWebSite {
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_imp.gif","images_18_imp.gif"));	
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_fileprint.gif","images_18_fileprint.gif"));	
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_filewrite.gif","images_18_filewrite.gif"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_fileimage.gif","images_18_fileimage.gif"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_mailsend.gif","images_18_mailsend.gif"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_probe.gif","images_18_probe.gif"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "gestionenligne/images/icones/18_fileprint.gif","images_18_fileprint.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/searchdoc.gif","images_searchdoc.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/dorispetit18x18.gif","images_dorispetit18x18.gif"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_faq.gif","images_18_faq.gif"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/rightsign.jpg","images_rightsign.jpg"));
 		
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier1puce.jpg","images_fichier1puce.jpg"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier2puce.jpg","images_fichier2puce.jpg"));
@@ -1360,16 +1368,17 @@ public class PrefetchDorisWebSite {
 		lienANettoyer.add(new Lien(LienKind.MED_RES, "http://doris.ffessm.fr/gestionenligne/photos_fiche_moy/","/"));
 		lienANettoyer.add(new Lien(LienKind.HI_RES, "http://doris.ffessm.fr/gestionenligne/photos/","/"));
 		
-		lienANettoyer.add(new Lien(LienKind.VIGNETTE, "gestionenligne/images_groupe/","/images_groupe_"));
-		lienANettoyer.add(new Lien(LienKind.VIGNETTE, "gestionenligne/images_sousgroupe/","/images_sousgroupe_"));
+		lienANettoyer.add(new Lien(LienKind.ICONE, "gestionenligne/images_groupe/","/images_groupe_"));
+		lienANettoyer.add(new Lien(LienKind.ICONE, "gestionenligne/images_sousgroupe/","/images_sousgroupe_"));
 		return lienANettoyer;
 	}
 
 	public List<Lien> getRegExpPourNettoyer(){
 		List<Lien> regExpPourNettoyer = new ArrayList<Lien>(0);
 		
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche2.asp\\?fiche_numero=([^&]*)&[^\"]*","href=\"fiche-$1.html"));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche2.asp\\?fiche_numero=([^&]*)&[^\"<]*","href=\"fiche-$1.html"));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"contacts.asp\\?filtre=(.)","href=\"listeParticipants-$1.html"));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"[^\"\\?]*formulaire_contact2.asp\\?contact_numero=([^\"]*)\"","href=\"A FINIR\""));
 		return regExpPourNettoyer;
 	}
 	

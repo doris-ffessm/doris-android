@@ -72,6 +72,7 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
+import fr.ffessm.doris.android.tools.Outils.ImageType;
 
 public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer, Integer>{
 	private static final String LOG_TAG = TelechargePhotosFiches_BgActivity.class.getCanonicalName();
@@ -202,11 +203,11 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 			// On commence par les photos principales
 			
 			// Photos déjà sur l'appareil
-			HashSet<String> hsImagesVigAllreadyAvailable = Outils.getAllVignettesPhotoFicheAvailable(context);
+			HashSet<String> hsImagesVigAllreadyAvailable = Outils.getAllPhotosAvailable(context, ImageType.VIGNETTE);
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - VigAllreadyAvailable : "+hsImagesVigAllreadyAvailable.size() );
-			HashSet<String> hsImagesMedResAllreadyAvailable = Outils.getAllMedResPhotoFicheAvailable(context);
+			HashSet<String> hsImagesMedResAllreadyAvailable = Outils.getAllPhotosAvailable(context, ImageType.MED_RES);
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - MedResAllreadyAvailable : "+hsImagesMedResAllreadyAvailable.size() );
-			HashSet<String> hsImagesHiResAllreadyAvailable = Outils.getAllHiResPhotoFicheAvailable(context);
+			HashSet<String> hsImagesHiResAllreadyAvailable = Outils.getAllPhotosAvailable(context, ImageType.HI_RES);
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - HiResAllreadyAvailable : "+hsImagesHiResAllreadyAvailable.size() );
 			
 	    	for (ZoneGeographique zoneGeo : listeZoneGeo) {
@@ -321,11 +322,11 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_notifText_initial) );
     		mNotificationHelper.setMaxItemToProcess(""+0);
     			    		
-    		hsImagesVigAllreadyAvailable = Outils.getAllVignettesPhotoFicheAvailable(context);
+    		hsImagesVigAllreadyAvailable = Outils.getAllPhotosAvailable(context, ImageType.VIGNETTE);
     		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - VigAllreadyAvailable : "+hsImagesVigAllreadyAvailable.size() );
-    		hsImagesMedResAllreadyAvailable = Outils.getAllMedResPhotoFicheAvailable(context);
+    		hsImagesMedResAllreadyAvailable = Outils.getAllPhotosAvailable(context, ImageType.MED_RES);
     		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - MedResAllreadyAvailable : "+hsImagesMedResAllreadyAvailable.size() );
-    		hsImagesHiResAllreadyAvailable = Outils.getAllHiResPhotoFicheAvailable(context);
+    		hsImagesHiResAllreadyAvailable = Outils.getAllPhotosAvailable(context, ImageType.HI_RES);
     		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - HiResAllreadyAvailable : "+hsImagesHiResAllreadyAvailable.size() );
     		
     		
@@ -492,15 +493,12 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
     
 
     public void majParamNbandSize() {
-    	int nb;
-    	nb = Outils.getVignetteCount(context);
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "majParamNbandSize() - nb Vignettes : "+nb);
-    	Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_vignettes, nb);
-		Outils.setParamLong(context,R.string.pref_key_size_folder_vignettes, Outils.getVignettesDiskUsage(context));
-		Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_med_res, Outils.getMedResCount(context));
-		Outils.setParamLong(context,R.string.pref_key_size_folder_med_res, Outils.getMedResDiskUsage(context));
-		Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_hi_res, Outils.getHiResCount(context));
-		Outils.setParamLong(context,R.string.pref_key_size_folder_hi_res, Outils.getHiResDiskUsage(context));
+    	Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_vignettes, Outils.getImageCount(context, ImageType.VIGNETTE));
+		Outils.setParamLong(context,R.string.pref_key_size_folder_vignettes, Outils.getPhotoDiskUsage(context, ImageType.VIGNETTE));
+		Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_med_res, Outils.getImageCount(context, ImageType.MED_RES));
+		Outils.setParamLong(context,R.string.pref_key_size_folder_med_res, Outils.getPhotoDiskUsage(context, ImageType.MED_RES));
+		Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_hi_res, Outils.getImageCount(context, ImageType.HI_RES));
+		Outils.setParamLong(context,R.string.pref_key_size_folder_hi_res, Outils.getPhotoDiskUsage(context, ImageType.HI_RES));
 
     }
     

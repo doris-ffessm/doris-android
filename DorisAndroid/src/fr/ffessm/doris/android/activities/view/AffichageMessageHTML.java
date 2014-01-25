@@ -9,6 +9,7 @@ import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
+import fr.ffessm.doris.android.tools.Outils.ImageType;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -115,26 +116,26 @@ public class AffichageMessageHTML {
 		}
     	
 		StringBuffer sizeFolderTexte =  new StringBuffer();
-		if (Outils.getVignetteCount(context.getApplicationContext())!=0 ) {
+		if (Outils.getImageCount(context.getApplicationContext(), ImageType.VIGNETTE)!=0 ) {
 			sizeFolderTexte.append(System.getProperty("line.separator")); 
 			sizeFolderTexte.append("\t");
-			sizeFolderTexte.append(Outils.getVignetteCount(context.getApplicationContext()));
+			sizeFolderTexte.append(Outils.getImageCount(context.getApplicationContext(), ImageType.VIGNETTE));
 			sizeFolderTexte.append(context.getString(R.string.a_propos_foldersize_vignettes));
-			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getVignettesDiskUsage(context.getApplicationContext()) ) );
+			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getPhotoDiskUsage(context, ImageType.VIGNETTE) ) );
 		}
-		if (Outils.getMedResCount(context.getApplicationContext())!=0 ) {
+		if (Outils.getImageCount(context.getApplicationContext(), ImageType.MED_RES)!=0 ) {
 			sizeFolderTexte.append(System.getProperty("line.separator"));
 			sizeFolderTexte.append("\t");
-			sizeFolderTexte.append(Outils.getMedResCount(context.getApplicationContext()));
+			sizeFolderTexte.append(Outils.getImageCount(context.getApplicationContext(), ImageType.MED_RES));
 			sizeFolderTexte.append(context.getString(R.string.a_propos_foldersize_med_res));
-			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getMedResDiskUsage(context.getApplicationContext()) ) );
+			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getPhotoDiskUsage(context, ImageType.MED_RES) ) );
 		}
-		if (Outils.getHiResCount(context.getApplicationContext())!=0 ) {
+		if (Outils.getImageCount(context.getApplicationContext(), ImageType.HI_RES)!=0 ) {
 			sizeFolderTexte.append(System.getProperty("line.separator"));
 			sizeFolderTexte.append("\t");
-			sizeFolderTexte.append(Outils.getHiResCount(context.getApplicationContext()));
+			sizeFolderTexte.append(Outils.getImageCount(context.getApplicationContext(), ImageType.HI_RES));
 			sizeFolderTexte.append(context.getString(R.string.a_propos_foldersize_hi_res));
-			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getHiResDiskUsage(context.getApplicationContext()) ) );
+			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getPhotoDiskUsage(context, ImageType.HI_RES) ) );
 		}
 		if (sizeFolderTexte.length()!=0) {
 			texte.append(System.getProperty("line.separator"));

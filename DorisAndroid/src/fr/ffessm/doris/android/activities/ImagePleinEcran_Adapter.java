@@ -51,8 +51,10 @@ import com.squareup.picasso.Picasso;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
+import fr.ffessm.doris.android.tools.Outils.ImageType;
 import fr.ffessm.doris.android.tools.Outils.PrecharMode;
 
 import android.app.Activity;
@@ -113,10 +115,10 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         int hauteur = ScreenTools.getScreenHeight(_activity);
         int largeur = ScreenTools.getScreenWidth(_activity);
         final PhotoFiche photoFiche = _PhotoFicheLists.get(position);
-        if(Outils.isAvailableHiResPhotoFiche(_activity,photoFiche)){
+        if(Outils.isAvailablePhoto(_activity, photoFiche.getCleURL(), ImageType.HI_RES)){
     		try {
 				Picasso.with(_activity)
-					.load(Outils.getHiResFile(_activity, photoFiche))
+					.load(Outils.getPhotoFile(_activity, photoFiche.getCleURL(), ImageType.HI_RES))
 					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
 					.resize(largeur, hauteur)
 					.centerInside()
@@ -125,10 +127,10 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 			}
     	}
     	else{
-    		if(Outils.isAvailableMedResPhotoFiche(_activity,photoFiche)){
+    		if(Outils.isAvailablePhoto(_activity,photoFiche.getCleURL(), ImageType.MED_RES)){
         		try {
     				Picasso.with(_activity)
-    					.load(Outils.getMedResFile(_activity, photoFiche))
+    					.load(Outils.getPhotoFile(_activity, photoFiche.getCleURL(), ImageType.MED_RES))
     					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
     					.into(imgDisplay);
     			} catch (IOException e) {
@@ -139,13 +141,13 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     			String dossier_photo;
     			switch(Outils.ImageType.valueOf(Outils.getParamString(_activity, R.string.pref_key_mode_connecte_qualite_photo,""))){
     			case MED_RES :
-    				dossier_photo = PhotoFiche.MOYENNE_BASE_URL;
+    				dossier_photo = Constants.MOYENNE_BASE_URL;
     				break;
     			case HI_RES :
-    				dossier_photo = PhotoFiche.GRANDE_BASE_URL;
+    				dossier_photo = Constants.GRANDE_BASE_URL;
     				break;
     			default:
-    				dossier_photo = PhotoFiche.MOYENNE_BASE_URL;
+    				dossier_photo = Constants.MOYENNE_BASE_URL;
     			}
     			
 	    		Picasso.with(_activity)

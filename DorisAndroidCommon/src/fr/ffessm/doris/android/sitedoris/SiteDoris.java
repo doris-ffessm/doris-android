@@ -128,8 +128,8 @@ public class SiteDoris {
     	
     	int nivPrecedent = 0;
     	
-    	// Création du groupe racine qui contiendra récurcivement tout l'arbre
-    	// TODO : Supprimer sur les Créations de Groupe ci-dessous le commentaire tempo aidant à debbeuger
+    	// Création du groupe racine qui contiendra récursivement tout l'arbre
+    	// TODO : Supprimer sur les Créations de Groupe ci-dessous le commentaire tempo aidant à debugger
     	Groupe groupe = new Groupe(0, 0, "racine","Les grands groupes", "", "");
     	Groupe groupeRacine = groupe;
     	Groupe groupeNiveau1Courant = null;
@@ -432,9 +432,9 @@ public class SiteDoris {
          *			Recherche A Class = lien_email et href <> "" => Derrière le = on a la 
          *référence du participant
          *    	 Pour toutes IMG :
-         *    Si alt=Protographe alors Participant est Photographe
-         *    Si alt=Rédacteuralors Participant est Rédacteur
-         *    Si alt=Protographe alors Participant est Vérificateur
+         *    Si alt=Photographe alors Participant est Photographe
+         *    Si alt=Rédacteur alors Participant est Rédacteur
+         *    Si alt=Vérificateur alors Participant est Vérificateur
     	 */
     	
     	Element element1erTRTitre2 = source.getFirstElementByClass("titre2");
@@ -449,6 +449,7 @@ public class SiteDoris {
     	
 		String participantNom = "";
 		String participantId = "";
+		String participantUrlPhoto = "";
 		
 		int numeroTR = 0;
     	for (Element elementTR : listeElementsTR) {
@@ -462,11 +463,9 @@ public class SiteDoris {
 					log.info("getListeParticipantsParInitiale() - Nom Participant : "+elementTDTitre2ParticipantNom.getRenderer() );
 					participantNom = elementTDTitre2ParticipantNom.getRenderer().toString().trim();
 					
-					//TODO : Vérifier
 					List<? extends Element> listeElementsTDTitre2ParticipantKind = elementTR.getAllElementsByClass("normal_gris_gras");
 					for (Element elementTDTitre2 : listeElementsTDTitre2ParticipantKind) {
-						
-						//TODO : J'hésite entre tests != null et getRenderer.toString = "" 
+
 						if ( elementTDTitre2.getFirstElement(HTMLElementName.IMG) != null ){
 							log.info("getListeParticipantsParInitiale() - Participant Kind : "+elementTDTitre2.getFirstElement(HTMLElementName.IMG).getAttributeValue("alt") );
 						} else {
@@ -495,8 +494,9 @@ public class SiteDoris {
 					List<? extends Element> listeElementsIMGParticipantPhoto = elementTR.getAllElements(HTMLElementName.IMG);
 					for (Element elementIMG : listeElementsIMGParticipantPhoto) {
 						String elementTDwidth = elementIMG.getAttributeValue("width");
-						if (elementTDwidth != null && elementTDwidth == "150"){
+						if (elementTDwidth != null && elementTDwidth.equals("150") ){
 							log.info("getListeParticipantsParInitiale() - photo : "+elementIMG.getAttributeValue("src"));
+							participantUrlPhoto = elementIMG.getAttributeValue("src");
 						}
 					}
 					
@@ -505,9 +505,10 @@ public class SiteDoris {
 				}
 				if (numeroTR % 4 == 3){
 					// TODO trouver l'url de l'image du participant
-					listeParticipants.add(new Participant( participantNom, Integer.valueOf(participantId), "") );
+					listeParticipants.add(new Participant( participantNom, Integer.valueOf(participantId), participantUrlPhoto) );
 					participantNom = "";
 					participantId = "";
+					participantUrlPhoto = "";
 				}
 			}
     	} // Fin Pour Chaque TR

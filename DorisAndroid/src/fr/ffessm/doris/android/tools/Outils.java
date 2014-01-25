@@ -1,12 +1,10 @@
 package fr.ffessm.doris.android.tools;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,14 +25,12 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
-import android.app.Activity;
+import fr.ffessm.doris.android.sitedoris.Constants;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
@@ -43,7 +39,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.format.DateUtils;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -51,8 +46,6 @@ import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
@@ -80,15 +73,14 @@ public class Outils {
 		case VIGNETTE :
 			return getImageFolderVignette(inContext);
 		case MED_RES :
-			return getImageFolderVignette(inContext);
+			return getImageFolderMedRes(inContext);
 		case HI_RES :
-			return getImageFolderVignette(inContext);
+			return getImageFolderHiRes(inContext);
 			default:
 		return null;
 		}
 	}
 	public static File getImageFolderVignette(Context inContext) {
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageFolderVignette() - Début");
 		return inContext.getDir( VIGNETTES_FICHE_FOLDER , Context.MODE_PRIVATE);
 	}
 	public static File getImageFolderMedRes(Context inContext) { 
@@ -98,6 +90,18 @@ public class Outils {
 		return inContext.getDir( HI_RES_FICHE_FOLDER , Context.MODE_PRIVATE);
 	}
 
+	public static String getbaseUrl(Context inContext, ImageType inImageType) { 
+		switch (inImageType) {
+		case VIGNETTE:
+			return Constants.VIGNETTE_BASE_URL;
+		case MED_RES:
+			return Constants.MOYENNE_BASE_URL;
+		case HI_RES:
+			return Constants.GRANDE_BASE_URL;
+		default:
+			return "";
+		}
+	}
 	
 	public static boolean isAvailableImagePhotoFiche(Context inContext, PhotoFiche photofiche){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - photofiche : "+ photofiche );
@@ -106,197 +110,51 @@ public class Outils {
 		case P1 :
 		case P2 :
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - Vignettes" );
-			return isAvailableVignettePhotoFiche(inContext, photofiche);
+			return isAvailablePhoto(inContext, photofiche.getCleURL(), ImageType.VIGNETTE);
 		case P3 :
 		case P4 :
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - Medium" );
-			return isAvailableMedResPhotoFiche(inContext, photofiche);
+			return isAvailablePhoto(inContext, photofiche.getCleURL(), ImageType.MED_RES);
 		case P5 :
 		case P6 :
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - Hight" );
-	    	return isAvailableHiResPhotoFiche(inContext, photofiche);
+	    	return isAvailablePhoto(inContext, photofiche.getCleURL(), ImageType.HI_RES);
 		default:
 			return false;
 		}
 	}
 
-	public static boolean isAvailableImagePhotoFiche(Context inContext, PhotoFiche inPhotofiche, ImageType inImageType){
-		switch(inImageType){
-		case VIGNETTE :
-			return isAvailableVignettePhotoFiche(inContext, inPhotofiche);
-		case MED_RES :
-			return isAvailableMedResPhotoFiche(inContext, inPhotofiche);
-		case HI_RES :
-	    	return isAvailableHiResPhotoFiche(inContext, inPhotofiche);
-		default:
-			return false;
-		}
-	}
-	
-	public static boolean isAvailableVignettePhotoFiche(Context inContext, PhotoFiche photofiche){
-		File imageFolder = inContext.getDir(VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE);		
-		if(photofiche != null && photofiche.getCleURL() != null && !photofiche.getCleURL().isEmpty()){
-			File vignetteImage = new File(imageFolder, photofiche.getCleURL());
-			if(vignetteImage.exists()){
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public static boolean isAvailableMedResPhotoFiche(Context inContext, PhotoFiche photofiche){
-		File imageFolder = inContext.getDir( MED_RES_FICHE_FOLDER , Context.MODE_PRIVATE);		
-		if(photofiche != null){
-			File vignetteImage = new File(imageFolder, photofiche.getCleURL());
-			if(vignetteImage.exists()){
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public static boolean isAvailableHiResPhotoFiche(Context inContext, PhotoFiche photofiche){
-		File imageFolder = inContext.getDir( HI_RES_FICHE_FOLDER , Context.MODE_PRIVATE);		
-		if(photofiche != null){
-			File vignetteImage = new File(imageFolder, photofiche.getCleURL());
-			if(vignetteImage.exists()){
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public static File getVignetteFile(Context inContext, PhotoFiche photo) throws IOException{		
-		File imageFolder = getImageFolderVignette(inContext);		
-		return new File(imageFolder, photo.getCleURL());
-	}
-	
-	public static File getMedResFile(Context inContext, PhotoFiche photo) throws IOException{		
-		File imageFolder = getImageFolderMedRes(inContext);		
-		return new File(imageFolder, photo.getCleURL());
-	}
-	
-	public static File getHiResFile(Context inContext, PhotoFiche photo) throws IOException{		
-		File imageFolder = getImageFolderHiRes(inContext);	;		
-		return new File(imageFolder, photo.getCleURL());
-	}
-
-	public static HashSet<String> getAllVignettesPhotoFicheAvailable(Context inContext){
-		HashSet<String> hsPhotoFicheAvailable = new HashSet<String>();
-		File imageFolder = getImageFolderVignette(inContext);		
-		for (File file : imageFolder.listFiles()) {
-			hsPhotoFicheAvailable.add(file.getName());
-		}
-		return hsPhotoFicheAvailable;
-	}
-	public static HashSet<String> getAllMedResPhotoFicheAvailable(Context inContext){
-		HashSet<String> hsPhotoFicheAvailable = new HashSet<String>();
-		File imageFolder = getImageFolderMedRes(inContext);		
-		for (File file : imageFolder.listFiles()) {
-			hsPhotoFicheAvailable.add(file.getName());
-		}
-		return hsPhotoFicheAvailable;
-	}
-	public static HashSet<String> getAllHiResPhotoFicheAvailable(Context inContext){
-		HashSet<String> hsPhotoFicheAvailable = new HashSet<String>();
-		File imageFolder = getImageFolderHiRes(inContext);		
-		for (File file : imageFolder.listFiles()) {
-			hsPhotoFicheAvailable.add(file.getName());
-		}
-		return hsPhotoFicheAvailable;
-	}
-	
-	public static File getOrDownloadVignetteFile(Context inContext, PhotoFiche photo) throws IOException{
-		return getOrDownloadPhotoFile(inContext, photo, ImageType.VIGNETTE);
-	}
-	
-	public static File getOrDownloadPhotoFile(Context inContext, PhotoFiche photo, ImageType imageType) throws IOException{
-		File result = null;	
-		String imageFolderName="";
-		String baseUrl="";
-		switch (imageType) {
-		case VIGNETTE:
-			imageFolderName = VIGNETTES_FICHE_FOLDER;
-			baseUrl=PhotoFiche.VIGNETTE_BASE_URL;
-			break;
-		case MED_RES:
-			imageFolderName = MED_RES_FICHE_FOLDER;
-			baseUrl=PhotoFiche.MOYENNE_BASE_URL;
-			break;
-		case HI_RES:
-			imageFolderName = HI_RES_FICHE_FOLDER;
-			baseUrl=PhotoFiche.GRANDE_BASE_URL;
-			break;
-		default:
-			break;
-		}
-		File imageFolder = inContext.getDir(imageFolderName, Context.MODE_PRIVATE);
-		
-		
-		if(photo != null){
-			File fichierImage = new File(imageFolder, photo.getCleURL());
+	public static boolean isAvailablePhoto(Context inContext, String inPhotoURL, ImageType inImageType){
+		File imageFolder = getImageFolder(inContext, inImageType);	
+		if(!inPhotoURL.isEmpty()){
+			File fichierImage = new File(imageFolder, inPhotoURL);
 			if(fichierImage.exists()){
-				result = fichierImage;
-			}
-			else{
-		    
-				URL urlHtml;
-				try {
-					String urlNettoyee = baseUrl+photo.getCleURL();
-					urlNettoyee = urlNettoyee.replaceAll(" ", "%20");
-					urlHtml = new URL(urlNettoyee);
-					HttpURLConnection urlConnection = (HttpURLConnection) urlHtml.openConnection();
-			        urlConnection.setConnectTimeout(3000);
-			        urlConnection.setReadTimeout(10000);
-			        
-			        urlConnection.connect();
-		            
-		            // download the file
-		            InputStream input = urlConnection.getInputStream();
-		            OutputStream output = new FileOutputStream(fichierImage);
-
-		            byte data[] = new byte[1024];
-		            int count;
-		            while ((count = input.read(data)) != -1) {
-		                output.write(data, 0, count);
-		            }
-
-		            output.flush();
-		            output.close();
-		            input.close();
-			        
-				} catch (MalformedURLException e) {
-					Log.w(LOG_TAG, e.getMessage(), e);
-				}
-				
+				return true;
 			}
 		}
-		
-		return result;
+		return false;
+	}
+	
+	
+	public static File getPhotoFile(Context inContext, String photoURL, ImageType inImageType) throws IOException{		
+		File imageFolder = getImageFolder(inContext, inImageType);		
+		return new File(imageFolder, photoURL);
+	}
+	
+
+	public static HashSet<String> getAllPhotosAvailable(Context inContext, ImageType inImageType){
+		HashSet<String> hsPhotosAvailable = new HashSet<String>();
+		File imageFolder = getImageFolder(inContext, inImageType);		
+		for (File file : imageFolder.listFiles()) {
+			hsPhotosAvailable.add(file.getName());
+		}
+		return hsPhotosAvailable;
 	}
 	
 	public static File getOrDownloadPhotoFile(Context inContext, String photoUrl, ImageType imageType) throws IOException{
 		File result = null;	
-		String imageFolderName="";
-		String baseUrl="";
-		switch (imageType) {
-		case VIGNETTE:
-			imageFolderName = VIGNETTES_FICHE_FOLDER;
-			baseUrl=PhotoFiche.VIGNETTE_BASE_URL;
-			break;
-		case MED_RES:
-			imageFolderName = MED_RES_FICHE_FOLDER;
-			baseUrl=PhotoFiche.MOYENNE_BASE_URL;
-			break;
-		case HI_RES:
-			imageFolderName = HI_RES_FICHE_FOLDER;
-			baseUrl=PhotoFiche.GRANDE_BASE_URL;
-			break;
-		default:
-			break;
-		}
-		File imageFolder = inContext.getDir(imageFolderName, Context.MODE_PRIVATE);
-		
+		String baseUrl = getbaseUrl(inContext, imageType);
+		File imageFolder = getImageFolder(inContext, imageType);
 		
 		if(!photoUrl.isEmpty()){
 			File fichierImage = new File(imageFolder, photoUrl);
@@ -343,33 +201,19 @@ public class Outils {
 		
 		return result;
 	}
-	
-	public static int getVignetteCount(Context inContext){
-		return getFileCount(inContext, getImageFolderVignette(inContext));
-	}
-	public static int getMedResCount(Context inContext){
-		return getFileCount(inContext, getImageFolderMedRes(inContext));
-	}
-	public static int getHiResCount(Context inContext){
-		return getFileCount(inContext, getImageFolderHiRes(inContext));
-	}
-	
-	public static int getFileCount(Context inContext, File inFolder){
-		return inFolder.list().length;
+
+
+	public static int getImageCount(Context inContext, ImageType inImageType){
+		return getImageFolder(inContext, inImageType).list().length;
 	}
 	
 	public static long getPhotosDiskUsage(Context inContext){
-    	return getVignettesDiskUsage(inContext) + getMedResDiskUsage(inContext) + getHiResDiskUsage(inContext);
+    	return getPhotoDiskUsage(inContext, ImageType.VIGNETTE) + getPhotoDiskUsage(inContext, ImageType.MED_RES) + getPhotoDiskUsage(inContext, ImageType.HI_RES);
 	}
-	public static long getVignettesDiskUsage(Context inContext){
-    	return getDiskUsage(inContext, getImageFolderVignette(inContext) );
+	public static long getPhotoDiskUsage(Context inContext, ImageType inImageType){
+    	return getDiskUsage(inContext, getImageFolder(inContext, inImageType) );
 	}
-	public static long getMedResDiskUsage(Context inContext){
-    	return getDiskUsage(inContext, getImageFolderMedRes(inContext) );
-	}
-	public static long getHiResDiskUsage(Context inContext){
-    	return getDiskUsage(inContext, getImageFolderHiRes(inContext) );
-	}
+
 	public static long getDiskUsage(Context inContext, File inImageFolder){
 		DiskUsage du = new DiskUsage();
     	du.accept(inImageFolder);

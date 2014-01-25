@@ -94,8 +94,10 @@ import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
+import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.OutilsGroupe;
+import fr.ffessm.doris.android.tools.Outils.ImageType;
 
 
 //End of user code
@@ -316,12 +318,12 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         	photoPrincipale.setContextDB(_contextDB);
 
     		Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
-        	if(Outils.isAvailableVignettePhotoFiche(context, photoPrincipale)){
+        	if(Outils.isAvailablePhoto(context, photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
         		try {
         			//Log.d(LOG_TAG, "from disk "+photoPrincipale.getCleURL());
 					Picasso.with(context)
 						.load(Outils
-						.getVignetteFile(context, photoPrincipale))
+						.getPhotoFile(context, photoPrincipale.getCleURL(), ImageType.VIGNETTE))
 						.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
 						.into(ivIcon);
 				} catch (IOException e) {
@@ -330,7 +332,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         	else{
         		// pas préchargée en local pour l'instant, cherche sur internet
         		Picasso.with(context)
-        			.load(PhotoFiche.VIGNETTE_BASE_URL+photoPrincipale.getCleURL())
+        			.load(Constants.VIGNETTE_BASE_URL+photoPrincipale.getCleURL())
 					.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
 					.error(R.drawable.doris_icone_doris_large_pas_connecte)
         			.into(ivIcon);

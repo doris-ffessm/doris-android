@@ -50,6 +50,12 @@ public class Constants {
 	 */
     private final static String SITE_RACINE_URL = "http://doris.ffessm.fr/";
     
+	public static final String IMAGE_BASE_URL = "http://doris.ffessm.fr/gestionenligne/";
+	public static final String PORTRAIT_BASE_URL = IMAGE_BASE_URL+ "photos_vig";
+	public static final String VIGNETTE_BASE_URL = IMAGE_BASE_URL+ "photos_fiche_vig";
+	public static final String MOYENNE_BASE_URL = IMAGE_BASE_URL+ "photos_fiche_moy";
+	public static final String GRANDE_BASE_URL = IMAGE_BASE_URL+ "photos";
+	
     private final static String LISTE_TOUTES_FICHES_URL = "nom_scientifique.asp?numero_fichier=10";
     
     private final static String GROUPES_URL = "groupes.asp?numero_fichier=10";

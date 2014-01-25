@@ -178,7 +178,7 @@ public class Outils {
 
 		String texteNettoye = texteANettoye;
 		
-		//TODO : je me demande bien pour j'ai fait cela : GMo 04/01/2014
+		//TODO : je me demande bien pourquoi j'ai fait cela : GMo 04/01/2014
 		texteNettoye = texteNettoye.replace("&nbsp;", " ");
 		
 		// Tous les sauts de ligne de la même façon + gain de place en auteur pour l'interface Android

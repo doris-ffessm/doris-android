@@ -110,6 +110,7 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
+import fr.ffessm.doris.android.tools.Outils.ImageType;
 
 public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_implements
@@ -601,9 +602,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         ImageView imageView = new ImageView(getApplicationContext());	        
         imageView.setLayoutParams(new LayoutParams(200, 200));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        if(Outils.isAvailableVignettePhotoFiche(this, photoFiche)){
+        if(Outils.isAvailablePhoto(this, photoFiche.getCleURL(), ImageType.VIGNETTE)){
     		try {
-				Picasso.with(this).load(Outils.getVignetteFile(this, photoFiche))
+				Picasso.with(this).load(Outils.getPhotoFile(this, photoFiche.getCleURL(), ImageType.VIGNETTE))
 					.fit()
 					.centerInside()
 					.into(imageView);
@@ -613,7 +614,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     	else{
     		// pas préchargée en local pour l'instant, cherche sur internet
     		Picasso.with(this)
-    			.load(PhotoFiche.VIGNETTE_BASE_URL+photoFiche.getCleURL())
+    			.load(Constants.VIGNETTE_BASE_URL+photoFiche.getCleURL())
 				.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
 				.error(R.drawable.doris_icone_doris_large_pas_connecte)
 				.fit()

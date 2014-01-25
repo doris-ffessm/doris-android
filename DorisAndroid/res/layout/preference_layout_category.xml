@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:paddingLeft="4dip"
+    android:paddingLeft="0dip"
     android:paddingRight="?android:attr/scrollbarSize" >
 
     <LinearLayout
@@ -30,10 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:paddingBottom="4dip"
-        android:paddingLeft="4dip"
-        android:paddingRight="4dip"
-        android:paddingTop="4dip"
-		android:background="#404040" >
+        android:paddingTop="4dip" >
 
         <TextView
             android:id="@+android:id/title"
@@ -42,8 +39,8 @@
             android:ellipsize="marquee"
             android:fadingEdge="horizontal"
             android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-			android:textColor="?android:attr/textColorPrimary"/>
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Titre"/>
 
         <TextView
             android:id="@+android:id/summary"
@@ -53,7 +50,8 @@
             android:layout_below="@android:id/title"
             android:maxLines="4"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:attr/textColorSecondary" />
+            android:textColor="?android:attr/textColorSecondary"
+            android:text="Sous-Titre"/>
     </RelativeLayout>
 </LinearLayout>
 <!-- End of user code
