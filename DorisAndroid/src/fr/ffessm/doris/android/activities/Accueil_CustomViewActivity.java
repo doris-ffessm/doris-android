@@ -107,7 +107,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	implements DataChangedListener
 //End of user code
 {
-	
+
 	//Start of user code constants Accueil_CustomViewActivity
 //	static final int TELECHARGE_FICHE_MENU_ID = 1;	
 	static final int TELECHARGE_PHOTO_FICHES_MENU_ID = 2;
@@ -120,7 +120,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getCanonicalName();
 	Handler mHandler;
 	LinearLayout llContainerLayout;
-	
+	 
 	boolean isOnCreate = true;
 	
 	protected HashMap<Integer, MultiProgressBar> progressBarZones = new HashMap<Integer, MultiProgressBar>(); 
