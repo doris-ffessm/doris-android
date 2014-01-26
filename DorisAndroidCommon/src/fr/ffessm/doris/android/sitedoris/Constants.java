@@ -241,11 +241,13 @@ public class Constants {
 		}
     }
     public static String getTitreCourtZoneGeographique(ZoneGeographiqueKind zoneKing) {
+    	if (zoneKing==null) return "Toutes Zones DORIS";
+    	
     	switch (zoneKing) {
 		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
-			return "France - Marines";
+			return "France - Espèces Marines";
 		case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
-			return "France - Dulcicoles";
+			return "France - Espèces Dulcicoles";
 		case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
 			return "Indo-Pacifique";
 		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:

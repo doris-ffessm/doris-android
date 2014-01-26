@@ -257,7 +257,7 @@ public class Fiche {
 	}
 	
 	
-	public void getFicheFromHtml(String htmlFiche, HashSet<Groupe> listeGroupes, HashSet<Participant> listeParticipants) throws SQLException{
+	public void getFicheFromHtml(String htmlFiche, List<Groupe> listeGroupes, HashSet<Participant> listeParticipants) throws SQLException{
 		log.trace("getFicheFromHtml() - Début");
 		
     	int i;

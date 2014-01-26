@@ -74,8 +74,8 @@ import fr.ffessm.doris.android.tools.Outils;
 // End of user code
 import fr.ffessm.doris.android.tools.Outils.ImageType;
 
-public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer, Integer>{
-	private static final String LOG_TAG = TelechargePhotosFiches_BgActivity.class.getCanonicalName();
+public class TelechargeAsync_BgActivity  extends AsyncTask<String,Integer, Integer>{
+	private static final String LOG_TAG = TelechargeAsync_BgActivity.class.getCanonicalName();
 	
 	
     private NotificationHelper mNotificationHelper;
@@ -89,7 +89,7 @@ public class TelechargePhotosFiches_BgActivity  extends AsyncTask<String,Integer
 	// End of user code
     
 	/** constructor */
-    public TelechargePhotosFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper){
+    public TelechargeAsync_BgActivity(Context context, OrmLiteDBHelper dbHelper){
 		// Start of user code additional attribute declarations TelechargePhotosFiches_BgActivity constructor
 		String initialTickerText = context.getString(R.string.bg_notifText_initial);
 		String notificationTitle = context.getString(R.string.bg_notifTitle_initial);

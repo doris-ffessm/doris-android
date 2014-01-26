@@ -121,10 +121,10 @@ public class SiteDoris {
 	
 	
     
-    public static HashSet<Groupe> getListeGroupesFromHtml(String inCodePageHtml){
+    public static List<Groupe> getListeGroupesFromHtml(String inCodePageHtml){
     	log.trace("getGroupes() - Début");
     	
-    	HashSet<Groupe> listeGroupes = new HashSet<Groupe>(0);
+    	List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
     	
     	int nivPrecedent = 0;
     	
@@ -185,15 +185,16 @@ public class SiteDoris {
 							String nom = elementTD.getRenderer().toString().replaceAll("\\(.*", "").trim();
 							String description = elementTD.getRenderer().toString().replaceAll(".*\\((.*)\\).*", "$1").trim();
 							if (nom.equals(description)) description = "";
-							log.info("getGroupes() - groupe 2 : "+nom+" - "+description);
 							
 							groupe = new Groupe(0, 0, nom, description, "", "");
 							listeGroupes.add(groupe);
 							
 							if (nivPrecedent >= 1) {
 								groupe.setGroupePere(groupeNiveau1Courant);
+								log.info("getGroupes() - groupe 2 : "+nom+" - "+description+" <- "+groupeNiveau1Courant.getNomGroupe());
 							} else {
 								groupe.setGroupePere(groupeRacine);
+								log.info("getGroupes() - groupe 2 : "+nom+" - "+description+" <- "+groupeRacine.getNomGroupe());
 							}
 							
 							groupeNiveau2Courant = groupe;
@@ -228,7 +229,7 @@ public class SiteDoris {
 													String nom = elementA.getRenderer().toString().replaceAll("\\(.*", "").trim();
 													String description = elementA.getRenderer().toString().replaceAll(".*\\((.*)\\).*", "$1").trim();
 													if (nom.equals(description)) description = "";
-													log.info("getGroupes() - groupe 2 : "+nom+" - "+description);
+													log.info("getGroupes() - groupe 2 : "+nom+" - "+description+" <- "+groupeNiveau1Courant.getNomGroupe());
 													
 													String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
 													
@@ -245,7 +246,7 @@ public class SiteDoris {
 													String nom = elementA.getRenderer().toString().replaceAll("\\(.*", "").trim();
 													String description = elementA.getRenderer().toString().replaceAll(".*\\((.*)\\).*", "$1").trim();
 													if (nom.equals(description)) description = "";
-													log.info("getGroupes() - groupe 3 : "+numGroupe+" - "+nom+" - "+description);
+													log.info("getGroupes() - groupe 3 : "+numGroupe+" - "+nom+" - "+description+" <- "+groupeNiveau2Courant.getNomGroupe());
 													
 													// Récupération de la vignette du Groupe
 													// TODO : Prévoir dans la base de donnée son URL et son nom (son nom = en fait le numéro du Groupe)
@@ -283,7 +284,7 @@ public class SiteDoris {
 												String nom = elementAG4.getRenderer().toString().replaceAll("\\x85","...").replaceAll("\\(.*", "").trim();
 												String description = elementAG4.getRenderer().toString().replaceAll("\\x85","...").replaceAll(".*\\((.*)\\).*", "$1").trim();
 												if (nom.equals(description)) description = "";
-												log.info("getGroupes() - groupe 4 : "+numGroupe+" - "+nom+" - "+description);
+												log.info("getGroupes() - groupe 4 : "+numGroupe+" - "+nom+" - "+description+" <- "+groupeNiveau3Courant.getNomGroupe());
 
 												// Récupération de la vignette du Groupe
 												String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
@@ -310,7 +311,7 @@ public class SiteDoris {
 		return listeGroupes;
     }
 
-    public static Groupe getGroupeFromListeGroupes(HashSet<Groupe> listeGroupes, int numGroupe, int numSousGroupe){
+    public static Groupe getGroupeFromListeGroupes(List<Groupe> listeGroupes, int numGroupe, int numSousGroupe){
     	log.trace("getGroupeFromListeGroupes() - Début");
     	log.debug("getGroupeFromListeGroupes() - numGroupe : "+numGroupe);
     	log.debug("getGroupeFromListeGroupes() - numSousGroupe : "+numSousGroupe);

@@ -89,7 +89,7 @@ import com.j256.ormlite.dao.CloseableIterator;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.MultiProgressBar;
-import fr.ffessm.doris.android.async.TelechargePhotosFiches_BgActivity;
+import fr.ffessm.doris.android.async.TelechargeAsync_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -97,6 +97,7 @@ import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
+import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
@@ -212,7 +213,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	        		|| (! wifiOnly && connectionType == Outils.ConnectionType.GSM)){
 		
         		Log.d(LOG_TAG, "onCreate() - Lancement préchargement");
-        		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+        		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargeAsync_BgActivity) new TelechargeAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 
 	        }
         } 
@@ -235,7 +236,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     protected void onDestroy(){
     	Log.d(LOG_TAG, "onDestroy()");
     	 DorisApplicationContext.getInstance().removeDataChangeListeners(this);
-    	TelechargePhotosFiches_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;
+    	TelechargeAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;
     	if(telechargePhotosFiches_BgActivity != null && telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING){ 		
     		// TODO déterminer si c'est une rotation ou une vrai fin de l'appli pour tuer les taches background ou pas
     		Log.d(LOG_TAG, "onDestroy() - isFinishing() : "+isFinishing());
@@ -282,7 +283,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		        Bundle b = new Bundle();
 		        b.putBoolean("GroupeSelection_depuisAccueil", true);
 		        toGroupeSelectionView.putExtras(b);
-		        showToast(getString(R.string.accueil_recherche_guidee_label_text)+"; "+zone.getDescription());
+		        showToast(getString(R.string.accueil_recherche_guidee_label_text)+"; "
+		        	+Constants.getTitreCourtZoneGeographique(Constants.getZoneGeographiqueFromId(zone.getId() )));
+		        
 		        startActivity(toGroupeSelectionView);
 			}
 		});
@@ -306,7 +309,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 				// réinitialise le filtre espèce
 				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), 1);
 		        ed.commit();
-		        showToast(zone.getDescription());
+		        showToast(Constants.getTitreCourtZoneGeographique(Constants.getZoneGeographiqueFromId(zone.getId() )));
 				startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
 			}
 		});
@@ -687,10 +690,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	            return true;
 			//Start of user code additional menu action Accueil_CustomViewActivity
 	        case R.id.accueil_customview_action_telecharge_photofiches:
-	        	TelechargePhotosFiches_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
+	        	TelechargeAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
 				if(telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING)
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = 
-						(TelechargePhotosFiches_BgActivity) new TelechargePhotosFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+						(TelechargeAsync_BgActivity) new TelechargeAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 
 	            return true;
 	        case R.id.accueil_customview_action_a_propos:

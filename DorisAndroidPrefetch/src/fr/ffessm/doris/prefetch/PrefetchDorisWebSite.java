@@ -203,7 +203,7 @@ public class PrefetchDorisWebSite {
 					}
 				}
 				
-				final HashSet<Groupe> listeGroupes = SiteDoris.getListeGroupesFromHtml(contenuFichierHtml);
+				final List<Groupe> listeGroupes = SiteDoris.getListeGroupesFromHtml(contenuFichierHtml);
 				log.debug("doMain() - listeGroupes.size : "+listeGroupes.size());
 				
 				TransactionManager.callInTransaction(connectionSource,
@@ -1402,7 +1402,7 @@ public class PrefetchDorisWebSite {
 		
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"contacts.asp\\?filtre=(.)","href=\"listeParticipants-$1.html"));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"[^\"\\?]*formulaire_contact2.asp\\?contact_numero=([^\"]*)\"","href=\"indisponible_CDDVD.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"contact_fiche.asp?temp=0&amp;contact_numero=([^\">*)\"","href=\"indisponible_CDDVD.html\""));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"contact_fiche.asp\\?temp=0&amp;contact_numero=([^\">*)\"","href=\"indisponible_CDDVD.html\""));
 				
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp?filtre=(.)[^\"<]*","href=\"listeDefinitions-$1-1.html"));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp?mapage=([^&\"<]*)&[^\"<]*filtre=(.)\"","href=\"listeDefinitions-$2-$1.html"));
