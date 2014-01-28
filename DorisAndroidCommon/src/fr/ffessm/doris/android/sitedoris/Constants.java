@@ -77,6 +77,8 @@ public class Constants {
     private final static String GLOSSAIRE_RACINE_URL = "glossaire.asp?filtre=@lettre&mapage=@numero";
     private final static String DEFINITION_RACINE_URL = "glossaire_detail.asp?glossaire_numero=";
 
+    private final static String BIBLIOGRAPHIES_RACINE_URL = "biblio.asp?mapage=@indice&PageCourante=@precedent";
+    private final static String BIBLIOGRAPHIE_RACINE_URL = "biblio_fiche.asp?biblio_numero=";
     
 	/*
 	 * Autres Constantes
@@ -158,6 +160,17 @@ public class Constants {
     public static String getDefinitionUrl(String inId) {
  		String definitionsUrl = SITE_RACINE_URL + DEFINITION_RACINE_URL + inId;
      	return definitionsUrl;
+    }
+    
+    public static String getListeBibliographiesUrl(int numPage) {
+    	int pagePrecedente = numPage - 1;
+ 		String listeBibliographiesUrl = SITE_RACINE_URL + BIBLIOGRAPHIES_RACINE_URL.replace("@indice", ""+numPage).replace("@precedent", ""+pagePrecedente);
+     	return listeBibliographiesUrl;
+    }
+    
+    public static String getBibliographieUrl(String inId) {
+ 		String listeDefinitionsUrl = SITE_RACINE_URL + BIBLIOGRAPHIES_RACINE_URL + inId;
+     	return listeDefinitionsUrl;
     }
     
     public static String getListeFichesUrl(ZoneGeographiqueKind zoneKing) {
