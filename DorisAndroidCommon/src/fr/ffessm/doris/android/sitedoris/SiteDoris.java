@@ -477,17 +477,21 @@ public class SiteDoris {
 				
 				if (numeroTR % 4 == 3){
 					Element elementAlien_emailParticipantId = elementTR.getFirstElementByClass("lien_email");
-					//log.info("getListeParticipantsParInitiale() - id Participant : "+elementAlien_emailParticipantId.getAttributeValue("href") );
+					log.info("getListeParticipantsParInitiale() - id Participant : "+elementAlien_emailParticipantId.getAttributeValue("href") );
 					String href = ""+elementAlien_emailParticipantId.getAttributeValue("href");
 					participantId = href.substring(Math.min(href.length(), href.indexOf("=")+1 ) );
-					//log.info("getListeParticipantsParInitiale() - debug : "+participantId+" - href : "+href+" - "+ href.indexOf("=") );
+					log.info("getListeParticipantsParInitiale() - debug 1 : "+participantId+" - href : "+href+" - "+ href.indexOf("=") );
 					if (href.indexOf("=")==-1){
 						Element elementAlien_fichecontactParticipantId = elementTR.getFirstElementByClass("lien_fichecontact");
 						href = ""+elementAlien_fichecontactParticipantId.getAttributeValue("href");
+						log.info("getListeParticipantsParInitiale() - href : "+href+" - "+ href.indexOf("=") );
+						
 						participantId = href.substring(Math.min(href.length(), href.indexOf("=")+1) );
+						log.info("getListeParticipantsParInitiale() - debug 2 : "+participantId );
+
 					}
 					if (participantId.indexOf("&")!=-1){
-						participantId=participantId.substring(1, participantId.indexOf("&") );
+						participantId=participantId.substring(0, participantId.indexOf("&") );
 					}
 					log.info("getListeParticipantsParInitiale() - id Participant : "+participantId);
 					
