@@ -55,25 +55,25 @@ import android.os.AsyncTask;
 import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
-// Start of user code additional imports VerifieNouvellesFiches_BgActivity
+// Start of user code additional imports TelechargePhotosFiche_BgActivity
 // End of user code
 
-public class VerifieNouvellesFiches_BgActivity  extends AsyncTask<String,Integer, Integer>{
-	private static final String LOG_TAG = VerifieNouvellesFiches_BgActivity.class.getCanonicalName();
+public class TelechargePhotosFiche_BgActivity  extends AsyncTask<String,Integer, Integer>{
+	private static final String LOG_TAG = TelechargePhotosFiche_BgActivity.class.getCanonicalName();
 	
 	
     private NotificationHelper mNotificationHelper;
     private OrmLiteDBHelper dbHelper;
     private Context context;
     
-    // Start of user code additional attribute declarations VerifieNouvellesFiches_BgActivity
+    // Start of user code additional attribute declarations TelechargePhotosFiche_BgActivity
 	// End of user code
     
 	/** constructor */
-    public VerifieNouvellesFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper){
-		// Start of user code additional attribute declarations VerifieNouvellesFiches_BgActivity constructor
-		String initialTickerText = context.getString(R.string.verifienouvellesfiches_bg_initialTickerText);
-		String notificationTitle = context.getString(R.string.verifienouvellesfiches_bg_notificationTitle);
+    public TelechargePhotosFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper){
+		// Start of user code additional attribute declarations TelechargePhotosFiche_BgActivity constructor
+		String initialTickerText = context.getString(R.string.telechargephotosfiche_bg_initialTickerText);
+		String notificationTitle = context.getString(R.string.telechargephotosfiche_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
 		// End of user code
         this.dbHelper = dbHelper;
@@ -89,13 +89,13 @@ public class VerifieNouvellesFiches_BgActivity  extends AsyncTask<String,Integer
     protected Integer doInBackground(String... arg0) {
     	
 
-		// Start of user code initialization of the task VerifieNouvellesFiches_BgActivity
+		// Start of user code initialization of the task TelechargePhotosFiche_BgActivity
 		// do the initializatio of the task here
 		// once done, you should indicates to the notificationHelper how many item will be processed
-    	mNotificationHelper.setMaxItemToProcess(""+100);
+		//mNotificationHelper.setMaxNbPages(maxNbPages.toString());
 		// End of user code
     	
-    	// Start of user code main loop of task VerifieNouvellesFiches_BgActivity
+    	// Start of user code main loop of task TelechargePhotosFiche_BgActivity
 		// This is where we would do the actual job
 		// you should indicates the progression using publishProgress()
 		for (int i=10;i<=100;i += 10)
@@ -111,7 +111,7 @@ public class VerifieNouvellesFiches_BgActivity  extends AsyncTask<String,Integer
             }
 		// End of user code
         
-		// Start of user code end of task VerifieNouvellesFiches_BgActivity
+		// Start of user code end of task TelechargePhotosFiche_BgActivity
 		// return the number of item processed
         return 100;
 		// End of user code
@@ -125,17 +125,17 @@ public class VerifieNouvellesFiches_BgActivity  extends AsyncTask<String,Integer
 	protected void onCancelled() {
 		super.onCancelled();
 		mNotificationHelper.completed();
-		// Start of user code VerifieNouvellesFiches onCancelled
+		// Start of user code TelechargePhotosFiche onCancelled
 		// End of user code
 	}
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
-		// Start of user code VerifieNouvellesFiches onPostExecute
+		// Start of user code TelechargePhotosFiche onPostExecute
 		// End of user code
     }
 
-    // Start of user code additional operations VerifieNouvellesFiches_BgActivity
+    // Start of user code additional operations TelechargePhotosFiche_BgActivity
 	
 	// End of user code
 	

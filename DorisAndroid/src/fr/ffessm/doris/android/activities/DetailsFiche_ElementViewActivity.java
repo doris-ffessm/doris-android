@@ -46,7 +46,6 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -63,8 +62,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_import
 import fr.ffessm.doris.android.BuildConfig;
 import android.content.SharedPreferences;
@@ -90,6 +91,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView.BufferType;
+import fr.ffessm.doris.android.tools.Outils.ImageType;
 
 import com.squareup.picasso.Picasso;
 
@@ -110,7 +112,7 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
-import fr.ffessm.doris.android.tools.Outils.ImageType;
+
 
 public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_implements
