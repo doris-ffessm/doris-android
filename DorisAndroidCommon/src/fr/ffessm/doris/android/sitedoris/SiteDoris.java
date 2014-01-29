@@ -644,6 +644,8 @@ public class SiteDoris {
     			if (elementAClass.toString().equals("normal")) {
     				String bibliographie = elementA.getRenderer().toString();
     				
+    				String idBiblio = elementA.getAttributeValue("href").replaceAll("[^=]*=([0-9]*)", "$1");
+    				
     				String auteur = bibliographie.replaceAll("^([^,]*),.*$", "$1").trim();
     				String Annee = bibliographie.replaceAll("^[^,]*,([^,]),.*$", "$1").trim();
     				String titre = elementA.getFirstElement(HTMLElementName.STRONG).getRenderer().toString().trim();
