@@ -96,7 +96,6 @@ public class PhotoFiche {
 	public boolean fiche_mayNeedDBRefresh = true;
 	
 
-	@DatabaseField
 	protected java.lang.String cleURL;
 
 	protected java.io.File imageVignette;
@@ -105,14 +104,11 @@ public class PhotoFiche {
 
 	protected java.io.File imageGrande;
 
-	@DatabaseField
 	protected java.lang.String titre;
 
-	@DatabaseField(dataType = com.j256.ormlite.field.DataType.LONG_STRING)
 	protected java.lang.String description;
 	
 
-	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiche;
 
 	// Start of user code PhotoFiche additional user properties	

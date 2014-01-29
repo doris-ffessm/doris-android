@@ -51,7 +51,6 @@ import com.j256.ormlite.stmt.SelectArg;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Collection;
 
@@ -60,6 +59,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import fr.ffessm.doris.android.datamodel.associations.*;
+
+// Start of user code additional import for Fiche
+import java.util.HashSet;
+
 import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
@@ -118,10 +121,8 @@ public class Fiche {
 	public boolean groupe_mayNeedDBRefresh = true;
 	
 
-	@DatabaseField
 	protected java.lang.String nomScientifique;
 
-	@DatabaseField
 	protected java.lang.String nomCommun;
 
 	/** Numéro de la fiche tel que connu par le site lui même */ 
@@ -164,7 +165,7 @@ public class Fiche {
 
 	/** zones géographiques où l'on peut trouver l'élément décrit par la fiche 
 	  * Attention, returned list is readonly
-      */
+     */
 	public List<ZoneGeographique> getZonesGeographiques(){
 		List<ZoneGeographique> result = new ArrayList<ZoneGeographique>();
 		
@@ -182,8 +183,6 @@ public class Fiche {
 		}
 	}
 	// end work in progress 	
-
-				
 
 	/** zones  où l'on peut observer l'élément décrit par la fiche */ 
 	@ForeignCollectionField(eager = false, foreignFieldName = "fiches")
@@ -235,8 +234,6 @@ public class Fiche {
 		}
 	}
 	// end work in progress 	
-
-				
 
 	// Start of user code Fiche additional user properties
 	
