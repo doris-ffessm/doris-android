@@ -50,6 +50,8 @@
       <dataAttributes name="nom" type="//@dataModel/@dataClasses.11"/>
       <dataAttributes name="numeroParticipant" documentation="identifiant du participant sur le site Doris" lowerbound="1" type="//@dataModel/@dataClasses.13"/>
       <dataAttributes name="cleURLPhotoParticipant" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="fonctions" documentation="Liste des ParticipantKind : Rédacteur, Relecteur, Responsable, etc." type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="description" documentation="Texte de Description du Participant" type="//@dataModel/@dataClasses.11"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="ZoneGeographique">
       <dataReferences name="fiches" upperBound="-1" opposite="//@dataModel/@dataAssociations.1" type="//@dataModel/@dataClasses.0"/>
@@ -66,9 +68,10 @@
       <dataAttributes name="numeroGroupe" documentation="XXX de groupe_numero=XXX dans l'url permettant d'afficher le groupe.&#xA;Certains groupes (de haut niveau) n'ont pas de numéro" type="//@dataModel/@dataClasses.13"/>
       <dataAttributes name="numeroSousGroupe" documentation="XXX de sousgroupe_numero=XXX dans l'url permettant avec le numero de groupe d'afficher le groupe.&#xA;Seuls certains groupes de plus bas niveau ont le numéro de sous-groupe" type="//@dataModel/@dataClasses.13"/>
       <dataAttributes name="nomGroupe" lowerbound="1" type="//@dataModel/@dataClasses.11" simpleXmlType="true"/>
-      <dataAttributes name="descriptionGroupe" documentation="En haut des pages de groupe, il y a un petit texte expliquant les grandes caractéristques du groupe.&#xA;C'est ce texte." type="//@dataModel/@dataClasses.11" simpleXmlType="true"/>
+      <dataAttributes name="descriptionGroupe" documentation="Souvent une petite liste d'exemples illustratifs" type="//@dataModel/@dataClasses.11" simpleXmlType="true"/>
       <dataAttributes name="cleURLImage" documentation="url de base pour les images de ce groupe" type="//@dataModel/@dataClasses.11"/>
       <dataAttributes name="nomImage" documentation="nom de l'image de ce groupe" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="descriptionDetailleeGroupe" documentation="En haut des pages de groupe, il y a un petit texte expliquant les grandes caractéristques du groupe.&#xA;C'est ce texte." type="//@dataModel/@dataClasses.11" simpleXmlType="true"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="DefinitionGlossaire" documentation="Entrée pour les définitions du Glossaire">
       <dataReferences name="fichesConcernees" documentation="Fiches concernées par cette définition (Ie. qui utilise dans leur texte cette définition)" upperBound="-1" opposite="//@dataModel/@dataAssociations.8" type="//@dataModel/@dataClasses.0"/>
@@ -85,6 +88,14 @@
     <dataClasses xsi:type="genandroid:NativeDataClass" name="LongString" instanceClassName="java.lang.String" databaseType="com.j256.ormlite.field.DataType.LONG_STRING"/>
     <dataClasses xsi:type="genandroid:NativeDataClass" name="Integer" instanceClassName="int"/>
     <dataClasses xsi:type="genandroid:NativeDataClass" name="File" instanceClassName="java.io.File"/>
+    <dataClasses xsi:type="genandroid:DataClass" name="EntreeBibliographie" documentation="Entrée de la Bibliographie">
+      <dataAttributes name="numeroDoris" documentation="numéro de l'entrée sur le site Doris" lowerbound="1" type="//@dataModel/@dataClasses.13"/>
+      <dataAttributes name="titre" documentation="Titre du Livre, Revue, etc." lowerbound="1" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="auteurs" documentation="Auteur(s)" type="//@dataModel/@dataClasses.12"/>
+      <dataAttributes name="annee" documentation="Année de Parution" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="details" documentation="Détails comme l'édition, etc." type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="cleURLIllustration" documentation="URL de l'illustration éventuelle de l'entrée bibliographique" type="//@dataModel/@dataClasses.11"/>
+    </dataClasses>
     <dataAssociations name="Fiche_Photos" references="//@dataModel/@dataClasses.2/@dataReferences.0 //@dataModel/@dataClasses.0/@dataReferences.0"/>
     <dataAssociations name="Fiches_ZonesGeographiques" references="//@dataModel/@dataClasses.6/@dataReferences.0 //@dataModel/@dataClasses.0/@dataReferences.1"/>
     <dataAssociations name="Fiches_ZonesObservations" references="//@dataModel/@dataClasses.0/@dataReferences.2 //@dataModel/@dataClasses.7/@dataReferences.0"/>

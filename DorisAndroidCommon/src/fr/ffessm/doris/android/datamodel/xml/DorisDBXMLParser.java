@@ -78,6 +78,7 @@ public class DorisDBXMLParser {
 	List<Groupe> groupes = new ArrayList<Groupe>();
 	List<DefinitionGlossaire> definitionGlossaires = new ArrayList<DefinitionGlossaire>();
 	List<DorisDB_metadata> dorisDB_metadatas = new ArrayList<DorisDB_metadata>();
+	List<EntreeBibliographie> entreeBibliographies = new ArrayList<EntreeBibliographie>();
 	Set<Fiche> fichesToUpdate = new HashSet<Fiche>();
 	Set<AutreDenomination> autreDenominationsToUpdate = new HashSet<AutreDenomination>();
 	Set<PhotoFiche> photoFichesToUpdate = new HashSet<PhotoFiche>();
@@ -89,6 +90,7 @@ public class DorisDBXMLParser {
 	Set<Groupe> groupesToUpdate = new HashSet<Groupe>();
 	Set<DefinitionGlossaire> definitionGlossairesToUpdate = new HashSet<DefinitionGlossaire>();
 	Set<DorisDB_metadata> dorisDB_metadatasToUpdate = new HashSet<DorisDB_metadata>();
+	Set<EntreeBibliographie> entreeBibliographiesToUpdate = new HashSet<EntreeBibliographie>();
 	Hashtable<String, Fiche> xmlId2Fiche = new Hashtable<String, Fiche>();
 	Hashtable<String, AutreDenomination> xmlId2AutreDenomination = new Hashtable<String, AutreDenomination>();
 	Hashtable<String, PhotoFiche> xmlId2PhotoFiche = new Hashtable<String, PhotoFiche>();
@@ -100,6 +102,7 @@ public class DorisDBXMLParser {
 	Hashtable<String, Groupe> xmlId2Groupe = new Hashtable<String, Groupe>();
 	Hashtable<String, DefinitionGlossaire> xmlId2DefinitionGlossaire = new Hashtable<String, DefinitionGlossaire>();
 	Hashtable<String, DorisDB_metadata> xmlId2DorisDB_metadata = new Hashtable<String, DorisDB_metadata>();
+	Hashtable<String, EntreeBibliographie> xmlId2EntreeBibliographie = new Hashtable<String, EntreeBibliographie>();
 
 	// minimize memory footprint by using static Strings
     public static final String ID_STRING = "id";
@@ -126,6 +129,8 @@ public class DorisDBXMLParser {
 	public static final String DATACLASSIFIER_DEFINITIONGLOSSAIRE  = "DEFINITIONGLOSSAIRE";
 	public static final String DATACLASSIFIER_DORISDB_METADATAS = "DORISDB_METADATAS";
 	public static final String DATACLASSIFIER_DORISDB_METADATA  = "DORISDB_METADATA";
+	public static final String DATACLASSIFIER_ENTREEBIBLIOGRAPHIES = "ENTREEBIBLIOGRAPHIES";
+	public static final String DATACLASSIFIER_ENTREEBIBLIOGRAPHIE  = "ENTREEBIBLIOGRAPHIE";
 
 	public static final String DATAATT_FICHE_nomScientifique = "nomScientifique";
 	public static final String DATAATT_FICHE_NOMSCIENTIFIQUE = "NOMSCIENTIFIQUE";
@@ -187,6 +192,10 @@ public class DorisDBXMLParser {
 	public static final String DATAATT_PARTICIPANT_NUMEROPARTICIPANT = "NUMEROPARTICIPANT";
 	public static final String DATAATT_PARTICIPANT_cleURLPhotoParticipant = "cleURLPhotoParticipant";
 	public static final String DATAATT_PARTICIPANT_CLEURLPHOTOPARTICIPANT = "CLEURLPHOTOPARTICIPANT";
+	public static final String DATAATT_PARTICIPANT_fonctions = "fonctions";
+	public static final String DATAATT_PARTICIPANT_FONCTIONS = "FONCTIONS";
+	public static final String DATAATT_PARTICIPANT_description = "description";
+	public static final String DATAATT_PARTICIPANT_DESCRIPTION = "DESCRIPTION";
 	public static final String DATAREF_PARTICIPANT_intervenantFiches = "intervenantFiches";
 	public static final String DATAATT_ZONEGEOGRAPHIQUE_nom = "nom";
 	public static final String DATAATT_ZONEGEOGRAPHIQUE_NOM = "NOM";
@@ -198,6 +207,8 @@ public class DorisDBXMLParser {
 	public static final String DATAATT_GROUPE_NOMGROUPE = "NOMGROUPE";
 	public static final String DATAATT_GROUPE_descriptionGroupe = "descriptionGroupe";
 	public static final String DATAATT_GROUPE_DESCRIPTIONGROUPE = "DESCRIPTIONGROUPE";
+	public static final String DATAATT_GROUPE_descriptionDetailleeGroupe = "descriptionDetailleeGroupe";
+	public static final String DATAATT_GROUPE_DESCRIPTIONDETAILLEEGROUPE = "DESCRIPTIONDETAILLEEGROUPE";
 	public static final String DATAATT_GROUPE_numeroGroupe = "numeroGroupe";
 	public static final String DATAATT_GROUPE_NUMEROGROUPE = "NUMEROGROUPE";
 	public static final String DATAATT_GROUPE_numeroSousGroupe = "numeroSousGroupe";
@@ -221,6 +232,18 @@ public class DorisDBXMLParser {
 	public static final String DATAATT_DORISDB_METADATA_DATEBASE = "DATEBASE";
 	public static final String DATAATT_DORISDB_METADATA_dateMAJPartielle = "dateMAJPartielle";
 	public static final String DATAATT_DORISDB_METADATA_DATEMAJPARTIELLE = "DATEMAJPARTIELLE";
+	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_numeroDoris = "numeroDoris";
+	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_NUMERODORIS = "NUMERODORIS";
+	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_titre = "titre";
+	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_TITRE = "TITRE";
+	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_auteurs = "auteurs";
+	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_AUTEURS = "AUTEURS";
+	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_annee = "annee";
+	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_ANNEE = "ANNEE";
+	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_details = "details";
+	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_DETAILS = "DETAILS";
+	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_cleURLIllustration = "cleURLIllustration";
+	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_CLEURLILLUSTRATION = "CLEURLILLUSTRATION";
 
 
 
@@ -293,6 +316,10 @@ public class DorisDBXMLParser {
 		 	if (name.equals(DATACLASSIFIER_DORISDB_METADATAS)) {
 				dorisDB_metadatas = readDorisDB_metadatas(parser,DATACLASSIFIER_DORISDB_METADATAS);
 	            // dorisDB_metadatas.addAll(readDorisDB_metadatas(parser,DATACLASSIFIER_DORISDB_METADATAS));
+	        } else 
+		 	if (name.equals(DATACLASSIFIER_ENTREEBIBLIOGRAPHIES)) {
+				entreeBibliographies = readEntreeBibliographies(parser,DATACLASSIFIER_ENTREEBIBLIOGRAPHIES);
+	            // entreeBibliographies.addAll(readEntreeBibliographies(parser,DATACLASSIFIER_ENTREEBIBLIOGRAPHIES));
 	        } else 
 			{
 	            skip(parser);
@@ -514,6 +541,26 @@ public class DorisDBXMLParser {
 	        String name = parser.getName();
 			if (name.equals(DATACLASSIFIER_DORISDB_METADATA)) {
 	            entries.add(readDorisDB_metadata(parser));
+	        } else {
+	            skip(parser);
+	        }
+	    }
+		entries.trimToSize();
+		return entries;
+	}
+	/**
+     * parser for a group of EntreeBibliographie
+     */
+	List<EntreeBibliographie> readEntreeBibliographies(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
+		ArrayList<EntreeBibliographie> entries = new ArrayList<EntreeBibliographie>();
+		parser.require(XmlPullParser.START_TAG, ns, containingTag);
+	    while (parser.next() != XmlPullParser.END_TAG) {
+	        if (parser.getEventType() != XmlPullParser.START_TAG) {
+	            continue;
+	        }
+	        String name = parser.getName();
+			if (name.equals(DATACLASSIFIER_ENTREEBIBLIOGRAPHIE)) {
+	            entries.add(readEntreeBibliographie(parser));
 	        } else {
 	            skip(parser);
 	        }
@@ -782,6 +829,16 @@ public class DorisDBXMLParser {
 	            result.setCleURLPhotoParticipant(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_PARTICIPANT_cleURLPhotoParticipant);
 	        } else
+			if (currentTagName.equals(DATAATT_PARTICIPANT_fonctions)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_PARTICIPANT_fonctions);
+	            result.setFonctions(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_PARTICIPANT_fonctions);
+	        } else
+			if (currentTagName.equals(DATAATT_PARTICIPANT_description)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_PARTICIPANT_description);
+	            result.setDescription(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_PARTICIPANT_description);
+	        } else
 					// TODO deal with ref intervenantFiches
 	        {
 	            skip(parser);
@@ -854,6 +911,7 @@ public class DorisDBXMLParser {
     	xmlId2Groupe.put(parser.getAttributeValue(null, ID_STRING),result);		
 		result.setNomGroupe(parser.getAttributeValue(null, DATAATT_GROUPE_nomGroupe));
 		result.setDescriptionGroupe(parser.getAttributeValue(null, DATAATT_GROUPE_descriptionGroupe));
+		result.setDescriptionDetailleeGroupe(parser.getAttributeValue(null, DATAATT_GROUPE_descriptionDetailleeGroupe));
 		while (parser.next() != XmlPullParser.END_TAG) {
 	        if (parser.getEventType() != XmlPullParser.START_TAG) {
 	            continue;
@@ -953,6 +1011,53 @@ public class DorisDBXMLParser {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_DORISDB_METADATA_dateMAJPartielle);
 	            result.setDateMAJPartielle(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_DORISDB_METADATA_dateMAJPartielle);
+	        } else
+	        {
+	            skip(parser);
+	        }
+	    }
+
+		return result;
+	}
+	EntreeBibliographie readEntreeBibliographie(XmlPullParser parser)  throws XmlPullParserException, IOException{
+		EntreeBibliographie result = new EntreeBibliographie();
+
+		parser.require(XmlPullParser.START_TAG, ns, DATACLASSIFIER_ENTREEBIBLIOGRAPHIE);
+    	String currentTagName = parser.getName();
+    			
+    	xmlId2EntreeBibliographie.put(parser.getAttributeValue(null, ID_STRING),result);		
+		while (parser.next() != XmlPullParser.END_TAG) {
+	        if (parser.getEventType() != XmlPullParser.START_TAG) {
+	            continue;
+	        }
+	        currentTagName = parser.getName();
+			//TODO if (currentTagName.equals(DATAATT_ENTREEBIBLIOGRAPHIE_NUMERODORIS)) {
+	        //    title = readTitle(parser);
+	        //} else	
+			if (currentTagName.equals(DATAATT_ENTREEBIBLIOGRAPHIE_titre)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_ENTREEBIBLIOGRAPHIE_titre);
+	            result.setTitre(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_ENTREEBIBLIOGRAPHIE_titre);
+	        } else
+			if (currentTagName.equals(DATAATT_ENTREEBIBLIOGRAPHIE_auteurs)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_ENTREEBIBLIOGRAPHIE_auteurs);
+	            result.setAuteurs(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_ENTREEBIBLIOGRAPHIE_auteurs);
+	        } else
+			if (currentTagName.equals(DATAATT_ENTREEBIBLIOGRAPHIE_annee)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_ENTREEBIBLIOGRAPHIE_annee);
+	            result.setAnnee(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_ENTREEBIBLIOGRAPHIE_annee);
+	        } else
+			if (currentTagName.equals(DATAATT_ENTREEBIBLIOGRAPHIE_details)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_ENTREEBIBLIOGRAPHIE_details);
+	            result.setDetails(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_ENTREEBIBLIOGRAPHIE_details);
+	        } else
+			if (currentTagName.equals(DATAATT_ENTREEBIBLIOGRAPHIE_cleURLIllustration)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_ENTREEBIBLIOGRAPHIE_cleURLIllustration);
+	            result.setCleURLIllustration(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_ENTREEBIBLIOGRAPHIE_cleURLIllustration);
 	        } else
 	        {
 	            skip(parser);

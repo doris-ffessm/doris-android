@@ -91,7 +91,6 @@ public class AutreDenomination {
 	 */
 	public boolean fiche_mayNeedDBRefresh = true;
 	
-
 	@DatabaseField
 	protected java.lang.String denomination;
 
@@ -99,7 +98,6 @@ public class AutreDenomination {
 	@DatabaseField
 	protected java.lang.String langue;
 	
-
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiche;
 

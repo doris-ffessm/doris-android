@@ -95,7 +95,6 @@ public class PhotoFiche {
 	 */
 	public boolean fiche_mayNeedDBRefresh = true;
 	
-
 	@DatabaseField
 	protected java.lang.String cleURL;
 

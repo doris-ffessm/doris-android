@@ -100,6 +100,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	// the DAO object we use to access the diveBudies table
 	// private Dao<DorisDB_metadata, Integer> dorisDB_metadataDao = null;
 	private RuntimeExceptionDao<DorisDB_metadata, Integer> dorisDB_metadataRuntimeDao = null;
+
 	
 		private RuntimeExceptionDao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesRuntimeDao = null;
 		private RuntimeExceptionDao<Fiches_DefinitionsGlossaire, Integer> fiches_DefinitionsGlossaireRuntimeDao = null;
@@ -281,6 +282,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		return definitionGlossaireRuntimeDao;
 	}
 
+	
 	/**
 	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DorisDB_metadata class. It will
 	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
@@ -303,16 +305,6 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 			fiches_ZonesGeographiquesRuntimeDao = getRuntimeExceptionDao(Fiches_ZonesGeographiques.class);
 		}
 		return fiches_ZonesGeographiquesRuntimeDao;
-	}
-	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our Fiches_DefinitionsGlossaire class. It will
-	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
-	 */
-	public RuntimeExceptionDao<Fiches_DefinitionsGlossaire, Integer> getFiches_DefinitionsGlossaireDao() {
-		if (fiches_DefinitionsGlossaireRuntimeDao == null) {
-			fiches_DefinitionsGlossaireRuntimeDao = getRuntimeExceptionDao(Fiches_DefinitionsGlossaire.class);
-		}
-		return fiches_DefinitionsGlossaireRuntimeDao;
 	}
 
 
@@ -355,8 +347,8 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 			helper.groupeDao = getDao(Groupe.class);
 			helper.definitionGlossaireDao = getDao(DefinitionGlossaire.class);
 			helper.dorisDB_metadataDao = getDao(DorisDB_metadata.class);
-		helper.fiches_ZonesGeographiquesDao = getDao(Fiches_ZonesGeographiques.class);
-		helper.fiches_DefinitionsGlossaireDao = getDao(Fiches_DefinitionsGlossaire.class);
+			helper.fiches_ZonesGeographiquesDao = getDao(Fiches_ZonesGeographiques.class);
+			helper.fiches_DefinitionsGlossaireDao = getDao(Fiches_DefinitionsGlossaire.class);
 		} catch (SQLException e) {
 			Log.e(OrmLiteDBHelper.class.getName(), "Can't get ", e);
 		}

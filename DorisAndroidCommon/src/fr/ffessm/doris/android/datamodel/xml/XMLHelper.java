@@ -253,6 +253,19 @@ public class XMLHelper {
 			e.printStackTrace();
 		}
 		sb.append("\n\t</DORISDB_METADATAS>\n");
+		sb.append("\n\t<ENTREEBIBLIOGRAPHIES>");
+		try {	
+			List<EntreeBibliographie> entreeBibliographies = dbContext.entreeBibliographieDao.queryForAll();
+			for(EntreeBibliographie  entreeBibliographie : entreeBibliographies){
+				// TODO find if contained by another element, if not put it there
+					sb.append("\n");
+					sb.append(entreeBibliographie.toXML("\t\t", dbContext));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sb.append("\n\t</ENTREEBIBLIOGRAPHIES>\n");
 		sb.append("\n</DORISDB>");
 		return sb.toString();
 	}
@@ -359,6 +372,14 @@ public class XMLHelper {
 					log.error("cannot create DorisDB_metadata "+e.getMessage(),e);
 				}
 			}
+			log.info("starting creation of EntreeBibliographie...");
+			for(EntreeBibliographie entreeBibliographie : parser.entreeBibliographies){
+				try {
+					dbContext.entreeBibliographieDao.create(entreeBibliographie);
+				} catch (SQLException e) {
+					log.error("cannot create EntreeBibliographie "+e.getMessage(),e);
+				}
+			}
 			log.info("starting crossref...");
 			// proceed with cross ref
 			for (RefCommand command : parser.refCommands) {
@@ -452,6 +473,14 @@ public class XMLHelper {
 					dbContext.dorisDB_metadataDao.update(elem);
 				} catch (SQLException e) {
 					log.error("cannot update DorisDB_metadata "+e.getMessage(),e);
+				}
+			}
+			log.info("starting update DB of EntreeBibliographie...");
+			for(EntreeBibliographie elem : parser.entreeBibliographiesToUpdate){
+				try {
+					dbContext.entreeBibliographieDao.update(elem);
+				} catch (SQLException e) {
+					log.error("cannot update EntreeBibliographie "+e.getMessage(),e);
 				}
 			}
 			log.info("DB filled from XML");

@@ -620,4 +620,45 @@ public class SiteDoris {
     	//log.debug("getContinuerListeDefinitionsParInitialeFromHtml() - continuer :"+continuer);
     	return continuer;
     }
+    
+    // TODO : passer HashSet<String> -> HashSet<Biblio qd ce sera possible
+    public static HashSet<String> getListeBiblioFromHtml(String inCodePageHtml) {
+    	log.trace("getListeBiblioFromHtml()- Début");
+    	
+    	HashSet<String> listeBiblio = new HashSet<String>(0);
+    	
+    	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml),false ) );
+    	source.fullSequentialParse();
+    	log.debug("getListeFichesFromHtml()- source.length() : " + source.length());
+    	//log.debug("getListeFiches()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
+
+    	List<? extends Element> listeElementsA = source.getAllElements(HTMLElementName.A);
+    	log.debug("getListeFichesFromHtml() - listeElementsA.size() : " + listeElementsA.size());
+
+    	for (Element elementA : listeElementsA) {
+    		//log.debug("getListeFiches() - elementTD.length() : " + elementTD.length());
+    		//log.debug("getListeFiches()- elementTD : " + elementTD.toString().substring(0, Math.min(100, elementTD.toString().length())));
+    		
+    		String elementAClass = elementA.getAttributeValue("class");
+			if (elementAClass != null){
+    			if (elementAClass.toString().equals("normal")) {
+    				String bibliographie = elementA.getRenderer().toString();
+    				
+    				String idBiblio = elementA.getAttributeValue("href").replaceAll("[^=]*=([0-9]*)", "$1");
+    				
+    				String auteur = bibliographie.replaceAll("^([^,]*),.*$", "$1").trim();
+    				String Annee = bibliographie.replaceAll("^[^,]*,([^,]),.*$", "$1").trim();
+    				String titre = elementA.getFirstElement(HTMLElementName.STRONG).getRenderer().toString().trim();
+    				String edition = elementAClass.toString().replaceAll(".*</strong>,(.*)$", "$1");
+    			}
+			}
+			
+		}
+		log.trace("getListeBiblioFromHtml()- Fin");
+		return listeBiblio;
+    }
+	
+	
+    
+    
 }

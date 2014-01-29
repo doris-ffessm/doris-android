@@ -58,7 +58,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,6 +84,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import com.j256.ormlite.dao.CloseableIterator;
+import android.widget.ImageButton;
 
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
@@ -108,7 +108,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	implements DataChangedListener
 //End of user code
 {
-
+	
 	//Start of user code constants Accueil_CustomViewActivity
 //	static final int TELECHARGE_FICHE_MENU_ID = 1;	
 	static final int TELECHARGE_PHOTO_FICHES_MENU_ID = 2;
