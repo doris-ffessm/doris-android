@@ -91,13 +91,14 @@ public class AutreDenomination {
 	 */
 	public boolean fiche_mayNeedDBRefresh = true;
 	
-
+	@DatabaseField
 	protected java.lang.String denomination;
 
 	/** Si renseigné, indique la ou les langues qui utilisent cette dénomination  */ 
+	@DatabaseField
 	protected java.lang.String langue;
 	
-
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiche;
 
 	// Start of user code AutreDenomination additional user properties

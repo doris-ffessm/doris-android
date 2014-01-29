@@ -91,10 +91,12 @@ public class DorisDB_metadata {
 	
 
 	/** Date de récupération de la base DORIS */ 
+	@DatabaseField
 	protected java.lang.String dateBase;
 
 	/** Date d'une éventuelle mise à jour partielle de la base 
 (ie. plus récente que la copie fournie avec l'application) */ 
+	@DatabaseField
 	protected java.lang.String dateMAJPartielle;
 	
 

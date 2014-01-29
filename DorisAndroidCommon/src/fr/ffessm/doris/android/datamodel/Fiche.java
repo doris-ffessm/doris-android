@@ -120,9 +120,10 @@ public class Fiche {
 	public boolean photoPrincipale_mayNeedDBRefresh = true;
 	public boolean groupe_mayNeedDBRefresh = true;
 	
-
+	@DatabaseField
 	protected java.lang.String nomScientifique;
 
+	@DatabaseField
 	protected java.lang.String nomCommun;
 
 	/** Numéro de la fiche tel que connu par le site lui même */ 

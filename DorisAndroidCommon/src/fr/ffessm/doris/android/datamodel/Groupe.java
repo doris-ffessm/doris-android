@@ -107,25 +107,32 @@ public class Groupe {
 
 	/** XXX de groupe_numero=XXX dans l'url permettant d'afficher le groupe.
 Certains groupes (de haut niveau) n'ont pas de numéro */ 
+	@DatabaseField
 	protected int numeroGroupe;
 
 	/** XXX de sousgroupe_numero=XXX dans l'url permettant avec le numero de groupe d'afficher le groupe.
 Seuls certains groupes de plus bas niveau ont le numéro de sous-groupe */ 
+	@DatabaseField
 	protected int numeroSousGroupe;
 
+	@DatabaseField
 	protected java.lang.String nomGroupe;
 
 	/** Souvent une petite liste d'exemples illustratifs */ 
+	@DatabaseField
 	protected java.lang.String descriptionGroupe;
 
 	/** url de base pour les images de ce groupe */ 
+	@DatabaseField
 	protected java.lang.String cleURLImage;
 
 	/** nom de l'image de ce groupe */ 
+	@DatabaseField
 	protected java.lang.String nomImage;
 
 	/** En haut des pages de groupe, il y a un petit texte expliquant les grandes caractéristques du groupe.
 C'est ce texte. */ 
+	@DatabaseField
 	protected java.lang.String descriptionDetailleeGroupe;
 	
 

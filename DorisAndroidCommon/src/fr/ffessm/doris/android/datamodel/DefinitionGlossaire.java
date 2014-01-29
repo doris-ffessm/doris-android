@@ -98,15 +98,19 @@ public class DefinitionGlossaire {
 	
 
 	/** numéro de la définition sur le site Doris */ 
+	@DatabaseField
 	protected int numeroDoris;
 
 	/** terme de l'entrée */ 
+	@DatabaseField
 	protected java.lang.String terme;
 
 	/** définition de cette entrée */ 
+	@DatabaseField(dataType = com.j256.ormlite.field.DataType.LONG_STRING)
 	protected java.lang.String definition;
 
 	/** URL de l'illustration éventuelle de la définition */ 
+	@DatabaseField
 	protected java.lang.String cleURLIllustration;
 	
 

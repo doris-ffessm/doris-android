@@ -121,6 +121,9 @@ public class ZoneGeographique {
 		}
 	}
 	// end work in progress 	
+	
+	
+	
 	// Start of user code ZoneGeographique additional user properties
 	
 	// Ce serait mieux dans la base mais en attendant ce sera en dur ici

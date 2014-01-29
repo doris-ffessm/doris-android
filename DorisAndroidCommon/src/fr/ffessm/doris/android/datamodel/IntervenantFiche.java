@@ -94,11 +94,13 @@ public class IntervenantFiche {
 	
 
 	/** Type d'intervention sur une fiche */ 
+	@DatabaseField
 	protected int roleIntervenant;
 	
-
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Participant participant;
 
+	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiche;
 
 	// Start of user code IntervenantFiche additional user properties

@@ -94,22 +94,28 @@ public class EntreeBibliographie {
 	 */
 	
 
-	/** numéro de l'entrée sur le site Doris */ 
+	/** numéro de l'entrée sur le site Doris */
+	@DatabaseField
 	protected int numeroDoris;
 
 	/** Titre du Livre, Revue, etc. */ 
+	@DatabaseField
 	protected java.lang.String titre;
 
 	/** Auteur(s) */ 
+	@DatabaseField
 	protected java.lang.String auteurs;
 
 	/** Année de Parution */ 
+	@DatabaseField
 	protected java.lang.String annee;
 
 	/** Détails comme l'édition, etc. */ 
+	@DatabaseField
 	protected java.lang.String details;
 
 	/** URL de l'illustration éventuelle de l'entrée bibliographique */ 
+	@DatabaseField
 	protected java.lang.String cleURLIllustration;
 	
 
