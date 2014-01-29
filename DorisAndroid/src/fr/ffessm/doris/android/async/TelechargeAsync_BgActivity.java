@@ -77,7 +77,6 @@ import fr.ffessm.doris.android.tools.Outils.ImageType;
 public class TelechargeAsync_BgActivity  extends AsyncTask<String,Integer, Integer>{
 	private static final String LOG_TAG = TelechargeAsync_BgActivity.class.getCanonicalName();
 	
-	
     private NotificationHelper mNotificationHelper;
     private OrmLiteDBHelper dbHelper;
     private Context context;
