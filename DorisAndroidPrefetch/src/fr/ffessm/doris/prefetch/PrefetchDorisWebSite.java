@@ -77,6 +77,7 @@ import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
+import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.IntervenantFiche;
@@ -99,10 +100,12 @@ public class PrefetchDorisWebSite {
 	// we are using the in-memory H2 database
 	//private final static String DATABASE_URL = "jdbc:h2:mem:fiche";
 	// we are using the created SQLite database
-	private final static String DATABASE_URL = "jdbc:sqlite:run/DorisAndroid.db";
+	private final static String DATABASE_URL = "jdbc:sqlite:run/database/DorisAndroid.db";
 
 	// Dossiers liés au fonctionnement de l'appli prefetch
 	private final static String DOSSIER_RACINE = "./run";
+	private final static String DOSSIER_RES_HTML = "./res/html";
+	
 	// Ces dossiers seront renommés qd nécessaire
 	private final static String DOSSIER_HTML = "html";
 	private final static String DOSSIER_HTML_REF = "html_ref";
@@ -444,24 +447,25 @@ public class PrefetchDorisWebSite {
 							System.exit(0);
 						}
 					}
-					//TODO : J'en suis là sur la récupération de la Bibliographie : to be continued
-					//final HashSet<Participant> listeParticipantsFromHTML = SiteDoris.getListeParticipantsParInitialeFromHtml(contenuFichierHtml);
+					
+					final HashSet<EntreeBibliographie> listeBiblioFromHTML = SiteDoris.getListeBiblioFromHtml(contenuFichierHtml);
 					//log.info("Creation de "+listeParticipantsFromHTML.size()+" participants pour la lettre : "+initiale);
-					/*
-						new Callable<Void>() {
-							public Void call() throws Exception {
-								for (Participant participant : listeParticipantsFromHTML){
-									if (!dbContext.participantDao.idExists(participant.getId()))
-										dbContext.participantDao.create(participant);
-								}
-								return null;
-						    }
-						});
-					 */
+					TransactionManager.callInTransaction(connectionSource,
+							new Callable<Void>() {
+								public Void call() throws Exception {
+									for (EntreeBibliographie entreeBiblio : listeBiblioFromHTML){
+										if (!dbContext.entreeBibliographieDao.idExists(entreeBiblio.getId()))
+											dbContext.entreeBibliographieDao.create(entreeBiblio);
+									}
+									return null;
+							    }
+							});
+					 
 					pageCourante ++;
 					testContinu = contenuFichierHtml.contains("biblio.asp?mapage="+pageCourante+"&");
 				} while ( testContinu );
-				/*
+				/* TODO : Il y a souvent une illustration dans la page de l'entrée bibliographique
+				 * La façon de faire ressemblerait bcp à la façon de faire des définitions
 				HashSet<Participant> listeParticipants = new HashSet<Participant>(0);
 				listeParticipants.addAll(dbContext.participantDao.queryForAll());
 				log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
@@ -970,6 +974,7 @@ public class PrefetchDorisWebSite {
 		dbContext.sectionFicheDao = DaoManager.createDao(connectionSource, SectionFiche.class);
 		dbContext.autreDenominationDao = DaoManager.createDao(connectionSource, AutreDenomination.class);
 		dbContext.definitionGlossaireDao = DaoManager.createDao(connectionSource, DefinitionGlossaire.class);
+		dbContext.entreeBibliographieDao = DaoManager.createDao(connectionSource, EntreeBibliographie.class);
 		
 		//dbContext.fiches_verificateurs_ParticipantsDao = DaoManager.createDao(connectionSource, Fiches_verificateurs_Participants.class);
 		dbContext.fiches_ZonesGeographiquesDao = DaoManager.createDao(connectionSource, Fiches_ZonesGeographiques.class);
@@ -999,6 +1004,7 @@ public class PrefetchDorisWebSite {
 		TableUtils.createTable(connectionSource, Fiches_ZonesGeographiques.class);
 		TableUtils.createTable(connectionSource, Fiches_ZonesObservations.class);
 		TableUtils.createTable(connectionSource, Fiches_DefinitionsGlossaire.class);
+		TableUtils.createTable(connectionSource, EntreeBibliographie.class);
 		TableUtils.createTable(connectionSource, DorisDB_metadata.class);
 		
 		
@@ -1399,6 +1405,10 @@ public class PrefetchDorisWebSite {
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_faq.gif","images_18_faq.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/rightsign.jpg","images_rightsign.jpg"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/btn_next.gif","images_btn_next.gif"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/picto_regl18.gif","images_picto_regl18.gif"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/picto_regl.gif","images_picto_regl.gif"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/picto_dang18.gif","images_picto_dang18.gif"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/picto_dang.gif","images_picto_dang.gif"));
 		
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier1puce.jpg","images_fichier1puce.jpg"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier2puce.jpg","images_fichier2puce.jpg"));
@@ -1438,7 +1448,8 @@ public class PrefetchDorisWebSite {
 		lienANettoyer.add(new Lien(LienKind.PAGE, "glossaire.asp\"","listeDefinitions-a-1.html\""));
 		
 		lienANettoyer.add(new Lien(LienKind.PAGE, "biblio.asp\"","listeBibliographies-1.html\""));
-				
+
+		//TODO : Qd des espaces il faudrait les remplacer par des _
 		lienANettoyer.add(new Lien(LienKind.VIGNETTE, "http://doris.ffessm.fr/gestionenligne/photos_fiche_vig/","/"));
 		lienANettoyer.add(new Lien(LienKind.MED_RES, "http://doris.ffessm.fr/gestionenligne/photos_fiche_moy/","/"));
 		lienANettoyer.add(new Lien(LienKind.HI_RES, "http://doris.ffessm.fr/gestionenligne/photos/","/"));
@@ -1472,8 +1483,9 @@ public class PrefetchDorisWebSite {
 		
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche.asp\\?[^&\"<]*&fiche_numero=([^&]*)&[^\">]*","href=\"fiche-$1.html"));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche2.asp\\?fiche_numero=([^&]*)&[^\">]*","href=\"fiche-$1.html"));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche2.asp?fiche_numero=([^\">]*)\"","href=\"fiche-$1.html"));
-			
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche2.asp\\?fiche_numero=([^\">]*)\"","href=\"fiche-$1.html\""));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "fiche2.asp\\?fiche_numero=([^\">]*)","href=\"fiche-$1.html"));
+				
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"contacts.asp\\?filtre=(.)","href=\"listeParticipants-$1.html"));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"[^\"\\?]*formulaire_contact2.asp\\?contact_numero=([^\">]*)\"","href=\"indisponible_CDDVD.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"contact_fiche.asp\\?temp=0&amp;contact_numero=([^\">]*)\"","href=\"indisponible_CDDVD.html\""));
@@ -1483,11 +1495,11 @@ public class PrefetchDorisWebSite {
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiches_liste_contact.asp\\?contact_numero=([^\">]*)\"","href=\"indisponible_CDDVD.html\""));
 
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?filtre=(.)[^\">]*","href=\"listeDefinitions-$1-1.html"));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?mapage=([^&\">]*)&[^\">]*filtre=(.)\"","href=\"listeDefinitions-$2-$1.html"));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?mapage=([^&\">]*)&[^\">]*filtre=(.)\"","href=\"listeDefinitions-$2-$1.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire_detail.asp\\?glossaire_numero=([^&\">]*)&[^\">]*","href=\"definition-$1.html"));
 
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiches_liste.asp\\?groupe_numero=[^\">]*\"","href=\"indisponible_CDDVD.html\""));
-
+				
 		regExpPourNettoyer.add(new Lien(LienKind.ICONE, "http://doris.ffessm.fr/gestionenligne/photos_forum_vig/[^\">]*\"","/doris_icone_doris_large.png\""));
 
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "fiche_photo_liste_apercu.asp\\?fiche_numero=([^&>]*)&[^\">]*\"","fiche-$1_listePhotos.html\""));
@@ -1588,6 +1600,16 @@ public class PrefetchDorisWebSite {
 		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES+"/"+SOUSDOSSIER_MED_RES);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		//Copie du Fichier permettant d'aller directement sur la page d'accueil depuis la racine du CD
+		log.info("Copie du Fichier : Doris_CD.html");
+		dossierCD = new File(fichierCDLien);
+		File fichierRef = new File(DOSSIER_RES_HTML+"/"+"Doris_CD.html");
+		try {
+			FileUtils.copyFileToDirectory(fichierRef, dossierCD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

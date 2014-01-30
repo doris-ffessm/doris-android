@@ -260,7 +260,7 @@ public class Outils {
 			// ça ne semble arriver que pour ce cas, i.. pas pour les termes du glossaire, l'italique etc..
 			texteNettoye = texteNettoye.replace("{{/g}}{{/F}}", "{{/F}}{{/g}}");
 			texteNettoye = texteNettoye.replaceAll("\\{\\{F:([0-9]*)\\}\\}\\{\\{g\\}\\}", "{{g}}{{F:$1}}");
-				
+			
 		} else {
 			texteNettoye = texteNettoye.replace("<strong>", "");
 			texteNettoye = texteNettoye.replace("</strong>", "");
@@ -283,6 +283,9 @@ public class Outils {
 		String texteNettoye = texteANettoye;
 		
 		//if (LOG) Log.v(TAG, "nettoyageCaracteres() - texteNettoye : " + texteNettoye.charAt(7) + " - " + texteNettoye.codePointAt(7));
+		
+		// On commence par enlever toutes les dernières balises qu'il pourrait rester
+		texteNettoye = texteNettoye.replaceAll("<[^>]*>", "");
 		
 		// A priori seuls les caratères de table Unicode "Latin étendu A" nécessite une transcodif.
 		// en français seul oe
@@ -310,7 +313,7 @@ public class Outils {
 		// suppression des blancs multiples
 		texteNettoye = texteNettoye.replaceAll("[ \t]{2,}"," ");
 		
-		// remplacement de l'espace inséquable devant : ; ! ?
+		// remplacement de l'espace insécable devant : ; ! ?
 		texteNettoye = texteNettoye.replaceAll(" :", "\u00A0:")
 				.replaceAll(" ;", "\u00A0;")
 				.replaceAll(" !", "\u00A0!")

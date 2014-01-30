@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
@@ -56,6 +57,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
+import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.Participant;
@@ -448,9 +450,11 @@ public class SiteDoris {
     	List<? extends Element> listeElementsTR = elementTABLERacine.getAllElements(HTMLElementName.TR);
 		int profondeurTRlignes = elementTABLERacine.getFirstElement(HTMLElementName.TR).getDepth();
     	
-		String participantNom = "";
 		String participantId = "";
+		String participantNom = "";
+		String participantKind = "";
 		String participantUrlPhoto = "";
+		String participantDescription = "";
 		
 		int numeroTR = 0;
     	for (Element elementTR : listeElementsTR) {
@@ -468,26 +472,30 @@ public class SiteDoris {
 					for (Element elementTDTitre2 : listeElementsTDTitre2ParticipantKind) {
 
 						if ( elementTDTitre2.getFirstElement(HTMLElementName.IMG) != null ){
-							log.info("getListeParticipantsParInitiale() - Participant Kind : "+elementTDTitre2.getFirstElement(HTMLElementName.IMG).getAttributeValue("alt") );
+							String kind = elementTDTitre2.getFirstElement(HTMLElementName.IMG).getAttributeValue("alt");
+							log.info("getListeParticipantsParInitiale() - Participant Kind : "+ kind + " - " +Constants.getTypeParticipant(kind));
+							//TODO : Il faudra mettre autre chose
+							participantKind += Constants.getTypeParticipant(kind).ordinal()+";";
 						} else {
 							log.info("getListeParticipantsParInitiale() - Participant Provenance : "+elementTDTitre2.getRenderer().toString().trim() );
+							participantDescription = elementTDTitre2.getRenderer().toString().trim()+"<br/>";
 						}
 					}
 				}
 				
 				if (numeroTR % 4 == 3){
 					Element elementAlien_emailParticipantId = elementTR.getFirstElementByClass("lien_email");
-					log.info("getListeParticipantsParInitiale() - id Participant : "+elementAlien_emailParticipantId.getAttributeValue("href") );
+					//log.info("getListeParticipantsParInitiale() - id Participant : "+elementAlien_emailParticipantId.getAttributeValue("href") );
 					String href = ""+elementAlien_emailParticipantId.getAttributeValue("href");
 					participantId = href.substring(Math.min(href.length(), href.indexOf("=")+1 ) );
-					log.info("getListeParticipantsParInitiale() - debug 1 : "+participantId+" - href : "+href+" - "+ href.indexOf("=") );
+					//log.info("getListeParticipantsParInitiale() - debug 1 : "+participantId+" - href : "+href+" - "+ href.indexOf("=") );
 					if (href.indexOf("=")==-1){
 						Element elementAlien_fichecontactParticipantId = elementTR.getFirstElementByClass("lien_fichecontact");
 						href = ""+elementAlien_fichecontactParticipantId.getAttributeValue("href");
-						log.info("getListeParticipantsParInitiale() - href : "+href+" - "+ href.indexOf("=") );
+						//log.info("getListeParticipantsParInitiale() - href : "+href+" - "+ href.indexOf("=") );
 						
 						participantId = href.substring(Math.min(href.length(), href.indexOf("=")+1) );
-						log.info("getListeParticipantsParInitiale() - debug 2 : "+participantId );
+						//log.info("getListeParticipantsParInitiale() - debug 2 : "+participantId );
 
 					}
 					if (participantId.indexOf("&")!=-1){
@@ -495,25 +503,53 @@ public class SiteDoris {
 					}
 					log.info("getListeParticipantsParInitiale() - id Participant : "+participantId);
 					
-					//TODO : Vérifier Photo
 					List<? extends Element> listeElementsIMGParticipantPhoto = elementTR.getAllElements(HTMLElementName.IMG);
 					for (Element elementIMG : listeElementsIMGParticipantPhoto) {
 						String elementTDwidth = elementIMG.getAttributeValue("width");
 						if (elementTDwidth != null && elementTDwidth.equals("150") ){
-							log.info("getListeParticipantsParInitiale() - photo : "+elementIMG.getAttributeValue("src"));
+							//log.info("getListeParticipantsParInitiale() - photo : "+elementIMG.getAttributeValue("src"));
 							participantUrlPhoto = elementIMG.getAttributeValue("src");
 						}
 					}
-					
-					//TODO : Rechercher Ici Description Participant
-					
+
+					List<? extends Element> listeElementsTD = elementTR.getAllElements(HTMLElementName.TD);
+					int numeroTD = 0;
+					for (Element elementTD : listeElementsTD) {
+						String elementTDheight = elementTD.getAttributeValue("height");
+						String elementTDclass = elementTD.getAttributeValue("class");
+						if (elementTDheight != null && elementTDheight.equals("20") ) {
+							if (elementTDclass != null && elementTDclass.equals("normal") ) {
+								numeroTD ++;
+								if (numeroTD==1){
+									if (elementTD.getContent().toString().contains("images/18_probe.gif")) {
+										String siteWeb = elementTD.getFirstElement("src", Pattern.compile("images/18_probe\\.gif")).getParentElement().getRenderer().toString().trim();
+										//log.info("getListeParticipantsParInitiale() - Site Web : "+siteWeb);
+										participantDescription += "Site Web : <a href=\""+siteWeb+"\">"+siteWeb+"</a><br/>";
+									}
+								} else if (numeroTD==2){
+									String description = elementTD.toString().trim();
+									description = Outils.remplacementBalises(description, true);
+									description = Outils.nettoyageTextes(description);
+									
+									log.info("getListeParticipantsParInitiale() - Description : "+description);
+									if (!description.isEmpty()) participantDescription += description+"<br/>";
+								}
+							}
+						}
+					}
 				}
 				if (numeroTR % 4 == 3){
-					// TODO trouver l'url de l'image du participant
-					listeParticipants.add(new Participant( participantNom, Integer.valueOf(participantId), participantUrlPhoto) );
+					participantDescription = Outils.remplacementBalises(participantDescription, true);
+					participantDescription = Outils.nettoyageTextes(participantDescription);
+					log.info("getListeParticipantsParInitiale() - participantKind : "+participantKind);
+					log.info("getListeParticipantsParInitiale() - participantDescription : "+participantDescription);
+					
+					listeParticipants.add(new Participant( participantNom, Integer.valueOf(participantId), participantUrlPhoto, participantKind, participantDescription) );
 					participantNom = "";
 					participantId = "";
+					participantKind = "";
 					participantUrlPhoto = "";
+					participantDescription = "";
 				}
 			}
     	} // Fin Pour Chaque TR
@@ -540,7 +576,7 @@ public class SiteDoris {
     	
     	Iterator<Fiche> iFicheSite = inListeFichesSite.iterator();
     	while (iFicheSite.hasNext()) {
-    		// Si Nouvelle Fiche ou Etat a changé alors le couple ne peut être trouvé dans la liste de référence
+    		// Si Nouvelle Fiche ou État a changé alors le couple ne peut être trouvé dans la liste de référence
     		// Tentative d'optime pour avoir une empreinte mémoire la plus faible
     		Fiche ficheSite = iFicheSite.next();
     		if ( ! listeFichesEtatsRef.contains( ficheSite.getRefEtatFiche() ) ){
@@ -621,11 +657,10 @@ public class SiteDoris {
     	return continuer;
     }
     
-    // TODO : passer HashSet<String> -> HashSet<Biblio qd ce sera possible
-    public static HashSet<String> getListeBiblioFromHtml(String inCodePageHtml) {
+    public static HashSet<EntreeBibliographie> getListeBiblioFromHtml(String inCodePageHtml) {
     	log.trace("getListeBiblioFromHtml()- Début");
     	
-    	HashSet<String> listeBiblio = new HashSet<String>(0);
+    	HashSet<EntreeBibliographie> listeBiblio = new HashSet<EntreeBibliographie>(0);
     	
     	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml),false ) );
     	source.fullSequentialParse();
@@ -645,11 +680,18 @@ public class SiteDoris {
     				String bibliographie = elementA.getRenderer().toString();
     				
     				String idBiblio = elementA.getAttributeValue("href").replaceAll("[^=]*=([0-9]*)", "$1");
+    				log.debug("getListeFiches() - idBiblio : " + idBiblio);
     				
-    				String auteur = bibliographie.replaceAll("^([^,]*),.*$", "$1").trim();
-    				String Annee = bibliographie.replaceAll("^[^,]*,([^,]),.*$", "$1").trim();
-    				String titre = elementA.getFirstElement(HTMLElementName.STRONG).getRenderer().toString().trim();
+    				String auteurs = bibliographie.replaceAll("^([^,]*),.*$", "$1").trim();
+    				String annee = bibliographie.replaceAll("^[^,]*,([^,]*),.*$", "$1").trim();
+    				String titre = "";
+    				if (elementA.getFirstElement(HTMLElementName.STRONG) != null) {
+    					titre = elementA.getFirstElement(HTMLElementName.STRONG).getRenderer().toString().trim();
+    				}
     				String edition = elementAClass.toString().replaceAll(".*</strong>,(.*)$", "$1");
+    				
+    				// TODO : l'illustration éventuelle dans cleURLIllustration (mais il faudrait alors télécharger la page de l'entrée bibliographique
+    				listeBiblio.add(new EntreeBibliographie( Integer.valueOf(idBiblio), titre, auteurs, annee, edition,"") );
     			}
 			}
 			

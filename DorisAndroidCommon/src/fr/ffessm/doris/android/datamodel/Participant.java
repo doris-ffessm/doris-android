@@ -116,13 +116,6 @@ public class Participant {
 	protected ForeignCollection<IntervenantFiche> intervenantFiches;
 
 	// Start of user code Participant additional user properties
-	public Participant(java.lang.String nom, int numeroParticipant, java.lang.String cleURLPhotoParticipant) {
-		super();
-		this.nom = nom;
-		this.numeroParticipant = numeroParticipant;
-		this.cleURLPhotoParticipant = cleURLPhotoParticipant;
-	} 
- 
 	
 	public String getPhotoNom() {
 		return cleURLPhotoParticipant.replace("gestionenligne/photos_vig/", "").trim();

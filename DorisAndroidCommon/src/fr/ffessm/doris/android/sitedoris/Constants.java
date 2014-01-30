@@ -101,17 +101,21 @@ public class Constants {
     	REDACTEUR,
     	VERIFICATEUR,
     	CORRECTEUR_SCIENTIFIQUE,
+    	CORRECTEUR,
     	RESPONSABLE_REGIONAL,
-    	RESPONSABLE_NATIONAL
+    	RESPONSABLE_NATIONAL,
+    	PHOTOGRAPHE
     }
     
     private final static String REDACTEUR_PRINCIPAL_LIB = "Rédacteur Principal";
 	private final static String REDACTEUR_LIB = "Rédacteur";
 	private final static String VERIFICATEUR_LIB = "Vérificateur";
+	private final static String CORRECTEUR_LIB = "Correcteur";
 	private final static String CORRECTEUR_SCIENTIFIQUE_LIB = "Correcteur Scientifique";
 	private final static String RESPONSABLE_REGIONAL_LIB = "Responsable Régional";
 	private final static String RESPONSABLE_NATIONAL_LIB = "Responsable National";
-    
+	private final static String PHOTOGRAPHE_LIB = "Photographe";
+
     public enum PictoKind {
     	PICTO_ESPECE_REGLEMENTEE,
     	PICTO_ESPECE_DANGEREUSE
@@ -284,10 +288,14 @@ public class Constants {
 			return VERIFICATEUR_LIB;
 		case CORRECTEUR_SCIENTIFIQUE:
 			return CORRECTEUR_SCIENTIFIQUE_LIB;
+		case CORRECTEUR:
+			return CORRECTEUR_LIB;
 		case RESPONSABLE_REGIONAL:
 			return RESPONSABLE_REGIONAL_LIB;
 		case RESPONSABLE_NATIONAL:
 			return RESPONSABLE_NATIONAL_LIB;
+		case PHOTOGRAPHE:
+			return PHOTOGRAPHE_LIB;
 		default:
 			return "Type d'intervenant inconnu";
 		}
@@ -304,9 +312,13 @@ public class Constants {
 		case 3:
 			return CORRECTEUR_SCIENTIFIQUE_LIB;
 		case 4:
-			return RESPONSABLE_REGIONAL_LIB;
+			return CORRECTEUR_LIB;
 		case 5:
+			return RESPONSABLE_REGIONAL_LIB;
+		case 6:
 			return RESPONSABLE_NATIONAL_LIB;
+		case 7:
+			return PHOTOGRAPHE_LIB;
 		default:
 			return "Type d'intervenant inconnu";
 		}
@@ -318,8 +330,10 @@ public class Constants {
     	if (typeParticipant.equalsIgnoreCase(REDACTEUR_LIB)) return ParticipantKind.REDACTEUR;
     	if (typeParticipant.equalsIgnoreCase(VERIFICATEUR_LIB)) return ParticipantKind.VERIFICATEUR;
     	if (typeParticipant.equalsIgnoreCase(CORRECTEUR_SCIENTIFIQUE_LIB)) return ParticipantKind.CORRECTEUR_SCIENTIFIQUE;
+    	if (typeParticipant.equalsIgnoreCase(CORRECTEUR_LIB)) return ParticipantKind.CORRECTEUR;
     	if (typeParticipant.equalsIgnoreCase(RESPONSABLE_REGIONAL_LIB)) return ParticipantKind.RESPONSABLE_REGIONAL;
     	if (typeParticipant.equalsIgnoreCase(RESPONSABLE_NATIONAL_LIB)) return ParticipantKind.RESPONSABLE_NATIONAL;
+    	if (typeParticipant.equalsIgnoreCase(PHOTOGRAPHE_LIB)) return ParticipantKind.PHOTOGRAPHE;
 		
 		return null;
     }
