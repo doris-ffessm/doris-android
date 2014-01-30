@@ -764,19 +764,31 @@ public class Fiche {
 		
 		}
 		
+		// Partie basse de la Fiche
+		/* Premier class="tableau_trait"
+		 * Remonter de 5 niveaux : <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		 * Pour chaque <TR> de profondeur +1 : getChildElements()
+		 * Le 5ème TR contient le 1er Titre
+		 * Le 6ème le 1er contenu
+		 * le 7ème est vide => enregistrement : RAZ valeur Titre & Contenu
+		 * le 8ème le 2ème titre
+		 * le 9ème le 2ème contenu
+		 * le 11ème etc. etc.
+		 */
 		
-		
-		// TODO
+		// TODO : Est-ce vraiment toujours utile ?
 		if (sbListeLiensVersFiches.length() !=0){
 			setNumerofichesLiees(sbListeLiensVersFiches.toString());									
 		}
 		
+		// Texte pour recherche rapide dans les listes de fiches
 		StringBuilder sbTextePourRechercheRapide = new StringBuilder(getNomCommun());
 		sbTextePourRechercheRapide.append(getNomScientifique().replaceAll("\\([^\\)]*\\)", ""));
 		sbTextePourRechercheRapide.append(" "+autresDenominationsPourRechercheRapide.trim());
 		sbTextePourRechercheRapide = new StringBuilder(sbTextePourRechercheRapide.toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "") );
 		setTextePourRechercheRapide(Outils.formatStringNormalizer(sbTextePourRechercheRapide.toString()).toLowerCase());
 		
+		// RAZ
 		listeElementsTable_TABLE = null;
 		
     	log.trace("getFicheFromHtml() - Fin");
