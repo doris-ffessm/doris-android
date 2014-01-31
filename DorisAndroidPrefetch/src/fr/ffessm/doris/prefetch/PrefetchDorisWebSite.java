@@ -1399,12 +1399,12 @@ public class PrefetchDorisWebSite {
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_filetick.gif","images_18_filetick.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_mailsend.gif","images_18_mailsend.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_probe.gif","images_18_probe.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/icones/18_fileprint.gif","images_18_fileprint.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/searchdoc.gif","images_searchdoc.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/dorispetit18x18.gif","images_dorispetit18x18.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_faq.gif","images_18_faq.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/rightsign.jpg","images_rightsign.jpg"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/btn_next.gif","images_btn_next.gif"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/btn_prev.gif","images_btn_prev.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/picto_regl18.gif","images_picto_regl18.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/picto_regl.gif","images_picto_regl.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/picto_dang18.gif","images_picto_dang18.gif"));
@@ -1444,7 +1444,8 @@ public class PrefetchDorisWebSite {
 		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=4&","listeFiches-4.html"));
 		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=5&","listeFiches-5.html"));
 		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=10&","listeFiches.html"));
-		
+		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?fichier=",""));
+
 		lienANettoyer.add(new Lien(LienKind.PAGE, "glossaire.asp\"","listeDefinitions-a-1.html\""));
 		
 		lienANettoyer.add(new Lien(LienKind.PAGE, "biblio.asp\"","listeBibliographies-1.html\""));
@@ -1467,13 +1468,15 @@ public class PrefetchDorisWebSite {
 		lienANettoyer.add(new Lien(LienKind.PAGE, "cle_identification0.asp","indisponible_CDDVD.html"));
 		lienANettoyer.add(new Lien(LienKind.PAGE, "forum_detail.asp","indisponible_CDDVD.html"));
 		
-		lienANettoyer.add(new Lien(LienKind.PAGE, "action=\"contacts.asp\"","action=\"indisponible_CDDVD.html\""));
-		lienANettoyer.add(new Lien(LienKind.PAGE, "action=\"fiches_liste_recherche.asp\"","action=\"indisponible_CDDVD.html\""));
-		lienANettoyer.add(new Lien(LienKind.PAGE, "action=\"formulaire_contact_valid.asp\"","action=\"indisponible_CDDVD.html\""));
-		lienANettoyer.add(new Lien(LienKind.PAGE, "action=\"biblio.asp\"","action=\"indisponible_CDDVD.html\""));
-				
-		lienANettoyer.add(new Lien(LienKind.PAGE, "href=\"http://doris.ffessm.fr","href=\""));
-		lienANettoyer.add(new Lien(LienKind.PAGE, "href=\" http://doris.ffessm.fr","href=\""));
+		lienANettoyer.add(new Lien(LienKind.TEXTE, "action=\"contacts.asp\"","action=\"indisponible_CDDVD.html\""));
+		lienANettoyer.add(new Lien(LienKind.TEXTE, "action=\"fiches_liste_recherche.asp\"","action=\"indisponible_CDDVD.html\""));
+		lienANettoyer.add(new Lien(LienKind.TEXTE, "action=\"formulaire_contact_valid.asp\"","action=\"indisponible_CDDVD.html\""));
+		lienANettoyer.add(new Lien(LienKind.TEXTE, "action=\"biblio.asp\"","action=\"indisponible_CDDVD.html\""));
+		lienANettoyer.add(new Lien(LienKind.TEXTE, "action=\"glossaire.asp\"","action=\"indisponible_CDDVD.html\""));
+		lienANettoyer.add(new Lien(LienKind.TEXTE, "form.submit();",""));
+		
+		lienANettoyer.add(new Lien(LienKind.PAGE, "http://doris.ffessm.fr","accueil.html"));
+		lienANettoyer.add(new Lien(LienKind.PAGE, " http://doris.ffessm.fr","accueil.html"));
 		return lienANettoyer;
 	}
 
@@ -1481,11 +1484,11 @@ public class PrefetchDorisWebSite {
 	public List<Lien> getRegExpPourNettoyer(){
 		List<Lien> regExpPourNettoyer = new ArrayList<Lien>(0);
 		
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche.asp\\?[^&\"<]*&fiche_numero=([^&]*)&[^\">]*","href=\"fiche-$1.html"));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche2.asp\\?fiche_numero=([^&]*)&[^\">]*","href=\"fiche-$1.html"));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche.asp\\?[^&\">]*&fiche_numero=([^&]*)&[^\">]*\"","href=\"fiche-$1.html\""));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche2.asp\\?fiche_numero=([^&]*)&[^\">]*\"","href=\"fiche-$1.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche2.asp\\?fiche_numero=([^\">]*)\"","href=\"fiche-$1.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "fiche2.asp\\?fiche_numero=([^\">]*)","href=\"fiche-$1.html"));
-				
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"\\.\\./fiche2.asp\\?fiche_numero=([^\">]*)\"","href=\"fiche-$1.html\""));
+		
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"contacts.asp\\?filtre=(.)","href=\"listeParticipants-$1.html"));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"[^\"\\?]*formulaire_contact2.asp\\?contact_numero=([^\">]*)\"","href=\"indisponible_CDDVD.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"contact_fiche.asp\\?temp=0&amp;contact_numero=([^\">]*)\"","href=\"indisponible_CDDVD.html\""));
@@ -1497,22 +1500,29 @@ public class PrefetchDorisWebSite {
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?filtre=(.)[^\">]*","href=\"listeDefinitions-$1-1.html"));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?mapage=([^&\">]*)&[^\">]*filtre=(.)\"","href=\"listeDefinitions-$2-$1.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire_detail.asp\\?glossaire_numero=([^&\">]*)&[^\">]*","href=\"definition-$1.html"));
-
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?page=Suivant[^\"]*","href=\""));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?page=Precedent[^\"]*","href=\""));
+		
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiches_liste.asp\\?groupe_numero=[^\">]*\"","href=\"indisponible_CDDVD.html\""));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiches_liste.asp\\?sousgroupe_numero=[^\">]*\"","href=\"indisponible_CDDVD.html\""));
 				
 		regExpPourNettoyer.add(new Lien(LienKind.ICONE, "http://doris.ffessm.fr/gestionenligne/photos_forum_vig/[^\">]*\"","/doris_icone_doris_large.png\""));
 
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "fiche_photo_liste_apercu.asp\\?fiche_numero=([^&>]*)&[^\">]*\"","fiche-$1_listePhotos.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "photo_gde_taille_fiche2.asp\\?varpositionf=[^\">]*fiche_numero = ([^&]*)&[^\">]*\"","fiche-$1_listePhotos.html\""));
 		
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio_fiche.asp?biblio_numero=[^\">]*\"","href=\"indisponible_CDDVD.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp?mapage=([^&>]*)&[^\">]*\"","href=\"listeBibliographies-$1.html\""));
-		
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio_fiche.asp\\?biblio_numero=[^\">]*\"","href=\"indisponible_CDDVD.html\""));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?mapage=([^&>]*)&[^\">]*\"","href=\"listeBibliographies-$1.html\""));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?page=Suivant[^\"]*","href=\""));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?page=Precedent[^\"]*","href=\""));
+
+
 		return regExpPourNettoyer;
 	}
 	
 	public enum LienKind {
     	PAGE,
+    	TEXTE,
     	ICONE,
     	VIGNETTE,
     	MED_RES,
@@ -1627,6 +1637,11 @@ public class PrefetchDorisWebSite {
 			String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
 			contenuFichier = contenuFichier.replace("href=\""+Constants.getSiteUrl(),"href=\"");
 			
+			// Le site n'est pas toujours très cohérent
+			contenuFichier = contenuFichier.replace("src=\"../Images","src=\"images");
+			contenuFichier = contenuFichier.replace("src=\"gestionenligne/images/icones","src=\"images" );
+			
+			
 			// Pour chaque Liens à télécharger définis ci-après
 			for (Lien lienTelecharge : getLienATelecharger()){
 				switch (lienTelecharge.getLienKind()) {
@@ -1641,6 +1656,7 @@ public class PrefetchDorisWebSite {
 					contenuFichier = contenuFichier.replace("src=\""+lienTelecharge.getUrl()+"\"","src=\"../"+SOUSDOSSIER_ICONES+"/"+lienTelecharge.getFichier()+"\"");
 					contenuFichier = contenuFichier.replace("background=\""+lienTelecharge.getUrl()+"\"","background=\"../"+SOUSDOSSIER_ICONES+"/"+lienTelecharge.getFichier()+"\"");
 					break;
+				case TEXTE :
 				case VIGNETTE :
 				case MED_RES :
 				case HI_RES :
@@ -1651,6 +1667,9 @@ public class PrefetchDorisWebSite {
 				switch (lienANettoyer.getLienKind()) {
 				case PAGE :
 					contenuFichier = contenuFichier.replaceAll("href=\""+Pattern.quote(lienANettoyer.getUrl())+"[^\"]*\"","href=\""+lienANettoyer.getFichier()+"\"");
+					break;
+				case TEXTE :
+					contenuFichier = contenuFichier.replace(lienANettoyer.getUrl(),lienANettoyer.getFichier());
 					break;
 				case ICONE :
 					contenuFichier = contenuFichier.replace(lienANettoyer.getUrl(),"../"+SOUSDOSSIER_ICONES+lienANettoyer.getFichier());
