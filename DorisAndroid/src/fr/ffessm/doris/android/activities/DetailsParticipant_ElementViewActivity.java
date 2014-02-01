@@ -50,6 +50,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
@@ -59,6 +61,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView.BufferType;
 
 import android.widget.ListView;
 import android.widget.TextView;
@@ -129,6 +132,29 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
 		participantNumeroDoris = entry.getNumeroParticipant();
 		((TextView) findViewById(R.id.detailsparticipant_elementview_numeroparticipant)).setText(((Integer)participantNumeroDoris).toString());					
 		
+		if (entry.getFonctions().contains(Constants.ParticipantKind.PHOTOGRAPHE.ordinal()+";")){
+			((ImageView) findViewById(R.id.detailsparticipant_picto_photographe)).setVisibility(View.VISIBLE);
+			((TextView) findViewById(R.id.detailsparticipant_texte_photographe)).setVisibility(View.VISIBLE);
+		}
+		if (entry.getFonctions().contains(Constants.ParticipantKind.REDACTEUR.ordinal()+";")){
+			((ImageView) findViewById(R.id.detailsparticipant_picto_redacteur)).setVisibility(View.VISIBLE);
+			((TextView) findViewById(R.id.detailsparticipant_texte_redacteur)).setVisibility(View.VISIBLE);
+		}
+		if (entry.getFonctions().contains(Constants.ParticipantKind.CORRECTEUR.ordinal()+";")){
+			((ImageView) findViewById(R.id.detailsparticipant_picto_correcteur)).setVisibility(View.VISIBLE);
+			((TextView) findViewById(R.id.detailsparticipant_texte_correcteur)).setVisibility(View.VISIBLE);
+		}
+		if (entry.getFonctions().contains(Constants.ParticipantKind.VERIFICATEUR.ordinal()+";")){
+			((ImageView) findViewById(R.id.detailsparticipant_picto_verificateur)).setVisibility(View.VISIBLE);
+			((TextView) findViewById(R.id.detailsparticipant_texte_verificateur)).setVisibility(View.VISIBLE);
+		}
+		
+		TextView texte_description = (TextView) findViewById(R.id.detailsparticipant_texte_description);
+        SpannableString richtext = Outils.textToSpannableStringDoris(context, entry.getDescription());
+        texte_description.setText(richtext, BufferType.SPANNABLE);
+        // make our ClickableSpans and URLSpans work 
+        texte_description.setMovementMethod(LinkMovementMethod.getInstance());
+        
         ImageView trombineView = (ImageView) findViewById(R.id.detailsparticipant_elementview_icon);	        
         if(Outils.isAvailablePhoto(context, entry.getPhotoNom(), ImageType.VIGNETTE)){
     		try {

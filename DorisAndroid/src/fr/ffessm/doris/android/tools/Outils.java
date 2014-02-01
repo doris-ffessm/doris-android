@@ -986,7 +986,9 @@ public class Outils {
 					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_liendefinition))), ts.positionDebut, ts.positionFin, 0);
 	        	} // Fin else DEFINITION
 	        	else if ( ts.spanType == TextSpan.SpanType.LIENWEB) {
-	        		richtext.setSpan(new URLSpan("http://"+ts.info), ts.positionDebut, ts.positionFin, 0);  
+	        		String url = ts.info;
+	        		if (!url.contains("http")) url = "http://"+url;
+	        		richtext.setSpan(new URLSpan(url), ts.positionDebut, ts.positionFin, 0);  
 	        	}
 	        	else if ( ts.spanType == TextSpan.SpanType.PARTICIPANT ) {
 

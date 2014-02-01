@@ -22,7 +22,8 @@
 		<RelativeLayout
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:gravity="right" >
+		    android:gravity="right"
+		    android:paddingBottom="3dp" >
 
 		    <ImageView
 		        android:id="@+id/detailsparticipant_elementview_icon"
@@ -57,34 +58,13 @@
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="Nom"/>
 
-		    <TextView
-		        android:id="@+id/detailsparticipant_textView2"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:padding="3dip"
-		        android:layout_alignLeft="@+id/detailsparticipant_textView1"
-		        android:layout_below="@+id/detailsparticipant_textView1"
-		        android:text="@string/detailsparticipant_elementview_numeroparticipant_label"
-				android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?android:attr/textColorSecondary"/>
-
-		    <TextView
-		        android:id="@+id/detailsparticipant_elementview_numeroparticipant"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:padding="3dip"
-		        android:layout_toRightOf="@+id/detailsparticipant_textView2"
-		        android:layout_below="@+id/detailsparticipant_textView1"
-		        android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?android:attr/textColorSecondary"
-                android:text="999"/>
-
 		    <LinearLayout
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:layout_alignParentBottom="true"
 		        android:layout_alignParentRight="true"
-		        android:onClick="onClickBioComplete"
+		        android:background="@drawable/groupe_icon_background"
+       	        android:onClick="onClickBioComplete"
 		        android:orientation="vertical" >
 
 		        <ImageView
@@ -97,20 +77,144 @@
 		            android:src="@drawable/app_ic_launcher" />
 
 		        <TextView
-		            android:id="@+id/detailsparticipant_participants_text"
+		            android:id="@+id/detailsparticipant_participants_iconetext"
 		            android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
 		            android:layout_marginLeft="2dp"
 		            android:layout_marginRight="2dp"
 		            android:text="@string/detailsparticipant_elementview_bio_textbutton"
 		            android:textAppearance="?android:attr/textAppearanceSmall"
-		            android:textColor="?android:attr/textColorSecondary" />
+		            android:textColor="?android:attr/textColorSecondaryInverse" />
 		    </LinearLayout>
+
+		    <TextView
+		        android:id="@+id/detailsparticipant_textView2"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignLeft="@+id/detailsparticipant_elementview_nom"
+		        android:layout_alignParentBottom="true"
+		        android:padding="3dip"
+		        android:text="@string/detailsparticipant_elementview_numeroparticipant_label"
+		        android:textAppearance="?android:attr/textAppearanceSmall"
+		        android:textColor="?android:attr/textColorSecondary" />
+
+		    <TextView
+		        android:id="@+id/detailsparticipant_elementview_numeroparticipant"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentBottom="true"
+		        android:layout_toRightOf="@+id/detailsparticipant_textView2"
+		        android:padding="3dip"
+		        android:text="999"
+		        android:textAppearance="?android:attr/textAppearanceSmall"
+		        android:textColor="?android:attr/textColorSecondary" />
 		    
 		</RelativeLayout>
+		
+		<View style="@style/Separateur"/>
+		
+		<LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+		    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+		    <ImageView
+			    android:id="@+id/detailsparticipant_picto_photographe"
+			    android:layout_width="32dip"
+			    android:layout_height="32dip"
+			    android:gravity="right"
+	        	android:padding="3dip"
+	        	android:visibility="gone"
+			    android:src="@drawable/app_participant_photographe" />
 
+		    <TextView
+		        android:id="@+id/detailsparticipant_texte_photographe"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="2dp"
+		        android:layout_marginRight="2dp"
+		        android:text="@string/detailsparticipant_elementview_photographe_text"
+		        android:textAppearance="?android:attr/textAppearanceSmall"
+		        android:textColor="?android:attr/textColorSecondary"
+		        android:visibility="gone" />
+
+   		    <ImageView
+			    android:id="@+id/detailsparticipant_picto_redacteur"
+			    android:layout_width="32dip"
+			    android:layout_height="32dip"
+			    android:gravity="right"
+	        	android:padding="3dip"
+	        	android:visibility="gone"
+			    android:src="@drawable/app_participant_redacteur" />
+   		    <TextView
+	            android:id="@+id/detailsparticipant_texte_redacteur"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="2dp"
+	            android:layout_marginRight="2dp"
+	            android:text="@string/detailsparticipant_elementview_redacteur_text"
+	            android:visibility="gone"
+	            android:textAppearance="?android:attr/textAppearanceSmall"
+	            android:textColor="?android:attr/textColorSecondary" />
+	    	</LinearLayout>
+	    	
+	    	<LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+		     <ImageView
+			    android:id="@+id/detailsparticipant_picto_verificateur"
+			    android:layout_width="32dip"
+			    android:layout_height="32dip"
+			    android:gravity="right"
+	        	android:padding="3dip"
+	        	android:visibility="gone"
+			    android:src="@drawable/app_participant_verificateur" />
+		    <TextView
+	            android:id="@+id/detailsparticipant_texte_verificateur"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="2dp"
+	            android:layout_marginRight="2dp"
+	            android:text="@string/detailsparticipant_elementview_verificateur_text"
+	            android:visibility="gone"
+	            android:textAppearance="?android:attr/textAppearanceSmall"
+	            android:textColor="?android:attr/textColorSecondary" />
+   		    <ImageView
+			    android:id="@+id/detailsparticipant_picto_correcteur"
+			    android:layout_width="32dip"
+			    android:layout_height="32dip"
+			    android:gravity="right"
+	        	android:padding="3dip"
+	        	android:visibility="gone"
+			    android:src="@drawable/app_participant_correcteur" />
+   		    <TextView
+	            android:id="@+id/detailsparticipant_texte_correcteur"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="2dp"
+	            android:layout_marginRight="2dp"
+	            android:text="@string/detailsparticipant_elementview_correcteur_text"
+	            android:visibility="gone"
+	            android:textAppearance="?android:attr/textAppearanceSmall"
+	            android:textColor="?android:attr/textColorSecondary" />
+	    	</LinearLayout>
+	    </LinearLayout>
+	    
+	    <View style="@style/Separateur"/>
+	    
+	    <TextView
+	        android:id="@+id/detailsparticipant_texte_description"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:padding="3dip"
+	        android:text="TextView" />
 <!--End of user code
 -->
+
+
+
         </LinearLayout>
     </ScrollView>
 

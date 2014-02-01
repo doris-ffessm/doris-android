@@ -419,7 +419,7 @@ public class SiteDoris {
     	
     	HashSet<Participant> listeParticipants = new HashSet<Participant>(0);
     	
-    	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), false ) );
+    	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), true ) );
     	source.fullSequentialParse();
     	log.debug("getListeParticipantsParInitiale()- source.length() : " + source.length());
     	
@@ -520,6 +520,7 @@ public class SiteDoris {
 						if (elementTDheight != null && elementTDheight.equals("20") ) {
 							if (elementTDclass != null && elementTDclass.equals("normal") ) {
 								numeroTD ++;
+								//log.info("getListeParticipantsParInitiale() - numeroTD : "+numeroTD+" - "+elementTD.getContent().toString());
 								if (numeroTD==1){
 									if (elementTD.getContent().toString().contains("images/18_probe.gif")) {
 										String siteWeb = elementTD.getFirstElement("src", Pattern.compile("images/18_probe\\.gif")).getParentElement().getRenderer().toString().trim();
@@ -527,9 +528,9 @@ public class SiteDoris {
 										participantDescription += "Site Web : <a href=\""+siteWeb+"\">"+siteWeb+"</a><br/>";
 									}
 								} else if (numeroTD==2){
-									String description = elementTD.toString().trim();
-									description = Outils.remplacementBalises(description, true);
-									description = Outils.nettoyageTextes(description);
+									String description = elementTD.getRenderer().toString();
+									//description = Outils.remplacementBalises(description, true);
+									//description = Outils.nettoyageTextes(description);
 									
 									log.info("getListeParticipantsParInitiale() - Description : "+description);
 									if (!description.isEmpty()) participantDescription += description+"<br/>";
