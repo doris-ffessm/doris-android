@@ -776,6 +776,55 @@ public class Fiche {
 		 * le 11ème etc. etc.
 		 */
 		
+		if (etatFiche == 4) {
+			// Premier class="tableau_trait" ce qui permet de repérer le tableau de la classification
+			Element ElementTableauTrait=source.getFirstElementByClass("tableau_trait");
+			if (ElementTableauTrait!=null) {
+				log.debug("getFiche() - Bloc TableauTrait : " + ElementTableauTrait.toString().substring(0, Math.min(ElementTableauTrait.toString().length(),30)));
+				
+				//Remonter de 5 niveaux : <table width="100%" border="0" cellspacing="0" cellpadding="0">
+				Element ElementTableBasse=ElementTableauTrait.getParentElement().getParentElement().getParentElement().getParentElement().getParentElement();
+				log.debug("getFiche() - Bloc TableBasse : " + ElementTableBasse.toString().substring(0, Math.min(ElementTableBasse.toString().length(),30)));
+				
+				int indice = 0;
+				for (Element element : ElementTableBasse.getChildElements()) {
+					indice++;
+					
+					if (indice >= 5){
+						if (element.getContent().toString().contains("images/black_round_grey")) {
+							String section = element.getRenderer().toString().trim();
+							
+							//Certain TR ne sont pas constitué de la même manière que les autres
+							//Dans 1 TR il y a une TABLE
+							if (element.getContent().toString().contains("table") ){
+								Element sousElement = element.getFirstElementByClass("tableau_trait");
+								if (sousElement != null) {
+									section = sousElement.getRenderer().toString().trim();
+								}
+							}
+							
+							log.debug("getFiche() - Section : " + section);
+						}
+						if (element.getContent().toString().contains("class=\"normal\"")) {
+							String texte = element.getRenderer().toString().trim();
+	
+							if (element.getContent().toString().contains("table") ){
+								Element sousElement = element.getFirstElementByClass("table_biblio");
+								if (sousElement != null) {
+									sousElement = sousElement.getParentElement().getParentElement().getParentElement();
+	
+									texte = sousElement.getRenderer().toString().trim();
+								}
+							}
+							
+							log.debug("getFiche() - Texte : " + texte);
+						}
+						
+					}
+				}
+			}
+		}
+		
 		// TODO : Est-ce vraiment toujours utile ?
 		if (sbListeLiensVersFiches.length() !=0){
 			setNumerofichesLiees(sbListeLiensVersFiches.toString());									

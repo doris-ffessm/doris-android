@@ -158,10 +158,8 @@ public class PrefetchDorisWebSite {
 		if (action.equals("TEST")) {
 			log.debug("doMain() - Début TEST");
 			
-			//checkDossiers("CDDVD");
-			//creationCD();
-			transfoHtml();
 
+			
 
 			log.debug("doMain() - Fin TEST");
 		} else {
@@ -634,7 +632,7 @@ public class PrefetchDorisWebSite {
 						}
 						if(contenuFichierHtmlListePhotos != null){
 							
-							final HashSet<PhotoFiche> listePhotoFiche = SiteDoris.getListePhotosFicheFromHtml(fiche, contenuFichierHtmlListePhotos);
+							final List<PhotoFiche> listePhotoFiche = SiteDoris.getListePhotosFicheFromHtml(fiche, contenuFichierHtmlListePhotos);
 							
 							// Maj Base de données
 							final Fiche ficheMaj = fiche;

@@ -340,19 +340,19 @@ public class SiteDoris {
 
 
 
-	public static HashSet<PhotoFiche> getListePhotosFicheFromHtml(Fiche fiche,
+	public static List<PhotoFiche> getListePhotosFicheFromHtml(Fiche fiche,
 			String inCodePageHtml) {
 		log.trace("getListePhotosFiche()- Début");
     	
-		HashSet<PhotoFiche> listePhotosFiche = new HashSet<PhotoFiche>(0);
+		List<PhotoFiche> listePhotosFiche = new ArrayList<PhotoFiche>(0);
     	
     	Source source=new Source( Outils.remplacementBalises( Outils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
     	//log.debug("getListePhotosFiche()- source.length() : " + source.length());
     	//log.debug("getListePhotosFiche()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
     	
-    	Element elementTableracine=source.getFirstElementByClass("titre2").getParentElement().getParentElement();
-    	List<? extends Element> listeElementsTD = elementTableracine.getAllElements(HTMLElementName.TD);
+    	Element elementTableRacine=source.getFirstElementByClass("titre2").getParentElement().getParentElement();
+    	List<? extends Element> listeElementsTD = elementTableRacine.getAllElements(HTMLElementName.TD);
     	//log.debug("getListePhotosFiche() - listeElementsTD.size() : " + listeElementsTD.size());
     	
     	// titre de la photo courante
@@ -663,13 +663,13 @@ public class SiteDoris {
     	
     	HashSet<EntreeBibliographie> listeBiblio = new HashSet<EntreeBibliographie>(0);
     	
-    	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml),false ) );
+    	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml) );
     	source.fullSequentialParse();
-    	log.debug("getListeFichesFromHtml()- source.length() : " + source.length());
+    	//log.debug("getListeBiblioFromHtml()- source.length() : " + source.length());
     	//log.debug("getListeFiches()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
 
     	List<? extends Element> listeElementsA = source.getAllElements(HTMLElementName.A);
-    	log.debug("getListeFichesFromHtml() - listeElementsA.size() : " + listeElementsA.size());
+    	//log.debug("getListeBiblioFromHtml() - listeElementsA.size() : " + listeElementsA.size());
 
     	for (Element elementA : listeElementsA) {
     		//log.debug("getListeFiches() - elementTD.length() : " + elementTD.length());
@@ -678,18 +678,28 @@ public class SiteDoris {
     		String elementAClass = elementA.getAttributeValue("class");
 			if (elementAClass != null){
     			if (elementAClass.toString().equals("normal")) {
-    				String bibliographie = elementA.getRenderer().toString();
+    	    		//log.debug("getListeBiblioFromHtml() - - - - - - - -");
+    	    		
+    				String bibliographie = elementA.getRenderer().toString().trim().replaceAll("\n|\r", "");
+    				//log.debug("getListeBiblioFromHtml() - bibliographie : " + bibliographie);
     				
     				String idBiblio = elementA.getAttributeValue("href").replaceAll("[^=]*=([0-9]*)", "$1");
-    				log.debug("getListeFiches() - idBiblio : " + idBiblio);
+    				log.debug("getListeBiblioFromHtml() - idBiblio : " + idBiblio);
     				
-    				String auteurs = bibliographie.replaceAll("^([^,]*),.*$", "$1").trim();
-    				String annee = bibliographie.replaceAll("^[^,]*,([^,]*),.*$", "$1").trim();
+    				String annee = bibliographie.replaceAll(".*, ([0-9]{4}),.*", "$1").trim();
+    				//log.debug("getListeBiblioFromHtml() - annee : " + annee);
+    				
+    				String auteurs = bibliographie.replaceAll("^(.*), "+annee+",.*$", "$1").trim();
+    				log.debug("getListeBiblioFromHtml() - auteurs : " + auteurs);
+    				
     				String titre = "";
+    				//log.debug("getListeFiches() - STRONG : " + elementA.getFirstElement(HTMLElementName.STRONG));
     				if (elementA.getFirstElement(HTMLElementName.STRONG) != null) {
-    					titre = elementA.getFirstElement(HTMLElementName.STRONG).getRenderer().toString().trim();
+    					titre = elementA.getFirstElement(HTMLElementName.STRONG).getRenderer().toString().trim().replaceAll("\n|\r", "");
     				}
-    				String edition = elementAClass.toString().replaceAll(".*</strong>,(.*)$", "$1");
+    				log.debug("getListeBiblioFromHtml() - titre : " + titre);
+    				String edition = bibliographie.replaceAll(".*"+titre+",(.*)$", "$1").trim();
+    				//log.debug("getListeBiblioFromHtml() - edition : " + edition);
     				
     				// TODO : l'illustration éventuelle dans cleURLIllustration (mais il faudrait alors télécharger la page de l'entrée bibliographique
     				listeBiblio.add(new EntreeBibliographie( Integer.valueOf(idBiblio), titre, auteurs, annee, edition,"") );
