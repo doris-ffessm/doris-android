@@ -678,9 +678,10 @@ public class SiteDoris {
     		String elementAClass = elementA.getAttributeValue("class");
 			if (elementAClass != null){
     			if (elementAClass.toString().equals("normal")) {
-    	    		//log.debug("getListeBiblioFromHtml() - - - - - - - -");
-    	    		
-    				String bibliographie = elementA.getRenderer().toString().trim().replaceAll("\n|\r", "");
+    	    		log.debug("getListeBiblioFromHtml() - - - - - - - -");
+    				log.debug("getListeFiches() - elementA : " + elementA.getContent().toString().replaceAll("\n|\r", ""));
+    				
+    				String bibliographie = elementA.getRenderer().toString().replaceAll("\n|\r", "").trim();
     				//log.debug("getListeBiblioFromHtml() - bibliographie : " + bibliographie);
     				
     				String idBiblio = elementA.getAttributeValue("href").replaceAll("[^=]*=([0-9]*)", "$1");
@@ -690,15 +691,18 @@ public class SiteDoris {
     				//log.debug("getListeBiblioFromHtml() - annee : " + annee);
     				
     				String auteurs = bibliographie.replaceAll("^(.*), "+annee+",.*$", "$1").trim();
+    				auteurs = Outils.nettoyageTextes(auteurs);
     				log.debug("getListeBiblioFromHtml() - auteurs : " + auteurs);
     				
     				String titre = "";
-    				//log.debug("getListeFiches() - STRONG : " + elementA.getFirstElement(HTMLElementName.STRONG));
+    				log.debug("getListeFiches() - STRONG : " + elementA.getFirstElement(HTMLElementName.STRONG));
     				if (elementA.getFirstElement(HTMLElementName.STRONG) != null) {
     					titre = elementA.getFirstElement(HTMLElementName.STRONG).getRenderer().toString().trim().replaceAll("\n|\r", "");
+    					titre = Outils.nettoyageTextes(titre);
     				}
     				log.debug("getListeBiblioFromHtml() - titre : " + titre);
     				String edition = bibliographie.replaceAll(".*"+titre+",(.*)$", "$1").trim();
+    				edition = Outils.nettoyageTextes(edition);
     				//log.debug("getListeBiblioFromHtml() - edition : " + edition);
     				
     				// TODO : l'illustration éventuelle dans cleURLIllustration (mais il faudrait alors télécharger la page de l'entrée bibliographique

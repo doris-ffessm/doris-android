@@ -1011,6 +1011,13 @@ public class Outils {
 	        	}
 	        }
 	        
+	        /* Pour jour mettre des images directement dans le texte : la picto dangerosité par exemple.
+	        Drawable d = getResources().getDrawable(R.drawable.icon32); 
+            d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight()); 
+            ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BASELINE);
+            ss.setSpan(span, 0, 3, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            */
+	        
 	        return richtext;
 	    }
 

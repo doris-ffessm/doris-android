@@ -181,6 +181,17 @@ public class Outils {
 		//TODO : je me demande bien pourquoi j'ai fait cela : GMo 04/01/2014
 		texteNettoye = texteNettoye.replace("&nbsp;", " ");
 		
+		// On convertit <b> en <strong> les 2 sont confondus sur le site
+		texteNettoye = texteNettoye.replace("<b>", "<strong>")
+						.replace("</b>", "</strong>");
+
+		// On enlève les commentaires dans les pages, il y en a au milieu de tout ...
+		// TODO : une entrée bibliographique ne fonctionne pas 
+		// idBiblio : 618
+		// auteurs : Jourdan A.-J.-L.
+		// texteNettoye = texteNettoye.replaceAll("\n|\r", "");
+		// texteNettoye = texteNettoye.replaceAll("<!--[^!]*-->", "");
+		
 		// Tous les sauts de ligne de la même façon + gain de place en auteur pour l'interface Android
 		texteNettoye = texteNettoye.replace("<br>", "<br/>")
 				.replace("<br />", "<br/>")
@@ -203,17 +214,20 @@ public class Outils {
 		
 		// Certaines fiches comme : http://doris.ffessm.fr/fiche2.asp?fiche_numero=3527 (au 30 mars 13)
 		// contiennent des " dans le nom de l'animal, or les " ne sont pas échappés donc ça met le
-		// bazard dans le code html
+		// Bazar dans le code html
 		// Je retire donc ici les paires de " qui sont à l'intérieure d'une autre paire de "
 		// et qui ne contiennent pas de = ? < >
 		texteNettoye = texteNettoye.replaceAll("(href=\"[^\"]*)\"([^\"=?<>]*)\"([^\"]*\")", "$1$2$3");
 
 		//Il arrive très souvent qu'une balise ouverte soit aussitôt refermée
-		// ce doit sans doute être dû à l'interface de saisie ou des outils utlisés en amont
+		// ce doit sans doute être dû à l'interface de saisie ou des outils utilisés en amont
 		// Toujours est-il que ça peut gêner ensuite, que ça fait perdre du temps et de la place
 		texteNettoye = texteNettoye.replace("<strong></strong>", "")
+				.replace("</strong><strong>", "")
 				.replace("<em></em>", "")
-				.replace("<i></i>", "");
+				.replace("</em><em>", "")
+				.replace("<i></i>", "")
+				.replace("</i><i>", "");
 		texteNettoye = texteNettoye.replaceAll("<a href=\"http://[^>]*></a>", "");
 				
 				
