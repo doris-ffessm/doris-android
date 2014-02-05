@@ -524,14 +524,14 @@ public class PrefetchDorisWebSite {
 
 				// - - - Fiche - - -
 				// Pour chaque fiche, on télécharge la page (si nécessaire) puis on la traite
-				log.info("Mise à jours de "+listeFichesSite.size()+" fiches.");
+				log.info("Mise à jours de "+listeFichesTravail.size()+" fiches.");
 				HashSet<Fiche> listFichesModif = null;
 				if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
-					listFichesModif = SiteDoris.getListeFichesUpdated(listFichesFromRef, listeFichesSite);
+					listFichesModif = SiteDoris.getListeFichesUpdated(listFichesFromRef, listeFichesTravail);
 				}
 				
 				int nbFichesTraitees = 0;
-				for (Fiche fiche : listeFichesSite) {
+				for (Fiche fiche : listeFichesTravail) {
 					if (  nbFichesTraitees <= nbMaxFichesTraitees ) {
 						log.debug("doMain() - Traitement Fiche : "+fiche.getNomCommun());
 						

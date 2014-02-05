@@ -797,8 +797,10 @@ public class Fiche {
 							//Certain TR ne sont pas constitué de la même manière que les autres
 							//Dans 1 TR il y a une TABLE
 							if (element.getContent().toString().contains("table") ){
-								Element sousElement = element.getFirstElementByClass("tableau_trait");
+								//log.debug("getFiche() - Test 1 : " + element.getContent().toString());
+								Element sousElement = element.getFirstElement(HTMLElementName.IMG).getParentElement();
 								if (sousElement != null) {
+									//log.debug("getFiche() - Test 2 : " + sousElement.getContent().toString());
 									section = sousElement.getRenderer().toString().trim();
 								}
 							}
@@ -821,7 +823,11 @@ public class Fiche {
 						}
 						
 					}
-				}
+				} // Fin extraction données du bas de la page sauf tableau Phylogénique
+				
+				
+				
+				
 			}
 		}
 		
