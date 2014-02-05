@@ -94,7 +94,7 @@ public class EntreeBibliographie {
 	 */
 	
 
-	/** numéro de l'entrée sur le site Doris */
+	/** numéro de l'entrée sur le site Doris */ 
 	@DatabaseField
 	protected int numeroDoris;
 
@@ -103,7 +103,7 @@ public class EntreeBibliographie {
 	protected java.lang.String titre;
 
 	/** Auteur(s) */ 
-	@DatabaseField
+	@DatabaseField(dataType = com.j256.ormlite.field.DataType.LONG_STRING)
 	protected java.lang.String auteurs;
 
 	/** Année de Parution */ 

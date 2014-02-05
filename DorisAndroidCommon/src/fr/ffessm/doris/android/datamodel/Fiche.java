@@ -120,6 +120,7 @@ public class Fiche {
 	public boolean photoPrincipale_mayNeedDBRefresh = true;
 	public boolean groupe_mayNeedDBRefresh = true;
 	
+
 	@DatabaseField
 	protected java.lang.String nomScientifique;
 
@@ -166,7 +167,7 @@ public class Fiche {
 
 	/** zones géographiques où l'on peut trouver l'élément décrit par la fiche 
 	  * Attention, returned list is readonly
-     */
+      */
 	public List<ZoneGeographique> getZonesGeographiques(){
 		List<ZoneGeographique> result = new ArrayList<ZoneGeographique>();
 		
@@ -184,6 +185,8 @@ public class Fiche {
 		}
 	}
 	// end work in progress 	
+
+				
 
 	/** zones  où l'on peut observer l'élément décrit par la fiche */ 
 	@ForeignCollectionField(eager = false, foreignFieldName = "fiches")
@@ -235,6 +238,8 @@ public class Fiche {
 		}
 	}
 	// end work in progress 	
+
+				
 
 	// Start of user code Fiche additional user properties
 	

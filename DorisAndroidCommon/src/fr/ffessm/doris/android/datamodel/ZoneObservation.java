@@ -93,6 +93,7 @@ public class ZoneObservation {
 
 	// NOT Implemented<java.lang.String> nom;
 	
+
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiches;
 

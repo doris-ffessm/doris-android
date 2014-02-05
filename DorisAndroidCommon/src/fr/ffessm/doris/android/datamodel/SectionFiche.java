@@ -91,12 +91,14 @@ public class SectionFiche {
 	 */
 	public boolean fiche_mayNeedDBRefresh = true;
 	
+
 	@DatabaseField
 	protected java.lang.String titre;
 
 	@DatabaseField
 	protected java.lang.String texte;
 	
+
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiche;
 

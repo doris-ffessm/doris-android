@@ -91,7 +91,7 @@
     <dataClasses xsi:type="genandroid:DataClass" name="EntreeBibliographie" documentation="Entrée de la Bibliographie">
       <dataAttributes name="numeroDoris" documentation="numéro de l'entrée sur le site Doris" lowerbound="1" type="//@dataModel/@dataClasses.13"/>
       <dataAttributes name="titre" documentation="Titre du Livre, Revue, etc." lowerbound="1" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="auteurs" documentation="Auteur(s)" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="auteurs" documentation="Auteur(s)" type="//@dataModel/@dataClasses.12"/>
       <dataAttributes name="annee" documentation="Année de Parution" type="//@dataModel/@dataClasses.11"/>
       <dataAttributes name="details" documentation="Détails comme l'édition, etc." type="//@dataModel/@dataClasses.11"/>
       <dataAttributes name="cleURLIllustration" documentation="URL de l'illustration éventuelle de l'entrée bibliographique" type="//@dataModel/@dataClasses.11"/>
