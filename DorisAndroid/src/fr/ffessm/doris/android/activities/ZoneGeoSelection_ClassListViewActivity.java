@@ -44,6 +44,7 @@ package fr.ffessm.doris.android.activities;
 
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.app.Activity;
@@ -88,6 +89,7 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteActionBarActi
 
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
+		ThemeUtil.onActivityCreateSetTheme(this);
 		setContentView(R.layout.zonegeoselection_listview);
 
 		ActionBar actionBar = getSupportActionBar();

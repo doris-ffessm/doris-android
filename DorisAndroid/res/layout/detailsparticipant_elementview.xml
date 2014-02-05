@@ -212,9 +212,6 @@
 	        android:text="TextView" />
 <!--End of user code
 -->
-
-
-
         </LinearLayout>
     </ScrollView>
 

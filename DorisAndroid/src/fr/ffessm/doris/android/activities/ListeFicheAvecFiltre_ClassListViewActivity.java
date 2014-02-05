@@ -47,6 +47,7 @@ import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.app.Activity;
@@ -112,6 +113,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
+		ThemeUtil.onActivityCreateSetTheme(this);
 		setContentView(R.layout.listeficheavecfiltre_listview);
 
 		ActionBar actionBar = getSupportActionBar();

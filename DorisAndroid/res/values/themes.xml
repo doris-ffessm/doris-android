@@ -15,4 +15,11 @@
 
 	</style>
 
+    <style name="Theme.AppPureBlack" parent="Theme.AppCompat">
+	    <item name="android:background">#FF000000</item> 
+    </style>
+    <style name="Theme.AppHolo" parent="Theme.AppCompat"> 
+    </style>
+    <style name="Theme.AppHoloLight" parent="Theme.AppCompat.Light"> 
+    </style>
 </resources>
