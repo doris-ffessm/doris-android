@@ -45,7 +45,9 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -62,10 +64,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_import
 import fr.ffessm.doris.android.BuildConfig;
 import android.content.SharedPreferences;
@@ -113,7 +113,6 @@ import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
 
-
 public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_implements
 	implements DataChangedListener
@@ -144,6 +143,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.detailsfiche_elementview);
 
 		ActionBar actionBar = getSupportActionBar();

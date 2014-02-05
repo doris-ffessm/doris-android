@@ -141,6 +141,7 @@ public class DefinitionGlossaire {
 	}
 	// end work in progress 	
 
+				
 
 	// Start of user code DefinitionGlossaire additional user properties
 

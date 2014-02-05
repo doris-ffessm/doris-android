@@ -45,6 +45,7 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.app.Activity;
@@ -72,6 +73,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.widget.LinearLayout;
 import fr.ffessm.doris.android.datamodel.SQLiteDataBaseHelper;
+import fr.ffessm.doris.android.tools.ThemeUtil;
 //End of user code
 public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 //Start of user code additional implements SplashScreen_CustomViewActivity
@@ -87,6 +89,7 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		ThemeUtil.onActivityCreateSetTheme(this);
 			PreferenceManager.setDefaultValues(this, R.xml.preference, false);
         setContentView(R.layout.splashscreen_customview);
         //Start of user code onCreate SplashScreen_CustomViewActivity

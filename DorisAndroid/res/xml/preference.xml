@@ -136,6 +136,7 @@
 		android:title="@string/presentation_preference_category_title"
 		android:summary="@string/presentation_preference_category_summary"
 	    android:layout="@layout/preference_layout_category">
+        
         <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
             android:key="@string/pref_key_accueil_fiches_ordre" 
         	android:title="@string/accueil_fiches_ordre_prompt" 
@@ -190,6 +191,14 @@
 			android:summary="@string/debug_preference_category_summary"
 	        android:layout="@layout/preference_layout_category"
 	        >
+		<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+            android:key="@string/pref_key_theme" 
+        	android:title="@string/pref_theme_prompt" 
+        	android:entryValues="@array/pref_theme_values"
+        	android:entries="@array/pref_theme_lib" 
+        	android:defaultValue="@string/pref_theme_default"
+        	android:layout="@layout/preference_layout_preference"
+        	/>
         <CheckBoxPreference android:key="@string/pref_key_affichage_debug"
             android:title="@string/debug_preferences_affichage_prompt"
             android:summary="@string/debug_preferences_affichage_summary"  

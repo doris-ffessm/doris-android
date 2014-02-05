@@ -45,6 +45,7 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.app.Activity;
@@ -100,12 +101,13 @@ import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
+import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 //End of user code
 public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 //Start of user code additional implements Accueil_CustomViewActivity
-	implements DataChangedListener
+	implements DataChangedListener 
 //End of user code
 {
 	
@@ -118,7 +120,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	static final int APROPOS = 6;
 	static final int AIDE = 7;
 	
-	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getCanonicalName();
+	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getSimpleName();
 	Handler mHandler;
 	LinearLayout llContainerLayout;
 	 
@@ -136,6 +138,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.accueil_customview);
         //Start of user code onCreate Accueil_CustomViewActivity
 	/*	// si pas de fiche alors il faut initialiser la base à partir du prefetched_DB
@@ -231,7 +234,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		//End of user code
 	}
     //Start of user code additional code Accueil_CustomViewActivity
-    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+    }
     @Override
     protected void onDestroy(){
     	Log.d(LOG_TAG, "onDestroy()");
@@ -495,6 +502,17 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		   progressBarZone.update(inZoneGeo.getNom(), sbTexte.toString(), imageZone, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto, downloadInProgress);
 	}
 	
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+		Log.d(LOG_TAG, "Preference change detected for key ="+key);
+        if (key.equals(R.string.pref_key_theme)) {
+            // change theme to the selected one
+        	showToast("Preference change detected for Theme="+sharedPreferences.getString(key, "Default" ));
+        //	sharedPreferences.getString(key, )
+        //	ThemeUtil.changeToTheme(this, theme)
+        }
+    }
+
+	
 	//End of user code
 
     /** refresh screen from data 
@@ -503,6 +521,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
     	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
 
+    	
+    	
+    	
     	/* 
     	DVK 
     	StringBuilder sbTexte = new StringBuilder();
@@ -522,6 +543,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         
     	StringBuilder sbRecherchePrecedente = new StringBuilder(); 
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    	
+    
+    	
+    	
         int filtreCourantId = prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1);	        
 		if(filtreCourantId==1){
 			sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreEspece_sans));

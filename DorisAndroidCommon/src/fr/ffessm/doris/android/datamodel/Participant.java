@@ -93,13 +93,14 @@ public class Participant {
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
 	
+
 	@DatabaseField
 	protected java.lang.String nom;
 
 	/** identifiant du participant sur le site Doris */ 
 	@DatabaseField
 	protected int numeroParticipant;
-	
+
 	@DatabaseField
 	protected java.lang.String cleURLPhotoParticipant;
 

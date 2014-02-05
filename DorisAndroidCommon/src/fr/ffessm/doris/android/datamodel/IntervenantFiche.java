@@ -97,6 +97,7 @@ public class IntervenantFiche {
 	@DatabaseField
 	protected int roleIntervenant;
 	
+
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Participant participant;
 

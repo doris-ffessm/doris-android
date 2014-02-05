@@ -17,6 +17,7 @@
 	<string name="pref_key_mode_precharg_photo_region_favorite">mode_precharg_photo_region_favorite</string>
 	<string name="pref_key_mode_precharg_photo_intervenants">mode_precharg_photo_intervenants</string>
 
+	<string name="pref_key_theme">pref_key_theme</string>
 	<string name="pref_key_accueil_fiches_ordre">pref_accueil_fiches_ordre</string>
 	<string name="pref_key_accueil_etat_fiches_affiche">pref_accueil_etat_fiches_affiche</string>
 	<string name="pref_key_accueil_icon_size">pref_accueil_icon_size</string>
@@ -113,6 +114,22 @@
 	
 	<string name="presentation_preference_category_title">Présentation</string>
 	<string name="presentation_preference_category_summary">Affich. par défaut, Taille icônes, etc.</string>
+	
+	<string name="pref_theme_prompt">"Thème"</string>
+	<string name="pref_theme_default">DorisAndroid</string>
+	<string-array name="pref_theme_values">
+        <item>DorisAndroid</item>
+        <item>PureBlack</item>
+        <item>Holo</item>
+        <item>HoloLight</item>
+    </string-array>
+	<string-array name="pref_theme_lib">
+	    <item>DorisAndroid (défault)</item>
+        <item>Noir intense</item>
+        <item>Holo (sombre)</item>
+        <item>Holo light (clair) (expérimental)</item>
+    </string-array>
+	
 	
 	<string name="accueil_fiches_ordre_prompt">"Ordre de tri des fiches"</string>
 	<string name="accueil_fiches_ordre_default">Commun</string>

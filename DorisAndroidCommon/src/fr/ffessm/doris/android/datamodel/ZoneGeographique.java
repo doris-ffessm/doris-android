@@ -90,12 +90,14 @@ public class ZoneGeographique {
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
 	
+
 	@DatabaseField
 	protected java.lang.String nom;
 
 	@DatabaseField
 	protected java.lang.String description;
 	
+
 	// work in progress, find association 
 	// Association many to many Fiches_ZonesGeographiques
 	@ForeignCollectionField(eager = false, foreignFieldName = "zoneGeographique")	
@@ -121,9 +123,9 @@ public class ZoneGeographique {
 		}
 	}
 	// end work in progress 	
-	
-	
-	
+
+				
+
 	// Start of user code ZoneGeographique additional user properties
 	
 	// Ce serait mieux dans la base mais en attendant ce sera en dur ici
