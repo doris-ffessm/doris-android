@@ -54,9 +54,10 @@ public class Outils {
 	public static final String VIGNETTES_FICHE_FOLDER = "vignettes_fiches";
 	public static final String MED_RES_FICHE_FOLDER = "medium_res_images_fiches";
 	public static final String HI_RES_FICHE_FOLDER = "hi_res_images_fiches";
+	public static final String PORTRAITS_FOLDER = "portraits";
 	
 	public enum ImageType {
-	    VIGNETTE, MED_RES, HI_RES 
+	    VIGNETTE, MED_RES, HI_RES, PORTRAITS
 	} 
 	
 	public enum ConnectionType {
@@ -76,6 +77,8 @@ public class Outils {
 			return getImageFolderMedRes(inContext);
 		case HI_RES :
 			return getImageFolderHiRes(inContext);
+		case PORTRAITS :
+			return getImageFolderPortraits(inContext);
 			default:
 		return null;
 		}
@@ -89,7 +92,10 @@ public class Outils {
 	public static File getImageFolderHiRes(Context inContext) { 
 		return inContext.getDir( HI_RES_FICHE_FOLDER , Context.MODE_PRIVATE);
 	}
-
+	public static File getImageFolderPortraits(Context inContext) { 
+		return inContext.getDir( PORTRAITS_FOLDER , Context.MODE_PRIVATE);
+	}
+	
 	public static String getbaseUrl(Context inContext, ImageType inImageType) { 
 		switch (inImageType) {
 		case VIGNETTE:
@@ -98,6 +104,8 @@ public class Outils {
 			return Constants.MOYENNE_BASE_URL;
 		case HI_RES:
 			return Constants.GRANDE_BASE_URL;
+		case PORTRAITS:
+			return Constants.PORTRAIT_BASE_URL;
 		default:
 			return "";
 		}
@@ -208,7 +216,10 @@ public class Outils {
 	}
 	
 	public static long getPhotosDiskUsage(Context inContext){
-    	return getPhotoDiskUsage(inContext, ImageType.VIGNETTE) + getPhotoDiskUsage(inContext, ImageType.MED_RES) + getPhotoDiskUsage(inContext, ImageType.HI_RES);
+    	return getPhotoDiskUsage(inContext, ImageType.VIGNETTE)
+    			+ getPhotoDiskUsage(inContext, ImageType.MED_RES)
+    			+ getPhotoDiskUsage(inContext, ImageType.HI_RES)
+    			+ getPhotoDiskUsage(inContext, ImageType.PORTRAITS);
 	}
 	public static long getPhotoDiskUsage(Context inContext, ImageType inImageType){
     	return getDiskUsage(inContext, getImageFolder(inContext, inImageType) );
@@ -260,7 +271,6 @@ public class Outils {
 	    	return ConnectionType.AUCUNE;
 	    }
 	}
-	
 	
 	/* Lecture Paramètres */
 	public static String getStringKeyParam(Context inContext, int inParam) {
@@ -357,15 +367,15 @@ public class Outils {
 		
 		switch(inIdZoneGeo){
 		case 1 :
-			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_france,"P1"));
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_france,"P1"));
 		case 2 :
-			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_eaudouce,"P1"));
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_eaudouce,"P1"));
 		case 3 :
-			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_indopac,"P1"));
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_indopac,"P1"));
 		case 4 :
-			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_caraibes,"P1"));
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_caraibes,"P1"));
 		case 5 :
-			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_atlantno,"P1"));
+			return PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_atlantno,"P1"));
 		default :
 			return null;
 		}
@@ -573,11 +583,11 @@ public class Outils {
 	public static boolean isPrecharModeOnlyP0(Context inContext){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharMode() - Début" );
 		
-		if ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_france,"P1")) == PrecharMode.P0 
-			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_eaudouce,"P1")) == PrecharMode.P0
-			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_atlantno,"P1")) == PrecharMode.P0
-			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_indopac,"P1")) == PrecharMode.P0
-			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_caraibes,"P1")) == PrecharMode.P0
+		if ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_france,"P1")) == PrecharMode.P0 
+			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_eaudouce,"P1")) == PrecharMode.P0
+			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_atlantno,"P1")) == PrecharMode.P0
+			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_indopac,"P1")) == PrecharMode.P0
+			&& PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_caraibes,"P1")) == PrecharMode.P0
 			) return true;
 		return false;	
 	}
@@ -585,16 +595,16 @@ public class Outils {
 	public static boolean isPrecharModeOnlyP0orP1(Context inContext){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharMode() - Début" );
 		
-		if ( ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_france,"P1")) == PrecharMode.P0 
-				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_france,"P1")) == PrecharMode.P1 )
-			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_eaudouce,"P1")) == PrecharMode.P0
-				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_eaudouce,"P1")) == PrecharMode.P1 )
-			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_atlantno,"P1")) == PrecharMode.P0
-				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_atlantno,"P1")) == PrecharMode.P1 )
-			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_indopac,"P1")) == PrecharMode.P0
-				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_indopac,"P1")) == PrecharMode.P1 )
-			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_caraibes,"P1")) == PrecharMode.P0
-				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_region_caraibes,"P1")) == PrecharMode.P1 )
+		if ( ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_france,"P1")) == PrecharMode.P0 
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_france,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_eaudouce,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_eaudouce,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_atlantno,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_atlantno,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_indopac,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_indopac,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_caraibes,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(getParamString(inContext, R.string.pref_key_mode_precharg_photo_region_caraibes,"P1")) == PrecharMode.P1 )
 			) return true;
 		return false;	
 	}

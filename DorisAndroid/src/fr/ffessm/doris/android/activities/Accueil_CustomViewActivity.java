@@ -89,7 +89,7 @@ import android.widget.ImageButton;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.MultiProgressBar;
-import fr.ffessm.doris.android.async.TelechargeAsync_BgActivity;
+import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -213,7 +213,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	        		|| (! wifiOnly && connectionType == Outils.ConnectionType.GSM)){
 		
         		Log.d(LOG_TAG, "onCreate() - Lancement préchargement");
-        		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargeAsync_BgActivity) new TelechargeAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+        		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 
 	        }
         } 
@@ -236,7 +236,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     protected void onDestroy(){
     	Log.d(LOG_TAG, "onDestroy()");
     	 DorisApplicationContext.getInstance().removeDataChangeListeners(this);
-    	TelechargeAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;
+    	TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;
     	if(telechargePhotosFiches_BgActivity != null && telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING){ 		
     		// TODO déterminer si c'est une rotation ou une vrai fin de l'appli pour tuer les taches background ou pas
     		Log.d(LOG_TAG, "onDestroy() - isFinishing() : "+isFinishing());
@@ -690,10 +690,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	            return true;
 			//Start of user code additional menu action Accueil_CustomViewActivity
 	        case R.id.accueil_customview_action_telecharge_photofiches:
-	        	TelechargeAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
+	        	TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
 				if(telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING)
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = 
-						(TelechargeAsync_BgActivity) new TelechargeAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+						(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 
 	            return true;
 	        case R.id.accueil_customview_action_a_propos:

@@ -41,7 +41,7 @@
 	        android:persistent="false"
 	        android:layout="@layout/preference_layout_preferencescreen">
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:key="@string/pref_key_mode_precharg_region_france"
+	            android:key="@string/pref_key_mode_precharg_photo_region_france"
 	            android:title="@string/mode_precharg_region_france_prompt"
 				android:entryValues="@array/mode_precharg_answers_values"
 				android:entries="@array/mode_precharg_answers_lib"
@@ -49,7 +49,7 @@
 				android:layout="@layout/preference_layout_preference"
 				/>
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-   				android:key="@string/pref_key_mode_precharg_region_eaudouce"
+   				android:key="@string/pref_key_mode_precharg_photo_region_eaudouce"
 	            android:title="@string/mode_precharg_region_eaudouce_prompt"
 	            android:entryValues="@array/mode_precharg_answers_values"
 	            android:entries="@array/mode_precharg_answers_lib"
@@ -57,7 +57,7 @@
 				android:layout="@layout/preference_layout_preference"
 				/>
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-   				android:key="@string/pref_key_mode_precharg_region_indopac"
+   				android:key="@string/pref_key_mode_precharg_photo_region_indopac"
 	            android:title="@string/mode_precharg_region_indopac_prompt"
    				android:entryValues="@array/mode_precharg_answers_values"
 	            android:entries="@array/mode_precharg_answers_lib"
@@ -65,7 +65,7 @@
 				android:layout="@layout/preference_layout_preference"
 				/>
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:key="@string/pref_key_mode_precharg_region_caraibes"
+	            android:key="@string/pref_key_mode_precharg_photo_region_caraibes"
 	            android:title="@string/mode_precharg_region_caraibes_prompt"
 	            android:entryValues="@array/mode_precharg_answers_values"
 				android:entries="@array/mode_precharg_answers_lib"
@@ -73,7 +73,7 @@
 				android:layout="@layout/preference_layout_preference"
 				/>
    	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-   	            android:key="@string/pref_key_mode_precharg_region_atlantno"
+   	            android:key="@string/pref_key_mode_precharg_photo_region_atlantno"
 	            android:title="@string/mode_precharg_region_atlantno_prompt"
 				android:entryValues="@array/mode_precharg_answers_values"
 				android:entries="@array/mode_precharg_answers_lib"
@@ -81,7 +81,7 @@
 				android:layout="@layout/preference_layout_preference"
 				/>
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:key="@string/pref_key_mode_precharg_region_favorite"
+	            android:key="@string/pref_key_mode_precharg_photo_region_favorite"
 	            android:title="@string/mode_precharg_favorite_prompt"
 	            android:entryValues="@array/mode_precharg_answers_values"
 	            android:entries="@array/mode_precharg_answers_lib"
@@ -89,6 +89,11 @@
 				android:layout="@layout/preference_layout_preference"
 				/>
         </PreferenceScreen>
+        <CheckBoxPreference android:key="@string/pref_key_mode_precharg_photo_intervenants"
+            android:title="@string/mode_precharg_photo_intervenants_prompt" 
+            android:defaultValue="false"
+            android:layout="@layout/preference_layout_preference"
+            />
         <PreferenceScreen
 	        android:key="button_mode_precharg_reset"
 	        android:title="@string/mode_precharg_reset_title"

@@ -3,7 +3,7 @@ package fr.ffessm.doris.android;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.ffessm.doris.android.async.TelechargeAsync_BgActivity;
+import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 
 
@@ -24,7 +24,7 @@ public class DorisApplicationContext {
 	}
 	
 	// used to get a pointer on running background activities, usefull when on onCreate onDestroy in case of configuration changes like rotation
-	public TelechargeAsync_BgActivity telechargePhotosFiches_BgActivity = null;
+	public TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = null;
 	
 	/** listener that have registered for being notified of data changes */
 	private ArrayList<DataChangedListener>  dataChangeListeners = new ArrayList<DataChangedListener>();

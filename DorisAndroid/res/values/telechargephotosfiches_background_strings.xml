@@ -6,22 +6,15 @@
 	<!-- freely add here the desired resource String for your custom view -->
 	<string name="bg_notifTitle_initial">Mise à jour en tache de fond</string>
 	<string name="bg_notifText_initial">Synch. avec doris.ffessm.fr</string>
-	
-	<string name="analysefiches00_bg_initialTickerText">Analyse des fiches</string>
-	<string name="telechargephotosfiches00_bg_initialTickerText">Télécharge les photos des fiches</string>
-	<string name="analysefiches00_bg_notificationTitle">Analyse des fiches</string>
-	<string name="telechargephotosfiches00_bg_notificationTitle">Télécharge les photos</string>
-	
-	<string name="analysefiches01_bg_notificationTitle">Analyse des fiches</string>
-	<string name="analysefiches01_bg_initialTickerText">Analyse des fiches</string>
-	<string name="telechargephotosfiches01_bg_notificationTitle">Télécharge les photos</string>
-	<string name="telechargephotosfiches01_bg_initialTickerText">Télécharge les photos des fiches</string>
-	
+		
 	<string name="bg_notifTitre_imagesprinc">"Photos Princ.\u00A0/ Zone\u00A0: "</string>
 	<string name="bg_racineTicker_imagesprinc">"Photo\u00A0: "</string>
 	<string name="bg_notifTitre_images">"Photos\u00A0/ Zone\u00A0: "</string>
 	<string name="bg_racineTicker_images">"Photo\u00A0: "</string>
 		
+	<string name="bg_notifTitre_imagesparticipants">"Photos Participants\u00A0: "</string>
+	<string name="bg_racineTicker_imagesparticipants">"Photo\u00A0: "</string>
+	
 	<!--End of user code
 	-->
 </resources>

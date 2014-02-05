@@ -153,27 +153,29 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
         // make our ClickableSpans and URLSpans work 
         texte_description.setMovementMethod(LinkMovementMethod.getInstance());
         
-        ImageView trombineView = (ImageView) findViewById(R.id.detailsparticipant_elementview_icon);	        
-        if(Outils.isAvailablePhoto(context, entry.getPhotoNom(), ImageType.VIGNETTE)){
-    		try {
-				Picasso.with(context).load(Outils.getPhotoFile(context, entry.getPhotoNom(), ImageType.VIGNETTE))
+        if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {
+	        ImageView trombineView = (ImageView) findViewById(R.id.detailsparticipant_elementview_icon);	        
+	        if(Outils.isAvailablePhoto(context, entry.getPhotoNom(), ImageType.PORTRAITS)){
+	    		try {
+					Picasso.with(context).load(Outils.getPhotoFile(context, entry.getPhotoNom(), ImageType.PORTRAITS))
+						.fit()
+						.centerInside()
+						.into(trombineView);
+				} catch (IOException e) {
+				}
+	    	}
+	    	else{
+	    		// pas préchargée en local pour l'instant, cherche sur internet
+	    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLPhotoParticipant() : "+Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom());
+	    		Picasso.with(context)
+	    			.load(Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom())
+					.placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
+					.error(R.drawable.app_ic_participant_pas_connecte)
 					.fit()
 					.centerInside()
-					.into(trombineView);
-			} catch (IOException e) {
-			}
-    	}
-    	else{
-    		// pas préchargée en local pour l'instant, cherche sur internet
-    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLPhotoParticipant() : "+Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom());
-    		Picasso.with(context)
-    			.load(Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom())
-				.placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
-				.error(R.drawable.app_ic_participant_pas_connecte)
-				.fit()
-				.centerInside()
-    			.into(trombineView);
-    	}
+	    			.into(trombineView);
+	    	}
+        }
 		// End of user code
     	
 	}
