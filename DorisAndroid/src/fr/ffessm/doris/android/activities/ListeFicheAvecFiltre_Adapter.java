@@ -68,6 +68,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -240,6 +241,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
 	@Override
 	public int getCount() {
+		if(filteredFicheIdList.size() == 0){
+			return 1;	// will create a dummy entry to invite changing the filters
+        }
 		return filteredFicheIdList.size();
 	}
 
@@ -261,7 +265,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.listeficheavecfiltre_listviewrow, null);
         }
-
+		if(filteredFicheIdList.size() == 0){
+        	return getNoResultSubstitute(convertView);
+        }
 		final Fiche entry = getFicheForId(filteredFicheIdList.get(position));
 		if(entry == null) return convertView;
        
@@ -374,6 +380,40 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
 	}
 
+	protected View getNoResultSubstitute(View convertView){
+		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_label);
+		tvLabel.setText(R.string.listeficheavecfiltre_classlistview_no_result);
+		// Start of user code protected additional ListeFicheAvecFiltre_Adapter getNoResultSubstitute code
+		try{
+			StringBuilder sbRechercheCourante = new StringBuilder();
+	        int filtreCourantId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);	        
+			if(filtreCourantId==1){
+				sbRechercheCourante.append(context.getString(R.string.accueil_recherche_precedente_filtreEspece_sans));
+	        }
+			else {
+				Groupe groupeFiltreCourant = _contextDB.groupeDao.queryForId(filtreCourantId);
+				sbRechercheCourante.append(context.getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec)+" "+groupeFiltreCourant.getNomGroupe().trim());
+			}
+			sbRechercheCourante.append(" ; ");
+			int currentFilterId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), -1);
+	        if(currentFilterId == -1 || currentFilterId == 0){ // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
+	        	sbRechercheCourante.append(context.getString(R.string.accueil_recherche_precedente_filtreGeographique_sans));
+	        }
+	        else{
+	        	ZoneGeographique currentZoneFilter= _contextDB.zoneGeographiqueDao.queryForId(currentFilterId);
+	        	sbRechercheCourante.append(context.getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec)+" "+currentZoneFilter.getNom().trim());
+	        }
+	        // TODO ajouter le filtre textuel courant qui lui aussi peut impliquer de ne retourner aucun résultats
+	        TextView tvDetails = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_details);
+			tvDetails.setText( sbRechercheCourante.toString() );
+		} catch (SQLException e) {
+			Log.e(LOG_TAG, e.getMessage(), e);
+		}
+		// End of user code
+		ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_icon);
+    	ivIcon.setImageResource(R.drawable.app_ic_launcher);
+		return convertView;
+	}
 	protected Fiche getFicheForId(Integer ficheId){
 		Fiche f = ficheCache.get(ficheId);
 		if(f != null) return f;

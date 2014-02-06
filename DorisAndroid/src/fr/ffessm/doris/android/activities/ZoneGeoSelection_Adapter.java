@@ -140,7 +140,6 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.zonegeoselection_listviewrow, null);
         }
-
 		final ZoneGeographique entry = filteredZoneGeographiqueList.get(position);
 		if(_contextDB != null) entry.setContextDB(_contextDB); 		
        

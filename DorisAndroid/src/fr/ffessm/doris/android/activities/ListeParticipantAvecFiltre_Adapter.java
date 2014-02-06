@@ -67,6 +67,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -121,6 +122,9 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 
 	@Override
 	public int getCount() {
+		if(filteredParticipantList.size() == 0){
+			return 1;	// will create a dummy entry to invite changing the filters
+        }
 		return filteredParticipantList.size();
 	}
 
@@ -142,7 +146,9 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.listeparticipantavecfiltre_listviewrow, null);
         }
-
+		if(filteredParticipantList.size() == 0){
+        	return getNoResultSubstitute(convertView);
+        }
 		final Participant entry = filteredParticipantList.get(position);
 		if(_contextDB != null) entry.setContextDB(_contextDB); 		
        
@@ -166,6 +172,22 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 
 	}
 
+	protected View getNoResultSubstitute(View convertView){
+		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeparticipantavecfiltre_listviewrow_label);
+		tvLabel.setText(R.string.listeparticipantavecfiltre_classlistview_no_result);
+		// Start of user code protected additional ListeParticipantAvecFiltre_Adapter getNoResultSubstitute code
+		
+			StringBuilder sbRechercheCourante = new StringBuilder();
+	    
+	        // TODO ajouter le filtre textuel courant qui lui aussi peut impliquer de ne retourner aucun résultats
+	        TextView tvDetails = (TextView) convertView.findViewById(R.id.listeparticipantavecfiltre_listviewrow_details);
+			tvDetails.setText( sbRechercheCourante.toString() );
+		
+		// End of user code
+		ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeparticipantavecfiltre_listviewrow_icon);
+    	ivIcon.setImageResource(R.drawable.app_ic_launcher);
+		return convertView;
+	}
 	public HashMap<Character, Integer> getUsedAlphabetHashMap(){
 		HashMap<Character, Integer> alphabetToIndex = new HashMap<Character, Integer>();
 		Log.d(LOG_TAG,"getUsedAlphabetHashMap - début");

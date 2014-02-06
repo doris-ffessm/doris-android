@@ -211,7 +211,6 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.groupeselection_listviewrow, null);
         }
-
 		final Groupe entry = filteredGroupeList.get(position);
 		if(_contextDB != null) entry.setContextDB(_contextDB); 		
        
