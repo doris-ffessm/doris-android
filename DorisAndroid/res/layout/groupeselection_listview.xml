@@ -4,34 +4,54 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 	<!--	Start of user code protectedgroupeselection_listviewheader  -->
-
-    <LinearLayout
-        android:id="@+id/groupselection_listview_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="40dp" >
-
-        <ImageButton
-            android:id="@+id/groupselection_listview_imageButton1"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:background="@drawable/button_selected_background"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:src="@drawable/ic_action_arbre_phylogenetique" />
-
-        <Button
-            android:id="@+id/groupselection_listview_button2"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/button_selected_background"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="Button"
-            android:textColor="@android:color/darker_gray" />
-    </LinearLayout>
-
+	<RelativeLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+			android:paddingLeft="4dip"
+       		android:paddingRight="4dip" >
+	    <LinearLayout
+	        android:id="@+id/groupselection_listview_navigation"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+		    android:layout_toLeftOf="@+id/groupeselection_main_btnSelect"
+	        android:minHeight="40dp" >
+	
+	        <ImageButton
+	            android:id="@+id/groupselection_listview_imageButton1"
+	            android:layout_width="wrap_content"
+	            android:layout_height="30dp"
+	            android:background="@drawable/button_selected_background"
+	            android:paddingLeft="5dp"
+	            android:paddingRight="5dp"
+	            android:src="@drawable/ic_action_arbre_phylogenetique" />
+	
+	        <Button
+	            android:id="@+id/groupselection_listview_button2"
+	            android:layout_width="wrap_content"
+	            android:layout_height="30dp"
+	            android:layout_marginRight="5dp"
+	            android:background="@drawable/button_selected_background"
+	            android:paddingLeft="10dp"
+	            android:paddingRight="10dp"
+	            android:text="Button"
+	            android:textColor="@android:color/darker_gray" />
+	    </LinearLayout>
+		<ImageButton
+			    android:id="@+id/groupeselection_main_btnSelect"
+			    android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentRight="true"
+		        android:layout_marginRight="0dp"
+		        android:padding="5dp"
+		        android:layout_margin="0dp"
+			    android:text=""
+			    android:drawablePadding="0dp"
+			    android:src="@android:drawable/ic_menu_set_as"
+			    android:scaleType="fitCenter"
+		        android:background="@android:color/transparent"
+		        android:onClick="onClickCurrentGroup"
+		     />
+	</RelativeLayout>
     <RelativeLayout
         android:id="@+id/groupselection_listview_filtre_espece_courant_layout"
         android:layout_width="wrap_content"
