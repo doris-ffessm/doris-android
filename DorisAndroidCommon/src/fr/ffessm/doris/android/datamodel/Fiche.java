@@ -870,9 +870,11 @@ public class Fiche {
 		}
 		
 		// TODO : Est-ce vraiment toujours utile ?
+		/*
 		if (sbListeLiensVersFiches.length() !=0){
 			setNumerofichesLiees(sbListeLiensVersFiches.toString());									
 		}
+		*/
 		
 		// Texte pour recherche rapide dans les listes de fiches
 		StringBuilder sbTextePourRechercheRapide = new StringBuilder(getNomCommun());

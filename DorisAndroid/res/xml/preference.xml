@@ -229,6 +229,12 @@
             android:defaultValue="50"
             android:layout="@layout/preference_layout_preference"
             />
+         <CheckBoxPreference android:key="@string/pref_key_debug_maj_fiche_activee"
+            android:summary="Activer la mise à jour des fiches par le menu (dev.)" 
+            android:title="MAJ Fiche" 
+            android:defaultValue="false"
+            android:layout="@layout/preference_layout_preference"
+            />
      </PreferenceScreen>
  
 

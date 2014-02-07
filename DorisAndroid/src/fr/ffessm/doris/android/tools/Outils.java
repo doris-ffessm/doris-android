@@ -1,12 +1,18 @@
 package fr.ffessm.doris.android.tools;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,6 +20,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import fr.ffessm.doris.android.activities.DetailEntreeGlossaire_ElementViewActivity;
@@ -21,11 +28,15 @@ import fr.ffessm.doris.android.activities.DetailsFiche_ElementViewActivity;
 import fr.ffessm.doris.android.activities.DetailsParticipant_ElementViewActivity;
 import fr.ffessm.doris.android.activities.Glossaire_ClassListViewActivity;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,6 +47,7 @@ import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.format.DateUtils;
@@ -46,6 +58,7 @@ import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
@@ -1058,5 +1071,167 @@ public class Outils {
     		this.info = info;
     	}
     }
+    
+    public static void majFiche(Context contexte, OrmLiteDBHelper helper, int idFiche, int numeroFiche) {
+    	
+    	Log.d(LOG_TAG, "majFiche() - numeroFiche : "+numeroFiche);
+    	Toast.makeText(contexte, "numeroFiche : "+numeroFiche, Toast.LENGTH_LONG).show();
+    	
+    	String urlFiche =  Constants.getFicheFromIdUrl( numeroFiche );
+    	Log.d(LOG_TAG, "majFiche() - urlFiche : "+urlFiche);
+    	
+    	String fichierDansCache = "fiche-"+numeroFiche+".html";
+    	Log.d(LOG_TAG, "majFiche() - fichierDansCache : "+fichierDansCache);
+    	
+    	try {
+    		String contenu = getHtml(contexte, urlFiche, fichierDansCache);
+			Log.d(LOG_TAG, "majFiche() - contenu : "+contenu.length());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}   
+    	
+    	Log.d(LOG_TAG, "majFiche() - avant");
+    	String contenuFichierHtml = fr.ffessm.doris.android.sitedoris.Outils
+    			.getFichierTxtFromDisk(new File(contexte.getCacheDir()+"/"+fichierDansCache));
+    	Log.d(LOG_TAG, "majFiche() - contenuFichierHtml : "+contenuFichierHtml.length());
+ 
+		
+    	List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
+    	listeGroupes.addAll(helper.getGroupeDao().queryForAll());
+		Log.d(LOG_TAG, "majFiche() - listeGroupes.size : "+listeGroupes.size());
+		
+    	HashSet<Participant> listeParticipants = new HashSet<Participant>(0);
+		listeParticipants.addAll(helper.getParticipantDao().queryForAll());
+		Log.d(LOG_TAG, "majFiche() - listeParticipants.size : "+listeParticipants.size());
+    	
+		Fiche fiche = new Fiche();
+		try {
+			fiche.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
+			
+			Log.d(LOG_TAG, "majFiche() - Fiche : "+fiche.getNumeroFiche()+" - "+fiche.getNomCommun());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+    }
+    
+	/* *********************************************************************
+	 * POUR L'INSTANT ICI, VOIR PLUS TARD POUR EN AVOIR UN COMMUN AVEC PREFECTCH SI POSSIBLE
+	 * ISSU DE DORIS for ANDROID 1
+     * getHtml permet de récupérer le fichier html à partir de l'URL
+     * et de stocker le résultat dans un cache qui devrait permettre d'accélérer
+     * la récup et consommer moins de bande passante
+     ********************************************************************** */
+	public static String getHtml (Context inContext, String inUrl, String inCleFichier) throws IOException{
+    	Log.d(LOG_TAG, "getHtml()- Début");
+    	Log.d(LOG_TAG, "getHtml()- inUrl : " + inUrl);
+    	Log.d(LOG_TAG, "getHtml()- inCleFichier : " + inCleFichier);
+    	
+    	//Pour le travail de debbug
+    	if (android.os.Build.VERSION.SDK_INT > 9) { StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); StrictMode.setThreadPolicy(policy); }
+    	
+    	
+    	if (inUrl.length()==0 || inCleFichier.length()==0)
+    	{	
+    		Log.d(LOG_TAG, "getHtml()- problèmes sur les paramètres");
+    		return "";
+    	}
+        
+    	StringBuffer stringBuffer = new StringBuffer("");
+    	BufferedReader bufferedReader = null;
+    	
+    	URL urlHtml = null;
+    	try {
+    		urlHtml = new URL(inUrl);
+    	} catch (MalformedURLException e ) {
+			Log.w(LOG_TAG, e.getMessage(), e);
+		}
+    	
+    	HttpURLConnection urlConnection = null;
+    	try {
+			urlConnection = (HttpURLConnection) urlHtml.openConnection();
+			Log.d(LOG_TAG, "getHtml()- 010 : "+urlConnection.toString());
+	        urlConnection.setConnectTimeout(3000);
+	        Log.d(LOG_TAG, "getHtml()- 015");
+	        urlConnection.setReadTimeout(10000);
+	        Log.d(LOG_TAG, "getHtml()- 020");
+	        urlConnection.connect();
+	        Log.d(LOG_TAG, "getHtml()- 025");
+    	} catch (IOException e ) {
+			Log.w(LOG_TAG, e.getMessage(), e);
+		}
+    	
+		try {
+			Log.d(LOG_TAG, "getHtml()- 030");
+			InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
+			Log.d(LOG_TAG, "getHtml()- 035");
+			//On vérifie que l'on est bien sur Doris (dans le cas ou l'on est re-dirigé vers Free, SFR, etc.
+			if (!urlHtml.getHost().equals(urlConnection.getURL().getHost())) {
+		    	String text = "Problème vraisemblable de redirection";
+		    	Log.e(LOG_TAG, "getHtml() - " + text);
+		    	Toast toast = Toast.makeText(inContext, text, Toast.LENGTH_LONG);
+				toast.show();
+				return "";
+			} else {
+				bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "ISO-8859-1"));
+			}
+			Log.d(LOG_TAG, "getHtml()- 040");
+    		//On lit ligne à ligne le bufferedReader pour le stocker dans le stringBuffer
+    		String ligneCodeHTML = bufferedReader.readLine();
+    		while (ligneCodeHTML != null){
+    			stringBuffer.append(ligneCodeHTML);
+    			stringBuffer.append("\n");
+    			ligneCodeHTML = bufferedReader.readLine();
+    		}
+    		Log.d(LOG_TAG, "getHtml()- 050");
+		}
+		catch(SocketTimeoutException erreur) {
+			String text = "La Connexion semble trop lente";
+        	Log.e(LOG_TAG, "getHtml() - " + text + " - " + erreur.toString(), erreur);
+        	Toast toast = Toast.makeText(inContext, text, Toast.LENGTH_LONG);
+			toast.show();
+        }
+		catch (Exception e){
+    		Log.e(LOG_TAG, e.getMessage());
+	    	String text = "Problème inconnu : "+e.getMessage();
+	    	Log.e(LOG_TAG, "getHtml() - " + text);
+	    	Toast toast = Toast.makeText(inContext, text, Toast.LENGTH_LONG);
+			toast.show();
+			return "";
+    	}finally{
+    		urlConnection.disconnect();
+
+    		//Dans tous les cas on ferme le bufferedReader s'il n'est pas null
+    		if (bufferedReader != null){
+    			try{
+    				bufferedReader.close();
+    			}catch(IOException e){
+    	    		Log.e(LOG_TAG, "getHtml()" + e.getMessage());
+    			}
+    		}
+    	}
+    	
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(new File(inContext.getCacheDir(), inCleFichier));
+            fos.write(stringBuffer.toString().getBytes());
+            fos.flush();
+            fos.close();
+        }
+        //this should never happen
+        catch(FileNotFoundException e) {
+        	Log.e(LOG_TAG, e.toString(), e);
+        }
+
+    	
+    	Log.d(LOG_TAG, "getHtml() - codeHtml : " +stringBuffer.toString().substring(0, Math.min(stringBuffer.toString().length(), 20)));
+		Log.d(LOG_TAG, "getHtml() - Fin");
+    	return stringBuffer.toString();
+	}
+    
     
 }

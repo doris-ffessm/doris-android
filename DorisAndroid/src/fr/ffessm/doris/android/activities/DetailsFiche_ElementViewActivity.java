@@ -194,6 +194,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     	else if (ficheNumero != 0) entry = entriesDao.queryForEq("numeroFiche", ficheNumero).get(0);
 	    entry.setContextDB(getHelper().getDorisDBHelper());
 	    
+	    if (ficheId != 0) ficheNumero = entry.getNumeroFiche();
+	    else if (ficheNumero != 0) ficheId = entry.getId();
+	    
     	((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText( Outils.textToSpannableStringDoris(context, entry.getNomScientifique()) );
 		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
 		((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText("N° "+((Integer)entry.getNumeroFiche()).toString());					
@@ -389,6 +392,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu DetailsFiche_EditableElementViewActivity
 
+		if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_debug_maj_fiche_activee, false)){
+			menu.add(Menu.NONE, 888, 2, "MaJ Fiche (Dev.)").setIcon(android.R.drawable.ic_menu_add);
+
+		}
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
@@ -411,6 +418,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         	case R.id.detailsfiche_elementview_action_glossaire:
         		Intent toDefinitionlView = new Intent(context, Glossaire_ClassListViewActivity.class);
             	context.startActivity(toDefinitionlView);
+            	return true;
+        	case 888:
+        		
+        		Outils.majFiche(context, this.getHelper(), ficheId, ficheNumero);
             	return true;
 			//End of user code
 			default:
