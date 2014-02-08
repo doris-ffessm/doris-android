@@ -172,6 +172,14 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 		// Start of user code protected additional ListeParticipantAvecFiltre_Adapter getView code
 		//	additional code
         ImageView trombineView = (ImageView) convertView.findViewById(R.id.listeparticipantavecfiltre_listviewrow_icon);
+        String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
+        int defaultIconSize = 48;
+        try{
+        	defaultIconSize = Integer.parseInt(defaultIconSizeString);
+        }catch(Exception e){}
+        
+        trombineView.getLayoutParams().height = defaultIconSize;
+        trombineView.getLayoutParams().width = defaultIconSize;
         if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {
 	        if(Outils.isAvailablePhoto(context, entry.getPhotoNom(), ImageType.PORTRAITS)){
 	    		try {
