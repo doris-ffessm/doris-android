@@ -154,9 +154,8 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
         texte_description.setText(richtext, BufferType.SPANNABLE);
         // make our ClickableSpans and URLSpans work 
         texte_description.setMovementMethod(LinkMovementMethod.getInstance());
-        
-        if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {
-	        ImageView trombineView = (ImageView) findViewById(R.id.detailsparticipant_elementview_icon);	        
+        ImageView trombineView = (ImageView) findViewById(R.id.detailsparticipant_elementview_icon);
+        if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {	        
 	        if(Outils.isAvailablePhoto(context, entry.getPhotoNom(), ImageType.PORTRAITS)){
 	    		try {
 					Picasso.with(context).load(Outils.getPhotoFile(context, entry.getPhotoNom(), ImageType.PORTRAITS))

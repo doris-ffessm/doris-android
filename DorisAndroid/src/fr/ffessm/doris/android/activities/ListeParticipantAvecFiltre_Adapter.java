@@ -171,8 +171,8 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
         
 		// Start of user code protected additional ListeParticipantAvecFiltre_Adapter getView code
 		//	additional code
+        ImageView trombineView = (ImageView) convertView.findViewById(R.id.listeparticipantavecfiltre_listviewrow_icon);
         if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {
-	        ImageView trombineView = (ImageView) convertView.findViewById(R.id.listeparticipantavecfiltre_listviewrow_icon);	        
 	        if(Outils.isAvailablePhoto(context, entry.getPhotoNom(), ImageType.PORTRAITS)){
 	    		try {
 					Picasso.with(context).load(Outils.getPhotoFile(context, entry.getPhotoNom(), ImageType.PORTRAITS))
@@ -194,6 +194,10 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 					.centerInside()
 	    			.into(trombineView);
 	    	}
+        }
+        else{
+        	// remet l'image par défaut (necessaire à cause de recyclage des widget
+        	trombineView.setImageResource(R.drawable.app_ic_participant_small);
         }
 		// End of user code
 
