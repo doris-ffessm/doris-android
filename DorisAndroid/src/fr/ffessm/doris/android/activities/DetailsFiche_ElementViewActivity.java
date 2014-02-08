@@ -44,6 +44,7 @@ package fr.ffessm.doris.android.activities;
 
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
@@ -101,6 +102,8 @@ import java.util.Collection;
 import java.util.List;
 
 import fr.ffessm.doris.android.activities.view.FoldableClickListener;
+import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
+import fr.ffessm.doris.android.async.VerifieMAJFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Groupe;
@@ -420,8 +423,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             	context.startActivity(toDefinitionlView);
             	return true;
         	case 888:
-        		
-        		Outils.majFiche(context, this.getHelper(), ficheId, ficheNumero);
+        		DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity =
+        			(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext(), this.getHelper()).execute(""+ficheNumero);
+
+        		//Outils.majFiche(context, this.getHelper(), ficheNumero);
             	return true;
 			//End of user code
 			default:

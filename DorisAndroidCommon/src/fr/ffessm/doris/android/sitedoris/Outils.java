@@ -55,6 +55,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
+import java.util.regex.Pattern;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -69,7 +71,7 @@ import net.htmlparser.jericho.Source;
  ********************************************************************** */
 public class Outils {
     
-	// Inititalisation de la Gestion des Log
+	// Initialisation de la Gestion des Log
 	public static Log log = LogFactory.getLog(Outils.class);
     
 
@@ -185,13 +187,6 @@ public class Outils {
 		texteNettoye = texteNettoye.replace("<b>", "<strong>")
 						.replace("</b>", "</strong>");
 
-		// On enlève les commentaires dans les pages, il y en a au milieu de tout ...
-		// TODO : une entrée bibliographique ne fonctionne pas 
-		// idBiblio : 618
-		// auteurs : Jourdan A.-J.-L.
-		// texteNettoye = texteNettoye.replaceAll("\n|\r", "");
-		// texteNettoye = texteNettoye.replaceAll("<!--[^!]*-->", "");
-		
 		// Tous les sauts de ligne de la même façon + gain de place en auteur pour l'interface Android
 		texteNettoye = texteNettoye.replace("<br>", "<br/>")
 				.replace("<br />", "<br/>")

@@ -90,6 +90,7 @@ import fr.ffessm.doris.android.datamodel.associations.Fiches_DefinitionsGlossair
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesObservations;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.OutilsBase;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Outils;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
@@ -135,7 +136,8 @@ public class PrefetchDorisWebSite {
 	public static final String XML_ATT_SITE_URL = "UrlRacineSite";
 	
 	DorisDBHelper dbContext = null;
-
+	OutilsBase outilsBase = null;
+	
 	public static void main(String[] args) throws Exception {
 		
 		// turn our static method into an instance of Main
@@ -165,6 +167,7 @@ public class PrefetchDorisWebSite {
 		} else {
 
 			ConnectionSource connectionSource = null;
+			
 			try {
 				// - - - Base de Données - - -
 				// create empty DB and initialize it for Android
@@ -175,6 +178,8 @@ public class PrefetchDorisWebSite {
 				// setup our database and DAOs
 				setupDatabase(connectionSource);
 				databaseInitialisation(connectionSource);
+				
+				outilsBase = new OutilsBase(dbContext);
 				
 				// - - - Groupes - - -
 				// Récupération de la liste des groupes sur le site de DORIS
@@ -248,6 +253,10 @@ public class PrefetchDorisWebSite {
 						}
 					}
 				}
+				
+				// TODO : recup description longue des groupes
+				// http://doris.ffessm.fr/fiches_liste.asp?numero_fichier=5&groupe_numero=51
+				
 
 				// - - - Intervenants - - -
 				// On boucle sur les initiales des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
@@ -815,7 +824,7 @@ public class PrefetchDorisWebSite {
 						public Void call() throws Exception { 
 
 							for (Fiche fiche : listFicheFromHTML) {
-								Fiche fichesDeLaBase = queryFicheByNumeroFiche(fiche.getNumeroFiche());
+								Fiche fichesDeLaBase = outilsBase.queryFicheByNumeroFiche(fiche.getNumeroFiche());
 								fichesDeLaBase.setContextDB(dbContext);
 								fichesDeLaBase.addZoneGeographique(zoneGeographique);
 							}
@@ -1301,22 +1310,7 @@ public class PrefetchDorisWebSite {
 		log.debug("checkDossiers() - Fin");
 	}
 
-	// Retrouve la fiche dans la base
-	public Fiche queryFicheByNumeroFiche(int inNumeroFiche) {
-		try {
-			Fiche queryFiche = new Fiche();
-			queryFiche.setNumeroFiche(inNumeroFiche);
-			List<Fiche> fichesDeLaBase = dbContext.ficheDao.queryForMatching(queryFiche);
-			if(fichesDeLaBase.size() != 1){
-				log.debug("La fiche n°"+queryFiche.getNumeroFiche()+ " n'existe pas dans la base");
-				return null;
-			}
-			return fichesDeLaBase.get(0);
-		} catch (SQLException e) {
-			log.error("erreur pendant la requete sur la fiche "+inNumeroFiche+ " dans la base", e);
-		}
-		return null;
-	}
+
 	
 	// Vérifie que le fichier existe
 	public boolean isFileExistingPath(String fichierPath){

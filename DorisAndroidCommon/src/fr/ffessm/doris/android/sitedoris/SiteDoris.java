@@ -509,6 +509,7 @@ public class SiteDoris {
 						if (elementTDwidth != null && elementTDwidth.equals("150") ){
 							//log.info("getListeParticipantsParInitiale() - photo : "+elementIMG.getAttributeValue("src"));
 							participantUrlPhoto = elementIMG.getAttributeValue("src");
+							participantUrlPhoto = participantUrlPhoto.replaceAll(" ", "%20");	// on s'assure d'avoir une url valide
 						}
 					}
 
@@ -663,6 +664,13 @@ public class SiteDoris {
     	
     	HashSet<EntreeBibliographie> listeBiblio = new HashSet<EntreeBibliographie>(0);
     	
+		// Une entrée bibliographique ne fonctionne pas, parce qu'elle est très longue
+    	// il est probable qu'une astuce ait été utilisée, mais le site est tellement
+    	// mal foutu qu'il arrive à générer une balise non terminée : </,
+		// idBiblio : 618
+		// auteurs : Jourdan A.-J.-L.
+    	inCodePageHtml = Pattern.compile("</,[^<>]*<strong>", Pattern.DOTALL).matcher(inCodePageHtml).replaceAll(",");
+	    	
     	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml) );
     	source.fullSequentialParse();
     	//log.debug("getListeBiblioFromHtml()- source.length() : " + source.length());
@@ -691,22 +699,28 @@ public class SiteDoris {
     				//log.debug("getListeBiblioFromHtml() - annee : " + annee);
     				
     				String auteurs = bibliographie.replaceAll("^(.*), "+annee+",.*$", "$1").trim();
-    				auteurs = Outils.nettoyageTextes(auteurs);
     				log.debug("getListeBiblioFromHtml() - auteurs : " + auteurs);
     				
     				String titre = "";
     				log.debug("getListeFiches() - STRONG : " + elementA.getFirstElement(HTMLElementName.STRONG));
     				if (elementA.getFirstElement(HTMLElementName.STRONG) != null) {
     					titre = elementA.getFirstElement(HTMLElementName.STRONG).getRenderer().toString().trim().replaceAll("\n|\r", "");
-    					titre = Outils.nettoyageTextes(titre);
     				}
     				log.debug("getListeBiblioFromHtml() - titre : " + titre);
-    				String edition = bibliographie.replaceAll(".*"+titre+",(.*)$", "$1").trim();
-    				edition = Outils.nettoyageTextes(edition);
+    				
+    				
+    				//String edition = bibliographie.replaceAll(".*"+titre+",(.*)$", "$1").trim();
+    				String regExp = ".*"+titre+",(.*)$";
+    				String edition = Pattern.compile(regExp, Pattern.DOTALL).matcher(bibliographie).replaceAll("$1");
     				//log.debug("getListeBiblioFromHtml() - edition : " + edition);
     				
     				// TODO : l'illustration éventuelle dans cleURLIllustration (mais il faudrait alors télécharger la page de l'entrée bibliographique
-    				listeBiblio.add(new EntreeBibliographie( Integer.valueOf(idBiblio), titre, auteurs, annee, edition,"") );
+    				listeBiblio.add(new EntreeBibliographie( Integer.valueOf(idBiblio),
+    						Outils.nettoyageTextes(titre),
+    						Outils.nettoyageTextes(auteurs),
+    						annee,
+    						Outils.nettoyageTextes(edition),
+    						"") );
     			}
 			}
 			

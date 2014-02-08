@@ -43,9 +43,13 @@ package fr.ffessm.doris.android.async;
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,7 +57,14 @@ import java.util.regex.Pattern;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
+import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.datamodel.Participant;
+import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.OutilsBase;
+import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports VerifieMAJFiches_BgActivity
 // End of user code
@@ -92,26 +103,93 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		// Start of user code initialization of the task VerifieMAJFiches_BgActivity
 		// do the initializatio of the task here
 		// once done, you should indicates to the notificationHelper how many item will be processed
+    	
+    	int numeroFiche = Integer.valueOf(arg0[0]);
+    	
     	mNotificationHelper.setMaxItemToProcess(""+100);
 		// End of user code
     	
     	// Start of user code main loop of task VerifieMAJFiches_BgActivity
 		// This is where we would do the actual job
-		// you should indicates the progression using publishProgress()
-		for (int i=10;i<=100;i += 10)
-            {
-                try {
-					// simply sleep for one second
-                    Thread.sleep(1000);
-                    publishProgress(i);
+    	
+    	Log.d(LOG_TAG, "doInBackground() - numeroFiche : "+numeroFiche);
+    	
+    	// Récupération Fiche de la Base
+    	OutilsBase outilsBase = new OutilsBase(dbHelper.getDorisDBHelper());
+    	Fiche ficheDeLaBase = outilsBase.queryFicheByNumeroFiche(numeroFiche);
+		ficheDeLaBase.setContextDB(dbHelper.getDorisDBHelper());
+		Log.d(LOG_TAG, "doInBackground() - Fiche de la Base : "+ficheDeLaBase.getEtatFiche()+" - "
+				+ ficheDeLaBase.getNomCommun() + " - " + ficheDeLaBase.getDateCreation()
+				+ " - " + ficheDeLaBase.getDateModification());
+		
+		// Récupération Fiche du Site
+    	String urlFiche =  Constants.getFicheFromIdUrl( numeroFiche );
+    	Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlFiche);
+    	
+    	String fichierDansCache = "fiche-"+numeroFiche+".html";
+    	Log.d(LOG_TAG, "doInBackground() - fichierDansCache : "+fichierDansCache);
+    	
+    	try {
+    		Outils.getHtml(context, urlFiche, fichierDansCache);
+		} catch (IOException e) {
+			Log.w(LOG_TAG, e.getMessage(), e);
+		}   
+    	
+    	String contenuFichierHtml = fr.ffessm.doris.android.sitedoris.Outils
+			.getFichierTxtFromDisk(new File(context.getCacheDir()+"/"+fichierDansCache));
+ 
+    	Fiche ficheSite = new Fiche();
+		ficheSite.getFicheEtatDateModifFromHtml(contenuFichierHtml);
+		Log.d(LOG_TAG, "doInBackground() - Fiche du Site : "+ficheSite.getEtatFiche()+" - "
+				+ ficheSite.getDateModification());
+		
+		//Si le statut a changé ou que la date de mise à jour a évolué, on continue
+		if ( ficheSite.getEtatFiche() != ficheDeLaBase.getEtatFiche()
+			|| !ficheSite.getDateModification().equals(ficheDeLaBase.getDateModification()) ) {
 
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+	    	List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
+	    	listeGroupes.addAll(dbHelper.getGroupeDao().queryForAll());
+			Log.d(LOG_TAG, "doInBackground() - listeGroupes.size : "+listeGroupes.size());
+			
+	    	HashSet<Participant> listeParticipants = new HashSet<Participant>(0);
+			listeParticipants.addAll(dbHelper.getParticipantDao().queryForAll());
+			Log.d(LOG_TAG, "doInBackground() - listeParticipants.size : "+listeParticipants.size());
+	    	
+			ficheSite.setContextDB(dbHelper.getDorisDBHelper());
+			
+			try {
+				ficheSite.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
+				
+				Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheSite.getNomCommun());
+			} catch (SQLException e) {
+				Log.w(LOG_TAG, e.getMessage(), e);
+			}
+		
+		}
+    	
+    	
+    	
+		// you should indicates the progression using publishProgress()
+		for (int i=10;i<=100;i += 10) {
+            try {
+				// simply sleep for one second
+                Thread.sleep(1000);
+                publishProgress(i);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+        }
+		
+		
+		
+		
 		// End of user code
         
 		// Start of user code end of task VerifieMAJFiches_BgActivity
+		
+		
+		
 		// return the number of item processed
         return 100;
 		// End of user code

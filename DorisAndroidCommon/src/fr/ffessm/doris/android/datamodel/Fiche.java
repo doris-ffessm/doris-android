@@ -62,6 +62,7 @@ import fr.ffessm.doris.android.datamodel.associations.*;
 
 // Start of user code additional import for Fiche
 import java.util.HashSet;
+import java.util.regex.Pattern;
 
 import net.htmlparser.jericho.Attribute;
 import net.htmlparser.jericho.Element;
@@ -259,6 +260,27 @@ public class Fiche {
 		return numeroFiche+"-"+etatFiche;
 	}
 	
+	public void getFicheEtatDateModifFromHtml(String htmlFiche) {
+		log.trace("getFicheEtatDateModifFromHtml() - Début");
+		
+		//4 : Fiche Publiée - 1, 2, 3 : En cours de Rédaction - 5 : Fiche Proposée 
+		if ( htmlFiche.contains("Fiche propos") ){
+			etatFiche = 5;
+		} else if ( htmlFiche.contains("Fiche en cours de r") ) {
+			etatFiche = 1;
+		} else {
+			etatFiche = 4;
+		}
+		log.trace("getFicheEtatDateModifFromHtml() - etatFiche : "+etatFiche);
+		
+		// Quelque soit leur état dans le bas des fiches on a toujours la date de dernière modification
+		//<strong>DORIS</strong>,&nbsp;4/2/2013&nbsp;:&nbsp;
+		String regex = ".*<strong>DORIS</strong>,&nbsp;([^&]*)&nbsp;.*";
+		dateModification = Pattern.compile(regex, Pattern.DOTALL).matcher(htmlFiche).replaceAll("$1");
+		log.trace("getFicheEtatDateModifFromHtml() - etatFiche : "+etatFiche);
+		
+		log.trace("getFicheEtatDateModifFromHtml() - Fin");
+	}
 	
 	public void getFicheFromHtml(String htmlFiche, List<Groupe> listeGroupes, HashSet<Participant> listeParticipants) throws SQLException{
 		log.trace("getFicheFromHtml() - Début");
@@ -757,13 +779,13 @@ public class Fiche {
 								
 			} // Fin parcourt des Cadres Gris
 			
-			// Les dates de Créations et de nodifications
+			// Les dates de Créations et de modifications
 			// Elles sont dans le seul TD de class = normalgris
 			Element ElementDates=source.getFirstElementByClass("normalgris2");
 			//log.info("getFiche() - Bloc Dates : " + ElementDates.getRenderer().toString());
 			
 			dateCreation = ElementDates.getRenderer().toString().replaceAll("\r\n", " ").replaceAll("\n", " ").replaceAll(".*DORIS[^,]*,([^:]*):.*", "$1").trim();
-			//dateModification = ElementDates.getRenderer().toString().replaceAll(".*modification le(.*)", "$1").trim();
+			dateModification = dateCreation;
 			log.debug("getFicheFromHtml() - dateCreation : " + dateCreation);
 			//log.debug("getFicheFromHtml() - dateModification : " + dateModification);
 		
@@ -876,10 +898,13 @@ public class Fiche {
 		}
 		*/
 		
+		
 		// Texte pour recherche rapide dans les listes de fiches
-		StringBuilder sbTextePourRechercheRapide = new StringBuilder(getNomCommun());
-		sbTextePourRechercheRapide.append(getNomScientifique().replaceAll("\\([^\\)]*\\)", ""));
+		StringBuilder sbTextePourRechercheRapide = new StringBuilder();
+		if (getNomCommun() != null) sbTextePourRechercheRapide.append(getNomCommun());
+		if (getNomScientifique() != null) sbTextePourRechercheRapide.append(getNomScientifique().replaceAll("\\([^\\)]*\\)", ""));
 		sbTextePourRechercheRapide.append(" "+autresDenominationsPourRechercheRapide.trim());
+		
 		sbTextePourRechercheRapide = new StringBuilder(sbTextePourRechercheRapide.toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "") );
 		setTextePourRechercheRapide(Outils.formatStringNormalizer(sbTextePourRechercheRapide.toString()).toLowerCase());
 		

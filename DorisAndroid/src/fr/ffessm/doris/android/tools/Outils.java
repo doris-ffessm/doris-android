@@ -35,6 +35,7 @@ import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.OutilsBase;
 
 import android.app.Activity;
 import android.content.Context;
@@ -1072,51 +1073,6 @@ public class Outils {
     	}
     }
     
-    public static void majFiche(Context contexte, OrmLiteDBHelper helper, int idFiche, int numeroFiche) {
-    	
-    	Log.d(LOG_TAG, "majFiche() - numeroFiche : "+numeroFiche);
-    	Toast.makeText(contexte, "numeroFiche : "+numeroFiche, Toast.LENGTH_LONG).show();
-    	
-    	String urlFiche =  Constants.getFicheFromIdUrl( numeroFiche );
-    	Log.d(LOG_TAG, "majFiche() - urlFiche : "+urlFiche);
-    	
-    	String fichierDansCache = "fiche-"+numeroFiche+".html";
-    	Log.d(LOG_TAG, "majFiche() - fichierDansCache : "+fichierDansCache);
-    	
-    	try {
-    		String contenu = getHtml(contexte, urlFiche, fichierDansCache);
-			Log.d(LOG_TAG, "majFiche() - contenu : "+contenu.length());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}   
-    	
-    	Log.d(LOG_TAG, "majFiche() - avant");
-    	String contenuFichierHtml = fr.ffessm.doris.android.sitedoris.Outils
-    			.getFichierTxtFromDisk(new File(contexte.getCacheDir()+"/"+fichierDansCache));
-    	Log.d(LOG_TAG, "majFiche() - contenuFichierHtml : "+contenuFichierHtml.length());
- 
-		
-    	List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
-    	listeGroupes.addAll(helper.getGroupeDao().queryForAll());
-		Log.d(LOG_TAG, "majFiche() - listeGroupes.size : "+listeGroupes.size());
-		
-    	HashSet<Participant> listeParticipants = new HashSet<Participant>(0);
-		listeParticipants.addAll(helper.getParticipantDao().queryForAll());
-		Log.d(LOG_TAG, "majFiche() - listeParticipants.size : "+listeParticipants.size());
-    	
-		Fiche fiche = new Fiche();
-		try {
-			fiche.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
-			
-			Log.d(LOG_TAG, "majFiche() - Fiche : "+fiche.getNumeroFiche()+" - "+fiche.getNomCommun());
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-    }
     
 	/* *********************************************************************
 	 * POUR L'INSTANT ICI, VOIR PLUS TARD POUR EN AVOIR UN COMMUN AVEC PREFECTCH SI POSSIBLE
@@ -1131,7 +1087,7 @@ public class Outils {
     	Log.d(LOG_TAG, "getHtml()- inCleFichier : " + inCleFichier);
     	
     	//Pour le travail de debbug
-    	if (android.os.Build.VERSION.SDK_INT > 9) { StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); StrictMode.setThreadPolicy(policy); }
+    	//if (android.os.Build.VERSION.SDK_INT > 9) { StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); StrictMode.setThreadPolicy(policy); }
     	
     	
     	if (inUrl.length()==0 || inCleFichier.length()==0)
