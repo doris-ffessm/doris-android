@@ -41,6 +41,7 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -51,6 +52,9 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
+import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Outils.ImageType;
 
 
 import android.content.Context;
@@ -74,6 +78,7 @@ import android.widget.Toast;
 
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.squareup.picasso.Picasso;
 
 //Start of user code protected additional ListeParticipantAvecFiltre_Adapter imports
 // additional imports
@@ -166,6 +171,34 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
         
 		// Start of user code protected additional ListeParticipantAvecFiltre_Adapter getView code
 		//	additional code
+        ImageView trombineView = (ImageView) convertView.findViewById(R.id.listeparticipantavecfiltre_listviewrow_icon);
+        if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {
+	        if(Outils.isAvailablePhoto(context, entry.getPhotoNom(), ImageType.PORTRAITS)){
+	    		try {
+					Picasso.with(context).load(Outils.getPhotoFile(context, entry.getPhotoNom(), ImageType.PORTRAITS))
+						.fit()
+						.centerInside()
+						.into(trombineView);
+				} catch (IOException e) {
+				}
+	    	}
+	    	else{
+	    		// pas préchargée en local pour l'instant, cherche sur internet
+	    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLPhotoParticipant() : "+Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom());
+	    		String urlPhoto= Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom();
+	    		Picasso.with(context)
+	    			.load(urlPhoto.replaceAll(" ", "%20"))
+					.placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
+					.error(R.drawable.app_ic_participant_pas_connecte)
+					.fit()
+					.centerInside()
+	    			.into(trombineView);
+	    	}
+        }
+        else{
+        	// remet l'image par défaut (necessaire à cause de recyclage des widget
+        	trombineView.setImageResource(R.drawable.app_ic_participant_small);
+        }
 		// End of user code
 
         return convertView;
