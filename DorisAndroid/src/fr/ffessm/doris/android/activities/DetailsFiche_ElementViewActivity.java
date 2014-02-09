@@ -103,7 +103,7 @@ import java.util.List;
 
 import fr.ffessm.doris.android.activities.view.FoldableClickListener;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
-import fr.ffessm.doris.android.async.VerifieMAJFiches_BgActivity;
+import fr.ffessm.doris.android.async.VerifieMAJFiche_BgActivity;
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Groupe;
@@ -423,7 +423,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             	return true;
         	case 888:
         		DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity =
-        			(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext(),
+        			(VerifieMAJFiche_BgActivity) new VerifieMAJFiche_BgActivity(getApplicationContext(),
 					this.getHelper()).execute(""+ficheNumero);
         		//refreshScreenData();
 

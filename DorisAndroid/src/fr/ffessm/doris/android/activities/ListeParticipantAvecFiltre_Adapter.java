@@ -196,7 +196,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 	    	}
         }
         else{
-        	// remet l'image par défaut (necessaire à cause de recyclage des widget
+        	// remet l'image par défaut (nécessaire à cause de recyclage des widget
         	trombineView.setImageResource(R.drawable.app_ic_participant_small);
         }
 		// End of user code

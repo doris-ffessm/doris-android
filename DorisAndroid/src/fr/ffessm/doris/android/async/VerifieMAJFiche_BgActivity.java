@@ -71,8 +71,8 @@ import fr.ffessm.doris.android.R;
 // Start of user code additional imports VerifieMAJFiches_BgActivity
 // End of user code
 
-public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Integer>{
-	private static final String LOG_TAG = VerifieMAJFiches_BgActivity.class.getCanonicalName();
+public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integer>{
+	private static final String LOG_TAG = VerifieMAJFiche_BgActivity.class.getCanonicalName();
 	
 	
     private NotificationHelper mNotificationHelper;
@@ -80,7 +80,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     private Context context;
     
     // Start of user code additional attribute declarations VerifieMAJFiches_BgActivity
-    public VerifieMAJFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper, DataChangedListener verifieMAJFiches_BgActivity){
+    public VerifieMAJFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper, DataChangedListener verifieMAJFiches_BgActivity){
 		String initialTickerText = context.getString(R.string.initialisationapplication_bg_initialTickerText);
 		String notificationTitle = context.getString(R.string.initialisationapplication_bg_notificationTitle);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
@@ -92,7 +92,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 	// End of user code
     
 	/** constructor */
-    public VerifieMAJFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper){
+    public VerifieMAJFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper){
 		// Start of user code additional attribute declarations VerifieMAJFiches_BgActivity constructor
 		String initialTickerText = context.getString(R.string.verifiemajfiches_bg_initialTickerText);
 		String notificationTitle = context.getString(R.string.verifiemajfiches_bg_notificationTitle);
