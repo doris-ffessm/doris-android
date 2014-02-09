@@ -81,18 +81,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
-// Start of user code protectedGlossaire_ClassListViewActivity_additionalimports
+// Start of user code protectedListeBibliographieAvecFiltre_ClassListViewActivity_additionalimports
 // End of user code
 
-public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener , ActivityWithIndexBar{
+public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener , ActivityWithIndexBar{
 	
-	private static final String LOG_TAG = Glossaire_ClassListViewActivity.class.getSimpleName();
+	private static final String LOG_TAG = ListeBibliographieAvecFiltre_ClassListViewActivity.class.getSimpleName();
 
-	//Start of user code constants Glossaire_ClassListViewActivity
+	//Start of user code constants ListeBibliographieAvecFiltre_ClassListViewActivity
 	//End of user code
 	// Search EditText
     //EditText inputSearch;
-    Glossaire_Adapter adapter;
+    ListeBibliographieAvecFiltre_Adapter adapter;
 
 	Handler mHandler;
     HashMap<Character, Integer> alphabetToIndex;
@@ -101,15 +101,15 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		ThemeUtil.onActivityCreateSetTheme(this);
-		setContentView(R.layout.glossaire_listview);
+		setContentView(R.layout.listebibliographieavecfiltre_listview);
 
 		ActionBar actionBar = getSupportActionBar();
 	    actionBar.setDisplayHomeAsUpEnabled(true);
 
-		ListView list = (ListView) findViewById(R.id.glossaire_listview);
+		ListView list = (ListView) findViewById(R.id.listebibliographieavecfiltre_listview);
         list.setClickable(true);
-		//Start of user code onCreate Glossaire_ClassListViewActivity adapter creation
-        adapter = new Glossaire_Adapter(this, getHelper().getDorisDBHelper());		
+		//Start of user code onCreate ListeBibliographieAvecFiltre_ClassListViewActivity adapter creation
+        adapter = new ListeBibliographieAvecFiltre_Adapter(this, getHelper().getDorisDBHelper());		
 		//End of user code
 		// avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -122,16 +122,14 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 
 		// add handler for indexBar
         mHandler = new IndexBarHandler(this);
-		//Start of user code onCreate additions Glossaire_ClassListViewActivity
-
-	    actionBar.setSubtitle("Glossaire");
+		//Start of user code onCreate additions ListeBibliographieAvecFiltre_ClassListViewActivity
 		//End of user code
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//Start of user code onResume additions Glossaire_ClassListViewActivity
+		//Start of user code onResume additions ListeBibliographieAvecFiltre_ClassListViewActivity
 		//End of user code
 		populateIndexBarHashMap();
 	}
@@ -156,7 +154,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
             // handles a search query
             String query = intent.getStringExtra(SearchManager.QUERY);
     		Log.d(LOG_TAG,"ACTION_SEARCH Intent received for "+query);
-            Glossaire_ClassListViewActivity.this.adapter.getFilter().filter(query);
+            ListeBibliographieAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(query);
         }
     }	
 
@@ -168,11 +166,11 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 		Log.d(LOG_TAG, "onItemClick "+view);
-		if(view instanceof LinearLayout && view.getId() == R.id.glossaire_listviewrow){
+		if(view instanceof LinearLayout && view.getId() == R.id.listebibliographieavecfiltre_listviewrow){
 			// normal case on main item
-	        Intent toDetailView = new Intent(this, DetailEntreeGlossaire_ElementViewActivity.class);
+	        Intent toDetailView = new Intent(this, DetailsBibliographie_ElementViewActivity.class);
 	        Bundle b = new Bundle();
-	        b.putInt("definitionGlossaireId", ((DefinitionGlossaire)view.getTag()).getId());
+	        b.putInt("entreeBibliographieId", ((EntreeBibliographie)view.getTag()).getId());
 			toDetailView.putExtras(b);
 	        startActivity(toDetailView);
 		}
@@ -190,13 +188,13 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 			Log.d(LOG_TAG, "Selected Alphabet is:"+selected_alpahbet+"   position is:"+newPosition);
 			if(	newPosition != null){	
 				Toast.makeText(this, selected_alpahbet, Toast.LENGTH_SHORT).show();
-				ListView listview=(ListView)findViewById(R.id.glossaire_listview);
+				ListView listview=(ListView)findViewById(R.id.listebibliographieavecfiltre_listview);
 				listview.setSelection(newPosition);
 			}
 		}
     }
 
-	//Start of user code additional  Glossaire_ClassListViewActivity methods
+	//Start of user code additional  ListeBibliographieAvecFiltre_ClassListViewActivity methods
 
 	//End of user code
 
@@ -204,10 +202,10 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
     public boolean onCreateOptionsMenu(Menu menu) {
 		// add options in the menu
 		MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.glossaire_classlistview_actions, menu);
+	    inflater.inflate(R.menu.listebibliographieavecfiltre_classlistview_actions, menu);
 		// Associate searchable configuration with the SearchView
 		// deal with compat
-		MenuItem  menuItem = (MenuItem ) menu.findItem(R.id.glossaire_classlistview_action_search);
+		MenuItem  menuItem = (MenuItem ) menu.findItem(R.id.listebibliographieavecfiltre_classlistview_action_search);
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 	    SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
 		searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()));
@@ -220,7 +218,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 					// already done by normal
 				}
 				else{
-					Glossaire_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
+					ListeBibliographieAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
 				}
 				return false;
 			}
@@ -229,13 +227,13 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 			public boolean onQueryTextChange(String arg0) {
 				// TODO must be careful if the request might be long
 				// action on text change
-				Glossaire_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
+				ListeBibliographieAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
 				return false;
 			}
 		});
 	    
 		// add additional programmatic options in the menu
-		//Start of user code additional onCreateOptionsMenu Glossaire_ClassListViewActivity
+		//Start of user code additional onCreateOptionsMenu ListeBibliographieAvecFiltre_ClassListViewActivity
 
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -246,12 +244,12 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
     public boolean onOptionsItemSelected(MenuItem item) {
 		// behavior of option menu
         switch (item.getItemId()) {
-			case R.id.glossaire_classlistview_action_preference:
+			case R.id.listebibliographieavecfiltre_classlistview_action_preference:
 	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
 	            return true;
-			//Start of user code additional menu action Glossaire_ClassListViewActivity
-
-		//End of user code
+			//Start of user code additional menu action ListeBibliographieAvecFiltre_ClassListViewActivity
+	
+			//End of user code
 			default:
                 return super.onOptionsItemSelected(item);
         }
@@ -260,14 +258,14 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 	//  ------------ dealing with Up button
 	@Override
 	public Intent getSupportParentActivityIntent() {
-		//Start of user code getSupportParentActivityIntent Glossaire_ClassListViewActivity
+		//Start of user code getSupportParentActivityIntent ListeBibliographieAvecFiltre_ClassListViewActivity
 		// navigates to the parent activity
 		return new Intent(this, Accueil_CustomViewActivity.class);
 		//End of user code
 	}
 	@Override
 	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-		//Start of user code onCreateSupportNavigateUpTaskStack Glossaire_ClassListViewActivity
+		//Start of user code onCreateSupportNavigateUpTaskStack ListeBibliographieAvecFiltre_ClassListViewActivity
 		super.onCreateSupportNavigateUpTaskStack(builder);
 		//End of user code
 	}
@@ -303,7 +301,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 				}
 				else
 					if(i==26) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
-						alphabetToIndex.put(alpha, adapter.filteredDefinitionGlossaireList.size()-1);
+						alphabetToIndex.put(alpha, adapter.filteredEntreeBibliographieList.size()-1);
 					else
 						continue;
 					
@@ -313,13 +311,13 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 	
 	@Override
 	public ListView getAlphabetListView() {
-		return (ListView)findViewById(R.id.glossaire_listView_alphabets);
+		return (ListView)findViewById(R.id.listebibliographieavecfiltre_listView_alphabets);
 	}
 	public View getAlphabetRowView(){
 		return findViewById(R.id.alphabet_row_layout);
 	}
 
-	// Start of user code protectedGlossaire_ClassListViewActivity
+	// Start of user code protectedListeBibliographieAvecFiltre_ClassListViewActivity
 	public void onClickFilterBtn(View view){
 		showToast("filter button pressed. \nPlease customize ;-)");
     }

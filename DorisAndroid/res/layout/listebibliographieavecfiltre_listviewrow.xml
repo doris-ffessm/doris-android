@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+android:id/listeparticipantavecfiltre_listviewrow"
+    android:id="@+android:id/listebibliographieavecfiltre_listviewrow"
     android:layout_width="match_parent"
     android:layout_height="match_parent"    
 	android:layout_marginBottom="2dp"
     android:layout_marginTop="2dp"
     android:orientation="horizontal" >
     <ImageView
-        android:id="@+id/listeparticipantavecfiltre_listviewrow_icon"
+        android:id="@+id/listebibliographieavecfiltre_listviewrow_icon"
 		android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginBottom="2dip"
@@ -15,7 +15,7 @@
         android:layout_marginRight="2dip"
         android:layout_marginTop="2dip"
         android:adjustViewBounds="true"
-        android:contentDescription="Participant icon"
+        android:contentDescription="EntreeBibliographie icon"
 		android:scaleType="fitCenter"
         android:src="@drawable/app_ic_launcher" >
     </ImageView>
@@ -24,24 +24,25 @@
 		    android:layout_height="wrap_content"
 			android:paddingLeft="4dip"
        		android:paddingRight="4dip" >
-		<!-- Start of user code protected listeparticipantavecfiltre_listviewrow linearlayout customization
+		<!-- Start of user code protected listebibliographieavecfiltre_listviewrow linearlayout customization
 			-->
 		<LinearLayout 
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
+		    android:layout_toLeftOf="@+id/listebibliographieavecfiltre_btn"
 		    android:orientation="vertical" >
 	
 		<!-- End of user code
 			-->
 			<TextView
-		        android:id="@+id/listeparticipantavecfiltre_listviewrow_label"
+		        android:id="@+id/listebibliographieavecfiltre_listviewrow_label"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textAppearance="?android:attr/textAppearanceMedium"
 			    android:textColor="?android:attr/textColorPrimary" >
 		    </TextView>
 		    <TextView
-		        android:id="@+id/listeparticipantavecfiltre_listviewrow_details"
+		        android:id="@+id/listebibliographieavecfiltre_listviewrow_details"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:paddingLeft="4dip"
@@ -49,9 +50,21 @@
    				android:textColor="?android:attr/textColorSecondary" >
 		    </TextView>
 		</LinearLayout>
-		<!-- Start of user code protected listeparticipantavecfiltre_listviewrow linearlayout additions
+		<!-- Start of user code protected listebibliographieavecfiltre_listviewrow linearlayout additions
 			-->
-		
+		<TextView
+		    android:id="@+id/listebibliographieavecfiltre_btn"
+	        android:layout_width="wrap_content"
+	        android:layout_height="20dp"
+	        android:layout_alignParentRight="true"
+	        android:layout_alignParentTop="true"
+	        android:layout_marginRight="2dp"
+	        android:layout_marginTop="1dp"
+	        android:paddingTop="2dp"
+	        android:paddingBottom="2dp"
+	        android:background="@drawable/button_background"
+	        android:textColor="?android:attr/textColorSecondary" >
+		</TextView>
 
 		<!-- End of user code
 			-->
