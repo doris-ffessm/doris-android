@@ -704,7 +704,7 @@ public class SiteDoris {
     				String titre = "";
     				log.debug("getListeFiches() - STRONG : " + elementA.getFirstElement(HTMLElementName.STRONG));
     				if (elementA.getFirstElement(HTMLElementName.STRONG) != null) {
-    					titre = elementA.getFirstElement(HTMLElementName.STRONG).getRenderer().toString().trim().replaceAll("\n|\r", "");
+    					titre = elementA.getFirstElement(HTMLElementName.STRONG).getRenderer().toString().trim().replaceAll("\n|\r", "").trim();
     				}
     				log.debug("getListeBiblioFromHtml() - titre : " + titre);
     				
@@ -716,12 +716,12 @@ public class SiteDoris {
     				
     				// TODO : l'illustration éventuelle dans cleURLIllustration (mais il faudrait alors télécharger la page de l'entrée bibliographique
     				listeBiblio.add(new EntreeBibliographie( Integer.valueOf(idBiblio),
-    						Outils.nettoyageTextes(titre),
-    						Outils.nettoyageTextes(auteurs),
+    						Outils.nettoyageTextes(titre).trim(),
+    						Outils.nettoyageTextes(auteurs).trim(),
     						annee,
-    						Outils.nettoyageTextes(edition),
+    						Outils.nettoyageTextes(edition).trim(),
     						"",
-    						titre+auteurs) );
+    						(Outils.formatStringNormalizer(titre+" "+auteurs)).toLowerCase() ));
     			}
 			}
 			

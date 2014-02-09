@@ -291,7 +291,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
 	public int filter(int position, EntreeBibliographie entry, String pattern){
 		// Start of user code protected additional ListeBibliographieAvecFiltre_Adapter filter code
 		StringBuilder labelSB = new StringBuilder();
-		labelSB.append(entry.getTitre());
+		labelSB.append(entry.getTextePourRecherche());
 		labelSB.append(" ");
 		if(labelSB.toString().toLowerCase().contains(pattern)) return 1;
 		else return -1;

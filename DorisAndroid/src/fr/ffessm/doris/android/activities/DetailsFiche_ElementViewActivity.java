@@ -309,68 +309,76 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			
 			// sections issues de la fiche
 			if(entry.getContenu() != null){
-				
+				boolean affichageCredit = false;
 				for (SectionFiche sectionFiche : entry.getContenu()) {
 					//Log.d(LOG_TAG, "refreshScreenData() - titre : "+sectionFiche.getTitre());
 					//Log.d(LOG_TAG, "refreshScreenData() - texte : "+sectionFiche.getTexte());
+					if (affichageCredit == false && sectionFiche.getNumOrdre() > 100) {
+						
+						affichageCredit = true;
+						
+						// Zones Géographiques
+						List<ZoneGeographique> zonesGeographiques= entry.getZonesGeographiques();
+						if(zonesGeographiques!= null){			
+							StringBuilder sbZonesGeographiques = new StringBuilder();	
+				            int i = 1;
+							for (ZoneGeographique zoneGeographique : zonesGeographiques) {
+								sbZonesGeographiques.append(zoneGeographique.getNom());
+								if(zonesGeographiques.size() > 1 && i < zonesGeographiques.size()){
+									sbZonesGeographiques.append("\n");
+								}
+								i++;
+							}
+							if (sbZonesGeographiques.toString().length() != 0) {
+								addFoldableTextView(containerLayout, getString(R.string.detailsfiche_elementview_zonesgeo_label), sbZonesGeographiques.toString());
+							} else {
+								addFoldableTextView(containerLayout, getString(R.string.detailsfiche_elementview_zonesgeo_label), getString(R.string.detailsfiche_elementview_zonesgeo_aucune_label));
+							}
+						}
+						
+						// section "Crédits"
+						StringBuilder sbCreditText = new StringBuilder();
+						final String urlString = Constants.getFicheFromIdUrl( entry.getNumeroFiche() ); 
+						sbCreditText.append("{{A:"+urlString+"}}");
+						sbCreditText.append(urlString);
+						sbCreditText.append("{{/A}}");
+						
+						sbCreditText.append("\n"+getString(R.string.detailsfiche_elementview_datecreation_label));
+						sbCreditText.append(entry.getDateCreation());
+						
+						if (!entry.getDateModification().isEmpty()) {
+							sbCreditText.append("\n"+getString(R.string.detailsfiche_elementview_datemodification_label));
+							sbCreditText.append(entry.getDateModification());
+						}
+						
+						for (IntervenantFiche intervenant : entry.getIntervenants()) {
+							intervenant.setContextDB(getHelper().getDorisDBHelper());
+							//sbCreditText.append("\n"+intervenant.getId());
+							sbCreditText.append("\n"+Constants.getTitreParticipant(intervenant.getRoleIntervenant() )+" : " );				
+							
+							intervenant.setContextDB(getHelper().getDorisDBHelper());
+							Participant participant = intervenant.getParticipant();
+							participant.setContextDB(getHelper().getDorisDBHelper());
+							
+							sbCreditText.append("{{P:"+participant.getId()+"}}");
+							sbCreditText.append(participant.getNom());
+							sbCreditText.append("{{/P}}");
+							
+						}
+						
+						SpannableString richtext = Outils.textToSpannableStringDoris(context, sbCreditText.toString());
+						//richtext.setSpan(new RelativeSizeSpan(2f), 0, urlString.length(), 0);
+						//richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
+						
+						addFoldableTextView(containerLayout, getString(R.string.detailsfiche_elementview_credit_label),richtext);
+
+						
+					}
 					addFoldableTextView(containerLayout, sectionFiche.getTitre(), sectionFiche.getTexte());
 				}
 			}
 			
-			// Zones Géographiques
-			List<ZoneGeographique> zonesGeographiques= entry.getZonesGeographiques();
-			if(zonesGeographiques!= null){			
-				StringBuilder sbZonesGeographiques = new StringBuilder();	
-	            int i = 1;
-				for (ZoneGeographique zoneGeographique : zonesGeographiques) {
-					sbZonesGeographiques.append(zoneGeographique.getNom());
-					if(zonesGeographiques.size() > 1 && i < zonesGeographiques.size()){
-						sbZonesGeographiques.append("\n");
-					}
-					i++;
-				}
-				if (sbZonesGeographiques.toString().length() != 0) {
-					addFoldableTextView(containerLayout, getString(R.string.detailsfiche_elementview_zonesgeo_label), sbZonesGeographiques.toString());
-				} else {
-					addFoldableTextView(containerLayout, getString(R.string.detailsfiche_elementview_zonesgeo_label), getString(R.string.detailsfiche_elementview_zonesgeo_aucune_label));
-				}
-			}
 			
-			// section "Crédits"
-			StringBuilder sbCreditText = new StringBuilder();
-			final String urlString = Constants.getFicheFromIdUrl( entry.getNumeroFiche() ); 
-			sbCreditText.append("{{A:"+urlString+"}}");
-			sbCreditText.append(urlString);
-			sbCreditText.append("{{/A}}");
-			
-			sbCreditText.append("\n"+getString(R.string.detailsfiche_elementview_datecreation_label));
-			sbCreditText.append(entry.getDateCreation());
-			
-			if (!entry.getDateModification().isEmpty()) {
-				sbCreditText.append("\n"+getString(R.string.detailsfiche_elementview_datemodification_label));
-				sbCreditText.append(entry.getDateModification());
-			}
-			
-			for (IntervenantFiche intervenant : entry.getIntervenants()) {
-				intervenant.setContextDB(getHelper().getDorisDBHelper());
-				//sbCreditText.append("\n"+intervenant.getId());
-				sbCreditText.append("\n"+Constants.getTitreParticipant(intervenant.getRoleIntervenant() )+" : " );				
-				
-				intervenant.setContextDB(getHelper().getDorisDBHelper());
-				Participant participant = intervenant.getParticipant();
-				participant.setContextDB(getHelper().getDorisDBHelper());
-				
-				sbCreditText.append("{{P:"+participant.getId()+"}}");
-				sbCreditText.append(participant.getNom());
-				sbCreditText.append("{{/P}}");
-				
-			}
-			
-			SpannableString richtext = Outils.textToSpannableStringDoris(context, sbCreditText.toString());
-			//richtext.setSpan(new RelativeSizeSpan(2f), 0, urlString.length(), 0);
-			//richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
-			
-			addFoldableTextView(containerLayout, getString(R.string.detailsfiche_elementview_credit_label),richtext);
 			
 			isOnCreate = false;
 		}

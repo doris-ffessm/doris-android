@@ -296,7 +296,7 @@ public class Outils {
 		// On commence par enlever toutes les dernières balises qu'il pourrait rester
 		texteNettoye = texteNettoye.replaceAll("<[^>]*>", "");
 		
-		// A priori seuls les caratères de table Unicode "Latin étendu A" nécessite une transcodif.
+		// A priori seuls les caractères de table Unicode "Latin étendu A" nécessite une transcodif.
 		// en français seul oe
 		
 		//œ oe 

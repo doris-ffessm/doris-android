@@ -818,10 +818,10 @@ public class Fiche {
 				log.debug("getFiche() - Bloc TableBasse : " + ElementTableBasse.toString().substring(0, Math.min(ElementTableBasse.toString().length(),30)));
 				
 				int indice = 0;
+				String dernierTitreSection="";
 				for (Element element : ElementTableBasse.getChildElements()) {
 					indice++;
-					
-					String dernierTitreSection="";
+
 					if (indice >= 5){
 						if (element.getContent().toString().contains("images/black_round_grey")) {
 							String section = element.getRenderer().toString().trim();
@@ -834,6 +834,7 @@ public class Fiche {
 								if (sousElement != null) {
 									//log.debug("getFiche() - Test 2 : " + sousElement.getContent().toString());
 									section = sousElement.getRenderer().toString().trim();
+									section = Outils.nettoyageTextes(section);
 								}
 							}
 							log.debug("getFiche() - Section : " + section);
@@ -848,6 +849,7 @@ public class Fiche {
 									sousElement = sousElement.getParentElement().getParentElement().getParentElement();
 	
 									texte = sousElement.getRenderer().toString().trim();
+									texte = Outils.nettoyageTextes(texte);
 								}
 							}
 							
