@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.view.AdaptableImageViewCallback;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -62,6 +63,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
@@ -79,6 +81,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 //Start of user code protected additional ListeFicheAvecFiltre_Adapter imports
 // additional imports
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -314,31 +317,42 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 			}*/
     	}
         if(photoPrincipale != null){
+        	ivIcon.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
+        	ivIcon.getLayoutParams().width = defaultIconSize;
         	photoPrincipale.setContextDB(_contextDB);
 
     		Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
+    		AdaptableImageViewCallback adaptableImageViewCallback = new AdaptableImageViewCallback(ivIcon);
         	if(Outils.isAvailablePhoto(context, photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
         		try {
         			//Log.d(LOG_TAG, "from disk "+photoPrincipale.getCleURL());
 					Picasso.with(context)
 						.load(Outils
 						.getPhotoFile(context, photoPrincipale.getCleURL(), ImageType.VIGNETTE))
+						.resize(defaultIconSize, defaultIconSize)
+						.centerInside()
 						.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
 						.into(ivIcon);
+					
 				} catch (IOException e) {
 				}
         	}
         	else{
         		// pas préchargée en local pour l'instant, cherche sur internet
+        		
         		Picasso.with(context)
         			.load(Constants.VIGNETTE_BASE_URL+photoPrincipale.getCleURL())
 					.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
+					.resize(defaultIconSize, defaultIconSize)
+					.centerInside()
 					.error(R.drawable.doris_icone_doris_large_pas_connecte)
         			.into(ivIcon);
         	}
         }
         else{
         	// remet l'icone de base
+        	ivIcon.getLayoutParams().height = defaultIconSize;
+        	ivIcon.getLayoutParams().width = defaultIconSize;
         	ivIcon.setImageResource(R.drawable.app_ic_launcher);
         }
        
