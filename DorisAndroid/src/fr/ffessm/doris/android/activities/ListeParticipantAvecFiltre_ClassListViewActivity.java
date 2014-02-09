@@ -89,6 +89,7 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
 	private static final String LOG_TAG = ListeParticipantAvecFiltre_ClassListViewActivity.class.getSimpleName();
 
 	//Start of user code constants ListeParticipantAvecFiltre_ClassListViewActivity
+	String iconSizeString = "48";
 	//End of user code
 	// Search EditText
     //EditText inputSearch;
@@ -132,6 +133,12 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
 	protected void onResume() {
 		super.onResume();
 		//Start of user code onResume additions ListeParticipantAvecFiltre_ClassListViewActivity
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    	if(!prefs.getString(getString(R.string.pref_key_list_icon_size), "48").equals(iconSizeString)){
+    		iconSizeString = prefs.getString(getString(R.string.pref_key_list_icon_size), "48");
+    		ListView list = (ListView) findViewById(R.id.listeparticipantavecfiltre_listview);
+    		list.invalidateViews();
+    	}
 		//End of user code
 		populateIndexBarHashMap();
 	}

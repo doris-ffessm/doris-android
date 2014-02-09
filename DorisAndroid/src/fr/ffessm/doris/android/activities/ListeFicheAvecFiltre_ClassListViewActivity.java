@@ -100,7 +100,9 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	//Start of user code constants ListeFicheAvecFiltre_ClassListViewActivity
 	
     MenuItem searchButtonMenuItem;
-    
+
+	String iconSizeString = "48";
+	
     final Context context = this;
 	//End of user code
 	// Search EditText
@@ -152,6 +154,11 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 		// TODO peut être qu'il y a moyen de s'abonner aux changements de préférence et de ne le faire que dans ce cas ?
 		ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter(); 
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    	if(!prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48").equals(iconSizeString)){
+    		iconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
+    		ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
+    		list.invalidateViews();
+    	}
     	updateFilterInActionBar();
 
 		//End of user code
