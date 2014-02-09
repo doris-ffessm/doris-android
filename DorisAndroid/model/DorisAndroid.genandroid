@@ -96,6 +96,7 @@
       <dataAttributes name="annee" documentation="Année de Parution" type="//@dataModel/@dataClasses.11"/>
       <dataAttributes name="details" documentation="Détails comme l'édition, etc." type="//@dataModel/@dataClasses.11"/>
       <dataAttributes name="cleURLIllustration" documentation="URL de l'illustration éventuelle de l'entrée bibliographique" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="textePourRecherche" documentation="Permet de Rechercher par Auteurs et Titre" type="//@dataModel/@dataClasses.11"/>
     </dataClasses>
     <dataAssociations name="Fiche_Photos" references="//@dataModel/@dataClasses.2/@dataReferences.0 //@dataModel/@dataClasses.0/@dataReferences.0"/>
     <dataAssociations name="Fiches_ZonesGeographiques" references="//@dataModel/@dataClasses.6/@dataReferences.0 //@dataModel/@dataClasses.0/@dataReferences.1"/>
@@ -129,7 +130,7 @@
     <classDetails mainAttributes="//@dataModel/@dataClasses.6/@dataAttributes.0" name="ContenuListeZoneGeographique"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.8/@dataAttributes.2" name="ContenuListeGroupeSelection" secondaryAttributes="//@dataModel/@dataClasses.8/@dataAttributes.3"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.9/@dataAttributes.1" name="ContenuListeGlossaire" secondaryAttributes="//@dataModel/@dataClasses.9/@dataAttributes.2"/>
-    <classDetails mainAttributes="//@dataModel/@dataClasses.15/@dataAttributes.1" name="ContenuListeBibliographie" secondaryAttributes="//@dataModel/@dataClasses.15/@dataAttributes.2"/>
+    <classDetails mainAttributes="//@dataModel/@dataClasses.15/@dataAttributes.2" name="ContenuListeBibliographie" secondaryAttributes="//@dataModel/@dataClasses.15/@dataAttributes.1"/>
     <backgroundActivities name="TelechargeFiches" documentation="Tache responsable du téléchargement des données des fiches. &#xD;&#xA;Cela inclue les données croisées telles que les zones géographiqes et d'observation.&#xD;&#xA;Elle vérifie le niveau de détails requis pour chaque fiche."/>
     <backgroundActivities name="VerifieNouvellesFiches" documentation="Tache responsable de la vérification de la disponibilité de nouvelles fiches."/>
     <backgroundActivities name="VerifieMAJFiches" documentation="Tache responsable de vérifier s'il existe une version plus récente des fiches déjà connues."/>
