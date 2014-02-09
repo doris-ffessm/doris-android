@@ -921,7 +921,30 @@ public class Fiche {
 		DESCRIPTION
 	}
 	
-
+	public Boolean updateFromFiche(Fiche ficheUpdated){
+		/* TODO : Mettre à jour les listes
+		* - des Contenues : SectionFiche
+		* - des Photos
+		* - Autres Dénominations
+		* - Intervenants
+		*/
+		if (this.numeroFiche != ficheUpdated.numeroFiche) {
+			return false;
+		}
+		
+		this.etatFiche = ficheUpdated.etatFiche;
+		this.nomScientifique = ficheUpdated.nomScientifique;
+		this.nomCommun = ficheUpdated.nomCommun;
+		
+		this.dateCreation = ficheUpdated.dateCreation;
+		this.dateModification = ficheUpdated.dateModification;
+		
+		this.numerofichesLiees = ficheUpdated.numerofichesLiees;
+		this.textePourRechercheRapide = ficheUpdated.textePourRechercheRapide;
+		this.pictogrammes = ficheUpdated.pictogrammes;
+		
+		return true;
+	}
 	
 	/**
 	 * @return liste des numeroFiche des fiches liées

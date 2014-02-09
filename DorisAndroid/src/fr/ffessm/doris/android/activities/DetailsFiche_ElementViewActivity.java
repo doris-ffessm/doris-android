@@ -397,7 +397,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 
 		if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_debug_maj_fiche_activee, false)){
 			menu.add(Menu.NONE, 888, 2, "MaJ Fiche (Dev.)").setIcon(android.R.drawable.ic_menu_add);
-
 		}
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -424,9 +423,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             	return true;
         	case 888:
         		DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity =
-        			(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext(), this.getHelper()).execute(""+ficheNumero);
+        			(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext(),
+					this.getHelper()).execute(""+ficheNumero);
+        		//refreshScreenData();
 
-        		//Outils.majFiche(context, this.getHelper(), ficheNumero);
             	return true;
 			//End of user code
 			default:

@@ -58,6 +58,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
+import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
@@ -65,6 +66,7 @@ import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.OutilsBase;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports VerifieMAJFiches_BgActivity
 // End of user code
@@ -78,6 +80,15 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     private Context context;
     
     // Start of user code additional attribute declarations VerifieMAJFiches_BgActivity
+    public VerifieMAJFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper, DataChangedListener verifieMAJFiches_BgActivity){
+		String initialTickerText = context.getString(R.string.initialisationapplication_bg_initialTickerText);
+		String notificationTitle = context.getString(R.string.initialisationapplication_bg_notificationTitle);
+        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
+        this.dbHelper = dbHelper;
+		this.context = context;
+		
+		this.verifieMAJFiches_BgActivity = verifieMAJFiches_BgActivity;
+    }
 	// End of user code
     
 	/** constructor */
@@ -159,8 +170,15 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 			
 			try {
 				ficheSite.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
-				
 				Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheSite.getNomCommun());
+
+				ficheDeLaBase.updateFromFiche(ficheSite);
+				
+				dbHelper.getDorisDBHelper().ficheDao.update(
+						ficheDeLaBase
+					);
+
+				
 			} catch (SQLException e) {
 				Log.w(LOG_TAG, e.getMessage(), e);
 			}
@@ -168,12 +186,12 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		}
     	
     	
-    	
+    	// TODO : à faire ensuite
 		// you should indicates the progression using publishProgress()
 		for (int i=10;i<=100;i += 10) {
             try {
 				// simply sleep for one second
-                Thread.sleep(1000);
+                Thread.sleep(100);
                 publishProgress(i);
 
             } catch (InterruptedException e) {
@@ -187,9 +205,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		// End of user code
         
 		// Start of user code end of task VerifieMAJFiches_BgActivity
-		
-		
-		
+
 		// return the number of item processed
         return 100;
 		// End of user code
@@ -210,11 +226,19 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
 		// Start of user code VerifieMAJFiches onPostExecute
+        
+        if(verifieMAJFiches_BgActivity != null){
+        	verifieMAJFiches_BgActivity.dataHasChanged("Fiche mise à jour depuis le site Doris");
+        	//Toast.makeText(accueil_CustomViewActivity.getContext(), "Base initialisée avec les données prédéfinies", Toast.LENGTH_LONG).show();
+        }
+        
+		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+
 		// End of user code
     }
 
     // Start of user code additional operations VerifieMAJFiches_BgActivity
-	
+    private DataChangedListener verifieMAJFiches_BgActivity = null;
 	// End of user code
 	
 }

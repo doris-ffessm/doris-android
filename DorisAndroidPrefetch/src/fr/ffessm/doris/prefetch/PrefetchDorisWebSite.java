@@ -260,7 +260,7 @@ public class PrefetchDorisWebSite {
 
 				// - - - Intervenants - - -
 				// On boucle sur les initiales des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
-				// On récupère la liste des intervants dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
+				// On récupère la liste des intervenants dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
 				String listeFiltres;
 				if (nbMaxFichesTraitees == 9999){
 					listeFiltres="abcdefghijklmnopqrstuvwxyz";
@@ -855,7 +855,7 @@ public class PrefetchDorisWebSite {
 			System.exit(0);
 		}
 		
-		// On commence par regarder si un des paramètres est un paramétre optionnel prioritaire
+		// On commence par regarder si un des paramètres est un paramètre optionnel prioritaire
 		// verbose, debug ou silence
 		log.debug("checkArgs() - debug, verbose ou silence ? ");
 		for (String arg : inArgs) {
@@ -1223,7 +1223,7 @@ public class PrefetchDorisWebSite {
 			}
 		}
 		
-		//	Vérification que le dossier Html Référence existe
+		//	Vérification que le dossier html Référence existe
 		if(inAction.equals("NODWNLD") || inAction.equals("UPDATE")  || inAction.equals("CDDVD") ){
 			final File dossierReference = new File(DOSSIER_RACINE + "/" + DOSSIER_HTML_REF);
 			if (!dossierReference.exists()){
@@ -1237,7 +1237,7 @@ public class PrefetchDorisWebSite {
 			}
 		}
 		
-		//	Vérification que le dossier Html Référence existe
+		//	Vérification que le dossier html Référence existe
 		if(inAction.equals("CDDVD") ){
 			File dossierReference = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF);
 			if (!dossierReference.exists()){
