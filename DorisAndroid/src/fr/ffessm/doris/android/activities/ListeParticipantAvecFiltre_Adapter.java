@@ -118,7 +118,8 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 		// Start of user code protected ListeParticipantAvecFiltre_Adapter updateList
 		// TODO find a way to query in a lazier way
 		try{
-			this.participantList = _contextDB.participantDao.queryForAll();
+			//this.participantList = _contextDB.participantDao.queryForAll();
+			this.participantList = _contextDB.participantDao.query(_contextDB.participantDao.queryBuilder().orderBy("nom", true).prepare());
 			this.filteredParticipantList = this.participantList;
 		} catch (java.sql.SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
