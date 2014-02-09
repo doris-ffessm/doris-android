@@ -199,7 +199,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	    
 	    if (ficheId != 0) ficheNumero = entry.getNumeroFiche();
 	    else if (ficheNumero != 0) ficheId = entry.getId();
-	    
 
 		getSupportActionBar().setTitle(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
 		getSupportActionBar().setSubtitle(Outils.textToSpannableStringDoris(context, entry.getNomScientifique()));

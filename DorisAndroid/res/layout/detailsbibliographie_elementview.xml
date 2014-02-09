@@ -60,7 +60,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
                 android:padding="3dip"
                 android:text="@string/detailsbibliographie_elementview_titre_label"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -70,7 +69,6 @@
 	            android:id="@+id/detailsbibliographie_elementview_titre"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
-	            android:layout_gravity="right"
 	            android:padding="3dip"
 	            android:text="Titre de l'entrée Bibliographique"
 	            android:textAppearance="?android:attr/textAppearanceMedium"

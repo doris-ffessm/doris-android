@@ -842,12 +842,17 @@ public class Fiche {
 						}
 						if (element.getContent().toString().contains("class=\"normal\"")) {
 							String texte = element.getRenderer().toString().trim();
-	
+							
+							// Entrées Bibliographiques
 							if (element.getContent().toString().contains("table") ){
 								Element sousElement = element.getFirstElementByClass("table_biblio");
 								if (sousElement != null) {
+									texte="";
 									sousElement = sousElement.getParentElement().getParentElement().getParentElement();
-									texte = sousElement.getRenderer().toString().trim();
+									
+									for (Element elementClassNormal : sousElement.getAllElementsByClass("normal")) {
+										texte += elementClassNormal.getRenderer().toString().trim()+"{{n/}}";
+									}
 								}
 							}
 							
