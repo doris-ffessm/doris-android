@@ -64,7 +64,7 @@ import fr.ffessm.doris.android.datamodel.associations.*;
 // End of user code
 
 /** 
-  *  
+  * Contenu Texte des Fiches 
   */ 
 @DatabaseTable(tableName = "sectionFiche")
 public class SectionFiche {
@@ -73,6 +73,7 @@ public class SectionFiche {
 
 	public static final String XML_SECTIONFICHE = "SECTIONFICHE";
 	public static final String XML_ATT_ID = "id";
+	public static final String XML_ATT_NUMORDRE = "numOrdre";
 	public static final String XML_ATT_TITRE = "titre";
 	public static final String XML_ATT_TEXTE = "texte";
 	public static final String XML_REF_FICHE = "fiche";
@@ -91,6 +92,12 @@ public class SectionFiche {
 	 */
 	public boolean fiche_mayNeedDBRefresh = true;
 	
+
+	/** Sections Hautes de la Page < 100
+Sections Basses de la Page > 200
+ */ 
+	@DatabaseField
+	protected int numOrdre;
 
 	@DatabaseField
 	protected java.lang.String titre;
@@ -115,8 +122,9 @@ public class SectionFiche {
 	// End of user code
 	
 	public SectionFiche() {} // needed by ormlite
-	public SectionFiche(java.lang.String titre, java.lang.String texte) {
+	public SectionFiche(int numOrdre, java.lang.String titre, java.lang.String texte) {
 		super();
+		this.numOrdre = numOrdre;
 		this.titre = titre;
 		this.texte = texte;
 	} 
@@ -135,6 +143,12 @@ public class SectionFiche {
 		this._contextDB = contextDB;
 	}
 
+	public int getNumOrdre() {
+		return this.numOrdre;
+	}
+	public void setNumOrdre(int numOrdre) {
+		this.numOrdre = numOrdre;
+	}
 	public java.lang.String getTitre() {
 		return this.titre;
 	}
@@ -177,6 +191,9 @@ public class SectionFiche {
     	sb.append("\" ");
     	sb.append(">");
 
+		sb.append("\n"+indent+"\t<"+XML_ATT_NUMORDRE+">");
+		sb.append(this.numOrdre);
+    	sb.append("</"+XML_ATT_NUMORDRE+">");
 		sb.append("\n"+indent+"\t<"+XML_ATT_TITRE+">");
 		sb.append(StringEscapeUtils.escapeXml(this.titre));
     	sb.append("</"+XML_ATT_TITRE+">");

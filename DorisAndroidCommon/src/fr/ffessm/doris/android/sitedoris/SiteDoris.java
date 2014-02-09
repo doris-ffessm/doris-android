@@ -720,7 +720,8 @@ public class SiteDoris {
     						Outils.nettoyageTextes(auteurs),
     						annee,
     						Outils.nettoyageTextes(edition),
-    						"") );
+    						"",
+    						titre+auteurs) );
     			}
 			}
 			
