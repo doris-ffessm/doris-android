@@ -847,12 +847,11 @@ public class Fiche {
 								Element sousElement = element.getFirstElementByClass("table_biblio");
 								if (sousElement != null) {
 									sousElement = sousElement.getParentElement().getParentElement().getParentElement();
-	
 									texte = sousElement.getRenderer().toString().trim();
-									texte = Outils.nettoyageTextes(texte);
 								}
 							}
 							
+							texte = Outils.nettoyageTextes(texte);
 							log.debug("getFiche() - Texte : " + texte);
 							positionSectionDansFiche++;
 							SectionFiche contenu = new SectionFiche(100+positionSectionDansFiche, dernierTitreSection, texte);
