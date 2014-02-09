@@ -66,7 +66,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	private static final int DATABASE_VERSION = 1;
 	// End of user code
 
-
+	
 	// the DAO object we use to access the diveBudies table
 	// private Dao<Fiche, Integer> ficheDao = null;
 	private RuntimeExceptionDao<Fiche, Integer> ficheRuntimeDao = null;
@@ -103,6 +103,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	// the DAO object we use to access the diveBudies table
 	// private Dao<EntreeBibliographie, Integer> entreeBibliographieDao = null;
 	private RuntimeExceptionDao<EntreeBibliographie, Integer> entreeBibliographieRuntimeDao = null;
+
 	
 		private RuntimeExceptionDao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesRuntimeDao = null;
 		private RuntimeExceptionDao<Fiches_DefinitionsGlossaire, Integer> fiches_DefinitionsGlossaireRuntimeDao = null;
@@ -306,7 +307,6 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		return entreeBibliographieRuntimeDao;
 	}
 
-	
 	
 	/**
 	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our Fiches_ZonesGeographiques class. It will

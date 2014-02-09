@@ -13,6 +13,8 @@
 (GroupeSelection)-><GroupeSelectionChoice>
 (Glossaire)-><GlossaireChoice>
 (DetailEntreeGlossaire)-><DetailEntreeGlossaireChoice>
+(ListeBibliographieAvecFiltre)-><ListeBibliographieAvecFiltreChoice>
+(DetailsBibliographie)-><DetailsBibliographieChoice>
 (TelechargeFiches)->(end)
 (VerifieNouvellesFiches)->(end)
 (VerifieMAJFiches)->(end)
@@ -34,3 +36,4 @@
 <DetailsFicheChoice>->(TelechargePhotosFiche)
 (ListeParticipantAvecFiltre)->(DetailsParticipant)		
 (Glossaire)->(DetailEntreeGlossaire)		
+(ListeBibliographieAvecFiltre)->(DetailsBibliographie)		

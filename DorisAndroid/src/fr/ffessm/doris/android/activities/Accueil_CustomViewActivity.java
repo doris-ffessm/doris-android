@@ -731,6 +731,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	        case R.id.accueil_customview_action_glossaire:
 	        	startActivity(new Intent(this, Glossaire_ClassListViewActivity.class));
 	        	return true;
+	        case R.id.accueil_customview_action_bibliographie:
+	        	startActivity(new Intent(this, ListeBibliographieAvecFiltre_ClassListViewActivity.class));
+	        	return true;
 	        case R.id.accueil_customview_action_aide:
 	        	AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
 				aide.affichageMessageHTML(getContext().getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");

@@ -42,9 +42,10 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.BuildConfig;
+import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -52,6 +53,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
 import android.util.Log;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
@@ -64,102 +68,87 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+// Start of user code protectedDetailsBibliographie_ElementViewActivity_additional_import
+// End of user code
 
-//Start of user code additional imports ImagePleinEcran_CustomViewActivity
-
-import android.support.v4.view.ViewPager;
-import com.squareup.picasso.Picasso;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import fr.ffessm.doris.android.datamodel.Fiche;
-import fr.ffessm.doris.android.datamodel.PhotoFiche;
-import fr.ffessm.doris.android.tools.Outils;
-import fr.ffessm.doris.android.BuildConfig;
-//End of user code
-public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
-//Start of user code additional implements ImagePleinEcran_CustomViewActivity
-//End of user code
+public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
+// Start of user code protectedDetailsBibliographie_ElementViewActivity_additional_implements
+// End of user code
 {
 	
-	//Start of user code constants ImagePleinEcran_CustomViewActivity
+	protected int entreeBibliographieId;
 	
-	protected ImagePleinEcran_Adapter adapter;
-	protected ViewPager viewPager;
-	//End of user code
+	private static final String LOG_TAG = DetailsBibliographie_ElementViewActivity.class.getCanonicalName();
 
+// Start of user code protectedDetailsBibliographie_ElementViewActivity_additional_attributes
+// End of user code
+	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		ThemeUtil.onActivityCreateSetTheme(this);
-        setContentView(R.layout.imagepleinecran_customview);
+        setContentView(R.layout.detailsbibliographie_elementview);
+
 		ActionBar actionBar = getSupportActionBar();
 	    actionBar.setDisplayHomeAsUpEnabled(true);
 
-        //Start of user code onCreate ImagePleinEcran_CustomViewActivity
+        entreeBibliographieId = getIntent().getExtras().getInt("entreeBibliographieId");
         
-        viewPager = (ViewPager) findViewById(R.id.imagepleinecran_pager);
-        
-        Intent i = getIntent();
-        // récupération de la position dans du click dans la vue précédente
-		int position = i.getIntExtra("position", 0);
-		// récupération info qui permettra de retrouver la liste des images à afficher
-		int ficheId = i.getIntExtra("ficheId", 0);
-
-		
-		//TODO calcul de la liste d'images à partir de l'Id de la fiche  (pour plus tard, la même chose mais pour les photos principales d'un groupe ?) 
-		//ArrayList<String> imagePaths;
-		
-		RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
-    	Fiche entry = entriesDao.queryForId(ficheId);
-    	entry.setContextDB(getHelper().getDorisDBHelper());
-    	//Collection<PhotoFiche> photosFiche = entry.getPhotosFiche(); 
-    	ArrayList<PhotoFiche> photosFicheArrayList = new ArrayList<PhotoFiche>(entry.getPhotosFiche());
-		
-    	actionBar.setTitle(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
-		actionBar.setSubtitle(Outils.textToSpannableStringDoris(this, entry.getNomScientifique()));
-    	
-        // Image adapter
-        adapter = new ImagePleinEcran_Adapter(ImagePleinEcran_CustomViewActivity.this, photosFicheArrayList);
-        
-        viewPager.setAdapter(adapter);
-        
-        // affiche l'image selectionnée en premier
-     	viewPager.setCurrentItem(position);
-     	
-     	// info de debug de Picasso
-     	if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debug, false)){
-     		Picasso.with(this).setDebugging(BuildConfig.DEBUG);
-     	}
-		//End of user code
+		// Start of user code protectedDetailsBibliographie_ElementViewActivity_onCreate
+		// End of user code
     }
     
     @Override
 	protected void onResume() {
 		super.onResume();
 		refreshScreenData();
-		//Start of user code onResume ImagePleinEcran_CustomViewActivity
-		//End of user code
 	}
-    //Start of user code additional code ImagePleinEcran_CustomViewActivity
-	
-	//End of user code
+    
+    
+    private void refreshScreenData() {
+    	// get our dao
+    	RuntimeExceptionDao<EntreeBibliographie, Integer> entriesDao = getHelper().getEntreeBibliographieDao();
+		// Start of user code protectedDetailsBibliographie_ElementViewActivity.refreshScreenData
+    	EntreeBibliographie entry = entriesDao.queryForId(entreeBibliographieId);
+    	entry.setContextDB(getHelper().getDorisDBHelper());
 
-    /** refresh screen from data 
-     */
-    public void refreshScreenData() {
-    	//Start of user code action when refreshing the screen ImagePleinEcran_CustomViewActivity
-		//End of user code
+		((TextView) findViewById(R.id.detailsbibliographie_elementview_numerodoris)).setText(((Integer)entry.getNumeroDoris()).toString());					
+		((TextView) findViewById(R.id.detailsbibliographie_elementview_titre)).setText(entry.getTitre());
+		((TextView) findViewById(R.id.detailsbibliographie_elementview_auteurs)).setText(entry.getAuteurs());
+		((TextView) findViewById(R.id.detailsbibliographie_elementview_annee)).setText(entry.getAnnee());
+		((TextView) findViewById(R.id.detailsbibliographie_elementview_details)).setText(entry.getDetails());
+		//((TextView) findViewById(R.id.detailsbibliographie_elementview_cleurlillustration)).setText(entry.getCleURLIllustration());
+		
+		String urlString = Constants.getBibliographieUrl( ""+entry.getNumeroDoris() ); 
+		SpannableString richtext = new SpannableString(urlString);
+		richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
+		TextView contenuUrl = (TextView) findViewById(R.id.detailsbibliographie_elementview_liensite);
+		contenuUrl.setText(richtext);
+		contenuUrl.setMovementMethod(LinkMovementMethod.getInstance());
+		
+		/*SimpleDateFormat dateFormatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+    	((TextView) findViewById(R.id.detail_divedate)).setText(dateFormatter.format(entry.getDate()));
+		
+    	((TextView) findViewById(R.id.detail_divelocation)).setText(entry.getLocation());
+    	
+    	((TextView) findViewById(R.id.detail_divedepth)).setText(entry.getMaxdepth().toString());
+    	
+    	((TextView) findViewById(R.id.detail_diveduration)).setText(entry.getDuration().toString());
+    	*/	
+		// End of user code
+    	
 	}
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
+		// add options in the menu
 		MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.imagepleinecran_customview_actions, menu);
+	    inflater.inflate(R.menu.detailsbibliographie_elementview_actions, menu);
 		// add additional programmatic options in the menu
-		//Start of user code additional onCreateOptionsMenu ImagePleinEcran_CustomViewActivity
+		//Start of user code additional onCreateOptionsMenu DetailsBibliographie_EditableElementViewActivity
 
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -168,33 +157,37 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	// behavior of option menu
+		// behavior of option menu
         switch (item.getItemId()) {
-			case R.id.imagepleinecran_customview_action_preference:
+			case R.id.detailsbibliographie_elementview_action_preference:
 	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
 	            return true;
-			//Start of user code additional menu action ImagePleinEcran_CustomViewActivity
-
-		//End of user code
+			//Start of user code additional menu action DetailsBibliographie_ElementViewActivity
+	
+			//End of user code
 			default:
                 return super.onOptionsItemSelected(item);
-        }
+        }    	
     }
 
 	//  ------------ dealing with Up button
 	@Override
 	public Intent getSupportParentActivityIntent() {
-		//Start of user code getSupportParentActivityIntent ImagePleinEcran_CustomViewActivity
+		//Start of user code getSupportParentActivityIntent DetailsBibliographie_ClassListViewActivity
 		// navigates to the parent activity
 		return new Intent(this, Accueil_CustomViewActivity.class);
 		//End of user code
 	}
 	@Override
 	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-		//Start of user code onCreateSupportNavigateUpTaskStack ImagePleinEcran_CustomViewActivity
+		//Start of user code onCreateSupportNavigateUpTaskStack DetailsBibliographie_ClassListViewActivity
 		super.onCreateSupportNavigateUpTaskStack(builder);
 		//End of user code
 	}
+
+	// Start of user code protectedDetailsBibliographie_ElementViewActivity_additional_operations
+	// End of user code
+
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }

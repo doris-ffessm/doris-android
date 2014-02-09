@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    <!-- Search row -->
+    <LinearLayout
+        android:id="@+android:id/listebibliographieavecfiltre_listviewsearchrow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <!-- Editext for Search -->
+
+        <!--<EditText
+            android:id="@+id/inputSearch_listebibliographieavecfiltre_listviewsearchrow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.67"
+            android:hint="@string/searchHint_listebibliographieavecfiltre_listviewsearchrow"
+            android:inputType="textVisiblePassword" />--> 
+	<!--	Start of user code protectedlistebibliographieavecfiltre_listviewsearchrow 
+      -->
+
+	<!--	
+End of user code -->
+    </LinearLayout>
+	<include layout="@layout/indexbar_alphabtes_row"
+    	 	android:id="@+id/alphabet_row_layout"
+    	 	android:visibility="invisible"/>
+	 	 
+	<RelativeLayout
+        android:layout_height="match_parent"
+		android:layout_width="match_parent" 
+		android:id="@+id/listebibliographieavecfiltre_relativeLayout2"> 
+		
+	    <fr.ffessm.doris.android.activities.view.indexbar.CustomListView 
+		 	android:layout_height="fill_parent"
+			android:layout_width="match_parent" 
+			android:id="@+id/listebibliographieavecfiltre_listview"
+		    android:layout_toLeftOf="@+id/listebibliographieavecfiltre_listView_alphabets"
+			android:scrollingCache="false" 
+			android:scrollbarAlwaysDrawVerticalTrack="true" 
+			android:footerDividersEnabled="false" 
+			android:headerDividersEnabled="false">
+	    </fr.ffessm.doris.android.activities.view.indexbar.CustomListView >
+			
+		<ListView
+		    android:id="@+id/listebibliographieavecfiltre_listView_alphabets"
+		    android:layout_width="20dip"
+		    android:layout_height="match_parent"
+		    android:layout_alignParentRight="true"
+		    android:layout_centerVertical="true"
+		    android:paddingTop="7dp"
+		    android:paddingBottom="7dp"
+		    android:background="@drawable/roundbackground"
+		    android:divider="@android:color/black"
+		    android:footerDividersEnabled="false"
+		    android:headerDividersEnabled="false"
+		    android:listSelector="@android:color/darker_gray"
+		    android:scrollbarAlwaysDrawVerticalTrack="false"
+		    android:scrollbars="none"
+		    android:scrollingCache="false" >
+		</ListView>	
+	</RelativeLayout>
+</LinearLayout>

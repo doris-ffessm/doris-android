@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resource Strings specific to detailsbibliographie Element View and EditableElement View -->
+<resources>
+	<!--Start of user code protecteddetailsbibliographie_elementview_strings.xml
+	-->	
+	<string name="detailsbibliographie_elementview_numerodoris_label"></string>
+	<string name="detailsbibliographie_elementview_titre_label"></string>
+	<string name="detailsbibliographie_elementview_auteurs_label"></string>
+	<string name="detailsbibliographie_elementview_annee_label">Annee : </string>
+	<string name="detailsbibliographie_elementview_details_label"></string>
+	<string name="detailsbibliographie_elementview_cleurlillustration_label"></string>
+	<string name="detailsbibliographie_elementview_numerodoris_hint_text"></string>
+	<string name="detailsbibliographie_elementview_titre_hint_text"></string>
+	<string name="detailsbibliographie_elementview_auteurs_hint_text"></string>
+	<string name="detailsbibliographie_elementview_annee_hint_text"></string>
+	<string name="detailsbibliographie_elementview_details_hint_text"></string>
+	<string name="detailsbibliographie_elementview_cleurlillustration_hint_text"></string>
+	<!-- End of user code
+	-->
+</resources>

@@ -50,7 +50,7 @@ import java.util.List;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
-import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
+import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 
 
 import android.content.Context;
@@ -75,11 +75,11 @@ import android.widget.Toast;
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
-//Start of user code protected additional Glossaire_Adapter imports
+//Start of user code protected additional ListeBibliographieAvecFiltre_Adapter imports
 // additional imports
 //End of user code
 
-public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
+public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implements Filterable{
 	
 	private Context context;
 
@@ -89,18 +89,18 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 	 */
 	protected DorisDBHelper _contextDB = null;
 
-	private static final String LOG_TAG = Glossaire_Adapter.class.getCanonicalName();
+	private static final String LOG_TAG = ListeBibliographieAvecFiltre_Adapter.class.getCanonicalName();
 
-    private List<DefinitionGlossaire> definitionGlossaireList;
-    public List<DefinitionGlossaire> filteredDefinitionGlossaireList;
+    private List<EntreeBibliographie> entreeBibliographieList;
+    public List<EntreeBibliographie> filteredEntreeBibliographieList;
 	private final Object mLock = new Object();
 	private SimpleFilter mFilter;
 	SharedPreferences prefs;
-	//Start of user code protected additional Glossaire_Adapter attributes
+	//Start of user code protected additional ListeBibliographieAvecFiltre_Adapter attributes
 	// additional attributes
 	//End of user code
 
-	public Glossaire_Adapter(Context context, DorisDBHelper contextDB) {
+	public ListeBibliographieAvecFiltre_Adapter(Context context, DorisDBHelper contextDB) {
 		super();
 		this.context = context;
 		this._contextDB = contextDB;
@@ -109,11 +109,11 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 	}
 	
 	protected void updateList(){
-		// Start of user code protected Glossaire_Adapter updateList
+		// Start of user code protected ListeBibliographieAvecFiltre_Adapter updateList
 		// TODO find a way to query in a lazier way
 		try{
-			this.definitionGlossaireList = _contextDB.definitionGlossaireDao.queryForAll();
-			this.filteredDefinitionGlossaireList = this.definitionGlossaireList;
+			this.entreeBibliographieList = _contextDB.entreeBibliographieDao.queryForAll();
+			this.filteredEntreeBibliographieList = this.entreeBibliographieList;
 		} catch (java.sql.SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
 		}
@@ -122,15 +122,15 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 
 	@Override
 	public int getCount() {
-		if(filteredDefinitionGlossaireList.size() == 0){
+		if(filteredEntreeBibliographieList.size() == 0){
 			return 1;	// will create a dummy entry to invite changing the filters
         }
-		return filteredDefinitionGlossaireList.size();
+		return filteredEntreeBibliographieList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return filteredDefinitionGlossaireList.get(position);
+		return filteredEntreeBibliographieList.get(position);
 	}
 
 	@Override
@@ -144,43 +144,33 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.glossaire_listviewrow, null);
+            convertView = inflater.inflate(R.layout.listebibliographieavecfiltre_listviewrow, null);
         }
-		if(filteredDefinitionGlossaireList.size() == 0){
+		if(filteredEntreeBibliographieList.size() == 0){
         	return getNoResultSubstitute(convertView);
         }
-		final DefinitionGlossaire entry = filteredDefinitionGlossaireList.get(position);
+		final EntreeBibliographie entry = filteredEntreeBibliographieList.get(position);
 		if(_contextDB != null) entry.setContextDB(_contextDB); 		
        
 		// set data in the row 
-		TextView tvLabel = (TextView) convertView.findViewById(R.id.glossaire_listviewrow_label);
+		TextView tvLabel = (TextView) convertView.findViewById(R.id.listebibliographieavecfiltre_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
-		labelSB.append(entry.getTerme());
+		labelSB.append(entry.getAuteurs());
 		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
 
-        TextView tvDetails = (TextView) convertView.findViewById(R.id.glossaire_listviewrow_details);
+        TextView tvDetails = (TextView) convertView.findViewById(R.id.listebibliographieavecfiltre_listviewrow_details);
 		StringBuilder detailsSB = new StringBuilder();
-		detailsSB.append(entry.getDefinition().toString());
+		detailsSB.append(entry.getTitre().toString());
 		detailsSB.append(" ");
         tvDetails.setText(detailsSB.toString());
 		
         // assign the entry to the row in order to ease GUI interactions
-        LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.glossaire_listviewrow);
+        LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.listebibliographieavecfiltre_listviewrow);
         llRow.setTag(entry);
         
-		// Start of user code protected additional Glossaire_Adapter getView code
+		// Start of user code protected additional ListeBibliographieAvecFiltre_Adapter getView code
 		//	additional code
-        int longueurMax = 80;
-        String texteRow = entry.getDefinition().toString().replaceAll("^[^\\)]*\\)\\.", "").trim();
-        texteRow = texteRow.replaceAll("\\{\\{[^\\}]*\\}\\}", "");
-        if (texteRow.length() > longueurMax ) {
-        	texteRow = texteRow.substring(0, longueurMax);
-        	texteRow = texteRow.replaceAll(" [^ ]*$", "");
-        	texteRow = texteRow + "\u00A0\u2026";
-        }
-        tvDetails.setText(texteRow);
-        
 		// End of user code
 
         return convertView;
@@ -188,31 +178,32 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 	}
 
 	protected View getNoResultSubstitute(View convertView){
-		TextView tvLabel = (TextView) convertView.findViewById(R.id.glossaire_listviewrow_label);
-		tvLabel.setText(R.string.glossaire_classlistview_no_result);
-		// Start of user code protected additional Glossaire_Adapter getNoResultSubstitute code
+		TextView tvLabel = (TextView) convertView.findViewById(R.id.listebibliographieavecfiltre_listviewrow_label);
+		tvLabel.setText(R.string.listebibliographieavecfiltre_classlistview_no_result);
+		// Start of user code protected additional ListeBibliographieAvecFiltre_Adapter getNoResultSubstitute code
 		StringBuilder sbRechercheCourante = new StringBuilder();
-	        
+	    
         // TODO ajouter le filtre textuel courant qui lui aussi peut impliquer de ne retourner aucun résultats
-        TextView tvDetails = (TextView) convertView.findViewById(R.id.glossaire_listviewrow_details);
+        TextView tvDetails = (TextView) convertView.findViewById(R.id.listebibliographieavecfiltre_listviewrow_details);
 		tvDetails.setText( sbRechercheCourante.toString() );
-	
+
+
 		// End of user code
-		ImageView ivIcon = (ImageView) convertView.findViewById(R.id.glossaire_listviewrow_icon);
+		ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listebibliographieavecfiltre_listviewrow_icon);
     	ivIcon.setImageResource(R.drawable.app_ic_launcher);
 		return convertView;
 	}
 	public HashMap<Character, Integer> getUsedAlphabetHashMap(){
 		HashMap<Character, Integer> alphabetToIndex = new HashMap<Character, Integer>();
 		Log.d(LOG_TAG,"getUsedAlphabetHashMap - début");
-		int base_list_length=filteredDefinitionGlossaireList.size();
+		int base_list_length=filteredEntreeBibliographieList.size();
 		if(base_list_length < 100 ){
 			// the base has been filtered so return the element from the filtered one
 			alphabetToIndex=new HashMap<Character, Integer>();
 			
 			
 			for(int i=0; i < base_list_length; i++){
-				DefinitionGlossaire entry = filteredDefinitionGlossaireList.get(i);
+				EntreeBibliographie entry = filteredEntreeBibliographieList.get(i);
 				char firstCharacter=getFirstCharForIndex(entry);
 				boolean presentOrNot=alphabetToIndex.containsKey(firstCharacter);
 				if(!presentOrNot){
@@ -239,9 +230,9 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 		return alphabetToIndex;
 	}
 	
-	protected char getFirstCharForIndex(DefinitionGlossaire entry){
-		//Start of user code protected Glossaire_Adapter binarySearch custom
-    	return entry.getTerme().charAt(0);
+	protected char getFirstCharForIndex(EntreeBibliographie entry){
+		//Start of user code protected ListeBibliographieAvecFiltre_Adapter binarySearch custom
+    	return entry.getAuteurs().charAt(0);
 	  	//End of user code
 	}
 
@@ -260,7 +251,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 	   boolean found = false;
 	   while (bot <= top) {
 	      mid = bot + (top - bot) / 2;
-		  DefinitionGlossaire entry = filteredDefinitionGlossaireList.get(mid);
+		  EntreeBibliographie entry = filteredEntreeBibliographieList.get(mid);
 	      char midCharacter=getFirstCharForIndex(entry);
 	      if      (key < midCharacter) top = mid - 1;
 	      else if (key > midCharacter) bot = mid + 1;
@@ -273,7 +264,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 		  // search for the first occurence
 		  int best= mid;
 		  for (int i = mid; i > startBottom; i--) {
-		      DefinitionGlossaire entry = filteredDefinitionGlossaireList.get(i);
+		      EntreeBibliographie entry = filteredEntreeBibliographieList.get(i);
 		      char midCharacter=getFirstCharForIndex(entry);
 			  if(midCharacter == key){
 				  best = i;
@@ -290,17 +281,17 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 	} 
 		
 	
-	//Start of user code protected additional Glossaire_Adapter methods
+	//Start of user code protected additional ListeBibliographieAvecFiltre_Adapter methods
 	// additional methods
 	//End of user code
 	protected boolean sortAfterFilter() {
 		return false;
 	}
 	
-	public int filter(int position, DefinitionGlossaire entry, String pattern){
-		// Start of user code protected additional Glossaire_Adapter filter code
+	public int filter(int position, EntreeBibliographie entry, String pattern){
+		// Start of user code protected additional ListeBibliographieAvecFiltre_Adapter filter code
 		StringBuilder labelSB = new StringBuilder();
-		labelSB.append(entry.getTerme());
+		labelSB.append(entry.getTitre());
 		labelSB.append(" ");
 		if(labelSB.toString().toLowerCase().contains(pattern)) return 1;
 		else return -1;
@@ -329,24 +320,24 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 
 			if (prefix == null || prefix.length() == 0) {
 				synchronized (mLock) {
-					ArrayList<DefinitionGlossaire> list = new ArrayList<DefinitionGlossaire>(definitionGlossaireList);
+					ArrayList<EntreeBibliographie> list = new ArrayList<EntreeBibliographie>(entreeBibliographieList);
 					results.values = list;
 					results.count = list.size();
 				}
 			} else {
-		// Start of user code protected Glossaire_Adapter filter prefix customisation
+		// Start of user code protected ListeBibliographieAvecFiltre_Adapter filter prefix customisation
 				String prefixString = prefix.toString().toLowerCase();
 		// End of user code
 				boolean sort = sortAfterFilter();
-				final List<DefinitionGlossaire> values = definitionGlossaireList;
+				final List<EntreeBibliographie> values = entreeBibliographieList;
 				final int count = values.size();
 		
-				final ArrayList<DefinitionGlossaire> newValues = new ArrayList<DefinitionGlossaire>(count);
+				final ArrayList<EntreeBibliographie> newValues = new ArrayList<EntreeBibliographie>(count);
 				final int[] orders = sort ? new int[count] : null;
 
 				for (int i = 0; i < count; i++) {
-					final DefinitionGlossaire value = values.get(i);
-					int order = Glossaire_Adapter.this.filter(i, value, prefixString);
+					final EntreeBibliographie value = values.get(i);
+					int order = ListeBibliographieAvecFiltre_Adapter.this.filter(i, value, prefixString);
 					if (order >= 0) {
 						if (sort)
 							orders[newValues.size()] = order;
@@ -355,9 +346,9 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 				}
 				/* TODO implement a sort
 				if (sort) {
-					Comparator<DefinitionGlossaire> c = new Comparator<DefinitionGlossaire>() {
-						public int compare(DefinitionGlossaire object1, DefinitionGlossaire object2) {
-							// Start of user code protected additional Glossaire_Adapter compare code
+					Comparator<EntreeBibliographie> c = new Comparator<EntreeBibliographie>() {
+						public int compare(EntreeBibliographie object1, EntreeBibliographie object2) {
+							// Start of user code protected additional ListeBibliographieAvecFiltre_Adapter compare code
 							int i1 = newValues.indexOf(object1);
 							int i2 = newValues.indexOf(object2);
 							return orders[i1] - orders[i2];
@@ -379,10 +370,10 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 		protected void publishResults(CharSequence constraint, FilterResults results) {
 			
 			if (results.count > 0) {
-				filteredDefinitionGlossaireList = (List<DefinitionGlossaire>) results.values;
+				filteredEntreeBibliographieList = (List<EntreeBibliographie>) results.values;
 				notifyDataSetChanged();
 			} else {
-				filteredDefinitionGlossaireList = new ArrayList<DefinitionGlossaire>();
+				filteredEntreeBibliographieList = new ArrayList<EntreeBibliographie>();
 				notifyDataSetInvalidated();
 			}
 			// update hashmap for index

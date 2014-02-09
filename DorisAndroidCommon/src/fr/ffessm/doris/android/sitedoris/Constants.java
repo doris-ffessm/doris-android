@@ -173,7 +173,7 @@ public class Constants {
     }
     
     public static String getBibliographieUrl(String inId) {
- 		String listeDefinitionsUrl = SITE_RACINE_URL + BIBLIOGRAPHIES_RACINE_URL + inId;
+ 		String listeDefinitionsUrl = SITE_RACINE_URL + BIBLIOGRAPHIE_RACINE_URL + inId;
      	return listeDefinitionsUrl;
     }
     

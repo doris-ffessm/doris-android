@@ -14,6 +14,9 @@
 	      android:title="@string/accueil_glossaire_text"
           android:showAsAction="ifRoom"
     	  dorisandroid:showAsAction="ifRoom" />
+	<item android:id="@+id/accueil_customview_action_bibliographie"
+	      android:icon="@drawable/ic_action_bibliographie"
+	      android:title="@string/accueil_bibliographie_text" />
 	<item android:id="@+id/accueil_customview_action_telecharge_photofiches"
 	      android:icon="@android:drawable/ic_menu_set_as"
 	      android:title="@string/menu_option_telecharge_photofiches" />
