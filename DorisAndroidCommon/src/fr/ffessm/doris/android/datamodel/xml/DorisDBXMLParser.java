@@ -177,6 +177,8 @@ public class DorisDBXMLParser {
 	public static final String DATAATT_PHOTOFICHE_description = "description";
 	public static final String DATAATT_PHOTOFICHE_DESCRIPTION = "DESCRIPTION";
 	public static final String DATAREF_PHOTOFICHE_fiche = "fiche";
+	public static final String DATAATT_SECTIONFICHE_numOrdre = "numOrdre";
+	public static final String DATAATT_SECTIONFICHE_NUMORDRE = "NUMORDRE";
 	public static final String DATAATT_SECTIONFICHE_titre = "titre";
 	public static final String DATAATT_SECTIONFICHE_TITRE = "TITRE";
 	public static final String DATAATT_SECTIONFICHE_texte = "texte";
@@ -244,6 +246,8 @@ public class DorisDBXMLParser {
 	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_DETAILS = "DETAILS";
 	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_cleURLIllustration = "cleURLIllustration";
 	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_CLEURLILLUSTRATION = "CLEURLILLUSTRATION";
+	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_textePourRecherche = "textePourRecherche";
+	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_TEXTEPOURRECHERCHE = "TEXTEPOURRECHERCHE";
 
 
 
@@ -747,6 +751,9 @@ public class DorisDBXMLParser {
 	            continue;
 	        }
 	        currentTagName = parser.getName();
+			//TODO if (currentTagName.equals(DATAATT_SECTIONFICHE_NUMORDRE)) {
+	        //    title = readTitle(parser);
+	        //} else	
 			if (currentTagName.equals(DATAATT_SECTIONFICHE_titre)) {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_SECTIONFICHE_titre);
 	            result.setTitre(readText(parser));
@@ -1058,6 +1065,11 @@ public class DorisDBXMLParser {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_ENTREEBIBLIOGRAPHIE_cleURLIllustration);
 	            result.setCleURLIllustration(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_ENTREEBIBLIOGRAPHIE_cleURLIllustration);
+	        } else
+			if (currentTagName.equals(DATAATT_ENTREEBIBLIOGRAPHIE_textePourRecherche)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_ENTREEBIBLIOGRAPHIE_textePourRecherche);
+	            result.setTextePourRecherche(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_ENTREEBIBLIOGRAPHIE_textePourRecherche);
 	        } else
 	        {
 	            skip(parser);

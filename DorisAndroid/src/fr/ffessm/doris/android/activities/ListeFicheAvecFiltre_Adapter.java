@@ -48,7 +48,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import fr.ffessm.doris.android.R;
-//import fr.ffessm.doris.android.activities.view.AdaptableImageViewCallback;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -322,7 +321,6 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         	photoPrincipale.setContextDB(_contextDB);
 
     		Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
-    		//AdaptableImageViewCallback adaptableImageViewCallback = new AdaptableImageViewCallback(ivIcon);
         	if(Outils.isAvailablePhoto(context, photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
         		try {
         			//Log.d(LOG_TAG, "from disk "+photoPrincipale.getCleURL());

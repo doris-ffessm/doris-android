@@ -118,7 +118,9 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
     	//Collection<PhotoFiche> photosFiche = entry.getPhotosFiche(); 
     	ArrayList<PhotoFiche> photosFicheArrayList = new ArrayList<PhotoFiche>(entry.getPhotosFiche());
 		
-		
+    	actionBar.setTitle(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
+		actionBar.setSubtitle(Outils.textToSpannableStringDoris(this, entry.getNomScientifique()));
+    	
         // Image adapter
         adapter = new ImagePleinEcran_Adapter(ImagePleinEcran_CustomViewActivity.this, photosFicheArrayList);
         

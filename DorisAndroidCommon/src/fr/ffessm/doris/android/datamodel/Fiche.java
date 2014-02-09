@@ -348,6 +348,8 @@ public class Fiche {
 		int groupeRef = 0;
 		int sousgroupeRef = 0;
 		
+		int positionSectionDansFiche = 0;
+		
 		//Initialisation Liste des Autres Dénominations
 		String autresDenominationsPourRechercheRapide = "";
 		
@@ -488,7 +490,8 @@ public class Fiche {
 									log.info("getFicheFromHtml() - contenu(après nettoyage) : " + contenuTexte);
 									
 									if ( ! contenuTexte.isEmpty() ){
-										SectionFiche contenu = new SectionFiche(rubrique, contenuTexte);
+										positionSectionDansFiche++;
+										SectionFiche contenu = new SectionFiche(positionSectionDansFiche, rubrique, contenuTexte);
 										contenu.setFiche(this);
 										_contextDB.sectionFicheDao.create(contenu);
 									}
@@ -662,7 +665,8 @@ public class Fiche {
 
 						String ficheRegion = ElementDistribution.getRenderer().toString().trim();
 						if ( ! ficheRegion.isEmpty() ){
-							SectionFiche contenu = new SectionFiche("Distribution", ficheRegion);
+							positionSectionDansFiche++;
+							SectionFiche contenu = new SectionFiche(positionSectionDansFiche,"Distribution", ficheRegion);
 							contenu.setFiche(this);
 							_contextDB.sectionFicheDao.create(contenu);
 						}
@@ -817,6 +821,7 @@ public class Fiche {
 				for (Element element : ElementTableBasse.getChildElements()) {
 					indice++;
 					
+					String dernierTitreSection="";
 					if (indice >= 5){
 						if (element.getContent().toString().contains("images/black_round_grey")) {
 							String section = element.getRenderer().toString().trim();
@@ -831,8 +836,8 @@ public class Fiche {
 									section = sousElement.getRenderer().toString().trim();
 								}
 							}
-							
 							log.debug("getFiche() - Section : " + section);
+							dernierTitreSection = section;
 						}
 						if (element.getContent().toString().contains("class=\"normal\"")) {
 							String texte = element.getRenderer().toString().trim();
@@ -847,6 +852,10 @@ public class Fiche {
 							}
 							
 							log.debug("getFiche() - Texte : " + texte);
+							positionSectionDansFiche++;
+							SectionFiche contenu = new SectionFiche(100+positionSectionDansFiche, dernierTitreSection, texte);
+							contenu.setFiche(this);
+							_contextDB.sectionFicheDao.create(contenu);
 						}
 						
 					}
