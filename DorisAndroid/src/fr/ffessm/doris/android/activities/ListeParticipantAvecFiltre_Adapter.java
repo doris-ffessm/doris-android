@@ -64,6 +64,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -178,13 +179,13 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
         	defaultIconSize = Integer.parseInt(defaultIconSizeString);
         }catch(Exception e){}
         
-        trombineView.getLayoutParams().height = defaultIconSize;
-        trombineView.getLayoutParams().width = defaultIconSize;
         if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {
+        	trombineView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
+            trombineView.getLayoutParams().width = defaultIconSize;
 	        if(Outils.isAvailablePhoto(context, entry.getPhotoNom(), ImageType.PORTRAITS)){
 	    		try {
 					Picasso.with(context).load(Outils.getPhotoFile(context, entry.getPhotoNom(), ImageType.PORTRAITS))
-						.fit()
+						.resize(defaultIconSize, defaultIconSize)
 						.centerInside()
 						.into(trombineView);
 				} catch (IOException e) {
@@ -198,13 +199,15 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 	    			.load(urlPhoto.replaceAll(" ", "%20"))
 					.placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
 					.error(R.drawable.app_ic_participant_pas_connecte)
-					.fit()
+					.resize(defaultIconSize, defaultIconSize)
 					.centerInside()
 	    			.into(trombineView);
 	    	}
         }
         else{
         	// remet l'image par défaut (nécessaire à cause de recyclage des widget
+        	trombineView.getLayoutParams().height = defaultIconSize;
+            trombineView.getLayoutParams().width = defaultIconSize;
         	trombineView.setImageResource(R.drawable.app_ic_participant_small);
         }
 		// End of user code

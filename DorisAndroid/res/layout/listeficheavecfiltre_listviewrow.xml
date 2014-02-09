@@ -16,7 +16,7 @@
         android:layout_marginTop="2dip"
         android:adjustViewBounds="true"
         android:contentDescription="Fiche icon"
-		android:scaleType="fitCenter"
+		android:scaleType="fitEnd"
         android:src="@drawable/app_ic_launcher" >
     </ImageView>
     <RelativeLayout
