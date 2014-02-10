@@ -252,6 +252,36 @@ public class TouchImageView extends ImageView {
 		}
 		fixTrans();
 	}
+
+	public void zoom(float mScaleFactor){
+		float origScale = saveScale;
+		saveScale *= mScaleFactor;
+		if (saveScale > maxScale) {
+			saveScale = maxScale;
+			mScaleFactor = maxScale / origScale;
+		} else if (saveScale < minScale) {
+			saveScale = minScale;
+			mScaleFactor = minScale / origScale;
+		}
+
+		matrix.postScale(mScaleFactor, mScaleFactor, viewWidth / 2,
+					viewHeight / 2);
+		/*else
+			matrix.postScale(mScaleFactor, mScaleFactor,
+					detector.getFocusX(), detector.getFocusY());*/
+
+		fixTrans();
+	}
+	public void zoomIn() {
+		zoom((float) 2.0);
+		invalidate();
+		setImageMatrix(matrix);
+	}
+	public void zoomOut() {
+		zoom((float) 0.5);
+		invalidate();
+		setImageMatrix(matrix);
+	}
 	
 	
 }

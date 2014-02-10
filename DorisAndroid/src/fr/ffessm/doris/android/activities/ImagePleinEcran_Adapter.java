@@ -73,6 +73,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ZoomControls;
 
 public class ImagePleinEcran_Adapter extends PagerAdapter {
 
@@ -100,7 +101,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
      
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-    	fr.ffessm.doris.android.tools.TouchImageView imgDisplay;
+    	final fr.ffessm.doris.android.tools.TouchImageView imgDisplay;
     	ImageView btnClose;
         Button imgTitre;
         
@@ -113,8 +114,8 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         btnClose = (ImageView) viewLayout.findViewById(R.id.imagepleinecran_image_btnClose);
         imgTitre = (Button) viewLayout.findViewById(R.id.imagepleinecran_image_titre);
         
-        int hauteur = ScreenTools.getScreenHeight(_activity);
-        int largeur = ScreenTools.getScreenWidth(_activity);
+        int hauteur = (int )Math.round((ScreenTools.getScreenHeight(_activity)*2.0));
+        int largeur = (int )Math.round((ScreenTools.getScreenWidth(_activity)*2.0));
         final PhotoFiche photoFiche = _PhotoFicheLists.get(position);
         if(Outils.isAvailablePhoto(_activity, photoFiche.getCleURL(), ImageType.HI_RES)){
     		try {
@@ -178,6 +179,21 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     	}
          
         imgDisplay.setOnClickListener(new PhotoClickListener(photoFiche));
+        
+        
+        ZoomControls zoomControls = (ZoomControls)viewLayout.findViewById(R.id.imagepleinecran_image_zoomControls);
+        zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				imgDisplay.zoomIn();
+			}
+		});
+        zoomControls.setOnZoomOutClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				imgDisplay.zoomOut();
+			}
+		});
 
         // close button click event
         btnClose.setOnClickListener(new View.OnClickListener() {           
@@ -187,6 +203,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
             }
         });
   
+        
         
         // Affichage Titre & Description de l'image
         String titre = photoFiche.getTitre();
