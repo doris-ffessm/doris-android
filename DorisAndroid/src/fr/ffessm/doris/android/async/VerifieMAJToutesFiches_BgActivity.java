@@ -185,7 +185,7 @@ public class VerifieMAJToutesFiches_BgActivity  extends AsyncTask<String,Integer
 	    	listeGroupes.addAll(dbHelper.getGroupeDao().queryForAll());
 			Log.d(LOG_TAG, "doInBackground() - listeGroupes.size : "+listeGroupes.size());
 			
-	    	HashSet<Participant> listeParticipants = new HashSet<Participant>(0);
+	    	List<Participant> listeParticipants = new ArrayList<Participant>(0);
 			listeParticipants.addAll(dbHelper.getParticipantDao().queryForAll());
 			Log.d(LOG_TAG, "doInBackground() - listeParticipants.size : "+listeParticipants.size());
 	    	

@@ -61,7 +61,6 @@ import org.apache.commons.logging.LogFactory;
 import fr.ffessm.doris.android.datamodel.associations.*;
 
 // Start of user code additional import for Fiche
-import java.util.HashSet;
 import java.util.regex.Pattern;
 
 import net.htmlparser.jericho.Attribute;
@@ -282,7 +281,7 @@ public class Fiche {
 		log.trace("getFicheEtatDateModifFromHtml() - Fin");
 	}
 	
-	public void getFicheFromHtml(String htmlFiche, List<Groupe> listeGroupes, HashSet<Participant> listeParticipants) throws SQLException{
+	public void getFicheFromHtml(String htmlFiche, List<Groupe> listeGroupes, List<Participant> listeParticipants) throws SQLException{
 		log.trace("getFicheFromHtml() - Début");
 		
     	int i;

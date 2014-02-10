@@ -292,7 +292,7 @@ public class PrefetchDorisWebSite {
 						}
 					}
 					
-					final HashSet<Participant> listeParticipantsFromHTML = SiteDoris.getListeParticipantsParInitialeFromHtml(contenuFichierHtml);
+					final List<Participant> listeParticipantsFromHTML = SiteDoris.getListeParticipantsParInitialeFromHtml(contenuFichierHtml);
 					log.info("Creation de "+listeParticipantsFromHTML.size()+" participants pour la lettre : "+initiale);
 					TransactionManager.callInTransaction(connectionSource,
 						new Callable<Void>() {
@@ -306,7 +306,7 @@ public class PrefetchDorisWebSite {
 						});
 				}	
 				
-				HashSet<Participant> listeParticipants = new HashSet<Participant>(0);
+				List<Participant> listeParticipants = new ArrayList<Participant>(0);
 				listeParticipants.addAll(dbContext.participantDao.queryForAll());
 				log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
 				
@@ -352,7 +352,7 @@ public class PrefetchDorisWebSite {
 						
 						continuer = SiteDoris.getContinuerListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
 						
-						final HashSet<DefinitionGlossaire> listeDefinitionsFromHTML = SiteDoris.getListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
+						final List<DefinitionGlossaire> listeDefinitionsFromHTML = SiteDoris.getListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
 						log.info("Creation de "+listeDefinitionsFromHTML.size()+" définitions pour la lettre : "+initiale);
 						TransactionManager.callInTransaction(connectionSource,
 							new Callable<Void>() {
@@ -455,7 +455,7 @@ public class PrefetchDorisWebSite {
 						}
 					}
 					
-					final HashSet<EntreeBibliographie> listeBiblioFromHTML = SiteDoris.getListeBiblioFromHtml(contenuFichierHtml);
+					final List<EntreeBibliographie> listeBiblioFromHTML = SiteDoris.getListeBiblioFromHtml(contenuFichierHtml);
 					//log.info("Creation de "+listeParticipantsFromHTML.size()+" participants pour la lettre : "+initiale);
 					TransactionManager.callInTransaction(connectionSource,
 							new Callable<Void>() {

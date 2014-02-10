@@ -414,10 +414,10 @@ public class SiteDoris {
     
 	
 
-    public static HashSet<Participant> getListeParticipantsParInitialeFromHtml(String inCodePageHtml){
+    public static List<Participant> getListeParticipantsParInitialeFromHtml(String inCodePageHtml){
     	log.debug("getListeParticipantsParInitiale() - Début");
     	
-    	HashSet<Participant> listeParticipants = new HashSet<Participant>(0);
+    	List<Participant> listeParticipants = new ArrayList<Participant>(0);
     	
     	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), true ) );
     	source.fullSequentialParse();
@@ -591,7 +591,7 @@ public class SiteDoris {
 		return listeFichesUpdated;
     }
     
-    public static Participant getParticipantFromListeParticipants(HashSet<Participant> listeParticipants, int numParticipant){
+    public static Participant getParticipantFromListeParticipants(List<Participant> listeParticipants, int numParticipant){
     	//log.trace("getParticipantFromListeParticipants() - Début");
     	//log.debug("getParticipantFromListeParticipants() - numParticipant : "+numParticipant);
     	
@@ -616,10 +616,10 @@ public class SiteDoris {
     }
     
 
-    public static HashSet<DefinitionGlossaire> getListeDefinitionsParInitialeFromHtml(String inCodePageHtml){
+    public static List<DefinitionGlossaire> getListeDefinitionsParInitialeFromHtml(String inCodePageHtml){
     	//log.debug("getListeDefinitionsParInitialeFromHtml() - Début");
     	
-    	HashSet<DefinitionGlossaire> listeDefinitions = new HashSet<DefinitionGlossaire>(0);
+    	List<DefinitionGlossaire> listeDefinitions = new ArrayList<DefinitionGlossaire>(0);
     	
     	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
@@ -659,10 +659,10 @@ public class SiteDoris {
     	return continuer;
     }
     
-    public static HashSet<EntreeBibliographie> getListeBiblioFromHtml(String inCodePageHtml) {
+    public static List<EntreeBibliographie> getListeBiblioFromHtml(String inCodePageHtml) {
     	log.trace("getListeBiblioFromHtml()- Début");
     	
-    	HashSet<EntreeBibliographie> listeBiblio = new HashSet<EntreeBibliographie>(0);
+    	List<EntreeBibliographie> listeBiblio = new ArrayList<EntreeBibliographie>(0);
     	
 		// Une entrée bibliographique ne fonctionne pas, parce qu'elle est très longue
     	// il est probable qu'une astuce ait été utilisée, mais le site est tellement

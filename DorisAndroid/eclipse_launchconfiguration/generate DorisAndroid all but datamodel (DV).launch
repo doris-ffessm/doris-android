@@ -17,7 +17,7 @@
 <listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="fr.vojtisek.genandroid.acceleo.files.AndroidGenerateAllButDataModel"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="&quot;D:/Users/dvojtise/git/doris-android-master/DorisAndroid/model/DorisAndroid.genandroid&quot; &quot;D:/Users/dvojtise/git/doris-android-master/DorisAndroid&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="&quot;D:/Perso/Dev/Android/DORIS_2/DorisAndroid/model/DorisAndroid.genandroid&quot; &quot;D:/Perso/Dev/Android/DORIS_2/DorisAndroid&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="fr.vojtisek.genandroid.acceleo"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dfile.Encoding=UTF8"/>
 <stringAttribute key="org.eclipse.jdt.launching.WORKING_DIRECTORY" value="${workspace_loc:fr.vojtisek.genandroid.acceleo}"/>

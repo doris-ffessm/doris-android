@@ -42,28 +42,15 @@ termes.
 
 package fr.ffessm.doris.android.sitedoris;
 
-import java.io.File;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Pattern;
-
-import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.HTMLElementName;
-import net.htmlparser.jericho.Source;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
-import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.Fiche;
-import fr.ffessm.doris.android.datamodel.Groupe;
-import fr.ffessm.doris.android.datamodel.Participant;
-import fr.ffessm.doris.android.datamodel.PhotoFiche;
+
 
 public class OutilsBase {
 
