@@ -102,7 +102,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	        	if (typeParam.equals("mode_precharg_region")) {
 	        		if (param != null) {
 			        	PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference("button_qualite_images_zones_key");
-			        	int pos = findPreference("mode_precharg_region_"+param).getOrder();
+			        	int pos = findPreference("mode_precharg_photo_region_"+param).getOrder();
 			        	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - pos "+param+" : "+pos);
 			        	preferenceScreen.onItemClick( null, null, pos, 0 ); 
 	        		}

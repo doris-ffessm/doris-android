@@ -103,7 +103,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 		String initialTickerText = context.getString(R.string.bg_notifText_initial);
 		String notificationTitle = context.getString(R.string.bg_notifTitle_initial);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
-
+        
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     	
 		// TODO : Tempo pour ralentir traitement : lecture paramètre temporaire
@@ -242,7 +242,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitle_initial));
         mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_notifText_initial) );
 		mNotificationHelper.setMaxItemToProcess(""+0);
-		
+
     	for (ZoneGeographique zoneGeo : listeZoneGeo) {
 		
     		GenericRawResults<String[]> rawResults = null;
@@ -389,7 +389,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     			//Enregistrement du nombre total de photos téléchargée pour afficher avancement
 				Outils.setParamInt(context, Outils.getKeyDataRecuesZoneGeo(context, zoneId, true), nbPhotosPrinRecuesPourZone);
 				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - nbPhotosPrincDejaLaPourZone : "+nbPhotosPrinRecuesPourZone );
-	
+				publishProgress( nbPhotosPrinRecuesPourZone );
     		}
 	
     	} // fin ZoneGeo Images Principales
@@ -452,11 +452,11 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	    		}
 		        		
 			    try{
+			    	int nbTelechargements = 0;
 					for (String[] resultColumns : listePhotos) {
 					    
 						String photoURL = resultColumns[0];
-		        		int nbTelechargements = 0;
-						
+		        		
 						if ( imageTypeImage == Outils.ImageType.VIGNETTE ){
 							if ( !hsImagesVigAllreadyAvailable.contains(photoURL) ){
 	    						Outils.getOrDownloadPhotoFile(context, photoURL, Outils.ImageType.VIGNETTE);
@@ -504,7 +504,8 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 		
 			//Enregistrement du nombre total de photos téléchargée pour afficher avancement
 			Outils.setParamInt(context, Outils.getKeyDataRecuesZoneGeo(context, zoneId, false), nbPhotosRecuesPourZone);
-
+			publishProgress( nbPhotosRecuesPourZone );
+			
 		} // Fin Pour Chaque ZoneGeo Toutes Photos
 		return 0;
 	}
