@@ -50,6 +50,7 @@ import com.squareup.picasso.Picasso;
 
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.view.ChainedLoadImageViewCallback;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
@@ -150,13 +151,29 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     				dossier_photo = Constants.MOYENNE_BASE_URL;
     			}
     			
-	    		Picasso.with(_activity)
-	    			.load(dossier_photo+photoFiche.getCleURL())
-					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
-					.error(R.drawable.doris_icone_doris_large_pas_connecte)
-					.resize(largeur, hauteur)
-					.centerInside()
-	    			.into(imgDisplay);
+    			ChainedLoadImageViewCallback chainedLoadImageViewCallback = new ChainedLoadImageViewCallback(_activity, imgDisplay, 
+    					dossier_photo+photoFiche.getCleURL(),largeur, hauteur); // vrai chargement de l'image dansle callback
+    			if(Outils.isAvailablePhoto(_activity, photoFiche.getCleURL(), ImageType.VIGNETTE)){
+    				try {
+						Picasso.with(_activity)
+							.load(Outils.getPhotoFile(_activity, photoFiche.getCleURL(), ImageType.VIGNETTE)) // charge d'abord la vignette depuis le disque
+							.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
+							.error(R.drawable.doris_icone_doris_large_pas_connecte)
+							.resize(largeur, hauteur)
+							.centerInside()
+							.into(imgDisplay,chainedLoadImageViewCallback);
+					} catch (IOException e) {
+					}
+    			}
+    			else{
+		    		Picasso.with(_activity)
+		    			.load(Constants.VIGNETTE_BASE_URL+photoFiche.getCleURL()) // charge d'abord la vignette depuis internet (mais elle est probablement déjà dans le cache)
+						.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
+						.error(R.drawable.doris_icone_doris_large_pas_connecte)
+						.resize(largeur, hauteur)
+						.centerInside()
+		    			.into(imgDisplay,chainedLoadImageViewCallback);
+    			}
     		}
     	}
          
