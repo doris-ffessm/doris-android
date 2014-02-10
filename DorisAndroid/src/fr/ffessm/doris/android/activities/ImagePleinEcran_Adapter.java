@@ -60,8 +60,10 @@ import fr.ffessm.doris.android.tools.Outils.PrecharMode;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -114,8 +116,8 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         btnClose = (ImageView) viewLayout.findViewById(R.id.imagepleinecran_image_btnClose);
         imgTitre = (Button) viewLayout.findViewById(R.id.imagepleinecran_image_titre);
         
-        int hauteur = (int )Math.round((ScreenTools.getScreenHeight(_activity)*2.0));
-        int largeur = (int )Math.round((ScreenTools.getScreenWidth(_activity)*2.0));
+        int hauteur = (int )Math.round((ScreenTools.getScreenHeight(_activity)*1.5));
+        int largeur = (int )Math.round((ScreenTools.getScreenWidth(_activity)*1.5));
         final PhotoFiche photoFiche = _PhotoFicheLists.get(position);
         if(Outils.isAvailablePhoto(_activity, photoFiche.getCleURL(), ImageType.HI_RES)){
     		try {
@@ -180,21 +182,27 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
          
         imgDisplay.setOnClickListener(new PhotoClickListener(photoFiche));
         
-        
-        ZoomControls zoomControls = (ZoomControls)viewLayout.findViewById(R.id.imagepleinecran_image_zoomControls);
-        zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				imgDisplay.zoomIn();
-			}
-		});
-        zoomControls.setOnZoomOutClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				imgDisplay.zoomOut();
-			}
-		});
-
+        // gestion des bouton de control de zoom
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(_activity);
+        if(prefs.getBoolean(_activity.getString(R.string.pref_key_imagepleinecran_aff_zoomcontrol), false)){
+	        ZoomControls zoomControls = (ZoomControls)viewLayout.findViewById(R.id.imagepleinecran_image_zoomControls);
+	        zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					imgDisplay.zoomIn();
+				}
+			});
+	        zoomControls.setOnZoomOutClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					imgDisplay.zoomOut();
+				}
+			});
+        }
+        else{
+        	ZoomControls zoomControls = (ZoomControls)viewLayout.findViewById(R.id.imagepleinecran_image_zoomControls);
+ 	       	zoomControls.setVisibility(View.GONE);
+        }
         // close button click event
         btnClose.setOnClickListener(new View.OnClickListener() {           
             @Override

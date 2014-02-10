@@ -183,6 +183,13 @@
 			android:defaultValue="false"
 			android:layout="@layout/preference_layout_preference"
 			/>
+		<CheckBoxPreference
+		    android:key="@string/pref_key_imagepleinecran_aff_zoomcontrol"
+			android:title="@string/pref_imagepleinecran_aff_zoomcontrol_prompt"
+			android:summary="@string/pref_imagepleinecran_aff_zoomcontrol_summary"
+			android:defaultValue="false"
+			android:layout="@layout/preference_layout_preference"
+			/>
     </PreferenceScreen>
     
 	<PreferenceScreen

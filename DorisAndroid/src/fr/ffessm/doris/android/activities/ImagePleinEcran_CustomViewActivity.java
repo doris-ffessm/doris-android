@@ -51,7 +51,9 @@ import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
@@ -64,6 +66,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ZoomControls;
+
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code additional imports ImagePleinEcran_CustomViewActivity
@@ -141,10 +145,19 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 		super.onResume();
 		refreshScreenData();
 		//Start of user code onResume ImagePleinEcran_CustomViewActivity
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    	if(prefs.getBoolean(getString(R.string.pref_key_imagepleinecran_aff_zoomcontrol), false) !=  affZoomControl){
+    		affZoomControl = prefs.getBoolean(getString(R.string.pref_key_imagepleinecran_aff_zoomcontrol), false);
+    		ViewPager view = (ViewPager) findViewById(R.id.imagepleinecran_pager);
+    		view.invalidate();
+    		// ne fonctione pas :-(
+    	}   
 		//End of user code
 	}
     //Start of user code additional code ImagePleinEcran_CustomViewActivity
 	
+    boolean affZoomControl = false;
+    
 	//End of user code
 
     /** refresh screen from data 

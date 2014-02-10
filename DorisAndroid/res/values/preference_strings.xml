@@ -24,6 +24,7 @@
 	<string name="pref_key_list_icon_size">pref_list_icon_size</string>
 	<string name="pref_key_accueil_aff_iconesfede">pref_accueil_aff_iconesfede</string>
 	<string name="pref_key_fiche_aff_details_pardefaut">pref_fiche_aff_details_pardefaut</string>
+	<string name="pref_key_imagepleinecran_aff_zoomcontrol">pref_key_imagepleinecran_aff_zoomcontrol</string>
 	
 	<string name="pref_key_last_version_run">LAST_VERSION_RUN</string>
 			
@@ -180,6 +181,9 @@
 	
 	<string name="pref_fiche_aff_details_pardefaut_prompt">Fiche\u00A0: montrer détails\u00A0?</string>
 	<string name="pref_fiche_aff_details_pardefaut_summary">"Les détails de la fiche sont tous affichés par défaut"</string>
+	
+	<string name="pref_imagepleinecran_aff_zoomcontrol_prompt">Afficher boutons de contrôle de zoom</string>
+	<string name="pref_imagepleinecran_aff_zoomcontrol_summary"></string>
 	
 	<string name="imagepleinecran_titre_longmax">25</string>
 		
