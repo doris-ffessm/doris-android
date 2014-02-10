@@ -116,8 +116,10 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         btnClose = (ImageView) viewLayout.findViewById(R.id.imagepleinecran_image_btnClose);
         imgTitre = (Button) viewLayout.findViewById(R.id.imagepleinecran_image_titre);
         
-        int hauteur = (int )Math.round((ScreenTools.getScreenHeight(_activity)*1.5));
-        int largeur = (int )Math.round((ScreenTools.getScreenWidth(_activity)*1.5));
+        //int hauteur = (int )Math.round((ScreenTools.getScreenHeight(_activity)*1.5));
+        //int largeur = (int )Math.round((ScreenTools.getScreenWidth(_activity)*1.5));
+        int hauteur = ScreenTools.getScreenHeight(_activity);
+        int largeur = ScreenTools.getScreenWidth(_activity);
         final PhotoFiche photoFiche = _PhotoFicheLists.get(position);
         if(Outils.isAvailablePhoto(_activity, photoFiche.getCleURL(), ImageType.HI_RES)){
     		try {
