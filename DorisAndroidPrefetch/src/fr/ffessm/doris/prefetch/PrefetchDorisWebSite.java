@@ -50,6 +50,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -191,7 +192,7 @@ public class PrefetchDorisWebSite {
 					listeGroupesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeGroupes.html";
 					log.info("Récup. Liste Groupes Doris : " + listeGroupesFichier);
 					
-					if (Outils.getFichierFromUrl(Constants.getGroupesUrl(), listeGroupesFichier)) {
+					if (Outils.getFichierFromUrl(Constants.getGroupesUrl(10), listeGroupesFichier)) {
 						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeGroupesFichier));
 						
 					} else {
@@ -250,87 +251,52 @@ public class PrefetchDorisWebSite {
 						dbContext.groupeDao.update(groupe);
 					}
 				}
-				// Téléchargement des pages de Groupes et des Icônes
+				// Téléchargement des pages de Groupes
+				// TODO : Reste à faire les replaceAll dans les pages pour les lier entres elles
 				if ( action.equals("CDDVD")){
-					String fichierIconeRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_ICONES + "/";
-					String fichierIconeRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/" + SOUSDOSSIER_ICONES + "/";
-/*
-					for (Groupe groupe : listeGroupes){
-						log.info("Groupe : " + groupe.getNomGroupe());
-						if (groupe.getNumeroGroupe() != 0) {
-							String fichierLocalGroupe = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/groupe-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+".html";
-							String fichierRefGroupe = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/groupe-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+".html";
-	
-							if( ! isFileExistingPath( fichierRefGroupe ) ){
-								if (Outils.getFichierFromUrl(Constants.getGroupeUrl(groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe()), fichierLocalGroupe)) {
-								} else {
-									log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-									System.exit(0);
-								}
-							}
-						}
 
-						log.info("Groupe : " + groupe.getNomGroupe()+" - "+groupe.getCleURLImage());
-						if ( !groupe.getCleURLImage().isEmpty() ) {
-							if( ! isFileExistingPath( fichierIconeRefRacine+groupe.getImageNameOnDisk() ) ){
-								if (Outils.getFichierFromUrl(Constants.getSiteUrl() + groupe.getCleURLImage(), fichierIconeRacine + groupe.getImageNameOnDisk())) {
-								} else {
-									log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-									System.exit(0);
-								}
+					List<ZoneGeographiqueKind> listZone = Arrays.asList(ZoneGeographiqueKind.values());
+					for (ZoneGeographiqueKind zone : listZone ) {
+						int zoneId = zone.ordinal() + 1;
+						
+						String fichierGroupes = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/groupes_zone_"+zoneId+".html";
+
+						if (Outils.getFichierFromUrl(Constants.getGroupesUrl(zoneId), fichierGroupes)) {
+							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierGroupes));
+						} else {
+							log.error("Une erreur est survenue lors de la récupération de la liste des Groupes : " + zone.toString());
+							System.exit(0);
+						}
+						final List<Groupe> listeGroupesZone = SiteDoris.getListeGroupesFromHtml(contenuFichierHtml);
+						log.debug("doMain() - listeGroupesZone.size : "+listeGroupesZone.size());
+						
+						for (Groupe groupe : listeGroupesZone) {
+							
+							if (groupe.getNumeroGroupe() != 0) {
+								int pageCourante = 1;
+								boolean testContinu = false;
+								
+								do {
+									log.debug("doMain() - page Groupe : "+zoneId+" - "+groupe.getNumeroGroupe()+" - "+groupe.getNumeroSousGroupe()+" - "+pageCourante);
+	
+									String fichierPageGroupe = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/groupe-"+zoneId+"-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-"+pageCourante+".html";
+	
+									if (Outils.getFichierFromUrl(Constants.getGroupeContenuUrl(zoneId, groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe(), pageCourante), fichierPageGroupe)) {
+										contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierPageGroupe));
+									} else {
+										log.error("Une erreur est survenue lors de la récupération de la page des groupes : " + fichierPageGroupe);
+										System.exit(0);
+									}
+
+									pageCourante ++;
+									testContinu = SiteDoris.getContinuerContenuGroupeFromHtml(contenuFichierHtml);
+								
+								} while ( testContinu );
+								
 							}
 						}
 					}
-									*/
 				}
-				/*
-				int pageCourante = 1;
-				boolean testContinu = false;
-				
-				do {
-					log.debug("doMain() - pageCourante Bibliographie : "+pageCourante);
-					
-					String listeBibliographies = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeBibliographies-"+pageCourante+".html";
-					log.info("Récup. Liste des Bibliographies : " + listeBibliographies);
-					
-					if (! action.equals("NODWNLD")){
-						if (Outils.getFichierFromUrl(Constants.getListeBibliographiesUrl(pageCourante), listeBibliographies)) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeBibliographies));
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la liste des Bibliographies : " + listeBibliographies);
-							System.exit(0);
-						}
-					} else {
-						// NODWNLD
-						listeBibliographies = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeBibliographies-"+pageCourante+".html";
-						if (new File(listeBibliographies).exists()) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeBibliographies));
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la liste des Bibliographies : " + listeBibliographies);
-							System.exit(0);
-						}
-					}
-					
-					final List<EntreeBibliographie> listeBiblioFromHTML = SiteDoris.getListeBiblioFromHtml(contenuFichierHtml);
-					//log.info("Creation de "+listeParticipantsFromHTML.size()+" participants pour la lettre : "+initiale);
-					TransactionManager.callInTransaction(connectionSource,
-							new Callable<Void>() {
-								public Void call() throws Exception {
-									for (EntreeBibliographie entreeBiblio : listeBiblioFromHTML){
-										if (!dbContext.entreeBibliographieDao.idExists(entreeBiblio.getId()))
-											dbContext.entreeBibliographieDao.create(entreeBiblio);
-									}
-									return null;
-							    }
-							});
-					 
-					pageCourante ++;
-					testContinu = contenuFichierHtml.contains("biblio.asp?mapage="+pageCourante+"&");
-				} while ( testContinu );
-				
-				*/
-				// TODO : recup description longue des groupes
-				// http://doris.ffessm.fr/fiches_liste.asp?numero_fichier=5&groupe_numero=51
 				
 
 				// - - - Intervenants - - -
@@ -735,6 +701,7 @@ public class PrefetchDorisWebSite {
 								});
 							
 							// Téléchargement Photos
+							//TODO : Qd des espaces il faudrait les remplacer par des _
 							if ( action.equals("CDDVD") ) {
 								String fichierImageRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/";
 								String fichierImageRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/";
@@ -1423,12 +1390,14 @@ public class PrefetchDorisWebSite {
 		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=4","fichier_4.html"));
 		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=5","fichier_5.html"));
 
+		/*
 		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=10","groupes_zone_10.html"));
 		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=1","groupes_zone_1.html"));
 		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=2","groupes_zone_2.html"));
 		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=3","groupes_zone_3.html"));
 		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=4","groupes_zone_4.html"));
 		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=5","groupes_zone_5.html"));
+		*/
 		
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/favicon.ico","images_favicon.ico"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/carre.jpg","images_carre.jpg"));

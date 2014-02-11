@@ -42,6 +42,8 @@ termes.
 
 package fr.ffessm.doris.android.sitedoris;
 
+import java.util.ArrayList;
+
 
 public class Constants {
 
@@ -58,8 +60,7 @@ public class Constants {
 	
     private final static String LISTE_TOUTES_FICHES_URL = "nom_scientifique.asp?numero_fichier=10";
     
-    private final static String GROUPES_URL = "groupes.asp?numero_fichier=10";
-    private final static String GROUPE_URL = "fiches_liste.asp?groupe_numero=";
+    private final static String GROUPES_URL = "groupes.asp?numero_fichier=";
     private final static String SOUSGROUPE_URL = "&sousgroupe_numero=";
     private final static String GROUPE_CONTENU_URL = "fiches_liste.asp?numero_fichier=@zone&groupe_numero=@groupe&pagecourante=@page";
     
@@ -177,6 +178,7 @@ public class Constants {
  		String listeDefinitionsUrl = SITE_RACINE_URL + BIBLIOGRAPHIE_RACINE_URL + inId;
      	return listeDefinitionsUrl;
     }
+
     
     public static String getListeFichesUrl(ZoneGeographiqueKind zoneKing) {
     	switch (zoneKing) {
@@ -195,11 +197,11 @@ public class Constants {
 		}
     } 
     
-    public static String getGroupesUrl() {
-		String listeFichesUrl = SITE_RACINE_URL + GROUPES_URL;
+    public static String getGroupesUrl(int zone) {
+		String listeFichesUrl = SITE_RACINE_URL + GROUPES_URL+zone;
     	return listeFichesUrl;
     }
-
+    
     public static String getGroupeContenuUrl(int zone, int numeroGroupe, int numeroSousGroupe, int page) {
 		String listeGroupeUrl = SITE_RACINE_URL + GROUPE_CONTENU_URL
 			.replace("@zone", ""+zone).replace("@groupe", ""+numeroGroupe).replace("@page", ""+page);

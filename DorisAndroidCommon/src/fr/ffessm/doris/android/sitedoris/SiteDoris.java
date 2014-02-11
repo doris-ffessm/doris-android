@@ -649,9 +649,9 @@ public class SiteDoris {
     	
     	String indexPage = inCodePageHtml.replaceAll("\n", "").replaceAll(".*>Page ([^<>]*)<.*", "$1").trim();
     	//log.debug("getContinuerListeDefinitionsParInitialeFromHtml() - indexPage :"+indexPage);
-    	String numeroPageCourante = indexPage.replaceAll("/.*", "");
+    	String numeroPageCourante = indexPage.replaceAll("/.*", "").trim();
     	//log.debug("getContinuerListeDefinitionsParInitialeFromHtml() - numeroPageCourante :"+numeroPageCourante);
-    	String nbPages = indexPage.replaceAll(".*/", "");
+    	String nbPages = indexPage.replaceAll(".*/", "").trim();
     	//log.debug("getContinuerListeDefinitionsParInitialeFromHtml() - nbPages :"+nbPages);
     	if (numeroPageCourante.equals(nbPages)) continuer = false;
     	
@@ -663,11 +663,11 @@ public class SiteDoris {
     	//log.debug("getContinuerContenuGroupeFromHtml() - Début");
     	boolean continuer = true;
     	
-    	String indexPage = inCodePageHtml.replaceAll("\n", "").replaceAll(".*>Page ([^<>]*)<.*", "$1").trim();
-    	//log.debug("getContinuerContenuGroupeFromHtml() - indexPage :"+indexPage);
-    	String numeroPageCourante = indexPage.replaceAll("/.*", "");
+    	String indexPage = Pattern.compile(".*>Page ([^<>]*)<.*", Pattern.DOTALL).matcher(inCodePageHtml).replaceAll("$1");
+     	//log.debug("getContinuerContenuGroupeFromHtml() - indexPage :"+indexPage);
+    	String numeroPageCourante = indexPage.replaceAll("/.*", "").trim();
     	//log.debug("getContinuerContenuGroupeFromHtml() - numeroPageCourante :"+numeroPageCourante);
-    	String nbPages = indexPage.replaceAll(".*/", "");
+    	String nbPages = indexPage.replaceAll(".*/", "").trim();
     	//log.debug("getContinuerContenuGroupeFromHtml() - nbPages :"+nbPages);
     	if (numeroPageCourante.equals(nbPages)) continuer = false;
     	
