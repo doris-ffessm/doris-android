@@ -61,6 +61,7 @@ public class Constants {
     private final static String GROUPES_URL = "groupes.asp?numero_fichier=10";
     private final static String GROUPE_URL = "fiches_liste.asp?groupe_numero=";
     private final static String SOUSGROUPE_URL = "&sousgroupe_numero=";
+    private final static String GROUPE_CONTENU_URL = "fiches_liste.asp?numero_fichier=@zone&groupe_numero=@groupe&pagecourante=@page";
     
     private final static String LISTE_FICHES_FRANCE_METROPOLITAINE_URL = "nom_scientifique.asp?numero_fichier=1&fichier=Faune%20et%20flore%20marines%20de%20France%20m%E9tropolitaine";
     private final static String LISTE_FICHES_EAU_DOUCE_URL = "nom_scientifique.asp?numero_fichier=2&fichier=Faune%20et%20flore%20dulcicoles%20de%20France%20m%E9tropolitaine";
@@ -198,13 +199,16 @@ public class Constants {
 		String listeFichesUrl = SITE_RACINE_URL + GROUPES_URL;
     	return listeFichesUrl;
     }
-    public static String getGroupeUrl(int numeroGroupe, int numeroSousGroupe) {
-		String listeGroupeUrl = SITE_RACINE_URL + GROUPE_URL + numeroGroupe;
+
+    public static String getGroupeContenuUrl(int zone, int numeroGroupe, int numeroSousGroupe, int page) {
+		String listeGroupeUrl = SITE_RACINE_URL + GROUPE_CONTENU_URL
+			.replace("@zone", ""+zone).replace("@groupe", ""+numeroGroupe).replace("@page", ""+page);
 		if (numeroSousGroupe != 0) {
 			listeGroupeUrl += SOUSGROUPE_URL + numeroSousGroupe;
 		}
     	return listeGroupeUrl;
     }
+
     
 	/*
 	 * Gestion Zones Géographiques

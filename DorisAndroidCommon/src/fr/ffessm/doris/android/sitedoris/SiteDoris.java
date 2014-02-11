@@ -659,6 +659,22 @@ public class SiteDoris {
     	return continuer;
     }
     
+    public static boolean getContinuerContenuGroupeFromHtml(String inCodePageHtml){
+    	//log.debug("getContinuerContenuGroupeFromHtml() - Début");
+    	boolean continuer = true;
+    	
+    	String indexPage = inCodePageHtml.replaceAll("\n", "").replaceAll(".*>Page ([^<>]*)<.*", "$1").trim();
+    	//log.debug("getContinuerContenuGroupeFromHtml() - indexPage :"+indexPage);
+    	String numeroPageCourante = indexPage.replaceAll("/.*", "");
+    	//log.debug("getContinuerContenuGroupeFromHtml() - numeroPageCourante :"+numeroPageCourante);
+    	String nbPages = indexPage.replaceAll(".*/", "");
+    	//log.debug("getContinuerContenuGroupeFromHtml() - nbPages :"+nbPages);
+    	if (numeroPageCourante.equals(nbPages)) continuer = false;
+    	
+    	//log.debug("getContinuerContenuGroupeFromHtml() - continuer :"+continuer);
+    	return continuer;
+    }
+    
     public static List<EntreeBibliographie> getListeBiblioFromHtml(String inCodePageHtml) {
     	log.trace("getListeBiblioFromHtml()- Début");
     	

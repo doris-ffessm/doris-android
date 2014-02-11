@@ -163,25 +163,33 @@ C'est ce texte. */
 		return imageName;
 	}
 	
-	public void getGroupeFromHtml(String htmlGroupe) throws SQLException{
-		log.trace("getGroupeFromHtml() - Début");
+	
+	
+	public void descriptionDetailleeFromHtml(String htmlGroupe) throws SQLException{
+		log.trace("descriptionDetailleeFromHtml() - Début");
 		
-		htmlGroupe = Outils.nettoyageBalises(htmlGroupe);
+		htmlGroupe = Outils.remplacementBalises(Outils.nettoyageBalises(htmlGroupe), true);
     	
-    	// -- Cible de la page en enlevant tout débord tout ce qui est totalement superflu --
-    	// -- Issue de la Version 1 : ca fonctionne => je garde / GMo
 		Source source=new Source(htmlGroupe);
 		source.fullSequentialParse();
-		
+		// Description du groupe
 		Element elementTDtitre2 = source.getFirstElementByClass("titre2");
+		if (numeroSousGroupe != 0) {
+			elementTDtitre2 = source.getNextElementByClass(elementTDtitre2.getEnd(), "titre2");
+		}
+		
+		
 		Element elementTRPere = elementTDtitre2.getParentElement().getParentElement();
 		Element elementTDTexte = elementTRPere.getFirstElementByClass("normal");
 		
-		log.trace("getGroupeFromHtml() - Description Groupe : "+elementTDTexte.toString());
+		log.trace("descriptionDetailleeFromHtml() - Description Détaillée Groupe : "+elementTDTexte.toString());
 		
-		log.trace("getGroupeFromHtml() - Fin");
+		descriptionDetailleeGroupe = elementTDTexte.getRenderer().toString().trim();
+		descriptionDetailleeGroupe = Outils.nettoyageTextes(descriptionDetailleeGroupe);
+		
+		log.trace("descriptionDetailleeFromHtml() - Fin");
 	}
-	
+
 	// End of user code
 	
 	public Groupe() {} // needed by ormlite

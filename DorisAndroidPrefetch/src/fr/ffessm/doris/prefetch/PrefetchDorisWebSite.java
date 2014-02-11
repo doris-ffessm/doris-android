@@ -222,11 +222,39 @@ public class PrefetchDorisWebSite {
 					    }
 					});
 
+				for (Groupe groupe : listeGroupes){
+					log.info("Groupe : " + groupe.getNomGroupe());
+					if (groupe.getNumeroGroupe() != 0) {
+						String fichierLocalContenuGroupe = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
+						String fichierRefContenuGroupe = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
+
+						if (! action.equals("NODWNLD")){
+							if (Outils.getFichierFromUrl(Constants.getGroupeContenuUrl(10, groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe(), 1), fichierLocalContenuGroupe)) {
+								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalContenuGroupe));
+							} else {
+								log.error("Une erreur est survenue lors du téléchargement du groupe : "+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe());
+								System.exit(0);
+							}
+						} else {
+							// NODWNLD
+							if ( isFileExistingPath( fichierRefContenuGroupe ) ) {
+								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefContenuGroupe));
+							} else {
+								log.error("Une erreur est survenue lors de la récupération du groupe : "+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe());
+								System.exit(0);
+							}
+						}
+											
+						groupe.setContextDB(dbContext);
+						groupe.descriptionDetailleeFromHtml(contenuFichierHtml);
+						dbContext.groupeDao.update(groupe);
+					}
+				}
 				// Téléchargement des pages de Groupes et des Icônes
 				if ( action.equals("CDDVD")){
 					String fichierIconeRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_ICONES + "/";
 					String fichierIconeRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/" + SOUSDOSSIER_ICONES + "/";
-
+/*
 					for (Groupe groupe : listeGroupes){
 						log.info("Groupe : " + groupe.getNomGroupe());
 						if (groupe.getNumeroGroupe() != 0) {
@@ -241,6 +269,7 @@ public class PrefetchDorisWebSite {
 								}
 							}
 						}
+
 						log.info("Groupe : " + groupe.getNomGroupe()+" - "+groupe.getCleURLImage());
 						if ( !groupe.getCleURLImage().isEmpty() ) {
 							if( ! isFileExistingPath( fichierIconeRefRacine+groupe.getImageNameOnDisk() ) ){
@@ -252,8 +281,54 @@ public class PrefetchDorisWebSite {
 							}
 						}
 					}
+									*/
 				}
+				/*
+				int pageCourante = 1;
+				boolean testContinu = false;
 				
+				do {
+					log.debug("doMain() - pageCourante Bibliographie : "+pageCourante);
+					
+					String listeBibliographies = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeBibliographies-"+pageCourante+".html";
+					log.info("Récup. Liste des Bibliographies : " + listeBibliographies);
+					
+					if (! action.equals("NODWNLD")){
+						if (Outils.getFichierFromUrl(Constants.getListeBibliographiesUrl(pageCourante), listeBibliographies)) {
+							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeBibliographies));
+						} else {
+							log.error("Une erreur est survenue lors de la récupération de la liste des Bibliographies : " + listeBibliographies);
+							System.exit(0);
+						}
+					} else {
+						// NODWNLD
+						listeBibliographies = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeBibliographies-"+pageCourante+".html";
+						if (new File(listeBibliographies).exists()) {
+							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeBibliographies));
+						} else {
+							log.error("Une erreur est survenue lors de la récupération de la liste des Bibliographies : " + listeBibliographies);
+							System.exit(0);
+						}
+					}
+					
+					final List<EntreeBibliographie> listeBiblioFromHTML = SiteDoris.getListeBiblioFromHtml(contenuFichierHtml);
+					//log.info("Creation de "+listeParticipantsFromHTML.size()+" participants pour la lettre : "+initiale);
+					TransactionManager.callInTransaction(connectionSource,
+							new Callable<Void>() {
+								public Void call() throws Exception {
+									for (EntreeBibliographie entreeBiblio : listeBiblioFromHTML){
+										if (!dbContext.entreeBibliographieDao.idExists(entreeBiblio.getId()))
+											dbContext.entreeBibliographieDao.create(entreeBiblio);
+									}
+									return null;
+							    }
+							});
+					 
+					pageCourante ++;
+					testContinu = contenuFichierHtml.contains("biblio.asp?mapage="+pageCourante+"&");
+				} while ( testContinu );
+				
+				*/
 				// TODO : recup description longue des groupes
 				// http://doris.ffessm.fr/fiches_liste.asp?numero_fichier=5&groupe_numero=51
 				
@@ -477,8 +552,6 @@ public class PrefetchDorisWebSite {
 				listeParticipants.addAll(dbContext.participantDao.queryForAll());
 				log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
 				*/
-				//Pas la peine de Récupérer la page de chacun des intervenants
-				// Toutes les infos sont dans les listes ci dessus
 				
 				
 				// - - - Liste des Fiches - - -
