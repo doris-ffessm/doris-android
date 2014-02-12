@@ -192,7 +192,7 @@ public class PrefetchDorisWebSite {
 					listeGroupesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeGroupes.html";
 					log.info("Récup. Liste Groupes Doris : " + listeGroupesFichier);
 					
-					if (Outils.getFichierFromUrl(Constants.getGroupesUrl(10), listeGroupesFichier)) {
+					if (Outils.getFichierFromUrl(Constants.getGroupesZoneUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES)), listeGroupesFichier)) {
 						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeGroupesFichier));
 						
 					} else {
@@ -228,9 +228,10 @@ public class PrefetchDorisWebSite {
 					if (groupe.getNumeroGroupe() != 0) {
 						String fichierLocalContenuGroupe = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
 						String fichierRefContenuGroupe = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
-
+						
 						if (! action.equals("NODWNLD")){
-							if (Outils.getFichierFromUrl(Constants.getGroupeContenuUrl(10, groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe(), 1), fichierLocalContenuGroupe)) {
+							if (Outils.getFichierFromUrl(Constants.getGroupeContenuUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES),
+									groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe(), 1), fichierLocalContenuGroupe)) {
 								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalContenuGroupe));
 							} else {
 								log.error("Une erreur est survenue lors du téléchargement du groupe : "+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe());
@@ -257,11 +258,11 @@ public class PrefetchDorisWebSite {
 
 					List<ZoneGeographiqueKind> listZone = Arrays.asList(ZoneGeographiqueKind.values());
 					for (ZoneGeographiqueKind zone : listZone ) {
-						int zoneId = zone.ordinal() + 1;
 						
+						int zoneId = Constants.getNumZoneForUrl(zone);
 						String fichierGroupes = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/groupes_zone_"+zoneId+".html";
 
-						if (Outils.getFichierFromUrl(Constants.getGroupesUrl(zoneId), fichierGroupes)) {
+						if (Outils.getFichierFromUrl(Constants.getGroupesZoneUrl(zoneId), fichierGroupes)) {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierGroupes));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste des Groupes : " + zone.toString());
@@ -527,7 +528,8 @@ public class PrefetchDorisWebSite {
 				log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
 				
 				if (! action.equals("NODWNLD")){
-					if (Outils.getFichierFromUrl(Constants.getListeFichesUrl(), listeFichesFichier)) {
+					String listeToutesFiches = Constants.getListeFichesUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES)); 
+					if (Outils.getFichierFromUrl(listeToutesFiches, listeFichesFichier)) {
 						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
@@ -821,15 +823,15 @@ public class PrefetchDorisWebSite {
 		log.debug("doMain() - Fin");
 	}
 
-	private void majZoneGeographique(ConnectionSource connectionSource, ZoneGeographiqueKind zoneKing){
+	private void majZoneGeographique(ConnectionSource connectionSource, ZoneGeographiqueKind zoneKind){
 		log.debug("majZoneGeographique() - Début");
 		
-		String listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeFiches-"+(zoneKing.ordinal()+1)+".html";
+		String listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeFiches-"+(zoneKind.ordinal()+1)+".html";
 		log.debug("Récup. Liste Fiches Doris Zone : " + listeFichesFichier);
 		//List<Fiche> listeFiches = new ArrayList<Fiche>(0);
 		String contenuFichierHtml = "";
 		if (! action.equals("NODWNLD")){
-			if (Outils.getFichierFromUrl(Constants.getListeFichesUrl(zoneKing), listeFichesFichier)) {
+			if (Outils.getFichierFromUrl(Constants.getListeFichesUrl(Constants.getNumZoneForUrl(zoneKind)) , listeFichesFichier)) {
 				contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
 				
 			} else {
@@ -838,7 +840,7 @@ public class PrefetchDorisWebSite {
 			}
 		} else {
 			// NODWNLD
-			listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeFiches-"+(zoneKing.ordinal()+1)+".html";
+			listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeFiches-"+(zoneKind.ordinal()+1)+".html";
 			if (new File(listeFichesFichier).exists()) {
 				contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
 			} else {
@@ -847,8 +849,8 @@ public class PrefetchDorisWebSite {
 			}
 		}
 		
-		final ZoneGeographique zoneGeographique = new ZoneGeographique(Constants.getTitreZoneGeographique(zoneKing), 
-																 Constants.getTexteZoneGeographique(zoneKing));
+		final ZoneGeographique zoneGeographique = new ZoneGeographique(Constants.getTitreZoneGeographique(zoneKind), 
+																 Constants.getTexteZoneGeographique(zoneKind));
 		try {
 			dbContext.zoneGeographiqueDao.create(zoneGeographique);
 		} catch (SQLException e) {

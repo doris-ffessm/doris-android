@@ -58,18 +58,12 @@ public class Constants {
 	public static final String MOYENNE_BASE_URL = IMAGE_BASE_URL+ "photos_fiche_moy";
 	public static final String GRANDE_BASE_URL = IMAGE_BASE_URL+ "photos";
 	
-    private final static String LISTE_TOUTES_FICHES_URL = "nom_scientifique.asp?numero_fichier=10";
+    private final static String LISTE_FICHES_ZONE_URL = "nom_scientifique.asp?numero_fichier=";
     
     private final static String GROUPES_URL = "groupes.asp?numero_fichier=";
     private final static String SOUSGROUPE_URL = "&sousgroupe_numero=";
     private final static String GROUPE_CONTENU_URL = "fiches_liste.asp?numero_fichier=@zone&groupe_numero=@groupe&pagecourante=@page";
-    
-    private final static String LISTE_FICHES_FRANCE_METROPOLITAINE_URL = "nom_scientifique.asp?numero_fichier=1&fichier=Faune%20et%20flore%20marines%20de%20France%20m%E9tropolitaine";
-    private final static String LISTE_FICHES_EAU_DOUCE_URL = "nom_scientifique.asp?numero_fichier=2&fichier=Faune%20et%20flore%20dulcicoles%20de%20France%20m%E9tropolitaine";
-    private final static String LISTE_FICHES_CARAIBES_URL = "nom_scientifique.asp?numero_fichier=4&fichier=Faune%20et%20flore%20subaquatiques%20des%20Cara%EFbes";
-    private final static String LISTE_FICHES_ATL_NORD_OUEST_URL = "nom_scientifique.asp?numero_fichier=5&fichier=Faune%20et%20flore%20marines%20et%20dulcicoles%20de%20l'Atlantique%20Nord-Ouest";
-    private final static String LISTE_FICHES_INDO_PACIFIQUE_URL = "nom_scientifique.asp?numero_fichier=3&fichier=Faune%20et%20flore%20marines%20et%20dulcicoles%20de%20l'Indo-Pacifique";
-    
+       
     private final static String FICHE_RACINE_URL_ID = "fiche2.asp?fiche_numero=";
     private final static String FICHE_RACINE_URL_NOM_COMMUN = "fiche3.asp?nomcommun=";
     
@@ -95,7 +89,8 @@ public class Constants {
     	FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE,
     	FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE,
     	FAUNE_FLORE_SUBAQUATIQUES_CARAIBES,
-    	FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST
+    	FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST,
+    	FAUNE_FLORE_TOUTES_ZONES
     }
 	
     public enum ParticipantKind {
@@ -134,8 +129,8 @@ public class Constants {
 		return listeFichesUrl;
     }
     
-    public static String getListeFichesUrl() {
-		String listeFichesUrl = SITE_RACINE_URL + LISTE_TOUTES_FICHES_URL;
+    public static String getListeFichesUrl(int numZone) {
+		String listeFichesUrl = SITE_RACINE_URL + LISTE_FICHES_ZONE_URL + numZone;
     	return listeFichesUrl;
     }
     
@@ -180,24 +175,26 @@ public class Constants {
     }
 
     
-    public static String getListeFichesUrl(ZoneGeographiqueKind zoneKing) {
+    public static int getNumZoneForUrl(ZoneGeographiqueKind zoneKing) {
     	switch (zoneKing) {
 		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
-			return SITE_RACINE_URL + LISTE_FICHES_FRANCE_METROPOLITAINE_URL;
+			return 1;
 		case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
-			return SITE_RACINE_URL + LISTE_FICHES_EAU_DOUCE_URL;
+			return 2;
 		case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
-			return SITE_RACINE_URL + LISTE_FICHES_INDO_PACIFIQUE_URL;
+			return 3;
 		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
-			return SITE_RACINE_URL + LISTE_FICHES_CARAIBES_URL;
+			return 4;
 		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
-			return SITE_RACINE_URL + LISTE_FICHES_ATL_NORD_OUEST_URL;
+			return 5;
+		case FAUNE_FLORE_TOUTES_ZONES:
+			return 10;
 		default:
-			return SITE_RACINE_URL + LISTE_TOUTES_FICHES_URL;
+			return 99;
 		}
     } 
     
-    public static String getGroupesUrl(int zone) {
+    public static String getGroupesZoneUrl(int zone) {
 		String listeFichesUrl = SITE_RACINE_URL + GROUPES_URL+zone;
     	return listeFichesUrl;
     }
@@ -227,6 +224,8 @@ public class Constants {
 			return ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES;
 		case 5 :
 			return ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST;
+		case 10 :
+			return ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES;
 		default:
 			return null;
 		}
@@ -243,6 +242,8 @@ public class Constants {
 			return "Faune et flore subaquatiques des Caraïbes";
 		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
 			return "Faune et flore subaquatiques de l'Atlantique Nord-Ouest";
+		case FAUNE_FLORE_TOUTES_ZONES:
+			return "Faune et flore subaquatiques de toutes les zones DORIS";
 		default:
 			return "Faune et flore subaquatiques de toutes les zones DORIS";
 		}
@@ -259,9 +260,11 @@ public class Constants {
 			return "Guadeloupe, Martinique et autres";
 		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
 			return "Côte est du Canada, embouchure du St Laurent, archipel de St Pierre-et-Miquelon";
+		case FAUNE_FLORE_TOUTES_ZONES:
+			return "Toutes les espèces de toutes les zones DORIS";
 		default:
-			return "Faune et flore subaquatiques de toutes les zones DORIS";
-		}
+			return "Toutes les espèces de toutes les zones DORIS";
+		} 
     }
     public static String getTitreCourtZoneGeographique(ZoneGeographiqueKind zoneKing) {
     	if (zoneKing==null) return "Toutes Zones DORIS";
@@ -277,6 +280,8 @@ public class Constants {
 			return "Caraïbes";
 		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
 			return "Atlant. Nord-Ouest";
+		case FAUNE_FLORE_TOUTES_ZONES:
+			return "Toutes Zones DORIS";
 		default:
 			return "Toutes Zones DORIS";
 		}
