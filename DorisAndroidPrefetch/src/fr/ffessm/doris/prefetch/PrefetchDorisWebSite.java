@@ -162,8 +162,6 @@ public class PrefetchDorisWebSite {
 			log.debug("doMain() - Début TEST");
 			
 
-			
-
 			log.debug("doMain() - Fin TEST");
 		} else {
 
@@ -253,14 +251,13 @@ public class PrefetchDorisWebSite {
 					}
 				}
 				// Téléchargement des pages de Groupes
-				// TODO : Reste à faire les replaceAll dans les pages pour les lier entres elles
 				if ( action.equals("CDDVD")){
 
 					List<ZoneGeographiqueKind> listZone = Arrays.asList(ZoneGeographiqueKind.values());
 					for (ZoneGeographiqueKind zone : listZone ) {
 						
 						int zoneId = Constants.getNumZoneForUrl(zone);
-						String fichierGroupes = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/groupes_zone_"+zoneId+".html";
+						String fichierGroupes = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/groupes_zone-"+zoneId+".html";
 
 						if (Outils.getFichierFromUrl(Constants.getGroupesZoneUrl(zoneId), fichierGroupes)) {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierGroupes));
@@ -1385,21 +1382,19 @@ public class PrefetchDorisWebSite {
 		lienATelecharger.add(new Lien(LienKind.PAGE, "doris_chroniques_doridiennes.asp","doris_genese_objectifs.html"));
 		lienATelecharger.add(new Lien(LienKind.PAGE, "doris_equipe.asp","doris_equipe.html"));
 
-		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=10","fichier_10.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=1","fichier_1.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=2","fichier_2.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=3","fichier_3.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=4","fichier_4.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=5","fichier_5.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=10","fichier-10.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=1","fichier-1.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=2","fichier-2.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=3","fichier-3.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=4","fichier-4.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=5","fichier-5.html"));
 
-		/*
-		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=10","groupes_zone_10.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=1","groupes_zone_1.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=2","groupes_zone_2.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=3","groupes_zone_3.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=4","groupes_zone_4.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=5","groupes_zone_5.html"));
-		*/
+		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=10","groupes_zone-10.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=1","groupes_zone-1.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=2","groupes_zone-2.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=3","groupes_zone-3.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=4","groupes_zone-4.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=5","groupes_zone-5.html"));
 		
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/favicon.ico","images_favicon.ico"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/carre.jpg","images_carre.jpg"));
@@ -1539,8 +1534,8 @@ public class PrefetchDorisWebSite {
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?page=Suivant[^\"]*","href=\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?page=Precedent[^\"]*","href=\""));
 		
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiches_liste.asp\\?groupe_numero=[^\">]*\"","href=\"indisponible_CDDVD.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiches_liste.asp\\?sousgroupe_numero=[^\">]*\"","href=\"indisponible_CDDVD.html\""));
+		//regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiches_liste.asp\\?groupe_numero=[^\">]*\"","href=\"indisponible_CDDVD.html\""));
+		//regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiches_liste.asp\\?sousgroupe_numero=[^\">]*\"","href=\"indisponible_CDDVD.html\""));
 				
 		regExpPourNettoyer.add(new Lien(LienKind.ICONE, "http://doris.ffessm.fr/gestionenligne/photos_forum_vig/[^\">]*\"","/doris_icone_doris_large.png\""));
 
@@ -1671,11 +1666,14 @@ public class PrefetchDorisWebSite {
 		File dossierCD = new File(fichierCDLien+DOSSIER_HTML);
 		for (File fichierHtml:dossierCD.listFiles()) {
 			String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
+			
 			contenuFichier = contenuFichier.replace("href=\""+Constants.getSiteUrl(),"href=\"");
 			
 			// Le site n'est pas toujours très cohérent
 			contenuFichier = contenuFichier.replace("src=\"../Images","src=\"images");
 			contenuFichier = contenuFichier.replace("src=\"gestionenligne/images/icones","src=\"images" );
+			
+			// Si la Page contient : "recherche par Images"
 			
 			
 			// Pour chaque Liens à télécharger définis ci-après
@@ -1748,8 +1746,67 @@ public class PrefetchDorisWebSite {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
+		} // Fin pour chaque fichier du dossier html
 
+		// Les liens entre les pages de Groupes ne pouvaient être réalisé purement avec des expressions régulières
+		// On re-parcourt donc l'ensemble des fichiers contenant groupe dans leur nom.
+		for (File fichierHtml : dossierCD.listFiles()) {
+			
+			// Les pages contenant l'arborescence des Groupes : groupes_zone-11.html
+			if (fichierHtml.getName().contains("groupes_zone")){
+				
+				String numZone = fichierHtml.getName().replaceAll("[^-]*-([0-9]*).*", "$1").trim();
+				
+				String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
+		
+				// Lien vers 1ère page des espèces du Groupe
+				// fiches_liste.asp?groupe_numero=51 pour la zone 10
+				// groupe-10-51-0-1
+				contenuFichier = contenuFichier.replaceAll(
+						"href=\"fiches_liste.asp\\?groupe_numero=([0-9]*)[^\">]*\"",
+						"href=\"groupe-"+numZone+"-$1-0-1.html");
+
+				// Lien vers 1ère page des espèces du Sous Groupe
+				//fiches_liste.asp?sousgroupe_numero=73&groupe_numero=2&fichier=&numero_fichier=1 pour la zone 10
+				// groupe-10-2-73-1
+				contenuFichier = contenuFichier.replaceAll(
+						"href=\"fiches_liste.asp?sousgroupe_numero=([0-9]*)&groupe_numero=([0-9]*)[^\">]*\"",
+						"href=\"groupe-"+numZone+"-$2-$1-1.html");
+				
+			}
+			// Les pages contenant les espèces du Groupe : groupe-10-2-73-1.html
+			if (fichierHtml.getName().contains("groupe-")){
+				
+				String[] info = fichierHtml.getName().replace(".html", "").split("-");
+				String numZone = info[1].trim();
+				String numGroupe = info[2].trim().trim();
+				String numSousGroupe = info[3].trim().trim();
+				String numPage = info[4].trim().trim();
+				
+				int numPageSuivante = Integer.valueOf(numPage)+1;
+				int numPagePrecedente = Integer.valueOf(numPage)-1;
+				
+				String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
+				
+				// Lien vers la page de tous les groupes de la zone
+				//groupes.asp?temp=0
+				contenuFichier = contenuFichier.replace("groupes.asp?temp=0", "groupes_zone-"+numZone+".html");
+				
+				// Page Suivante
+				// fiches_liste.asp?fichier=&groupe_numero=49&sousgroupe_numero=&rnomscient=&rtrie=&rnomcommunfr=&page=Suivant&PageCourante=2&term=&enco=&prop=&allcheck=
+				contenuFichier = contenuFichier.replaceAll(
+						"href=\"fiches_liste.asp?fichier=[^\"]*&page=Suivant&[^\"]*\"",
+						"href=\"groupe-"+numZone+"-"+numGroupe+"-"+numSousGroupe+"-"+numPageSuivante+".html");
+				
+				
+				// Précédente
+				// fiches_liste.asp?&fichier=&groupe_numero=49&sousgroupe_numero=&rnomscient=&rtrie=&rnomcommunfr=&page=Precedent&PageCourante=2&term=&enco=&prop=&allcheck=
+				contenuFichier = contenuFichier.replaceAll(
+						"href=\"fiches_liste.asp?fichier=[^\"]*&page=Precedent&[^\"]*\"",
+						"href=\"groupe-"+numZone+"-"+numGroupe+"-"+numSousGroupe+"-"+numPagePrecedente+".html");
+				
+			}
+		}
 		
 		log.debug("transfoHtml() - Fin");
 	}
