@@ -161,6 +161,8 @@ public class PrefetchDorisWebSite {
 		if (action.equals("TEST")) {
 			log.debug("doMain() - Début TEST");
 			
+			creationCD();
+			transfoHtml();
 
 			log.debug("doMain() - Fin TEST");
 		} else {
@@ -227,7 +229,7 @@ public class PrefetchDorisWebSite {
 						String fichierLocalContenuGroupe = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
 						String fichierRefContenuGroupe = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
 						
-						if (! action.equals("NODWNLD")){
+						if (! action.equals("NODWNLD") && ! action.equals("CDDVD")){
 							if (Outils.getFichierFromUrl(Constants.getGroupeContenuUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES),
 									groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe(), 1), fichierLocalContenuGroupe)) {
 								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalContenuGroupe));
@@ -236,7 +238,7 @@ public class PrefetchDorisWebSite {
 								System.exit(0);
 							}
 						} else {
-							// NODWNLD
+							// NODWNLD ou CDDVD
 							if ( isFileExistingPath( fichierRefContenuGroupe ) ) {
 								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefContenuGroupe));
 							} else {
@@ -1275,7 +1277,7 @@ public class PrefetchDorisWebSite {
 			}
 		}
 		
-		//	Vérification que le dossier html Référence existe
+		//	Vérification que les dossiers Images Référence existe
 		if(inAction.equals("CDDVD") ){
 			File dossierReference = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF);
 			if (!dossierReference.exists()){
@@ -1378,7 +1380,7 @@ public class PrefetchDorisWebSite {
 		lienATelecharger.add(new Lien(LienKind.PAGE, "formulaire_contact.asp","formulaire_contact.html"));
 		lienATelecharger.add(new Lien(LienKind.PAGE, "doris_doridiens.asp","doris_doridiens.html"));
 		lienATelecharger.add(new Lien(LienKind.PAGE, "doris_genese_objectifs.asp","doris_genese_objectifs.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "doris_chroniques_doridiennes.asp","doris_genese_objectifs.html"));
+		lienATelecharger.add(new Lien(LienKind.PAGE, "doris_chroniques_doridiennes.asp","doris_chroniques_doridiennes.html"));
 		lienATelecharger.add(new Lien(LienKind.PAGE, "doris_equipe.asp","doris_equipe.html"));
 
 		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=10","fichier-10.html"));
@@ -1439,6 +1441,7 @@ public class PrefetchDorisWebSite {
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/picto_regl.gif","images_picto_regl.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/picto_dang18.gif","images_picto_dang18.gif"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/picto_dang.gif","images_picto_dang.gif"));
+		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fiche.gif","fiche.gif"));
 		
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier1puce.jpg","images_fichier1puce.jpg"));
 		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier2puce.jpg","images_fichier2puce.jpg"));
@@ -1514,7 +1517,7 @@ public class PrefetchDorisWebSite {
 	public List<Lien> getRegExpPourNettoyer(){
 		List<Lien> regExpPourNettoyer = new ArrayList<Lien>(0);
 		
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche.asp\\?[^&\">]*&fiche_numero=([^&]*)&[^\">]*\"","href=\"fiche-$1.html\""));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche.asp\\?[^\">]*&fiche_numero=([^&]*)&[^\">]*\"","href=\"fiche-$1.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche2.asp\\?fiche_numero=([^&]*)&[^\">]*\"","href=\"fiche-$1.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche2.asp\\?fiche_numero=([^\">]*)\"","href=\"fiche-$1.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"\\.\\./fiche2.asp\\?fiche_numero=([^\">]*)\"","href=\"fiche-$1.html\""));
@@ -1537,6 +1540,7 @@ public class PrefetchDorisWebSite {
 
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "fiche_photo_liste_apercu.asp\\?fiche_numero=([^&>]*)&[^\">]*\"","fiche-$1_listePhotos.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "photo_gde_taille_fiche2.asp\\?varpositionf=[^\">]*fiche_numero = ([^&]*)&[^\">]*\"","fiche-$1_listePhotos.html\""));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "photo_gde_taille.asp\\?varposition=[^\">]*\"","indisponible_CDDVD.html\""));
 		
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio_fiche.asp\\?biblio_numero=[^\">]*\"","href=\"indisponible_CDDVD.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?mapage=([^&>]*)&[^\">]*\"","href=\"listeBibliographies-$1.html\""));
@@ -1758,6 +1762,8 @@ public class PrefetchDorisWebSite {
 				
 				String numZone = fichierHtml.getName().replaceAll("[^-]*-([0-9]*).*", "$1").trim();
 				
+				log.debug("transfoHtml() - groupes_zone : "+fichierHtml.getName()+" - "+numZone);
+				
 				String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
 		
 				// Lien vers 1ère page des espèces du Groupe
@@ -1765,15 +1771,22 @@ public class PrefetchDorisWebSite {
 				// groupe-10-51-0-1
 				contenuFichier = contenuFichier.replaceAll(
 						"href=\"fiches_liste.asp\\?groupe_numero=([0-9]*)[^\">]*\"",
-						"href=\"groupe-"+numZone+"-$1-0-1.html");
+						"href=\"groupe-"+numZone+"-$1-0-1.html\"");
 
 				// Lien vers 1ère page des espèces du Sous Groupe
 				//fiches_liste.asp?sousgroupe_numero=73&groupe_numero=2&fichier=&numero_fichier=1 pour la zone 10
 				// groupe-10-2-73-1
 				contenuFichier = contenuFichier.replaceAll(
-						"href=\"fiches_liste.asp?sousgroupe_numero=([0-9]*)&groupe_numero=([0-9]*)[^\">]*\"",
-						"href=\"groupe-"+numZone+"-$2-$1-1.html");
+						"href=\"fiches_liste.asp\\?sousgroupe_numero=([0-9]*)&groupe_numero=([0-9]*)[^\">]*\"",
+						"href=\"groupe-"+numZone+"-$2-$1-1.html\"");
 				
+				
+				
+				try {
+					FileUtils.write(fichierHtml, contenuFichier, "iso-8859-1");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			// Les pages contenant les espèces du Groupe : groupe-10-2-73-1.html
 			if (fichierHtml.getName().contains("groupe-")){
@@ -1784,6 +1797,9 @@ public class PrefetchDorisWebSite {
 				String numSousGroupe = info[3].trim().trim();
 				String numPage = info[4].trim().trim();
 				
+				log.debug("transfoHtml() - groupe- : "+fichierHtml.getName()+" - "+numZone+
+						" - "+numGroupe+" - "+numSousGroupe+" - "+numPage);
+				
 				int numPageSuivante = Integer.valueOf(numPage)+1;
 				int numPagePrecedente = Integer.valueOf(numPage)-1;
 				
@@ -1791,21 +1807,29 @@ public class PrefetchDorisWebSite {
 				
 				// Lien vers la page de tous les groupes de la zone
 				//groupes.asp?temp=0
-				contenuFichier = contenuFichier.replace("groupes.asp?temp=0", "groupes_zone-"+numZone+".html");
+				contenuFichier = contenuFichier.replaceAll(
+						"href=\"groupes.asp\\?temp=0[^\"]*\"",
+						"href=\"groupes_zone-"+numZone+".html\"");
 				
 				// Page Suivante
 				// fiches_liste.asp?fichier=&groupe_numero=49&sousgroupe_numero=&rnomscient=&rtrie=&rnomcommunfr=&page=Suivant&PageCourante=2&term=&enco=&prop=&allcheck=
 				contenuFichier = contenuFichier.replaceAll(
-						"href=\"fiches_liste.asp?fichier=[^\"]*&page=Suivant&[^\"]*\"",
-						"href=\"groupe-"+numZone+"-"+numGroupe+"-"+numSousGroupe+"-"+numPageSuivante+".html");
+						"href=\"fiches_liste.asp\\?fichier=[^\"]*&page=Suivant&[^\"]*\"",
+						"href=\"groupe-"+numZone+"-"+numGroupe+"-"+numSousGroupe+"-"+numPageSuivante+".html\"");
 				
 				
 				// Précédente
 				// fiches_liste.asp?&fichier=&groupe_numero=49&sousgroupe_numero=&rnomscient=&rtrie=&rnomcommunfr=&page=Precedent&PageCourante=2&term=&enco=&prop=&allcheck=
 				contenuFichier = contenuFichier.replaceAll(
-						"href=\"fiches_liste.asp?fichier=[^\"]*&page=Precedent&[^\"]*\"",
-						"href=\"groupe-"+numZone+"-"+numGroupe+"-"+numSousGroupe+"-"+numPagePrecedente+".html");
+						"href=\"fiches_liste.asp\\?&fichier=[^\"]*&page=Precedent&[^\"]*\"",
+						"href=\"groupe-"+numZone+"-"+numGroupe+"-"+numSousGroupe+"-"+numPagePrecedente+".html\"");
 				
+				
+				try {
+					FileUtils.write(fichierHtml, contenuFichier, "iso-8859-1");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		
