@@ -850,7 +850,7 @@ public class Fiche {
 									sousElement = sousElement.getParentElement().getParentElement().getParentElement();
 									
 									for (Element elementClassNormal : sousElement.getAllElementsByClass("normal")) {
-										texte += elementClassNormal.getRenderer().toString().trim()+"{{n/}}";
+										texte += elementClassNormal.getRenderer().toString().trim()+"{{n/}}{{n/}}";
 									}
 								}
 							}

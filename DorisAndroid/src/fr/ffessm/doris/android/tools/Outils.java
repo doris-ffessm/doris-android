@@ -188,7 +188,7 @@ public class Outils {
 				URL urlHtml = null;
 				try {
 					String urlNettoyee = baseUrl+photoUrl;
-					urlNettoyee = urlNettoyee.replaceAll(" ", "%20");
+					urlNettoyee = urlNettoyee.replace(" ", "%20");
 					urlHtml = new URL(urlNettoyee);
 				} catch (MalformedURLException e ) {
 					Log.w(LOG_TAG, e.getMessage(), e);

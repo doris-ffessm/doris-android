@@ -170,7 +170,7 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
 	    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLPhotoParticipant() : "+Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom());
 	    		String urlPhoto= Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom();
 	    		Picasso.with(context)
-	    			.load(urlPhoto.replaceAll(" ", "%20"))
+	    			.load(urlPhoto.replace(" ", "%20"))
 					.placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
 					.error(R.drawable.app_ic_participant_pas_connecte)
 					.fit()

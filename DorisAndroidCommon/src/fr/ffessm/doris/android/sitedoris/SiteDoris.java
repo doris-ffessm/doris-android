@@ -388,7 +388,7 @@ public class SiteDoris {
     			if(elementIMG != null){
 	    			String cleURL = elementIMG.getAttributeValue("src");
 	    			cleURL = cleURL.substring(cleURL.lastIndexOf("/"), cleURL.length()); // garde seulement le nom du fichier 
-	    			cleURL = cleURL.replaceAll(" ", "%20");	// on s'assure d'avoir une url valide
+	    			cleURL = cleURL.replace(" ", "%20");	// on s'assure d'avoir une url valide
 	    			if (listePhotosFiche.isEmpty()) {
 	    				//Image Principale
 	    				PhotoFiche photoFiche = new PhotoFiche(cleURL,titrePhotoCourante, descritionPhotoCourante, true);
@@ -509,7 +509,7 @@ public class SiteDoris {
 						if (elementTDwidth != null && elementTDwidth.equals("150") ){
 							//log.info("getListeParticipantsParInitiale() - photo : "+elementIMG.getAttributeValue("src"));
 							participantUrlPhoto = elementIMG.getAttributeValue("src");
-							participantUrlPhoto = participantUrlPhoto.replaceAll(" ", "%20");	// on s'assure d'avoir une url valide
+							participantUrlPhoto = participantUrlPhoto.replace(" ", "%20");	// on s'assure d'avoir une url valide
 						}
 					}
 

@@ -700,7 +700,6 @@ public class PrefetchDorisWebSite {
 								});
 							
 							// Téléchargement Photos
-							//TODO : Qd des espaces il faudrait les remplacer par des _
 							if ( action.equals("CDDVD") ) {
 								String fichierImageRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/";
 								String fichierImageRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/";
@@ -709,24 +708,24 @@ public class PrefetchDorisWebSite {
 	
 									if ( !photoFiche.getCleURL().isEmpty() ) {
 										// Vignettes
-										if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL() ) ){
-											if (Outils.getFichierFromUrl(Constants.VIGNETTE_BASE_URL+photoFiche.getCleURL(), fichierImageRacine+SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL())) {
+										if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL().replace(" ", "_") ) ){
+											if (Outils.getFichierFromUrl(Constants.VIGNETTE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL().replace(" ", "_"))) {
 											} else {
 												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 												//System.exit(0);
 											}
 										}
 										// Qualité Intermédiaire
-										if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_MED_RES+photoFiche.getCleURL() ) ){
-											if (Outils.getFichierFromUrl(Constants.MOYENNE_BASE_URL+photoFiche.getCleURL(), fichierImageRacine+SOUSDOSSIER_MED_RES+photoFiche.getCleURL())) {
+										if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_MED_RES+photoFiche.getCleURL().replace(" ", "_") ) ){
+											if (Outils.getFichierFromUrl(Constants.MOYENNE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+SOUSDOSSIER_MED_RES+photoFiche.getCleURL().replace(" ", "_"))) {
 											} else {
 												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 												//System.exit(0);
 											}
 										}
 										// Haute Qualité 
-										if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_HI_RES+photoFiche.getCleURL() ) ){
-											if (Outils.getFichierFromUrl(Constants.GRANDE_BASE_URL+photoFiche.getCleURL(), fichierImageRacine+SOUSDOSSIER_HI_RES+photoFiche.getCleURL())) {
+										if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_HI_RES+photoFiche.getCleURL().replace(" ", "_") ) ){
+											if (Outils.getFichierFromUrl(Constants.GRANDE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+SOUSDOSSIER_HI_RES+photoFiche.getCleURL().replace(" ", "_"))) {
 											} else {
 												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 												//System.exit(0);
@@ -1534,9 +1533,6 @@ public class PrefetchDorisWebSite {
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?page=Suivant[^\"]*","href=\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?page=Precedent[^\"]*","href=\""));
 		
-		//regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiches_liste.asp\\?groupe_numero=[^\">]*\"","href=\"indisponible_CDDVD.html\""));
-		//regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiches_liste.asp\\?sousgroupe_numero=[^\">]*\"","href=\"indisponible_CDDVD.html\""));
-				
 		regExpPourNettoyer.add(new Lien(LienKind.ICONE, "http://doris.ffessm.fr/gestionenligne/photos_forum_vig/[^\">]*\"","/doris_icone_doris_large.png\""));
 
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "fiche_photo_liste_apercu.asp\\?fiche_numero=([^&>]*)&[^\">]*\"","fiche-$1_listePhotos.html\""));
@@ -1548,6 +1544,11 @@ public class PrefetchDorisWebSite {
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?page=Precedent[^\"]*","href=\""));
 
 
+		// Si un espace dans le nom des photos alors on le remplace par un _
+		//regExpPourNettoyer.add(new Lien(LienKind.PAGE, "<img src="../vignettes_fiches/ electra_posidoniae-dh02.jpg"","href=\""));
+
+		//<img src="../vignettes_fiches/ electra_posidoniae-dh02.jpg"
+		
 		return regExpPourNettoyer;
 	}
 	
