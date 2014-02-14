@@ -43,17 +43,28 @@ package fr.ffessm.doris.android.async;
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.j256.ormlite.dao.GenericRawResults;
+
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
+import fr.ffessm.doris.android.sitedoris.OutilsBase;
+import fr.ffessm.doris.android.sitedoris.SiteDoris;
+import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports VerifieMAJFiches_BgActivity
 // End of user code
@@ -67,6 +78,11 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     private Context context;
     
     // Start of user code additional attribute declarations VerifieMAJFiches_BgActivity
+    
+    
+    
+    
+    
 	// End of user code
     
 	/** constructor */
@@ -97,6 +113,76 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     	
     	// Start of user code main loop of task VerifieMAJFiches_BgActivity
 		// This is where we would do the actual job
+    	HashSet<FicheLight> listeFichesBase = new HashSet<FicheLight>(100);
+    	try{
+    		
+	    	// Récupération de la liste des Fiches de la Base
+	    	//OutilsBase outilsBase = new OutilsBase(dbHelper.getDorisDBHelper());
+	    	listeFichesBase = new HashSet<FicheLight>((int) dbHelper.getDorisDBHelper().ficheDao.countOf());
+	    	//ficheList = dbHelper.getDorisDBHelper().ficheDao.queryForAll();
+	    	
+	    	GenericRawResults<String[]> rawResults =
+	    			dbHelper.getDorisDBHelper().ficheDao.queryRaw("SELECT _id, numeroFiche, etatFiche FROM fiche");
+			for (String[] resultColumns : rawResults) {
+			    String iDString = resultColumns[0];
+			    String numeroFicheString = resultColumns[1];
+			    String etatFicheString = resultColumns[2];
+			    listeFichesBase.add(new FicheLight(
+			    		Integer.parseInt(iDString),
+			    		Integer.parseInt(numeroFicheString),
+			    		Integer.parseInt(etatFicheString)) );
+			}
+			Log.d(LOG_TAG, "doInBackground() - Fiches de la Base : "+listeFichesBase.size() );
+			
+			
+			// Récupération de la liste Fiches depuis le Site
+	    	String urlListeFiches =  Constants.getListeFichesUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES));
+	    	Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlListeFiches);
+	    	
+	    	String fichierDansCache = "listeFiches-10.html";
+	    	Log.d(LOG_TAG, "doInBackground() - fichierDansCache : "+fichierDansCache);
+	    	
+	    	try {
+	    		Outils.getHtml(context, urlListeFiches, fichierDansCache);
+			} catch (IOException e) {
+				Log.w(LOG_TAG, e.getMessage(), e);
+			}   
+	    	
+	    	String contenuFichierHtml = fr.ffessm.doris.android.sitedoris.Outils
+				.getFichierTxtFromDisk(new File(context.getCacheDir()+"/"+fichierDansCache));
+	 
+	    	HashSet<Fiche> listeFichesSite = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
+	    	Log.d(LOG_TAG, "doInBackground() - Fiches de la Base : "+listeFichesSite.size() );
+	    	
+	    	for (Fiche ficheSite : listeFichesSite){
+	    		FicheLight ficheLightSite = new FicheLight(
+    				ficheSite.getId(),
+    				ficheSite.getNumeroFiche(),
+    				ficheSite.getEtatFiche());
+	    		if (listeFichesBase.contains(ficheLightSite)){
+	    			Log.d(LOG_TAG, "doInBackground() - Fiche inchangée : "+ficheSite.getNumeroFiche() );
+	    		} else {
+	    			Log.d(LOG_TAG, "doInBackground() - Fiche modifiée : "+ficheSite.getNumeroFiche() );
+	    			
+	    			
+	    			
+	    		}
+	    		
+	    		
+	    	}
+	    	
+	    	
+    	} catch(java.sql.SQLException e) {
+			Log.e(LOG_TAG, e.getMessage(), e);
+    	}
+		
+    	
+    	
+    	
+    	
+    	
+    	
+    	
 		// you should indicates the progression using publishProgress()
 		for (int i=10;i<=100;i += 10)
             {
@@ -137,6 +223,19 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 
     // Start of user code additional operations VerifieMAJFiches_BgActivity
 	
+    // Entête Fiche permettant d'avoir une emprunte mémoire minimum
+    private class FicheLight {
+    	int _id;
+    	int numeroFiche;
+    	int etatFiche;
+    	FicheLight(int _id, int numeroFiche, int etatFiche){
+    		this._id = _id;
+    		this.numeroFiche = numeroFiche;
+    		this.etatFiche = etatFiche;
+    	}
+    }
+    
+    
 	// End of user code
 	
 }

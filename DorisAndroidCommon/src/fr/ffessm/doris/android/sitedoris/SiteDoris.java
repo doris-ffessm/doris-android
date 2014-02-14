@@ -65,7 +65,7 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 
 public class SiteDoris {
 
-	// Inititalisation de la Gestion des Log
+	// Initialisation de la Gestion des Log
 	public static Log log = LogFactory.getLog(SiteDoris.class);
 	
 
