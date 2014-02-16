@@ -122,7 +122,7 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 		((TextView) findViewById(R.id.detailsbibliographie_elementview_details)).setText(entry.getDetails());
 		//((TextView) findViewById(R.id.detailsbibliographie_elementview_cleurlillustration)).setText(entry.getCleURLIllustration());
 		
-		String urlString = Constants.getBibliographieUrl( ""+entry.getNumeroDoris() ); 
+		String urlString = Constants.getBibliographieUrl( entry.getNumeroDoris() ); 
 		SpannableString richtext = new SpannableString(urlString);
 		richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
 		TextView contenuUrl = (TextView) findViewById(R.id.detailsbibliographie_elementview_liensite);

@@ -381,6 +381,14 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			startActivity(intent);
 		}
     }
+	public void onClickBtnIconeSiteWebFFESSM(View view){
+		String url = getString(R.string.ffessm_url);
+		if (!url.isEmpty()) {
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setData(Uri.parse(url));
+			startActivity(intent);
+		}
+    }
 	public void onClickBtnFermer(View view){
 		mustShowLogoFede = false;
     	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);

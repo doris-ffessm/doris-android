@@ -4,6 +4,9 @@
     <string name="app_name">DorisAndroid</string>
 	<!--Start of user code remove protected zone to rebuild all default values
 		-->
+	<string name="ffessm">"Fédération Française d\'Études de Sports Sous-Marins"</string>
+	<string name="ffessm_url">http://www.ffessm.fr</string>
+		
     <string name="edit_menu">Edit</string>
     
     

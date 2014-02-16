@@ -253,34 +253,6 @@
 	    android:gravity="center_horizontal"
 	    android:orientation="vertical" >
 
-		<ImageView
-		    android:id="@+id/accueil_logo1"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:layout_alignParentTop="true"
-		    android:layout_marginLeft="4dip"
-		    android:layout_marginRight="4dip"
-		    android:layout_marginTop="4dip"
-		    android:adjustViewBounds="true"
-		    android:contentDescription="@string/accueil_customview_logo1_description"
-		    android:maxHeight="60dp"
-		    android:onClick="onClickBtnIconeSiteWeb1"
-		    android:src="@drawable/doris_logo_site_doris" />
-
-	    <ImageView
-	        android:id="@+id/accueil_logo2"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentBottom="true"
-	        android:layout_marginLeft="4dip"
-	        android:layout_marginRight="4dip"
-	        android:layout_marginTop="4dip"
-	        android:adjustViewBounds="true"
-	        android:contentDescription="@string/accueil_customview_logo2_description"
-	        android:maxHeight="60dp"
-	        android:onClick="onClickBtnIconeSiteWeb2"
-	        android:src="@drawable/doris_logo_site_biologie" />
-
 	    <ImageView
 	        android:id="@+id/btn_close"
 	        android:layout_width="wrap_content"
@@ -290,6 +262,55 @@
 	        android:contentDescription="Fermer"
 	        android:onClick="onClickBtnFermer"
 			android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+	    <ImageView
+	        android:id="@+id/accueil_logo1"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_alignParentTop="true"
+	        android:adjustViewBounds="true"
+	        android:contentDescription="@string/accueil_customview_logo1_description"
+	        android:maxHeight="40dp"
+	        android:onClick="onClickBtnIconeSiteWeb1"
+	        android:src="@drawable/doris_logo_site_doris" />
+		<LinearLayout
+	        android:id="@+id/accueil_accueil_ffessm_layout"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_above="@+id/accueil_logo2"
+	        android:layout_alignParentLeft="true"
+			android:onClick="onClickBtnIconeSiteWebFFESSM">
+
+			<ImageView
+			    android:id="@+id/accueil_logoffessm"
+			    android:layout_width="54dp"
+			    android:layout_height="40dp"
+			    android:layout_gravity="center_vertical"
+			    android:src="@drawable/doris_logo_ffessm_quadri" />
+
+		    <TextView
+		        android:id="@+id/accueil_ffessm"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:gravity="center_horizontal"
+		        android:padding="3dip"
+		        android:text="@string/ffessm"
+		        android:textAppearance="?android:attr/textAppearanceMedium"
+		        android:textColor="#0958A5"
+		        android:textStyle="bold"/>
+		</LinearLayout>
+	    <ImageView
+	        android:id="@+id/accueil_logo2"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_centerHorizontal="true"
+	        android:adjustViewBounds="true"
+	        android:contentDescription="@string/accueil_customview_logo2_description"
+	        android:maxHeight="40dp"
+	        android:onClick="onClickBtnIconeSiteWeb2"
+	        android:src="@drawable/doris_logo_site_biologie" />
 
 	</RelativeLayout>
 	<ScrollView

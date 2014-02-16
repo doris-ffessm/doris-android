@@ -228,7 +228,7 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
 	// Start of user code protectedDetailsParticipant_ElementViewActivity_additional_operations
     
     public void onClickBioComplete(View view){
-		String url = Constants.getParticipantUrl(((Integer)participantNumeroDoris).toString());
+		String url = Constants.getParticipantUrl(participantNumeroDoris);
 		if (!url.isEmpty()) {
 			Intent intent = new Intent(Intent.ACTION_VIEW);
 			intent.setData(Uri.parse(url));

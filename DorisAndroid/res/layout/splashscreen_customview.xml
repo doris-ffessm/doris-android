@@ -25,7 +25,7 @@
 		    android:contentDescription="@string/accueil_customview_logo1_description"
 		    android:maxHeight="60dp"
 		    android:src="@drawable/doris_logo_site_doris" />
-
+	    
 	    <ImageView
 	        android:id="@+id/splashscreen_logo2"
 	        android:layout_width="match_parent"
@@ -38,14 +38,27 @@
 	        android:contentDescription="@string/accueil_customview_logo2_description"
 	        android:maxHeight="60dp"
 	        android:src="@drawable/doris_logo_site_biologie" />
-
+	    
+		<ImageView
+	        android:id="@+id/splashscreen_logo3"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@+id/splashscreen_logo2"
+	        android:layout_marginLeft="4dip"
+	        android:layout_marginRight="4dip"
+	        android:layout_marginTop="4dip"
+	        android:adjustViewBounds="true"
+	        android:contentDescription="@string/ffessm"
+	        android:maxHeight="60dp"
+	        android:src="@drawable/doris_logo_ffessm_quadri" />
+		
 	    <LinearLayout
 	        android:id="@+id/splashscreen_progressLayout"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:layout_gravity="center_horizontal" 
 		    android:layout_centerHorizontal="true"
-	        android:layout_below="@+id/splashscreen_logo2"
+	        android:layout_below="@+id/splashscreen_logo3"
 			android:visibility="gone">
 	
 			<TextView
@@ -60,6 +73,7 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"/>
 		</LinearLayout>
+
 
 	</RelativeLayout>
 </LinearLayout>
