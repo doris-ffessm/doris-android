@@ -187,7 +187,7 @@ public class Outils {
 		texteNettoye = texteNettoye.replace("<b>", "<strong>")
 						.replace("</b>", "</strong>");
 
-		// Tous les sauts de ligne de la même façon + gain de place en auteur pour l'interface Android
+		// Tous les sauts de ligne de la même façon + gain de place en hauteur pour l'interface Android
 		texteNettoye = texteNettoye.replace("<br>", "<br/>")
 				.replace("<br />", "<br/>")
 				.replace("<br/><br/>", "<br/>");
@@ -224,8 +224,11 @@ public class Outils {
 				.replace("<i></i>", "")
 				.replace("</i><i>", "");
 		texteNettoye = texteNettoye.replaceAll("<a href=\"http://[^>]*></a>", "");
-				
-				
+			
+		// Suppression des textes masqués en étant écrit en blanc sur fond blanc
+		// <span style="color: #ffffff;">Vidéoris</span>
+		texteNettoye = texteNettoye.replaceAll("<span style=\"color: #ffffff;\">[^<>]*</span>", "");
+		
 		//log.debug("nettoyageBalises() - texteNettoye : " + texteNettoye);
 		//log.debug("nettoyageBalises() - Fin");
 		return texteNettoye;
@@ -249,10 +252,15 @@ public class Outils {
 			texteNettoye = texteNettoye.replaceAll("<span style=\"text-decoration: underline;\">([^<>]*)</span>","{{s}}$1{{/s}}");
 			//Sauts de ligne
 			texteNettoye = texteNettoye.replace("<br/>", "{{n/}}");
+			
 			//Lien vers autres fiches
 			texteNettoye = texteNettoye.replaceAll("<[^<]*fiche_numero=([0-9]*)\"[^>]*>([^<]*)</a>", "{{F:$1}}$2{{/F}}");
+			
 			//Lien vers termes du glossaire
 			texteNettoye = texteNettoye.replaceAll("([ >\\}'\\(])([^ >\\}'\\(]*)\\*", "$1{{D:$2}}$2{{/D}}");
+			//Image du Glossaire (elles sont dans le texte) - <img src="gestionenligne/diaporamaglo/16.jpg     ">
+			texteNettoye = texteNettoye.replaceAll("<img src=\"gestionenligne/diaporamaglo/([^\" >]*)[ ]*\">", "{{H:$1/}}");
+			
 			
 			//Lien vers site extérieur : oiseaux.net, fishbase.org, etc ...
 			texteNettoye = texteNettoye.replaceAll("<a href=\"http://([^\"]*)\"[^>]*>([^<]*)</a>", "{{A:$1}}$2{{/A}}");
@@ -266,7 +274,7 @@ public class Outils {
 			texteNettoye = texteNettoye.replace("{{/g}} {{g}}"," ");
 			
 			// Le Gras ne doit pas être à l'intérieure d'un lien mais l'entourer
-			// ça ne semble arriver que pour ce cas, i.. pas pour les termes du glossaire, l'italique etc..
+			// ça ne semble arriver que pour ce cas, i.e. pas pour les termes du glossaire, l'italique etc..
 			texteNettoye = texteNettoye.replace("{{/g}}{{/F}}", "{{/F}}{{/g}}");
 			texteNettoye = texteNettoye.replaceAll("\\{\\{F:([0-9]*)\\}\\}\\{\\{g\\}\\}", "{{g}}{{F:$1}}");
 			

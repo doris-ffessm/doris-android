@@ -122,6 +122,9 @@ public class Participant {
 		return cleURLPhotoParticipant.replace("gestionenligne/photos_vig/", "").trim();
 	} 
 	
+	
+	
+	
 	// End of user code
 	
 	public Participant() {} // needed by ormlite

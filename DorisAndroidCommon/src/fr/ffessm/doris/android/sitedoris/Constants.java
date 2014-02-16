@@ -50,7 +50,7 @@ public class Constants {
 	/*
 	 * URL
 	 */
-    private final static String SITE_RACINE_URL = "http://doris.ffessm.fr/";
+	public final static String SITE_RACINE_URL = "http://doris.ffessm.fr/";
     
 	public static final String IMAGE_BASE_URL = "http://doris.ffessm.fr/gestionenligne/";
 	public static final String PORTRAIT_BASE_URL = IMAGE_BASE_URL+ "photos_vig";
@@ -75,7 +75,7 @@ public class Constants {
 
     private final static String BIBLIOGRAPHIES_RACINE_URL = "biblio.asp?mapage=@indice&PageCourante=@precedent";
     private final static String BIBLIOGRAPHIE_RACINE_URL = "biblio_fiche.asp?biblio_numero=";
-    
+
 	/*
 	 * Autres Constantes
 	 */
@@ -148,7 +148,7 @@ public class Constants {
  		String listeParticipantsUrl = SITE_RACINE_URL + PARTICIPANTS_RACINE_URL + inInitiale;
      	return listeParticipantsUrl;
     }
-    public static String getParticipantUrl(String numeroParticipantDoris) {
+    public static String getParticipantUrl(int numeroParticipantDoris) {
  		String listeParticipantsUrl = SITE_RACINE_URL + PARTICIPANT_RACINE_URL + numeroParticipantDoris;
      	return listeParticipantsUrl;
     }
@@ -169,7 +169,7 @@ public class Constants {
      	return listeBibliographiesUrl;
     }
     
-    public static String getBibliographieUrl(String inId) {
+    public static String getBibliographieUrl(int inId) {
  		String listeDefinitionsUrl = SITE_RACINE_URL + BIBLIOGRAPHIE_RACINE_URL + inId;
      	return listeDefinitionsUrl;
     }

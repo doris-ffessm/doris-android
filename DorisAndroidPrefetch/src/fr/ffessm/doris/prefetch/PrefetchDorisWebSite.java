@@ -351,9 +351,50 @@ public class PrefetchDorisWebSite {
 				listeParticipants.addAll(dbContext.participantDao.queryForAll());
 				log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
 				
-				//Pas la peine de Récupérer la page de chacun des intervenants
-				// Toutes les infos sont dans les listes ci dessus
+				// Pas la peine de Récupérer la page de chacun des intervenants
+				// Toutes les infos sont dans les listes ci dessus mais pour CDDVD
+				// ça fait plus propre
+				if ( action.equals("CDDVD") ) {
+					String pageIntervenantRacine = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/";
+					String pageIntervenantRacineRef = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/";
+					
+					for (Participant participant : listeParticipants){
+						
+						if( ! isFileExistingPath( pageIntervenantRacineRef+"participant-"+participant.getNumeroParticipant()+".html") ){
+							if ( Outils.getFichierFromUrl( Constants.getParticipantUrl(participant.getNumeroParticipant()),
+									pageIntervenantRacine+"participant-"+participant.getNumeroParticipant()+".html") ) {
+							} else {
+								log.error("Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom());
+								//System.exit(0);
+							}
+						}
+							
+					}
+				}
+				
+				// Téléchargement Photos Participants
+				if ( action.equals("CDDVD") ) {
+					String fichierImageRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/";
+					String fichierImageRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/";
 
+					for (Participant participant : listeParticipants){
+
+						if ( !participant.getCleURLPhotoParticipant().isEmpty() ) {
+							
+							// On stocke la photo dans les Vignettes
+							if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_") ) ){
+								if (Outils.getFichierFromUrl(Constants.SITE_RACINE_URL+participant.getCleURLPhotoParticipant().replace(" ", "%20"),
+										fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_"))) {
+								} else {
+									log.error("Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom());
+									//System.exit(0);
+								}
+							}
+						}
+					}
+				}
+				
+				
 				
 				// - - - Glossaire - - -
 				// On boucle sur les initiales des définitions (Cf site : doris.ffessm.fr/glossaire.asp?filtre=?)
@@ -462,6 +503,27 @@ public class PrefetchDorisWebSite {
 						log.info("Définitions traitées = "+nbDefinitionTelechargees+", pause de 1s...");
 						Thread.sleep(1000);
 					}
+					
+					//Si des photos dans la définition, il faut les télécharger dans le cas CDDVD
+					if (action.equals("CDDVD")){
+						String fichierImageRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/";
+						String fichierImageRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/";
+						
+						if (definition.getListeImagesDefinition() != null) {
+							for (String image : definition.getListeImagesDefinition()) {
+					    			
+								// On stocke la photo dans les Vignettes
+								if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+image ) ){
+									if (Outils.getFichierFromUrl(Constants.SITE_RACINE_URL+"gestionenligne/diaporamaglo/"+image,
+											fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+image)) {
+									} else {
+										log.error("Une erreur est survenue lors de la récupération d'une photo de la définition de : "+definition.getTerme());
+										//System.exit(0);
+									}
+								}
+							}
+						}
+					}
 				}
 			
 				
@@ -512,12 +574,51 @@ public class PrefetchDorisWebSite {
 					pageCourante ++;
 					testContinu = contenuFichierHtml.contains("biblio.asp?mapage="+pageCourante+"&");
 				} while ( testContinu );
-				/* TODO : Il y a souvent une illustration dans la page de l'entrée bibliographique
-				 * La façon de faire ressemblerait bcp à la façon de faire des définitions
-				HashSet<Participant> listeParticipants = new HashSet<Participant>(0);
-				listeParticipants.addAll(dbContext.participantDao.queryForAll());
-				log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
-				*/
+				
+				List<EntreeBibliographie> listeEntreesBiblio = new ArrayList<EntreeBibliographie>(0);
+				listeEntreesBiblio.addAll(dbContext.entreeBibliographieDao.queryForAll());
+				log.debug("doMain() - listeEntreesBiblio.size : "+listeEntreesBiblio.size());
+				
+				// Téléchargement de la page de l'entrée bibliographique
+				if ( action.equals("CDDVD") ) {
+					String pageBiblioRacine = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/";
+					String pageBiblioRacineRef = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/";
+					
+					for (EntreeBibliographie biblio : listeEntreesBiblio){
+						
+						if( ! isFileExistingPath( pageBiblioRacineRef+"biblio-"+biblio.getNumeroDoris()+".html") ){
+							if ( Outils.getFichierFromUrl( Constants.getBibliographieUrl(biblio.getNumeroDoris()),
+									pageBiblioRacine+"participant-"+biblio.getNumeroDoris()+".html") ) {
+							} else {
+								log.error("Une erreur est survenue lors de la récupération de la page Bibliograpgie de : "+biblio.getTitre());
+								//System.exit(0);
+							}
+						}
+					}
+				}
+				
+				// Téléchargement Photos Bibliographie
+				if ( action.equals("CDDVD") ) {
+					String fichierImageRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/";
+					String fichierImageRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/";
+
+					for (EntreeBibliographie biblio : listeEntreesBiblio){
+
+						if ( !biblio.getCleURLIllustration().isEmpty() ) {
+							
+							// On stocke la photo dans les Vignettes
+							if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+"biblio-"+biblio.getCleURLIllustration() ) ){
+								if (Outils.getFichierFromUrl(Constants.SITE_RACINE_URL+biblio.getCleURLIllustration().replace(" ", "%20"),
+										fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+"biblio-"+biblio.getCleURLIllustration() )) {
+								} else {
+									log.error("Une erreur est survenue lors de la récupération de la photo de l'entrée Biblio. : "+biblio.getTitre());
+									//System.exit(0);
+								}
+							}
+						}
+					}
+				}
+
 				
 				
 				// - - - Liste des Fiches - - -
@@ -679,7 +780,8 @@ public class PrefetchDorisWebSite {
 								log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
 							}
 						}
-						if(contenuFichierHtmlListePhotos != null){
+						
+						if(contenuFichierHtmlListePhotos != null) {
 							
 							final List<PhotoFiche> listePhotoFiche = SiteDoris.getListePhotosFicheFromHtml(fiche, contenuFichierHtmlListePhotos);
 							

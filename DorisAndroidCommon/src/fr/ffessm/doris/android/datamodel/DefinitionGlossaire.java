@@ -62,8 +62,10 @@ import fr.ffessm.doris.android.datamodel.associations.*;
 
 // Start of user code additional import for DefinitionGlossaire
 import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
 
+import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Outils;
 // End of user code
 
@@ -156,18 +158,65 @@ public class DefinitionGlossaire {
     	source.fullSequentialParse();
     	log.debug("getDefinitionsFromHtml()- source.length() : " + source.length());
     	
-    	Element elementsTDTitre2 = source.getFirstElementByClass("titre2");
-    	terme = Outils.nettoyageTextes( elementsTDTitre2.getRenderer().toString().replace(":", "").trim() );
+    	Element elementTDTitre2 = source.getFirstElementByClass("titre2");
+    	terme = Outils.nettoyageTextes( elementTDTitre2.getRenderer().toString().replace(":", "").trim() );
     	log.debug("getDefinitionsFromHtml()- motDefini : " + terme);
     	
-    	definition = elementsTDTitre2.getParentElement().getParentElement().getFirstElementByClass("normal").getRenderer().toString();
+    	definition = elementTDTitre2.getParentElement().getParentElement().getFirstElementByClass("normal").getRenderer().toString();
     	definition = Outils.nettoyageTextes(definition);
     	log.debug("getDefinitionsFromHtml()- Définition : " + definition);
     	
+    	// Traitement des définitions complexes telles que : Byssus
+    	List<Element> listeElementsTR = elementTDTitre2.getParentElement().getParentElement().getParentElement()
+    			.getParentElement().getParentElement().getChildElements();
+    	//log.debug("getDefinitionsFromHtml()- listeElementsTR : " + listeElementsTR.toString());
+    	int rangTR = 0;
+    	for (Element element : listeElementsTR) {
+    		//log.debug("getDefinitionsFromHtml()- (element.getName() : " + element.getName());
+    		if (element.getName() == HTMLElementName.TR){
+    			rangTR++;
+    			if (rangTR == 6){
+    				log.debug("getDefinitionsFromHtml()- TR 6 : " + element.getRenderer().toString());
+    				definition = definition+"{{n/}}"+element.getRenderer().toString().trim()
+    					.replaceAll("[\r\n]", "{{n/}}").replaceAll("[\n|\r]", "{{n/}}");
+    			}
+    		}
+    	}
+
     	log.debug("getDefinitionsFromHtml() - Fin");
     }
 	
 	
+    public List<String> getListeImagesDefinition(){
+    	List<String> listeImagesDefinition = null;
+    	
+	    String chaineCaract = definition;
+		int positionCourante = 0;
+		int positionFin = 0;
+		int longueurChaine = chaineCaract.length();
+	
+		do {
+			positionCourante = chaineCaract.indexOf("{{H:", positionCourante)+4;
+			
+			if (positionCourante != -1) {
+				positionFin = chaineCaract.indexOf("/}}", positionCourante);
+				
+				String image = chaineCaract.replace("{{H:", "").replaceAll("/}}.*", "");
+				image = "definition-" + image;
+				
+				listeImagesDefinition.add(image);
+				
+	    		positionCourante = positionFin + 3;
+			} else {
+				positionCourante = longueurChaine;
+			}
+	
+	 	} while(positionCourante < longueurChaine);
+		
+		return listeImagesDefinition;
+    }
+    
+    
 	// End of user code
 	
 	public DefinitionGlossaire() {} // needed by ormlite
