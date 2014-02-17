@@ -225,7 +225,7 @@ public class PrefetchDorisWebSite {
 
 				for (Groupe groupe : listeGroupes){
 					log.info("Groupe : " + groupe.getNomGroupe());
-					if (groupe.getNumeroGroupe() != 0) {
+					if (groupe.getNumeroGroupe() != 0 && (nbMaxFichesTraitees == 9999 || groupe.getNumeroGroupe() <= 10) ) {
 						String fichierLocalContenuGroupe = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
 						String fichierRefContenuGroupe = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
 						
@@ -272,7 +272,7 @@ public class PrefetchDorisWebSite {
 						
 						for (Groupe groupe : listeGroupesZone) {
 							
-							if (groupe.getNumeroGroupe() != 0) {
+							if (groupe.getNumeroGroupe() != 0  && (nbMaxFichesTraitees == 9999 || groupe.getNumeroGroupe() <= 10) ) {
 								int pageCourante = 1;
 								boolean testContinu = false;
 								
@@ -509,13 +509,15 @@ public class PrefetchDorisWebSite {
 						String fichierImageRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/";
 						String fichierImageRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/";
 						
-						if (definition.getListeImagesDefinition() != null) {
-							for (String image : definition.getListeImagesDefinition()) {
+						List<String> listeImagesDefinition = definition.getListeImagesDefinition();
+						
+						if (listeImagesDefinition != null) {
+							for (String image : listeImagesDefinition) {
 					    			
 								// On stocke la photo dans les Vignettes
-								if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+image ) ){
+								if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+"definition-"+image ) ){
 									if (Outils.getFichierFromUrl(Constants.SITE_RACINE_URL+"gestionenligne/diaporamaglo/"+image,
-											fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+image)) {
+											fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+"definition-"+image)) {
 									} else {
 										log.error("Une erreur est survenue lors de la récupération d'une photo de la définition de : "+definition.getTerme());
 										//System.exit(0);
@@ -525,7 +527,8 @@ public class PrefetchDorisWebSite {
 						}
 					}
 				}
-			
+				
+				listeDefinitions = null;
 				
 				// - - - Bibliographie - - -
 				// On boucle sur la page des Fiches tant que l'on trouve dans la page courante (n)
@@ -588,7 +591,7 @@ public class PrefetchDorisWebSite {
 						
 						if( ! isFileExistingPath( pageBiblioRacineRef+"biblio-"+biblio.getNumeroDoris()+".html") ){
 							if ( Outils.getFichierFromUrl( Constants.getBibliographieUrl(biblio.getNumeroDoris()),
-									pageBiblioRacine+"participant-"+biblio.getNumeroDoris()+".html") ) {
+									pageBiblioRacine+"biblio-"+biblio.getNumeroDoris()+".html") ) {
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la page Bibliograpgie de : "+biblio.getTitre());
 								//System.exit(0);
@@ -618,8 +621,7 @@ public class PrefetchDorisWebSite {
 						}
 					}
 				}
-
-				
+				listeEntreesBiblio = null;
 				
 				// - - - Liste des Fiches - - -
 				// Récupération de la liste des fiches sur le site de DORIS
@@ -672,6 +674,9 @@ public class PrefetchDorisWebSite {
 					    }
 					});
 
+				listeFichesSite = null;
+				listFichesFromRef = null;
+				
 				// - - - Fiche - - -
 				// Pour chaque fiche, on télécharge la page (si nécessaire) puis on la traite
 				log.info("Mise à jours de "+listeFichesTravail.size()+" fiches.");
@@ -851,7 +856,6 @@ public class PrefetchDorisWebSite {
 						Thread.sleep(1000);
 					}
 				}
-				
 				
 				// mise à jour des zones géographiques
 				// zone France Métropolitaine Marines

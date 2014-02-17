@@ -823,6 +823,15 @@ public class Outils {
 	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.DEFINITION,ts.positionDebut,posFinTexteFinal,
 	        				ts.info));
 	        	}
+	        	else if (balise.startsWith("H:")){
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
+	        		int posDepTexteFinal = texteFinal.length();
+	        		
+	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
+	        	
+	        		pileDerniereBalise.add(new TextSpan(TextSpan.SpanType.DEFINITION_ILLUSTRATION,posDepTexteFinal,0));
+
+	        	}
 	        	else if (balise.startsWith("A:")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
 	        		int posDepTexteFinal = texteFinal.length();
@@ -864,17 +873,6 @@ public class Outils {
 	        		
 	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.PARTICIPANT,ts.positionDebut,posFinTexteFinal,
 	        				ts.info));
-	        	}
-	        	else if (balise.equals("H")){
-	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
-	        		int posFinTexteFinal = texteFinal.length();
-	        		
-	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
-	        		
-	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
-	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
-	        		
-	        		//listeFicheNumero.add();
 	        	}
 	        	
 	        } // fin du While
@@ -1020,6 +1018,15 @@ public class Outils {
 					richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
 					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_liendefinition))), ts.positionDebut, ts.positionFin, 0);
 	        	} // Fin else DEFINITION
+	        	else if ( ts.spanType == TextSpan.SpanType.DEFINITION) {
+	    	        
+	    	        /* Pour jour mettre des images directement dans le texte : la picto dangerosité par exemple.
+	    	        Drawable d = getResources().getDrawable(R.drawable.icon32); 
+	                d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight()); 
+	                ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BASELINE);
+	                ss.setSpan(span, 0, 3, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+	                */
+	        	}
 	        	else if ( ts.spanType == TextSpan.SpanType.LIENWEB) {
 	        		String url = ts.info;
 	        		if (!url.contains("http")) url = "http://"+url;
@@ -1045,13 +1052,7 @@ public class Outils {
 					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_lienparticipant))), ts.positionDebut, ts.positionFin, 0);  
 	        	}
 	        }
-	        
-	        /* Pour jour mettre des images directement dans le texte : la picto dangerosité par exemple.
-	        Drawable d = getResources().getDrawable(R.drawable.icon32); 
-            d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight()); 
-            ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BASELINE);
-            ss.setSpan(span, 0, 3, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-            */
+
 	        
 	        return richtext;
 	    }
@@ -1062,7 +1063,8 @@ public class Outils {
     public static class TextSpan {
     	
     	public enum SpanType {
-    	    FICHE, ITALIQUE, GRAS, SOULIGNE, SAUTDELIGNE, DEFINITION, LIENWEB, PARTICIPANT
+    	    FICHE, ITALIQUE, GRAS, SOULIGNE, SAUTDELIGNE, DEFINITION, DEFINITION_ILLUSTRATION,
+    	    LIENWEB, PARTICIPANT
     	} 
     	
     	SpanType spanType = null;

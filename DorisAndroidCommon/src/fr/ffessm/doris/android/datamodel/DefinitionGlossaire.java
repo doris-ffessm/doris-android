@@ -182,37 +182,47 @@ public class DefinitionGlossaire {
     			}
     		}
     	}
-
+    	definition = Outils.nettoyageTextes(definition);
+    	log.debug("getDefinitionsFromHtml() - definition : " + definition);
     	log.debug("getDefinitionsFromHtml() - Fin");
     }
 	
 	
     public List<String> getListeImagesDefinition(){
-    	List<String> listeImagesDefinition = null;
+    	log.debug("getListeImagesDefinition() - Début");
+    	log.debug("getListeImagesDefinition() - definition : " + definition);
+    	List<String> listeImagesDefinition = new ArrayList<String>();
     	
 	    String chaineCaract = definition;
 		int positionCourante = 0;
 		int positionFin = 0;
-		int longueurChaine = chaineCaract.length();
-	
+		int iteration = 0;
+		boolean fin = false;
+		
 		do {
-			positionCourante = chaineCaract.indexOf("{{H:", positionCourante)+4;
+			iteration++;
+			positionCourante = chaineCaract.indexOf("{{H:", positionCourante);
+			log.debug("getListeImagesDefinition() - 1 : "+positionCourante+" - "+positionFin);
 			
 			if (positionCourante != -1) {
+
 				positionFin = chaineCaract.indexOf("/}}", positionCourante);
+				log.debug("getListeImagesDefinition() - 2 : "+positionCourante+" - "+positionFin);
 				
-				String image = chaineCaract.replace("{{H:", "").replaceAll("/}}.*", "");
-				image = "definition-" + image;
+				String image = chaineCaract.substring(positionCourante+4, positionFin);
+				log.debug("getListeImagesDefinition() - image : "+image);
 				
 				listeImagesDefinition.add(image);
 				
 	    		positionCourante = positionFin + 3;
+	    		chaineCaract = chaineCaract.substring(positionCourante);
 			} else {
-				positionCourante = longueurChaine;
+				fin = true;
 			}
 	
-	 	} while(positionCourante < longueurChaine);
+	 	} while( fin == false && iteration < 10);
 		
+		log.debug("getListeImagesDefinition() - Fin");
 		return listeImagesDefinition;
     }
     
