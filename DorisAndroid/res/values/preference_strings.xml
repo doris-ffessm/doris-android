@@ -15,7 +15,7 @@
 	<string name="pref_key_mode_precharg_photo_region_indopac">mode_precharg_photo_region_indopac</string>
 	<string name="pref_key_mode_precharg_photo_region_caraibes">mode_precharg_photo_region_caraibes</string>
 	<string name="pref_key_mode_precharg_photo_region_favorite">mode_precharg_photo_region_favorite</string>
-	<string name="pref_key_mode_precharg_photo_intervenants">mode_precharg_photo_intervenants</string>
+	<string name="pref_key_mode_precharg_photo_autres">mode_precharg_photo_autres</string>
 
 	<string name="pref_key_theme">pref_key_theme</string>
 	<string name="pref_key_accueil_fiches_ordre">pref_accueil_fiches_ordre</string>
@@ -74,7 +74,8 @@
     <string name="mode_precharg_region_caraibes_prompt">- Caraïbes\u00A0?</string>
     <string name="mode_precharg_favorite_prompt">- Fiches préférées ? (A FAIRE)</string>
     <string name="mode_precharg_region_defaut">P1</string>
-    <string name="mode_precharg_photo_intervenants_prompt">Précharg. Photos Participants\u00A0?</string>
+    <string name="mode_precharg_photo_autres_prompt">Précharg. Autres Photos\u00A0?</string>
+    <string name="mode_precharg_photo_autres_summary">Photos Participants, Bibliographies, Glossaire\u00A0\u2026</string>
     
 	<string name="icone_touteszones">drawable/doris_icone_toutes_zones</string>
 	<string name="icone_france">drawable/doris_icone_france</string>

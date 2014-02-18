@@ -15,6 +15,11 @@
 	<string name="bg_notifTitre_imagesparticipants">"Photos Participants\u00A0: "</string>
 	<string name="bg_racineTicker_imagesparticipants">"Photo\u00A0: "</string>
 	
+	<string name="bg_notifTitre_imagesbibliographie">"Photos Bibliographie\u00A0: "</string>
+	<string name="bg_racineTicker_imagesbibliographie">"Photo\u00A0: "</string>
+	
+	<string name="bg_notifTitre_imagesglossaire">"Photos Glossaire\u00A0: "</string>
+	<string name="bg_racineTicker_imagesglossaire">"Photo\u00A0: "</string>
 	<!--End of user code
 	-->
 </resources>

@@ -516,7 +516,7 @@ public class PrefetchDorisWebSite {
 					    			
 								// On stocke la photo dans les Vignettes
 								if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+"definition-"+image ) ){
-									if (Outils.getFichierFromUrl(Constants.SITE_RACINE_URL+"gestionenligne/diaporamaglo/"+image,
+									if (Outils.getFichierFromUrl(Constants.ILLUSTRATION_DEFINITION_BASE_URL+"/"+image,
 											fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+"definition-"+image)) {
 									} else {
 										log.error("Une erreur est survenue lors de la récupération d'une photo de la définition de : "+definition.getTerme());

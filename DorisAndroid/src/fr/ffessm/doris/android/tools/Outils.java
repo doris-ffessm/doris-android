@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.squareup.picasso.Picasso;
 
 import fr.ffessm.doris.android.activities.DetailEntreeGlossaire_ElementViewActivity;
 import fr.ffessm.doris.android.activities.DetailsFiche_ElementViewActivity;
@@ -36,7 +37,6 @@ import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.OutilsBase;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -45,15 +45,19 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.format.DateUtils;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
@@ -69,9 +73,11 @@ public class Outils {
 	public static final String MED_RES_FICHE_FOLDER = "medium_res_images_fiches";
 	public static final String HI_RES_FICHE_FOLDER = "hi_res_images_fiches";
 	public static final String PORTRAITS_FOLDER = "portraits";
+	public static final String ILLUSTRATION_DEFINITION_FOLDER = VIGNETTES_FICHE_FOLDER;
+	public static final String ILLUSTRATION_BIBLIO_FOLDER = VIGNETTES_FICHE_FOLDER;
 	
 	public enum ImageType {
-	    VIGNETTE, MED_RES, HI_RES, PORTRAITS
+	    VIGNETTE, MED_RES, HI_RES, PORTRAITS, ILLUSTRATION_DEFINITION, ILLUSTRATION_BIBLIO
 	} 
 	
 	public enum ConnectionType {
@@ -93,6 +99,10 @@ public class Outils {
 			return getImageFolderHiRes(inContext);
 		case PORTRAITS :
 			return getImageFolderPortraits(inContext);
+		case ILLUSTRATION_DEFINITION :
+			return getImageFolderGlossaire(inContext);
+		case ILLUSTRATION_BIBLIO :
+			return getImageFolderBiblio(inContext);
 			default:
 		return null;
 		}
@@ -109,6 +119,12 @@ public class Outils {
 	public static File getImageFolderPortraits(Context inContext) { 
 		return inContext.getDir( PORTRAITS_FOLDER , Context.MODE_PRIVATE);
 	}
+	public static File getImageFolderGlossaire(Context inContext) { 
+		return inContext.getDir( ILLUSTRATION_DEFINITION_FOLDER , Context.MODE_PRIVATE);
+	}
+	public static File getImageFolderBiblio(Context inContext) { 
+		return inContext.getDir( ILLUSTRATION_BIBLIO_FOLDER , Context.MODE_PRIVATE);
+	}
 	
 	public static String getbaseUrl(Context inContext, ImageType inImageType) { 
 		switch (inImageType) {
@@ -120,6 +136,10 @@ public class Outils {
 			return Constants.GRANDE_BASE_URL;
 		case PORTRAITS:
 			return Constants.PORTRAIT_BASE_URL;
+		case ILLUSTRATION_DEFINITION :
+			return Constants.ILLUSTRATION_DEFINITION_BASE_URL;
+		case ILLUSTRATION_BIBLIO :
+			return Constants.ILLUSTRATION_BIBLIO_BASE_URL;
 		default:
 			return "";
 		}
@@ -823,13 +843,13 @@ public class Outils {
 	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.DEFINITION,ts.positionDebut,posFinTexteFinal,
 	        				ts.info));
 	        	}
-	        	else if (balise.startsWith("H:")){
+	        	else if (balise.startsWith("E:")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
 	        		int posDepTexteFinal = texteFinal.length();
 	        		
 	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
 	        	
-	        		pileDerniereBalise.add(new TextSpan(TextSpan.SpanType.DEFINITION_ILLUSTRATION,posDepTexteFinal,0));
+	        		pileDerniereBalise.add(new TextSpan(TextSpan.SpanType.ILLUSTRATION_DEFINITION,posDepTexteFinal,0));
 
 	        	}
 	        	else if (balise.startsWith("A:")){
@@ -1018,13 +1038,54 @@ public class Outils {
 					richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
 					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_liendefinition))), ts.positionDebut, ts.positionFin, 0);
 	        	} // Fin else DEFINITION
-	        	else if ( ts.spanType == TextSpan.SpanType.DEFINITION) {
+	        	else if ( ts.spanType == TextSpan.SpanType.ILLUSTRATION_DEFINITION) {
 	    	        
-	    	        /* Pour jour mettre des images directement dans le texte : la picto dangerosité par exemple.
-	    	        Drawable d = getResources().getDrawable(R.drawable.icon32); 
-	                d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight()); 
-	                ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BASELINE);
-	                ss.setSpan(span, 0, 3, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+	    	        //Pour jour mettre des images directement dans le texte : la picto dangerosité par exemple.
+	    	        String nomPhoto = ts.info;
+	    	        
+	    	        /*
+	    	        if(Outils.isAvailablePhoto(context, nomPhoto, ImageType.ILLUSTRATION_DEFINITION)){
+	    	    		try {
+	    					Picasso.with(context)
+	    						.load(Outils.getPhotoFile(context, nomPhoto, ImageType.ILLUSTRATION_DEFINITION))
+	    						.fit()
+	    						.centerInside();
+	    				} catch (IOException e) {
+	    				}
+	    	    	}
+	    	    	else{
+	    	    		// pas préchargée en local pour l'instant, cherche sur internet
+	    	    		
+	    	    		Log.d(LOG_TAG, "addFoldableView() - nomPhoto : "+Constants.ILLUSTRATION_DEFINITION_BASE_URL+"/"+nomPhoto);
+	    	    		String urlPhoto = Constants.ILLUSTRATION_DEFINITION_BASE_URL+"/"+nomPhoto;
+	    	    		Picasso.with(context)
+	    	    			.load(urlPhoto.replace(" ", "%20"))
+	    					.error(R.drawable.app_ic_participant_pas_connecte)
+	    					.fit()
+	    					.centerInside()
+	    	    			.fetch();
+	    	    	}
+	        		*/
+/*
+	    	        Drawable drawable = new BitmapDrawable();
+	    	        
+	    	        try {
+		    	        if(! Outils.isAvailablePhoto(context, nomPhoto, ImageType.ILLUSTRATION_DEFINITION)){
+		    	        	String urlPhoto = Constants.ILLUSTRATION_DEFINITION_BASE_URL+"/"+nomPhoto;
+		    	        	Outils.getOrDownloadPhotoFile(context, urlPhoto, Outils.ImageType.ILLUSTRATION_DEFINITION);
+		    	        }
+		    	        drawable.createFromPath(Outils.getPhotoFile(context, nomPhoto, ImageType.ILLUSTRATION_DEFINITION).getPath());
+	    	        } catch (IOException e){
+	    	        	Log.e(LOG_TAG, String.format("Erreur chargement image Définition, error %s", e.getMessage()));
+	    	        	
+	    	        	InputStream stream = context.getClass().getClassLoader().getResourceAsStream(resName);
+	    	        	R.drawable.app_ic_launcher
+	    	        	drawable.createFromStream(is, "");
+	    	        	BitmapDrawable(x);
+	    	        }
+	        		drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight()); 
+	                ImageSpan span = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+	                richtext.setSpan(span, 0, 3, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
 	                */
 	        	}
 	        	else if ( ts.spanType == TextSpan.SpanType.LIENWEB) {
@@ -1063,8 +1124,9 @@ public class Outils {
     public static class TextSpan {
     	
     	public enum SpanType {
-    	    FICHE, ITALIQUE, GRAS, SOULIGNE, SAUTDELIGNE, DEFINITION, DEFINITION_ILLUSTRATION,
-    	    LIENWEB, PARTICIPANT
+    	    FICHE, ITALIQUE, GRAS, SOULIGNE, SAUTDELIGNE,
+    	    DEFINITION, ILLUSTRATION_DEFINITION,
+    	    LIENWEB, PARTICIPANT 
     	} 
     	
     	SpanType spanType = null;
