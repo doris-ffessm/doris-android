@@ -124,15 +124,19 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
   */  	
 		((TextView) findViewById(R.id.detailentreeglossaire_elementview_numerodoris)).setText(((Integer)entry.getNumeroDoris()).toString());					
 		((TextView) findViewById(R.id.detailentreeglossaire_elementview_terme)).setText(entry.getTerme());
-		((TextView) findViewById(R.id.detailentreeglossaire_elementview_definition)).setText(Outils.textToSpannableStringDoris(context, entry.getDefinition()) );
-	
+		
+		TextView definition = (TextView) findViewById(R.id.detailentreeglossaire_elementview_definition);
+		definition.setText(Outils.textToSpannableStringDoris(context, entry.getDefinition()));
+		definition.setMovementMethod(LinkMovementMethod.getInstance());
+		
 		String urlString = Constants.getDefinitionUrl( ""+entry.getNumeroDoris() ); 
 		SpannableString richtext = new SpannableString(urlString);
 		richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
 		TextView contenuUrl = (TextView) findViewById(R.id.detailentreeglossaire_elementview_liensite);
 		contenuUrl.setText(richtext);
 		contenuUrl.setMovementMethod(LinkMovementMethod.getInstance());
-				
+
+
 		// End of user code
     	
 	}

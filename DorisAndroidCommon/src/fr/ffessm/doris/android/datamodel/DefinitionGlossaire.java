@@ -152,6 +152,7 @@ public class DefinitionGlossaire {
 
     	inCodePageHtml = Outils.remplacementBalises(inCodePageHtml, true);
     	
+    	
     	Source source=new Source(inCodePageHtml);
     	source.fullSequentialParse();
     	log.debug("getDefinitionsFromHtml()- source.length() : " + source.length());
@@ -161,7 +162,7 @@ public class DefinitionGlossaire {
     	log.debug("getDefinitionsFromHtml()- motDefini : " + terme);
     	
     	definition = elementTDTitre2.getParentElement().getParentElement().getFirstElementByClass("normal").getRenderer().toString();
-    	definition = Outils.nettoyageTextes(definition);
+    	
     	log.debug("getDefinitionsFromHtml()- Définition : " + definition);
     	
     	// Traitement des définitions complexes telles que : Byssus
@@ -175,8 +176,7 @@ public class DefinitionGlossaire {
     			rangTR++;
     			if (rangTR == 6){
     				log.debug("getDefinitionsFromHtml()- TR 6 : " + element.getRenderer().toString());
-    				definition = definition+"{{n/}}"+element.getRenderer().toString().trim()
-    					.replaceAll("[\r\n]", "{{n/}}").replaceAll("[\n|\r]", "{{n/}}");
+    				definition = definition+"{{n/}}"+element.getRenderer().toString().trim();
     			}
     		}
     	}

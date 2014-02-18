@@ -914,12 +914,16 @@ public class PrefetchDorisWebSite {
 				
 				// Création du dossier CD et DVD
 				if ( action.equals("CDDVD") ) {
+					log.debug("doMain() - Création du dossier CD");
 					creationCD();
+					//TODO : Création DVD
+					log.debug("doMain() - transfoHtml");
 					transfoHtml();
 				}
 				
 			} finally {
 				// destroy the data source which should close underlying connections
+				log.debug("doMain() - Fermeture Base");
 				if (connectionSource != null) {
 					connectionSource.close();
 				}
@@ -1913,29 +1917,33 @@ public class PrefetchDorisWebSite {
 				int numPagePrecedente = Integer.valueOf(numPage)-1;
 				
 				String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
+				log.debug("transfoHtml() - contenuFichier : "+contenuFichier.length());
 				
 				// Lien vers la page de tous les groupes de la zone
 				//groupes.asp?temp=0
 				contenuFichier = contenuFichier.replaceAll(
 						"href=\"groupes.asp\\?temp=0[^\"]*\"",
 						"href=\"groupes_zone-"+numZone+".html\"");
+				log.debug("transfoHtml() - 110");
 				
 				// Page Suivante
 				// fiches_liste.asp?fichier=&groupe_numero=49&sousgroupe_numero=&rnomscient=&rtrie=&rnomcommunfr=&page=Suivant&PageCourante=2&term=&enco=&prop=&allcheck=
 				contenuFichier = contenuFichier.replaceAll(
 						"href=\"fiches_liste.asp\\?fichier=[^\"]*&page=Suivant&[^\"]*\"",
 						"href=\"groupe-"+numZone+"-"+numGroupe+"-"+numSousGroupe+"-"+numPageSuivante+".html\"");
-				
+				log.debug("transfoHtml() - 120");
 				
 				// Précédente
 				// fiches_liste.asp?&fichier=&groupe_numero=49&sousgroupe_numero=&rnomscient=&rtrie=&rnomcommunfr=&page=Precedent&PageCourante=2&term=&enco=&prop=&allcheck=
 				contenuFichier = contenuFichier.replaceAll(
 						"href=\"fiches_liste.asp\\?&fichier=[^\"]*&page=Precedent&[^\"]*\"",
 						"href=\"groupe-"+numZone+"-"+numGroupe+"-"+numSousGroupe+"-"+numPagePrecedente+".html\"");
-				
+				log.debug("transfoHtml() - 130");
 				
 				try {
+					log.debug("transfoHtml() - 210");
 					FileUtils.write(fichierHtml, contenuFichier, "iso-8859-1");
+					log.debug("transfoHtml() - 220");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

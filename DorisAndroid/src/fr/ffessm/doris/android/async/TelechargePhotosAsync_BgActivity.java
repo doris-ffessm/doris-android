@@ -42,13 +42,10 @@ termes.
 package fr.ffessm.doris.android.async;
 
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
+
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -56,15 +53,11 @@ import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 
-
-// Start of user code additional imports TelechargePhotosFiches_BgActivity
 import java.util.ArrayList;
 import java.util.HashSet;
 
 import com.j256.ormlite.dao.GenericRawResults;
 
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
 import fr.ffessm.doris.android.BuildConfig;
@@ -73,7 +66,7 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
-// End of user code
+
 import fr.ffessm.doris.android.tools.Outils.ImageType;
 
 public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer, Integer>{
@@ -82,9 +75,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     private NotificationHelper mNotificationHelper;
     private OrmLiteDBHelper dbHelper;
     private Context context;
-    
-    // Start of user code additional attribute declarations TelechargePhotosFiches_BgActivity
-    
+
     // Permet de ralentir le traitement pour laisser du temps processeur aux autres applications
     // en milliseconde, on multiplie selon les contextes par 1, 2, 4
     int tempo = 50;
@@ -99,11 +90,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	Integer nbPhotosATelechargerPourBiblio = 0;
 	Integer nbPhotosATelechargerPourGlossaire = 0;
 	
-	// End of user code
     
 	/** constructor */
     public TelechargePhotosAsync_BgActivity(Context context, OrmLiteDBHelper dbHelper){
-		// Start of user code additional attribute declarations TelechargePhotosFiches_BgActivity constructor
+
 		String initialTickerText = context.getString(R.string.bg_notifText_initial);
 		String notificationTitle = context.getString(R.string.bg_notifTitle_initial);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
@@ -114,7 +104,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         try{
         	tempo = Integer.valueOf(preferences.getString(context.getString(R.string.pref_key_asynch_tempo), "50") );
         }catch(Exception e){}
-		// End of user code
+
         this.dbHelper = dbHelper;
 		this.context = context;
     }
@@ -126,10 +116,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
     @Override
     protected Integer doInBackground(String... arg0) {
-    	
-
-		// Start of user code initialization of the task TelechargePhotosFiches_BgActivity
-
+ 
 	    try{
 			// do the initialization of the task here
 	    	// Téléchargement en tache de fond de toutes les photos de toutes les fiches correspondants aux critères de l'utilisateur
@@ -191,57 +178,52 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			if (Outils.getParamBoolean(context, R.string.pref_key_mode_precharg_photo_autres, false)) {
 				telechargementPhotosIntervenants(dorisDBHelper);
 				if( this.isCancelled()) return 0;
+				
+				telechargementPhotosBibliographie(dorisDBHelper);
+				if( this.isCancelled()) return 0;
+				
+				telechargementPhotosGlossaire(dorisDBHelper);
+				if( this.isCancelled()) return 0;
 			}
 			
-		// End of user code
-    	
-    	// Start of user code main loop of task TelechargePhotosFiches_BgActivity
-		// This is where we would do the actual job
-		// you should indicates the progression using publishProgress()
-		
-		// End of user code
-        
-		// Start of user code end of task TelechargePhotosFiches_BgActivity
+
 		}finally{
 	    	DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 	    	
 	    	mNotificationHelper.completed();
 	    }
 	    return 0;
-		// End of user code
     }
     protected void onProgressUpdate(Integer... progress) {
         //This method runs on the UI thread, it receives progress updates
         //from the background thread and publishes them to the status bar
         mNotificationHelper.progressUpdate(progress[0]);
     }
+    
 	@Override
 	protected void onCancelled() {
 		super.onCancelled();
 		mNotificationHelper.completed();
-		// Start of user code TelechargePhotosFiches onCancelled
+
 		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = null;
         // termine de notifier les vues qui pouvaient être intéressées
 		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 		
 		majParamNbandSize();
-		// End of user code
 	}
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
-		// Start of user code TelechargePhotosFiches onPostExecute
+
         // retire l'activité qui est maintenant finie
         DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = null;
         // termine de notifier les vues qui pouvaient être intéressées
         DorisApplicationContext.getInstance().notifyDataHasChanged(null);
         
         majParamNbandSize();
-		// End of user code
     }
 
-    // Start of user code additional operations TelechargePhotosFiches_BgActivity
-    
+
     public void photosDejaTelechargees(DorisDBHelper dorisDBHelper) {
 		hsImagesVigAllreadyAvailable = Outils.getAllPhotosAvailable(context, ImageType.VIGNETTE);
 		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - VigAllreadyAvailable : "+hsImagesVigAllreadyAvailable.size() );
@@ -779,8 +761,5 @@ public int telechargementPhotosGlossaire(DorisDBHelper dorisDBHelper){
 		Outils.setParamLong(context,R.string.pref_key_size_folder_hi_res, Outils.getPhotoDiskUsage(context, ImageType.HI_RES));
 
     }
-    
-    
-	// End of user code
-	
+
 }

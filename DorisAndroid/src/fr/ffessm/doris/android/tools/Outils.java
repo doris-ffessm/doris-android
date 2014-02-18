@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources.NotFoundException;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -717,7 +720,7 @@ public class Outils {
 	    	return new SpannableString(texte);
 	    	
 	    } else {
-	    	//Log.d(LOG_TAG, "textToSpannableStringDoris() - Traitement récurrent des blocs {{*}}");
+	    	Log.d(LOG_TAG, "textToSpannableStringDoris() - Traitement récurrent des blocs {{*}}");
 	    	
 	    	// TODO : doit être améliorable mais je n'arrive pas à manipuler directement SpannableString
 	    	// donc pas de concat, pas de regexp.
@@ -848,9 +851,9 @@ public class Outils {
 	        		int posDepTexteFinal = texteFinal.length();
 	        		
 	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
-	        	
-	        		pileDerniereBalise.add(new TextSpan(TextSpan.SpanType.ILLUSTRATION_DEFINITION,posDepTexteFinal,0));
-
+	        		
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.ILLUSTRATION_DEFINITION,posDepTexteFinal,posDepTexteFinal,
+	        				balise.substring(2, balise.length()-1)));
 	        	}
 	        	else if (balise.startsWith("A:")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
@@ -1039,54 +1042,55 @@ public class Outils {
 					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_liendefinition))), ts.positionDebut, ts.positionFin, 0);
 	        	} // Fin else DEFINITION
 	        	else if ( ts.spanType == TextSpan.SpanType.ILLUSTRATION_DEFINITION) {
-	    	        
 	    	        //Pour jour mettre des images directement dans le texte : la picto dangerosité par exemple.
 	    	        String nomPhoto = ts.info;
-	    	        
+	    	        Log.d(LOG_TAG, "getHtml()- nomPhoto : "+nomPhoto);
 	    	        /*
-	    	        if(Outils.isAvailablePhoto(context, nomPhoto, ImageType.ILLUSTRATION_DEFINITION)){
-	    	    		try {
-	    					Picasso.with(context)
-	    						.load(Outils.getPhotoFile(context, nomPhoto, ImageType.ILLUSTRATION_DEFINITION))
-	    						.fit()
-	    						.centerInside();
-	    				} catch (IOException e) {
-	    				}
-	    	    	}
-	    	    	else{
-	    	    		// pas préchargée en local pour l'instant, cherche sur internet
-	    	    		
-	    	    		Log.d(LOG_TAG, "addFoldableView() - nomPhoto : "+Constants.ILLUSTRATION_DEFINITION_BASE_URL+"/"+nomPhoto);
-	    	    		String urlPhoto = Constants.ILLUSTRATION_DEFINITION_BASE_URL+"/"+nomPhoto;
-	    	    		Picasso.with(context)
-	    	    			.load(urlPhoto.replace(" ", "%20"))
-	    					.error(R.drawable.app_ic_participant_pas_connecte)
-	    					.fit()
-	    					.centerInside()
-	    	    			.fetch();
-	    	    	}
-	        		*/
-/*
 	    	        Drawable drawable = new BitmapDrawable();
-	    	        
-	    	        try {
-		    	        if(! Outils.isAvailablePhoto(context, nomPhoto, ImageType.ILLUSTRATION_DEFINITION)){
-		    	        	String urlPhoto = Constants.ILLUSTRATION_DEFINITION_BASE_URL+"/"+nomPhoto;
-		    	        	Outils.getOrDownloadPhotoFile(context, urlPhoto, Outils.ImageType.ILLUSTRATION_DEFINITION);
-		    	        }
-		    	        drawable.createFromPath(Outils.getPhotoFile(context, nomPhoto, ImageType.ILLUSTRATION_DEFINITION).getPath());
-	    	        } catch (IOException e){
-	    	        	Log.e(LOG_TAG, String.format("Erreur chargement image Définition, error %s", e.getMessage()));
+
+	    	        if(Outils.isAvailablePhoto(context, nomPhoto, ImageType.ILLUSTRATION_DEFINITION)){
+	    	        	Log.d(LOG_TAG, "getHtml()- isAvailablePhoto");
+	    	        	try {
+							drawable.createFromPath(Outils.getPhotoFile(context, nomPhoto, ImageType.ILLUSTRATION_DEFINITION).getPath());
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+	    	        }  else {
+	    	        	Log.d(LOG_TAG, "getHtml()- ! isAvailablePhoto");
+	    	        	try {
+	    	        		//InputStream stream = context.getResources().openRawResource(R.drawable.app_ic_launcher);
+
+		    	        	//R.drawable.app_ic_launcher
+		    	        	//drawable.createFromStream(stream, "Test GMo");
+	    	        		
+	    	        		URI uri = null;
+	    	    	     	try {
+	    	    	     		uri = new URI("file:///android_res/raw/images_groupe_1.gif");
+	    	    	     	} catch (URISyntaxException e) {
+	    	    	     		e.printStackTrace();
+	    	    	     	}
+	    	    	     	File file = new File(uri);
+	    	    	     	Log.d(LOG_TAG, "getHtml()- file : "+file.getAbsolutePath());
+	    	    	     	drawable.createFromPath(file.getAbsolutePath());
+	    	    	     	
+	    	        	} catch (NotFoundException e) {
+	    	        		// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
 	    	        	
-	    	        	InputStream stream = context.getClass().getClassLoader().getResourceAsStream(resName);
-	    	        	R.drawable.app_ic_launcher
-	    	        	drawable.createFromStream(is, "");
-	    	        	BitmapDrawable(x);
-	    	        }
-	        		drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight()); 
-	                ImageSpan span = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
-	                richtext.setSpan(span, 0, 3, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-	                */
+	    	        }*/
+	    	        ImageSpan imageSpan = new ImageSpan(context, R.drawable.ic_launcher );
+	    	        //Log.d(LOG_TAG, "getHtml()- image taille : "+drawable.getIntrinsicWidth()+" - "+drawable.getIntrinsicHeight());
+	        		//drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight()); 
+	                
+	        		//ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+	    	        Log.d(LOG_TAG, "getHtml()- richtext : "+richtext.length());
+	    	        Log.d(LOG_TAG, "getHtml()- ts.positionDebut : "+ts.positionDebut);
+	    	        richtext.setSpan(imageSpan, ts.positionDebut, ts.positionDebut+1, 0);
+
 	        	}
 	        	else if ( ts.spanType == TextSpan.SpanType.LIENWEB) {
 	        		String url = ts.info;

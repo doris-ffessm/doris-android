@@ -151,7 +151,7 @@ public class Outils {
 				try {
 					objFile.close();
 					
-					//log.debug("getFichier()- Fin");
+					log.debug("getFichier()- Fin");
 			    	return (objBuffer.toString());
 			    	
 				} catch (IOException e) {
