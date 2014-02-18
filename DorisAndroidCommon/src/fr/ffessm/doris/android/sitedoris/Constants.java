@@ -57,6 +57,8 @@ public class Constants {
 	public static final String VIGNETTE_BASE_URL = IMAGE_BASE_URL+ "photos_fiche_vig";
 	public static final String MOYENNE_BASE_URL = IMAGE_BASE_URL+ "photos_fiche_moy";
 	public static final String GRANDE_BASE_URL = IMAGE_BASE_URL+ "photos";
+	public static final String ILLUSTRATION_DEFINITION_BASE_URL = IMAGE_BASE_URL+ "diaporamaglo";
+	public static final String ILLUSTRATION_BIBLIO_BASE_URL = IMAGE_BASE_URL+ "photos_biblio_moy";
 	
     private final static String LISTE_FICHES_ZONE_URL = "nom_scientifique.asp?numero_fichier=";
     

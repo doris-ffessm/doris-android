@@ -259,7 +259,7 @@ public class Outils {
 			//Lien vers termes du glossaire
 			texteNettoye = texteNettoye.replaceAll("([ >\\}'\\(])([^ >\\}'\\(]*)\\*", "$1{{D:$2}}$2{{/D}}");
 			//Image du Glossaire (elles sont dans le texte) - <img src="gestionenligne/diaporamaglo/16.jpg     ">
-			texteNettoye = texteNettoye.replaceAll("<img src=\"gestionenligne/diaporamaglo/([^\" >]*)[ ]*\">", "{{H:$1/}}");
+			texteNettoye = texteNettoye.replaceAll("<img src=\"gestionenligne/diaporamaglo/([^\" >]*)[ ]*\">", "{{E:$1/}}");
 			
 			
 			//Lien vers site extérieur : oiseaux.net, fishbase.org, etc ...

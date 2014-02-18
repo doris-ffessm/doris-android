@@ -89,8 +89,9 @@
 				android:layout="@layout/preference_layout_preference"
 				/>
         </PreferenceScreen>
-        <CheckBoxPreference android:key="@string/pref_key_mode_precharg_photo_intervenants"
-            android:title="@string/mode_precharg_photo_intervenants_prompt" 
+        <CheckBoxPreference android:key="@string/pref_key_mode_precharg_photo_autres"
+            android:title="@string/mode_precharg_photo_autres_prompt" 
+            android:summary="@string/mode_precharg_photo_autres_summary"
             android:defaultValue="false"
             android:layout="@layout/preference_layout_preference"
             />

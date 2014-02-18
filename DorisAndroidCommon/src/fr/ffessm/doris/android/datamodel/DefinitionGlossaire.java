@@ -59,12 +59,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import fr.ffessm.doris.android.datamodel.associations.*;
-
 // Start of user code additional import for DefinitionGlossaire
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
-
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Outils;
 // End of user code
@@ -184,6 +182,13 @@ public class DefinitionGlossaire {
     	}
     	definition = Outils.nettoyageTextes(definition);
     	log.debug("getDefinitionsFromHtml() - definition : " + definition);
+
+    	// permet de faire gagner du temps sur le téléphone
+		List<String> listeImagesDefinition = getListeImagesDefinition();
+		for (String imageDefinition : listeImagesDefinition ){
+			cleURLIllustration = cleURLIllustration + imageDefinition + ";";
+		}
+
     	log.debug("getDefinitionsFromHtml() - Fin");
     }
 	
@@ -201,7 +206,7 @@ public class DefinitionGlossaire {
 		
 		do {
 			iteration++;
-			positionCourante = chaineCaract.indexOf("{{H:", positionCourante);
+			positionCourante = chaineCaract.indexOf("{{E:", positionCourante);
 			log.debug("getListeImagesDefinition() - 1 : "+positionCourante+" - "+positionFin);
 			
 			if (positionCourante != -1) {
