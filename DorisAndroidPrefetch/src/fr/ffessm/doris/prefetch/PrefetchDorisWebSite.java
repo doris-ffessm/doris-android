@@ -44,6 +44,7 @@ package fr.ffessm.doris.prefetch;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -67,7 +68,6 @@ import com.j256.ormlite.field.FieldType;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.misc.SqlExceptionUtil;
 import com.j256.ormlite.misc.TransactionManager;
-import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.StatementBuilder.StatementType;
 import com.j256.ormlite.support.CompiledStatement;
 import com.j256.ormlite.support.ConnectionSource;
@@ -383,7 +383,9 @@ public class PrefetchDorisWebSite {
 							
 							// On stocke la photo dans les Vignettes
 							if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_") ) ){
-								if (Outils.getFichierFromUrl(Constants.SITE_RACINE_URL+participant.getCleURLPhotoParticipant().replace(" ", "%20"),
+								String photoURL = URLEncoder.encode(participant.getCleURLPhotoParticipant(),"UTF-8");
+								
+								if (Outils.getFichierFromUrl(Constants.SITE_RACINE_URL+photoURL,
 										fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_"))) {
 								} else {
 									log.error("Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom());
@@ -610,9 +612,9 @@ public class PrefetchDorisWebSite {
 						if ( !biblio.getCleURLIllustration().isEmpty() ) {
 							
 							// On stocke la photo dans les Vignettes
-							if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+"biblio-"+biblio.getCleURLIllustration() ) ){
-								if (Outils.getFichierFromUrl(Constants.SITE_RACINE_URL+biblio.getCleURLIllustration().replace(" ", "%20"),
-										fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+"biblio-"+biblio.getCleURLIllustration() )) {
+							if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+"biblio-"+biblio.getNumeroDoris()+".jpg" ) ){
+								if (Outils.getFichierFromUrl(Constants.SITE_RACINE_URL+biblio.getCleURLIllustration(),
+										fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+"biblio-"+biblio.getNumeroDoris()+".jpg" )) {
 								} else {
 									log.error("Une erreur est survenue lors de la récupération de la photo de l'entrée Biblio. : "+biblio.getTitre());
 									//System.exit(0);
@@ -675,7 +677,7 @@ public class PrefetchDorisWebSite {
 					});
 
 				listeFichesSite = null;
-				listFichesFromRef = null;
+
 				
 				// - - - Fiche - - -
 				// Pour chaque fiche, on télécharge la page (si nécessaire) puis on la traite
@@ -684,6 +686,7 @@ public class PrefetchDorisWebSite {
 				if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
 					listFichesModif = SiteDoris.getListeFichesUpdated(listFichesFromRef, listeFichesTravail);
 				}
+				listFichesFromRef = null;
 				
 				int nbFichesTraitees = 0;
 				for (Fiche fiche : listeFichesTravail) {

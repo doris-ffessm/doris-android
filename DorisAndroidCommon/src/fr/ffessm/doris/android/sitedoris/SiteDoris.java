@@ -730,13 +730,15 @@ public class SiteDoris {
     				String edition = Pattern.compile(regExp, Pattern.DOTALL).matcher(bibliographie).replaceAll("$1");
     				//log.debug("getListeBiblioFromHtml() - edition : " + edition);
     				
+    				String illustrationURL = "gestionenligne/photos_biblio_moy/" + idBiblio + ".jpg";
+    				
     				// TODO : l'illustration éventuelle dans cleURLIllustration (mais il faudrait alors télécharger la page de l'entrée bibliographique
     				listeBiblio.add(new EntreeBibliographie( Integer.valueOf(idBiblio),
     						Outils.nettoyageTextes(titre).trim(),
     						Outils.nettoyageTextes(auteurs).trim(),
     						annee,
     						Outils.nettoyageTextes(edition).trim(),
-    						"",
+    						illustrationURL,
     						(Outils.formatStringNormalizer(titre+" "+auteurs)).toLowerCase() ));
     			}
 			}
