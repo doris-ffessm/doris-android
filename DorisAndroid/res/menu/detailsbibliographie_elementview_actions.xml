@@ -4,6 +4,9 @@
 	<!--Start of user code elementView_menu for DetailsBibliographie
 	-->
 	<!-- freely adapt here the desired layout for yourmenu -->
+	<item android:id="@+id/detailsbibliographie_elementview_action_aide"
+      android:icon="@android:drawable/ic_menu_help"
+      android:title="@string/aide_menu" />
 	<!--End of user code
 	-->
 	<item android:id="@+id/detailsbibliographie_elementview_action_preference"

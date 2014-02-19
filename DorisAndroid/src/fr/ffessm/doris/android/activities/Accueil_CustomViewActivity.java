@@ -112,13 +112,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 {
 	
 	//Start of user code constants Accueil_CustomViewActivity
-//	static final int TELECHARGE_FICHE_MENU_ID = 1;	
-	static final int TELECHARGE_PHOTO_FICHES_MENU_ID = 2;
-//	static final int VERIFIE_MAJ_FICHES_MENU_ID = 3;
-//	static final int VERIFIE_NOUVELLES_FICHES_MENU_ID = 4;
-//	static final int RESET_DB_FROM_XML_MENU_ID = 5;
-	static final int APROPOS = 6;
-	static final int AIDE = 7;
 	
 	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getSimpleName();
 	Handler mHandler;
@@ -703,11 +696,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    inflater.inflate(R.menu.accueil_customview_actions, menu);
 		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu Accueil_CustomViewActivity
-	//	menu.add(Menu.NONE, TELECHARGE_FICHE_MENU_ID, 1, R.string.menu_option_telecharge_fiches).setIcon(android.R.drawable.ic_menu_preferences);
-	//	menu.add(Menu.NONE, TELECHARGE_PHOTO_FICHES_MENU_ID, 2, R.string.menu_option_telecharge_photofiches).setIcon(android.R.drawable.ic_menu_set_as);
-    //    menu.add(Menu.NONE, VERIFIE_NOUVELLES_FICHES_MENU_ID, 4, R.string.menu_option_verifie_nouvelles_fiches).setIcon(android.R.drawable.ic_menu_preferences);
-    //    menu.add(Menu.NONE, RESET_DB_FROM_XML_MENU_ID, 5, R.string.menu_option_reinitialise_a_partir_du_xml).setIcon(android.R.drawable.ic_menu_preferences);
-	//	menu.add(Menu.NONE, APROPOS, 2, R.string.a_propos_label).setIcon(android.R.drawable.ic_menu_info_details);
 
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -747,21 +735,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 				aide.affichageMessageHTML(getContext().getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
 				return true;
 				
-		/*	case VERIFIE_NOUVELLES_FICHES_MENU_ID:
-				new VerifieNouvellesFiches_BgActivity(getApplicationContext(), this.getHelper()).execute("");
-				break;
-			case RESET_DB_FROM_XML_MENU_ID:
-				reinitializeDBFromPrefetched();
-				break; */
-		/*0000	case APROPOS:
-				AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
-				aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label)+getContext().getString(R.string.app_name), aPropos.aProposAff(),	"file:///android_res/raw/apropos.html");
-				break;
-			case AIDE:
-				AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
-				aide.affichageMessageHTML(getContext().getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
-				break;
-				*/
 		//End of user code
 			default:
                 return super.onOptionsItemSelected(item);

@@ -42,6 +42,7 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
@@ -162,7 +163,10 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
 	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
 	            return true;
 			//Start of user code additional menu action DetailEntreeGlossaire_ElementViewActivity
-	
+	        case R.id.detailentreeglossaire_elementview_action_aide:
+	        	AffichageMessageHTML aide = new AffichageMessageHTML(this, (Activity) this, getHelper());
+				aide.affichageMessageHTML(this.getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
+				return true;
 			//End of user code
 			default:
                 return super.onOptionsItemSelected(item);

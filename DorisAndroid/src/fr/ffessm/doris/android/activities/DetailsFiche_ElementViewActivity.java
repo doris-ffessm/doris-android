@@ -101,6 +101,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.FoldableClickListener;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.async.VerifieMAJFiche_BgActivity;
@@ -436,8 +437,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         			(VerifieMAJFiche_BgActivity) new VerifieMAJFiche_BgActivity(getApplicationContext(),
 					this.getHelper()).execute(""+ficheNumero);
         		//refreshScreenData();
-
             	return true;
+	        case R.id.detailsfiche_elementview_action_aide:
+	        	AffichageMessageHTML aide = new AffichageMessageHTML(this, (Activity) this, getHelper());
+				aide.affichageMessageHTML(this.getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
+				return true;
 			//End of user code
 			default:
                 return super.onOptionsItemSelected(item);
