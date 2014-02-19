@@ -465,8 +465,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {  
     	super.onCreateContextMenu(menu, v, menuInfo);  
         //menu.setHeaderTitle("Context Menu");  
-        menu.add(Menu.NONE, R.id.detailsfiche_elementview_action_fold_all_sections, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.app_ic_expand_close);
-		menu.add(Menu.NONE, R.id.detailsfiche_elementview_action_unfold_all_sections, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.app_ic_expand_open);
+        menu.add(Menu.NONE, R.id.detailsfiche_elementview_action_fold_all_sections, 1, R.string.fold_all_sections_menu_option).setIcon(R.drawable.app_expander_ic_minimized);
+		menu.add(Menu.NONE, R.id.detailsfiche_elementview_action_unfold_all_sections, 2, R.string.unfold_all_sections_menu_option).setIcon(R.drawable.app_expander_ic_maximized);
 
 
     }

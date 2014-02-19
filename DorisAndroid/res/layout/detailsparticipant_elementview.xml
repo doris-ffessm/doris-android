@@ -37,7 +37,7 @@
 		    </ImageView>
 
 		    <TextView
-		        android:id="@+id/detailsparticipant_textView1"
+		        android:id="@+id/detailsparticipant_elementview_nom_label"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:padding="3dip"
@@ -52,8 +52,8 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:padding="3dip"
-		        android:layout_toRightOf="@+id/detailsparticipant_textView1"
-		        android:layout_alignTop="@+id/detailsparticipant_textView1"
+		        android:layout_toRightOf="@+id/detailsparticipant_elementview_nom_label"
+		        android:layout_alignTop="@+id/detailsparticipant_elementview_nom_label"
 		        android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="Nom"/>
@@ -88,7 +88,7 @@
 		    </LinearLayout>
 
 		    <TextView
-		        android:id="@+id/detailsparticipant_textView2"
+		        android:id="@+id/detailsparticipant_elementview_numeroparticipant_label"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:layout_alignLeft="@+id/detailsparticipant_elementview_nom"
@@ -103,7 +103,7 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:layout_alignParentBottom="true"
-		        android:layout_toRightOf="@+id/detailsparticipant_textView2"
+		        android:layout_toRightOf="@+id/detailsparticipant_elementview_numeroparticipant_label"
 		        android:padding="3dip"
 		        android:text="999"
 		        android:textAppearance="?android:attr/textAppearanceSmall"

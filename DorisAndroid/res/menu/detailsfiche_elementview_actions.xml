@@ -5,10 +5,10 @@
 	-->
 	<!-- freely adapt here the desired layout for yourmenu -->
 	<item android:id="@+id/detailsfiche_elementview_action_fold_all_sections"
-	      android:icon="@drawable/app_ic_expand_close"
+	      android:icon="@drawable/app_expander_ic_minimized"
 	      android:title="@string/fold_all_sections_menu_option" />
 	<item android:id="@+id/detailsfiche_elementview_action_unfold_all_sections"
-	      android:icon="@drawable/app_ic_expand_open"
+	      android:icon="@drawable/app_expander_ic_maximized"
 	      android:title="@string/unfold_all_sections_menu_option" />
 	<item android:id="@+id/detailsfiche_elementview_action_glossaire"
 	      android:icon="@drawable/ic_action_glossaire"

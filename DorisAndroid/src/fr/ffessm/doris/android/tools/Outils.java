@@ -1073,7 +1073,7 @@ public class Outils {
 
 	    	        }  else {
 	    	        	Log.d(LOG_TAG, "getHtml()- ! isAvailablePhoto");
-	    	        	imageSpan = new ImageSpan(context, R.drawable.app_photo_non_disponible );	
+	    	        	imageSpan = new ImageSpan(context, R.drawable.app_glossaire_indisponible );	
 	    	        }
 
 	    	        Log.d(LOG_TAG, "getHtml()- richtext : "+richtext.length());

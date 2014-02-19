@@ -6,7 +6,7 @@
 	<string name="detailsbibliographie_elementview_numerodoris_label"></string>
 	<string name="detailsbibliographie_elementview_titre_label"></string>
 	<string name="detailsbibliographie_elementview_auteurs_label"></string>
-	<string name="detailsbibliographie_elementview_annee_label">Annee : </string>
+	<string name="detailsbibliographie_elementview_annee_label">"Année : "</string>
 	<string name="detailsbibliographie_elementview_details_label"></string>
 	<string name="detailsbibliographie_elementview_cleurlillustration_label"></string>
 	<string name="detailsbibliographie_elementview_numerodoris_hint_text"></string>

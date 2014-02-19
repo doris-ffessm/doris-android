@@ -206,7 +206,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 	    	}
         }
         else{
-        	// remet l'image par défaut (nécessaire à cause de recyclage des widget
+        	// remet l'image par défaut (nécessaire à cause de recyclage des widgets)
         	trombineView.getLayoutParams().height = defaultIconSize;
             trombineView.getLayoutParams().width = defaultIconSize;
         	trombineView.setImageResource(R.drawable.app_ic_participant_small);

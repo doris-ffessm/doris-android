@@ -1,122 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+<LinearLayout android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android">
 <!--Start of user code elementView_layout for DetailsBibliographie_before_scroll
 -->
-
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:shrinkColumns="1"
-        android:stretchColumns="1" >
-
-		<TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:padding="3dip"
-                android:text="@string/detailsbibliographie_elementview_auteurs_label"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="?android:attr/textColorPrimary" />
-
-            <TextView
-                android:id="@+id/detailsbibliographie_elementview_auteurs"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:padding="3dip"
-                android:text="Noms Auteurs"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="?android:attr/textColorPrimary" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:padding="3dip"
-                android:text="@string/detailsbibliographie_elementview_numerodoris_label"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?android:attr/textColorSecondary" />
-
-	        <TextView
-	            android:id="@+id/detailsbibliographie_elementview_numerodoris"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="right"
-	            android:padding="3dip"
-	            android:text="999"
-	            android:textAppearance="?android:attr/textAppearanceSmall"
-	            android:textColor="?android:attr/textColorSecondary" />
-	      </TableRow>
-	      <TableRow
-			android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="3dip"
-                android:text="@string/detailsbibliographie_elementview_titre_label"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="?android:attr/textColorPrimary" />
-
-	        <TextView
-	            android:id="@+id/detailsbibliographie_elementview_titre"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:padding="3dip"
-	            android:text="Titre de l'entrée Bibliographique"
-	            android:textAppearance="?android:attr/textAppearanceMedium"
-	            android:textColor="?android:attr/textColorPrimary" />
-	        
-	        <TextView
-	            android:text="@string/detailsbibliographie_elementview_annee_label"
-	            android:padding="3dip"
-				android:textAppearance="?android:attr/textAppearanceSmall"
-	            android:textColor="?android:attr/textColorSecondary"/>
-	        <TextView
-	            android:id="@+id/detailsbibliographie_elementview_annee"
-	            android:gravity="right"
-	            android:text="2099"
-	            android:padding="3dip"
-				android:textAppearance="?android:attr/textAppearanceSmall"
-	            android:textColor="?android:attr/textColorSecondary"/>
-        </TableRow>
-	</TableLayout>
-
-	<LinearLayout
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content">
-		<TextView
-            android:text="@string/detailsbibliographie_elementview_details_label"
-            android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-            android:padding="3dip" />
-        <TextView
-            android:id="@+id/detailsbibliographie_elementview_details"
-            android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-            android:padding="3dip" />
-    </LinearLayout>
-    
-	
-	<TextView
-		android:id="@+id/detailsbibliographie_elementview_liensite"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="left"
-		android:padding="1dip"
-		android:text="Lien vers le site"
-		android:textAppearance="?android:attr/textAppearanceSmall"
-		android:textColor="?android:attr/textColorSecondary" />
-		
-	<View style="@style/Separateur"/>
-
 
 <!--End of user code
 -->
@@ -131,16 +18,144 @@
 
 	<!--Start of user code elementView_layout for DetailsBibliographie
 -->
-<!--<ImageView
-        android:id="@+id/divelist_viewrow_icon"
-        android:contentDescription="Dive icon"
-        android:layout_width="22px"
-        android:layout_height="22px"
-        android:layout_marginLeft="4px"
-        android:layout_marginRight="10px"
-        android:layout_marginTop="4px"
-        android:src="@drawable/app_ic_launcher" >
-    </ImageView>-->
+		
+			<RelativeLayout
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:gravity="right"
+			    android:paddingBottom="3dp" >
+			
+			    <ImageView
+			        android:id="@+id/detailsbibliographie_elementview_icon"
+			        android:layout_width="120dp"
+			        android:layout_height="120dp"
+			        android:layout_margin="2dp"
+			        android:contentDescription="1er Couverture"
+			        android:maxHeight="96dip"
+			        android:maxWidth="96dip"
+			        android:src="@drawable/app_bibliographie_doris" />
+			
+	            <TextView
+	                android:id="@+id/detailsbibliographie_elementview_auteurs_label"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:padding="3dip"
+			        android:layout_alignTop="@+id/detailsbibliographie_elementview_icon"
+			        android:layout_toRightOf="@+id/detailsbibliographie_elementview_icon"
+	                android:text="@string/detailsbibliographie_elementview_auteurs_label"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textColor="?android:attr/textColorPrimary" />
+	
+	            <TextView
+	                android:id="@+id/detailsbibliographie_elementview_auteurs"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+			        android:padding="3dip"
+			        android:layout_toRightOf="@+id/detailsbibliographie_elementview_auteurs_label"
+			        android:layout_alignTop="@+id/detailsbibliographie_elementview_auteurs_label"
+	                android:text="Noms Auteurs"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textColor="?android:attr/textColorPrimary" />
+	            
+				<TextView
+	                android:id="@+id/detailsbibliographie_elementview_titre_label"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:padding="3dip"
+			        android:layout_below="@+id/detailsbibliographie_elementview_auteurs_label"
+			        android:layout_toRightOf="@+id/detailsbibliographie_elementview_icon"
+	                android:text="@string/detailsbibliographie_elementview_titre_label"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textColor="?android:attr/textColorSecondary" />
+	
+	            <TextView
+	                android:id="@+id/detailsbibliographie_elementview_titre"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+			        android:padding="3dip"
+		         	android:layout_toRightOf="@+id/detailsbibliographie_elementview_titre_label"
+			        android:layout_alignTop="@+id/detailsbibliographie_elementview_titre_label"
+	                android:text="Titre de l'entrée Bibliographique"
+	                android:textAppearance="?android:attr/textAppearanceMedium"
+	                android:textColor="?android:attr/textColorSecondary" />
+
+	            <TextView
+	                android:id="@+id/detailsbibliographie_elementview_numerodoris_label"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+			        android:layout_alignLeft="@+id/detailsbibliographie_elementview_auteurs"
+			        android:layout_alignParentBottom="true"
+			        android:padding="3dip"
+	                android:text="@string/detailsbibliographie_elementview_numerodoris_label"
+	                android:textAppearance="?android:attr/textAppearanceSmall"
+	                android:textColor="?android:attr/textColorSecondary" />
+	
+		        <TextView
+		            android:id="@+id/detailsbibliographie_elementview_numerodoris"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+			        android:layout_alignParentBottom="true"
+			        android:layout_toRightOf="@+id/detailsbibliographie_elementview_numerodoris_label"
+			        android:padding="3dip"
+		            android:text="999"
+		            android:textAppearance="?android:attr/textAppearanceSmall"
+		            android:textColor="?android:attr/textColorSecondary" />
+
+		        <TextView
+		            android:id="@+id/detailsbibliographie_elementview_annee"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_alignParentRight="true"
+		            android:layout_alignParentBottom="true"
+		            android:gravity="right"
+		            android:text="2099"
+		            android:padding="3dip"
+					android:textAppearance="?android:attr/textAppearanceSmall"
+		            android:textColor="?android:attr/textColorSecondary"/>
+			        
+		        <TextView
+		            android:id="@+id/detailsbibliographie_elementview_annee_label"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_alignParentBottom="true"
+		            android:layout_toLeftOf="@id/detailsbibliographie_elementview_annee"
+		            android:gravity="right"
+		            android:padding="3dip"
+		            android:text="@string/detailsbibliographie_elementview_annee_label"
+		            android:textAppearance="?android:attr/textAppearanceSmall"
+		            android:textColor="?android:attr/textColorSecondary" />
+		        
+			</RelativeLayout>
+			
+			<LinearLayout
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				<TextView
+		            android:text="@string/detailsbibliographie_elementview_details_label"
+		            android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+		            android:padding="3dip" />
+		        <TextView
+		            android:id="@+id/detailsbibliographie_elementview_details"
+		            android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+		            android:padding="3dip" />
+		    </LinearLayout>
+			    
+				
+			<TextView
+				android:id="@+id/detailsbibliographie_elementview_liensite"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="left"
+				android:padding="1dip"
+				android:text="Lien vers le site"
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:textColor="?android:attr/textColorSecondary" />
+				
+			<View style="@style/Separateur"/>
+
+
 
 <!--End of user code
 -->
