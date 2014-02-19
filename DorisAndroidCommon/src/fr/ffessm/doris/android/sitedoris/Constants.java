@@ -81,8 +81,11 @@ public class Constants {
 	/*
 	 * Autres Constantes
 	 */
-  
+    public static final String PREFIX_IMGDSK_PORTRAIT = "";
+    public static final String PREFIX_IMGDSK_DEFINITION = "definition-";
+    public static final String PREFIX_IMGDSK_BIBLIO = "biblio-";
     
+
 	/*
 	 * Liste des Types de Zone géographique, Participant, etc.
 	 */

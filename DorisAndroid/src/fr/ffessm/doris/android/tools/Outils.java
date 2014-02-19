@@ -52,6 +52,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -197,12 +198,16 @@ public class Outils {
 	}
 	
 	public static File getOrDownloadPhotoFile(Context inContext, String photoUrl, ImageType imageType) throws IOException{
+		return getOrDownloadPhotoFile(inContext, photoUrl, photoUrl, imageType);
+	}
+	
+	public static File getOrDownloadPhotoFile(Context inContext, String photoUrl, String photoDisque, ImageType imageType) throws IOException{
 		File result = null;	
 		String baseUrl = getbaseUrl(inContext, imageType);
 		File imageFolder = getImageFolder(inContext, imageType);
 		
 		if(!photoUrl.isEmpty()){
-			File fichierImage = new File(imageFolder, photoUrl);
+			File fichierImage = new File(imageFolder, photoDisque);
 			if(fichierImage.exists()){
 				result = fichierImage;
 			}
@@ -849,10 +854,12 @@ public class Outils {
 	        	else if (balise.startsWith("E:")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
 	        		int posDepTexteFinal = texteFinal.length();
+	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) + balise);
+	        		int posFinTexteFinal = texteFinal.length();
 	        		
 	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
 	        		
-	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.ILLUSTRATION_DEFINITION,posDepTexteFinal,posDepTexteFinal,
+	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.ILLUSTRATION_DEFINITION,posDepTexteFinal,posFinTexteFinal,
 	        				balise.substring(2, balise.length()-1)));
 	        	}
 	        	else if (balise.startsWith("A:")){
@@ -1041,55 +1048,37 @@ public class Outils {
 					richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
 					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_liendefinition))), ts.positionDebut, ts.positionFin, 0);
 	        	} // Fin else DEFINITION
+	        	
 	        	else if ( ts.spanType == TextSpan.SpanType.ILLUSTRATION_DEFINITION) {
 	    	        //Pour jour mettre des images directement dans le texte : la picto dangerosité par exemple.
-	    	        String nomPhoto = ts.info;
+	    	        String nomPhoto = Constants.PREFIX_IMGDSK_DEFINITION+ts.info;
 	    	        Log.d(LOG_TAG, "getHtml()- nomPhoto : "+nomPhoto);
-	    	        /*
-	    	        Drawable drawable = new BitmapDrawable();
 
+	    	        Drawable drawable = new BitmapDrawable();
+	    	        ImageSpan imageSpan = null;
+	    	        
 	    	        if(Outils.isAvailablePhoto(context, nomPhoto, ImageType.ILLUSTRATION_DEFINITION)){
 	    	        	Log.d(LOG_TAG, "getHtml()- isAvailablePhoto");
 	    	        	try {
-							drawable.createFromPath(Outils.getPhotoFile(context, nomPhoto, ImageType.ILLUSTRATION_DEFINITION).getPath());
-						} catch (IOException e) {
+	    	        		String path = Outils.getPhotoFile(context, nomPhoto, ImageType.ILLUSTRATION_DEFINITION).getAbsolutePath();
+	    	        		Log.d(LOG_TAG, "getHtml()- path : "+path);
+
+	    	        		drawable = Drawable.createFromPath(path);
+							drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight()); 
+							imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
+	    	        	} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 
 	    	        }  else {
 	    	        	Log.d(LOG_TAG, "getHtml()- ! isAvailablePhoto");
-	    	        	try {
-	    	        		//InputStream stream = context.getResources().openRawResource(R.drawable.app_ic_launcher);
+	    	        	imageSpan = new ImageSpan(context, R.drawable.app_photo_non_disponible );	
+	    	        }
 
-		    	        	//R.drawable.app_ic_launcher
-		    	        	//drawable.createFromStream(stream, "Test GMo");
-	    	        		
-	    	        		URI uri = null;
-	    	    	     	try {
-	    	    	     		uri = new URI("file:///android_res/raw/images_groupe_1.gif");
-	    	    	     	} catch (URISyntaxException e) {
-	    	    	     		e.printStackTrace();
-	    	    	     	}
-	    	    	     	File file = new File(uri);
-	    	    	     	Log.d(LOG_TAG, "getHtml()- file : "+file.getAbsolutePath());
-	    	    	     	drawable.createFromPath(file.getAbsolutePath());
-	    	    	     	
-	    	        	} catch (NotFoundException e) {
-	    	        		// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-	    	        	
-	    	        }*/
-	    	        ImageSpan imageSpan = new ImageSpan(context, R.drawable.ic_launcher );
-	    	        //Log.d(LOG_TAG, "getHtml()- image taille : "+drawable.getIntrinsicWidth()+" - "+drawable.getIntrinsicHeight());
-	        		//drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight()); 
-	                
-	        		//ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
 	    	        Log.d(LOG_TAG, "getHtml()- richtext : "+richtext.length());
 	    	        Log.d(LOG_TAG, "getHtml()- ts.positionDebut : "+ts.positionDebut);
-	    	        richtext.setSpan(imageSpan, ts.positionDebut, ts.positionDebut+1, 0);
+	    	        richtext.setSpan(imageSpan, ts.positionDebut, ts.positionFin, 0);
 
 	        	}
 	        	else if ( ts.spanType == TextSpan.SpanType.LIENWEB) {

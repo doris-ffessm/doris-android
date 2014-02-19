@@ -517,9 +517,9 @@ public class PrefetchDorisWebSite {
 							for (String image : listeImagesDefinition) {
 					    			
 								// On stocke la photo dans les Vignettes
-								if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+"definition-"+image ) ){
+								if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_DEFINITION+image ) ){
 									if (Outils.getFichierFromUrl(Constants.ILLUSTRATION_DEFINITION_BASE_URL+"/"+image,
-											fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+"definition-"+image)) {
+											fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_DEFINITION+image)) {
 									} else {
 										log.error("Une erreur est survenue lors de la récupération d'une photo de la définition de : "+definition.getTerme());
 										//System.exit(0);
@@ -612,9 +612,9 @@ public class PrefetchDorisWebSite {
 						if ( !biblio.getCleURLIllustration().isEmpty() ) {
 							
 							// On stocke la photo dans les Vignettes
-							if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+"biblio-"+biblio.getNumeroDoris()+".jpg" ) ){
+							if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_BIBLIO+biblio.getNumeroDoris()+".jpg" ) ){
 								if (Outils.getFichierFromUrl(Constants.SITE_RACINE_URL+biblio.getCleURLIllustration(),
-										fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+"biblio-"+biblio.getNumeroDoris()+".jpg" )) {
+										fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_BIBLIO+biblio.getNumeroDoris()+".jpg" )) {
 								} else {
 									log.error("Une erreur est survenue lors de la récupération de la photo de l'entrée Biblio. : "+biblio.getTitre());
 									//System.exit(0);

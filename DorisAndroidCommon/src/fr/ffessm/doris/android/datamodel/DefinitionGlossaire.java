@@ -155,7 +155,7 @@ public class DefinitionGlossaire {
     	
     	Source source=new Source(inCodePageHtml);
     	source.fullSequentialParse();
-    	log.debug("getDefinitionsFromHtml()- source.length() : " + source.length());
+    	//log.debug("getDefinitionsFromHtml()- source.length() : " + source.length());
     	
     	Element elementTDTitre2 = source.getFirstElementByClass("titre2");
     	terme = Outils.nettoyageTextes( elementTDTitre2.getRenderer().toString().replace(":", "").trim() );
@@ -163,20 +163,34 @@ public class DefinitionGlossaire {
     	
     	definition = elementTDTitre2.getParentElement().getParentElement().getFirstElementByClass("normal").getRenderer().toString();
     	
-    	log.debug("getDefinitionsFromHtml()- Définition : " + definition);
+    	//log.debug("getDefinitionsFromHtml()- Définition : " + definition);
     	
     	// Traitement des définitions complexes telles que : Byssus
     	List<Element> listeElementsTR = elementTDTitre2.getParentElement().getParentElement().getParentElement()
     			.getParentElement().getParentElement().getChildElements();
     	//log.debug("getDefinitionsFromHtml()- listeElementsTR : " + listeElementsTR.toString());
     	int rangTR = 0;
-    	for (Element element : listeElementsTR) {
+    	for (Element elementTR : listeElementsTR) {
     		//log.debug("getDefinitionsFromHtml()- (element.getName() : " + element.getName());
-    		if (element.getName() == HTMLElementName.TR){
+    		if (elementTR.getName() == HTMLElementName.TR){
     			rangTR++;
     			if (rangTR == 6){
-    				log.debug("getDefinitionsFromHtml()- TR 6 : " + element.getRenderer().toString());
-    				definition = definition+"{{n/}}"+element.getRenderer().toString().trim();
+    				//log.debug("getDefinitionsFromHtml()- TR 6 : " + elementTR.getRenderer().toString());
+    				List<Element> listeTablesligne = elementTR.getAllElements(HTMLElementName.TABLE);
+					for (Element elementTable : listeTablesligne) {
+						//log.debug("getDefinitionsFromHtml()- getDepth : " + elementTable.getDepth());
+    					if ( elementTable.getDepth() == 14 ){
+    						List<Element> listeTRlignes = elementTable.getAllElements(HTMLElementName.TR);
+    						for (Element elementTRLigne : listeTRlignes) {
+    							//log.debug("getDefinitionsFromHtml()- elementLigne getDepth : " + elementTRLigne.getDepth());
+    							if ( elementTRLigne.getDepth() == 15 && !elementTRLigne.getRenderer().toString().trim().isEmpty()) {
+    								definition = definition+"{{n/}}"+elementTRLigne.getRenderer().toString().trim();
+    							}
+    						}
+    						
+    					}
+    				}
+    				
     			}
     		}
     	}

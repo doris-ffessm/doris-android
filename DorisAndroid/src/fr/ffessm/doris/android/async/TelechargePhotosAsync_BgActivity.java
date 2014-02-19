@@ -630,12 +630,12 @@ public int telechargementPhotosBibliographie(DorisDBHelper dorisDBHelper){
 			for (String[] resultColumns : listePhotos) {
 			    
 				String photoURL = resultColumns[0];
-				String photoSurDisque = photoURL.replace("gestionenligne/photos_biblio_moy", "");
-				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosBibliographie() - photoSurDisque : "+photoSurDisque );
+				photoURL = photoURL.replace("gestionenligne/photos_biblio_moy/", "");
+				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosBibliographie() - photoURL : "+photoURL );
 		    	
-				if ( !hsImagesVigAllreadyAvailable.contains(photoSurDisque) ){
+				if ( !hsImagesVigAllreadyAvailable.contains(Constants.PREFIX_IMGDSK_BIBLIO + photoURL) ){
 					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosBibliographie() - hsImagesVigAllreadyAvailable = false" );
-					Outils.getOrDownloadPhotoFile(context, photoSurDisque, Outils.ImageType.ILLUSTRATION_BIBLIO);
+					Outils.getOrDownloadPhotoFile(context, "/"+photoURL, Constants.PREFIX_IMGDSK_BIBLIO + photoURL, Outils.ImageType.ILLUSTRATION_BIBLIO);
 				}
 				
 				nbBiblioAnalyses++;
@@ -715,13 +715,12 @@ public int telechargementPhotosGlossaire(DorisDBHelper dorisDBHelper){
 			for (String photoURL : photosURL) {
 				if (!photoURL.isEmpty()) {
 		
-					
-					String photoSurDisque = photoURL.replace("gestionenligne/diaporamaglo", "");
-					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosGlossaire() - photoSurDisque : "+photoSurDisque );
+					photoURL = photoURL.replace("gestionenligne/diaporamaglo/", "");
+					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosGlossaire() - photoURL : "+photoURL );
 			    	
-					if ( !hsImagesVigAllreadyAvailable.contains(photoSurDisque) ){
+					if ( !hsImagesVigAllreadyAvailable.contains(Constants.PREFIX_IMGDSK_DEFINITION + photoURL) ){
 						if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosGlossaire() - hsImagesVigAllreadyAvailable = false" );
-						Outils.getOrDownloadPhotoFile(context, photoSurDisque, Outils.ImageType.ILLUSTRATION_DEFINITION);
+						Outils.getOrDownloadPhotoFile(context, "/"+photoURL, Constants.PREFIX_IMGDSK_DEFINITION + photoURL, Outils.ImageType.ILLUSTRATION_DEFINITION);
 					}
 					
 					nbTermesAnalyses++;
