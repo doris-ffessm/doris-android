@@ -2,6 +2,6 @@
 <project name="DorisAndroidCommon" default="createjar">
     <target name="createjar">
         <jar destfile="../DorisAndroid/libs/DorisAndroidCommon.jar" basedir="bin" />
-        <eclipse.refreshLocal resource="DorisAndroid/libs" depth="infinite" />
+        <!-- <eclipse.refreshLocal resource="DorisAndroid/libs" depth="infinite" /> -->
     </target>
 </project>

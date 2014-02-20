@@ -4,6 +4,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile project(':android-support-v7-appcompat')
     compile project(':GenandroidLib')
+	compile project(':DorisAndroidCommon')
 }
 
 android {
