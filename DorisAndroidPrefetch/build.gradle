@@ -16,6 +16,11 @@ task(buildDorisDB, dependsOn: 'classes', type: JavaExec) {
 	classpath = sourceSets.main.runtimeClasspath
 	args '-v',  'INIT'
 }
+task cleanDorisDB(type: Delete) {
+  delete 'run'
+}
+
+
 task(buildDorisCDDVD, dependsOn: 'classes', type: JavaExec) {
 	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath

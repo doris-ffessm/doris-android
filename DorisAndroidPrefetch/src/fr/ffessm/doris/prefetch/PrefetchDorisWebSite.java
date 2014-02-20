@@ -106,6 +106,7 @@ public class PrefetchDorisWebSite {
 
 	// Dossiers liés au fonctionnement de l'appli prefetch
 	private final static String DOSSIER_RACINE = "./run";
+	private final static String DOSSIER_DATABASE = "./run/database";
 	private final static String DOSSIER_RES_HTML = "./res/html";
 	
 	// Ces dossiers seront renommés qd nécessaire
@@ -1097,7 +1098,7 @@ public class PrefetchDorisWebSite {
 	
 	private void initializeSQLite(String url) throws ClassNotFoundException, SQLException{
 		
-		Class.forName("org.sqlite.JDBC");
+		Class.forName("org.sqlite.JDBC");		
 		Connection c = DriverManager.getConnection(url);
 		log.debug("Opened database successfully");
 		
@@ -1257,6 +1258,7 @@ public class PrefetchDorisWebSite {
 		
 		log.debug("checkDossiers() - Dossier de base : " + DOSSIER_RACINE);
 		log.debug("checkDossiers() - Dossier html : " + DOSSIER_HTML);
+		log.debug("checkDossiers() - Dossier de la base : " + DOSSIER_DATABASE);
 		log.debug("checkDossiers() - Fichier de la Base : " + DATABASE_URL);
 		
 		// Si le dossier principal de travail n'existe pas, on le créé
@@ -1264,6 +1266,10 @@ public class PrefetchDorisWebSite {
 		if (dossierBase.mkdirs()) {
 			log.info("Création du dossier : " + dossierBase.getAbsolutePath());
 		} 
+		File dossierDB = new File(DOSSIER_DATABASE);
+		if (dossierDB.mkdirs()) {
+			log.info("Création du dossier : " + dossierDB.getAbsolutePath());
+		}
 
 		// Si les dossiers download (html et img) et résultats existent déjà, ils sont renommés
 		// avant d'être recréé vide
