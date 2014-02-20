@@ -17,32 +17,49 @@
 		<p>
 			<h3><a name="Sommaire">Sommaire de l'Aide</h3>
 			<ul class="Aide">
-				<li><a href="#AidePrincipe">Principes</a></li>
-				<li><a href="#AideNavigation">Navigation</a></li>
-				<li><a href="#Parametre">Paramètres</a></li>
+				<li><a href="#Principes">Principes</a></li>
+				<li><a href="#Navigation">Navigation</a></li>
 				<ul class="Aide">
-					<li><a href="#AideParamModeConnecte">Mode Connecté</a></li>
-					<li><a href="#AideParamHorsLigne">Précharg. Photos pour Mode Hors Ligne</a></li>
-					<li><a href="#AideParamPresentation">Options de Présentation</a></li>
+					<li><a href="#Menus">Menus</a></li>
+					<li><a href="#Filtres">Filtres</a></li>
+					<li><a href="#ImagesIndisponibles">Images Indisponibles</a></li>
+				</ul>
+				<li><a href="#Parametres">Paramètres</a></li>
+				<ul class="Aide">
+					<li><a href="#ParamModeConnecte">Mode Connecté</a></li>
+					<li><a href="#ParamHorsLigne">Précharg. Photos pour Mode Hors Ligne</a></li>
+					<li><a href="#ParamPresentation">Options de Présentation</a></li>
 				</ul>
 			</ul>
 			<ul class="Retour">
 				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
 			</ul>
-			<h3><a name="AidePrincipe"></a>Principes</h3>
+			<h3><a name="Principes"></a>Principes</h3>
 			<span class="Aide">
 				Les <b>Fiches</b>, les <b>termes du Glossaire</b>, les informations sur les <b>Participants</b> et les <b>références Bibliographiques</b> publiés sur le site <b>DORIS</b> sont compris dans l'application.
 				Dans cette Version (<i>Beta 2</i>) ces informations ne peuvent pas encore être mises à jour depuis le terminal.<br />
-				<i>C'est une évolution prévue.</i><br />
+				<i>C'est une évolution prévue. En attendant, il faut mettre à jour l'application.</i><br />
 				<br />
 				Les <b>Photos</b>, elles, doivent être téléchargées. Si vous avez un accès à internet cela peut être fait durant la navigation. Mais pour économiser votre forfait et gagner en fluidité vous pouvez les télécharger préalablement en WIFI.<br />
-				Tout cela est <a href="#AideParametres">paramétrable</a>.
+				Tout cela est <a href="#Parametre">paramétrable</a>.
 			</span>
 			<ul class="Retour">
 				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
 			</ul>
-			<h3><a name="AideNavigation"></a>Navigation</h3>
-			<h4>Filtres</h4>
+			<h3><a name="Navigation"></a>Navigation</h3>
+			<h4><a name="Menus"></a>Menus</h4>
+			<span class="Aide">	
+				<ul class="Aide">
+					<li><img src="ic_action_participants.png" style="background-color:grey; margin: 1px;" alt="Menu Participants" align="middle"/> - Participants</li>
+					<li><img src="ic_action_glossaire.png" style="background-color:grey; margin: 1px;" alt="Menu Glossaire" align="middle"/> - Glossaire</li>
+					<li><img src="ic_action_bibliographie.png" style="background-color:grey; margin: 1px;" alt="Menu Bibliographoe" align="middle"/> - Bibliographie</li>
+				</ul>
+				Les icônes ci-dessus n'apparaissent que si la largeur de l'écran est suffisante, les applications sont sinon accessibles via le menu.
+			</span>
+			<ul class="Retour">
+				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
+			</ul>
+			<h4><a name="Filtres"></a>Filtres</h4>
 			<span class="Aide">
 				Il est possible de filtrer les fiches par <b>Zone Géographique</b> et par <b>Groupe Phylogénique</b> (indépendamment ou en même temps).<br />
 				Pour cela, depuis la page d'accueil il est possible de cliquer directement sur la zone choisie, soit sur son arbre phylogénique : <img src="ic_action_arbre_phylogenetique.png" style="background-color:grey;" alt="Icône Arbre" align="top"/>.<br />
@@ -50,19 +67,20 @@
 				Lorsqu'un filtre est activé l'icône placée dans la barre supérieure devient orange : <img src="app_filter_settings_actif_32.png" style="background-color:grey;" alt="Icône Filtre" align="top"/><br />
 				Pour enlever un filtre, il faut soit revenir à l'accueil le choix suivant annulera alors le précédent, soit cliquer sur l'icône orange ci-avant et supprimer les filtres.<br />
 			</span>
-			<h4>Autres Menus</h4>
-			<span class="Aide">	
-				<ul class="Aide">
-					<li><img src="ic_action_participants.png" style="background-color:grey; margin: 1px;" alt="Menu Participants" align="middle"/> - Participants</li>
-					<li><img src="ic_action_glossaire.png" style="background-color:grey; margin: 1px;" alt="Menu Glossaire" align="middle"/> - Glossaire</li>
-					<li><img src="ic_action_bibliographie.png" style="background-color:grey; margin: 1px;" alt="Menu Bibliographoe" align="middle"/> - Bibliographie</li>
-				</ul>
+			<ul class="Retour">
+				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
+			</ul>
+			<h4><a name="ImagesIndisponibles"></a>Images indisponibles</h4>
+			<span class="Aide">
+				Lors de votre utilisation de l'application, il est possible que des images soient indisponibles. Ceci parce qu'elles n'ont pas été téléchargées préalablement et que vous n'avez pas de réseaux ou n'avez pas autorisé les téléchargements sans WIFI (<a href="#ParamHorsLigne">Paramètres</a>).<br />
+				Dans ce cas, une icône remplace l'image du site : <img src="app_doris_pas_connecte.png" style="background-color:grey;" alt="Image Indisponible" align="top"/>.<br />
+				Les illustrations du Glossaire doivent être téléchargées préalablement pour être visible (<a href="#ParamHorsLigneAutresPhotos">Paramètres</a>), si ce n'est pas le cas vous verrez cette image : <img src="app_glossaire_indisponible.png" style="background-color:grey;" alt="Image Indisponible" align="top"/>.<br />
 			</span>
 			<ul class="Retour">
 				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
 			</ul>
 			<h3><a name="Parametre"></a>Paramètres</h3>
-			<h4><a name="AideParamModeConnecte"></a>Mode Connecté</h4>
+			<h4><a name="ParamModeConnecte"></a>Mode Connecté</h4>
 			<span class="Aide">
 				Par défaut, les vignettes des listes et, lors de leur affichage, les photos de qualité intermédiaire sont téléchargées <span style="text-decoration: underline;">si elles ne sont pas disponibles sur l'appareil</span>.<br />
 				Il est possible de n'autoriser ces téléchargements que quand l'appareil est connecté à internet en WIFI.<br />
@@ -73,7 +91,7 @@
 			<ul class="Retour">
 				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
 			</ul>
-			<h4><a name="AideParamHorsLigne"></a>Préchargement Photos pour le Mode Hors Ligne</h4>
+			<h4><a name="ParamHorsLigne"></a>Préchargement Photos pour le Mode Hors Ligne</h4>
 			<span class="Aide">
 				Par défaut, les vignettes de la photo principale de chaque fiche sont téléchargées lorsque l'application est lancée et si l'appareil est connecté à internet en WIFI.<br />
 				<i>Il est possible d'activer ces téléchargements en permanence mais faites alors attention à votre forfait.</i><br />
@@ -100,11 +118,14 @@
 					<li>~100 Ko par photo en qualité maximum cela représente presque 2 Go</li>
 				</ul>
 			</span>
+			<a name="ParamHorsLigneAutresPhotos"></a>
+			Il est possible de précharger les images ... indispensable pour glossaire ....
+			
 			
 			<ul class="Retour">
 				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
 			</ul>
-			<h4><a name="AideParamPresentation"></a>Options de Présentation</h4>
+			<h4><a name="ParamPresentation"></a>Options de Présentation</h4>
 			<span class="Aide">
 				À compléter ...
 			</span>
