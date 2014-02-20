@@ -110,8 +110,9 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
 	    actionBar.setDisplayHomeAsUpEnabled(true);
 
         participantId = getIntent().getExtras().getInt("participantId");
-        
+		
 		// Start of user code protectedDetailsParticipant_ElementViewActivity_onCreate
+        Log.d(LOG_TAG, "onCreate() - participantId : "+participantId);
 		// End of user code
     }
     

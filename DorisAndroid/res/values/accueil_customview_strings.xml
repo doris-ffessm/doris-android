@@ -28,7 +28,7 @@
 	<string name="accueil_customview_logo2_url">http://biologie.ffessm.fr</string>
 	
 	<string name="menu_option_telecharge_fiches">Télécharge fiches</string>
-	<string name="menu_option_telecharge_photofiches">Préchargement photos</string>
+	<string name="menu_option_telecharge_photofiches">Précharg. photos M/A</string>
 	<string name="menu_option_verifie_nouvelles_fiches">Cherche nouvelles fiches</string>
 	<string name="menu_option_reinitialise_a_partir_du_xml">Réinitialise Base</string>
 	

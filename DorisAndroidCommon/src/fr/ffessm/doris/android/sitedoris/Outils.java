@@ -187,6 +187,10 @@ public class Outils {
 		texteNettoye = texteNettoye.replace("<b>", "<strong>")
 						.replace("</b>", "</strong>");
 
+		// Il faut nettoyer cette balise originale ...
+		// <strong style="font-size: 11px;">
+		texteNettoye = texteNettoye.replaceAll("<strong [^>]*>", "");
+		
 		// Tous les sauts de ligne de la même façon + gain de place en hauteur pour l'interface Android
 		texteNettoye = texteNettoye.replace("<br>", "<br/>")
 				.replace("<br />", "<br/>")

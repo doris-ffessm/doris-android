@@ -712,10 +712,18 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			//Start of user code additional menu action Accueil_CustomViewActivity
 	        case R.id.accueil_customview_action_telecharge_photofiches:
 	        	TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
-				if(telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING)
+				if(telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING) {
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = 
 						(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
-
+	
+				} else {
+					Toast.makeText(this, "Arrêt des téléchargements demandé", Toast.LENGTH_LONG).show();
+					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
+					
+					ProgressBar pbRunningBarLayout =  (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);
+					pbRunningBarLayout.setVisibility(View.GONE);
+				}
+				
 	            return true;
 	        case R.id.accueil_customview_action_a_propos:
 	        	AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
