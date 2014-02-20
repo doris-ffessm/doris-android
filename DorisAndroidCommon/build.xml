@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="DorisAndroidCommon" default="createjar">
     <target name="createjar">
-        <jar destfile="../DorisAndroid/libs/DorisAndroidCommon.jar" basedir="bin" />
-        <eclipse.refreshLocal resource="DorisAndroid/libs" depth="infinite" />
+        <jar destfile="../DorisAndroid/additionnal_libs/DorisAndroidCommon.jar" basedir="bin" />
+        <!-- <eclipse.refreshLocal resource="DorisAndroid/libs" depth="infinite" /> -->
     </target>
 </project>
