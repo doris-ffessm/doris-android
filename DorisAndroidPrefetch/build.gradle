@@ -9,3 +9,15 @@ sourceSets {
     test.java.srcDirs = ['tests/java']
     test.resources.srcDirs = ['tests/resources']
 }
+
+
+task(buildDorisDB, dependsOn: 'classes', type: JavaExec) {
+	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
+	classpath = sourceSets.main.runtimeClasspath
+	args '-v',  'INIT'
+}
+task(buildDorisCDDVD, dependsOn: 'classes', type: JavaExec) {
+	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
+	classpath = sourceSets.main.runtimeClasspath
+	args '-v',  'CDDVD'
+}
