@@ -1,12 +1,16 @@
 package fr.ffessm.doris.android.activities.view;
 
 import com.j256.ormlite.dao.CloseableIterator;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
+import fr.ffessm.doris.android.activities.DetailsParticipant_ElementViewActivity;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
+import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.Outils.ImageType;
@@ -15,6 +19,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.preference.ListPreference;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -87,6 +92,21 @@ public class AffichageMessageHTML {
 					context.startActivity(intent);
 	
 					return true;
+    	    	} else if (inUrl.startsWith("participant")){
+    	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Affichage Participant : "+inUrl.replace("participant://", ""));
+	
+    	    		Intent toDetailView = new Intent(context, DetailsParticipant_ElementViewActivity.class);
+    	    		
+	    	        OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(context);
+	                RuntimeExceptionDao<Participant, Integer> entriesDao = ormLiteDBHelper.getParticipantDao();
+	    	        
+    	    		Bundle b = new Bundle();
+	    	        b.putInt("participantId", entriesDao.queryForEq("numeroParticipant", Integer.valueOf( inUrl.replace("participant://", "") ) ).get(0).getId() );
+	    	        
+	    	        toDetailView.putExtras(b);
+	    			context.startActivity(toDetailView);
+	    			
+    	    		return true;
     	    	} else {
     	    		return true;
     	    	}
@@ -137,6 +157,7 @@ public class AffichageMessageHTML {
 			sizeFolderTexte.append(context.getString(R.string.a_propos_foldersize_hi_res));
 			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getParamLong(context.getApplicationContext(), R.string.pref_key_size_folder_hi_res, 0L ) ) );
 		}
+		
 		if (sizeFolderTexte.length()!=0) {
 			texte.append(System.getProperty("line.separator"));
 			texte.append(context.getString(R.string.a_propos_foldersize_titre));

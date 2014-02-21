@@ -198,7 +198,7 @@ public class PrefetchDorisWebSite {
 						
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-						System.exit(0);
+						System.exit(1);
 					}
 				} else {
 					// NODWNLD
@@ -207,7 +207,7 @@ public class PrefetchDorisWebSite {
 						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeGroupesFichier));
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-						System.exit(0);
+						System.exit(1);
 					}
 				}
 				
@@ -236,7 +236,7 @@ public class PrefetchDorisWebSite {
 								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalContenuGroupe));
 							} else {
 								log.error("Une erreur est survenue lors du téléchargement du groupe : "+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe());
-								System.exit(0);
+								System.exit(1);
 							}
 						} else {
 							// NODWNLD ou CDDVD
@@ -244,7 +244,7 @@ public class PrefetchDorisWebSite {
 								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefContenuGroupe));
 							} else {
 								log.error("Une erreur est survenue lors de la récupération du groupe : "+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe());
-								System.exit(0);
+								System.exit(1);
 							}
 						}
 											
@@ -266,7 +266,7 @@ public class PrefetchDorisWebSite {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierGroupes));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste des Groupes : " + zone.toString());
-							System.exit(0);
+							System.exit(1);
 						}
 						final List<Groupe> listeGroupesZone = SiteDoris.getListeGroupesFromHtml(contenuFichierHtml);
 						log.debug("doMain() - listeGroupesZone.size : "+listeGroupesZone.size());
@@ -286,7 +286,7 @@ public class PrefetchDorisWebSite {
 										contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierPageGroupe));
 									} else {
 										log.error("Une erreur est survenue lors de la récupération de la page des groupes : " + fichierPageGroupe);
-										System.exit(0);
+										System.exit(1);
 									}
 
 									pageCourante ++;
@@ -321,7 +321,7 @@ public class PrefetchDorisWebSite {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeParticipantsFichier));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste des Participants : "+initiale);
-							System.exit(0);
+							System.exit(1);
 						}
 					} else {
 						// NODWNLD
@@ -330,7 +330,7 @@ public class PrefetchDorisWebSite {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeParticipantsFichier));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste des Participants : "+initiale);
-							System.exit(0);
+							System.exit(1);
 						}
 					}
 					
@@ -366,7 +366,7 @@ public class PrefetchDorisWebSite {
 									pageIntervenantRacine+"participant-"+participant.getNumeroParticipant()+".html") ) {
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom());
-								//System.exit(0);
+								//System.exit(1);
 							}
 						}
 							
@@ -390,7 +390,7 @@ public class PrefetchDorisWebSite {
 										fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_"))) {
 								} else {
 									log.error("Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom());
-									//System.exit(0);
+									//System.exit(1);
 								}
 							}
 						}
@@ -422,7 +422,7 @@ public class PrefetchDorisWebSite {
 								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeDefinitionsFichier));
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale+"-"+numero);
-								System.exit(0);
+								System.exit(1);
 							}
 						} else {
 							// NODWNLD
@@ -431,7 +431,7 @@ public class PrefetchDorisWebSite {
 								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeDefinitionsFichier));
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale+"-"+numero);
-								System.exit(0);
+								System.exit(1);
 							}
 						}
 						
@@ -523,7 +523,7 @@ public class PrefetchDorisWebSite {
 											fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_DEFINITION+image)) {
 									} else {
 										log.error("Une erreur est survenue lors de la récupération d'une photo de la définition de : "+definition.getTerme());
-										//System.exit(0);
+										//System.exit(1);
 									}
 								}
 							}
@@ -551,7 +551,7 @@ public class PrefetchDorisWebSite {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeBibliographies));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste des Bibliographies : " + listeBibliographies);
-							System.exit(0);
+							System.exit(1);
 						}
 					} else {
 						// NODWNLD
@@ -560,7 +560,7 @@ public class PrefetchDorisWebSite {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeBibliographies));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste des Bibliographies : " + listeBibliographies);
-							System.exit(0);
+							System.exit(1);
 						}
 					}
 					
@@ -597,7 +597,7 @@ public class PrefetchDorisWebSite {
 									pageBiblioRacine+"biblio-"+biblio.getNumeroDoris()+".html") ) {
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la page Bibliograpgie de : "+biblio.getTitre());
-								//System.exit(0);
+								//System.exit(1);
 							}
 						}
 					}
@@ -618,7 +618,7 @@ public class PrefetchDorisWebSite {
 										fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_BIBLIO+biblio.getNumeroDoris()+".jpg" )) {
 								} else {
 									log.error("Une erreur est survenue lors de la récupération de la photo de l'entrée Biblio. : "+biblio.getTitre());
-									//System.exit(0);
+									//System.exit(1);
 								}
 							}
 						}
@@ -638,7 +638,7 @@ public class PrefetchDorisWebSite {
 						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-						System.exit(0);
+						System.exit(1);
 					}
 				}
 				HashSet<Fiche> listeFichesSite = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
@@ -654,7 +654,7 @@ public class PrefetchDorisWebSite {
 						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-						System.exit(0);
+						System.exit(1);
 					}
 				}
 				HashSet<Fiche> listFichesFromRef = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);;
@@ -825,7 +825,7 @@ public class PrefetchDorisWebSite {
 											if (Outils.getFichierFromUrl(Constants.VIGNETTE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL().replace(" ", "_"))) {
 											} else {
 												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-												//System.exit(0);
+												//System.exit(1);
 											}
 										}
 										// Qualité Intermédiaire
@@ -833,7 +833,7 @@ public class PrefetchDorisWebSite {
 											if (Outils.getFichierFromUrl(Constants.MOYENNE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+SOUSDOSSIER_MED_RES+photoFiche.getCleURL().replace(" ", "_"))) {
 											} else {
 												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-												//System.exit(0);
+												//System.exit(1);
 											}
 										}
 										// Haute Qualité 
@@ -841,7 +841,7 @@ public class PrefetchDorisWebSite {
 											if (Outils.getFichierFromUrl(Constants.GRANDE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+SOUSDOSSIER_HI_RES+photoFiche.getCleURL().replace(" ", "_"))) {
 											} else {
 												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-												//System.exit(0);
+												//System.exit(1);
 											}
 										}
 									}
@@ -894,7 +894,7 @@ public class PrefetchDorisWebSite {
 										fichierLocalLien+lienATelecharger.getFichier() ) ) {
 								} else {
 									log.error("Une erreur est survenue lors de la récupération du lien : "+lienATelecharger.getUrl() );
-									System.exit(0);
+									System.exit(1);
 								}
 							}
 						}
@@ -905,7 +905,7 @@ public class PrefetchDorisWebSite {
 										fichierIconeRacine+lienATelecharger.getFichier() ) ) {
 								} else {
 									log.error("Une erreur est survenue lors de la récupération du lien : "+lienATelecharger.getUrl() );
-									System.exit(0);
+									System.exit(1);
 								}
 							}
 						}
@@ -1006,7 +1006,7 @@ public class PrefetchDorisWebSite {
 		if (inArgs.length < 1) {
 			help();
 			log.error("Le programme ne peut être lancé sans arguments.");
-			System.exit(0);
+			System.exit(1);
 		}
 		
 		// On commence par regarder si un des paramètres est un paramètre optionnel prioritaire
@@ -1058,7 +1058,7 @@ public class PrefetchDorisWebSite {
 			    } catch(NumberFormatException e) { 
 			    	help();
 					log.error("Argument -M ou --max mal utilisé : " + arg);
-			    	System.exit(0);
+			    	System.exit(1);
 			    }
 			}
 		}
@@ -1090,7 +1090,7 @@ public class PrefetchDorisWebSite {
 			}
 			log.error("arguments : " + listeArgs);
 			log.error("Action non prévue");
-			System.exit(0);
+			System.exit(1);
 		}
 		return action;
 
@@ -1286,14 +1286,14 @@ public class PrefetchDorisWebSite {
 					log.info("Sauvegarde du dossier download : " + dossierHtmlNew.getAbsolutePath());
 				}else{
 					log.error("Echec renommage du dossier download : " + dossierHtml.getAbsolutePath());
-					System.exit(0);
+					System.exit(1);
 				}
 			}
 			if (dossierHtml.mkdir()) {
 				log.info("Création du dossier download : " + dossierHtml.getAbsolutePath());
 			} else {
 				log.error("Echec de la Création du dossier download : " + dossierHtml.getAbsolutePath());
-				System.exit(0);
+				System.exit(1);
 			}
 		}
 		
@@ -1306,14 +1306,14 @@ public class PrefetchDorisWebSite {
 					log.info("Sauvegarde du dossier download : " + dossierImagesNew.getAbsolutePath());
 				}else{
 					log.error("Echec renommage du dossier download : " + dossierImagesNew.getAbsolutePath());
-					System.exit(0);
+					System.exit(1);
 				}
 			}
 			if (dossierImages.mkdir()) {
 				log.info("Création du dossier download : " + dossierImages.getAbsolutePath());
 			} else {
 				log.error("Echec de la Création du dossier download : " + dossierImages.getAbsolutePath());
-				System.exit(0);
+				System.exit(1);
 			}
 			File sousDossierImages;
 			sousDossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_ICONES);
@@ -1321,28 +1321,28 @@ public class PrefetchDorisWebSite {
 				log.info("Création du dossier download : " + sousDossierImages.getAbsolutePath());
 			} else {
 				log.error("Echec de la Création du sous-dossier download : " + sousDossierImages.getAbsolutePath());
-				System.exit(0);
+				System.exit(1);
 			}
 			sousDossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_VIGNETTES);
 			if (sousDossierImages.mkdir()) {
 				log.info("Création du dossier download : " + sousDossierImages.getAbsolutePath());
 			} else {
 				log.error("Echec de la Création du dossier sous-download : " + sousDossierImages.getAbsolutePath());
-				System.exit(0);
+				System.exit(1);
 			}
 			sousDossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_MED_RES);
 			if (sousDossierImages.mkdir()) {
 				log.info("Création du dossier download : " + sousDossierImages.getAbsolutePath());
 			} else {
 				log.error("Echec de la Création du dossier sous-download : " + sousDossierImages.getAbsolutePath());
-				System.exit(0);
+				System.exit(1);
 			}
 			sousDossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_HI_RES);
 			if (sousDossierImages.mkdir()) {
 				log.info("Création du dossier download : " + sousDossierImages.getAbsolutePath());
 			} else {
 				log.error("Echec de la Création du dossier sous-download : " + sousDossierImages.getAbsolutePath());
-				System.exit(0);
+				System.exit(1);
 			}
 		}
 		
@@ -1355,14 +1355,14 @@ public class PrefetchDorisWebSite {
 					log.info("Sauvegarde du dossier CD : " + dossierCDNew.getAbsolutePath());
 				}else{
 					log.error("Echec renommage du dossier CD : " + dossierCDNew.getAbsolutePath());
-					System.exit(0);
+					System.exit(1);
 				}
 			}
 			if (dossierCD.mkdir()) {
 				log.info("Création du dossier CD : " + dossierCD.getAbsolutePath());
 			} else {
 				log.error("Echec de la Création du dossier CD : " + dossierCD.getAbsolutePath());
-				System.exit(0);
+				System.exit(1);
 			}
 			File dossierDVD = new File(DOSSIER_RACINE + "/" + DOSSIER_DVD);
 			if (dossierDVD.exists()){
@@ -1371,14 +1371,14 @@ public class PrefetchDorisWebSite {
 					log.info("Sauvegarde du dossier DVD : " + dossierDVDNew.getAbsolutePath());
 				}else{
 					log.error("Echec renommage du dossier DVD : " + dossierDVDNew.getAbsolutePath());
-					System.exit(0);
+					System.exit(1);
 				}
 			}
 			if (dossierDVD.mkdir()) {
 				log.info("Création du dossier DVD : " + dossierDVD.getAbsolutePath());
 			} else {
 				log.error("Echec de la Création du dossier DVD : " + dossierDVD.getAbsolutePath());
-				System.exit(0);
+				System.exit(1);
 			}
 		}
 		
@@ -1387,11 +1387,11 @@ public class PrefetchDorisWebSite {
 			final File dossierReference = new File(DOSSIER_RACINE + "/" + DOSSIER_HTML_REF);
 			if (!dossierReference.exists()){
 				log.error("Le dossier Référence : " + dossierReference.getAbsolutePath() + "n'a pas été créé.");
-				System.exit(0);
+				System.exit(1);
 			} else {
 				if (!dossierReference.isDirectory()){
 					log.error("Le dossier Référence : " + dossierReference.getAbsolutePath() + "n'a pas été créé.");
-					System.exit(0);
+					System.exit(1);
 				}
 			}
 		}
@@ -1401,52 +1401,52 @@ public class PrefetchDorisWebSite {
 			File dossierReference = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF);
 			if (!dossierReference.exists()){
 				log.error("Le dossier Référence des images : " + dossierReference.getAbsolutePath() + " n'a pas été créé.");
-				System.exit(0);
+				System.exit(1);
 			} else {
 				if (!dossierReference.isDirectory()){
 					log.error("Le dossier Référence des images : " + dossierReference.getAbsolutePath() + " n'a pas été créé.");
-					System.exit(0);
+					System.exit(1);
 				}
 			}
 			File sousDossierImages;
 			sousDossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_ICONES);
 			if (!sousDossierImages.exists()){
 				log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
-				System.exit(0);
+				System.exit(1);
 			} else {
 				if (!sousDossierImages.isDirectory()){
 					log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
-					System.exit(0);
+					System.exit(1);
 				}
 			}
 			sousDossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_VIGNETTES);
 			if (!sousDossierImages.exists()){
 				log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
-				System.exit(0);
+				System.exit(1);
 			} else {
 				if (!sousDossierImages.isDirectory()){
 					log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
-					System.exit(0);
+					System.exit(1);
 				}
 			}
 			sousDossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_MED_RES);
 			if (!sousDossierImages.exists()){
 				log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
-				System.exit(0);
+				System.exit(1);
 			} else {
 				if (!sousDossierImages.isDirectory()){
 					log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
-					System.exit(0);
+					System.exit(1);
 				}
 			}
 			sousDossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_HI_RES);
 			if (!sousDossierImages.exists()){
 				log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
-				System.exit(0);
+				System.exit(1);
 			} else {
 				if (!sousDossierImages.isDirectory()){
 					log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
-					System.exit(0);
+					System.exit(1);
 				}
 			}
 		}
@@ -1461,7 +1461,7 @@ public class PrefetchDorisWebSite {
 				log.info("Sauvegarde du fichier de la base : " + fichierDB.getAbsolutePath());
 			}else{
 				log.error("Echec renommage du fichier de la base en : " + fichierDBNew.getAbsolutePath());
-				System.exit(0);
+				System.exit(1);
 			}
 
 		}

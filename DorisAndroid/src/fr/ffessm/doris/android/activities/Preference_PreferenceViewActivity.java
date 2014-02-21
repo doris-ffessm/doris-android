@@ -71,6 +71,7 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Outils.ImageType;
 
 //End of user code
 
@@ -114,20 +115,26 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	        }
         }
 
+        //TODO : Mettre une demande de confirmation
         final Preference btnVideVig = (Preference)getPreferenceManager().findPreference("btn_reset_vig");
         if(btnVideVig != null) {
 	        btnVideVig.setSummary(getVigSummary());
         	btnVideVig.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                  @Override
                  public boolean onPreferenceClick(Preference arg0) {
+                	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_vig");
                 	 Outils.clearFolder(Outils.getImageFolderVignette(getApplicationContext()), 0);
 
-                	 btnVideVig.setSummary(getVigSummary());
+                	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_vignettes, Outils.getImageCount(context, ImageType.VIGNETTE));
+                	 Outils.setParamLong(context,R.string.pref_key_size_folder_vignettes, Outils.getPhotoDiskUsage(context, ImageType.VIGNETTE));
+                	 btnVideVig.setSummary(getVigSummary());	
+
                 	 return true;
                  }
              }); 
          }
 
+        //TODO : Mettre une demande de confirmation
         final Preference btnVideMedRes = (Preference)getPreferenceManager().findPreference("btn_reset_med_res");      
         if(btnVideMedRes != null) {
 	        btnVideMedRes.setSummary(getMedResSummary());
@@ -135,14 +142,19 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         	btnVideMedRes.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                  @Override
                  public boolean onPreferenceClick(Preference arg0) {
+                	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_med_res");
                 	 Outils.clearFolder(Outils.getImageFolderMedRes(getApplicationContext()), 0);
 
+                	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_med_res, Outils.getImageCount(context, ImageType.MED_RES));
+                	 Outils.setParamLong(context,R.string.pref_key_size_folder_med_res, Outils.getPhotoDiskUsage(context, ImageType.MED_RES));
                 	 btnVideMedRes.setSummary(getMedResSummary());
+                	 
                 	 return true;
                  }
              });     
          }
-
+        
+        //TODO : Mettre une demande de confirmation
         final Preference btnVideHiRes = (Preference)getPreferenceManager().findPreference("btn_reset_hi_res");      
         if(btnVideHiRes != null) {
         	btnVideHiRes.setSummary(getHiResSummary());
@@ -150,14 +162,19 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         	btnVideHiRes.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                  @Override
                  public boolean onPreferenceClick(Preference arg0) {
+                	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_hi_res");
                 	 Outils.clearFolder(Outils.getImageFolderHiRes(getApplicationContext()), 0);
 
+                	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_hi_res, Outils.getImageCount(context, ImageType.HI_RES));
+                	 Outils.setParamLong(context,R.string.pref_key_size_folder_hi_res, Outils.getPhotoDiskUsage(context, ImageType.HI_RES));
                 	 btnVideHiRes.setSummary(getHiResSummary());
+                	 
                 	 return true;
                  }
              });     
          }
 
+        //TODO : Mettre une demande de confirmation
         final Preference btnVideCache = (Preference)getPreferenceManager().findPreference("btn_reset_cache");      
         if(btnVideCache != null) {
         	
@@ -179,13 +196,6 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
              });     
          }
         
-        /* Ne peut pas fonctionner comme si dessous avec API10 */
-        /*
-        String uri = Outils.getZoneIcone(getApplicationContext(), 1); 
-    	int imageResource = getApplicationContext().getResources().getIdentifier(uri, null, getApplicationContext().getPackageName());
-    	Preference btnPrechargRegionFrance = (Preference)getPreferenceManager().findPreference("pref_key_mode_precharg_region_france");   
-    	btnPrechargRegionFrance.setIcon(imageResource);
-        */
 
 		//End of user code
     }

@@ -30,6 +30,7 @@ import fr.ffessm.doris.android.activities.DetailEntreeGlossaire_ElementViewActiv
 import fr.ffessm.doris.android.activities.DetailsFiche_ElementViewActivity;
 import fr.ffessm.doris.android.activities.DetailsParticipant_ElementViewActivity;
 import fr.ffessm.doris.android.activities.Glossaire_ClassListViewActivity;
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -669,6 +670,7 @@ public class Outils {
     public static int clearFolder(File inFolder, int inNbJours){
 		int deletedFiles = 0;
 	    if (inFolder!= null && inFolder.isDirectory()) {
+	    	Log.d(LOG_TAG, "clearFolder() - inFolder : "+inFolder);
 	        try {
 	            for (File child:inFolder.listFiles()) {
 
@@ -690,6 +692,7 @@ public class Outils {
 	        	Log.e(LOG_TAG, String.format("Failed to clean the folder, error %s", e.getMessage()));
 	        }
 	    }
+	    Log.d(LOG_TAG, "clearFolder() - Fichiers effacés : "+deletedFiles);
 	    return deletedFiles;
 	}
 	
@@ -725,7 +728,7 @@ public class Outils {
 	    	return new SpannableString(texte);
 	    	
 	    } else {
-	    	Log.d(LOG_TAG, "textToSpannableStringDoris() - Traitement récurrent des blocs {{*}}");
+	    	//Log.d(LOG_TAG, "textToSpannableStringDoris() - Traitement récurrent des blocs {{*}}");
 	    	
 	    	// TODO : doit être améliorable mais je n'arrive pas à manipuler directement SpannableString
 	    	// donc pas de concat, pas de regexp.
@@ -744,8 +747,8 @@ public class Outils {
 	        	
 	        	String balise = texteInter.substring(posDepTexteInter+2, posFinTexteInter);
 	        	
-	        	//Log.d(LOG_TAG, "textToSpannableStringDoris() - texteInter : "+texteInter
-	        	//		+ " - " + posDepTexteInter + "-" + posFinTexteInter + " -> " + balise);
+	        	Log.d(LOG_TAG, "textToSpannableStringDoris() - texteInter : "+texteInter
+	        			+ " - " + posDepTexteInter + "-" + posFinTexteInter + " -> " + balise);
 	        	
 	        	if (balise.equals("i")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
@@ -1073,7 +1076,18 @@ public class Outils {
 
 	    	        }  else {
 	    	        	Log.d(LOG_TAG, "getHtml()- ! isAvailablePhoto");
-	    	        	imageSpan = new ImageSpan(context, R.drawable.app_glossaire_indisponible );	
+	    	        	imageSpan = new ImageSpan(context, R.drawable.app_glossaire_indisponible );
+	    	        	
+	    				ClickableSpan clickableSpan = new ClickableSpan() {  
+				            @Override  
+				            public void onClick(View view) {
+				            	
+			    	        	AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, new OrmLiteDBHelper(context));
+			    				aide.affichageMessageHTML(context.getString(R.string.aide_label), "", "file:///android_res/raw/aide.html#ImagesIndisponibles");
+
+				            }  
+				        };
+				        richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
 	    	        }
 
 	    	        Log.d(LOG_TAG, "getHtml()- richtext : "+richtext.length());
@@ -1177,21 +1191,16 @@ public class Outils {
     	HttpURLConnection urlConnection = null;
     	try {
 			urlConnection = (HttpURLConnection) urlHtml.openConnection();
-			Log.d(LOG_TAG, "getHtml()- 010 : "+urlConnection.toString());
+			//Log.d(LOG_TAG, "getHtml()- 010 : "+urlConnection.toString());
 	        urlConnection.setConnectTimeout(3000);
-	        Log.d(LOG_TAG, "getHtml()- 015");
 	        urlConnection.setReadTimeout(10000);
-	        Log.d(LOG_TAG, "getHtml()- 020");
 	        urlConnection.connect();
-	        Log.d(LOG_TAG, "getHtml()- 025");
     	} catch (IOException e ) {
 			Log.w(LOG_TAG, e.getMessage(), e);
 		}
     	
 		try {
-			Log.d(LOG_TAG, "getHtml()- 030");
 			InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
-			Log.d(LOG_TAG, "getHtml()- 035");
 			//On vérifie que l'on est bien sur Doris (dans le cas ou l'on est re-dirigé vers Free, SFR, etc.
 			if (!urlHtml.getHost().equals(urlConnection.getURL().getHost())) {
 		    	String text = "Problème vraisemblable de redirection";
@@ -1202,7 +1211,6 @@ public class Outils {
 			} else {
 				bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "ISO-8859-1"));
 			}
-			Log.d(LOG_TAG, "getHtml()- 040");
     		//On lit ligne à ligne le bufferedReader pour le stocker dans le stringBuffer
     		String ligneCodeHTML = bufferedReader.readLine();
     		while (ligneCodeHTML != null){
@@ -1210,7 +1218,6 @@ public class Outils {
     			stringBuffer.append("\n");
     			ligneCodeHTML = bufferedReader.readLine();
     		}
-    		Log.d(LOG_TAG, "getHtml()- 050");
 		}
 		catch(SocketTimeoutException erreur) {
 			String text = "La Connexion semble trop lente";
