@@ -34,4 +34,23 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
+	
+	File signFile = file('/builds/keystore/sign.properties')
+	if (signFile.exists()) {
+		println 'found sign.properties!'
+		Properties p = new Properties()
+		p.load(new FileInputStream(signFile))
+		signingConfigs {
+			releaseConfig {
+				storeFile file(p.storeFile)
+				storePassword p.storePassword
+				keyAlias p.keyAlias
+				keyPassword p.keyPassword
+			}
+		}
+		buildTypes.release.signingConfig signingConfigs.releaseConfig
+	}
+	else{
+		println 'sign.properties not found'
+	}	
 }
