@@ -259,7 +259,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	progressBarZoneGenerale.pbProgressBar_running.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(context, "Arrêt des téléchargements demandé", Toast.LENGTH_LONG).show();
+				Toast.makeText(context, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
 				DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 				
 				ProgressBar pbRunningBarLayout =  (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);
@@ -271,8 +271,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			public void onClick(View v) {
 				
 				Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, Preference_PreferenceViewActivity.class);
-				intent.putExtra("type_parametre", "mode_precharg_toutesregions");
-				//intent.putExtra("parametre", id);
+				intent.putExtra("type_parametre", "mode_precharg_category");
+				intent.putExtra("parametre", "button_qualite_images_zones_key");
+				
 				startActivity(intent);
 			}
 		});
@@ -301,24 +302,28 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
  				public void onClick(View v) {
  					//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setOnClickListener() - zoneGeoId : "+zoneGeoId);
  					Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, Preference_PreferenceViewActivity.class);
- 					intent.putExtra("type_parametre", "mode_precharg_region");
+ 					
  					String param = null;
  					
  					switch (zoneGeoId){
  					case 1 :
- 						param = "france"; break;
+ 						param = "pref_key_mode_precharg_photo_region_france"; break;
  					case 2 :
- 						param = "eaudouce"; break;
+ 						param = "pref_key_mode_precharg_photo_region_eaudouce"; break;
  					case 3 :
- 						param = "atlantno"; break;
+ 						param = "pref_key_mode_precharg_photo_region_atlantno"; break;
  					case 4 :
- 						param = "indopac"; break;
+ 						param = "pref_key_mode_precharg_photo_region_indopac"; break;
  					case 5 :
- 						param = "caraibes"; break;
+ 						param = "pref_key_mode_precharg_photo_region_caraibes"; break;
  					}
 
  					if (param != null){
+ 						intent.putExtra("type_parametre", "button_qualite_images_zones_key");
  						intent.putExtra("parametre", param);
+ 					} else {
+ 						intent.putExtra("type_parametre", "mode_precharg_category");
+ 						intent.putExtra("parametre", "button_qualite_images_zones_key");
  					}
  					
  					startActivity(intent);

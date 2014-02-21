@@ -7,6 +7,8 @@ import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
 import fr.ffessm.doris.android.activities.DetailsParticipant_ElementViewActivity;
+import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
+import fr.ffessm.doris.android.activities.Preference_PreferenceViewActivity;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
@@ -95,7 +97,7 @@ public class AffichageMessageHTML {
     	    	} else if (inUrl.startsWith("participant")){
     	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Affichage Participant : "+inUrl.replace("participant://", ""));
 	
-    	    		Intent toDetailView = new Intent(context, DetailsParticipant_ElementViewActivity.class);
+    	    		Intent toParticipantView = new Intent(context, DetailsParticipant_ElementViewActivity.class);
     	    		
 	    	        OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(context);
 	                RuntimeExceptionDao<Participant, Integer> entriesDao = ormLiteDBHelper.getParticipantDao();
@@ -103,8 +105,23 @@ public class AffichageMessageHTML {
     	    		Bundle b = new Bundle();
 	    	        b.putInt("participantId", entriesDao.queryForEq("numeroParticipant", Integer.valueOf( inUrl.replace("participant://", "") ) ).get(0).getId() );
 	    	        
-	    	        toDetailView.putExtras(b);
-	    			context.startActivity(toDetailView);
+	    	        toParticipantView.putExtras(b);
+	    			context.startActivity(toParticipantView);
+	    			
+    	    		return true;
+    	    	} else if (inUrl.startsWith("preference")){
+    	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Affichage preference : "+inUrl.replace("preference://", ""));
+	
+    	    		Intent toPrefView = new Intent(context, Preference_PreferenceViewActivity.class);
+ 					
+    	    		String[] pref = inUrl.replace("preference://", "").split("/");
+    	    		
+    	    		toPrefView.putExtra("type_parametre", pref[0]);
+    	    		toPrefView.putExtra("parametre", pref[1]);
+    	    		
+    	    		Bundle b = new Bundle();
+    	    		toPrefView.putExtras(b);
+	    			context.startActivity(toPrefView);
 	    			
     	    		return true;
     	    	} else {

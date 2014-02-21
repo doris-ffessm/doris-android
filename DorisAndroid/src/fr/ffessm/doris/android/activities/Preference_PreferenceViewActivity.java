@@ -91,7 +91,10 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         addPreferencesFromResource(R.xml.preference); 
 		//Start of user code Preference preference activity additional onCreate
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        		
+
+        /* Permet d'afficher directement une sous-partie des préférences
+        *  Utile depuis Aide ou EtatHorsLigne, etc.
+        */
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
 	        String typeParam = bundle.getString("type_parametre");
@@ -100,18 +103,12 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	        if (typeParam != null) {
 	        	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - typeParam : "+typeParam);
 	        	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - param : "+param);
-	        	if (typeParam.equals("mode_precharg_region")) {
-	        		if (param != null) {
-			        	PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference("button_qualite_images_zones_key");
-			        	int pos = findPreference("mode_precharg_photo_region_"+param).getOrder();
-			        	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - pos "+param+" : "+pos);
-			        	preferenceScreen.onItemClick( null, null, pos, 0 ); 
-	        		}
-	        	}
-	        	if (typeParam.equals("mode_precharg_toutesregions")) {
-	        		PreferenceScreen preferenceScreen = (PreferenceScreen) getPreferenceScreen();
-			        preferenceScreen.onItemClick( null, null, 5, 0 ); 
-	        	}
+	        	PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(typeParam);
+        		if (param != null) {
+		        	int pos = findPreference(param).getOrder();
+		        	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - pos "+param+" : "+pos);
+		        	preferenceScreen.onItemClick( null, null, pos, 0 ); 
+        		}
 	        }
         }
 
