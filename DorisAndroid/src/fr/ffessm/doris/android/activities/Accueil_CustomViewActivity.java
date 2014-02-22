@@ -589,7 +589,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    	progressBarZoneGenerale.pbProgressBar_running.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Toast.makeText(context, "Arrêt des téléchargements demandé", Toast.LENGTH_LONG).show();
+					Toast.makeText(context, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 					
 					ProgressBar pbRunningBarLayout =  (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);
@@ -717,7 +717,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 						(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 	
 				} else {
-					Toast.makeText(this, "Arrêt des téléchargements demandé", Toast.LENGTH_LONG).show();
+					Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 					
 					ProgressBar pbRunningBarLayout =  (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);

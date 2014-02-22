@@ -7,6 +7,8 @@ import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
 import fr.ffessm.doris.android.activities.DetailsParticipant_ElementViewActivity;
+import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
+import fr.ffessm.doris.android.activities.Preference_PreferenceViewActivity;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
@@ -95,7 +97,7 @@ public class AffichageMessageHTML {
     	    	} else if (inUrl.startsWith("participant")){
     	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Affichage Participant : "+inUrl.replace("participant://", ""));
 	
-    	    		Intent toDetailView = new Intent(context, DetailsParticipant_ElementViewActivity.class);
+    	    		Intent toParticipantView = new Intent(context, DetailsParticipant_ElementViewActivity.class);
     	    		
 	    	        OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(context);
 	                RuntimeExceptionDao<Participant, Integer> entriesDao = ormLiteDBHelper.getParticipantDao();
@@ -103,8 +105,23 @@ public class AffichageMessageHTML {
     	    		Bundle b = new Bundle();
 	    	        b.putInt("participantId", entriesDao.queryForEq("numeroParticipant", Integer.valueOf( inUrl.replace("participant://", "") ) ).get(0).getId() );
 	    	        
-	    	        toDetailView.putExtras(b);
-	    			context.startActivity(toDetailView);
+	    	        toParticipantView.putExtras(b);
+	    			context.startActivity(toParticipantView);
+	    			
+    	    		return true;
+    	    	} else if (inUrl.startsWith("preference")){
+    	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Affichage preference : "+inUrl.replace("preference://", ""));
+	
+    	    		Intent toPrefView = new Intent(context, Preference_PreferenceViewActivity.class);
+ 					
+    	    		String[] pref = inUrl.replace("preference://", "").split("/");
+    	    		
+    	    		toPrefView.putExtra("type_parametre", pref[0]);
+    	    		toPrefView.putExtra("parametre", pref[1]);
+    	    		
+    	    		Bundle b = new Bundle();
+    	    		toPrefView.putExtras(b);
+	    			context.startActivity(toPrefView);
 	    			
     	    		return true;
     	    	} else {
@@ -136,29 +153,28 @@ public class AffichageMessageHTML {
 		}
     	
 		StringBuffer sizeFolderTexte =  new StringBuffer();
-		/* ******************************************************************
-		if (Outils.getImageCount(context.getApplicationContext(), ImageType.VIGNETTE)!=0 ) {
+		if ( Outils.getParamInt(context.getApplicationContext(), R.string.pref_key_nbphotos_recues_vignettes, 0) !=0 ) {
 			sizeFolderTexte.append(System.getProperty("line.separator")); 
 			sizeFolderTexte.append("\t");
-			sizeFolderTexte.append(Outils.getImageCount(context.getApplicationContext(), ImageType.VIGNETTE));
+			sizeFolderTexte.append(Outils.getParamInt(context.getApplicationContext(), R.string.pref_key_nbphotos_recues_vignettes, 0));
 			sizeFolderTexte.append(context.getString(R.string.a_propos_foldersize_vignettes));
-			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getPhotoDiskUsage(context, ImageType.VIGNETTE) ) );
+			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getParamLong(context.getApplicationContext(), R.string.pref_key_size_folder_vignettes, 0L ) ) );
 		}
-		if (Outils.getImageCount(context.getApplicationContext(), ImageType.MED_RES)!=0 ) {
-			sizeFolderTexte.append(System.getProperty("line.separator"));
+		if ( Outils.getParamInt(context.getApplicationContext(), R.string.pref_key_nbphotos_recues_med_res, 0) !=0 ) {
+			sizeFolderTexte.append(System.getProperty("line.separator")); 
 			sizeFolderTexte.append("\t");
-			sizeFolderTexte.append(Outils.getImageCount(context.getApplicationContext(), ImageType.MED_RES));
+			sizeFolderTexte.append(Outils.getParamInt(context.getApplicationContext(), R.string.pref_key_nbphotos_recues_med_res, 0));
 			sizeFolderTexte.append(context.getString(R.string.a_propos_foldersize_med_res));
-			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getPhotoDiskUsage(context, ImageType.MED_RES) ) );
+			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getParamLong(context.getApplicationContext(), R.string.pref_key_size_folder_med_res, 0L ) ) );
 		}
-		if (Outils.getImageCount(context.getApplicationContext(), ImageType.HI_RES)!=0 ) {
-			sizeFolderTexte.append(System.getProperty("line.separator"));
+		if ( Outils.getParamInt(context.getApplicationContext(), R.string.pref_key_nbphotos_recues_hi_res, 0) !=0 ) {
+			sizeFolderTexte.append(System.getProperty("line.separator")); 
 			sizeFolderTexte.append("\t");
-			sizeFolderTexte.append(Outils.getImageCount(context.getApplicationContext(), ImageType.HI_RES));
+			sizeFolderTexte.append(Outils.getParamInt(context.getApplicationContext(), R.string.pref_key_nbphotos_recues_hi_res, 0));
 			sizeFolderTexte.append(context.getString(R.string.a_propos_foldersize_hi_res));
-			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getPhotoDiskUsage(context, ImageType.HI_RES) ) );
+			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getParamLong(context.getApplicationContext(), R.string.pref_key_size_folder_hi_res, 0L ) ) );
 		}
-		****************************************************************** */
+		
 		if (sizeFolderTexte.length()!=0) {
 			texte.append(System.getProperty("line.separator"));
 			texte.append(context.getString(R.string.a_propos_foldersize_titre));
