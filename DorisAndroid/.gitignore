@@ -3,3 +3,5 @@
 /mem_analysis
 /build
 /additionnal_libs
+/lint.xml
+/.gitignore

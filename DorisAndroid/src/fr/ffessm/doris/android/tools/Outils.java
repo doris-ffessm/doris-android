@@ -1070,7 +1070,6 @@ public class Outils {
 							drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight()); 
 							imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BASELINE);
 	    	        	} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 

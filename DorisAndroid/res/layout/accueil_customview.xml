@@ -1,20 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Start of user code customView_layout for Accueil -->
 <!-- freely adapt here the desired layout for your custom view -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="4dip" >
-
-	<!-- <TextView
-        android:id="@+id/accueil_texte"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dip"
-		android:text="@string/accueil_customview_texte_text"/>
-		<View style="@style/Separateur"/>
-	 -->
+    android:paddingTop="4dip" xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<ScrollView
 	    android:layout_width="fill_parent"
@@ -25,21 +15,6 @@
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical" >
-			<!--  <Button
-			    android:id="@+id/btnListeFichesAccueil"
-			    android:layout_width="wrap_content"
-			    android:layout_height="30dp"
-			    android:layout_marginRight="15dp"
-			    android:layout_marginTop="15dp"
-			    android:background="@drawable/button_background"
-			    android:onClick="onClickBtnListeFiches"
-			    android:paddingBottom="4dp"
-			    android:paddingLeft="8dp"
-			    android:paddingRight="8dp"
-			    android:paddingTop="4dp"
-			    android:text="@string/accueil_customview_listefiches_btn_label"
-			    android:textColor="@android:color/darker_gray" />
-			-->
 			<LinearLayout 
 			    android:id="@+android:id/accueil_recherche_precedente_ll"
 			    android:layout_width="match_parent"
@@ -102,62 +77,7 @@
 		        android:layout_height="wrap_content"
 		        android:orientation="vertical" >
 	        </LinearLayout>
-			
-			
-		<!-- 	<LinearLayout 
-			    android:id="@+android:id/accueil_recherche_guidee_ll"
-			    android:layout_width="match_parent"
-			    android:layout_height="match_parent"
-			    android:orientation="horizontal"
-			    android:onClick="onClickBtnRechercheGuidee" >
-			    
-			    <ImageView
-			        android:id="@+id/accueil_recherche_guidee_icone"
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:layout_marginBottom="8dip"
-			        android:layout_marginLeft="2dip"
-			        android:layout_marginRight="2dip"
-			        android:layout_marginTop="2dip"
-			        android:adjustViewBounds="true"
-			        android:contentDescription="recherche guidée"
-			        android:maxHeight="64dip"
-			        android:src="@drawable/doris_icone_plongeur" >
 
-			    </ImageView>
-			    <RelativeLayout
-					    android:layout_width="match_parent"
-					    android:layout_height="wrap_content"
-						android:paddingLeft="4dip"
-        				android:paddingRight="4dip" >
-					
-					<LinearLayout 
-					    android:layout_width="match_parent"
-					    android:layout_height="wrap_content"
-					    android:orientation="vertical" >
-				
-						<TextView
-						    android:id="@+id/accueil_recherche_guidee_label"
-						    android:layout_width="wrap_content"
-						    android:layout_height="wrap_content"
-						    android:text="@string/accueil_recherche_guidee_label_text"
-						    android:textAppearance="?android:attr/textAppearanceMedium"
-						    android:textColor="?android:attr/textColorPrimary" >
-
-					    </TextView>
-					    <TextView
-					        android:id="@+id/accueil_recherche_guidee_details"
-					        android:layout_width="wrap_content"
-					        android:layout_height="wrap_content"
-					        android:paddingLeft="4dip"
-					        android:text="@string/accueil_recherche_guidee_label_details"
-					        android:textAppearance="?android:attr/textAppearanceSmall"
-            				android:textColor="?android:attr/textColorSecondary">
-					    </TextView>
-					</LinearLayout>
-			
-				</RelativeLayout>
-			</LinearLayout>  -->
 			<View style="@style/Separateur"/>
 			
 			<TextView
@@ -176,73 +96,7 @@
 		        android:layout_height="wrap_content"
 		        android:orientation="vertical" >
 	        </LinearLayout>
-	        
-			<!-- layout for  -->
-		<!-- 	<HorizontalScrollView
-			    android:id="@+id/horizontalScrollView1"
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content" >
 
-			    <LinearLayout
-			        android:layout_width="match_parent"
-			        android:layout_height="match_parent"
-			        android:orientation="horizontal"
-					android:layout_marginTop="2dip">
-					<LinearLayout
-				        android:layout_width="match_parent"
-				        android:layout_height="match_parent"
-				        android:orientation="vertical"
-					    android:layout_marginLeft="2dp"
-				        android:layout_marginRight="4dp"
-						android:background="@drawable/groupe_icon_background"
-						android:onClick="onClickBtnListeParticipants" >
-				        <ImageView
-					        android:id="@+id/accueil_participants_icone"
-					        android:layout_width="fill_parent"
-					        android:layout_height="wrap_content"
-					        android:adjustViewBounds="true"
-					        android:contentDescription="Participants"
-					        android:maxHeight="64dip"
-					        android:src="@drawable/app_participant_button" />
-				        <TextView
-					        android:id="@+id/accueil_participants_text"
-					        android:layout_width="wrap_content"
-					        android:layout_height="wrap_content"
-					        android:layout_marginLeft="2dp"
-					        android:layout_marginRight="2dp"
-				    		android:textAppearance="?android:attr/textAppearanceSmall" 
-				    		android:textColor="?android:attr/textColorPrimaryInverse"
-							android:text="@string/accueil_liste_participants_text"/>
-					</LinearLayout>
-					<LinearLayout
-				        android:layout_width="match_parent"
-				        android:layout_height="match_parent"
-				        android:orientation="vertical"
-				        android:layout_marginRight="4dp"
-						android:background="@drawable/groupe_icon_background"
-						android:onClick="onClickBtnGlossaire" >
-				        <ImageView
-					        android:id="@+id/accueil_glossaire_icone"
-					        android:layout_width="fill_parent"
-					        android:layout_height="wrap_content"
-					        android:adjustViewBounds="true"
-					        android:contentDescription="Glossaire"
-					        android:maxHeight="64dip"
-					        android:src="@drawable/app_glossaire_button" />
-				        <TextView
-					        android:id="@+id/accueil_glossaire_text"
-					        android:layout_width="wrap_content"
-					        android:layout_height="wrap_content"
-					        android:layout_marginLeft="2dp"
-					        android:layout_marginRight="2dp"
-				    		android:textAppearance="?android:attr/textAppearanceSmall" 
-				    		android:textColor="?android:attr/textColorPrimaryInverse"
-							android:text="@string/accueil_glossaire_text"/>
-					</LinearLayout>
-			    </LinearLayout>
-
-			</HorizontalScrollView>
-			-->
 		</LinearLayout>
 	</ScrollView>
 	
@@ -257,20 +111,19 @@
 	        android:id="@+id/accueil_logo1"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:layout_alignParentTop="true"
 	        android:adjustViewBounds="true"
 	        android:contentDescription="@string/accueil_customview_logo1_description"
 	        android:maxHeight="40dp"
 	        android:onClick="onClickBtnIconeSiteWeb1"
 	        android:src="@drawable/doris_logo_site_doris" />
+
 		<LinearLayout
-	        android:id="@+id/accueil_accueil_ffessm_layout"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_above="@+id/accueil_logo2"
-	        android:layout_alignParentLeft="true"
-			android:onClick="onClickBtnIconeSiteWebFFESSM">
+		    android:id="@+id/accueil_accueil_ffessm_layout"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_above="@+id/accueil_logo2"
+		    android:layout_centerHorizontal="true"
+		    android:onClick="onClickBtnIconeSiteWebFFESSM" >
 
 			<ImageView
 			    android:id="@+id/accueil_logoffessm"
@@ -284,18 +137,21 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:gravity="center_horizontal"
+		        android:lines="2"
+		        android:maxWidth="200dp"
 		        android:padding="3dip"
 		        android:text="@string/ffessm"
-		        android:textAppearance="?android:attr/textAppearanceMedium"
+		        android:textAppearance="?android:attr/textAppearanceSmall"
 		        android:textColor="#0958A5"
-		        android:textStyle="bold"/>
+		        android:textStyle="bold" />
+
 		</LinearLayout>
+
 	    <ImageView
 	        android:id="@+id/accueil_logo2"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentBottom="true"
-	        android:layout_centerHorizontal="true"
 	        android:adjustViewBounds="true"
 	        android:contentDescription="@string/accueil_customview_logo2_description"
 	        android:maxHeight="40dp"
@@ -311,7 +167,7 @@
 	        android:contentDescription="Fermer"
 	        android:onClick="onClickBtnFermer"
 			android:src="@android:drawable/ic_menu_close_clear_cancel" />
-	    
+	    	    
 	</RelativeLayout>
 	<ScrollView
 	    android:id="@+id/accueil_debug"

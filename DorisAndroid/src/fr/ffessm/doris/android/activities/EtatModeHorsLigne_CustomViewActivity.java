@@ -74,6 +74,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.AsyncTask.Status;
 import android.preference.PreferenceManager;
 import android.util.SparseArray;
 import android.widget.LinearLayout;
@@ -82,6 +83,7 @@ import com.j256.ormlite.dao.CloseableIterator;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.MultiProgressBar;
+import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
@@ -379,9 +381,28 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
 	            return true;
 			//Start of user code additional menu action EtatModeHorsLigne_CustomViewActivity
-        	case R.id.etatmodehorsligne_customview_action_a_propos:
+	        case R.id.etatmodehorsligne_customview_action_telecharge_photofiches:
+	        	TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
+				if(telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING) {
+					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = 
+						(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+	
+				} else {
+					Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
+					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
+					
+					ProgressBar pbRunningBarLayout =  (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);
+					pbRunningBarLayout.setVisibility(View.GONE);
+				}
+				
+	            return true;
+			case R.id.etatmodehorsligne_customview_action_a_propos:
 				AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
 				aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label)+getContext().getString(R.string.app_name), aPropos.aProposAff(),	"file:///android_res/raw/apropos.html");		
+				return true;
+	        case R.id.etatmodehorsligne_customview_action_aide:
+	        	AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
+				aide.affichageMessageHTML(getContext().getString(R.string.aide_label), "", "file:///android_res/raw/aide.html#ParamHorsLigne");
 				return true;
 		//End of user code
 			default:
