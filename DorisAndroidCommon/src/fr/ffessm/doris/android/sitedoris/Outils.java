@@ -132,8 +132,8 @@ public class Outils {
 
 
 	public static String getFichierTxtFromDisk(File inFichier) {
-    	//log.debug("getFichier()- Début");
-    	log.info("getFichier()- Fichier : " + inFichier);
+    	//log.debug("getFichierTxtFromDisk()- Début");
+    	log.info("getFichierTxtFromDisk()- Fichier : " + inFichier);
     	
     	FileInputStream objFile = null;
 		try {
@@ -151,7 +151,7 @@ public class Outils {
 				try {
 					objFile.close();
 					
-					log.debug("getFichier()- Fin");
+					//log.debug("getFichierTxtFromDisk()- Fin");
 			    	return (objBuffer.toString());
 			    	
 				} catch (IOException e) {
@@ -170,7 +170,7 @@ public class Outils {
 			e.printStackTrace();
 		}
 		log.error("Erreur lors de la lecture du fichier : " + inFichier);
-     	//log.debug("getFichier()- Fin");
+     	//log.debug("getFichierTxtFromDisk()- Fin");
 		return null;
 	}
 

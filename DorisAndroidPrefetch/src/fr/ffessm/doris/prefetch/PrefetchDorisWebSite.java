@@ -579,46 +579,80 @@ public class PrefetchDorisWebSite {
 					 
 					pageCourante ++;
 					testContinu = contenuFichierHtml.contains("biblio.asp?mapage="+pageCourante+"&");
-				} while ( testContinu );
+				} while ( testContinu && (nbMaxFichesTraitees == 9999 || pageCourante <= 10) );
 				
 				List<EntreeBibliographie> listeEntreesBiblio = new ArrayList<EntreeBibliographie>(0);
 				listeEntreesBiblio.addAll(dbContext.entreeBibliographieDao.queryForAll());
 				log.debug("doMain() - listeEntreesBiblio.size : "+listeEntreesBiblio.size());
 				
 				// Téléchargement de la page de l'entrée bibliographique
-				if ( action.equals("CDDVD") ) {
-					String pageBiblioRacine = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/";
-					String pageBiblioRacineRef = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/";
-					
-					for (EntreeBibliographie biblio : listeEntreesBiblio){
+				log.debug("doMain() - Téléchargement de la page de l'entrée bibliographique");
+				int nbBiblioTelechargees = 0;
+				
+				for (EntreeBibliographie biblio : listeEntreesBiblio){
+					if (nbMaxFichesTraitees == 9999 || nbBiblioTelechargees <= 10) {
+	
+						String urlBiblio = Constants.getBibliographieUrl(biblio.getNumeroDoris());
+						String fichierBiblio = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/"+"biblio-" + biblio.getNumeroDoris()+".html";
+						String fichierBiblioRef = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/" + biblio.getNumeroDoris()+".html";
 						
-						if( ! isFileExistingPath( pageBiblioRacineRef+"biblio-"+biblio.getNumeroDoris()+".html") ){
-							if ( Outils.getFichierFromUrl( Constants.getBibliographieUrl(biblio.getNumeroDoris()),
-									pageBiblioRacine+"biblio-"+biblio.getNumeroDoris()+".html") ) {
+						if ( action.equals("INIT") ) {
+							if( ! isFileExistingPath( fichierBiblioRef ) ){
+								if ( Outils.getFichierFromUrl( urlBiblio, fichierBiblio ) ) {
+									nbBiblioTelechargees += 1;
+									contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierBiblio));
+								} else {
+									log.error("Une erreur est survenue lors de la récupération de la Biblio : "+urlBiblio);
+									continue;
+								}
+							}
+						} else if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
+							if ( ! new File(fichierBiblioRef).exists() ) {
+								if (Outils.getFichierFromUrl(urlBiblio, fichierBiblio)) {
+									nbBiblioTelechargees += 1;
+									contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierBiblio));
+								} else {
+									log.error("Une erreur est survenue lors de la récupération de la Biblio : "+urlBiblio);
+									continue;
+								}
 							} else {
-								log.error("Une erreur est survenue lors de la récupération de la page Bibliograpgie de : "+biblio.getTitre());
-								//System.exit(1);
+								if (new File(fichierBiblioRef).exists()) {
+									contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierBiblioRef));
+								} else {
+									log.error("Une erreur est survenue lors de la récupération de la Biblio sur le disque : "+fichierBiblioRef+" a échoué.");
+								}
+							}
+						} else if ( action.equals("NODWNLD") ) {
+							if (new File(fichierBiblioRef).exists()) {
+								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierBiblioRef));
+							} else {
+								log.error("Une erreur est survenue lors de la récupération de la Biblio sur le disque : "+fichierBiblioRef+" a échoué.");
 							}
 						}
-					}
-				}
-				
-				// Téléchargement Photos Bibliographie
-				if ( action.equals("CDDVD") ) {
-					String fichierImageRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/";
-					String fichierImageRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/";
-
-					for (EntreeBibliographie biblio : listeEntreesBiblio){
-
-						if ( !biblio.getCleURLIllustration().isEmpty() ) {
-							
-							// On stocke la photo dans les Vignettes
-							if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_BIBLIO+biblio.getNumeroDoris()+".jpg" ) ){
-								if (Outils.getFichierFromUrl(Constants.SITE_RACINE_URL+biblio.getCleURLIllustration(),
+	
+	
+						// Téléchargement Vérification existence de l'image / Photos Bibliographie
+						if (contenuFichierHtml.contains(biblio.getNumeroDoris()+".jpg")) {
+							// Maj Base de données
+							final EntreeBibliographie biblioMaj = biblio;
+							TransactionManager.callInTransaction(connectionSource,
+								new Callable<Void>() {
+									public Void call() throws Exception {
+	
+										biblioMaj.setCleURLIllustration("gestionenligne/photos_biblio_moy/" + biblioMaj.getNumeroDoris() + ".jpg");
+										dbContext.entreeBibliographieDao.update(biblioMaj);
+										return null;
+								    }
+								});
+						
+							if ( action.equals("CDDVD") ) {
+								String fichierImageRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/";
+								
+								// On stocke la photo dans les Vignettes
+								if (Outils.getFichierFromUrl(Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+biblio.getNumeroDoris()+".jpg",
 										fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_BIBLIO+biblio.getNumeroDoris()+".jpg" )) {
 								} else {
-									log.error("Une erreur est survenue lors de la récupération de la photo de l'entrée Biblio. : "+biblio.getTitre());
-									//System.exit(1);
+									log.info("Une erreur est survenue lors de la récupération de la photo de l'entrée Biblio. : "+biblio.getTitre() + ", il est probable qu'il n'y ait pas d'illustration.");
 								}
 							}
 						}
