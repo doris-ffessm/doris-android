@@ -113,7 +113,7 @@
 	<string name="mode_precharg_reset_hi_res_summary">Suppression des @nbPh images téléchargées (@size)</string>
 	<string name="mode_precharg_reset_cache_title">Vider le cache</string>
 	<string name="mode_precharg_reset_cache_summary">Vider le cache du mode connecté\u00A0: @nbPh fichiers (@size)</string>
-	
+	<string name="mode_precharg_reset_confirmation">Êtes-vous certain de vouloir vider ce dossier ?</string>
 	
 	<string name="presentation_preference_category_title">Présentation</string>
 	<string name="presentation_preference_category_summary">Affich. par défaut, Taille icônes, etc.</string>

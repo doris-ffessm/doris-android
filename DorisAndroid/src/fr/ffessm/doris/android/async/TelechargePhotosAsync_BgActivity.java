@@ -223,6 +223,11 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         majParamNbandSize();
     }
 
+    public OrmLiteDBHelper getHelper() {
+    	return this.dbHelper;
+    }
+    
+    
 
     public void photosDejaTelechargees(DorisDBHelper dorisDBHelper) {
 		hsImagesVigAllreadyAvailable = Outils.getAllPhotosAvailable(context, ImageType.VIGNETTE);

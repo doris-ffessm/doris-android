@@ -359,7 +359,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		startActivity(new Intent(this, Glossaire_ClassListViewActivity.class));
 	}*/
 	public void onClickBtnIconeSiteWeb1(View view){
-		String url = getString(R.string.accueil_customview_logo1_url);
+		String url = getString(R.string.accueil_customview_logo_doris_url);
 		if (!url.isEmpty()) {
 			Intent intent = new Intent(Intent.ACTION_VIEW);
 			intent.setData(Uri.parse(url));
@@ -367,7 +367,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		}
     }
 	public void onClickBtnIconeSiteWeb2(View view){
-		String url = getString(R.string.accueil_customview_logo2_url);
+		String url = getString(R.string.accueil_customview_logo_bio_url);
 		if (!url.isEmpty()) {
 			Intent intent = new Intent(Intent.ACTION_VIEW);
 			intent.setData(Uri.parse(url));
@@ -385,6 +385,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	public void onClickBtnFermer(View view){
 		mustShowLogoFede = false;
     	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
+    	
+    	showToast(getContext().getString(R.string.accueil_customview_logos_preference));
     }
 	/*public void reinitializeDBFromPrefetched(){
 		//XMLHelper.loadDBFromXMLFile(getHelper().getDorisDBHelper(), this.getResources().openRawResource(R.raw.prefetched_db));

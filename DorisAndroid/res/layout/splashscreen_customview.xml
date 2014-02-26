@@ -14,7 +14,7 @@
 	    android:orientation="vertical">
 
 		<ImageView
-		    android:id="@+id/splashscreen_logo1"
+		    android:id="@+id/splashscreen_logo_doris"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_alignParentTop="true"
@@ -22,33 +22,33 @@
 		    android:layout_marginRight="4dip"
 		    android:layout_marginTop="4dip"
 		    android:adjustViewBounds="true"
-		    android:contentDescription="@string/accueil_customview_logo1_description"
+		    android:contentDescription="@string/accueil_customview_logo_doris_description"
 		    android:maxHeight="60dp"
 		    android:src="@drawable/doris_logo_site_doris" />
 	    
 	    <ImageView
-	        android:id="@+id/splashscreen_logo2"
+	        android:id="@+id/splashscreen_logo_bio"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/splashscreen_logo1"
+	        android:layout_below="@+id/splashscreen_logo_doris"
 	        android:layout_marginLeft="4dip"
 	        android:layout_marginRight="4dip"
 	        android:layout_marginTop="4dip"
 	        android:adjustViewBounds="true"
-	        android:contentDescription="@string/accueil_customview_logo2_description"
+	        android:contentDescription="@string/accueil_customview_logo_bio_description"
 	        android:maxHeight="60dp"
 	        android:src="@drawable/doris_logo_site_biologie" />
 	    
 		<ImageView
-	        android:id="@+id/splashscreen_logo3"
+	        android:id="@+id/splashscreen_logo_ffessm"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/splashscreen_logo2"
+	        android:layout_below="@+id/splashscreen_logo_bio"
 	        android:layout_marginLeft="4dip"
 	        android:layout_marginRight="4dip"
 	        android:layout_marginTop="4dip"
 	        android:adjustViewBounds="true"
-	        android:contentDescription="@string/ffessm"
+	        android:contentDescription="@string/accueil_customview_logo_fede_description"
 	        android:maxHeight="60dp"
 	        android:src="@drawable/doris_logo_ffessm_quadri" />
 		
@@ -58,7 +58,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_gravity="center_horizontal" 
 		    android:layout_centerHorizontal="true"
-	        android:layout_below="@+id/splashscreen_logo3"
+	        android:layout_below="@+id/splashscreen_logo_ffessm"
 			android:visibility="gone">
 	
 			<TextView

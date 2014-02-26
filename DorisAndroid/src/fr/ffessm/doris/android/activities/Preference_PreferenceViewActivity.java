@@ -41,11 +41,15 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.AsyncTask.Status;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 
 //Start of user code Preference preference activity additional imports
@@ -58,6 +62,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.Builder;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.Preference;
@@ -65,11 +70,13 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.text.format.DateUtils;
 import android.util.Log;
 import fr.ffessm.doris.android.BuildConfig;
+import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.Outils.ImageType;
 
@@ -82,6 +89,8 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	private static final String LOG_TAG = Outils.class.getCanonicalName();
 	final Context context = this;
 	private SharedPreferences prefs;
+	
+
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -91,6 +100,13 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         addPreferencesFromResource(R.xml.preference); 
 		//Start of user code Preference preference activity additional onCreate
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        // Si téléchargements en tâche de fond, il est arrêté
+        TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
+    	if(telechargePhotosFiches_BgActivity != null && telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING) {
+    		Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
+    		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
+    	}
 
         /* Permet d'afficher directement une sous-partie des préférences
         *  Utile depuis Aide ou EtatHorsLigne, etc.
@@ -112,26 +128,47 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	        }
         }
 
-        //TODO : Mettre une demande de confirmation
+
         final Preference btnVideVig = (Preference)getPreferenceManager().findPreference("btn_reset_vig");
         if(btnVideVig != null) {
 	        btnVideVig.setSummary(getVigSummary());
         	btnVideVig.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                  @Override
                  public boolean onPreferenceClick(Preference arg0) {
-                	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_vig");
-                	 Outils.clearFolder(Outils.getImageFolderVignette(getApplicationContext()), 0);
+                	 
+                	 AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(context);
+                	 alertDialogbD.setMessage(context.getString(R.string.mode_precharg_reset_confirmation));
+                	 alertDialogbD.setCancelable(true);
+                	 
+                	 // On vide le dossier si validé
+                	 alertDialogbD.setPositiveButton(context.getString(R.string.btn_yes),
+            			 new DialogInterface.OnClickListener() {
+	                         public void onClick(DialogInterface dialog, int id) {
+	                        	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_vig");
+	                        	 Outils.clearFolder(Outils.getImageFolderVignette(getApplicationContext()), 0);
 
-                	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_vignettes, Outils.getImageCount(context, ImageType.VIGNETTE));
-                	 Outils.setParamLong(context,R.string.pref_key_size_folder_vignettes, Outils.getPhotoDiskUsage(context, ImageType.VIGNETTE));
-                	 btnVideVig.setSummary(getVigSummary());	
+	                        	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_vignettes, Outils.getImageCount(context, ImageType.VIGNETTE));
+	                        	 Outils.setParamLong(context,R.string.pref_key_size_folder_vignettes, Outils.getPhotoDiskUsage(context, ImageType.VIGNETTE));
+	                        	 btnVideVig.setSummary(getVigSummary());	
+	                         }
+                     	});
+                	 // Abandon donc Rien à Faire
+                	 alertDialogbD.setNegativeButton(context.getString(R.string.btn_annul),
+                         new DialogInterface.OnClickListener() {
+                         	public void onClick(DialogInterface dialog, int id) {
+                         		dialog.cancel();
+                         	}
+                     	});
+
+                     AlertDialog alertDialog = alertDialogbD.create();
+                     alertDialog.show();
 
                 	 return true;
                  }
              }); 
          }
 
-        //TODO : Mettre une demande de confirmation
+
         final Preference btnVideMedRes = (Preference)getPreferenceManager().findPreference("btn_reset_med_res");      
         if(btnVideMedRes != null) {
 	        btnVideMedRes.setSummary(getMedResSummary());
@@ -139,19 +176,40 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         	btnVideMedRes.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                  @Override
                  public boolean onPreferenceClick(Preference arg0) {
-                	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_med_res");
-                	 Outils.clearFolder(Outils.getImageFolderMedRes(getApplicationContext()), 0);
+                	 
+                	 AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(context);
+                	 alertDialogbD.setMessage(context.getString(R.string.mode_precharg_reset_confirmation));
+                	 alertDialogbD.setCancelable(true);
+                	 
+                	 // On vide le dossier si validé
+                	 alertDialogbD.setPositiveButton(context.getString(R.string.btn_yes),
+            			 new DialogInterface.OnClickListener() {
+	                         public void onClick(DialogInterface dialog, int id) {
+	                        	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_med_res");
+	                        	 Outils.clearFolder(Outils.getImageFolderMedRes(getApplicationContext()), 0);
 
-                	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_med_res, Outils.getImageCount(context, ImageType.MED_RES));
-                	 Outils.setParamLong(context,R.string.pref_key_size_folder_med_res, Outils.getPhotoDiskUsage(context, ImageType.MED_RES));
-                	 btnVideMedRes.setSummary(getMedResSummary());
+	                        	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_med_res, Outils.getImageCount(context, ImageType.MED_RES));
+	                        	 Outils.setParamLong(context,R.string.pref_key_size_folder_med_res, Outils.getPhotoDiskUsage(context, ImageType.MED_RES));
+	                        	 btnVideMedRes.setSummary(getMedResSummary());
+	                         }
+                     	});
+                	 // Abandon donc Rien à Faire
+                	 alertDialogbD.setNegativeButton(context.getString(R.string.btn_annul),
+                         new DialogInterface.OnClickListener() {
+                         	public void onClick(DialogInterface dialog, int id) {
+                         		dialog.cancel();
+                         	}
+                     	});
+
+                     AlertDialog alertDialog = alertDialogbD.create();
+                     alertDialog.show();
                 	 
                 	 return true;
                  }
              });     
          }
         
-        //TODO : Mettre une demande de confirmation
+
         final Preference btnVideHiRes = (Preference)getPreferenceManager().findPreference("btn_reset_hi_res");      
         if(btnVideHiRes != null) {
         	btnVideHiRes.setSummary(getHiResSummary());
@@ -159,19 +217,40 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         	btnVideHiRes.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                  @Override
                  public boolean onPreferenceClick(Preference arg0) {
-                	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_hi_res");
-                	 Outils.clearFolder(Outils.getImageFolderHiRes(getApplicationContext()), 0);
+                	 
+                	 AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(context);
+                	 alertDialogbD.setMessage(context.getString(R.string.mode_precharg_reset_confirmation));
+                	 alertDialogbD.setCancelable(true);
+                	 
+                	 // On vide le dossier si validé
+                	 alertDialogbD.setPositiveButton(context.getString(R.string.btn_yes),
+            			 new DialogInterface.OnClickListener() {
+	                         public void onClick(DialogInterface dialog, int id) {
+	                        	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_hi_res");
+	                        	 Outils.clearFolder(Outils.getImageFolderHiRes(getApplicationContext()), 0);
 
-                	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_hi_res, Outils.getImageCount(context, ImageType.HI_RES));
-                	 Outils.setParamLong(context,R.string.pref_key_size_folder_hi_res, Outils.getPhotoDiskUsage(context, ImageType.HI_RES));
-                	 btnVideHiRes.setSummary(getHiResSummary());
+	                        	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_hi_res, Outils.getImageCount(context, ImageType.HI_RES));
+	                        	 Outils.setParamLong(context,R.string.pref_key_size_folder_hi_res, Outils.getPhotoDiskUsage(context, ImageType.HI_RES));
+	                        	 btnVideHiRes.setSummary(getHiResSummary());
+	                         }
+                     	});
+                	 // Abandon donc Rien à Faire
+                	 alertDialogbD.setNegativeButton(context.getString(R.string.btn_annul),
+                         new DialogInterface.OnClickListener() {
+                         	public void onClick(DialogInterface dialog, int id) {
+                         		dialog.cancel();
+                         	}
+                     	});
+
+                     AlertDialog alertDialog = alertDialogbD.create();
+                     alertDialog.show();
                 	 
                 	 return true;
                  }
              });     
          }
 
-        //TODO : Mettre une demande de confirmation
+
         final Preference btnVideCache = (Preference)getPreferenceManager().findPreference("btn_reset_cache");      
         if(btnVideCache != null) {
         	
@@ -180,15 +259,37 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         	btnVideCache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                  @Override
                  public boolean onPreferenceClick(Preference arg0) {
-                	 try {
-                	        File dir = context.getCacheDir();
-                	        if (dir != null && dir.isDirectory()) {
-                	            deleteDir(dir);
-                	        }
-                	    } catch (Exception e) {}
                 	 
-                	 btnVideCache.setSummary(getCacheSummary());
-                	 return true;
+                	 AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(context);
+                	 alertDialogbD.setMessage(context.getString(R.string.mode_precharg_reset_confirmation));
+                	 alertDialogbD.setCancelable(true);
+                	 
+                	 // On vide le cache si validé
+                	 alertDialogbD.setPositiveButton(context.getString(R.string.btn_yes),
+            			 new DialogInterface.OnClickListener() {
+	                         public void onClick(DialogInterface dialog, int id) {
+                        	 try {
+	                     	        File dir = context.getCacheDir();
+	                     	        if (dir != null && dir.isDirectory()) {
+	                     	            deleteDir(dir);
+	                     	        }
+	                     	    } catch (Exception e) {}
+	                     	 
+	                        	 btnVideCache.setSummary(getCacheSummary());
+                        	 }
+                     	});
+                	 // Abandon donc Rien à Faire
+                	 alertDialogbD.setNegativeButton(context.getString(R.string.btn_annul),
+                         new DialogInterface.OnClickListener() {
+                         	public void onClick(DialogInterface dialog, int id) {
+                         		dialog.cancel();
+                         	}
+                     	});
+
+                     AlertDialog alertDialog = alertDialogbD.create();
+                     alertDialog.show();
+
+                     return true;
                  }
              });     
          }
@@ -233,7 +334,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 
 	
 	//Start of user code Preference preference activity additional operations
-
+    
     private String getVigSummary() {
     	String txt = context.getString(R.string.mode_precharg_reset_vig_summary);
     	txt = txt.replace("@nbPh", ""+Outils.getParamInt(getApplicationContext(), R.string.pref_key_nbphotos_recues_vignettes, 0)) ;
@@ -262,7 +363,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
      	}
     	String txt = getApplicationContext().getString(R.string.mode_precharg_reset_cache_summary);
     	// La division par 2 est très sale mais c'est bien le plus rapide :-)
-    	// En le dossier est bizarrement structué avec des dossiers renommés, mais en gros il y en a 2 par fichiers en cache
+    	// En le dossier est bizarrement structuré avec des dossiers renommés, mais en gros il y en a 2 par fichiers en cache
      	txt = txt.replace("@nbPh", ""+ Math.round(nbFichiersDansCache/2) );
      	txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getDiskUsage(getApplicationContext(), getApplicationContext().getCacheDir() ) ) ) ;
      	return txt;
@@ -280,5 +381,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         }
         return dir.delete();
     }
+
+    
 	//End of user code
 }

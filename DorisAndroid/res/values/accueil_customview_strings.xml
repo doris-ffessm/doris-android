@@ -20,12 +20,13 @@
 	
 	<string name="accueil_customview_zonegeo_touteszones">Toutes Zones</string>
 	
-	<string name="accueil_customview_logo1_icone">@drawable/doris_logo_site_doris</string>
-	<string name="accueil_customview_logo1_description">Logo Doris Accueil</string>
-	<string name="accueil_customview_logo1_url">http://doris.ffessm.fr</string>
-	<string name="accueil_customview_logo2_icone">@drawable/doris_logo_site_biologie</string>
-	<string name="accueil_customview_logo2_description">Logo Biologie Accueil</string>
-	<string name="accueil_customview_logo2_url">http://biologie.ffessm.fr</string>
+	<string name="accueil_customview_logo_fede_description">@string/ffessm</string>
+	<string name="accueil_customview_logo_fede_url">@string/ffessm_url</string>
+	<string name="accueil_customview_logo_doris_description">Logo Doris Accueil</string>
+	<string name="accueil_customview_logo_doris_url">http://doris.ffessm.fr</string>
+	<string name="accueil_customview_logo_bio_description">Logo Biologie Accueil</string>
+	<string name="accueil_customview_logo_bio_url">http://biologie.ffessm.fr</string>
+	<string name="accueil_customview_logos_preference">"Il est possible de masquer par défaut ce bandeau dans les préférences."</string>
 	
 	<string name="menu_option_telecharge_fiches">Télécharge fiches</string>
 	<string name="menu_option_telecharge_photofiches">Précharg. photos M/A</string>

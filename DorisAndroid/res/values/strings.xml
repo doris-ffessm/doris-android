@@ -9,7 +9,6 @@
 		
     <string name="edit_menu">Edit</string>
     
-    
     <string name="btnOtherFiler_listeficheavecfiltre_listviewsearchrow_btn_label">Filtres</string>
     <string name="searchHint_listeficheavecfiltre_listviewsearchrow">Chercher\u00A0\u2026</string>
 	<string name="searchHint_listeficheavecfiltre_classlistview">Chercher fiche\u00A0\u2026</string>
@@ -26,6 +25,11 @@
     
     <string name="searchHint_listebibliographieavecfiltre_classlistview">Chercher\u00A0\u2026</string>
     <string name="searchHint_listebibliographieavecfiltre_listviewsearchrow">Chercher\u00A0\u2026</string>
+    
+    <string name="btn_yes">Oui</string>
+    <string name="btn_no">Non</string>
+    <string name="btn_annul">Annuler</string>
+    
 	<!--End of user code
 	  -->
 </resources>
