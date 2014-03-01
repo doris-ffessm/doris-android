@@ -17,7 +17,7 @@
         android:adjustViewBounds="true"
         android:contentDescription="EntreeBibliographie icon"
 		android:scaleType="fitCenter"
-        android:src="@drawable/app_bibliographie_doris" >
+        android:src="@drawable/app_ic_launcher" >
     </ImageView>
     <RelativeLayout
 		    android:layout_width="match_parent"

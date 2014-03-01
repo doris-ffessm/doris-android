@@ -51,9 +51,7 @@ import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
@@ -66,12 +64,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ZoomControls;
-
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code additional imports ImagePleinEcran_CustomViewActivity
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
@@ -189,6 +187,14 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 			//Start of user code additional menu action ImagePleinEcran_CustomViewActivity
 
 		//End of user code
+			// Respond to the action bar's Up/Home button
+			case android.R.id.home:
+	        	TaskStackBuilder.create(this)
+	                // Add all of this activity's parents to the back stack
+	                .addNextIntentWithParentStack(getSupportParentActivityIntent())
+	                // Navigate up to the closest parent
+	                .startActivities();
+	            return true;
 			default:
                 return super.onOptionsItemSelected(item);
         }

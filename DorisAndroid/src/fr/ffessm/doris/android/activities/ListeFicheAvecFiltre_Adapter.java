@@ -62,7 +62,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
@@ -80,7 +79,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 //Start of user code protected additional ListeFicheAvecFiltre_Adapter imports
 // additional imports
 
-import com.squareup.picasso.Callback;
+import android.view.ViewGroup.LayoutParams;
 import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -89,19 +88,13 @@ import java.util.Set;
 
 import org.apache.commons.lang3.text.StrBuilder;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.widget.Button;
-import android.widget.ImageView;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
-import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.OutilsGroupe;
 import fr.ffessm.doris.android.tools.Outils.ImageType;
-
 
 //End of user code
 
