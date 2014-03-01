@@ -43,32 +43,35 @@ package fr.ffessm.doris.android.async;
 
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.R;
+// Start of user code additional imports VerifieMAJFiche_BgActivity
+
+import java.io.File;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import android.widget.Toast;
+import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.OutilsBase;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.R;
-// Start of user code additional imports VerifieMAJFiches_BgActivity
 // End of user code
 
 public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integer>{
@@ -79,24 +82,24 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
     private OrmLiteDBHelper dbHelper;
     private Context context;
     
-    // Start of user code additional attribute declarations VerifieMAJFiches_BgActivity
+    // Start of user code additional attribute declarations VerifieMAJFiche_BgActivity
     public VerifieMAJFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper, DataChangedListener verifieMAJFiches_BgActivity){
 		String initialTickerText = context.getString(R.string.initialisationapplication_bg_initialTickerText);
 		String notificationTitle = context.getString(R.string.initialisationapplication_bg_notificationTitle);
-        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
+        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
         this.dbHelper = dbHelper;
 		this.context = context;
 		
 		this.verifieMAJFiches_BgActivity = verifieMAJFiches_BgActivity;
     }
-	// End of user code
+    // End of user code
     
 	/** constructor */
     public VerifieMAJFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper){
-		// Start of user code additional attribute declarations VerifieMAJFiches_BgActivity constructor
+		// Start of user code additional attribute declarations VerifieMAJFiche_BgActivity constructor
 		String initialTickerText = context.getString(R.string.verifiemajfiches_bg_initialTickerText);
 		String notificationTitle = context.getString(R.string.verifiemajfiches_bg_notificationTitle);
-        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
+        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 		// End of user code
         this.dbHelper = dbHelper;
 		this.context = context;
@@ -111,18 +114,18 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
     protected Integer doInBackground(String... arg0) {
     	
 
-		// Start of user code initialization of the task VerifieMAJFiches_BgActivity
+		// Start of user code initialization of the task VerifieMAJFiche_BgActivity
 		// do the initializatio of the task here
 		// once done, you should indicates to the notificationHelper how many item will be processed
-    	
+
     	int numeroFiche = Integer.valueOf(arg0[0]);
     	
     	mNotificationHelper.setMaxItemToProcess(""+100);
 		// End of user code
     	
-    	// Start of user code main loop of task VerifieMAJFiches_BgActivity
+    	// Start of user code main loop of task VerifieMAJFiche_BgActivity
 		// This is where we would do the actual job
-    	
+
     	Log.d(LOG_TAG, "doInBackground() - numeroFiche : "+numeroFiche);
     	
     	// Récupération Fiche de la Base
@@ -201,11 +204,10 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
 		
 		
 		
-		
+
 		// End of user code
         
-		// Start of user code end of task VerifieMAJFiches_BgActivity
-
+		// Start of user code end of task VerifieMAJFiche_BgActivity
 		// return the number of item processed
         return 100;
 		// End of user code
@@ -219,14 +221,14 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
 	protected void onCancelled() {
 		super.onCancelled();
 		mNotificationHelper.completed();
-		// Start of user code VerifieMAJFiches onCancelled
+		// Start of user code VerifieMAJFiche onCancelled
 		// End of user code
 	}
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
-		// Start of user code VerifieMAJFiches onPostExecute
-        
+		// Start of user code VerifieMAJFiche onPostExecute
+
         if(verifieMAJFiches_BgActivity != null){
         	verifieMAJFiches_BgActivity.dataHasChanged("Fiche mise à jour depuis le site Doris");
         	//Toast.makeText(accueil_CustomViewActivity.getContext(), "Base initialisée avec les données prédéfinies", Toast.LENGTH_LONG).show();
@@ -234,10 +236,10 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
         
 		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 
-		// End of user code
+        // End of user code
     }
 
-    // Start of user code additional operations VerifieMAJFiches_BgActivity
+    // Start of user code additional operations VerifieMAJFiche_BgActivity
     private DataChangedListener verifieMAJFiches_BgActivity = null;
 	// End of user code
 	

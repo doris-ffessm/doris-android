@@ -51,6 +51,7 @@ import android.support.v4.app.NotificationCompat;
 
 public class NotificationHelper {
     private Context mContext;
+    private Intent resultIntent;
     private int NOTIFICATION_ID = 1;
     private Notification mNotification;
     private NotificationManager mNotificationManager;
@@ -72,9 +73,10 @@ public class NotificationHelper {
 	/** Full title of the notification in the pull down */
 	private String notificationContentTitle;
 
-	public NotificationHelper(Context context, String initialTickerText, String contentTitle)
+	public NotificationHelper(Context context, String initialTickerText, String contentTitle, Intent resultIntent)
     {
         mContext = context;
+        this.resultIntent = resultIntent;
 		this.initialTickerText = initialTickerText;
 		this.notificationContentTitle = contentTitle;
 		
@@ -97,9 +99,12 @@ public class NotificationHelper {
         CharSequence contentText = "0 / "+maxItemToProcess; //Text of the notification in the pull down
 
         //you have to set a PendingIntent on a notification to tell the system what you want it to do when the notification is selected
-        //I don't want to use this here so I'm just creating a blank one
-        Intent notificationIntent = new Intent();
-        mContentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
+        mContentIntent = PendingIntent.getActivity(
+        		mContext,
+        		0,
+        	    resultIntent,
+        	    PendingIntent.FLAG_UPDATE_CURRENT
+        	);
 
         //add the additional content and intent to the notification
        // mNotification.setLatestEventInfo(mContext, mContentTitle, contentText, mContentIntent);

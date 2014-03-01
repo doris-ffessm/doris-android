@@ -51,8 +51,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports TelechargeFiches_BgActivity
@@ -75,7 +77,7 @@ public class TelechargeFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		// Start of user code additional attribute declarations TelechargeFiches_BgActivity constructor
 		String initialTickerText = context.getString(R.string.telechargefiches_bg_initialTickerText);
 		String notificationTitle = context.getString(R.string.telechargefiches_bg_notificationTitle);
-        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
+        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent());
 		// End of user code
         this.dbHelper = dbHelper;
 		this.context = context;

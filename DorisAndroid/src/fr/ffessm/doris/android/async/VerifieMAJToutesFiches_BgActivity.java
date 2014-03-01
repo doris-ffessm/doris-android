@@ -55,9 +55,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
+import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
@@ -89,7 +91,7 @@ public class VerifieMAJToutesFiches_BgActivity  extends AsyncTask<String,Integer
     public VerifieMAJToutesFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper, DataChangedListener verifieMAJFiches_BgActivity){
 		String initialTickerText = context.getString(R.string.initialisationapplication_bg_initialTickerText);
 		String notificationTitle = context.getString(R.string.initialisationapplication_bg_notificationTitle);
-        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
+        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
         this.dbHelper = dbHelper;
 		this.context = context;
 		
@@ -105,7 +107,7 @@ public class VerifieMAJToutesFiches_BgActivity  extends AsyncTask<String,Integer
 		// Start of user code additional attribute declarations VerifieMAJFiches_BgActivity constructor
 		String initialTickerText = context.getString(R.string.verifiemajfiches_bg_initialTickerText);
 		String notificationTitle = context.getString(R.string.verifiemajfiches_bg_notificationTitle);
-        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
+        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 		// End of user code
         this.dbHelper = dbHelper;
 		this.context = context;

@@ -51,6 +51,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
@@ -73,7 +74,7 @@ public class InitialisationApplication_BgActivity  extends AsyncTask<String,Inte
     public InitialisationApplication_BgActivity(Context context, OrmLiteDBHelper dbHelper, DataChangedListener accueil_CustomViewActivity){
     	String initialTickerText = context.getString(R.string.initialisationapplication_bg_initialTickerText);
 		String notificationTitle = context.getString(R.string.initialisationapplication_bg_notificationTitle);
-        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
+        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent());
         this.dbHelper = dbHelper;
 		this.context = context;
 		this.accueil_CustomViewActivity = accueil_CustomViewActivity;
@@ -85,7 +86,7 @@ public class InitialisationApplication_BgActivity  extends AsyncTask<String,Inte
     public InitialisationApplication_BgActivity(Context context, OrmLiteDBHelper dbHelper){
 		String initialTickerText = context.getString(R.string.initialisationapplication_bg_initialTickerText);
 		String notificationTitle = context.getString(R.string.initialisationapplication_bg_notificationTitle);
-        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
+        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent());
         this.dbHelper = dbHelper;
 		this.context = context;
     }

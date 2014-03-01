@@ -42,16 +42,22 @@ termes.
 package fr.ffessm.doris.android.async;
 
 
+import java.io.BufferedReader;
 import java.io.IOException;
-
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.List;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+// Start of user code additional imports TelechargePhotosAsync_BgActivity
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -69,13 +75,17 @@ import fr.ffessm.doris.android.tools.Outils;
 
 import fr.ffessm.doris.android.tools.Outils.ImageType;
 
+// End of user code
+
 public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer, Integer>{
 	private static final String LOG_TAG = TelechargePhotosAsync_BgActivity.class.getCanonicalName();
+	
 	
     private NotificationHelper mNotificationHelper;
     private OrmLiteDBHelper dbHelper;
     private Context context;
-
+    
+    // Start of user code additional attribute declarations TelechargePhotosAsync_BgActivity
     // Permet de ralentir le traitement pour laisser du temps processeur aux autres applications
     // en milliseconde, on multiplie selon les contextes par 1, 2, 4
     int tempo = 50;
@@ -89,15 +99,15 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	Integer nbPhotosATelechargerPourParticipant = 0;
 	Integer nbPhotosATelechargerPourBiblio = 0;
 	Integer nbPhotosATelechargerPourGlossaire = 0;
-	
+	// End of user code
     
 	/** constructor */
     public TelechargePhotosAsync_BgActivity(Context context, OrmLiteDBHelper dbHelper){
-
+		// Start of user code additional attribute declarations TelechargePhotosAsync_BgActivity constructor
 		String initialTickerText = context.getString(R.string.bg_notifText_initial);
-		String notificationTitle = context.getString(R.string.bg_notifTitle_initial);
-        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
-        
+		String notificationTitle = context.getString(R.string.bg_notifText_initial);
+        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
+
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
     	
 		// TODO : Tempo pour ralentir traitement : lecture paramètre temporaire
@@ -105,6 +115,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         	tempo = Integer.valueOf(preferences.getString(context.getString(R.string.pref_key_asynch_tempo), "50") );
         }catch(Exception e){}
 
+		// End of user code
         this.dbHelper = dbHelper;
 		this.context = context;
     }
@@ -116,8 +127,18 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
     @Override
     protected Integer doInBackground(String... arg0) {
- 
-	    try{
+    	
+
+		// Start of user code initialization of the task TelechargePhotosAsync_BgActivity
+		// do the initializatio of the task here
+		// once done, you should indicates to the notificationHelper how many item will be processed
+		//mNotificationHelper.setMaxNbPages(maxNbPages.toString());
+		// End of user code
+    	
+    	// Start of user code main loop of task TelechargePhotosAsync_BgActivity
+		// This is where we would do the actual job
+		// you should indicates the progression using publishProgress()
+    	try{
 			// do the initialization of the task here
 	    	// Téléchargement en tache de fond de toutes les photos de toutes les fiches correspondants aux critères de l'utilisateur
 	    	if(Outils.getConnectionType(context) == Outils.ConnectionType.AUCUNE){
@@ -192,37 +213,45 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	    	
 	    	mNotificationHelper.completed();
 	    }
-	    return 0;
+		// End of user code
+        
+		// Start of user code end of task TelechargePhotosAsync_BgActivity
+		// return the number of item processed
+        return 0;
+		// End of user code
     }
     protected void onProgressUpdate(Integer... progress) {
         //This method runs on the UI thread, it receives progress updates
         //from the background thread and publishes them to the status bar
         mNotificationHelper.progressUpdate(progress[0]);
     }
-    
 	@Override
 	protected void onCancelled() {
 		super.onCancelled();
 		mNotificationHelper.completed();
+		// Start of user code TelechargePhotosAsync onCancelled
 
 		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = null;
         // termine de notifier les vues qui pouvaient être intéressées
 		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 		
 		majParamNbandSize();
+		// End of user code
 	}
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
-
+		// Start of user code TelechargePhotosAsync onPostExecute
         // retire l'activité qui est maintenant finie
         DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = null;
         // termine de notifier les vues qui pouvaient être intéressées
         DorisApplicationContext.getInstance().notifyDataHasChanged(null);
         
         majParamNbandSize();
+		// End of user code
     }
 
+    // Start of user code additional operations TelechargePhotosAsync_BgActivity
     public OrmLiteDBHelper getHelper() {
     	return this.dbHelper;
     }
@@ -764,6 +793,7 @@ public int telechargementPhotosGlossaire(DorisDBHelper dorisDBHelper){
 		Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_hi_res, Outils.getImageCount(context, ImageType.HI_RES));
 		Outils.setParamLong(context,R.string.pref_key_size_folder_hi_res, Outils.getPhotoDiskUsage(context, ImageType.HI_RES));
 
-    }
-
+    }	
+	// End of user code
+	
 }
