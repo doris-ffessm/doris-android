@@ -89,6 +89,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 	
 	protected ImagePleinEcran_Adapter adapter;
 	protected ViewPager viewPager;
+	int ficheId;
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -108,7 +109,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
         // récupération de la position dans du click dans la vue précédente
 		int position = i.getIntExtra("position", 0);
 		// récupération info qui permettra de retrouver la liste des images à afficher
-		int ficheId = i.getIntExtra("ficheId", 0);
+		ficheId = i.getIntExtra("ficheId", 0);
 
 		
 		//TODO calcul de la liste d'images à partir de l'Id de la fiche  (pour plus tard, la même chose mais pour les photos principales d'un groupe ?) 
@@ -186,7 +187,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 	            return true;
 			//Start of user code additional menu action ImagePleinEcran_CustomViewActivity
 
-		//End of user code
+		    //End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
 	        	TaskStackBuilder.create(this)
@@ -205,7 +206,11 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 	public Intent getSupportParentActivityIntent() {
 		//Start of user code getSupportParentActivityIntent ImagePleinEcran_CustomViewActivity
 		// navigates to the parent activity
-		return new Intent(this, Accueil_CustomViewActivity.class);
+		Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
+        Bundle b = new Bundle();
+        b.putInt("ficheId", ficheId);
+		toDetailView.putExtras(b);
+		return toDetailView;
 		//End of user code
 	}
 	@Override
