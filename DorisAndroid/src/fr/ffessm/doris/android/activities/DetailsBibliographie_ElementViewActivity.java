@@ -42,26 +42,18 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import java.io.IOException;
-
-import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.ffessm.doris.android.tools.Outils.ImageType;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
-import android.text.style.URLSpan;
 import android.util.Log;
+import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
@@ -70,15 +62,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 // Start of user code protectedDetailsBibliographie_ElementViewActivity_additional_import
-// End of user code
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
+import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
+import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Outils.ImageType;
+import java.io.IOException;
+// End of user code
 
 public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 // Start of user code protectedDetailsBibliographie_ElementViewActivity_additional_implements
@@ -198,6 +198,14 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 				aide.affichageMessageHTML(this.getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
 				return true;
 			//End of user code
+			// Respond to the action bar's Up/Home button
+			case android.R.id.home:
+	        	TaskStackBuilder.create(this)
+	                // Add all of this activity's parents to the back stack
+	                .addNextIntentWithParentStack(getSupportParentActivityIntent())
+	                // Navigate up to the closest parent
+	                .startActivities();
+	            return true;
 			default:
                 return super.onOptionsItemSelected(item);
         }    	
@@ -208,7 +216,7 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 	public Intent getSupportParentActivityIntent() {
 		//Start of user code getSupportParentActivityIntent DetailsBibliographie_ClassListViewActivity
 		// navigates to the parent activity
-		return new Intent(this, Accueil_CustomViewActivity.class);
+		return new Intent(this, ListeBibliographieAvecFiltre_ClassListViewActivity.class);
 		//End of user code
 	}
 	@Override

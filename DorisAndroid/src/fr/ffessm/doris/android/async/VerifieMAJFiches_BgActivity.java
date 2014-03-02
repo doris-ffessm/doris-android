@@ -43,31 +43,38 @@ package fr.ffessm.doris.android.async;
 
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.j256.ormlite.dao.GenericRawResults;
-
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+
+
+import fr.ffessm.doris.android.R;
+// Start of user code additional imports VerifieMAJFiches_BgActivity
+
+import com.j256.ormlite.dao.GenericRawResults;
+
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.OutilsBase;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.tools.Outils;
-import fr.ffessm.doris.android.R;
-// Start of user code additional imports VerifieMAJFiches_BgActivity
+import fr.ffessm.doris.android.datamodel.Fiche;
+
+
+import java.io.File;
+import java.util.HashSet;
+
 // End of user code
 
 public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Integer>{
@@ -91,7 +98,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		// Start of user code additional attribute declarations VerifieMAJFiches_BgActivity constructor
 		String initialTickerText = context.getString(R.string.verifiemajfiches_bg_initialTickerText);
 		String notificationTitle = context.getString(R.string.verifiemajfiches_bg_notificationTitle);
-        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
+        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 		// End of user code
         this.dbHelper = dbHelper;
 		this.context = context;
@@ -113,6 +120,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		// End of user code
     	
     	// Start of user code main loop of task VerifieMAJFiches_BgActivity
+
 		// This is where we would do the actual job
     	HashSet<FicheLight> listeFichesBase = new HashSet<FicheLight>(100);
     	try{
@@ -184,13 +192,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 			Log.e(LOG_TAG, e.getMessage(), e);
     	}
 		
-    	
-    	
-    	
-    	
-    	
-    	
-    	
+
 		// you should indicates the progression using publishProgress()
 		for (int i=10;i<=100;i += 10)
             {
@@ -231,9 +233,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     }
 
     // Start of user code additional operations VerifieMAJFiches_BgActivity
-	
-
-    
+   
 	// End of user code
 	
 }

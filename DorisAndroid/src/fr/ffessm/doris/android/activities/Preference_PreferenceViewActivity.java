@@ -41,15 +41,11 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.AsyncTask.Status;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 
 //Start of user code Preference preference activity additional imports
@@ -61,10 +57,12 @@ import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Picasso.Builder;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.AsyncTask.Status;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
@@ -76,6 +74,7 @@ import android.widget.Toast;
 import android.text.format.DateUtils;
 import android.util.Log;
 import fr.ffessm.doris.android.BuildConfig;
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.Outils.ImageType;

@@ -42,7 +42,6 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
@@ -54,6 +53,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
@@ -72,6 +72,7 @@ import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 // End of user code
@@ -167,7 +168,16 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
 	        	AffichageMessageHTML aide = new AffichageMessageHTML(this, (Activity) this, getHelper());
 				aide.affichageMessageHTML(this.getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
 				return true;
+				
 			//End of user code
+			// Respond to the action bar's Up/Home button
+			case android.R.id.home:
+	        	TaskStackBuilder.create(this)
+	                // Add all of this activity's parents to the back stack
+	                .addNextIntentWithParentStack(getSupportParentActivityIntent())
+	                // Navigate up to the closest parent
+	                .startActivities();
+	            return true;
 			default:
                 return super.onOptionsItemSelected(item);
         }    	
@@ -178,7 +188,7 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
 	public Intent getSupportParentActivityIntent() {
 		//Start of user code getSupportParentActivityIntent DetailEntreeGlossaire_ClassListViewActivity
 		// navigates to the parent activity
-		return new Intent(this, Accueil_CustomViewActivity.class);
+		return new Intent(this, Glossaire_ClassListViewActivity.class);
 		//End of user code
 	}
 	@Override

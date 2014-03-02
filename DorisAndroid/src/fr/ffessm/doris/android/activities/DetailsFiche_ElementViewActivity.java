@@ -44,7 +44,6 @@ package fr.ffessm.doris.android.activities;
 
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
@@ -54,6 +53,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
@@ -92,6 +92,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView.BufferType;
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.tools.Outils.ImageType;
 
 import com.squareup.picasso.Picasso;
@@ -443,6 +444,14 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 				aide.affichageMessageHTML(this.getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
 				return true;
 			//End of user code
+			// Respond to the action bar's Up/Home button
+			case android.R.id.home:
+	        	TaskStackBuilder.create(this)
+	                // Add all of this activity's parents to the back stack
+	                .addNextIntentWithParentStack(getSupportParentActivityIntent())
+	                // Navigate up to the closest parent
+	                .startActivities();
+	            return true;
 			default:
                 return super.onOptionsItemSelected(item);
         }    	
@@ -453,7 +462,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	public Intent getSupportParentActivityIntent() {
 		//Start of user code getSupportParentActivityIntent DetailsFiche_ClassListViewActivity
 		// navigates to the parent activity
-		return new Intent(this, Accueil_CustomViewActivity.class);
+		return new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class);
 		//End of user code
 	}
 	@Override
