@@ -51,7 +51,7 @@
 	
 	<string name="mode_connecte_wifi_only_prompt">Téléch. photos en wifi uniquement\u00A0?</string>
     <string name="mode_connecte_qualite_photo_prompt">Qualité photos téléch.\u00A0?</string>
-    <string name="mode_connecte_qualite_photo_defaut">MED_RES</string>
+    <string name="mode_connecte_qualite_photo_defaut"></string>
     <string-array name="mode_connecte_qualite_photo_values">
         <item>MED_RES</item>
         <item>HI_RES</item>
@@ -159,9 +159,9 @@
     </string-array>
 	
     <string name="accueil_icon_size_prompt">"Taille des icones de la page d'accueil"</string>
-    <string name="accueil_icon_size_default">64</string>
+    <string name="accueil_icon_size_default"></string>
     <string name="list_icon_size_prompt">Taille des icones dans les listes</string>
-    <string name="list_icon_size_default">64</string>
+    <string name="list_icon_size_default"></string>
 	<string-array name="icon_size_values">
         <item>48</item>
         <item>64</item>

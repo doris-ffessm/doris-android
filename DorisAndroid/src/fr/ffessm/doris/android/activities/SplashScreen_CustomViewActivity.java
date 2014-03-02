@@ -72,6 +72,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.widget.LinearLayout;
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.datamodel.SQLiteDataBaseHelper;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 //End of user code
@@ -141,8 +142,11 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 		}
 		// Use SharedPreferences to store something like "LAST_VERSION_RUN" = pInfo.versionName
 
-		// execute your xml news feed loader
+		// execute the database initialization in a thread
 		new AsyncInitialize(this).execute();
+		
+		// ensure that defaut preferences are set according to screen size
+		DorisApplicationContext.getInstance().ensureDefaultPreferencesInitialization(this);
 		//End of user code
     }
     
