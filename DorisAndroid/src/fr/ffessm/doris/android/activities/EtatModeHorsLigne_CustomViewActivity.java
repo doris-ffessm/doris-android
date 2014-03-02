@@ -309,15 +309,15 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
  					
  					switch (zoneGeoId){
  					case 1 :
- 						param = "pref_key_mode_precharg_photo_region_france"; break;
+ 						param = "mode_precharg_photo_region_france"; break;
  					case 2 :
- 						param = "pref_key_mode_precharg_photo_region_eaudouce"; break;
+ 						param = "mode_precharg_photo_region_eaudouce"; break;
  					case 3 :
- 						param = "pref_key_mode_precharg_photo_region_atlantno"; break;
+ 						param = "mode_precharg_photo_region_atlantno"; break;
  					case 4 :
- 						param = "pref_key_mode_precharg_photo_region_indopac"; break;
+ 						param = "mode_precharg_photo_region_indopac"; break;
  					case 5 :
- 						param = "pref_key_mode_precharg_photo_region_caraibes"; break;
+ 						param = "mode_precharg_photo_region_caraibes"; break;
  					}
 
  					if (param != null){
