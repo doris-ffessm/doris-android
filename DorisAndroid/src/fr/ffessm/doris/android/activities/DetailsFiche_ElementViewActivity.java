@@ -433,7 +433,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             	context.startActivity(toDefinitionlView);
             	return true;
         	case 888:
-        		DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity =
+        		DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity =
         			(VerifieMAJFiche_BgActivity) new VerifieMAJFiche_BgActivity(getApplicationContext(),
 					this.getHelper()).execute(""+ficheNumero);
         		//refreshScreenData();

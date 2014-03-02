@@ -91,6 +91,7 @@ import fr.ffessm.doris.android.datamodel.associations.Fiches_DefinitionsGlossair
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesObservations;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.OutilsBase;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Outils;
@@ -675,7 +676,7 @@ public class PrefetchDorisWebSite {
 						System.exit(1);
 					}
 				}
-				HashSet<Fiche> listeFichesSite = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
+				HashSet<FicheLight> listeFichesSite = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
 				log.info("Nb Fiches sur le site : "+listeFichesSite.size());
 
 				// Récupération de la liste des fiches dans le dossier de référence
@@ -691,21 +692,21 @@ public class PrefetchDorisWebSite {
 						System.exit(1);
 					}
 				}
-				HashSet<Fiche> listFichesFromRef = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);;
+				HashSet<FicheLight> listFichesFromRef = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);;
 				log.info("Nb Fiches dans le dossier de référence : "+listFichesFromRef.size());
 				
 				// Création de l'entête des fiches
-				final HashSet<Fiche> listeFichesTravail;
+				final HashSet<FicheLight> listeFichesTravail;
 				if (! action.equals("NODWNLD")) {
-					listeFichesTravail = (HashSet<Fiche>) listeFichesSite.clone();
+					listeFichesTravail = (HashSet<FicheLight>) listeFichesSite.clone();
 				} else {
-					listeFichesTravail = (HashSet<Fiche>) listFichesFromRef.clone();
+					listeFichesTravail = (HashSet<FicheLight>) listFichesFromRef.clone();
 				}
 				TransactionManager.callInTransaction(connectionSource,
 					new Callable<Void>() {
 						public Void call() throws Exception {
-							for (Fiche fiche : listeFichesTravail){
-								dbContext.ficheDao.create(fiche);
+							for (FicheLight ficheLight : listeFichesTravail){
+								dbContext.ficheDao.create(new Fiche(ficheLight));
 							}
 							return null;
 					    }
@@ -717,20 +718,20 @@ public class PrefetchDorisWebSite {
 				// - - - Fiche - - -
 				// Pour chaque fiche, on télécharge la page (si nécessaire) puis on la traite
 				log.info("Mise à jours de "+listeFichesTravail.size()+" fiches.");
-				HashSet<Fiche> listFichesModif = null;
+				HashSet<FicheLight> listFichesModif = null;
 				if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
 					listFichesModif = SiteDoris.getListeFichesUpdated(listFichesFromRef, listeFichesTravail);
 				}
 				listFichesFromRef = null;
 				
 				int nbFichesTraitees = 0;
-				for (Fiche fiche : listeFichesTravail) {
+				for (FicheLight ficheLight : listeFichesTravail) {
 					if (  nbFichesTraitees <= nbMaxFichesTraitees ) {
-						log.debug("doMain() - Traitement Fiche : "+fiche.getNomCommun());
+						log.debug("doMain() - Traitement Fiche : "+ficheLight.getNomCommun());
 						
-						String urlFiche =  Constants.getFicheFromIdUrl( fiche.getNumeroFiche() );
-						String fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche-"+fiche.getNumeroFiche()+".html";
-						String fichierRefFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+".html";
+						String urlFiche =  Constants.getFicheFromIdUrl( ficheLight.getNumeroFiche() );
+						String fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche-"+ficheLight.getNumeroFiche()+".html";
+						String fichierRefFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/fiche-"+ficheLight.getNumeroFiche()+".html";
 						
 						if ( action.equals("INIT") ) {
 							if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
@@ -739,7 +740,7 @@ public class PrefetchDorisWebSite {
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 								// Solution de contournement désespérée 
-								urlFiche = Constants.getFicheFromNomCommunUrl(fiche.getNomCommun());
+								urlFiche = Constants.getFicheFromNomCommunUrl(ficheLight.getNomCommun());
 								log.error("=> Tentative sur : "+urlFiche);
 								if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
 									nbFichesTraitees += 1;
@@ -750,7 +751,7 @@ public class PrefetchDorisWebSite {
 								}
 							}
 						} else if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
-							if (new File(fichierRefFiche).exists() && !listFichesModif.contains(fiche)) {
+							if (new File(fichierRefFiche).exists() && !listFichesModif.contains(ficheLight)) {
 								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefFiche));
 								nbFichesTraitees += 1;
 							} else {
@@ -760,7 +761,7 @@ public class PrefetchDorisWebSite {
 								} else {
 									log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 									// Solution de contournement désespérée 
-									urlFiche = Constants.getFicheFromNomCommunUrl(fiche.getNomCommun());
+									urlFiche = Constants.getFicheFromNomCommunUrl(ficheLight.getNomCommun());
 									log.error("=> Tentative sur : "+urlFiche);
 									if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
 										nbFichesTraitees += 1;
@@ -779,7 +780,10 @@ public class PrefetchDorisWebSite {
 								log.error("La récupération de la fiche sur le disque : "+fichierRefFiche+" a échoué.");
 							}
 						}
-						
+						//Fiche fiche = new Fiche(ficheLight);
+						Fiche fiche = dbContext.ficheDao.queryForFirst(
+								dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", ficheLight.getNumeroFiche()).prepare()
+							);
 						fiche.setContextDB(dbContext);
 						fiche.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
 						dbContext.ficheDao.update(fiche);
@@ -1003,7 +1007,7 @@ public class PrefetchDorisWebSite {
 			log.error("impossible de créer la zone dans la base", e);
 		}
 		
-		final HashSet<Fiche> listFicheFromHTML = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
+		final HashSet<FicheLight> listFicheFromHTML = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
 		log.info("Création des "+listFicheFromHTML.size()+" associations pour la Zone : " + listeFichesFichier);
 		
 		try {
@@ -1011,8 +1015,8 @@ public class PrefetchDorisWebSite {
 					new Callable<Void>() {
 						public Void call() throws Exception { 
 
-							for (Fiche fiche : listFicheFromHTML) {
-								Fiche fichesDeLaBase = outilsBase.queryFicheByNumeroFiche(fiche.getNumeroFiche());
+							for (FicheLight ficheLight : listFicheFromHTML) {
+								Fiche fichesDeLaBase = outilsBase.queryFicheByNumeroFiche(ficheLight.getNumeroFiche());
 								fichesDeLaBase.setContextDB(dbContext);
 								fichesDeLaBase.addZoneGeographique(zoneGeographique);
 							}

@@ -80,15 +80,6 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
     private Context context;
     
     // Start of user code additional attribute declarations VerifieMAJFiches_BgActivity
-    public VerifieMAJFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper, DataChangedListener verifieMAJFiches_BgActivity){
-		String initialTickerText = context.getString(R.string.initialisationapplication_bg_initialTickerText);
-		String notificationTitle = context.getString(R.string.initialisationapplication_bg_notificationTitle);
-        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle);
-        this.dbHelper = dbHelper;
-		this.context = context;
-		
-		this.verifieMAJFiches_BgActivity = verifieMAJFiches_BgActivity;
-    }
 	// End of user code
     
 	/** constructor */

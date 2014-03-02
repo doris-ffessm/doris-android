@@ -62,6 +62,7 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
+import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.OutilsBase;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.tools.Outils;
@@ -117,9 +118,9 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     	try{
     		
 	    	// Récupération de la liste des Fiches de la Base
-	    	//OutilsBase outilsBase = new OutilsBase(dbHelper.getDorisDBHelper());
+    		mNotificationHelper.setContentTitle("Fiches de la Base");
 	    	listeFichesBase = new HashSet<FicheLight>((int) dbHelper.getDorisDBHelper().ficheDao.countOf());
-	    	//ficheList = dbHelper.getDorisDBHelper().ficheDao.queryForAll();
+	    	mNotificationHelper.setMaxItemToProcess(""+listeFichesBase.size());
 	    	
 	    	GenericRawResults<String[]> rawResults =
 	    			dbHelper.getDorisDBHelper().ficheDao.queryRaw("SELECT _id, numeroFiche, etatFiche FROM fiche");
@@ -128,7 +129,6 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 			    String numeroFicheString = resultColumns[1];
 			    String etatFicheString = resultColumns[2];
 			    listeFichesBase.add(new FicheLight(
-			    		Integer.parseInt(iDString),
 			    		Integer.parseInt(numeroFicheString),
 			    		Integer.parseInt(etatFicheString)) );
 			}
@@ -136,10 +136,12 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 			
 			
 			// Récupération de la liste Fiches depuis le Site
-	    	String urlListeFiches =  Constants.getListeFichesUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES));
+			mNotificationHelper.setContentTitle("Fiches du Site");
+			int numZone = Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE);
+	    	String urlListeFiches =  Constants.getListeFichesUrl(numZone);
 	    	Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlListeFiches);
 	    	
-	    	String fichierDansCache = "listeFiches-10.html";
+	    	String fichierDansCache = "listeFiches-"+numZone+".html";
 	    	Log.d(LOG_TAG, "doInBackground() - fichierDansCache : "+fichierDansCache);
 	    	
 	    	try {
@@ -148,24 +150,30 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 				Log.w(LOG_TAG, e.getMessage(), e);
 			}   
 	    	
+	    	Log.d(LOG_TAG, "doInBackground() - 10");
 	    	String contenuFichierHtml = fr.ffessm.doris.android.sitedoris.Outils
 				.getFichierTxtFromDisk(new File(context.getCacheDir()+"/"+fichierDansCache));
-	 
-	    	HashSet<Fiche> listeFichesSite = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
-	    	Log.d(LOG_TAG, "doInBackground() - Fiches de la Base : "+listeFichesSite.size() );
 	    	
-	    	for (Fiche ficheSite : listeFichesSite){
+	    	Log.d(LOG_TAG, "doInBackground() - 20");
+	    	
+	    	HashSet<FicheLight> listeFichesSite = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
+	    	Log.d(LOG_TAG, "doInBackground() - Fiches du Site : "+listeFichesSite.size() );
+	    	
+	    	
+	    	// Analyse différences entre les 2 listes
+	    	mNotificationHelper.setContentTitle("Analyse Evolutions");
+	    	int i = 0;
+	    	for (FicheLight ficheSite : listeFichesSite){
+	    		i++;
 	    		FicheLight ficheLightSite = new FicheLight(
-    				ficheSite.getId(),
     				ficheSite.getNumeroFiche(),
     				ficheSite.getEtatFiche());
+	    		
 	    		if (listeFichesBase.contains(ficheLightSite)){
-	    			Log.d(LOG_TAG, "doInBackground() - Fiche inchangée : "+ficheSite.getNumeroFiche() );
+	    			if (i % 100 == 0) Log.d(LOG_TAG, "doInBackground() - Fiche inchangée : "+ficheSite.getNumeroFiche() );
 	    		} else {
-	    			Log.d(LOG_TAG, "doInBackground() - Fiche modifiée : "+ficheSite.getNumeroFiche() );
-	    			
-	    			
-	    			
+	    			if (i % 100 == 0) Log.d(LOG_TAG, "doInBackground() - Fiche modifiée : "+ficheSite.getNumeroFiche() );
+	
 	    		}
 	    		
 	    		
@@ -195,6 +203,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
                     e.printStackTrace();
                 }
             }
+		Log.d(LOG_TAG, "doInBackground() - Fin");
 		// End of user code
         
 		// Start of user code end of task VerifieMAJFiches_BgActivity
@@ -223,18 +232,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 
     // Start of user code additional operations VerifieMAJFiches_BgActivity
 	
-    // Entête Fiche permettant d'avoir une emprunte mémoire minimum
-    private class FicheLight {
-    	int _id;
-    	int numeroFiche;
-    	int etatFiche;
-    	FicheLight(int _id, int numeroFiche, int etatFiche){
-    		this._id = _id;
-    		this.numeroFiche = numeroFiche;
-    		this.etatFiche = etatFiche;
-    	}
-    }
-    
+
     
 	// End of user code
 	

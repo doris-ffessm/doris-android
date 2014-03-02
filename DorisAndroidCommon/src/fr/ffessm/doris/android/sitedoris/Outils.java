@@ -54,17 +54,9 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.List;
-import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import net.htmlparser.jericho.Attribute;
-import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.HTMLElementName;
-import net.htmlparser.jericho.Source;
-
 
 /* *********************************************************************
  * Outils
@@ -76,7 +68,7 @@ public class Outils {
     
 
     public static boolean getFichierFromUrl(String inUrl, String inFichierRetour) {
-    	//log.debug("getFichierUrl()- Début");
+    	log.debug("getFichierUrl()- Début");
     	log.info("getFichierUrl()- url : " + inUrl);
     	log.info("getFichierUrl()- Fichier à Retourner : " + inFichierRetour);
     	
@@ -132,15 +124,20 @@ public class Outils {
 
 
 	public static String getFichierTxtFromDisk(File inFichier) {
-    	//log.debug("getFichierTxtFromDisk()- Début");
+    	log.info("getFichierTxtFromDisk()- Début");
     	log.info("getFichierTxtFromDisk()- Fichier : " + inFichier);
     	
-    	FileInputStream objFile = null;
 		try {
-			objFile = new FileInputStream(inFichier);
+			//FileInputStream objFile = new FileInputStream(inFichier);
 			
-			InputStreamReader objReader = new InputStreamReader(objFile, "iso-8859-1");
-			BufferedReader objBufferReader = new BufferedReader(objReader);
+			
+			//Top d'après JavaDoc : BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+			//InputStreamReader objReader = new InputStreamReader(objFile, "iso-8859-1");
+			//BufferedReader objBufferReader = new BufferedReader(objReader);
+			BufferedReader objBufferReader = new BufferedReader(
+					new InputStreamReader(
+							new FileInputStream(inFichier), "iso-8859-1"));
+			
 			StringBuffer objBuffer = new StringBuffer();
 			String strLine;
 			try {
@@ -148,17 +145,18 @@ public class Outils {
 					objBuffer.append(strLine);
 					objBuffer.append("\n");
 				}
-				try {
-					objFile.close();
+				//try {
+					//objFile.close();
 					
-					//log.debug("getFichierTxtFromDisk()- Fin");
+					log.info("getFichierTxtFromDisk()- objBuffer.length : "+objBuffer.toString().length());
+					log.info("getFichierTxtFromDisk()- Fin");
 			    	return (objBuffer.toString());
 			    	
-				} catch (IOException e) {
+				/*} catch (IOException e) {
 
 					e.printStackTrace();
 					
-				}
+				}*/
 			} catch (IOException e) {
 
 				e.printStackTrace();

@@ -3,8 +3,6 @@ package fr.ffessm.doris.android.tools;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,8 +11,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,9 +18,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
-import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.squareup.picasso.Picasso;
 
 import fr.ffessm.doris.android.activities.DetailEntreeGlossaire_ElementViewActivity;
 import fr.ffessm.doris.android.activities.DetailsFiche_ElementViewActivity;
@@ -32,32 +26,25 @@ import fr.ffessm.doris.android.activities.DetailsParticipant_ElementViewActivity
 import fr.ffessm.doris.android.activities.Glossaire_ClassListViewActivity;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
-import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
-import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.sitedoris.OutilsBase;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Resources.NotFoundException;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.format.DateUtils;
 import android.text.style.ClickableSpan;
@@ -1055,16 +1042,16 @@ public class Outils {
 	        	else if ( ts.spanType == TextSpan.SpanType.ILLUSTRATION_DEFINITION) {
 	    	        //Pour jour mettre des images directement dans le texte : la picto dangerosité par exemple.
 	    	        String nomPhoto = Constants.PREFIX_IMGDSK_DEFINITION+ts.info;
-	    	        Log.d(LOG_TAG, "getHtml()- nomPhoto : "+nomPhoto);
+	    	        Log.d(LOG_TAG, "textToSpannableStringDoris()- nomPhoto : "+nomPhoto);
 
 	    	        Drawable drawable = new BitmapDrawable();
 	    	        ImageSpan imageSpan = null;
 	    	        
 	    	        if(Outils.isAvailablePhoto(context, nomPhoto, ImageType.ILLUSTRATION_DEFINITION)){
-	    	        	Log.d(LOG_TAG, "getHtml()- isAvailablePhoto");
+	    	        	Log.d(LOG_TAG, "textToSpannableStringDoris()- isAvailablePhoto");
 	    	        	try {
 	    	        		String path = Outils.getPhotoFile(context, nomPhoto, ImageType.ILLUSTRATION_DEFINITION).getAbsolutePath();
-	    	        		Log.d(LOG_TAG, "getHtml()- path : "+path);
+	    	        		Log.d(LOG_TAG, "textToSpannableStringDoris()- path : "+path);
 
 	    	        		drawable = Drawable.createFromPath(path);
 							drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight()); 
@@ -1074,7 +1061,7 @@ public class Outils {
 						}
 
 	    	        }  else {
-	    	        	Log.d(LOG_TAG, "getHtml()- ! isAvailablePhoto");
+	    	        	Log.d(LOG_TAG, "textToSpannableStringDoris()- ! isAvailablePhoto");
 	    	        	imageSpan = new ImageSpan(context, R.drawable.app_glossaire_indisponible );
 	    	        	
 	    				ClickableSpan clickableSpan = new ClickableSpan() {  
@@ -1089,8 +1076,8 @@ public class Outils {
 				        richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
 	    	        }
 
-	    	        Log.d(LOG_TAG, "getHtml()- richtext : "+richtext.length());
-	    	        Log.d(LOG_TAG, "getHtml()- ts.positionDebut : "+ts.positionDebut);
+	    	        Log.d(LOG_TAG, "textToSpannableStringDoris()- richtext : "+richtext.length());
+	    	        Log.d(LOG_TAG, "textToSpannableStringDoris()- ts.positionDebut : "+ts.positionDebut);
 	    	        richtext.setSpan(imageSpan, ts.positionDebut, ts.positionFin, 0);
 
 	        	}
@@ -1212,26 +1199,35 @@ public class Outils {
 			}
     		//On lit ligne à ligne le bufferedReader pour le stocker dans le stringBuffer
     		String ligneCodeHTML = bufferedReader.readLine();
+    		FileOutputStream fos = null;
+    		fos = new FileOutputStream(new File(inContext.getCacheDir(), inCleFichier));
+    		
+    		int i = 0;
+    		
     		while (ligneCodeHTML != null){
-    			stringBuffer.append(ligneCodeHTML);
-    			stringBuffer.append("\n");
+    			fos.write(ligneCodeHTML.trim().getBytes());
+    			
+    			i++;
+    			if (i % 100 == 0) Log.d(LOG_TAG, "getHtml() - "+i+" - ligneCodeHTML : "+ligneCodeHTML.trim().length());
+    			
     			ligneCodeHTML = bufferedReader.readLine();
     		}
-		}
-		catch(SocketTimeoutException erreur) {
+    		Log.d(LOG_TAG, "getHtml() - "+i);
+			
+    		fos.flush();
+            fos.close();
+            
+		} catch(SocketTimeoutException erreur) {
 			String text = "La Connexion semble trop lente";
-        	Log.e(LOG_TAG, "getHtml() - " + text + " - " + erreur.toString(), erreur);
-        	Toast toast = Toast.makeText(inContext, text, Toast.LENGTH_LONG);
-			toast.show();
-        }
-		catch (Exception e){
-    		Log.e(LOG_TAG, e.getMessage());
-	    	String text = "Problème inconnu : "+e.getMessage();
+        	Log.e(LOG_TAG, "getHtml() - " + text + " - " + erreur.toString());
+        	return "";
+        	
+        } catch (Exception erreur) {
+	    	String text = "Problème inconnu : "+erreur.toString();
 	    	Log.e(LOG_TAG, "getHtml() - " + text);
-	    	Toast toast = Toast.makeText(inContext, text, Toast.LENGTH_LONG);
-			toast.show();
 			return "";
-    	}finally{
+			
+    	} finally {
     		urlConnection.disconnect();
 
     		//Dans tous les cas on ferme le bufferedReader s'il n'est pas null
@@ -1244,20 +1240,7 @@ public class Outils {
     		}
     	}
     	
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(new File(inContext.getCacheDir(), inCleFichier));
-            fos.write(stringBuffer.toString().getBytes());
-            fos.flush();
-            fos.close();
-        }
-        //this should never happen
-        catch(FileNotFoundException e) {
-        	Log.e(LOG_TAG, e.toString(), e);
-        }
-
-    	
+   	
     	Log.d(LOG_TAG, "getHtml() - codeHtml : " +stringBuffer.toString().substring(0, Math.min(stringBuffer.toString().length(), 20)));
 		Log.d(LOG_TAG, "getHtml() - Fin");
     	return stringBuffer.toString();

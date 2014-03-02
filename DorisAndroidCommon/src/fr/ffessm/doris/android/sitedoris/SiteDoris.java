@@ -42,7 +42,6 @@ termes.
 
 package fr.ffessm.doris.android.sitedoris;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -68,12 +67,11 @@ public class SiteDoris {
 	// Initialisation de la Gestion des Log
 	public static Log log = LogFactory.getLog(SiteDoris.class);
 	
-
     
-    public static HashSet<Fiche> getListeFichesFromHtml(String inCodePageHtml) {
+    public static HashSet<FicheLight> getListeFichesFromHtml(String inCodePageHtml) {
     	log.trace("getListeFichesFromHtml()- Début");
     	
-    	HashSet<Fiche> listeFiches = new HashSet<Fiche>(0);
+    	HashSet<FicheLight> listeFiches = new HashSet<FicheLight>(0);
     	
     	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml),false ) );
     	source.fullSequentialParse();
@@ -105,12 +103,9 @@ public class SiteDoris {
     				int ficheId = Integer.parseInt(elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "").replaceAll("&.*", ""));
     				int ficheEtat = Integer.parseInt(elementTDA.getAttributeValue("href").replaceAll(".*fiche_etat=", "").replaceAll("&.*", ""));
     				
-    				String dateCreation = ""; //TODO : Ça aurait été bien que la date de modif. apparaisse dans la page des noms scientifiques
-    				String dateModification = "";
     				log.info("getListeFichesFromHtml() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
     				
-    				String textePourRechercheRapide = ficheNomCommun+" "+ficheNomScientifique;
-    				Fiche fiche = new Fiche(ficheNomScientifique, ficheNomCommun, ficheId, ficheEtat, dateCreation, dateModification, "", Outils.formatStringNormalizer(textePourRechercheRapide).toLowerCase(), "" );
+    				FicheLight fiche = new FicheLight(ficheId, ficheEtat, ficheNomScientifique, ficheNomCommun);
       				
     				listeFiches.add(fiche);
     			}
@@ -561,27 +556,27 @@ public class SiteDoris {
 		return listeParticipants;
     }
     
-    public static HashSet<Fiche> getListeFichesUpdated(HashSet<Fiche> inListeFichesRef, HashSet<Fiche> inListeFichesSite) {
+    public static HashSet<FicheLight> getListeFichesUpdated(HashSet<FicheLight> inListeFichesRef, HashSet<FicheLight> inListeFichesSite) {
     	log.debug("getListeFichesUpdated()- Début");
     	log.debug("getListeFichesUpdated()- Liste Base : "+inListeFichesRef.size());
     	log.debug("getListeFichesUpdated()- Liste Site : "+inListeFichesSite.size());
     	
-    	HashSet<Fiche> listeFichesUpdated = new HashSet<Fiche>(0);
+    	HashSet<FicheLight> listeFichesUpdated = new HashSet<FicheLight>(0);
      	
     	HashSet<String> listeFichesEtatsRef = new HashSet<String>(0);
     	// On charge une liste de tous les couples : Ref. Fiche - État Fiche
-    	Iterator<Fiche> iFicheRef = inListeFichesRef.iterator();
+    	Iterator<FicheLight> iFicheRef = inListeFichesRef.iterator();
     	while (iFicheRef.hasNext()) {
-    		Fiche ficheRef = iFicheRef.next();
-    		listeFichesEtatsRef.add( ficheRef.getRefEtatFiche() );
+    		FicheLight ficheRef = iFicheRef.next();
+    		listeFichesEtatsRef.add( ""+ficheRef.getEtatFiche() );
     	}
     	
-    	Iterator<Fiche> iFicheSite = inListeFichesSite.iterator();
+    	Iterator<FicheLight> iFicheSite = inListeFichesSite.iterator();
     	while (iFicheSite.hasNext()) {
     		// Si Nouvelle Fiche ou État a changé alors le couple ne peut être trouvé dans la liste de référence
     		// Tentative d'optime pour avoir une empreinte mémoire la plus faible
-    		Fiche ficheSite = iFicheSite.next();
-    		if ( ! listeFichesEtatsRef.contains( ficheSite.getRefEtatFiche() ) ){
+    		FicheLight ficheSite = iFicheSite.next();
+    		if ( ! listeFichesEtatsRef.contains( ""+ficheSite.getEtatFiche() ) ){
     			listeFichesUpdated.add(ficheSite);
     		}
     	}
@@ -747,7 +742,6 @@ public class SiteDoris {
 		log.trace("getListeBiblioFromHtml()- Fin");
 		return listeBiblio;
     }
-	
 	
     
     

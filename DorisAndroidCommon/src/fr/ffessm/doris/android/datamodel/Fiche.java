@@ -72,6 +72,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Constants.ParticipantKind;
+import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.Outils;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 // End of user code
@@ -284,10 +285,12 @@ public class Fiche {
 	public void getFicheFromHtml(String htmlFiche, List<Groupe> listeGroupes, List<Participant> listeParticipants) throws SQLException{
 		log.trace("getFicheFromHtml() - Début");
 		
+		pictogrammes = "";
+		
     	int i;
     	
 		// TODO : si un jour on veut avoir la liste inversée des fiches
-    	StringBuilder sbListeLiensVersFiches = new StringBuilder();
+    	//StringBuilder sbListeLiensVersFiches = new StringBuilder();
     	
     	htmlFiche = Outils.nettoyageBalises(htmlFiche);
     	
@@ -383,7 +386,7 @@ public class Fiche {
 						for (Element elementTR : listeElementsHG_TR) {
 							i++;
 							if (i == 1) {
-								//TODO: pour chaque IMG contenu on a un petit logo indiquant si l'espèce est protégée, réglementée, dangereuse
+								//Pour chaque IMG contenu on a un petit logo indiquant si l'espèce est protégée, réglementée, dangereuse
 								List<? extends Element> listeElementsTR_IMG = elementTR.getAllElements(HTMLElementName.IMG);
 								for (Element elementImg : listeElementsTR_IMG) {
 									log.info("getFicheFromHtml() - ficheTagInfo : " + elementImg.getAttributeValue("alt")+" + "+elementImg.getAttributeValue("src"));
@@ -971,7 +974,13 @@ public class Fiche {
 		return result;
 	}
 	
-	
+	public Fiche(FicheLight ficheLight) {
+		super();
+		this.nomScientifique = ficheLight.getNomScientifique();
+		this.nomCommun = ficheLight.getNomCommun();
+		this.numeroFiche = ficheLight.getNumeroFiche();
+		this.etatFiche = ficheLight.getEtatFiche();
+	} 
 	// End of user code
 	
 	public Fiche() {} // needed by ormlite
@@ -984,7 +993,7 @@ public class Fiche {
 		this.dateCreation = dateCreation;
 		this.dateModification = dateModification;
 		this.numerofichesLiees = numerofichesLiees;
-		this.textePourRechercheRapide = textePourRechercheRapide;
+		this.textePourRechercheRapide = Outils.formatStringNormalizer(nomCommun+" "+nomScientifique).toLowerCase();
 		this.pictogrammes = pictogrammes;
 	} 
 

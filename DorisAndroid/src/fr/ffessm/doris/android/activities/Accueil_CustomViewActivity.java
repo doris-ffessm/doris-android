@@ -91,6 +91,8 @@ import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.MultiProgressBar;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
+import fr.ffessm.doris.android.async.VerifieMAJFiche_BgActivity;
+import fr.ffessm.doris.android.async.VerifieMAJFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -209,7 +211,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	        		|| (! wifiOnly && connectionType == Outils.ConnectionType.GSM)){
 		
         		Log.d(LOG_TAG, "onCreate() - Lancement préchargement");
-        		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+        		//DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 
 	        }
         } 
@@ -257,12 +259,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         TextView tvLabel = (TextView) viewZone.findViewById(R.id.zonegeoselection_listviewrow_label);
         tvLabel.setText(zone.getNom());
         
-        if(ScreenTools.getScreenWidth(context) > 500){ // TODO devra probablement être adpaté lorsque l'on aura des fragments
+        if(ScreenTools.getScreenWidth(context) > 500){ // TODO devra probablement être adapté lorsque l'on aura des fragments
 	        TextView tvLDetails = (TextView) viewZone.findViewById(R.id.zonegeoselection_listviewrow_details);
 	        tvLDetails.setVisibility(View.VISIBLE);
 	        tvLDetails.setText(zone.getDescription());
-        }
-        else{
+        } else {
         	viewZone.findViewById(R.id.zonegeoselection_listviewrow_details).setVisibility(View.GONE);
         }
         
@@ -699,6 +700,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu Accueil_CustomViewActivity
 
+	    if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_debug_maj_fiche_activee, false)){
+			menu.add(Menu.NONE, 888, 2, "MaJ All Fiches (Dev.)").setIcon(android.R.drawable.ic_menu_add);
+		}
+	    
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
@@ -744,7 +749,12 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	        	AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
 				aide.affichageMessageHTML(getContext().getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
 				return true;
-				
+        	case 888:
+        		DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity =
+        			(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext(),
+					this.getHelper()).execute();
+        		//refreshScreenData();
+            	return true;
 		//End of user code
 			default:
                 return super.onOptionsItemSelected(item);
