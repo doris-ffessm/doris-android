@@ -46,6 +46,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,7 +57,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
+import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.datamodel.Participant;
 
 
 import fr.ffessm.doris.android.R;
@@ -133,7 +137,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 	    	GenericRawResults<String[]> rawResults =
 	    			dbHelper.getDorisDBHelper().ficheDao.queryRaw("SELECT _id, numeroFiche, etatFiche FROM fiche");
 			for (String[] resultColumns : rawResults) {
-			    String iDString = resultColumns[0];
+			    String _idString = resultColumns[0];
 			    String numeroFicheString = resultColumns[1];
 			    String etatFicheString = resultColumns[2];
 			    listeFichesBase.add(new FicheLight(
@@ -170,21 +174,61 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 	    	
 	    	// Analyse différences entre les 2 listes
 	    	mNotificationHelper.setContentTitle("Analyse Evolutions");
-	    	int i = 0;
-	    	for (FicheLight ficheSite : listeFichesSite){
-	    		i++;
-	    		FicheLight ficheLightSite = new FicheLight(
-    				ficheSite.getNumeroFiche(),
-    				ficheSite.getEtatFiche());
-	    		
-	    		if (listeFichesBase.contains(ficheLightSite)){
-	    			if (i % 100 == 0) Log.d(LOG_TAG, "doInBackground() - Fiche inchangée : "+ficheSite.getNumeroFiche() );
-	    		} else {
-	    			if (i % 100 == 0) Log.d(LOG_TAG, "doInBackground() - Fiche modifiée : "+ficheSite.getNumeroFiche() );
+	    	HashSet<FicheLight> listeFichesUpdated = SiteDoris.getListeFichesUpdated(listeFichesBase, listeFichesSite);
+	    	Log.d(LOG_TAG, "doInBackground() - Fiches Updated : "+listeFichesUpdated.size() );
+
+	    	listeFichesBase.clear();
+	    	listeFichesSite.clear();
+	    	
+	    	// Mises à jour fiches
+	    	if (listeFichesUpdated.size()!=0) {
+	        	OutilsBase outilsBase = new OutilsBase(dbHelper.getDorisDBHelper());
+	        	
+	    		List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
+		    	listeGroupes.addAll(dbHelper.getGroupeDao().queryForAll());
+				Log.d(LOG_TAG, "doInBackground() - listeGroupes.size : "+listeGroupes.size());
+				
+		    	List<Participant> listeParticipants = new ArrayList<Participant>(0);
+				listeParticipants.addAll(dbHelper.getParticipantDao().queryForAll());
+				Log.d(LOG_TAG, "doInBackground() - listeParticipants.size : "+listeParticipants.size());
+		    	
+		    	for (FicheLight ficheLight : listeFichesUpdated){
+		    		Log.d(LOG_TAG, "doInBackground() - fiche modifiée : "+ficheLight.getNumeroFiche());
+		    		
+		    		// Récupération Fiche du Site
+		        	String urlFiche =  Constants.getFicheFromIdUrl( ficheLight.getNumeroFiche() );
+		        	Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlFiche);
+		        	
+		        	fichierDansCache = "fiche-"+ficheLight.getNumeroFiche()+".html";
+		        	Log.d(LOG_TAG, "doInBackground() - fichierDansCache : "+fichierDansCache);
+		        	
+		        	try {
+		        		Outils.getHtml(context, urlFiche, fichierDansCache);
+		    		} catch (IOException e) {
+		    			Log.w(LOG_TAG, e.getMessage(), e);
+		    		}   
+		        	
+		        	contenuFichierHtml = fr.ffessm.doris.android.sitedoris.Outils
+		    			.getFichierTxtFromDisk(new File(context.getCacheDir()+"/"+fichierDansCache));
+		     
+		        	Fiche ficheDeLaBase = outilsBase.queryFicheByNumeroFiche(ficheLight.getNumeroFiche());
+		        	ficheDeLaBase.setContextDB(dbHelper.getDorisDBHelper());
+		        	ficheDeLaBase.setEtatFiche(ficheLight.getEtatFiche());
+					try {
+						ficheDeLaBase.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
+						Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheDeLaBase.getNomCommun());
 	
-	    		}
-	    		
-	    		
+						ficheDeLaBase.updateFromFiche(ficheDeLaBase);
+						
+						dbHelper.getDorisDBHelper().ficheDao.update(
+								ficheDeLaBase
+							);
+	
+						
+					} catch (SQLException e) {
+						Log.w(LOG_TAG, e.getMessage(), e);
+					}
+		    	}
 	    	}
 	    	
 	    	

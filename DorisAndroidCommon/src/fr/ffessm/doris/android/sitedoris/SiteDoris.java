@@ -67,13 +67,17 @@ public class SiteDoris {
 	// Initialisation de la Gestion des Log
 	public static Log log = LogFactory.getLog(SiteDoris.class);
 	
+    public SiteDoris(){
+    }
     
-    public static HashSet<FicheLight> getListeFichesFromHtml(String inCodePageHtml) {
+	
+	public static HashSet<FicheLight> getListeFichesFromHtml(String inCodePageHtml) {
     	log.trace("getListeFichesFromHtml()- Début");
     	
     	HashSet<FicheLight> listeFiches = new HashSet<FicheLight>(0);
     	
     	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml),false ) );
+    	log.trace("getListeFichesFromHtml()- 010");
     	source.fullSequentialParse();
     	log.debug("getListeFichesFromHtml()- source.length() : " + source.length());
     	//log.debug("getListeFiches()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
@@ -103,7 +107,7 @@ public class SiteDoris {
     				int ficheId = Integer.parseInt(elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "").replaceAll("&.*", ""));
     				int ficheEtat = Integer.parseInt(elementTDA.getAttributeValue("href").replaceAll(".*fiche_etat=", "").replaceAll("&.*", ""));
     				
-    				log.info("getListeFichesFromHtml() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
+    				log.debug("getListeFichesFromHtml() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
     				
     				FicheLight fiche = new FicheLight(ficheId, ficheEtat, ficheNomScientifique, ficheNomCommun);
       				
@@ -112,7 +116,7 @@ public class SiteDoris {
 			}
 			
 		}
-		log.trace("getListeFichesFromHtml()- Fin");
+		log.debug("getListeFichesFromHtml()- Fin");
 		return listeFiches;
     }
 	
@@ -563,22 +567,28 @@ public class SiteDoris {
     	
     	HashSet<FicheLight> listeFichesUpdated = new HashSet<FicheLight>(0);
      	
-    	HashSet<String> listeFichesEtatsRef = new HashSet<String>(0);
-    	// On charge une liste de tous les couples : Ref. Fiche - État Fiche
+    	HashSet<String> listeClesRef = new HashSet<String>(inListeFichesRef.size());
+    
+    	// Chargement de la liste des clés de comparaisons
     	Iterator<FicheLight> iFicheRef = inListeFichesRef.iterator();
     	while (iFicheRef.hasNext()) {
     		FicheLight ficheRef = iFicheRef.next();
-    		listeFichesEtatsRef.add( ""+ficheRef.getEtatFiche() );
+    		//log.info("getListeFichesUpdated() - ficheRef.getCleCompareUpdate() : "+ficheRef.getCleCompareUpdate());
+    		
+    		listeClesRef.add( ficheRef.getCleCompareUpdate() );
     	}
+    	inListeFichesRef.clear();
     	
+    	// Pour chaque Fiche du site, on regarde si la clé existe dans la liste ci dessus
     	Iterator<FicheLight> iFicheSite = inListeFichesSite.iterator();
     	while (iFicheSite.hasNext()) {
-    		// Si Nouvelle Fiche ou État a changé alors le couple ne peut être trouvé dans la liste de référence
-    		// Tentative d'optime pour avoir une empreinte mémoire la plus faible
     		FicheLight ficheSite = iFicheSite.next();
-    		if ( ! listeFichesEtatsRef.contains( ""+ficheSite.getEtatFiche() ) ){
+    		//log.info("getListeFichesUpdated() - ficheSite.getCleCompareUpdate() : "+ficheSite.getCleCompareUpdate());
+    		
+    		if ( ! listeClesRef.contains(ficheSite.getCleCompareUpdate()) ){
     			listeFichesUpdated.add(ficheSite);
     		}
+    		
     	}
     	log.debug("getListeFichesUpdated()- Liste Site Updated : "+listeFichesUpdated.size());
     	

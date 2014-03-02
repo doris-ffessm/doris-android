@@ -55,6 +55,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -128,9 +129,7 @@ public class Outils {
     	log.info("getFichierTxtFromDisk()- Fichier : " + inFichier);
     	
 		try {
-			//FileInputStream objFile = new FileInputStream(inFichier);
-			
-			
+
 			//Top d'après JavaDoc : BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 			//InputStreamReader objReader = new InputStreamReader(objFile, "iso-8859-1");
 			//BufferedReader objBufferReader = new BufferedReader(objReader);
@@ -138,25 +137,24 @@ public class Outils {
 					new InputStreamReader(
 							new FileInputStream(inFichier), "iso-8859-1"));
 			
-			StringBuffer objBuffer = new StringBuffer();
-			String strLine;
+			log.info("getFichierTxtFromDisk()- 020");
+			
+			StringBuilder objBuilder = new StringBuilder();
+			
 			try {
+				log.info("getFichierTxtFromDisk()- 030");
+				String strLine;
 				while ((strLine = objBufferReader.readLine()) != null) {
-					objBuffer.append(strLine);
-					objBuffer.append("\n");
+					objBuilder.append(strLine);
+					objBuilder.append("\n");
 				}
-				//try {
-					//objFile.close();
+				objBufferReader.close();
 					
-					log.info("getFichierTxtFromDisk()- objBuffer.length : "+objBuffer.toString().length());
-					log.info("getFichierTxtFromDisk()- Fin");
-			    	return (objBuffer.toString());
+				log.info("getFichierTxtFromDisk()- objBuffer.length : "+objBuilder.toString().length());
+				log.info("getFichierTxtFromDisk()- Fin");
+		    	return (objBuilder.toString());
 			    	
-				/*} catch (IOException e) {
 
-					e.printStackTrace();
-					
-				}*/
 			} catch (IOException e) {
 
 				e.printStackTrace();
@@ -172,127 +170,141 @@ public class Outils {
 		return null;
 	}
 
-    public static String nettoyageBalises(String texteANettoye) {
-    	//log.debug("nettoyageBalises() - Début");
+    public static String nettoyageBalises(String texte) {
+    	log.info("nettoyageBalises() - Début");
     	//log.debug("nettoyageBalises() - texteANettoye : " + texteANettoye);
-
-		String texteNettoye = texteANettoye;
 		
+    	log.info("nettoyageBalises() - 005");
+    	
 		//TODO : je me demande bien pourquoi j'ai fait cela : GMo 04/01/2014
-		texteNettoye = texteNettoye.replace("&nbsp;", " ");
+		texte = StringUtils.replace(texte, "&nbsp;", " ");
 		
 		// On convertit <b> en <strong> les 2 sont confondus sur le site
-		texteNettoye = texteNettoye.replace("<b>", "<strong>")
-						.replace("</b>", "</strong>");
+		texte = StringUtils.replace(texte, "<b>", "<strong>");
+		texte = StringUtils.replace(texte, "</b>", "</strong>");
 
+		log.info("nettoyageBalises() - 010");
+		
 		// Il faut nettoyer cette balise originale ...
 		// <strong style="font-size: 11px;">
-		texteNettoye = texteNettoye.replaceAll("<strong [^>]*>", "");
+		texte = texte.replaceAll("<strong [^>]*>", "");
+		
+		log.info("nettoyageBalises() - 020");
 		
 		// Tous les sauts de ligne de la même façon + gain de place en hauteur pour l'interface Android
-		texteNettoye = texteNettoye.replace("<br>", "<br/>")
-				.replace("<br />", "<br/>")
-				.replace("<br/><br/>", "<br/>");
+		texte = StringUtils.replace(texte, "<br>", "<br/>");
+		texte = StringUtils.replace(texte, "<br />", "<br/>");
+		texte = StringUtils.replace(texte, "<br/><br/>", "<br/>");
+		
+		log.info("nettoyageBalises() - 025");
 		
 		//Permet que la recherche des définitions fonctionne mieux ensuite
-		texteNettoye = texteNettoye.replace("**", "##")
-				.replace("</strong>*", "*</strong>")
-				.replace("</em>*", "*</em>")
-				.replace("</i>*", "*</i>");
+		texte = StringUtils.replace(texte, "**", "##");
+		texte = StringUtils.replace(texte, "</strong>*", "*</strong>");
+		texte = StringUtils.replace(texte, "</em>*", "*</em>");
+		texte = StringUtils.replace(texte, "</i>*", "*</i>");
+		
+		log.info("nettoyageBalises() - 030");
 		
 		//L'adresse du site n'apporte rien et pose des problèmes qd on va recherche les liens
 		// vers les sites extérieurs
-		texteNettoye = texteNettoye.replace(Constants.getSiteUrl(), "");
+		texte = StringUtils.replace(texte, Constants.getSiteUrl(), "");
 		//De même pour les site : www.ffessm.fr et www.security.fr qui sont sur toutes les pages
-		texteNettoye = texteNettoye.replace("href=\"http://www.ffessm.fr\"", "")
-				.replace("href=\"http://biologie.ffessm.fr/\"", "")
-				.replace("href=\"http://www.security.fr/\"", "");
+		texte = StringUtils.replace(texte, "href=\"http://www.ffessm.fr\"", "");
+		texte = StringUtils.replace(texte, "href=\"http://biologie.ffessm.fr/\"", "");
+		texte = StringUtils.replace(texte, "href=\"http://www.security.fr/\"", "");
 		
+		log.info("nettoyageBalises() - 040");
 		
 		// Certaines fiches comme : http://doris.ffessm.fr/fiche2.asp?fiche_numero=3527 (au 30 mars 13)
 		// contiennent des " dans le nom de l'animal, or les " ne sont pas échappés donc ça met le
 		// Bazar dans le code html
 		// Je retire donc ici les paires de " qui sont à l'intérieure d'une autre paire de "
 		// et qui ne contiennent pas de = ? < >
-		texteNettoye = texteNettoye.replaceAll("(href=\"[^\"]*)\"([^\"=?<>]*)\"([^\"]*\")", "$1$2$3");
-
+		texte = texte.replaceAll("(href=\"[^\"]*)\"([^\"=?<>]*)\"([^\"]*\")", "$1$2$3");
+		
+		log.info("nettoyageBalises() - 050");
+		
 		//Il arrive très souvent qu'une balise ouverte soit aussitôt refermée
 		// ce doit sans doute être dû à l'interface de saisie ou des outils utilisés en amont
 		// Toujours est-il que ça peut gêner ensuite, que ça fait perdre du temps et de la place
-		texteNettoye = texteNettoye.replace("<strong></strong>", "")
-				.replace("</strong><strong>", "")
-				.replace("<em></em>", "")
-				.replace("</em><em>", "")
-				.replace("<i></i>", "")
-				.replace("</i><i>", "");
-		texteNettoye = texteNettoye.replaceAll("<a href=\"http://[^>]*></a>", "");
+		texte = StringUtils.replace(texte, "<strong></strong>", "");
+		texte = StringUtils.replace(texte, "</strong><strong>", "");
+		texte = StringUtils.replace(texte, "<em></em>", "");
+		texte = StringUtils.replace(texte, "</em><em>", "");
+		texte = StringUtils.replace(texte, "<i></i>", "");
+		texte = StringUtils.replace(texte, "</i><i>", "");
+		texte = texte.replaceAll("<a href=\"http://[^>]*></a>", "");
 			
+		log.info("nettoyageBalises() - 060");
+		
 		// Suppression des textes masqués en étant écrit en blanc sur fond blanc
 		// <span style="color: #ffffff;">Vidéoris</span>
-		texteNettoye = texteNettoye.replaceAll("<span style=\"color: #ffffff;\">[^<>]*</span>", "");
+		texte = texte.replaceAll("<span style=\"color: #ffffff;\">[^<>]*</span>", "");
 		
-		//log.debug("nettoyageBalises() - texteNettoye : " + texteNettoye);
-		//log.debug("nettoyageBalises() - Fin");
-		return texteNettoye;
+		log.info("nettoyageBalises() - 090");
+		
+		//log.debug("nettoyageBalises() - texte : " + texte);
+		log.info("nettoyageBalises() - Fin");
+		return texte;
 	}
 
-    public static String remplacementBalises(String texteANettoye, boolean avecMiseEnForme) {
-    	//log.debug("remplacementBalises() - Début");
-    	//log.debug("remplacementBalises() - texteANettoye : " + texteANettoye);
-		String texteNettoye = texteANettoye;
+    public static String remplacementBalises(String texte, boolean avecMiseEnForme) {
+    	log.info("remplacementBalises() - Début");
+    	//log.debug("remplacementBalises() - texteANettoye : " + texte);
 
 		if (avecMiseEnForme) {
 			//Gras
-			texteNettoye = texteNettoye.replace("<strong>", "{{g}}");
-			texteNettoye = texteNettoye.replace("</strong>", "{{/g}}");
+			texte = StringUtils.replace(texte, "<strong>", "{{g}}");
+			texte = StringUtils.replace(texte, "</strong>", "{{/g}}");
 			//Italique
-			texteNettoye = texteNettoye.replace("<em>", "{{i}}");
-			texteNettoye = texteNettoye.replace("</em>", "{{/i}}");
-			texteNettoye = texteNettoye.replace("<i>", "{{i}}");
-			texteNettoye = texteNettoye.replace("</i>", "{{/i}}");
+			texte = StringUtils.replace(texte, "<em>", "{{i}}");
+			texte = StringUtils.replace(texte, "</em>", "{{/i}}");
+			texte = StringUtils.replace(texte, "<i>", "{{i}}");
+			texte = StringUtils.replace(texte, "</i>", "{{/i}}");
 			//Souligné
-			texteNettoye = texteNettoye.replaceAll("<span style=\"text-decoration: underline;\">([^<>]*)</span>","{{s}}$1{{/s}}");
+			texte = texte.replaceAll("<span style=\"text-decoration: underline;\">([^<>]*)</span>","{{s}}$1{{/s}}");
 			//Sauts de ligne
-			texteNettoye = texteNettoye.replace("<br/>", "{{n/}}");
+			texte = StringUtils.replace(texte, "<br/>", "{{n/}}");
 			
 			//Lien vers autres fiches
-			texteNettoye = texteNettoye.replaceAll("<[^<]*fiche_numero=([0-9]*)\"[^>]*>([^<]*)</a>", "{{F:$1}}$2{{/F}}");
+			texte = texte.replaceAll("<[^<]*fiche_numero=([0-9]*)\"[^>]*>([^<]*)</a>", "{{F:$1}}$2{{/F}}");
 			
 			//Lien vers termes du glossaire
-			texteNettoye = texteNettoye.replaceAll("([ >\\}'\\(])([^ >\\}'\\(]*)\\*", "$1{{D:$2}}$2{{/D}}");
+			texte = texte.replaceAll("([ >\\}'\\(])([^ >\\}'\\(]*)\\*", "$1{{D:$2}}$2{{/D}}");
 			//Image du Glossaire (elles sont dans le texte) - <img src="gestionenligne/diaporamaglo/16.jpg     ">
-			texteNettoye = texteNettoye.replaceAll("<img src=\"gestionenligne/diaporamaglo/([^\" >]*)[ ]*\">", "{{E:$1/}}");
+			texte = texte.replaceAll("<img src=\"gestionenligne/diaporamaglo/([^\" >]*)[ ]*\">", "{{E:$1/}}");
 			
 			
 			//Lien vers site extérieur : oiseaux.net, fishbase.org, etc ...
-			texteNettoye = texteNettoye.replaceAll("<a href=\"http://([^\"]*)\"[^>]*>([^<]*)</a>", "{{A:$1}}$2{{/A}}");
+			texte = texte.replaceAll("<a href=\"http://([^\"]*)\"[^>]*>([^<]*)</a>", "{{A:$1}}$2{{/A}}");
 			
 			// Après cela on nettoie un peu et met en ordre
 			// Mieux vaut le faire dans le prefetch qd on a le temps qu'à la présentation
-			texteNettoye = texteNettoye.replace("{{/i}}{{i}}","");
-			texteNettoye = texteNettoye.replace("{{/g}}{{g}}","");
+			texte = StringUtils.replace(texte, "{{/i}}{{i}}","");
+			texte = StringUtils.replace(texte, "{{/g}}{{g}}","");
 			
-			texteNettoye = texteNettoye.replace("{{/i}} {{i}}"," ");
-			texteNettoye = texteNettoye.replace("{{/g}} {{g}}"," ");
+			texte = StringUtils.replace(texte, "{{/i}} {{i}}"," ");
+			texte = StringUtils.replace(texte, "{{/g}} {{g}}"," ");
 			
 			// Le Gras ne doit pas être à l'intérieure d'un lien mais l'entourer
 			// ça ne semble arriver que pour ce cas, i.e. pas pour les termes du glossaire, l'italique etc..
-			texteNettoye = texteNettoye.replace("{{/g}}{{/F}}", "{{/F}}{{/g}}");
-			texteNettoye = texteNettoye.replaceAll("\\{\\{F:([0-9]*)\\}\\}\\{\\{g\\}\\}", "{{g}}{{F:$1}}");
+			texte = StringUtils.replace(texte, "{{/g}}{{/F}}", "{{/F}}{{/g}}");
+			texte = texte.replaceAll("\\{\\{F:([0-9]*)\\}\\}\\{\\{g\\}\\}", "{{g}}{{F:$1}}");
 			
 		} else {
-			texteNettoye = texteNettoye.replace("<strong>", "");
-			texteNettoye = texteNettoye.replace("</strong>", "");
-			texteNettoye = texteNettoye.replace("<em>", "");
-			texteNettoye = texteNettoye.replace("</em>", "");
-			texteNettoye = texteNettoye.replace("<i>", "");
-			texteNettoye = texteNettoye.replace("</i>", "");
-			texteNettoye = texteNettoye.replace("<br/>", " ");
+			texte = StringUtils.replace(texte, "<strong>", "");
+			texte = StringUtils.replace(texte, "</strong>", "");
+			texte = StringUtils.replace(texte, "<em>", "");
+			texte = StringUtils.replace(texte, "</em>", "");
+			texte = StringUtils.replace(texte, "<i>", "");
+			texte = StringUtils.replace(texte, "</i>", "");
+			texte = StringUtils.replace(texte, "<br/>", " ");
 		}
 		
 		//log.debug("remplacementBalises() - texteNettoye : " + texteNettoye);
-		//log.debug("remplacementBalises() - Fin");
-		return texteNettoye;
+		log.info("remplacementBalises() - Fin");
+		return texte;
 	}
 	
     public static String nettoyageTextes(String texteANettoye) {

@@ -1208,7 +1208,7 @@ public class Outils {
     			fos.write(ligneCodeHTML.trim().getBytes());
     			
     			i++;
-    			if (i % 100 == 0) Log.d(LOG_TAG, "getHtml() - "+i+" - ligneCodeHTML : "+ligneCodeHTML.trim().length());
+    			//if (i % 100 == 0) Log.d(LOG_TAG, "getHtml() - "+i+" - ligneCodeHTML : "+ligneCodeHTML.trim().length());
     			
     			ligneCodeHTML = bufferedReader.readLine();
     		}
@@ -1240,7 +1240,7 @@ public class Outils {
     		}
     	}
     	
-   	
+		Log.d(LOG_TAG, "getHtml() - length : "+stringBuffer.toString().length());
     	Log.d(LOG_TAG, "getHtml() - codeHtml : " +stringBuffer.toString().substring(0, Math.min(stringBuffer.toString().length(), 20)));
 		Log.d(LOG_TAG, "getHtml() - Fin");
     	return stringBuffer.toString();

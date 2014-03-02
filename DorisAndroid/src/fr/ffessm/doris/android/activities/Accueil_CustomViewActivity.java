@@ -211,7 +211,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	        		|| (! wifiOnly && connectionType == Outils.ConnectionType.GSM)){
 		
         		Log.d(LOG_TAG, "onCreate() - Lancement préchargement");
-        		//DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+        		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
 
 	        }
         } 

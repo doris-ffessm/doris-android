@@ -1,7 +1,14 @@
 package fr.ffessm.doris.android.sitedoris;
 
+
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
+
+
 // Entête Fiche permettant d'avoir une emprunte mémoire minimum
 public class FicheLight {
+	public static Log log = LogFactory.getLog(FicheLight.class);
+	
 	private int numeroFiche;
 	private int etatFiche;
 	private String nomScientifique;
@@ -31,9 +38,9 @@ public class FicheLight {
 	public String getNomCommun() {
 		return nomCommun;
 	}
-	
-	@Override
-	public boolean equals(Object other) {
-	    return other != null && other instanceof FicheLight && this.numeroFiche == ((FicheLight)other).numeroFiche;
+
+	public String getCleCompareUpdate(){
+		return numeroFiche+";"+etatFiche;
 	}
+	
 }
