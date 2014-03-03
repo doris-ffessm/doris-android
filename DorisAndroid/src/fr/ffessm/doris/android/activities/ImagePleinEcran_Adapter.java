@@ -54,9 +54,10 @@ import fr.ffessm.doris.android.activities.view.ChainedLoadImageViewCallback;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
-import fr.ffessm.doris.android.tools.Outils.ImageType;
-import fr.ffessm.doris.android.tools.Outils.PrecharMode;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+import fr.ffessm.doris.android.tools.Photos_Outils.PrecharMode;
 
 import android.app.Activity;
 import android.content.Context;
@@ -121,10 +122,13 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         int hauteur = ScreenTools.getScreenHeight(_activity);
         int largeur = ScreenTools.getScreenWidth(_activity);
         final PhotoFiche photoFiche = _PhotoFicheLists.get(position);
-        if(Outils.isAvailablePhoto(_activity, photoFiche.getCleURL(), ImageType.HI_RES)){
+        
+        Photos_Outils photosOutils = new Photos_Outils(_activity);
+        
+        if(photosOutils.isAvailablePhoto(photoFiche.getCleURL(), ImageType.HI_RES)){
     		try {
 				Picasso.with(_activity)
-					.load(Outils.getPhotoFile(_activity, photoFiche.getCleURL(), ImageType.HI_RES))
+					.load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.HI_RES))
 					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
 					.resize(largeur, hauteur)
 					.centerInside()
@@ -133,10 +137,10 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 			}
     	}
     	else{
-    		if(Outils.isAvailablePhoto(_activity,photoFiche.getCleURL(), ImageType.MED_RES)){
+    		if(photosOutils.isAvailablePhoto(photoFiche.getCleURL(), ImageType.MED_RES)){
         		try {
     				Picasso.with(_activity)
-    					.load(Outils.getPhotoFile(_activity, photoFiche.getCleURL(), ImageType.MED_RES))
+    					.load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.MED_RES))
     					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
     					.into(imgDisplay);
     			} catch (IOException e) {
@@ -145,7 +149,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     		else{
 	    		// pas préchargée en local pour l'instant, cherche sur internet
     			String dossier_photo;
-    			switch(Outils.ImageType.valueOf(Outils.getParamString(_activity, R.string.pref_key_mode_connecte_qualite_photo,""))){
+    			switch(Photos_Outils.ImageType.valueOf(Outils.getParamString(_activity, R.string.pref_key_mode_connecte_qualite_photo,""))){
     			case MED_RES :
     				dossier_photo = Constants.MOYENNE_BASE_URL;
     				break;
@@ -158,10 +162,10 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     			
     			ChainedLoadImageViewCallback chainedLoadImageViewCallback = new ChainedLoadImageViewCallback(_activity, imgDisplay, 
     					dossier_photo+photoFiche.getCleURL(),largeur, hauteur); // vrai chargement de l'image dansle callback
-    			if(Outils.isAvailablePhoto(_activity, photoFiche.getCleURL(), ImageType.VIGNETTE)){
+    			if(photosOutils.isAvailablePhoto(photoFiche.getCleURL(), ImageType.VIGNETTE)){
     				try {
 						Picasso.with(_activity)
-							.load(Outils.getPhotoFile(_activity, photoFiche.getCleURL(), ImageType.VIGNETTE)) // charge d'abord la vignette depuis le disque
+							.load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.VIGNETTE)) // charge d'abord la vignette depuis le disque
 							.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
 							.error(R.drawable.doris_icone_doris_large_pas_connecte)
 							.resize(largeur, hauteur)

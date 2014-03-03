@@ -4,8 +4,8 @@
 	<!--Start of user code BackgroundActivity_stringstelechargephotosfiches
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
-	<string name="bg_notifTitle_initial">Mise à jour en tache de fond</string>
-	<string name="bg_notifText_initial">Synch. avec doris.ffessm.fr</string>
+	<string name="bg_notifTitle_imagesinitial">Mise à jour en tache de fond</string>
+	<string name="bg_notifText_imagesinitial">Synch. avec doris.ffessm.fr</string>
 		
 	<string name="bg_notifTitre_imagesprinc">"Photos Princ.\u00A0/ Zone\u00A0: "</string>
 	<string name="bg_racineTicker_imagesprinc">"Photo\u00A0: "</string>

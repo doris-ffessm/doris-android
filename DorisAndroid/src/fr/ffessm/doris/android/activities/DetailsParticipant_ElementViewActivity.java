@@ -45,6 +45,7 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -80,7 +81,7 @@ import android.widget.TextView.BufferType;
 import com.squareup.picasso.Picasso;
 
 import fr.ffessm.doris.android.tools.Outils;
-import fr.ffessm.doris.android.tools.Outils.ImageType;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
 // End of user code
 
@@ -160,10 +161,12 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
         
         
         ImageView trombineView = (ImageView) findViewById(R.id.detailsparticipant_elementview_icon);
-        if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {	        
-	        if(Outils.isAvailablePhoto(context, entry.getPhotoNom(), ImageType.PORTRAITS)){
+        if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {	     
+        	
+        	Photos_Outils photosOutils = new Photos_Outils(context);
+	        if(photosOutils.isAvailablePhoto(entry.getPhotoNom(), ImageType.PORTRAITS)){
 	    		try {
-					Picasso.with(context).load(Outils.getPhotoFile(context, entry.getPhotoNom(), ImageType.PORTRAITS))
+					Picasso.with(context).load(photosOutils.getPhotoFile(entry.getPhotoNom(), ImageType.PORTRAITS))
 						.fit()
 						.centerInside()
 						.into(trombineView);

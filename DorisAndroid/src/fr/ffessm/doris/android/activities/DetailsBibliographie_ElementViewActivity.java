@@ -45,6 +45,7 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -76,7 +77,7 @@ import com.squareup.picasso.Picasso;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
-import fr.ffessm.doris.android.tools.Outils.ImageType;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import java.io.IOException;
 // End of user code
 
@@ -144,9 +145,11 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
         	String nomPhoto = entry.getCleURLIllustration().replace("gestionenligne/photos_biblio_moy/","");
         	nomPhoto = Constants.PREFIX_IMGDSK_BIBLIO+nomPhoto;
         	
-	        if(Outils.isAvailablePhoto(context, nomPhoto, ImageType.ILLUSTRATION_BIBLIO)){
+        	Photos_Outils photosOutils = new Photos_Outils(context);
+        	
+	        if(photosOutils.isAvailablePhoto(nomPhoto, ImageType.ILLUSTRATION_BIBLIO)){
 	    		try {
-					Picasso.with(context).load(Outils.getPhotoFile(context, nomPhoto, ImageType.ILLUSTRATION_BIBLIO))
+					Picasso.with(context).load(photosOutils.getPhotoFile(nomPhoto, ImageType.ILLUSTRATION_BIBLIO))
 						.fit()
 						.centerInside()
 						.into(trombineView);

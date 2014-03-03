@@ -83,7 +83,8 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
-import fr.ffessm.doris.android.tools.Outils.ImageType;
+import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
 //End of user code
 
@@ -192,9 +193,11 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
         	
         	imageView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
         	imageView.getLayoutParams().width = defaultIconSize;
-	        if(Outils.isAvailablePhoto(context, nomPhoto, ImageType.ILLUSTRATION_BIBLIO)){
+        	
+        	Photos_Outils photosOutils = new Photos_Outils(context);
+	        if(photosOutils.isAvailablePhoto(nomPhoto, ImageType.ILLUSTRATION_BIBLIO)){
 	    		try {
-					Picasso.with(context).load(Outils.getPhotoFile(context, nomPhoto, ImageType.ILLUSTRATION_BIBLIO))
+					Picasso.with(context).load(photosOutils.getPhotoFile(nomPhoto, ImageType.ILLUSTRATION_BIBLIO))
 						.resize(defaultIconSize, defaultIconSize)
 						.centerInside()
 						.into(imageView);

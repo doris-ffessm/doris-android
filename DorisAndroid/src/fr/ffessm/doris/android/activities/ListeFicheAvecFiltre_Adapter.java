@@ -94,7 +94,8 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.OutilsGroupe;
-import fr.ffessm.doris.android.tools.Outils.ImageType;
+import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
 //End of user code
 
@@ -314,12 +315,13 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         	photoPrincipale.setContextDB(_contextDB);
 
     		Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
-        	if(Outils.isAvailablePhoto(context, photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
+    		
+    		Photos_Outils photosOutils = new Photos_Outils(context);
+        	if(photosOutils.isAvailablePhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
         		try {
         			//Log.d(LOG_TAG, "from disk "+photoPrincipale.getCleURL());
 					Picasso.with(context)
-						.load(Outils
-						.getPhotoFile(context, photoPrincipale.getCleURL(), ImageType.VIGNETTE))
+						.load(photosOutils.getPhotoFile(photoPrincipale.getCleURL(), ImageType.VIGNETTE))
 						.resize(defaultIconSize, defaultIconSize)
 						.centerInside()
 						.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer

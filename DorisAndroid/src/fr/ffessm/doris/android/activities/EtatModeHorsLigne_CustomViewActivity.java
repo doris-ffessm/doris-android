@@ -45,6 +45,7 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -100,6 +101,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	
 	private static final String LOG_TAG = EtatModeHorsLigne_CustomViewActivity.class.getCanonicalName();
 	Handler mHandler;
+	
+	Photos_Outils photosOutils = new Photos_Outils(getContext());
 	
 	protected SparseArray< MultiProgressBar> progressBarZones = new SparseArray< MultiProgressBar>(); 
 	//End of user code
@@ -175,9 +178,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			   nbFichesZoneGeo = getHelper().getFiches_ZonesGeographiquesDao().queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, inZoneGeo.getId()).size();
 		   }
 		   
-		   Outils.PrecharMode precharModeZoneGeo = Outils.getPrecharModeZoneGeo(getContext(), inZoneGeo.getId());
+		   Photos_Outils.PrecharMode precharModeZoneGeo = photosOutils.getPrecharModeZoneGeo(inZoneGeo.getId());
 		   
-		   if ( precharModeZoneGeo == Outils.PrecharMode.P0 ) {
+		   if ( precharModeZoneGeo == Photos_Outils.PrecharMode.P0 ) {
 
 			   affichageBarrePhotoPrinc = false;
 			   affichageBarrePhoto = false;
@@ -186,10 +189,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
 			   
 		   } else {
-			   int nbPhotosPrincATelecharger = Outils.getAPrecharQteZoneGeo(getContext(), inZoneGeo.getId(), true);
-			   int nbPhotosATelecharger = Outils.getAPrecharQteZoneGeo(getContext(), inZoneGeo.getId(), false);
-			   int nbPhotosPrincDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), inZoneGeo.getId(), true);
-			   int nbPhotosDejaLa = Outils.getDejaLaQteZoneGeo(getContext(), inZoneGeo.getId(), false);
+			   int nbPhotosPrincATelecharger = photosOutils.getAPrecharQteZoneGeo(inZoneGeo.getId(), true);
+			   int nbPhotosATelecharger = photosOutils.getAPrecharQteZoneGeo(inZoneGeo.getId(), false);
+			   int nbPhotosPrincDejaLa = photosOutils.getDejaLaQteZoneGeo(inZoneGeo.getId(), true);
+			   int nbPhotosDejaLa = photosOutils.getDejaLaQteZoneGeo(inZoneGeo.getId(), false);
 			   
 			   affichageBarrePhotoPrinc = true;
 			   affichageBarrePhoto = true;
@@ -199,7 +202,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
 			   } else {
 				   
-				   if ( precharModeZoneGeo == Outils.PrecharMode.P1 ) {
+				   if ( precharModeZoneGeo == Photos_Outils.PrecharMode.P1 ) {
 				   
 					   summaryTexte = getContext().getString(R.string.avancement_progressbar_P1_summary);
 					   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );

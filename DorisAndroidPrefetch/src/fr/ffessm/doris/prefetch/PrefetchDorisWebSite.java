@@ -92,7 +92,7 @@ import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesObservations;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.FicheLight;
-import fr.ffessm.doris.android.sitedoris.OutilsBase;
+import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Outils;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
@@ -139,7 +139,7 @@ public class PrefetchDorisWebSite {
 	public static final String XML_ATT_SITE_URL = "UrlRacineSite";
 	
 	DorisDBHelper dbContext = null;
-	OutilsBase outilsBase = null;
+	DataBase_Outils outilsBase = null;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -182,7 +182,7 @@ public class PrefetchDorisWebSite {
 				setupDatabase(connectionSource);
 				databaseInitialisation(connectionSource);
 				
-				outilsBase = new OutilsBase(dbContext);
+				outilsBase = new DataBase_Outils(dbContext);
 				
 				// - - - Groupes - - -
 				// Récupération de la liste des groupes sur le site de DORIS

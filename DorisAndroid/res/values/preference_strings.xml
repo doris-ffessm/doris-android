@@ -9,12 +9,20 @@
 	<string name="pref_key_mode_connecte_qualite_photo">mode_connecte_qualite_photo</string>
 
 	<string name="pref_key_mode_precharg_wifi_only">mode_precharg_wifi_only</string>
+	
+	<string name="pref_key_maj_liste_fiches_region_france">maj_liste_fiches_region_france</string>
+	<string name="pref_key_maj_liste_fiches_region_eaudouce">maj_liste_fiches_region_eaudouce</string>
+	<string name="pref_key_maj_liste_fiches_region_atlantno">maj_liste_fiches_region_atlantno</string>
+	<string name="pref_key_maj_liste_fiches_region_indopac">maj_liste_fiches_region_indopac</string>
+	<string name="pref_key_maj_liste_fiches_region_caraibes">maj_liste_fiches_region_caraibes</string>
+		
 	<string name="pref_key_mode_precharg_photo_region_france">mode_precharg_photo_region_france</string>
 	<string name="pref_key_mode_precharg_photo_region_eaudouce">mode_precharg_photo_region_eaudouce</string>
 	<string name="pref_key_mode_precharg_photo_region_atlantno">mode_precharg_photo_region_atlantno</string>
 	<string name="pref_key_mode_precharg_photo_region_indopac">mode_precharg_photo_region_indopac</string>
 	<string name="pref_key_mode_precharg_photo_region_caraibes">mode_precharg_photo_region_caraibes</string>
 	<string name="pref_key_mode_precharg_photo_region_favorite">mode_precharg_photo_region_favorite</string>
+	
 	<string name="pref_key_mode_precharg_photo_autres">mode_precharg_photo_autres</string>
 
 	<string name="pref_key_theme">pref_key_theme</string>
@@ -62,30 +70,47 @@
     </string-array>
     
     
-	<string name="mode_precharg_preference_category_title">Préchargement photos</string>
+	<string name="mode_precharg_preference_category_title">Préchargements</string>
     <string name="mode_precharg_preference_category_summary">Paramétrer le Mode Hors Ligne</string>
     
 	<string name="mode_precharg_wifi_only_prompt">Précharg. en wifi uniquement\u00A0?</string>
-	<string name="mode_precharg_region_prompt">Qualité Images par Zone</string>
-    <string name="mode_precharg_region_france_prompt">- France Métropolitaine\u00A0?</string>
-    <string name="mode_precharg_region_eaudouce_prompt">- Eau douce\u00A0?</string>
-    <string name="mode_precharg_region_atlantno_prompt">- Atlantique Nord-Ouest\u00A0?</string>
-    <string name="mode_precharg_region_indopac_prompt">- Indo-Pacifique\u00A0?</string>
-    <string name="mode_precharg_region_caraibes_prompt">- Caraïbes\u00A0?</string>
-    <string name="mode_precharg_favorite_prompt">- Fiches préférées ? (A FAIRE)</string>
-    <string name="mode_precharg_region_defaut">P1</string>
+	
+	<string name="maj_liste_fiches_region_prompt">Mise à jour des Listes de Fiches</string>
+    <string name="maj_liste_fiches_region_defaut">M1</string>
+    
+    <string name="maj_liste_fiches_region_france_prompt">- France Métropolitaine\u00A0?</string>
+    <string name="maj_liste_fiches_region_eaudouce_prompt">- Eau douce\u00A0?</string>
+    <string name="maj_liste_fiches_region_atlantno_prompt">- Atlantique Nord-Ouest\u00A0?</string>
+    <string name="maj_liste_fiches_region_indopac_prompt">- Indo-Pacifique\u00A0?</string>
+    <string name="maj_liste_fiches_region_caraibes_prompt">- Caraïbes\u00A0?</string>
+    
+	<string-array name="maj_liste_fiches_answers_values">
+        <item>M0</item>
+        <item>M1</item>
+        <item>M2</item>
+        <item>M3</item>
+    </string-array>
+	<string-array name="maj_liste_fiches_answers_lib">
+        <item>Jamais</item>
+        <item>Mise à jour sur demande</item>
+        <item>Mise à jour chaque Semaine</item>
+        <item>Mise à jour chaque Jour</item>
+    </string-array>
+	
+	<string name="mode_precharg_photo_region_prompt">Qualité Images par Zone</string>
+    <string name="mode_precharg_photo_region_defaut">P1</string>
+    
+    <string name="mode_precharg_photo_region_france_prompt">- France Métropolitaine\u00A0?</string>
+    <string name="mode_precharg_photo_region_eaudouce_prompt">- Eau douce\u00A0?</string>
+    <string name="mode_precharg_photo_region_atlantno_prompt">- Atlantique Nord-Ouest\u00A0?</string>
+    <string name="mode_precharg_photo_region_indopac_prompt">- Indo-Pacifique\u00A0?</string>
+    <string name="mode_precharg_photo_region_caraibes_prompt">- Caraïbes\u00A0?</string>
+    <!-- <string name="mode_precharg_photo_favorite_prompt">- Fiches préférées ? (A FAIRE)</string> -->
+  
     <string name="mode_precharg_photo_autres_prompt">Précharg. Autres Photos\u00A0?</string>
     <string name="mode_precharg_photo_autres_summary">Photos Participants, Bibliographies, Glossaire\u00A0\u2026</string>
-    
-	<string name="icone_touteszones">drawable/doris_icone_toutes_zones</string>
-	<string name="icone_france">drawable/doris_icone_france</string>
-	<string name="icone_eaudouce">drawable/doris_icone_eau_douce</string>
-	<string name="icone_indopac">drawable/doris_icone_indo_pac</string>
-	<string name="icone_caraibes">drawable/doris_icone_caraibes</string>
-	<string name="icone_atlantno">drawable/doris_icone_atl_n_o</string>
 
-
-	<string-array name="mode_precharg_answers_values">
+	<string-array name="mode_precharg_photo_answers_values">
         <item>P0</item>
         <item>P1</item>
         <item>P2</item>
@@ -94,7 +119,7 @@
         <item>P5</item>
         <item>P6</item>
     </string-array>
-	<string-array name="mode_precharg_answers_lib">
+	<string-array name="mode_precharg_photo_answers_lib">
         <item>Aucune photo préchargée</item>
         <item>La photo principale en qualité vignette</item>
         <item>Toutes les photos en qualité vignette</item>
@@ -103,6 +128,14 @@
         <item>La photo principale en haute résolution, les autres en intermédiaire</item>
         <item>Toutes les photos en haute résolution</item>
     </string-array>
+        
+	<string name="icone_touteszones">drawable/doris_icone_toutes_zones</string>
+	<string name="icone_france">drawable/doris_icone_france</string>
+	<string name="icone_eaudouce">drawable/doris_icone_eau_douce</string>
+	<string name="icone_indopac">drawable/doris_icone_indo_pac</string>
+	<string name="icone_caraibes">drawable/doris_icone_caraibes</string>
+	<string name="icone_atlantno">drawable/doris_icone_atl_n_o</string>
+
 	<string name="mode_precharg_reset_title">Ré-Initialisation données</string>
 	<string name="mode_precharg_reset_summary">Permet d\'effacer toutes les fiches et images en mémoire avant de les re-télécharger.</string>
 	<string name="mode_precharg_reset_vig_title">Suppression vignettes</string>

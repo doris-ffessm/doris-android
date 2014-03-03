@@ -54,24 +54,29 @@ import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 
 
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports VerifieMAJFiches_BgActivity
 
 import com.j256.ormlite.dao.GenericRawResults;
 
 import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
+import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
 import fr.ffessm.doris.android.sitedoris.FicheLight;
-import fr.ffessm.doris.android.sitedoris.OutilsBase;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
+import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.datamodel.Fiche;
 
@@ -84,25 +89,28 @@ import java.util.HashSet;
 public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Integer>{
 	private static final String LOG_TAG = VerifieMAJFiches_BgActivity.class.getCanonicalName();
 	
-	
     private NotificationHelper mNotificationHelper;
     private OrmLiteDBHelper dbHelper;
     private Context context;
     
     // Start of user code additional attribute declarations VerifieMAJFiches_BgActivity
-    
-    
-    
-    
+    private final Fiches_Outils fichesOutils = new Fiches_Outils(context);
+
     
 	// End of user code
     
 	/** constructor */
     public VerifieMAJFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper){
 		// Start of user code additional attribute declarations VerifieMAJFiches_BgActivity constructor
-		String initialTickerText = context.getString(R.string.verifiemajfiches_bg_initialTickerText);
-		String notificationTitle = context.getString(R.string.verifiemajfiches_bg_notificationTitle);
-        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
+		
+		String initialTickerText = context.getString(R.string.bg_notifText_fichesinitial);
+		String notificationTitle = context.getString(R.string.bg_notifTitle_fichesinitial);
+        //TODO : compléter EtatModeHorsLigne_CustomViewActivity ?
+		mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
+
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+	
+		
 		// End of user code
         this.dbHelper = dbHelper;
 		this.context = context;
@@ -116,19 +124,32 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     @Override
     protected Integer doInBackground(String... arg0) {
     	
-
 		// Start of user code initialization of the task VerifieMAJFiches_BgActivity
 		// do the initializatio of the task here
 		// once done, you should indicates to the notificationHelper how many item will be processed
 		//mNotificationHelper.setMaxNbPages(maxNbPages.toString());
-		// End of user code
+
+    	String typeLancement = "";
+    	if (arg0.length > 0) typeLancement= arg0[0];
+    	Log.d(LOG_TAG, "doInBackground() - typeLancement : "+typeLancement);
+    	
+    	// Téléchargement en tache de fond de toutes les photos de toutes les fiches correspondants aux critères de l'utilisateur
+    	if(Outils.getConnectionType(context) == Outils.ConnectionType.AUCUNE){
+        	Log.d(LOG_TAG, "doInBackground() - pas connexion internet : annulation du processus de Maj");
+        	return 0;
+        }
+    	
+    	if(fichesOutils.isMajListeFichesTypeOnlyP0()) {
+        	Log.d(LOG_TAG, "doInBackground() - aucune maj à faire : annulation du processus de Maj");
+        	return 0;
+    	}
+    	// End of user code
     	
     	// Start of user code main loop of task VerifieMAJFiches_BgActivity
-
 		// This is where we would do the actual job
+
     	HashSet<FicheLight> listeFichesBase = new HashSet<FicheLight>(100);
     	try{
-    		
 	    	// Récupération de la liste des Fiches de la Base
     		mNotificationHelper.setContentTitle("Fiches de la Base");
 	    	listeFichesBase = new HashSet<FicheLight>((int) dbHelper.getDorisDBHelper().ficheDao.countOf());
@@ -137,104 +158,125 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 	    	GenericRawResults<String[]> rawResults =
 	    			dbHelper.getDorisDBHelper().ficheDao.queryRaw("SELECT _id, numeroFiche, etatFiche FROM fiche");
 			for (String[] resultColumns : rawResults) {
-			    String _idString = resultColumns[0];
-			    String numeroFicheString = resultColumns[1];
-			    String etatFicheString = resultColumns[2];
+			    //String _idString = resultColumns[0];
+			    //String numeroFicheString = resultColumns[1];
+			    //String etatFicheString = resultColumns[2];
 			    listeFichesBase.add(new FicheLight(
-			    		Integer.parseInt(numeroFicheString),
-			    		Integer.parseInt(etatFicheString)) );
+			    		Integer.parseInt(resultColumns[1]),
+			    		Integer.parseInt(resultColumns[2])) );
 			}
 			Log.d(LOG_TAG, "doInBackground() - Fiches de la Base : "+listeFichesBase.size() );
-			
-			
-			// Récupération de la liste Fiches depuis le Site
-			mNotificationHelper.setContentTitle("Fiches du Site");
-			int numZone = Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE);
-	    	String urlListeFiches =  Constants.getListeFichesUrl(numZone);
-	    	Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlListeFiches);
-	    	
-	    	String fichierDansCache = "listeFiches-"+numZone+".html";
-	    	Log.d(LOG_TAG, "doInBackground() - fichierDansCache : "+fichierDansCache);
-	    	
-	    	try {
-	    		Outils.getHtml(context, urlListeFiches, fichierDansCache);
-			} catch (IOException e) {
-				Log.w(LOG_TAG, e.getMessage(), e);
-			}   
-	    	
-	    	Log.d(LOG_TAG, "doInBackground() - 10");
-	    	String contenuFichierHtml = fr.ffessm.doris.android.sitedoris.Outils
-				.getFichierTxtFromDisk(new File(context.getCacheDir()+"/"+fichierDansCache));
-	    	
-	    	Log.d(LOG_TAG, "doInBackground() - 20");
-	    	
-	    	HashSet<FicheLight> listeFichesSite = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
-	    	Log.d(LOG_TAG, "doInBackground() - Fiches du Site : "+listeFichesSite.size() );
-	    	
-	    	
-	    	// Analyse différences entre les 2 listes
-	    	mNotificationHelper.setContentTitle("Analyse Evolutions");
-	    	HashSet<FicheLight> listeFichesUpdated = SiteDoris.getListeFichesUpdated(listeFichesBase, listeFichesSite);
-	    	Log.d(LOG_TAG, "doInBackground() - Fiches Updated : "+listeFichesUpdated.size() );
-
-	    	listeFichesBase.clear();
-	    	listeFichesSite.clear();
-	    	
-	    	// Mises à jour fiches
-	    	if (listeFichesUpdated.size()!=0) {
-	        	OutilsBase outilsBase = new OutilsBase(dbHelper.getDorisDBHelper());
-	        	
-	    		List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
-		    	listeGroupes.addAll(dbHelper.getGroupeDao().queryForAll());
-				Log.d(LOG_TAG, "doInBackground() - listeGroupes.size : "+listeGroupes.size());
-				
-		    	List<Participant> listeParticipants = new ArrayList<Participant>(0);
-				listeParticipants.addAll(dbHelper.getParticipantDao().queryForAll());
-				Log.d(LOG_TAG, "doInBackground() - listeParticipants.size : "+listeParticipants.size());
-		    	
-		    	for (FicheLight ficheLight : listeFichesUpdated){
-		    		Log.d(LOG_TAG, "doInBackground() - fiche modifiée : "+ficheLight.getNumeroFiche());
-		    		
-		    		// Récupération Fiche du Site
-		        	String urlFiche =  Constants.getFicheFromIdUrl( ficheLight.getNumeroFiche() );
-		        	Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlFiche);
-		        	
-		        	fichierDansCache = "fiche-"+ficheLight.getNumeroFiche()+".html";
-		        	Log.d(LOG_TAG, "doInBackground() - fichierDansCache : "+fichierDansCache);
-		        	
-		        	try {
-		        		Outils.getHtml(context, urlFiche, fichierDansCache);
-		    		} catch (IOException e) {
-		    			Log.w(LOG_TAG, e.getMessage(), e);
-		    		}   
-		        	
-		        	contenuFichierHtml = fr.ffessm.doris.android.sitedoris.Outils
-		    			.getFichierTxtFromDisk(new File(context.getCacheDir()+"/"+fichierDansCache));
-		     
-		        	Fiche ficheDeLaBase = outilsBase.queryFicheByNumeroFiche(ficheLight.getNumeroFiche());
-		        	ficheDeLaBase.setContextDB(dbHelper.getDorisDBHelper());
-		        	ficheDeLaBase.setEtatFiche(ficheLight.getEtatFiche());
-					try {
-						ficheDeLaBase.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
-						Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheDeLaBase.getNomCommun());
-	
-						ficheDeLaBase.updateFromFiche(ficheDeLaBase);
-						
-						dbHelper.getDorisDBHelper().ficheDao.update(
-								ficheDeLaBase
-							);
-	
-						
-					} catch (SQLException e) {
-						Log.w(LOG_TAG, e.getMessage(), e);
-					}
-		    	}
-	    	}
-	    	
-	    	
     	} catch(java.sql.SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
     	}
+    	
+    	// Pour Chaque Zone, on télécharge la liste des fiches si nécessaire
+    	List<ZoneGeographique> listeZoneGeo;
+		listeZoneGeo = dbHelper.getZoneGeographiqueDao().queryForAll();
+    	// zoneGeo : 1 - Faune et flore marines de France métropolitaine
+    	// zoneGeo : 2 - Faune et flore dulcicoles de France métropolitaine
+    	// zoneGeo : 3 - Faune et flore subaquatiques de l'Indo-Pacifique
+    	// zoneGeo : 4 - Faune et flore subaquatiques des Caraïbes
+    	// zoneGeo : 5 - Faune et flore subaquatiques de l'Atlantique Nord-Ouest
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
+		
+		List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
+    	listeGroupes.addAll(dbHelper.getGroupeDao().queryForAll());
+		Log.d(LOG_TAG, "doInBackground() - listeGroupes.size : "+listeGroupes.size());
+		
+    	List<Participant> listeParticipants = new ArrayList<Participant>(0);
+		listeParticipants.addAll(dbHelper.getParticipantDao().queryForAll());
+		Log.d(LOG_TAG, "doInBackground() - listeParticipants.size : "+listeParticipants.size());
+		
+		for (ZoneGeographique zoneGeo : listeZoneGeo) {
+    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
+    		
+    		int zoneId = zoneGeo.getId();
+    		
+    		if ( fichesOutils.getMajListeFichesTypeZoneGeo(context, zoneId) != Fiches_Outils.MajListeFichesType.M0 ) {
+
+		        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_imagesprinc)
+		        		+ Constants.getTitreCourtZoneGeographique(Constants.getZoneGeographiqueFromId(zoneId)));
+		        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_imagesprinc) );
+	    		mNotificationHelper.setMaxItemToProcess(""+listeZoneGeo.size());
+    			publishProgress( 0 );
+		
+				// Récupération de la liste Fiches depuis le Site
+				mNotificationHelper.setContentTitle("Fiches du Site");
+		    	String urlListeFiches =  Constants.getListeFichesUrl(zoneId);
+		    	Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlListeFiches);
+		    	
+		    	String fichierDansCache = "listeFiches-"+zoneId+".html";
+		    	Log.d(LOG_TAG, "doInBackground() - fichierDansCache : "+fichierDansCache);
+		    	
+		    	try {
+		    		Outils.getHtml(context, urlListeFiches, fichierDansCache);
+				} catch (IOException e) {
+					Log.w(LOG_TAG, e.getMessage(), e);
+				}   
+		    	
+		    	Log.d(LOG_TAG, "doInBackground() - 10");
+		    	String contenuFichierHtml = fr.ffessm.doris.android.sitedoris.Outils
+					.getFichierTxtFromDisk(new File(context.getCacheDir()+"/"+fichierDansCache));
+		    	
+		    	Log.d(LOG_TAG, "doInBackground() - 20");
+		    	
+		    	HashSet<FicheLight> listeFichesSite = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
+		    	Log.d(LOG_TAG, "doInBackground() - Fiches du Site : "+listeFichesSite.size() );
+		    	
+		    	
+		    	// Analyse différences entre les 2 listes
+		    	mNotificationHelper.setContentTitle("Analyse Evolutions");
+		    	HashSet<FicheLight> listeFichesUpdated = SiteDoris.getListeFichesUpdated(listeFichesBase, listeFichesSite);
+		    	Log.d(LOG_TAG, "doInBackground() - Fiches Updated : "+listeFichesUpdated.size() );
+	
+		    	listeFichesSite.clear();
+		    	
+		    	// Mises à jour fiches
+		    	if (listeFichesUpdated.size()!=0) {
+
+			    	
+			    	for (FicheLight ficheLight : listeFichesUpdated){
+			    		Log.d(LOG_TAG, "doInBackground() - fiche modifiée : "+ficheLight.getNumeroFiche());
+			    		
+			    		// Récupération Fiche du Site
+			        	String urlFiche =  Constants.getFicheFromIdUrl( ficheLight.getNumeroFiche() );
+			        	Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlFiche);
+			        	
+			        	fichierDansCache = "fiche-"+ficheLight.getNumeroFiche()+".html";
+			        	Log.d(LOG_TAG, "doInBackground() - fichierDansCache : "+fichierDansCache);
+			        	
+			        	try {
+			        		Outils.getHtml(context, urlFiche, fichierDansCache);
+			    		} catch (IOException e) {
+			    			Log.w(LOG_TAG, e.getMessage(), e);
+			    		}   
+			        	
+			        	contenuFichierHtml = fr.ffessm.doris.android.sitedoris.Outils
+			    			.getFichierTxtFromDisk(new File(context.getCacheDir()+"/"+fichierDansCache));
+			        	
+			        	Fiche ficheDeLaBase = (new DataBase_Outils(dbHelper.getDorisDBHelper()) ).queryFicheByNumeroFiche(ficheLight.getNumeroFiche());
+			        	ficheDeLaBase.setContextDB(dbHelper.getDorisDBHelper());
+			        	ficheDeLaBase.setEtatFiche(ficheLight.getEtatFiche());
+						try {
+							ficheDeLaBase.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
+							Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheDeLaBase.getNomCommun());
+		
+							ficheDeLaBase.updateFromFiche(ficheDeLaBase);
+							
+							dbHelper.getDorisDBHelper().ficheDao.update(
+									ficheDeLaBase
+								);
+		
+							
+						} catch (SQLException e) {
+							Log.w(LOG_TAG, e.getMessage(), e);
+						}
+			    	}
+		    	}
+	    	
+    		}
+		}
 		
 
 		// you should indicates the progression using publishProgress()
@@ -278,6 +320,9 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 
     // Start of user code additional operations VerifieMAJFiches_BgActivity
    
+
+    
+    
 	// End of user code
 	
 }

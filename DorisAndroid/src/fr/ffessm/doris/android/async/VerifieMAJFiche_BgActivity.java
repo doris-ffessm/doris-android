@@ -69,7 +69,7 @@ import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.sitedoris.OutilsBase;
+import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.DorisApplicationContext;
 // End of user code
@@ -89,8 +89,8 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
 	/** constructor */
     public VerifieMAJFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper){
 		// Start of user code additional attribute declarations VerifieMAJFiche_BgActivity constructor
-		String initialTickerText = context.getString(R.string.verifiemajfiches_bg_initialTickerText);
-		String notificationTitle = context.getString(R.string.verifiemajfiches_bg_notificationTitle);
+		String initialTickerText = context.getString(R.string.bg_notifText_fichesinitial);
+		String notificationTitle = context.getString(R.string.bg_notifTitle_fichesinitial);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 		// End of user code
         this.dbHelper = dbHelper;
@@ -121,8 +121,7 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
     	Log.d(LOG_TAG, "doInBackground() - numeroFiche : "+numeroFiche);
     	
     	// Récupération Fiche de la Base
-    	OutilsBase outilsBase = new OutilsBase(dbHelper.getDorisDBHelper());
-    	Fiche ficheDeLaBase = outilsBase.queryFicheByNumeroFiche(numeroFiche);
+    	Fiche ficheDeLaBase = (new DataBase_Outils(dbHelper.getDorisDBHelper())).queryFicheByNumeroFiche(numeroFiche);
 		ficheDeLaBase.setContextDB(dbHelper.getDorisDBHelper());
 		Log.d(LOG_TAG, "doInBackground() - Fiche de la Base : "+ficheDeLaBase.getEtatFiche()+" - "
 				+ ficheDeLaBase.getNomCommun() + " - " + ficheDeLaBase.getDateCreation()

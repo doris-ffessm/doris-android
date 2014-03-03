@@ -77,7 +77,8 @@ import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.tools.Outils;
-import fr.ffessm.doris.android.tools.Outils.ImageType;
+import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
 //End of user code
 
@@ -100,6 +101,8 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 		//Start of user code Preference preference activity additional onCreate
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
+        final Photos_Outils photosOutils = new Photos_Outils(context);
+        
         // Si téléchargements en tâche de fond, il est arrêté
         TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
     	if(telechargePhotosFiches_BgActivity != null && telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING) {
@@ -144,10 +147,10 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
             			 new DialogInterface.OnClickListener() {
 	                         public void onClick(DialogInterface dialog, int id) {
 	                        	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_vig");
-	                        	 Outils.clearFolder(Outils.getImageFolderVignette(getApplicationContext()), 0);
+	                        	 Outils.clearFolder(photosOutils.getImageFolderVignette(), 0);
 
-	                        	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_vignettes, Outils.getImageCount(context, ImageType.VIGNETTE));
-	                        	 Outils.setParamLong(context,R.string.pref_key_size_folder_vignettes, Outils.getPhotoDiskUsage(context, ImageType.VIGNETTE));
+	                        	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_vignettes, photosOutils.getImageCount(ImageType.VIGNETTE));
+	                        	 Outils.setParamLong(context,R.string.pref_key_size_folder_vignettes, photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE));
 	                        	 btnVideVig.setSummary(getVigSummary());	
 	                         }
                      	});
@@ -185,10 +188,10 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
             			 new DialogInterface.OnClickListener() {
 	                         public void onClick(DialogInterface dialog, int id) {
 	                        	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_med_res");
-	                        	 Outils.clearFolder(Outils.getImageFolderMedRes(getApplicationContext()), 0);
+	                        	 Outils.clearFolder(photosOutils.getImageFolderMedRes(), 0);
 
-	                        	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_med_res, Outils.getImageCount(context, ImageType.MED_RES));
-	                        	 Outils.setParamLong(context,R.string.pref_key_size_folder_med_res, Outils.getPhotoDiskUsage(context, ImageType.MED_RES));
+	                        	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_med_res, photosOutils.getImageCount(ImageType.MED_RES));
+	                        	 Outils.setParamLong(context,R.string.pref_key_size_folder_med_res, photosOutils.getPhotoDiskUsage(ImageType.MED_RES));
 	                        	 btnVideMedRes.setSummary(getMedResSummary());
 	                         }
                      	});
@@ -226,10 +229,10 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
             			 new DialogInterface.OnClickListener() {
 	                         public void onClick(DialogInterface dialog, int id) {
 	                        	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_hi_res");
-	                        	 Outils.clearFolder(Outils.getImageFolderHiRes(getApplicationContext()), 0);
+	                        	 Outils.clearFolder(photosOutils.getImageFolderHiRes(), 0);
 
-	                        	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_hi_res, Outils.getImageCount(context, ImageType.HI_RES));
-	                        	 Outils.setParamLong(context,R.string.pref_key_size_folder_hi_res, Outils.getPhotoDiskUsage(context, ImageType.HI_RES));
+	                        	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_hi_res, photosOutils.getImageCount(ImageType.HI_RES));
+	                        	 Outils.setParamLong(context,R.string.pref_key_size_folder_hi_res, photosOutils.getPhotoDiskUsage(ImageType.HI_RES));
 	                        	 btnVideHiRes.setSummary(getHiResSummary());
 	                         }
                      	});

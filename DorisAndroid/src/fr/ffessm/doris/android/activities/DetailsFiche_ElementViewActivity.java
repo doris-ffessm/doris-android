@@ -45,6 +45,7 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -93,7 +94,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView.BufferType;
 import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.tools.Outils.ImageType;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
 import com.squareup.picasso.Picasso;
 
@@ -643,9 +644,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         ImageView imageView = new ImageView(getApplicationContext());	        
         imageView.setLayoutParams(new LayoutParams(200, 200));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        if(Outils.isAvailablePhoto(this, photoFiche.getCleURL(), ImageType.VIGNETTE)){
+        
+        Photos_Outils photosOutils = new Photos_Outils(this);
+        if(photosOutils.isAvailablePhoto(photoFiche.getCleURL(), ImageType.VIGNETTE)){
     		try {
-				Picasso.with(this).load(Outils.getPhotoFile(this, photoFiche.getCleURL(), ImageType.VIGNETTE))
+				Picasso.with(this).load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.VIGNETTE))
 					.fit()
 					.centerInside()
 					.into(imageView);

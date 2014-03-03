@@ -4,8 +4,10 @@
 	<!--Start of user code BackgroundActivity_stringsverifiemajfiches
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
-	<string name="verifiemajfiches_bg_initialTickerText">VerifieMAJFiches</string>
-	<string name="verifiemajfiches_bg_notificationTitle">VerifieMAJFiches</string>
+	<string name="bg_notifTitle_fichesinitial">Mise à jour en tache de fond</string>
+	<string name="bg_notifText_fichesinitial">Synch. avec doris.ffessm.fr</string>
+	
+	
 	<!--End of user code
 	-->
 </resources>

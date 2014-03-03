@@ -83,7 +83,8 @@ import com.squareup.picasso.Picasso;
 
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
-import fr.ffessm.doris.android.tools.Outils.ImageType;
+import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import java.io.IOException;
 
 //End of user code
@@ -186,9 +187,11 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
         if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {
         	trombineView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
             trombineView.getLayoutParams().width = defaultIconSize;
-	        if(Outils.isAvailablePhoto(context, entry.getPhotoNom(), ImageType.PORTRAITS)){
+            
+            Photos_Outils photosOutils = new Photos_Outils(context);
+	        if(photosOutils.isAvailablePhoto(entry.getPhotoNom(), ImageType.PORTRAITS)){
 	    		try {
-					Picasso.with(context).load(Outils.getPhotoFile(context, entry.getPhotoNom(), ImageType.PORTRAITS))
+					Picasso.with(context).load(photosOutils.getPhotoFile(entry.getPhotoNom(), ImageType.PORTRAITS))
 						.resize(defaultIconSize, defaultIconSize)
 						.centerInside()
 						.into(trombineView);

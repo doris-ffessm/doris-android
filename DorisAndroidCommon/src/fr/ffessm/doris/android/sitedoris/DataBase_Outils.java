@@ -52,14 +52,14 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 
 
-public class OutilsBase {
+public class DataBase_Outils {
 
 	// Initialisation de la Gestion des Log
-	private static Log log = LogFactory.getLog(OutilsBase.class);
+	private static Log log = LogFactory.getLog(DataBase_Outils.class);
 	
 	private DorisDBHelper dbContext = null;
 	
-	public OutilsBase(DorisDBHelper dbContext) {
+	public DataBase_Outils(DorisDBHelper dbContext) {
 		this.dbContext = dbContext;
 	}
 	
