@@ -92,9 +92,9 @@ import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.tools.Outils;
-import fr.ffessm.doris.android.tools.OutilsGroupe;
+import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Textes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
 //End of user code
@@ -204,7 +204,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				//Log.d(LOG_TAG, "filter _contextDB="+_contextDB);
 				searchedGroupe.setContextDB(_contextDB);
 				acceptedGroupeId = new ArrayList<Integer>();
-				for (Groupe groupe : OutilsGroupe.getAllSubGroupesForGroupe(searchedGroupe)) {
+				for (Groupe groupe : Groupes_Outils.getAllSubGroupesForGroupe(searchedGroupe)) {
 					acceptedGroupeId.add(groupe.getId());
 				}
 				StrBuilder queryIdForGroupes = new StrBuilder("SELECT _id FROM fiche WHERE groupe_id IN (");
@@ -282,7 +282,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		// Start of user code protected additional ListeFicheAvecFiltre_Adapter getView code
 		//	additional code
         TextView tvDetails = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_details);
-		tvDetails.setText( Outils.textToSpannableStringDoris(context,entry.getNomScientifique().toString()) );
+        Textes_Outils textesOutils = new Textes_Outils(context);
+        tvDetails.setText( textesOutils.textToSpannableStringDoris(entry.getNomScientifique().toString()) );
 		
         String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
         int defaultIconSize = 48;

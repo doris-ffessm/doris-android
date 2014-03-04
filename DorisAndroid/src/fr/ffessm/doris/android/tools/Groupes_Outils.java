@@ -10,9 +10,9 @@ import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 
-public class OutilsGroupe {
+public class Groupes_Outils {
 
-	public static final String LOG_TAG = OutilsGroupe.class.getSimpleName();
+	public static final String LOG_TAG = Groupes_Outils.class.getSimpleName();
 	public static Groupe getroot(List<Groupe> allGroupes){
 		// trouve le groupe racine
 		Groupe rootGroupe = null;

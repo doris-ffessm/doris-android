@@ -82,7 +82,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.tools.OutilsGroupe;
+import fr.ffessm.doris.android.tools.Groupes_Outils;
 //End of user code
 
 public class GroupeSelection_Adapter extends BaseAdapter  {
@@ -179,7 +179,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 				}
 			}
 			if(currentRootGroupe == null)
-				currentRootGroupe = OutilsGroupe.getroot(groupeList);
+				currentRootGroupe = Groupes_Outils.getroot(groupeList);
 			buildTreeForRoot(currentRootGroupe);
 			
 		} catch (java.sql.SQLException e) {
@@ -371,7 +371,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	public void buildTreeForRoot(Groupe rootGroupe){
 		this.currentRootGroupe = rootGroupe;
 		
-		List<Groupe> nextLevelGroupes  = OutilsGroupe.getAllGroupesForNextLevel(this.groupeList, currentRootGroupe);
+		List<Groupe> nextLevelGroupes  = Groupes_Outils.getAllGroupesForNextLevel(this.groupeList, currentRootGroupe);
 		if(nextLevelGroupes.size() > 0)
 			this.filteredGroupeList  = nextLevelGroupes;
 		notifyDataSetChanged();

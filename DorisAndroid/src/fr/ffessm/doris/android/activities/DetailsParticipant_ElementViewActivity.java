@@ -45,7 +45,6 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -82,6 +81,8 @@ import com.squareup.picasso.Picasso;
 
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Textes_Outils;
 
 // End of user code
 
@@ -97,6 +98,7 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
 // Start of user code protectedDetailsParticipant_ElementViewActivity_additional_attributes
 	
 	final Context context = this;
+	
 	
 	protected int participantNumeroDoris;
 // End of user code
@@ -154,7 +156,8 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
 		}
 		
 		TextView texte_description = (TextView) findViewById(R.id.detailsparticipant_texte_description);
-        SpannableString richtext = Outils.textToSpannableStringDoris(context, entry.getDescription());
+		Textes_Outils textesOutils = new Textes_Outils(context);
+		SpannableString richtext = textesOutils.textToSpannableStringDoris(entry.getDescription());
         texte_description.setText(richtext, BufferType.SPANNABLE);
         // make our ClickableSpans and URLSpans work 
         texte_description.setMovementMethod(LinkMovementMethod.getInstance());

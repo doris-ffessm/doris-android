@@ -73,12 +73,11 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.tools.Outils;
-import fr.ffessm.doris.android.BuildConfig;
+import fr.ffessm.doris.android.tools.Textes_Outils;
 //End of user code
 public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 //Start of user code additional implements ImagePleinEcran_CustomViewActivity
@@ -122,7 +121,8 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
     	ArrayList<PhotoFiche> photosFicheArrayList = new ArrayList<PhotoFiche>(entry.getPhotosFiche());
 		
     	actionBar.setTitle(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
-		actionBar.setSubtitle(Outils.textToSpannableStringDoris(this, entry.getNomScientifique()));
+    	Textes_Outils textesOutils = new Textes_Outils(this);
+		actionBar.setSubtitle(textesOutils.textToSpannableStringDoris(entry.getNomScientifique()));
     	
         // Image adapter
         adapter = new ImagePleinEcran_Adapter(ImagePleinEcran_CustomViewActivity.this, photosFicheArrayList);

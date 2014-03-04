@@ -45,7 +45,6 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -82,7 +81,6 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
-import android.text.style.URLSpan;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
@@ -117,6 +115,8 @@ import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Textes_Outils;
 // End of user code
 
 public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
@@ -133,6 +133,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	
 	final Context context = this;
 	final Activity activity = this;
+	
+	final Textes_Outils textesOutils = new Textes_Outils(context);
 	
 	protected int ficheNumero;
 	
@@ -159,6 +161,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         
 		// Start of user code protectedDetailsFiche_ElementViewActivity_onCreate
 
+        
+        
         ficheNumero = getIntent().getExtras().getInt("ficheNumero");
         // Defines a Handler object that's attached to the UI thread
 		mHandler = new Handler(Looper.getMainLooper()) {
@@ -204,9 +208,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	    else if (ficheNumero != 0) ficheId = entry.getId();
 
 		getSupportActionBar().setTitle(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
-		getSupportActionBar().setSubtitle(Outils.textToSpannableStringDoris(context, entry.getNomScientifique()));
+		getSupportActionBar().setSubtitle(textesOutils.textToSpannableStringDoris(entry.getNomScientifique()));
 		
-    	((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText( Outils.textToSpannableStringDoris(context, entry.getNomScientifique()) );
+    	((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText( textesOutils.textToSpannableStringDoris(entry.getNomScientifique()) );
 		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
 		((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText("N° "+((Integer)entry.getNumeroFiche()).toString());					
 		((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer)entry.getEtatFiche()).toString());	
@@ -367,7 +371,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 							
 						}
 						
-						SpannableString richtext = Outils.textToSpannableStringDoris(context, sbCreditText.toString());
+						SpannableString richtext = textesOutils.textToSpannableStringDoris(sbCreditText.toString());
 						//richtext.setSpan(new RelativeSizeSpan(2f), 0, urlString.length(), 0);
 						//richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
 						
@@ -511,13 +515,13 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         TextView contenuText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletext);
         
         if (!Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_fiche_aff_details_pardefaut, false)){
-        	contenuText.setVisibility(View.GONE); // par défault invisible
+        	contenuText.setVisibility(View.GONE); // par défaut invisible
         } else {
         	contenuText.setVisibility(View.VISIBLE);
         }
         
         // Si le texte contient {{999}} alors on remplace par (Fiche) est on met un lien vers la fiche sur (Fiche)
-        SpannableString richtext = Outils.textToSpannableStringDoris(context, texte);
+        SpannableString richtext = textesOutils.textToSpannableStringDoris(texte);
         
         
         //Log.d(LOG_TAG, "addFoldableView() - richtext : "+richtext);

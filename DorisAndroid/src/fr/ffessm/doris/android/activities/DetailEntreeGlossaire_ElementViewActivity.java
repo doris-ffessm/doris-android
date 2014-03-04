@@ -74,7 +74,7 @@ import android.text.style.URLSpan;
 
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Textes_Outils;
 // End of user code
 
 public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
@@ -128,7 +128,8 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
 		((TextView) findViewById(R.id.detailentreeglossaire_elementview_terme)).setText(entry.getTerme());
 		
 		TextView definition = (TextView) findViewById(R.id.detailentreeglossaire_elementview_definition);
-		definition.setText(Outils.textToSpannableStringDoris(context, entry.getDefinition()));
+		Textes_Outils textesOutils = new Textes_Outils(context);
+		definition.setText(textesOutils.textToSpannableStringDoris(entry.getDefinition()));
 		definition.setMovementMethod(LinkMovementMethod.getInstance());
 		
 		String urlString = Constants.getDefinitionUrl( ""+entry.getNumeroDoris() ); 
