@@ -61,6 +61,7 @@ import fr.ffessm.doris.android.R;
 
 public class Photos_Outils {
 	private final String LOG_TAG = Photos_Outils.class.getCanonicalName();
+	
 	public final String VIGNETTES_FICHE_FOLDER = "vignettes_fiches";
 	public final String MED_RES_FICHE_FOLDER = "medium_res_images_fiches";
 	public final String HI_RES_FICHE_FOLDER = "hi_res_images_fiches";
@@ -108,6 +109,8 @@ public class Photos_Outils {
 		return context.getDir( MED_RES_FICHE_FOLDER , Context.MODE_PRIVATE);
 	}
 	public File getImageFolderHiRes() { 
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageFolderHiRes() - context : " + context.toString() );
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageFolderHiRes() - HI_RES_FICHE_FOLDER : " +HI_RES_FICHE_FOLDER);
 		return context.getDir( HI_RES_FICHE_FOLDER , Context.MODE_PRIVATE);
 	}
 	public File getImageFolderPortraits() { 

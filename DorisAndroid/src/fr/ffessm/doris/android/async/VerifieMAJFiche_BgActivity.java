@@ -85,16 +85,20 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
     
 
     // Start of user code additional attribute declarations VerifieMAJFiches_BgActivity
-    Reseau_Outils reseauOutils = new Reseau_Outils(context);
+    private Reseau_Outils reseauOutils;
 	// End of user code
     
 	/** constructor */
     public VerifieMAJFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper){
 		// Start of user code additional attribute declarations VerifieMAJFiche_BgActivity constructor
-		String initialTickerText = context.getString(R.string.bg_notifText_fichesinitial);
+    	reseauOutils = new Reseau_Outils(context);
+    	
+    	String initialTickerText = context.getString(R.string.bg_notifText_fichesinitial);
 		String notificationTitle = context.getString(R.string.bg_notifTitle_fichesinitial);
-        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
-		// End of user code
+        
+		mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
+		
+        // End of user code
         this.dbHelper = dbHelper;
 		this.context = context;
     }

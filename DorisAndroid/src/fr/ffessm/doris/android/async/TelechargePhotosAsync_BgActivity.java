@@ -93,8 +93,8 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     // en milliseconde, on multiplie selon les contextes par 1, 2, 4
     int tempo = 50;
     
-    final Param_Outils paramOutils = new Param_Outils(context);
-    final Photos_Outils photosOutils = new Photos_Outils(context);
+    private Param_Outils paramOutils;
+    private Photos_Outils photosOutils;
     
     Integer nbPhotosPrincATelechargerPourZone[] = new Integer[10];
 	Integer nbPhotosATelechargerPourZone[] = new Integer[10];
@@ -114,7 +114,9 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    	
+		paramOutils = new Param_Outils(context);
+		photosOutils = new Photos_Outils(context);
+		    
 		// TODO : Tempo pour ralentir traitement : lecture paramètre temporaire
         try{
         	tempo = Integer.valueOf(preferences.getString(context.getString(R.string.pref_key_asynch_tempo), "50") );

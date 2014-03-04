@@ -38,12 +38,14 @@ public class AffichageMessageHTML {
 	
 	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getCanonicalName();
 	
-	Param_Outils paramOutils = new Param_Outils(context.getApplicationContext());
+	private Param_Outils paramOutils;
 	
 	public AffichageMessageHTML(Context context, Activity activity, OrmLiteDBHelper dbHelper) {
 		this.context = context;
 		this.activity = activity;
 		this.dbHelper = dbHelper;
+		
+		paramOutils = new Param_Outils(context.getApplicationContext());
 	}
 	
 	public AffichageMessageHTML(Context context) {

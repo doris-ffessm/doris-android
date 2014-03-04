@@ -95,8 +95,8 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     private Context context;
     
     // Start of user code additional attribute declarations VerifieMAJFiches_BgActivity
-    private final Fiches_Outils fichesOutils = new Fiches_Outils(context);
-    private final Reseau_Outils reseauOutils = new Reseau_Outils(context);
+    private Fiches_Outils fichesOutils;
+    private Reseau_Outils reseauOutils;
     
 	// End of user code
     
@@ -110,7 +110,8 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-	
+		fichesOutils = new Fiches_Outils(context);
+	    reseauOutils = new Reseau_Outils(context);
 		
 		// End of user code
         this.dbHelper = dbHelper;

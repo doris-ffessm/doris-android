@@ -81,19 +81,23 @@ import android.widget.ZoomControls;
 
 public class ImagePleinEcran_Adapter extends PagerAdapter {
 
+	private static final String LOG_TAG = ImagePleinEcran_Adapter.class.getCanonicalName();
 	
 	private ImagePleinEcran_CustomViewActivity _activity;
     private ArrayList<PhotoFiche> _PhotoFicheLists;
     private LayoutInflater inflater;
  
-    Param_Outils paramOutils = new Param_Outils(_activity);
-    Photos_Outils photosOutils = new Photos_Outils(_activity);
+    private Param_Outils paramOutils;
+    private Photos_Outils photosOutils;
     
     // constructor
     public ImagePleinEcran_Adapter(ImagePleinEcran_CustomViewActivity activity,
             ArrayList<PhotoFiche> photoFicheLists) {
         this._activity = activity;
         this._PhotoFicheLists = photoFicheLists;
+        
+        paramOutils = new Param_Outils(activity);
+        photosOutils = new Photos_Outils(activity);
     }
 	
 	@Override
@@ -126,7 +130,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         int hauteur = ScreenTools.getScreenHeight(_activity);
         int largeur = ScreenTools.getScreenWidth(_activity);
         final PhotoFiche photoFiche = _PhotoFicheLists.get(position);
-        
+         
         if(photosOutils.isAvailablePhoto(photoFiche.getCleURL(), ImageType.HI_RES)){
     		try {
 				Picasso.with(_activity)
