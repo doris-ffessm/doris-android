@@ -8,10 +8,11 @@ public class Fiches_Outils {
 	private static final String LOG_TAG = Fiches_Outils.class.getCanonicalName();
 	private static Context context;
 	
-	Param_Outils paramOutils = new Param_Outils(context);
+	private Param_Outils paramOutils;
 	
 	public Fiches_Outils(Context context) {
 		Fiches_Outils.context = context;
+		paramOutils = new Param_Outils(context);
 	}
 	
 	public enum MajListeFichesType {

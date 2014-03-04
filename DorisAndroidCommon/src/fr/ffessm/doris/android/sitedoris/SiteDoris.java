@@ -72,12 +72,12 @@ public class SiteDoris {
     
 	
 	public static HashSet<FicheLight> getListeFichesFromHtml(String inCodePageHtml) {
-    	log.trace("getListeFichesFromHtml()- Début");
+    	log.info("getListeFichesFromHtml()- Début");
     	
     	HashSet<FicheLight> listeFiches = new HashSet<FicheLight>(0);
     	
     	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml),false ) );
-    	log.trace("getListeFichesFromHtml()- 010");
+    	log.info("getListeFichesFromHtml()- 010");
     	source.fullSequentialParse();
     	log.debug("getListeFichesFromHtml()- source.length() : " + source.length());
     	//log.debug("getListeFiches()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
@@ -116,7 +116,7 @@ public class SiteDoris {
 			}
 			
 		}
-		log.debug("getListeFichesFromHtml()- Fin");
+		log.info("getListeFichesFromHtml()- Fin");
 		return listeFiches;
     }
 	
@@ -577,7 +577,6 @@ public class SiteDoris {
     		
     		listeClesRef.add( ficheRef.getCleCompareUpdate() );
     	}
-    	inListeFichesRef.clear();
     	
     	// Pour chaque Fiche du site, on regarde si la clé existe dans la liste ci dessus
     	Iterator<FicheLight> iFicheSite = inListeFichesSite.iterator();

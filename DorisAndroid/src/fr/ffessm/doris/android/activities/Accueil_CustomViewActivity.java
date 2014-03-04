@@ -218,8 +218,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	        		|| (! wifiOnly && connectionType == Reseau_Outils.ConnectionType.GSM)){
 		
         		Log.d(LOG_TAG, "onCreate() - Lancement préchargement");
-        		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
-
+        		if (! paramOutils.getParamBoolean(R.string.pref_key_debug_maj_fiche_activee, false)){
+        			DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+        		}
 	        }
         } 
         DorisApplicationContext.getInstance().addDataChangeListeners(this);
@@ -244,7 +245,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     @Override
     protected void onDestroy(){
     	Log.d(LOG_TAG, "onDestroy()");
-    	 DorisApplicationContext.getInstance().removeDataChangeListeners(this);
+    	
+    	// TODO : s'il y a d'autres traitements en fond il faudra aussi les arrêter ici
+    	DorisApplicationContext.getInstance().removeDataChangeListeners(this);
     	TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;
     	if(telechargePhotosFiches_BgActivity != null && telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING){ 		
     		// TODO déterminer si c'est une rotation ou une vrai fin de l'appli pour tuer les taches background ou pas

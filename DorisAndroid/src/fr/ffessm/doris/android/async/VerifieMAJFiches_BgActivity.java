@@ -224,20 +224,20 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		    	Log.d(LOG_TAG, "doInBackground() - 20");
 		    	
 		    	HashSet<FicheLight> listeFichesSite = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
+		    	Log.d(LOG_TAG, "doInBackground() - Fiches de la Base : "+listeFichesBase.size() );
 		    	Log.d(LOG_TAG, "doInBackground() - Fiches du Site : "+listeFichesSite.size() );
 		    	
 		    	
 		    	// Analyse différences entre les 2 listes
 		    	mNotificationHelper.setContentTitle("Analyse Evolutions");
+		    	
 		    	HashSet<FicheLight> listeFichesUpdated = SiteDoris.getListeFichesUpdated(listeFichesBase, listeFichesSite);
 		    	Log.d(LOG_TAG, "doInBackground() - Fiches Updated : "+listeFichesUpdated.size() );
-	
 		    	listeFichesSite.clear();
 		    	
 		    	// Mises à jour fiches
 		    	if (listeFichesUpdated.size()!=0) {
 
-			    	
 			    	for (FicheLight ficheLight : listeFichesUpdated){
 			    		Log.d(LOG_TAG, "doInBackground() - fiche modifiée : "+ficheLight.getNumeroFiche());
 			    		
@@ -276,7 +276,6 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 						}
 			    	}
 		    	}
-	    	
     		}
 		}
 		
