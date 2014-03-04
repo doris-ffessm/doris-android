@@ -78,6 +78,7 @@ import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.datamodel.Fiche;
 
 
@@ -95,7 +96,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     
     // Start of user code additional attribute declarations VerifieMAJFiches_BgActivity
     private final Fiches_Outils fichesOutils = new Fiches_Outils(context);
-
+    private final Reseau_Outils reseauOutils = new Reseau_Outils(context);
     
 	// End of user code
     
@@ -134,7 +135,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     	Log.d(LOG_TAG, "doInBackground() - typeLancement : "+typeLancement);
     	
     	// Téléchargement en tache de fond de toutes les photos de toutes les fiches correspondants aux critères de l'utilisateur
-    	if(Outils.getConnectionType(context) == Outils.ConnectionType.AUCUNE){
+    	if(reseauOutils.getConnectionType() == Reseau_Outils.ConnectionType.AUCUNE){
         	Log.d(LOG_TAG, "doInBackground() - pas connexion internet : annulation du processus de Maj");
         	return 0;
         }
@@ -210,7 +211,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		    	Log.d(LOG_TAG, "doInBackground() - fichierDansCache : "+fichierDansCache);
 		    	
 		    	try {
-		    		Outils.getHtml(context, urlListeFiches, fichierDansCache);
+		    		reseauOutils.getHtml(urlListeFiches, fichierDansCache);
 				} catch (IOException e) {
 					Log.w(LOG_TAG, e.getMessage(), e);
 				}   
@@ -247,7 +248,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 			        	Log.d(LOG_TAG, "doInBackground() - fichierDansCache : "+fichierDansCache);
 			        	
 			        	try {
-			        		Outils.getHtml(context, urlFiche, fichierDansCache);
+			        		reseauOutils.getHtml(urlFiche, fichierDansCache);
 			    		} catch (IOException e) {
 			    			Log.w(LOG_TAG, e.getMessage(), e);
 			    		}   

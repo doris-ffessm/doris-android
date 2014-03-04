@@ -140,8 +140,10 @@ public class AffichageMessageHTML {
 	
 	public String aProposAff() {
 		StringBuilder texte = new StringBuilder();
+		Outils outils = new Outils(context);
+		
 		texte.append(context.getString(R.string.a_propos_txt));
-		texte.append(Outils.getAppVersion(context));
+		texte.append(outils.getAppVersion());
 		
 		CloseableIterator<DorisDB_metadata> it = dbHelper.getDorisDB_metadataDao().iterator();
     	while (it.hasNext()) {

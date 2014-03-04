@@ -181,8 +181,9 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
         }catch(Exception e){}
     	ivIcon.setMaxHeight(defaultIconSize);
     	
-        // TODO : pas trés propre mais fonctionne => Modifier Outils ... vers entry.getIcone qd sera dispo
-    	String uri = Outils.getZoneIcone(context, entry.getId()); 
+        // TODO : pas très propre mais fonctionne => Modifier Outils ... vers entry.getIcone qd sera dispo
+    	Outils outils = new Outils(context);
+    	String uri = outils.getZoneIcone(entry.getId()); 
     	int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
     	ivIcon.setImageResource(imageResource);
     	

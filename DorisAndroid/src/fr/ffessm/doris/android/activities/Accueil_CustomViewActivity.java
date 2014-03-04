@@ -104,6 +104,7 @@ import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
+import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
@@ -123,7 +124,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	 
 	boolean isOnCreate = true;
 	
+	Outils outils = new Outils(getContext());
 	Param_Outils paramOutils = new Param_Outils(getContext());
+	Reseau_Outils reseauOutils = new Reseau_Outils(getContext());
 	
 	protected HashMap<Integer, MultiProgressBar> progressBarZones = new HashMap<Integer, MultiProgressBar>(); 
 	
@@ -188,7 +191,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - VersionAffichageAPropos : "+VersionAffichageAPropos);
     	
         //Récupération du numéro de Version de DORIS
-        String appVersionName = Outils.getAppVersion(this);
+        String appVersionName = outils.getAppVersion();
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - appVersionName : "+appVersionName);
 
         if (!VersionAffichageAPropos.equals(appVersionName)) {
@@ -207,12 +210,12 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         else{
 	        // pas de tache précédente en cours
         	// démarre ou pas un téléchargement de photos au démarrage	
-        	Outils.ConnectionType connectionType = Outils.getConnectionType(this.getApplicationContext());
+        	Reseau_Outils.ConnectionType connectionType = reseauOutils.getConnectionType();
         	Log.d(LOG_TAG, "onCreate() - connectionType : "+connectionType);
         	boolean wifiOnly = paramOutils.getParamBoolean(R.string.pref_key_mode_precharg_wifi_only, true);
         	Log.d(LOG_TAG, "onCreate() - wifiOnly : "+wifiOnly);
-        	if ( connectionType == Outils.ConnectionType.WIFI 
-	        		|| (! wifiOnly && connectionType == Outils.ConnectionType.GSM)){
+        	if ( connectionType == Reseau_Outils.ConnectionType.WIFI 
+	        		|| (! wifiOnly && connectionType == Reseau_Outils.ConnectionType.GSM)){
 		
         		Log.d(LOG_TAG, "onCreate() - Lancement préchargement");
         		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
@@ -295,7 +298,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			}
 		});
         
-        String uri = Outils.getZoneIcone(this.getApplicationContext(), zone.getId()); 
+        String uri = outils.getZoneIcone(zone.getId()); 
         int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
         
         ImageView ivIcone = (ImageView)viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
@@ -413,7 +416,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	protected void updateProgressBarZone(ZoneGeographique inZoneGeo, MultiProgressBar progressBarZone){
 		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
 		   
-		   String uri = Outils.getZoneIcone(this.getApplicationContext(), inZoneGeo.getId());
+		   String uri = outils.getZoneIcone(inZoneGeo.getId());
 		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
 		   int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
 		   

@@ -74,6 +74,7 @@ import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Reseau_Outils;
 
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
@@ -145,7 +146,8 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     	try{
 			// do the initialization of the task here
 	    	// Téléchargement en tache de fond de toutes les photos de toutes les fiches correspondants aux critères de l'utilisateur
-	    	if(Outils.getConnectionType(context) == Outils.ConnectionType.AUCUNE){
+    		Reseau_Outils reseauOutils = new Reseau_Outils(context);
+    		if(reseauOutils.getConnectionType() == Reseau_Outils.ConnectionType.AUCUNE){
 	        	Log.d(LOG_TAG, "pas connexion internet : annulation du téléchargement");
 	        	return 0;
 	        }

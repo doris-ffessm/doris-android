@@ -71,6 +71,7 @@ import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.DorisApplicationContext;
 // End of user code
 
@@ -84,6 +85,7 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
     
 
     // Start of user code additional attribute declarations VerifieMAJFiches_BgActivity
+    Reseau_Outils reseauOutils = new Reseau_Outils(context);
 	// End of user code
     
 	/** constructor */
@@ -135,7 +137,7 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
     	Log.d(LOG_TAG, "doInBackground() - fichierDansCache : "+fichierDansCache);
     	
     	try {
-    		Outils.getHtml(context, urlFiche, fichierDansCache);
+    		reseauOutils.getHtml(urlFiche, fichierDansCache);
 		} catch (IOException e) {
 			Log.w(LOG_TAG, e.getMessage(), e);
 		}   
