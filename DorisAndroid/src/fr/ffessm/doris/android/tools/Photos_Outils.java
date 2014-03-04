@@ -141,8 +141,9 @@ public class Photos_Outils {
 	
 	public boolean isAvailableImagePhotoFiche(PhotoFiche photofiche){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - photofiche : "+ photofiche );
-    	
-		switch(PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_region_ttzones,"P1"))){
+		Param_Outils paramOutils = new Param_Outils(context);
+		
+		switch(PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_region_ttzones,"P1"))){
 		case P1 :
 		case P2 :
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - Vignettes" );
@@ -297,18 +298,19 @@ public class Photos_Outils {
 	
 	public PrecharMode getPrecharModeZoneGeo(int inIdZoneGeo){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharModeZoneGeo() - Début" );
+		Param_Outils paramOutils = new Param_Outils(context);
 		
 		switch(inIdZoneGeo){
 		case 1 :
-			return PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_france,"P1"));
+			return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_france,"P1"));
 		case 2 :
-			return PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_eaudouce,"P1"));
+			return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_eaudouce,"P1"));
 		case 3 :
-			return PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_indopac,"P1"));
+			return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_indopac,"P1"));
 		case 4 :
-			return PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_caraibes,"P1"));
+			return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_caraibes,"P1"));
 		case 5 :
-			return PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_atlantno,"P1"));
+			return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_atlantno,"P1"));
 		default :
 			return null;
 		}
@@ -327,47 +329,49 @@ public class Photos_Outils {
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inIdZoneGeo );
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - data_nbphotos_atelecharger_france : "+getParamInt(context, R.string.pref_key_nbphotos_atelecharger_france, 0) );
+		Param_Outils paramOutils = new Param_Outils(context);
+		
 		if (inPrincipale) {
 			switch(inIdZoneGeo){
 			case -1 :
-				int nbAPrechar = Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_atelecharger_france, 0 );
-				nbAPrechar += Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_atelecharger_eaudouce, 0 );
-				nbAPrechar += Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_atelecharger_atlantno, 0 );
-				nbAPrechar += Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_atelecharger_indopac, 0 );
-				nbAPrechar += Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_atelecharger_caraibes, 0 );
+				int nbAPrechar = paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_france, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_eaudouce, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_atlantno, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_indopac, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_caraibes, 0 );
 				return nbAPrechar;
 			case 1 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_atelecharger_france, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_france, 0 );
 			case 2 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_atelecharger_eaudouce, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_eaudouce, 0 );
 			case 3 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_atelecharger_indopac, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_indopac, 0 );
 			case 4 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_atelecharger_caraibes, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_caraibes, 0 );
 			case 5 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_atelecharger_atlantno, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_atlantno, 0 );
 			default :
 				return 0;
 			}
 		} else {
 			switch(inIdZoneGeo){
 			case -1 :
-				int nbAPrechar = Outils.getParamInt(context, R.string.pref_key_nbphotos_atelecharger_france, 0 );
-				nbAPrechar += Outils.getParamInt(context, R.string.pref_key_nbphotos_atelecharger_eaudouce, 0 );
-				nbAPrechar += Outils.getParamInt(context, R.string.pref_key_nbphotos_atelecharger_atlantno, 0 );
-				nbAPrechar += Outils.getParamInt(context, R.string.pref_key_nbphotos_atelecharger_indopac, 0 );
-				nbAPrechar += Outils.getParamInt(context, R.string.pref_key_nbphotos_atelecharger_caraibes, 0 );
+				int nbAPrechar = paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_france, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_eaudouce, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_atlantno, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_indopac, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_caraibes, 0 );
 				return nbAPrechar;
 			case 1 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotos_atelecharger_france, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_france, 0 );
 			case 2 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotos_atelecharger_eaudouce, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_eaudouce, 0 );
 			case 3 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotos_atelecharger_indopac, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_indopac, 0 );
 			case 4 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotos_atelecharger_caraibes, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_caraibes, 0 );
 			case 5 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotos_atelecharger_atlantno, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_atlantno, 0 );
 			default :
 				return 0;
 			}
@@ -386,47 +390,49 @@ public class Photos_Outils {
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inIdZoneGeo );
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - data_nbphotos_recues_france : "+getParamInt(context, R.string.pref_key_nbphotos_recues_france, 0) );
+		Param_Outils paramOutils = new Param_Outils(context);
+		
 		if (inPrincipale) {
 			switch(inIdZoneGeo){
 			case -1 :
-				int nbAPrechar = Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_recues_france, 0 );
-				nbAPrechar += Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_recues_eaudouce, 0 );
-				nbAPrechar += Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_recues_atlantno, 0 );
-				nbAPrechar += Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_recues_indopac, 0 );
-				nbAPrechar += Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_recues_caraibes, 0 );
+				int nbAPrechar = paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_france, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_eaudouce, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_atlantno, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_indopac, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_caraibes, 0 );
 				return nbAPrechar;
 			case 1 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_recues_france, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_france, 0 );
 			case 2 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_recues_eaudouce, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_eaudouce, 0 );
 			case 3 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_recues_indopac, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_indopac, 0 );
 			case 4 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_recues_caraibes, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_caraibes, 0 );
 			case 5 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotosprinc_recues_atlantno, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_atlantno, 0 );
 			default :
 				return 0;
 			}
 		} else {
 			switch(inIdZoneGeo){
 			case -1 :
-				int nbAPrechar = Outils.getParamInt(context, R.string.pref_key_nbphotos_recues_france, 0 );
-				nbAPrechar += Outils.getParamInt(context, R.string.pref_key_nbphotos_recues_eaudouce, 0 );
-				nbAPrechar += Outils.getParamInt(context, R.string.pref_key_nbphotos_recues_atlantno, 0 );
-				nbAPrechar += Outils.getParamInt(context, R.string.pref_key_nbphotos_recues_indopac, 0 );
-				nbAPrechar += Outils.getParamInt(context, R.string.pref_key_nbphotos_recues_caraibes, 0 );
+				int nbAPrechar = paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_france, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_eaudouce, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_atlantno, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_indopac, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_caraibes, 0 );
 				return nbAPrechar;
 			case 1 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotos_recues_france, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_france, 0 );
 			case 2 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotos_recues_eaudouce, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_eaudouce, 0 );
 			case 3 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotos_recues_indopac, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_indopac, 0 );
 			case 4 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotos_recues_caraibes, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_caraibes, 0 );
 			case 5 :
-				return Outils.getParamInt(context, R.string.pref_key_nbphotos_recues_atlantno, 0 );
+				return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_atlantno, 0 );
 			default :
 				return 0;
 			}
@@ -515,29 +521,31 @@ public class Photos_Outils {
 	
 	public boolean isPrecharModeOnlyP0(){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharMode() - Début" );
+		Param_Outils paramOutils = new Param_Outils(context);
 		
-		if ( PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_france,"P1")) == PrecharMode.P0 
-			&& PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_eaudouce,"P1")) == PrecharMode.P0
-			&& PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_atlantno,"P1")) == PrecharMode.P0
-			&& PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_indopac,"P1")) == PrecharMode.P0
-			&& PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_caraibes,"P1")) == PrecharMode.P0
+		if ( PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_france,"P1")) == PrecharMode.P0 
+			&& PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_eaudouce,"P1")) == PrecharMode.P0
+			&& PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_atlantno,"P1")) == PrecharMode.P0
+			&& PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_indopac,"P1")) == PrecharMode.P0
+			&& PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_caraibes,"P1")) == PrecharMode.P0
 			) return true;
 		return false;	
 	}
 	
 	public boolean isPrecharModeOnlyP0orP1(){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharMode() - Début" );
+		Param_Outils paramOutils = new Param_Outils(context);
 		
-		if ( ( PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_france,"P1")) == PrecharMode.P0 
-				|| PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_france,"P1")) == PrecharMode.P1 )
-			&& ( PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_eaudouce,"P1")) == PrecharMode.P0
-				|| PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_eaudouce,"P1")) == PrecharMode.P1 )
-			&& ( PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_atlantno,"P1")) == PrecharMode.P0
-				|| PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_atlantno,"P1")) == PrecharMode.P1 )
-			&& ( PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_indopac,"P1")) == PrecharMode.P0
-				|| PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_indopac,"P1")) == PrecharMode.P1 )
-			&& ( PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_caraibes,"P1")) == PrecharMode.P0
-				|| PrecharMode.valueOf(Outils.getParamString(context, R.string.pref_key_mode_precharg_photo_region_caraibes,"P1")) == PrecharMode.P1 )
+		if ( ( PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_france,"P1")) == PrecharMode.P0 
+				|| PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_france,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_eaudouce,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_eaudouce,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_atlantno,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_atlantno,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_indopac,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_indopac,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_caraibes,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_caraibes,"P1")) == PrecharMode.P1 )
 			) return true;
 		return false;	
 	}

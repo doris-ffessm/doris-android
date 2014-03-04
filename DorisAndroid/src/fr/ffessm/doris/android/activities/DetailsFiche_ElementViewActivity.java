@@ -115,6 +115,7 @@ import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Textes_Outils;
 // End of user code
@@ -135,6 +136,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	final Activity activity = this;
 	
 	final Textes_Outils textesOutils = new Textes_Outils(context);
+	final Param_Outils paramOutils = new Param_Outils(context);
 	
 	protected int ficheNumero;
 	
@@ -160,7 +162,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         ficheId = getIntent().getExtras().getInt("ficheId");
         
 		// Start of user code protectedDetailsFiche_ElementViewActivity_onCreate
-
+        
         
         
         ficheNumero = getIntent().getExtras().getInt("ficheNumero");
@@ -182,7 +184,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 		};
 		
 		// info de debug de Picasso
-		if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debug, false)){
+		if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)){
 			Picasso.with(this).setDebugging(BuildConfig.DEBUG);
 		}
 		// End of user code
@@ -392,7 +394,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 		// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     	// Debug
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debug, false)){
+		if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)){
 			
 			((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setVisibility(View.VISIBLE);
 			((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setText(sbDebugText.toString());
@@ -412,7 +414,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu DetailsFiche_EditableElementViewActivity
 
-		if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_debug_maj_fiche_activee, false)){
+		if (paramOutils.getParamBoolean(R.string.pref_key_debug_maj_fiche_activee, false)){
 			menu.add(Menu.NONE, 888, 2, "MaJ Fiche (Dev.)").setIcon(android.R.drawable.ic_menu_add);
 		}
 		//End of user code
@@ -514,7 +516,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         
         TextView contenuText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletext);
         
-        if (!Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_fiche_aff_details_pardefaut, false)){
+        if (!paramOutils.getParamBoolean(R.string.pref_key_fiche_aff_details_pardefaut, false)){
         	contenuText.setVisibility(View.GONE); // par défaut invisible
         } else {
         	contenuText.setVisibility(View.VISIBLE);
@@ -563,7 +565,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         
         RelativeLayout sectionIcones = (RelativeLayout) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_icones);
         
-        if (!Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_fiche_aff_details_pardefaut, false)){
+        if (! paramOutils.getParamBoolean(R.string.pref_key_fiche_aff_details_pardefaut, false)){
         	sectionIcones.setVisibility(View.GONE); // par défaut invisible
         } else {
         	sectionIcones.setVisibility(View.VISIBLE);

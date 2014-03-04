@@ -44,6 +44,7 @@ package fr.ffessm.doris.android.activities.view;
 
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
@@ -93,8 +94,8 @@ public class MultiProgressBar extends LinearLayout {
 
 		ivIcon.setImageResource(inIconResId);
 
-		int iconeZine = Integer.valueOf(Outils.getParamString(
-				context.getApplicationContext(),
+		Param_Outils paramOutils = new Param_Outils(context.getApplicationContext());
+		int iconeZine = Integer.valueOf(paramOutils.getParamString(
 				R.string.pref_key_accueil_icon_size, "64"));
 		ivIcon.setMaxHeight(iconeZine);
 

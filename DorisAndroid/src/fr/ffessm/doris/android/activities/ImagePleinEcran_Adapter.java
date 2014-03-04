@@ -54,6 +54,7 @@ import fr.ffessm.doris.android.activities.view.ChainedLoadImageViewCallback;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
@@ -85,6 +86,9 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     private ArrayList<PhotoFiche> _PhotoFicheLists;
     private LayoutInflater inflater;
  
+    Param_Outils paramOutils = new Param_Outils(_activity);
+    Photos_Outils photosOutils = new Photos_Outils(_activity);
+    
     // constructor
     public ImagePleinEcran_Adapter(ImagePleinEcran_CustomViewActivity activity,
             ArrayList<PhotoFiche> photoFicheLists) {
@@ -123,8 +127,6 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         int largeur = ScreenTools.getScreenWidth(_activity);
         final PhotoFiche photoFiche = _PhotoFicheLists.get(position);
         
-        Photos_Outils photosOutils = new Photos_Outils(_activity);
-        
         if(photosOutils.isAvailablePhoto(photoFiche.getCleURL(), ImageType.HI_RES)){
     		try {
 				Picasso.with(_activity)
@@ -149,7 +151,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     		else{
 	    		// pas préchargée en local pour l'instant, cherche sur internet
     			String dossier_photo;
-    			switch(Photos_Outils.ImageType.valueOf(Outils.getParamString(_activity, R.string.pref_key_mode_connecte_qualite_photo,""))){
+    			switch(Photos_Outils.ImageType.valueOf(paramOutils.getParamString(R.string.pref_key_mode_connecte_qualite_photo,""))){
     			case MED_RES :
     				dossier_photo = Constants.MOYENNE_BASE_URL;
     				break;
@@ -221,7 +223,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         
         // Affichage Titre & Description de l'image
         String titre = photoFiche.getTitre();
-        int longMax = Integer.parseInt(Outils.getParamString(_activity, R.string.imagepleinecran_titre_longmax,"25"));
+        int longMax = Integer.parseInt(paramOutils.getParamString(R.string.imagepleinecran_titre_longmax,"25"));
         // on termine par un espace insécable puis "..."
         if (titre.length() > longMax) titre = titre.substring(0, longMax)+"\u00A0\u2026";
         if (titre.isEmpty()) titre = "Image sans titre";
@@ -279,7 +281,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 		String titre = photoFiche.getTitre();
 		String description = photoFiche.getDescription();
 		String texteAff = description;
-		if (titre.length() > Integer.parseInt(Outils.getParamString(_activity, R.string.imagepleinecran_titre_longmax,"25")))
+		if (titre.length() > Integer.parseInt(paramOutils.getParamString(R.string.imagepleinecran_titre_longmax,"25")))
 			texteAff = titre + System.getProperty("line.separator") + description;
 		if (texteAff.isEmpty()) texteAff = "Image sans description";
 		

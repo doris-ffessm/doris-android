@@ -12,6 +12,7 @@ import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -35,6 +36,8 @@ public class AffichageMessageHTML {
 	
 	
 	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getCanonicalName();
+	
+	Param_Outils paramOutils = new Param_Outils(context.getApplicationContext());
 	
 	public AffichageMessageHTML(Context context, Activity activity, OrmLiteDBHelper dbHelper) {
 		this.context = context;
@@ -146,26 +149,26 @@ public class AffichageMessageHTML {
 		}
     	
 		StringBuffer sizeFolderTexte =  new StringBuffer();
-		if ( Outils.getParamInt(context.getApplicationContext(), R.string.pref_key_nbphotos_recues_vignettes, 0) !=0 ) {
+		if ( paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_vignettes, 0) !=0 ) {
 			sizeFolderTexte.append(System.getProperty("line.separator")); 
 			sizeFolderTexte.append("\t");
-			sizeFolderTexte.append(Outils.getParamInt(context.getApplicationContext(), R.string.pref_key_nbphotos_recues_vignettes, 0));
+			sizeFolderTexte.append(paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_vignettes, 0));
 			sizeFolderTexte.append(context.getString(R.string.a_propos_foldersize_vignettes));
-			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getParamLong(context.getApplicationContext(), R.string.pref_key_size_folder_vignettes, 0L ) ) );
+			sizeFolderTexte.append(Outils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_vignettes, 0L ) ) );
 		}
-		if ( Outils.getParamInt(context.getApplicationContext(), R.string.pref_key_nbphotos_recues_med_res, 0) !=0 ) {
+		if ( paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_med_res, 0) !=0 ) {
 			sizeFolderTexte.append(System.getProperty("line.separator")); 
 			sizeFolderTexte.append("\t");
-			sizeFolderTexte.append(Outils.getParamInt(context.getApplicationContext(), R.string.pref_key_nbphotos_recues_med_res, 0));
+			sizeFolderTexte.append(paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_med_res, 0));
 			sizeFolderTexte.append(context.getString(R.string.a_propos_foldersize_med_res));
-			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getParamLong(context.getApplicationContext(), R.string.pref_key_size_folder_med_res, 0L ) ) );
+			sizeFolderTexte.append(Outils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_med_res, 0L ) ) );
 		}
-		if ( Outils.getParamInt(context.getApplicationContext(), R.string.pref_key_nbphotos_recues_hi_res, 0) !=0 ) {
+		if ( paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_hi_res, 0) !=0 ) {
 			sizeFolderTexte.append(System.getProperty("line.separator")); 
 			sizeFolderTexte.append("\t");
-			sizeFolderTexte.append(Outils.getParamInt(context.getApplicationContext(), R.string.pref_key_nbphotos_recues_hi_res, 0));
+			sizeFolderTexte.append(paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_hi_res, 0));
 			sizeFolderTexte.append(context.getString(R.string.a_propos_foldersize_hi_res));
-			sizeFolderTexte.append(Outils.getHumanDiskUsage(Outils.getParamLong(context.getApplicationContext(), R.string.pref_key_size_folder_hi_res, 0L ) ) );
+			sizeFolderTexte.append(Outils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_hi_res, 0L ) ) );
 		}
 		
 		if (sizeFolderTexte.length()!=0) {

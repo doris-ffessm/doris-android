@@ -114,61 +114,6 @@ public class Outils {
 	    }
 	}
 	
-	/* Lecture Paramètres */
-	public static String getStringKeyParam(Context inContext, int inParam) {
-		return inContext.getResources().getResourceEntryName(inParam);
-	}
-	public static String getStringNameParam(Context inContext, int inParam) {
-		return inContext.getString(inParam);
-	}
-	public static boolean getParamBoolean(Context inContext, int inParam, boolean inValDef) {
-		return PreferenceManager.getDefaultSharedPreferences(inContext).getBoolean(inContext.getString(inParam), inValDef);
-	}
-	public static String getParamString(Context inContext, int inParam, String inValDef) {
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getParamString() - param : " + inParam + "-" + inContext.getString(inParam) );
-		return PreferenceManager.getDefaultSharedPreferences(inContext).getString(inContext.getString(inParam), inValDef);
-	}
-	public static long getParamLong(Context inContext, int inParam, Long inValDef) {
-		if (PreferenceManager.getDefaultSharedPreferences(inContext).contains(inContext.getString(inParam)) ) {
-			return PreferenceManager.getDefaultSharedPreferences(inContext).getLong(inContext.getString(inParam), inValDef);
-		} else {
-			return inValDef;
-		}
-	}
-	public static int getParamInt(Context inContext, int inParam, int inValDef) {
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getParamInt() - param : " + inParam );
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getParamInt() - param : " + inContext.getString(inParam) );
-		return PreferenceManager.getDefaultSharedPreferences(inContext).getInt(inContext.getString(inParam), inValDef);
-	}
-	/* Enregistrement paramètres */
-	public static void setParamString(Context inContext, int inParam, String inVal) {
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(inContext);
-	    SharedPreferences.Editor prefEdit = preferences.edit();
-	    //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setParamString() - param : " + inContext.getString(inParam) );
-	    //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setParamString() - getStringKeyParam : " + Outils.getStringKeyParam(inContext,inParam) );
-	    prefEdit.putString(inContext.getString(inParam), inVal);
-		prefEdit.commit();
-	}
-	public static void setParamInt(Context inContext, int inParam, int inVal) {
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(inContext);
-	    SharedPreferences.Editor prefEdit = preferences.edit();  
-		prefEdit.putInt(inContext.getString(inParam), inVal);
-		prefEdit.commit();
-	}
-	public static void setParamBoolean(Context inContext, int inParam, Boolean inVal) {
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(inContext);
-	    SharedPreferences.Editor prefEdit = preferences.edit();  
-		prefEdit.putBoolean(inContext.getString(inParam), inVal);
-		prefEdit.commit();
-	}
-	
-	public static void setParamLong(Context inContext, int inParam, long inVal) {
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(inContext);
-	    SharedPreferences.Editor prefEdit = preferences.edit();  
-		prefEdit.putLong(inContext.getString(inParam), inVal);
-		prefEdit.commit();
-	}	
-
 	
 	public static String getAppVersion(Context inContext) {
 		try	{

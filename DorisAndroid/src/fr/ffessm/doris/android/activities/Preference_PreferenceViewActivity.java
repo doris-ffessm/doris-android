@@ -77,6 +77,7 @@ import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
@@ -90,7 +91,8 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	final Context context = this;
 	private SharedPreferences prefs;
 	
-
+    final Param_Outils paramOutils = new Param_Outils(context);
+    final Photos_Outils photosOutils = new Photos_Outils(context);
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -100,8 +102,6 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         addPreferencesFromResource(R.xml.preference); 
 		//Start of user code Preference preference activity additional onCreate
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-        final Photos_Outils photosOutils = new Photos_Outils(context);
         
         // Si téléchargements en tâche de fond, il est arrêté
         TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
@@ -149,8 +149,8 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	                        	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_vig");
 	                        	 Outils.clearFolder(photosOutils.getImageFolderVignette(), 0);
 
-	                        	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_vignettes, photosOutils.getImageCount(ImageType.VIGNETTE));
-	                        	 Outils.setParamLong(context,R.string.pref_key_size_folder_vignettes, photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE));
+	                        	 paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_vignettes, photosOutils.getImageCount(ImageType.VIGNETTE));
+	                        	 paramOutils.setParamLong(R.string.pref_key_size_folder_vignettes, photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE));
 	                        	 btnVideVig.setSummary(getVigSummary());	
 	                         }
                      	});
@@ -190,8 +190,8 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	                        	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_med_res");
 	                        	 Outils.clearFolder(photosOutils.getImageFolderMedRes(), 0);
 
-	                        	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_med_res, photosOutils.getImageCount(ImageType.MED_RES));
-	                        	 Outils.setParamLong(context,R.string.pref_key_size_folder_med_res, photosOutils.getPhotoDiskUsage(ImageType.MED_RES));
+	                        	 paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_med_res, photosOutils.getImageCount(ImageType.MED_RES));
+	                        	 paramOutils.setParamLong(R.string.pref_key_size_folder_med_res, photosOutils.getPhotoDiskUsage(ImageType.MED_RES));
 	                        	 btnVideMedRes.setSummary(getMedResSummary());
 	                         }
                      	});
@@ -231,8 +231,8 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	                        	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_hi_res");
 	                        	 Outils.clearFolder(photosOutils.getImageFolderHiRes(), 0);
 
-	                        	 Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_hi_res, photosOutils.getImageCount(ImageType.HI_RES));
-	                        	 Outils.setParamLong(context,R.string.pref_key_size_folder_hi_res, photosOutils.getPhotoDiskUsage(ImageType.HI_RES));
+	                        	 paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_hi_res, photosOutils.getImageCount(ImageType.HI_RES));
+	                        	 paramOutils.setParamLong(R.string.pref_key_size_folder_hi_res, photosOutils.getPhotoDiskUsage(ImageType.HI_RES));
 	                        	 btnVideHiRes.setSummary(getHiResSummary());
 	                         }
                      	});
@@ -339,20 +339,20 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     
     private String getVigSummary() {
     	String txt = context.getString(R.string.mode_precharg_reset_vig_summary);
-    	txt = txt.replace("@nbPh", ""+Outils.getParamInt(getApplicationContext(), R.string.pref_key_nbphotos_recues_vignettes, 0)) ;
-    	txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getParamLong(getApplicationContext(), R.string.pref_key_size_folder_vignettes, 0L ) ) ) ;
+    	txt = txt.replace("@nbPh", ""+paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_vignettes, 0)) ;
+    	txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_vignettes, 0L ) ) ) ;
     	return txt;
     }
     private String getMedResSummary() {
         String txt = getApplicationContext().getString(R.string.mode_precharg_reset_med_res_summary); 
-        txt = txt.replace("@nbPh", ""+Outils.getParamInt(getApplicationContext(), R.string.pref_key_nbphotos_recues_med_res, 0)) ;
-        txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getParamLong(getApplicationContext(), R.string.pref_key_size_folder_med_res, 0L ) ) ) ;
+        txt = txt.replace("@nbPh", ""+paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_med_res, 0)) ;
+        txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_med_res, 0L ) ) ) ;
     	return txt;
     }
     private String getHiResSummary() {
         String txt = getApplicationContext().getString(R.string.mode_precharg_reset_hi_res_summary); 
-        txt = txt.replace("@nbPh", ""+Outils.getParamInt(getApplicationContext(), R.string.pref_key_nbphotos_recues_hi_res, 0)) ;
-        txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getParamLong(getApplicationContext(), R.string.pref_key_size_folder_hi_res, 0L ) ) ) ;
+        txt = txt.replace("@nbPh", ""+paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_hi_res, 0)) ;
+        txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_hi_res, 0L ) ) ) ;
     	return txt;
     }
     private String getCacheSummary() {

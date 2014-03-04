@@ -72,6 +72,7 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
@@ -91,6 +92,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     // en milliseconde, on multiplie selon les contextes par 1, 2, 4
     int tempo = 50;
     
+    final Param_Outils paramOutils = new Param_Outils(context);
     final Photos_Outils photosOutils = new Photos_Outils(context);
     
     Integer nbPhotosPrincATelechargerPourZone[] = new Integer[10];
@@ -198,7 +200,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			// Photos déjà sur l'appareil
 	   		photosDejaTelechargees(dorisDBHelper);
 	   		
-			if (Outils.getParamBoolean(context, R.string.pref_key_mode_precharg_photo_autres, false)) {
+			if (paramOutils.getParamBoolean(R.string.pref_key_mode_precharg_photo_autres, false)) {
 				telechargementPhotosIntervenants(dorisDBHelper);
 				if( this.isCancelled()) return 0;
 				
@@ -301,7 +303,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         		}
         		nbPhotosPrincATelechargerPourZone[zoneId] = Integer.valueOf(countPhoto.get(0)[0]);
     		}
-    		Outils.setParamInt(context, photosOutils.getKeyDataAPrecharZoneGeo(zoneId, true), nbPhotosPrincATelechargerPourZone[zoneId]);
+    		paramOutils.setParamInt(photosOutils.getKeyDataAPrecharZoneGeo(zoneId, true), nbPhotosPrincATelechargerPourZone[zoneId]);
 
     		if ( photosOutils.getPrecharModeZoneGeo(zoneId) != Photos_Outils.PrecharMode.P0 
     				&& photosOutils.getPrecharModeZoneGeo(zoneId) != Photos_Outils.PrecharMode.P1 ) {
@@ -317,7 +319,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         		}
         		nbPhotosATelechargerPourZone[zoneId] = Integer.valueOf(countPhoto.get(0)[0]);
     		}
-    		Outils.setParamInt(context, photosOutils.getKeyDataAPrecharZoneGeo(zoneId, false), nbPhotosATelechargerPourZone[zoneId]);
+    		paramOutils.setParamInt(photosOutils.getKeyDataAPrecharZoneGeo(zoneId, false), nbPhotosATelechargerPourZone[zoneId]);
     	
     	}
     }
@@ -401,7 +403,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         			
 		    			//Enregistrement du nombre total de photos téléchargée pour afficher avancement au fur et à mesure
     					if (nbPhotosPrinRecuesPourZone % 200 == 0 || nbTelechargements % 10 == 0){
-    						Outils.setParamInt(context, photosOutils.getKeyDataRecuesZoneGeo(zoneId, true), nbPhotosPrinRecuesPourZone);
+    						paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, true), nbPhotosPrinRecuesPourZone);
     						DorisApplicationContext.getInstance().notifyDataHasChanged(null);
     					}
 
@@ -418,7 +420,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 				}
 
     			//Enregistrement du nombre total de photos téléchargée pour afficher avancement
-				Outils.setParamInt(context, photosOutils.getKeyDataRecuesZoneGeo(zoneId, true), nbPhotosPrinRecuesPourZone);
+				paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, true), nbPhotosPrinRecuesPourZone);
 				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - nbPhotosPrincDejaLaPourZone : "+nbPhotosPrinRecuesPourZone );
 				publishProgress( nbPhotosPrinRecuesPourZone );
     		}
@@ -512,7 +514,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	    				
 						if (nbPhotosRecuesPourZone % 500 == 0 || nbTelechargements % 10 == 0){
 							//Enregistrement du nombre total de photos téléchargée pour afficher avancement
-			        		Outils.setParamInt(context, photosOutils.getKeyDataRecuesZoneGeo(zoneId, false), nbPhotosRecuesPourZone);
+							paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, false), nbPhotosRecuesPourZone);
 			        		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 						}
 						if (nbPhotosRecuesPourZone % 200 == 0){	
@@ -531,7 +533,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			}
 		
 			//Enregistrement du nombre total de photos téléchargée pour afficher avancement
-			Outils.setParamInt(context, photosOutils.getKeyDataRecuesZoneGeo(zoneId, false), nbPhotosRecuesPourZone);
+			paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, false), nbPhotosRecuesPourZone);
 			publishProgress( nbPhotosRecuesPourZone );
 			
 		} // Fin Pour Chaque ZoneGeo Toutes Photos
@@ -788,12 +790,12 @@ public int telechargementPhotosGlossaire(DorisDBHelper dorisDBHelper){
 
 
     public void majParamNbandSize() {
-    	Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_vignettes, photosOutils.getImageCount(ImageType.VIGNETTE));
-		Outils.setParamLong(context,R.string.pref_key_size_folder_vignettes, photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE));
-		Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_med_res, photosOutils.getImageCount(ImageType.MED_RES));
-		Outils.setParamLong(context,R.string.pref_key_size_folder_med_res, photosOutils.getPhotoDiskUsage(ImageType.MED_RES));
-		Outils.setParamInt(context,R.string.pref_key_nbphotos_recues_hi_res, photosOutils.getImageCount(ImageType.HI_RES));
-		Outils.setParamLong(context,R.string.pref_key_size_folder_hi_res, photosOutils.getPhotoDiskUsage(ImageType.HI_RES));
+    	paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_vignettes, photosOutils.getImageCount(ImageType.VIGNETTE));
+    	paramOutils.setParamLong(R.string.pref_key_size_folder_vignettes, photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE));
+    	paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_med_res, photosOutils.getImageCount(ImageType.MED_RES));
+    	paramOutils.setParamLong(R.string.pref_key_size_folder_med_res, photosOutils.getPhotoDiskUsage(ImageType.MED_RES));
+    	paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_hi_res, photosOutils.getImageCount(ImageType.HI_RES));
+    	paramOutils.setParamLong(R.string.pref_key_size_folder_hi_res, photosOutils.getPhotoDiskUsage(ImageType.HI_RES));
 
     }	
 	// End of user code

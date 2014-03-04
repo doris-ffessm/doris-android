@@ -16,6 +16,7 @@ import fr.ffessm.doris.android.async.VerifieMAJFiche_BgActivity;
 import fr.ffessm.doris.android.async.VerifieMAJFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 
 
@@ -71,17 +72,20 @@ public class DorisApplicationContext {
 	
 	
 	/**
-	 * Gère les valeur par défault en fonction du type d'appareil sur lequel l'application est installée.
-	 * Une fois exécuté, le valeur sont stockeée et ne sont plus modifiées par ce traitement afin de conserver les choix utilisateur.
+	 * Gère les valeur par défaut en fonction du type d'appareil sur lequel l'application est installée.
+	 * Une fois exécuté, le valeur sont stockée et ne sont plus modifiées par ce traitement afin de conserver les choix utilisateur.
 	 * @param context
 	 */
 	public void ensureDefaultPreferencesInitialization(Context context){
+		
+		
+		final Param_Outils paramOutils = new Param_Outils(context);
 		
 		int screenlayout_size = context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 		int screenlayout_density= context.getResources().getDisplayMetrics().densityDpi;
 		Log.d(LOG_TAG, "ensureDefaultPreferencesInitialization "+screenlayout_density+" "+screenlayout_size);
 		// Taille par défaut des images téléchargées en mode on-line
-		String qualitePhotoSgtring = Outils.getParamString(context, R.string.pref_key_mode_connecte_qualite_photo,"");
+		String qualitePhotoSgtring = paramOutils.getParamString(R.string.pref_key_mode_connecte_qualite_photo,"");
 		if(qualitePhotoSgtring.equals("")){
 			SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 			// adapte la taille par défaut des images téléchargée (mode online) en fonction de la taille de l'écran et la densité 
@@ -99,7 +103,7 @@ public class DorisApplicationContext {
 		}
 		// TODO fatoriser ce code qui semble redondant plutot
 		// Taille des icones des listes
-		String iconSizeString = Outils.getParamString(context, R.string.pref_key_list_icon_size, "");
+		String iconSizeString = paramOutils.getParamString(R.string.pref_key_list_icon_size, "");
 		if(iconSizeString.equals("")){
 			SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 			// adapte la taille par défaut des icones en fonction de la densité et la taille de l'écran 
@@ -160,7 +164,7 @@ public class DorisApplicationContext {
 			ed.commit();
 		}
 		// Taille des icones des page accueil
-		String acceuilIconSizeString = Outils.getParamString(context, R.string.pref_key_accueil_icon_size, "");
+		String acceuilIconSizeString = paramOutils.getParamString(R.string.pref_key_accueil_icon_size, "");
 		if(acceuilIconSizeString.equals("")){
 			SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 			// adapte la taille par défaut des icones en fonction de la densité et la taille de l'écran 

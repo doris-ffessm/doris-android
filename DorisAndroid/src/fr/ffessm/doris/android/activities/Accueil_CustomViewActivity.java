@@ -103,6 +103,7 @@ import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
@@ -121,6 +122,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	LinearLayout llContainerLayout;
 	 
 	boolean isOnCreate = true;
+	
+	Param_Outils paramOutils = new Param_Outils(getContext());
 	
 	protected HashMap<Integer, MultiProgressBar> progressBarZones = new HashMap<Integer, MultiProgressBar>(); 
 	
@@ -165,12 +168,12 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         };
 
         // Affichage Icones Fédé.
-        if (!mustShowLogoFede || !Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_accueil_aff_iconesfede, true)){
+        if (!mustShowLogoFede || !paramOutils.getParamBoolean(R.string.pref_key_accueil_aff_iconesfede, true)){
         	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
         }
         
         // Affichage Debug
-        if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debug, false)){
+        if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)){
         	if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Affichage Debug");
         	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
         	((ScrollView) findViewById(R.id.accueil_debug)).setVisibility(View.VISIBLE);
@@ -181,7 +184,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         //Lors du 1er démarrage de l'application dans la version actuelle,
         //on affiche la boite d'A Propos
-        String VersionAffichageAPropos = Outils.getParamString(this.getApplicationContext(), R.string.pref_key_a_propos_version, "");
+        String VersionAffichageAPropos = paramOutils.getParamString(R.string.pref_key_a_propos_version, "");
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - VersionAffichageAPropos : "+VersionAffichageAPropos);
     	
         //Récupération du numéro de Version de DORIS
@@ -193,7 +196,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
 			aPropos.aProposAff();
         	
-            Outils.setParamString(this.getApplicationContext(), R.string.pref_key_a_propos_version, appVersionName);
+			paramOutils.setParamString(R.string.pref_key_a_propos_version, appVersionName);
         }
         
         if(DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null){
@@ -206,7 +209,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         	// démarre ou pas un téléchargement de photos au démarrage	
         	Outils.ConnectionType connectionType = Outils.getConnectionType(this.getApplicationContext());
         	Log.d(LOG_TAG, "onCreate() - connectionType : "+connectionType);
-        	boolean wifiOnly = Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_mode_precharg_wifi_only, true);
+        	boolean wifiOnly = paramOutils.getParamBoolean(R.string.pref_key_mode_precharg_wifi_only, true);
         	Log.d(LOG_TAG, "onCreate() - wifiOnly : "+wifiOnly);
         	if ( connectionType == Outils.ConnectionType.WIFI 
 	        		|| (! wifiOnly && connectionType == Outils.ConnectionType.GSM)){
@@ -297,7 +300,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         
         ImageView ivIcone = (ImageView)viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
         ivIcone.setImageResource(imageZone);   
-        int iconeZine = Integer.valueOf(Outils.getParamString(this.getApplicationContext(), R.string.pref_key_accueil_icon_size, "64"));
+        int iconeZine = Integer.valueOf(paramOutils.getParamString(R.string.pref_key_accueil_icon_size, "64"));
 	    ivIcone.setMaxHeight(iconeZine);
 	    ivIcone.setMaxWidth(iconeZine);
         
@@ -543,7 +546,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	*/
     	// recherche précédente
     	//ImageView ivIcone = (ImageView) findViewById(R.id.accueil_recherche_precedente_icone);
-        int iconeZine = Integer.valueOf(Outils.getParamString(this.getApplicationContext(), R.string.pref_key_accueil_icon_size, "64"));
+        int iconeZine = Integer.valueOf(paramOutils.getParamString(R.string.pref_key_accueil_icon_size, "64"));
         ((ImageView) findViewById(R.id.accueil_recherche_precedente_icone)).setMaxHeight(iconeZine);
         
         
@@ -620,7 +623,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     	// Debbug
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    	if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_affichage_debug, false)){
+    	if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)){
 	    	StringBuilder sb = new StringBuilder();
 	    	sb.append("- - Debbug - -\n");
 	    	
@@ -702,7 +705,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu Accueil_CustomViewActivity
 
-	    if (Outils.getParamBoolean(this.getApplicationContext(), R.string.pref_key_debug_maj_fiche_activee, false)){
+	    if (paramOutils.getParamBoolean(R.string.pref_key_debug_maj_fiche_activee, false)){
 			menu.add(Menu.NONE, 888, 2, "MaJ All Fiches (Dev.)").setIcon(android.R.drawable.ic_menu_add);
 		}
 	    
