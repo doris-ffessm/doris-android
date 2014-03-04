@@ -255,7 +255,8 @@ public class Photos_Outils {
     			+ getPhotoDiskUsage(ImageType.PORTRAITS);
 	}
 	public long getPhotoDiskUsage(ImageType inImageType){
-    	return Outils.getDiskUsage(context, getImageFolder(inImageType) );
+		Disque_Outils disqueOutils = new Disque_Outils(context);
+    	return disqueOutils.getDiskUsage(getImageFolder(inImageType) );
 	}
 
 

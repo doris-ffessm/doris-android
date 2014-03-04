@@ -76,6 +76,7 @@ import android.util.Log;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
+import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
@@ -93,6 +94,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	
     final Param_Outils paramOutils = new Param_Outils(context);
     final Photos_Outils photosOutils = new Photos_Outils(context);
+    Disque_Outils disqueOutils = new Disque_Outils(context);
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -147,7 +149,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
             			 new DialogInterface.OnClickListener() {
 	                         public void onClick(DialogInterface dialog, int id) {
 	                        	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_vig");
-	                        	 Outils.clearFolder(photosOutils.getImageFolderVignette(), 0);
+	                        	 disqueOutils.clearFolder(photosOutils.getImageFolderVignette(), 0);
 
 	                        	 paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_vignettes, photosOutils.getImageCount(ImageType.VIGNETTE));
 	                        	 paramOutils.setParamLong(R.string.pref_key_size_folder_vignettes, photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE));
@@ -188,7 +190,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
             			 new DialogInterface.OnClickListener() {
 	                         public void onClick(DialogInterface dialog, int id) {
 	                        	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_med_res");
-	                        	 Outils.clearFolder(photosOutils.getImageFolderMedRes(), 0);
+	                        	 disqueOutils.clearFolder(photosOutils.getImageFolderMedRes(), 0);
 
 	                        	 paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_med_res, photosOutils.getImageCount(ImageType.MED_RES));
 	                        	 paramOutils.setParamLong(R.string.pref_key_size_folder_med_res, photosOutils.getPhotoDiskUsage(ImageType.MED_RES));
@@ -229,7 +231,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
             			 new DialogInterface.OnClickListener() {
 	                         public void onClick(DialogInterface dialog, int id) {
 	                        	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_hi_res");
-	                        	 Outils.clearFolder(photosOutils.getImageFolderHiRes(), 0);
+	                        	 disqueOutils.clearFolder(photosOutils.getImageFolderHiRes(), 0);
 
 	                        	 paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_hi_res, photosOutils.getImageCount(ImageType.HI_RES));
 	                        	 paramOutils.setParamLong(R.string.pref_key_size_folder_hi_res, photosOutils.getPhotoDiskUsage(ImageType.HI_RES));
@@ -340,19 +342,19 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     private String getVigSummary() {
     	String txt = context.getString(R.string.mode_precharg_reset_vig_summary);
     	txt = txt.replace("@nbPh", ""+paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_vignettes, 0)) ;
-    	txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_vignettes, 0L ) ) ) ;
+    	txt = txt.replace("@size", ""+disqueOutils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_vignettes, 0L ) ) ) ;
     	return txt;
     }
     private String getMedResSummary() {
         String txt = getApplicationContext().getString(R.string.mode_precharg_reset_med_res_summary); 
         txt = txt.replace("@nbPh", ""+paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_med_res, 0)) ;
-        txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_med_res, 0L ) ) ) ;
+        txt = txt.replace("@size", ""+disqueOutils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_med_res, 0L ) ) ) ;
     	return txt;
     }
     private String getHiResSummary() {
         String txt = getApplicationContext().getString(R.string.mode_precharg_reset_hi_res_summary); 
         txt = txt.replace("@nbPh", ""+paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_hi_res, 0)) ;
-        txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_hi_res, 0L ) ) ) ;
+        txt = txt.replace("@size", ""+disqueOutils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_hi_res, 0L ) ) ) ;
     	return txt;
     }
     private String getCacheSummary() {
@@ -367,7 +369,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     	// La division par 2 est très sale mais c'est bien le plus rapide :-)
     	// En le dossier est bizarrement structuré avec des dossiers renommés, mais en gros il y en a 2 par fichiers en cache
      	txt = txt.replace("@nbPh", ""+ Math.round(nbFichiersDansCache/2) );
-     	txt = txt.replace("@size", ""+Outils.getHumanDiskUsage(Outils.getDiskUsage(getApplicationContext(), getApplicationContext().getCacheDir() ) ) ) ;
+     	txt = txt.replace("@size", ""+disqueOutils.getHumanDiskUsage(disqueOutils.getDiskUsage(getApplicationContext().getCacheDir() ) ) ) ;
      	return txt;
     }
     

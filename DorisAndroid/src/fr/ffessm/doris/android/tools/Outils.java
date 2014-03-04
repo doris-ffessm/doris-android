@@ -66,30 +66,6 @@ public class Outils {
 	    AUCUNE, WIFI, GSM 
 	}
 
-
-	public static long getDiskUsage(Context inContext, File inImageFolder){
-		DiskUsage du = new DiskUsage();
-    	du.accept(inImageFolder);
-    	return du.getSize();
-	}
-	public static String getHumanDiskUsage(long inSize){
-		String sizeTexte = "";
-		// octet => ko
-		inSize = inSize/1024;
-        if ( inSize < 1024 ) {
-        	sizeTexte = String.valueOf(Math.round(inSize)) + "\u00A0Ko";
-        } else {
-        	inSize = inSize / 1024;
-        	if ( inSize < 1024 ) {
-        		sizeTexte = String.valueOf(Math.round(inSize)) + "\u00A0Mo";
-        	} else {
-        		inSize = inSize / 1024;
-        		sizeTexte = String.valueOf(Math.round(inSize)) + "\u00A0Go";
-        	}
-        }
-    	return sizeTexte;
-	}
-
 	
 	/* *********************************************************************
      * Type de connection : aucune, wifi, gsm 
@@ -128,36 +104,6 @@ public class Outils {
     	}
 	}
 	
-
-	
-    public static int clearFolder(File inFolder, int inNbJours){
-		int deletedFiles = 0;
-	    if (inFolder!= null && inFolder.isDirectory()) {
-	    	Log.d(LOG_TAG, "clearFolder() - inFolder : "+inFolder);
-	        try {
-	            for (File child:inFolder.listFiles()) {
-
-	                //first delete subdirectories recursively
-	                if (child.isDirectory()) {
-	                    deletedFiles += clearFolder(child, inNbJours);
-	                }
-
-	                //then delete the files and subdirectories in this dir
-	                //only empty directories can be deleted, so subdirs have been done first
-	                if (child.lastModified() < new Date().getTime() - inNbJours * DateUtils.DAY_IN_MILLIS) {
-	                    if (child.delete()) {
-	                        deletedFiles++;
-	                    }
-	                }
-	            }
-	        }
-	        catch(Exception e) {
-	        	Log.e(LOG_TAG, String.format("Failed to clean the folder, error %s", e.getMessage()));
-	        }
-	    }
-	    Log.d(LOG_TAG, "clearFolder() - Fichiers effacés : "+deletedFiles);
-	    return deletedFiles;
-	}
 	
     // TODO : En attendant d'obtenir la nouvelle version de Common
 	public static String getZoneIcone(Context inContext, int inId) {
