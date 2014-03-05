@@ -242,21 +242,30 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         super.onPause();
         //PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
     }
+    
     @Override
     protected void onDestroy(){
     	Log.d(LOG_TAG, "onDestroy()");
+    	Log.d(LOG_TAG, "onDestroy() - isFinishing() : "+isFinishing());
     	
-    	// TODO : s'il y a d'autres traitements en fond il faudra aussi les arrêter ici
     	DorisApplicationContext.getInstance().removeDataChangeListeners(this);
-    	TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;
-    	if(telechargePhotosFiches_BgActivity != null && telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING){ 		
-    		// TODO déterminer si c'est une rotation ou une vrai fin de l'appli pour tuer les taches background ou pas
-    		Log.d(LOG_TAG, "onDestroy() - isFinishing() : "+isFinishing());
-    		if(isFinishing())
-    			Log.d(LOG_TAG, "onDestroy() - telechargePhotosFiches_BgActivity.cancel(true) : "+telechargePhotosFiches_BgActivity.cancel(true) );
-    	}
-    	super.onDestroy();
     	
+    	TelechargePhotosAsync_BgActivity telechargePhotosAsync_BgAct = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;
+    	if(telechargePhotosAsync_BgAct != null && telechargePhotosAsync_BgAct.getStatus() == Status.RUNNING){ 		
+    		if(isFinishing()) Log.d(LOG_TAG, "onDestroy() - TelechargePhotosAsync.cancel(true) : "+telechargePhotosAsync_BgAct.cancel(true) );
+    	}
+    	
+    	VerifieMAJFiches_BgActivity verifieMAJFiches_BgAct = DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity;
+    	if(verifieMAJFiches_BgAct != null && verifieMAJFiches_BgAct.getStatus() == Status.RUNNING){ 		
+    		if(isFinishing()) Log.d(LOG_TAG, "onDestroy() - VerifieMAJFiches.cancel(true) : "+verifieMAJFiches_BgAct.cancel(true) );
+    	}
+    	
+    	VerifieMAJFiche_BgActivity verifieMAJFiche_BgAct = DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity;
+    	if(verifieMAJFiche_BgAct != null && verifieMAJFiche_BgAct.getStatus() == Status.RUNNING){ 		
+    		if(isFinishing()) Log.d(LOG_TAG, "onDestroy() - VerifieMAJFiche.cancel(true) : "+verifieMAJFiche_BgAct.cancel(true) );
+    	}
+    	
+    	super.onDestroy();
     }
     
     protected View createNavigationZoneView(final ZoneGeographique zone){

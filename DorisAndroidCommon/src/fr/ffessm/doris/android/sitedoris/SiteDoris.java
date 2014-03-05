@@ -70,7 +70,6 @@ public class SiteDoris {
     public SiteDoris(){
     }
     
-	
 	public static HashSet<FicheLight> getListeFichesFromHtml(String inCodePageHtml) {
     	log.info("getListeFichesFromHtml()- Début");
     	
@@ -130,7 +129,6 @@ public class SiteDoris {
     	int nivPrecedent = 0;
     	
     	// Création du groupe racine qui contiendra récursivement tout l'arbre
-    	// TODO : Supprimer sur les Créations de Groupe ci-dessous le commentaire tempo aidant à debugger
     	Groupe groupe = new Groupe(0, 0, "racine","Les grands groupes", "", "");
     	Groupe groupeRacine = groupe;
     	Groupe groupeNiveau1Courant = null;
@@ -250,8 +248,6 @@ public class SiteDoris {
 													log.info("getGroupes() - groupe 3 : "+numGroupe+" - "+nom+" - "+description+" <- "+groupeNiveau2Courant.getNomGroupe());
 													
 													// Récupération de la vignette du Groupe
-													// TODO : Prévoir dans la base de donnée son URL et son nom (son nom = en fait le numéro du Groupe)
-													// (attention il faudra l'afficher sur fond blanc : sinon pas propre visuellement
 													String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
 													
 													groupe = new Groupe(numGroupe, 0, nom, description, urlPhotoGroupe, "");
@@ -727,16 +723,12 @@ public class SiteDoris {
     					titre = elementA.getFirstElement(HTMLElementName.STRONG).getRenderer().toString().trim().replaceAll("\n|\r", "").trim();
     				}
     				log.debug("getListeBiblioFromHtml() - titre : " + titre);
-    				
-    				
-    				//String edition = bibliographie.replaceAll(".*"+titre+",(.*)$", "$1").trim();
+
     				String regExp = ".*"+titre+",(.*)$";
     				String edition = Pattern.compile(regExp, Pattern.DOTALL).matcher(bibliographie).replaceAll("$1");
     				//log.debug("getListeBiblioFromHtml() - edition : " + edition);
-    				
-    				//String illustrationURL = "gestionenligne/photos_biblio_moy/" + idBiblio + ".jpg";
-    				
-    				// TODO : l'illustration éventuelle dans cleURLIllustration (mais il faudrait alors télécharger la page de l'entrée bibliographique
+
+    				// l'illustration éventuelle dans cleURLIllustration, update après avoir téléchargé la page de l'entrée bibliographique
     				listeBiblio.add(new EntreeBibliographie( Integer.valueOf(idBiblio),
     						Outils.nettoyageTextes(titre).trim(),
     						Outils.nettoyageTextes(auteurs).trim(),
