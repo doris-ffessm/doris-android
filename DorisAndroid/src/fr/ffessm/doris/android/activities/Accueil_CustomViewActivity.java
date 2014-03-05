@@ -369,7 +369,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	public void onClickBtnGlossaire(View view){
 		startActivity(new Intent(this, Glossaire_ClassListViewActivity.class));
 	}*/
-	public void onClickBtnIconeSiteWeb1(View view){
+	public void onClickBtnIconeSiteWeb_doris(View view){
 		String url = getString(R.string.accueil_customview_logo_doris_url);
 		if (!url.isEmpty()) {
 			Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -377,7 +377,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			startActivity(intent);
 		}
     }
-	public void onClickBtnIconeSiteWeb2(View view){
+	public void onClickBtnIconeSiteBio(View view){
 		String url = getString(R.string.accueil_customview_logo_bio_url);
 		if (!url.isEmpty()) {
 			Intent intent = new Intent(Intent.ACTION_VIEW);
