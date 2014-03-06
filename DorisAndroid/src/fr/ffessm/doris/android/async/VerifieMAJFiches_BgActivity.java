@@ -47,7 +47,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,6 +62,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.text.format.Time;
 import android.util.Log;
 import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
@@ -78,6 +84,7 @@ import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.datamodel.Fiche;
 
@@ -97,7 +104,8 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     // Start of user code additional attribute declarations VerifieMAJFiches_BgActivity
     private Fiches_Outils fichesOutils;
     private Reseau_Outils reseauOutils;
-    
+    private Param_Outils paramOutils;
+
 	// End of user code
     
 	/** constructor */
@@ -109,10 +117,10 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
         //TODO : compléter EtatModeHorsLigne_CustomViewActivity ?
 		mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 
-		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		fichesOutils = new Fiches_Outils(context);
 	    reseauOutils = new Reseau_Outils(context);
-		
+	    paramOutils = new Param_Outils(context);
+	    
 		// End of user code
         this.dbHelper = dbHelper;
 		this.context = context;
@@ -127,12 +135,13 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     protected Integer doInBackground(String... arg0) {
     	
 		// Start of user code initialization of the task VerifieMAJFiches_BgActivity
-		// do the initializatio of the task here
+		// do the initialization of the task here
 		// once done, you should indicates to the notificationHelper how many item will be processed
 		//mNotificationHelper.setMaxNbPages(maxNbPages.toString());
-
-    	String typeLancement = "";
-    	if (arg0.length > 0) typeLancement= arg0[0];
+        
+        Fiches_Outils.TypeLancement_kind typeLancement = Fiches_Outils.TypeLancement_kind.MANUEL;
+        
+    	if (arg0.length > 0) typeLancement = Fiches_Outils.TypeLancement_kind.valueOf(arg0[0]);
     	Log.d(LOG_TAG, "doInBackground() - typeLancement : "+typeLancement);
     	
     	// Téléchargement en tache de fond de toutes les photos de toutes les fiches correspondants aux critères de l'utilisateur
@@ -195,7 +204,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     		
     		int zoneId = zoneGeo.getId();
     		
-    		if ( fichesOutils.getMajListeFichesTypeZoneGeo(context, zoneId) != Fiches_Outils.MajListeFichesType.M0 ) {
+    		if ( fichesOutils.isMajNecessaireZone(zoneId,typeLancement) ) {
 
 		        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_imagesprinc)
 		        		+ Constants.getTitreCourtZoneGeographique(Constants.getZoneGeographiqueFromId(zoneId)));
@@ -323,6 +332,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
    
 
     
+
     
 	// End of user code
 	

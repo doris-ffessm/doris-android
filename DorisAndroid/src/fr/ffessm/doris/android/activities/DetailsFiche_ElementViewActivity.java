@@ -444,7 +444,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         		DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity =
         			(VerifieMAJFiche_BgActivity) new VerifieMAJFiche_BgActivity(getApplicationContext(),
 					this.getHelper()).execute(""+ficheNumero);
-        		//refreshScreenData();
+        		// TODO : refreshScreenData();
             	return true;
 	        case R.id.detailsfiche_elementview_action_aide:
 	        	AffichageMessageHTML aide = new AffichageMessageHTML(this, (Activity) this, getHelper());

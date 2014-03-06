@@ -138,7 +138,7 @@
 		        android:layout_height="wrap_content"
 		        android:gravity="center_horizontal"
 		        android:lines="2"
-		        android:maxWidth="200dp"
+		        android:maxWidth="250dp"
 		        android:padding="3dip"
 		        android:text="@string/accueil_customview_logo_fede_description"
 		        android:textAppearance="?android:attr/textAppearanceSmall"

@@ -101,6 +101,7 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
@@ -772,8 +773,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         	case 888:
         		DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity =
         			(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext(),
-					this.getHelper()).execute();
-        		//refreshScreenData();
+					this.getHelper()).execute(""+Fiches_Outils.TypeLancement_kind.MANUEL);
+        		// TODO : refreshScreenData();
             	return true;
 		//End of user code
 			default:
