@@ -5,7 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.content.Context;
+import android.util.Log;
 
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
 public class Fiches_Outils {
@@ -81,6 +83,8 @@ public class Fiches_Outils {
 			dernierMajDateCaract = "01-01-2999";
 		}
 		
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getDerniereMajListeFichesTypeZoneGeo() - dernierMajDateCaract : "+dernierMajDateCaract );
+		
 		Calendar dernierMajDate = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
     	try {
@@ -91,6 +95,37 @@ public class Fiches_Outils {
     	
     	return dernierMajDate;
 	}
+	
+	
+	public boolean setDateMajListeFichesTypeZoneGeo(int inIdZoneGeo) {
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setDateMajListeFichesTypeZoneGeo() - Début" );
+		Calendar aujourdHui = Calendar.getInstance();
+ 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		String dateMajCaract = sdf.format(aujourdHui.getTime());
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setDateMajListeFichesTypeZoneGeo() - dateMajCaract : "+dateMajCaract );
+		
+		switch(inIdZoneGeo){
+		case 1:
+			paramOutils.setParamString(R.string.pref_key_datedermaj_fiches_france, dateMajCaract);
+			return true;
+		case 2:
+			paramOutils.setParamString(R.string.pref_key_datedermaj_fiches_eaudouce, dateMajCaract);
+			return true;
+		case 3:
+			paramOutils.setParamString(R.string.pref_key_datedermaj_fiches_indopac, dateMajCaract);
+			return true;
+		case 4:
+			paramOutils.setParamString(R.string.pref_key_datedermaj_fiches_caraibes, dateMajCaract);
+			return true;
+		case 5:
+			paramOutils.setParamString(R.string.pref_key_datedermaj_fiches_atlantno, dateMajCaract);
+			return true;
+		default :
+			return false;
+		}
+    	
+	}
+	
 	
 	public int getNbJoursDerMajListeFichesTypeZoneGeo(int inIdZoneGeo) {
 		Calendar jourDerniereMaj = getDerniereMajListeFichesTypeZoneGeo(inIdZoneGeo);

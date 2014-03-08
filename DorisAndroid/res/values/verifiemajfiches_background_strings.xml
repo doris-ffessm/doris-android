@@ -4,8 +4,14 @@
 	<!--Start of user code BackgroundActivity_stringsverifiemajfiches
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
-	<string name="bg_notifTitle_fichesinitial">Mise à jour en tache de fond</string>
-	<string name="bg_notifText_fichesinitial">Synch. avec doris.ffessm.fr</string>
+	<string name="bg_notifTitle_fichesInitial">Mise à jour en tache de fond</string>
+	<string name="bg_notifText_fichesInitial">Synch. avec doris.ffessm.fr</string>
+	
+	<string name="bg_notifTitle_fichesBase">Fiches de la Base</string>
+	<string name="bg_notifText_fichesBase"></string>
+	
+	<string name="bg_notifTitle_fichesZoneGeo">Fiches du Site</string>
+	<string name="bg_notifText_fichesZoneGeo">"Avancement : "</string>
 	
 	
 	<!--End of user code

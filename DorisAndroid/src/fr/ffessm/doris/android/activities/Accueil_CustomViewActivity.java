@@ -675,7 +675,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	     		}
 	     	}
 	     	*/
-	    	
+	    	/*
 	     	sb.append("- - - - - -\n");
 	     	sb.append(getApplicationContext().getFilesDir().getAbsolutePath()+"\n");
 	     	sb.append(getApplicationContext().getFilesDir().listFiles().length+"\n");
@@ -703,6 +703,13 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	     	// Cf. http://stackoverflow.com/questions/19345576/cannot-draw-recycled-bitmaps-exception-with-picasso
 	     	// et surtout : http://www.basic4ppc.com/android/forum/threads/picasso-image-downloading-and-caching-library.31495/
 	    	// Fin test
+	    	*/
+	    	
+	    	/*
+	    	Fiches_Outils fichesOutils = new Fiches_Outils(getApplicationContext());
+	    	sb.append(fichesOutils.getDerniereMajListeFichesTypeZoneGeo(1));
+	    	*/
+	    	
 	    	
 	    	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());
     	}

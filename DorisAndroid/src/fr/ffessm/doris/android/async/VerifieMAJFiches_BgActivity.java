@@ -112,8 +112,8 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     public VerifieMAJFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper){
 		// Start of user code additional attribute declarations VerifieMAJFiches_BgActivity constructor
 		
-		String initialTickerText = context.getString(R.string.bg_notifText_fichesinitial);
-		String notificationTitle = context.getString(R.string.bg_notifTitle_fichesinitial);
+		String initialTickerText = context.getString(R.string.bg_notifText_fichesInitial);
+		String notificationTitle = context.getString(R.string.bg_notifTitle_fichesInitial);
         //TODO : compléter EtatModeHorsLigne_CustomViewActivity ?
 		mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 
@@ -162,10 +162,12 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     	HashSet<FicheLight> listeFichesBase = new HashSet<FicheLight>(100);
     	try{
 	    	// Récupération de la liste des Fiches de la Base
-    		mNotificationHelper.setContentTitle("Fiches de la Base");
-	    	listeFichesBase = new HashSet<FicheLight>((int) dbHelper.getDorisDBHelper().ficheDao.countOf());
-	    	mNotificationHelper.setMaxItemToProcess(""+listeFichesBase.size());
+    		mNotificationHelper.setContentTitle(context.getString(R.string.bg_notifTitle_fichesBase));
+    		mNotificationHelper.setRacineTickerText(context.getString(R.string.bg_notifText_fichesBase));
+	    	mNotificationHelper.setMaxItemToProcess("0");
+	    	publishProgress( 0 );
 	    	
+	    	listeFichesBase = new HashSet<FicheLight>((int) dbHelper.getDorisDBHelper().ficheDao.countOf());
 	    	GenericRawResults<String[]> rawResults =
 	    			dbHelper.getDorisDBHelper().ficheDao.queryRaw("SELECT _id, numeroFiche, etatFiche FROM fiche");
 			for (String[] resultColumns : rawResults) {
@@ -191,6 +193,13 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     	// zoneGeo : 5 - Faune et flore subaquatiques de l'Atlantique Nord-Ouest
 		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
 		
+		mNotificationHelper.setContentTitle(context.getString(R.string.bg_notifTitle_fichesZoneGeo));
+		mNotificationHelper.setRacineTickerText(context.getString(R.string.bg_notifText_fichesZoneGeo));
+		int avancementMax = listeZoneGeo.size();
+		mNotificationHelper.setMaxItemToProcess(""+avancementMax);
+    	int avancement = 0;
+		publishProgress(avancement);
+		
 		List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
     	listeGroupes.addAll(dbHelper.getGroupeDao().queryForAll());
 		Log.d(LOG_TAG, "doInBackground() - listeGroupes.size : "+listeGroupes.size());
@@ -201,19 +210,14 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		
 		for (ZoneGeographique zoneGeo : listeZoneGeo) {
     		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
+    		avancement++;
+    		publishProgress(avancement);
     		
     		int zoneId = zoneGeo.getId();
     		
     		if ( fichesOutils.isMajNecessaireZone(zoneId,typeLancement) ) {
-
-		        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_imagesprinc)
-		        		+ Constants.getTitreCourtZoneGeographique(Constants.getZoneGeographiqueFromId(zoneId)));
-		        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_imagesprinc) );
-	    		mNotificationHelper.setMaxItemToProcess(""+listeZoneGeo.size());
-    			publishProgress( 0 );
-		
+	
 				// Récupération de la liste Fiches depuis le Site
-				mNotificationHelper.setContentTitle("Fiches du Site");
 		    	String urlListeFiches =  Constants.getListeFichesUrl(zoneId);
 		    	Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlListeFiches);
 		    	
@@ -238,7 +242,6 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		    	
 		    	
 		    	// Analyse différences entre les 2 listes
-		    	mNotificationHelper.setContentTitle("Analyse Evolutions");
 		    	
 		    	HashSet<FicheLight> listeFichesUpdated = SiteDoris.getListeFichesUpdated(listeFichesBase, listeFichesSite);
 		    	Log.d(LOG_TAG, "doInBackground() - Fiches Updated : "+listeFichesUpdated.size() );
@@ -247,6 +250,9 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		    	// Mises à jour fiches
 		    	if (listeFichesUpdated.size()!=0) {
 
+		    		avancementMax = avancementMax + listeFichesUpdated.size();
+		    		mNotificationHelper.setMaxItemToProcess(""+avancementMax);
+		    		
 			    	for (FicheLight ficheLight : listeFichesUpdated){
 			    		Log.d(LOG_TAG, "doInBackground() - fiche modifiée : "+ficheLight.getNumeroFiche());
 			    		
@@ -283,24 +289,17 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 						} catch (SQLException e) {
 							Log.w(LOG_TAG, e.getMessage(), e);
 						}
+						
+			    		avancement++;
+			    		publishProgress(avancement);
 			    	}
 		    	}
+		    	
+		    	fichesOutils.setDateMajListeFichesTypeZoneGeo(zoneId);
+		    	
     		}
 		}
 		
-
-		// you should indicates the progression using publishProgress()
-		for (int i=10;i<=100;i += 10)
-            {
-                try {
-					// simply sleep for one second
-                    Thread.sleep(1000);
-                    publishProgress(i);
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
 		Log.d(LOG_TAG, "doInBackground() - Fin");
 		// End of user code
         

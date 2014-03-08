@@ -93,8 +93,8 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
 		// Start of user code additional attribute declarations VerifieMAJFiche_BgActivity constructor
     	reseauOutils = new Reseau_Outils(context);
     	
-    	String initialTickerText = context.getString(R.string.bg_notifText_fichesinitial);
-		String notificationTitle = context.getString(R.string.bg_notifTitle_fichesinitial);
+    	String initialTickerText = context.getString(R.string.bg_notifText_fichesInitial);
+		String notificationTitle = context.getString(R.string.bg_notifTitle_fichesInitial);
         
 		mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 		
