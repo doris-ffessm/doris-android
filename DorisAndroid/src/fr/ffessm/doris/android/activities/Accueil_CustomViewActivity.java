@@ -219,9 +219,17 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	        		|| (! wifiOnly && connectionType == Reseau_Outils.ConnectionType.GSM)){
 		
         		Log.d(LOG_TAG, "onCreate() - Lancement préchargement");
-        		if (! paramOutils.getParamBoolean(R.string.pref_key_debug_maj_fiche_activee, false)){
-        			DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = (TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
-        		}
+        		// On démarrage d'abord la MaJ des fiches, puis elle enchaînera avec telechargePhotosFiches
+        		/* DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity =
+        		 * 		(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(
+        		 * 			getApplicationContext(), this.getHelper()).execute("");
+        		 * */
+        		//VerifieMAJFiches_BgActivity verifieMAJFiches_BgActivity = DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity;		    	
+				
+	        	DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity =
+	        		(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext(),
+						this.getHelper()).execute(""+Fiches_Outils.TypeLancement_kind.START);
+
 	        }
         } 
         DorisApplicationContext.getInstance().addDataChangeListeners(this);
@@ -728,10 +736,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu Accueil_CustomViewActivity
 
-	    if (paramOutils.getParamBoolean(R.string.pref_key_debug_maj_fiche_activee, false)){
-			menu.add(Menu.NONE, 888, 2, "MaJ All Fiches (Dev.)").setIcon(android.R.drawable.ic_menu_add);
-		}
-	    
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
@@ -760,6 +764,15 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 				}
 				
 	            return true;
+        	case R.id.accueil_customview_action_maj_listesfiches:
+        		VerifieMAJFiches_BgActivity verifieMAJFiches_BgActivity = DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity;		    	
+				if(verifieMAJFiches_BgActivity == null || verifieMAJFiches_BgActivity.getStatus() != Status.RUNNING) {
+	        		DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity =
+	        			(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext(),
+						this.getHelper()).execute(""+Fiches_Outils.TypeLancement_kind.MANUEL);
+				}
+        		// TODO : refreshScreenData();
+            	return true;
 	        case R.id.accueil_customview_action_a_propos:
 	        	AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
 				aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label)+getContext().getString(R.string.app_name), aPropos.aProposAff(),	"file:///android_res/raw/apropos.html");
@@ -777,12 +790,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	        	AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
 				aide.affichageMessageHTML(getContext().getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
 				return true;
-        	case 888:
-        		DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity =
-        			(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext(),
-					this.getHelper()).execute(""+Fiches_Outils.TypeLancement_kind.MANUEL);
-        		// TODO : refreshScreenData();
-            	return true;
+
 		//End of user code
 			default:
                 return super.onOptionsItemSelected(item);

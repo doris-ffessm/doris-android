@@ -73,6 +73,7 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 
 
 import fr.ffessm.doris.android.BuildConfig;
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports VerifieMAJFiches_BgActivity
 
@@ -305,7 +306,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
         
 		// Start of user code end of task VerifieMAJFiches_BgActivity
 		// return the number of item processed
-        return 100;
+        return avancement;
 		// End of user code
     }
     protected void onProgressUpdate(Integer... progress) {
@@ -324,6 +325,12 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
 		// Start of user code VerifieMAJFiches onPostExecute
+        
+        DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity =
+        		(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(
+        				context, dbHelper).execute("");
+		 
+        
 		// End of user code
     }
 

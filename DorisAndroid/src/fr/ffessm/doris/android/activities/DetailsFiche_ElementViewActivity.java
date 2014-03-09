@@ -414,9 +414,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu DetailsFiche_EditableElementViewActivity
 
-		if (paramOutils.getParamBoolean(R.string.pref_key_debug_maj_fiche_activee, false)){
-			menu.add(Menu.NONE, 888, 2, "MaJ Fiche (Dev.)").setIcon(android.R.drawable.ic_menu_add);
-		}
+
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
@@ -440,7 +438,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         		Intent toDefinitionlView = new Intent(context, Glossaire_ClassListViewActivity.class);
             	context.startActivity(toDefinitionlView);
             	return true;
-        	case 888:
+        	case R.id.detailsfiche_elementview_action_maj_fiche:
         		DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity =
         			(VerifieMAJFiche_BgActivity) new VerifieMAJFiche_BgActivity(getApplicationContext(),
 					this.getHelper()).execute(""+ficheNumero);

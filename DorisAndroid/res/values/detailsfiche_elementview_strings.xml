@@ -25,6 +25,7 @@
 	<string name="detailsfiche_elementview_fold_unflod_section_hint_text">Plie ou déplie texte de la section</string>
 	<string name="unfold_all_sections_menu_option">Tout déplier</string>
 	<string name="fold_all_sections_menu_option">Tout replier</string>
+	<string name="menu_option_maj_fiche">MaJ Fiche</string>
 	
 	<string name="ficheproposee_explications">Fiche propoposée. Très peu d\'informations sont disponibles.</string>
 	<string name="ficheredaction_explications">En cours de rédaction. Cette fiche est peut être incomplète.</string>

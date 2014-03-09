@@ -15,6 +15,9 @@
 	      android:title="@string/accueil_glossaire_text"
 	      android:showAsAction="ifRoom"
     	  dorisandroid:showAsAction="ifRoom"/>
+	<item android:id="@+id/detailsfiche_elementview_action_maj_fiche"
+	      android:icon="@android:drawable/ic_menu_set_as"
+	      android:title="@string/menu_option_maj_fiche" />
 	<item android:id="@+id/detailsfiche_elementview_action_aide"
 	      android:icon="@android:drawable/ic_menu_help"
 	      android:title="@string/aide_menu" />

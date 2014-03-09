@@ -50,32 +50,20 @@ import fr.ffessm.doris.android.R;
 
 //Start of user code Preference preference activity additional imports
 import java.io.File;
-import java.util.Date;
-import java.util.List;
-
-import com.squareup.picasso.LruCache;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Picasso.Builder;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask.Status;
 import android.preference.Preference;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.widget.ArrayAdapter;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.Toast;
-import android.text.format.DateUtils;
 import android.util.Log;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
+import fr.ffessm.doris.android.async.VerifieMAJFiche_BgActivity;
+import fr.ffessm.doris.android.async.VerifieMAJFiches_BgActivity;
 import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
@@ -90,7 +78,6 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	//Start of user code Preference preference activity additional attributes
 	private static final String LOG_TAG = Outils.class.getCanonicalName();
 	final Context context = this;
-	private SharedPreferences prefs;
 	
     final Param_Outils paramOutils = new Param_Outils(context);
     final Photos_Outils photosOutils = new Photos_Outils(context);
@@ -103,7 +90,6 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preference); 
 		//Start of user code Preference preference activity additional onCreate
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
         
         // Si téléchargements en tâche de fond, il est arrêté
         TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
@@ -111,7 +97,19 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     		Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
     		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
     	}
-
+    	
+    	VerifieMAJFiches_BgActivity verifieMAJFiches_BgAct = DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity;
+    	if(verifieMAJFiches_BgAct != null && verifieMAJFiches_BgAct.getStatus() == Status.RUNNING){ 
+    		Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
+    		DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity.cancel(true);
+    	}
+    	
+    	VerifieMAJFiche_BgActivity verifieMAJFiche_BgAct = DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity;
+    	if(verifieMAJFiche_BgAct != null && verifieMAJFiche_BgAct.getStatus() == Status.RUNNING){ 		
+    		Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
+    		DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity.cancel(true);
+    	}
+    	
         /* Permet d'afficher directement une sous-partie des préférences
         *  Utile depuis Aide ou EtatHorsLigne, etc.
         */
