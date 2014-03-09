@@ -86,6 +86,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 {
 	
 	//Start of user code constants ImagePleinEcran_CustomViewActivity
+	private static final String LOG_TAG = ImagePleinEcran_CustomViewActivity.class.getSimpleName();
 	
 	protected ImagePleinEcran_Adapter adapter;
 	protected ViewPager viewPager;
@@ -130,7 +131,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
         
         viewPager.setAdapter(adapter);
         
-        // affiche l'image selectionnée en premier
+        // affiche l'image sélectionnée en premier
      	viewPager.setCurrentItem(position);
      	
      	// info de debug de Picasso
@@ -151,7 +152,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
     		affZoomControl = prefs.getBoolean(getString(R.string.pref_key_imagepleinecran_aff_zoomcontrol), false);
     		ViewPager view = (ViewPager) findViewById(R.id.imagepleinecran_pager);
     		view.invalidate();
-    		// ne fonctione pas :-(
+    		// ne fonctionne pas :-(
     	}   
 		//End of user code
 	}
@@ -159,6 +160,16 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 	
     boolean affZoomControl = false;
     
+    @Override
+    protected void onDestroy(){
+    	super.onDestroy();
+    	
+    	Log.d(LOG_TAG, "onDestroy()");
+    	Log.d(LOG_TAG, "onDestroy() - isFinishing() : "+isFinishing());
+
+
+    }
+    	
 	//End of user code
 
     /** refresh screen from data 

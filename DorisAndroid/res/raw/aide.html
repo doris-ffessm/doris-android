@@ -16,7 +16,7 @@
 	</head>
 	<body>
 		<p>
-			<h3><a name="Sommaire">Sommaire de l'Aide</h3>
+			<h3><a name="Sommaire">Sommaire de l'Aide</a></h3>
 			<ul class="Aide">
 				<li><a href="#Principes">Principes</a></li>
 				<li><a href="#Navigation">Navigation</a></li>
@@ -28,7 +28,8 @@
 				<li><a href="#Parametres">Paramètres</a></li>
 				<ul class="Aide">
 					<li><a href="#ParamModeConnecte">Mode Connecté</a></li>
-					<li><a href="#ParamHorsLigne">Précharg. Photos pour Mode Hors Ligne</a></li>
+					<li><a href="#ParamMajListesFiches">Mise à jour des Fiches</a></li>
+					<li><a href="#ParamHorsLignePhotos">Précharg. Photos pour Mode Hors Ligne</a></li>
 					<li><a href="#ParamPresentation">Options de Présentation</a></li>
 				</ul>
 			</ul>
@@ -38,8 +39,6 @@
 			<h3><a name="Principes"></a>Principes</h3>
 			<span class="Aide">
 				Les <b>Fiches</b>, les <b>termes du Glossaire</b>, les informations sur les <b>Participants</b> et les <b>références Bibliographiques</b> publiés sur le site <b>DORIS</b> sont compris dans l'application.
-				Dans cette Version (<i>Beta 2</i>) ces informations ne peuvent pas encore être mises à jour depuis le terminal.<br />
-				<i>C'est une évolution prévue. En attendant, il faut mettre à jour l'application.</i><br />
 				<br />
 				Les <b>Photos</b>, elles, doivent être téléchargées. Si vous avez un accès à internet cela peut être fait durant la navigation. Mais pour économiser votre forfait et gagner en fluidité vous pouvez les télécharger préalablement en WIFI.<br />
 				Tout cela est <a href="#Parametre">paramétrable</a>.
@@ -92,7 +91,21 @@
 			<ul class="Retour">
 				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
 			</ul>
-			<h4><a name="ParamHorsLigne"></a>Préchargement Photos pour le Mode Hors Ligne</h4>
+			<h4><a name="ParamMajListesFiches"></a>Mise à jour des fiches d'espèce</h4>
+			<span class="Aide">
+				Les fiches d'espèce ne peuvent pas être mises à jour en masse par l'application, cela demanderait de télécharger puis de traiter l'ensemble des fiches. Cela serait trop lourd et long sur un terminal Android.<br />
+				Néanmoins 2 possibilités sont proposées :
+				<ol>
+					<li>Chaque fiche peut-être mise à jour individuellement à partir de son Menu.</li>
+					<li>Les fiches ayant changé de statut (<i>Nouvelle -> Proposée -> En-cours de Rédaction -> Publiée</i>) peuvent être mises à jour.<br />
+					Cette mise à jour s'effectue par zone géographique, chaque zone nécessite un téléchargement de 1Mo environ. La fréquence de mise à jour des fiches se choisit dans les paramètres (<a href="preference://mode_precharg_category/button_maj_liste_fiches_zones_key" class="appli">ouvrir</a>).</li>
+				</ol>
+				L'application est régulièrement mise à jour sur Google Play et intègre systématiquement l'ensemble des modifications réalisées sur le Site DORIS.<br />
+			</span>
+			<ul class="Retour">
+				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
+			</ul>
+			<h4><a name="ParamHorsLignePhotos"></a>Préchargement Photos pour le Mode Hors Ligne</h4>
 			<span class="Aide">
 				Par défaut, les vignettes de la photo principale de chaque fiche sont téléchargées lorsque l'application est lancée et si l'appareil est connecté à internet en WIFI.<br />
 				<i>Il est possible d'activer ces téléchargements en permanence mais faites alors attention à votre forfait.</i><br />
@@ -110,7 +123,7 @@
 			<br />
 			<a name="ParamHorsLigneAutresPhotos"></a>
 			<span class="Aide">
-			De même, les photos des participants et celles de références bibliographiques peuvent être téléchargées à l'avances.<br />
+			De même, les photos des participants et celles de références bibliographiques peuvent être téléchargées à l'avance.<br />
 			<b>Pour que les illustrations du Glossaire</b> apparaissent ce préchargement est <b><span style="text-decoration: underline;">indispensable</span></b>.
 			</span>
 			<ul class="Retour">

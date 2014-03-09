@@ -44,7 +44,6 @@ package fr.ffessm.doris.android.activities;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import com.squareup.picasso.Picasso;
 
@@ -58,13 +57,9 @@ import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
-import fr.ffessm.doris.android.tools.Photos_Outils.PrecharMode;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -75,7 +70,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ZoomControls;
 
