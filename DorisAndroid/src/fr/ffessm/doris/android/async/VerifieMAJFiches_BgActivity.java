@@ -107,6 +107,8 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     private Reseau_Outils reseauOutils;
     private Param_Outils paramOutils;
 
+    Fiches_Outils.TypeLancement_kind typeLancement = Fiches_Outils.TypeLancement_kind.MANUEL;
+    
 	// End of user code
     
 	/** constructor */
@@ -140,7 +142,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		// once done, you should indicates to the notificationHelper how many item will be processed
 		//mNotificationHelper.setMaxNbPages(maxNbPages.toString());
         
-        Fiches_Outils.TypeLancement_kind typeLancement = Fiches_Outils.TypeLancement_kind.MANUEL;
+        
         
     	if (arg0.length > 0) typeLancement = Fiches_Outils.TypeLancement_kind.valueOf(arg0[0]);
     	Log.d(LOG_TAG, "doInBackground() - typeLancement : "+typeLancement);
@@ -215,27 +217,21 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     		publishProgress(avancement);
     		
     		int zoneId = zoneGeo.getId();
+    		String contenuFichierHtml = "";
     		
     		if ( fichesOutils.isMajNecessaireZone(zoneId,typeLancement) ) {
 	
 				// Récupération de la liste Fiches depuis le Site
 		    	String urlListeFiches =  Constants.getListeFichesUrl(zoneId);
 		    	Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlListeFiches);
-		    	
-		    	String fichierDansCache = "listeFiches-"+zoneId+".html";
-		    	Log.d(LOG_TAG, "doInBackground() - fichierDansCache : "+fichierDansCache);
-		    	
+		    			 
 		    	try {
-		    		reseauOutils.getHtml(urlListeFiches, fichierDansCache);
+		    		contenuFichierHtml = reseauOutils.getHtml(urlListeFiches);
 				} catch (IOException e) {
 					Log.w(LOG_TAG, e.getMessage(), e);
 				}   
 		    	
 		    	Log.d(LOG_TAG, "doInBackground() - 10");
-		    	String contenuFichierHtml = fr.ffessm.doris.android.sitedoris.Outils
-					.getFichierTxtFromDisk(new File(context.getCacheDir()+"/"+fichierDansCache));
-		    	
-		    	Log.d(LOG_TAG, "doInBackground() - 20");
 		    	
 		    	HashSet<FicheLight> listeFichesSite = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
 		    	Log.d(LOG_TAG, "doInBackground() - Fiches de la Base : "+listeFichesBase.size() );
@@ -261,17 +257,11 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 			        	String urlFiche =  Constants.getFicheFromIdUrl( ficheLight.getNumeroFiche() );
 			        	Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlFiche);
 			        	
-			        	fichierDansCache = "fiche-"+ficheLight.getNumeroFiche()+".html";
-			        	Log.d(LOG_TAG, "doInBackground() - fichierDansCache : "+fichierDansCache);
-			        	
 			        	try {
-			        		reseauOutils.getHtml(urlFiche, fichierDansCache);
+			        		contenuFichierHtml = reseauOutils.getHtml(urlFiche);
 			    		} catch (IOException e) {
 			    			Log.w(LOG_TAG, e.getMessage(), e);
 			    		}   
-			        	
-			        	contenuFichierHtml = fr.ffessm.doris.android.sitedoris.Outils
-			    			.getFichierTxtFromDisk(new File(context.getCacheDir()+"/"+fichierDansCache));
 			        	
 			        	Fiche ficheDeLaBase = (new DataBase_Outils(dbHelper.getDorisDBHelper()) ).queryFicheByNumeroFiche(ficheLight.getNumeroFiche());
 			        	ficheDeLaBase.setContextDB(dbHelper.getDorisDBHelper());
@@ -280,8 +270,6 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 							ficheDeLaBase.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
 							Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheDeLaBase.getNomCommun());
 		
-							ficheDeLaBase.updateFromFiche(ficheDeLaBase);
-							
 							dbHelper.getDorisDBHelper().ficheDao.update(
 									ficheDeLaBase
 								);
@@ -326,10 +314,11 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
         mNotificationHelper.completed();
 		// Start of user code VerifieMAJFiches onPostExecute
         
-        DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity =
-        		(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(
-        				context, dbHelper).execute("");
-		 
+        if ( typeLancement == Fiches_Outils.TypeLancement_kind.START) {
+	        DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity =
+	        		(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(
+	        				context, dbHelper).execute("");
+        }
         
 		// End of user code
     }

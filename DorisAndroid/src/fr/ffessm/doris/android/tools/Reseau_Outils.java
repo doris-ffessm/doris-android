@@ -105,16 +105,12 @@ public class Reseau_Outils {
      * et de stocker le résultat dans un cache qui devrait permettre d'accélérer
      * la récup et consommer moins de bande passante
      ********************************************************************** */
-	public String getHtml (String inUrl, String inCleFichier) throws IOException{
+	public String getHtml (String inUrl) throws IOException{
     	Log.d(LOG_TAG, "getHtml()- Début");
     	Log.d(LOG_TAG, "getHtml()- inUrl : " + inUrl);
-    	Log.d(LOG_TAG, "getHtml()- inCleFichier : " + inCleFichier);
-    	
-    	//Pour le travail de debbug
-    	//if (android.os.Build.VERSION.SDK_INT > 9) { StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); StrictMode.setThreadPolicy(policy); }
     	
     	
-    	if (inUrl.length()==0 || inCleFichier.length()==0)
+    	if (inUrl.length()==0)
     	{	
     		Log.d(LOG_TAG, "getHtml()- problèmes sur les paramètres");
     		return "";
@@ -155,23 +151,17 @@ public class Reseau_Outils {
 			}
     		//On lit ligne à ligne le bufferedReader pour le stocker dans le stringBuffer
     		String ligneCodeHTML = bufferedReader.readLine();
-    		FileOutputStream fos = null;
-    		fos = new FileOutputStream(new File(context.getCacheDir(), inCleFichier));
     		
     		int i = 0;
     		
     		while (ligneCodeHTML != null){
-    			fos.write(ligneCodeHTML.trim().getBytes());
-    			
+    			stringBuffer.append(ligneCodeHTML.trim());
     			i++;
     			//if (i % 100 == 0) Log.d(LOG_TAG, "getHtml() - "+i+" - ligneCodeHTML : "+ligneCodeHTML.trim().length());
     			
     			ligneCodeHTML = bufferedReader.readLine();
     		}
     		Log.d(LOG_TAG, "getHtml() - "+i);
-			
-    		fos.flush();
-            fos.close();
             
 		} catch(SocketTimeoutException erreur) {
 			String text = "La Connexion semble trop lente";

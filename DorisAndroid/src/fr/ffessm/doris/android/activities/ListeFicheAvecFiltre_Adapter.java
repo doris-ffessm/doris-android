@@ -315,7 +315,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         	ivIcon.getLayoutParams().width = defaultIconSize;
         	photoPrincipale.setContextDB(_contextDB);
 
-    		Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
+    		//Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
     		
     		Photos_Outils photosOutils = new Photos_Outils(context);
         	if(photosOutils.isAvailablePhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE)){

@@ -109,8 +109,8 @@ public class Photos_Outils {
 		return context.getDir( MED_RES_FICHE_FOLDER , Context.MODE_PRIVATE);
 	}
 	public File getImageFolderHiRes() { 
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageFolderHiRes() - context : " + context.toString() );
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageFolderHiRes() - HI_RES_FICHE_FOLDER : " +HI_RES_FICHE_FOLDER);
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageFolderHiRes() - context : " + context.toString() );
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageFolderHiRes() - HI_RES_FICHE_FOLDER : " +HI_RES_FICHE_FOLDER);
 		return context.getDir( HI_RES_FICHE_FOLDER , Context.MODE_PRIVATE);
 	}
 	public File getImageFolderPortraits() { 
@@ -143,7 +143,7 @@ public class Photos_Outils {
 	}
 	
 	public boolean isAvailableImagePhotoFiche(PhotoFiche photofiche){
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - photofiche : "+ photofiche );
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - photofiche : "+ photofiche );
 		Param_Outils paramOutils = new Param_Outils(context);
 		
 		switch(PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_region_ttzones,"P1"))){
@@ -165,7 +165,7 @@ public class Photos_Outils {
 	}
 
 	public boolean isAvailablePhoto(String inPhotoURL, ImageType inImageType){
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailablePhoto() - inPhotoURL : "+ inPhotoURL );
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailablePhoto() - inPhotoURL : "+ inPhotoURL );
 		
 		File imageFolder = getImageFolder(inImageType);	
 		if(!inPhotoURL.isEmpty()){
@@ -179,7 +179,7 @@ public class Photos_Outils {
 	
 	
 	public File getPhotoFile(String photoURL, ImageType inImageType) throws IOException{
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPhotoFile() - photoURL : "+ photoURL );
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPhotoFile() - photoURL : "+ photoURL );
 		
 		File imageFolder = getImageFolder(inImageType);		
 		return new File(imageFolder, photoURL);

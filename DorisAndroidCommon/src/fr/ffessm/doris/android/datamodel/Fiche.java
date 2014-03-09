@@ -764,12 +764,12 @@ public class Fiche {
 							
 							if ( Constants.getTypeParticipant(ligne.trim()) != null ){
 								intervenantQualite = Constants.getTypeParticipant(ligne.trim() );
-								log.debug("getFicheFromHtml() - Type Intervenant: " + intervenantQualite);
+								log.info("getFicheFromHtml() - Type Intervenant: " + intervenantQualite);
 							}
 							
 							if ( ligne.trim().contains("contact_numero=") ){
 								intervenantRef = ligne.trim().replaceAll(".*contact_fiche.*contact_numero=(.*)>", "$1");
-								log.debug("getFicheFromHtml() - Ref Intervenant: " + intervenantRef);
+								log.info("getFicheFromHtml() - Ref Intervenant: " + intervenantRef);
 								
 								Participant participant = SiteDoris.getParticipantFromListeParticipants(listeParticipants, Integer.valueOf(intervenantRef) );
 								if (participant != null) {
@@ -839,7 +839,7 @@ public class Fiche {
 									section = Outils.nettoyageTextes(section);
 								}
 							}
-							log.debug("getFiche() - Section : " + section);
+							log.info("getFiche() - Section : " + section);
 							dernierTitreSection = section;
 						}
 						if (element.getContent().toString().contains("class=\"normal\"")) {
@@ -859,7 +859,7 @@ public class Fiche {
 							}
 							
 							texte = Outils.nettoyageTextes(texte);
-							log.debug("getFiche() - Texte : " + texte);
+							log.info("getFiche() - Texte : " + texte);
 							positionSectionDansFiche++;
 							SectionFiche contenu = new SectionFiche(100+positionSectionDansFiche, dernierTitreSection, texte);
 							contenu.setFiche(this);

@@ -103,8 +103,9 @@ public class Textes_Outils {
 	        	
 	        	String balise = texteInter.substring(posDepTexteInter+2, posFinTexteInter);
 	        	
-	        	Log.d(LOG_TAG, "textToSpannableStringDoris() - texteInter : "+texteInter
+	        	/*Log.d(LOG_TAG, "textToSpannableStringDoris() - texteInter : "+texteInter
 	        			+ " - " + posDepTexteInter + "-" + posFinTexteInter + " -> " + balise);
+	        	*/
 	        	
 	        	if (balise.equals("i")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
@@ -411,17 +412,17 @@ public class Textes_Outils {
 	        	else if ( ts.spanType == TextSpan.SpanType.ILLUSTRATION_DEFINITION) {
 	    	        //Pour jour mettre des images directement dans le texte : la picto dangerosité par exemple.
 	    	        String nomPhoto = Constants.PREFIX_IMGDSK_DEFINITION+ts.info;
-	    	        Log.d(LOG_TAG, "textToSpannableStringDoris()- nomPhoto : "+nomPhoto);
+	    	        //Log.d(LOG_TAG, "textToSpannableStringDoris()- nomPhoto : "+nomPhoto);
 
 	    	        Drawable drawable = new BitmapDrawable();
 	    	        ImageSpan imageSpan = null;
 	    	        Photos_Outils photosOutils = new Photos_Outils(context);
 	    	        
 	    	        if(photosOutils.isAvailablePhoto(nomPhoto, Photos_Outils.ImageType.ILLUSTRATION_DEFINITION)){
-	    	        	Log.d(LOG_TAG, "textToSpannableStringDoris()- isAvailablePhoto");
+	    	        	//Log.d(LOG_TAG, "textToSpannableStringDoris()- isAvailablePhoto");
 	    	        	try {
 	    	        		String path = photosOutils.getPhotoFile(nomPhoto, Photos_Outils.ImageType.ILLUSTRATION_DEFINITION).getAbsolutePath();
-	    	        		Log.d(LOG_TAG, "textToSpannableStringDoris()- path : "+path);
+	    	        		//Log.d(LOG_TAG, "textToSpannableStringDoris()- path : "+path);
 
 	    	        		drawable = Drawable.createFromPath(path);
 							drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight()); 
@@ -431,7 +432,7 @@ public class Textes_Outils {
 						}
 
 	    	        }  else {
-	    	        	Log.d(LOG_TAG, "textToSpannableStringDoris()- ! isAvailablePhoto");
+	    	        	//Log.d(LOG_TAG, "textToSpannableStringDoris()- ! isAvailablePhoto");
 	    	        	imageSpan = new ImageSpan(context, R.drawable.app_glossaire_indisponible );
 	    	        	
 	    				ClickableSpan clickableSpan = new ClickableSpan() {  
@@ -446,8 +447,8 @@ public class Textes_Outils {
 				        richtext.setSpan(clickableSpan, ts.positionDebut, ts.positionFin, 0);
 	    	        }
 
-	    	        Log.d(LOG_TAG, "textToSpannableStringDoris()- richtext : "+richtext.length());
-	    	        Log.d(LOG_TAG, "textToSpannableStringDoris()- ts.positionDebut : "+ts.positionDebut);
+	    	        //Log.d(LOG_TAG, "textToSpannableStringDoris()- richtext : "+richtext.length());
+	    	        //Log.d(LOG_TAG, "textToSpannableStringDoris()- ts.positionDebut : "+ts.positionDebut);
 	    	        richtext.setSpan(imageSpan, ts.positionDebut, ts.positionFin, 0);
 
 	        	}

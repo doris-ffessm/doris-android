@@ -59,18 +59,14 @@ import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports VerifieMAJFiche_BgActivity
 
-import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import android.widget.Toast;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
-import fr.ffessm.doris.android.tools.Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.DorisApplicationContext;
 // End of user code
@@ -118,7 +114,8 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
 
     	int numeroFiche = Integer.valueOf(arg0[0]);
     	
-    	mNotificationHelper.setMaxItemToProcess(""+100);
+    	mNotificationHelper.setMaxItemToProcess(""+1);
+    	publishProgress(1);
 		// End of user code
     	
     	// Start of user code main loop of task VerifieMAJFiche_BgActivity
@@ -137,19 +134,16 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
     	String urlFiche =  Constants.getFicheFromIdUrl( numeroFiche );
     	Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlFiche);
     	
-    	String fichierDansCache = "fiche-"+numeroFiche+".html";
-    	Log.d(LOG_TAG, "doInBackground() - fichierDansCache : "+fichierDansCache);
-    	
+    	String contenuFichierHtml = "";
     	try {
-    		reseauOutils.getHtml(urlFiche, fichierDansCache);
+    		contenuFichierHtml = reseauOutils.getHtml(urlFiche);
 		} catch (IOException e) {
 			Log.w(LOG_TAG, e.getMessage(), e);
 		}   
     	
-    	String contenuFichierHtml = fr.ffessm.doris.android.sitedoris.Outils
-			.getFichierTxtFromDisk(new File(context.getCacheDir()+"/"+fichierDansCache));
- 
     	Fiche ficheSite = new Fiche();
+    	ficheSite.setContextDB(dbHelper.getDorisDBHelper());
+    	
 		ficheSite.getFicheEtatDateModifFromHtml(contenuFichierHtml);
 		Log.d(LOG_TAG, "doInBackground() - Fiche du Site : "+ficheSite.getEtatFiche()+" - "
 				+ ficheSite.getDateModification());
@@ -165,48 +159,28 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
 	    	List<Participant> listeParticipants = new ArrayList<Participant>(0);
 			listeParticipants.addAll(dbHelper.getParticipantDao().queryForAll());
 			Log.d(LOG_TAG, "doInBackground() - listeParticipants.size : "+listeParticipants.size());
-	    	
-			ficheSite.setContextDB(dbHelper.getDorisDBHelper());
 			
 			try {
-				ficheSite.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
-				Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheSite.getNomCommun());
+				ficheDeLaBase.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
+				Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheDeLaBase.getNomCommun());
 
-				ficheDeLaBase.updateFromFiche(ficheSite);
-				
 				dbHelper.getDorisDBHelper().ficheDao.update(
 						ficheDeLaBase
 					);
-
-				
+	
 			} catch (SQLException e) {
 				Log.w(LOG_TAG, e.getMessage(), e);
 			}
 		
 		}
     	
-    	
-    	// TODO : à faire ensuite
-		// you should indicates the progression using publishProgress()
-		for (int i=10;i<=100;i += 10) {
-            try {
-				// simply sleep for one second
-                Thread.sleep(100);
-                publishProgress(i);
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-		
-		
-		
+	
 
 		// End of user code
         
 		// Start of user code end of task VerifieMAJFiche_BgActivity
 		// return the number of item processed
-        return 100;
+        return 1;
 		// End of user code
     }
     protected void onProgressUpdate(Integer... progress) {
