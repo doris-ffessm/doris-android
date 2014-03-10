@@ -263,7 +263,12 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 			    			Log.w(LOG_TAG, e.getMessage(), e);
 			    		}   
 			        	
-			        	Fiche ficheDeLaBase = (new DataBase_Outils(dbHelper.getDorisDBHelper()) ).queryFicheByNumeroFiche(ficheLight.getNumeroFiche());
+			        	Fiche ficheDeLaBase =
+			        			(new DataBase_Outils(dbHelper.getDorisDBHelper()) ).queryFicheByNumeroFiche(
+			        					ficheLight.getNumeroFiche());
+			        	if (ficheDeLaBase == null){
+			        		ficheDeLaBase = new Fiche();
+			        	}
 			        	ficheDeLaBase.setContextDB(dbHelper.getDorisDBHelper());
 			        	ficheDeLaBase.setEtatFiche(ficheLight.getEtatFiche());
 						try {
