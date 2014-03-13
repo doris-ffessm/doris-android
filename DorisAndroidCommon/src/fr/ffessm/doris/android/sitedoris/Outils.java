@@ -69,9 +69,9 @@ public class Outils {
     
 
     public static boolean getFichierFromUrl(String inUrl, String inFichierRetour) {
-    	log.debug("getFichierUrl()- Début");
-    	log.info("getFichierUrl()- url : " + inUrl);
-    	log.info("getFichierUrl()- Fichier à Retourner : " + inFichierRetour);
+    	//log.debug("getFichierUrl()- Début");
+    	//log.debug("getFichierUrl()- url : " + inUrl);
+    	//log.debug("getFichierUrl()- Fichier à Retourner : " + inFichierRetour);
     	
     	InputStream flux = null;
         FileOutputStream fichierUrl = null;
@@ -125,8 +125,8 @@ public class Outils {
 
 
 	public static String getFichierTxtFromDisk(File inFichier) {
-    	log.info("getFichierTxtFromDisk()- Début");
-    	log.info("getFichierTxtFromDisk()- Fichier : " + inFichier);
+    	//log.debug("getFichierTxtFromDisk()- Début");
+    	//log.debug("getFichierTxtFromDisk()- Fichier : " + inFichier);
     	
 		try {
 
@@ -137,12 +137,12 @@ public class Outils {
 					new InputStreamReader(
 							new FileInputStream(inFichier), "iso-8859-1"));
 			
-			log.info("getFichierTxtFromDisk()- 020");
+			//log.debug("getFichierTxtFromDisk()- 020");
 			
 			StringBuilder objBuilder = new StringBuilder();
 			
 			try {
-				log.info("getFichierTxtFromDisk()- 030");
+				//log.debug("getFichierTxtFromDisk()- 030");
 				String strLine;
 				while ((strLine = objBufferReader.readLine()) != null) {
 					objBuilder.append(strLine);
@@ -150,8 +150,8 @@ public class Outils {
 				}
 				objBufferReader.close();
 					
-				log.info("getFichierTxtFromDisk()- objBuffer.length : "+objBuilder.toString().length());
-				log.info("getFichierTxtFromDisk()- Fin");
+				//log.debug("getFichierTxtFromDisk()- objBuffer.length : "+objBuilder.toString().length());
+				//log.debug("getFichierTxtFromDisk()- Fin");
 		    	return (objBuilder.toString());
 			    	
 
@@ -171,10 +171,10 @@ public class Outils {
 	}
 
     public static String nettoyageBalises(String texte) {
-    	log.info("nettoyageBalises() - Début");
+    	//log.debug("nettoyageBalises() - Début");
     	//log.debug("nettoyageBalises() - texteANettoye : " + texteANettoye);
 		
-    	log.info("nettoyageBalises() - 005");
+    	//log.debug("nettoyageBalises() - 005");
     	
 		//TODO : je me demande bien pourquoi j'ai fait cela : GMo 04/01/2014
 		texte = StringUtils.replace(texte, "&nbsp;", " ");
@@ -183,20 +183,20 @@ public class Outils {
 		texte = StringUtils.replace(texte, "<b>", "<strong>");
 		texte = StringUtils.replace(texte, "</b>", "</strong>");
 
-		log.info("nettoyageBalises() - 010");
+		//log.debug("nettoyageBalises() - 010");
 		
 		// Il faut nettoyer cette balise originale ...
 		// <strong style="font-size: 11px;">
 		texte = texte.replaceAll("<strong [^>]*>", "");
 		
-		log.info("nettoyageBalises() - 020");
+		//log.debug("nettoyageBalises() - 020");
 		
 		// Tous les sauts de ligne de la même façon + gain de place en hauteur pour l'interface Android
 		texte = StringUtils.replace(texte, "<br>", "<br/>");
 		texte = StringUtils.replace(texte, "<br />", "<br/>");
 		texte = StringUtils.replace(texte, "<br/><br/>", "<br/>");
 		
-		log.info("nettoyageBalises() - 025");
+		//log.debug("nettoyageBalises() - 025");
 		
 		//Permet que la recherche des définitions fonctionne mieux ensuite
 		texte = StringUtils.replace(texte, "**", "##");
@@ -204,17 +204,20 @@ public class Outils {
 		texte = StringUtils.replace(texte, "</em>*", "*</em>");
 		texte = StringUtils.replace(texte, "</i>*", "*</i>");
 		
-		log.info("nettoyageBalises() - 030");
+		//log.debug("nettoyageBalises() - 030");
 		
 		//L'adresse du site n'apporte rien et pose des problèmes qd on va recherche les liens
 		// vers les sites extérieurs
-		texte = StringUtils.replace(texte, Constants.getSiteUrl(), "");
+		String SITE_RACINE_URL = "http://doris.ffessm.fr/";
+		//texte = StringUtils.replace(texte, Constants.getSiteUrl(), "");
+		texte = StringUtils.replace(texte, SITE_RACINE_URL, "");
+		
 		//De même pour les site : www.ffessm.fr et www.security.fr qui sont sur toutes les pages
 		texte = StringUtils.replace(texte, "href=\"http://www.ffessm.fr\"", "");
 		texte = StringUtils.replace(texte, "href=\"http://biologie.ffessm.fr/\"", "");
 		texte = StringUtils.replace(texte, "href=\"http://www.security.fr/\"", "");
 		
-		log.info("nettoyageBalises() - 040");
+		//log.debug("nettoyageBalises() - 040");
 		
 		// Certaines fiches comme : http://doris.ffessm.fr/fiche2.asp?fiche_numero=3527 (au 30 mars 13)
 		// contiennent des " dans le nom de l'animal, or les " ne sont pas échappés donc ça met le
@@ -223,7 +226,7 @@ public class Outils {
 		// et qui ne contiennent pas de = ? < >
 		texte = texte.replaceAll("(href=\"[^\"]*)\"([^\"=?<>]*)\"([^\"]*\")", "$1$2$3");
 		
-		log.info("nettoyageBalises() - 050");
+		//log.debug("nettoyageBalises() - 050");
 		
 		//Il arrive très souvent qu'une balise ouverte soit aussitôt refermée
 		// ce doit sans doute être dû à l'interface de saisie ou des outils utilisés en amont
@@ -236,21 +239,21 @@ public class Outils {
 		texte = StringUtils.replace(texte, "</i><i>", "");
 		texte = texte.replaceAll("<a href=\"http://[^>]*></a>", "");
 			
-		log.info("nettoyageBalises() - 060");
+		//log.debug("nettoyageBalises() - 060");
 		
 		// Suppression des textes masqués en étant écrit en blanc sur fond blanc
 		// <span style="color: #ffffff;">Vidéoris</span>
 		texte = texte.replaceAll("<span style=\"color: #ffffff;\">[^<>]*</span>", "");
 		
-		log.info("nettoyageBalises() - 090");
+		//log.debug("nettoyageBalises() - 090");
 		
 		//log.debug("nettoyageBalises() - texte : " + texte);
-		log.info("nettoyageBalises() - Fin");
+		//log.debug("nettoyageBalises() - Fin");
 		return texte;
 	}
 
     public static String remplacementBalises(String texte, boolean avecMiseEnForme) {
-    	log.info("remplacementBalises() - Début");
+    	//log.debug("remplacementBalises() - Début");
     	//log.debug("remplacementBalises() - texteANettoye : " + texte);
 
 		if (avecMiseEnForme) {
@@ -303,7 +306,7 @@ public class Outils {
 		}
 		
 		//log.debug("remplacementBalises() - texteNettoye : " + texteNettoye);
-		log.info("remplacementBalises() - Fin");
+		//log.info("remplacementBalises() - Fin");
 		return texte;
 	}
 	

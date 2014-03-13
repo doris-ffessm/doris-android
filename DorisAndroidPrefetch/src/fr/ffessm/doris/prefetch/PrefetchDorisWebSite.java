@@ -594,8 +594,8 @@ public class PrefetchDorisWebSite {
 					if (nbMaxFichesTraitees == 9999 || nbBiblioTelechargees <= 10) {
 	
 						String urlBiblio = Constants.getBibliographieUrl(biblio.getNumeroDoris());
-						String fichierBiblio = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/"+"biblio-" + biblio.getNumeroDoris()+".html";
-						String fichierBiblioRef = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/" + biblio.getNumeroDoris()+".html";
+						String fichierBiblio = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/" + "biblio-" + biblio.getNumeroDoris()+".html";
+						String fichierBiblioRef = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/" + "biblio-" + biblio.getNumeroDoris()+".html";
 						
 						if ( action.equals("INIT") ) {
 							if( ! isFileExistingPath( fichierBiblioRef ) ){
@@ -648,12 +648,15 @@ public class PrefetchDorisWebSite {
 						
 							if ( action.equals("CDDVD") ) {
 								String fichierImageRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/";
+								String fichierImageRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/";
 								
 								// On stocke la photo dans les Vignettes
-								if (Outils.getFichierFromUrl(Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+biblio.getNumeroDoris()+".jpg",
-										fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_BIBLIO+biblio.getNumeroDoris()+".jpg" )) {
-								} else {
-									log.info("Une erreur est survenue lors de la récupération de la photo de l'entrée Biblio. : "+biblio.getTitre() + ", il est probable qu'il n'y ait pas d'illustration.");
+								if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_BIBLIO+biblio.getNumeroDoris()+".jpg" ) ){
+									if (Outils.getFichierFromUrl(Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+biblio.getNumeroDoris()+".jpg",
+											fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_BIBLIO+biblio.getNumeroDoris()+".jpg" )) {
+									} else {
+										log.info("Une erreur est survenue lors de la récupération de la photo de l'entrée Biblio. : "+biblio.getTitre() + ", il est probable qu'il n'y ait pas d'illustration.");
+									}
 								}
 							}
 						}
@@ -893,7 +896,7 @@ public class PrefetchDorisWebSite {
 						break; // ignore les fiches suivantes
 					}
 					
-					if ( nbFichesTraitees != 0 && (nbFichesTraitees % 50) == 0) {
+					if ( nbFichesTraitees != 0 && (nbFichesTraitees % 500) == 0) {
 						log.info("fiche traitées = "+nbFichesTraitees+", pause de 1s...");
 						Thread.sleep(1000);
 					}
@@ -1644,7 +1647,8 @@ public class PrefetchDorisWebSite {
 		lienANettoyer.add(new Lien(LienKind.VIGNETTE, "http://doris.ffessm.fr/gestionenligne/photos_fiche_vig/","/"));
 		lienANettoyer.add(new Lien(LienKind.MED_RES, "http://doris.ffessm.fr/gestionenligne/photos_fiche_moy/","/"));
 		lienANettoyer.add(new Lien(LienKind.HI_RES, "http://doris.ffessm.fr/gestionenligne/photos/","/"));
-		
+		lienANettoyer.add(new Lien(LienKind.VIGNETTE, "http://doris.ffessm.fr/gestionenligne/photos_biblio_moy/","/biblio-"));
+			
 		lienANettoyer.add(new Lien(LienKind.ICONE, "gestionenligne/images_groupe/","/images_groupe_"));
 		lienANettoyer.add(new Lien(LienKind.ICONE, "gestionenligne/images_sousgroupe/","/images_sousgroupe_"));
 				
@@ -1699,7 +1703,7 @@ public class PrefetchDorisWebSite {
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "photo_gde_taille_fiche2.asp\\?varpositionf=[^\">]*fiche_numero = ([^&]*)&[^\">]*\"","fiche-$1_listePhotos.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "photo_gde_taille.asp\\?varposition=[^\">]*\"","indisponible_CDDVD.html\""));
 		
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio_fiche.asp\\?biblio_numero=[^\">]*\"","href=\"indisponible_CDDVD.html\""));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio_fiche.asp\\?biblio_numero=([^\">]*)\"","href=\"biblio-$1.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?mapage=([^&>]*)&[^\">]*\"","href=\"listeBibliographies-$1.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?page=Suivant[^\"]*","href=\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?page=Precedent[^\"]*","href=\""));
