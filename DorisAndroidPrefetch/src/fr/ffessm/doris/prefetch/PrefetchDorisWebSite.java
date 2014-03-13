@@ -386,6 +386,7 @@ public class PrefetchDorisWebSite {
 							// On stocke la photo dans les Vignettes
 							if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_") ) ){
 								String photoURL = URLEncoder.encode(participant.getCleURLPhotoParticipant(),"UTF-8");
+								log.debug("doMain() - photoURL : "+photoURL);
 								
 								if (Outils.getFichierFromUrl(Constants.SITE_RACINE_URL+photoURL,
 										fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_"))) {

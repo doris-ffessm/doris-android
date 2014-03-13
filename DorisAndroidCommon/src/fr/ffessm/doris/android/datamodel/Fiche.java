@@ -372,6 +372,8 @@ public class Fiche {
 
 			for (Element elementTable_TABLE : listeElementsTable_TABLE) {
 				num_table++;
+				log.debug("getFicheFromHtml() - num_table : " + num_table);
+				
 				//log.debug("getFiche() - ligneTable_TR :" + num_table);
 				//log.debug("getFiche() - elementTable_TR : " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),100)));
 				switch(num_table) {
