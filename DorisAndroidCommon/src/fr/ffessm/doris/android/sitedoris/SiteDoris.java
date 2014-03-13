@@ -505,6 +505,7 @@ public class SiteDoris {
 							//log.info("getListeParticipantsParInitiale() - photo : "+elementIMG.getAttributeValue("src"));
 							participantUrlPhoto = elementIMG.getAttributeValue("src");
 							participantUrlPhoto = participantUrlPhoto.replace(" ", "%20");	// on s'assure d'avoir une url valide
+							log.info("getListeParticipantsParInitiale() - participantUrlPhoto : "+participantUrlPhoto);
 						}
 					}
 
