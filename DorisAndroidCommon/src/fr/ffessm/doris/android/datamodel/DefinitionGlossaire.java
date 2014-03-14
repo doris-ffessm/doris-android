@@ -146,7 +146,7 @@ public class DefinitionGlossaire {
 	// Start of user code DefinitionGlossaire additional user properties
 
     public void getDefinitionsFromHtml(String inCodePageHtml){
-    	log.debug("getDefinitionsFromHtml() - Début");
+    	//log.debug("getDefinitionsFromHtml() - Début");
 
     	inCodePageHtml = Outils.nettoyageBalises(inCodePageHtml);
 
@@ -203,12 +203,12 @@ public class DefinitionGlossaire {
 			cleURLIllustration = cleURLIllustration + imageDefinition + ";";
 		}
 
-    	log.debug("getDefinitionsFromHtml() - Fin");
+    	//log.debug("getDefinitionsFromHtml() - Fin");
     }
 	
 	
     public List<String> getListeImagesDefinition(){
-    	log.debug("getListeImagesDefinition() - Début");
+    	//log.debug("getListeImagesDefinition() - Début");
     	log.debug("getListeImagesDefinition() - definition : " + definition);
     	List<String> listeImagesDefinition = new ArrayList<String>();
     	
@@ -221,12 +221,12 @@ public class DefinitionGlossaire {
 		do {
 			iteration++;
 			positionCourante = chaineCaract.indexOf("{{E:", positionCourante);
-			log.debug("getListeImagesDefinition() - 1 : "+positionCourante+" - "+positionFin);
+			//log.debug("getListeImagesDefinition() - 1 : "+positionCourante+" - "+positionFin);
 			
 			if (positionCourante != -1) {
 
 				positionFin = chaineCaract.indexOf("/}}", positionCourante);
-				log.debug("getListeImagesDefinition() - 2 : "+positionCourante+" - "+positionFin);
+				//log.debug("getListeImagesDefinition() - 2 : "+positionCourante+" - "+positionFin);
 				
 				String image = chaineCaract.substring(positionCourante+4, positionFin);
 				log.debug("getListeImagesDefinition() - image : "+image);
@@ -241,7 +241,7 @@ public class DefinitionGlossaire {
 	
 	 	} while( fin == false && iteration < 10);
 		
-		log.debug("getListeImagesDefinition() - Fin");
+		//log.debug("getListeImagesDefinition() - Fin");
 		return listeImagesDefinition;
     }
     

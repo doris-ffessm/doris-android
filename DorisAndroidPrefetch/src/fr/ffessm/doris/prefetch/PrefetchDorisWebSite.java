@@ -1649,7 +1649,8 @@ public class PrefetchDorisWebSite {
 		lienANettoyer.add(new Lien(LienKind.MED_RES, "http://doris.ffessm.fr/gestionenligne/photos_fiche_moy/","/"));
 		lienANettoyer.add(new Lien(LienKind.HI_RES, "http://doris.ffessm.fr/gestionenligne/photos/","/"));
 		lienANettoyer.add(new Lien(LienKind.VIGNETTE, "http://doris.ffessm.fr/gestionenligne/photos_biblio_moy/","/biblio-"));
-			
+		lienANettoyer.add(new Lien(LienKind.VIGNETTE, "http://doris.ffessm.fr/gestionenligne/photos_vig/","/"));
+		
 		lienANettoyer.add(new Lien(LienKind.ICONE, "gestionenligne/images_groupe/","/images_groupe_"));
 		lienANettoyer.add(new Lien(LienKind.ICONE, "gestionenligne/images_sousgroupe/","/images_sousgroupe_"));
 				
@@ -1822,6 +1823,16 @@ public class PrefetchDorisWebSite {
 			e.printStackTrace();
 		}
 		
+		//Copie de la page d'erreur
+		log.info("Copie du Fichier : indisponible_CDDVD.html");
+		dossierCD = new File(fichierCDLien+DOSSIER_HTML);
+		fichierRef = new File(DOSSIER_RES_HTML+"/"+"indisponible_CDDVD.html");
+		try {
+			FileUtils.copyFileToDirectory(fichierRef, dossierCD);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		log.debug("creationCD() - Fin");
 	}
 
@@ -1952,12 +1963,12 @@ public class PrefetchDorisWebSite {
 			}
 			// Les pages contenant les espèces du Groupe : groupe-10-2-73-1.html
 			if (fichierHtml.getName().contains("groupe-")){
-				
+				log.debug("transfoHtml() - fichier groupe : "+fichierHtml.getName());
 				String[] info = fichierHtml.getName().replace(".html", "").split("-");
 				String numZone = info[1].trim();
-				String numGroupe = info[2].trim().trim();
-				String numSousGroupe = info[3].trim().trim();
-				String numPage = info[4].trim().trim();
+				String numGroupe = info[2].trim();
+				String numSousGroupe = info[3].trim();
+				String numPage = info[4].trim();
 				
 				log.debug("transfoHtml() - groupe- : "+fichierHtml.getName()+" - "+numZone+
 						" - "+numGroupe+" - "+numSousGroupe+" - "+numPage);
@@ -1966,33 +1977,33 @@ public class PrefetchDorisWebSite {
 				int numPagePrecedente = Integer.valueOf(numPage)-1;
 				
 				String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
-				log.debug("transfoHtml() - contenuFichier : "+contenuFichier.length());
+				//log.debug("transfoHtml() - contenuFichier : "+contenuFichier.length());
 				
 				// Lien vers la page de tous les groupes de la zone
 				//groupes.asp?temp=0
 				contenuFichier = contenuFichier.replaceAll(
 						"href=\"groupes.asp\\?temp=0[^\"]*\"",
 						"href=\"groupes_zone-"+numZone+".html\"");
-				log.debug("transfoHtml() - 110");
+				//log.debug("transfoHtml() - 110");
 				
 				// Page Suivante
 				// fiches_liste.asp?fichier=&groupe_numero=49&sousgroupe_numero=&rnomscient=&rtrie=&rnomcommunfr=&page=Suivant&PageCourante=2&term=&enco=&prop=&allcheck=
 				contenuFichier = contenuFichier.replaceAll(
 						"href=\"fiches_liste.asp\\?fichier=[^\"]*&page=Suivant&[^\"]*\"",
 						"href=\"groupe-"+numZone+"-"+numGroupe+"-"+numSousGroupe+"-"+numPageSuivante+".html\"");
-				log.debug("transfoHtml() - 120");
+				//log.debug("transfoHtml() - 120");
 				
 				// Précédente
 				// fiches_liste.asp?&fichier=&groupe_numero=49&sousgroupe_numero=&rnomscient=&rtrie=&rnomcommunfr=&page=Precedent&PageCourante=2&term=&enco=&prop=&allcheck=
 				contenuFichier = contenuFichier.replaceAll(
 						"href=\"fiches_liste.asp\\?&fichier=[^\"]*&page=Precedent&[^\"]*\"",
 						"href=\"groupe-"+numZone+"-"+numGroupe+"-"+numSousGroupe+"-"+numPagePrecedente+".html\"");
-				log.debug("transfoHtml() - 130");
+				//log.debug("transfoHtml() - 130");
 				
 				try {
-					log.debug("transfoHtml() - 210");
+					//log.debug("transfoHtml() - 210");
 					FileUtils.write(fichierHtml, contenuFichier, "iso-8859-1");
-					log.debug("transfoHtml() - 220");
+					//log.debug("transfoHtml() - 220");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

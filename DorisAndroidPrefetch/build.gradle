@@ -3,6 +3,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 	compile project(':DorisAndroidCommon')
 }
+
+
 sourceSets {
     main.java.srcDirs = ['src']
     main.resources.srcDirs = ['src']
@@ -16,10 +18,19 @@ task(buildDorisDB, dependsOn: 'classes', type: JavaExec) {
 	classpath = sourceSets.main.runtimeClasspath
 	args '-v',  'INIT'
 }
+
+
 task cleanDorisDB(type: Delete) {
-  delete 'run'
+	delete 'run'
 }
 
+task cleanDorisDBKeepRef(type: Delete) {
+  FileTree tree = fileTree(dir: 'run')
+  // On n'efface pas html_ref et images_ref pour ne pas avoir à les re-télécharger à chaque fois
+  tree.exclude '**/html_ref*'
+  tree.exclude '**/images_ref*'
+  delete tree
+}
 
 task(buildDorisCDDVD, dependsOn: 'classes', type: JavaExec) {
 	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'

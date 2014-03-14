@@ -71,35 +71,35 @@ public class SiteDoris {
     }
     
 	public static HashSet<FicheLight> getListeFichesFromHtml(String inCodePageHtml) {
-    	log.info("getListeFichesFromHtml()- Début");
+    	//log.info("getListeFichesFromHtml()- Début");
     	
     	HashSet<FicheLight> listeFiches = new HashSet<FicheLight>(0);
     	
     	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml),false ) );
-    	log.info("getListeFichesFromHtml()- 010");
+    	//log.info("getListeFichesFromHtml()- 010");
     	source.fullSequentialParse();
-    	log.debug("getListeFichesFromHtml()- source.length() : " + source.length());
-    	//log.debug("getListeFiches()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
+    	//log.debug("getListeFichesFromHtml()- source.length() : " + source.length());
+    	//log.debug("getListeFichesFromHtml()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
 
     	Element elementTableracine=source.getFirstElementByClass("titre_page").getParentElement().getParentElement();
-    	//log.debug("getListeFiches()- elementTableracine.length() : " + elementTableracine.length());
-    	//log.debug("getListeFiches()- elementTableracine : " + elementTableracine.toString().substring(0, Math.min(100, elementTableracine.toString().length())));
+    	//log.debug("getListeFichesFromHtml()- elementTableracine.length() : " + elementTableracine.length());
+    	//log.debug("getListeFichesFromHtml()- elementTableracine : " + elementTableracine.toString().substring(0, Math.min(100, elementTableracine.toString().length())));
 
     	List<? extends Element> listeElementsTD = elementTableracine.getAllElements(HTMLElementName.TD);
-    	log.debug("getListeFichesFromHtml() - listeElementsTD.size() : " + listeElementsTD.size());
+    	//log.debug("getListeFichesFromHtml() - listeElementsTD.size() : " + listeElementsTD.size());
 		
     	for (Element elementTD : listeElementsTD) {
-    		//log.debug("getListeFiches() - elementTD.length() : " + elementTD.length());
-    		//log.debug("getListeFiches()- elementTD : " + elementTD.toString().substring(0, Math.min(100, elementTD.toString().length())));
+    		//log.debug("getListeFichesFromHtml() - elementTD.length() : " + elementTD.length());
+    		//log.debug("getListeFichesFromHtml()- elementTD : " + elementTD.toString().substring(0, Math.min(100, elementTD.toString().length())));
     		
     		String elementTDwidth = elementTD.getAttributeValue("width");
 			if (elementTDwidth != null){
     			if (elementTDwidth.toString().equals("75%")) {
-    				//log.debug("getListeFiches() - elementTD : "+elementTD.getRenderer());
+    				//log.debug("getListeFichesFromHtml() - elementTD : "+elementTD.getRenderer());
     				Element elementTDA = elementTD.getFirstElement(HTMLElementName.A);
     				
     				String contenu = elementTDA.getRenderer().toString();
-    				//log.debug("getListeFiches() - contenu : "+contenu);
+    				//log.debug("getListeFichesFromHtml() - contenu : "+contenu);
     				
     				String ficheNomScientifique = contenu.replaceAll("([^-]*)-(.*)", "$1").trim();
     				String ficheNomCommun = contenu.replaceAll("([^-]*)-(.*)", "$2").trim();
@@ -115,14 +115,14 @@ public class SiteDoris {
 			}
 			
 		}
-		log.info("getListeFichesFromHtml()- Fin");
+		//log.info("getListeFichesFromHtml()- Fin");
 		return listeFiches;
     }
 	
 	
     
     public static List<Groupe> getListeGroupesFromHtml(String inCodePageHtml){
-    	log.trace("getGroupes() - Début");
+    	//log.trace("getGroupes() - Début");
     	
     	List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
     	
@@ -304,12 +304,12 @@ public class SiteDoris {
 				}
 			}
 		}
-		log.trace("getGroupes() - Fin");
+		//log.trace("getGroupes() - Fin");
 		return listeGroupes;
     }
 
     public static Groupe getGroupeFromListeGroupes(List<Groupe> listeGroupes, int numGroupe, int numSousGroupe){
-    	log.trace("getGroupeFromListeGroupes() - Début");
+    	//log.trace("getGroupeFromListeGroupes() - Début");
     	log.debug("getGroupeFromListeGroupes() - numGroupe : "+numGroupe);
     	log.debug("getGroupeFromListeGroupes() - numSousGroupe : "+numSousGroupe);
     	
@@ -323,7 +323,7 @@ public class SiteDoris {
     	
     		if ( groupe.getNumeroGroupe() == numGroupe && ( numSousGroupe == 0 || groupe.getNumeroSousGroupe() == numSousGroupe) ) {
     			log.debug("getGroupeFromListeGroupes() - Groupe Trouvé : "+groupe.getId()+" - "+groupe.getNomGroupe());
-    			log.trace("getGroupeFromListeGroupes() - Fin");
+    			//log.trace("getGroupeFromListeGroupes() - Fin");
     			return groupe;
     		}
     		
@@ -337,7 +337,7 @@ public class SiteDoris {
 
 	public static List<PhotoFiche> getListePhotosFicheFromHtml(Fiche fiche,
 			String inCodePageHtml) {
-		log.trace("getListePhotosFiche()- Début");
+		//log.trace("getListePhotosFiche()- Début");
     	
 		List<PhotoFiche> listePhotosFiche = new ArrayList<PhotoFiche>(0);
     	
@@ -410,13 +410,13 @@ public class SiteDoris {
 	
 
     public static List<Participant> getListeParticipantsParInitialeFromHtml(String inCodePageHtml){
-    	log.debug("getListeParticipantsParInitiale() - Début");
+    	//log.debug("getListeParticipantsParInitiale() - Début");
     	
     	List<Participant> listeParticipants = new ArrayList<Participant>(0);
     	
     	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), true ) );
     	source.fullSequentialParse();
-    	log.debug("getListeParticipantsParInitiale()- source.length() : " + source.length());
+    	//log.debug("getListeParticipantsParInitiale()- source.length() : " + source.length());
     	
     	/* Pour trouver les Participants
     	 *	Rechercher 1er TD Class = titre2
@@ -553,12 +553,12 @@ public class SiteDoris {
     	} // Fin Pour Chaque TR
     	
     	log.debug("getListeParticipantsParInitiale() - listeParticipants : "+listeParticipants.size());
-		log.debug("getListeParticipantsParInitiale() - Fin");
+		//log.debug("getListeParticipantsParInitiale() - Fin");
 		return listeParticipants;
     }
     
     public static HashSet<FicheLight> getListeFichesUpdated(HashSet<FicheLight> inListeFichesRef, HashSet<FicheLight> inListeFichesSite) {
-    	log.debug("getListeFichesUpdated()- Début");
+    	//log.debug("getListeFichesUpdated()- Début");
     	log.debug("getListeFichesUpdated()- Liste Base : "+inListeFichesRef.size());
     	log.debug("getListeFichesUpdated()- Liste Site : "+inListeFichesSite.size());
     	
@@ -588,7 +588,7 @@ public class SiteDoris {
     	}
     	log.debug("getListeFichesUpdated()- Liste Site Updated : "+listeFichesUpdated.size());
     	
-		log.debug("getListeFichesUpdated()- Fin");
+		//log.debug("getListeFichesUpdated()- Fin");
 		return listeFichesUpdated;
     }
     
@@ -629,7 +629,7 @@ public class SiteDoris {
     	List<? extends Element> listeElementsTD = source.getAllElementsByClass("liste0");
     			
     	for (Element elementTD : listeElementsTD) {
-    		log.debug("getListeDefinitionsParInitialeFromHtml()- elementTD : " +elementTD.getRenderer().toString());
+    		//log.debug("getListeDefinitionsParInitialeFromHtml()- elementTD : " +elementTD.getRenderer().toString());
 			if (elementTD.getRenderer().toString().trim().replaceAll("<[^>]*>", "").isEmpty() ) {
 				String numeroDefinition =  elementTD.getRenderer().toString().trim().replaceAll(".*glossaire_numero=([^&]*)&.*", "$1");
 				log.debug("getListeDefinitionsParInitialeFromHtml()- numeroDefinition : " +numeroDefinition);
@@ -677,7 +677,7 @@ public class SiteDoris {
     }
     
     public static List<EntreeBibliographie> getListeBiblioFromHtml(String inCodePageHtml) {
-    	log.trace("getListeBiblioFromHtml()- Début");
+    	//log.trace("getListeBiblioFromHtml()- Début");
     	
     	List<EntreeBibliographie> listeBiblio = new ArrayList<EntreeBibliographie>(0);
     	
@@ -691,20 +691,20 @@ public class SiteDoris {
     	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml) );
     	source.fullSequentialParse();
     	//log.debug("getListeBiblioFromHtml()- source.length() : " + source.length());
-    	//log.debug("getListeFiches()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
+    	//log.debug("getListeBiblioFromHtml()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
 
     	List<? extends Element> listeElementsA = source.getAllElements(HTMLElementName.A);
     	//log.debug("getListeBiblioFromHtml() - listeElementsA.size() : " + listeElementsA.size());
 
     	for (Element elementA : listeElementsA) {
-    		//log.debug("getListeFiches() - elementTD.length() : " + elementTD.length());
-    		//log.debug("getListeFiches()- elementTD : " + elementTD.toString().substring(0, Math.min(100, elementTD.toString().length())));
+    		//log.debug("getListeBiblioFromHtml() - elementTD.length() : " + elementTD.length());
+    		//log.debug("getListeBiblioFromHtml()- elementTD : " + elementTD.toString().substring(0, Math.min(100, elementTD.toString().length())));
     		
     		String elementAClass = elementA.getAttributeValue("class");
 			if (elementAClass != null){
     			if (elementAClass.toString().equals("normal")) {
-    	    		log.debug("getListeBiblioFromHtml() - - - - - - - -");
-    				log.debug("getListeFiches() - elementA : " + elementA.getContent().toString().replaceAll("\n|\r", ""));
+    	    		//log.debug("getListeBiblioFromHtml() - - - - - - - -");
+    				//log.debug("getListeBiblioFromHtml() - elementA : " + elementA.getContent().toString().replaceAll("\n|\r", ""));
     				
     				String bibliographie = elementA.getRenderer().toString().replaceAll("\n|\r", "").trim();
     				//log.debug("getListeBiblioFromHtml() - bibliographie : " + bibliographie);
@@ -719,7 +719,7 @@ public class SiteDoris {
     				log.debug("getListeBiblioFromHtml() - auteurs : " + auteurs);
     				
     				String titre = "";
-    				log.debug("getListeFiches() - STRONG : " + elementA.getFirstElement(HTMLElementName.STRONG));
+    				//log.debug("getListeBiblioFromHtml() - STRONG : " + elementA.getFirstElement(HTMLElementName.STRONG));
     				if (elementA.getFirstElement(HTMLElementName.STRONG) != null) {
     					titre = elementA.getFirstElement(HTMLElementName.STRONG).getRenderer().toString().trim().replaceAll("\n|\r", "").trim();
     				}
@@ -741,7 +741,7 @@ public class SiteDoris {
 			}
 			
 		}
-		log.trace("getListeBiblioFromHtml()- Fin");
+		//log.trace("getListeBiblioFromHtml()- Fin");
 		return listeBiblio;
     }
 	
