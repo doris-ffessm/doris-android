@@ -13,6 +13,13 @@ sourceSets {
 }
 
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// * INIT : L'ensemble des fiches est re-téléchargé pour créer la base
+// * html_ref est sans intérêt pour ce mode, en revanche à l'issu du traitement
+// * le dossier html pourrait être renommé en html_ref pour éviter aux autres 
+// * modes de tout re-télécharger
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+
 task(buildDorisDB, dependsOn: 'classes', type: JavaExec) {
 	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
@@ -20,20 +27,84 @@ task(buildDorisDB, dependsOn: 'classes', type: JavaExec) {
 }
 
 
-task cleanDorisDB(type: Delete) {
-	delete 'run'
-}
-
-task cleanDorisDBKeepRef(type: Delete) {
-  FileTree tree = fileTree(dir: 'run')
-  // On n'efface pas html_ref et images_ref pour ne pas avoir à les re-télécharger à chaque fois
-  tree.exclude '**/html_ref*'
-  tree.exclude '**/images_ref*'
-  delete tree
-}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// * Permet de créer la base et le CD hors ligne du Site
+// * Ce mode utilise html_ref et de image_ref ce qui permet de ne pas tout
+// * re-télécharger systématiquement. C'est suffisant pour un traitement quotidien.
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 
 task(buildDorisCDDVD, dependsOn: 'classes', type: JavaExec) {
 	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
 	args '-v',  'CDDVD'
 }
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// * Utile quand on veut créer un Base complètement à jour => tout le site sera
+// * re-téléchargé ensuite puisque plus de html_ref et de image_ref
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+
+task cleanDorisDB(type: Delete) {
+	delete 'run'
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// * Permet de supprimer html, image et database, ce qui permet de gagner de la place.
+// * S'ils n'étaient pas effacés, ils seraient renommés html_ref et de image_ref
+// * sont conservés ce qui permet de ne pas tout re-télécharger systématiquement.
+// * C'est suffisant pour un traitement quotidien.
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+
+task cleanDorisDBKeepRef(type: Delete) {
+  FileTree tree = fileTree(dir: 'DorisAndroidPrefetch/run')
+  // On n'efface pas html_ref et images_ref pour ne pas avoir à les re-télécharger à chaque fois
+  //tree.exclude '**/html_ref'
+  //tree.exclude '**/images_ref'
+  delete tree
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// * Déplacement de la Base vers DorisAndroid/assets/
+// * Permet que la prochaine génération de l'appli utilise la dernière version de la base 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+task copyDorisDBToAndroid(type: Copy) {
+    from ('run/database/DorisAndroid.db')
+    into ('../DorisAndroid/assets')
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// * Gradle n'est pas du tout intuitif voire ...
+// * Permet de faire des expériences
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+task essai {
+    doLast {
+        println 'Début essai'
+        
+        File dossier = new File('DorisAndroidPrefetch/run')
+        if (dossier.isDirectory()){
+        	println 'DorisAndroidPrefetch/run est un dossier'
+        } else {
+        	println 'DorisAndroidPrefetch/run n est pas un dossier'
+        }
+        if (dossier.isFile()){
+        	println 'DorisAndroidPrefetch/run est un fichier'
+        } else {
+        	println 'DorisAndroidPrefetch/run n est pas un fichier'
+        }
+        
+        //FileTree arbreFichiers = fileTree(dir: 'DorisAndroidPrefetch/run')
+        FileTree arbreFichiers = fileTree(dir: 'run')
+        arbreFichiers.each {File fichier ->
+    		println 'f :'+fichier
+		}
+		
+		println 'Fin essai'
+    }
+}
+
