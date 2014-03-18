@@ -42,8 +42,6 @@ termes.
 
 package fr.ffessm.doris.android.sitedoris;
 
-import java.util.ArrayList;
-
 
 public class Constants {
 

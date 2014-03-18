@@ -96,47 +96,17 @@ import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Outils;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
-
+import fr.ffessm.doris.prefetch.PrefetchConstants;
 
 public class PrefetchDorisWebSite {
 
-	// we are using the in-memory H2 database
-	//private final static String DATABASE_URL = "jdbc:h2:mem:fiche";
-	// we are using the created SQLite database
-	private final static String DATABASE_URL = "jdbc:sqlite:run/database/DorisAndroid.db";
-
-	// Dossiers liés au fonctionnement de l'appli prefetch
-	private final static String DOSSIER_RACINE = "./run";
-	private final static String DOSSIER_DATABASE = "./run/database";
-	private final static String DOSSIER_RES_HTML = "./res/html";
-	
-	// Ces dossiers seront renommés qd nécessaire
-	private final static String DOSSIER_HTML = "html";
-	private final static String DOSSIER_HTML_REF = "html_ref";
-	private final static String DOSSIER_IMAGES = "images";
-	private final static String DOSSIER_IMAGES_REF = "images_ref";
-	private final static String SOUSDOSSIER_ICONES = "icones";
-	private final static String SOUSDOSSIER_VIGNETTES = "vignettes_fiches";
-	private final static String SOUSDOSSIER_MED_RES = "medium_res_images_fiches";
-	private final static String SOUSDOSSIER_HI_RES = "hi_res_images_fiches";
-	
-	private final static String DOSSIER_CD = "cd";
-	private final static String DOSSIER_DVD = "dvd";
-	
 	// Initialisation de la Gestion des Log 
 	public static Log log = LogFactory.getLog(PrefetchDorisWebSite.class);
 	
 	// Nombre maximum de fiches traitées (--max=K permet de changer cette valeur)
-	private static int nbMaxFichesTraitees = 9999;
-	private static String action = "";
+	private static int nbMaxFichesTraitees = PrefetchConstants.nbMaxFichesTraiteesDef;
+	public static String action = "";
 	
-	
-	// Balises et Attributs des fichiers XML
-	public static final String XML_BASE = "Doris";
-	public static final String XML_FICHES = "Fiches";
-	public static final String XML_GROUPES = "Groupes";
-	public static final String XML_ATT_DATE_CREAT = "DateCreation";
-	public static final String XML_ATT_SITE_URL = "UrlRacineSite";
 	
 	DorisDBHelper dbContext = null;
 	DataBase_Outils outilsBase = null;
@@ -174,10 +144,10 @@ public class PrefetchDorisWebSite {
 			try {
 				// - - - Base de Données - - -
 				// create empty DB and initialize it for Android
-				initializeSQLite(DATABASE_URL);
+				initializeSQLite(PrefetchConstants.DATABASE_URL);
 				
 				// create our data-source for the database
-				connectionSource = new JdbcConnectionSource(DATABASE_URL);
+				connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
 				// setup our database and DAOs
 				setupDatabase(connectionSource);
 				databaseInitialisation(connectionSource);
@@ -191,7 +161,7 @@ public class PrefetchDorisWebSite {
 				String contenuFichierHtml = null;
 				
 				if (! action.equals("NODWNLD")){
-					listeGroupesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeGroupes.html";
+					listeGroupesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeGroupes.html";
 					log.info("Récup. Liste Groupes Doris : " + listeGroupesFichier);
 					
 					if (Outils.getFichierFromUrl(Constants.getGroupesZoneUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES)), listeGroupesFichier)) {
@@ -203,7 +173,7 @@ public class PrefetchDorisWebSite {
 					}
 				} else {
 					// NODWNLD
-					listeGroupesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeGroupes.html";
+					listeGroupesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeGroupes.html";
 					if (new File(listeGroupesFichier).exists()) {
 						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeGroupesFichier));
 					} else {
@@ -228,8 +198,8 @@ public class PrefetchDorisWebSite {
 				for (Groupe groupe : listeGroupes){
 					log.info("Groupe : " + groupe.getNomGroupe());
 					if (groupe.getNumeroGroupe() != 0 && (nbMaxFichesTraitees == 9999 || groupe.getNumeroGroupe() <= 10) ) {
-						String fichierLocalContenuGroupe = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
-						String fichierRefContenuGroupe = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
+						String fichierLocalContenuGroupe = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
+						String fichierRefContenuGroupe = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
 						
 						if (! action.equals("NODWNLD") && ! action.equals("CDDVD")){
 							if (Outils.getFichierFromUrl(Constants.getGroupeContenuUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES),
@@ -261,7 +231,7 @@ public class PrefetchDorisWebSite {
 					for (ZoneGeographiqueKind zone : listZone ) {
 						
 						int zoneId = Constants.getNumZoneForUrl(zone);
-						String fichierGroupes = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/groupes_zone-"+zoneId+".html";
+						String fichierGroupes = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/groupes_zone-"+zoneId+".html";
 
 						if (Outils.getFichierFromUrl(Constants.getGroupesZoneUrl(zoneId), fichierGroupes)) {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierGroupes));
@@ -281,7 +251,7 @@ public class PrefetchDorisWebSite {
 								do {
 									log.debug("doMain() - page Groupe : "+zoneId+" - "+groupe.getNumeroGroupe()+" - "+groupe.getNumeroSousGroupe()+" - "+pageCourante);
 	
-									String fichierPageGroupe = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/groupe-"+zoneId+"-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-"+pageCourante+".html";
+									String fichierPageGroupe = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/groupe-"+zoneId+"-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-"+pageCourante+".html";
 	
 									if (Outils.getFichierFromUrl(Constants.getGroupeContenuUrl(zoneId, groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe(), pageCourante), fichierPageGroupe)) {
 										contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierPageGroupe));
@@ -314,7 +284,7 @@ public class PrefetchDorisWebSite {
 				for (char initiale : listeFiltres.toCharArray()){
 					log.debug("doMain() - Recup Participants : "+initiale);
 					
-					String listeParticipantsFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeParticipants-"+initiale+".html";
+					String listeParticipantsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeParticipants-"+initiale+".html";
 					log.info("Récup. Liste des Participants : " + listeParticipantsFichier);
 					
 					if (! action.equals("NODWNLD")){
@@ -326,7 +296,7 @@ public class PrefetchDorisWebSite {
 						}
 					} else {
 						// NODWNLD
-						listeParticipantsFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeParticipants-"+initiale+".html";
+						listeParticipantsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeParticipants-"+initiale+".html";
 						if (new File(listeParticipantsFichier).exists()) {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeParticipantsFichier));
 						} else {
@@ -357,8 +327,8 @@ public class PrefetchDorisWebSite {
 				// Toutes les infos sont dans les listes ci dessus mais pour CDDVD
 				// ça fait plus propre
 				if ( action.equals("CDDVD") ) {
-					String pageIntervenantRacine = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/";
-					String pageIntervenantRacineRef = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/";
+					String pageIntervenantRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/";
+					String pageIntervenantRacineRef = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/";
 					
 					for (Participant participant : listeParticipants){
 						
@@ -376,20 +346,20 @@ public class PrefetchDorisWebSite {
 				
 				// Téléchargement Photos Participants
 				if ( action.equals("CDDVD") ) {
-					String fichierImageRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/";
-					String fichierImageRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/";
+					String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
+					String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
 
 					for (Participant participant : listeParticipants){
 
 						if ( !participant.getCleURLPhotoParticipant().isEmpty() ) {
 							
 							// On stocke la photo dans les Vignettes
-							if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_") ) ){
+							if( ! isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_") ) ){
 								String photoURL = URLEncoder.encode(participant.getCleURLPhotoParticipant(),"UTF-8");
 								log.debug("doMain() - photoURL : "+photoURL);
 								
 								if (Outils.getFichierFromUrl(Constants.SITE_RACINE_URL+photoURL,
-										fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_"))) {
+										fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_"))) {
 								} else {
 									log.error("Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom());
 									//System.exit(1);
@@ -416,7 +386,7 @@ public class PrefetchDorisWebSite {
 					int numero = 1;
 					boolean continuer;
 					do {
-						String listeDefinitionsFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeDefinitions-"+initiale+"-"+numero+".html";
+						String listeDefinitionsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeDefinitions-"+initiale+"-"+numero+".html";
 						log.info("Récup. Liste des Définitions : " + listeDefinitionsFichier);
 						
 						if (! action.equals("NODWNLD")){
@@ -428,7 +398,7 @@ public class PrefetchDorisWebSite {
 							}
 						} else {
 							// NODWNLD
-							listeDefinitionsFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeDefinitions-"+initiale+"-"+numero+".html";
+							listeDefinitionsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeDefinitions-"+initiale+"-"+numero+".html";
 							if (new File(listeDefinitionsFichier).exists()) {
 								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeDefinitionsFichier));
 							} else {
@@ -466,8 +436,8 @@ public class PrefetchDorisWebSite {
 					log.debug("doMain() - Traitement Définition : "+definition.getNumeroDoris());
 					
 					String urlDefinition =  Constants.getDefinitionUrl( ""+definition.getNumeroDoris() );
-					String fichierLocalDefinition = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/definition-"+definition.getNumeroDoris()+".html";
-					String fichierRefDefinition = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/definition-"+definition.getNumeroDoris()+".html";
+					String fichierLocalDefinition = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/definition-"+definition.getNumeroDoris()+".html";
+					String fichierRefDefinition = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/definition-"+definition.getNumeroDoris()+".html";
 					if ( action.equals("INIT") ) {
 						if (Outils.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
 							nbDefinitionTelechargees += 1;
@@ -511,8 +481,8 @@ public class PrefetchDorisWebSite {
 					
 					//Si des photos dans la définition, il faut les télécharger dans le cas CDDVD
 					if (action.equals("CDDVD")){
-						String fichierImageRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/";
-						String fichierImageRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/";
+						String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
+						String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
 						
 						List<String> listeImagesDefinition = definition.getListeImagesDefinition();
 						
@@ -520,9 +490,9 @@ public class PrefetchDorisWebSite {
 							for (String image : listeImagesDefinition) {
 					    			
 								// On stocke la photo dans les Vignettes
-								if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_DEFINITION+image ) ){
+								if( ! isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_DEFINITION+image ) ){
 									if (Outils.getFichierFromUrl(Constants.ILLUSTRATION_DEFINITION_BASE_URL+"/"+image,
-											fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_DEFINITION+image)) {
+											fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_DEFINITION+image)) {
 									} else {
 										log.error("Une erreur est survenue lors de la récupération d'une photo de la définition de : "+definition.getTerme());
 										//System.exit(1);
@@ -545,7 +515,7 @@ public class PrefetchDorisWebSite {
 				do {
 					log.debug("doMain() - pageCourante Bibliographie : "+pageCourante);
 					
-					String listeBibliographies = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeBibliographies-"+pageCourante+".html";
+					String listeBibliographies = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeBibliographies-"+pageCourante+".html";
 					log.info("Récup. Liste des Bibliographies : " + listeBibliographies);
 					
 					if (! action.equals("NODWNLD")){
@@ -557,7 +527,7 @@ public class PrefetchDorisWebSite {
 						}
 					} else {
 						// NODWNLD
-						listeBibliographies = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeBibliographies-"+pageCourante+".html";
+						listeBibliographies = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeBibliographies-"+pageCourante+".html";
 						if (new File(listeBibliographies).exists()) {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeBibliographies));
 						} else {
@@ -595,8 +565,8 @@ public class PrefetchDorisWebSite {
 					if (nbMaxFichesTraitees == 9999 || nbBiblioTelechargees <= 10) {
 	
 						String urlBiblio = Constants.getBibliographieUrl(biblio.getNumeroDoris());
-						String fichierBiblio = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/" + "biblio-" + biblio.getNumeroDoris()+".html";
-						String fichierBiblioRef = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/" + "biblio-" + biblio.getNumeroDoris()+".html";
+						String fichierBiblio = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/" + "biblio-" + biblio.getNumeroDoris()+".html";
+						String fichierBiblioRef = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/" + "biblio-" + biblio.getNumeroDoris()+".html";
 						
 						if ( action.equals("INIT") ) {
 							if( ! isFileExistingPath( fichierBiblioRef ) ){
@@ -648,13 +618,13 @@ public class PrefetchDorisWebSite {
 								});
 						
 							if ( action.equals("CDDVD") ) {
-								String fichierImageRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/";
-								String fichierImageRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/";
+								String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
+								String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
 								
 								// On stocke la photo dans les Vignettes
-								if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_BIBLIO+biblio.getNumeroDoris()+".jpg" ) ){
+								if( ! isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_BIBLIO+biblio.getNumeroDoris()+".jpg" ) ){
 									if (Outils.getFichierFromUrl(Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+biblio.getNumeroDoris()+".jpg",
-											fichierImageRacine+SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_BIBLIO+biblio.getNumeroDoris()+".jpg" )) {
+											fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_BIBLIO+biblio.getNumeroDoris()+".jpg" )) {
 									} else {
 										log.info("Une erreur est survenue lors de la récupération de la photo de l'entrée Biblio. : "+biblio.getTitre() + ", il est probable qu'il n'y ait pas d'illustration.");
 									}
@@ -668,7 +638,7 @@ public class PrefetchDorisWebSite {
 				// - - - Liste des Fiches - - -
 				// Récupération de la liste des fiches sur le site de DORIS
 				// Elles sont récupérées dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
-				String listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeFiches.html";
+				String listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeFiches.html";
 				log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
 				
 				if (! action.equals("NODWNLD")){
@@ -688,7 +658,7 @@ public class PrefetchDorisWebSite {
 				// Si UPDATED ou CDDVD, elle permettra de déduire les fiches à télécharger de nouveau : les fiches ayant changées de statut
 
 				if (! action.equals("INIT")){
-					listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeFiches.html";
+					listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches.html";
 					if (new File(listeFichesFichier).exists()) {
 						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
 					} else {
@@ -734,8 +704,8 @@ public class PrefetchDorisWebSite {
 						log.debug("doMain() - Traitement Fiche : "+ficheLight.getNomCommun());
 						
 						String urlFiche =  Constants.getFicheFromIdUrl( ficheLight.getNumeroFiche() );
-						String fichierLocalFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche-"+ficheLight.getNumeroFiche()+".html";
-						String fichierRefFiche = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/fiche-"+ficheLight.getNumeroFiche()+".html";
+						String fichierLocalFiche = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/fiche-"+ficheLight.getNumeroFiche()+".html";
+						String fichierRefFiche = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/fiche-"+ficheLight.getNumeroFiche()+".html";
 						
 						if ( action.equals("INIT") ) {
 							if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
@@ -802,8 +772,8 @@ public class PrefetchDorisWebSite {
 						log.info("doMain() - }");
 						
 						String urlListePhotos = "http://doris.ffessm.fr/fiche_photo_liste_apercu.asp?fiche_numero="+fiche.getNumeroFiche();
-						String fichierLocalListePhotos = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
-						String fichierRefListePhotos = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
+						String fichierLocalListePhotos = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
+						String fichierRefListePhotos = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
 						String contenuFichierHtmlListePhotos = null;
 						if ( action.equals("INIT")) {
 							if (Outils.getFichierFromUrl(urlListePhotos, fichierLocalListePhotos)) {
@@ -856,31 +826,31 @@ public class PrefetchDorisWebSite {
 							
 							// Téléchargement Photos
 							if ( action.equals("CDDVD") ) {
-								String fichierImageRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/";
-								String fichierImageRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/";
+								String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
+								String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
 
 								for (PhotoFiche photoFiche : listePhotoFiche){
 	
 									if ( !photoFiche.getCleURL().isEmpty() ) {
 										// Vignettes
-										if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL().replace(" ", "_") ) ){
-											if (Outils.getFichierFromUrl(Constants.VIGNETTE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL().replace(" ", "_"))) {
+										if( ! isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL().replace(" ", "_") ) ){
+											if (Outils.getFichierFromUrl(Constants.VIGNETTE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL().replace(" ", "_"))) {
 											} else {
 												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 												//System.exit(1);
 											}
 										}
 										// Qualité Intermédiaire
-										if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_MED_RES+photoFiche.getCleURL().replace(" ", "_") ) ){
-											if (Outils.getFichierFromUrl(Constants.MOYENNE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+SOUSDOSSIER_MED_RES+photoFiche.getCleURL().replace(" ", "_"))) {
+										if( ! isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_MED_RES+photoFiche.getCleURL().replace(" ", "_") ) ){
+											if (Outils.getFichierFromUrl(Constants.MOYENNE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_MED_RES+photoFiche.getCleURL().replace(" ", "_"))) {
 											} else {
 												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 												//System.exit(1);
 											}
 										}
 										// Haute Qualité 
-										if( ! isFileExistingPath( fichierImageRefRacine+SOUSDOSSIER_HI_RES+photoFiche.getCleURL().replace(" ", "_") ) ){
-											if (Outils.getFichierFromUrl(Constants.GRANDE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+SOUSDOSSIER_HI_RES+photoFiche.getCleURL().replace(" ", "_"))) {
+										if( ! isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_HI_RES+photoFiche.getCleURL().replace(" ", "_") ) ){
+											if (Outils.getFichierFromUrl(Constants.GRANDE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_HI_RES+photoFiche.getCleURL().replace(" ", "_"))) {
 											} else {
 												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 												//System.exit(1);
@@ -922,10 +892,10 @@ public class PrefetchDorisWebSite {
 				
 				// Téléchargement Pages et Images exclusives CD et DVD
 				if ( action.equals("CDDVD") ) {
-					String fichierLocalLien = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/";
-					String fichierRefLien = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/";
-					String fichierIconeRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_ICONES + "/";
-					String fichierIconeRefRacine = DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF + "/" + SOUSDOSSIER_ICONES + "/";
+					String fichierLocalLien = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/";
+					String fichierRefLien = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/";
+					String fichierIconeRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_ICONES + "/";
+					String fichierIconeRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/" + PrefetchConstants.SOUSDOSSIER_ICONES + "/";
 
 					List<Lien> liensATelecharger = getLienATelecharger();
 					for (Lien lienATelecharger : liensATelecharger) {
@@ -980,7 +950,7 @@ public class PrefetchDorisWebSite {
 	private void majZoneGeographique(ConnectionSource connectionSource, ZoneGeographiqueKind zoneKind){
 		log.debug("majZoneGeographique() - Début");
 		
-		String listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML + "/listeFiches-"+(zoneKind.ordinal()+1)+".html";
+		String listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeFiches-"+(zoneKind.ordinal()+1)+".html";
 		log.debug("Récup. Liste Fiches Doris Zone : " + listeFichesFichier);
 		//List<Fiche> listeFiches = new ArrayList<Fiche>(0);
 		String contenuFichierHtml = "";
@@ -994,7 +964,7 @@ public class PrefetchDorisWebSite {
 			}
 		} else {
 			// NODWNLD
-			listeFichesFichier = DOSSIER_RACINE + "/" + DOSSIER_HTML_REF + "/listeFiches-"+(zoneKind.ordinal()+1)+".html";
+			listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches-"+(zoneKind.ordinal()+1)+".html";
 			if (new File(listeFichesFichier).exists()) {
 				contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
 			} else {
@@ -1144,18 +1114,17 @@ public class PrefetchDorisWebSite {
 		Connection c = DriverManager.getConnection(url);
 		log.debug("Opened database successfully");
 		
-		if (! action.equals("CDDVD") ) {
-			Statement  stmt = c.createStatement();
-			String sql = "CREATE TABLE \"android_metadata\" (\"locale\" TEXT DEFAULT 'en_US')"; 
-			stmt.executeUpdate(sql);
-			stmt.close();
-			
-			stmt = c.createStatement();
-			sql = "    INSERT INTO \"android_metadata\" VALUES ('en_US')"; 
-			stmt.executeUpdate(sql);
-			stmt.close();
-			c.close();
-		}
+		Statement  stmt = c.createStatement();
+		String sql = "CREATE TABLE \"android_metadata\" (\"locale\" TEXT DEFAULT 'en_US')"; 
+		stmt.executeUpdate(sql);
+		stmt.close();
+		
+		stmt = c.createStatement();
+		sql = "    INSERT INTO \"android_metadata\" VALUES ('en_US')"; 
+		stmt.executeUpdate(sql);
+		stmt.close();
+		c.close();
+
 	}
 	
 	/**
@@ -1298,17 +1267,17 @@ public class PrefetchDorisWebSite {
 		
 		log.debug("checkDossiers() - Action : " + inAction);
 		
-		log.debug("checkDossiers() - Dossier de base : " + DOSSIER_RACINE);
-		log.debug("checkDossiers() - Dossier html : " + DOSSIER_HTML);
-		log.debug("checkDossiers() - Dossier de la base : " + DOSSIER_DATABASE);
-		log.debug("checkDossiers() - Fichier de la Base : " + DATABASE_URL);
+		log.debug("checkDossiers() - Dossier de base : " + PrefetchConstants.DOSSIER_RACINE);
+		log.debug("checkDossiers() - Dossier html : " + PrefetchConstants.DOSSIER_HTML);
+		log.debug("checkDossiers() - Dossier de la base : " + PrefetchConstants.DOSSIER_DATABASE);
+		log.debug("checkDossiers() - Fichier de la Base : " + PrefetchConstants.DATABASE_URL);
 		
 		// Si le dossier principal de travail n'existe pas, on le créé
-		File dossierBase = new File(DOSSIER_RACINE);
+		File dossierBase = new File(PrefetchConstants.DOSSIER_RACINE);
 		if (dossierBase.mkdirs()) {
 			log.info("Création du dossier : " + dossierBase.getAbsolutePath());
 		} 
-		File dossierDB = new File(DOSSIER_DATABASE);
+		File dossierDB = new File(PrefetchConstants.DOSSIER_DATABASE);
 		if (dossierDB.mkdirs()) {
 			log.info("Création du dossier : " + dossierDB.getAbsolutePath());
 		}
@@ -1321,9 +1290,9 @@ public class PrefetchDorisWebSite {
 		
 		// Le dossier des fichiers html téléchargés
 		if(inAction.equals("INIT") || inAction.equals("UPDATE")  || inAction.equals("CDDVD") ){
-			File dossierHtml = new File(DOSSIER_RACINE + "/" + DOSSIER_HTML);
+			File dossierHtml = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML);
 			if (dossierHtml.exists()){
-				File dossierHtmlNew = new File(DOSSIER_RACINE + "/" + DOSSIER_HTML +"_"+ suffixe);
+				File dossierHtmlNew = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML +"_"+ suffixe);
 				if(dossierHtml.renameTo(dossierHtmlNew)){
 					log.info("Sauvegarde du dossier download : " + dossierHtmlNew.getAbsolutePath());
 				}else{
@@ -1341,9 +1310,9 @@ public class PrefetchDorisWebSite {
 		
 		// Le dossier des images téléchargées
 		if( inAction.equals("CDDVD") ){
-			File dossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES);
+			File dossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES);
 			if (dossierImages.exists()){
-				File dossierImagesNew = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES +"_"+ suffixe);
+				File dossierImagesNew = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES +"_"+ suffixe);
 				if(dossierImages.renameTo(dossierImagesNew)){
 					log.info("Sauvegarde du dossier download : " + dossierImagesNew.getAbsolutePath());
 				}else{
@@ -1358,28 +1327,28 @@ public class PrefetchDorisWebSite {
 				System.exit(1);
 			}
 			File sousDossierImages;
-			sousDossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_ICONES);
+			sousDossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_ICONES);
 			if (sousDossierImages.mkdir()) {
 				log.info("Création du dossier download : " + sousDossierImages.getAbsolutePath());
 			} else {
 				log.error("Echec de la Création du sous-dossier download : " + sousDossierImages.getAbsolutePath());
 				System.exit(1);
 			}
-			sousDossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_VIGNETTES);
+			sousDossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_VIGNETTES);
 			if (sousDossierImages.mkdir()) {
 				log.info("Création du dossier download : " + sousDossierImages.getAbsolutePath());
 			} else {
 				log.error("Echec de la Création du dossier sous-download : " + sousDossierImages.getAbsolutePath());
 				System.exit(1);
 			}
-			sousDossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_MED_RES);
+			sousDossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_MED_RES);
 			if (sousDossierImages.mkdir()) {
 				log.info("Création du dossier download : " + sousDossierImages.getAbsolutePath());
 			} else {
 				log.error("Echec de la Création du dossier sous-download : " + sousDossierImages.getAbsolutePath());
 				System.exit(1);
 			}
-			sousDossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_HI_RES);
+			sousDossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_HI_RES);
 			if (sousDossierImages.mkdir()) {
 				log.info("Création du dossier download : " + sousDossierImages.getAbsolutePath());
 			} else {
@@ -1390,9 +1359,9 @@ public class PrefetchDorisWebSite {
 		
 		// Le dossier du CD ou DVD
 		if( inAction.equals("CDDVD") ){
-			File dossierCD = new File(DOSSIER_RACINE + "/" + DOSSIER_CD);
+			File dossierCD = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD);
 			if (dossierCD.exists()){
-				File dossierCDNew = new File(DOSSIER_RACINE + "/" + DOSSIER_CD +"_"+ suffixe);
+				File dossierCDNew = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD +"_"+ suffixe);
 				if(dossierCD.renameTo(dossierCDNew)){
 					log.info("Sauvegarde du dossier CD : " + dossierCDNew.getAbsolutePath());
 				}else{
@@ -1406,9 +1375,9 @@ public class PrefetchDorisWebSite {
 				log.error("Echec de la Création du dossier CD : " + dossierCD.getAbsolutePath());
 				System.exit(1);
 			}
-			File dossierDVD = new File(DOSSIER_RACINE + "/" + DOSSIER_DVD);
+			File dossierDVD = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_DVD);
 			if (dossierDVD.exists()){
-				File dossierDVDNew = new File(DOSSIER_RACINE + "/" + DOSSIER_DVD +"_"+ suffixe);
+				File dossierDVDNew = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_DVD +"_"+ suffixe);
 				if(dossierDVD.renameTo(dossierDVDNew)){
 					log.info("Sauvegarde du dossier DVD : " + dossierDVDNew.getAbsolutePath());
 				}else{
@@ -1426,7 +1395,7 @@ public class PrefetchDorisWebSite {
 		
 		//	Vérification que le dossier html Référence existe
 		if(inAction.equals("NODWNLD") || inAction.equals("UPDATE")  || inAction.equals("CDDVD") ){
-			final File dossierReference = new File(DOSSIER_RACINE + "/" + DOSSIER_HTML_REF);
+			final File dossierReference = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF);
 			if (!dossierReference.exists()){
 				log.error("Le dossier Référence : " + dossierReference.getAbsolutePath() + "n'a pas été créé.");
 				System.exit(1);
@@ -1440,7 +1409,7 @@ public class PrefetchDorisWebSite {
 		
 		//	Vérification que les dossiers Images Référence existe
 		if(inAction.equals("CDDVD") ){
-			File dossierReference = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES_REF);
+			File dossierReference = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF);
 			if (!dossierReference.exists()){
 				log.error("Le dossier Référence des images : " + dossierReference.getAbsolutePath() + " n'a pas été créé.");
 				System.exit(1);
@@ -1451,7 +1420,7 @@ public class PrefetchDorisWebSite {
 				}
 			}
 			File sousDossierImages;
-			sousDossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_ICONES);
+			sousDossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_ICONES);
 			if (!sousDossierImages.exists()){
 				log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
 				System.exit(1);
@@ -1461,7 +1430,7 @@ public class PrefetchDorisWebSite {
 					System.exit(1);
 				}
 			}
-			sousDossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_VIGNETTES);
+			sousDossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_VIGNETTES);
 			if (!sousDossierImages.exists()){
 				log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
 				System.exit(1);
@@ -1471,7 +1440,7 @@ public class PrefetchDorisWebSite {
 					System.exit(1);
 				}
 			}
-			sousDossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_MED_RES);
+			sousDossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_MED_RES);
 			if (!sousDossierImages.exists()){
 				log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
 				System.exit(1);
@@ -1481,7 +1450,7 @@ public class PrefetchDorisWebSite {
 					System.exit(1);
 				}
 			}
-			sousDossierImages = new File(DOSSIER_RACINE + "/" + DOSSIER_IMAGES + "/" + SOUSDOSSIER_HI_RES);
+			sousDossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_HI_RES);
 			if (!sousDossierImages.exists()){
 				log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
 				System.exit(1);
@@ -1494,7 +1463,7 @@ public class PrefetchDorisWebSite {
 		}
 	
 		// Le fichier de la base de données
-		String dataBaseName = DATABASE_URL.substring(DATABASE_URL.lastIndexOf(":")+1, DATABASE_URL.lastIndexOf(".") );
+		String dataBaseName = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.lastIndexOf(".") );
 		log.debug("dataBaseName : " + dataBaseName);
 		File fichierDB= new File(dataBaseName+".db");
 		if (fichierDB.exists()){
@@ -1749,19 +1718,19 @@ public class PrefetchDorisWebSite {
 	}
 	private void creationCD(){
 		log.debug("creationCD() - Début");
-		String fichierCDLien = DOSSIER_RACINE + "/" + DOSSIER_CD + "/";
-		String fichierRefLien = DOSSIER_RACINE + "/";
+		String fichierCDLien = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD + "/";
+		String fichierRefLien = PrefetchConstants.DOSSIER_RACINE + "/";
 		
 		// Création Dossiers du CD
 		log.info("Création Dossier HTML du CD");
-		File dossierCD = new File(fichierCDLien+DOSSIER_HTML);
-		File dossierRef = new File(fichierRefLien+DOSSIER_HTML_REF);
+		File dossierCD = new File(fichierCDLien+PrefetchConstants.DOSSIER_HTML);
+		File dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_HTML_REF);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		dossierRef = new File(fichierRefLien+DOSSIER_HTML);
+		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_HTML);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
 		} catch (IOException e) {
@@ -1769,14 +1738,14 @@ public class PrefetchDorisWebSite {
 		}
 		
 		log.info("Création Dossier Icones du CD");
-		dossierCD = new File(fichierCDLien+SOUSDOSSIER_ICONES);
-		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES_REF+"/"+SOUSDOSSIER_ICONES);
+		dossierCD = new File(fichierCDLien+PrefetchConstants.SOUSDOSSIER_ICONES);
+		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES_REF+"/"+PrefetchConstants.SOUSDOSSIER_ICONES);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES+"/"+SOUSDOSSIER_ICONES);
+		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES+"/"+PrefetchConstants.SOUSDOSSIER_ICONES);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
 		} catch (IOException e) {
@@ -1784,14 +1753,14 @@ public class PrefetchDorisWebSite {
 		}
 		
 		log.info("Création Dossier Vignettes du CD");
-		dossierCD = new File(fichierCDLien+SOUSDOSSIER_VIGNETTES);
-		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES_REF+"/"+SOUSDOSSIER_VIGNETTES);
+		dossierCD = new File(fichierCDLien+PrefetchConstants.SOUSDOSSIER_VIGNETTES);
+		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES_REF+"/"+PrefetchConstants.SOUSDOSSIER_VIGNETTES);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES+"/"+SOUSDOSSIER_VIGNETTES);
+		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES+"/"+PrefetchConstants.SOUSDOSSIER_VIGNETTES);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
 		} catch (IOException e) {
@@ -1799,14 +1768,14 @@ public class PrefetchDorisWebSite {
 		}
 		
 		log.info("Création Dossier Images du CD");
-		dossierCD = new File(fichierCDLien+SOUSDOSSIER_MED_RES);
-		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES_REF+"/"+SOUSDOSSIER_MED_RES);
+		dossierCD = new File(fichierCDLien+PrefetchConstants.SOUSDOSSIER_MED_RES);
+		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES_REF+"/"+PrefetchConstants.SOUSDOSSIER_MED_RES);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		dossierRef = new File(fichierRefLien+DOSSIER_IMAGES+"/"+SOUSDOSSIER_MED_RES);
+		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES+"/"+PrefetchConstants.SOUSDOSSIER_MED_RES);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
 		} catch (IOException e) {
@@ -1816,7 +1785,7 @@ public class PrefetchDorisWebSite {
 		//Copie du Fichier permettant d'aller directement sur la page d'accueil depuis la racine du CD
 		log.info("Copie du Fichier : Doris_CD.html");
 		dossierCD = new File(fichierCDLien);
-		File fichierRef = new File(DOSSIER_RES_HTML+"/"+"Doris_CD.html");
+		File fichierRef = new File(PrefetchConstants.DOSSIER_RES_HTML+"/"+"Doris_CD.html");
 		try {
 			FileUtils.copyFileToDirectory(fichierRef, dossierCD);
 		} catch (IOException e) {
@@ -1825,8 +1794,8 @@ public class PrefetchDorisWebSite {
 		
 		//Copie de la page d'erreur
 		log.info("Copie du Fichier : indisponible_CDDVD.html");
-		dossierCD = new File(fichierCDLien+DOSSIER_HTML);
-		fichierRef = new File(DOSSIER_RES_HTML+"/"+"indisponible_CDDVD.html");
+		dossierCD = new File(fichierCDLien+PrefetchConstants.DOSSIER_HTML);
+		fichierRef = new File(PrefetchConstants.DOSSIER_RES_HTML+"/"+"indisponible_CDDVD.html");
 		try {
 			FileUtils.copyFileToDirectory(fichierRef, dossierCD);
 		} catch (IOException e) {
@@ -1838,10 +1807,10 @@ public class PrefetchDorisWebSite {
 
 	private void transfoHtml(){
 		log.debug("transfoHtml() - Début");
-		String fichierCDLien = DOSSIER_RACINE + "/" + DOSSIER_CD + "/";
+		String fichierCDLien = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD + "/";
 
 		// Modification Fichiers HTML : lien, images
-		File dossierCD = new File(fichierCDLien+DOSSIER_HTML);
+		File dossierCD = new File(fichierCDLien+PrefetchConstants.DOSSIER_HTML);
 		for (File fichierHtml:dossierCD.listFiles()) {
 			String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
 			
@@ -1865,8 +1834,8 @@ public class PrefetchDorisWebSite {
 					}
 					break;
 				case ICONE :
-					contenuFichier = contenuFichier.replace("src=\""+lienTelecharge.getUrl()+"\"","src=\"../"+SOUSDOSSIER_ICONES+"/"+lienTelecharge.getFichier()+"\"");
-					contenuFichier = contenuFichier.replace("background=\""+lienTelecharge.getUrl()+"\"","background=\"../"+SOUSDOSSIER_ICONES+"/"+lienTelecharge.getFichier()+"\"");
+					contenuFichier = contenuFichier.replace("src=\""+lienTelecharge.getUrl()+"\"","src=\"../"+PrefetchConstants.SOUSDOSSIER_ICONES+"/"+lienTelecharge.getFichier()+"\"");
+					contenuFichier = contenuFichier.replace("background=\""+lienTelecharge.getUrl()+"\"","background=\"../"+PrefetchConstants.SOUSDOSSIER_ICONES+"/"+lienTelecharge.getFichier()+"\"");
 					break;
 				case TEXTE :
 				case VIGNETTE :
@@ -1884,16 +1853,16 @@ public class PrefetchDorisWebSite {
 					contenuFichier = contenuFichier.replace(lienANettoyer.getUrl(),lienANettoyer.getFichier());
 					break;
 				case ICONE :
-					contenuFichier = contenuFichier.replace(lienANettoyer.getUrl(),"../"+SOUSDOSSIER_ICONES+lienANettoyer.getFichier());
+					contenuFichier = contenuFichier.replace(lienANettoyer.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_ICONES+lienANettoyer.getFichier());
 					break;
 				case VIGNETTE :
-					contenuFichier = contenuFichier.replace(lienANettoyer.getUrl(),"../"+SOUSDOSSIER_VIGNETTES+lienANettoyer.getFichier());
+					contenuFichier = contenuFichier.replace(lienANettoyer.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_VIGNETTES+lienANettoyer.getFichier());
 					break;
 				case MED_RES :
-					contenuFichier = contenuFichier.replace(lienANettoyer.getUrl(),"../"+SOUSDOSSIER_MED_RES+lienANettoyer.getFichier());
+					contenuFichier = contenuFichier.replace(lienANettoyer.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_MED_RES+lienANettoyer.getFichier());
 					break;
 				case HI_RES :
-					contenuFichier = contenuFichier.replace(lienANettoyer.getUrl(),"../"+SOUSDOSSIER_MED_RES+lienANettoyer.getFichier());
+					contenuFichier = contenuFichier.replace(lienANettoyer.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_MED_RES+lienANettoyer.getFichier());
 					break;
 				}
 			}
@@ -1905,16 +1874,16 @@ public class PrefetchDorisWebSite {
 					contenuFichier = contenuFichier.replaceAll(lienRegExp.url,lienRegExp.getFichier());
 				break;
 				case ICONE :
-					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+SOUSDOSSIER_ICONES+lienRegExp.getFichier());
+					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_ICONES+lienRegExp.getFichier());
 				break;
 				case VIGNETTE :
-					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+SOUSDOSSIER_VIGNETTES+lienRegExp.getFichier());
+					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_VIGNETTES+lienRegExp.getFichier());
 					break;
 				case MED_RES :
-					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+SOUSDOSSIER_MED_RES+lienRegExp.getFichier());
+					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_MED_RES+lienRegExp.getFichier());
 					break;
 				case HI_RES :
-					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+SOUSDOSSIER_MED_RES+lienRegExp.getFichier());
+					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_MED_RES+lienRegExp.getFichier());
 					break;
 				}
 			}
