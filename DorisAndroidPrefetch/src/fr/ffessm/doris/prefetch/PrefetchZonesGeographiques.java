@@ -1,0 +1,179 @@
+/* *********************************************************************
+ * Licence CeCILL-B
+ * *********************************************************************
+ * Copyright (c) 2012-2013 - FFESSM
+ * Auteurs : Guillaume Mo <gmo7942@gmail.com>
+ *           Didier Vojtisek <dvojtise@gmail.com>
+ * *********************************************************************
+
+Ce logiciel est un programme informatique servant à afficher de manière 
+ergonomique sur un terminal Android les fiches du site : doris.ffessm.fr. 
+
+Les images, logos et textes restent la propriété de leurs auteurs, cf. : 
+doris.ffessm.fr.
+
+Ce logiciel est régi par la licence CeCILL-B soumise au droit français et
+respectant les principes de diffusion des logiciels libres. Vous pouvez
+utiliser, modifier et/ou redistribuer ce programme sous les conditions
+de la licence CeCILL-B telle que diffusée par le CEA, le CNRS et l'INRIA 
+sur le site "http://www.cecill.info".
+
+En contrepartie de l'accessibilité au code source et des droits de copie,
+de modification et de redistribution accordés par cette licence, il n'est
+offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+titulaire des droits patrimoniaux et les concédants successifs.
+
+A cet égard  l'attention de l'utilisateur est attirée sur les risques
+associés au chargement,  à l'utilisation,  à la modification et/ou au
+développement et à la reproduction du logiciel par l'utilisateur étant 
+donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+manipuler et qui le réserve donc à des développeurs et des professionnels
+avertis possédant  des  connaissances  informatiques approfondies.  Les
+utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+logiciel à leurs besoins dans des conditions permettant d'assurer la
+sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
+à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+
+Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
+pris connaissance de la licence CeCILL-B, et que vous en avez accepté les
+termes.
+* ********************************************************************* */
+
+package fr.ffessm.doris.prefetch;
+
+import java.io.File;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.concurrent.Callable;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.j256.ormlite.misc.TransactionManager;
+import com.j256.ormlite.support.ConnectionSource;
+
+import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
+import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
+import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
+import fr.ffessm.doris.android.sitedoris.FicheLight;
+import fr.ffessm.doris.android.sitedoris.SiteDoris;
+import fr.ffessm.doris.android.sitedoris.Outils;
+import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
+
+
+public class PrefetchZonesGeographiques {
+
+
+	// Initialisation de la Gestion des Log 
+	public static Log log = LogFactory.getLog(PrefetchZonesGeographiques.class);
+	
+	private DorisDBHelper dbContext = null;
+	private ConnectionSource connectionSource = null;
+	
+	private String action;
+	private int nbMaxFichesATraiter;
+	
+	public PrefetchZonesGeographiques(DorisDBHelper dbContext, ConnectionSource connectionSource, String action, int nbMaxFichesATraiter) {
+		this.dbContext = dbContext;
+		this.connectionSource = connectionSource;
+		this.action = action;
+		this.nbMaxFichesATraiter = nbMaxFichesATraiter;
+	}
+	
+	
+	
+	public int prefetch() {
+		// - - - Mise à jour des zones géographiques - - -
+		
+		String listeFiltres;
+		String contenuFichierHtml = null;
+		
+		try {
+			// zone France Métropolitaine Marines
+			majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE);
+			// zone France Métropolitaine Eau douce
+			majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE);
+			// zone indo pacifique
+			majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE);
+			// zone Caraïbes
+			majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES);
+			// zone atlantique nordOuest
+			majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST);
+			
+			return 5;
+			
+		} catch ( Exception e) {
+			// une erreur est survenue
+			log.error("Une erreur est survenue dans PrefetchZonesGeographiques");
+			return -1;
+		}
+
+
+	}
+	
+	private void majZoneGeographique(ConnectionSource connectionSource, ZoneGeographiqueKind zoneKind){
+		log.debug("majZoneGeographique() - Début");
+		
+		String listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeFiches-"+(zoneKind.ordinal()+1)+".html";
+		log.debug("Récup. Liste Fiches Doris Zone : " + listeFichesFichier);
+		//List<Fiche> listeFiches = new ArrayList<Fiche>(0);
+		String contenuFichierHtml = "";
+		if (! action.equals("NODWNLD")){
+			if (Outils.getFichierFromUrl(Constants.getListeFichesUrl(Constants.getNumZoneForUrl(zoneKind)) , listeFichesFichier)) {
+				contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
+				
+			} else {
+				log.error("Une erreur est survenue lors de la récupération de la liste des fiches de la zone ");
+				return;
+			}
+		} else {
+			// NODWNLD
+			listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches-"+(zoneKind.ordinal()+1)+".html";
+			if (new File(listeFichesFichier).exists()) {
+				contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
+			} else {
+				log.error("Une erreur est survenue lors de la récupération de la liste des fiches de la zone ");
+				return;
+			}
+		}
+		
+		final ZoneGeographique zoneGeographique = new ZoneGeographique(Constants.getTitreZoneGeographique(zoneKind), 
+																 Constants.getTexteZoneGeographique(zoneKind));
+		try {
+			dbContext.zoneGeographiqueDao.create(zoneGeographique);
+		} catch (SQLException e) {
+			log.error("impossible de créer la zone dans la base", e);
+		}
+		
+		final HashSet<FicheLight> listFicheFromHTML = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
+		log.info("Création des "+listFicheFromHTML.size()+" associations pour la Zone : " + listeFichesFichier);
+		
+		final DataBase_Outils outilsBase = new DataBase_Outils(dbContext);
+		try {
+			TransactionManager.callInTransaction(connectionSource,
+					new Callable<Void>() {
+						public Void call() throws Exception { 
+
+							for (FicheLight ficheLight : listFicheFromHTML) {
+								Fiche fichesDeLaBase = outilsBase.queryFicheByNumeroFiche(ficheLight.getNumeroFiche());
+								fichesDeLaBase.setContextDB(dbContext);
+								fichesDeLaBase.addZoneGeographique(zoneGeographique);
+							}
+							
+							return null;
+					    }
+					});
+
+		} catch (SQLException e) {
+			log.error("impossible d'associer Fiches et Zone Géographique", e);
+		}
+		log.debug("majZoneGeographique() - Fin");
+	}
+	
+}

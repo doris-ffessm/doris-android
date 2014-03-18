@@ -43,7 +43,6 @@ termes.
 package fr.ffessm.doris.prefetch;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -72,13 +71,15 @@ public class PrefetchGroupes {
 	private ConnectionSource connectionSource = null;
 	
 	private String action;
-	private int nbMaxFichesTraitees;
+	private int nbMaxFichesATraiter;
 	
-	public PrefetchGroupes(DorisDBHelper dbContext, ConnectionSource connectionSource, String action, int nbMaxFichesTraitees) {
+	public List<Groupe> listeGroupes;
+	
+	public PrefetchGroupes(DorisDBHelper dbContext, ConnectionSource connectionSource, String action, int nbMaxFichesATraiter) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
 		this.action = action;
-		this.nbMaxFichesTraitees = nbMaxFichesTraitees;
+		this.nbMaxFichesATraiter = nbMaxFichesATraiter;
 	}
 	
 	
@@ -114,7 +115,7 @@ public class PrefetchGroupes {
 				}
 			}
 			
-			final List<Groupe> listeGroupes = SiteDoris.getListeGroupesFromHtml(contenuFichierHtml);
+			listeGroupes = SiteDoris.getListeGroupesFromHtml(contenuFichierHtml);
 			log.debug("doMain() - listeGroupes.size : "+listeGroupes.size());
 			
 			TransactionManager.callInTransaction(connectionSource,
@@ -129,7 +130,7 @@ public class PrefetchGroupes {
 
 			for (Groupe groupe : listeGroupes){
 				log.info("Groupe : " + groupe.getNomGroupe());
-				if (groupe.getNumeroGroupe() != 0 && (nbMaxFichesTraitees == 9999 || groupe.getNumeroGroupe() <= 10) ) {
+				if (groupe.getNumeroGroupe() != 0 && (nbMaxFichesATraiter == PrefetchConstants.nbMaxFichesTraiteesDef || groupe.getNumeroGroupe() <= 10) ) {
 					String fichierLocalContenuGroupe = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
 					String fichierRefContenuGroupe = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
 					
@@ -176,7 +177,7 @@ public class PrefetchGroupes {
 					
 					for (Groupe groupe : listeGroupesZone) {
 						
-						if (groupe.getNumeroGroupe() != 0  && (nbMaxFichesTraitees == 9999 || groupe.getNumeroGroupe() <= 10) ) {
+						if (groupe.getNumeroGroupe() != 0  && (nbMaxFichesATraiter == PrefetchConstants.nbMaxFichesTraiteesDef || groupe.getNumeroGroupe() <= 10) ) {
 							int pageCourante = 1;
 							boolean testContinu = false;
 							
@@ -201,11 +202,12 @@ public class PrefetchGroupes {
 					}
 				}
 			}
-			return 0;
+			return listeGroupes.size();
 			
 		} catch ( Exception e) {
 			// une erreur est survenue
-			return 1;
+			log.error("Une erreur est survenue dans PrefetchGroupes");
+			return -1;
 		}
 
 

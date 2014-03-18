@@ -43,31 +43,23 @@ termes.
 package fr.ffessm.doris.prefetch;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.regex.Pattern;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
-import org.apache.commons.io.FileUtils;
 
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.field.FieldType;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.misc.SqlExceptionUtil;
-import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.stmt.StatementBuilder.StatementType;
 import com.j256.ormlite.support.CompiledStatement;
 import com.j256.ormlite.support.ConnectionSource;
@@ -90,12 +82,7 @@ import fr.ffessm.doris.android.datamodel.ZoneObservation;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_DefinitionsGlossaire;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesObservations;
-import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
-import fr.ffessm.doris.android.sitedoris.SiteDoris;
-import fr.ffessm.doris.android.sitedoris.Outils;
-import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.prefetch.PrefetchConstants;
 
 public class PrefetchDorisWebSite {
@@ -104,7 +91,7 @@ public class PrefetchDorisWebSite {
 	public static Log log = LogFactory.getLog(PrefetchDorisWebSite.class);
 	
 	// Nombre maximum de fiches traitées (--max=K permet de changer cette valeur)
-	private static int nbMaxFichesTraitees = PrefetchConstants.nbMaxFichesTraiteesDef;
+	private static int nbMaxFichesATraiter = PrefetchConstants.nbMaxFichesTraiteesDef;
 	public static String action = "";
 	
 	
@@ -125,7 +112,7 @@ public class PrefetchDorisWebSite {
 		log.debug("doMain() : Vérification et lecture des arguments");
 		action = checkArgs(args);
 		log.info("action : " + action);
-		log.info("Nb. Fiches Max : " + nbMaxFichesTraitees);
+		log.info("Nb. Fiches Max : " + nbMaxFichesATraiter);
 		
 		// Vérification, Création, Sauvegarde des dossiers de travails
 		checkDossiers(action);
@@ -133,806 +120,105 @@ public class PrefetchDorisWebSite {
 		if (action.equals("TEST")) {
 			log.debug("doMain() - Début TEST");
 			
-			creationCD();
-			transfoHtml();
+			GenerationCDDVD generationCDDVD = new GenerationCDDVD();
+			generationCDDVD.creationCD();
+			generationCDDVD.transfoHtml();
 
 			log.debug("doMain() - Fin TEST");
 		} else {
 
 			ConnectionSource connectionSource = null;
 			
+		
+			// - - - Base de Données - - -
+			// create empty DB and initialize it for Android
+			initializeSQLite(PrefetchConstants.DATABASE_URL);
+			
+			// create our data-source for the database
+			connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
+			// setup our database and DAOs
+			setupDatabase(connectionSource);
+			databaseInitialisation(connectionSource);
+			
+			outilsBase = new DataBase_Outils(dbContext);
+			
 			try {
-				// - - - Base de Données - - -
-				// create empty DB and initialize it for Android
-				initializeSQLite(PrefetchConstants.DATABASE_URL);
-				
-				// create our data-source for the database
-				connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
-				// setup our database and DAOs
-				setupDatabase(connectionSource);
-				databaseInitialisation(connectionSource);
-				
-				outilsBase = new DataBase_Outils(dbContext);
-				
 				// - - - Groupes - - -
 				// Récupération de la liste des groupes sur le site de DORIS
-				// En UPDATE et CDDVD on re-télécharge la liste
-				String listeGroupesFichier = "";
-				String contenuFichierHtml = null;
-				
-				if (! action.equals("NODWNLD")){
-					listeGroupesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeGroupes.html";
-					log.info("Récup. Liste Groupes Doris : " + listeGroupesFichier);
-					
-					if (Outils.getFichierFromUrl(Constants.getGroupesZoneUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES)), listeGroupesFichier)) {
-						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeGroupesFichier));
-						
-					} else {
-						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-						System.exit(1);
-					}
-				} else {
-					// NODWNLD
-					listeGroupesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeGroupes.html";
-					if (new File(listeGroupesFichier).exists()) {
-						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeGroupesFichier));
-					} else {
-						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-						System.exit(1);
-					}
-				}
-				
-				final List<Groupe> listeGroupes = SiteDoris.getListeGroupesFromHtml(contenuFichierHtml);
-				log.debug("doMain() - listeGroupes.size : "+listeGroupes.size());
-				
-				TransactionManager.callInTransaction(connectionSource,
-					new Callable<Void>() {
-						public Void call() throws Exception {
-							for (Groupe groupe : listeGroupes){
-								dbContext.groupeDao.create(groupe);
-							}
-							return null;
-					    }
-					});
-
-				for (Groupe groupe : listeGroupes){
-					log.info("Groupe : " + groupe.getNomGroupe());
-					if (groupe.getNumeroGroupe() != 0 && (nbMaxFichesTraitees == 9999 || groupe.getNumeroGroupe() <= 10) ) {
-						String fichierLocalContenuGroupe = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
-						String fichierRefContenuGroupe = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
-						
-						if (! action.equals("NODWNLD") && ! action.equals("CDDVD")){
-							if (Outils.getFichierFromUrl(Constants.getGroupeContenuUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES),
-									groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe(), 1), fichierLocalContenuGroupe)) {
-								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalContenuGroupe));
-							} else {
-								log.error("Une erreur est survenue lors du téléchargement du groupe : "+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe());
-								System.exit(1);
-							}
-						} else {
-							// NODWNLD ou CDDVD
-							if ( isFileExistingPath( fichierRefContenuGroupe ) ) {
-								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefContenuGroupe));
-							} else {
-								log.error("Une erreur est survenue lors de la récupération du groupe : "+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe());
-								System.exit(1);
-							}
-						}
-											
-						groupe.setContextDB(dbContext);
-						groupe.descriptionDetailleeFromHtml(contenuFichierHtml);
-						dbContext.groupeDao.update(groupe);
-					}
-				}
-				// Téléchargement des pages de Groupes
-				if ( action.equals("CDDVD")){
-
-					List<ZoneGeographiqueKind> listZone = Arrays.asList(ZoneGeographiqueKind.values());
-					for (ZoneGeographiqueKind zone : listZone ) {
-						
-						int zoneId = Constants.getNumZoneForUrl(zone);
-						String fichierGroupes = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/groupes_zone-"+zoneId+".html";
-
-						if (Outils.getFichierFromUrl(Constants.getGroupesZoneUrl(zoneId), fichierGroupes)) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierGroupes));
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la liste des Groupes : " + zone.toString());
-							System.exit(1);
-						}
-						final List<Groupe> listeGroupesZone = SiteDoris.getListeGroupesFromHtml(contenuFichierHtml);
-						log.debug("doMain() - listeGroupesZone.size : "+listeGroupesZone.size());
-						
-						for (Groupe groupe : listeGroupesZone) {
-							
-							if (groupe.getNumeroGroupe() != 0  && (nbMaxFichesTraitees == 9999 || groupe.getNumeroGroupe() <= 10) ) {
-								int pageCourante = 1;
-								boolean testContinu = false;
-								
-								do {
-									log.debug("doMain() - page Groupe : "+zoneId+" - "+groupe.getNumeroGroupe()+" - "+groupe.getNumeroSousGroupe()+" - "+pageCourante);
+				// En UPDATE et CDDVD on re-télécharge que la liste
 	
-									String fichierPageGroupe = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/groupe-"+zoneId+"-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-"+pageCourante+".html";
-	
-									if (Outils.getFichierFromUrl(Constants.getGroupeContenuUrl(zoneId, groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe(), pageCourante), fichierPageGroupe)) {
-										contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierPageGroupe));
-									} else {
-										log.error("Une erreur est survenue lors de la récupération de la page des groupes : " + fichierPageGroupe);
-										System.exit(1);
-									}
-
-									pageCourante ++;
-									testContinu = SiteDoris.getContinuerContenuGroupeFromHtml(contenuFichierHtml);
-								
-								} while ( testContinu );
-								
-							}
-						}
-					}
+				PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, action, nbMaxFichesATraiter);
+				if ( groupes.prefetch() == -1 ) {
+					log.debug("doMain() - Erreur Groupes" );
+					System.exit(1);
 				}
 				
-
+				
 				// - - - Intervenants - - -
 				// On boucle sur les initiales des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
 				// On récupère la liste des intervenants dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
-				String listeFiltres;
-				if (nbMaxFichesTraitees == 9999){
-					listeFiltres="abcdefghijklmnopqrstuvwxyz";
-				} else {
-					listeFiltres="ab";
+	
+				PrefetchIntervenants intervenants = new PrefetchIntervenants(dbContext, connectionSource, action, nbMaxFichesATraiter);
+				if ( intervenants.prefetch() == -1 ) {
+					log.debug("doMain() - Erreur Intervenants" );
+					System.exit(1);
 				}
-				
-				for (char initiale : listeFiltres.toCharArray()){
-					log.debug("doMain() - Recup Participants : "+initiale);
-					
-					String listeParticipantsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeParticipants-"+initiale+".html";
-					log.info("Récup. Liste des Participants : " + listeParticipantsFichier);
-					
-					if (! action.equals("NODWNLD")){
-						if (Outils.getFichierFromUrl(Constants.getListeParticipantsUrl(""+initiale), listeParticipantsFichier)) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeParticipantsFichier));
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la liste des Participants : "+initiale);
-							System.exit(1);
-						}
-					} else {
-						// NODWNLD
-						listeParticipantsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeParticipants-"+initiale+".html";
-						if (new File(listeParticipantsFichier).exists()) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeParticipantsFichier));
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la liste des Participants : "+initiale);
-							System.exit(1);
-						}
-					}
-					
-					final List<Participant> listeParticipantsFromHTML = SiteDoris.getListeParticipantsParInitialeFromHtml(contenuFichierHtml);
-					log.info("Creation de "+listeParticipantsFromHTML.size()+" participants pour la lettre : "+initiale);
-					TransactionManager.callInTransaction(connectionSource,
-						new Callable<Void>() {
-							public Void call() throws Exception {
-								for (Participant participant : listeParticipantsFromHTML){
-									if (!dbContext.participantDao.idExists(participant.getId()))
-										dbContext.participantDao.create(participant);
-								}
-								return null;
-						    }
-						});
-				}	
-				
-				List<Participant> listeParticipants = new ArrayList<Participant>(0);
-				listeParticipants.addAll(dbContext.participantDao.queryForAll());
-				log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
-				
-				// Pas la peine de Récupérer la page de chacun des intervenants
-				// Toutes les infos sont dans les listes ci dessus mais pour CDDVD
-				// ça fait plus propre
-				if ( action.equals("CDDVD") ) {
-					String pageIntervenantRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/";
-					String pageIntervenantRacineRef = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/";
-					
-					for (Participant participant : listeParticipants){
-						
-						if( ! isFileExistingPath( pageIntervenantRacineRef+"participant-"+participant.getNumeroParticipant()+".html") ){
-							if ( Outils.getFichierFromUrl( Constants.getParticipantUrl(participant.getNumeroParticipant()),
-									pageIntervenantRacine+"participant-"+participant.getNumeroParticipant()+".html") ) {
-							} else {
-								log.error("Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom());
-								//System.exit(1);
-							}
-						}
-							
-					}
-				}
-				
-				// Téléchargement Photos Participants
-				if ( action.equals("CDDVD") ) {
-					String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
-					String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
-
-					for (Participant participant : listeParticipants){
-
-						if ( !participant.getCleURLPhotoParticipant().isEmpty() ) {
-							
-							// On stocke la photo dans les Vignettes
-							if( ! isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_") ) ){
-								String photoURL = URLEncoder.encode(participant.getCleURLPhotoParticipant(),"UTF-8");
-								log.debug("doMain() - photoURL : "+photoURL);
-								
-								if (Outils.getFichierFromUrl(Constants.SITE_RACINE_URL+photoURL,
-										fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_"))) {
-								} else {
-									log.error("Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom());
-									//System.exit(1);
-								}
-							}
-						}
-					}
-				}
-				
 				
 				
 				// - - - Glossaire - - -
 				// On boucle sur les initiales des définitions (Cf site : doris.ffessm.fr/glossaire.asp?filtre=?)
 				// On récupère la liste des termes dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
-				if (nbMaxFichesTraitees == 9999){
-					listeFiltres="abcdefghijklmnopqrstuvwxyz";
-				} else {
-					listeFiltres="ab";
+	
+				PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, action, nbMaxFichesATraiter);
+				if ( glossaire.prefetch() == -1 ) {
+					log.debug("doMain() - Erreur Glossaire" );
+					System.exit(1);
 				}
-				
-				for (char initiale : listeFiltres.toCharArray()){
-					log.debug("doMain() - Recup Page de définitions pour la lettre : "+initiale);
-					
-					int numero = 1;
-					boolean continuer;
-					do {
-						String listeDefinitionsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeDefinitions-"+initiale+"-"+numero+".html";
-						log.info("Récup. Liste des Définitions : " + listeDefinitionsFichier);
-						
-						if (! action.equals("NODWNLD")){
-							if (Outils.getFichierFromUrl(Constants.getListeDefinitionsUrl(""+initiale,""+numero ), listeDefinitionsFichier)) {
-								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeDefinitionsFichier));
-							} else {
-								log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale+"-"+numero);
-								System.exit(1);
-							}
-						} else {
-							// NODWNLD
-							listeDefinitionsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeDefinitions-"+initiale+"-"+numero+".html";
-							if (new File(listeDefinitionsFichier).exists()) {
-								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeDefinitionsFichier));
-							} else {
-								log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale+"-"+numero);
-								System.exit(1);
-							}
-						}
-						
-						continuer = SiteDoris.getContinuerListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
-						
-						final List<DefinitionGlossaire> listeDefinitionsFromHTML = SiteDoris.getListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
-						log.info("Creation de "+listeDefinitionsFromHTML.size()+" définitions pour la lettre : "+initiale);
-						TransactionManager.callInTransaction(connectionSource,
-							new Callable<Void>() {
-								public Void call() throws Exception {
-									for (DefinitionGlossaire definition : listeDefinitionsFromHTML){
-										if (!dbContext.definitionGlossaireDao.idExists(definition.getId()))
-											dbContext.definitionGlossaireDao.create(definition);
-									}
-									return null;
-							    }
-							});
-						
-						numero ++;
-					} while (continuer && numero < 10);
-				} 
-				
-				List<DefinitionGlossaire> listeDefinitions = new ArrayList<DefinitionGlossaire>(0);
-				listeDefinitions.addAll(dbContext.definitionGlossaireDao.queryForAll());
-				log.debug("doMain() - listeDefinitions.size : "+listeDefinitions.size());
-				
-				// Pour chaque Définitions, on télécharge la page (si nécessaire) puis on la traite
-				int nbDefinitionTelechargees = 0;
-				for (DefinitionGlossaire definition : listeDefinitions) {
-					log.debug("doMain() - Traitement Définition : "+definition.getNumeroDoris());
-					
-					String urlDefinition =  Constants.getDefinitionUrl( ""+definition.getNumeroDoris() );
-					String fichierLocalDefinition = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/definition-"+definition.getNumeroDoris()+".html";
-					String fichierRefDefinition = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/definition-"+definition.getNumeroDoris()+".html";
-					if ( action.equals("INIT") ) {
-						if (Outils.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
-							nbDefinitionTelechargees += 1;
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalDefinition));
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la définition : "+urlDefinition);
-							continue;
-						}
-					} else if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
-						if ( ! new File(fichierRefDefinition).exists() ) {
-							if (Outils.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
-								nbDefinitionTelechargees += 1;
-								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalDefinition));
-							} else {
-								log.error("Une erreur est survenue lors de la récupération de la définition : "+urlDefinition);
-								continue;
-							}
-						} else {
-							if (new File(fichierRefDefinition).exists()) {
-								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefDefinition));
-							} else {
-								log.error("Une erreur est survenue lors de la récupération de la définition sur le disque : "+fichierRefDefinition+" a échoué.");
-							}
-						}
-					} else if ( action.equals("NODWNLD") ) {
-						if (new File(fichierRefDefinition).exists()) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefDefinition));
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la définition sur le disque : "+fichierRefDefinition+" a échoué.");
-						}
-					}
-					
-					definition.setContextDB(dbContext);
-					definition.getDefinitionsFromHtml(contenuFichierHtml);
-					dbContext.definitionGlossaireDao.update(definition);
-					
-					if ( nbDefinitionTelechargees !=0 && (nbDefinitionTelechargees % 50) == 0) {
-						log.info("Définitions traitées = "+nbDefinitionTelechargees+", pause de 1s...");
-						Thread.sleep(1000);
-					}
-					
-					//Si des photos dans la définition, il faut les télécharger dans le cas CDDVD
-					if (action.equals("CDDVD")){
-						String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
-						String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
-						
-						List<String> listeImagesDefinition = definition.getListeImagesDefinition();
-						
-						if (listeImagesDefinition != null) {
-							for (String image : listeImagesDefinition) {
-					    			
-								// On stocke la photo dans les Vignettes
-								if( ! isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_DEFINITION+image ) ){
-									if (Outils.getFichierFromUrl(Constants.ILLUSTRATION_DEFINITION_BASE_URL+"/"+image,
-											fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_DEFINITION+image)) {
-									} else {
-										log.error("Une erreur est survenue lors de la récupération d'une photo de la définition de : "+definition.getTerme());
-										//System.exit(1);
-									}
-								}
-							}
-						}
-					}
-				}
-				
-				listeDefinitions = null;
 				
 				// - - - Bibliographie - - -
 				// On boucle sur la page des Fiches tant que l'on trouve dans la page courante (n)
 				//biblio.asp?mapage=(n+1)&PageCourante=n
 				// On récupère les Bibliographies dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
-				int pageCourante = 1;
-				boolean testContinu = false;
 				
-				do {
-					log.debug("doMain() - pageCourante Bibliographie : "+pageCourante);
-					
-					String listeBibliographies = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeBibliographies-"+pageCourante+".html";
-					log.info("Récup. Liste des Bibliographies : " + listeBibliographies);
-					
-					if (! action.equals("NODWNLD")){
-						if (Outils.getFichierFromUrl(Constants.getListeBibliographiesUrl(pageCourante), listeBibliographies)) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeBibliographies));
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la liste des Bibliographies : " + listeBibliographies);
-							System.exit(1);
-						}
-					} else {
-						// NODWNLD
-						listeBibliographies = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeBibliographies-"+pageCourante+".html";
-						if (new File(listeBibliographies).exists()) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeBibliographies));
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la liste des Bibliographies : " + listeBibliographies);
-							System.exit(1);
-						}
-					}
-					
-					final List<EntreeBibliographie> listeBiblioFromHTML = SiteDoris.getListeBiblioFromHtml(contenuFichierHtml);
-					//log.info("Creation de "+listeParticipantsFromHTML.size()+" participants pour la lettre : "+initiale);
-					TransactionManager.callInTransaction(connectionSource,
-							new Callable<Void>() {
-								public Void call() throws Exception {
-									for (EntreeBibliographie entreeBiblio : listeBiblioFromHTML){
-										if (!dbContext.entreeBibliographieDao.idExists(entreeBiblio.getId()))
-											dbContext.entreeBibliographieDao.create(entreeBiblio);
-									}
-									return null;
-							    }
-							});
-					 
-					pageCourante ++;
-					testContinu = contenuFichierHtml.contains("biblio.asp?mapage="+pageCourante+"&");
-				} while ( testContinu && (nbMaxFichesTraitees == 9999 || pageCourante <= 10) );
-				
-				List<EntreeBibliographie> listeEntreesBiblio = new ArrayList<EntreeBibliographie>(0);
-				listeEntreesBiblio.addAll(dbContext.entreeBibliographieDao.queryForAll());
-				log.debug("doMain() - listeEntreesBiblio.size : "+listeEntreesBiblio.size());
-				
-				// Téléchargement de la page de l'entrée bibliographique
-				log.debug("doMain() - Téléchargement de la page de l'entrée bibliographique");
-				int nbBiblioTelechargees = 0;
-				
-				for (EntreeBibliographie biblio : listeEntreesBiblio){
-					if (nbMaxFichesTraitees == 9999 || nbBiblioTelechargees <= 10) {
-	
-						String urlBiblio = Constants.getBibliographieUrl(biblio.getNumeroDoris());
-						String fichierBiblio = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/" + "biblio-" + biblio.getNumeroDoris()+".html";
-						String fichierBiblioRef = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/" + "biblio-" + biblio.getNumeroDoris()+".html";
-						
-						if ( action.equals("INIT") ) {
-							if( ! isFileExistingPath( fichierBiblioRef ) ){
-								if ( Outils.getFichierFromUrl( urlBiblio, fichierBiblio ) ) {
-									nbBiblioTelechargees += 1;
-									contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierBiblio));
-								} else {
-									log.error("Une erreur est survenue lors de la récupération de la Biblio : "+urlBiblio);
-									continue;
-								}
-							}
-						} else if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
-							if ( ! new File(fichierBiblioRef).exists() ) {
-								if (Outils.getFichierFromUrl(urlBiblio, fichierBiblio)) {
-									nbBiblioTelechargees += 1;
-									contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierBiblio));
-								} else {
-									log.error("Une erreur est survenue lors de la récupération de la Biblio : "+urlBiblio);
-									continue;
-								}
-							} else {
-								if (new File(fichierBiblioRef).exists()) {
-									contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierBiblioRef));
-								} else {
-									log.error("Une erreur est survenue lors de la récupération de la Biblio sur le disque : "+fichierBiblioRef+" a échoué.");
-								}
-							}
-						} else if ( action.equals("NODWNLD") ) {
-							if (new File(fichierBiblioRef).exists()) {
-								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierBiblioRef));
-							} else {
-								log.error("Une erreur est survenue lors de la récupération de la Biblio sur le disque : "+fichierBiblioRef+" a échoué.");
-							}
-						}
-	
-	
-						// Téléchargement Vérification existence de l'image / Photos Bibliographie
-						if (contenuFichierHtml.contains(biblio.getNumeroDoris()+".jpg")) {
-							// Maj Base de données
-							final EntreeBibliographie biblioMaj = biblio;
-							TransactionManager.callInTransaction(connectionSource,
-								new Callable<Void>() {
-									public Void call() throws Exception {
-	
-										biblioMaj.setCleURLIllustration("gestionenligne/photos_biblio_moy/" + biblioMaj.getNumeroDoris() + ".jpg");
-										dbContext.entreeBibliographieDao.update(biblioMaj);
-										return null;
-								    }
-								});
-						
-							if ( action.equals("CDDVD") ) {
-								String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
-								String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
-								
-								// On stocke la photo dans les Vignettes
-								if( ! isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_BIBLIO+biblio.getNumeroDoris()+".jpg" ) ){
-									if (Outils.getFichierFromUrl(Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+biblio.getNumeroDoris()+".jpg",
-											fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_BIBLIO+biblio.getNumeroDoris()+".jpg" )) {
-									} else {
-										log.info("Une erreur est survenue lors de la récupération de la photo de l'entrée Biblio. : "+biblio.getTitre() + ", il est probable qu'il n'y ait pas d'illustration.");
-									}
-								}
-							}
-						}
-					}
+				PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, action, nbMaxFichesATraiter);
+				if ( bibliographies.prefetch() == -1 ) {
+					log.debug("doMain() - Erreur Bibliographies" );
+					System.exit(1);
 				}
-				listeEntreesBiblio = null;
-				
+	
 				// - - - Liste des Fiches - - -
 				// Récupération de la liste des fiches sur le site de DORIS
 				// Elles sont récupérées dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
-				String listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeFiches.html";
-				log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
-				
-				if (! action.equals("NODWNLD")){
-					String listeToutesFiches = Constants.getListeFichesUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES)); 
-					if (Outils.getFichierFromUrl(listeToutesFiches, listeFichesFichier)) {
-						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
-					} else {
-						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-						System.exit(1);
-					}
-				}
-				HashSet<FicheLight> listeFichesSite = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
-				log.info("Nb Fiches sur le site : "+listeFichesSite.size());
-
-				// Récupération de la liste des fiches dans le dossier de référence
-				// Si NODWNLD la liste sera utilisée pour faire le traitement
-				// Si UPDATED ou CDDVD, elle permettra de déduire les fiches à télécharger de nouveau : les fiches ayant changées de statut
-
-				if (! action.equals("INIT")){
-					listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches.html";
-					if (new File(listeFichesFichier).exists()) {
-						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
-					} else {
-						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-						System.exit(1);
-					}
-				}
-				HashSet<FicheLight> listFichesFromRef = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);;
-				log.info("Nb Fiches dans le dossier de référence : "+listFichesFromRef.size());
-				
-				// Création de l'entête des fiches
-				final HashSet<FicheLight> listeFichesTravail;
-				if (! action.equals("NODWNLD")) {
-					listeFichesTravail = (HashSet<FicheLight>) listeFichesSite.clone();
-				} else {
-					listeFichesTravail = (HashSet<FicheLight>) listFichesFromRef.clone();
-				}
-				TransactionManager.callInTransaction(connectionSource,
-					new Callable<Void>() {
-						public Void call() throws Exception {
-							for (FicheLight ficheLight : listeFichesTravail){
-								dbContext.ficheDao.create(new Fiche(ficheLight));
-							}
-							return null;
-					    }
-					});
-
-				listeFichesSite = null;
-
-				
-				// - - - Fiche - - -
-				// Pour chaque fiche, on télécharge la page (si nécessaire) puis on la traite
-				log.info("Mise à jours de "+listeFichesTravail.size()+" fiches.");
-				HashSet<FicheLight> listFichesModif = null;
-				if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
-					listFichesModif = SiteDoris.getListeFichesUpdated(listFichesFromRef, listeFichesTravail);
-				}
-				listFichesFromRef = null;
-				
-				int nbFichesTraitees = 0;
-				for (FicheLight ficheLight : listeFichesTravail) {
-					if (  nbFichesTraitees <= nbMaxFichesTraitees ) {
-						log.debug("doMain() - Traitement Fiche : "+ficheLight.getNomCommun());
-						
-						String urlFiche =  Constants.getFicheFromIdUrl( ficheLight.getNumeroFiche() );
-						String fichierLocalFiche = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/fiche-"+ficheLight.getNumeroFiche()+".html";
-						String fichierRefFiche = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/fiche-"+ficheLight.getNumeroFiche()+".html";
-						
-						if ( action.equals("INIT") ) {
-							if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
-								nbFichesTraitees += 1;
-								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalFiche));
-							} else {
-								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
-								// Solution de contournement désespérée 
-								urlFiche = Constants.getFicheFromNomCommunUrl(ficheLight.getNomCommun());
-								log.error("=> Tentative sur : "+urlFiche);
-								if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
-									nbFichesTraitees += 1;
-									contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalFiche));
-								} else {
-									log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
-									continue;
-								}
-							}
-						} else if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
-							if (new File(fichierRefFiche).exists() && !listFichesModif.contains(ficheLight)) {
-								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefFiche));
-								nbFichesTraitees += 1;
-							} else {
-								if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
-									nbFichesTraitees += 1;
-									contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalFiche));
-								} else {
-									log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
-									// Solution de contournement désespérée 
-									urlFiche = Constants.getFicheFromNomCommunUrl(ficheLight.getNomCommun());
-									log.error("=> Tentative sur : "+urlFiche);
-									if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
-										nbFichesTraitees += 1;
-										contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalFiche));
-									} else {
-										log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
-										continue;
-									}
-								}
-							}
-						} else if ( action.equals("NODWNLD") ) {
-							if (new File(fichierRefFiche).exists()) {
-								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefFiche));
-								nbFichesTraitees += 1;
-							} else {
-								log.error("La récupération de la fiche sur le disque : "+fichierRefFiche+" a échoué.");
-							}
-						}
-						//Fiche fiche = new Fiche(ficheLight);
-						Fiche fiche = dbContext.ficheDao.queryForFirst(
-								dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", ficheLight.getNumeroFiche()).prepare()
-							);
-						fiche.setContextDB(dbContext);
-						fiche.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
-						dbContext.ficheDao.update(fiche);
-						
-						// mise à jour des champs inverse
-						//dbContext.ficheDao.refresh(fiche);
-						
-						log.info("doMain() - Info Fiche {");
-						log.info("doMain() -      - ref : "+fiche.getNumeroFiche());
-						log.info("doMain() -      - nom : "+fiche.getNomCommun());
-						log.info("doMain() -      - etat : "+fiche.getEtatFiche());
-						log.info("doMain() - }");
-						
-						String urlListePhotos = "http://doris.ffessm.fr/fiche_photo_liste_apercu.asp?fiche_numero="+fiche.getNumeroFiche();
-						String fichierLocalListePhotos = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
-						String fichierRefListePhotos = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
-						String contenuFichierHtmlListePhotos = null;
-						if ( action.equals("INIT")) {
-							if (Outils.getFichierFromUrl(urlListePhotos, fichierLocalListePhotos)) {
-								contenuFichierHtmlListePhotos = Outils.getFichierTxtFromDisk(new File(fichierLocalListePhotos));
-							} else {
-								log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
-								continue;
-							}
-						} else if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
-							if (new File(fichierRefListePhotos).exists() && !listFichesModif.contains(fiche)) {
-								contenuFichierHtmlListePhotos = Outils.getFichierTxtFromDisk(new File(fichierRefListePhotos));
-							} else {
-								if (Outils.getFichierFromUrl(urlListePhotos, fichierLocalListePhotos)) {
-									contenuFichierHtmlListePhotos = Outils.getFichierTxtFromDisk(new File(fichierLocalListePhotos));
-								
-								} else {
-									log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
-									continue;
-								}
-							}
-						} else if ( action.equals("NODWNLD") ){
-							if (new File(fichierRefListePhotos).exists()) {
-								contenuFichierHtmlListePhotos = Outils.getFichierTxtFromDisk(new File(fichierRefListePhotos));
-							} else {
-								log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
-							}
-						}
-						
-						if(contenuFichierHtmlListePhotos != null) {
-							
-							final List<PhotoFiche> listePhotoFiche = SiteDoris.getListePhotosFicheFromHtml(fiche, contenuFichierHtmlListePhotos);
-							
-							// Maj Base de données
-							final Fiche ficheMaj = fiche;
-							TransactionManager.callInTransaction(connectionSource,
-								new Callable<Void>() {
-									public Void call() throws Exception {
-										for (PhotoFiche photoFiche : listePhotoFiche){
-											photoFiche.setFiche(ficheMaj);
-											dbContext.photoFicheDao.create(photoFiche);
-											
-											if (photoFiche.estPhotoPrincipale) {
-												ficheMaj.setPhotoPrincipale(photoFiche);
-												dbContext.ficheDao.update(ficheMaj);
-											}
-										}
-										return null;
-								    }
-								});
-							
-							// Téléchargement Photos
-							if ( action.equals("CDDVD") ) {
-								String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
-								String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
-
-								for (PhotoFiche photoFiche : listePhotoFiche){
 	
-									if ( !photoFiche.getCleURL().isEmpty() ) {
-										// Vignettes
-										if( ! isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL().replace(" ", "_") ) ){
-											if (Outils.getFichierFromUrl(Constants.VIGNETTE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL().replace(" ", "_"))) {
-											} else {
-												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-												//System.exit(1);
-											}
-										}
-										// Qualité Intermédiaire
-										if( ! isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_MED_RES+photoFiche.getCleURL().replace(" ", "_") ) ){
-											if (Outils.getFichierFromUrl(Constants.MOYENNE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_MED_RES+photoFiche.getCleURL().replace(" ", "_"))) {
-											} else {
-												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-												//System.exit(1);
-											}
-										}
-										// Haute Qualité 
-										if( ! isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_HI_RES+photoFiche.getCleURL().replace(" ", "_") ) ){
-											if (Outils.getFichierFromUrl(Constants.GRANDE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_HI_RES+photoFiche.getCleURL().replace(" ", "_"))) {
-											} else {
-												log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-												//System.exit(1);
-											}
-										}
-									}
-								}
-							}
-						}
-						
-					}
-					else {
-						log.info("Nombre max de fiches à traiter atteint.");
-						break; // ignore les fiches suivantes
-					}
-					
-					if ( nbFichesTraitees != 0 && (nbFichesTraitees % 500) == 0) {
-						log.info("fiche traitées = "+nbFichesTraitees+", pause de 1s...");
-						Thread.sleep(1000);
-					}
+				PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, action, nbMaxFichesATraiter,
+						groupes.listeGroupes, intervenants.listeParticipants);
+				if ( listeFiches.prefetch() == -1 ) {
+					log.debug("doMain() - Erreur Liste des Fiches" );
+					System.exit(1);
+				}
+	
+	
+				// - - - Mise à jour des zones géographiques - - -
+				
+				PrefetchZonesGeographiques zonesGeographiques = new PrefetchZonesGeographiques(dbContext, connectionSource, action, nbMaxFichesATraiter);
+				if ( zonesGeographiques.prefetch() == -1 ) {
+					log.debug("doMain() - Erreur Mise à jour des zones géographiques" );
+					System.exit(1);
 				}
 				
-				// mise à jour des zones géographiques
-				// zone France Métropolitaine Marines
-				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE);
-				// zone France Métropolitaine Eau douce
-				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE);
-				// zone indo pacifique
-				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE);
-				// zone Caraïbes
-				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES);
-				// zone atlantique nordOuest
-				majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST);
-			
+				
+				// - - - Enregistrement Date génération Base - - -
 				Date date = new Date();
 				SimpleDateFormat ft =  new SimpleDateFormat ("dd/MM/yyyy  HH:mm");
 				dbContext.dorisDB_metadataDao.create(new DorisDB_metadata(ft.format(date),""));
 				
 				
-				// Téléchargement Pages et Images exclusives CD et DVD
+				// - - - Génération CD et DVD  - - - 
 				if ( action.equals("CDDVD") ) {
-					String fichierLocalLien = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/";
-					String fichierRefLien = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/";
-					String fichierIconeRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_ICONES + "/";
-					String fichierIconeRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/" + PrefetchConstants.SOUSDOSSIER_ICONES + "/";
+					GenerationCDDVD generationCDDVD = new GenerationCDDVD(dbContext, connectionSource, action, nbMaxFichesATraiter);
+					generationCDDVD.generation();
+				}
 
-					List<Lien> liensATelecharger = getLienATelecharger();
-					for (Lien lienATelecharger : liensATelecharger) {
-						
-						if (lienATelecharger.getLienKind() == LienKind.PAGE) {
-							if( ! isFileExistingPath( fichierRefLien+lienATelecharger.getFichier() ) ){
-								if (Outils.getFichierFromUrl(Constants.getSiteUrl()+lienATelecharger.getUrl(),
-										fichierLocalLien+lienATelecharger.getFichier() ) ) {
-								} else {
-									log.error("Une erreur est survenue lors de la récupération du lien : "+lienATelecharger.getUrl() );
-									System.exit(1);
-								}
-							}
-						}
-						
-						if (lienATelecharger.getLienKind() == LienKind.ICONE) {
-							if( ! isFileExistingPath( fichierIconeRefRacine+lienATelecharger.getFichier() ) ){
-								if (Outils.getFichierFromUrl(Constants.getSiteUrl()+lienATelecharger.getUrl(),
-										fichierIconeRacine+lienATelecharger.getFichier() ) ) {
-								} else {
-									log.error("Une erreur est survenue lors de la récupération du lien : "+lienATelecharger.getUrl() );
-									System.exit(1);
-								}
-							}
-						}
-					}
-					
-				}
-				
-				// Création du dossier CD et DVD
-				if ( action.equals("CDDVD") ) {
-					log.debug("doMain() - Création du dossier CD");
-					creationCD();
-					//TODO : Création DVD
-					log.debug("doMain() - transfoHtml");
-					transfoHtml();
-				}
 				
 			} finally {
 				// destroy the data source which should close underlying connections
@@ -941,69 +227,11 @@ public class PrefetchDorisWebSite {
 					connectionSource.close();
 				}
 			}
-			
-			
 		} // Fin de <> TEST
 		log.debug("doMain() - Fin");
 	}
 
-	private void majZoneGeographique(ConnectionSource connectionSource, ZoneGeographiqueKind zoneKind){
-		log.debug("majZoneGeographique() - Début");
-		
-		String listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeFiches-"+(zoneKind.ordinal()+1)+".html";
-		log.debug("Récup. Liste Fiches Doris Zone : " + listeFichesFichier);
-		//List<Fiche> listeFiches = new ArrayList<Fiche>(0);
-		String contenuFichierHtml = "";
-		if (! action.equals("NODWNLD")){
-			if (Outils.getFichierFromUrl(Constants.getListeFichesUrl(Constants.getNumZoneForUrl(zoneKind)) , listeFichesFichier)) {
-				contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
-				
-			} else {
-				log.error("Une erreur est survenue lors de la récupération de la liste des fiches de la zone ");
-				return;
-			}
-		} else {
-			// NODWNLD
-			listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches-"+(zoneKind.ordinal()+1)+".html";
-			if (new File(listeFichesFichier).exists()) {
-				contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
-			} else {
-				log.error("Une erreur est survenue lors de la récupération de la liste des fiches de la zone ");
-				return;
-			}
-		}
-		
-		final ZoneGeographique zoneGeographique = new ZoneGeographique(Constants.getTitreZoneGeographique(zoneKind), 
-																 Constants.getTexteZoneGeographique(zoneKind));
-		try {
-			dbContext.zoneGeographiqueDao.create(zoneGeographique);
-		} catch (SQLException e) {
-			log.error("impossible de créer la zone dans la base", e);
-		}
-		
-		final HashSet<FicheLight> listFicheFromHTML = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
-		log.info("Création des "+listFicheFromHTML.size()+" associations pour la Zone : " + listeFichesFichier);
-		
-		try {
-			TransactionManager.callInTransaction(connectionSource,
-					new Callable<Void>() {
-						public Void call() throws Exception { 
 
-							for (FicheLight ficheLight : listFicheFromHTML) {
-								Fiche fichesDeLaBase = outilsBase.queryFicheByNumeroFiche(ficheLight.getNumeroFiche());
-								fichesDeLaBase.setContextDB(dbContext);
-								fichesDeLaBase.addZoneGeographique(zoneGeographique);
-							}
-							
-							return null;
-					    }
-					});
-
-		} catch (SQLException e) {
-			log.error("impossible d'associer Fiches et Zone Géographique", e);
-		}
-		log.debug("majZoneGeographique() - Fin");
-	}
 	
 	
 	/**
@@ -1065,8 +293,8 @@ public class PrefetchDorisWebSite {
 					nbFichesStr =  arg.substring(6);
 				}
 				try { 
-					 nbMaxFichesTraitees = Integer.parseInt(nbFichesStr);
-					 log.debug("checkArgs() - nbMaxFichesTraitees : " + nbMaxFichesTraitees);
+					 nbMaxFichesATraiter = Integer.parseInt(nbFichesStr);
+					 log.debug("checkArgs() - nbMaxFichesTraitees : " + nbMaxFichesATraiter);
 			    } catch(NumberFormatException e) { 
 			    	help();
 					log.error("Argument -M ou --max mal utilisé : " + arg);
@@ -1262,7 +490,7 @@ public class PrefetchDorisWebSite {
 	 * 
 	 * @param action
 	 */
-	public void checkDossiers(String inAction) {
+	private void checkDossiers(String inAction) {
 		log.debug("checkDossiers() - Début");
 		
 		log.debug("checkDossiers() - Action : " + inAction);
@@ -1481,504 +709,5 @@ public class PrefetchDorisWebSite {
 	}
 
 
-	
-	// Vérifie que le fichier existe
-	public boolean isFileExistingPath(String fichierPath){
-		File fichier = new File(fichierPath);
-		if (!fichier.exists()){
-			return false;
-		} else {
-			if (fichier.isDirectory()){
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	// Liste des Pages et Images à télécharger dans le cas des CD et DVD
-	// REPLACE
-	public List<Lien> getLienATelecharger(){
-		List<Lien> lienATelecharger = new ArrayList<Lien>(0);
 
-		lienATelecharger.add(new Lien(LienKind.PAGE, "accueil.asp","accueil.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "styles.css","styles.css"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "doris.asp","doris.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "doris_faq.asp","doris_faq.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "contacts_accueil.asp","contacts_accueil.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "Copyright.asp","Copyright.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "liens.asp","liens.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "formulaire_contact.asp","formulaire_contact.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "doris_doridiens.asp","doris_doridiens.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "doris_genese_objectifs.asp","doris_genese_objectifs.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "doris_chroniques_doridiennes.asp","doris_chroniques_doridiennes.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "doris_equipe.asp","doris_equipe.html"));
-
-		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=10","fichier-10.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=1","fichier-1.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=2","fichier-2.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=3","fichier-3.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=4","fichier-4.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "fichier.asp?numero_fichier=5","fichier-5.html"));
-
-		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=10","groupes_zone-10.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=1","groupes_zone-1.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=2","groupes_zone-2.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=3","groupes_zone-3.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=4","groupes_zone-4.html"));
-		lienATelecharger.add(new Lien(LienKind.PAGE, "groupes.asp?numero_fichier=5","groupes_zone-5.html"));
-		
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/favicon.ico","images_favicon.ico"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/carre.jpg","images_carre.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/pucecarre.gif","images_pucecarre.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "Images/pucecarre.gif","images_pucecarre.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/pucecarreorange.gif","images_pucecarreorange.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "Images/pucecarreorange.gif","images_pucecarreorange.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fleche_grise.gif","images_fleche_grise.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/logo.gif","images_logo.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/logo2.gif","images_logo2.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/logo-biologie.gif","images_logo-biologie.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/logo_ffessm.gif","images_logo_ffessm.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/logo-biologie-pantone.gif","images_logo-biologie-pantone.gif"));
-
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/ligne_carre3.gif","images_ligne_carre3.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/ligne_carre4.gif","images_ligne_carre4.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/MNHN2.gif","images_MNHN2.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/Palme3.gif","images_Palme3.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/1x1.gif","images_1x1.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/10x10.gif","images_10x10.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/pucemenu.gif","images_pucemenu.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fond_bas.gif","images_fond_bas.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fonbandeau.gif","images_fonbandeau.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/icon_back.gif","images_icon_back.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/petit_gris.gif","images_petit_gris.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/f3f3f3.gif","images_f3f3f3.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/black_round_grey.gif","images_black_round_grey.gif"));		
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/newsearch.gif","images_newsearch.gif"));	
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_imp.gif","images_18_imp.gif"));	
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_fileprint.gif","images_18_fileprint.gif"));	
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_filewrite.gif","images_18_filewrite.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_fileimage.gif","images_18_fileimage.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_filetick.gif","images_18_filetick.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_mailsend.gif","images_18_mailsend.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_probe.gif","images_18_probe.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/searchdoc.gif","images_searchdoc.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/dorispetit18x18.gif","images_dorispetit18x18.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/18_faq.gif","images_18_faq.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/rightsign.jpg","images_rightsign.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/btn_next.gif","images_btn_next.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/btn_prev.gif","images_btn_prev.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/picto_regl18.gif","images_picto_regl18.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/picto_regl.gif","images_picto_regl.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/picto_dang18.gif","images_picto_dang18.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/picto_dang.gif","images_picto_dang.gif"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fiche.gif","fiche.gif"));
-		
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier1puce.jpg","images_fichier1puce.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier2puce.jpg","images_fichier2puce.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier3puce.jpg","images_fichier3puce.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier4puce.jpg","images_fichier4puce.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier5puce.jpg","images_fichier5puce.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier10puce.jpg","images_fichier10puce.jpg"));
-
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier1.jpg","images_fichier1.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier2.jpg","images_fichier2.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier3.jpg","images_fichier3.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier4.jpg","images_fichier4.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier5.jpg","images_fichier5.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier10.jpg","images_fichier10.jpg"));
-		
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier1_gde.jpg","images_fichier1_gde.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier2_gde.jpg","images_fichier2_gde.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier3_gde.jpg","images_fichier3_gde.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier4_gde.jpg","images_fichier4_gde.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier5_gde.jpg","images_fichier5_gde.jpg"));
-		lienATelecharger.add(new Lien(LienKind.ICONE, "images/fichier10_gde.jpg","images_fichier10_gde.jpg"));
-		return lienATelecharger;
-	}
-	
-	// REPLACE
-	public List<Lien> getLienANettoyer(){
-		List<Lien> lienANettoyer = new ArrayList<Lien>(0);
-		
-		// dans les href si commence par url, on replace par le nom du fichier
-		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=1&","listeFiches-1.html"));
-		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=2&","listeFiches-2.html"));
-		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=3&","listeFiches-3.html"));
-		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=4&","listeFiches-4.html"));
-		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=5&","listeFiches-5.html"));
-		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?numero_fichier=10&","listeFiches.html"));
-		lienANettoyer.add(new Lien(LienKind.PAGE, "nom_scientifique.asp?fichier=",""));
-
-		lienANettoyer.add(new Lien(LienKind.PAGE, "glossaire.asp\"","listeDefinitions-a-1.html\""));
-		
-		lienANettoyer.add(new Lien(LienKind.PAGE, "biblio.asp\"","listeBibliographies-1.html\""));
-
-		//TODO : Qd des espaces il faudrait les remplacer par des _
-		lienANettoyer.add(new Lien(LienKind.VIGNETTE, "http://doris.ffessm.fr/gestionenligne/photos_fiche_vig/","/"));
-		lienANettoyer.add(new Lien(LienKind.MED_RES, "http://doris.ffessm.fr/gestionenligne/photos_fiche_moy/","/"));
-		lienANettoyer.add(new Lien(LienKind.HI_RES, "http://doris.ffessm.fr/gestionenligne/photos/","/"));
-		lienANettoyer.add(new Lien(LienKind.VIGNETTE, "http://doris.ffessm.fr/gestionenligne/photos_biblio_moy/","/biblio-"));
-		lienANettoyer.add(new Lien(LienKind.VIGNETTE, "http://doris.ffessm.fr/gestionenligne/photos_vig/","/"));
-		
-		lienANettoyer.add(new Lien(LienKind.ICONE, "gestionenligne/images_groupe/","/images_groupe_"));
-		lienANettoyer.add(new Lien(LienKind.ICONE, "gestionenligne/images_sousgroupe/","/images_sousgroupe_"));
-				
-		lienANettoyer.add(new Lien(LienKind.PAGE, "fichier.asp","accueil.html"));
-				
-		lienANettoyer.add(new Lien(LienKind.PAGE, "forum_liste.asp","indisponible_CDDVD.html"));
-		lienANettoyer.add(new Lien(LienKind.PAGE, "fiche_imprime.asp","indisponible_CDDVD.html"));
-		lienANettoyer.add(new Lien(LienKind.PAGE, "fiches_liste_recherche.asp","indisponible_CDDVD.html"));
-		lienANettoyer.add(new Lien(LienKind.PAGE, "fiches_liste_proposees.asp","indisponible_CDDVD.html"));
-		lienANettoyer.add(new Lien(LienKind.PAGE, "fiches_liste_reservees.asp","indisponible_CDDVD.html"));
-		lienANettoyer.add(new Lien(LienKind.PAGE, "cle_identification0.asp","indisponible_CDDVD.html"));
-		lienANettoyer.add(new Lien(LienKind.PAGE, "forum_detail.asp","indisponible_CDDVD.html"));
-		
-		lienANettoyer.add(new Lien(LienKind.TEXTE, "action=\"contacts.asp\"","action=\"indisponible_CDDVD.html\""));
-		lienANettoyer.add(new Lien(LienKind.TEXTE, "action=\"fiches_liste_recherche.asp\"","action=\"indisponible_CDDVD.html\""));
-		lienANettoyer.add(new Lien(LienKind.TEXTE, "action=\"formulaire_contact_valid.asp\"","action=\"indisponible_CDDVD.html\""));
-		lienANettoyer.add(new Lien(LienKind.TEXTE, "action=\"biblio.asp\"","action=\"indisponible_CDDVD.html\""));
-		lienANettoyer.add(new Lien(LienKind.TEXTE, "action=\"glossaire.asp\"","action=\"indisponible_CDDVD.html\""));
-		lienANettoyer.add(new Lien(LienKind.TEXTE, "form.submit();",""));
-		
-		lienANettoyer.add(new Lien(LienKind.PAGE, "http://doris.ffessm.fr","accueil.html"));
-		lienANettoyer.add(new Lien(LienKind.PAGE, " http://doris.ffessm.fr","accueil.html"));
-		return lienANettoyer;
-	}
-
-	//REPLACE_ALL
-	public List<Lien> getRegExpPourNettoyer(){
-		List<Lien> regExpPourNettoyer = new ArrayList<Lien>(0);
-		
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche.asp\\?[^\">]*&fiche_numero=([^&]*)&[^\">]*\"","href=\"fiche-$1.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche2.asp\\?fiche_numero=([^&]*)&[^\">]*\"","href=\"fiche-$1.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiche2.asp\\?fiche_numero=([^\">]*)\"","href=\"fiche-$1.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"\\.\\./fiche2.asp\\?fiche_numero=([^\">]*)\"","href=\"fiche-$1.html\""));
-		
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"contacts.asp\\?filtre=(.)","href=\"listeParticipants-$1.html"));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"[^\"\\?]*formulaire_contact2.asp\\?contact_numero=([^\">]*)\"","href=\"indisponible_CDDVD.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"contact_fiche.asp\\?temp=0&amp;contact_numero=([^\">]*)\"","href=\"indisponible_CDDVD.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"contact_fiche.asp\\?temp=0&contact_numero=([^\">]*)\"","href=\"indisponible_CDDVD.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"contact_fiche.asp\\?contact_numero=([^\">]*)\"","href=\"indisponible_CDDVD.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiches_liste_photographe.asp\\?contact_numero=([^\">]*)\"","href=\"indisponible_CDDVD.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiches_liste_contact.asp\\?contact_numero=([^\">]*)\"","href=\"indisponible_CDDVD.html\""));
-
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?filtre=(.)[^\">]*","href=\"listeDefinitions-$1-1.html"));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?mapage=([^&\">]*)&[^\">]*filtre=(.)\"","href=\"listeDefinitions-$2-$1.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire_detail.asp\\?glossaire_numero=([^&\">]*)&[^\">]*","href=\"definition-$1.html"));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?page=Suivant[^\"]*","href=\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?page=Precedent[^\"]*","href=\""));
-		
-		regExpPourNettoyer.add(new Lien(LienKind.ICONE, "http://doris.ffessm.fr/gestionenligne/photos_forum_vig/[^\">]*\"","/doris_icone_doris_large.png\""));
-
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "fiche_photo_liste_apercu.asp\\?fiche_numero=([^&>]*)&[^\">]*\"","fiche-$1_listePhotos.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "photo_gde_taille_fiche2.asp\\?varpositionf=[^\">]*fiche_numero = ([^&]*)&[^\">]*\"","fiche-$1_listePhotos.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "photo_gde_taille.asp\\?varposition=[^\">]*\"","indisponible_CDDVD.html\""));
-		
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio_fiche.asp\\?biblio_numero=([^\">]*)\"","href=\"biblio-$1.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?mapage=([^&>]*)&[^\">]*\"","href=\"listeBibliographies-$1.html\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?page=Suivant[^\"]*","href=\""));
-		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?page=Precedent[^\"]*","href=\""));
-
-
-		// Si un espace dans le nom des photos alors on le remplace par un _
-		//regExpPourNettoyer.add(new Lien(LienKind.PAGE, "<img src="../vignettes_fiches/ electra_posidoniae-dh02.jpg"","href=\""));
-
-		//<img src="../vignettes_fiches/ electra_posidoniae-dh02.jpg"
-		
-		return regExpPourNettoyer;
-	}
-	
-	public enum LienKind {
-    	PAGE,
-    	TEXTE,
-    	ICONE,
-    	VIGNETTE,
-    	MED_RES,
-    	HI_RES
-    }
-	private class Lien {
-		LienKind lienKind;
-		String url;
-		String fichierSurDisque;
-		
-		Lien(LienKind lienKind, String url, String fichierSurDisque){
-			this.lienKind = lienKind;
-			this.url = url;
-			this.fichierSurDisque = fichierSurDisque;
-		}
-		public LienKind getLienKind() {
-			return lienKind;
-		}
-		public String getUrl() {
-			return url;
-		}
-		public String getFichier() {
-			return fichierSurDisque;
-		}
-	}
-	private void creationCD(){
-		log.debug("creationCD() - Début");
-		String fichierCDLien = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD + "/";
-		String fichierRefLien = PrefetchConstants.DOSSIER_RACINE + "/";
-		
-		// Création Dossiers du CD
-		log.info("Création Dossier HTML du CD");
-		File dossierCD = new File(fichierCDLien+PrefetchConstants.DOSSIER_HTML);
-		File dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_HTML_REF);
-		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_HTML);
-		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		log.info("Création Dossier Icones du CD");
-		dossierCD = new File(fichierCDLien+PrefetchConstants.SOUSDOSSIER_ICONES);
-		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES_REF+"/"+PrefetchConstants.SOUSDOSSIER_ICONES);
-		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES+"/"+PrefetchConstants.SOUSDOSSIER_ICONES);
-		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		log.info("Création Dossier Vignettes du CD");
-		dossierCD = new File(fichierCDLien+PrefetchConstants.SOUSDOSSIER_VIGNETTES);
-		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES_REF+"/"+PrefetchConstants.SOUSDOSSIER_VIGNETTES);
-		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES+"/"+PrefetchConstants.SOUSDOSSIER_VIGNETTES);
-		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		log.info("Création Dossier Images du CD");
-		dossierCD = new File(fichierCDLien+PrefetchConstants.SOUSDOSSIER_MED_RES);
-		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES_REF+"/"+PrefetchConstants.SOUSDOSSIER_MED_RES);
-		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES+"/"+PrefetchConstants.SOUSDOSSIER_MED_RES);
-		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		//Copie du Fichier permettant d'aller directement sur la page d'accueil depuis la racine du CD
-		log.info("Copie du Fichier : Doris_CD.html");
-		dossierCD = new File(fichierCDLien);
-		File fichierRef = new File(PrefetchConstants.DOSSIER_RES_HTML+"/"+"Doris_CD.html");
-		try {
-			FileUtils.copyFileToDirectory(fichierRef, dossierCD);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		//Copie de la page d'erreur
-		log.info("Copie du Fichier : indisponible_CDDVD.html");
-		dossierCD = new File(fichierCDLien+PrefetchConstants.DOSSIER_HTML);
-		fichierRef = new File(PrefetchConstants.DOSSIER_RES_HTML+"/"+"indisponible_CDDVD.html");
-		try {
-			FileUtils.copyFileToDirectory(fichierRef, dossierCD);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		log.debug("creationCD() - Fin");
-	}
-
-	private void transfoHtml(){
-		log.debug("transfoHtml() - Début");
-		String fichierCDLien = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD + "/";
-
-		// Modification Fichiers HTML : lien, images
-		File dossierCD = new File(fichierCDLien+PrefetchConstants.DOSSIER_HTML);
-		for (File fichierHtml:dossierCD.listFiles()) {
-			String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
-			
-			contenuFichier = contenuFichier.replace("href=\""+Constants.getSiteUrl(),"href=\"");
-			
-			// Le site n'est pas toujours très cohérent
-			contenuFichier = contenuFichier.replace("src=\"../Images","src=\"images");
-			contenuFichier = contenuFichier.replace("src=\"gestionenligne/images/icones","src=\"images" );
-			
-			// Si la Page contient : "recherche par Images"
-			
-			
-			// Pour chaque Liens à télécharger définis ci-après
-			for (Lien lienTelecharge : getLienATelecharger()){
-				switch (lienTelecharge.getLienKind()) {
-				case PAGE :
-					if ( ! lienTelecharge.getUrl().contains("=")) {
-						contenuFichier = contenuFichier.replace("href=\""+lienTelecharge.getUrl()+"\"","href=\""+lienTelecharge.getFichier()+"\"");
-					} else {
-						contenuFichier = contenuFichier.replaceAll("href=\""+Pattern.quote(lienTelecharge.getUrl())+"[^\"]*\"","href=\""+lienTelecharge.getFichier()+"\"");
-					}
-					break;
-				case ICONE :
-					contenuFichier = contenuFichier.replace("src=\""+lienTelecharge.getUrl()+"\"","src=\"../"+PrefetchConstants.SOUSDOSSIER_ICONES+"/"+lienTelecharge.getFichier()+"\"");
-					contenuFichier = contenuFichier.replace("background=\""+lienTelecharge.getUrl()+"\"","background=\"../"+PrefetchConstants.SOUSDOSSIER_ICONES+"/"+lienTelecharge.getFichier()+"\"");
-					break;
-				case TEXTE :
-				case VIGNETTE :
-				case MED_RES :
-				case HI_RES :
-				}
-			}
-			// Liens vers 
-			for (Lien lienANettoyer : getLienANettoyer()){
-				switch (lienANettoyer.getLienKind()) {
-				case PAGE :
-					contenuFichier = contenuFichier.replaceAll("href=\""+Pattern.quote(lienANettoyer.getUrl())+"[^\"]*\"","href=\""+lienANettoyer.getFichier()+"\"");
-					break;
-				case TEXTE :
-					contenuFichier = contenuFichier.replace(lienANettoyer.getUrl(),lienANettoyer.getFichier());
-					break;
-				case ICONE :
-					contenuFichier = contenuFichier.replace(lienANettoyer.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_ICONES+lienANettoyer.getFichier());
-					break;
-				case VIGNETTE :
-					contenuFichier = contenuFichier.replace(lienANettoyer.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_VIGNETTES+lienANettoyer.getFichier());
-					break;
-				case MED_RES :
-					contenuFichier = contenuFichier.replace(lienANettoyer.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_MED_RES+lienANettoyer.getFichier());
-					break;
-				case HI_RES :
-					contenuFichier = contenuFichier.replace(lienANettoyer.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_MED_RES+lienANettoyer.getFichier());
-					break;
-				}
-			}
-			
-			// RegExp
-			for (Lien lienRegExp : getRegExpPourNettoyer()){
-				switch (lienRegExp.getLienKind()) {
-				case PAGE :
-					contenuFichier = contenuFichier.replaceAll(lienRegExp.url,lienRegExp.getFichier());
-				break;
-				case ICONE :
-					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_ICONES+lienRegExp.getFichier());
-				break;
-				case VIGNETTE :
-					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_VIGNETTES+lienRegExp.getFichier());
-					break;
-				case MED_RES :
-					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_MED_RES+lienRegExp.getFichier());
-					break;
-				case HI_RES :
-					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_MED_RES+lienRegExp.getFichier());
-					break;
-				}
-			}
-			
-			try {
-				FileUtils.write(fichierHtml, contenuFichier, "iso-8859-1");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} // Fin pour chaque fichier du dossier html
-
-		// Les liens entre les pages de Groupes ne pouvaient être réalisé purement avec des expressions régulières
-		// On re-parcourt donc l'ensemble des fichiers contenant groupe dans leur nom.
-		for (File fichierHtml : dossierCD.listFiles()) {
-			
-			// Les pages contenant l'arborescence des Groupes : groupes_zone-11.html
-			if (fichierHtml.getName().contains("groupes_zone")){
-				
-				String numZone = fichierHtml.getName().replaceAll("[^-]*-([0-9]*).*", "$1").trim();
-				
-				log.debug("transfoHtml() - groupes_zone : "+fichierHtml.getName()+" - "+numZone);
-				
-				String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
-		
-				// Lien vers 1ère page des espèces du Groupe
-				// fiches_liste.asp?groupe_numero=51 pour la zone 10
-				// groupe-10-51-0-1
-				contenuFichier = contenuFichier.replaceAll(
-						"href=\"fiches_liste.asp\\?groupe_numero=([0-9]*)[^\">]*\"",
-						"href=\"groupe-"+numZone+"-$1-0-1.html\"");
-
-				// Lien vers 1ère page des espèces du Sous Groupe
-				//fiches_liste.asp?sousgroupe_numero=73&groupe_numero=2&fichier=&numero_fichier=1 pour la zone 10
-				// groupe-10-2-73-1
-				contenuFichier = contenuFichier.replaceAll(
-						"href=\"fiches_liste.asp\\?sousgroupe_numero=([0-9]*)&groupe_numero=([0-9]*)[^\">]*\"",
-						"href=\"groupe-"+numZone+"-$2-$1-1.html\"");
-				
-				
-				
-				try {
-					FileUtils.write(fichierHtml, contenuFichier, "iso-8859-1");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			// Les pages contenant les espèces du Groupe : groupe-10-2-73-1.html
-			if (fichierHtml.getName().contains("groupe-")){
-				log.debug("transfoHtml() - fichier groupe : "+fichierHtml.getName());
-				String[] info = fichierHtml.getName().replace(".html", "").split("-");
-				String numZone = info[1].trim();
-				String numGroupe = info[2].trim();
-				String numSousGroupe = info[3].trim();
-				String numPage = info[4].trim();
-				
-				log.debug("transfoHtml() - groupe- : "+fichierHtml.getName()+" - "+numZone+
-						" - "+numGroupe+" - "+numSousGroupe+" - "+numPage);
-				
-				int numPageSuivante = Integer.valueOf(numPage)+1;
-				int numPagePrecedente = Integer.valueOf(numPage)-1;
-				
-				String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
-				//log.debug("transfoHtml() - contenuFichier : "+contenuFichier.length());
-				
-				// Lien vers la page de tous les groupes de la zone
-				//groupes.asp?temp=0
-				contenuFichier = contenuFichier.replaceAll(
-						"href=\"groupes.asp\\?temp=0[^\"]*\"",
-						"href=\"groupes_zone-"+numZone+".html\"");
-				//log.debug("transfoHtml() - 110");
-				
-				// Page Suivante
-				// fiches_liste.asp?fichier=&groupe_numero=49&sousgroupe_numero=&rnomscient=&rtrie=&rnomcommunfr=&page=Suivant&PageCourante=2&term=&enco=&prop=&allcheck=
-				contenuFichier = contenuFichier.replaceAll(
-						"href=\"fiches_liste.asp\\?fichier=[^\"]*&page=Suivant&[^\"]*\"",
-						"href=\"groupe-"+numZone+"-"+numGroupe+"-"+numSousGroupe+"-"+numPageSuivante+".html\"");
-				//log.debug("transfoHtml() - 120");
-				
-				// Précédente
-				// fiches_liste.asp?&fichier=&groupe_numero=49&sousgroupe_numero=&rnomscient=&rtrie=&rnomcommunfr=&page=Precedent&PageCourante=2&term=&enco=&prop=&allcheck=
-				contenuFichier = contenuFichier.replaceAll(
-						"href=\"fiches_liste.asp\\?&fichier=[^\"]*&page=Precedent&[^\"]*\"",
-						"href=\"groupe-"+numZone+"-"+numGroupe+"-"+numSousGroupe+"-"+numPagePrecedente+".html\"");
-				//log.debug("transfoHtml() - 130");
-				
-				try {
-					//log.debug("transfoHtml() - 210");
-					FileUtils.write(fichierHtml, contenuFichier, "iso-8859-1");
-					//log.debug("transfoHtml() - 220");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-		log.debug("transfoHtml() - Fin");
-	}
 }
