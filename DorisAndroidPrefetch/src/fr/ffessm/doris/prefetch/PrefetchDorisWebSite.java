@@ -476,7 +476,8 @@ public class PrefetchDorisWebSite {
 		System.out.println("  CDDVD          	Comme UPDATE + Permet de télécharger les photos manquantes et de créer un dossier de la taille d'un CD (images en qualité inter.) et un de la taille d'un DVD (images en qualité max.)");
 		System.out.println("  TEST          	Pour les développeurs");
 		System.out.println("  PROMOTE_AS_REF    Déplace la base du Prefetch vers DorisAndroid");
-		
+		System.out.println("  ERASE_ALL         Efface tout le contenu de run");
+		System.out.println("  ERASE_BUT_REF     Efface le contenu de run sauf html_ref et images_ref");
 		log.debug("help() - Fin");
 	}
 	
