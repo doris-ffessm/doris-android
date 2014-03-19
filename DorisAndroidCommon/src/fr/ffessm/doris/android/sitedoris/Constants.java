@@ -120,6 +120,7 @@ public class Constants {
     	PICTO_ESPECE_REGLEMENTEE,
     	PICTO_ESPECE_DANGEREUSE
     }
+    
     private final static String PICTO_ESPECE_REGLEMENTEE_LIB = "Espèce réglementée";
 	private final static String PICTO_ESPECE_DANGEREUSE_LIB = "Espèce dangereuse";
 
@@ -233,6 +234,7 @@ public class Constants {
 			return null;
 		}
     }
+    
     public static String getTitreZoneGeographique(ZoneGeographiqueKind zoneKing) {
     	switch (zoneKing) {
 		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
@@ -251,6 +253,7 @@ public class Constants {
 			return "Faune et flore subaquatiques de toutes les zones DORIS";
 		}
     }
+    
     public static String getTexteZoneGeographique(ZoneGeographiqueKind zoneKing) {
     	switch (zoneKing) {
 		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
@@ -269,6 +272,7 @@ public class Constants {
 			return "Toutes les espèces de toutes les zones DORIS";
 		} 
     }
+    
     public static String getTitreCourtZoneGeographique(ZoneGeographiqueKind zoneKing) {
     	if (zoneKing==null) return "Toutes Zones DORIS";
     	
@@ -289,6 +293,7 @@ public class Constants {
 			return "Toutes Zones DORIS";
 		}
     }
+    
 	/*
 	 * Gestion Participants
 	 */

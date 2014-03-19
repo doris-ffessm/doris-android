@@ -92,11 +92,20 @@ public class PrefetchDorisWebSite {
 	
 	// Nombre maximum de fiches traitées (--max=K permet de changer cette valeur)
 	private static int nbMaxFichesATraiter = PrefetchConstants.nbMaxFichesTraiteesDef;
-	public static String action = "";
+	public static ActionKind action;
 	
+	public enum ActionKind {
+		INIT,
+		UPDATE,
+		NODWNLD,
+		CDDVD,
+		TEST
+	}
 	
+	ConnectionSource connectionSource = null;
 	DorisDBHelper dbContext = null;
 	DataBase_Outils outilsBase = null;
+	PrefetchDBTools prefetchDBTools = null;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -114,10 +123,12 @@ public class PrefetchDorisWebSite {
 		log.info("action : " + action);
 		log.info("Nb. Fiches Max : " + nbMaxFichesATraiter);
 		
-		// Vérification, Création, Sauvegarde des dossiers de travails
+		// Vérification, Création, Sauvegarde des dossiers de travail
 		checkDossiers(action);
 		
-		if (action.equals("TEST")) {
+		// - - - - - - - - - - - -
+		// - - - Test  - - - - - -
+		if ( action == ActionKind.TEST ) {
 			log.debug("doMain() - Début TEST");
 			
 			GenerationCDDVD generationCDDVD = new GenerationCDDVD();
@@ -125,22 +136,24 @@ public class PrefetchDorisWebSite {
 			generationCDDVD.transfoHtml();
 
 			log.debug("doMain() - Fin TEST");
-		} else {
-
-			ConnectionSource connectionSource = null;
 			
-		
+		} else if(action == ActionKind.INIT || action == ActionKind.UPDATE || action == ActionKind.NODWNLD
+				|| action == ActionKind.CDDVD ) {
+			
 			// - - - Base de Données - - -
 			// create empty DB and initialize it for Android
-			initializeSQLite(PrefetchConstants.DATABASE_URL);
+			PrefetchDBTools.initializeSQLite(PrefetchConstants.DATABASE_URL);
 			
 			// create our data-source for the database
 			connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
+			
 			// setup our database and DAOs
-			setupDatabase(connectionSource);
-			databaseInitialisation(connectionSource);
+			dbContext = PrefetchDBTools.setupDatabase(connectionSource);
+			
+			PrefetchDBTools.databaseInitialisation(connectionSource);
 			
 			outilsBase = new DataBase_Outils(dbContext);
+			
 			
 			try {
 				// - - - Groupes - - -
@@ -239,7 +252,7 @@ public class PrefetchDorisWebSite {
 	 * 
 	 *  @param args
 	 */
-	private String checkArgs(String[] inArgs){
+	private ActionKind checkArgs(String[] inArgs){
 			
 		// Si Aucun Argument, on affiche l'aide et on termine
 		log.debug("checkArgs() - nb args : " + inArgs.length);
@@ -305,24 +318,21 @@ public class PrefetchDorisWebSite {
 
 		
 		// Vérification que le dernier argument est une des actions prévues
-		String action = "";
+		ActionKind action = null;
 		log.debug("checkArgs() - argument action");
 		for (String arg : inArgs) {
-			if (arg.equals("INIT")) {
-				action = arg;
-			} else if (arg.startsWith("NODWNLD")) {
-				action = "NODWNLD";
-			} else if (arg.equals("NEWFICHES")) {
-				action = arg;
-			} else if (arg.equals("UPDATE")) {
-				action = arg;
-			} else if (arg.equals("CDDVD")) {
-				action = arg;
-			} else if (arg.equals("TEST")) {
-				action = arg;
+			
+			for (ActionKind actionKind : ActionKind.values()) {
+				log.debug("checkArgs() - actionKind : "+actionKind.toString());
+				// TODO : ActionKind.valueOf(*) ?
+				if (arg.equals(actionKind.toString())) {
+					action = actionKind;
+				}
 			}
+				
 		}
-		if (action == "") {
+		
+		if (action == null) {
 			help();
 			String listeArgs = "";
 			for (String arg : inArgs) {
@@ -336,125 +346,7 @@ public class PrefetchDorisWebSite {
 
 	}
 	
-	private void initializeSQLite(String url) throws ClassNotFoundException, SQLException{
-		
-		Class.forName("org.sqlite.JDBC");		
-		Connection c = DriverManager.getConnection(url);
-		log.debug("Opened database successfully");
-		
-		Statement  stmt = c.createStatement();
-		String sql = "CREATE TABLE \"android_metadata\" (\"locale\" TEXT DEFAULT 'en_US')"; 
-		stmt.executeUpdate(sql);
-		stmt.close();
-		
-		stmt = c.createStatement();
-		sql = "    INSERT INTO \"android_metadata\" VALUES ('en_US')"; 
-		stmt.executeUpdate(sql);
-		stmt.close();
-		c.close();
 
-	}
-	
-	/**
-	 * Setup our database and DAOs
-	 */
-	private void setupDatabase(ConnectionSource connectionSource)
-			throws Exception {
-		log.debug("setupDatabase() - Début");
-		
-		dbContext = new DorisDBHelper();
-		dbContext.ficheDao = DaoManager.createDao(connectionSource, Fiche.class);
-		dbContext.groupeDao = DaoManager.createDao(connectionSource, Groupe.class);
-		
-		dbContext.photoFicheDao = DaoManager.createDao(connectionSource, PhotoFiche.class);
-		dbContext.participantDao = DaoManager.createDao(connectionSource, Participant.class);
-		dbContext.intervenantFicheDao = DaoManager.createDao(connectionSource, IntervenantFiche.class);
-		dbContext.zoneGeographiqueDao = DaoManager.createDao(connectionSource, ZoneGeographique.class);
-		dbContext.zoneObservationDao = DaoManager.createDao(connectionSource, ZoneObservation.class);
-		dbContext.sectionFicheDao = DaoManager.createDao(connectionSource, SectionFiche.class);
-		dbContext.autreDenominationDao = DaoManager.createDao(connectionSource, AutreDenomination.class);
-		dbContext.definitionGlossaireDao = DaoManager.createDao(connectionSource, DefinitionGlossaire.class);
-		dbContext.entreeBibliographieDao = DaoManager.createDao(connectionSource, EntreeBibliographie.class);
-		
-		//dbContext.fiches_verificateurs_ParticipantsDao = DaoManager.createDao(connectionSource, Fiches_verificateurs_Participants.class);
-		dbContext.fiches_ZonesGeographiquesDao = DaoManager.createDao(connectionSource, Fiches_ZonesGeographiques.class);
-		dbContext.fiches_DefinitionsGlossaireDao = DaoManager.createDao(connectionSource, Fiches_DefinitionsGlossaire.class);
-		//dbContext.fiches_ZonesObservationsDao = DaoManager.createDao(connectionSource, Fiches_ZonesObservations.class);
-		dbContext.dorisDB_metadataDao = DaoManager.createDao(connectionSource, DorisDB_metadata.class);
-	}
-		
-	/**
-	 * Création des Tables
-	 */
-	private void databaseInitialisation(ConnectionSource connectionSource)
-			throws Exception {
-		log.debug("databaseInitialisation() - Début");	
-		
-		// if you need to create the table
-		TableUtils.createTable(connectionSource, Fiche.class);
-		TableUtils.createTable(connectionSource, Groupe.class);
-		TableUtils.createTable(connectionSource, Participant.class);
-		TableUtils.createTable(connectionSource, IntervenantFiche.class);
-		TableUtils.createTable(connectionSource, PhotoFiche.class);
-		TableUtils.createTable(connectionSource, ZoneGeographique.class);
-		TableUtils.createTable(connectionSource, ZoneObservation.class);
-		TableUtils.createTable(connectionSource, SectionFiche.class);
-		TableUtils.createTable(connectionSource, AutreDenomination.class);
-		TableUtils.createTable(connectionSource, DefinitionGlossaire.class);
-		TableUtils.createTable(connectionSource, Fiches_ZonesGeographiques.class);
-		TableUtils.createTable(connectionSource, Fiches_ZonesObservations.class);
-		TableUtils.createTable(connectionSource, Fiches_DefinitionsGlossaire.class);
-		TableUtils.createTable(connectionSource, EntreeBibliographie.class);
-		TableUtils.createTable(connectionSource, DorisDB_metadata.class);
-		
-		
-		// TODO : Reprendre par Didier plus proprement
-		// CREATE INDEX fiches_ZoneGeographiques_Id ON fiches_ZonesGeographiques(ZoneGeographique_id ASC);
-		// CREATE INDEX photoFiche_I_ficheId ON photoFiche(fiche_id ASC);
-		
-		DatabaseConnection connection = connectionSource.getReadWriteConnection();
-		List<String> statements = new ArrayList<String>();
-		final FieldType[] noFieldTypes = new FieldType[0];
-		Boolean ignoreErrors = false;
-		Boolean returnsNegative  = false;
-		Boolean expectingZero  = false;
-		statements.add("CREATE INDEX fiches_ZoneGeographiques_I_id ON fiches_ZonesGeographiques(ZoneGeographique_id ASC)");
-		statements.add("CREATE INDEX photoFiche_I_ficheId ON photoFiche(fiche_id ASC)");
-		
-
-		for (String statement : statements) {
-			int rowC = 0;
-			CompiledStatement compiledStmt = null;
-			try {
-				compiledStmt = connection.compileStatement(statement, StatementType.EXECUTE, noFieldTypes);
-				rowC = compiledStmt.runExecute();
-				log.info("executed {} table statement changed {} rows: {}" + rowC + " - " + statement);
-
-			} catch (SQLException e) {
-				if (ignoreErrors) {
-					log.info("ignoring {} error '{}' for statement: {}" + rowC + " - " + statement);
-				} else {
-					throw SqlExceptionUtil.create("SQL statement failed: " + statement, e);
-				}
-			} finally {
-				if (compiledStmt != null) {
-					compiledStmt.close();
-				}
-			}
-			// sanity check
-			if (rowC < 0) {
-				if (!returnsNegative) {
-					throw new SQLException("SQL statement " + statement + " updated " + rowC
-							+ " rows, we were expecting >= 0");
-				}
-			} else if (rowC > 0 && expectingZero) {
-				throw new SQLException("SQL statement updated " + rowC + " rows, we were expecting == 0: " + statement);
-			}
-		}
-		// Fin Création index
-		
-		log.debug("databaseInitialisation() - Fin");
-	}
 
 
 	/**
@@ -490,10 +382,10 @@ public class PrefetchDorisWebSite {
 	 * 
 	 * @param action
 	 */
-	private void checkDossiers(String inAction) {
+	private void checkDossiers(ActionKind inAction) {
 		log.debug("checkDossiers() - Début");
 		
-		log.debug("checkDossiers() - Action : " + inAction);
+		log.debug("checkDossiers() - Action : " + inAction.toString());
 		
 		log.debug("checkDossiers() - Dossier de base : " + PrefetchConstants.DOSSIER_RACINE);
 		log.debug("checkDossiers() - Dossier html : " + PrefetchConstants.DOSSIER_HTML);
@@ -517,7 +409,7 @@ public class PrefetchDorisWebSite {
 		String suffixe = sdf.format(maintenant);
 		
 		// Le dossier des fichiers html téléchargés
-		if(inAction.equals("INIT") || inAction.equals("UPDATE")  || inAction.equals("CDDVD") ){
+		if(inAction == ActionKind.INIT || inAction == ActionKind.UPDATE  || inAction == ActionKind.CDDVD ){
 			File dossierHtml = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML);
 			if (dossierHtml.exists()){
 				File dossierHtmlNew = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML +"_"+ suffixe);
@@ -537,7 +429,7 @@ public class PrefetchDorisWebSite {
 		}
 		
 		// Le dossier des images téléchargées
-		if( inAction.equals("CDDVD") ){
+		if( inAction == ActionKind.CDDVD ){
 			File dossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES);
 			if (dossierImages.exists()){
 				File dossierImagesNew = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES +"_"+ suffixe);
@@ -586,7 +478,7 @@ public class PrefetchDorisWebSite {
 		}
 		
 		// Le dossier du CD ou DVD
-		if( inAction.equals("CDDVD") ){
+		if( inAction == ActionKind.CDDVD ){
 			File dossierCD = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD);
 			if (dossierCD.exists()){
 				File dossierCDNew = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD +"_"+ suffixe);
@@ -622,7 +514,7 @@ public class PrefetchDorisWebSite {
 		}
 		
 		//	Vérification que le dossier html Référence existe
-		if(inAction.equals("NODWNLD") || inAction.equals("UPDATE")  || inAction.equals("CDDVD") ){
+		if( inAction == ActionKind.NODWNLD || inAction == ActionKind.UPDATE  || inAction == ActionKind.CDDVD ){
 			final File dossierReference = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF);
 			if (!dossierReference.exists()){
 				log.error("Le dossier Référence : " + dossierReference.getAbsolutePath() + "n'a pas été créé.");
@@ -636,7 +528,7 @@ public class PrefetchDorisWebSite {
 		}
 		
 		//	Vérification que les dossiers Images Référence existe
-		if(inAction.equals("CDDVD") ){
+		if( inAction == ActionKind.CDDVD ){
 			File dossierReference = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF);
 			if (!dossierReference.exists()){
 				log.error("Le dossier Référence des images : " + dossierReference.getAbsolutePath() + " n'a pas été créé.");
@@ -691,18 +583,20 @@ public class PrefetchDorisWebSite {
 		}
 	
 		// Le fichier de la base de données
-		String dataBaseName = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.lastIndexOf(".") );
-		log.debug("dataBaseName : " + dataBaseName);
-		File fichierDB= new File(dataBaseName+".db");
-		if (fichierDB.exists()){
-			File fichierDBNew = new File(dataBaseName+"_"+suffixe+".db");
-			if(fichierDB.renameTo(fichierDBNew)){
-				log.info("Sauvegarde du fichier de la base : " + fichierDB.getAbsolutePath());
-			}else{
-				log.error("Echec renommage du fichier de la base en : " + fichierDBNew.getAbsolutePath());
-				System.exit(1);
-			}
+		if(inAction == ActionKind.INIT || inAction == ActionKind.UPDATE || inAction == ActionKind.NODWNLD  || inAction == ActionKind.CDDVD ) {
 
+			String dataBaseName = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.lastIndexOf(".") );
+			log.debug("dataBaseName : " + dataBaseName);
+			File fichierDB= new File(dataBaseName+".db");
+			if (fichierDB.exists()){
+				File fichierDBNew = new File(dataBaseName+"_"+suffixe+".db");
+				if(fichierDB.renameTo(fichierDBNew)){
+					log.info("Sauvegarde du fichier de la base : " + fichierDB.getAbsolutePath());
+				}else{
+					log.error("Echec renommage du fichier de la base en : " + fichierDBNew.getAbsolutePath());
+					System.exit(1);
+				}
+			}
 		}
 		
 		log.debug("checkDossiers() - Fin");

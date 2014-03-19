@@ -59,6 +59,7 @@ import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Outils;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
+import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
 
 public class PrefetchGroupes {
@@ -70,12 +71,12 @@ public class PrefetchGroupes {
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
 	
-	private String action;
+	private ActionKind action;
 	private int nbMaxFichesATraiter;
 	
 	public List<Groupe> listeGroupes;
 	
-	public PrefetchGroupes(DorisDBHelper dbContext, ConnectionSource connectionSource, String action, int nbMaxFichesATraiter) {
+	public PrefetchGroupes(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
 		this.action = action;
