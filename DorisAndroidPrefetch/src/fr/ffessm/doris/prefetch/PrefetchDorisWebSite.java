@@ -43,6 +43,7 @@ termes.
 package fr.ffessm.doris.prefetch;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -52,6 +53,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
@@ -99,7 +101,10 @@ public class PrefetchDorisWebSite {
 		UPDATE,
 		NODWNLD,
 		CDDVD,
-		TEST
+		TEST,
+		PROMOTE_AS_REF,
+		ERASE_BUT_REF,
+		ERASE_ALL
 	}
 	
 	ConnectionSource connectionSource = null;
@@ -240,7 +245,108 @@ public class PrefetchDorisWebSite {
 					connectionSource.close();
 				}
 			}
-		} // Fin de <> TEST
+		// Fin de <> TEST
+		} else if ( action == ActionKind.PROMOTE_AS_REF ) {
+			// Consiste au déplacement du fichier de la base du run vers assets
+			String dataBaseRunString = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.length() );
+			log.debug("dataBase : " + dataBaseRunString);
+			
+			String dataBaseName = dataBaseRunString.substring(dataBaseRunString.lastIndexOf("/")+1, dataBaseRunString.length() );
+			log.debug("dataBaseName : " + dataBaseName);
+			
+			File dataBaseRunFile = new File(dataBaseRunString);
+			File dataBaseAndroidFile = new File("../DorisAndroid/assets/"+dataBaseName);
+			
+			if ( dataBaseRunFile.exists() ){
+				if ( dataBaseAndroidFile.exists() ){
+					try {
+						FileUtils.forceDelete(dataBaseAndroidFile);
+						log.info("Suppression du fichier précédent : " + dataBaseAndroidFile.getAbsolutePath());
+					} catch (IOException e) {
+						log.info("Problème suppression du fichier précédent : " + dataBaseAndroidFile.getAbsolutePath());
+						e.printStackTrace();
+					}
+				}
+				
+				try {
+					// Ne pas faire un moveTo car il faut que les 2 fichiers soient sur le même disque
+					// ça n'est pas le cas si on utilise un tmpfs pour run/database
+					FileUtils.moveFile(dataBaseRunFile, dataBaseAndroidFile);
+					log.info("Déplacement du fichier de la base vers : " + dataBaseAndroidFile.getAbsolutePath());
+				} catch (IOException e) {
+					log.error("Echec Déplacement du fichier de la base de : " + dataBaseRunFile.getAbsolutePath());
+					log.error("vers : " + dataBaseAndroidFile.getAbsolutePath());
+					e.printStackTrace();
+				}
+			} else {
+				log.error("Le fichier de la Base n'existe pas ou plus dans le Prefetch");
+				System.exit(1);
+			}
+			
+		} else if ( action == ActionKind.ERASE_BUT_REF ) {
+			
+			// Effacement de tous les fichiers de run sauf image_ref et html_ref
+			
+			// Le chemin vers un dossier peut être écrit de façon différente
+			// Comparer 2 dossiers (File) ne fonctionne pas forcément, nous nous basons donc sur 
+			// sur la fin du chemin : pas top mais ça fonctionne
+			File dossierRun = new File(PrefetchConstants.DOSSIER_RACINE);
+			log.debug("dossierRun : " + dossierRun.getAbsolutePath());
+			
+			if ( dossierRun.exists() ){
+				
+				for (File dossierFils : dossierRun.listFiles()) {
+					
+					if ( dossierFils.isDirectory()
+							&& ! dossierFils.toString().matches(".*"+PrefetchConstants.DOSSIER_HTML_REF)
+							&& ! dossierFils.toString().matches(".*"+PrefetchConstants.DOSSIER_IMAGES_REF) ) {
+				
+						try {
+							FileUtils.deleteDirectory(dossierFils);
+							log.info("Suppression de : " + dossierFils.getAbsolutePath());
+						} catch (IOException e) {
+							log.info("Problème suppression de : " + dossierFils.getAbsolutePath());
+							e.printStackTrace();
+						}
+						
+					}
+				}
+			} else {
+				// Ne devrait jamais arriver
+				log.error("Le dossier run n'existe pas !");
+				System.exit(1);
+			}
+			
+			
+		} else if ( action == ActionKind.ERASE_ALL ) {
+			
+			// Effacement de tous les fichiers de run
+			// à reserver à la mise à jour complète de la base : tâche "mensuelle"
+			
+			File dossierRun = new File(PrefetchConstants.DOSSIER_RACINE);
+			log.debug("dossierRun : " + dossierRun.getAbsolutePath());
+			
+			if ( dossierRun.exists() ){
+				
+				try {
+					FileUtils.cleanDirectory(dossierRun);
+					log.info("Suppression du contenu de : " + dossierRun.getAbsolutePath());
+				} catch (IOException e) {
+					log.info("Problème suppression du contenu de : " + dossierRun.getAbsolutePath());
+					e.printStackTrace();
+				}
+				
+			} else {
+				// Ne devrait jamais arriver
+				log.error("Le dossier run n'existe pas !");
+				System.exit(1);
+			}
+			
+			
+			
+		}
+
+		
 		log.debug("doMain() - Fin");
 	}
 
@@ -321,16 +427,14 @@ public class PrefetchDorisWebSite {
 		ActionKind action = null;
 		log.debug("checkArgs() - argument action");
 		for (String arg : inArgs) {
-			
 			for (ActionKind actionKind : ActionKind.values()) {
-				log.debug("checkArgs() - actionKind : "+actionKind.toString());
 				// TODO : ActionKind.valueOf(*) ?
 				if (arg.equals(actionKind.toString())) {
 					action = actionKind;
 				}
 			}
-				
 		}
+		log.debug("checkArgs() - action : "+action);
 		
 		if (action == null) {
 			help();
@@ -366,12 +470,12 @@ public class PrefetchDorisWebSite {
 		System.out.println("  -s, --silence     aucune sortie, même pas les erreurs");
 		System.out.println("");
 		System.out.println("ACTION :");
-		System.out.println("  INIT               Toutes les fiches sont retéléchargées sur doris.ffessm.fr et retraitées pour créer la base (images comprises)");
-		System.out.println("  NODWNLD dossier    Pas de téléchargement, travail sur un dossier de référznce (utile en dév.)");
-		System.out.println("  NEWFICHES    TODO: Ne télécharge que les nouvelles fiches");
-		System.out.println("  UPDATE       TODO: En plus des nouvelles fiches, définitions et intervenants, on retélécharge les fiches qui ont changées de statut");
-		System.out.println("  CDDVD          	 Comme UPDATE + Permet de télécharger les photos manquantes et de créer un dossier de la taille d'un CD (images en qualité inter.) et un de la taille d'un DVD (images en qualité max.)");
-		System.out.println("  TEST          	 Pour les développeurs");
+		System.out.println("  INIT              Toutes les fiches sont retéléchargées sur doris.ffessm.fr et retraitées pour créer la base (images comprises)");
+		System.out.println("  NODWNLD dossier   Pas de téléchargement, travail sur un dossier de référznce (utile en dév.)");
+		System.out.println("  UPDATE            En plus des nouvelles fiches, définitions et intervenants, on retélécharge les fiches qui ont changées de statut");
+		System.out.println("  CDDVD          	Comme UPDATE + Permet de télécharger les photos manquantes et de créer un dossier de la taille d'un CD (images en qualité inter.) et un de la taille d'un DVD (images en qualité max.)");
+		System.out.println("  TEST          	Pour les développeurs");
+		System.out.println("  PROMOTE_AS_REF    Déplace la base du Prefetch vers DorisAndroid");
 		
 		log.debug("help() - Fin");
 	}
