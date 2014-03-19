@@ -59,6 +59,7 @@ import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Outils;
+import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
 
 public class PrefetchIntervenants {
@@ -70,12 +71,12 @@ public class PrefetchIntervenants {
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
 	
-	private String action;
+	private ActionKind action;
 	private int nbMaxFichesATraiter;
 	
 	public List<Participant> listeParticipants = new ArrayList<Participant>(0);
 	
-	public PrefetchIntervenants(DorisDBHelper dbContext, ConnectionSource connectionSource, String action, int nbMaxFichesATraiter) {
+	public PrefetchIntervenants(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
 		this.action = action;
@@ -108,7 +109,7 @@ public class PrefetchIntervenants {
 				String listeParticipantsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeParticipants-"+initiale+".html";
 				log.info("Récup. Liste des Participants : " + listeParticipantsFichier);
 				
-				if (! action.equals("NODWNLD")){
+				if (action != ActionKind.NODWNLD){
 					if (Outils.getFichierFromUrl(Constants.getListeParticipantsUrl(""+initiale), listeParticipantsFichier)) {
 						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeParticipantsFichier));
 					} else {
@@ -147,7 +148,7 @@ public class PrefetchIntervenants {
 			// Pas la peine de Récupérer la page de chacun des intervenants
 			// Toutes les infos sont dans les listes ci dessus mais pour CDDVD
 			// ça fait plus propre
-			if ( action.equals("CDDVD") ) {
+			if ( action == ActionKind.CDDVD ) {
 				String pageIntervenantRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/";
 				String pageIntervenantRacineRef = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/";
 				
@@ -166,7 +167,7 @@ public class PrefetchIntervenants {
 			}
 			
 			// Téléchargement Photos Participants
-			if ( action.equals("CDDVD") ) {
+			if ( action == ActionKind.CDDVD ) {
 				String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
 				String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
 	

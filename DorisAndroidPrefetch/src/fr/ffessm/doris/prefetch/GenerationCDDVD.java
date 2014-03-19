@@ -58,6 +58,7 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Outils;
+import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
 
 
@@ -71,7 +72,7 @@ public class GenerationCDDVD {
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
 	
-	private String action;
+	private ActionKind action;
 	private int nbMaxFichesATraiter;
 	
 	public List<Groupe> listeGroupes;
@@ -82,7 +83,7 @@ public class GenerationCDDVD {
 	}
 	
 	
-	public GenerationCDDVD(DorisDBHelper dbContext, ConnectionSource connectionSource, String action, int nbMaxFichesATraiter) {
+	public GenerationCDDVD(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
 		this.action = action;
@@ -124,7 +125,7 @@ public class GenerationCDDVD {
 		}
 	
 		// Création du dossier CD et DVD
-		if ( action.equals("CDDVD") ) {
+		if ( action == ActionKind.CDDVD ) {
 			log.debug("doMain() - Création du dossier CD");
 			creationCD();
 			//TODO : Création DVD

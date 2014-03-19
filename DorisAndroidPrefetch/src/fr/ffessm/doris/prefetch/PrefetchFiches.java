@@ -63,6 +63,7 @@ import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Outils;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
+import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
 
 public class PrefetchFiches {
@@ -74,13 +75,13 @@ public class PrefetchFiches {
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
 	
-	private String action;
+	private ActionKind action;
 	private int nbMaxFichesATraiter;
 	
 	private List<Groupe> listeGroupes;
 	private List<Participant> listeParticipants;
 
-	public PrefetchFiches(DorisDBHelper dbContext, ConnectionSource connectionSource, String action, int nbMaxFichesATraiter,
+	public PrefetchFiches(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter,
 			List<Groupe> listeGroupes, List<Participant> listeParticipants) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
@@ -106,7 +107,7 @@ public class PrefetchFiches {
 			String listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeFiches.html";
 			log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
 			
-			if (! action.equals("NODWNLD")){
+			if ( action != ActionKind.NODWNLD ){
 				String listeToutesFiches = Constants.getListeFichesUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES)); 
 				if (Outils.getFichierFromUrl(listeToutesFiches, listeFichesFichier)) {
 					contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
@@ -131,7 +132,7 @@ public class PrefetchFiches {
 			// Si NODWNLD la liste sera utilisée pour faire le traitement
 			// Si UPDATED ou CDDVD, elle permettra de déduire les fiches à télécharger de nouveau : les fiches ayant changées de statut
 
-			if (! action.equals("INIT")){
+			if ( action != ActionKind.INIT ){
 				listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches.html";
 				if (new File(listeFichesFichier).exists()) {
 					contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
@@ -146,7 +147,7 @@ public class PrefetchFiches {
 			
 			// Création de l'entête des fiches
 			final HashSet<FicheLight> listeFichesTravail;
-			if (! action.equals("NODWNLD")) {
+			if ( action != ActionKind.NODWNLD ) {
 				listeFichesTravail = (HashSet<FicheLight>) listeFichesSite.clone();
 			} else {
 				listeFichesTravail = (HashSet<FicheLight>) listFichesFromRef.clone();
@@ -167,7 +168,7 @@ public class PrefetchFiches {
 
 			log.info("Mise à jours de "+listeFichesTravail.size()+" fiches.");
 			HashSet<FicheLight> listFichesModif = null;
-			if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
+			if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
 				listFichesModif = SiteDoris.getListeFichesUpdated(listFichesFromRef, listeFichesTravail);
 			}
 			
@@ -180,7 +181,7 @@ public class PrefetchFiches {
 					String fichierLocalFiche = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/fiche-"+ficheLight.getNumeroFiche()+".html";
 					String fichierRefFiche = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/fiche-"+ficheLight.getNumeroFiche()+".html";
 					
-					if ( action.equals("INIT") ) {
+					if ( action == ActionKind.INIT ) {
 						if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
 							nbFichesTraitees += 1;
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalFiche));
@@ -197,7 +198,7 @@ public class PrefetchFiches {
 								continue;
 							}
 						}
-					} else if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
+					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
 						if (new File(fichierRefFiche).exists() && !listFichesModif.contains(ficheLight)) {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefFiche));
 							nbFichesTraitees += 1;
@@ -219,7 +220,7 @@ public class PrefetchFiches {
 								}
 							}
 						}
-					} else if ( action.equals("NODWNLD") ) {
+					} else if ( action == ActionKind.NODWNLD ) {
 						if (new File(fichierRefFiche).exists()) {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefFiche));
 							nbFichesTraitees += 1;
@@ -248,14 +249,14 @@ public class PrefetchFiches {
 					String fichierLocalListePhotos = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
 					String fichierRefListePhotos = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
 					String contenuFichierHtmlListePhotos = null;
-					if ( action.equals("INIT")) {
+					if ( action == ActionKind.INIT ) {
 						if (Outils.getFichierFromUrl(urlListePhotos, fichierLocalListePhotos)) {
 							contenuFichierHtmlListePhotos = Outils.getFichierTxtFromDisk(new File(fichierLocalListePhotos));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
 							continue;
 						}
-					} else if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
+					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
 						if (new File(fichierRefListePhotos).exists() && !listFichesModif.contains(fiche)) {
 							contenuFichierHtmlListePhotos = Outils.getFichierTxtFromDisk(new File(fichierRefListePhotos));
 						} else {
@@ -267,7 +268,7 @@ public class PrefetchFiches {
 								continue;
 							}
 						}
-					} else if ( action.equals("NODWNLD") ){
+					} else if ( action == ActionKind.NODWNLD ){
 						if (new File(fichierRefListePhotos).exists()) {
 							contenuFichierHtmlListePhotos = Outils.getFichierTxtFromDisk(new File(fichierRefListePhotos));
 						} else {
@@ -298,7 +299,7 @@ public class PrefetchFiches {
 							});
 						
 						// Téléchargement Photos
-						if ( action.equals("CDDVD") ) {
+						if ( action == ActionKind.CDDVD ) {
 							String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
 							String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
 

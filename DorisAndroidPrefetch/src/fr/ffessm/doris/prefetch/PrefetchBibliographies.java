@@ -58,6 +58,7 @@ import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Outils;
+import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
 
 public class PrefetchBibliographies {
@@ -69,10 +70,10 @@ public class PrefetchBibliographies {
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
 	
-	private String action;
+	private ActionKind action;
 	private int nbMaxFichesATraiter;
 	
-	public PrefetchBibliographies(DorisDBHelper dbContext, ConnectionSource connectionSource, String action, int nbMaxFichesATraiter) {
+	public PrefetchBibliographies(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
 		this.action = action;
@@ -102,7 +103,7 @@ public class PrefetchBibliographies {
 				String listeBibliographies = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeBibliographies-"+pageCourante+".html";
 				log.info("Récup. Liste des Bibliographies : " + listeBibliographies);
 				
-				if (! action.equals("NODWNLD")){
+				if ( action != ActionKind.NODWNLD){
 					if (Outils.getFichierFromUrl(Constants.getListeBibliographiesUrl(pageCourante), listeBibliographies)) {
 						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeBibliographies));
 					} else {
@@ -152,7 +153,7 @@ public class PrefetchBibliographies {
 					String fichierBiblio = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/" + "biblio-" + biblio.getNumeroDoris()+".html";
 					String fichierBiblioRef = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/" + "biblio-" + biblio.getNumeroDoris()+".html";
 					
-					if ( action.equals("INIT") ) {
+					if ( action == ActionKind.INIT ) {
 						if( ! PrefetchTools.isFileExistingPath( fichierBiblioRef ) ){
 							if ( Outils.getFichierFromUrl( urlBiblio, fichierBiblio ) ) {
 								nbBiblioTelechargees += 1;
@@ -162,7 +163,7 @@ public class PrefetchBibliographies {
 								continue;
 							}
 						}
-					} else if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
+					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
 						if ( ! new File(fichierBiblioRef).exists() ) {
 							if (Outils.getFichierFromUrl(urlBiblio, fichierBiblio)) {
 								nbBiblioTelechargees += 1;
@@ -178,7 +179,7 @@ public class PrefetchBibliographies {
 								log.error("Une erreur est survenue lors de la récupération de la Biblio sur le disque : "+fichierBiblioRef+" a échoué.");
 							}
 						}
-					} else if ( action.equals("NODWNLD") ) {
+					} else if ( action == ActionKind.NODWNLD ) {
 						if (new File(fichierBiblioRef).exists()) {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierBiblioRef));
 						} else {
@@ -201,7 +202,7 @@ public class PrefetchBibliographies {
 							    }
 							});
 					
-						if ( action.equals("CDDVD") ) {
+						if ( action == ActionKind.CDDVD ) {
 							String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
 							String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
 							

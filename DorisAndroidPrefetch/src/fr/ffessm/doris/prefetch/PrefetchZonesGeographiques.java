@@ -65,6 +65,7 @@ import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Outils;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
+import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
 
 public class PrefetchZonesGeographiques {
@@ -76,10 +77,10 @@ public class PrefetchZonesGeographiques {
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
 	
-	private String action;
+	private ActionKind action;
 	private int nbMaxFichesATraiter;
 	
-	public PrefetchZonesGeographiques(DorisDBHelper dbContext, ConnectionSource connectionSource, String action, int nbMaxFichesATraiter) {
+	public PrefetchZonesGeographiques(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
 		this.action = action;
@@ -124,7 +125,7 @@ public class PrefetchZonesGeographiques {
 		log.debug("Récup. Liste Fiches Doris Zone : " + listeFichesFichier);
 		//List<Fiche> listeFiches = new ArrayList<Fiche>(0);
 		String contenuFichierHtml = "";
-		if (! action.equals("NODWNLD")){
+		if ( action != ActionKind.NODWNLD){
 			if (Outils.getFichierFromUrl(Constants.getListeFichesUrl(Constants.getNumZoneForUrl(zoneKind)) , listeFichesFichier)) {
 				contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
 				

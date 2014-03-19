@@ -58,6 +58,7 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Outils;
+import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
 
 public class PrefetchGlossaire {
@@ -69,10 +70,10 @@ public class PrefetchGlossaire {
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
 	
-	private String action;
+	private ActionKind action;
 	private int nbMaxFichesATraiter;
 	
-	public PrefetchGlossaire(DorisDBHelper dbContext, ConnectionSource connectionSource, String action, int nbMaxFichesATraiter) {
+	public PrefetchGlossaire(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
 		this.action = action;
@@ -107,7 +108,7 @@ public class PrefetchGlossaire {
 					String listeDefinitionsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeDefinitions-"+initiale+"-"+numero+".html";
 					log.info("Récup. Liste des Définitions : " + listeDefinitionsFichier);
 					
-					if (! action.equals("NODWNLD")){
+					if ( action != ActionKind.NODWNLD ){
 						if (Outils.getFichierFromUrl(Constants.getListeDefinitionsUrl(""+initiale,""+numero ), listeDefinitionsFichier)) {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeDefinitionsFichier));
 						} else {
@@ -156,7 +157,7 @@ public class PrefetchGlossaire {
 				String urlDefinition =  Constants.getDefinitionUrl( ""+definition.getNumeroDoris() );
 				String fichierLocalDefinition = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/definition-"+definition.getNumeroDoris()+".html";
 				String fichierRefDefinition = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/definition-"+definition.getNumeroDoris()+".html";
-				if ( action.equals("INIT") ) {
+				if ( action == ActionKind.INIT ) {
 					if (Outils.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
 						nbDefinitionTelechargees += 1;
 						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalDefinition));
@@ -164,7 +165,7 @@ public class PrefetchGlossaire {
 						log.error("Une erreur est survenue lors de la récupération de la définition : "+urlDefinition);
 						continue;
 					}
-				} else if ( action.equals("UPDATE") || action.equals("CDDVD") ) {
+				} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
 					if ( ! new File(fichierRefDefinition).exists() ) {
 						if (Outils.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
 							nbDefinitionTelechargees += 1;
@@ -180,7 +181,7 @@ public class PrefetchGlossaire {
 							log.error("Une erreur est survenue lors de la récupération de la définition sur le disque : "+fichierRefDefinition+" a échoué.");
 						}
 					}
-				} else if ( action.equals("NODWNLD") ) {
+				} else if ( action == ActionKind.NODWNLD ) {
 					if (new File(fichierRefDefinition).exists()) {
 						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefDefinition));
 					} else {
@@ -198,7 +199,7 @@ public class PrefetchGlossaire {
 				}
 				
 				//Si des photos dans la définition, il faut les télécharger dans le cas CDDVD
-				if (action.equals("CDDVD")){
+				if (action == ActionKind.CDDVD){
 					String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
 					String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
 					

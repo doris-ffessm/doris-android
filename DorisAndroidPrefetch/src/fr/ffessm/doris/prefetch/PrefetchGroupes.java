@@ -94,7 +94,7 @@ public class PrefetchGroupes {
 			
 		try {
 			
-			if (! action.equals("NODWNLD")){
+			if ( action != ActionKind.NODWNLD ){
 				listeGroupesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeGroupes.html";
 				log.info("Récup. Liste Groupes Doris : " + listeGroupesFichier);
 				
@@ -135,7 +135,7 @@ public class PrefetchGroupes {
 					String fichierLocalContenuGroupe = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
 					String fichierRefContenuGroupe = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
 					
-					if (! action.equals("NODWNLD") && ! action.equals("CDDVD")){
+					if ( action != ActionKind.NODWNLD && action != ActionKind.CDDVD ){
 						if (Outils.getFichierFromUrl(Constants.getGroupeContenuUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES),
 								groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe(), 1), fichierLocalContenuGroupe)) {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalContenuGroupe));
@@ -159,7 +159,7 @@ public class PrefetchGroupes {
 				}
 			}
 			// Téléchargement des pages de Groupes
-			if ( action.equals("CDDVD")){
+			if ( action == ActionKind.CDDVD ){
 
 				List<ZoneGeographiqueKind> listZone = Arrays.asList(ZoneGeographiqueKind.values());
 				for (ZoneGeographiqueKind zone : listZone ) {

@@ -227,7 +227,7 @@ public class PrefetchDorisWebSite {
 				
 				
 				// - - - Génération CD et DVD  - - - 
-				if ( action.equals("CDDVD") ) {
+				if ( action == ActionKind.CDDVD ) {
 					GenerationCDDVD generationCDDVD = new GenerationCDDVD(dbContext, connectionSource, action, nbMaxFichesATraiter);
 					generationCDDVD.generation();
 				}
