@@ -43,21 +43,74 @@ termes.
 package fr.ffessm.doris.prefetch;
 
 import java.io.File;
+import java.io.FileInputStream;
+
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class PrefetchTools {
+	
+	// Initialisation de la Gestion des Log 
+	public static Log log = LogFactory.getLog(PrefetchTools.class);
+	
 	
 	// Vérifie que le fichier existe
 	public static boolean isFileExistingPath(String fichierPath){
 		File fichier = new File(fichierPath);
-		if (!fichier.exists()){
+		if (!fichier.exists()) {
 			return false;
 		} else {
-			if (fichier.isDirectory()){
+			if (fichier.isDirectory()) {
 				return false;
 			}
 		}
 		return true;
 	}
 	
-	
+	// Permet de Zipper un Dossier
+	// Très inspiré de http://www.devx.com/tips/Tip/14049
+	public static void zipDossier(String dossierAZipper, ZipOutputStream zipOS) 
+	{ 
+	    try {
+	    	
+           File dossier = new File(dossierAZipper); 
+           String[] contenuDossier = dossier.list(); 
+
+           // ???
+           byte[] readBuffer = new byte[2156]; 
+           int bytesIn = 0;
+           
+           // Parcours du contenu
+           for ( int i=0; i < contenuDossier.length; i++ ) {
+        	   File fichier = new File(dossier, contenuDossier[i]); 
+        	   
+        	   // Si c'est un Dossier => récurrence
+        	   if ( fichier.isDirectory() ) { 
+        		   String sousDossier = fichier.getPath(); 
+        		   zipDossier(sousDossier, zipOS); 
+        		   continue; 
+        	   } 
+        	   
+        	   // Écriture du fichier dans le ZIP
+        	   FileInputStream fileIS = new FileInputStream(fichier); 
+        	   ZipEntry zipEntry = new ZipEntry( fichier.getPath() ); 
+
+        	   zipOS.putNextEntry(zipEntry);
+        	   
+        	   while((bytesIn = fileIS.read(readBuffer)) != -1) { 
+        		   zipOS.write(readBuffer, 0, bytesIn); 
+        	   }
+        	   
+        	   fileIS.close(); 
+           }
+           
+		} catch(Exception e) { 
+			log.info("Erreur lors du ZIP du dossier : "+dossierAZipper);
+			e.printStackTrace();
+		} 
+	}
 }
+

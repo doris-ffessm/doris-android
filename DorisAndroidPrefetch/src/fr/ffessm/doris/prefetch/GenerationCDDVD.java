@@ -43,10 +43,14 @@ termes.
 package fr.ffessm.doris.prefetch;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -73,17 +77,19 @@ public class GenerationCDDVD {
 	private ConnectionSource connectionSource = null;
 	
 	private ActionKind action;
-	private Boolean zipCDDVD;
+	private boolean zipCDDVD;
 	
 	public List<Groupe> listeGroupes;
 	
+	String fichierCDLien = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD;
+	File dossierCD = new File(fichierCDLien + "/" +PrefetchConstants.DOSSIER_HTML);
 	
 	// Pour debbug creationCD(), transfoHtml()
 	public GenerationCDDVD() {
 	}
 	
 	
-	public GenerationCDDVD(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, Boolean zipCDDVD) {
+	public GenerationCDDVD(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, boolean zipCDDVD) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
 		this.action = action;
@@ -134,10 +140,31 @@ public class GenerationCDDVD {
 		log.debug("doMain() - transfoHtml");
 		transfoHtml();
 		
-		// Zip CD si demandé
+		// Zip CD si demandé puis effacement du dossier CD
 		if (zipCDDVD) {
 			log.debug("doMain() - zip CD");
-			// TODO : zip puis effacement dossier
+			try { 
+			    ZipOutputStream zipOS = new ZipOutputStream(
+		    		new FileOutputStream(fichierCDLien + ".zip")
+	    		); 
+
+			    PrefetchTools.zipDossier(fichierCDLien, zipOS); 
+
+			    zipOS.close(); 
+			} catch(Exception e) { 
+				log.info("Erreur lors du ZIP du CD");
+				e.printStackTrace();
+				System.exit(1);
+			}
+			
+			try {
+				FileUtils.deleteDirectory(dossierCD);
+				log.info("Suppression de : " + dossierCD.getAbsolutePath());
+			} catch (IOException e) {
+				log.info("Problème suppression de : " + dossierCD.getAbsolutePath());
+				e.printStackTrace();
+			}
+			log.debug("doMain() - Fin zip CD");
 		}
 	
 	}
@@ -373,12 +400,12 @@ public class GenerationCDDVD {
 	
 	public void creationCD(){
 		log.debug("creationCD() - Début");
-		String fichierCDLien = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD + "/";
-		String fichierRefLien = PrefetchConstants.DOSSIER_RACINE + "/";
-		
+
 		// Création Dossiers du CD
 		log.info("Création Dossier HTML du CD");
-		File dossierCD = new File(fichierCDLien+PrefetchConstants.DOSSIER_HTML);
+		
+		String fichierRefLien = PrefetchConstants.DOSSIER_RACINE + "/";
+		
 		File dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_HTML_REF);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
@@ -393,7 +420,7 @@ public class GenerationCDDVD {
 		}
 		
 		log.info("Création Dossier Icones du CD");
-		dossierCD = new File(fichierCDLien+PrefetchConstants.SOUSDOSSIER_ICONES);
+		dossierCD = new File(fichierCDLien + "/" +PrefetchConstants.SOUSDOSSIER_ICONES);
 		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES_REF+"/"+PrefetchConstants.SOUSDOSSIER_ICONES);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
@@ -408,7 +435,7 @@ public class GenerationCDDVD {
 		}
 		
 		log.info("Création Dossier Vignettes du CD");
-		dossierCD = new File(fichierCDLien+PrefetchConstants.SOUSDOSSIER_VIGNETTES);
+		dossierCD = new File(fichierCDLien + "/" +PrefetchConstants.SOUSDOSSIER_VIGNETTES);
 		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES_REF+"/"+PrefetchConstants.SOUSDOSSIER_VIGNETTES);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
@@ -423,7 +450,7 @@ public class GenerationCDDVD {
 		}
 		
 		log.info("Création Dossier Images du CD");
-		dossierCD = new File(fichierCDLien+PrefetchConstants.SOUSDOSSIER_MED_RES);
+		dossierCD = new File(fichierCDLien + "/" +PrefetchConstants.SOUSDOSSIER_MED_RES);
 		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES_REF+"/"+PrefetchConstants.SOUSDOSSIER_MED_RES);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
@@ -440,7 +467,7 @@ public class GenerationCDDVD {
 		//Copie du Fichier permettant d'aller directement sur la page d'accueil depuis la racine du CD
 		log.info("Copie du Fichier : Doris_CD.html");
 		dossierCD = new File(fichierCDLien);
-		File fichierRef = new File(PrefetchConstants.DOSSIER_RES_HTML+"/"+"Doris_CD.html");
+		File fichierRef = new File(PrefetchConstants.DOSSIER_RES_HTML +"/" +"Doris_CD.html");
 		try {
 			FileUtils.copyFileToDirectory(fichierRef, dossierCD);
 		} catch (IOException e) {
@@ -449,7 +476,7 @@ public class GenerationCDDVD {
 		
 		//Copie de la page d'erreur
 		log.info("Copie du Fichier : indisponible_CDDVD.html");
-		dossierCD = new File(fichierCDLien+PrefetchConstants.DOSSIER_HTML);
+		dossierCD = new File(fichierCDLien + "/" + PrefetchConstants.DOSSIER_HTML);
 		fichierRef = new File(PrefetchConstants.DOSSIER_RES_HTML+"/"+"indisponible_CDDVD.html");
 		try {
 			FileUtils.copyFileToDirectory(fichierRef, dossierCD);

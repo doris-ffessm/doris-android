@@ -90,7 +90,7 @@ public class PrefetchDorisWebSite {
 		NODWNLD,
 		CDDVD,
 		TEST,
-		PROMOTE_AS_REF,
+		PROMOTE_DB_AS_REF,
 		ERASE_BUT_REF,
 		ERASE_ALL
 	}
@@ -240,7 +240,8 @@ public class PrefetchDorisWebSite {
 				}
 			}
 		// Fin de <> TEST
-		} else if ( action == ActionKind.PROMOTE_AS_REF ) {
+			
+		} else if ( action == ActionKind.PROMOTE_DB_AS_REF ) {
 			// Consiste au déplacement du fichier de la base du run vers assets
 			String dataBaseRunString = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.length() );
 			log.debug("dataBase : " + dataBaseRunString);
@@ -480,7 +481,7 @@ public class PrefetchDorisWebSite {
 		System.out.println("");
 		System.out.println("OPTIONS :");
 		System.out.println("  -M, --max=K		On limite le travail au K 1ères fiches (utile en dev.)");
-		System.out.println("  -Z, --zip         Option réservée au Mode CDDVD, elle permet ZIPPER le dossier généré");
+		System.out.println("  -Z, --zip         Option réservée au Mode CDDVD, elle permet de ZIPPER le dossier généré");
 		System.out.println("  -h, --help        Afficher cette aide");
 		System.out.println("  -d, --debug       Messages detinés aux développeurs de cette application");
 		System.out.println("  -v, --verbose     Messages permettant de suivre l'avancé des traitements");
@@ -492,7 +493,7 @@ public class PrefetchDorisWebSite {
 		System.out.println("  UPDATE            En plus des nouvelles fiches, définitions et intervenants, on retélécharge les fiches qui ont changées de statut");
 		System.out.println("  CDDVD          	Comme UPDATE + Permet de télécharger les photos manquantes et de créer un dossier de la taille d'un CD (images en qualité inter.) et un de la taille d'un DVD (images en qualité max.)");
 		System.out.println("  TEST          	Pour les développeurs");
-		System.out.println("  PROMOTE_AS_REF    Déplace la base du Prefetch vers DorisAndroid");
+		System.out.println("  PROMOTE_DB_AS_REF Déplace la base du Prefetch vers DorisAndroid");
 		System.out.println("  ERASE_ALL         Efface tout le contenu de run");
 		System.out.println("  ERASE_BUT_REF     Efface le contenu de run sauf html_ref et images_ref");
 		log.debug("help() - Fin");
@@ -514,11 +515,17 @@ public class PrefetchDorisWebSite {
 		log.debug("checkDossiers() - Dossier de la base : " + PrefetchConstants.DOSSIER_DATABASE);
 		log.debug("checkDossiers() - Fichier de la Base : " + PrefetchConstants.DATABASE_URL);
 		
-		// Si le dossier principal de travail n'existe pas, on le créé
-		File dossierBase = new File(PrefetchConstants.DOSSIER_RACINE);
-		if (dossierBase.mkdirs()) {
-			log.info("Création du dossier : " + dossierBase.getAbsolutePath());
-		} 
+		// Calcul suffixe de renommage
+		Date maintenant = new Date(); 
+		SimpleDateFormat sdf = new SimpleDateFormat("yyMMddhhmmss");
+		String suffixe = sdf.format(maintenant);
+		
+		// Si le dossier principal de travail ( ./run )  n'existe pas, on le créé
+		File dossierRacine = new File(PrefetchConstants.DOSSIER_RACINE);
+		if (dossierRacine.mkdirs()) {
+			log.info("Création du dossier : " + dossierRacine.getAbsolutePath());
+		}
+		// idem dossier de la Base ( ./run/database )
 		File dossierDB = new File(PrefetchConstants.DOSSIER_DATABASE);
 		if (dossierDB.mkdirs()) {
 			log.info("Création du dossier : " + dossierDB.getAbsolutePath());
@@ -526,10 +533,7 @@ public class PrefetchDorisWebSite {
 
 		// Si les dossiers download (html et img) et résultats existent déjà, ils sont renommés
 		// avant d'être recréé vide
-		Date maintenant = new Date(); 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyMMddhhmmss");
-		String suffixe = sdf.format(maintenant);
-		
+
 		// Le dossier des fichiers html téléchargés
 		if(inAction == ActionKind.INIT || inAction == ActionKind.UPDATE  || inAction == ActionKind.CDDVD ){
 			File dossierHtml = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML);
@@ -637,72 +641,42 @@ public class PrefetchDorisWebSite {
 		
 		//	Vérification que le dossier html Référence existe
 		if( inAction == ActionKind.NODWNLD || inAction == ActionKind.UPDATE  || inAction == ActionKind.CDDVD ){
-			final File dossierReference = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF);
-			if (!dossierReference.exists()){
-				log.error("Le dossier Référence : " + dossierReference.getAbsolutePath() + "n'a pas été créé.");
-				System.exit(1);
-			} else {
-				if (!dossierReference.isDirectory()){
-					log.error("Le dossier Référence : " + dossierReference.getAbsolutePath() + "n'a pas été créé.");
-					System.exit(1);
-				}
+			File dossierReference = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF);
+			if (dossierReference.mkdir()) {
+				log.info("Création du dossier : " + dossierReference.getAbsolutePath());
 			}
 		}
 		
 		//	Vérification que les dossiers Images Référence existe
-		// TODO : Création des dossiers si inexistants
 		if( inAction == ActionKind.CDDVD ){
+			
 			File dossierReference = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF);
-			if (!dossierReference.exists()){
-				log.error("Le dossier Référence des images : " + dossierReference.getAbsolutePath() + " n'a pas été créé.");
-				System.exit(1);
-			} else {
-				if (!dossierReference.isDirectory()){
-					log.error("Le dossier Référence des images : " + dossierReference.getAbsolutePath() + " n'a pas été créé.");
-					System.exit(1);
-				}
+			if (dossierReference.mkdir()) {
+				log.info("Création du dossier : " + dossierReference.getAbsolutePath());
 			}
+			
 			File sousDossierImages;
+			
 			sousDossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_ICONES);
-			if (!sousDossierImages.exists()){
-				log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
-				System.exit(1);
-			} else {
-				if (!sousDossierImages.isDirectory()){
-					log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
-					System.exit(1);
-				}
+			if (sousDossierImages.mkdir()) {
+				log.info("Création du dossier : " + sousDossierImages.getAbsolutePath());
 			}
+			
 			sousDossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_VIGNETTES);
-			if (!sousDossierImages.exists()){
-				log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
-				System.exit(1);
-			} else {
-				if (!sousDossierImages.isDirectory()){
-					log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
-					System.exit(1);
-				}
+			if (sousDossierImages.mkdir()) {
+				log.info("Création du dossier : " + sousDossierImages.getAbsolutePath());
 			}
+			
 			sousDossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_MED_RES);
-			if (!sousDossierImages.exists()){
-				log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
-				System.exit(1);
-			} else {
-				if (!sousDossierImages.isDirectory()){
-					log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
-					System.exit(1);
-				}
+			if (sousDossierImages.mkdir()) {
+				log.info("Création du dossier : " + sousDossierImages.getAbsolutePath());
 			}
+			
 			sousDossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_HI_RES);
-			if (!sousDossierImages.exists()){
-				log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
-				System.exit(1);
-			} else {
-				if (!sousDossierImages.isDirectory()){
-					log.error("Le dossier Référence des images : " + sousDossierImages.getAbsolutePath() + " n'a pas été créé.");
-					System.exit(1);
-				}
+			if (sousDossierImages.mkdir()) {
+				log.info("Création du dossier : " + sousDossierImages.getAbsolutePath());
 			}
+			
 		}
 	
 		// Le fichier de la base de données
