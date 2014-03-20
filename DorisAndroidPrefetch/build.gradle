@@ -79,9 +79,18 @@ task(cleanDorisDBKeepRef, dependsOn: 'classes', type: JavaExec) {
 task(copyDorisDBToAndroid, dependsOn: 'classes', type: JavaExec) {
 	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
-	args '-v', 'PROMOTE_DB_AS_REF'
+	args '-v', 'DB_TO_ANDROID'
 }
 
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// * Déplacement des fichiers de html vers html_ref
+// * et images vers images_ref
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
+task(copyDwnldToRef, dependsOn: 'classes', type: JavaExec) {
+	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
+	classpath = sourceSets.main.runtimeClasspath
+	args '-v', 'DWNLD_TO_REF'
+}
 

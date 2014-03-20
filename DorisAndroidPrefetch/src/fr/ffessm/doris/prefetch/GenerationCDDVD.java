@@ -43,13 +43,12 @@ termes.
 package fr.ffessm.doris.prefetch;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
@@ -64,11 +63,7 @@ import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Outils;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
-
-
-
 public class GenerationCDDVD {
-
 
 	// Initialisation de la Gestion des Log 
 	public static Log log = LogFactory.getLog(GenerationCDDVD.class);
@@ -134,11 +129,12 @@ public class GenerationCDDVD {
 		// Création du dossier CD et DVD
 		log.debug("doMain() - Création du dossier CD");
 		creationCD();
+
+		log.debug("doMain() - transfoHtml");
+		transfoHtml( PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD + "/" );
+
 		//TODO : Création DVD
 
-		
-		log.debug("doMain() - transfoHtml");
-		transfoHtml();
 		
 		// Zip CD si demandé puis effacement du dossier CD
 		if (zipCDDVD) {
@@ -401,7 +397,7 @@ public class GenerationCDDVD {
 	public void creationCD(){
 		log.debug("creationCD() - Début");
 
-		// Création Dossiers du CD
+		// Création Dossier HTML du CD
 		log.info("Création Dossier HTML du CD");
 		
 		String fichierRefLien = PrefetchConstants.DOSSIER_RACINE + "/";
@@ -412,6 +408,7 @@ public class GenerationCDDVD {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_HTML);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
@@ -419,6 +416,7 @@ public class GenerationCDDVD {
 			e.printStackTrace();
 		}
 		
+		// Création Dossier Icones du CD
 		log.info("Création Dossier Icones du CD");
 		dossierCD = new File(fichierCDLien + "/" +PrefetchConstants.SOUSDOSSIER_ICONES);
 		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES_REF+"/"+PrefetchConstants.SOUSDOSSIER_ICONES);
@@ -434,6 +432,7 @@ public class GenerationCDDVD {
 			e.printStackTrace();
 		}
 		
+		// Création Dossier Vignettes du CD
 		log.info("Création Dossier Vignettes du CD");
 		dossierCD = new File(fichierCDLien + "/" +PrefetchConstants.SOUSDOSSIER_VIGNETTES);
 		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES_REF+"/"+PrefetchConstants.SOUSDOSSIER_VIGNETTES);
@@ -449,6 +448,7 @@ public class GenerationCDDVD {
 			e.printStackTrace();
 		}
 		
+		// Création Dossier Images du CD
 		log.info("Création Dossier Images du CD");
 		dossierCD = new File(fichierCDLien + "/" +PrefetchConstants.SOUSDOSSIER_MED_RES);
 		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES_REF+"/"+PrefetchConstants.SOUSDOSSIER_MED_RES);
@@ -464,7 +464,7 @@ public class GenerationCDDVD {
 			e.printStackTrace();
 		}
 		
-		//Copie du Fichier permettant d'aller directement sur la page d'accueil depuis la racine du CD
+		// Copie du Fichier permettant d'aller directement sur la page d'accueil depuis la racine du CD
 		log.info("Copie du Fichier : Doris_CD.html");
 		dossierCD = new File(fichierCDLien);
 		File fichierRef = new File(PrefetchConstants.DOSSIER_RES_HTML +"/" +"Doris_CD.html");
@@ -474,7 +474,7 @@ public class GenerationCDDVD {
 			e.printStackTrace();
 		}
 		
-		//Copie de la page d'erreur
+		// Copie de la page d'erreur
 		log.info("Copie du Fichier : indisponible_CDDVD.html");
 		dossierCD = new File(fichierCDLien + "/" + PrefetchConstants.DOSSIER_HTML);
 		fichierRef = new File(PrefetchConstants.DOSSIER_RES_HTML+"/"+"indisponible_CDDVD.html");
@@ -489,9 +489,8 @@ public class GenerationCDDVD {
 
 	
 	
-	public void transfoHtml(){
+	public void transfoHtml(String fichierCDLien){
 		log.debug("transfoHtml() - Début");
-		String fichierCDLien = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD + "/";
 
 		// Modification Fichiers HTML : lien, images
 		File dossierCD = new File(fichierCDLien+PrefetchConstants.DOSSIER_HTML);
