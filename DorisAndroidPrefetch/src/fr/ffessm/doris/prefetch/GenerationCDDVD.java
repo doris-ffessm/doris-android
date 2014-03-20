@@ -73,7 +73,7 @@ public class GenerationCDDVD {
 	private ConnectionSource connectionSource = null;
 	
 	private ActionKind action;
-	private int nbMaxFichesATraiter;
+	private Boolean zipCDDVD;
 	
 	public List<Groupe> listeGroupes;
 	
@@ -83,11 +83,11 @@ public class GenerationCDDVD {
 	}
 	
 	
-	public GenerationCDDVD(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter) {
+	public GenerationCDDVD(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, Boolean zipCDDVD) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
 		this.action = action;
-		this.nbMaxFichesATraiter = nbMaxFichesATraiter;
+		this.zipCDDVD = zipCDDVD;
 	}
 
 	
@@ -98,6 +98,7 @@ public class GenerationCDDVD {
 		String fichierIconeRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_ICONES + "/";
 		String fichierIconeRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/" + PrefetchConstants.SOUSDOSSIER_ICONES + "/";
 
+		// Des fichiers html et icônes doivent être téléchargés spécifiquement pour le CD 
 		List<Lien> liensATelecharger = getLienATelecharger();
 		for (Lien lienATelecharger : liensATelecharger) {
 			
@@ -125,12 +126,18 @@ public class GenerationCDDVD {
 		}
 	
 		// Création du dossier CD et DVD
-		if ( action == ActionKind.CDDVD ) {
-			log.debug("doMain() - Création du dossier CD");
-			creationCD();
-			//TODO : Création DVD
-			log.debug("doMain() - transfoHtml");
-			transfoHtml();
+		log.debug("doMain() - Création du dossier CD");
+		creationCD();
+		//TODO : Création DVD
+
+		
+		log.debug("doMain() - transfoHtml");
+		transfoHtml();
+		
+		// Zip CD si demandé
+		if (zipCDDVD) {
+			log.debug("doMain() - zip CD");
+			// TODO : zip puis effacement dossier
 		}
 	
 	}

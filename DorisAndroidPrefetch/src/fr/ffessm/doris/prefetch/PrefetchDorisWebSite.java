@@ -44,29 +44,16 @@ package fr.ffessm.doris.prefetch;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
 
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.field.FieldType;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.misc.SqlExceptionUtil;
-import com.j256.ormlite.stmt.StatementBuilder.StatementType;
-import com.j256.ormlite.support.CompiledStatement;
 import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.support.DatabaseConnection;
-import com.j256.ormlite.table.TableUtils;
 
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
@@ -93,8 +80,9 @@ public class PrefetchDorisWebSite {
 	public static Log log = LogFactory.getLog(PrefetchDorisWebSite.class);
 	
 	// Nombre maximum de fiches traitées (--max=K permet de changer cette valeur)
-	private static int nbMaxFichesATraiter = PrefetchConstants.nbMaxFichesTraiteesDef;
-	public static ActionKind action;
+	private int nbMaxFichesATraiter = PrefetchConstants.nbMaxFichesTraiteesDef;
+	private ActionKind action;
+	private boolean zipCDDVD = false;
 	
 	public enum ActionKind {
 		INIT,
@@ -233,10 +221,16 @@ public class PrefetchDorisWebSite {
 				
 				// - - - Génération CD et DVD  - - - 
 				if ( action == ActionKind.CDDVD ) {
-					GenerationCDDVD generationCDDVD = new GenerationCDDVD(dbContext, connectionSource, action, nbMaxFichesATraiter);
+					GenerationCDDVD generationCDDVD = new GenerationCDDVD(dbContext, connectionSource, action, zipCDDVD);
 					generationCDDVD.generation();
 				}
 
+				
+				// TODO : Recopie fichiers html dans html_ref
+				// A réfléchir, car pas forcément intéressant sur nos postes
+				// mais utile sur Jenkins
+				
+				
 				
 			} finally {
 				// destroy the data source which should close underlying connections
@@ -388,6 +382,7 @@ public class PrefetchDorisWebSite {
 			}
 		}
 		
+		
 		// Si Aide ou Version alors affichage puis on termine
 		log.debug("checkArgs() - help ou version ? ");
 		for (String arg : inArgs) {
@@ -399,29 +394,6 @@ public class PrefetchDorisWebSite {
 			}
 		}
 		
-		// paramètre qui permet de limiter le nombre de fiches à traiter
-		log.debug("checkArgs() - max ? ");
-		for (String arg : inArgs) {
-			if ( arg.startsWith("-M") || arg.startsWith("--max=")) {
-				log.debug("checkArgs() - arg : " + arg);
-				String nbFichesStr = null;
-				if ( arg.startsWith("-M")) {
-					nbFichesStr =  arg.substring(3);
-				}
-				if ( arg.startsWith("--max=")) {
-					nbFichesStr =  arg.substring(6);
-				}
-				try { 
-					 nbMaxFichesATraiter = Integer.parseInt(nbFichesStr);
-					 log.debug("checkArgs() - nbMaxFichesTraitees : " + nbMaxFichesATraiter);
-			    } catch(NumberFormatException e) { 
-			    	help();
-					log.error("Argument -M ou --max mal utilisé : " + arg);
-			    	System.exit(1);
-			    }
-			}
-		}
-
 		
 		// Vérification que le dernier argument est une des actions prévues
 		ActionKind action = null;
@@ -446,6 +418,50 @@ public class PrefetchDorisWebSite {
 			log.error("Action non prévue");
 			System.exit(1);
 		}
+		
+		
+		
+		// Paramètres autres :
+		//   - qui permet de limiter le nombre de fiches à traiter
+		//   - qui permet de Zipper le CD à l'issue de sa génération
+		log.debug("checkArgs() - max ? ");
+		for (String arg : inArgs) {
+			
+			// Permet de limiter le nombre de fiches à traiter (utile en Dev.)
+			if ( arg.startsWith("-M") || arg.startsWith("--max=")) {
+				log.debug("checkArgs() - arg : " + arg);
+				String nbFichesStr = null;
+				if ( arg.startsWith("-M")) {
+					nbFichesStr =  arg.substring(3);
+				}
+				if ( arg.startsWith("--max=")) {
+					nbFichesStr =  arg.substring(6);
+				}
+				try { 
+					 nbMaxFichesATraiter = Integer.parseInt(nbFichesStr);
+					 log.debug("checkArgs() - nbMaxFichesTraitees : " + nbMaxFichesATraiter);
+			    } catch(NumberFormatException e) { 
+			    	help();
+					log.error("Argument -M ou --max mal utilisé : " + arg);
+			    	System.exit(1);
+			    }
+			}
+			
+			// Permet de Zipper le CD à l'issue de sa génération
+			if ( arg.startsWith("-Z") || arg.startsWith("--zip")) {
+				log.debug("checkArgs() - arg : " + arg);
+				if (action == ActionKind.CDDVD) {
+					zipCDDVD = true;
+				} else {
+					help();
+					log.error("Argument -Z ou --zip réservé au Mode : CDDVD");
+			    	System.exit(1);
+			    }
+			}
+		}
+
+		
+
 		return action;
 
 	}
@@ -463,11 +479,12 @@ public class PrefetchDorisWebSite {
 		System.out.println("Usage: java -jar PrefetchDorisWebSite.jar [OPTIONS] [ACTION]");
 		System.out.println("");
 		System.out.println("OPTIONS :");
-		System.out.println("  -M, --max=K		on limite le travail au K 1ères fiches (utile en dev.)");
-		System.out.println("  -h, --help        afficher cette aide");
-		System.out.println("  -d, --debug       messages detinés aux développeurs de cette application");
-		System.out.println("  -v, --verbose     messages permettant de suivre l'avancé des traitements");
-		System.out.println("  -s, --silence     aucune sortie, même pas les erreurs");
+		System.out.println("  -M, --max=K		On limite le travail au K 1ères fiches (utile en dev.)");
+		System.out.println("  -Z, --zip         Option réservée au Mode CDDVD, elle permet ZIPPER le dossier généré");
+		System.out.println("  -h, --help        Afficher cette aide");
+		System.out.println("  -d, --debug       Messages detinés aux développeurs de cette application");
+		System.out.println("  -v, --verbose     Messages permettant de suivre l'avancé des traitements");
+		System.out.println("  -s, --silence     Aucune sortie, même pas les erreurs");
 		System.out.println("");
 		System.out.println("ACTION :");
 		System.out.println("  INIT              Toutes les fiches sont retéléchargées sur doris.ffessm.fr et retraitées pour créer la base (images comprises)");
@@ -633,6 +650,7 @@ public class PrefetchDorisWebSite {
 		}
 		
 		//	Vérification que les dossiers Images Référence existe
+		// TODO : Création des dossiers si inexistants
 		if( inAction == ActionKind.CDDVD ){
 			File dossierReference = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF);
 			if (!dossierReference.exists()){
