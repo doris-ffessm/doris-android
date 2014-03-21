@@ -26,16 +26,24 @@ task(buildDorisDB, dependsOn: 'classes', type: JavaExec) {
 	args '-v',  'INIT'
 }
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// * UPDATE : Tout ce qui manque dans html_ref et images_ref est re-téléchargé.
+// * Cette génération de la base est suffisante pour un traitement quotidien.
+// * Elle permet d'obtenir les fiches nouvelles ou ayant changées de statut,
+// * par contre on n'a pas les modifications dans les fiches déjà publiées.
+// * Mensuellement on pourrait donc vider les dossiers *_ref
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+
+task(updateDorisDB, dependsOn: 'classes', type: JavaExec) {
+	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
+	classpath = sourceSets.main.runtimeClasspath
+	args '-v', 'UPDATE'
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 // * --zip CDDVD : Permet de créer la base et le CD hors ligne du Site
 // * Ce mode utilise html_ref et de images_ref ce qui permet de ne pas tout
 // * re-télécharger systématiquement.
-// * Tout ce qui manque dans html_ref et images_ref est re-téléchargé.
-// * Cette génération de la base est suffisante pour un traitement quotidien.
-// * Elle permet d'obtenir les fiches nouvelles ou ayant changées de statut,
-// * par contre on n'a pas les modifications dans les fiches déjà publiées.
-// * Mensuellement on pourrait donc vider les dossiers *_ref
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 
 task(buildDorisCDDVD, dependsOn: 'classes', type: JavaExec) {

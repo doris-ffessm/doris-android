@@ -10,6 +10,6 @@
 <mapEntry key="log4j.configuration" value="${workspace_loc:DorisAndroidPrefetch}/src/log4j.properties"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="fr.ffessm.doris.prefetch.PrefetchDorisWebSite"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-d  PROMOTE_AS_REF"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-d  DB_TO_ANDROID"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="DorisAndroidPrefetch"/>
 </launchConfiguration>

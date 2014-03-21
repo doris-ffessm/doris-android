@@ -224,6 +224,9 @@ public class PrefetchDorisWebSite {
 		// Fin de <> TEST
 			
 		} else if ( action == ActionKind.DB_TO_ANDROID ) {
+			
+			log.debug("doMain() - Début Déplacement Base");
+			
 			// Consiste au déplacement du fichier de la base du run vers assets
 			String dataBaseRunString = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.length() );
 			log.debug("dataBase : " + dataBaseRunString);
@@ -259,9 +262,13 @@ public class PrefetchDorisWebSite {
 				log.error("Le fichier de la Base n'existe pas ou plus dans le Prefetch");
 				System.exit(1);
 			}
-		
+			
+			log.debug("doMain() - Fin Déplacement Base");
+			
 		} else if ( action == ActionKind.DWNLD_TO_REF ) {
 
+			log.debug("doMain() - Début Déplacement Fichiers vers Ref");
+			
 			// Consiste au déplacement des fichiers de html vers html_ref
 			// et ceux de images vers images_ref
 
@@ -269,8 +276,8 @@ public class PrefetchDorisWebSite {
 			creationDossiersRef(action);
 
 			// html -> html_ref
-			File dossierHtml = new File(PrefetchConstants.DOSSIER_RACINE + PrefetchConstants.DOSSIER_HTML);
-			File dossierHtmlRef = new File(PrefetchConstants.DOSSIER_RACINE + PrefetchConstants.DOSSIER_HTML_REF);
+			File dossierHtml = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML);
+			File dossierHtmlRef = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF);
 			try {
 				FileUtils.copyDirectory(dossierHtml, dossierHtmlRef);
 			} catch (IOException e) {
@@ -278,16 +285,21 @@ public class PrefetchDorisWebSite {
 			}
 
 			// images -> images_ref
-			File dossierImages = new File(PrefetchConstants.DOSSIER_RACINE + PrefetchConstants.DOSSIER_IMAGES);
-			File dossierImagesRef = new File(PrefetchConstants.DOSSIER_RACINE + PrefetchConstants.DOSSIER_IMAGES);
-			try {
-				FileUtils.copyDirectory(dossierImages, dossierImagesRef);
-			} catch (IOException e) {
-				e.printStackTrace();
+			File dossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES);
+			if (dossierImages.exists()) {
+				File dossierImagesRef = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF);
+				try {
+					FileUtils.copyDirectory(dossierImages, dossierImagesRef);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 
+			log.debug("doMain() - Fin Déplacement Fichiers vers Ref");
 			
 		} else if ( action == ActionKind.ERASE_BUT_REF ) {
+			
+			log.debug("doMain() - Début Effacement Fichiers autres que Ref");
 			
 			// Effacement de tous les fichiers de run sauf image_ref et html_ref
 			
@@ -306,6 +318,7 @@ public class PrefetchDorisWebSite {
 							&& ! dossierFils.toString().matches(".*"+PrefetchConstants.DOSSIER_IMAGES_REF) ) {
 				
 						try {
+							// TODO : si dossier de la base dans tmpfs ne marche pas (évidement ?)
 							FileUtils.deleteDirectory(dossierFils);
 							log.info("Suppression de : " + dossierFils.getAbsolutePath());
 						} catch (IOException e) {
@@ -321,8 +334,11 @@ public class PrefetchDorisWebSite {
 				System.exit(1);
 			}
 			
+			log.debug("doMain() - Fin Effacement Fichiers autres que Ref");
 			
 		} else if ( action == ActionKind.ERASE_ALL ) {
+			
+			log.debug("doMain() - Début Effacement tous Dossiers");
 			
 			// Effacement de tous les fichiers de run
 			// à reserver à la mise à jour complète de la base : tâche "mensuelle"
@@ -346,7 +362,7 @@ public class PrefetchDorisWebSite {
 				System.exit(1);
 			}
 			
-			
+			log.debug("doMain() - Fin Effacement tous Dossiers");
 			
 		}
 
@@ -731,9 +747,6 @@ public class PrefetchDorisWebSite {
 			File dossierReference = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF);
 			if (dossierReference.mkdir()) {
 				log.info("Création du dossier : " + dossierReference.getAbsolutePath());
-			} else {
-				log.error("Echec de la Création du html_ref : " + dossierReference.getAbsolutePath());
-				System.exit(1);
 			}
 		}
 		
@@ -744,9 +757,6 @@ public class PrefetchDorisWebSite {
 			File dossierImagesReference = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF);
 			if (dossierImagesReference.mkdir()) {
 				log.info("Création du dossier : " + dossierImagesReference.getAbsolutePath());
-			} else {
-				log.error("Echec de la Création du dossier : " + dossierImagesReference.getAbsolutePath());
-				System.exit(1);
 			}
 			
 			File sousDossierImages;
@@ -755,36 +765,24 @@ public class PrefetchDorisWebSite {
 			sousDossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/" + PrefetchConstants.SOUSDOSSIER_ICONES);
 			if (sousDossierImages.mkdir()) {
 				log.info("Création du dossier : " + sousDossierImages.getAbsolutePath());
-			} else {
-				log.error("Echec de la Création du dossier : " + sousDossierImages.getAbsolutePath());
-				System.exit(1);
 			}
 			
 			// ( ./run/images_ref/vignettes_fiches/ )
 			sousDossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/" + PrefetchConstants.SOUSDOSSIER_VIGNETTES);
 			if (sousDossierImages.mkdir()) {
 				log.info("Création du dossier : " + sousDossierImages.getAbsolutePath());
-			} else {
-				log.error("Echec de la Création du dossier : " + sousDossierImages.getAbsolutePath());
-				System.exit(1);
 			}
 			
 			// ( ./run/images_ref/medium_res_images_fiches/ )
 			sousDossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/" + PrefetchConstants.SOUSDOSSIER_MED_RES);
 			if (sousDossierImages.mkdir()) {
 				log.info("Création du dossier : " + sousDossierImages.getAbsolutePath());
-			} else {
-				log.error("Echec de la Création du dossier : " + sousDossierImages.getAbsolutePath());
-				System.exit(1);
 			}
 			
 			// ( ./run/images_ref/hi_res_images_fiches/ )
 			sousDossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/" + PrefetchConstants.SOUSDOSSIER_HI_RES);
 			if (sousDossierImages.mkdir()) {
 				log.info("Création du dossier : " + sousDossierImages.getAbsolutePath());
-			} else {
-				log.error("Echec de la Création du dossier : " + sousDossierImages.getAbsolutePath());
-				System.exit(1);
 			}
 			
 		}
