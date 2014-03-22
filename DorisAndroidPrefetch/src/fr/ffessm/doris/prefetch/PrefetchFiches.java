@@ -131,18 +131,24 @@ public class PrefetchFiches {
 			// Récupération de la liste des fiches dans le dossier de référence
 			// Si NODWNLD la liste sera utilisée pour faire le traitement
 			// Si UPDATED ou CDDVD, elle permettra de déduire les fiches à télécharger de nouveau : les fiches ayant changées de statut
-
+			HashSet<FicheLight> listFichesFromRef = new HashSet<FicheLight>(0);
 			if ( action != ActionKind.INIT ){
 				listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches.html";
 				if (new File(listeFichesFichier).exists()) {
 					contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
+					listFichesFromRef = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
 				} else {
-					log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-					System.exit(1);
+					// Si en Mode NODWLD alors le fichier doit être dispo.
+					if (action == ActionKind.NODWNLD) {
+						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
+						System.exit(1);
+					} else {
+						// Sinon Liste Ref = Liste du Site puisque non dispo
+						listFichesFromRef = listeFichesSite;
+					}
 				}
 			}
 			
-			HashSet<FicheLight> listFichesFromRef = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);;
 			log.info("Nb Fiches dans le dossier de référence : "+listFichesFromRef.size());
 			
 			// Création de l'entête des fiches
