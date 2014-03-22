@@ -135,7 +135,7 @@ public class PrefetchGroupes {
 					String fichierLocalContenuGroupe = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
 					String fichierRefContenuGroupe = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
 					
-					if ( action != ActionKind.NODWNLD && action != ActionKind.CDDVD ){
+					if ( action != ActionKind.NODWNLD && action != ActionKind.CDDVD && action != ActionKind.UPDATE){
 						if (Outils.getFichierFromUrl(Constants.getGroupeContenuUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES),
 								groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe(), 1), fichierLocalContenuGroupe)) {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalContenuGroupe));
@@ -143,8 +143,19 @@ public class PrefetchGroupes {
 							log.error("Une erreur est survenue lors du téléchargement du groupe : "+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe());
 							System.exit(1);
 						}
+					} else if (action == ActionKind.CDDVD || action == ActionKind.UPDATE) {
+						// UPDATE ou CDDVD
+						if ( PrefetchTools.isFileExistingPath( fichierRefContenuGroupe ) ) {
+							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefContenuGroupe));
+						} else if (Outils.getFichierFromUrl(Constants.getGroupeContenuUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES),
+								groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe(), 1), fichierLocalContenuGroupe)) {
+							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalContenuGroupe));
+						} else {
+							log.error("Une erreur est survenue lors du téléchargement du groupe : "+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe());
+							System.exit(1);
+						}
 					} else {
-						// NODWNLD ou CDDVD
+						// NODWNLD
 						if ( PrefetchTools.isFileExistingPath( fichierRefContenuGroupe ) ) {
 							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefContenuGroupe));
 						} else {
