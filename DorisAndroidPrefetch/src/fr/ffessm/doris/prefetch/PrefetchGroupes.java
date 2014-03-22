@@ -57,7 +57,6 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
-import fr.ffessm.doris.android.sitedoris.Outils;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
@@ -89,6 +88,9 @@ public class PrefetchGroupes {
 		// - - - Groupes - - -
 		// Récupération de la liste des groupes sur le site de DORIS
 		// En UPDATE et CDDVD on re-télécharge la liste
+		
+		PrefetchTools prefetchTools = new PrefetchTools();	
+		
 		String listeGroupesFichier = "";
 		String contenuFichierHtml = null;
 			
@@ -98,8 +100,8 @@ public class PrefetchGroupes {
 				listeGroupesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeGroupes.html";
 				log.info("Récup. Liste Groupes Doris : " + listeGroupesFichier);
 				
-				if (Outils.getFichierFromUrl(Constants.getGroupesZoneUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES)), listeGroupesFichier)) {
-					contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeGroupesFichier));
+				if (prefetchTools.getFichierFromUrl(Constants.getGroupesZoneUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES)), listeGroupesFichier)) {
+					contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeGroupesFichier));
 					
 				} else {
 					log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
@@ -109,7 +111,7 @@ public class PrefetchGroupes {
 				// NODWNLD
 				listeGroupesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeGroupes.html";
 				if (new File(listeGroupesFichier).exists()) {
-					contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeGroupesFichier));
+					contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeGroupesFichier));
 				} else {
 					log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 					System.exit(1);
@@ -136,28 +138,28 @@ public class PrefetchGroupes {
 					String fichierRefContenuGroupe = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
 					
 					if ( action != ActionKind.NODWNLD && action != ActionKind.CDDVD && action != ActionKind.UPDATE){
-						if (Outils.getFichierFromUrl(Constants.getGroupeContenuUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES),
+						if (prefetchTools.getFichierFromUrl(Constants.getGroupeContenuUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES),
 								groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe(), 1), fichierLocalContenuGroupe)) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalContenuGroupe));
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalContenuGroupe));
 						} else {
 							log.error("Une erreur est survenue lors du téléchargement du groupe : "+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe());
 							System.exit(1);
 						}
 					} else if (action == ActionKind.CDDVD || action == ActionKind.UPDATE) {
 						// UPDATE ou CDDVD
-						if ( PrefetchTools.isFileExistingPath( fichierRefContenuGroupe ) ) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefContenuGroupe));
-						} else if (Outils.getFichierFromUrl(Constants.getGroupeContenuUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES),
+						if ( prefetchTools.isFileExistingPath( fichierRefContenuGroupe ) ) {
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierRefContenuGroupe));
+						} else if (prefetchTools.getFichierFromUrl(Constants.getGroupeContenuUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES),
 								groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe(), 1), fichierLocalContenuGroupe)) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalContenuGroupe));
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalContenuGroupe));
 						} else {
 							log.error("Une erreur est survenue lors du téléchargement du groupe : "+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe());
 							System.exit(1);
 						}
 					} else {
 						// NODWNLD
-						if ( PrefetchTools.isFileExistingPath( fichierRefContenuGroupe ) ) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefContenuGroupe));
+						if ( prefetchTools.isFileExistingPath( fichierRefContenuGroupe ) ) {
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierRefContenuGroupe));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération du groupe : "+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe());
 							System.exit(1);
@@ -178,8 +180,8 @@ public class PrefetchGroupes {
 					int zoneId = Constants.getNumZoneForUrl(zone);
 					String fichierGroupes = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/groupes_zone-"+zoneId+".html";
 
-					if (Outils.getFichierFromUrl(Constants.getGroupesZoneUrl(zoneId), fichierGroupes)) {
-						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierGroupes));
+					if (prefetchTools.getFichierFromUrl(Constants.getGroupesZoneUrl(zoneId), fichierGroupes)) {
+						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierGroupes));
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la liste des Groupes : " + zone.toString());
 						System.exit(1);
@@ -198,8 +200,8 @@ public class PrefetchGroupes {
 
 								String fichierPageGroupe = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/groupe-"+zoneId+"-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-"+pageCourante+".html";
 
-								if (Outils.getFichierFromUrl(Constants.getGroupeContenuUrl(zoneId, groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe(), pageCourante), fichierPageGroupe)) {
-									contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierPageGroupe));
+								if (prefetchTools.getFichierFromUrl(Constants.getGroupeContenuUrl(zoneId, groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe(), pageCourante), fichierPageGroupe)) {
+									contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierPageGroupe));
 								} else {
 									log.error("Une erreur est survenue lors de la récupération de la page des groupes : " + fichierPageGroupe);
 									System.exit(1);

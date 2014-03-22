@@ -123,16 +123,18 @@ public class PrefetchDorisWebSite {
 				|| action == ActionKind.CDDVD ) {
 			
 			// - - - Base de Données - - -
+			PrefetchDBTools prefetchDBTools = new PrefetchDBTools();
+			
 			// create empty DB and initialize it for Android
-			PrefetchDBTools.initializeSQLite(PrefetchConstants.DATABASE_URL);
+			prefetchDBTools.initializeSQLite(PrefetchConstants.DATABASE_URL);
 			
 			// create our data-source for the database
 			connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
 			
 			// setup our database and DAOs
-			dbContext = PrefetchDBTools.setupDatabase(connectionSource);
+			dbContext = prefetchDBTools.setupDatabase(connectionSource);
 			
-			PrefetchDBTools.databaseInitialisation(connectionSource);
+			prefetchDBTools.databaseInitialisation(connectionSource);
 			
 			outilsBase = new DataBase_Outils(dbContext);
 			
@@ -280,6 +282,7 @@ public class PrefetchDorisWebSite {
 			File dossierHtmlRef = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF);
 			try {
 				FileUtils.copyDirectory(dossierHtml, dossierHtmlRef);
+				FileUtils.deleteDirectory(dossierHtml);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -290,6 +293,7 @@ public class PrefetchDorisWebSite {
 				File dossierImagesRef = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF);
 				try {
 					FileUtils.copyDirectory(dossierImages, dossierImagesRef);
+					FileUtils.deleteDirectory(dossierImages);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

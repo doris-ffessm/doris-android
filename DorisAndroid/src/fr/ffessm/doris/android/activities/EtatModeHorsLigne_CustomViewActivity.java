@@ -45,6 +45,7 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
@@ -89,7 +90,7 @@ import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
-import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.App_Outils;
 //End of user code
 public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 //Start of user code additional implements EtatModeHorsLigne_CustomViewActivity
@@ -160,9 +161,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     
     protected void updateProgressBarZone(ZoneGeographique inZoneGeo, MultiProgressBar progressBarZone){
     	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
-		   
-    	Outils outils = new Outils(this.getApplicationContext());
-    	String uri = outils.getZoneIcone(inZoneGeo.getId());
+    	Fiches_Outils fichesOutils = new Fiches_Outils(getContext());
+    	String uri = fichesOutils.getZoneIcone(inZoneGeo.getId());
     	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
     	int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
 	   

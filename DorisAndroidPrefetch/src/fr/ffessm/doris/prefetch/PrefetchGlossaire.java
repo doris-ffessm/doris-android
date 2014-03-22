@@ -57,7 +57,6 @@ import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
-import fr.ffessm.doris.android.sitedoris.Outils;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
 
@@ -87,6 +86,7 @@ public class PrefetchGlossaire {
 		// On boucle sur les initiales des définitions (Cf site : doris.ffessm.fr/glossaire.asp?filtre=?)
 		// On récupère la liste des termes dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
 		
+		PrefetchTools prefetchTools = new PrefetchTools();
 		
 		String listeFiltres;
 		String contenuFichierHtml = null;
@@ -109,8 +109,8 @@ public class PrefetchGlossaire {
 					log.info("Récup. Liste des Définitions : " + listeDefinitionsFichier);
 					
 					if ( action != ActionKind.NODWNLD ){
-						if (Outils.getFichierFromUrl(Constants.getListeDefinitionsUrl(""+initiale,""+numero ), listeDefinitionsFichier)) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeDefinitionsFichier));
+						if (prefetchTools.getFichierFromUrl(Constants.getListeDefinitionsUrl(""+initiale,""+numero ), listeDefinitionsFichier)) {
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeDefinitionsFichier));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale+"-"+numero);
 							System.exit(1);
@@ -119,7 +119,7 @@ public class PrefetchGlossaire {
 						// NODWNLD
 						listeDefinitionsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeDefinitions-"+initiale+"-"+numero+".html";
 						if (new File(listeDefinitionsFichier).exists()) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeDefinitionsFichier));
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeDefinitionsFichier));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale+"-"+numero);
 							System.exit(1);
@@ -158,32 +158,32 @@ public class PrefetchGlossaire {
 				String fichierLocalDefinition = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/definition-"+definition.getNumeroDoris()+".html";
 				String fichierRefDefinition = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/definition-"+definition.getNumeroDoris()+".html";
 				if ( action == ActionKind.INIT ) {
-					if (Outils.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
+					if (prefetchTools.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
 						nbDefinitionTelechargees += 1;
-						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalDefinition));
+						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalDefinition));
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la définition : "+urlDefinition);
 						continue;
 					}
 				} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
 					if ( ! new File(fichierRefDefinition).exists() ) {
-						if (Outils.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
+						if (prefetchTools.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
 							nbDefinitionTelechargees += 1;
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalDefinition));
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalDefinition));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la définition : "+urlDefinition);
 							continue;
 						}
 					} else {
 						if (new File(fichierRefDefinition).exists()) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefDefinition));
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierRefDefinition));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la définition sur le disque : "+fichierRefDefinition+" a échoué.");
 						}
 					}
 				} else if ( action == ActionKind.NODWNLD ) {
 					if (new File(fichierRefDefinition).exists()) {
-						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefDefinition));
+						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierRefDefinition));
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la définition sur le disque : "+fichierRefDefinition+" a échoué.");
 					}
@@ -200,6 +200,7 @@ public class PrefetchGlossaire {
 				
 				//Si des photos dans la définition, il faut les télécharger dans le cas CDDVD
 				if (action == ActionKind.CDDVD){
+					
 					String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
 					String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
 					
@@ -209,8 +210,8 @@ public class PrefetchGlossaire {
 						for (String image : listeImagesDefinition) {
 				    			
 							// On stocke la photo dans les Vignettes
-							if( ! PrefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_DEFINITION+image ) ){
-								if (Outils.getFichierFromUrl(Constants.ILLUSTRATION_DEFINITION_BASE_URL+"/"+image,
+							if( ! prefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_DEFINITION+image ) ){
+								if (prefetchTools.getFichierFromUrl(Constants.ILLUSTRATION_DEFINITION_BASE_URL+"/"+image,
 										fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_DEFINITION+image)) {
 								} else {
 									log.error("Une erreur est survenue lors de la récupération d'une photo de la définition de : "+definition.getTerme());

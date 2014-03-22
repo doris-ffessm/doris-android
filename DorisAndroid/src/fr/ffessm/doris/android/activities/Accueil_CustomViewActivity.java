@@ -65,9 +65,6 @@ import android.widget.Toast;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code additional imports Accueil_CustomViewActivity
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -102,7 +99,7 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
-import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
@@ -125,7 +122,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	 
 	boolean isOnCreate = true;
 	
-	Outils outils = new Outils(getContext());
+	Fiches_Outils fichesOutils = new Fiches_Outils(getContext());
+	App_Outils outils = new App_Outils(getContext());
 	Param_Outils paramOutils = new Param_Outils(getContext());
 	Reseau_Outils reseauOutils = new Reseau_Outils(getContext());
 	
@@ -319,7 +317,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			}
 		});
         
-        String uri = outils.getZoneIcone(zone.getId()); 
+        String uri = fichesOutils.getZoneIcone(zone.getId()); 
         int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
         
         ImageView ivIcone = (ImageView)viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
@@ -437,7 +435,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	protected void updateProgressBarZone(ZoneGeographique inZoneGeo, MultiProgressBar progressBarZone){
 		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
 		   
-		   String uri = outils.getZoneIcone(inZoneGeo.getId());
+		   String uri = fichesOutils.getZoneIcone(inZoneGeo.getId());
 		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
 		   int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
 		   

@@ -61,7 +61,7 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
-import fr.ffessm.doris.android.sitedoris.Outils;
+import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
@@ -74,6 +74,8 @@ public class PrefetchFiches {
 	
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
+	
+	private PrefetchTools prefetchTools = new PrefetchTools();
 	
 	private ActionKind action;
 	private int nbMaxFichesATraiter;
@@ -109,8 +111,8 @@ public class PrefetchFiches {
 			
 			if ( action != ActionKind.NODWNLD ){
 				String listeToutesFiches = Constants.getListeFichesUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES)); 
-				if (Outils.getFichierFromUrl(listeToutesFiches, listeFichesFichier)) {
-					contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
+				if (prefetchTools.getFichierFromUrl(listeToutesFiches, listeFichesFichier)) {
+					contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier));
 				} else {
 					log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 					System.exit(1);
@@ -119,7 +121,7 @@ public class PrefetchFiches {
 				// NODWNLD
 				listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches.html";
 				if (new File(listeFichesFichier).exists()) {
-					contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
+					contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier));
 				} else {
 					log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 					System.exit(0);
@@ -135,7 +137,7 @@ public class PrefetchFiches {
 			if ( action != ActionKind.INIT ){
 				listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches.html";
 				if (new File(listeFichesFichier).exists()) {
-					contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
+					contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier));
 					listFichesFromRef = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
 				} else {
 					// Si en Mode NODWLD alors le fichier doit être dispo.
@@ -188,17 +190,17 @@ public class PrefetchFiches {
 					String fichierRefFiche = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/fiche-"+ficheLight.getNumeroFiche()+".html";
 					
 					if ( action == ActionKind.INIT ) {
-						if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
+						if (prefetchTools.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
 							nbFichesTraitees += 1;
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalFiche));
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalFiche));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 							// Solution de contournement désespérée 
 							urlFiche = Constants.getFicheFromNomCommunUrl(ficheLight.getNomCommun());
 							log.error("=> Tentative sur : "+urlFiche);
-							if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
+							if (prefetchTools.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
 								nbFichesTraitees += 1;
-								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalFiche));
+								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalFiche));
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 								continue;
@@ -206,20 +208,20 @@ public class PrefetchFiches {
 						}
 					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
 						if (new File(fichierRefFiche).exists() && !listFichesModif.contains(ficheLight)) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefFiche));
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierRefFiche));
 							nbFichesTraitees += 1;
 						} else {
-							if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
+							if (prefetchTools.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
 								nbFichesTraitees += 1;
-								contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalFiche));
+								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalFiche));
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 								// Solution de contournement désespérée 
 								urlFiche = Constants.getFicheFromNomCommunUrl(ficheLight.getNomCommun());
 								log.error("=> Tentative sur : "+urlFiche);
-								if (Outils.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
+								if (prefetchTools.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
 									nbFichesTraitees += 1;
-									contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierLocalFiche));
+									contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalFiche));
 								} else {
 									log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 									continue;
@@ -228,7 +230,7 @@ public class PrefetchFiches {
 						}
 					} else if ( action == ActionKind.NODWNLD ) {
 						if (new File(fichierRefFiche).exists()) {
-							contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(fichierRefFiche));
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierRefFiche));
 							nbFichesTraitees += 1;
 						} else {
 							log.error("La récupération de la fiche sur le disque : "+fichierRefFiche+" a échoué.");
@@ -256,18 +258,18 @@ public class PrefetchFiches {
 					String fichierRefListePhotos = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
 					String contenuFichierHtmlListePhotos = null;
 					if ( action == ActionKind.INIT ) {
-						if (Outils.getFichierFromUrl(urlListePhotos, fichierLocalListePhotos)) {
-							contenuFichierHtmlListePhotos = Outils.getFichierTxtFromDisk(new File(fichierLocalListePhotos));
+						if (prefetchTools.getFichierFromUrl(urlListePhotos, fichierLocalListePhotos)) {
+							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalListePhotos));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
 							continue;
 						}
 					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
 						if (new File(fichierRefListePhotos).exists() && !listFichesModif.contains(fiche)) {
-							contenuFichierHtmlListePhotos = Outils.getFichierTxtFromDisk(new File(fichierRefListePhotos));
+							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(new File(fichierRefListePhotos));
 						} else {
-							if (Outils.getFichierFromUrl(urlListePhotos, fichierLocalListePhotos)) {
-								contenuFichierHtmlListePhotos = Outils.getFichierTxtFromDisk(new File(fichierLocalListePhotos));
+							if (prefetchTools.getFichierFromUrl(urlListePhotos, fichierLocalListePhotos)) {
+								contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalListePhotos));
 							
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
@@ -276,7 +278,7 @@ public class PrefetchFiches {
 						}
 					} else if ( action == ActionKind.NODWNLD ){
 						if (new File(fichierRefListePhotos).exists()) {
-							contenuFichierHtmlListePhotos = Outils.getFichierTxtFromDisk(new File(fichierRefListePhotos));
+							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(new File(fichierRefListePhotos));
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
 						}
@@ -306,6 +308,9 @@ public class PrefetchFiches {
 						
 						// Téléchargement Photos
 						if ( action == ActionKind.CDDVD ) {
+							
+							PrefetchTools prefetchTools = new PrefetchTools();
+							
 							String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
 							String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
 
@@ -313,24 +318,24 @@ public class PrefetchFiches {
 
 								if ( !photoFiche.getCleURL().isEmpty() ) {
 									// Vignettes
-									if( ! PrefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL().replace(" ", "_") ) ){
-										if (Outils.getFichierFromUrl(Constants.VIGNETTE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL().replace(" ", "_"))) {
+									if( ! prefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL().replace(" ", "_") ) ){
+										if (prefetchTools.getFichierFromUrl(Constants.VIGNETTE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL().replace(" ", "_"))) {
 										} else {
 											log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 											//System.exit(1);
 										}
 									}
 									// Qualité Intermédiaire
-									if( ! PrefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_MED_RES+photoFiche.getCleURL().replace(" ", "_") ) ){
-										if (Outils.getFichierFromUrl(Constants.MOYENNE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_MED_RES+photoFiche.getCleURL().replace(" ", "_"))) {
+									if( ! prefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_MED_RES+photoFiche.getCleURL().replace(" ", "_") ) ){
+										if (prefetchTools.getFichierFromUrl(Constants.MOYENNE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_MED_RES+photoFiche.getCleURL().replace(" ", "_"))) {
 										} else {
 											log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 											//System.exit(1);
 										}
 									}
 									// Haute Qualité 
-									if( ! PrefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_HI_RES+photoFiche.getCleURL().replace(" ", "_") ) ){
-										if (Outils.getFichierFromUrl(Constants.GRANDE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_HI_RES+photoFiche.getCleURL().replace(" ", "_"))) {
+									if( ! prefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_HI_RES+photoFiche.getCleURL().replace(" ", "_") ) ){
+										if (prefetchTools.getFichierFromUrl(Constants.GRANDE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_HI_RES+photoFiche.getCleURL().replace(" ", "_"))) {
 										} else {
 											log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 											//System.exit(1);

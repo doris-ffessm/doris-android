@@ -42,8 +42,17 @@ termes.
 
 package fr.ffessm.doris.prefetch;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
 
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -56,9 +65,13 @@ public class PrefetchTools {
 	// Initialisation de la Gestion des Log 
 	public static Log log = LogFactory.getLog(PrefetchTools.class);
 	
+	// Constructeur
+	public PrefetchTools(){
+		
+	}
 	
 	// Vérifie que le fichier existe
-	public static boolean isFileExistingPath(String fichierPath){
+	public boolean isFileExistingPath(String fichierPath){
 		File fichier = new File(fichierPath);
 		if (!fichier.exists()) {
 			return false;
@@ -69,10 +82,114 @@ public class PrefetchTools {
 		}
 		return true;
 	}
+
+	
+    public boolean getFichierFromUrl(String inUrl, String inFichierRetour) {
+    	//log.debug("getFichierUrl()- Début");
+    	//log.debug("getFichierUrl()- url : " + inUrl);
+    	//log.debug("getFichierUrl()- Fichier à Retourner : " + inFichierRetour);
+    	
+    	InputStream flux = null;
+        FileOutputStream fichierUrl = null;
+
+        try
+        {
+            URL url = new URL(inUrl);
+            URLConnection connection = url.openConnection();
+            int fileLength = connection.getContentLength();
+
+            if (fileLength == -1)
+            {
+                log.error("URL Invalide : " + inUrl);
+                return false;
+            }
+
+            flux = connection.getInputStream();
+            fichierUrl = new FileOutputStream(inFichierRetour);
+            byte[] buffer = new byte[1024];
+            int read;
+
+            while ((read = flux.read(buffer)) > 0)
+            	fichierUrl.write(buffer, 0, read);
+            fichierUrl.flush();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            log.error("Erreur lors du téléchargement du fichier : " + inUrl);
+            return false;
+        }
+        finally
+        {
+            try
+            {  	
+            	if(fichierUrl!=null) fichierUrl.close();            	
+            	if(flux!=null)  flux.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                log.error("Erreur lors de l'écriture du fichier : " + inFichierRetour);
+                return false;
+            }
+        }
+    	
+    	
+    	//log.debug("getFichierUrl()- Fin");
+    	return true;
+    }
+
+
+	public String getFichierTxtFromDisk(File inFichier) {
+    	//log.debug("getFichierTxtFromDisk()- Début");
+    	//log.debug("getFichierTxtFromDisk()- Fichier : " + inFichier);
+    	
+		try {
+
+			//Top d'après JavaDoc : BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+			//InputStreamReader objReader = new InputStreamReader(objFile, "iso-8859-1");
+			//BufferedReader objBufferReader = new BufferedReader(objReader);
+			BufferedReader objBufferReader = new BufferedReader(
+					new InputStreamReader(
+							new FileInputStream(inFichier), "iso-8859-1"));
+			
+			//log.debug("getFichierTxtFromDisk()- 020");
+			
+			StringBuilder objBuilder = new StringBuilder();
+			
+			try {
+				//log.debug("getFichierTxtFromDisk()- 030");
+				String strLine;
+				while ((strLine = objBufferReader.readLine()) != null) {
+					objBuilder.append(strLine);
+					objBuilder.append("\n");
+				}
+				objBufferReader.close();
+					
+				//log.debug("getFichierTxtFromDisk()- objBuffer.length : "+objBuilder.toString().length());
+				//log.debug("getFichierTxtFromDisk()- Fin");
+		    	return (objBuilder.toString());
+			    	
+
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e) {
+
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		log.error("Erreur lors de la lecture du fichier : " + inFichier);
+     	//log.debug("getFichierTxtFromDisk()- Fin");
+		return null;
+	}
+	
 	
 	// Permet de Zipper un Dossier
 	// Très inspiré de http://www.devx.com/tips/Tip/14049
-	public static void zipDossier(String dossierAZipper, ZipOutputStream zipOS) 
+	public void zipDossier(String dossierAZipper, ZipOutputStream zipOS) 
 	{ 
 	    try {
 	    	

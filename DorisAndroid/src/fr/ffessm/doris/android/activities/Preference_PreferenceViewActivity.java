@@ -65,7 +65,7 @@ import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.async.VerifieMAJFiche_BgActivity;
 import fr.ffessm.doris.android.async.VerifieMAJFiches_BgActivity;
 import fr.ffessm.doris.android.tools.Disque_Outils;
-import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
@@ -76,7 +76,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 
 	
 	//Start of user code Preference preference activity additional attributes
-	private static final String LOG_TAG = Outils.class.getCanonicalName();
+	private static final String LOG_TAG = App_Outils.class.getCanonicalName();
 	final Context context = this;
 	
     final Param_Outils paramOutils = new Param_Outils(context);

@@ -66,7 +66,7 @@ import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
 
 
-import fr.ffessm.doris.android.sitedoris.Outils;
+import fr.ffessm.doris.android.sitedoris.Common_Outils;
 // End of user code
 
 /** 
@@ -168,7 +168,7 @@ C'est ce texte. */
 	public void descriptionDetailleeFromHtml(String htmlGroupe) throws SQLException{
 		log.trace("descriptionDetailleeFromHtml() - Début");
 		
-		htmlGroupe = Outils.remplacementBalises(Outils.nettoyageBalises(htmlGroupe), true);
+		htmlGroupe = Common_Outils.remplacementBalises(Common_Outils.nettoyageBalises(htmlGroupe), true);
     	
 		Source source=new Source(htmlGroupe);
 		source.fullSequentialParse();
@@ -185,7 +185,7 @@ C'est ce texte. */
 		log.trace("descriptionDetailleeFromHtml() - Description Détaillée Groupe : "+elementTDTexte.toString());
 		
 		descriptionDetailleeGroupe = elementTDTexte.getRenderer().toString().trim();
-		descriptionDetailleeGroupe = Outils.nettoyageTextes(descriptionDetailleeGroupe);
+		descriptionDetailleeGroupe = Common_Outils.nettoyageTextes(descriptionDetailleeGroupe);
 		
 		log.trace("descriptionDetailleeFromHtml() - Fin");
 	}

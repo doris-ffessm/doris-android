@@ -202,4 +202,22 @@ public class Fiches_Outils {
     	return false;
     }
 	
+	public String getZoneIcone(int inId) {
+	   	switch (inId) {
+	   	case -1:
+    		return context.getString(R.string.icone_touteszones);
+    	case 1:
+    		return context.getString(R.string.icone_france);
+		case 2:
+			return context.getString(R.string.icone_eaudouce);
+		case 3:
+			return context.getString(R.string.icone_indopac);
+		case 4:
+			return context.getString(R.string.icone_caraibes);
+		case 5:
+			return context.getString(R.string.icone_atlantno);
+		default:
+			return "";
+		}
+	}
 }

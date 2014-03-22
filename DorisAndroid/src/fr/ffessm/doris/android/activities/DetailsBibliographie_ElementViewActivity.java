@@ -76,7 +76,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import java.io.IOException;
 // End of user code

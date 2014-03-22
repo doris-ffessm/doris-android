@@ -74,7 +74,8 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 // additional imports
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.Fiches_Outils;
+import fr.ffessm.doris.android.tools.App_Outils;
 //End of user code
 
 public class ZoneGeoSelection_Adapter extends BaseAdapter  {
@@ -182,8 +183,8 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
     	ivIcon.setMaxHeight(defaultIconSize);
     	
         // TODO : pas très propre mais fonctionne => Modifier Outils ... vers entry.getIcone qd sera dispo
-    	Outils outils = new Outils(context);
-    	String uri = outils.getZoneIcone(entry.getId()); 
+    	Fiches_Outils fichesOutils = new Fiches_Outils(context);
+    	String uri = fichesOutils.getZoneIcone(entry.getId()); 
     	int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
     	ivIcon.setImageResource(imageResource);
     	

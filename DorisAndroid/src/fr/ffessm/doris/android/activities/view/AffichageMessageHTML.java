@@ -53,7 +53,7 @@ import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.tools.Disque_Outils;
-import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 import android.app.Activity;
@@ -183,7 +183,7 @@ public class AffichageMessageHTML {
 	
 	public String aProposAff() {
 		StringBuilder texte = new StringBuilder();
-		Outils outils = new Outils(context);
+		App_Outils outils = new App_Outils(context);
 		
 		texte.append(context.getString(R.string.a_propos_txt));
 		texte.append(outils.getAppVersion());

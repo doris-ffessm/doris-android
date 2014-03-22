@@ -44,9 +44,7 @@ package fr.ffessm.doris.prefetch;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.logging.Log;
@@ -63,7 +61,6 @@ import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
 import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
-import fr.ffessm.doris.android.sitedoris.Outils;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
@@ -76,6 +73,8 @@ public class PrefetchZonesGeographiques {
 	
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
+	
+	private PrefetchTools prefetchTools = new PrefetchTools();
 	
 	private ActionKind action;
 	private int nbMaxFichesATraiter;
@@ -91,9 +90,6 @@ public class PrefetchZonesGeographiques {
 	
 	public int prefetch() {
 		// - - - Mise à jour des zones géographiques - - -
-		
-		String listeFiltres;
-		String contenuFichierHtml = null;
 		
 		try {
 			// zone France Métropolitaine Marines
@@ -126,8 +122,8 @@ public class PrefetchZonesGeographiques {
 		//List<Fiche> listeFiches = new ArrayList<Fiche>(0);
 		String contenuFichierHtml = "";
 		if ( action != ActionKind.NODWNLD){
-			if (Outils.getFichierFromUrl(Constants.getListeFichesUrl(Constants.getNumZoneForUrl(zoneKind)) , listeFichesFichier)) {
-				contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
+			if (prefetchTools.getFichierFromUrl(Constants.getListeFichesUrl(Constants.getNumZoneForUrl(zoneKind)) , listeFichesFichier)) {
+				contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier));
 				
 			} else {
 				log.error("Une erreur est survenue lors de la récupération de la liste des fiches de la zone ");
@@ -137,7 +133,7 @@ public class PrefetchZonesGeographiques {
 			// NODWNLD
 			listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches-"+(zoneKind.ordinal()+1)+".html";
 			if (new File(listeFichesFichier).exists()) {
-				contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeFichesFichier));
+				contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier));
 			} else {
 				log.error("Une erreur est survenue lors de la récupération de la liste des fiches de la zone ");
 				return;

@@ -75,7 +75,7 @@ public class SiteDoris {
     	
     	HashSet<FicheLight> listeFiches = new HashSet<FicheLight>(0);
     	
-    	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml),false ) );
+    	Source source=new Source(Common_Outils.remplacementBalises(Common_Outils.nettoyageBalises(inCodePageHtml),false ) );
     	//log.info("getListeFichesFromHtml()- 010");
     	source.fullSequentialParse();
     	//log.debug("getListeFichesFromHtml()- source.length() : " + source.length());
@@ -137,7 +137,7 @@ public class SiteDoris {
     	
     	listeGroupes.add(groupe);
     	
-    	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), false ) );
+    	Source source=new Source(Common_Outils.remplacementBalises(Common_Outils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
     	//log.debug("getGroupes()- source.length() : " + source.length());
     	
@@ -341,7 +341,7 @@ public class SiteDoris {
     	
 		List<PhotoFiche> listePhotosFiche = new ArrayList<PhotoFiche>(0);
     	
-    	Source source=new Source( Outils.remplacementBalises( Outils.nettoyageBalises(inCodePageHtml), false ) );
+    	Source source=new Source( Common_Outils.remplacementBalises( Common_Outils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
     	//log.debug("getListePhotosFiche()- source.length() : " + source.length());
     	//log.debug("getListePhotosFiche()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
@@ -371,7 +371,7 @@ public class SiteDoris {
     			descritionPhotoCouranteElem = elementTD;
     			descritionPhotoCourante = descritionPhotoCouranteElem.getRenderer().toString();
     			
-    			descritionPhotoCourante = Outils.nettoyageTextes(descritionPhotoCourante);
+    			descritionPhotoCourante = Common_Outils.nettoyageTextes(descritionPhotoCourante);
     			
     			//Suppression Balises (A en particulier)
     			//TODO : Mettre un lien un jour si ergonomie le permet
@@ -414,7 +414,7 @@ public class SiteDoris {
     	
     	List<Participant> listeParticipants = new ArrayList<Participant>(0);
     	
-    	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), true ) );
+    	Source source=new Source(Common_Outils.remplacementBalises(Common_Outils.nettoyageBalises(inCodePageHtml), true ) );
     	source.fullSequentialParse();
     	//log.debug("getListeParticipantsParInitiale()- source.length() : " + source.length());
     	
@@ -537,8 +537,8 @@ public class SiteDoris {
 					}
 				}
 				if (numeroTR % 4 == 3){
-					participantDescription = Outils.remplacementBalises(participantDescription, true);
-					participantDescription = Outils.nettoyageTextes(participantDescription);
+					participantDescription = Common_Outils.remplacementBalises(participantDescription, true);
+					participantDescription = Common_Outils.nettoyageTextes(participantDescription);
 					log.info("getListeParticipantsParInitiale() - participantKind : "+participantKind);
 					log.info("getListeParticipantsParInitiale() - participantDescription : "+participantDescription);
 					
@@ -622,7 +622,7 @@ public class SiteDoris {
     	
     	List<DefinitionGlossaire> listeDefinitions = new ArrayList<DefinitionGlossaire>(0);
     	
-    	Source source=new Source(Outils.remplacementBalises(Outils.nettoyageBalises(inCodePageHtml), false ) );
+    	Source source=new Source(Common_Outils.remplacementBalises(Common_Outils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
     	//log.debug("getListeDefinitionsParInitialeFromHtml()- source.length() : " + source.length());
     	
@@ -688,7 +688,7 @@ public class SiteDoris {
 		// auteurs : Jourdan A.-J.-L.
     	inCodePageHtml = Pattern.compile("</,[^<>]*<strong>", Pattern.DOTALL).matcher(inCodePageHtml).replaceAll(",");
 	    	
-    	Source source=new Source(Outils.nettoyageBalises(inCodePageHtml) );
+    	Source source=new Source(Common_Outils.nettoyageBalises(inCodePageHtml) );
     	source.fullSequentialParse();
     	//log.debug("getListeBiblioFromHtml()- source.length() : " + source.length());
     	//log.debug("getListeBiblioFromHtml()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
@@ -731,12 +731,12 @@ public class SiteDoris {
 
     				// l'illustration éventuelle dans cleURLIllustration, update après avoir téléchargé la page de l'entrée bibliographique
     				listeBiblio.add(new EntreeBibliographie( Integer.valueOf(idBiblio),
-    						Outils.nettoyageTextes(titre).trim(),
-    						Outils.nettoyageTextes(auteurs).trim(),
+    						Common_Outils.nettoyageTextes(titre).trim(),
+    						Common_Outils.nettoyageTextes(auteurs).trim(),
     						annee,
-    						Outils.nettoyageTextes(edition).trim(),
+    						Common_Outils.nettoyageTextes(edition).trim(),
     						"",
-    						(Outils.formatStringNormalizer(titre+" "+auteurs)).toLowerCase() ));
+    						(Common_Outils.formatStringNormalizer(titre+" "+auteurs)).toLowerCase() ));
     			}
 			}
 			

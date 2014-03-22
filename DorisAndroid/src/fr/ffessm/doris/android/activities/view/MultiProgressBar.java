@@ -43,7 +43,7 @@ termes.
 package fr.ffessm.doris.android.activities.view;
 
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.Outils;
+import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import android.content.Context;
 import android.graphics.Color;

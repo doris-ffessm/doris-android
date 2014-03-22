@@ -73,7 +73,7 @@ import org.apache.commons.lang3.StringUtils;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Constants.ParticipantKind;
 import fr.ffessm.doris.android.sitedoris.FicheLight;
-import fr.ffessm.doris.android.sitedoris.Outils;
+import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 // End of user code
 
@@ -292,7 +292,7 @@ public class Fiche {
 		// TODO : si un jour on veut avoir la liste inversée des fiches
     	//StringBuilder sbListeLiensVersFiches = new StringBuilder();
     	
-    	htmlFiche = Outils.nettoyageBalises(htmlFiche);
+    	htmlFiche = Common_Outils.nettoyageBalises(htmlFiche);
     	
     	// -- Cible de la page en enlevant tout débord tout ce qui est totalement superflu --
     	// -- Issue de la Version 1 : ca fonctionne => je garde / GMo
@@ -319,7 +319,7 @@ public class Fiche {
 				
     	// Permet ensuite d'utiliser la mise en forme
     	// mais le prix à payer est de supprimer à la main partout où elle n'est pas nécessaire
-    	htmlFiche = Outils.remplacementBalises(htmlFiche, true);
+    	htmlFiche = Common_Outils.remplacementBalises(htmlFiche, true);
     	
     	//log.debug("getFiche() - htmlFiche : " + htmlFiche.substring(0, 200));
     	
@@ -397,7 +397,7 @@ public class Fiche {
 							}
 							if (i == 2) {
 								log.info("getFicheFromHtml() - ficheNomLatin : " + elementTR.getRenderer().toString().trim());
-								setNomScientifique( Outils.nettoyageTextes(elementTR.getRenderer().toString().trim()) );
+								setNomScientifique( Common_Outils.nettoyageTextes(elementTR.getRenderer().toString().trim()) );
 							}
 							if (i == 3) {
 								log.info("getFicheFromHtml() - ficheRegion : " + elementTR.getRenderer().toString().trim());
@@ -406,7 +406,7 @@ public class Fiche {
 							}
 							if (i == 5) {
 								log.info("getFicheFromHtml() - ficheNomFrancais : " + elementTR.getRenderer().toString().trim());
-								setNomCommun( Outils.nettoyageTextes(elementTR.getRenderer().toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "")).trim() );
+								setNomCommun( Common_Outils.nettoyageTextes(elementTR.getRenderer().toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "")).trim() );
 							}
 						}
 					}
@@ -463,7 +463,7 @@ public class Fiche {
 								log.debug("getFicheFromHtml() - rubrique : " + rubrique);
 								if (autresDenominationsFlag) {
 									
-									String autresDenominationsTexte = Outils.nettoyageTextes(elementTD.getRenderer().toString().trim());
+									String autresDenominationsTexte = Common_Outils.nettoyageTextes(elementTD.getRenderer().toString().trim());
 									
 									// permet d'enlever les Liens et de les remplacer par un texte, par exemple "(Fiche)"
 									autresDenominationsTexte = autresDenominationsTexte.replaceAll("<[^>]*fiche_numero=([^>]*)>", "{{$1}}").trim();
@@ -480,7 +480,7 @@ public class Fiche {
 									String contenuTexte = elementTD.getRenderer().toString().trim();
 									//log.debug("getFiche() - contenu(initial) : " + contenuTexte);
 									
-									contenuTexte = Outils.nettoyageTextes(contenuTexte);
+									contenuTexte = Common_Outils.nettoyageTextes(contenuTexte);
 									
 									// permet d'enlever les Liens et de les remplacer par une balise qui sera réutilisée dans l'appli.
 									//<../fiche2.asp?fiche_numero=289>
@@ -585,8 +585,8 @@ public class Fiche {
 					Element ElementDates=elementTable_TABLE.getFirstElementByClass("normalgris");
 					//log.info("getFiche() - Bloc Dates : " + ElementDates.getRenderer().toString());
 					
-					dateCreation = Outils.nettoyageTextes(ElementDates.getRenderer().toString()).replaceAll("Création le.: ([^ ]*).*", "$1").trim();
-					dateModification = Outils.nettoyageTextes(ElementDates.getRenderer().toString()).replaceAll(".*modification le(.*) [^ ]*", "$1").trim();
+					dateCreation = Common_Outils.nettoyageTextes(ElementDates.getRenderer().toString()).replaceAll("Création le.: ([^ ]*).*", "$1").trim();
+					dateModification = Common_Outils.nettoyageTextes(ElementDates.getRenderer().toString()).replaceAll(".*modification le(.*) [^ ]*", "$1").trim();
 					log.debug("getFicheFromHtml() - dateCreation : " + dateCreation);
 					log.debug("getFicheFromHtml() - dateModification : " + dateModification);
 					break; // Fin de la recherche d'infos dans le bloc principal
@@ -681,7 +681,7 @@ public class Fiche {
 					try	{
 						Element ElementNomCommun = ElementInfosGauche.getFirstElementByClass("titre2").getFirstElement();
 						log.info("getFicheFromHtml() - ElementNomCommun : " + ElementNomCommun.getRenderer().toString().trim());
-						setNomCommun( Outils.nettoyageTextes(ElementNomCommun.getRenderer().toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "")).trim() );
+						setNomCommun( Common_Outils.nettoyageTextes(ElementNomCommun.getRenderer().toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "")).trim() );
 					} catch (Exception e) {
 		        		log.debug("getFicheFromHtml() - le nom français n'est pas toujours renseigné");
 		        	}
@@ -838,7 +838,7 @@ public class Fiche {
 								if (sousElement != null) {
 									//log.debug("getFiche() - Test 2 : " + sousElement.getContent().toString());
 									section = sousElement.getRenderer().toString().trim();
-									section = Outils.nettoyageTextes(section);
+									section = Common_Outils.nettoyageTextes(section);
 								}
 							}
 							log.info("getFiche() - Section : " + section);
@@ -860,7 +860,7 @@ public class Fiche {
 								}
 							}
 							
-							texte = Outils.nettoyageTextes(texte);
+							texte = Common_Outils.nettoyageTextes(texte);
 							log.info("getFiche() - Texte : " + texte);
 							positionSectionDansFiche++;
 							SectionFiche contenu = new SectionFiche(100+positionSectionDansFiche, dernierTitreSection, texte);
@@ -925,7 +925,7 @@ public class Fiche {
 		sbTextePourRechercheRapide.append(" "+autresDenominationsPourRechercheRapide.trim());
 		
 		sbTextePourRechercheRapide = new StringBuilder(sbTextePourRechercheRapide.toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "") );
-		setTextePourRechercheRapide(Outils.formatStringNormalizer(sbTextePourRechercheRapide.toString()).toLowerCase());
+		setTextePourRechercheRapide(Common_Outils.formatStringNormalizer(sbTextePourRechercheRapide.toString()).toLowerCase());
 		
 		// RAZ
 		listeElementsTable_TABLE = null;
@@ -995,7 +995,7 @@ public class Fiche {
 		this.dateCreation = dateCreation;
 		this.dateModification = dateModification;
 		this.numerofichesLiees = numerofichesLiees;
-		this.textePourRechercheRapide = Outils.formatStringNormalizer(nomCommun+" "+nomScientifique).toLowerCase();
+		this.textePourRechercheRapide = Common_Outils.formatStringNormalizer(nomCommun+" "+nomScientifique).toLowerCase();
 		this.pictogrammes = pictogrammes;
 	} 
 

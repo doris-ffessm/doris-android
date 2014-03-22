@@ -58,7 +58,7 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
-import fr.ffessm.doris.android.sitedoris.Outils;
+import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
 
@@ -90,6 +90,7 @@ public class PrefetchIntervenants {
 		// On boucle sur les initiales des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
 		// On récupère la liste des intervenants dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
 		
+		PrefetchTools prefetchTools = new PrefetchTools();
 		
 		String listeFiltres;
 		String contenuFichierHtml = null;
@@ -110,8 +111,8 @@ public class PrefetchIntervenants {
 				log.info("Récup. Liste des Participants : " + listeParticipantsFichier);
 				
 				if (action != ActionKind.NODWNLD){
-					if (Outils.getFichierFromUrl(Constants.getListeParticipantsUrl(""+initiale), listeParticipantsFichier)) {
-						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeParticipantsFichier));
+					if (prefetchTools.getFichierFromUrl(Constants.getListeParticipantsUrl(""+initiale), listeParticipantsFichier)) {
+						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeParticipantsFichier));
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la liste des Participants : "+initiale);
 						System.exit(1);
@@ -120,7 +121,7 @@ public class PrefetchIntervenants {
 					// NODWNLD
 					listeParticipantsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeParticipants-"+initiale+".html";
 					if (new File(listeParticipantsFichier).exists()) {
-						contenuFichierHtml = Outils.getFichierTxtFromDisk(new File(listeParticipantsFichier));
+						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeParticipantsFichier));
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la liste des Participants : "+initiale);
 						System.exit(1);
@@ -154,8 +155,8 @@ public class PrefetchIntervenants {
 				
 				for (Participant participant : listeParticipants){
 					
-					if( ! PrefetchTools.isFileExistingPath( pageIntervenantRacineRef+"participant-"+participant.getNumeroParticipant()+".html") ){
-						if ( Outils.getFichierFromUrl( Constants.getParticipantUrl(participant.getNumeroParticipant()),
+					if( ! prefetchTools.isFileExistingPath( pageIntervenantRacineRef+"participant-"+participant.getNumeroParticipant()+".html") ){
+						if ( prefetchTools.getFichierFromUrl( Constants.getParticipantUrl(participant.getNumeroParticipant()),
 								pageIntervenantRacine+"participant-"+participant.getNumeroParticipant()+".html") ) {
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom());
@@ -176,11 +177,11 @@ public class PrefetchIntervenants {
 					if ( !participant.getCleURLPhotoParticipant().isEmpty() ) {
 						
 						// On stocke la photo dans les Vignettes
-						if( ! PrefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_") ) ){
+						if( ! prefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_") ) ){
 							String photoURL = URLEncoder.encode(participant.getCleURLPhotoParticipant(),"UTF-8");
 							log.debug("doMain() - photoURL : "+photoURL);
 							
-							if (Outils.getFichierFromUrl(Constants.SITE_RACINE_URL+photoURL,
+							if (prefetchTools.getFichierFromUrl(Constants.SITE_RACINE_URL+photoURL,
 									fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_"))) {
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom());

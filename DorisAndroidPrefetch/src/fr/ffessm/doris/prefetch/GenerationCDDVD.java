@@ -60,7 +60,6 @@ import com.j256.ormlite.support.ConnectionSource;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.sitedoris.Outils;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
 public class GenerationCDDVD {
@@ -70,6 +69,8 @@ public class GenerationCDDVD {
 	
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
+	
+	private PrefetchTools prefetchTools = new PrefetchTools();
 	
 	private ActionKind action;
 	private boolean zipCDDVD;
@@ -104,8 +105,8 @@ public class GenerationCDDVD {
 		for (Lien lienATelecharger : liensATelecharger) {
 			
 			if (lienATelecharger.getLienKind() == LienKind.PAGE) {
-				if( ! PrefetchTools.isFileExistingPath( fichierRefLien+lienATelecharger.getFichier() ) ){
-					if (Outils.getFichierFromUrl(Constants.getSiteUrl()+lienATelecharger.getUrl(),
+				if( ! prefetchTools.isFileExistingPath( fichierRefLien+lienATelecharger.getFichier() ) ){
+					if (prefetchTools.getFichierFromUrl(Constants.getSiteUrl()+lienATelecharger.getUrl(),
 							fichierLocalLien+lienATelecharger.getFichier() ) ) {
 					} else {
 						log.error("Une erreur est survenue lors de la récupération du lien : "+lienATelecharger.getUrl() );
@@ -115,8 +116,8 @@ public class GenerationCDDVD {
 			}
 			
 			if (lienATelecharger.getLienKind() == LienKind.ICONE) {
-				if( ! PrefetchTools.isFileExistingPath( fichierIconeRefRacine+lienATelecharger.getFichier() ) ){
-					if (Outils.getFichierFromUrl(Constants.getSiteUrl()+lienATelecharger.getUrl(),
+				if( ! prefetchTools.isFileExistingPath( fichierIconeRefRacine+lienATelecharger.getFichier() ) ){
+					if (prefetchTools.getFichierFromUrl(Constants.getSiteUrl()+lienATelecharger.getUrl(),
 							fichierIconeRacine+lienATelecharger.getFichier() ) ) {
 					} else {
 						log.error("Une erreur est survenue lors de la récupération du lien : "+lienATelecharger.getUrl() );
@@ -144,7 +145,7 @@ public class GenerationCDDVD {
 		    		new FileOutputStream(fichierCDLien + ".zip")
 	    		); 
 
-			    PrefetchTools.zipDossier(fichierCDLien, zipOS); 
+			    prefetchTools.zipDossier(fichierCDLien, zipOS); 
 
 			    zipOS.close(); 
 			} catch(Exception e) { 
@@ -495,7 +496,7 @@ public class GenerationCDDVD {
 		// Modification Fichiers HTML : lien, images
 		File dossierCD = new File(fichierCDLien+PrefetchConstants.DOSSIER_HTML);
 		for (File fichierHtml:dossierCD.listFiles()) {
-			String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
+			String contenuFichier = prefetchTools.getFichierTxtFromDisk(fichierHtml);
 			
 			contenuFichier = contenuFichier.replace("href=\""+Constants.getSiteUrl(),"href=\"");
 			
@@ -589,7 +590,7 @@ public class GenerationCDDVD {
 				
 				log.debug("transfoHtml() - groupes_zone : "+fichierHtml.getName()+" - "+numZone);
 				
-				String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
+				String contenuFichier = prefetchTools.getFichierTxtFromDisk(fichierHtml);
 		
 				// Lien vers 1ère page des espèces du Groupe
 				// fiches_liste.asp?groupe_numero=51 pour la zone 10
@@ -628,7 +629,7 @@ public class GenerationCDDVD {
 				int numPageSuivante = Integer.valueOf(numPage)+1;
 				int numPagePrecedente = Integer.valueOf(numPage)-1;
 				
-				String contenuFichier = Outils.getFichierTxtFromDisk(fichierHtml);
+				String contenuFichier = prefetchTools.getFichierTxtFromDisk(fichierHtml);
 				//log.debug("transfoHtml() - contenuFichier : "+contenuFichier.length());
 				
 				// Lien vers la page de tous les groupes de la zone

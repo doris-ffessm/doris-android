@@ -48,12 +48,12 @@ import android.util.Log;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
-public class Outils {
-	private static final String LOG_TAG = Outils.class.getCanonicalName();
+public class App_Outils {
+	private static final String LOG_TAG = App_Outils.class.getCanonicalName();
 	
 	private Context context;
 	
-	public Outils(Context context){
+	public App_Outils(Context context){
 		this.context = context;
 	}
 	
@@ -70,25 +70,5 @@ public class Outils {
     	}
 	}
 	
-	
-    // TODO : En attendant d'obtenir la nouvelle version de Common
-	public String getZoneIcone(int inId) {
-	   	switch (inId) {
-	   	case -1:
-    		return context.getString(R.string.icone_touteszones);
-    	case 1:
-    		return context.getString(R.string.icone_france);
-		case 2:
-			return context.getString(R.string.icone_eaudouce);
-		case 3:
-			return context.getString(R.string.icone_indopac);
-		case 4:
-			return context.getString(R.string.icone_caraibes);
-		case 5:
-			return context.getString(R.string.icone_atlantno);
-		default:
-			return "";
-		}
-	}
     
 }

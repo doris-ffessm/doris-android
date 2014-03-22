@@ -42,7 +42,6 @@ termes.
 
 package fr.ffessm.doris.prefetch;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -84,8 +83,12 @@ public class PrefetchDBTools {
 	// Initialisation de la Gestion des Log 
 	public static Log log = LogFactory.getLog(PrefetchFiches.class);
 	
+	// Constructeur
+	public PrefetchDBTools(){
+		
+	}
 	
-	public static void initializeSQLite(String url) throws ClassNotFoundException, SQLException{
+	public void initializeSQLite(String url) throws ClassNotFoundException, SQLException{
 		
 		Class.forName("org.sqlite.JDBC");		
 		Connection c = DriverManager.getConnection(url);
@@ -107,7 +110,7 @@ public class PrefetchDBTools {
 	/**
 	 * Setup our database and DAOs
 	 */
-	public static DorisDBHelper setupDatabase(ConnectionSource connectionSource)
+	public DorisDBHelper setupDatabase(ConnectionSource connectionSource)
 			throws Exception {
 		log.debug("setupDatabase() - Début");
 		
@@ -139,7 +142,7 @@ public class PrefetchDBTools {
 	/**
 	 * Création des Tables
 	 */
-	public static void databaseInitialisation(ConnectionSource connectionSource)
+	public void databaseInitialisation(ConnectionSource connectionSource)
 			throws Exception {
 		log.debug("databaseInitialisation() - Début");	
 		
