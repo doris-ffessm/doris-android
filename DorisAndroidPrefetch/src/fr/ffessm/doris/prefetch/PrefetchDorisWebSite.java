@@ -152,6 +152,9 @@ public class PrefetchDorisWebSite {
 					System.exit(1);
 				}
 				log.debug("doMain() - debbug" );
+				List<Groupe> listeGroupes = groupes.listeGroupes;
+				groupes = null;
+				
 				
 				// - - - Intervenants - - -
 				// On boucle sur les initiales des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)

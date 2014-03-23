@@ -74,6 +74,7 @@ public class PrefetchGroupes {
 	private int nbMaxFichesATraiter;
 	
 	public List<Groupe> listeGroupes;
+	private Groupe groupeMaj;
 	
 	public PrefetchGroupes(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter) {
 		this.dbContext = dbContext;
@@ -169,7 +170,15 @@ public class PrefetchGroupes {
 										
 					groupe.setContextDB(dbContext);
 					groupe.descriptionDetailleeFromHtml(contenuFichierHtml);
-					dbContext.groupeDao.update(groupe);
+					groupeMaj = groupe;
+					TransactionManager.callInTransaction(connectionSource,
+						new Callable<Void>() {
+							public Void call() throws Exception {
+								dbContext.groupeDao.update(groupeMaj);
+								return null;
+						    }
+						});
+					
 				}
 			}
 			// Téléchargement des pages de Groupes
@@ -218,6 +227,7 @@ public class PrefetchGroupes {
 					}
 				}
 			}
+			contenuFichierHtml = null;
 			return listeGroupes.size();
 			
 		} catch ( Exception e) {

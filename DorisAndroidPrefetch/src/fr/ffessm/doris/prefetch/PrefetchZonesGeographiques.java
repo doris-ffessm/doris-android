@@ -144,7 +144,13 @@ public class PrefetchZonesGeographiques {
 		final ZoneGeographique zoneGeographique = new ZoneGeographique(Constants.getTitreZoneGeographique(zoneKind), 
 																 Constants.getTexteZoneGeographique(zoneKind));
 		try {
-			dbContext.zoneGeographiqueDao.create(zoneGeographique);
+			TransactionManager.callInTransaction(connectionSource,
+				new Callable<Void>() {
+					public Void call() throws Exception {
+						dbContext.zoneGeographiqueDao.create(zoneGeographique);
+						return null;
+				    }
+				});
 		} catch (SQLException e) {
 			log.error("impossible de créer la zone dans la base", e);
 		}

@@ -79,7 +79,10 @@ public class PrefetchFiches {
 	
 	private List<Groupe> listeGroupes;
 	private List<Participant> listeParticipants;
-
+	
+	private Fiche ficheMaj;
+	private List<PhotoFiche> listePhotoFiche;
+	
 	public PrefetchFiches(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter,
 			List<Groupe> listeGroupes, List<Participant> listeParticipants) {
 		this.dbContext = dbContext;
@@ -159,6 +162,8 @@ public class PrefetchFiches {
 			} else {
 				listeFichesTravail = (HashSet<FicheLight>) listFichesFromRef.clone();
 			}
+			listeFichesSite = null;
+			
 			TransactionManager.callInTransaction(connectionSource,
 				new Callable<Void>() {
 					public Void call() throws Exception {
@@ -178,49 +183,71 @@ public class PrefetchFiches {
 			if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
 				listFichesModif = siteDoris.getListeFichesUpdated(listFichesFromRef, listeFichesTravail);
 			}
+			listFichesFromRef = null;
 			
 			int nbFichesTraitees = 0;
+			String urlFiche =  "";
+			String fichierSiteFicheUrl = "";
+			String fichierRefFicheUrl = "";
+			File fichierSiteFiche = null;
+			File fichierRefFiche = null;
+			
+			Fiche fiche = null;
+			
+			String urlListePhotos = "";
+			String fichierSiteListePhotosUrl = "";
+			String fichierRefListePhotosUrl = "";
+			File fichierSiteListePhotos = null;
+			File fichierRefListePhotos = null;
+			String contenuFichierHtmlListePhotos = null;
+			
+			String fichierImageRacine = "";
+			String fichierImageRefRacine = "";
+
 			for (FicheLight ficheLight : listeFichesTravail) {
 				if (  nbFichesTraitees <= nbMaxFichesATraiter ) {
 					log.debug("doMain() - Traitement Fiche : "+ficheLight.getNomCommun());
 					
-					String urlFiche =  Constants.getFicheFromIdUrl( ficheLight.getNumeroFiche() );
-					String fichierLocalFiche = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/fiche-"+ficheLight.getNumeroFiche()+".html";
-					String fichierRefFiche = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/fiche-"+ficheLight.getNumeroFiche()+".html";
+					urlFiche =  Constants.getFicheFromIdUrl( ficheLight.getNumeroFiche() );
+					fichierSiteFicheUrl = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/fiche-"+ficheLight.getNumeroFiche()+".html";
+					fichierRefFicheUrl = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/fiche-"+ficheLight.getNumeroFiche()+".html";
+					fichierSiteFiche = new File(fichierSiteFicheUrl);
+					fichierRefFiche = new File(fichierRefFicheUrl);
 					
 					if ( action == ActionKind.INIT ) {
-						if (prefetchTools.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
+						if (prefetchTools.getFichierFromUrl(urlFiche, fichierSiteFicheUrl)) {
 							nbFichesTraitees += 1;
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalFiche));
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 							// Solution de contournement désespérée 
 							urlFiche = Constants.getFicheFromNomCommunUrl(ficheLight.getNomCommun());
 							log.error("=> Tentative sur : "+urlFiche);
-							if (prefetchTools.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
+							if (prefetchTools.getFichierFromUrl(urlFiche, fichierSiteFicheUrl)) {
 								nbFichesTraitees += 1;
-								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalFiche));
+								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche);
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 								continue;
 							}
 						}
 					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
-						if (new File(fichierRefFiche).exists() && !listFichesModif.contains(ficheLight)) {
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierRefFiche));
+	
+						if ( fichierRefFiche.exists() && !listFichesModif.contains(ficheLight)) {
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierRefFiche);
 							nbFichesTraitees += 1;
 						} else {
-							if (prefetchTools.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
+							if (prefetchTools.getFichierFromUrl(urlFiche, fichierSiteFicheUrl)) {
 								nbFichesTraitees += 1;
-								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalFiche));
+								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche);
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 								// Solution de contournement désespérée 
 								urlFiche = Constants.getFicheFromNomCommunUrl(ficheLight.getNomCommun());
 								log.error("=> Tentative sur : "+urlFiche);
-								if (prefetchTools.getFichierFromUrl(urlFiche, fichierLocalFiche)) {
+								if (prefetchTools.getFichierFromUrl(urlFiche, fichierSiteFicheUrl)) {
 									nbFichesTraitees += 1;
-									contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalFiche));
+									contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche);
 								} else {
 									log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 									continue;
@@ -228,20 +255,27 @@ public class PrefetchFiches {
 							}
 						}
 					} else if ( action == ActionKind.NODWNLD ) {
-						if (new File(fichierRefFiche).exists()) {
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierRefFiche));
+						if (fichierRefFiche.exists()) {
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierRefFiche);
 							nbFichesTraitees += 1;
 						} else {
-							log.error("La récupération de la fiche sur le disque : "+fichierRefFiche+" a échoué.");
+							log.error("La récupération de la fiche sur le disque : "+fichierRefFicheUrl+" a échoué.");
 						}
 					}
-					//Fiche fiche = new Fiche(ficheLight);
-					Fiche fiche = dbContext.ficheDao.queryForFirst(
+
+					fiche = dbContext.ficheDao.queryForFirst(
 							dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", ficheLight.getNumeroFiche()).prepare()
 						);
 					fiche.setContextDB(dbContext);
 					fiche.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
-					dbContext.ficheDao.update(fiche);
+					ficheMaj = fiche;
+					TransactionManager.callInTransaction(connectionSource,
+							new Callable<Void>() {
+								public Void call() throws Exception {
+									dbContext.ficheDao.update(ficheMaj);
+									return null;
+							    }
+							});
 					
 					// mise à jour des champs inverse
 					//dbContext.ficheDao.refresh(fiche);
@@ -252,23 +286,27 @@ public class PrefetchFiches {
 					log.info("doMain() -      - etat : "+fiche.getEtatFiche());
 					log.info("doMain() - }");
 					
-					String urlListePhotos = "http://doris.ffessm.fr/fiche_photo_liste_apercu.asp?fiche_numero="+fiche.getNumeroFiche();
-					String fichierLocalListePhotos = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
-					String fichierRefListePhotos = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
-					String contenuFichierHtmlListePhotos = null;
+					urlListePhotos = "http://doris.ffessm.fr/fiche_photo_liste_apercu.asp?fiche_numero="+fiche.getNumeroFiche();
+					fichierSiteListePhotosUrl = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
+					fichierRefListePhotosUrl = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
+					fichierSiteListePhotos = new File(fichierSiteListePhotosUrl);
+					fichierRefListePhotos = new File(fichierRefListePhotosUrl);
+					
+					contenuFichierHtmlListePhotos = null;
+					
 					if ( action == ActionKind.INIT ) {
-						if (prefetchTools.getFichierFromUrl(urlListePhotos, fichierLocalListePhotos)) {
-							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalListePhotos));
+						if (prefetchTools.getFichierFromUrl(urlListePhotos, fichierSiteListePhotosUrl)) {
+							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierSiteListePhotos);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
 							continue;
 						}
 					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
-						if (new File(fichierRefListePhotos).exists() && !listFichesModif.contains(fiche)) {
-							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(new File(fichierRefListePhotos));
+						if (fichierRefListePhotos.exists() && !listFichesModif.contains(fiche)) {
+							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierRefListePhotos);
 						} else {
-							if (prefetchTools.getFichierFromUrl(urlListePhotos, fichierLocalListePhotos)) {
-								contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalListePhotos));
+							if (prefetchTools.getFichierFromUrl(urlListePhotos, fichierSiteListePhotosUrl)) {
+								contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierSiteListePhotos);
 							
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
@@ -276,8 +314,8 @@ public class PrefetchFiches {
 							}
 						}
 					} else if ( action == ActionKind.NODWNLD ){
-						if (new File(fichierRefListePhotos).exists()) {
-							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(new File(fichierRefListePhotos));
+						if (fichierRefListePhotos.exists()) {
+							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierRefListePhotos);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
 						}
@@ -285,10 +323,10 @@ public class PrefetchFiches {
 					
 					if(contenuFichierHtmlListePhotos != null) {
 						
-						final List<PhotoFiche> listePhotoFiche = siteDoris.getListePhotosFicheFromHtml(fiche, contenuFichierHtmlListePhotos);
+						listePhotoFiche = siteDoris.getListePhotosFicheFromHtml(fiche, contenuFichierHtmlListePhotos);
 						
 						// Maj Base de données
-						final Fiche ficheMaj = fiche;
+						ficheMaj = fiche;
 						TransactionManager.callInTransaction(connectionSource,
 							new Callable<Void>() {
 								public Void call() throws Exception {
@@ -308,8 +346,8 @@ public class PrefetchFiches {
 						// Téléchargement Photos
 						if ( action == ActionKind.CDDVD ) {
 
-							String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
-							String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
+							fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
+							fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
 
 							for (PhotoFiche photoFiche : listePhotoFiche){
 
@@ -362,6 +400,7 @@ public class PrefetchFiches {
 		} catch ( Exception e) {
 			// une erreur est survenue
 			log.error("Une erreur est survenue dans PrefetchFiches");
+			log.error("Exception : "+e);
 			return -1;
 		}
 

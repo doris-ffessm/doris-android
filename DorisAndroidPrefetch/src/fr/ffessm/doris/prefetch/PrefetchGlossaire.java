@@ -72,6 +72,8 @@ public class PrefetchGlossaire {
 	private ActionKind action;
 	private int nbMaxFichesATraiter;
 	
+	DefinitionGlossaire definitionMaj = null;
+	
 	public PrefetchGlossaire(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
@@ -192,7 +194,15 @@ public class PrefetchGlossaire {
 				
 				definition.setContextDB(dbContext);
 				definition.getDefinitionsFromHtml(contenuFichierHtml);
-				dbContext.definitionGlossaireDao.update(definition);
+				definitionMaj = definition;
+				TransactionManager.callInTransaction(connectionSource,
+					new Callable<Void>() {
+						public Void call() throws Exception {
+							dbContext.definitionGlossaireDao.update(definitionMaj);
+							return null;
+					    }
+					});
+				
 				
 				if ( nbDefinitionTelechargees !=0 && (nbDefinitionTelechargees % 50) == 0) {
 					log.info("Définitions traitées = "+nbDefinitionTelechargees+", pause de 1s...");
