@@ -168,7 +168,9 @@ C'est ce texte. */
 	public void descriptionDetailleeFromHtml(String htmlGroupe) throws SQLException{
 		log.trace("descriptionDetailleeFromHtml() - Début");
 		
-		htmlGroupe = Common_Outils.remplacementBalises(Common_Outils.nettoyageBalises(htmlGroupe), true);
+		Common_Outils commonOutils = new Common_Outils();
+		
+		htmlGroupe = commonOutils.remplacementBalises(commonOutils.nettoyageBalises(htmlGroupe), true);
     	
 		Source source=new Source(htmlGroupe);
 		source.fullSequentialParse();
@@ -185,7 +187,7 @@ C'est ce texte. */
 		log.trace("descriptionDetailleeFromHtml() - Description Détaillée Groupe : "+elementTDTexte.toString());
 		
 		descriptionDetailleeGroupe = elementTDTexte.getRenderer().toString().trim();
-		descriptionDetailleeGroupe = Common_Outils.nettoyageTextes(descriptionDetailleeGroupe);
+		descriptionDetailleeGroupe = commonOutils.nettoyageTextes(descriptionDetailleeGroupe);
 		
 		log.trace("descriptionDetailleeFromHtml() - Fin");
 	}

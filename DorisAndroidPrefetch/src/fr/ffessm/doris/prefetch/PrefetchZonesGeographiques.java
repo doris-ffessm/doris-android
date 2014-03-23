@@ -73,9 +73,7 @@ public class PrefetchZonesGeographiques {
 	
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
-	
-	private PrefetchTools prefetchTools = new PrefetchTools();
-	
+		
 	private ActionKind action;
 	private int nbMaxFichesATraiter;
 	
@@ -117,6 +115,9 @@ public class PrefetchZonesGeographiques {
 	private void majZoneGeographique(ConnectionSource connectionSource, ZoneGeographiqueKind zoneKind){
 		log.debug("majZoneGeographique() - Début");
 		
+		PrefetchTools prefetchTools = new PrefetchTools();
+		SiteDoris siteDoris = new SiteDoris();
+		
 		String listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeFiches-"+(zoneKind.ordinal()+1)+".html";
 		log.debug("Récup. Liste Fiches Doris Zone : " + listeFichesFichier);
 		//List<Fiche> listeFiches = new ArrayList<Fiche>(0);
@@ -148,7 +149,7 @@ public class PrefetchZonesGeographiques {
 			log.error("impossible de créer la zone dans la base", e);
 		}
 		
-		final HashSet<FicheLight> listFicheFromHTML = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
+		final HashSet<FicheLight> listFicheFromHTML = siteDoris.getListeFichesFromHtml(contenuFichierHtml);
 		log.info("Création des "+listFicheFromHTML.size()+" associations pour la Zone : " + listeFichesFichier);
 		
 		final DataBase_Outils outilsBase = new DataBase_Outils(dbContext);

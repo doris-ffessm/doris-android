@@ -67,15 +67,18 @@ public class SiteDoris {
 	// Initialisation de la Gestion des Log
 	public static Log log = LogFactory.getLog(SiteDoris.class);
 	
+	// Constructeur
     public SiteDoris(){
     }
     
-	public static HashSet<FicheLight> getListeFichesFromHtml(String inCodePageHtml) {
+	public HashSet<FicheLight> getListeFichesFromHtml(String inCodePageHtml) {
     	//log.info("getListeFichesFromHtml()- Début");
     	
+		Common_Outils commonOutils = new Common_Outils();
+		
     	HashSet<FicheLight> listeFiches = new HashSet<FicheLight>(0);
     	
-    	Source source=new Source(Common_Outils.remplacementBalises(Common_Outils.nettoyageBalises(inCodePageHtml),false ) );
+    	Source source=new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(inCodePageHtml),false ) );
     	//log.info("getListeFichesFromHtml()- 010");
     	source.fullSequentialParse();
     	//log.debug("getListeFichesFromHtml()- source.length() : " + source.length());
@@ -121,8 +124,9 @@ public class SiteDoris {
 	
 	
     
-    public static List<Groupe> getListeGroupesFromHtml(String inCodePageHtml){
+    public List<Groupe> getListeGroupesFromHtml(String inCodePageHtml){
     	//log.trace("getGroupes() - Début");
+    	Common_Outils commonOutils = new Common_Outils();
     	
     	List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
     	
@@ -137,7 +141,7 @@ public class SiteDoris {
     	
     	listeGroupes.add(groupe);
     	
-    	Source source=new Source(Common_Outils.remplacementBalises(Common_Outils.nettoyageBalises(inCodePageHtml), false ) );
+    	Source source=new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
     	//log.debug("getGroupes()- source.length() : " + source.length());
     	
@@ -308,7 +312,7 @@ public class SiteDoris {
 		return listeGroupes;
     }
 
-    public static Groupe getGroupeFromListeGroupes(List<Groupe> listeGroupes, int numGroupe, int numSousGroupe){
+    public Groupe getGroupeFromListeGroupes(List<Groupe> listeGroupes, int numGroupe, int numSousGroupe){
     	//log.trace("getGroupeFromListeGroupes() - Début");
     	log.debug("getGroupeFromListeGroupes() - numGroupe : "+numGroupe);
     	log.debug("getGroupeFromListeGroupes() - numSousGroupe : "+numSousGroupe);
@@ -335,13 +339,14 @@ public class SiteDoris {
 
 
 
-	public static List<PhotoFiche> getListePhotosFicheFromHtml(Fiche fiche,
+	public List<PhotoFiche> getListePhotosFicheFromHtml(Fiche fiche,
 			String inCodePageHtml) {
 		//log.trace("getListePhotosFiche()- Début");
-    	
+		Common_Outils commonOutils = new Common_Outils();
+		
 		List<PhotoFiche> listePhotosFiche = new ArrayList<PhotoFiche>(0);
     	
-    	Source source=new Source( Common_Outils.remplacementBalises( Common_Outils.nettoyageBalises(inCodePageHtml), false ) );
+    	Source source=new Source( commonOutils.remplacementBalises( commonOutils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
     	//log.debug("getListePhotosFiche()- source.length() : " + source.length());
     	//log.debug("getListePhotosFiche()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
@@ -371,7 +376,7 @@ public class SiteDoris {
     			descritionPhotoCouranteElem = elementTD;
     			descritionPhotoCourante = descritionPhotoCouranteElem.getRenderer().toString();
     			
-    			descritionPhotoCourante = Common_Outils.nettoyageTextes(descritionPhotoCourante);
+    			descritionPhotoCourante = commonOutils.nettoyageTextes(descritionPhotoCourante);
     			
     			//Suppression Balises (A en particulier)
     			//TODO : Mettre un lien un jour si ergonomie le permet
@@ -409,12 +414,13 @@ public class SiteDoris {
     
 	
 
-    public static List<Participant> getListeParticipantsParInitialeFromHtml(String inCodePageHtml){
+    public List<Participant> getListeParticipantsParInitialeFromHtml(String inCodePageHtml){
     	//log.debug("getListeParticipantsParInitiale() - Début");
+    	Common_Outils commonOutils = new Common_Outils();
     	
     	List<Participant> listeParticipants = new ArrayList<Participant>(0);
     	
-    	Source source=new Source(Common_Outils.remplacementBalises(Common_Outils.nettoyageBalises(inCodePageHtml), true ) );
+    	Source source=new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(inCodePageHtml), true ) );
     	source.fullSequentialParse();
     	//log.debug("getListeParticipantsParInitiale()- source.length() : " + source.length());
     	
@@ -537,8 +543,8 @@ public class SiteDoris {
 					}
 				}
 				if (numeroTR % 4 == 3){
-					participantDescription = Common_Outils.remplacementBalises(participantDescription, true);
-					participantDescription = Common_Outils.nettoyageTextes(participantDescription);
+					participantDescription = commonOutils.remplacementBalises(participantDescription, true);
+					participantDescription = commonOutils.nettoyageTextes(participantDescription);
 					log.info("getListeParticipantsParInitiale() - participantKind : "+participantKind);
 					log.info("getListeParticipantsParInitiale() - participantDescription : "+participantDescription);
 					
@@ -557,7 +563,7 @@ public class SiteDoris {
 		return listeParticipants;
     }
     
-    public static HashSet<FicheLight> getListeFichesUpdated(HashSet<FicheLight> inListeFichesRef, HashSet<FicheLight> inListeFichesSite) {
+    public HashSet<FicheLight> getListeFichesUpdated(HashSet<FicheLight> inListeFichesRef, HashSet<FicheLight> inListeFichesSite) {
     	//log.debug("getListeFichesUpdated()- Début");
     	log.debug("getListeFichesUpdated()- Liste Base : "+inListeFichesRef.size());
     	log.debug("getListeFichesUpdated()- Liste Site : "+inListeFichesSite.size());
@@ -592,7 +598,7 @@ public class SiteDoris {
 		return listeFichesUpdated;
     }
     
-    public static Participant getParticipantFromListeParticipants(List<Participant> listeParticipants, int numParticipant){
+    public Participant getParticipantFromListeParticipants(List<Participant> listeParticipants, int numParticipant){
     	//log.trace("getParticipantFromListeParticipants() - Début");
     	//log.debug("getParticipantFromListeParticipants() - numParticipant : "+numParticipant);
     	
@@ -617,12 +623,14 @@ public class SiteDoris {
     }
     
 
-    public static List<DefinitionGlossaire> getListeDefinitionsParInitialeFromHtml(String inCodePageHtml){
+    public List<DefinitionGlossaire> getListeDefinitionsParInitialeFromHtml(String inCodePageHtml){
     	//log.debug("getListeDefinitionsParInitialeFromHtml() - Début");
+    	
+    	Common_Outils commonOutils = new Common_Outils();
     	
     	List<DefinitionGlossaire> listeDefinitions = new ArrayList<DefinitionGlossaire>(0);
     	
-    	Source source=new Source(Common_Outils.remplacementBalises(Common_Outils.nettoyageBalises(inCodePageHtml), false ) );
+    	Source source=new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
     	//log.debug("getListeDefinitionsParInitialeFromHtml()- source.length() : " + source.length());
     	
@@ -644,7 +652,7 @@ public class SiteDoris {
 		return listeDefinitions;
     }
 
-    public static boolean getContinuerListeDefinitionsParInitialeFromHtml(String inCodePageHtml){
+    public boolean getContinuerListeDefinitionsParInitialeFromHtml(String inCodePageHtml){
     	//log.debug("getContinuerListeDefinitionsParInitialeFromHtml() - Début");
     	boolean continuer = true;
     	
@@ -660,7 +668,7 @@ public class SiteDoris {
     	return continuer;
     }
     
-    public static boolean getContinuerContenuGroupeFromHtml(String inCodePageHtml){
+    public boolean getContinuerContenuGroupeFromHtml(String inCodePageHtml){
     	//log.debug("getContinuerContenuGroupeFromHtml() - Début");
     	boolean continuer = true;
     	
@@ -676,8 +684,10 @@ public class SiteDoris {
     	return continuer;
     }
     
-    public static List<EntreeBibliographie> getListeBiblioFromHtml(String inCodePageHtml) {
+    public List<EntreeBibliographie> getListeBiblioFromHtml(String inCodePageHtml) {
     	//log.trace("getListeBiblioFromHtml()- Début");
+    	
+    	Common_Outils commonOutils = new Common_Outils();
     	
     	List<EntreeBibliographie> listeBiblio = new ArrayList<EntreeBibliographie>(0);
     	
@@ -688,7 +698,7 @@ public class SiteDoris {
 		// auteurs : Jourdan A.-J.-L.
     	inCodePageHtml = Pattern.compile("</,[^<>]*<strong>", Pattern.DOTALL).matcher(inCodePageHtml).replaceAll(",");
 	    	
-    	Source source=new Source(Common_Outils.nettoyageBalises(inCodePageHtml) );
+    	Source source=new Source(commonOutils.nettoyageBalises(inCodePageHtml) );
     	source.fullSequentialParse();
     	//log.debug("getListeBiblioFromHtml()- source.length() : " + source.length());
     	//log.debug("getListeBiblioFromHtml()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
@@ -731,10 +741,10 @@ public class SiteDoris {
 
     				// l'illustration éventuelle dans cleURLIllustration, update après avoir téléchargé la page de l'entrée bibliographique
     				listeBiblio.add(new EntreeBibliographie( Integer.valueOf(idBiblio),
-    						Common_Outils.nettoyageTextes(titre).trim(),
-    						Common_Outils.nettoyageTextes(auteurs).trim(),
+    						commonOutils.nettoyageTextes(titre).trim(),
+    						commonOutils.nettoyageTextes(auteurs).trim(),
     						annee,
-    						Common_Outils.nettoyageTextes(edition).trim(),
+    						commonOutils.nettoyageTextes(edition).trim(),
     						"",
     						(Common_Outils.formatStringNormalizer(titre+" "+auteurs)).toLowerCase() ));
     			}

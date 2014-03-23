@@ -91,6 +91,7 @@ import org.apache.commons.lang3.text.StrBuilder;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
+import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
@@ -594,7 +595,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				}
 			} else {
 		// Start of user code protected ListeFicheAvecFiltre_Adapter filter prefix customisation
-				final String prefixString = fr.ffessm.doris.android.sitedoris.Outils.formatStringNormalizer(prefix.toString().toLowerCase());
+				final String prefixString = Common_Outils.formatStringNormalizer(prefix.toString().toLowerCase());
 				//
 		// End of user code
 				boolean sort = sortAfterFilter();

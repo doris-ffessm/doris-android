@@ -60,7 +60,7 @@ public class Common_Outils {
 		
 	}
 	
-    public static String nettoyageBalises(String texte) {
+    public String nettoyageBalises(String texte) {
     	//log.debug("nettoyageBalises() - Début");
     	//log.debug("nettoyageBalises() - texteANettoye : " + texteANettoye);
 		
@@ -142,7 +142,7 @@ public class Common_Outils {
 		return texte;
 	}
 
-    public static String remplacementBalises(String texte, boolean avecMiseEnForme) {
+    public String remplacementBalises(String texte, boolean avecMiseEnForme) {
     	//log.debug("remplacementBalises() - Début");
     	//log.debug("remplacementBalises() - texteANettoye : " + texte);
 
@@ -200,7 +200,7 @@ public class Common_Outils {
 		return texte;
 	}
 	
-    public static String nettoyageTextes(String texteANettoye) {
+    public String nettoyageTextes(String texteANettoye) {
     	//log.debug("nettoyageTextes() - Début");
     	//log.debug("nettoyageTextes() - texteANettoye : " + texteANettoye);
 

@@ -63,7 +63,6 @@ import fr.ffessm.doris.android.datamodel.associations.*;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
-import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Common_Outils;
 // End of user code
 
@@ -147,10 +146,11 @@ public class DefinitionGlossaire {
 
     public void getDefinitionsFromHtml(String inCodePageHtml){
     	//log.debug("getDefinitionsFromHtml() - Début");
+    	Common_Outils commonOutils = new Common_Outils();
+    	
+    	inCodePageHtml = commonOutils.nettoyageBalises(inCodePageHtml);
 
-    	inCodePageHtml = Common_Outils.nettoyageBalises(inCodePageHtml);
-
-    	inCodePageHtml = Common_Outils.remplacementBalises(inCodePageHtml, true);
+    	inCodePageHtml = commonOutils.remplacementBalises(inCodePageHtml, true);
     	
     	
     	Source source=new Source(inCodePageHtml);
@@ -158,7 +158,7 @@ public class DefinitionGlossaire {
     	//log.debug("getDefinitionsFromHtml()- source.length() : " + source.length());
     	
     	Element elementTDTitre2 = source.getFirstElementByClass("titre2");
-    	terme = Common_Outils.nettoyageTextes( elementTDTitre2.getRenderer().toString().replace(":", "").trim() );
+    	terme = commonOutils.nettoyageTextes( elementTDTitre2.getRenderer().toString().replace(":", "").trim() );
     	log.debug("getDefinitionsFromHtml()- motDefini : " + terme);
     	
     	definition = elementTDTitre2.getParentElement().getParentElement().getFirstElementByClass("normal").getRenderer().toString();
@@ -194,7 +194,7 @@ public class DefinitionGlossaire {
     			}
     		}
     	}
-    	definition = Common_Outils.nettoyageTextes(definition);
+    	definition = commonOutils.nettoyageTextes(definition);
     	log.debug("getDefinitionsFromHtml() - definition : " + definition);
 
     	// permet de faire gagner du temps sur le téléphone

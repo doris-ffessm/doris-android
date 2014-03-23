@@ -203,6 +203,8 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     	int avancement = 0;
 		publishProgress(avancement);
 		
+		SiteDoris siteDoris = new SiteDoris();
+		
 		List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
     	listeGroupes.addAll(dbHelper.getGroupeDao().queryForAll());
 		Log.d(LOG_TAG, "doInBackground() - listeGroupes.size : "+listeGroupes.size());
@@ -233,14 +235,14 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		    	
 		    	Log.d(LOG_TAG, "doInBackground() - 10");
 		    	
-		    	HashSet<FicheLight> listeFichesSite = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
+		    	HashSet<FicheLight> listeFichesSite = siteDoris.getListeFichesFromHtml(contenuFichierHtml);
 		    	Log.d(LOG_TAG, "doInBackground() - Fiches de la Base : "+listeFichesBase.size() );
 		    	Log.d(LOG_TAG, "doInBackground() - Fiches du Site : "+listeFichesSite.size() );
 		    	
 		    	
 		    	// Analyse différences entre les 2 listes
 		    	
-		    	HashSet<FicheLight> listeFichesUpdated = SiteDoris.getListeFichesUpdated(listeFichesBase, listeFichesSite);
+		    	HashSet<FicheLight> listeFichesUpdated = siteDoris.getListeFichesUpdated(listeFichesBase, listeFichesSite);
 		    	Log.d(LOG_TAG, "doInBackground() - Fiches Updated : "+listeFichesUpdated.size() );
 		    	listeFichesSite.clear();
 		    	

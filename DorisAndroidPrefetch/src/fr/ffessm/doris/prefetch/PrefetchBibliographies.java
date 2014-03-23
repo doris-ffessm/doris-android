@@ -69,9 +69,7 @@ public class PrefetchBibliographies {
 	
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
-	
-	private PrefetchTools prefetchTools = new PrefetchTools();
-	
+
 	private ActionKind action;
 	private int nbMaxFichesATraiter;
 	
@@ -90,12 +88,13 @@ public class PrefetchBibliographies {
 		//biblio.asp?mapage=(n+1)&PageCourante=n
 		// On récupère les Bibliographies dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
 		
+		PrefetchTools prefetchTools = new PrefetchTools();
+		SiteDoris siteDoris = new SiteDoris();
+		
 		String contenuFichierHtml = null;
 		
 		try {
-						
-
-			
+		
 			int pageCourante = 1;
 			boolean testContinu = false;
 			
@@ -123,7 +122,7 @@ public class PrefetchBibliographies {
 					}
 				}
 				
-				final List<EntreeBibliographie> listeBiblioFromHTML = SiteDoris.getListeBiblioFromHtml(contenuFichierHtml);
+				final List<EntreeBibliographie> listeBiblioFromHTML = siteDoris.getListeBiblioFromHtml(contenuFichierHtml);
 				//log.info("Creation de "+listeParticipantsFromHTML.size()+" participants pour la lettre : "+initiale);
 				TransactionManager.callInTransaction(connectionSource,
 						new Callable<Void>() {

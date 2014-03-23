@@ -61,7 +61,6 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
-import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
@@ -74,8 +73,6 @@ public class PrefetchFiches {
 	
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
-	
-	private PrefetchTools prefetchTools = new PrefetchTools();
 	
 	private ActionKind action;
 	private int nbMaxFichesATraiter;
@@ -100,7 +97,9 @@ public class PrefetchFiches {
 		// - - - Liste des Fiches - - -
 		// Récupération de la liste des fiches sur le site de DORIS
 		// Elles sont récupérées dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
-
+		
+		PrefetchTools prefetchTools = new PrefetchTools();
+		SiteDoris siteDoris = new SiteDoris();
 		
 		String contenuFichierHtml = null;
 		
@@ -127,7 +126,7 @@ public class PrefetchFiches {
 					System.exit(0);
 				}
 			}
-			HashSet<FicheLight> listeFichesSite = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
+			HashSet<FicheLight> listeFichesSite = siteDoris.getListeFichesFromHtml(contenuFichierHtml);
 			log.info("Nb Fiches sur le site : "+listeFichesSite.size());
 
 			// Récupération de la liste des fiches dans le dossier de référence
@@ -138,7 +137,7 @@ public class PrefetchFiches {
 				listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches.html";
 				if (new File(listeFichesFichier).exists()) {
 					contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier));
-					listFichesFromRef = SiteDoris.getListeFichesFromHtml(contenuFichierHtml);
+					listFichesFromRef = siteDoris.getListeFichesFromHtml(contenuFichierHtml);
 				} else {
 					// Si en Mode NODWLD alors le fichier doit être dispo.
 					if (action == ActionKind.NODWNLD) {
@@ -177,7 +176,7 @@ public class PrefetchFiches {
 			log.info("Mise à jours de "+listeFichesTravail.size()+" fiches.");
 			HashSet<FicheLight> listFichesModif = null;
 			if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
-				listFichesModif = SiteDoris.getListeFichesUpdated(listFichesFromRef, listeFichesTravail);
+				listFichesModif = siteDoris.getListeFichesUpdated(listFichesFromRef, listeFichesTravail);
 			}
 			
 			int nbFichesTraitees = 0;
@@ -286,7 +285,7 @@ public class PrefetchFiches {
 					
 					if(contenuFichierHtmlListePhotos != null) {
 						
-						final List<PhotoFiche> listePhotoFiche = SiteDoris.getListePhotosFicheFromHtml(fiche, contenuFichierHtmlListePhotos);
+						final List<PhotoFiche> listePhotoFiche = siteDoris.getListePhotosFicheFromHtml(fiche, contenuFichierHtmlListePhotos);
 						
 						// Maj Base de données
 						final Fiche ficheMaj = fiche;
@@ -308,9 +307,7 @@ public class PrefetchFiches {
 						
 						// Téléchargement Photos
 						if ( action == ActionKind.CDDVD ) {
-							
-							PrefetchTools prefetchTools = new PrefetchTools();
-							
+
 							String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
 							String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
 

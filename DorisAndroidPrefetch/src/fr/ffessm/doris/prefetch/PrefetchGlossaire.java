@@ -87,6 +87,7 @@ public class PrefetchGlossaire {
 		// On récupère la liste des termes dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
 		
 		PrefetchTools prefetchTools = new PrefetchTools();
+		SiteDoris siteDoris = new SiteDoris();
 		
 		String listeFiltres;
 		String contenuFichierHtml = null;
@@ -126,9 +127,9 @@ public class PrefetchGlossaire {
 						}
 					}
 					
-					continuer = SiteDoris.getContinuerListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
+					continuer = siteDoris.getContinuerListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
 					
-					final List<DefinitionGlossaire> listeDefinitionsFromHTML = SiteDoris.getListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
+					final List<DefinitionGlossaire> listeDefinitionsFromHTML = siteDoris.getListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
 					log.info("Creation de "+listeDefinitionsFromHTML.size()+" définitions pour la lettre : "+initiale);
 					TransactionManager.callInTransaction(connectionSource,
 						new Callable<Void>() {

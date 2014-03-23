@@ -90,6 +90,7 @@ public class PrefetchGroupes {
 		// En UPDATE et CDDVD on re-télécharge la liste
 		
 		PrefetchTools prefetchTools = new PrefetchTools();	
+		SiteDoris siteDoris = new SiteDoris();
 		
 		String listeGroupesFichier = "";
 		String contenuFichierHtml = null;
@@ -118,7 +119,7 @@ public class PrefetchGroupes {
 				}
 			}
 			
-			listeGroupes = SiteDoris.getListeGroupesFromHtml(contenuFichierHtml);
+			listeGroupes = siteDoris.getListeGroupesFromHtml(contenuFichierHtml);
 			log.debug("doMain() - listeGroupes.size : "+listeGroupes.size());
 			
 			TransactionManager.callInTransaction(connectionSource,
@@ -186,7 +187,8 @@ public class PrefetchGroupes {
 						log.error("Une erreur est survenue lors de la récupération de la liste des Groupes : " + zone.toString());
 						System.exit(1);
 					}
-					final List<Groupe> listeGroupesZone = SiteDoris.getListeGroupesFromHtml(contenuFichierHtml);
+					
+					final List<Groupe> listeGroupesZone = siteDoris.getListeGroupesFromHtml(contenuFichierHtml);
 					log.debug("doMain() - listeGroupesZone.size : "+listeGroupesZone.size());
 					
 					for (Groupe groupe : listeGroupesZone) {
@@ -208,7 +210,7 @@ public class PrefetchGroupes {
 								}
 
 								pageCourante ++;
-								testContinu = SiteDoris.getContinuerContenuGroupeFromHtml(contenuFichierHtml);
+								testContinu = siteDoris.getContinuerContenuGroupeFromHtml(contenuFichierHtml);
 							
 							} while ( testContinu );
 							

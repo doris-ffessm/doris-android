@@ -91,6 +91,7 @@ public class PrefetchIntervenants {
 		// On récupère la liste des intervenants dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
 		
 		PrefetchTools prefetchTools = new PrefetchTools();
+		SiteDoris siteDoris = new SiteDoris();
 		
 		String listeFiltres;
 		String contenuFichierHtml = null;
@@ -128,7 +129,7 @@ public class PrefetchIntervenants {
 					}
 				}
 				
-				final List<Participant> listeParticipantsFromHTML = SiteDoris.getListeParticipantsParInitialeFromHtml(contenuFichierHtml);
+				final List<Participant> listeParticipantsFromHTML = siteDoris.getListeParticipantsParInitialeFromHtml(contenuFichierHtml);
 				log.info("Creation de "+listeParticipantsFromHTML.size()+" participants pour la lettre : "+initiale);
 				TransactionManager.callInTransaction(connectionSource,
 					new Callable<Void>() {
