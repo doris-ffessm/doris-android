@@ -50,6 +50,7 @@ import java.util.regex.Pattern;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
+import net.htmlparser.jericho.LoggerProvider;
 import net.htmlparser.jericho.Source;
 
 import org.apache.commons.logging.Log;
@@ -77,6 +78,7 @@ public class SiteDoris {
 		Common_Outils commonOutils = new Common_Outils();
 		
     	HashSet<FicheLight> listeFiches = new HashSet<FicheLight>(0);
+    	//Config.LoggerProvider=LoggerProvider.DISABLED
     	
     	Source source=new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(inCodePageHtml),false ) );
     	//log.info("getListeFichesFromHtml()- 010");
