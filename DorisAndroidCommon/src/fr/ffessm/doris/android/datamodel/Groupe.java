@@ -189,6 +189,14 @@ C'est ce texte. */
 		descriptionDetailleeGroupe = elementTDTexte.getRenderer().toString().trim();
 		descriptionDetailleeGroupe = commonOutils.nettoyageTextes(descriptionDetailleeGroupe);
 		
+		/*
+		source = null;
+		elementTDtitre2 = null;
+		elementTRPere = null;
+		elementTDTexte = null;
+		*/
+
+		
 		log.trace("descriptionDetailleeFromHtml() - Fin");
 	}
 

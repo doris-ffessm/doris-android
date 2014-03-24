@@ -308,6 +308,18 @@ public class SiteDoris {
 				}
 			}
 		}
+		
+		/*
+		//source.clearCache();
+		source = null;
+		listeElementsTable = null;
+    	listeElementsA = null;
+    	elementTD = null;
+    	ElementNormal = null;
+    	elementTitreGrandsGroupes = null;
+    	elementTable = null;
+    	*/
+		
 		//log.trace("getGroupes() - Fin");
 		return listeGroupes;
     }
@@ -600,7 +612,7 @@ public class SiteDoris {
     
     public Participant getParticipantFromListeParticipants(List<Participant> listeParticipants, int numParticipant){
     	//log.trace("getParticipantFromListeParticipants() - Début");
-    	//log.debug("getParticipantFromListeParticipants() - numParticipant : "+numParticipant);
+    	//log.debug("getParticipantFromListeParticipants()) - numParticipant : "+numParticipant);
     	
     	// Contrôle basique des entrées
     	if (numParticipant == 0) {
