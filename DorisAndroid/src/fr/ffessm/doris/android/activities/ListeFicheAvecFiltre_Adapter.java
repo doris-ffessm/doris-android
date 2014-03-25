@@ -595,7 +595,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				}
 			} else {
 		// Start of user code protected ListeFicheAvecFiltre_Adapter filter prefix customisation
-				final String prefixString = Common_Outils.formatStringNormalizer(prefix.toString().toLowerCase());
+				Common_Outils commonOutils = new Common_Outils();
+				final String prefixString = commonOutils.formatStringNormalizer(prefix.toString().toLowerCase());
 				//
 		// End of user code
 				boolean sort = sortAfterFilter();
