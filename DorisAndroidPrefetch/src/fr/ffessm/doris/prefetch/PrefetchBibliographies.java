@@ -225,6 +225,7 @@ public class PrefetchBibliographies {
 		} catch ( Exception e) {
 			// une erreur est survenue
 			log.error("Une erreur est survenue dans PrefetchBibliographies");
+			log.error(e);
 			return -1;
 		}
 

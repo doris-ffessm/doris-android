@@ -108,10 +108,11 @@ public class PrefetchGlossaire {
 				int numero = 1;
 				boolean continuer;
 				do {
-					String listeDefinitionsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeDefinitions-"+initiale+"-"+numero+".html";
-					log.info("Récup. Liste des Définitions : " + listeDefinitionsFichier);
 					
 					if ( action != ActionKind.NODWNLD ){
+						String listeDefinitionsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeDefinitions-"+initiale+"-"+numero+".html";
+						log.info("Récup. Liste des Définitions : " + listeDefinitionsFichier);
+						
 						if (prefetchTools.getFichierFromUrl(Constants.getListeDefinitionsUrl(""+initiale,""+numero ), listeDefinitionsFichier)) {
 							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeDefinitionsFichier));
 						} else {
@@ -120,7 +121,9 @@ public class PrefetchGlossaire {
 						}
 					} else {
 						// NODWNLD
-						listeDefinitionsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeDefinitions-"+initiale+"-"+numero+".html";
+						String listeDefinitionsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeDefinitions-"+initiale+"-"+numero+".html";
+						log.info("Récup. Liste des Définitions : " + listeDefinitionsFichier);
+						
 						if (new File(listeDefinitionsFichier).exists()) {
 							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeDefinitionsFichier));
 						} else {
@@ -239,6 +242,7 @@ public class PrefetchGlossaire {
 		} catch ( Exception e) {
 			// une erreur est survenue
 			log.error("Une erreur est survenue dans PrefetchGlossaire");
+			log.error(e);
 			return -1;
 		}
 

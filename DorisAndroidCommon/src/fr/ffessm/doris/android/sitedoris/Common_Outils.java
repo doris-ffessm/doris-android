@@ -257,7 +257,7 @@ public class Common_Outils {
     /* *********************************************************************
      * Permet d'enlever les accents, cédilles et autres
      *  ********************************************************************* */
-	static public String formatStringNormalizer(String string) {
+	public String formatStringNormalizer(String string) {
 	    char[] charsData = new char[string.length()];
 	    string.getChars(0, charsData.length, charsData, 0);
 	 

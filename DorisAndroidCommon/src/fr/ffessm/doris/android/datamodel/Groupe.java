@@ -60,9 +60,11 @@ import org.apache.commons.logging.LogFactory;
 
 import fr.ffessm.doris.android.datamodel.associations.*;
 
+import net.htmlparser.jericho.Config;
 // Start of user code additional import for Groupe
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
+import net.htmlparser.jericho.LoggerProvider;
 import net.htmlparser.jericho.Source;
 
 
@@ -165,15 +167,19 @@ C'est ce texte. */
 	
 	
 	
-	public void descriptionDetailleeFromHtml(String htmlGroupe) throws SQLException{
+	public void descriptionDetailleeFromHtml(String htmlGroupe){
 		log.trace("descriptionDetailleeFromHtml() - Début");
 		
 		Common_Outils commonOutils = new Common_Outils();
 		
 		htmlGroupe = commonOutils.remplacementBalises(commonOutils.nettoyageBalises(htmlGroupe), true);
     	
-		Source source=new Source(htmlGroupe);
+		// Dans les version suivante de Jericho le niveau de trace a changé
+    	//Config.LoggerProvider = LoggerProvider.DISABLED;
+		
+		Source source = new Source(htmlGroupe);
 		source.fullSequentialParse();
+
 		// Description du groupe
 		Element elementTDtitre2 = source.getFirstElementByClass("titre2");
 		if (numeroSousGroupe != 0) {
@@ -188,14 +194,8 @@ C'est ce texte. */
 		
 		descriptionDetailleeGroupe = elementTDTexte.getRenderer().toString().trim();
 		descriptionDetailleeGroupe = commonOutils.nettoyageTextes(descriptionDetailleeGroupe);
-		
-		/*
-		source = null;
-		elementTDtitre2 = null;
-		elementTRPere = null;
-		elementTDTexte = null;
-		*/
 
+		source = null;
 		
 		log.trace("descriptionDetailleeFromHtml() - Fin");
 	}

@@ -327,7 +327,7 @@ public class Fiche {
     	//log.debug("getFiche() - htmlFiche : " + htmlFiche.substring(0, 200));
     	
 		// Utilisation du parser Jericho
-		source=new Source(htmlFiche);
+		source = new Source(htmlFiche);
 		
 		// Nécessaire pour trouver ensuite les pères
 		source.fullSequentialParse();
@@ -397,6 +397,7 @@ public class Fiche {
 									log.info("getFicheFromHtml() - ficheTagInfo : " + elementImg.getAttributeValue("alt")+" + "+elementImg.getAttributeValue("src"));
 									pictogrammes += Constants.getTypePicto(elementImg.getAttributeValue("alt")).ordinal() + ";";
 								}
+								listeElementsTR_IMG = null;
 							}
 							if (i == 2) {
 								log.info("getFicheFromHtml() - ficheNomLatin : " + elementTR.getRenderer().toString().trim());
@@ -412,7 +413,9 @@ public class Fiche {
 								setNomCommun( commonOutils.nettoyageTextes(elementTR.getRenderer().toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "")).trim() );
 							}
 						}
+						listeElementsHG_TR = null;
 					}
+					listeElementsHG_TD = null;
 					
 					//Recup TRs Haut Droit contenant le Groupe auquel appartient l'espèce
 					List<? extends Element> listeElementsIMG = elementTable_TABLE.getAllElements(HTMLElementName.IMG);
@@ -430,7 +433,7 @@ public class Fiche {
 							}
 						}
 					}
-
+					listeElementsIMG = null;
 					break;
 					
 				//Description Gauche et Droite
@@ -526,7 +529,7 @@ public class Fiche {
 							}
 						}*/
 					}
-					
+					listeElementsMG_TD = null;
 					
 					
 					//Recup du TD qui contient les infos DROITE (images et qui a fait la fiche)
@@ -582,6 +585,7 @@ public class Fiche {
 						}
 										
 					} // Fin parcourt des Cadres Gris
+					listeElementsEntoureDeGris = null;
 					
 					// Les dates de Créations et de nodifications
 					// Elles sont dans le seul TD de class = normalgris
@@ -634,6 +638,7 @@ public class Fiche {
 					}
 				}
 			}
+			listeElementsTDSousGroupe = null;
 		}
 		
 		
@@ -705,6 +710,7 @@ public class Fiche {
 							}
 						}
 					}
+					listeElementsIMG = null;
 				} // Fin Table avec Nom Commun et Scientifique
 					
 
@@ -735,7 +741,8 @@ public class Fiche {
 					}
 				}
 			} // Fin recherche Sous-Groupe
-	
+			listeElementsTDSousGroupe = null;
+			
 			//Recup du TD qui contient les infos DROITE (images et qui a fait la fiche)
 			//Recup du TR dont le 3ème TD fils contient les infos DROITE (images et qui a fait la fiche)
 			List<? extends Element> listeElementsEntoureDeGris = source.getAllElementsByClass("trait_cadregris");
@@ -789,6 +796,7 @@ public class Fiche {
 				}
 								
 			} // Fin parcourt des Cadres Gris
+			listeElementsEntoureDeGris = null;
 			
 			// Les dates de Créations et de modifications
 			// Elles sont dans le seul TD de class = normalgris
@@ -931,8 +939,10 @@ public class Fiche {
 		setTextePourRechercheRapide(commonOutils.formatStringNormalizer(sbTextePourRechercheRapide.toString()).toLowerCase());
 		
 		// RAZ
+		source = null;
 		listeElementsTable_TABLE = null;
-		
+		listeElementsTable = null;
+		listeAttributs = null;
     	log.trace("getFicheFromHtml() - Fin");
 	}
 	
@@ -999,7 +1009,8 @@ public class Fiche {
 		this.dateModification = dateModification;
 		this.numerofichesLiees = numerofichesLiees;
 		// Start of user code Fiche additional user properties
-		this.textePourRechercheRapide = Common_Outils.formatStringNormalizer(nomCommun+" "+nomScientifique).toLowerCase();
+		Common_Outils commonOutils = new Common_Outils();
+		this.textePourRechercheRapide = commonOutils.formatStringNormalizer(nomCommun+" "+nomScientifique).toLowerCase();
 		// End of user code
 		this.pictogrammes = pictogrammes;
 	} 

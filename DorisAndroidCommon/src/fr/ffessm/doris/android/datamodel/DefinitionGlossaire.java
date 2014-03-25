@@ -203,6 +203,7 @@ public class DefinitionGlossaire {
 			cleURLIllustration = cleURLIllustration + imageDefinition + ";";
 		}
 
+		source = null;
     	//log.debug("getDefinitionsFromHtml() - Fin");
     }
 	

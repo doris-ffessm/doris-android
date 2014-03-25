@@ -48,6 +48,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import net.htmlparser.jericho.Config;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.LoggerProvider;
@@ -78,7 +79,10 @@ public class SiteDoris {
 		Common_Outils commonOutils = new Common_Outils();
 		
     	HashSet<FicheLight> listeFiches = new HashSet<FicheLight>(0);
-    	//Config.LoggerProvider=LoggerProvider.DISABLED
+    	
+    	// Dans les version suivante de Jericho le niveau de trace a changé
+    	//Config.LoggerProvider = LoggerProvider.DISABLED;
+    	
     	
     	Source source=new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(inCodePageHtml),false ) );
     	//log.info("getListeFichesFromHtml()- 010");
@@ -120,6 +124,9 @@ public class SiteDoris {
 			}
 			
 		}
+    	
+    	source = null;
+    	listeElementsTD = null;
 		//log.info("getListeFichesFromHtml()- Fin");
 		return listeFiches;
     }
@@ -311,17 +318,9 @@ public class SiteDoris {
 			}
 		}
 		
-		/*
-		//source.clearCache();
 		source = null;
 		listeElementsTable = null;
     	listeElementsA = null;
-    	elementTD = null;
-    	ElementNormal = null;
-    	elementTitreGrandsGroupes = null;
-    	elementTable = null;
-    	*/
-		
 		//log.trace("getGroupes() - Fin");
 		return listeGroupes;
     }
@@ -423,6 +422,10 @@ public class SiteDoris {
     			}
     		}
     	}
+    	
+    	source = null;
+    	listeElementsTD = null;
+    	
 		return listePhotosFiche;
 	}
     
@@ -528,7 +531,8 @@ public class SiteDoris {
 							log.info("getListeParticipantsParInitiale() - participantUrlPhoto : "+participantUrlPhoto);
 						}
 					}
-
+					listeElementsIMGParticipantPhoto = null;
+					
 					List<? extends Element> listeElementsTD = elementTR.getAllElements(HTMLElementName.TD);
 					int numeroTD = 0;
 					for (Element elementTD : listeElementsTD) {
@@ -555,6 +559,7 @@ public class SiteDoris {
 							}
 						}
 					}
+					listeElementsTD = null;
 				}
 				if (numeroTR % 4 == 3){
 					participantDescription = commonOutils.remplacementBalises(participantDescription, true);
@@ -573,7 +578,13 @@ public class SiteDoris {
     	} // Fin Pour Chaque TR
     	
     	log.debug("getListeParticipantsParInitiale() - listeParticipants : "+listeParticipants.size());
-		//log.debug("getListeParticipantsParInitiale() - Fin");
+		
+    	source = null;
+    	listeElementsTR = null;
+    	
+    	
+    	
+    	//log.debug("getListeParticipantsParInitiale() - Fin");
 		return listeParticipants;
     }
     
@@ -646,12 +657,13 @@ public class SiteDoris {
     	
     	Source source=new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
-    	//log.debug("getListeDefinitionsParInitialeFromHtml()- source.length() : " + source.length());
+    	log.debug("getListeDefinitionsParInitialeFromHtml()- source.length() : " + source.length());
     	
     	List<? extends Element> listeElementsTD = source.getAllElementsByClass("liste0");
-    			
+    	log.debug("getListeDefinitionsParInitialeFromHtml()- source.length() : " + source.length());
+        		
     	for (Element elementTD : listeElementsTD) {
-    		//log.debug("getListeDefinitionsParInitialeFromHtml()- elementTD : " +elementTD.getRenderer().toString());
+    		log.debug("getListeDefinitionsParInitialeFromHtml()- elementTD : " +elementTD.getRenderer().toString());
 			if (elementTD.getRenderer().toString().trim().replaceAll("<[^>]*>", "").isEmpty() ) {
 				String numeroDefinition =  elementTD.getRenderer().toString().trim().replaceAll(".*glossaire_numero=([^&]*)&.*", "$1");
 				log.debug("getListeDefinitionsParInitialeFromHtml()- numeroDefinition : " +numeroDefinition);
@@ -662,7 +674,11 @@ public class SiteDoris {
     	} // Fin Pour Chaque TR
     	
     	//log.debug("getListeDefinitionsParInitialeFromHtml() - listeDefinitions : "+listeDefinitions.size());
-		//log.debug("getListeDefinitionsParInitialeFromHtml() - Fin");
+		
+    	source = null;
+    	listeElementsTD = null;
+    	
+    	//log.debug("getListeDefinitionsParInitialeFromHtml() - Fin");
 		return listeDefinitions;
     }
 
@@ -760,11 +776,15 @@ public class SiteDoris {
     						annee,
     						commonOutils.nettoyageTextes(edition).trim(),
     						"",
-    						(Common_Outils.formatStringNormalizer(titre+" "+auteurs)).toLowerCase() ));
+    						(commonOutils.formatStringNormalizer(titre+" "+auteurs)).toLowerCase() ));
     			}
 			}
 			
 		}
+    	
+    	source = null;
+    	listeElementsA = null;
+    	
 		//log.trace("getListeBiblioFromHtml()- Fin");
 		return listeBiblio;
     }

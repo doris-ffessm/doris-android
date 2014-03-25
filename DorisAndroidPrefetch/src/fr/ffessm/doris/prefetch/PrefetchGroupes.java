@@ -233,6 +233,7 @@ public class PrefetchGroupes {
 		} catch ( Exception e) {
 			// une erreur est survenue
 			log.error("Une erreur est survenue dans PrefetchGroupes");
+			log.error(e);
 			return -1;
 		}
 

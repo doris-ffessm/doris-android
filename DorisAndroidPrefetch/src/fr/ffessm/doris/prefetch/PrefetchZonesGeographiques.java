@@ -106,6 +106,7 @@ public class PrefetchZonesGeographiques {
 		} catch ( Exception e) {
 			// une erreur est survenue
 			log.error("Une erreur est survenue dans PrefetchZonesGeographiques");
+			log.error(e);
 			return -1;
 		}
 

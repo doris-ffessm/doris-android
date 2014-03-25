@@ -400,7 +400,7 @@ public class PrefetchFiches {
 		} catch ( Exception e) {
 			// une erreur est survenue
 			log.error("Une erreur est survenue dans PrefetchFiches");
-			log.error("Exception : "+e);
+			log.error(e);
 			return -1;
 		}
 

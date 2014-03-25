@@ -144,7 +144,8 @@ public class Constants {
     }
     
     public static String getFicheFromNomCommunUrl(String inNomCommun) {
-		String ficheUrl = SITE_RACINE_URL + FICHE_RACINE_URL_NOM_COMMUN + Common_Outils.formatStringNormalizer(inNomCommun.replace(" ", "%20") );
+    	Common_Outils commonOutils = new Common_Outils();
+		String ficheUrl = SITE_RACINE_URL + FICHE_RACINE_URL_NOM_COMMUN + commonOutils.formatStringNormalizer(inNomCommun.replace(" ", "%20") );
     	return ficheUrl;
     }
     

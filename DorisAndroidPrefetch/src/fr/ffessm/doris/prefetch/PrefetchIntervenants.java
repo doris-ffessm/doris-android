@@ -197,7 +197,7 @@ public class PrefetchIntervenants {
 			
 		} catch ( Exception e) {
 			// une erreur est survenue
-			log.error("Une erreur est survenue dans PrefetchIntervenants");
+			log.error(e);
 			return -1;
 		}
 
