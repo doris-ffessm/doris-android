@@ -526,9 +526,11 @@ public class SiteDoris {
 						String elementTDwidth = elementIMG.getAttributeValue("width");
 						if (elementTDwidth != null && elementTDwidth.equals("150") ){
 							//log.info("getListeParticipantsParInitiale() - photo : "+elementIMG.getAttributeValue("src"));
-							participantUrlPhoto = elementIMG.getAttributeValue("src");
-							participantUrlPhoto = participantUrlPhoto.replace(" ", "%20");	// on s'assure d'avoir une url valide
-							log.info("getListeParticipantsParInitiale() - participantUrlPhoto : "+participantUrlPhoto);
+							if ( elementIMG.getAttributeValue("src").contains("gestionenligne/photos_vig") ){
+								participantUrlPhoto = elementIMG.getAttributeValue("src");
+								participantUrlPhoto = participantUrlPhoto.replace(" ", "%20");	// on s'assure d'avoir une url valide
+								log.info("getListeParticipantsParInitiale() - participantUrlPhoto : "+participantUrlPhoto);
+							}
 						}
 					}
 					listeElementsIMGParticipantPhoto = null;

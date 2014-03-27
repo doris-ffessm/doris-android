@@ -147,9 +147,9 @@ public class PrefetchIntervenants {
 			listeParticipants.addAll(dbContext.participantDao.queryForAll());
 			log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
 			
-			// Pas la peine de Récupérer la page de chacun des intervenants
-			// Toutes les infos sont dans les listes ci dessus mais pour CDDVD
-			// ça fait plus propre
+			// Pas la peine de récupérer la page de chacun des intervenants
+			// Toutes les infos sont déjà dans les listes ci dessus 
+			// mais pour CDDVD ça fait plus propre
 			if ( action == ActionKind.CDDVD ) {
 				String pageIntervenantRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/";
 				String pageIntervenantRacineRef = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/";
@@ -179,7 +179,11 @@ public class PrefetchIntervenants {
 						
 						// On stocke la photo dans les Vignettes
 						if( ! prefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_") ) ){
-							String photoURL = URLEncoder.encode(participant.getCleURLPhotoParticipant(),"UTF-8");
+							//String photoURL = URLEncoder.encode(participant.getCleURLPhotoParticipant(),"UTF-8");
+							String photoURL = participant.getCleURLPhotoParticipant();
+							photoURL = photoURL.replace(" ", "%20");
+							photoURL = photoURL.replace("é", "%E9").replace("è", "%E8");
+							photoURL = photoURL.replace("É", "%C9").replace("È", "%C8");
 							log.debug("doMain() - photoURL : "+photoURL);
 							
 							if (prefetchTools.getFichierFromUrl(Constants.SITE_RACINE_URL+photoURL,

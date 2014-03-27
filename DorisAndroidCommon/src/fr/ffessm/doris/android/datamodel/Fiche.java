@@ -955,7 +955,7 @@ public class Fiche {
 	
 	public Boolean updateFromFiche(Fiche ficheUpdated){
 		/* TODO : Mettre à jour les listes
-		* - des Contenues : SectionFiche
+		* - des Contenus : SectionFiche
 		* - des Photos
 		* - Autres Dénominations
 		* - Intervenants

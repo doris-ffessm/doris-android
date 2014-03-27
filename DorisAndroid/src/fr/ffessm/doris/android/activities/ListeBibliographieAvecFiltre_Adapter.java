@@ -206,7 +206,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
 	    	}
 	    	else{
 	    		// pas préchargée en local pour l'instant, cherche sur internet
-	    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLPhotoParticipant() : "+Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+entry.getCleURLIllustration());
+	    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLIllustration() : "+Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+entry.getCleURLIllustration());
 	    		String urlPhoto = entry.getCleURLIllustration().replace("gestionenligne/photos_biblio_moy/", "");
 	    		urlPhoto= Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+urlPhoto;
 	    		Picasso.with(context)
