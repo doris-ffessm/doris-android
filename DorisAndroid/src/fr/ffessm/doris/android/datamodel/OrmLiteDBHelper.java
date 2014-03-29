@@ -372,7 +372,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 			helper.dorisDB_metadataDao = getDao(DorisDB_metadata.class);
 			helper.entreeBibliographieDao = getDao(EntreeBibliographie.class);
 		helper.fiches_ZonesGeographiquesDao = getDao(Fiches_ZonesGeographiques.class);
-		helper.fiches_DefinitionsGlossaireDao = getDao(Fiches_DefinitionsGlossaire.class);
+		
 		} catch (SQLException e) {
 			Log.e(OrmLiteDBHelper.class.getName(), "Can't get ", e);
 		}
