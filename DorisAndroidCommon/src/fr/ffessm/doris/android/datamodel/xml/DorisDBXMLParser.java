@@ -76,9 +76,11 @@ public class DorisDBXMLParser {
 	List<ZoneGeographique> zoneGeographiques = new ArrayList<ZoneGeographique>();
 	List<ZoneObservation> zoneObservations = new ArrayList<ZoneObservation>();
 	List<Groupe> groupes = new ArrayList<Groupe>();
-	List<DefinitionGlossaire> definitionGlossaires = new ArrayList<DefinitionGlossaire>();
 	List<DorisDB_metadata> dorisDB_metadatas = new ArrayList<DorisDB_metadata>();
 	List<EntreeBibliographie> entreeBibliographies = new ArrayList<EntreeBibliographie>();
+	List<Classification> classifications = new ArrayList<Classification>();
+	List<DefinitionGlossaire> definitionGlossaires = new ArrayList<DefinitionGlossaire>();
+	List<ClassificationFiche> classificationFiches = new ArrayList<ClassificationFiche>();
 	Set<Fiche> fichesToUpdate = new HashSet<Fiche>();
 	Set<AutreDenomination> autreDenominationsToUpdate = new HashSet<AutreDenomination>();
 	Set<PhotoFiche> photoFichesToUpdate = new HashSet<PhotoFiche>();
@@ -88,9 +90,11 @@ public class DorisDBXMLParser {
 	Set<ZoneGeographique> zoneGeographiquesToUpdate = new HashSet<ZoneGeographique>();
 	Set<ZoneObservation> zoneObservationsToUpdate = new HashSet<ZoneObservation>();
 	Set<Groupe> groupesToUpdate = new HashSet<Groupe>();
-	Set<DefinitionGlossaire> definitionGlossairesToUpdate = new HashSet<DefinitionGlossaire>();
 	Set<DorisDB_metadata> dorisDB_metadatasToUpdate = new HashSet<DorisDB_metadata>();
 	Set<EntreeBibliographie> entreeBibliographiesToUpdate = new HashSet<EntreeBibliographie>();
+	Set<Classification> classificationsToUpdate = new HashSet<Classification>();
+	Set<DefinitionGlossaire> definitionGlossairesToUpdate = new HashSet<DefinitionGlossaire>();
+	Set<ClassificationFiche> classificationFichesToUpdate = new HashSet<ClassificationFiche>();
 	Hashtable<String, Fiche> xmlId2Fiche = new Hashtable<String, Fiche>();
 	Hashtable<String, AutreDenomination> xmlId2AutreDenomination = new Hashtable<String, AutreDenomination>();
 	Hashtable<String, PhotoFiche> xmlId2PhotoFiche = new Hashtable<String, PhotoFiche>();
@@ -100,9 +104,11 @@ public class DorisDBXMLParser {
 	Hashtable<String, ZoneGeographique> xmlId2ZoneGeographique = new Hashtable<String, ZoneGeographique>();
 	Hashtable<String, ZoneObservation> xmlId2ZoneObservation = new Hashtable<String, ZoneObservation>();
 	Hashtable<String, Groupe> xmlId2Groupe = new Hashtable<String, Groupe>();
-	Hashtable<String, DefinitionGlossaire> xmlId2DefinitionGlossaire = new Hashtable<String, DefinitionGlossaire>();
 	Hashtable<String, DorisDB_metadata> xmlId2DorisDB_metadata = new Hashtable<String, DorisDB_metadata>();
 	Hashtable<String, EntreeBibliographie> xmlId2EntreeBibliographie = new Hashtable<String, EntreeBibliographie>();
+	Hashtable<String, Classification> xmlId2Classification = new Hashtable<String, Classification>();
+	Hashtable<String, DefinitionGlossaire> xmlId2DefinitionGlossaire = new Hashtable<String, DefinitionGlossaire>();
+	Hashtable<String, ClassificationFiche> xmlId2ClassificationFiche = new Hashtable<String, ClassificationFiche>();
 
 	// minimize memory footprint by using static Strings
     public static final String ID_STRING = "id";
@@ -125,12 +131,16 @@ public class DorisDBXMLParser {
 	public static final String DATACLASSIFIER_ZONEOBSERVATION  = "ZONEOBSERVATION";
 	public static final String DATACLASSIFIER_GROUPES = "GROUPES";
 	public static final String DATACLASSIFIER_GROUPE  = "GROUPE";
-	public static final String DATACLASSIFIER_DEFINITIONGLOSSAIRES = "DEFINITIONGLOSSAIRES";
-	public static final String DATACLASSIFIER_DEFINITIONGLOSSAIRE  = "DEFINITIONGLOSSAIRE";
 	public static final String DATACLASSIFIER_DORISDB_METADATAS = "DORISDB_METADATAS";
 	public static final String DATACLASSIFIER_DORISDB_METADATA  = "DORISDB_METADATA";
 	public static final String DATACLASSIFIER_ENTREEBIBLIOGRAPHIES = "ENTREEBIBLIOGRAPHIES";
 	public static final String DATACLASSIFIER_ENTREEBIBLIOGRAPHIE  = "ENTREEBIBLIOGRAPHIE";
+	public static final String DATACLASSIFIER_CLASSIFICATIONS = "CLASSIFICATIONS";
+	public static final String DATACLASSIFIER_CLASSIFICATION  = "CLASSIFICATION";
+	public static final String DATACLASSIFIER_DEFINITIONGLOSSAIRES = "DEFINITIONGLOSSAIRES";
+	public static final String DATACLASSIFIER_DEFINITIONGLOSSAIRE  = "DEFINITIONGLOSSAIRE";
+	public static final String DATACLASSIFIER_CLASSIFICATIONFICHES = "CLASSIFICATIONFICHES";
+	public static final String DATACLASSIFIER_CLASSIFICATIONFICHE  = "CLASSIFICATIONFICHE";
 
 	public static final String DATAATT_FICHE_nomScientifique = "nomScientifique";
 	public static final String DATAATT_FICHE_NOMSCIENTIFIQUE = "NOMSCIENTIFIQUE";
@@ -158,7 +168,7 @@ public class DorisDBXMLParser {
 	public static final String DATAREF_FICHE_autresDenominations = "autresDenominations";
 	public static final String DATAREF_FICHE_groupe = "groupe";
 	public static final String DATAREF_FICHE_intervenants = "intervenants";
-	public static final String DATAREF_FICHE_definitionsUtilisees = "definitionsUtilisees";
+	public static final String DATAREF_FICHE_classification = "classification";
 	public static final String DATAATT_AUTREDENOMINATION_denomination = "denomination";
 	public static final String DATAATT_AUTREDENOMINATION_DENOMINATION = "DENOMINATION";
 	public static final String DATAATT_AUTREDENOMINATION_langue = "langue";
@@ -221,15 +231,6 @@ public class DorisDBXMLParser {
 	public static final String DATAATT_GROUPE_NOMIMAGE = "NOMIMAGE";
 	public static final String DATAREF_GROUPE_groupesFils = "groupesFils";
 	public static final String DATAREF_GROUPE_groupePere = "groupePere";
-	public static final String DATAATT_DEFINITIONGLOSSAIRE_numeroDoris = "numeroDoris";
-	public static final String DATAATT_DEFINITIONGLOSSAIRE_NUMERODORIS = "NUMERODORIS";
-	public static final String DATAATT_DEFINITIONGLOSSAIRE_terme = "terme";
-	public static final String DATAATT_DEFINITIONGLOSSAIRE_TERME = "TERME";
-	public static final String DATAATT_DEFINITIONGLOSSAIRE_definition = "definition";
-	public static final String DATAATT_DEFINITIONGLOSSAIRE_DEFINITION = "DEFINITION";
-	public static final String DATAATT_DEFINITIONGLOSSAIRE_cleURLIllustration = "cleURLIllustration";
-	public static final String DATAATT_DEFINITIONGLOSSAIRE_CLEURLILLUSTRATION = "CLEURLILLUSTRATION";
-	public static final String DATAREF_DEFINITIONGLOSSAIRE_fichesConcernees = "fichesConcernees";
 	public static final String DATAATT_DORISDB_METADATA_dateBase = "dateBase";
 	public static final String DATAATT_DORISDB_METADATA_DATEBASE = "DATEBASE";
 	public static final String DATAATT_DORISDB_METADATA_dateMAJPartielle = "dateMAJPartielle";
@@ -248,6 +249,27 @@ public class DorisDBXMLParser {
 	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_CLEURLILLUSTRATION = "CLEURLILLUSTRATION";
 	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_textePourRecherche = "textePourRecherche";
 	public static final String DATAATT_ENTREEBIBLIOGRAPHIE_TEXTEPOURRECHERCHE = "TEXTEPOURRECHERCHE";
+	public static final String DATAATT_CLASSIFICATION_niveau = "niveau";
+	public static final String DATAATT_CLASSIFICATION_NIVEAU = "NIVEAU";
+	public static final String DATAATT_CLASSIFICATION_termeScientifique = "termeScientifique";
+	public static final String DATAATT_CLASSIFICATION_TERMESCIENTIFIQUE = "TERMESCIENTIFIQUE";
+	public static final String DATAATT_CLASSIFICATION_termeFrancais = "termeFrancais";
+	public static final String DATAATT_CLASSIFICATION_TERMEFRANCAIS = "TERMEFRANCAIS";
+	public static final String DATAATT_CLASSIFICATION_descriptif = "descriptif";
+	public static final String DATAATT_CLASSIFICATION_DESCRIPTIF = "DESCRIPTIF";
+	public static final String DATAREF_CLASSIFICATION_classificationFiche = "classificationFiche";
+	public static final String DATAATT_DEFINITIONGLOSSAIRE_numeroDoris = "numeroDoris";
+	public static final String DATAATT_DEFINITIONGLOSSAIRE_NUMERODORIS = "NUMERODORIS";
+	public static final String DATAATT_DEFINITIONGLOSSAIRE_terme = "terme";
+	public static final String DATAATT_DEFINITIONGLOSSAIRE_TERME = "TERME";
+	public static final String DATAATT_DEFINITIONGLOSSAIRE_definition = "definition";
+	public static final String DATAATT_DEFINITIONGLOSSAIRE_DEFINITION = "DEFINITION";
+	public static final String DATAATT_DEFINITIONGLOSSAIRE_cleURLIllustration = "cleURLIllustration";
+	public static final String DATAATT_DEFINITIONGLOSSAIRE_CLEURLILLUSTRATION = "CLEURLILLUSTRATION";
+	public static final String DATAATT_CLASSIFICATIONFICHE_numOrdre = "numOrdre";
+	public static final String DATAATT_CLASSIFICATIONFICHE_NUMORDRE = "NUMORDRE";
+	public static final String DATAREF_CLASSIFICATIONFICHE_classification = "classification";
+	public static final String DATAREF_CLASSIFICATIONFICHE_fiche = "fiche";
 
 
 
@@ -313,10 +335,6 @@ public class DorisDBXMLParser {
 				groupes = readGroupes(parser,DATACLASSIFIER_GROUPES);
 	            // groupes.addAll(readGroupes(parser,DATACLASSIFIER_GROUPES));
 	        } else 
-		 	if (name.equals(DATACLASSIFIER_DEFINITIONGLOSSAIRES)) {
-				definitionGlossaires = readDefinitionGlossaires(parser,DATACLASSIFIER_DEFINITIONGLOSSAIRES);
-	            // definitionGlossaires.addAll(readDefinitionGlossaires(parser,DATACLASSIFIER_DEFINITIONGLOSSAIRES));
-	        } else 
 		 	if (name.equals(DATACLASSIFIER_DORISDB_METADATAS)) {
 				dorisDB_metadatas = readDorisDB_metadatas(parser,DATACLASSIFIER_DORISDB_METADATAS);
 	            // dorisDB_metadatas.addAll(readDorisDB_metadatas(parser,DATACLASSIFIER_DORISDB_METADATAS));
@@ -324,6 +342,18 @@ public class DorisDBXMLParser {
 		 	if (name.equals(DATACLASSIFIER_ENTREEBIBLIOGRAPHIES)) {
 				entreeBibliographies = readEntreeBibliographies(parser,DATACLASSIFIER_ENTREEBIBLIOGRAPHIES);
 	            // entreeBibliographies.addAll(readEntreeBibliographies(parser,DATACLASSIFIER_ENTREEBIBLIOGRAPHIES));
+	        } else 
+		 	if (name.equals(DATACLASSIFIER_CLASSIFICATIONS)) {
+				classifications = readClassifications(parser,DATACLASSIFIER_CLASSIFICATIONS);
+	            // classifications.addAll(readClassifications(parser,DATACLASSIFIER_CLASSIFICATIONS));
+	        } else 
+		 	if (name.equals(DATACLASSIFIER_DEFINITIONGLOSSAIRES)) {
+				definitionGlossaires = readDefinitionGlossaires(parser,DATACLASSIFIER_DEFINITIONGLOSSAIRES);
+	            // definitionGlossaires.addAll(readDefinitionGlossaires(parser,DATACLASSIFIER_DEFINITIONGLOSSAIRES));
+	        } else 
+		 	if (name.equals(DATACLASSIFIER_CLASSIFICATIONFICHES)) {
+				classificationFiches = readClassificationFiches(parser,DATACLASSIFIER_CLASSIFICATIONFICHES);
+	            // classificationFiches.addAll(readClassificationFiches(parser,DATACLASSIFIER_CLASSIFICATIONFICHES));
 	        } else 
 			{
 	            skip(parser);
@@ -513,26 +543,6 @@ public class DorisDBXMLParser {
 		return entries;
 	}
 	/**
-     * parser for a group of DefinitionGlossaire
-     */
-	List<DefinitionGlossaire> readDefinitionGlossaires(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
-		ArrayList<DefinitionGlossaire> entries = new ArrayList<DefinitionGlossaire>();
-		parser.require(XmlPullParser.START_TAG, ns, containingTag);
-	    while (parser.next() != XmlPullParser.END_TAG) {
-	        if (parser.getEventType() != XmlPullParser.START_TAG) {
-	            continue;
-	        }
-	        String name = parser.getName();
-			if (name.equals(DATACLASSIFIER_DEFINITIONGLOSSAIRE)) {
-	            entries.add(readDefinitionGlossaire(parser));
-	        } else {
-	            skip(parser);
-	        }
-	    }
-		entries.trimToSize();
-		return entries;
-	}
-	/**
      * parser for a group of DorisDB_metadata
      */
 	List<DorisDB_metadata> readDorisDB_metadatas(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
@@ -565,6 +575,66 @@ public class DorisDBXMLParser {
 	        String name = parser.getName();
 			if (name.equals(DATACLASSIFIER_ENTREEBIBLIOGRAPHIE)) {
 	            entries.add(readEntreeBibliographie(parser));
+	        } else {
+	            skip(parser);
+	        }
+	    }
+		entries.trimToSize();
+		return entries;
+	}
+	/**
+     * parser for a group of Classification
+     */
+	List<Classification> readClassifications(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
+		ArrayList<Classification> entries = new ArrayList<Classification>();
+		parser.require(XmlPullParser.START_TAG, ns, containingTag);
+	    while (parser.next() != XmlPullParser.END_TAG) {
+	        if (parser.getEventType() != XmlPullParser.START_TAG) {
+	            continue;
+	        }
+	        String name = parser.getName();
+			if (name.equals(DATACLASSIFIER_CLASSIFICATION)) {
+	            entries.add(readClassification(parser));
+	        } else {
+	            skip(parser);
+	        }
+	    }
+		entries.trimToSize();
+		return entries;
+	}
+	/**
+     * parser for a group of DefinitionGlossaire
+     */
+	List<DefinitionGlossaire> readDefinitionGlossaires(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
+		ArrayList<DefinitionGlossaire> entries = new ArrayList<DefinitionGlossaire>();
+		parser.require(XmlPullParser.START_TAG, ns, containingTag);
+	    while (parser.next() != XmlPullParser.END_TAG) {
+	        if (parser.getEventType() != XmlPullParser.START_TAG) {
+	            continue;
+	        }
+	        String name = parser.getName();
+			if (name.equals(DATACLASSIFIER_DEFINITIONGLOSSAIRE)) {
+	            entries.add(readDefinitionGlossaire(parser));
+	        } else {
+	            skip(parser);
+	        }
+	    }
+		entries.trimToSize();
+		return entries;
+	}
+	/**
+     * parser for a group of ClassificationFiche
+     */
+	List<ClassificationFiche> readClassificationFiches(XmlPullParser parser, final String containingTag)  throws XmlPullParserException, IOException{
+		ArrayList<ClassificationFiche> entries = new ArrayList<ClassificationFiche>();
+		parser.require(XmlPullParser.START_TAG, ns, containingTag);
+	    while (parser.next() != XmlPullParser.END_TAG) {
+	        if (parser.getEventType() != XmlPullParser.START_TAG) {
+	            continue;
+	        }
+	        String name = parser.getName();
+			if (name.equals(DATACLASSIFIER_CLASSIFICATIONFICHE)) {
+	            entries.add(readClassificationFiche(parser));
 	        } else {
 	            skip(parser);
 	        }
@@ -647,7 +717,7 @@ public class DorisDBXMLParser {
 				parser.require(XmlPullParser.END_TAG, ns, DATAREF_FICHE_groupe);	    
 	        } else
 					// TODO deal with ref intervenants
-					// TODO deal with ref definitionsUtilisees
+					// TODO deal with ref classification
 	        {
 	            skip(parser);
 	        }
@@ -959,44 +1029,6 @@ public class DorisDBXMLParser {
 
 		return result;
 	}
-	DefinitionGlossaire readDefinitionGlossaire(XmlPullParser parser)  throws XmlPullParserException, IOException{
-		DefinitionGlossaire result = new DefinitionGlossaire();
-
-		parser.require(XmlPullParser.START_TAG, ns, DATACLASSIFIER_DEFINITIONGLOSSAIRE);
-    	String currentTagName = parser.getName();
-    			
-    	xmlId2DefinitionGlossaire.put(parser.getAttributeValue(null, ID_STRING),result);		
-		while (parser.next() != XmlPullParser.END_TAG) {
-	        if (parser.getEventType() != XmlPullParser.START_TAG) {
-	            continue;
-	        }
-	        currentTagName = parser.getName();
-			//TODO if (currentTagName.equals(DATAATT_DEFINITIONGLOSSAIRE_NUMERODORIS)) {
-	        //    title = readTitle(parser);
-	        //} else	
-			if (currentTagName.equals(DATAATT_DEFINITIONGLOSSAIRE_terme)) {
-				parser.require(XmlPullParser.START_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_terme);
-	            result.setTerme(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_terme);
-	        } else
-			if (currentTagName.equals(DATAATT_DEFINITIONGLOSSAIRE_definition)) {
-				parser.require(XmlPullParser.START_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_definition);
-	            result.setDefinition(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_definition);
-	        } else
-			if (currentTagName.equals(DATAATT_DEFINITIONGLOSSAIRE_cleURLIllustration)) {
-				parser.require(XmlPullParser.START_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_cleURLIllustration);
-	            result.setCleURLIllustration(readText(parser));
-				parser.require(XmlPullParser.END_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_cleURLIllustration);
-	        } else
-					// TODO deal with ref fichesConcernees
-	        {
-	            skip(parser);
-	        }
-	    }
-
-		return result;
-	}
 	DorisDB_metadata readDorisDB_metadata(XmlPullParser parser)  throws XmlPullParserException, IOException{
 		DorisDB_metadata result = new DorisDB_metadata();
 
@@ -1070,6 +1102,117 @@ public class DorisDBXMLParser {
 				parser.require(XmlPullParser.START_TAG, ns, DATAATT_ENTREEBIBLIOGRAPHIE_textePourRecherche);
 	            result.setTextePourRecherche(readText(parser));
 				parser.require(XmlPullParser.END_TAG, ns, DATAATT_ENTREEBIBLIOGRAPHIE_textePourRecherche);
+	        } else
+	        {
+	            skip(parser);
+	        }
+	    }
+
+		return result;
+	}
+	Classification readClassification(XmlPullParser parser)  throws XmlPullParserException, IOException{
+		Classification result = new Classification();
+
+		parser.require(XmlPullParser.START_TAG, ns, DATACLASSIFIER_CLASSIFICATION);
+    	String currentTagName = parser.getName();
+    			
+    	xmlId2Classification.put(parser.getAttributeValue(null, ID_STRING),result);		
+		while (parser.next() != XmlPullParser.END_TAG) {
+	        if (parser.getEventType() != XmlPullParser.START_TAG) {
+	            continue;
+	        }
+	        currentTagName = parser.getName();
+			if (currentTagName.equals(DATAATT_CLASSIFICATION_niveau)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_CLASSIFICATION_niveau);
+	            result.setNiveau(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_CLASSIFICATION_niveau);
+	        } else
+			if (currentTagName.equals(DATAATT_CLASSIFICATION_termeScientifique)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_CLASSIFICATION_termeScientifique);
+	            result.setTermeScientifique(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_CLASSIFICATION_termeScientifique);
+	        } else
+			if (currentTagName.equals(DATAATT_CLASSIFICATION_termeFrancais)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_CLASSIFICATION_termeFrancais);
+	            result.setTermeFrancais(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_CLASSIFICATION_termeFrancais);
+	        } else
+			if (currentTagName.equals(DATAATT_CLASSIFICATION_descriptif)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_CLASSIFICATION_descriptif);
+	            result.setDescriptif(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_CLASSIFICATION_descriptif);
+	        } else
+					// TODO deal with ref classificationFiche
+	        {
+	            skip(parser);
+	        }
+	    }
+
+		return result;
+	}
+	DefinitionGlossaire readDefinitionGlossaire(XmlPullParser parser)  throws XmlPullParserException, IOException{
+		DefinitionGlossaire result = new DefinitionGlossaire();
+
+		parser.require(XmlPullParser.START_TAG, ns, DATACLASSIFIER_DEFINITIONGLOSSAIRE);
+    	String currentTagName = parser.getName();
+    			
+    	xmlId2DefinitionGlossaire.put(parser.getAttributeValue(null, ID_STRING),result);		
+		while (parser.next() != XmlPullParser.END_TAG) {
+	        if (parser.getEventType() != XmlPullParser.START_TAG) {
+	            continue;
+	        }
+	        currentTagName = parser.getName();
+			//TODO if (currentTagName.equals(DATAATT_DEFINITIONGLOSSAIRE_NUMERODORIS)) {
+	        //    title = readTitle(parser);
+	        //} else	
+			if (currentTagName.equals(DATAATT_DEFINITIONGLOSSAIRE_terme)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_terme);
+	            result.setTerme(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_terme);
+	        } else
+			if (currentTagName.equals(DATAATT_DEFINITIONGLOSSAIRE_definition)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_definition);
+	            result.setDefinition(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_definition);
+	        } else
+			if (currentTagName.equals(DATAATT_DEFINITIONGLOSSAIRE_cleURLIllustration)) {
+				parser.require(XmlPullParser.START_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_cleURLIllustration);
+	            result.setCleURLIllustration(readText(parser));
+				parser.require(XmlPullParser.END_TAG, ns, DATAATT_DEFINITIONGLOSSAIRE_cleURLIllustration);
+	        } else
+	        {
+	            skip(parser);
+	        }
+	    }
+
+		return result;
+	}
+	ClassificationFiche readClassificationFiche(XmlPullParser parser)  throws XmlPullParserException, IOException{
+		ClassificationFiche result = new ClassificationFiche();
+
+		parser.require(XmlPullParser.START_TAG, ns, DATACLASSIFIER_CLASSIFICATIONFICHE);
+    	String currentTagName = parser.getName();
+    			
+    	xmlId2ClassificationFiche.put(parser.getAttributeValue(null, ID_STRING),result);		
+		while (parser.next() != XmlPullParser.END_TAG) {
+	        if (parser.getEventType() != XmlPullParser.START_TAG) {
+	            continue;
+	        }
+	        currentTagName = parser.getName();
+			//TODO if (currentTagName.equals(DATAATT_CLASSIFICATIONFICHE_NUMORDRE)) {
+	        //    title = readTitle(parser);
+	        //} else	
+			if (currentTagName.equals(DATAREF_CLASSIFICATIONFICHE_classification)) {	
+				parser.require(XmlPullParser.START_TAG, ns, DATAREF_CLASSIFICATIONFICHE_classification);
+	            String id = readText(parser);
+				refCommands.add(new ClassificationFiche_setClassification_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, DATAREF_CLASSIFICATIONFICHE_classification);	    
+	        } else
+			if (currentTagName.equals(DATAREF_CLASSIFICATIONFICHE_fiche)) {	
+				parser.require(XmlPullParser.START_TAG, ns, DATAREF_CLASSIFICATIONFICHE_fiche);
+	            String id = readText(parser);
+				refCommands.add(new ClassificationFiche_setFiche_RefCommand(result,id, this));
+				parser.require(XmlPullParser.END_TAG, ns, DATAREF_CLASSIFICATIONFICHE_fiche);	    
 	        } else
 	        {
 	            skip(parser);
@@ -1186,7 +1329,7 @@ public class DorisDBXMLParser {
 		}
 	}
 	// class Fiche_addIntervenants_RefCommand extends RefCommand{
-	// class Fiche_addDefinitionsUtilisees_RefCommand extends RefCommand{
+	// class Fiche_addClassification_RefCommand extends RefCommand{
 	class AutreDenomination_setFiche_RefCommand extends RefCommand{
 		AutreDenomination self;
 		String referencedElementID;
@@ -1342,7 +1485,45 @@ public class DorisDBXMLParser {
 			groupesToUpdate.add(self);
 		}
 	}
-	// class DefinitionGlossaire_addFichesConcernees_RefCommand extends RefCommand{
+	// class Classification_addClassificationFiche_RefCommand extends RefCommand{
+	class ClassificationFiche_setClassification_RefCommand extends RefCommand{
+		ClassificationFiche self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public ClassificationFiche_setClassification_RefCommand(ClassificationFiche self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setClassification(parser.xmlId2Classification.get(referencedElementID));
+			classificationFichesToUpdate.add(self);
+		}
+	}
+	class ClassificationFiche_setFiche_RefCommand extends RefCommand{
+		ClassificationFiche self;
+		String referencedElementID;
+		DorisDBXMLParser parser;
+		
+		public ClassificationFiche_setFiche_RefCommand(ClassificationFiche self,
+				String referencedElementID, DorisDBXMLParser parser) {
+			super();
+			this.self = self;
+			this.referencedElementID = referencedElementID;
+			this.parser = parser;
+		}
+
+		@Override
+		public void run() {
+			self.setFiche(parser.xmlId2Fiche.get(referencedElementID));
+			classificationFichesToUpdate.add(self);
+		}
+	}
 
 	// ---------- Additional helper methods
 	private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {

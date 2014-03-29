@@ -96,30 +96,44 @@ public class EntreeBibliographie {
 	
 
 	/** numéro de l'entrée sur le site Doris */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected int numeroDoris;
 
 	/** Titre du Livre, Revue, etc. */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String titre;
 
 	/** Auteur(s) */ 
-	@DatabaseField(dataType = com.j256.ormlite.field.DataType.LONG_STRING)
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	@DatabaseField
 	protected java.lang.String auteurs;
 
 	/** Année de Parution */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String annee;
 
 	/** Détails comme l'édition, etc. */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String details;
 
 	/** URL de l'illustration éventuelle de l'entrée bibliographique */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String cleURLIllustration;
 
 	/** Permet de Rechercher par Auteurs et Titre */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String textePourRecherche;
 	

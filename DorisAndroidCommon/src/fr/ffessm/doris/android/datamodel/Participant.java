@@ -94,27 +94,40 @@ public class Participant {
 	 */
 	
 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String nom;
 
 	/** identifiant du participant sur le site Doris */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected int numeroParticipant;
 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String cleURLPhotoParticipant;
 
 	/** Liste des ParticipantKind : Rédacteur, Relecteur, Responsable, etc. */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String fonctions;
 
 	/** Texte de Description du Participant */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String description;
 	
 
+	// NOT Implemented non SQLite collection reference intervenantFiches;
+	// Start of user code intervenantFiches - Permet de ne pas perdre Implémentation Manuelle de : 
 	@ForeignCollectionField(eager = false, foreignFieldName = "participant")
 	protected ForeignCollection<IntervenantFiche> intervenantFiches;
+	// End of user code
 
 	// Start of user code Participant additional user properties
 	

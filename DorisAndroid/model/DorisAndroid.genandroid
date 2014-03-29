@@ -1,102 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genandroid:AndroidProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:genandroid="http://genandroid/1.0" name="DorisAndroid" packagePrefix="fr.ffessm.doris.android" fileHeader="*********************************************************************&#xD;&#xA; * Licence CeCILL-B&#xD;&#xA; * *********************************************************************&#xD;&#xA; * Copyright (c) 2012-2013 - FFESSM&#xD;&#xA; * Auteurs : Guillaume Mo &lt;gmo7942@gmail.com>&#xD;&#xA; *           Didier Vojtisek &lt;dvojtise@gmail.com>&#xD;&#xA; * *********************************************************************&#xD;&#xA;&#xD;&#xA;Ce logiciel est un programme informatique servant à afficher de manière &#xD;&#xA;ergonomique sur un terminal Android les fiches du site : doris.ffessm.fr. &#xD;&#xA;&#xD;&#xA;Les images, logos et textes restent la propriété de leurs auteurs, cf. : &#xD;&#xA;doris.ffessm.fr.&#xD;&#xA;&#xD;&#xA;Ce logiciel est régi par la licence CeCILL-B soumise au droit français et&#xD;&#xA;respectant les principes de diffusion des logiciels libres. Vous pouvez&#xD;&#xA;utiliser, modifier et/ou redistribuer ce programme sous les conditions&#xD;&#xA;de la licence CeCILL-B telle que diffusée par le CEA, le CNRS et l'INRIA &#xD;&#xA;sur le site &quot;http://www.cecill.info&quot;.&#xD;&#xA;&#xD;&#xA;En contrepartie de l'accessibilité au code source et des droits de copie,&#xD;&#xA;de modification et de redistribution accordés par cette licence, il n'est&#xD;&#xA;offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,&#xD;&#xA;seule une responsabilité restreinte pèse sur l'auteur du programme,  le&#xD;&#xA;titulaire des droits patrimoniaux et les concédants successifs.&#xD;&#xA;&#xD;&#xA;A cet égard  l'attention de l'utilisateur est attirée sur les risques&#xD;&#xA;associés au chargement,  à l'utilisation,  à la modification et/ou au&#xD;&#xA;développement et à la reproduction du logiciel par l'utilisateur étant &#xD;&#xA;donné sa spécificité de logiciel libre, qui peut le rendre complexe à &#xD;&#xA;manipuler et qui le réserve donc à des développeurs et des professionnels&#xD;&#xA;avertis possédant  des  connaissances  informatiques approfondies.  Les&#xD;&#xA;utilisateurs sont donc invités à charger  et  tester  l'adéquation  du&#xD;&#xA;logiciel à leurs besoins dans des conditions permettant d'assurer la&#xD;&#xA;sécurité de leurs systèmes et ou de leurs données et, plus généralement, &#xD;&#xA;à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. &#xD;&#xA;&#xD;&#xA;Le fait que vous puissiez accéder à cet en-tête signifie que vous avez &#xD;&#xA;pris connaissance de la licence CeCILL-B, et que vous en avez accepté les&#xD;&#xA;termes.&#xD;&#xA;* *********************************************************************">
   <dataModel name="DorisDB">
-    <dataClasses xsi:type="genandroid:DataClass" name="Fiche" documentation="Fiche Doris, donne accés aux données de la fiche">
+    <dataClasses xsi:type="genandroid:DataClass" name="Fiche" documentation="Fiche Doris, donne accès aux données de la fiche">
       <dataReferences name="photosFiche" documentation="Liste des photos de la fiche" upperBound="-1" containment="true" opposite="//@dataModel/@dataAssociations.0" type="//@dataModel/@dataClasses.2"/>
       <dataReferences name="zonesGeographiques" documentation="zones géographiques où l'on peut trouver l'élément décrit par la fiche" lowerbound="1" upperBound="-1" opposite="//@dataModel/@dataAssociations.1" type="//@dataModel/@dataClasses.6"/>
       <dataReferences name="zonesObservation" documentation="zones  où l'on peut observer l'élément décrit par la fiche" lowerbound="1" upperBound="-1" opposite="//@dataModel/@dataAssociations.2" type="//@dataModel/@dataClasses.7"/>
       <dataReferences name="contenu" documentation="contenu textuel de la fiche" upperBound="-1" containment="true" opposite="//@dataModel/@dataAssociations.3" type="//@dataModel/@dataClasses.3"/>
       <dataReferences name="photoPrincipale" documentation="Photo par défaut de l'espèce présentée par cette fiche. Elle est aussi présente dans la liste &quot;photosFiche&quot;." type="//@dataModel/@dataClasses.2"/>
       <dataReferences name="autresDenominations" documentation="Liste des autres dénominations de l'espèce présentée sur la fiche." upperBound="-1" containment="true" opposite="//@dataModel/@dataAssociations.4" type="//@dataModel/@dataClasses.1"/>
-      <dataReferences name="groupe" documentation="Permet d'identifier avec le sous-groupe (optionel) le groupe auquel est rattaché la fiche" type="//@dataModel/@dataClasses.8"/>
+      <dataReferences name="groupe" documentation="Permet d'identifier avec le sous-groupe (optionnel) le groupe auquel est rattaché la fiche" type="//@dataModel/@dataClasses.8"/>
       <dataReferences name="intervenants" documentation="intervenants sur une fiche" upperBound="-1" opposite="//@dataModel/@dataAssociations.6" type="//@dataModel/@dataClasses.4"/>
-      <dataReferences name="definitionsUtilisees" documentation="Liste des défintions du glossaire utilisées dans cette fiche" upperBound="-1" opposite="//@dataModel/@dataAssociations.8" type="//@dataModel/@dataClasses.9"/>
-      <dataAttributes name="nomScientifique" type="//@dataModel/@dataClasses.11" simpleXmlType="true"/>
-      <dataAttributes name="nomCommun" type="//@dataModel/@dataClasses.11" simpleXmlType="true"/>
-      <dataAttributes name="numeroFiche" documentation="Numéro de la fiche tel que connu par le site lui même" type="//@dataModel/@dataClasses.13" simpleXmlType="true"/>
-      <dataAttributes name="etatFiche" documentation="Etat Avancement de la fiche &#xD;&#xA;4 : Fiche Publiée - 1, 2, 3 : En cours de Rédaction - 5 : Fiche Proposée" type="//@dataModel/@dataClasses.13" simpleXmlType="true"/>
-      <dataAttributes name="dateCreation" lowerbound="1" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="dateModification" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="numerofichesLiees" documentation="numéros des fiches liées séparé par des point virgules" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="textePourRechercheRapide" documentation="Texte précalculé pour optimiser les recherches (sans accents, sans majuscules) avec autres dénominations" type="//@dataModel/@dataClasses.12"/>
-      <dataAttributes name="pictogrammes" documentation="id des pictogrammes applicables à cette fiche séparés par des points virgules" type="//@dataModel/@dataClasses.11"/>
+      <dataReferences name="classification" documentation="Tableau Phylogénétique" upperBound="-1" opposite="//@dataModel/@dataAssociations.8" type="//@dataModel/@dataClasses.17"/>
+      <dataAttributes name="nomScientifique" type="//@dataModel/@dataClasses.10" simpleXmlType="true"/>
+      <dataAttributes name="nomCommun" type="//@dataModel/@dataClasses.10" simpleXmlType="true"/>
+      <dataAttributes name="numeroFiche" documentation="Numéro de la fiche tel que connu par le site lui même" type="//@dataModel/@dataClasses.12" simpleXmlType="true"/>
+      <dataAttributes name="etatFiche" documentation="Etat Avancement de la fiche &#xD;&#xA;4 : Fiche Publiée - 1, 2, 3 : En cours de Rédaction - 5 : Fiche Proposée" type="//@dataModel/@dataClasses.12" simpleXmlType="true"/>
+      <dataAttributes name="dateCreation" lowerbound="1" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="dateModification" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="numerofichesLiees" documentation="numéros des fiches liées séparé par des point virgules" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="textePourRechercheRapide" documentation="Texte précalculé pour optimiser les recherches (sans accents, sans majuscules) avec autres dénominations" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="pictogrammes" documentation="id des pictogrammes applicables à cette fiche séparés par des points virgules" type="//@dataModel/@dataClasses.10"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="AutreDenomination">
       <dataReferences name="fiche" opposite="//@dataModel/@dataAssociations.4" type="//@dataModel/@dataClasses.0"/>
-      <dataAttributes name="denomination" lowerbound="1" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="langue" documentation="Si renseigné, indique la ou les langues qui utilisent cette dénomination " type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="denomination" lowerbound="1" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="langue" documentation="Si renseigné, indique la ou les langues qui utilisent cette dénomination " type="//@dataModel/@dataClasses.10"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="PhotoFiche">
       <dataReferences name="fiche" lowerbound="1" opposite="//@dataModel/@dataAssociations.0" type="//@dataModel/@dataClasses.0"/>
-      <dataAttributes name="cleURL" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="imageVignette" derived="true" storage="File" type="//@dataModel/@dataClasses.14"/>
-      <dataAttributes name="imageMoyenne" derived="true" storage="File" type="//@dataModel/@dataClasses.14"/>
-      <dataAttributes name="imageGrande" derived="true" storage="File" type="//@dataModel/@dataClasses.14"/>
-      <dataAttributes name="titre" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="description" type="//@dataModel/@dataClasses.12"/>
+      <dataAttributes name="cleURL" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="imageVignette" derived="true" storage="File" type="//@dataModel/@dataClasses.13"/>
+      <dataAttributes name="imageMoyenne" derived="true" storage="File" type="//@dataModel/@dataClasses.13"/>
+      <dataAttributes name="imageGrande" derived="true" storage="File" type="//@dataModel/@dataClasses.13"/>
+      <dataAttributes name="titre" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="description" type="//@dataModel/@dataClasses.11"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="SectionFiche" documentation="Contenu Texte des Fiches">
       <dataReferences name="fiche" opposite="//@dataModel/@dataAssociations.3" type="//@dataModel/@dataClasses.0"/>
-      <dataAttributes name="numOrdre" documentation="Sections Hautes de la Page &lt; 100&#xA;Sections Basses de la Page > 200&#xA;" type="//@dataModel/@dataClasses.13"/>
-      <dataAttributes name="titre" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="texte" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="numOrdre" documentation="Sections Hautes de la Page &lt; 100&#xA;Sections Basses de la Page > 200&#xA;" type="//@dataModel/@dataClasses.12"/>
+      <dataAttributes name="titre" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="texte" type="//@dataModel/@dataClasses.10"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="IntervenantFiche" documentation="Intervenant sur une fiche">
       <dataReferences name="participant" lowerbound="1" opposite="//@dataModel/@dataAssociations.7" type="//@dataModel/@dataClasses.5"/>
       <dataReferences name="fiche" lowerbound="1" opposite="//@dataModel/@dataAssociations.6" type="//@dataModel/@dataClasses.0"/>
-      <dataAttributes name="roleIntervenant" documentation="Type d'intervention sur une fiche" lowerbound="1" type="//@dataModel/@dataClasses.13"/>
+      <dataAttributes name="roleIntervenant" documentation="Type d'intervention sur une fiche" lowerbound="1" type="//@dataModel/@dataClasses.12"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="Participant">
       <dataReferences name="intervenantFiches" upperBound="-1" opposite="//@dataModel/@dataAssociations.7" type="//@dataModel/@dataClasses.4"/>
-      <dataAttributes name="nom" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="numeroParticipant" documentation="identifiant du participant sur le site Doris" lowerbound="1" type="//@dataModel/@dataClasses.13"/>
-      <dataAttributes name="cleURLPhotoParticipant" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="fonctions" documentation="Liste des ParticipantKind : Rédacteur, Relecteur, Responsable, etc." type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="description" documentation="Texte de Description du Participant" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="nom" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="numeroParticipant" documentation="identifiant du participant sur le site Doris" lowerbound="1" type="//@dataModel/@dataClasses.12"/>
+      <dataAttributes name="cleURLPhotoParticipant" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="fonctions" documentation="Liste des ParticipantKind : Rédacteur, Relecteur, Responsable, etc." type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="description" documentation="Texte de Description du Participant" type="//@dataModel/@dataClasses.10"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="ZoneGeographique">
       <dataReferences name="fiches" upperBound="-1" opposite="//@dataModel/@dataAssociations.1" type="//@dataModel/@dataClasses.0"/>
-      <dataAttributes name="nom" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="description" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="nom" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="description" type="//@dataModel/@dataClasses.10"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="ZoneObservation">
       <dataReferences name="fiches" opposite="//@dataModel/@dataAssociations.2" type="//@dataModel/@dataClasses.0"/>
-      <dataAttributes name="nom" upperBound="-1" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="nom" upperBound="-1" type="//@dataModel/@dataClasses.10"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="Groupe" documentation="Groupe correspond aux entités permettant de naviguer par image sur le site web : &#xA;http://doris.ffessm.fr/groupes.asp?numero_fichier=10. Le niveau 0 est la racine du site.">
       <dataReferences name="groupesFils" documentation="Permet de créer ou lire l'arborescence des groupes par récurrence" upperBound="-1" containment="true" opposite="//@dataModel/@dataAssociations.5" type="//@dataModel/@dataClasses.8"/>
       <dataReferences name="groupePere" opposite="//@dataModel/@dataAssociations.5" type="//@dataModel/@dataClasses.8"/>
-      <dataAttributes name="numeroGroupe" documentation="XXX de groupe_numero=XXX dans l'url permettant d'afficher le groupe.&#xA;Certains groupes (de haut niveau) n'ont pas de numéro" type="//@dataModel/@dataClasses.13"/>
-      <dataAttributes name="numeroSousGroupe" documentation="XXX de sousgroupe_numero=XXX dans l'url permettant avec le numero de groupe d'afficher le groupe.&#xA;Seuls certains groupes de plus bas niveau ont le numéro de sous-groupe" type="//@dataModel/@dataClasses.13"/>
-      <dataAttributes name="nomGroupe" lowerbound="1" type="//@dataModel/@dataClasses.11" simpleXmlType="true"/>
-      <dataAttributes name="descriptionGroupe" documentation="Souvent une petite liste d'exemples illustratifs" type="//@dataModel/@dataClasses.11" simpleXmlType="true"/>
-      <dataAttributes name="cleURLImage" documentation="url de base pour les images de ce groupe" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="nomImage" documentation="nom de l'image de ce groupe" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="descriptionDetailleeGroupe" documentation="En haut des pages de groupe, il y a un petit texte expliquant les grandes caractéristques du groupe.&#xA;C'est ce texte." type="//@dataModel/@dataClasses.11" simpleXmlType="true"/>
-    </dataClasses>
-    <dataClasses xsi:type="genandroid:DataClass" name="DefinitionGlossaire" documentation="Entrée pour les définitions du Glossaire">
-      <dataReferences name="fichesConcernees" documentation="Fiches concernées par cette définition (Ie. qui utilise dans leur texte cette définition)" upperBound="-1" opposite="//@dataModel/@dataAssociations.8" type="//@dataModel/@dataClasses.0"/>
-      <dataAttributes name="numeroDoris" documentation="numéro de la définition sur le site Doris" lowerbound="1" type="//@dataModel/@dataClasses.13"/>
-      <dataAttributes name="terme" documentation="terme de l'entrée" lowerbound="1" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="definition" documentation="définition de cette entrée" lowerbound="1" type="//@dataModel/@dataClasses.12"/>
-      <dataAttributes name="cleURLIllustration" documentation="URL de l'illustration éventuelle de la définition" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="numeroGroupe" documentation="XXX de groupe_numero=XXX dans l'url permettant d'afficher le groupe.&#xA;Certains groupes (de haut niveau) n'ont pas de numéro" type="//@dataModel/@dataClasses.12"/>
+      <dataAttributes name="numeroSousGroupe" documentation="XXX de sousgroupe_numero=XXX dans l'url permettant avec le numero de groupe d'afficher le groupe.&#xA;Seuls certains groupes de plus bas niveau ont le numéro de sous-groupe" type="//@dataModel/@dataClasses.12"/>
+      <dataAttributes name="nomGroupe" lowerbound="1" type="//@dataModel/@dataClasses.10" simpleXmlType="true"/>
+      <dataAttributes name="descriptionGroupe" documentation="Souvent une petite liste d'exemples illustratifs" type="//@dataModel/@dataClasses.10" simpleXmlType="true"/>
+      <dataAttributes name="cleURLImage" documentation="url de base pour les images de ce groupe" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="nomImage" documentation="nom de l'image de ce groupe" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="descriptionDetailleeGroupe" documentation="En haut des pages de groupe, il y a un petit texte expliquant les grandes caractéristques du groupe.&#xA;C'est ce texte." type="//@dataModel/@dataClasses.10" simpleXmlType="true"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:DataClass" name="DorisDB_metadata" documentation="données complémentaires sur la base Doris">
-      <dataAttributes name="dateBase" documentation="Date de récupération de la base DORIS" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="dateMAJPartielle" documentation="Date d'une éventuelle mise à jour partielle de la base &#xD;&#xA;(ie. plus récente que la copie fournie avec l'application)" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="dateBase" documentation="Date de récupération de la base DORIS" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="dateMAJPartielle" documentation="Date d'une éventuelle mise à jour partielle de la base &#xD;&#xA;(ie. plus récente que la copie fournie avec l'application)" type="//@dataModel/@dataClasses.10"/>
     </dataClasses>
     <dataClasses xsi:type="genandroid:NativeDataClass" name="String" instanceClassName="java.lang.String"/>
     <dataClasses xsi:type="genandroid:NativeDataClass" name="LongString" instanceClassName="java.lang.String" databaseType="com.j256.ormlite.field.DataType.LONG_STRING"/>
     <dataClasses xsi:type="genandroid:NativeDataClass" name="Integer" instanceClassName="int"/>
     <dataClasses xsi:type="genandroid:NativeDataClass" name="File" instanceClassName="java.io.File"/>
     <dataClasses xsi:type="genandroid:DataClass" name="EntreeBibliographie" documentation="Entrée de la Bibliographie">
-      <dataAttributes name="numeroDoris" documentation="numéro de l'entrée sur le site Doris" lowerbound="1" type="//@dataModel/@dataClasses.13"/>
-      <dataAttributes name="titre" documentation="Titre du Livre, Revue, etc." lowerbound="1" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="auteurs" documentation="Auteur(s)" type="//@dataModel/@dataClasses.12"/>
-      <dataAttributes name="annee" documentation="Année de Parution" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="details" documentation="Détails comme l'édition, etc." type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="cleURLIllustration" documentation="URL de l'illustration éventuelle de l'entrée bibliographique" type="//@dataModel/@dataClasses.11"/>
-      <dataAttributes name="textePourRecherche" documentation="Permet de Rechercher par Auteurs et Titre" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="numeroDoris" documentation="numéro de l'entrée sur le site Doris" lowerbound="1" type="//@dataModel/@dataClasses.12"/>
+      <dataAttributes name="titre" documentation="Titre du Livre, Revue, etc." lowerbound="1" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="auteurs" documentation="Auteur(s)" type="//@dataModel/@dataClasses.11"/>
+      <dataAttributes name="annee" documentation="Année de Parution" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="details" documentation="Détails comme l'édition, etc." type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="cleURLIllustration" documentation="URL de l'illustration éventuelle de l'entrée bibliographique" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="textePourRecherche" documentation="Permet de Rechercher par Auteurs et Titre" type="//@dataModel/@dataClasses.10"/>
+    </dataClasses>
+    <dataClasses xsi:type="genandroid:DataClass" name="Classification" documentation="Liste des Embranchements, Ordres, Classes, etc et de leur description">
+      <dataReferences name="classificationFiche" upperBound="-1" opposite="//@dataModel/@dataAssociations.9" type="//@dataModel/@dataClasses.17"/>
+      <dataAttributes name="niveau" documentation="Niveau de la Classification = Embranchement, Groupe, etc" lowerbound="1" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="termeScientifique" documentation="Terme Scientifique (international)&#xA;C'est lui qui permet d'identifier la Classification" lowerbound="1" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="termeFrancais" documentation="Terme Français&#xA;(il n'est pas toujours renseigné)" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="descriptif" documentation="Texte descriptif de la Classification" type="//@dataModel/@dataClasses.10"/>
+    </dataClasses>
+    <dataClasses xsi:type="genandroid:DataClass" name="DefinitionGlossaire" documentation="Entrée pour les définitions du Glossaire">
+      <dataAttributes name="numeroDoris" documentation="numéro de la définition sur le site Doris" lowerbound="1" type="//@dataModel/@dataClasses.12"/>
+      <dataAttributes name="terme" documentation="terme de l'entrée" lowerbound="1" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="definition" documentation="définition de cette entrée" lowerbound="1" type="//@dataModel/@dataClasses.10"/>
+      <dataAttributes name="cleURLIllustration" documentation="Liste des URL des illustrations éventuelles de la définition (séparateur : ;)" type="//@dataModel/@dataClasses.10"/>
+    </dataClasses>
+    <dataClasses xsi:type="genandroid:DataClass" name="ClassificationFiche" documentation="Classification sur une fiche">
+      <dataReferences name="classification" lowerbound="1" opposite="//@dataModel/@dataAssociations.9" type="//@dataModel/@dataClasses.15"/>
+      <dataReferences name="fiche" lowerbound="1" opposite="//@dataModel/@dataAssociations.8" type="//@dataModel/@dataClasses.0"/>
+      <dataAttributes name="numOrdre" documentation="Permet d'afficher le tableau dans l'ordre du site directement" lowerbound="1" type="//@dataModel/@dataClasses.12"/>
     </dataClasses>
     <dataAssociations name="Fiche_Photos" references="//@dataModel/@dataClasses.2/@dataReferences.0 //@dataModel/@dataClasses.0/@dataReferences.0"/>
     <dataAssociations name="Fiches_ZonesGeographiques" references="//@dataModel/@dataClasses.6/@dataReferences.0 //@dataModel/@dataClasses.0/@dataReferences.1"/>
@@ -106,35 +117,35 @@
     <dataAssociations name="Groupe_Pere_Groupe_Fils" references="//@dataModel/@dataClasses.8/@dataReferences.0 //@dataModel/@dataClasses.8/@dataReferences.1"/>
     <dataAssociations name="Fiche_IntervenantFiche" references="//@dataModel/@dataClasses.4/@dataReferences.1 //@dataModel/@dataClasses.0/@dataReferences.7"/>
     <dataAssociations name="IntervenantFiche_Participant" references="//@dataModel/@dataClasses.5/@dataReferences.0 //@dataModel/@dataClasses.4/@dataReferences.0"/>
-    <dataAssociations name="Fiches_DefinitionsGlossaire" documentation="table permettant de retrouver plus vite les fiches concernées par une définition et vice versa." references="//@dataModel/@dataClasses.0/@dataReferences.8 //@dataModel/@dataClasses.9/@dataReferences.0"/>
+    <dataAssociations name="Fiche_ClassificationFiche" documentation="Sur chaque Fiche il y a un tableau Phylogénétique" references="//@dataModel/@dataClasses.17/@dataReferences.1 //@dataModel/@dataClasses.0/@dataReferences.8"/>
+    <dataAssociations name="ClassificationFiche_Classification" documentation="Les tableaux Phylogénétiques de chaque fiche pointent vers un dictionnaire des Classification, ceci permet de ne pas répèter à chaque fois la description longue" references="//@dataModel/@dataClasses.15/@dataReferences.0 //@dataModel/@dataClasses.17/@dataReferences.0"/>
   </dataModel>
   <presentationModel preferenceView="//@presentationModel/@viewActivities.2" welcomeView="//@presentationModel/@viewActivities.0">
     <viewActivities xsi:type="genandroid:CustomViewActivity" name="SplashScreen" documentation="Vue spéciale pour le splash screen, &#xD;&#xA;sert de détecteur de mise à jour de la base" accessibleViews="//@presentationModel/@viewActivities.1"/>
-    <viewActivities xsi:type="genandroid:CustomViewActivity" name="Accueil" accessibleViews="//@presentationModel/@viewActivities.4 //@presentationModel/@viewActivities.5 //@presentationModel/@viewActivities.3 //@presentationModel/@viewActivities.8 //@presentationModel/@viewActivities.12" triggerableBackgroundActivities="//@presentationModel/@backgroundActivities.1 //@presentationModel/@backgroundActivities.2 //@presentationModel/@backgroundActivities.4"/>
+    <viewActivities xsi:type="genandroid:CustomViewActivity" name="Accueil" accessibleViews="//@presentationModel/@viewActivities.4 //@presentationModel/@viewActivities.5 //@presentationModel/@viewActivities.3 //@presentationModel/@viewActivities.8 //@presentationModel/@viewActivities.12" triggerableBackgroundActivities="//@presentationModel/@backgroundActivities.1 //@presentationModel/@backgroundActivities.3"/>
     <viewActivities xsi:type="genandroid:PreferenceViewActivity" name="Preference" hasSupportForParentActivity="true"/>
-    <viewActivities xsi:type="genandroid:CustomViewActivity" name="EtatModeHorsLigne" documentation="Vue présentant les détails de l'état du mode hors ligne" triggerableBackgroundActivities="//@presentationModel/@backgroundActivities.4" hasSupportForParentActivity="true" defaultParentActivity="//@presentationModel/@viewActivities.1"/>
-    <viewActivities xsi:type="genandroid:CustomViewActivity" name="RechercheGuidee" accessibleViews="//@presentationModel/@viewActivities.5" hasSupportForParentActivity="true" defaultParentActivity="//@presentationModel/@viewActivities.1"/>
-    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ListeFicheAvecFiltre" documentation="Cette liste déroulante de fiche, dispose d'un filtre:&#xD;&#xA;Ce filtre permet d'entrer du texte, un zone géographique et une zone d'observation" accessibleViews="//@presentationModel/@viewActivities.6" hasSupportForParentActivity="true" defaultParentActivity="//@presentationModel/@viewActivities.1" selectItemAction="//@presentationModel/@viewActivities.6" isLargeList="true" useIndexSearch="true" listedElement="//@dataModel/@dataClasses.0" presentedDetail="//@presentationModel/@classDetails.0"/>
-    <viewActivities xsi:type="genandroid:ElementViewActivity" name="DetailsFiche" documentation="Affiche les détails d'une fiche" accessibleViews="//@presentationModel/@viewActivities.7" hasSupportForParentActivity="true" defaultParentActivity="//@presentationModel/@viewActivities.5" element="//@dataModel/@dataClasses.0"/>
-    <viewActivities xsi:type="genandroid:CustomViewActivity" name="ImagePleinEcran" documentation="Affiche une image en plein écran" hasSupportForParentActivity="true" defaultParentActivity="//@presentationModel/@viewActivities.6"/>
-    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ListeParticipantAvecFiltre" documentation="Vue présentant les participants Doris" accessibleViews="//@presentationModel/@viewActivities.9" hasSupportForParentActivity="true" defaultParentActivity="//@presentationModel/@viewActivities.1" selectItemAction="//@presentationModel/@viewActivities.9" useIndexSearch="true" listedElement="//@dataModel/@dataClasses.5" presentedDetail="//@presentationModel/@classDetails.1"/>
-    <viewActivities xsi:type="genandroid:ElementViewActivity" name="DetailsParticipant" documentation="Vue présentant les détails d'un participant" hasSupportForParentActivity="true" defaultParentActivity="//@presentationModel/@viewActivities.8" element="//@dataModel/@dataClasses.5"/>
-    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ZoneGeoSelection" documentation="Vue permettant de sélectionner la zone géographique pour le filtrage" hasSupportForParentActivity="true" defaultParentActivity="//@presentationModel/@viewActivities.1" isFilterable="false" listedElement="//@dataModel/@dataClasses.6" presentedDetail="//@presentationModel/@classDetails.2" useCustomRowPresentation="true"/>
-    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="GroupeSelection" documentation="Liste présentant les Groupe de manière hiérarchique (le filtre en haut assure la gestion de la profondeur)" hasSupportForParentActivity="true" defaultParentActivity="//@presentationModel/@viewActivities.1" isFilterable="false" listedElement="//@dataModel/@dataClasses.8" presentedDetail="//@presentationModel/@classDetails.3"/>
-    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="Glossaire" documentation="Liste présentant les entrées du glossaire" accessibleViews="//@presentationModel/@viewActivities.13" hasSupportForParentActivity="true" defaultParentActivity="//@presentationModel/@viewActivities.1" selectItemAction="//@presentationModel/@viewActivities.13" useIndexSearch="true" listedElement="//@dataModel/@dataClasses.9" presentedDetail="//@presentationModel/@classDetails.4"/>
-    <viewActivities xsi:type="genandroid:ElementViewActivity" name="DetailEntreeGlossaire" documentation="Vue présentant une entrée du glossaire en détail (texte complet, image éventuelle, liens vers le fiches utilisatrices, etc)" hasSupportForParentActivity="true" defaultParentActivity="//@presentationModel/@viewActivities.12" element="//@dataModel/@dataClasses.9"/>
-    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ListeBibliographieAvecFiltre" documentation="Vue présentant la Bibliographie Doris" accessibleViews="//@presentationModel/@viewActivities.15" hasSupportForParentActivity="true" defaultParentActivity="//@presentationModel/@viewActivities.1" selectItemAction="//@presentationModel/@viewActivities.15" useIndexSearch="true" listedElement="//@dataModel/@dataClasses.15" presentedDetail="//@presentationModel/@classDetails.5"/>
-    <viewActivities xsi:type="genandroid:ElementViewActivity" name="DetailsBibliographie" documentation="Vue présentant les détails de la Bibliographie" hasSupportForParentActivity="true" defaultParentActivity="//@presentationModel/@viewActivities.14" element="//@dataModel/@dataClasses.15"/>
+    <viewActivities xsi:type="genandroid:CustomViewActivity" name="EtatModeHorsLigne" documentation="Vue présentant les détails de l'état du mode hors ligne" triggerableBackgroundActivities="//@presentationModel/@backgroundActivities.3" hasSupportForParentActivity="true"/>
+    <viewActivities xsi:type="genandroid:CustomViewActivity" name="RechercheGuidee" accessibleViews="//@presentationModel/@viewActivities.5" hasSupportForParentActivity="true"/>
+    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ListeFicheAvecFiltre" documentation="Cette liste déroulante de fiche, dispose d'un filtre:&#xD;&#xA;Ce filtre permet d'entrer du texte, un zone géographique et une zone d'observation" accessibleViews="//@presentationModel/@viewActivities.6" hasSupportForParentActivity="true" selectItemAction="//@presentationModel/@viewActivities.6" isLargeList="true" useIndexSearch="true" listedElement="//@dataModel/@dataClasses.0" presentedDetail="//@presentationModel/@classDetails.0"/>
+    <viewActivities xsi:type="genandroid:ElementViewActivity" name="DetailsFiche" documentation="Affiche les détails d'une fiche" accessibleViews="//@presentationModel/@viewActivities.7" hasSupportForParentActivity="true" element="//@dataModel/@dataClasses.0"/>
+    <viewActivities xsi:type="genandroid:CustomViewActivity" name="ImagePleinEcran" documentation="Affiche une image en plein écran" hasSupportForParentActivity="true"/>
+    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ListeParticipantAvecFiltre" documentation="Vue présentant les participants Doris" accessibleViews="//@presentationModel/@viewActivities.9" hasSupportForParentActivity="true" selectItemAction="//@presentationModel/@viewActivities.9" useIndexSearch="true" listedElement="//@dataModel/@dataClasses.5" presentedDetail="//@presentationModel/@classDetails.1"/>
+    <viewActivities xsi:type="genandroid:ElementViewActivity" name="DetailsParticipant" documentation="Vue présentant les détails d'un participant" hasSupportForParentActivity="true" element="//@dataModel/@dataClasses.5"/>
+    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ZoneGeoSelection" documentation="Vue permettant de sélectionner la zone géographique pour le filtrage" hasSupportForParentActivity="true" isFilterable="false" listedElement="//@dataModel/@dataClasses.6" presentedDetail="//@presentationModel/@classDetails.2" useCustomRowPresentation="true"/>
+    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="GroupeSelection" documentation="Liste présentant les Groupe de manière hiérarchique (le filtre en haut assure la gestion de la profondeur)" hasSupportForParentActivity="true" isFilterable="false" listedElement="//@dataModel/@dataClasses.8" presentedDetail="//@presentationModel/@classDetails.3"/>
+    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="Glossaire" documentation="Liste présentant les entrées du glossaire" accessibleViews="//@presentationModel/@viewActivities.13" hasSupportForParentActivity="true" selectItemAction="//@presentationModel/@viewActivities.13" useIndexSearch="true" presentedDetail="//@presentationModel/@classDetails.4"/>
+    <viewActivities xsi:type="genandroid:ElementViewActivity" name="DetailEntreeGlossaire" documentation="Vue présentant une entrée du glossaire en détail (texte complet, image éventuelle, liens vers le fiches utilisatrices, etc)" hasSupportForParentActivity="true"/>
+    <viewActivities xsi:type="genandroid:ClassListViewActivity" name="ListeBibliographieAvecFiltre" documentation="Vue présentant la Bibliographie Doris" accessibleViews="//@presentationModel/@viewActivities.15" hasSupportForParentActivity="true" selectItemAction="//@presentationModel/@viewActivities.15" useIndexSearch="true" listedElement="//@dataModel/@dataClasses.14" presentedDetail="//@presentationModel/@classDetails.5"/>
+    <viewActivities xsi:type="genandroid:ElementViewActivity" name="DetailsBibliographie" documentation="Vue présentant les détails de la Bibliographie" hasSupportForParentActivity="true" element="//@dataModel/@dataClasses.14"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.0/@dataAttributes.1" name="ContenuListeFiche"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.5/@dataAttributes.0" name="ContenuListeParticipant"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.6/@dataAttributes.0" name="ContenuListeZoneGeographique"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.8/@dataAttributes.2" name="ContenuListeGroupeSelection" secondaryAttributes="//@dataModel/@dataClasses.8/@dataAttributes.3"/>
-    <classDetails mainAttributes="//@dataModel/@dataClasses.9/@dataAttributes.1" name="ContenuListeGlossaire" secondaryAttributes="//@dataModel/@dataClasses.9/@dataAttributes.2"/>
-    <classDetails mainAttributes="//@dataModel/@dataClasses.15/@dataAttributes.2" name="ContenuListeBibliographie" secondaryAttributes="//@dataModel/@dataClasses.15/@dataAttributes.1"/>
-    <backgroundActivities name="TelechargeFiches" documentation="Tache responsable du téléchargement des données des fiches. &#xD;&#xA;Cela inclue les données croisées telles que les zones géographiqes et d'observation.&#xD;&#xA;Elle vérifie le niveau de détails requis pour chaque fiche." targetIntent="//@presentationModel/@viewActivities.3"/>
-    <backgroundActivities name="VerifieNouvellesFiches" documentation="Tache responsable de la vérification de la disponibilité de nouvelles fiches." targetIntent="//@presentationModel/@viewActivities.3"/>
-    <backgroundActivities name="VerifieMAJFiches" documentation="Tache responsable de vérifier s'il existe une version plus récente des fiches déjà connues." targetIntent="//@presentationModel/@viewActivities.3"/>
-    <backgroundActivities name="VerifieMAJFiche" documentation="Tache responsable de vérifier s'il existe une version plus récente des fiches déjà connues." targetIntent="//@presentationModel/@viewActivities.3"/>
-    <backgroundActivities name="TelechargePhotosAsync" documentation="Tache responsable du téléchargement des photo des fiches. &#xD;&#xA;Elle vérifie le nombre de photos et la précision requise pour chaque fiche." targetIntent="//@presentationModel/@viewActivities.3"/>
+    <classDetails name="ContenuListeGlossaire"/>
+    <classDetails mainAttributes="//@dataModel/@dataClasses.14/@dataAttributes.2" name="ContenuListeBibliographie" secondaryAttributes="//@dataModel/@dataClasses.14/@dataAttributes.1"/>
+    <backgroundActivities name="TelechargeFiches" documentation="Tache responsable du téléchargement des données des fiches. &#xD;&#xA;Cela inclue les données croisées telles que les zones géographiqes et d'observation.&#xD;&#xA;Elle vérifie le niveau de détails requis pour chaque fiche."/>
+    <backgroundActivities name="VerifieMAJFiches" documentation="Tache responsable de vérifier s'il existe une version plus récente des fiches déjà connues."/>
+    <backgroundActivities name="VerifieMAJFiche" documentation="Tache responsable de vérifier s'il existe une version plus récente des fiches déjà connues."/>
+    <backgroundActivities name="TelechargePhotosAsync" documentation="Tache responsable du téléchargement des photo des fiches. &#xD;&#xA;Elle vérifie le nombre de photos et la précision requise pour chaque fiche."/>
   </presentationModel>
 </genandroid:AndroidProject>

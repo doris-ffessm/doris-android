@@ -91,11 +91,15 @@ public class DorisDB_metadata {
 	
 
 	/** Date de récupération de la base DORIS */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String dateBase;
 
 	/** Date d'une éventuelle mise à jour partielle de la base 
 (ie. plus récente que la copie fournie avec l'application) */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String dateMAJPartielle;
 	

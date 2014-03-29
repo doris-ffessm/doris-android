@@ -62,6 +62,8 @@ import com.j256.ormlite.support.DatabaseConnection;
 import com.j256.ormlite.table.TableUtils;
 
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
+import fr.ffessm.doris.android.datamodel.Classification;
+import fr.ffessm.doris.android.datamodel.ClassificationFiche;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
@@ -129,10 +131,12 @@ public class PrefetchDBTools {
 		dbContext.autreDenominationDao = DaoManager.createDao(connectionSource, AutreDenomination.class);
 		dbContext.definitionGlossaireDao = DaoManager.createDao(connectionSource, DefinitionGlossaire.class);
 		dbContext.entreeBibliographieDao = DaoManager.createDao(connectionSource, EntreeBibliographie.class);
+		dbContext.classificationDao = DaoManager.createDao(connectionSource, Classification.class);
+		dbContext.classificationFicheDao = DaoManager.createDao(connectionSource, ClassificationFiche.class);
 		
 		//dbContext.fiches_verificateurs_ParticipantsDao = DaoManager.createDao(connectionSource, Fiches_verificateurs_Participants.class);
 		dbContext.fiches_ZonesGeographiquesDao = DaoManager.createDao(connectionSource, Fiches_ZonesGeographiques.class);
-		dbContext.fiches_DefinitionsGlossaireDao = DaoManager.createDao(connectionSource, Fiches_DefinitionsGlossaire.class);
+		//dbContext.fiches_DefinitionsGlossaireDao = DaoManager.createDao(connectionSource, Fiches_DefinitionsGlossaire.class);
 		//dbContext.fiches_ZonesObservationsDao = DaoManager.createDao(connectionSource, Fiches_ZonesObservations.class);
 		dbContext.dorisDB_metadataDao = DaoManager.createDao(connectionSource, DorisDB_metadata.class);
 		
@@ -161,6 +165,8 @@ public class PrefetchDBTools {
 		TableUtils.createTable(connectionSource, Fiches_ZonesObservations.class);
 		TableUtils.createTable(connectionSource, Fiches_DefinitionsGlossaire.class);
 		TableUtils.createTable(connectionSource, EntreeBibliographie.class);
+		TableUtils.createTable(connectionSource, Classification.class);
+		TableUtils.createTable(connectionSource, ClassificationFiche.class);
 		TableUtils.createTable(connectionSource, DorisDB_metadata.class);
 		
 		

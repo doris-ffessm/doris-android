@@ -60,7 +60,6 @@ import org.apache.commons.logging.LogFactory;
 
 import fr.ffessm.doris.android.datamodel.associations.*;
 
-import net.htmlparser.jericho.Config;
 // Start of user code additional import for Groupe
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
@@ -109,40 +108,58 @@ public class Groupe {
 
 	/** XXX de groupe_numero=XXX dans l'url permettant d'afficher le groupe.
 Certains groupes (de haut niveau) n'ont pas de numéro */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected int numeroGroupe;
 
 	/** XXX de sousgroupe_numero=XXX dans l'url permettant avec le numero de groupe d'afficher le groupe.
 Seuls certains groupes de plus bas niveau ont le numéro de sous-groupe */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected int numeroSousGroupe;
 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String nomGroupe;
 
 	/** Souvent une petite liste d'exemples illustratifs */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String descriptionGroupe;
 
 	/** url de base pour les images de ce groupe */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String cleURLImage;
 
 	/** nom de l'image de ce groupe */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String nomImage;
 
 	/** En haut des pages de groupe, il y a un petit texte expliquant les grandes caractéristques du groupe.
 C'est ce texte. */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String descriptionDetailleeGroupe;
 	
 
 	/** Permet de créer ou lire l'arborescence des groupes par récurrence */ 
+	// NOT Implemented non SQLite collection reference groupesFils;
+	// Start of user code groupesFils - Permet de ne pas perdre Implémentation Manuelle de : 
 	@ForeignCollectionField(eager = false, foreignFieldName = "groupePere")
 	protected ForeignCollection<Groupe> groupesFils;
 
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
+	// End of user code
+
 	protected Groupe groupePere;
 
 	// Start of user code Groupe additional user properties

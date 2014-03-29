@@ -92,14 +92,18 @@ public class AutreDenomination {
 	public boolean fiche_mayNeedDBRefresh = true;
 	
 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String denomination;
 
 	/** Si renseigné, indique la ou les langues qui utilisent cette dénomination  */ 
+	/** TEST GM :  = SQLite **/
+	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
 	@DatabaseField
 	protected java.lang.String langue;
 	
-
+	//** Je l'ai ajouté à la main
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiche;
 
