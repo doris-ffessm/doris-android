@@ -106,6 +106,8 @@ import fr.ffessm.doris.android.activities.view.FoldableClickListener;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.async.VerifieMAJFiche_BgActivity;
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
+import fr.ffessm.doris.android.datamodel.Classification;
+import fr.ffessm.doris.android.datamodel.ClassificationFiche;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.IntervenantFiche;
@@ -363,7 +365,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 							//sbCreditText.append("\n"+intervenant.getId());
 							sbCreditText.append("\n"+Constants.getTitreParticipant(intervenant.getRoleIntervenant() )+" : " );				
 							
-							intervenant.setContextDB(getHelper().getDorisDBHelper());
 							Participant participant = intervenant.getParticipant();
 							participant.setContextDB(getHelper().getDorisDBHelper());
 							
@@ -383,9 +384,17 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 					}
 					addFoldableTextView(containerLayout, sectionFiche.getTitre(), sectionFiche.getTexte());
 				}
+			} // Fin contenu Fiche
+			
+			// Arbre Phylogénique
+			LinearLayout arbrePhylogeniqueLayout =  (LinearLayout) findViewById(R.id.details_tableau_phylogenique_foldablesection);
+			View arbrePhyloContenuLayout =  (View) findViewById(R.id.details_tableau_phylogenique_contenu_linearlayout);
+			
+			Collection<ClassificationFiche> classificationFicheCollect = entry.getClassification();
+
+			if(classificationFicheCollect.size() != 0){
+				addFoldableArbrePhylogeniqueView(containerLayout, classificationFicheCollect);
 			}
-			
-			
 			
 			isOnCreate = false;
 		}
@@ -632,6 +641,63 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         foldButton.setOnClickListener(foldable);
         
         LinearLayout titreLinearLayout = (LinearLayout) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_linearlayout);
+        titreLinearLayout.setOnClickListener(foldable);
+        // enregistre pour réagir au click long
+        registerForContextMenu(foldButton);
+        registerForContextMenu(titreLinearLayout);
+        
+        containerLayout.addView(convertView);
+    }
+    
+    protected void addFoldableArbrePhylogeniqueView(LinearLayout containerLayout, Collection<ClassificationFiche> classificationFicheCollect){
+    	LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    	View convertView = inflater.inflate(R.layout.details_tableau_phylogenique_foldablesection, null);
+        
+    	LinearLayout sectionArbre = (LinearLayout) convertView.findViewById(R.id.details_tableau_phylogenique_contenu_linearlayout);
+        
+        if (! paramOutils.getParamBoolean(R.string.pref_key_fiche_aff_details_pardefaut, false)){
+        	sectionArbre.setVisibility(View.GONE); // par défaut invisible
+        } else {
+        	sectionArbre.setVisibility(View.VISIBLE);
+        }
+    	
+   	
+        for( ClassificationFiche classificationFiche : classificationFicheCollect ) {
+ 
+        	classificationFiche.setContextDB(getHelper().getDorisDBHelper());
+     	
+        	Classification classification = classificationFiche.getClassification();
+			classification.setContextDB(getHelper().getDorisDBHelper());
+			Log.d(LOG_TAG, "addFoldableArbrePhylogeniqueView() - classification : "+classification.getNiveau()+" : "+classification.getTermeScientifique());
+
+	    	View convertArbreView = inflater.inflate(R.layout.details_tableau_phylogenique_detail, null);
+	    	
+	    	TextView detailsfiche_arbreview_titre = (TextView) convertArbreView.findViewById(R.id.detailsfiche_arbreview_foldablesection_titre);
+			SpannableString richtext = textesOutils.textToSpannableStringDoris(classification.getNiveau());
+			detailsfiche_arbreview_titre.setText(richtext);
+
+	    	TextView detailsfiche_arbreview_scientifique = (TextView) convertArbreView.findViewById(R.id.detailsfiche_arbreview_scientifique);
+			richtext = textesOutils.textToSpannableStringDoris(classification.getTermeScientifique());
+			detailsfiche_arbreview_scientifique.setText(richtext);
+			
+	    	TextView detailsfiche_arbreview_francais = (TextView) convertArbreView.findViewById(R.id.detailsfiche_arbreview_francais);
+			richtext = textesOutils.textToSpannableStringDoris(classification.getTermeFrancais());
+			detailsfiche_arbreview_francais.setText(richtext);
+			
+			TextView detailsfiche_arbreview_description = (TextView) convertArbreView.findViewById(R.id.detailsfiche_arbreview_description);
+			richtext = textesOutils.textToSpannableStringDoris(classification.getDescriptif());
+			detailsfiche_arbreview_description.setText(richtext);
+			
+        	sectionArbre.addView(convertArbreView);
+        }
+      
+        ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.details_tableau_phylogenique_fold_unflod_section_imageButton);
+        
+        FoldableClickListener foldable = new FoldableClickListener(sectionArbre, foldButton);
+        allFoldable.add(foldable);
+        foldButton.setOnClickListener(foldable);
+        
+        LinearLayout titreLinearLayout = (LinearLayout) convertView.findViewById(R.id.details_tableau_phylogenique_fold_unflod_section_linearlayout);
         titreLinearLayout.setOnClickListener(foldable);
         // enregistre pour réagir au click long
         registerForContextMenu(foldButton);

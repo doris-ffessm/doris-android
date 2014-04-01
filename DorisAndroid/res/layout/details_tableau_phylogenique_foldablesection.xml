@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+android:id/details_tableau_phylogenique_foldablesection"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+	<LinearLayout
+	    android:id="@+id/details_tableau_phylogenique_fold_unflod_section_linearlayout"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="2dp"
+	    android:orientation="horizontal" >
+
+		<ImageButton
+		    android:id="@+id/details_tableau_phylogenique_fold_unflod_section_imageButton"
+		    android:layout_width="wrap_content"
+		    android:layout_height="40dp"
+		    android:layout_marginLeft="4dp"
+		    android:adjustViewBounds="true"
+		    android:background="@android:color/transparent"
+		    android:contentDescription="@string/detailsfiche_elementview_fold_unflod_section_hint_text"
+		    android:scaleType="centerInside"
+		    android:src="@drawable/app_expander_ic_minimized" />
+
+		<TextView
+		    android:id="@+id/detailsfiche_elementview_foldablesection_titre"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginTop="4dp"
+		    android:layout_marginLeft="4dp"
+		    android:text="Titre Arbre Phylogenique"
+		    android:textAppearance="?android:attr/textAppearanceMedium"
+		    android:textColor="?android:attr/textColorPrimary"/>
+    </LinearLayout>
+
+	<LinearLayout
+	    android:id="@+id/details_tableau_phylogenique_contenu_linearlayout"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="2dp"
+	    android:orientation="horizontal" >
+		<!--  On met ici chaque ligne de l'arbre -->
+	</LinearLayout>
+
+    <View style="@style/Separateur"/>
+    
+    
+</LinearLayout>
