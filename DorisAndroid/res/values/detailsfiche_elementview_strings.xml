@@ -13,8 +13,11 @@
 	<string name="detailsfiche_elementview_groupes_label">Groupes Phylogénétiques</string>
 	<string name="detailsfiche_elementview_fichesliees_label">Fiches Liées</string>
 	<string name="detailsfiche_elementview_credit_label">Crédits</string>
+	<string name="detailsfiche_elementview_arbre_phylogenetique">Arbre phylogénétique</string>
+
 	<string name="detailsfiche_elementview_zonesgeo_label">Zones Doris</string>
 	<string name="detailsfiche_elementview_zonesgeo_aucune_label">"Aucune zone Doris n'est renseignée sur cette fiche"</string>
+	
 	<string name="detailsfiche_elementview_nomscientifique_hint_text"></string>
 	<string name="detailsfiche_elementview_nomcommun_hint_text"></string>
 	<string name="detailsfiche_elementview_numerofiche_hint_text"></string>
@@ -32,6 +35,8 @@
 	
 	<string name="picto_espece_reglementee_label">Espèce Réglementée</string>
 	<string name="picto_espece_en_danger_label">Espèce Dangereuse</string>
+	
+	<color name="detailsfiche_elementview_arbre_phylo_couleur">#7F9DB9</color>
 	<!-- End of user code
 	-->
 </resources>

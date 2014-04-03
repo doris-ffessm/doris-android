@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+android:id/details_tableau_phylogenique_foldablesection"
+    android:id="@+android:id/details_tableau_phylogenetique_foldablesection"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
     
 	<LinearLayout
-	    android:id="@+id/details_tableau_phylogenique_fold_unflod_section_linearlayout"
+	    android:id="@+id/details_tableau_phylogenetique_fold_unflod_section_linearlayout"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginTop="2dp"
 	    android:orientation="horizontal" >
 
 		<ImageButton
-		    android:id="@+id/details_tableau_phylogenique_fold_unflod_section_imageButton"
+		    android:id="@+id/details_tableau_phylogenetique_fold_unflod_section_imageButton"
 		    android:layout_width="wrap_content"
 		    android:layout_height="40dp"
 		    android:layout_marginLeft="4dp"
@@ -29,13 +29,13 @@
 		    android:layout_height="wrap_content"
 		    android:layout_marginTop="4dp"
 		    android:layout_marginLeft="4dp"
-		    android:text="Titre Arbre Phylogenique"
+		    android:text="@string/detailsfiche_elementview_arbre_phylogenetique"
 		    android:textAppearance="?android:attr/textAppearanceMedium"
 		    android:textColor="?android:attr/textColorPrimary"/>
     </LinearLayout>
 
 	<LinearLayout
-	    android:id="@+id/details_tableau_phylogenique_contenu_linearlayout"
+	    android:id="@+id/details_tableau_phylogenetique_contenu_linearlayout"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_marginTop="2dp"

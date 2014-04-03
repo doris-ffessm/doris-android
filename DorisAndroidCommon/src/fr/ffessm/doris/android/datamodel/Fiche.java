@@ -898,37 +898,37 @@ public class Fiche {
 				} // Fin extraction données du bas de la page sauf tableau Phylogénique
 				
 				//Remonter de 2 niveaux pour avoir le tableau
-				Element ElementTableauPhylogenique=ElementTableauTrait.getParentElement().getParentElement();
-				log.debug("getFiche() - Bloc Tableau Phylogenique : " + ElementTableauPhylogenique.toString().substring(0, Math.min(ElementTableBasse.toString().length(),30)));
+				Element ElementTableauPhylogenetique=ElementTableauTrait.getParentElement().getParentElement();
+				log.debug("getFiche() - Bloc Tableau Phylogenetique : " + ElementTableauPhylogenetique.toString().substring(0, Math.min(ElementTableBasse.toString().length(),30)));
 				
 				indice = 0;
 				String type_classification = "";
 				String terme_scientifique = "";
 				String terme_francais = "";
 				String description = "";
-				for (Element elementTR : ElementTableauPhylogenique.getAllElements(HTMLElementName.TR)) {
+				for (Element elementTR : ElementTableauPhylogenetique.getAllElements(HTMLElementName.TR)) {
 					indice++;
 					// La 1ère Ligne contient les Titres => On oublie
 					if (indice != 1){
 						int numColonne = 0;
 						for (Element elementTD : elementTR.getAllElements(HTMLElementName.TD)) {
 							numColonne ++;
-							if (numColonne == tableauPhylogeniqueColonnes.CLASSIFICATION_TYPE.ordinal() + 1) {
+							if (numColonne == tableauPhylogenetiqueColonnes.CLASSIFICATION_TYPE.ordinal() + 1) {
 								type_classification = elementTD.getRenderer().toString();
 							}
-							if (numColonne == tableauPhylogeniqueColonnes.TERME_SCIENTIFIQUE.ordinal() + 1) {
+							if (numColonne == tableauPhylogenetiqueColonnes.TERME_SCIENTIFIQUE.ordinal() + 1) {
 								terme_scientifique = elementTD.getRenderer().toString();
 							}
-							if (numColonne == tableauPhylogeniqueColonnes.TERME_FRANCAIS.ordinal() + 1) {
+							if (numColonne == tableauPhylogenetiqueColonnes.TERME_FRANCAIS.ordinal() + 1) {
 								terme_francais = elementTD.getRenderer().toString();
 							}
-							if (numColonne == tableauPhylogeniqueColonnes.DESCRIPTION.ordinal() + 1) {
+							if (numColonne == tableauPhylogenetiqueColonnes.DESCRIPTION.ordinal() + 1) {
 								description = elementTD.getRenderer().toString();
 								if (description.trim().equals("{{n/}}")) description = "";
 							}
 						}
 						
-						log.debug("getFiche() - Tableau Phylogenique : " + type_classification + " - "
+						log.debug("getFiche() - Tableau Phylogenetique : " + type_classification + " - "
 								+ terme_scientifique + " - " + terme_francais + " - " + description);
 						
 						// Si la classification n'a pas encore été créée dans le dico, on le fait
@@ -983,7 +983,7 @@ public class Fiche {
     	log.trace("getFicheFromHtml() - Fin");
 	}
 	
-	enum tableauPhylogeniqueColonnes{
+	enum tableauPhylogenetiqueColonnes{
 		CLASSIFICATION_TYPE,
 		TERME_SCIENTIFIQUE,
 		TERME_FRANCAIS,
