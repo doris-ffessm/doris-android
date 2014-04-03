@@ -387,13 +387,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			} // Fin contenu Fiche
 			
 			// Arbre Phylogénique
-			LinearLayout arbrePhylogeniqueLayout =  (LinearLayout) findViewById(R.id.details_tableau_phylogenique_foldablesection);
-			View arbrePhyloContenuLayout =  (View) findViewById(R.id.details_tableau_phylogenique_contenu_linearlayout);
-			
 			Collection<ClassificationFiche> classificationFicheCollect = entry.getClassification();
 
 			if(classificationFicheCollect.size() != 0){
-				addFoldableArbrePhylogeniqueView(containerLayout, classificationFicheCollect);
+				addFoldableArbrePhylogenetiqueView(containerLayout, classificationFicheCollect);
 			}
 			
 			isOnCreate = false;
@@ -649,11 +646,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         containerLayout.addView(convertView);
     }
     
-    protected void addFoldableArbrePhylogeniqueView(LinearLayout containerLayout, Collection<ClassificationFiche> classificationFicheCollect){
+    protected void addFoldableArbrePhylogenetiqueView(LinearLayout containerLayout, Collection<ClassificationFiche> classificationFicheCollect){
     	LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    	View convertView = inflater.inflate(R.layout.details_tableau_phylogenique_foldablesection, null);
+    	View convertView = inflater.inflate(R.layout.details_tableau_phylogenetique_foldablesection, null);
         
-    	LinearLayout sectionArbre = (LinearLayout) convertView.findViewById(R.id.details_tableau_phylogenique_contenu_linearlayout);
+    	LinearLayout sectionArbre = (LinearLayout) convertView.findViewById(R.id.details_tableau_phylogenetique_contenu_linearlayout);
         
         if (! paramOutils.getParamBoolean(R.string.pref_key_fiche_aff_details_pardefaut, false)){
         	sectionArbre.setVisibility(View.GONE); // par défaut invisible
@@ -668,36 +665,41 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
      	
         	Classification classification = classificationFiche.getClassification();
 			classification.setContextDB(getHelper().getDorisDBHelper());
-			Log.d(LOG_TAG, "addFoldableArbrePhylogeniqueView() - classification : "+classification.getNiveau()+" : "+classification.getTermeScientifique());
+			Log.d(LOG_TAG, "addFoldableArbrePhylogenetiqueView() - classification : "+classification.getNiveau()+" : "+classification.getTermeScientifique());
 
-	    	View convertArbreView = inflater.inflate(R.layout.details_tableau_phylogenique_detail, null);
+	    	View convertArbreView = inflater.inflate(R.layout.details_tableau_phylogenetique_detail, null);
 	    	
-	    	TextView detailsfiche_arbreview_titre = (TextView) convertArbreView.findViewById(R.id.detailsfiche_arbreview_foldablesection_titre);
+	    	Log.d(LOG_TAG, "addFoldableArbrePhylogenetiqueView() - 010");
+	    	TextView detailsfiche_arbreview_titre = (TextView) convertArbreView.findViewById(R.id.detailsfiche_arbreview_niveau);
 			SpannableString richtext = textesOutils.textToSpannableStringDoris(classification.getNiveau());
 			detailsfiche_arbreview_titre.setText(richtext);
 
+			Log.d(LOG_TAG, "addFoldableArbrePhylogenetiqueView() - 020");
 	    	TextView detailsfiche_arbreview_scientifique = (TextView) convertArbreView.findViewById(R.id.detailsfiche_arbreview_scientifique);
 			richtext = textesOutils.textToSpannableStringDoris(classification.getTermeScientifique());
 			detailsfiche_arbreview_scientifique.setText(richtext);
 			
+			Log.d(LOG_TAG, "addFoldableArbrePhylogenetiqueView() - 030");
 	    	TextView detailsfiche_arbreview_francais = (TextView) convertArbreView.findViewById(R.id.detailsfiche_arbreview_francais);
 			richtext = textesOutils.textToSpannableStringDoris(classification.getTermeFrancais());
 			detailsfiche_arbreview_francais.setText(richtext);
 			
+			Log.d(LOG_TAG, "addFoldableArbrePhylogenetiqueView() - 040");
 			TextView detailsfiche_arbreview_description = (TextView) convertArbreView.findViewById(R.id.detailsfiche_arbreview_description);
 			richtext = textesOutils.textToSpannableStringDoris(classification.getDescriptif());
 			detailsfiche_arbreview_description.setText(richtext);
 			
+			Log.d(LOG_TAG, "addFoldableArbrePhylogenetiqueView() - 050");
         	sectionArbre.addView(convertArbreView);
         }
       
-        ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.details_tableau_phylogenique_fold_unflod_section_imageButton);
+        ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.details_tableau_phylogenetique_fold_unflod_section_imageButton);
         
         FoldableClickListener foldable = new FoldableClickListener(sectionArbre, foldButton);
         allFoldable.add(foldable);
         foldButton.setOnClickListener(foldable);
         
-        LinearLayout titreLinearLayout = (LinearLayout) convertView.findViewById(R.id.details_tableau_phylogenique_fold_unflod_section_linearlayout);
+        LinearLayout titreLinearLayout = (LinearLayout) convertView.findViewById(R.id.details_tableau_phylogenetique_fold_unflod_section_linearlayout);
         titreLinearLayout.setOnClickListener(foldable);
         // enregistre pour réagir au click long
         registerForContextMenu(foldButton);
