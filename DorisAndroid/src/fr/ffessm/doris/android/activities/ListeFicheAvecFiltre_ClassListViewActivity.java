@@ -418,7 +418,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
 		View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
 		// peut être null si pas visible, ex dans actionbar overfloww si pas assez de place dans l'action bar 
-		LinearLayout viewGroup = (LinearLayout) findViewById(R.id.listeavecfiltre_filtrespopup);
+		RelativeLayout viewGroup = (RelativeLayout) findViewById(R.id.listeavecfiltre_filtrespopup);
 		LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View layout = layoutInflater.inflate(R.layout.listeficheavecfiltre_filtrespopup, viewGroup);
 		
