@@ -52,5 +52,9 @@ android {
 	}
 	else{
 		println 'sign.properties not found'
-	}	
+	}
+	lintOptions {
+		// if true, generate an XML report for use by for example Jenkins
+        xmlReport true
+    }	
 }
