@@ -56,12 +56,30 @@ public class FoldableClickListener implements OnClickListener {
 	protected View associatedFoldableView;
 	protected ImageButton foldButton;
 	
+	private enum ImageButtonKind{
+		DETAILS_FICHE,
+		DESCRIPTION_ARBRE_PHYLO
+	}
+	private int image_maximize;
+	private int image_minimize;
+	/*
 	public FoldableClickListener(View foldableView){
 		this.associatedFoldableView = foldableView;
-	}
-	public FoldableClickListener(View foldableView, ImageButton foldButton){
+	}*/
+	public FoldableClickListener(View foldableView, ImageButton foldButton, ImageButtonKind imageButtonKind ){
 		this.associatedFoldableView = foldableView;
 		this.foldButton = foldButton;
+		
+		switch(imageButtonKind){
+		case DETAILS_FICHE :
+			image_maximize = R.drawable.app_expander_ic_maximized;
+			image_minimize = R.drawable.app_expander_ic_minimized;
+			break;
+		case DESCRIPTION_ARBRE_PHYLO :
+			image_maximize = .drawable.;
+			image_minimize = R.drawable.app_expander_ic_minimized;
+			break;
+		}
 	}
 	
 	@Override
