@@ -487,7 +487,7 @@ public class GenerationCDDVD {
 		
 		// Copie de l'image du Doris de remplacement
 		log.info("Copie du Fichier : doris_icone_doris_large.png");
-		dossierCD = new File(fichierCDLien + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_ICONES);
+		dossierCD = new File(fichierCDLien + "/" + PrefetchConstants.SOUSDOSSIER_ICONES);
 		fichierRef = new File(PrefetchConstants.DOSSIER_RES_IMAGES+"/"+"doris_icone_doris_large.png");
 		try {
 			FileUtils.copyFileToDirectory(fichierRef, dossierCD);
