@@ -49,7 +49,7 @@ task(updateDorisDB, dependsOn: 'classes', type: JavaExec) {
 task(buildDorisCDDVD, dependsOn: 'classes', type: JavaExec) {
 	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
-	args '-v',  '--zip', 'CDDVD'
+	args '-v', 'CDDVD'
 }
 
 
