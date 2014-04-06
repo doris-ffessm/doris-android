@@ -53,6 +53,7 @@ public class PrefetchConstants {
 	public final static String DOSSIER_RACINE = "./run";
 	public final static String DOSSIER_DATABASE = "./run/database";
 	public final static String DOSSIER_RES_HTML = "./res/html";
+	public final static String DOSSIER_RES_IMAGES = "./res/images";
 	
 	// Ces dossiers seront renommés qd nécessaire
 	public final static String DOSSIER_HTML = "html";

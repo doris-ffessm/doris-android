@@ -923,8 +923,8 @@ public class Fiche {
 								terme_francais = elementTD.getRenderer().toString();
 							}
 							if (numColonne == tableauPhylogenetiqueColonnes.DESCRIPTION.ordinal() + 1) {
-								description = elementTD.getRenderer().toString();
-								if (description.trim().equals("{{n/}}")) description = "";
+								description = elementTD.getRenderer().toString().trim();
+								if (description.equals("{{n/}}")) description = "";
 							}
 						}
 						
@@ -940,7 +940,7 @@ public class Fiche {
 						
 						List<Classification> listClassification = _contextDB.classificationDao.queryForFieldValues(sqlMap); 
 						if ( listClassification.isEmpty() ){
-							classification = new Classification(type_classification, terme_scientifique, terme_francais, description);
+							classification = new Classification(type_classification, terme_scientifique, terme_francais, commonOutils.nettoyageTextes(description));
 							_contextDB.classificationDao.create(classification);
 						} else {
 							classification = listClassification.get(0);
