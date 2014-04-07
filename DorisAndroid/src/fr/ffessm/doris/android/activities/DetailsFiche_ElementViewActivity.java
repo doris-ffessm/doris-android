@@ -103,6 +103,7 @@ import java.util.List;
 
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.FoldableClickListener;
+import fr.ffessm.doris.android.activities.view.FoldableClickListener.ImageButtonKind;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.async.VerifieMAJFiche_BgActivity;
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
@@ -143,7 +144,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	protected int ficheNumero;
 	
     boolean isOnCreate = true;
-    List<FoldableClickListener> allFoldable = new ArrayList<FoldableClickListener>();
+    List<FoldableClickListener> allFoldableDetails = new ArrayList<FoldableClickListener>();
+    List<FoldableClickListener> allFoldableClassificationDescription = new ArrayList<FoldableClickListener>();
     Handler mHandler;
     LinearLayout photoGallery;
     Collection<String> insertedPhotosFiche = new ArrayList<String>();
@@ -435,10 +437,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	            return true;
 			//Start of user code additional menu action DetailsFiche_ElementViewActivity
 			case R.id.detailsfiche_elementview_action_fold_all_sections:
-        		foldAll();
+        		foldAllDetails();
 				return true;
         	case R.id.detailsfiche_elementview_action_unfold_all_sections:
-        		unfoldAll();
+        		unfoldAllDetails();
         		return true;
         	case R.id.detailsfiche_elementview_action_glossaire:
         		Intent toDefinitionlView = new Intent(context, Glossaire_ClassListViewActivity.class);
@@ -498,17 +500,16 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     public boolean onContextItemSelected(MenuItem item) {  
     	switch (item.getItemId()) {    
     	case R.id.detailsfiche_elementview_action_fold_all_sections:
-    		foldAll();
+    		foldAllDetails();
 			break;
     	case R.id.detailsfiche_elementview_action_unfold_all_sections:
-    		unfoldAll();
+    		unfoldAllDetails();
 			break;
 	    }
 	    return false;
     }
   
 
-	
 	// -------------- handler (for indexBar)
     
     protected void addFoldableTextView(LinearLayout containerLayout, String titre, CharSequence texte){
@@ -536,8 +537,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         
         ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
         
-        FoldableClickListener foldable = new FoldableClickListener(contenuText, foldButton);
-        allFoldable.add(foldable);
+        FoldableClickListener foldable = new FoldableClickListener(contenuText, foldButton, ImageButtonKind.DETAILS_FICHE);
+        allFoldableDetails.add(foldable);
         foldButton.setOnClickListener(foldable);
         
         LinearLayout titreLinearLayout = (LinearLayout) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_linearlayout);
@@ -548,16 +549,19 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         
         containerLayout.addView(convertView);
     }
-    protected void foldAll(){
-    	for (FoldableClickListener foldable : allFoldable) {
+    
+    protected void foldAllDetails(){
+    	for (FoldableClickListener foldable : allFoldableDetails) {
 			foldable.fold();
 		}
     }
-    protected void unfoldAll(){
-    	for (FoldableClickListener foldable : allFoldable) {
+    
+    protected void unfoldAllDetails(){
+    	for (FoldableClickListener foldable : allFoldableDetails) {
 			foldable.unfold();
 		}
     }
+    
     protected void addFoldableGroupeView(LinearLayout containerLayout, String titre, final Groupe groupe){
     	LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View convertView = inflater.inflate(R.layout.detailsfiche_elementview_foldablesection_2icones, null);
@@ -631,8 +635,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         
         ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
         
-        FoldableClickListener foldable = new FoldableClickListener(sectionIcones, foldButton);
-        allFoldable.add(foldable);
+        FoldableClickListener foldable = new FoldableClickListener(sectionIcones, foldButton, ImageButtonKind.DETAILS_FICHE);
+        allFoldableDetails.add(foldable);
         foldButton.setOnClickListener(foldable);
         
         LinearLayout titreLinearLayout = (LinearLayout) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_linearlayout);
@@ -642,6 +646,24 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         registerForContextMenu(titreLinearLayout);
         
         containerLayout.addView(convertView);
+    }
+    
+    
+    protected void foldAllDescriptionClassification(){
+    	for (FoldableClickListener foldable : allFoldableClassificationDescription) {
+			foldable.fold();
+		}
+    }
+    
+    protected void unfoldAllDescriptionClassification(){
+    	for (FoldableClickListener foldable : allFoldableClassificationDescription) {
+			foldable.unfold();
+		}
+    }
+    protected void onClickAllDescriptionClassification(){
+    	for (FoldableClickListener foldable : allFoldableClassificationDescription) {
+			foldable.onClick();
+		}
     }
     
     protected void addFoldableArbrePhylogenetiqueView(LinearLayout containerLayout, Collection<ClassificationFiche> classificationFicheCollect){
@@ -687,21 +709,37 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			}
 			
 			TextView detailsfiche_arbreview_description = (TextView) convertArbreView.findViewById(R.id.detailsfiche_arbreview_description);
+			ImageButton descriptionClassificationButton = (ImageButton) convertArbreView.findViewById(R.id.details_tableau_phylogenetique_fold_unflod_description_imageButton);
+		      
 			if (! classification.getDescriptif().isEmpty()) {
 				richtext = textesOutils.textToSpannableStringDoris(classification.getDescriptif());
 				detailsfiche_arbreview_description.setText(richtext, BufferType.SPANNABLE);
 				detailsfiche_arbreview_description.setMovementMethod(LinkMovementMethod.getInstance());
+				
+		        // Ouverture fermeture des descriptions des Classifications
+				LinearLayout descriptionClassificationLayout = (LinearLayout) convertArbreView.findViewById(R.id.LinearLayout_description);
+				
+		        FoldableClickListener descriptionClassificationFoldable = new FoldableClickListener(descriptionClassificationLayout, descriptionClassificationButton, ImageButtonKind.DESCRIPTION_ARBRE_PHYLO);
+		        allFoldableClassificationDescription.add(descriptionClassificationFoldable);
+		        descriptionClassificationButton.setOnClickListener(descriptionClassificationFoldable);
+
+		        descriptionClassificationLayout.setOnClickListener(descriptionClassificationFoldable);
+		        
 			} else {
 				detailsfiche_arbreview_description.setVisibility(View.GONE);
+				descriptionClassificationButton.setVisibility(View.GONE);
 			}
 			
+
+	        
         	sectionArbre.addView(convertArbreView);
         }
       
         // Ouverture fermeture de l'arbre
         ImageButton detailsTableauButton = (ImageButton) convertView.findViewById(R.id.details_tableau_phylogenetique_fold_unflod_section_imageButton);
-        FoldableClickListener detailsTableaufoldable = new FoldableClickListener(sectionArbre, detailsTableauButton);
-        allFoldable.add(detailsTableaufoldable);
+        
+        FoldableClickListener detailsTableaufoldable = new FoldableClickListener(sectionArbre, detailsTableauButton, ImageButtonKind.DETAILS_FICHE);
+        allFoldableDetails.add(detailsTableaufoldable);
         detailsTableauButton.setOnClickListener(detailsTableaufoldable);
         
         LinearLayout detailsTableauLayout = (LinearLayout) convertView.findViewById(R.id.details_tableau_phylogenetique_fold_unflod_section_linearlayout);
@@ -710,15 +748,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         // enregistre pour réagir au click long
         registerForContextMenu(detailsTableauButton);
         registerForContextMenu(detailsTableauLayout);
-        
-        // Ouverture fermeture des descriptions des Classifications
-        ImageButton descriptionClassificationButton = (ImageButton) convertView.findViewById(R.id.details_tableau_phylogenetique_fold_unflod_description_imageButton);
-        FoldableClickListener descriptionClassificationFoldable = new FoldableClickListener(sectionArbre, descriptionClassificationButton);
-        allFoldable.add(descriptionClassificationFoldable);
-        descriptionClassificationButton.setOnClickListener(descriptionClassificationFoldable);
-        
-        LinearLayout descriptionClassificationLayout = (LinearLayout) convertView.findViewById(R.id.detailsfiche_arbreview_relativeLayout);
-        descriptionClassificationLayout.setOnClickListener(descriptionClassificationFoldable);
         
         containerLayout.addView(convertView);
     }

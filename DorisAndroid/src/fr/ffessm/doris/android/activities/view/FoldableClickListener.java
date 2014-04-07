@@ -56,16 +56,17 @@ public class FoldableClickListener implements OnClickListener {
 	protected View associatedFoldableView;
 	protected ImageButton foldButton;
 	
-	private enum ImageButtonKind{
+	public enum ImageButtonKind {
 		DETAILS_FICHE,
 		DESCRIPTION_ARBRE_PHYLO
 	}
 	private int image_maximize;
 	private int image_minimize;
-	/*
+	
 	public FoldableClickListener(View foldableView){
 		this.associatedFoldableView = foldableView;
-	}*/
+	}
+	
 	public FoldableClickListener(View foldableView, ImageButton foldButton, ImageButtonKind imageButtonKind ){
 		this.associatedFoldableView = foldableView;
 		this.foldButton = foldButton;
@@ -76,8 +77,8 @@ public class FoldableClickListener implements OnClickListener {
 			image_minimize = R.drawable.app_expander_ic_minimized;
 			break;
 		case DESCRIPTION_ARBRE_PHYLO :
-			image_maximize = .drawable.;
-			image_minimize = R.drawable.app_expander_ic_minimized;
+			image_maximize = R.drawable.app_affichage_description_arbre;
+			image_minimize = R.drawable.app_affichage_description_arbre;
 			break;
 		}
 	}
@@ -86,22 +87,33 @@ public class FoldableClickListener implements OnClickListener {
 	public void onClick(View v) {
 		if(associatedFoldableView.getVisibility() == View.GONE){
 			associatedFoldableView.setVisibility(View.VISIBLE);;
-			foldButton.setImageResource(R.drawable.app_expander_ic_maximized);
+			foldButton.setImageResource(image_maximize);
 		}
 		else{
 			associatedFoldableView.setVisibility(View.GONE);
-			foldButton.setImageResource(R.drawable.app_expander_ic_minimized);
+			foldButton.setImageResource(image_minimize);
+		}
+	}
+	
+	public void onClick() {
+		if(associatedFoldableView.getVisibility() == View.GONE){
+			associatedFoldableView.setVisibility(View.VISIBLE);;
+			foldButton.setImageResource(image_maximize);
+		}
+		else{
+			associatedFoldableView.setVisibility(View.GONE);
+			foldButton.setImageResource(image_minimize);
 		}
 	}
 	
 	public void fold(){
 		associatedFoldableView.setVisibility(View.GONE);
-		foldButton.setImageResource(R.drawable.app_expander_ic_minimized);
+		foldButton.setImageResource(image_minimize);
 	}
 	
 	public void unfold(){
 		associatedFoldableView.setVisibility(View.VISIBLE);
-		foldButton.setImageResource(R.drawable.app_expander_ic_maximized);
+		foldButton.setImageResource(image_maximize);
 	}
 
 }

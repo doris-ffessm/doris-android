@@ -1,89 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+android:id/detailsfiche_elementview_foldablesection"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content" >
 
-    <RelativeLayout
-        android:id="@+id/detailsfiche_arbreview_relativeLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:id="@+id/detailsfiche_arbreview_niveau"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/details_tableau_phylogenetique_fold_unflod_description_imageButton"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="4dp"
-            android:text="Niveau"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/detailsfiche_elementview_arbre_phylo_couleur" />
-
-        <ImageButton
-            android:id="@+id/details_tableau_phylogenetique_fold_unflod_description_imageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginRight="4dp"
-            android:adjustViewBounds="true"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/detailsfiche_elementview_fold_unflod_section_hint_text"
-            android:scaleType="centerInside"
-            android:src="@android:drawable/ic_dialog_info" />
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/LinearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:id="@+id/detailsfiche_arbreview_scientifique"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:text="Scientifique"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="?android:attr/textColorPrimary" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/LinearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:id="@+id/detailsfiche_arbreview_francais"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
-            android:text="Français"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="?android:attr/textColorSecondary" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/detailsfiche_arbreview_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="4dp"
-        android:text="Description un peu longue pour voir si l&apos;ergononomie pouvait être utilisée"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?android:attr/textColorSecondary" />
-
-    <View style="@style/Separateur" />
-
-</LinearLayout>
+	<ImageButton
+	    android:id="@+id/details_tableau_phylogenetique_fold_unflod_description_imageButton"
+	    android:layout_width="wrap_content"
+	    android:layout_height="40dp"
+	    android:layout_alignParentRight="true"
+	    android:layout_alignParentTop="true"
+	    android:layout_marginRight="4dp"
+	    android:adjustViewBounds="true"
+	    android:background="@android:color/transparent"
+	    android:contentDescription="@string/detailsfiche_elementview_fold_unflod_section_hint_text"
+	    android:scaleType="centerInside"
+	    android:src="@drawable/app_affichage_description_arbre" />
+	        
+     <LinearLayout
+	        android:id="@+id/LinearLayout_classification"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="2dp"
+	        android:orientation="vertical" >
+	        
+	    <LinearLayout
+	        android:id="@+id/LinearLayout_niveau"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="2dp"
+	        android:orientation="horizontal" >
+	
+	        <TextView
+	            android:id="@+id/detailsfiche_arbreview_niveau"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignBaseline="@+id/details_tableau_phylogenetique_fold_unflod_description_imageButton"
+	            android:layout_alignParentLeft="true"
+	            android:layout_alignParentTop="true"
+	            android:layout_marginLeft="4dp"
+	            android:text="Niveau"
+	            android:textAppearance="?android:attr/textAppearanceMedium"
+	            android:textColor="@color/detailsfiche_elementview_arbre_phylo_couleur" />
+	
+	    </LinearLayout>
+	
+	    <LinearLayout
+	        android:id="@+id/LinearLayout_scientifique"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="2dp"
+	        android:orientation="horizontal" >
+	
+	        <TextView
+	            android:id="@+id/detailsfiche_arbreview_scientifique"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="16dp"
+	            android:text="Scientifique"
+	            android:textAppearance="?android:attr/textAppearanceMedium"
+	            android:textColor="?android:attr/textColorPrimary" />
+	    </LinearLayout>
+	
+	    <LinearLayout
+	        android:id="@+id/LinearLayout_francais"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="2dp"
+	        android:orientation="horizontal" >
+	
+	        <TextView
+	            android:id="@+id/detailsfiche_arbreview_francais"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="32dp"
+	            android:text="Français"
+	            android:textAppearance="?android:attr/textAppearanceMedium"
+	            android:textColor="?android:attr/textColorSecondary" />
+	    </LinearLayout>
+	
+	    <LinearLayout
+	        android:id="@+id/LinearLayout_description"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="2dp"
+	        android:orientation="horizontal" >
+		    <TextView
+		        android:id="@+id/detailsfiche_arbreview_description"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginBottom="2dp"
+		        android:layout_marginLeft="16dp"
+		        android:layout_marginRight="4dp"
+		        android:text="Description un peu longue pour voir si l&apos;ergononomie pouvait être utilisée"
+		        android:textAppearance="?android:attr/textAppearanceSmall"
+		        android:textColor="?android:attr/textColorSecondary" />
+			</LinearLayout>
+	    <View style="@style/Separateur" />
+	</LinearLayout>
+</RelativeLayout>
