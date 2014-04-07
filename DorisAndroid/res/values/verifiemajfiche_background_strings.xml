@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resource Strings speifc to verifiemajfiche Custom View -->
+<resources>	
+	<!--Start of user code BackgroundActivity_stringsverifiemajfiche
+	-->
+	<!-- freely add here the desired resource String for your custom view -->
+	<string name="verifiemajfiche_bg_initialTickerText">VerifieMAJFiche</string>
+	<string name="verifiemajfiche_bg_notificationTitle">VerifieMAJFiche</string>
+	<!--End of user code
+	-->
+</resources>

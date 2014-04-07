@@ -432,6 +432,15 @@ public class GenerationCDDVD {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		// Images du Dossier ./res/images, le Doris en cas d'images non présentes et
+		// celles des groupes : elles ne sont pas téléchargées pour l'appli car plus
+		// jolies retouchées, on remet ici celles de l'appli.
+		dossierRef = new File(PrefetchConstants.DOSSIER_RES_IMAGES);
+		try {
+			FileUtils.copyDirectory(dossierRef, dossierCD);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		// Création Dossier Vignettes du CD
 		log.info("Création Dossier Vignettes du CD");
@@ -479,16 +488,6 @@ public class GenerationCDDVD {
 		log.info("Copie du Fichier : indisponible_CDDVD.html");
 		dossierCD = new File(fichierCDLien + "/" + PrefetchConstants.DOSSIER_HTML);
 		fichierRef = new File(PrefetchConstants.DOSSIER_RES_HTML+"/"+"indisponible_CDDVD.html");
-		try {
-			FileUtils.copyFileToDirectory(fichierRef, dossierCD);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		// Copie de l'image du Doris de remplacement
-		log.info("Copie du Fichier : doris_icone_doris_large.png");
-		dossierCD = new File(fichierCDLien + "/" + PrefetchConstants.SOUSDOSSIER_ICONES);
-		fichierRef = new File(PrefetchConstants.DOSSIER_RES_IMAGES+"/"+"doris_icone_doris_large.png");
 		try {
 			FileUtils.copyFileToDirectory(fichierRef, dossierCD);
 		} catch (IOException e) {
