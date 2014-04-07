@@ -343,6 +343,8 @@ public class GenerationCDDVD {
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?page=Precedent[^\"]*","href=\""));
 		
 		regExpPourNettoyer.add(new Lien(LienKind.ICONE, "http://doris.ffessm.fr/gestionenligne/photos_forum_vig/[^\">]*\"","/doris_icone_doris_large.png\""));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "(/images_groupe_[^.]*).gif","$1.png"));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "(/images_sousgroupe_[^.]*).gif","$1.png"));
 
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "fiche_photo_liste_apercu.asp\\?fiche_numero=([^&>]*)&[^\">]*\"","fiche-$1_listePhotos.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "photo_gde_taille_fiche2.asp\\?varpositionf=[^\">]*fiche_numero = ([^&]*)&[^\">]*\"","fiche-$1_listePhotos.html\""));
@@ -352,7 +354,6 @@ public class GenerationCDDVD {
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?mapage=([^&>]*)&[^\">]*\"","href=\"listeBibliographies-$1.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?page=Suivant[^\"]*","href=\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?page=Precedent[^\"]*","href=\""));
-
 
 		// Si un espace dans le nom des photos alors on le remplace par un _
 		//regExpPourNettoyer.add(new Lien(LienKind.PAGE, "<img src="../vignettes_fiches/ electra_posidoniae-dh02.jpg"","href=\""));
@@ -374,9 +375,9 @@ public class GenerationCDDVD {
 	
 	
 	private class Lien {
-		LienKind lienKind;
-		String url;
-		String fichierSurDisque;
+		private LienKind lienKind;
+		private String url;
+		private String fichierSurDisque;
 		
 		Lien(LienKind lienKind, String url, String fichierSurDisque){
 			this.lienKind = lienKind;
@@ -564,7 +565,7 @@ public class GenerationCDDVD {
 			for (Lien lienRegExp : getRegExpPourNettoyer()){
 				switch (lienRegExp.getLienKind()) {
 				case PAGE :
-					contenuFichier = contenuFichier.replaceAll(lienRegExp.url,lienRegExp.getFichier());
+					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),lienRegExp.getFichier());
 				break;
 				case ICONE :
 					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_ICONES+lienRegExp.getFichier());
