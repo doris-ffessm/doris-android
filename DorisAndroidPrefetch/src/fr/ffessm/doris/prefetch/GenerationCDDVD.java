@@ -345,7 +345,9 @@ public class GenerationCDDVD {
 		regExpPourNettoyer.add(new Lien(LienKind.ICONE, "http://doris.ffessm.fr/gestionenligne/photos_forum_vig/[^\">]*\"","/doris_icone_doris_large.png\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "(/images_groupe_[^.]*).gif","$1.png"));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "(/images_sousgroupe_[^.]*).gif","$1.png"));
-
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "(/images_sousgroupe_[^.]*).jpg","$1.png"));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "(/images_sousgroupe_[^.]*).JPG","$1.png"));
+		
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "fiche_photo_liste_apercu.asp\\?fiche_numero=([^&>]*)&[^\">]*\"","fiche-$1_listePhotos.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "photo_gde_taille_fiche2.asp\\?varpositionf=[^\">]*fiche_numero = ([^&]*)&[^\">]*\"","fiche-$1_listePhotos.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "photo_gde_taille.asp\\?varposition=[^\">]*\"","indisponible_CDDVD.html\""));
@@ -355,6 +357,8 @@ public class GenerationCDDVD {
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?page=Suivant[^\"]*","href=\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?page=Precedent[^\"]*","href=\""));
 
+		regExpPourNettoyer.add(new Lien(LienKind.ICONE, "gestionenligne/diaporamaglo/([^.]*).jpg","biblio-$1.jpg"));
+				
 		// Si un espace dans le nom des photos alors on le remplace par un _
 		//regExpPourNettoyer.add(new Lien(LienKind.PAGE, "<img src="../vignettes_fiches/ electra_posidoniae-dh02.jpg"","href=\""));
 
