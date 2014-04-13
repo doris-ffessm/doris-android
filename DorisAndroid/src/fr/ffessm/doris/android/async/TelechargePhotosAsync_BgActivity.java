@@ -403,7 +403,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     						nbPhotosPrinRecuesPourZone++;
         				}
 	    					
-    					if (nbPhotosPrinRecuesPourZone % 100 == 0 || nbTelechargements % 10 == 0) publishProgress( nbPhotosPrinRecuesPourZone );	
+    					if (nbPhotosPrinRecuesPourZone % 200 == 0 || nbTelechargements % 20 == 0) publishProgress( nbPhotosPrinRecuesPourZone );	
         			
 		    			//Enregistrement du nombre total de photos téléchargée pour afficher avancement au fur et à mesure
     					if (nbPhotosPrinRecuesPourZone % 200 == 0 || nbTelechargements % 10 == 0){
@@ -514,7 +514,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 							nbPhotosRecuesPourZone++;
 	    				}
 						
-	    				if (nbPhotosRecuesPourZone % 100 == 0 || nbTelechargements % 10 == 0) publishProgress( nbPhotosRecuesPourZone );
+	    				if (nbPhotosRecuesPourZone % 200 == 0 || nbTelechargements % 20 == 0) publishProgress( nbPhotosRecuesPourZone );
 	    				
 						if (nbPhotosRecuesPourZone % 500 == 0 || nbTelechargements % 10 == 0){
 							//Enregistrement du nombre total de photos téléchargée pour afficher avancement
@@ -602,7 +602,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 				
 				nbIntervenantsAnalyses++;
 				
-				if (nbIntervenantsAnalyses % 10 == 0) publishProgress( nbIntervenantsAnalyses );
+				if (nbIntervenantsAnalyses % 20 == 0) publishProgress( nbIntervenantsAnalyses );
 				
 				if (nbIntervenantsAnalyses % 10 == 0){
 					//Enregistrement du nombre total de photos téléchargée pour afficher avancement
@@ -682,7 +682,7 @@ public int telechargementPhotosBibliographie(DorisDBHelper dorisDBHelper){
 				
 				nbBiblioAnalyses++;
 				
-				if (nbBiblioAnalyses % 10 == 0) publishProgress( nbBiblioAnalyses );
+				if (nbBiblioAnalyses % 20 == 0) publishProgress( nbBiblioAnalyses );
 				
 				if (nbBiblioAnalyses % 10 == 0){
 					//Enregistrement du nombre total de photos téléchargée pour afficher avancement
@@ -767,7 +767,7 @@ public int telechargementPhotosGlossaire(DorisDBHelper dorisDBHelper){
 					
 					nbTermesAnalyses++;
 					
-					if (nbTermesAnalyses % 10 == 0) publishProgress( nbTermesAnalyses );
+					if (nbTermesAnalyses % 20 == 0) publishProgress( nbTermesAnalyses );
 					
 					if (nbTermesAnalyses % 10 == 0){
 						//Enregistrement du nombre total de photos téléchargée pour afficher avancement

@@ -648,19 +648,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         containerLayout.addView(convertView);
     }
     
-    
-    protected void foldAllDescriptionClassification(){
-    	for (FoldableClickListener foldable : allFoldableClassificationDescription) {
-			foldable.fold();
-		}
-    }
-    
-    protected void unfoldAllDescriptionClassification(){
-    	for (FoldableClickListener foldable : allFoldableClassificationDescription) {
-			foldable.unfold();
-		}
-    }
-    protected void onClickAllDescriptionClassification(){
+    private void onClickAllDescriptionClassification(){
     	for (FoldableClickListener foldable : allFoldableClassificationDescription) {
 			foldable.onClick();
 		}
@@ -721,9 +709,15 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 				
 		        FoldableClickListener descriptionClassificationFoldable = new FoldableClickListener(descriptionClassificationLayout, descriptionClassificationButton, ImageButtonKind.DESCRIPTION_ARBRE_PHYLO);
 		        allFoldableClassificationDescription.add(descriptionClassificationFoldable);
-		        descriptionClassificationButton.setOnClickListener(descriptionClassificationFoldable);
 
-		        descriptionClassificationLayout.setOnClickListener(descriptionClassificationFoldable);
+		        // Par défaut on cache la description 
+		        descriptionClassificationLayout.setVisibility(View.GONE);
+		        descriptionClassificationButton.setOnClickListener(new View.OnClickListener() {           
+		            @Override
+		            public void onClick(View v) {
+		            	onClickAllDescriptionClassification();
+		            }
+		        });
 		        
 			} else {
 				detailsfiche_arbreview_description.setVisibility(View.GONE);

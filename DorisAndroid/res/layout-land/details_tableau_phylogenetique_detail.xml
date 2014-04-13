@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+android:id/detailsfiche_elementview_foldablesection"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+	<ImageButton
+	    android:id="@+id/details_tableau_phylogenetique_fold_unflod_description_imageButton"
+	    android:layout_width="wrap_content"
+	    android:layout_height="32dp"
+	    android:layout_alignParentRight="true"
+	    android:layout_alignParentTop="true"
+	    android:layout_marginRight="4dp"
+	    android:adjustViewBounds="true"
+	    android:background="@android:color/transparent"
+	    android:contentDescription="@string/detailsfiche_elementview_fold_unflod_section_hint_text"
+	    android:scaleType="centerInside"
+	    android:src="@drawable/app_affichage_description_arbre" />
+	        
+	
+	<TextView
+	    android:id="@+id/detailsfiche_arbreview_niveau"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="4dp"
+	    android:text="Niveau"
+	    android:textAppearance="?android:attr/textAppearanceMedium"
+	    android:textColor="@color/detailsfiche_elementview_arbre_phylo_couleur" />
+
+	<TextView
+	    android:id="@+id/detailsfiche_arbreview_scientifique"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/detailsfiche_arbreview_niveau"
+	    android:layout_marginLeft="18dp"
+	    android:text="Scientifique"
+	    android:textAppearance="?android:attr/textAppearanceMedium"
+	    android:textColor="?android:attr/textColorPrimary" />
+
+	<TextView
+	    android:id="@+id/detailsfiche_arbreview_francais"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignBaseline="@id/detailsfiche_arbreview_scientifique"
+	    android:layout_marginLeft="250dp"
+	    android:text="Français"
+	    android:textAppearance="?android:attr/textAppearanceMedium"
+	    android:textColor="?android:attr/textColorSecondary" />
+
+	<LinearLayout
+	    android:id="@+id/LinearLayout_description"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@id/detailsfiche_arbreview_scientifique"
+	    android:orientation="horizontal"
+		android:layout_marginTop="2dp">
+
+	    <TextView
+	        android:id="@+id/detailsfiche_arbreview_description"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="18dp"
+	        android:layout_marginBottom="2dp"
+	        android:text="Description un peu longue pour voir si l&apos;ergononomie pouvait être utilisée"
+	        android:textAppearance="?android:attr/textAppearanceSmall"
+	        android:textColor="?android:attr/textColorSecondary" />
+	</LinearLayout>
+		
+	    <View
+	        style="@style/Separateur"
+	        android:layout_below="@id/LinearLayout_description"/>
+	    
+</RelativeLayout>
