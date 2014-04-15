@@ -28,7 +28,6 @@
 	        android:id="@+id/LinearLayout_niveau"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_marginTop="2dp"
 	        android:orientation="horizontal" >
 	
 	        <TextView
@@ -46,7 +45,6 @@
 	        android:id="@+id/LinearLayout_scientifique"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_marginTop="2dp"
 	        android:orientation="horizontal" >
 	
 	        <TextView
@@ -63,7 +61,6 @@
 	        android:id="@+id/LinearLayout_francais"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_marginTop="2dp"
 	        android:orientation="horizontal" >
 	
 	        <TextView
