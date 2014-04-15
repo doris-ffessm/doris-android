@@ -873,6 +873,8 @@ public class Fiche {
 						if (element.getContent().toString().contains("class=\"normal\"")) {
 							String texte = element.getRenderer().toString().trim();
 							
+							log.info("getFiche() - Texte : " + texte);
+							
 							// Entrées Bibliographiques
 							if (element.getContent().toString().contains("table") ){
 								Element sousElement = element.getFirstElementByClass("table_biblio");
@@ -887,7 +889,7 @@ public class Fiche {
 							}
 							
 							texte = commonOutils.nettoyageTextes(texte);
-							log.info("getFiche() - Texte : " + texte);
+							log.info("getFiche() - Texte après nettoyage : " + texte);
 							positionSectionDansFiche++;
 							SectionFiche contenu = new SectionFiche(100+positionSectionDansFiche, dernierTitreSection, texte);
 							contenu.setFiche(this);
