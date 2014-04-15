@@ -62,6 +62,7 @@ import fr.ffessm.doris.android.R;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.GenericRawResults;
 
 import android.preference.PreferenceManager;
@@ -107,7 +108,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	// End of user code
     
 	/** constructor */
-    public TelechargePhotosAsync_BgActivity(Context context, OrmLiteDBHelper dbHelper){
+    public TelechargePhotosAsync_BgActivity(Context context/*, OrmLiteDBHelper dbHelper*/){
 		// Start of user code additional attribute declarations TelechargePhotosAsync_BgActivity constructor
 		String initialTickerText = context.getString(R.string.bg_notifText_imagesinitial);
 		String notificationTitle = context.getString(R.string.bg_notifTitle_imagesinitial);
@@ -123,8 +124,9 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         }catch(Exception e){}
 
 		// End of user code
-        this.dbHelper = dbHelper;
-		this.context = context;
+        // use application wide helper
+        this.dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
+		this.context = context.getApplicationContext();
     }
 
     protected void onPreExecute(){
