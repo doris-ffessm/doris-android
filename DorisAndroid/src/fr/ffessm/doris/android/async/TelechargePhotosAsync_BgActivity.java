@@ -270,11 +270,11 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
     public void photosDejaTelechargees(DorisDBHelper dorisDBHelper) {
 		hsImagesVigAllreadyAvailable = photosOutils.getAllPhotosAvailable(ImageType.VIGNETTE);
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - VigAllreadyAvailable : "+hsImagesVigAllreadyAvailable.size() );
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "photosDejaTelechargees - VigAllreadyAvailable : "+hsImagesVigAllreadyAvailable.size() );
 		hsImagesMedResAllreadyAvailable = photosOutils.getAllPhotosAvailable(ImageType.MED_RES);
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - MedResAllreadyAvailable : "+hsImagesMedResAllreadyAvailable.size() );
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "photosDejaTelechargees - MedResAllreadyAvailable : "+hsImagesMedResAllreadyAvailable.size() );
 		hsImagesHiResAllreadyAvailable = photosOutils.getAllPhotosAvailable(ImageType.HI_RES);
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - HiResAllreadyAvailable : "+hsImagesHiResAllreadyAvailable.size() );
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "photosDejaTelechargees - HiResAllreadyAvailable : "+hsImagesHiResAllreadyAvailable.size() );
     }
 	
 	/* On commence par compter les photos à télécharger pour que les indicateurs d'avancement soient
@@ -333,7 +333,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     public int telechargementPhotosPrincipalesFiches(DorisDBHelper dorisDBHelper, List<ZoneGeographique> listeZoneGeo){
 
     	for (ZoneGeographique zoneGeo : listeZoneGeo) {
-    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
+    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosPrincipalesFiches - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
     		
     		GenericRawResults<String[]> rawResults = null;
     		Photos_Outils.ImageType imageTypeImage;
@@ -343,7 +343,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     		
     		if ( photosOutils.getPrecharModeZoneGeo(zoneId) != Photos_Outils.PrecharMode.P0 ) {
 
-        		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - countNbPhotoPrincZone : "+nbPhotosPrincATelechargerPourZone[zoneId] );
+        		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosPrincipalesFiches - countNbPhotoPrincZone : "+nbPhotosPrincATelechargerPourZone[zoneId] );
 		        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_imagesprinc)
 		        		+ Constants.getTitreCourtZoneGeographique(Constants.getZoneGeographiqueFromId(zoneId)));
 		        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_imagesprinc) );
@@ -351,7 +351,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     			publishProgress( 0 );
 	
     			imageTypeImage = photosOutils.getImageQualityToDownload(true, zoneId);
-    			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneId : "+zoneId+" - Type Image : "+imageTypeImage);
+    			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosPrincipalesFiches - zoneId : "+zoneId+" - Type Image : "+imageTypeImage);
 
         		// SELECT cleURL FROM fiches_ZonesGeographiques, fiche, photoFiche WHERE ZoneGeographique_id = 1
 	    		// AND  fiches_ZonesGeographiques.Fiche_id = fiche._id AND photoFiche._id =  fiche.photoPrincipale_id
@@ -370,7 +370,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         		} catch (java.sql.SQLException e) {
         			Log.e(LOG_TAG, e.getMessage(), e);
         		}
-
+        		
 				try {
 
 					for (String[] resultColumns : listePhotoPrinc) {
@@ -405,15 +405,18 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     						nbPhotosPrinRecuesPourZone++;
         				}
 	    					
-    					if (nbPhotosPrinRecuesPourZone % 100 == 0 || nbTelechargements % 10 == 0) publishProgress( nbPhotosPrinRecuesPourZone );	
+    					if ( nbPhotosPrinRecuesPourZone % 200 == 0
+							|| (nbTelechargements != 0 && nbTelechargements % 10 == 0) )
+    							publishProgress( nbPhotosPrinRecuesPourZone );	
         			
 		    			//Enregistrement du nombre total de photos téléchargée pour afficher avancement au fur et à mesure
-    					if (nbPhotosPrinRecuesPourZone % 200 == 0 || nbTelechargements % 10 == 0){
+    					if (nbPhotosPrinRecuesPourZone % 400 == 0
+							|| (nbTelechargements != 0 && nbTelechargements % 10 == 0) ) {
     						paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, true), nbPhotosPrinRecuesPourZone);
     						DorisApplicationContext.getInstance().notifyDataHasChanged(null);
     					}
 
-    					if (nbPhotosPrinRecuesPourZone % 200 == 0){
+    					if (nbPhotosPrinRecuesPourZone % 250 == 0){
 	    	        		// tempo pour économiser le CPU
 	    	        		Thread.sleep(tempo); // wait for 50 milliseconds before running another loop
 	    					if( this.isCancelled()) return nbPhotosPrinRecuesPourZone;
@@ -427,7 +430,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
     			//Enregistrement du nombre total de photos téléchargée pour afficher avancement
 				paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, true), nbPhotosPrinRecuesPourZone);
-				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - nbPhotosPrincDejaLaPourZone : "+nbPhotosPrinRecuesPourZone );
+				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosPrincipalesFiches - nbPhotosPrincDejaLaPourZone : "+nbPhotosPrinRecuesPourZone );
 				publishProgress( nbPhotosPrinRecuesPourZone );
     		}
 	
@@ -445,7 +448,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 		mNotificationHelper.setMaxItemToProcess(""+0);
 			    				
 		for (ZoneGeographique zoneGeo : listeZoneGeo) {
-			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
+			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosFiches - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
 			
 			int nbPhotosRecuesPourZone = 0;
 			
@@ -454,7 +457,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			if ( photosOutils.getPrecharModeZoneGeo(zoneId) != Photos_Outils.PrecharMode.P0 
 					&& photosOutils.getPrecharModeZoneGeo(zoneId) != Photos_Outils.PrecharMode.P1 ) {
 	    		
-	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - countNbPhotoPrincZone : "+nbPhotosATelechargerPourZone );
+	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosFiches - countNbPhotoPrincZone : "+nbPhotosATelechargerPourZone[zoneId] );
 		        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_images)
 		        		+ Constants.getTitreCourtZoneGeographique(Constants.getZoneGeographiqueFromId(zoneId)));
 		        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_images) );
@@ -462,7 +465,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	    		publishProgress( 0 );
 	    				        		
 				imageTypeImage = photosOutils.getImageQualityToDownload(false, zoneId);
-				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneId : "+zoneId+" - Type Image : "+imageTypeImage);
+				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosFiches - zoneId : "+zoneId+" - Type Image : "+imageTypeImage);
 	    		
 		
 				// SELECT cleURL FROM fiches_ZonesGeographiques, photoFiche WHERE ZoneGeographique_id = 1
@@ -486,13 +489,13 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	    		} catch (java.sql.SQLException e) {
 	    			Log.e(LOG_TAG, e.getMessage(), e);
 	    		}
-		        		
+	    		
 			    try{
 			    	int nbTelechargements = 0;
 					for (String[] resultColumns : listePhotos) {
 					    
 						String photoURL = resultColumns[0];
-		        		
+		        							
 						if ( imageTypeImage == Photos_Outils.ImageType.VIGNETTE ){
 							if ( !hsImagesVigAllreadyAvailable.contains(photoURL) ){
 								photosOutils.getOrDownloadPhotoFile(photoURL, Photos_Outils.ImageType.VIGNETTE);
@@ -516,14 +519,19 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 							nbPhotosRecuesPourZone++;
 	    				}
 						
-	    				if (nbPhotosRecuesPourZone % 100 == 0 || nbTelechargements % 10 == 0) publishProgress( nbPhotosRecuesPourZone );
+	    				if ( nbPhotosRecuesPourZone % 200 == 0
+    						|| (nbTelechargements != 0 && nbTelechargements % 10 == 0) )
+	    						publishProgress( nbPhotosRecuesPourZone );
 	    				
-						if (nbPhotosRecuesPourZone % 500 == 0 || nbTelechargements % 10 == 0){
+						if ( nbPhotosRecuesPourZone % 400 == 0
+							|| (nbTelechargements != 0 && nbTelechargements % 10 == 0) ) {
+							
+							if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosFiches - nbPhotosRecuesPourZone : "+nbPhotosRecuesPourZone + " - nbTelechargements : "+nbTelechargements);
 							//Enregistrement du nombre total de photos téléchargée pour afficher avancement
 							paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, false), nbPhotosRecuesPourZone);
 			        		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 						}
-						if (nbPhotosRecuesPourZone % 200 == 0){	
+						if (nbPhotosRecuesPourZone % 250 == 0){	
 							if( this.isCancelled()) return nbPhotosRecuesPourZone;
 								// toutes les 200 images ajoutées fait une micro pause pour économiser le CPU pour l'UI
 	        				Thread.sleep(4 * tempo); // wait for 200 milliseconds before running another loop
