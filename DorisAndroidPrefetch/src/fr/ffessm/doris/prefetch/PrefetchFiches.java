@@ -354,7 +354,7 @@ public class PrefetchFiches {
 								if ( !photoFiche.getCleURL().isEmpty() ) {
 									// Vignettes
 									if( ! prefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL().replace(" ", "_") ) ){
-										if (prefetchTools.getFichierFromUrl(Constants.VIGNETTE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL().replace(" ", "_"))) {
+										if (prefetchTools.getFichierFromUrl(Constants.VIGNETTE_BASE_URL+"/"+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+photoFiche.getCleURL().replace(" ", "_"))) {
 										} else {
 											log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 											//System.exit(1);
@@ -362,7 +362,7 @@ public class PrefetchFiches {
 									}
 									// Qualité Intermédiaire
 									if( ! prefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_MED_RES+photoFiche.getCleURL().replace(" ", "_") ) ){
-										if (prefetchTools.getFichierFromUrl(Constants.MOYENNE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_MED_RES+photoFiche.getCleURL().replace(" ", "_"))) {
+										if (prefetchTools.getFichierFromUrl(Constants.MOYENNE_BASE_URL+"/"+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_MED_RES+photoFiche.getCleURL().replace(" ", "_"))) {
 										} else {
 											log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 											//System.exit(1);
@@ -370,7 +370,7 @@ public class PrefetchFiches {
 									}
 									// Haute Qualité 
 									if( ! prefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_HI_RES+photoFiche.getCleURL().replace(" ", "_") ) ){
-										if (prefetchTools.getFichierFromUrl(Constants.GRANDE_BASE_URL+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_HI_RES+photoFiche.getCleURL().replace(" ", "_"))) {
+										if (prefetchTools.getFichierFromUrl(Constants.GRANDE_BASE_URL+"/"+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_HI_RES+photoFiche.getCleURL().replace(" ", "_"))) {
 										} else {
 											log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 											//System.exit(1);
