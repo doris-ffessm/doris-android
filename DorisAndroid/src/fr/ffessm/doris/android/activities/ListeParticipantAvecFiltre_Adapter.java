@@ -183,10 +183,11 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
         try{
         	defaultIconSize = Integer.parseInt(defaultIconSizeString);
         }catch(Exception e){}
+        trombineView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
+        trombineView.getLayoutParams().width = defaultIconSize;
         
         if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {
-        	trombineView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
-            trombineView.getLayoutParams().width = defaultIconSize;
+        	
             
             Photos_Outils photosOutils = new Photos_Outils(context);
 	        if(photosOutils.isAvailablePhoto(entry.getPhotoNom(), ImageType.PORTRAITS)){
@@ -213,8 +214,6 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
         }
         else{
         	// remet l'image par défaut (nécessaire à cause de recyclage des widgets)
-        	trombineView.getLayoutParams().height = defaultIconSize;
-            trombineView.getLayoutParams().width = defaultIconSize;
         	trombineView.setImageResource(R.drawable.app_ic_participant_small);
         }
 		// End of user code

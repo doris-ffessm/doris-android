@@ -60,6 +60,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -171,6 +172,16 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
         
 		// Start of user code protected additional Glossaire_Adapter getView code
 		//	additional code
+        ImageView termeView = (ImageView) convertView.findViewById(R.id.glossaire_listviewrow_icon);
+        String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
+        int defaultIconSize = 48;
+        try{
+        	defaultIconSize = Integer.parseInt(defaultIconSizeString);
+        }catch(Exception e){}
+        
+        termeView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
+        termeView.getLayoutParams().width = defaultIconSize;
+        
         int longueurMax = 80;
         String texteRow = entry.getDefinition().toString().replaceAll("^[^\\)]*\\)\\.", "").trim();
         texteRow = texteRow.replaceAll("\\{\\{[^\\}]*\\}\\}", "");

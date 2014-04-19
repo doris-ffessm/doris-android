@@ -293,7 +293,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         }catch(Exception e){}
         
         ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_icon);
-    	ivIcon.getLayoutParams().height = defaultIconSize;
+    	ivIcon.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
     	ivIcon.getLayoutParams().width = defaultIconSize;
     	
     	PhotoFiche photoPrincipale = entry.getPhotoPrincipale();
@@ -312,8 +312,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 			}*/
     	}
         if(photoPrincipale != null){
-        	ivIcon.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
-        	ivIcon.getLayoutParams().width = defaultIconSize;
+
         	photoPrincipale.setContextDB(_contextDB);
 
     		//Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
@@ -346,8 +345,6 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         }
         else{
         	// remet l'icone de base
-        	ivIcon.getLayoutParams().height = defaultIconSize;
-        	ivIcon.getLayoutParams().width = defaultIconSize;
         	ivIcon.setImageResource(R.drawable.app_ic_launcher);
         }
        
@@ -420,7 +417,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		}
 		// End of user code
 		ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_icon);
-    	ivIcon.setImageResource(R.drawable.app_ic_launcher);
+		ivIcon.setImageResource(R.drawable.app_ic_launcher);
 		return convertView;
 	}
 	protected Fiche getFicheForId(Integer ficheId){
