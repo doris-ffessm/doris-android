@@ -5,7 +5,7 @@
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
 	<string name="initialisationapplication_bg_initialTickerText">Initialisation de la base de donnée</string>
-	<string name="initialisationapplication_bg_notificationTitle">Initialisation Doris</string>
+	<string name="initialisationapplication_bg_notificationTitle">Initialisation DORISAndroid</string>
 	<!--End of user code
 	-->
 </resources>
