@@ -899,7 +899,7 @@ public class Fiche {
 				
 				//Remonter de 2 niveaux pour avoir le tableau
 				Element ElementTableauPhylogenique=ElementTableauTrait.getParentElement().getParentElement();
-				log.debug("getFiche() - Bloc Tableau Phylogenique : " + ElementTableauPhylogenique.toString().substring(0, Math.min(ElementTableBasse.toString().length(),30)));
+				log.info("getFiche() - Bloc Tableau Phylogenique : " + ElementTableauPhylogenique.toString().substring(0, Math.min(ElementTableBasse.toString().length(),30)));
 				
 				indice = 0;
 				String type_classification = "";
@@ -928,7 +928,7 @@ public class Fiche {
 							}
 						}
 						
-						log.debug("getFiche() - Tableau Phylogenique : " + type_classification + " - "
+						log.info("getFiche() - Tableau Phylogenique : " + type_classification + " - "
 								+ terme_scientifique + " - " + terme_francais + " - " + description);
 						
 						// Si la classification n'a pas encore été créée dans le dico, on le fait
@@ -937,7 +937,7 @@ public class Fiche {
 						sqlMap.put("termeScientifique", terme_scientifique);
 
 						Classification classification = new Classification();
-						
+
 						List<Classification> listClassification = _contextDB.classificationDao.queryForFieldValues(sqlMap); 
 						if ( listClassification.isEmpty() ){
 							classification = new Classification(type_classification, terme_scientifique, terme_francais, description);
