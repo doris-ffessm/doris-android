@@ -104,12 +104,11 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	// private Dao<EntreeBibliographie, Integer> entreeBibliographieDao = null;
 	private RuntimeExceptionDao<EntreeBibliographie, Integer> entreeBibliographieRuntimeDao = null;
 	
-	// Test GMo
 	private RuntimeExceptionDao<Classification, Integer> classificationRuntimeDao = null;
 	private RuntimeExceptionDao<ClassificationFiche, Integer> classificationFicheRuntimeDao = null;
 	
-		private RuntimeExceptionDao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesRuntimeDao = null;
-		private RuntimeExceptionDao<Fiches_DefinitionsGlossaire, Integer> fiches_DefinitionsGlossaireRuntimeDao = null;
+	private RuntimeExceptionDao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesRuntimeDao = null;
+	private RuntimeExceptionDao<Fiches_DefinitionsGlossaire, Integer> fiches_DefinitionsGlossaireRuntimeDao = null;
 
 	public OrmLiteDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);

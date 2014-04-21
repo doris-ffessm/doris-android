@@ -320,7 +320,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
     		Photos_Outils photosOutils = new Photos_Outils(context);
         	if(photosOutils.isAvailablePhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
         		try {
-        			//Log.d(LOG_TAG, "from disk "+photoPrincipale.getCleURL());
+        			//Log.d(LOG_TAG, "from disk : "+photoPrincipale.getCleURL());
 					Picasso.with(context)
 						.load(photosOutils.getPhotoFile(photoPrincipale.getCleURL(), ImageType.VIGNETTE))
 						.resize(defaultIconSize, defaultIconSize)
@@ -333,9 +333,10 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         	}
         	else{
         		// pas préchargée en local pour l'instant, cherche sur internet
+        		//Log.d(LOG_TAG, "from internet : "+photoPrincipale.getCleURL());
         		
         		Picasso.with(context)
-        			.load(Constants.VIGNETTE_BASE_URL+photoPrincipale.getCleURL())
+        			.load(Constants.VIGNETTE_BASE_URL+"/"+photoPrincipale.getCleURL())
 					.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
 					.resize(defaultIconSize, defaultIconSize)
 					.centerInside()

@@ -662,7 +662,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     	else{
     		// pas préchargée en local pour l'instant, cherche sur internet
     		Picasso.with(this)
-    			.load(Constants.VIGNETTE_BASE_URL+photoFiche.getCleURL())
+    			.load(Constants.VIGNETTE_BASE_URL+"/"+photoFiche.getCleURL())
 				.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
 				.error(R.drawable.doris_icone_doris_large_pas_connecte)
 				.fit()

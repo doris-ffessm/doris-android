@@ -161,7 +161,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     			}
     			
     			ChainedLoadImageViewCallback chainedLoadImageViewCallback = new ChainedLoadImageViewCallback(_activity, imgDisplay, 
-    					dossier_photo+photoFiche.getCleURL(),largeur, hauteur); // vrai chargement de l'image dans le callback
+    					dossier_photo+"/"+photoFiche.getCleURL(),largeur, hauteur); // vrai chargement de l'image dans le callback
     			if(photosOutils.isAvailablePhoto(photoFiche.getCleURL(), ImageType.VIGNETTE)){
     				try {
 						Picasso.with(_activity)
@@ -176,7 +176,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     			}
     			else{
 		    		Picasso.with(_activity)
-		    			.load(Constants.VIGNETTE_BASE_URL+photoFiche.getCleURL()) // charge d'abord la vignette depuis internet (mais elle est probablement déjà dans le cache)
+		    			.load(Constants.VIGNETTE_BASE_URL+"/"+photoFiche.getCleURL()) // charge d'abord la vignette depuis internet (mais elle est probablement déjà dans le cache)
 						.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
 						.error(R.drawable.doris_icone_doris_large_pas_connecte)
 						.resize(largeur, hauteur)
