@@ -800,7 +800,7 @@ public class Fiche {
 								
 								Participant participant = siteDoris.getParticipantFromListeParticipants(listeParticipants, Integer.valueOf(intervenantRef) );
 								if (participant != null) {
-									IntervenantFiche intervenantFiche = new IntervenantFiche(  participant, intervenantQualite.ordinal());
+									IntervenantFiche intervenantFiche = new IntervenantFiche( participant, intervenantQualite.ordinal());
 									intervenantFiche.setFiche(this);
 									_contextDB.intervenantFicheDao.create(intervenantFiche);
 								}				

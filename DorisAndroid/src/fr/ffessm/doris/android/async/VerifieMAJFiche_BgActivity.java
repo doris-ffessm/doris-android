@@ -161,6 +161,15 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
 			Log.d(LOG_TAG, "doInBackground() - listeParticipants.size : "+listeParticipants.size());
 			
 			try {
+				// Nécessaire pour que la mise à jour suivante fonctionne
+				// (système hérité du passé et surtout fonctionnant dans le prefetch => GMo : je garde)
+				ficheDeLaBase.setEtatFiche(ficheSite.getEtatFiche());
+				
+				dbHelper.getDorisDBHelper().ficheDao.update(
+						ficheDeLaBase
+					);
+				
+				// Mise à jour réelle de la Fiche
 				ficheDeLaBase.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
 				Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheDeLaBase.getNomCommun());
 
