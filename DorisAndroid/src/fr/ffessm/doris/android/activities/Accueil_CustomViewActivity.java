@@ -2,7 +2,7 @@
  * Licence CeCILL-B
  * *********************************************************************
  * Copyright (c) 2012-2013 - FFESSM
- * Auteurs : Guillaume Mo <gmo7942@gmail.com>
+ * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
 
@@ -225,8 +225,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         		//VerifieMAJFiches_BgActivity verifieMAJFiches_BgActivity = DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity;		    	
 				
 	        	DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity =
-	        		(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext(),
-						this.getHelper()).execute(""+Fiches_Outils.TypeLancement_kind.START);
+	        		(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext()/*,
+						this.getHelper()*/).execute(""+Fiches_Outils.TypeLancement_kind.START);
 
 	        }
         } 
@@ -751,7 +751,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	        	TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
 				if(telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING) {
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = 
-						(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+						(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext()/*, this.getHelper()*/).execute("");
 	
 				} else {
 					Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
@@ -766,8 +766,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         		VerifieMAJFiches_BgActivity verifieMAJFiches_BgActivity = DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity;		    	
 				if(verifieMAJFiches_BgActivity == null || verifieMAJFiches_BgActivity.getStatus() != Status.RUNNING) {
 	        		DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity =
-	        			(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext(),
-						this.getHelper()).execute(""+Fiches_Outils.TypeLancement_kind.MANUEL);
+	        			(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext()/*,
+						this.getHelper()*/).execute(""+Fiches_Outils.TypeLancement_kind.MANUEL);
 				}
         		// TODO : refreshScreenData();
             	return true;

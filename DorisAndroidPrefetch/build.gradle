@@ -41,7 +41,7 @@ task(updateDorisDB, dependsOn: 'classes', type: JavaExec) {
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-// * --zip CDDVD : Permet de créer la base et le CD hors ligne du Site
+// * CDDVD : Permet de créer la base et le CD hors ligne du Site
 // * Ce mode utilise html_ref et de images_ref ce qui permet de ne pas tout
 // * re-télécharger systématiquement.
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 

@@ -2,7 +2,7 @@
  * Licence CeCILL-B
  * *********************************************************************
  * Copyright (c) 2012-2013 - FFESSM
- * Auteurs : Guillaume Mo <gmo7942@gmail.com>
+ * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
 
@@ -150,6 +150,16 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		//End of user code
 	}
     //Start of user code additional code EtatModeHorsLigne_CustomViewActivity
+    
+    @Override
+    protected void onDestroy(){
+    	Log.d(LOG_TAG, "onDestroy()");
+    	// s'assure de désenregistrer le handler
+    	DorisApplicationContext.getInstance().removeDataChangeListeners(this);
+
+    	super.onDestroy();
+    }
+    
     public void dataHasChanged(String textmessage){
     	Message completeMessage = mHandler.obtainMessage(1, textmessage);
     	completeMessage.sendToTarget();
@@ -389,7 +399,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	        	TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
 				if(telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING) {
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = 
-						(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext(), this.getHelper()).execute("");
+						(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext()/*, this.getHelper()*/).execute("");
 	
 				} else {
 					Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();

@@ -10,7 +10,8 @@
         android:layout="@layout/preference_layout_category">
         
         <CheckBoxPreference android:key="@string/pref_key_mode_connecte_wifi_only"
-            android:title="@string/mode_connecte_wifi_only_prompt" 
+            android:title="@string/mode_connecte_wifi_only_prompt"
+            android:summary="@string/mode_connecte_wifi_only_summary"
             android:defaultValue="false"
             android:layout="@layout/preference_layout_preference"
             />
@@ -31,13 +32,15 @@
         android:layout="@layout/preference_layout_category">
          
         <CheckBoxPreference android:key="@string/pref_key_mode_precharg_wifi_only"
-            android:title="@string/mode_precharg_wifi_only_prompt" 
+            android:title="@string/mode_precharg_wifi_only_prompt"
+            android:summary="@string/mode_precharg_wifi_only_summary"
             android:defaultValue="true"
             android:layout="@layout/preference_layout_preference"
             />
         <PreferenceScreen
 	        android:key="button_maj_liste_fiches_zones_key"
 	        android:title="@string/maj_liste_fiches_region_prompt"
+	        android:summary="@string/maj_liste_fiches_region_summary"
 	        android:persistent="false"
 	        android:layout="@layout/preference_layout_preferencescreen">
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary

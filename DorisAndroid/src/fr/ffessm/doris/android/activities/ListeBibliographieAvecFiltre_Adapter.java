@@ -2,7 +2,7 @@
  * Licence CeCILL-B
  * *********************************************************************
  * Copyright (c) 2012-2013 - FFESSM
- * Auteurs : Guillaume Mo <gmo7942@gmail.com>
+ * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
 
@@ -187,13 +187,13 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
         	defaultIconSize = Integer.parseInt(defaultIconSizeString);
         }catch(Exception e){}
         
+    	imageView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
+    	imageView.getLayoutParams().width = defaultIconSize;
+    	
         if ( !entry.getCleURLIllustration().isEmpty() ) {
         	String nomPhoto = entry.getCleURLIllustration().replace("gestionenligne/photos_biblio_moy/","");
         	nomPhoto = Constants.PREFIX_IMGDSK_BIBLIO+nomPhoto;
-        	
-        	imageView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
-        	imageView.getLayoutParams().width = defaultIconSize;
-        	
+        		
         	Photos_Outils photosOutils = new Photos_Outils(context);
 	        if(photosOutils.isAvailablePhoto(nomPhoto, ImageType.ILLUSTRATION_BIBLIO)){
 	    		try {
@@ -220,8 +220,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
         }
         else{
         	// remet l'image par défaut (nécessaire à cause de recyclage des widgets)
-        	imageView.getLayoutParams().height = defaultIconSize;
-        	imageView.getLayoutParams().width = defaultIconSize;
+
         	imageView.setImageResource(R.drawable.app_bibliographie_doris);
         }
 		// End of user code

@@ -2,7 +2,7 @@
  * Licence CeCILL-B
  * *********************************************************************
  * Copyright (c) 2012-2013 - FFESSM
- * Auteurs : Guillaume Mo <gmo7942@gmail.com>
+ * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
 
@@ -335,7 +335,9 @@ public class GenerationCDDVD {
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"contact_fiche.asp\\?contact_numero=([^\">]*)\"","href=\"indisponible_CDDVD.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiches_liste_photographe.asp\\?contact_numero=([^\">]*)\"","href=\"indisponible_CDDVD.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"fiches_liste_contact.asp\\?contact_numero=([^\">]*)\"","href=\"indisponible_CDDVD.html\""));
-
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "<embed.*/>","La Galerie de Photos est indisponible ici."));
+		
+		
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?filtre=(.)[^\">]*","href=\"listeDefinitions-$1-1.html"));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?mapage=([^&\">]*)&[^\">]*filtre=(.)\"","href=\"listeDefinitions-$2-$1.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire_detail.asp\\?glossaire_numero=([^&\">]*)&[^\">]*","href=\"definition-$1.html"));
@@ -343,7 +345,11 @@ public class GenerationCDDVD {
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"glossaire.asp\\?page=Precedent[^\"]*","href=\""));
 		
 		regExpPourNettoyer.add(new Lien(LienKind.ICONE, "http://doris.ffessm.fr/gestionenligne/photos_forum_vig/[^\">]*\"","/doris_icone_doris_large.png\""));
-
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "(/images_groupe_[^.]*).gif","$1.png"));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "(/images_sousgroupe_[^.]*).gif","$1.png"));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "(/images_sousgroupe_[^.]*).jpg","$1.png"));
+		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "(/images_sousgroupe_[^.]*).JPG","$1.png"));
+		
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "fiche_photo_liste_apercu.asp\\?fiche_numero=([^&>]*)&[^\">]*\"","fiche-$1_listePhotos.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "photo_gde_taille_fiche2.asp\\?varpositionf=[^\">]*fiche_numero = ([^&]*)&[^\">]*\"","fiche-$1_listePhotos.html\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "photo_gde_taille.asp\\?varposition=[^\">]*\"","indisponible_CDDVD.html\""));
@@ -353,7 +359,8 @@ public class GenerationCDDVD {
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?page=Suivant[^\"]*","href=\""));
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?page=Precedent[^\"]*","href=\""));
 
-
+		regExpPourNettoyer.add(new Lien(LienKind.VIGNETTE, "gestionenligne/diaporamaglo/([^.]*).jpg","/"+Constants.PREFIX_IMGDSK_DEFINITION+"$1.jpg"));
+				
 		// Si un espace dans le nom des photos alors on le remplace par un _
 		//regExpPourNettoyer.add(new Lien(LienKind.PAGE, "<img src="../vignettes_fiches/ electra_posidoniae-dh02.jpg"","href=\""));
 
@@ -374,9 +381,9 @@ public class GenerationCDDVD {
 	
 	
 	private class Lien {
-		LienKind lienKind;
-		String url;
-		String fichierSurDisque;
+		private LienKind lienKind;
+		private String url;
+		private String fichierSurDisque;
 		
 		Lien(LienKind lienKind, String url, String fichierSurDisque){
 			this.lienKind = lienKind;
@@ -427,6 +434,15 @@ public class GenerationCDDVD {
 			e.printStackTrace();
 		}
 		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES+"/"+PrefetchConstants.SOUSDOSSIER_ICONES);
+		try {
+			FileUtils.copyDirectory(dossierRef, dossierCD);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		// Images du Dossier ./res/images, le Doris en cas d'images non présentes et
+		// celles des groupes : elles ne sont pas téléchargées pour l'appli car plus
+		// jolies retouchées, on remet ici celles de l'appli.
+		dossierRef = new File(PrefetchConstants.DOSSIER_RES_IMAGES);
 		try {
 			FileUtils.copyDirectory(dossierRef, dossierCD);
 		} catch (IOException e) {
@@ -565,7 +581,7 @@ public class GenerationCDDVD {
 			for (Lien lienRegExp : getRegExpPourNettoyer()){
 				switch (lienRegExp.getLienKind()) {
 				case PAGE :
-					contenuFichier = contenuFichier.replaceAll(lienRegExp.url,lienRegExp.getFichier());
+					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),lienRegExp.getFichier());
 				break;
 				case ICONE :
 					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_ICONES+lienRegExp.getFichier());

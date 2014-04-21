@@ -2,7 +2,7 @@
  * Licence CeCILL-B
  * *********************************************************************
  * Copyright (c) 2012-2013 - FFESSM
- * Auteurs : Guillaume Mo <gmo7942@gmail.com>
+ * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
 
@@ -109,7 +109,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	// the DAO object we use to access the diveBudies table
 	// private Dao<EntreeBibliographie, Integer> entreeBibliographieDao = null;
 	private RuntimeExceptionDao<Classification, Integer> classificationRuntimeDao = null;
-	
+
 	private RuntimeExceptionDao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesRuntimeDao = null;
 	private RuntimeExceptionDao<Fiches_DefinitionsGlossaire, Integer> fiches_DefinitionsGlossaireRuntimeDao = null;
 
@@ -337,6 +337,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 
 
 	/**
+
 	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our IntervenantFiche class. It will
 	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
 	 */
@@ -357,6 +358,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		}
 		return classificationRuntimeDao;
 	}
+
 	
 	/**
 	 * Close the database connections and clear any cached DAOs.
@@ -380,6 +382,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		fiches_DefinitionsGlossaireRuntimeDao = null;
 		classificationFicheRuntimeDao = null;
 		classificationRuntimeDao = null;
+
 	}
 
 	
@@ -404,6 +407,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 			helper.fiches_ZonesGeographiquesDao = getDao(Fiches_ZonesGeographiques.class);
 			helper.classificationFicheDao = getDao(ClassificationFiche.class);
 			helper.classificationDao = getDao(Classification.class);
+
 		} catch (SQLException e) {
 			Log.e(OrmLiteDBHelper.class.getName(), "Can't get ", e);
 		}

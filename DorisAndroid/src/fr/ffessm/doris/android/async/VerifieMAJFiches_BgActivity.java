@@ -2,7 +2,7 @@
  * Licence CeCILL-B
  * *********************************************************************
  * Copyright (c) 2012-2013 - FFESSM
- * Auteurs : Guillaume Mo <gmo7942@gmail.com>
+ * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
 
@@ -77,6 +77,7 @@ import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports VerifieMAJFiches_BgActivity
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.GenericRawResults;
 
 import fr.ffessm.doris.android.sitedoris.Constants;
@@ -112,7 +113,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 	// End of user code
     
 	/** constructor */
-    public VerifieMAJFiches_BgActivity(Context context, OrmLiteDBHelper dbHelper){
+    public VerifieMAJFiches_BgActivity(Context context/*, OrmLiteDBHelper dbHelper*/){
 		// Start of user code additional attribute declarations VerifieMAJFiches_BgActivity constructor
 		
 		String initialTickerText = context.getString(R.string.bg_notifText_fichesInitial);
@@ -125,7 +126,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 	    paramOutils = new Param_Outils(context);
 	    
 		// End of user code
-        this.dbHelper = dbHelper;
+	    this.dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
 		this.context = context;
     }
 
@@ -324,7 +325,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
         if ( typeLancement == Fiches_Outils.TypeLancement_kind.START) {
 	        DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity =
 	        		(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(
-	        				context, dbHelper).execute("");
+	        				context/*, dbHelper*/).execute("");
         }
         
 		// End of user code

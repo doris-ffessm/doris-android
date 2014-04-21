@@ -2,7 +2,7 @@
  * Licence CeCILL-B
  * *********************************************************************
  * Copyright (c) 2012-2013 - FFESSM
- * Auteurs : Guillaume Mo <gmo7942@gmail.com>
+ * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
 
@@ -768,7 +768,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     	else{
     		// pas préchargée en local pour l'instant, cherche sur internet
     		Picasso.with(this)
-    			.load(Constants.VIGNETTE_BASE_URL+photoFiche.getCleURL())
+    			.load(Constants.VIGNETTE_BASE_URL+"/"+photoFiche.getCleURL())
 				.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
 				.error(R.drawable.doris_icone_doris_large_pas_connecte)
 				.fit()

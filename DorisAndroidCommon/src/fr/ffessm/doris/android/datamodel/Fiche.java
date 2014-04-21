@@ -2,7 +2,7 @@
  * Licence CeCILL-B
  * *********************************************************************
  * Copyright (c) 2012-2013 - FFESSM
- * Auteurs : Guillaume Mo <gmo7942@gmail.com>
+ * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
 
@@ -900,6 +900,7 @@ public class Fiche {
 				} // Fin extraction données du bas de la page sauf tableau Phylogénique
 				
 				//Remonter de 2 niveaux pour avoir le tableau
+
 				Element ElementTableauPhylogenetique=ElementTableauTrait.getParentElement().getParentElement();
 				log.debug("getFiche() - Bloc Tableau Phylogenetique : " + ElementTableauPhylogenetique.toString().substring(0, Math.min(ElementTableBasse.toString().length(),30)));
 				
@@ -929,7 +930,7 @@ public class Fiche {
 								if (description.equals("{{n/}}")) description = "";
 							}
 						}
-						
+
 						log.debug("getFiche() - Tableau Phylogenetique : " + type_classification + " - "
 								+ terme_scientifique + " - " + terme_francais + " - " + description);
 						
@@ -939,7 +940,7 @@ public class Fiche {
 						sqlMap.put("termeScientifique", terme_scientifique);
 
 						Classification classification = new Classification();
-						
+
 						List<Classification> listClassification = _contextDB.classificationDao.queryForFieldValues(sqlMap); 
 						if ( listClassification.isEmpty() ){
 							classification = new Classification(type_classification, terme_scientifique, terme_francais, commonOutils.nettoyageTextes(description));

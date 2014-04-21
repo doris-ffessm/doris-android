@@ -2,7 +2,7 @@
  * Licence CeCILL-B
  * *********************************************************************
  * Copyright (c) 2012-2013 - FFESSM
- * Auteurs : Guillaume Mo <gmo7942@gmail.com>
+ * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
 
@@ -293,7 +293,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         }catch(Exception e){}
         
         ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_icon);
-    	ivIcon.getLayoutParams().height = defaultIconSize;
+    	ivIcon.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
     	ivIcon.getLayoutParams().width = defaultIconSize;
     	
     	PhotoFiche photoPrincipale = entry.getPhotoPrincipale();
@@ -312,8 +312,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 			}*/
     	}
         if(photoPrincipale != null){
-        	ivIcon.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
-        	ivIcon.getLayoutParams().width = defaultIconSize;
+
         	photoPrincipale.setContextDB(_contextDB);
 
     		//Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
@@ -321,7 +320,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
     		Photos_Outils photosOutils = new Photos_Outils(context);
         	if(photosOutils.isAvailablePhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
         		try {
-        			//Log.d(LOG_TAG, "from disk "+photoPrincipale.getCleURL());
+        			//Log.d(LOG_TAG, "from disk : "+photoPrincipale.getCleURL());
 					Picasso.with(context)
 						.load(photosOutils.getPhotoFile(photoPrincipale.getCleURL(), ImageType.VIGNETTE))
 						.resize(defaultIconSize, defaultIconSize)
@@ -334,9 +333,10 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         	}
         	else{
         		// pas préchargée en local pour l'instant, cherche sur internet
+        		//Log.d(LOG_TAG, "from internet : "+photoPrincipale.getCleURL());
         		
         		Picasso.with(context)
-        			.load(Constants.VIGNETTE_BASE_URL+photoPrincipale.getCleURL())
+        			.load(Constants.VIGNETTE_BASE_URL+"/"+photoPrincipale.getCleURL())
 					.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
 					.resize(defaultIconSize, defaultIconSize)
 					.centerInside()
@@ -346,8 +346,6 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         }
         else{
         	// remet l'icone de base
-        	ivIcon.getLayoutParams().height = defaultIconSize;
-        	ivIcon.getLayoutParams().width = defaultIconSize;
         	ivIcon.setImageResource(R.drawable.app_ic_launcher);
         }
        
@@ -420,7 +418,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		}
 		// End of user code
 		ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_icon);
-    	ivIcon.setImageResource(R.drawable.app_ic_launcher);
+		ivIcon.setImageResource(R.drawable.app_ic_launcher);
 		return convertView;
 	}
 	protected Fiche getFicheForId(Integer ficheId){

@@ -2,7 +2,7 @@
  * Licence CeCILL-B
  * *********************************************************************
  * Copyright (c) 2012-2013 - FFESSM
- * Auteurs : Guillaume Mo <gmo7942@gmail.com>
+ * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
 
@@ -400,7 +400,8 @@ public class SiteDoris {
     			Element elementIMG = elementTD.getFirstElement(HTMLElementName.IMG);
     			if(elementIMG != null){
 	    			String cleURL = elementIMG.getAttributeValue("src");
-	    			cleURL = cleURL.substring(cleURL.lastIndexOf("/"), cleURL.length()); // garde seulement le nom du fichier 
+	    			// Bizarre que ce / soit indispensable ensuite
+	    			cleURL = cleURL.substring(cleURL.lastIndexOf("/")+1, cleURL.length()); // garde seulement le nom du fichier 
 	    			cleURL = cleURL.replace(" ", "%20");	// on s'assure d'avoir une url valide
 	    			if (listePhotosFiche.isEmpty()) {
 	    				//Image Principale

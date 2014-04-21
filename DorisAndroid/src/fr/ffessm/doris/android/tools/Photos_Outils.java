@@ -2,7 +2,7 @@
  * Licence CeCILL-B
  * *********************************************************************
  * Copyright (c) 2012-2013 - FFESSM
- * Auteurs : Guillaume Mo <gmo7942@gmail.com>
+ * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
 
@@ -206,11 +206,12 @@ public class Photos_Outils {
 	}
 
 	public boolean isAvailablePhoto(String inPhotoURL, ImageType inImageType){
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailablePhoto() - inPhotoURL : "+ inPhotoURL );
+		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailablePhoto() - inPhotoURL : "+ inPhotoURL );
 		
 		File imageFolder = getImageFolder(inImageType);	
 		if(!inPhotoURL.isEmpty()){
 			File fichierImage = new File(imageFolder, inPhotoURL);
+			//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailablePhoto() - fichierImage : "+ fichierImage.toString() );
 			if(fichierImage.exists()){
 				return true;
 			}
@@ -220,7 +221,7 @@ public class Photos_Outils {
 	
 	
 	public File getPhotoFile(String photoURL, ImageType inImageType) throws IOException{
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPhotoFile() - photoURL : "+ photoURL );
+		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getPhotoFile() - photoURL : "+ photoURL );
 		
 		File imageFolder = getImageFolder(inImageType);		
 		return new File(imageFolder, photoURL);
