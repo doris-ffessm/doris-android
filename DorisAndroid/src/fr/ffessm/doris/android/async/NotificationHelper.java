@@ -62,7 +62,7 @@ public class NotificationHelper {
     private String maxItemToProcess = "???";
 
 	// Start of user code notification helper additional attributes
-	/** Racine du texte qui apparait dans la status bar */
+	/** Racine du texte qui apparaît dans la status bar */
     private String racineTickerText = "";
 
 	// End of user code
@@ -96,8 +96,15 @@ public class NotificationHelper {
        
         
         //create the content which is shown in the notification pulldown
-        CharSequence contentText = "0 / "+maxItemToProcess; //Text of the notification in the pull down
-
+        // Start of user code notification helper additional status message
+        CharSequence contentText = "";
+        if (!maxItemToProcess.equals("???")) {
+        	contentText = "0 / "+maxItemToProcess; //Text of the notification in the pull down
+        } else {
+        	contentText = "";
+        }
+        // End of user code
+        
         //you have to set a PendingIntent on a notification to tell the system what you want it to do when the notification is selected
         mContentIntent = PendingIntent.getActivity(
         		mContext,
@@ -134,7 +141,7 @@ public class NotificationHelper {
 
 		// Start of user code notification helper additional status message
     	CharSequence contentText = "";
-        if (!maxItemToProcess.equals("0")) {
+        if (!maxItemToProcess.equals("???")) {
         	contentText = racineTickerText + nbItemsComplete + " / " +maxItemToProcess;
         } else {
         	contentText = racineTickerText;
