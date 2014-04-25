@@ -516,18 +516,13 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     	LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View convertView = inflater.inflate(R.layout.detailsfiche_elementview_foldablesection, null);
         
+        // Titre de la Section
         TextView titreText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_titre);
         titreText.setText(titre);
         
+        // Texte avec mise en forme avancée, par exemple si le texte contient {{999}} alors on remplace par (Fiche)
+        // et on met un lien vers la fiche sur (Fiche)
         TextView contenuText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletext);
-        
-        if (!paramOutils.getParamBoolean(R.string.pref_key_fiche_aff_details_pardefaut, false)){
-        	contenuText.setVisibility(View.GONE); // par défaut invisible
-        } else {
-        	contenuText.setVisibility(View.VISIBLE);
-        }
-        
-        // Si le texte contient {{999}} alors on remplace par (Fiche) est on met un lien vers la fiche sur (Fiche)
         SpannableString richtext = textesOutils.textToSpannableStringDoris(texte);
         //Log.d(LOG_TAG, "addFoldableView() - richtext : "+richtext);
                 
@@ -535,6 +530,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         // make our ClickableSpans and URLSpans work 
         contenuText.setMovementMethod(LinkMovementMethod.getInstance());
         
+        // Bouton de fermeture et d'ouverure du texte de la section
         ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
         
         FoldableClickListener foldable = new FoldableClickListener(contenuText, foldButton, ImageButtonKind.DETAILS_FICHE);
@@ -546,6 +542,14 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         // enregistre pour réagir au click long
         registerForContextMenu(foldButton);
         registerForContextMenu(titreLinearLayout);
+        
+        // Gestion de l'affichage à l'ouverture de la fiche
+        if (!paramOutils.getParamBoolean(R.string.pref_key_fiche_aff_details_pardefaut, false)){
+        	contenuText.setVisibility(View.GONE); // par défaut invisible
+        } else {
+        	contenuText.setVisibility(View.VISIBLE);
+        	foldButton.setImageResource(R.drawable.app_expander_ic_maximized);
+        }
         
         containerLayout.addView(convertView);
     }
@@ -566,16 +570,12 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     	LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View convertView = inflater.inflate(R.layout.detailsfiche_elementview_foldablesection_2icones, null);
         
+        // Titre de la Section
         TextView titreText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_titre);
         titreText.setText(titre);
         
+        // Icones de la Section
         RelativeLayout sectionIcones = (RelativeLayout) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_icones);
-        
-        if (! paramOutils.getParamBoolean(R.string.pref_key_fiche_aff_details_pardefaut, false)){
-        	sectionIcones.setVisibility(View.GONE); // par défaut invisible
-        } else {
-        	sectionIcones.setVisibility(View.VISIBLE);
-        }
         
         final Groupe groupePere = getHelper().getGroupeDao().queryForId(groupe.getGroupePere().getId());
  
@@ -633,6 +633,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			});
         }
         
+        // Bouton d'Affichage et de Masque de la section
         ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
         
         FoldableClickListener foldable = new FoldableClickListener(sectionIcones, foldButton, ImageButtonKind.DETAILS_FICHE);
@@ -644,6 +645,15 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         // enregistre pour réagir au click long
         registerForContextMenu(foldButton);
         registerForContextMenu(titreLinearLayout);
+        
+        
+        // Affichage défaut à l'ouverture de la fiche
+        if (! paramOutils.getParamBoolean(R.string.pref_key_fiche_aff_details_pardefaut, false)){
+        	sectionIcones.setVisibility(View.GONE); // par défaut invisible
+        } else {
+        	sectionIcones.setVisibility(View.VISIBLE);
+        	foldButton.setImageResource(R.drawable.app_expander_ic_maximized);
+        }
         
         containerLayout.addView(convertView);
     }
@@ -658,15 +668,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     	LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     	View convertView = inflater.inflate(R.layout.details_tableau_phylogenetique_foldablesection, null);
         
+    	// Affichage de l'arbre
     	LinearLayout sectionArbre = (LinearLayout) convertView.findViewById(R.id.details_tableau_phylogenetique_contenu_linearlayout);
-        
-        if (! paramOutils.getParamBoolean(R.string.pref_key_fiche_aff_details_pardefaut, false)){
-        	sectionArbre.setVisibility(View.GONE); // par défaut invisible
-        } else {
-        	sectionArbre.setVisibility(View.VISIBLE);
-        }
-    	
-   	
+         	
         for( ClassificationFiche classificationFiche : classificationFicheCollect ) {
  
         	classificationFiche.setContextDB(getHelper().getDorisDBHelper());
@@ -723,9 +727,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 				detailsfiche_arbreview_description.setVisibility(View.GONE);
 				descriptionClassificationButton.setVisibility(View.GONE);
 			}
-			
 
-	        
         	sectionArbre.addView(convertArbreView);
         }
       
@@ -742,6 +744,14 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         // enregistre pour réagir au click long
         registerForContextMenu(detailsTableauButton);
         registerForContextMenu(detailsTableauLayout);
+        
+        // Affichage et Masquage de l'arbre à l'affichage de la fiche
+        if (! paramOutils.getParamBoolean(R.string.pref_key_fiche_aff_details_pardefaut, false)){
+        	sectionArbre.setVisibility(View.GONE); // par défaut invisible
+        } else {
+        	sectionArbre.setVisibility(View.VISIBLE);
+        	detailsTableauButton.setImageResource(R.drawable.app_expander_ic_maximized);
+        }
         
         containerLayout.addView(convertView);
     }
