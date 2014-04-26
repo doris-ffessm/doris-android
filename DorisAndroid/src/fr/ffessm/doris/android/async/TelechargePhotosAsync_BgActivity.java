@@ -533,7 +533,8 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 						if ( nbPhotosRecuesPourZone % 200 == 0
 							|| (nbTelechargements != 0 && nbTelechargements % 10 == 0) ) {
 							
-							if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosFiches - nbPhotosRecuesPourZone : "+nbPhotosRecuesPourZone + " - nbTelechargements : "+nbTelechargements);
+							//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosFiches - nbPhotosRecuesPourZone : "+nbPhotosRecuesPourZone + " - nbTelechargements : "+nbTelechargements);
+							
 							//Enregistrement du nombre total de photos téléchargée pour afficher avancement
 							paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, false), nbPhotosRecuesPourZone);
 			        		DorisApplicationContext.getInstance().notifyDataHasChanged(null);

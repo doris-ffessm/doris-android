@@ -41,6 +41,7 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -51,6 +52,9 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
+import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
 
 import android.content.Context;
@@ -75,6 +79,7 @@ import android.widget.Toast;
 
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.squareup.picasso.Picasso;
 
 //Start of user code protected additional Glossaire_Adapter imports
 // additional imports
@@ -172,16 +177,43 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
         
 		// Start of user code protected additional Glossaire_Adapter getView code
 		//	additional code
-        ImageView termeView = (ImageView) convertView.findViewById(R.id.glossaire_listviewrow_icon);
+        
+        // Affichage 1ère image de la définition qd disponible
+        ImageView imageView = (ImageView) convertView.findViewById(R.id.glossaire_listviewrow_icon);
         String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
         int defaultIconSize = 48;
         try{
         	defaultIconSize = Integer.parseInt(defaultIconSizeString);
         }catch(Exception e){}
         
-        termeView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
-        termeView.getLayoutParams().width = defaultIconSize;
+        imageView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
+        imageView.getLayoutParams().width = defaultIconSize;
         
+        //Log.i(LOG_TAG, "getView() - entry.getCleURLIllustration() : " +entry.getCleURLIllustration());	
+        
+        if ( !entry.getCleURLIllustration().isEmpty() ) {
+        	String[] listePhotos = entry.getCleURLIllustration().split(";");
+        	String nom1erePhoto = Constants.PREFIX_IMGDSK_DEFINITION + listePhotos[0];
+        	Log.i(LOG_TAG, "getView() - nomPhoto1erePhoto : " +nom1erePhoto);
+        	
+        	Photos_Outils photosOutils = new Photos_Outils(context);
+	        if(photosOutils.isAvailablePhoto(nom1erePhoto, ImageType.ILLUSTRATION_DEFINITION)){
+	    		try {
+					Picasso.with(context).load(photosOutils.getPhotoFile(nom1erePhoto, ImageType.ILLUSTRATION_DEFINITION))
+						.resize(defaultIconSize, defaultIconSize)
+						.centerInside()
+						.into(imageView);
+				} catch (IOException e) {
+				}
+	    	}
+        }
+        else{
+        	// remet l'image par défaut (nécessaire à cause de recyclage des widgets)
+
+        	imageView.setImageResource(R.drawable.app_ic_launcher);
+        }
+        
+        // MaJ Titre et Début définition
         int longueurMax = 80;
         String texteRow = entry.getDefinition().toString().replaceAll("^[^\\)]*\\)\\.", "").trim();
         texteRow = texteRow.replaceAll("\\{\\{[^\\}]*\\}\\}", "");
