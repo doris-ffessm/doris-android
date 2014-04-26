@@ -189,7 +189,7 @@ public class DefinitionGlossaire {
 	
     public List<String> getListeImagesDefinition(){
     	//log.debug("getListeImagesDefinition() - Début");
-    	log.debug("getListeImagesDefinition() - definition : " + definition);
+    	//log.debug("getListeImagesDefinition() - definition : " + definition);
     	List<String> listeImagesDefinition = new ArrayList<String>();
     	
 	    String chaineCaract = definition;
@@ -200,7 +200,7 @@ public class DefinitionGlossaire {
 		
 		do {
 			iteration++;
-			positionCourante = chaineCaract.indexOf("{{E:", positionCourante);
+			positionCourante = chaineCaract.indexOf("{{E:", 0);
 			//log.debug("getListeImagesDefinition() - 1 : "+positionCourante+" - "+positionFin);
 			
 			if (positionCourante != -1) {
@@ -209,7 +209,7 @@ public class DefinitionGlossaire {
 				//log.debug("getListeImagesDefinition() - 2 : "+positionCourante+" - "+positionFin);
 				
 				String image = chaineCaract.substring(positionCourante+4, positionFin);
-				log.debug("getListeImagesDefinition() - image : "+image);
+				//log.debug("getListeImagesDefinition() - image : "+image);
 				
 				listeImagesDefinition.add(image);
 				

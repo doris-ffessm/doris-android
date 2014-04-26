@@ -105,24 +105,40 @@ public class PrefetchDorisWebSite {
 		log.info("action : " + action);
 		log.info("Nb. Fiches Max : " + nbMaxFichesATraiter);
 		
-		// Vérification, Création, Sauvegarde des dossiers de travail
-		renommageDossiers(action);
-		creationDossiers(action);
-		creationDossiersRef(action);
-		
+
 		// - - - - - - - - - - - -
 		// - - - Test  - - - - - -
 		if ( action == ActionKind.TEST ) {
 			log.debug("doMain() - Début TEST");
 			
-			GenerationCDDVD generationCDDVD = new GenerationCDDVD();
-			generationCDDVD.creationCD();
-			generationCDDVD.transfoHtml( PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD + "/" );
-
+			// Vérification, Création, Sauvegarde des dossiers de travail
+			renommageDossiers(ActionKind.INIT);
+			creationDossiers(ActionKind.INIT);
+			creationDossiersRef(ActionKind.INIT);
+			
+			// - - - Base de Données - - -
+			PrefetchDBTools prefetchDBTools = new PrefetchDBTools();
+			prefetchDBTools.initializeSQLite(PrefetchConstants.DATABASE_URL);
+			connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
+			dbContext = prefetchDBTools.setupDatabase(connectionSource);
+			prefetchDBTools.databaseInitialisation(connectionSource);
+			outilsBase = new DataBase_Outils(dbContext);
+						
+			PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, ActionKind.INIT, nbMaxFichesATraiter);
+			if ( glossaire.prefetch() == -1 ) {
+				log.debug("doMain() - Erreur Glossaire" );
+				System.exit(1);
+			}
+			
 			log.debug("doMain() - Fin TEST");
 			
 		} else if(action == ActionKind.INIT || action == ActionKind.UPDATE || action == ActionKind.NODWNLD
 				|| action == ActionKind.CDDVD ) {
+			
+			// Vérification, Création, Sauvegarde des dossiers de travail
+			renommageDossiers(action);
+			creationDossiers(action);
+			creationDossiersRef(action);
 			
 			// - - - Base de Données - - -
 			PrefetchDBTools prefetchDBTools = new PrefetchDBTools();
