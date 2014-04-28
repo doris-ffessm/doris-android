@@ -4,7 +4,7 @@
 	<!-- Start of user code customView_strings imagepleinecran
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
-	<string name="imagepleinecran_customview_sample_btn_label">SampleButton</string>
+	<string name="imagepleinecran_customview_btnHiResNotAvailable_message">Connectez vous pour obtenir une meilleure définition</string>
 	<!-- End of user code
 	-->
 </resources>

@@ -48,6 +48,7 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.sitedoris.Constants;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.ImageView;
 
 public class ChainedLoadImageViewCallback implements Callback{
@@ -57,31 +58,63 @@ public class ChainedLoadImageViewCallback implements Callback{
 	String imageUrl;
 	int width;
 	int height;
+	boolean replaceImageOnError = false;
+	View imageNotAvailable;
 	
-	public ChainedLoadImageViewCallback(Context context, ImageView targetImageView, String imageUrl, int width, int height){
+	public ChainedLoadImageViewCallback(Context context, ImageView targetImageView, String imageUrl, int width, int height, boolean replaceImageOnError, View imageNotAvailable){
 		this.targetImageView = targetImageView;
 		this.context = context;
 		this.imageUrl = imageUrl;
 		this.width = width;
 		this.height = height;
+		this.replaceImageOnError = replaceImageOnError;
+		this.imageNotAvailable = imageNotAvailable;
 	}
 
 	@Override
 	public void onError() {
-		// TODO Auto-generated method stub
+		if(imageNotAvailable != null){
+			imageNotAvailable.setVisibility(View.VISIBLE);
+		}
 		
 	}
 
 	@Override
 	public void onSuccess() {
-		// Call the second image using the first as placeholder
-		Picasso.with(context)
-		.load(imageUrl)
-		.placeholder(targetImageView.getDrawable())  
-		.resize(width, height)
-		.centerInside()
-		.error(R.drawable.doris_icone_doris_large_pas_connecte)
-		.into(targetImageView);
+		// Call the second image using the first as placeholder		
+		if(replaceImageOnError){			//
+			Picasso.with(context)
+			.load(imageUrl)
+			.placeholder(targetImageView.getDrawable())  
+			.resize(width, height)
+			.centerInside()
+			.error(R.drawable.doris_icone_doris_large_pas_connecte)
+			.into(targetImageView, new InternalCallback());
+		}
+		else{
+			Picasso.with(context)
+			.load(imageUrl)
+			.placeholder(targetImageView.getDrawable())  
+			.resize(width, height)
+			.centerInside()
+			.into(targetImageView, new InternalCallback());
+		}
+	}
+	
+	// internal callback used to make sure to display the imageNotAvailable overlay image
+	class InternalCallback implements Callback {
+
+		@Override
+		public void onError() {
+			if(imageNotAvailable != null){
+				imageNotAvailable.setVisibility(View.VISIBLE);
+			}
+		}
+
+		@Override
+		public void onSuccess() {
+		}
+		
 	}
 
 }

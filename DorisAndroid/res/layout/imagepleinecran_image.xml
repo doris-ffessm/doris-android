@@ -20,7 +20,6 @@
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
         android:contentDescription="Fermer"
-        android:onClick="onClickBtnFermer"
 		android:src="@android:drawable/ic_menu_close_clear_cancel" />
     
      <Button
@@ -45,5 +44,17 @@
          android:layout_alignTop="@+id/imagepleinecran_image_btnClose"
          android:layout_centerHorizontal="true"
          android:background="@android:color/transparent" />
+     <ImageView
+        android:id="@+id/imagepleinecran_image_btnHiResNotAvalaible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:contentDescription="Pas de connexion"
+		android:src="@drawable/app_wifi_not_connected" />
 
 </RelativeLayout>

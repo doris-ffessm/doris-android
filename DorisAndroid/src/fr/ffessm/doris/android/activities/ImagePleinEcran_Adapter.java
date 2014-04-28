@@ -108,6 +108,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
     	final fr.ffessm.doris.android.tools.TouchImageView imgDisplay;
     	ImageView btnClose;
+    	ImageView btnHiResNotAvailable;
         Button imgTitre;
         
         inflater = (LayoutInflater) _activity
@@ -118,7 +119,8 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         imgDisplay = (fr.ffessm.doris.android.tools.TouchImageView) viewLayout.findViewById(R.id.imagepleinecran_image_imgDisplay);
         btnClose = (ImageView) viewLayout.findViewById(R.id.imagepleinecran_image_btnClose);
         imgTitre = (Button) viewLayout.findViewById(R.id.imagepleinecran_image_titre);
-        
+        btnHiResNotAvailable = (ImageView) viewLayout.findViewById(R.id.imagepleinecran_image_btnHiResNotAvalaible);
+        btnHiResNotAvailable.setVisibility(View.GONE);
         //int hauteur = (int )Math.round((ScreenTools.getScreenHeight(_activity)*1.5));
         //int largeur = (int )Math.round((ScreenTools.getScreenWidth(_activity)*1.5));
         int hauteur = ScreenTools.getScreenHeight(_activity);
@@ -161,13 +163,12 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     			}
     			
     			ChainedLoadImageViewCallback chainedLoadImageViewCallback = new ChainedLoadImageViewCallback(_activity, imgDisplay, 
-    					dossier_photo+"/"+photoFiche.getCleURL(),largeur, hauteur); // vrai chargement de l'image dans le callback
+    					dossier_photo+"/"+photoFiche.getCleURL(),largeur, hauteur, false, btnHiResNotAvailable); // vrai chargement de l'image dans le callback
     			if(photosOutils.isAvailablePhoto(photoFiche.getCleURL(), ImageType.VIGNETTE)){
     				try {
 						Picasso.with(_activity)
 							.load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.VIGNETTE)) // charge d'abord la vignette depuis le disque
 							.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
-							.error(R.drawable.doris_icone_doris_large_pas_connecte)
 							.resize(largeur, hauteur)
 							.centerInside()
 							.into(imgDisplay,chainedLoadImageViewCallback);
@@ -178,7 +179,6 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 		    		Picasso.with(_activity)
 		    			.load(Constants.VIGNETTE_BASE_URL+"/"+photoFiche.getCleURL()) // charge d'abord la vignette depuis internet (mais elle est probablement déjà dans le cache)
 						.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
-						.error(R.drawable.doris_icone_doris_large_pas_connecte)
 						.resize(largeur, hauteur)
 						.centerInside()
 		    			.into(imgDisplay,chainedLoadImageViewCallback);
@@ -214,6 +214,13 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
             	_activity.finish();
+            }
+        });
+        
+        btnHiResNotAvailable.setOnClickListener(new View.OnClickListener() {           
+            @Override
+            public void onClick(View v) {
+            	Toast.makeText(_activity, _activity.getString(R.string.imagepleinecran_customview_btnHiResNotAvailable_message), Toast.LENGTH_LONG).show();
             }
         });
   
