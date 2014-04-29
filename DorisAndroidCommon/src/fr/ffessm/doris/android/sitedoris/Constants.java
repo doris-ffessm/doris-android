@@ -129,54 +129,44 @@ public class Constants {
 	 */
     
 	public static String getSiteUrl() {
-		String listeFichesUrl = SITE_RACINE_URL;
-		return listeFichesUrl;
+		return SITE_RACINE_URL;
     }
     
     public static String getListeFichesUrl(int numZone) {
-		String listeFichesUrl = SITE_RACINE_URL + LISTE_FICHES_ZONE_URL + numZone;
-    	return listeFichesUrl;
+    	return SITE_RACINE_URL + LISTE_FICHES_ZONE_URL + numZone;
     }
     
     public static String getFicheFromIdUrl(int inId) {
-		String ficheUrl = SITE_RACINE_URL + FICHE_RACINE_URL_ID + inId;
-    	return ficheUrl;
+    	return SITE_RACINE_URL + FICHE_RACINE_URL_ID + inId;
     }
     
     public static String getFicheFromNomCommunUrl(String inNomCommun) {
     	Common_Outils commonOutils = new Common_Outils();
-		String ficheUrl = SITE_RACINE_URL + FICHE_RACINE_URL_NOM_COMMUN + commonOutils.formatStringNormalizer(inNomCommun.replace(" ", "%20") );
-    	return ficheUrl;
+    	return SITE_RACINE_URL + FICHE_RACINE_URL_NOM_COMMUN + commonOutils.formatStringNormalizer(inNomCommun.replace(" ", "%20") );
     }
     
     public static String getListeParticipantsUrl(String inInitiale) {
- 		String listeParticipantsUrl = SITE_RACINE_URL + PARTICIPANTS_RACINE_URL + inInitiale;
-     	return listeParticipantsUrl;
+     	return SITE_RACINE_URL + PARTICIPANTS_RACINE_URL + inInitiale;
     }
     public static String getParticipantUrl(int numeroParticipantDoris) {
- 		String listeParticipantsUrl = SITE_RACINE_URL + PARTICIPANT_RACINE_URL + numeroParticipantDoris;
-     	return listeParticipantsUrl;
+     	return SITE_RACINE_URL + PARTICIPANT_RACINE_URL + numeroParticipantDoris;
     }
     
     public static String getListeDefinitionsUrl(String inInitiale, String numero) {
- 		String listeDefinitionsUrl = SITE_RACINE_URL + GLOSSAIRE_RACINE_URL.replace("@lettre", inInitiale).replace("@numero", numero);
-     	return listeDefinitionsUrl;
+     	return SITE_RACINE_URL + GLOSSAIRE_RACINE_URL.replace("@lettre", inInitiale).replace("@numero", numero);
     }
     
     public static String getDefinitionUrl(String inId) {
- 		String definitionsUrl = SITE_RACINE_URL + DEFINITION_RACINE_URL + inId;
-     	return definitionsUrl;
+     	return SITE_RACINE_URL + DEFINITION_RACINE_URL + inId;
     }
     
     public static String getListeBibliographiesUrl(int numPage) {
     	int pagePrecedente = numPage - 1;
- 		String listeBibliographiesUrl = SITE_RACINE_URL + BIBLIOGRAPHIES_RACINE_URL.replace("@indice", ""+numPage).replace("@precedent", ""+pagePrecedente);
-     	return listeBibliographiesUrl;
+     	return SITE_RACINE_URL + BIBLIOGRAPHIES_RACINE_URL.replace("@indice", ""+numPage).replace("@precedent", ""+pagePrecedente);
     }
     
     public static String getBibliographieUrl(int inId) {
- 		String listeDefinitionsUrl = SITE_RACINE_URL + BIBLIOGRAPHIE_RACINE_URL + inId;
-     	return listeDefinitionsUrl;
+     	return SITE_RACINE_URL + BIBLIOGRAPHIE_RACINE_URL + inId;
     }
 
     
@@ -200,8 +190,7 @@ public class Constants {
     } 
     
     public static String getGroupesZoneUrl(int zone) {
-		String listeFichesUrl = SITE_RACINE_URL + GROUPES_URL+zone;
-    	return listeFichesUrl;
+    	return SITE_RACINE_URL + GROUPES_URL+zone;
     }
     
     public static String getGroupeContenuUrl(int zone, int numeroGroupe, int numeroSousGroupe, int page) {

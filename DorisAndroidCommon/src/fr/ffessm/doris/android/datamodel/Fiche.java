@@ -290,8 +290,8 @@ public class Fiche {
 		
 		// Quelque soit leur état dans le bas des fiches on a toujours la date de dernière modification
 		//<strong>DORIS</strong>,&nbsp;4/2/2013&nbsp;:&nbsp;
-		String regex = ".*<strong>DORIS</strong>,&nbsp;([^&]*)&nbsp;.*";
-		dateModification = Pattern.compile(regex, Pattern.DOTALL).matcher(htmlFiche).replaceAll("$1");
+		dateModification = Pattern.compile(".*<strong>DORIS</strong>,&nbsp;([^&]*)&nbsp;.*",
+											Pattern.DOTALL).matcher(htmlFiche).replaceAll("$1");
 		log.trace("getFicheEtatDateModifFromHtml() - etatFiche : "+etatFiche);
 		
 		log.trace("getFicheEtatDateModifFromHtml() - Fin");
@@ -333,11 +333,10 @@ public class Fiche {
 			}
 			if (tableResultats != null) break;
 		}
-		htmlFiche = tableResultats.toString();
 				
     	// Permet ensuite d'utiliser la mise en forme
     	// mais le prix à payer est de supprimer à la main partout où elle n'est pas nécessaire
-    	htmlFiche = commonOutils.remplacementBalises(htmlFiche, true);
+    	htmlFiche = commonOutils.remplacementBalises(tableResultats.toString(), true);
     	
     	//log.debug("getFiche() - htmlFiche : " + htmlFiche.substring(0, 200));
     	
@@ -498,10 +497,9 @@ public class Fiche {
 									
 								} else {
 									
-									String contenuTexte = elementTD.getRenderer().toString().trim();
+									String contenuTexte = commonOutils.nettoyageTextes(elementTD.getRenderer().toString().trim());
 									//log.debug("getFiche() - contenu(initial) : " + contenuTexte);
-									
-									contenuTexte = commonOutils.nettoyageTextes(contenuTexte);
+
 									
 									// permet d'enlever les Liens et de les remplacer par une balise qui sera réutilisée dans l'appli.
 									//<../fiche2.asp?fiche_numero=289>
@@ -572,10 +570,10 @@ public class Fiche {
 								String listeParticipantsTexteBrute = elementRubriqueinEntoureDeGris.getParentElement().getParentElement().getFirstElement(HTMLElementName.TABLE).getRenderer().toString();
 								//log.debug("getFiche() - 525 - "+listeParticipantsTexteBrute);
 				
-								String[] listeParticipantsTexte = listeParticipantsTexteBrute.split("\n");
-								log.debug("getFiche() - 530 - "+listeParticipantsTexte.length);
+								//String[] listeParticipantsTexte = listeParticipantsTexteBrute.split("\n");
+								//log.debug("getFiche() - 530 - "+listeParticipantsTexte.length);
 								
-								for (String ligne : listeParticipantsTexte) {
+								for (String ligne : listeParticipantsTexteBrute.split("\n")) {
 									//log.debug("getFiche() - 535 - "+ligne.trim());
 									
 									if ( Constants.getTypeParticipant(ligne.trim()) != null ){
@@ -783,10 +781,10 @@ public class Fiche {
 						String listeParticipantsTexteBrute = elementRubriqueinEntoureDeGris.getParentElement().getParentElement().getFirstElement(HTMLElementName.TABLE).getRenderer().toString();
 						//log.debug("getFiche() - 555 - "+listeParticipantsTexteBrute);
 		
-						String[] listeParticipantsTexte = listeParticipantsTexteBrute.split("\n");
+						//String[] listeParticipantsTexte = listeParticipantsTexteBrute.split("\n");
 						//log.debug("getFiche() - 560 - "+listeParticipantsTexte.length);
 						
-						for (String ligne : listeParticipantsTexte) {
+						for (String ligne : listeParticipantsTexteBrute.split("\n")) {
 							//log.debug("getFiche() - 565 - "+ligne.trim());
 							
 							if ( Constants.getTypeParticipant(ligne.trim()) != null ){
@@ -863,8 +861,7 @@ public class Fiche {
 								Element sousElement = element.getFirstElement(HTMLElementName.IMG).getParentElement();
 								if (sousElement != null) {
 									//log.debug("getFiche() - Test 2 : " + sousElement.getContent().toString());
-									section = sousElement.getRenderer().toString().trim();
-									section = commonOutils.nettoyageTextes(section);
+									section = commonOutils.nettoyageTextes(sousElement.getRenderer().toString().trim());
 								}
 							}
 							log.info("getFiche() - Section : " + section);

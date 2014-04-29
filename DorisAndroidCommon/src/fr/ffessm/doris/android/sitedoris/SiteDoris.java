@@ -101,17 +101,16 @@ public class SiteDoris {
     		//log.debug("getListeFichesFromHtml() - elementTD.length() : " + elementTD.length());
     		//log.debug("getListeFichesFromHtml()- elementTD : " + elementTD.toString().substring(0, Math.min(100, elementTD.toString().length())));
     		
-    		String elementTDwidth = elementTD.getAttributeValue("width");
-			if (elementTDwidth != null){
-    			if (elementTDwidth.toString().equals("75%")) {
+			if (elementTD.getAttributeValue("width") != null){
+    			if (elementTD.getAttributeValue("width").toString().equals("75%")) {
     				//log.debug("getListeFichesFromHtml() - elementTD : "+elementTD.getRenderer());
     				Element elementTDA = elementTD.getFirstElement(HTMLElementName.A);
     				
-    				String contenu = elementTDA.getRenderer().toString();
+    				//String contenu = elementTDA.getRenderer().toString();
     				//log.debug("getListeFichesFromHtml() - contenu : "+contenu);
     				
-    				String ficheNomScientifique = contenu.replaceAll("([^-]*)-(.*)", "$1").trim();
-    				String ficheNomCommun = contenu.replaceAll("([^-]*)-(.*)", "$2").trim();
+    				String ficheNomScientifique = elementTDA.getRenderer().toString().replaceAll("([^-]*)-(.*)", "$1").trim();
+    				String ficheNomCommun = elementTDA.getRenderer().toString().replaceAll("([^-]*)-(.*)", "$2").trim();
     				int ficheId = Integer.parseInt(elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "").replaceAll("&.*", ""));
     				int ficheEtat = Integer.parseInt(elementTDA.getAttributeValue("href").replaceAll(".*fiche_etat=", "").replaceAll("&.*", ""));
     				
@@ -230,10 +229,9 @@ public class SiteDoris {
 									for (Element elementA : listeElementsA) {
 										//log.info("getGroupes() - elementA : "+elementA.toString());
 										
-										String elementAClass = elementA.getAttributeValue("class");
-										if (elementAClass != null){
+										if (elementA.getAttributeValue("class") != null){
 											//Groupes Niveau 3
-											if (elementAClass.toString().equals("normal")){
+											if (elementA.getAttributeValue("class").toString().equals("normal")){
 																						
 												if (nivPrecedent == 1){
 													
@@ -286,10 +284,9 @@ public class SiteDoris {
 									for (Element elementAG4 : listeElementsA) {
 										//log.info("getGroupes() - elementA : "+elementAG4.toString());
 										
-										String elementAClassG4 = elementAG4.getAttributeValue("class");
-										if (elementAClassG4 != null){
+										if (elementAG4.getAttributeValue("class") != null){
 											//Groupes Niveau 4
-											if (elementAClassG4.toString().equals("normalgris2")){
+											if (elementAG4.getAttributeValue("class").toString().equals("normalgris2")){
 												Integer numGroupe = Integer.parseInt(elementAG4.getAttributeValue("href").toString().replaceAll(".*sousgroupe_numero=(\\d+)&groupe_numero.*", "$1"));
 												String nom = elementAG4.getRenderer().toString().replaceAll("\\x85","...").replaceAll("\\(.*", "").trim();
 												String description = elementAG4.getRenderer().toString().replaceAll("\\x85","...").replaceAll(".*\\((.*)\\).*", "$1").trim();
@@ -387,9 +384,8 @@ public class SiteDoris {
     			// c'est la description
     	    	Element descritionPhotoCouranteElem = null;
     			descritionPhotoCouranteElem = elementTD;
-    			descritionPhotoCourante = descritionPhotoCouranteElem.getRenderer().toString();
-    			
-    			descritionPhotoCourante = commonOutils.nettoyageTextes(descritionPhotoCourante);
+
+    			descritionPhotoCourante = commonOutils.nettoyageTextes(descritionPhotoCouranteElem.getRenderer().toString());
     			
     			//Suppression Balises (A en particulier)
     			//TODO : Mettre un lien un jour si ergonomie le permet
@@ -524,8 +520,7 @@ public class SiteDoris {
 					
 					List<? extends Element> listeElementsIMGParticipantPhoto = elementTR.getAllElements(HTMLElementName.IMG);
 					for (Element elementIMG : listeElementsIMGParticipantPhoto) {
-						String elementTDwidth = elementIMG.getAttributeValue("width");
-						if (elementTDwidth != null && elementTDwidth.equals("150") ){
+						if (elementIMG.getAttributeValue("width") != null && elementIMG.getAttributeValue("width").equals("150") ){
 							//log.info("getListeParticipantsParInitiale() - photo : "+elementIMG.getAttributeValue("src"));
 							if ( elementIMG.getAttributeValue("src").contains("gestionenligne/photos_vig") ){
 								participantUrlPhoto = elementIMG.getAttributeValue("src");
@@ -539,10 +534,8 @@ public class SiteDoris {
 					List<? extends Element> listeElementsTD = elementTR.getAllElements(HTMLElementName.TD);
 					int numeroTD = 0;
 					for (Element elementTD : listeElementsTD) {
-						String elementTDheight = elementTD.getAttributeValue("height");
-						String elementTDclass = elementTD.getAttributeValue("class");
-						if (elementTDheight != null && elementTDheight.equals("20") ) {
-							if (elementTDclass != null && elementTDclass.equals("normal") ) {
+						if (elementTD.getAttributeValue("height") != null && elementTD.getAttributeValue("height").equals("20") ) {
+							if (elementTD.getAttributeValue("class") != null && elementTD.getAttributeValue("class").equals("normal") ) {
 								numeroTD ++;
 								//log.info("getListeParticipantsParInitiale() - numeroTD : "+numeroTD+" - "+elementTD.getContent().toString());
 								if (numeroTD==1){
@@ -743,9 +736,8 @@ public class SiteDoris {
     		//log.debug("getListeBiblioFromHtml() - elementTD.length() : " + elementTD.length());
     		//log.debug("getListeBiblioFromHtml()- elementTD : " + elementTD.toString().substring(0, Math.min(100, elementTD.toString().length())));
     		
-    		String elementAClass = elementA.getAttributeValue("class");
-			if (elementAClass != null){
-    			if (elementAClass.toString().equals("normal")) {
+			if (elementA.getAttributeValue("class") != null){
+    			if (elementA.getAttributeValue("class").toString().equals("normal")) {
     	    		//log.debug("getListeBiblioFromHtml() - - - - - - - -");
     				//log.debug("getListeBiblioFromHtml() - elementA : " + elementA.getContent().toString().replaceAll("\n|\r", ""));
     				
@@ -768,8 +760,7 @@ public class SiteDoris {
     				}
     				log.debug("getListeBiblioFromHtml() - titre : " + titre);
 
-    				String regExp = ".*"+titre+",(.*)$";
-    				String edition = Pattern.compile(regExp, Pattern.DOTALL).matcher(bibliographie).replaceAll("$1");
+    				String edition = Pattern.compile(".*"+titre+",(.*)$", Pattern.DOTALL).matcher(bibliographie).replaceAll("$1");
     				//log.debug("getListeBiblioFromHtml() - edition : " + edition);
 
     				// l'illustration éventuelle dans cleURLIllustration, update après avoir téléchargé la page de l'entrée bibliographique

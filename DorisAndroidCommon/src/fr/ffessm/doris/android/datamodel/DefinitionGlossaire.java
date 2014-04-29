@@ -177,8 +177,7 @@ public class DefinitionGlossaire {
     	log.debug("getDefinitionsFromHtml() - definition : " + definition);
 
     	// permet de faire gagner du temps sur le téléphone
-		List<String> listeImagesDefinition = getListeImagesDefinition();
-		for (String imageDefinition : listeImagesDefinition ){
+		for (String imageDefinition : getListeImagesDefinition() ){
 			cleURLIllustration = cleURLIllustration + imageDefinition + ";";
 		}
 
@@ -208,10 +207,10 @@ public class DefinitionGlossaire {
 				positionFin = chaineCaract.indexOf("/}}", positionCourante);
 				//log.debug("getListeImagesDefinition() - 2 : "+positionCourante+" - "+positionFin);
 				
-				String image = chaineCaract.substring(positionCourante+4, positionFin);
+				//String image = chaineCaract.substring(positionCourante+4, positionFin);
 				//log.debug("getListeImagesDefinition() - image : "+image);
 				
-				listeImagesDefinition.add(image);
+				listeImagesDefinition.add(chaineCaract.substring(positionCourante+4, positionFin));
 				
 	    		positionCourante = positionFin + 3;
 	    		chaineCaract = chaineCaract.substring(positionCourante);

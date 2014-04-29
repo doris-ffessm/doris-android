@@ -177,9 +177,8 @@ C'est ce texte. */
 	public String getImageNameOnDisk(){
 		//log.warn("getImageNameOnDisk() - groupe : "+_id+" - "+numeroGroupe+" - "+numeroSousGroupe);
 		//log.warn("getImageNameOnDisk() - cleURLImage : "+cleURLImage);
-		String imageName = cleURLImage.replace("gestionenligne/", "")
+		return cleURLImage.replace("gestionenligne/", "")
 			.replace("images/", "images_groupe/").replace("/","_");
-		return imageName;
 	}
 	
 	
@@ -188,13 +187,11 @@ C'est ce texte. */
 		log.trace("descriptionDetailleeFromHtml() - Début");
 		
 		Common_Outils commonOutils = new Common_Outils();
-		
-		htmlGroupe = commonOutils.remplacementBalises(commonOutils.nettoyageBalises(htmlGroupe), true);
     	
 		// Dans les version suivante de Jericho le niveau de trace a changé
     	//Config.LoggerProvider = LoggerProvider.DISABLED;
 		
-		Source source = new Source(htmlGroupe);
+		Source source = new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(htmlGroupe), true));
 		source.fullSequentialParse();
 
 		// Description du groupe
@@ -209,8 +206,8 @@ C'est ce texte. */
 		
 		log.trace("descriptionDetailleeFromHtml() - Description Détaillée Groupe : "+elementTDTexte.toString());
 		
-		descriptionDetailleeGroupe = elementTDTexte.getRenderer().toString().trim();
-		descriptionDetailleeGroupe = commonOutils.nettoyageTextes(descriptionDetailleeGroupe);
+		descriptionDetailleeGroupe = commonOutils.nettoyageTextes(
+										elementTDTexte.getRenderer().toString().trim());
 
 		source = null;
 		

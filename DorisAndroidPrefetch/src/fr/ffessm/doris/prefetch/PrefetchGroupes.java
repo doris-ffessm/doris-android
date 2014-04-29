@@ -227,7 +227,7 @@ public class PrefetchGroupes {
 					}
 				}
 			}
-			contenuFichierHtml = null;
+
 			return listeGroupes.size();
 			
 		} catch ( Exception e) {

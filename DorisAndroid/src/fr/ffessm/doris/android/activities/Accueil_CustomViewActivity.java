@@ -574,9 +574,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         
     	StringBuilder sbRecherchePrecedente = new StringBuilder(); 
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-    	
-    
-    	
+
     	
         int filtreCourantId = prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1);	        
 		if(filtreCourantId==1){

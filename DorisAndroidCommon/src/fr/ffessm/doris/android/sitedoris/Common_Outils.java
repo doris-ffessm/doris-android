@@ -82,8 +82,8 @@ public class Common_Outils {
 		//log.debug("nettoyageBalises() - 020");
 		
 		// Tous les sauts de ligne de la même façon + gain de place en hauteur pour l'interface Android
-		texte = StringUtils.replace(texte, "<br>", "<br/>");
-		texte = StringUtils.replace(texte, "<br />", "<br/>");
+		texte = texte.replaceAll("<br>|<br />", "<br/>");
+
 		texte = StringUtils.replace(texte, "<br/><br/>", "<br/>");
 		
 		//log.debug("nettoyageBalises() - 025");
@@ -121,12 +121,8 @@ public class Common_Outils {
 		//Il arrive très souvent qu'une balise ouverte soit aussitôt refermée
 		// ce doit sans doute être dû à l'interface de saisie ou des outils utilisés en amont
 		// Toujours est-il que ça peut gêner ensuite, que ça fait perdre du temps et de la place
-		texte = StringUtils.replace(texte, "<strong></strong>", "");
-		texte = StringUtils.replace(texte, "</strong><strong>", "");
-		texte = StringUtils.replace(texte, "<em></em>", "");
-		texte = StringUtils.replace(texte, "</em><em>", "");
-		texte = StringUtils.replace(texte, "<i></i>", "");
-		texte = StringUtils.replace(texte, "</i><i>", "");
+		texte = texte.replaceAll("<strong></strong>|</strong><strong>|<em></em>|</em><em>|<i></i>|</i><i>", "");
+
 		texte = texte.replaceAll("<a href=\"http://[^>]*></a>", "");
 			
 		//log.debug("nettoyageBalises() - 060");
@@ -151,10 +147,9 @@ public class Common_Outils {
 			texte = StringUtils.replace(texte, "<strong>", "{{g}}");
 			texte = StringUtils.replace(texte, "</strong>", "{{/g}}");
 			//Italique
-			texte = StringUtils.replace(texte, "<em>", "{{i}}");
-			texte = StringUtils.replace(texte, "</em>", "{{/i}}");
-			texte = StringUtils.replace(texte, "<i>", "{{i}}");
-			texte = StringUtils.replace(texte, "</i>", "{{/i}}");
+			texte = texte.replaceAll("<em>|<i>", "{{i}}");
+			texte = texte.replaceAll("</em>|</i>", "{{/i}}");
+
 			//Souligné
 			texte = texte.replaceAll("<span style=\"text-decoration: underline;\">([^<>]*)</span>","{{s}}$1{{/s}}");
 			//Sauts de ligne
@@ -174,11 +169,8 @@ public class Common_Outils {
 			
 			// Après cela on nettoie un peu et met en ordre
 			// Mieux vaut le faire dans le prefetch qd on a le temps qu'à la présentation
-			texte = StringUtils.replace(texte, "{{/i}}{{i}}","");
-			texte = StringUtils.replace(texte, "{{/g}}{{g}}","");
-			
-			texte = StringUtils.replace(texte, "{{/i}} {{i}}"," ");
-			texte = StringUtils.replace(texte, "{{/g}} {{g}}"," ");
+			texte = texte.replaceAll("\\{\\{/i\\}\\}\\{\\{i\\}\\}|\\{\\{/g\\}\\}\\{\\{g\\}\\}","");
+			texte = texte.replaceAll("\\{\\{/i\\}\\} \\{\\{i\\}\\}|\\{\\{/g\\}\\} \\{\\{g\\}\\}"," ");
 			
 			// Le Gras ne doit pas être à l'intérieure d'un lien mais l'entourer
 			// ça ne semble arriver que pour ce cas, i.e. pas pour les termes du glossaire, l'italique etc..
@@ -186,13 +178,7 @@ public class Common_Outils {
 			texte = texte.replaceAll("\\{\\{F:([0-9]*)\\}\\}\\{\\{g\\}\\}", "{{g}}{{F:$1}}");
 			
 		} else {
-			texte = StringUtils.replace(texte, "<strong>", "");
-			texte = StringUtils.replace(texte, "</strong>", "");
-			texte = StringUtils.replace(texte, "<em>", "");
-			texte = StringUtils.replace(texte, "</em>", "");
-			texte = StringUtils.replace(texte, "<i>", "");
-			texte = StringUtils.replace(texte, "</i>", "");
-			texte = StringUtils.replace(texte, "<br/>", " ");
+			texte = texte.replaceAll("<strong>|</strong>|<em>|</em>|<i>|</i>|<br/>", "");
 		}
 		
 		//log.debug("remplacementBalises() - texteNettoye : " + texteNettoye);
@@ -231,8 +217,7 @@ public class Common_Outils {
 		// PRIVATE USE TWO (C292 UTF8, 0092 en Java)
 		// de même : RIGHT SINGLE QUOTATION MARK (E28099 UTF8, \u2019 en Java)
 		// au lieu de ' - sous Android les TextView les remplacent par des espaces
-		texteNettoye = texteNettoye.replaceAll("\u0092", "'");
-		texteNettoye = texteNettoye.replaceAll("\u2019", "'");
+		texteNettoye = texteNettoye.replaceAll("\u0092|\u2019", "'");
 		
 		// suppression des blancs multiples
 		texteNettoye = texteNettoye.replaceAll("[ \t]{2,}"," ");

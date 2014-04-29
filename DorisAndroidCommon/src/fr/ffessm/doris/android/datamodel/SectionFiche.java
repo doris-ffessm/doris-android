@@ -118,11 +118,7 @@ Sections Basses de la Page > 200
 	// Start of user code SectionFiche additional user properties
 	
 	public java.lang.String getTexteAffichable() {
-		String texte = this.texte;
-		
-		texte = texte.replace(" :", "\u00A0:").replace(" ;", "\u00A0;");
-		
-		return texte;
+		return this.texte.replace(" :", "\u00A0:").replace(" ;", "\u00A0;");
 	}
 	
 	// End of user code
