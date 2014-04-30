@@ -56,11 +56,13 @@ public class PatchedTextView extends TextView {
 		try {
 			super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		} catch (IndexOutOfBoundsException e) {
+			String fallBackString = getText().toString();
 			try{
 				fixOnMeasure(widthMeasureSpec, heightMeasureSpec);
 			}catch (IndexOutOfBoundsException e2) {
 				if (BuildConfig.DEBUG) {
 					Log.d(TAG, "The text is a Spanned but the fix wasn't enough, falling back to String");
+					setText(fallBackString);
 					fallbackToString(widthMeasureSpec, heightMeasureSpec);
 				}
 			}
