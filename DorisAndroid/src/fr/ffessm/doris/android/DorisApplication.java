@@ -57,7 +57,7 @@ import android.util.Log;
 
 @ReportsCrashes(
 	    formKey = "", // This is required for backward compatibility but not used
-	    mailTo = "dvojtise@gmail.com",
+	    mailTo = "doris4android@gmail.com",
         mode = ReportingInteractionMode.TOAST,
         resToastText = R.string.crash_toast_text
 	)

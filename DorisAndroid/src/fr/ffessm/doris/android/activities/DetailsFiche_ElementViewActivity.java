@@ -524,7 +524,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         // et on met un lien vers la fiche sur (Fiche)
         TextView contenuText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletext);
         SpannableString richtext = textesOutils.textToSpannableStringDoris(texte);
-        //Log.d(LOG_TAG, "addFoldableView() - richtext : "+richtext);
+        Log.d(LOG_TAG, "addFoldableView() - titre : "+titre);
+        Log.d(LOG_TAG, "addFoldableView() - text : "+texte);
                 
         contenuText.setText(richtext, BufferType.SPANNABLE);
         // make our ClickableSpans and URLSpans work 
