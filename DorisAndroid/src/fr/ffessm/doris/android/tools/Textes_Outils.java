@@ -161,11 +161,14 @@ public class Textes_Outils {
 	        		int posFinTexteFinal = texteFinal.length();
 	        		
 	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
-	        		
-	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
-	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
-	        		
-	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.ITALIQUE,ts.positionDebut,posFinTexteFinal));
+	        		if(pileDerniereBalise.size() > 0){ // ignore les balises fermantes si pas de balise ouvrante correspondante
+		        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+		        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+		        		
+		        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.ITALIQUE,ts.positionDebut,posFinTexteFinal));}
+	        		else{
+	        			Log.w(LOG_TAG, "Problème de balise /i sur le texte : "+texte);
+	        		}
 	        	}
 	        	else if (balise.equals("g")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
@@ -180,11 +183,15 @@ public class Textes_Outils {
 	        		int posFinTexteFinal = texteFinal.length();
 	        		
 	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
-	        		
-	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
-	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
-	        		
-	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.GRAS,ts.positionDebut,posFinTexteFinal));
+	        		if(pileDerniereBalise.size() > 0){ // ignore les balises fermantes si pas de balise ouvrante correspondante
+		        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+		        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+		        		
+		        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.GRAS,ts.positionDebut,posFinTexteFinal));
+	        		}
+	        		else{
+	        			Log.w(LOG_TAG, "Problème de balise /g sur le texte : "+texte);
+	        		}
 	        	}
 	        	else if (balise.equals("s")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
@@ -199,11 +206,15 @@ public class Textes_Outils {
 	        		int posFinTexteFinal = texteFinal.length();
 	        		
 	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
-	        		
-	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
-	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
-	        		
-	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.SOULIGNE,ts.positionDebut,posFinTexteFinal));
+	        		if(pileDerniereBalise.size() > 0){ // ignore les balises fermantes si pas de balise ouvrante correspondante
+		        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+		        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+		        		
+		        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.SOULIGNE,ts.positionDebut,posFinTexteFinal));
+	        		}
+	        		else{
+	        			Log.w(LOG_TAG, "Problème de balise /s sur le texte : "+texte);
+	        		}
 	        	}
 	        	else if (balise.equals("n/")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) + "\n");
@@ -224,12 +235,17 @@ public class Textes_Outils {
 	        		int posFinTexteFinal = texteFinal.length();
 	        		
 	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
-	        		
-	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
-	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
-	        		
-	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.FICHE,ts.positionDebut,posFinTexteFinal,
-	        				ts.info));
+
+	        		if(pileDerniereBalise.size() > 0){ // ignore les balises fermantes si pas de balise ouvrante correspondante
+		        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+		        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+		        		
+		        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.FICHE,ts.positionDebut,posFinTexteFinal,
+		        				ts.info));
+	        		}
+	        		else{
+	        			Log.w(LOG_TAG, "Problème de balise /F sur le texte : "+texte);
+	        		}
 	        	}
 	        	else if (balise.startsWith("D:")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
@@ -245,12 +261,16 @@ public class Textes_Outils {
 	        		int posFinTexteFinal = texteFinal.length();
 	        		
 	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
-	        		
-	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
-	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
-	        		
-	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.DEFINITION,ts.positionDebut,posFinTexteFinal,
-	        				ts.info));
+	        		if(pileDerniereBalise.size() > 0){ // ignore les balises fermantes si pas de balise ouvrante correspondante			        	
+		        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+		        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+		        		
+		        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.DEFINITION,ts.positionDebut,posFinTexteFinal,
+		        				ts.info));
+	        		}
+	        		else{
+	        			Log.w(LOG_TAG, "Problème de balise /D sur le texte : "+texte);
+	        		}
 	        	}
 	        	else if (balise.startsWith("E:")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
@@ -277,12 +297,17 @@ public class Textes_Outils {
 	        		int posFinTexteFinal = texteFinal.length();
 	        		
 	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
-	        		
-	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
-	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
-	        		
-	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.LIENWEB,ts.positionDebut,posFinTexteFinal,
-	        				ts.info));
+	        		if(pileDerniereBalise.size() > 0){ // ignore les balises fermantes si pas de balise ouvrante correspondante
+				        	
+		        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+		        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+		        		
+		        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.LIENWEB,ts.positionDebut,posFinTexteFinal,
+		        				ts.info));
+	        		}
+	        		else{
+	        			Log.w(LOG_TAG, "Problème de balise /A sur le texte : "+texte);
+	        		}
 	        	}
 	        	else if (balise.startsWith("P:")){
 	        		texteFinal.append( texteInter.substring(0, posDepTexteInter) );
@@ -299,11 +324,16 @@ public class Textes_Outils {
 	        		
 	        		texteInter = texteInter.substring(posFinTexteInter+2, texteInter.length());
 	        		
-	        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
-	        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
-	        		
-	        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.PARTICIPANT,ts.positionDebut,posFinTexteFinal,
-	        				ts.info));
+	        		if(pileDerniereBalise.size() > 0){ // ignore les balises fermantes si pas de balise ouvrante correspondante					    
+		        		TextSpan ts = pileDerniereBalise.get(pileDerniereBalise.size()-1);
+		        		pileDerniereBalise.remove(pileDerniereBalise.size()-1);
+		        		
+		        		listeFicheNumero.add(new TextSpan(TextSpan.SpanType.PARTICIPANT,ts.positionDebut,posFinTexteFinal,
+		        				ts.info));
+	        		}
+	        		else{
+	        			Log.w(LOG_TAG, "Problème de balise /P sur le texte : "+texte);
+	        		}
 	        	}
 	        	
 	        } // fin du While
