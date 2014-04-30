@@ -34,7 +34,7 @@
 		    android:textColor="?android:attr/textColorPrimary"/>
     </LinearLayout>
 
-    <TextView
+    <fr.ffessm.doris.android.activities.view.PatchedTextView
         android:id="@+id/detailsfiche_elementview_foldablesection_foldabletext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,6 +44,8 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
 		android:textColor="?android:attr/textColorSecondary"
         android:text="Contenu" />
+
+    
 
     <View style="@style/Separateur"/>
     
