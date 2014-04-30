@@ -83,7 +83,6 @@ public class SiteDoris {
     	// Dans les version suivante de Jericho le niveau de trace a changé
     	//Config.LoggerProvider = LoggerProvider.DISABLED;
     	
-    	
     	Source source=new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(inCodePageHtml),false ) );
     	//log.info("getListeFichesFromHtml()- 010");
     	source.fullSequentialParse();
@@ -373,24 +372,18 @@ public class SiteDoris {
     	for (Element elementTD : listeElementsTD) {
     		if(elementTD.getAttributeValue("class").equals("normal_noir_gras")){
     			// c'est le titre
-    	    	Element titrePhotoCouranteElem = null;
-    			titrePhotoCouranteElem = elementTD;
-    			titrePhotoCourante = titrePhotoCouranteElem.getRenderer().toString();
-    			titrePhotoCourante = titrePhotoCouranteElem.getRenderer().toString().trim();
-    			titrePhotoCourante = titrePhotoCourante.replaceAll("[0-9].-", "").trim();
-    			titrePhotoCourante = titrePhotoCourante.replaceAll("[0-9].", "").trim();
+    			titrePhotoCourante = elementTD.getRenderer().toString().trim();
+    			titrePhotoCourante = titrePhotoCourante.replaceAll("[0-9].-", "").trim().replaceAll("[0-9].", "").trim();
     		}
+    		
     		if(elementTD.getAttributeValue("class").equals("normal")){
     			// c'est la description
-    	    	Element descritionPhotoCouranteElem = null;
-    			descritionPhotoCouranteElem = elementTD;
-
-    			descritionPhotoCourante = commonOutils.nettoyageTextes(descritionPhotoCouranteElem.getRenderer().toString());
-    			
+    			descritionPhotoCourante = commonOutils.nettoyageTextes(elementTD.getRenderer().toString());
     			//Suppression Balises (A en particulier)
     			//TODO : Mettre un lien un jour si ergonomie le permet
     			descritionPhotoCourante = descritionPhotoCourante.replaceAll("<[^>]*>", "").trim();
     		}
+    		
     		if(elementTD.getAttributeValue("class").equals("liste1")){
     			// c'est l'image
     			Element elementIMG = elementTD.getFirstElement(HTMLElementName.IMG);
@@ -407,8 +400,7 @@ public class SiteDoris {
 	    				PhotoFiche photoFiche = new PhotoFiche(cleURL,titrePhotoCourante, descritionPhotoCourante);
 	    				listePhotosFiche.add(photoFiche);
 	    			}
-	    			
-	    			
+
 	    			titrePhotoCourante = null;
 	    			descritionPhotoCourante = null;
     			}
@@ -558,8 +550,8 @@ public class SiteDoris {
 					listeElementsTD = null;
 				}
 				if (numeroTR % 4 == 3){
-					participantDescription = commonOutils.remplacementBalises(participantDescription, true);
-					participantDescription = commonOutils.nettoyageTextes(participantDescription);
+					participantDescription = commonOutils.nettoyageTextes(
+											commonOutils.remplacementBalises(participantDescription, true) );
 					log.info("getListeParticipantsParInitiale() - participantKind : "+participantKind);
 					log.info("getListeParticipantsParInitiale() - participantDescription : "+participantDescription);
 					
@@ -577,7 +569,6 @@ public class SiteDoris {
 		
     	source = null;
     	listeElementsTR = null;
-    	
     	
     	
     	//log.debug("getListeParticipantsParInitiale() - Fin");

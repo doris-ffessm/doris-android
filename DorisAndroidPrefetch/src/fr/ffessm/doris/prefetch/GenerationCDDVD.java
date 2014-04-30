@@ -642,7 +642,7 @@ public class GenerationCDDVD {
 			}
 			// Les pages contenant les espèces du Groupe : groupe-10-2-73-1.html
 			if (fichierHtml.getName().contains("groupe-")){
-				log.debug("transfoHtml() - fichier groupe : "+fichierHtml.getName());
+				//log.debug("transfoHtml() - fichier groupe : "+fichierHtml.getName());
 				String[] info = fichierHtml.getName().replace(".html", "").split("-");
 				String numZone = info[1].trim();
 				String numGroupe = info[2].trim();
