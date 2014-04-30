@@ -77,7 +77,7 @@ public class Common_Outils {
 		
 		// Il faut nettoyer cette balise originale ...
 		// <strong style="font-size: 11px;">
-		texte = texte.replaceAll("<strong [^>]*>", "");
+		texte = texte.replaceAll("<strong [^>]*>", "<strong>");
 		
 		//log.debug("nettoyageBalises() - 020");
 		
