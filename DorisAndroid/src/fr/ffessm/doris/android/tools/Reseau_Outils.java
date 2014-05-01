@@ -71,6 +71,7 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 
 import android.app.Activity;
 import android.content.Context;
@@ -143,12 +144,10 @@ public class Reseau_Outils {
 	 * POUR L'INSTANT ICI, VOIR PLUS TARD POUR EN AVOIR UN COMMUN AVEC PREFECTCH SI POSSIBLE
 	 * ISSU DE DORIS for ANDROID 1
      * getHtml permet de récupérer le fichier html à partir de l'URL
-     * et de stocker le résultat dans un cache qui devrait permettre d'accélérer
-     * la récup et consommer moins de bande passante
      ********************************************************************** */
-	public String getHtml (String inUrl) throws IOException{
-    	Log.d(LOG_TAG, "getHtml()- Début");
-    	Log.d(LOG_TAG, "getHtml()- inUrl : " + inUrl);
+	public String getHtml (String inUrl, FileHtmlKind fileKind) throws IOException{
+    	//Log.d(LOG_TAG, "getHtml()- Début");
+    	//Log.d(LOG_TAG, "getHtml()- inUrl : " + inUrl);
     	
     	
     	if (inUrl.length()==0)
@@ -190,19 +189,29 @@ public class Reseau_Outils {
 			} else {
 				bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "ISO-8859-1"));
 			}
+			
+			
     		//On lit ligne à ligne le bufferedReader pour le stocker dans le stringBuffer
-    		String ligneCodeHTML = bufferedReader.readLine();
-    		
-    		int i = 0;
-    		
-    		while (ligneCodeHTML != null){
-    			stringBuffer.append(ligneCodeHTML.trim());
-    			i++;
-    			//if (i % 100 == 0) Log.d(LOG_TAG, "getHtml() - "+i+" - ligneCodeHTML : "+ligneCodeHTML.trim().length());
-    			
-    			ligneCodeHTML = bufferedReader.readLine();
-    		}
-    		Log.d(LOG_TAG, "getHtml() - "+i);
+    		String ligneCodeHTML;
+    		while ((ligneCodeHTML = bufferedReader.readLine()) != null){
+				switch (fileKind) {
+				case LISTE_FICHES:
+					// Supprimer dès ici toutes les lignes <TD ne nous servant pas permet de gagner
+					// bcp de place en mémoire, le poids des fichiers html est en effet divisé par 2 
+					if (
+							!( ligneCodeHTML.trim().startsWith("<td width=") )
+							|| ( ligneCodeHTML.trim().startsWith("<td width=\"75%\"") )
+						){
+							stringBuffer.append(ligneCodeHTML.trim());
+							stringBuffer.append("\n");
+					}
+					break;
+				default:
+					stringBuffer.append(ligneCodeHTML.trim());
+					stringBuffer.append("\n");
+				}
+			}
+    		bufferedReader.close();
             
 		} catch(SocketTimeoutException erreur) {
 			String text = "La Connexion semble trop lente";
@@ -227,9 +236,9 @@ public class Reseau_Outils {
     		}
     	}
     	
-		Log.d(LOG_TAG, "getHtml() - length : "+stringBuffer.toString().length());
-    	Log.d(LOG_TAG, "getHtml() - codeHtml : " +stringBuffer.toString().substring(0, Math.min(stringBuffer.toString().length(), 20)));
-		Log.d(LOG_TAG, "getHtml() - Fin");
+		//Log.d(LOG_TAG, "getHtml() - length : "+stringBuffer.toString().length());
+    	//Log.d(LOG_TAG, "getHtml() - codeHtml : " +stringBuffer.toString().substring(0, Math.min(stringBuffer.toString().length(), 20)));
+		//Log.d(LOG_TAG, "getHtml() - Fin");
     	return stringBuffer.toString();
 	}
     
