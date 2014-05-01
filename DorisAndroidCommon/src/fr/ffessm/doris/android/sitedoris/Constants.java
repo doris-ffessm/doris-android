@@ -124,6 +124,22 @@ public class Constants {
     private final static String PICTO_ESPECE_REGLEMENTEE_LIB = "Espèce réglementée";
 	private final static String PICTO_ESPECE_DANGEREUSE_LIB = "Espèce dangereuse";
 
+	
+    public enum FileHtmlKind {
+    	LISTE_FICHES,
+    	FICHE,
+    	LISTE_BIBLIO,
+    	BIBLIO,
+    	LISTE_TERMES,
+    	TERME,
+    	LISTE_GROUPES,
+    	GROUPE,
+    	GROUPES_ZONE,
+    	LISTE_PARTICIPANTS,
+    	AUTRE
+    }
+    
+	
 	/*
 	 * Accession aux Constantes
 	 */

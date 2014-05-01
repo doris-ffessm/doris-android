@@ -59,6 +59,7 @@ import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
@@ -114,7 +115,7 @@ public class PrefetchFiches {
 			if ( action != ActionKind.NODWNLD ){
 				String listeToutesFiches = Constants.getListeFichesUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES)); 
 				if (prefetchTools.getFichierFromUrl(listeToutesFiches, listeFichesFichier)) {
-					contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier));
+					contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier), FileHtmlKind.LISTE_FICHES);
 				} else {
 					log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 					System.exit(1);
@@ -123,15 +124,16 @@ public class PrefetchFiches {
 				// NODWNLD
 				listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches.html";
 				if (new File(listeFichesFichier).exists()) {
-					contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier));
+					contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier), FileHtmlKind.LISTE_FICHES);
 				} else {
 					log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
 					System.exit(0);
 				}
 			}
+			
 			HashSet<FicheLight> listeFichesSite = siteDoris.getListeFichesFromHtml(contenuFichierHtml);
 			log.info("Nb Fiches sur le site : "+listeFichesSite.size());
-
+	
 			// Récupération de la liste des fiches dans le dossier de référence
 			// Si NODWNLD la liste sera utilisée pour faire le traitement
 			// Si UPDATED ou CDDVD, elle permettra de déduire les fiches à télécharger de nouveau : les fiches ayant changées de statut
@@ -139,8 +141,7 @@ public class PrefetchFiches {
 			if ( action != ActionKind.INIT ){
 				listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches.html";
 				if (new File(listeFichesFichier).exists()) {
-					contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier));
-					listFichesFromRef = siteDoris.getListeFichesFromHtml(contenuFichierHtml);
+					listFichesFromRef = siteDoris.getListeFichesFromHtml( prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier), FileHtmlKind.LISTE_FICHES) );
 				} else {
 					// Si en Mode NODWLD alors le fichier doit être dispo.
 					if (action == ActionKind.NODWNLD) {
@@ -217,7 +218,7 @@ public class PrefetchFiches {
 					if ( action == ActionKind.INIT ) {
 						if (prefetchTools.getFichierFromUrl(urlFiche, fichierSiteFicheUrl)) {
 							nbFichesTraitees += 1;
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche);
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche, FileHtmlKind.FICHE);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 							// Solution de contournement désespérée 
@@ -225,7 +226,7 @@ public class PrefetchFiches {
 							log.error("=> Tentative sur : "+urlFiche);
 							if (prefetchTools.getFichierFromUrl(urlFiche, fichierSiteFicheUrl)) {
 								nbFichesTraitees += 1;
-								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche);
+								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche, FileHtmlKind.FICHE);
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 								continue;
@@ -234,12 +235,12 @@ public class PrefetchFiches {
 					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
 	
 						if ( fichierRefFiche.exists() && !listFichesModif.contains(ficheLight)) {
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierRefFiche);
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierRefFiche, FileHtmlKind.FICHE);
 							nbFichesTraitees += 1;
 						} else {
 							if (prefetchTools.getFichierFromUrl(urlFiche, fichierSiteFicheUrl)) {
 								nbFichesTraitees += 1;
-								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche);
+								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche, FileHtmlKind.FICHE);
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 								// Solution de contournement désespérée 
@@ -247,7 +248,7 @@ public class PrefetchFiches {
 								log.error("=> Tentative sur : "+urlFiche);
 								if (prefetchTools.getFichierFromUrl(urlFiche, fichierSiteFicheUrl)) {
 									nbFichesTraitees += 1;
-									contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche);
+									contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche, FileHtmlKind.FICHE);
 								} else {
 									log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
 									continue;
@@ -256,7 +257,7 @@ public class PrefetchFiches {
 						}
 					} else if ( action == ActionKind.NODWNLD ) {
 						if (fichierRefFiche.exists()) {
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierRefFiche);
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierRefFiche, FileHtmlKind.FICHE);
 							nbFichesTraitees += 1;
 						} else {
 							log.error("La récupération de la fiche sur le disque : "+fichierRefFicheUrl+" a échoué.");
@@ -296,17 +297,17 @@ public class PrefetchFiches {
 					
 					if ( action == ActionKind.INIT ) {
 						if (prefetchTools.getFichierFromUrl(urlListePhotos, fichierSiteListePhotosUrl)) {
-							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierSiteListePhotos);
+							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierSiteListePhotos, FileHtmlKind.FICHE);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
 							continue;
 						}
 					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
 						if (fichierRefListePhotos.exists() && !listFichesModif.contains(fiche)) {
-							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierRefListePhotos);
+							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierRefListePhotos, FileHtmlKind.FICHE);
 						} else {
 							if (prefetchTools.getFichierFromUrl(urlListePhotos, fichierSiteListePhotosUrl)) {
-								contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierSiteListePhotos);
+								contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierSiteListePhotos, FileHtmlKind.FICHE);
 							
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
@@ -315,7 +316,7 @@ public class PrefetchFiches {
 						}
 					} else if ( action == ActionKind.NODWNLD ){
 						if (fichierRefListePhotos.exists()) {
-							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierRefListePhotos);
+							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierRefListePhotos, FileHtmlKind.FICHE);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
 						}

@@ -61,6 +61,7 @@ import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
 import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
+import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
@@ -125,7 +126,7 @@ public class PrefetchZonesGeographiques {
 		String contenuFichierHtml = "";
 		if ( action != ActionKind.NODWNLD){
 			if (prefetchTools.getFichierFromUrl(Constants.getListeFichesUrl(Constants.getNumZoneForUrl(zoneKind)) , listeFichesFichier)) {
-				contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier));
+				contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier), FileHtmlKind.LISTE_FICHES);
 				
 			} else {
 				log.error("Une erreur est survenue lors de la récupération de la liste des fiches de la zone ");
@@ -135,7 +136,7 @@ public class PrefetchZonesGeographiques {
 			// NODWNLD
 			listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches-"+(zoneKind.ordinal()+1)+".html";
 			if (new File(listeFichesFichier).exists()) {
-				contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier));
+				contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier), FileHtmlKind.LISTE_FICHES);
 			} else {
 				log.error("Une erreur est survenue lors de la récupération de la liste des fiches de la zone ");
 				return;

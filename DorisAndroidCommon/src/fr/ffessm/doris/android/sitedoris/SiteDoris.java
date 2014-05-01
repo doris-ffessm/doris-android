@@ -75,7 +75,7 @@ public class SiteDoris {
     
 	public HashSet<FicheLight> getListeFichesFromHtml(String inCodePageHtml) {
     	//log.info("getListeFichesFromHtml()- Début");
-    	
+		//log.debug("getListeFichesFromHtml()- inCodePageHtml.length() : " + inCodePageHtml.length());
 		Common_Outils commonOutils = new Common_Outils();
 		
     	HashSet<FicheLight> listeFiches = new HashSet<FicheLight>(0);
@@ -84,7 +84,7 @@ public class SiteDoris {
     	//Config.LoggerProvider = LoggerProvider.DISABLED;
     	
     	Source source=new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(inCodePageHtml),false ) );
-    	//log.info("getListeFichesFromHtml()- 010");
+
     	source.fullSequentialParse();
     	//log.debug("getListeFichesFromHtml()- source.length() : " + source.length());
     	//log.debug("getListeFichesFromHtml()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
@@ -125,7 +125,7 @@ public class SiteDoris {
     	
     	source = null;
     	listeElementsTD = null;
-		//log.info("getListeFichesFromHtml()- Fin");
+		log.info("getListeFichesFromHtml()- Fin");
 		return listeFiches;
     }
 	

@@ -190,7 +190,6 @@ C'est ce texte. */
     	
 		// Dans les version suivante de Jericho le niveau de trace a changé
     	//Config.LoggerProvider = LoggerProvider.DISABLED;
-		
 		Source source = new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(htmlGroupe), true));
 		source.fullSequentialParse();
 

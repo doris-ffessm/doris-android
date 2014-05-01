@@ -58,12 +58,12 @@ public class Common_Outils {
 	// Constructeur
 	public Common_Outils(){
 		
-	}
-	
+	}   
+    
     public String nettoyageBalises(String texte) {
     	//log.debug("nettoyageBalises() - Début");
     	//log.debug("nettoyageBalises() - texteANettoye : " + texteANettoye);
-		
+
     	//log.debug("nettoyageBalises() - 005");
     	
 		//TODO : je me demande bien pourquoi j'ai fait cela : GMo 04/01/2014
@@ -98,9 +98,7 @@ public class Common_Outils {
 		
 		//L'adresse du site n'apporte rien et pose des problèmes qd on va recherche les liens
 		// vers les sites extérieurs
-		String SITE_RACINE_URL = "http://doris.ffessm.fr/";
-		//texte = StringUtils.replace(texte, Constants.getSiteUrl(), "");
-		texte = StringUtils.replace(texte, SITE_RACINE_URL, "");
+		texte = StringUtils.replace(texte, "http://doris.ffessm.fr/", "");
 		
 		//De même pour les site : www.ffessm.fr et www.security.fr qui sont sur toutes les pages
 		texte = StringUtils.replace(texte, "href=\"http://www.ffessm.fr\"", "");
@@ -131,17 +129,21 @@ public class Common_Outils {
 		// <span style="color: #ffffff;">Vidéoris</span>
 		texte = texte.replaceAll("<span style=\"color: #ffffff;\">[^<>]*</span>", "");
 		
+		
+		texte = StringUtils.replace(texte, "bgcolor=\"#ffffff\" onMouseOver=\"this.bgColor='#F3F3F3';\" onMouseOut=\"this.bgColor='#ffffff';\"", "" );
+		texte = StringUtils.replace(texte, "color=\"#999999\"", "");
 		//log.debug("nettoyageBalises() - 090");
 		
 		//log.debug("nettoyageBalises() - texte : " + texte);
-		//log.debug("nettoyageBalises() - Fin");
+    	//log.debug("nettoyageBalises() - Fin");
 		return texte;
 	}
-
+    
+    
     public String remplacementBalises(String texte, boolean avecMiseEnForme) {
     	//log.debug("remplacementBalises() - Début");
     	//log.debug("remplacementBalises() - texteANettoye : " + texte);
-
+    	
 		if (avecMiseEnForme) {
 			//Gras
 			texte = StringUtils.replace(texte, "<strong>", "{{g}}");
@@ -182,10 +184,10 @@ public class Common_Outils {
 		}
 		
 		//log.debug("remplacementBalises() - texteNettoye : " + texteNettoye);
-		//log.info("remplacementBalises() - Fin");
+    	//log.info("remplacementBalises() - Fin");
 		return texte;
 	}
-	
+    
     public String nettoyageTextes(String texteANettoye) {
     	//log.debug("nettoyageTextes() - Début");
     	//log.debug("nettoyageTextes() - texteANettoye : " + texteANettoye);
