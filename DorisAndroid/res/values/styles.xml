@@ -15,9 +15,27 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-   
     </style>
     
+	<!-- Gestion des Icônes des Menus, etc. en fonction du thème -->
+	<style name="Theme.AppDorisAndroid" parent="Theme.AppCompat">
+    	<item name="attr/ic_action_participants">@drawable/ic_action_participants</item>
+    	<item name="attr/ic_action_glossaire">@drawable/ic_action_glossaire</item>
+    	<item name="attr/ic_action_bibliographie">@drawable/ic_action_bibliographie</item>
+    	<item name="attr/ic_action_search">@drawable/ic_action_search</item>
+    	<item name="attr/ic_action_arbre_phylogenetique">@drawable/ic_action_arbre_phylogenetique</item>
+    </style>
+    <style name="Theme.AppHoloLight" parent="Theme.AppCompat.Light">
+        <item name="attr/ic_action_participants">@drawable/ic_action_participants_light</item>
+       	<item name="attr/ic_action_glossaire">@drawable/ic_action_glossaire_light</item>
+    	<item name="attr/ic_action_bibliographie">@drawable/ic_action_bibliographie_light</item>
+    	<item name="attr/ic_action_search">@drawable/ic_action_search_light</item>
+    	<item name="attr/ic_action_arbre_phylogenetique">@drawable/ic_action_arbre_phylogenetique_light</item>
+    </style>
+    
+    
+    
+    <!-- Ligne Horizontale utilisée dans les listes, entre les sections des fiches, etc. -->
 	<style name="Separateur">
 	    <item name="android:layout_width">match_parent</item>
 	    <item name="android:layout_height">1dp</item>
@@ -29,5 +47,5 @@
 	<string name="detailsfiche_elementview_couleur_lienfiche">#0168A1</string>
 	<string name="detailsfiche_elementview_couleur_liendefinition">#80AA00</string>
 	<string name="detailsfiche_elementview_couleur_lienparticipant">#EE4400</string>
-	
+
 </resources>

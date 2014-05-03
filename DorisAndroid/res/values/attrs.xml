@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AppTheme">
+    	<attr name="ic_action_participants" format="reference" />
+    	<attr name="ic_action_glossaire" format="reference" />
+    	<attr name="ic_action_bibliographie" format="reference" />
+    	<attr name="ic_action_search" format="reference" />
+    	<attr name="ic_action_arbre_phylogenetique" format="reference" />
+   	</declare-styleable>
+</resources>
