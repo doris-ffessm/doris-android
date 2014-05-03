@@ -151,7 +151,10 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		
 		String ordreTri = prefs.getString(context.getString(R.string.pref_key_accueil_fiches_ordre), "Commun");
 		String orderByClause = "";
-		if (ordreTri.equals("Commun")) orderByClause = " ORDER BY Fiche.NomCommun";
+		if (ordreTri.equals("Commun")) orderByClause = " ORDER BY Fiche.nomCommun";
+		if (ordreTri.equals("Scientifique")) orderByClause = " ORDER BY Fiche.nomScientifique";
+		
+		
 		
 		String filtreEtat = prefs.getString(context.getString(R.string.pref_key_accueil_etat_fiches_affiche), "toutes");
 		String whereSuffixClauseWHERE = "";

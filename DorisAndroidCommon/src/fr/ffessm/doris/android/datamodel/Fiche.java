@@ -421,7 +421,7 @@ public class Fiche {
 							}
 							if (i == 5) {
 								//log.info("getFicheFromHtml() - ficheNomFrancais : " + elementTR.getRenderer().toString().trim());
-								setNomCommun( commonOutils.nettoyageTextes(elementTR.getRenderer().toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "")).trim() );
+								setNomCommunNeverEmpty( commonOutils.nettoyageTextes(elementTR.getRenderer().toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "")).trim() );
 							}
 						}
 						listeElementsHG_TR = null;
@@ -699,7 +699,7 @@ public class Fiche {
 					try	{
 						Element ElementNomCommun = ElementInfosGauche.getFirstElementByClass("titre2").getFirstElement();
 						//log.info("getFicheFromHtml() - ElementNomCommun : " + ElementNomCommun.getRenderer().toString().trim());
-						setNomCommun( commonOutils.nettoyageTextes(ElementNomCommun.getRenderer().toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "")).trim() );
+						setNomCommunNeverEmpty( commonOutils.nettoyageTextes(ElementNomCommun.getRenderer().toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "")).trim() );
 					} catch (Exception e) {
 		        		log.debug("getFicheFromHtml() - le nom français n'est pas toujours renseigné");
 		        	}
@@ -965,7 +965,9 @@ public class Fiche {
 		
 		// Texte pour recherche rapide dans les listes de fiches
 		StringBuilder sbTextePourRechercheRapide = new StringBuilder();
-		if (getNomCommun() != null) sbTextePourRechercheRapide.append(getNomCommun());
+		if (getNomCommun() != null && !getNomCommun().equals(Constants.FICHE_NOMCOMMUN_VALUE_IF_EMPTY)) {
+			sbTextePourRechercheRapide.append(getNomCommun());
+		}
 		if (getNomScientifique() != null) sbTextePourRechercheRapide.append(getNomScientifique().replaceAll("\\([^\\)]*\\)", ""));
 		sbTextePourRechercheRapide.append(" "+autresDenominationsPourRechercheRapide.trim());
 		
@@ -1026,11 +1028,18 @@ public class Fiche {
 	public Fiche(FicheLight ficheLight) {
 		super();
 		this.nomScientifique = ficheLight.getNomScientifique();
-		this.nomCommun = ficheLight.getNomCommun();
+		
+		setNomCommunNeverEmpty(ficheLight.getNomCommun());
+		
 		this.numeroFiche = ficheLight.getNumeroFiche();
 		this.etatFiche = ficheLight.getEtatFiche();
-	} 
-
+	}
+	
+	public void setNomCommunNeverEmpty(java.lang.String nomCommun) {
+		if (nomCommun.isEmpty()) nomCommun = Constants.FICHE_NOMCOMMUN_VALUE_IF_EMPTY;
+		this.nomCommun = nomCommun;
+	}
+	
 	// End of user code
 	
 	public Fiche() {} // needed by ormlite
@@ -1043,8 +1052,7 @@ public class Fiche {
 		this.dateCreation = dateCreation;
 		this.dateModification = dateModification;
 		this.numerofichesLiees = numerofichesLiees;
-		Common_Outils commonOutils = new Common_Outils();
-		this.textePourRechercheRapide = commonOutils.formatStringNormalizer(nomCommun+" "+nomScientifique).toLowerCase();
+		this.textePourRechercheRapide = textePourRechercheRapide;
 		this.pictogrammes = pictogrammes;
 	} 
 
