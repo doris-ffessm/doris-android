@@ -145,11 +145,28 @@ public class Photos_Outils {
 			return getImageFolderGlossaire();
 		case ILLUSTRATION_BIBLIO :
 			return getImageFolderBiblio();
-			default:
-		return null;
+		default:
+			return null;
 		}
 	}
-	
+	public File getImageFolder(ImageLocation baseImageLocation, ImageType inImageType) {
+		switch (inImageType) {
+		case VIGNETTE :
+			return getFolderFromBaseLocation(baseImageLocation, VIGNETTES_FICHE_FOLDER);
+		case MED_RES :
+			return getFolderFromBaseLocation(baseImageLocation, MED_RES_FICHE_FOLDER);
+		case HI_RES :
+			return getFolderFromBaseLocation(baseImageLocation, HI_RES_FICHE_FOLDER);
+		case PORTRAITS :
+			return getFolderFromBaseLocation(baseImageLocation, PORTRAITS_FOLDER);
+		case ILLUSTRATION_DEFINITION :
+			return getFolderFromBaseLocation(baseImageLocation, ILLUSTRATION_DEFINITION_FOLDER);
+		case ILLUSTRATION_BIBLIO :
+			return getFolderFromBaseLocation(baseImageLocation, ILLUSTRATION_BIBLIO_FOLDER);
+		default:
+			return null;
+		}
+	}
 	/**
 	 * recupère le folder requis en utilisant les préférence utilsateur comme base
 	 * Attention renvoie le disque interne si le disque secondaire n'est pas disponible
@@ -159,7 +176,12 @@ public class Photos_Outils {
 	 */
 	public File getFolderFromPreferedLocation(String requestedSubFolder) {
 		//Log.d(LOG_TAG, "getFolderFromPreferedLocation("+ requestedSubFolder+") "+getPreferedLocation());
-		switch(getPreferedLocation()){
+		return getFolderFromBaseLocation(getPreferedLocation(), requestedSubFolder);
+	}
+	
+	public File getFolderFromBaseLocation(ImageLocation baseImageLocation, String requestedSubFolder) {
+		//Log.d(LOG_TAG, "getFolderFromPreferedLocation("+ requestedSubFolder+") "+getPreferedLocation());
+		switch(baseImageLocation){
 		case PRIMARY:
 			return DiskEnvironment.getPrimaryExternalStorage().getFilesDir(context, requestedSubFolder);
 		case SECONDARY:
@@ -373,6 +395,14 @@ public class Photos_Outils {
 		return getImageFolder(inImageType).list().length;
 	}
 	
+	public long getPhotosDiskUsage(ImageLocation baseImageLocation){
+    	return getPhotoDiskUsage(baseImageLocation, ImageType.VIGNETTE)
+    			+ getPhotoDiskUsage(baseImageLocation, ImageType.MED_RES)
+    			+ getPhotoDiskUsage(baseImageLocation, ImageType.HI_RES)
+    			+ getPhotoDiskUsage(baseImageLocation, ImageType.PORTRAITS)
+    			+ getPhotoDiskUsage(baseImageLocation, ImageType.ILLUSTRATION_BIBLIO)
+    			+ getPhotoDiskUsage(baseImageLocation, ImageType.ILLUSTRATION_DEFINITION);
+	}
 	public long getPhotosDiskUsage(){
     	return getPhotoDiskUsage(ImageType.VIGNETTE)
     			+ getPhotoDiskUsage(ImageType.MED_RES)
@@ -387,6 +417,11 @@ public class Photos_Outils {
     	return disqueOutils.getDiskUsage(getImageFolder(inImageType) );
 	}
 
+	public long getPhotoDiskUsage(ImageLocation baseImageLocation, ImageType inImageType){
+		Disque_Outils disqueOutils = new Disque_Outils(context);
+		//Log.d(LOG_TAG, "getPhotoDiskUsage "+inImageType+" "+getImageFolder(inImageType));
+    	return disqueOutils.getDiskUsage(getImageFolder(baseImageLocation, inImageType) );
+	}
 
 	
 	public ImageType getImageQualityToDownload(boolean inPhotoPrincipale, int inIdZoneGeo){
