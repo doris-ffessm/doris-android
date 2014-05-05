@@ -71,6 +71,8 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
+import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 
 import android.app.Activity;
 import android.content.Context;
@@ -101,14 +103,14 @@ import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
 public class Photos_Outils {
-	private final String LOG_TAG = Photos_Outils.class.getCanonicalName();
+	private static final String LOG_TAG = Photos_Outils.class.getCanonicalName();
 	
-	public final String VIGNETTES_FICHE_FOLDER = "vignettes_fiches";
-	public final String MED_RES_FICHE_FOLDER = "medium_res_images_fiches";
-	public final String HI_RES_FICHE_FOLDER = "hi_res_images_fiches";
-	public final String PORTRAITS_FOLDER = "portraits";
-	public final String ILLUSTRATION_DEFINITION_FOLDER = VIGNETTES_FICHE_FOLDER;
-	public final String ILLUSTRATION_BIBLIO_FOLDER = VIGNETTES_FICHE_FOLDER;
+	public static final String VIGNETTES_FICHE_FOLDER = "vignettes_fiches";
+	public static final String MED_RES_FICHE_FOLDER = "medium_res_images_fiches";
+	public static final String HI_RES_FICHE_FOLDER = "hi_res_images_fiches";
+	public static final String PORTRAITS_FOLDER = "portraits";
+	public static final String ILLUSTRATION_DEFINITION_FOLDER = VIGNETTES_FICHE_FOLDER;
+	public static final String ILLUSTRATION_BIBLIO_FOLDER = VIGNETTES_FICHE_FOLDER;
 	
 	private Context context;
 	
@@ -124,6 +126,10 @@ public class Photos_Outils {
 	    P0, P1, P2, P3, P4, P5, P6 
 	}
 	
+	// type pour le chox de l'emplacement des photos
+	public enum ImageLocation {
+		APP_INTERNAL, PRIMARY, SECONDARY
+	}
 	
 	public File getImageFolder(ImageType inImageType) { 
 		switch (inImageType) {
@@ -143,25 +149,95 @@ public class Photos_Outils {
 		return null;
 		}
 	}
+	
+	/**
+	 * recupère le folder requis en utilisant les préférence utilsateur comme base
+	 * Attention renvoie le disque interne si le disque secondaire n'est pas disponible
+	 * Utilioser la fonction is isPreferedLocationAvailable
+	 * @param requestedSubFolder
+	 * @return
+	 */
+	public File getFolderFromPreferedLocation(String requestedSubFolder) {
+		//Log.d(LOG_TAG, "getFolderFromPreferedLocation("+ requestedSubFolder+") "+getPreferedLocation());
+		switch(getPreferedLocation()){
+		case PRIMARY:
+			return DiskEnvironment.getPrimaryExternalStorage().getFilesDir(context, requestedSubFolder);
+		case SECONDARY:
+			try {
+				return DiskEnvironment.getSecondaryExternalStorage().getFilesDir(context, requestedSubFolder);
+			} catch (NoSecondaryStorageException e) {
+				return context.getDir( requestedSubFolder , Context.MODE_PRIVATE);
+			}
+		case APP_INTERNAL: 
+		default:
+			return context.getDir( requestedSubFolder , Context.MODE_PRIVATE);
+		}
+	}
+	
+	public boolean isPreferedLocationAvailable(){
+		switch(getPreferedLocation()){
+		case SECONDARY:
+			try {
+				return DiskEnvironment.getSecondaryExternalStorage().isAvailable();
+			} catch (NoSecondaryStorageException e) {
+				return false;
+			}
+		default:
+			return true;
+		}
+	}
+	
 	public File getImageFolderVignette() {
-		return context.getDir( VIGNETTES_FICHE_FOLDER , Context.MODE_PRIVATE);
+		return getFolderFromPreferedLocation( VIGNETTES_FICHE_FOLDER );
 	}
 	public File getImageFolderMedRes() { 
-		return context.getDir( MED_RES_FICHE_FOLDER , Context.MODE_PRIVATE);
+		return getFolderFromPreferedLocation( MED_RES_FICHE_FOLDER);
 	}
 	public File getImageFolderHiRes() { 
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageFolderHiRes() - context : " + context.toString() );
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageFolderHiRes() - HI_RES_FICHE_FOLDER : " +HI_RES_FICHE_FOLDER);
-		return context.getDir( HI_RES_FICHE_FOLDER , Context.MODE_PRIVATE);
+		return getFolderFromPreferedLocation( HI_RES_FICHE_FOLDER);
 	}
 	public File getImageFolderPortraits() { 
-		return context.getDir( PORTRAITS_FOLDER , Context.MODE_PRIVATE);
+		return getFolderFromPreferedLocation( PORTRAITS_FOLDER);
 	}
 	public File getImageFolderGlossaire() { 
-		return context.getDir( ILLUSTRATION_DEFINITION_FOLDER , Context.MODE_PRIVATE);
+		return getFolderFromPreferedLocation( ILLUSTRATION_DEFINITION_FOLDER );
 	}
 	public File getImageFolderBiblio() { 
-		return context.getDir( ILLUSTRATION_BIBLIO_FOLDER , Context.MODE_PRIVATE);
+		return getFolderFromPreferedLocation( ILLUSTRATION_BIBLIO_FOLDER );
+	}
+	
+	/**
+	 * renvoie l'emplacement préféré si disponible, sinon rebascule sur le précédent 
+	 */
+	public ImageLocation getPreferedLocation(){
+		Param_Outils paramOutil = new Param_Outils(context);
+		switch (paramOutil.getParamInt(R.string.pref_key_prefered_disque_stockage_photo, 0)){
+		case 1:
+			return ImageLocation.PRIMARY;
+		case 2:
+			return ImageLocation.SECONDARY;
+		case 0:
+			return ImageLocation.APP_INTERNAL;
+		default:
+			return ImageLocation.APP_INTERNAL;
+		}
+	}
+	public void setPreferedLocation(ImageLocation preferedImageLocation){
+		Param_Outils paramOutil = new Param_Outils(context);
+		switch (preferedImageLocation){
+		case APP_INTERNAL:
+			paramOutil.setParamInt(R.string.pref_key_prefered_disque_stockage_photo, 0);
+			break;
+		case PRIMARY:
+			paramOutil.setParamInt(R.string.pref_key_prefered_disque_stockage_photo, 1);
+			break;
+		case SECONDARY:
+			paramOutil.setParamInt(R.string.pref_key_prefered_disque_stockage_photo, 2);
+			break;
+		}
+		
 	}
 	
 	public String getbaseUrl(ImageType inImageType) { 
@@ -301,10 +377,13 @@ public class Photos_Outils {
     	return getPhotoDiskUsage(ImageType.VIGNETTE)
     			+ getPhotoDiskUsage(ImageType.MED_RES)
     			+ getPhotoDiskUsage(ImageType.HI_RES)
-    			+ getPhotoDiskUsage(ImageType.PORTRAITS);
+    			+ getPhotoDiskUsage(ImageType.PORTRAITS)
+    			+ getPhotoDiskUsage(ImageType.ILLUSTRATION_BIBLIO)
+    			+ getPhotoDiskUsage(ImageType.ILLUSTRATION_DEFINITION);
 	}
 	public long getPhotoDiskUsage(ImageType inImageType){
 		Disque_Outils disqueOutils = new Disque_Outils(context);
+		//Log.d(LOG_TAG, "getPhotoDiskUsage "+inImageType+" "+getImageFolder(inImageType));
     	return disqueOutils.getDiskUsage(getImageFolder(inImageType) );
 	}
 

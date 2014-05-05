@@ -10,6 +10,8 @@
 	<string name="etatmodehorsligne_customview_etat_photos_titre_text">Téléchargement photos</string>
 	<string name="etatmodehorsligne_customview_etat_base_titre_text">Fiches et textes</string>
 	<string name="etatmodehorsligne_customview_etat_base_description_text">"Les textes des fiches correspondent à la base DORIS du\u00A0: "</string>
+	<string name="etatmodehorsligne_customview_diskusage_titre_text">Stockage des photos</string>
+	<string name="etatmodehorsligne_customview_diskusage_description_text"></string>
 	
 	<string name="avancement_titre">Avancement préchargement photos</string>
 	<string name="avancement_touteszones_titre">Avancement global</string>
@@ -27,7 +29,13 @@
 	<string name="avancement_progressbar_couleur3">YELLOW</string>
 	<string name="avancement_progressbar_couleur4">GREEN</string>
 	
-	
+	<string name="etatmodehorsligne_customview_diskselection_internal_btn_text_selected">Supprimer de la mémoire interne</string>
+	<string name="etatmodehorsligne_customview_diskselection_internal_btn_text_not_selected">Déplacer vers mémoire interne</string>
+	<string name="etatmodehorsligne_customview_diskselection_primary_btn_text_selected">Supprimer du disque primaire</string>
+	<string name="etatmodehorsligne_customview_diskselection_primary_btn_text_not_selected">Déplacer vers disque primaire</string>
+	<string name="etatmodehorsligne_customview_diskselection_secondary_btn_text_selected">Supprimer du disque secondaire</string>
+	<string name="etatmodehorsligne_customview_diskselection_secondary_btn_text_not_selected">Déplacer vers disque secondaire</string>
+	<string name="etatmodehorsligne_customview_diskselection_secondary_btn_text_not_available">Disque secondaire non disponible</string>
 	<!-- End of user code
 	-->
 </resources>

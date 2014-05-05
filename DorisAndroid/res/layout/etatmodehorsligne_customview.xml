@@ -70,7 +70,63 @@
 			        android:orientation="vertical" >
 		
 			</LinearLayout>
-	    
+			
+			<View style="@style/Separateur"/>
+	    	<TextView
+		        android:id="@+id/etatmodehorsligne_customview_diskusage_titre_textView"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textAppearance="?android:attr/textAppearanceMedium"
+		        android:textColor="?android:attr/textColorPrimary"
+		        android:text="@string/etatmodehorsligne_customview_diskusage_titre_text" />
+		    
+		    
+		    <TextView
+		        android:id="@+id/etatmodehorsligne_customview_diskusage_description_textView"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textAppearance="?android:attr/textAppearanceSmall"
+				android:textColor="?android:attr/textColorSecondary"
+		        android:text="@string/etatmodehorsligne_customview_diskusage_description_text" />
+
+		    
+
+		    <LinearLayout
+			        android:id="@+id/etatmodehorsligne_customview_diskusage_buttons_layout"
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:orientation="horizontal" >
+
+		        <Button
+		            android:id="@+id/etatmodehorsligne_customview_diskselection_internal_btn"
+		            style="?android:attr/buttonStyleSmall"
+		            android:layout_width="0dp"
+		            android:layout_height="match_parent"
+		            android:layout_weight="0.33"
+		            android:text="@string/etatmodehorsligne_customview_diskselection_internal_btn_text_selected" />
+
+				<Button
+				    android:id="@+id/etatmodehorsligne_customview_diskselection_primary_btn"
+				    style="?android:attr/buttonStyleSmall"
+		            android:layout_width="0dp"
+		            android:layout_height="match_parent"
+		            android:layout_weight="0.33"
+				    android:text="@string/etatmodehorsligne_customview_diskselection_primary_btn_text_not_selected" />
+
+				<Button
+		            android:id="@+id/etatmodehorsligne_customview_diskselection_secondary_btn"
+		            style="?android:attr/buttonStyleSmall"
+		            android:layout_width="0dp"
+		            android:layout_height="match_parent"
+		            android:layout_weight="0.33"
+		            android:text="@string/etatmodehorsligne_customview_diskselection_secondary_btn_text_not_available" />
+
+				<ProgressBar
+				    android:id="@+id/etatmodehorsligne_customview_diskusage_buttons_progressBar"
+				    android:layout_width="wrap_content"
+				    android:layout_height="match_parent" />
+
+			</LinearLayout>
 		</LinearLayout>
 	</ScrollView>
 </LinearLayout>	

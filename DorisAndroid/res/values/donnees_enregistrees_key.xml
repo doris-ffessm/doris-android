@@ -50,4 +50,6 @@
 	<string name="pref_key_datedermaj_fiches_indopac">data_datedermaj_fiches_indopac</string>
 	<string name="pref_key_datedermaj_fiches_caraibes">data_datedermaj_fiches_caraibes</string>
 	
+	<string name="pref_key_prefered_disque_stockage_photo">data_disque_stockage_photo</string>
+	
 </resources>
