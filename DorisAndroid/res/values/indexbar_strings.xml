@@ -2,7 +2,6 @@
 <resources>
 
     <string-array name="alphabtes_array">
-        <item>#</item>
 	    <item>A</item>
 	    <item>B</item>
 	    <item>C</item>
@@ -29,6 +28,7 @@
 	    <item>X</item>
 	    <item>Y</item>
 	    <item>Z</item>
+	    <item>#</item>
 	</string-array>
 	<string name="dot">.</string>
 	

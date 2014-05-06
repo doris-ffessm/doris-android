@@ -213,11 +213,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	    if (ficheId != 0) ficheNumero = entry.getNumeroFiche();
 	    else if (ficheNumero != 0) ficheId = entry.getId();
 
-		getSupportActionBar().setTitle(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
+		getSupportActionBar().setTitle(entry.getNomCommunNeverEmpty().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
 		getSupportActionBar().setSubtitle(textesOutils.textToSpannableStringDoris(entry.getNomScientifique()));
 		
     	((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText( textesOutils.textToSpannableStringDoris(entry.getNomScientifique()) );
-		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
+		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommunNeverEmpty().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
 		((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText("N° "+((Integer)entry.getNumeroFiche()).toString());					
 		((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer)entry.getEtatFiche()).toString());	
 		

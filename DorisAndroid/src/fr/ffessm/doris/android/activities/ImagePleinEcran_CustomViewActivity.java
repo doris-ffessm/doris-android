@@ -122,7 +122,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
     	//Collection<PhotoFiche> photosFiche = entry.getPhotosFiche(); 
     	ArrayList<PhotoFiche> photosFicheArrayList = new ArrayList<PhotoFiche>(entry.getPhotosFiche());
 		
-    	actionBar.setTitle(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
+    	actionBar.setTitle(entry.getNomCommunNeverEmpty().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
     	Textes_Outils textesOutils = new Textes_Outils(this);
 		actionBar.setSubtitle(textesOutils.textToSpannableStringDoris(entry.getNomScientifique()));
     	
