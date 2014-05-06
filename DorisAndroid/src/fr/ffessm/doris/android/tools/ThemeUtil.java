@@ -91,18 +91,10 @@ public class ThemeUtil {
 	}
 	
 	// Permet d'obtenir id de l'image pour setImageResource (différente selon les thèmes)
-	
-	//TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.attrs_icon, 0, 0);
-	
-	//TypedArray a = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.SVGImageView, defStyle, 0);
-	//int  resourceId = a.getResourceId(R.styleable.SVGImageView_svg, -1);
-    //if (resourceId != -1) {
-    //    setImageResource(resourceId);
-    //    return;
-    // }
-	
 	public static int attrToResId(Activity activity, int attr) {
-		TypedArray a = activity.getApplication().getTheme().obtainStyledAttributes(new int[] { attr });
+		
+		TypedArray a = activity.getTheme().obtainStyledAttributes(new int[] { attr });
+		
 		return a.getResourceId(0, 0);
 	}
 }
