@@ -314,7 +314,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 				}
 			}
 			// Section Groupe Phylogénique
-			if(entry.getGroupe().getNumeroGroupe() != 0){
+			if(entry.getGroupe() != null && entry.getGroupe().getNumeroGroupe() != 0){
 				addFoldableGroupeView(containerLayout, getString(R.string.detailsfiche_elementview_groupes_label), entry.getGroupe());
 			}
 			
@@ -389,10 +389,12 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			} // Fin contenu Fiche
 			
 			// Arbre Phylogénique
-			Collection<ClassificationFiche> classificationFicheCollect = entry.getClassification();
-
-			if(classificationFicheCollect.size() != 0){
-				addFoldableArbrePhylogenetiqueView(containerLayout, classificationFicheCollect);
+			if (entry.getClassification() != null ){
+				Collection<ClassificationFiche> classificationFicheCollect = entry.getClassification();
+	
+				if(classificationFicheCollect.size() != 0){
+					addFoldableArbrePhylogenetiqueView(containerLayout, classificationFicheCollect);
+				}
 			}
 			
 			isOnCreate = false;
