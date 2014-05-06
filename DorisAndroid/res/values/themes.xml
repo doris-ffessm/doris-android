@@ -2,26 +2,5 @@
 <resources>
 
     <!-- Platform-independent theme providing an action bar in a dark-themed activity. -->
-    <style name="Theme.AppDorisAndroid" parent="Theme.AppCompat">
-        
-        <item name="android:windowContentOverlay">@null</item>
-    	<item name="android:windowBackground">@drawable/app_background</item>
-    
-    </style>
 
-    <style name="Theme.AppDorisAndroidPreferences" parent="Theme.AppCompat">
-        <item name="android:windowFullscreen">true</item>
-	    <item name="android:windowBackground">@drawable/app_background</item>
-	    <item name="android:background">#FF000000</item>
-		<item name="android:colorBackground">#FF000000</item>
-		<item name="android:textAppearance">@android:style/TextAppearance.Small</item>
-	</style>
-
-    <style name="Theme.AppPureBlack" parent="Theme.AppCompat">
-	    <item name="android:background">#FF000000</item> 
-    </style>
-    <style name="Theme.AppHolo" parent="Theme.AppCompat"> 
-    </style>
-    <style name="Theme.AppHoloLight" parent="Theme.AppCompat.Light"> 
-    </style>
 </resources>
