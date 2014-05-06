@@ -51,10 +51,13 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Groupe;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -377,5 +380,6 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		notifyDataSetChanged();
 		refreshNavigation();
 	}
+
 	//End of user code
 }

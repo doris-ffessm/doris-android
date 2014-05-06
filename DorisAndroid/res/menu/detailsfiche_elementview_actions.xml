@@ -11,7 +11,7 @@
 	      android:icon="@drawable/app_expander_ic_maximized"
 	      android:title="@string/unfold_all_sections_menu_option" />
 	<item android:id="@+id/detailsfiche_elementview_action_glossaire"
-	      android:icon="@drawable/ic_action_glossaire"
+	      android:icon="?attr/ic_action_glossaire"
 	      android:title="@string/accueil_glossaire_text"
 	      android:showAsAction="ifRoom"
     	  dorisandroid:showAsAction="ifRoom"/>

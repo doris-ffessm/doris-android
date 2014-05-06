@@ -59,6 +59,7 @@ import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -250,6 +251,42 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
         	this.getApplicationContext().startActivity(toListeFiche_View);
         }
     }
+	
+	
+	/* *********************************************************************
+     * Capture des évènements sur le Clavier Physique de l'appareil
+     ********************************************************************** */
+	@Override
+    public boolean onKeyDown(int inKeyCode, KeyEvent inEvent)
+    {
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - Début");     
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - inKeyCode : " + inKeyCode);
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - inEvent : " + inEvent);
+		
+		switch(inKeyCode){
+		case KeyEvent.KEYCODE_BACK :
+			
+			Groupe groupeCourant = adapter.currentRootGroupe;
+			if(groupeCourant.getContextDB() == null){
+				Log.w(this.getClass().getSimpleName(),"workaround clickedGroupe.getContextDB() == null "+groupeCourant.getId());
+				groupeCourant.setContextDB(getHelper().getDorisDBHelper());
+			}
+			
+			//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - groupeCourant.getGroupePere() : " + groupeCourant.getGroupePere());
+			
+			if (groupeCourant.getNomGroupe().equals("racine")) {
+				((GroupeSelection_ClassListViewActivity)this).finish();
+			} else {
+				adapter.currentRootGroupe = groupeCourant.getGroupePere();
+				adapter.updateList();
+				adapter.notifyDataSetChanged();
+			}
+			return true; 
+		}
+
+		return false;
+    }
+	
 	// End of user code
 
 	private void showToast(String message) {
