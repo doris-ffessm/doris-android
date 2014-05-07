@@ -4,7 +4,8 @@
  
     <corners android:radius="3dp" />
  
-    <solid android:color="#000000" />
+    <!-- fond transparent -->
+    <solid android:color="#00000000" />
  
     <stroke
         android:width="2px"
