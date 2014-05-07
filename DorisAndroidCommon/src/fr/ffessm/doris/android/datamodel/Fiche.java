@@ -1039,10 +1039,7 @@ public class Fiche {
 		if (nomCommun.isEmpty()) nomCommun = Constants.FICHE_NOMCOMMUN_VALUE_IF_EMPTY;
 		this.nomCommun = nomCommun;
 	}
-	public java.lang.String getNomCommunNeverEmpty() {
-		if (this.nomCommun.equals(Constants.FICHE_NOMCOMMUN_VALUE_IF_EMPTY)) return "";
-		return this.nomCommun;
-	}
+	
 	// End of user code
 	
 	public Fiche() {} // needed by ormlite

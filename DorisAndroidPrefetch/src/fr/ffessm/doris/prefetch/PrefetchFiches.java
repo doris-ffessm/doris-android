@@ -283,7 +283,7 @@ public class PrefetchFiches {
 					
 					log.info("doMain() - Info Fiche {");
 					log.info("doMain() -      - ref : "+fiche.getNumeroFiche());
-					log.info("doMain() -      - nom : "+fiche.getNomCommunNeverEmpty());
+					log.info("doMain() -      - nom : "+fiche.getNomCommun());
 					log.info("doMain() -      - etat : "+fiche.getEtatFiche());
 					log.info("doMain() - }");
 					

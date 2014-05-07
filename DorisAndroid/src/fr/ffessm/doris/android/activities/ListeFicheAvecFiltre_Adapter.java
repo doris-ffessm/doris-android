@@ -274,7 +274,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
-		labelSB.append(entry.getNomCommunNeverEmpty());
+		labelSB.append(entry.getNomCommun());
 		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
 
@@ -477,8 +477,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	
 	protected char getFirstCharForIndex(Fiche entry){
 		//Start of user code protected ListeFicheAvecFiltre_Adapter binarySearch custom
-		if(entry.getNomCommunNeverEmpty().length() == 0) return '#';
-    	return entry.getNomCommunNeverEmpty().charAt(0);
+		if(entry.getNomCommun().length() == 0) return '#';
+    	return entry.getNomCommun().charAt(0);
 	  	//End of user code
 	}
 

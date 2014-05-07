@@ -128,7 +128,7 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
     	Fiche ficheDeLaBase = (new DataBase_Outils(dbHelper.getDorisDBHelper())).queryFicheByNumeroFiche(numeroFiche);
 		ficheDeLaBase.setContextDB(dbHelper.getDorisDBHelper());
 		Log.d(LOG_TAG, "doInBackground() - Fiche de la Base : "+ficheDeLaBase.getEtatFiche()+" - "
-				+ ficheDeLaBase.getNomCommunNeverEmpty() + " - " + ficheDeLaBase.getDateCreation()
+				+ ficheDeLaBase.getNomCommun() + " - " + ficheDeLaBase.getDateCreation()
 				+ " - " + ficheDeLaBase.getDateModification());
 		
 		// Récupération Fiche du Site
