@@ -51,12 +51,14 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Groupe;
 
 
+import android.app.ActionBar.LayoutParams;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -121,49 +123,6 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	// niveau de profondeur utilisé pour le listGroup par rapport au Groupe 
     public Groupe currentRootGroupe;
 	
-	/*protected void buildTreeForRoot(Groupe rootGroupe){
-		this.currentRootGroupe = rootGroupe;
-		
-		// trouve les groups de Groupe pour le niveau requis
-		groupesHeader = OutilsGroupe.getAllGroupesForNextLevel(rawGroupes, rootGroupe);
-		Log.d(LOG_TAG, "Created groupesHeader.size="+groupesHeader.size());
-		// crée les fils pour ces groups de Groupe
-		groupesChildMap = new HashMap<String, List<Groupe>>();
-		for (Groupe groupe : groupesHeader) {
-			List<Groupe> childs = new ArrayList<Groupe>();
-			childs.addAll(groupe.getGroupesFils());
-			groupesChildMap.put(groupe.getNomGroupe(), childs);
-			Log.d(LOG_TAG, "     Created childs.size="+childs.size());
-		}
-		notifyDataSetChanged();
-		refreshNavigation();
-	}*/
-	/*protected void refreshNavigation(){
-		LinearLayout navigationLayout = (LinearLayout)context.findViewById(R.id.groupselection_customview_navigation);
-    	
-    	navigationLayout.removeAllViews();
-    	addBackToParentGroupButton(navigationLayout, currentRootGroupe.getGroupePere());
-    	if(currentRootGroupe.getId() ==1){
-			// ajout du nouveau bouton standard
-			ImageView rootImage = new ImageView(_context);
-			navigationLayout.addView(rootImage);
-			rootImage.setImageResource(R.drawable.arbre_phylogenetique_gris);
-			rootImage.setPadding(5, 5, 5, 5);
-			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) rootImage.getLayoutParams();
-			layoutParams.leftMargin =2;
-			layoutParams.rightMargin = 2;
-			rootImage.setLayoutParams(layoutParams);
-			rootImage.setMaxHeight(30);
-			
-		}
-		else{
-	    	TextView groupeNavigationText = new TextView(context);
-	    	groupeNavigationText.setText(currentRootGroupe.getNomGroupe());
-	    	navigationLayout.addView(groupeNavigationText);
-		}
-	}*/
-	//End of user code
-
 	public GroupeSelection_Adapter(Context context, DorisDBHelper contextDB) {
 		super();
 		this.context = context;
@@ -309,19 +268,41 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			ImageView rootImage = new ImageView(context);
 			navigationLayout.addView(rootImage);
 			rootImage.setImageResource( ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_arbre_phylogenetique) );
-			rootImage.setPadding(5, 5, 5, 5);
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) rootImage.getLayoutParams();
 			layoutParams.leftMargin = 2;
 			layoutParams.rightMargin = 2;
 			rootImage.setLayoutParams(layoutParams);
-			rootImage.setMaxHeight(30);
-			
 		}
 		else{
 	    	TextView groupeNavigationText = new TextView(context);
-	    	groupeNavigationText.setText(currentRootGroupe.getNomGroupe());
-	    	groupeNavigationText.setPadding(2, 5, 5, 2);
 	    	navigationLayout.addView(groupeNavigationText);
+	    	
+	    	LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) groupeNavigationText.getLayoutParams();
+	    	layoutParams.setMargins(2, 0, 2, 0); // (left, top, right, bottom);
+
+	    	groupeNavigationText.setLayoutParams(layoutParams);
+	        
+	        //TODO:Valeur en dure :-(
+	        int longueurMax = 16;
+	        String groupeNom = currentRootGroupe.getNomGroupe().trim();
+	        if (groupeNom.length() > longueurMax ) {
+	        	groupeNom = groupeNom.substring(0, longueurMax);
+	        	groupeNom = groupeNom.replaceAll(" [^ ]*$", "");
+	        	groupeNom = groupeNom + "\u00A0\u2026";
+	        }
+	        groupeNavigationText.setText("-"+groupeNom);
+
+	    	
+	    	groupeNavigationText.setBackgroundResource(R.drawable.button_selected_background);
+	    	groupeNavigationText.setTextAppearance(context, android.R.attr.textAppearanceSmall);
+	    	//groupeNavigationText.setTextColor(context.getResources().getColor(android.R.color.darker_gray));
+	    	groupeNavigationText.setPadding(5, 0, 5, 0);
+
+	    	/*groupeNavigationText.setHeight(BitmapFactory.decodeResource(context.getResources(),
+					ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_arbre_phylogenetique) )
+					.getHeight()+50);
+	    	*/
+	    	
 		}
 	}
 	protected void addBackToParentGroupButton(LinearLayout navigationLayout, final Groupe parent){
@@ -336,7 +317,6 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			navigationLayout.addView(backToParentButton);
 			backToParentButton.setImageResource( ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_arbre_phylogenetique) );
 			backToParentButton.setBackgroundResource(R.drawable.button_selected_background);
-			backToParentButton.setPadding(5, 5, 5, 5);
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
 			layoutParams.leftMargin =2;
 			layoutParams.rightMargin = 2;
@@ -352,20 +332,31 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			// ajout du nouveau bouton
 			Button backToParentButton = new Button(context);
 			navigationLayout.addView(backToParentButton);
-			Log.w(LOG_TAG,"addBackToParentGroupButton parent="+parent);
-			Log.d(LOG_TAG,"addBackToParentGroupButton parent.getNomGroupe="+parent.getNomGroupe());
-			backToParentButton.setText(parent.getNomGroupe().trim());
-			backToParentButton.setBackgroundResource(R.drawable.button_selected_background);
-			backToParentButton.setTextColor(context.getResources().getColor(android.R.color.darker_gray));
-			backToParentButton.setPadding(5, 5, 5, 0);
+			
+			//Log.w(LOG_TAG,"addBackToParentGroupButton parent="+parent);
+			//Log.d(LOG_TAG,"addBackToParentGroupButton parent.getNomGroupe="+parent.getNomGroupe());
+	        //TODO:Valeur en dure :-(
+	        int longueurMax = 10;
+	        String groupeNom = parent.getNomGroupe().trim();
+	        if (groupeNom.length() > longueurMax ) {
+	        	groupeNom = groupeNom.substring(0, longueurMax);
+	        	groupeNom = groupeNom.replaceAll(" [^ ]*$", "");
+	        	groupeNom = groupeNom + "\u00A0\u2026";
+	        }
+			backToParentButton.setText("+"+groupeNom);
+
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
 			layoutParams.leftMargin =2;
 			layoutParams.rightMargin = 2;
-			layoutParams.bottomMargin = 5;
-			backToParentButton.setLayoutParams(layoutParams);
+			//layoutParams.bottomMargin = 5;
+			//backToParentButton.setLayoutParams(layoutParams);
+			backToParentButton.setBackgroundResource(R.drawable.button_selected_background);
+			backToParentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+			//backToParentButton.setTextAppearance(context, android.R.attr.textAppearanceSmall);
+			backToParentButton.setPadding(5, 0, 5, 0);
 			backToParentButton.setHeight(BitmapFactory.decodeResource(context.getResources(),
 										ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_arbre_phylogenetique) )
-										.getHeight()+10);
+										.getHeight());
 			backToParentButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
