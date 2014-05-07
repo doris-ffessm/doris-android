@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Tout est géré dans styles.xml -->
+    <!-- Platform-independent theme providing an action bar in a dark-themed activity. -->
 
 </resources>

@@ -17,13 +17,24 @@
 	        android:minHeight="40dp" >
 	
 	        <ImageButton
-	            android:id="@+id/groupselection_listview_imageButton_arbre_phylogenetique"
+	            android:id="@+id/groupselection_listview_imageButton1"
 	            android:layout_width="wrap_content"
 	            android:layout_height="30dp"
 	            android:background="@drawable/button_selected_background"
 	            android:paddingLeft="5dp"
 	            android:paddingRight="5dp"
-	            android:src="?attr/ic_action_arbre_phylogenetique" />
+	            android:src="@drawable/ic_action_arbre_phylogenetique" />
+	
+	        <Button
+	            android:id="@+id/groupselection_listview_button2"
+	            android:layout_width="wrap_content"
+	            android:layout_height="30dp"
+	            android:layout_marginRight="5dp"
+	            android:background="@drawable/button_selected_background"
+	            android:paddingLeft="10dp"
+	            android:paddingRight="10dp"
+	            android:text="Button"
+	            android:textColor="@android:color/darker_gray" />
 	    </LinearLayout>
 		<ImageButton
 			    android:id="@+id/groupeselection_main_btnSelect"

@@ -214,7 +214,6 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
         }
         
         // MaJ Titre et Début définition
-        //TODO:Valeur en dure :-(
         int longueurMax = 80;
         String texteRow = entry.getDefinition().toString().replaceAll("^[^\\)]*\\)\\.", "").trim();
         texteRow = texteRow.replaceAll("\\{\\{[^\\}]*\\}\\}", "");

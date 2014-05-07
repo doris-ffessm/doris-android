@@ -10,11 +10,11 @@
     	<item name="attr/ic_action_bibliographie">@drawable/ic_action_bibliographie</item>
     	<item name="attr/ic_action_search">@drawable/ic_action_search</item>
     	<item name="attr/ic_action_arbre_phylogenetique">@drawable/ic_action_arbre_phylogenetique</item>
-
+    
     </style>
 
     <style name="Theme.AppPureBlack" parent="Theme.AppCompat">
-	    <item name="android:background">#FF000000</item>
+	    <item name="android:background">#FF000000</item> 
     </style>
     
     
@@ -28,7 +28,6 @@
     	<item name="attr/ic_action_bibliographie">@drawable/ic_action_bibliographie_light</item>
     	<item name="attr/ic_action_search">@drawable/ic_action_search_light</item>
     	<item name="attr/ic_action_arbre_phylogenetique">@drawable/ic_action_arbre_phylogenetique_light</item>
-    	
     </style>
     
     

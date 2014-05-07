@@ -146,13 +146,13 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 		
 		Groupe clickedGroupe = groupeSelection_adapter.getGroupeFromPosition(position);
 		if(clickedGroupe.getContextDB() == null){
-			//Log.w(this.getClass().getSimpleName(),"workaround clickedGroupe.getContextDB() == null "+clickedGroupe.getId());
+			Log.w(this.getClass().getSimpleName(),"workaround clickedGroupe.getContextDB() == null "+clickedGroupe.getId());
 			clickedGroupe.setContextDB(getHelper().getDorisDBHelper());
 		}
 		if(clickedGroupe.getGroupesFils().size() > 0){	
 			for(Groupe g : clickedGroupe.getGroupesFils()){
 				if(g.getContextDB() == null){
-					//Log.w(this.getClass().getSimpleName(),"workaround Groupe.fils.getContextDB() == null "+g.getId());
+					Log.w(this.getClass().getSimpleName(),"workaround Groupe.fils.getContextDB() == null "+g.getId());
 					g.setContextDB(getHelper().getDorisDBHelper());
 				}
 			}
