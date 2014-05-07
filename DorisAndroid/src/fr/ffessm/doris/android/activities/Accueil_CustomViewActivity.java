@@ -295,7 +295,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         
         // Utilise le bouton select pour naviguer vers 
         ImageButton imgSelect = (ImageButton) viewZone.findViewById(R.id.zonegeoselection__selectBtn);
-        imgSelect.setImageResource( ThemeUtil.attrToResId(this, R.attr.ic_action_arbre_phylogenetique) );
         imgSelect.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

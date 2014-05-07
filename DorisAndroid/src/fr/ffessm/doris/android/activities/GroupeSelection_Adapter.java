@@ -264,24 +264,22 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
     	navigationLayout.removeAllViews();
     	addBackToParentGroupButton(navigationLayout, currentRootGroupe.getGroupePere());
     	if(currentRootGroupe.getId() == 1){
+    		
 			// ajout du nouveau bouton standard
-			ImageView rootImage = new ImageView(context);
-			navigationLayout.addView(rootImage);
-			rootImage.setImageResource( ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_arbre_phylogenetique) );
-			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) rootImage.getLayoutParams();
-			layoutParams.leftMargin = 2;
-			layoutParams.rightMargin = 2;
-			rootImage.setLayoutParams(layoutParams);
-		}
-		else{
-	    	TextView groupeNavigationText = new TextView(context);
-	    	navigationLayout.addView(groupeNavigationText);
-	    	
-	    	LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) groupeNavigationText.getLayoutParams();
-	    	layoutParams.setMargins(2, 0, 2, 0); // (left, top, right, bottom);
+    		ImageButton backToParentButton = new ImageButton(context);
+			navigationLayout.addView(backToParentButton);
+			
+			backToParentButton.setImageResource( ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_arbre_phylogenetique) );
+			backToParentButton.setBackgroundResource(R.drawable.button_background);
 
-	    	groupeNavigationText.setLayoutParams(layoutParams);
-	        
+			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
+			backToParentButton.setLayoutParams(layoutParams);
+			
+		} else {
+			// ajout du nouveau bouton
+			Button backToParentButton = new Button(context);
+			navigationLayout.addView(backToParentButton);
+	    	
 	        //TODO:Valeur en dure :-(
 	        int longueurMax = 16;
 	        String groupeNom = currentRootGroupe.getNomGroupe().trim();
@@ -290,18 +288,14 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	        	groupeNom = groupeNom.replaceAll(" [^ ]*$", "");
 	        	groupeNom = groupeNom + "\u00A0\u2026";
 	        }
-	        groupeNavigationText.setText("-"+groupeNom);
+	        backToParentButton.setText(groupeNom);
 
-	    	
-	    	groupeNavigationText.setBackgroundResource(R.drawable.button_selected_background);
-	    	groupeNavigationText.setTextAppearance(context, android.R.attr.textAppearanceSmall);
-	    	//groupeNavigationText.setTextColor(context.getResources().getColor(android.R.color.darker_gray));
-	    	groupeNavigationText.setPadding(5, 0, 5, 0);
-
-	    	/*groupeNavigationText.setHeight(BitmapFactory.decodeResource(context.getResources(),
-					ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_arbre_phylogenetique) )
-					.getHeight()+50);
-	    	*/
+	        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
+			layoutParams.leftMargin =2;
+			layoutParams.rightMargin = 2;
+			backToParentButton.setBackgroundResource(R.drawable.button_background);
+			backToParentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+			backToParentButton.setPadding(5, 0, 5, 0);
 	    	
 		}
 	}
@@ -318,8 +312,8 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			backToParentButton.setImageResource( ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_arbre_phylogenetique) );
 			backToParentButton.setBackgroundResource(R.drawable.button_selected_background);
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
-			layoutParams.leftMargin =2;
-			layoutParams.rightMargin = 2;
+			//layoutParams.leftMargin =2;
+			//layoutParams.rightMargin = 2;
 			backToParentButton.setLayoutParams(layoutParams);
 			backToParentButton.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -343,16 +337,15 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	        	groupeNom = groupeNom.replaceAll(" [^ ]*$", "");
 	        	groupeNom = groupeNom + "\u00A0\u2026";
 	        }
-			backToParentButton.setText("+"+groupeNom);
+			backToParentButton.setText(groupeNom);
 
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
 			layoutParams.leftMargin =2;
 			layoutParams.rightMargin = 2;
-			//layoutParams.bottomMargin = 5;
-			//backToParentButton.setLayoutParams(layoutParams);
+
 			backToParentButton.setBackgroundResource(R.drawable.button_selected_background);
 			backToParentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-			//backToParentButton.setTextAppearance(context, android.R.attr.textAppearanceSmall);
+
 			backToParentButton.setPadding(5, 0, 5, 0);
 			backToParentButton.setHeight(BitmapFactory.decodeResource(context.getResources(),
 										ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_arbre_phylogenetique) )
