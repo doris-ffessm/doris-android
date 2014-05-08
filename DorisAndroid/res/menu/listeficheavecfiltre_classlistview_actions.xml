@@ -9,7 +9,7 @@
 	<!--Start of user code customView_menu for ListeFicheAvecFiltre
 	-->
 	<item android:id="@+id/listeficheavecfiltre_classlistview_action_filterpopup"
-          android:icon="@drawable/app_filter_settings_32"
+          android:icon="?attr/ic_app_filter_settings"
           android:title="@string/listeficheavecfiltre_classlistview_action_filterpopup_title"
           android:showAsAction="ifRoom"
     	  dorisandroid:showAsAction="ifRoom"

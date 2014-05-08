@@ -94,7 +94,7 @@ public class ThemeUtil {
 	public static int attrToResId(Activity activity, int attr) {
 		
 		TypedArray a = activity.getTheme().obtainStyledAttributes(new int[] { attr });
-		
+		//Log.d(LOG_TAG, "attrToResId() - a.getResourceId(0, 0) ="+ a.getResourceId(0, 0));
 		return a.getResourceId(0, 0);
 	}
 }

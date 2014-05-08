@@ -11,6 +11,9 @@
     	<item name="attr/ic_action_search">@drawable/ic_action_search</item>
     	<item name="attr/ic_action_arbre_phylogenetique">@drawable/ic_action_arbre_phylogenetique</item>
 
+    	<item name="attr/ic_app_filter_settings">@drawable/ic_app_filter_settings</item>
+    	<item name="attr/ic_app_filter_settings_actif">@drawable/ic_app_filter_settings_actif</item>
+    	
     </style>
 
     <style name="Theme.AppPureBlack" parent="Theme.AppCompat">
@@ -29,6 +32,8 @@
     	<item name="attr/ic_action_search">@drawable/ic_action_search_light</item>
     	<item name="attr/ic_action_arbre_phylogenetique">@drawable/ic_action_arbre_phylogenetique_light</item>
     	
+    	<item name="attr/ic_app_filter_settings">@drawable/ic_app_filter_settings_light</item>
+    	<item name="attr/ic_app_filter_settings_actif">@drawable/ic_app_filter_settings_actif_light</item>
     </style>
     
     

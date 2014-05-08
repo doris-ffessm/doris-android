@@ -403,14 +403,14 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 			   (prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1) != -1)){       
 			// mise à jour de l'image du bouton de filtre
 			if(searchButtonMenuItem!=null)
-	    	   searchButtonMenuItem.setIcon(R.drawable.app_filter_settings_actif_32);
+	    	  searchButtonMenuItem.setIcon( ThemeUtil.attrToResId(((ListeFicheAvecFiltre_ClassListViewActivity)context), R.attr.ic_app_filter_settings_actif) );
 		}
 		else{
 			// pas de filtre actif
 			// remet l'imaged efiltre inactif
 	        //searchButton.setImageResource(R.drawable.filter_settings_32);
 			if(searchButtonMenuItem!=null)
-				searchButtonMenuItem.setIcon(R.drawable.app_filter_settings_32);
+				searchButtonMenuItem.setIcon( ThemeUtil.attrToResId(((ListeFicheAvecFiltre_ClassListViewActivity)context), R.attr.ic_app_filter_settings) );
 	        
 		}
 	}
