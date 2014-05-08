@@ -45,6 +45,9 @@ package fr.ffessm.doris.android.activities.view;
 
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.DetailsFiche_ElementViewActivity;
+import fr.ffessm.doris.android.activities.GroupeSelection_ClassListViewActivity;
+import fr.ffessm.doris.android.tools.ThemeUtil;
+import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
@@ -52,6 +55,8 @@ import android.widget.ImageButton;
 public class FoldableClickListener implements OnClickListener {
 
 	private static final String LOG_TAG = DetailsFiche_ElementViewActivity.class.getCanonicalName();
+	
+	private Context context;
 	
 	protected View associatedFoldableView;
 	protected ImageButton foldButton;
@@ -63,11 +68,13 @@ public class FoldableClickListener implements OnClickListener {
 	private int image_maximize;
 	private int image_minimize;
 	
-	public FoldableClickListener(View foldableView){
+	public FoldableClickListener(Context context, View foldableView){
+		this.context = context;
 		this.associatedFoldableView = foldableView;
 	}
 	
-	public FoldableClickListener(View foldableView, ImageButton foldButton, ImageButtonKind imageButtonKind ){
+	public FoldableClickListener(Context context, View foldableView, ImageButton foldButton, ImageButtonKind imageButtonKind ){
+		this.context = context;
 		this.associatedFoldableView = foldableView;
 		this.foldButton = foldButton;
 		
@@ -77,8 +84,8 @@ public class FoldableClickListener implements OnClickListener {
 			image_minimize = R.drawable.app_expander_ic_minimized;
 			break;
 		case DESCRIPTION_ARBRE_PHYLO :
-			image_maximize = R.drawable.app_affichage_description_arbre;
-			image_minimize = R.drawable.app_affichage_description_arbre;
+			image_maximize = ThemeUtil.attrToResId(((DetailsFiche_ElementViewActivity) context), R.attr.ic_app_more_informations);
+			image_minimize = ThemeUtil.attrToResId(((DetailsFiche_ElementViewActivity) context), R.attr.ic_app_more_informations);
 			break;
 		}
 	}

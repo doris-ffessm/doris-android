@@ -15,7 +15,7 @@
 	    android:background="@android:color/transparent"
 	    android:contentDescription="@string/detailsfiche_elementview_fold_unflod_section_hint_text"
 	    android:scaleType="centerInside"
-	    android:src="@drawable/app_affichage_description_arbre" />
+	    android:src="?attr/ic_app_more_informations" />
 	        
 	
 	<TextView

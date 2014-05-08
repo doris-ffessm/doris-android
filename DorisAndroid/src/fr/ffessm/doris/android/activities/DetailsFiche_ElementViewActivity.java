@@ -536,7 +536,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         // Bouton de fermeture et d'ouverure du texte de la section
         ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
         
-        FoldableClickListener foldable = new FoldableClickListener(contenuText, foldButton, ImageButtonKind.DETAILS_FICHE);
+        FoldableClickListener foldable = new FoldableClickListener(this, contenuText, foldButton, ImageButtonKind.DETAILS_FICHE);
         allFoldableDetails.add(foldable);
         foldButton.setOnClickListener(foldable);
         
@@ -591,7 +591,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         	int identifierIcone1Groupe = context.getResources().getIdentifier(groupe.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw",  context.getPackageName());
         	Bitmap bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(identifierIcone1Groupe));
         	icone1.setImageBitmap(bitmap);
-        	icone1.setBackgroundResource(R.drawable.groupe_icon_background);
+        	icone1.setBackgroundResource( ThemeUtil.attrToResId(((DetailsFiche_ElementViewActivity)context), R.attr.ic_action_background) );
         	texte1.setText(groupe.getNomGroupe());
         	icone1.setOnClickListener(new OnClickListener() {
 				@Override
@@ -608,7 +608,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         	int identifierIcone1Groupe = context.getResources().getIdentifier(groupePere.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw",  context.getPackageName());
         	Bitmap bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(identifierIcone1Groupe));
         	icone1.setImageBitmap(bitmap);
-        	icone1.setBackgroundResource(R.drawable.groupe_icon_background);
+        	icone1.setBackgroundResource( ThemeUtil.attrToResId(((DetailsFiche_ElementViewActivity)context), R.attr.ic_action_background) );
         	texte1.setText(groupePere.getNomGroupe());
         	icone1.setOnClickListener(new OnClickListener() {
 				@Override
@@ -623,7 +623,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
            	int identifierIcone2Groupe = context.getResources().getIdentifier(groupe.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw",  context.getPackageName());
            	bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(identifierIcone2Groupe));
         	icone2.setImageBitmap(bitmap);
-        	icone2.setBackgroundResource(R.drawable.groupe_icon_background);
+        	icone2.setBackgroundResource( ThemeUtil.attrToResId(((DetailsFiche_ElementViewActivity)context), R.attr.ic_action_background) );
         	texte2.setText(groupe.getNomGroupe());
         	icone2.setOnClickListener(new OnClickListener() {
 				@Override
@@ -639,7 +639,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         // Bouton d'Affichage et de Masque de la section
         ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
         
-        FoldableClickListener foldable = new FoldableClickListener(sectionIcones, foldButton, ImageButtonKind.DETAILS_FICHE);
+        FoldableClickListener foldable = new FoldableClickListener(this, sectionIcones, foldButton, ImageButtonKind.DETAILS_FICHE);
         allFoldableDetails.add(foldable);
         foldButton.setOnClickListener(foldable);
         
@@ -714,7 +714,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 		        // Ouverture fermeture des descriptions des Classifications
 				LinearLayout descriptionClassificationLayout = (LinearLayout) convertArbreView.findViewById(R.id.LinearLayout_description);
 				
-		        FoldableClickListener descriptionClassificationFoldable = new FoldableClickListener(descriptionClassificationLayout, descriptionClassificationButton, ImageButtonKind.DESCRIPTION_ARBRE_PHYLO);
+		        FoldableClickListener descriptionClassificationFoldable = new FoldableClickListener(this, descriptionClassificationLayout, descriptionClassificationButton, ImageButtonKind.DESCRIPTION_ARBRE_PHYLO);
 		        allFoldableClassificationDescription.add(descriptionClassificationFoldable);
 
 		        // Par défaut on cache la description 
@@ -737,7 +737,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         // Ouverture fermeture de l'arbre
         ImageButton detailsTableauButton = (ImageButton) convertView.findViewById(R.id.details_tableau_phylogenetique_fold_unflod_section_imageButton);
         
-        FoldableClickListener detailsTableaufoldable = new FoldableClickListener(sectionArbre, detailsTableauButton, ImageButtonKind.DETAILS_FICHE);
+        FoldableClickListener detailsTableaufoldable = new FoldableClickListener(this, sectionArbre, detailsTableauButton, ImageButtonKind.DETAILS_FICHE);
         allFoldableDetails.add(detailsTableaufoldable);
         detailsTableauButton.setOnClickListener(detailsTableaufoldable);
         

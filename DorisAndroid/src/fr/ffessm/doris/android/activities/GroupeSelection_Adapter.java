@@ -198,7 +198,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		//	additional code
         
         ImageView ivIcon = (ImageView) convertView.findViewById(R.id.groupeselection_listviewrow_icon);
-        ivIcon.setBackgroundResource(R.drawable.groupe_icon_background);
+        ivIcon.setBackgroundResource( ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_background) );
         if(entry.getCleURLImage() != null && !entry.getCleURLImage().isEmpty()){
         	//Picasso.with(context).load(Constants.getSiteUrl()+entry.getCleURLImage()).placeholder(R.drawable.app_ic_launcher).into(ivIcon);
          	int identifierIconeGroupe = context.getResources().getIdentifier(entry.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw",  context.getPackageName());
