@@ -290,10 +290,18 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 						
 			    		avancement++;
 			    		publishProgress(avancement);
+						if(this.isCancelled()){
+							// annulation demandée, fini la tache dés que possible
+							break;
+						}		
 			    	}
 		    	}
 		    	
 		    	fichesOutils.setDateMajListeFichesTypeZoneGeo(zoneId);
+				if(this.isCancelled()){
+					// annulation demandée, fini la tache dés que possible
+					return avancement;
+				}		
 		    	
     		}
 		}

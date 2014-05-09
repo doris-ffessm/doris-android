@@ -58,6 +58,7 @@ import java.util.regex.Pattern;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.DorisApplicationContext;
@@ -119,7 +120,15 @@ public class DeplacePhotos_BgActivity  extends AsyncTask<String,Integer, Integer
 
     protected void onPreExecute(){
         //Create the notification in the statusbar
+    	mNotificationHelper.setNotificationID(2);
         mNotificationHelper.createNotification();
+        
+        if(DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null)
+    		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
+        if(DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity != null)
+        	DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity.cancel(true);
+        if(DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity != null)
+        	DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity.cancel(true);
     }
 
     /** premier argument = source location
@@ -145,6 +154,21 @@ public class DeplacePhotos_BgActivity  extends AsyncTask<String,Integer, Integer
 	    	Log.e(LOG_TAG, "déplacement impossible, nombre de  parametre incorrect : "+arg0);
 	    	return 0;
     	}
+    	
+    	// stop les téléchargements si besoin
+    	if(DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null){
+    		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
+    		mNotificationHelper.setContentTitle("Attente de fermeture d'autre taches");
+    		mNotificationHelper.progressUpdate(0);
+    		while(DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null 
+    				&& DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING){
+    			try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {}
+    		}
+    	}
+    	mNotificationHelper.setContentTitle(context.getString(R.string.deplacephotos_bg_initialTickerText));
+    	
     	String source = arg0[0];
     	String dest = arg0[1];
     	// vérification des paramètres et calcul du nombre de fichier à copier

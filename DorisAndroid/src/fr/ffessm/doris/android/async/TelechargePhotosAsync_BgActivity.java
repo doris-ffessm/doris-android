@@ -330,7 +330,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         		nbPhotosATelechargerPourZone[zoneId] = Integer.valueOf(countPhoto.get(0)[0]);
     		}
     		paramOutils.setParamInt(photosOutils.getKeyDataAPrecharZoneGeo(zoneId, false), nbPhotosATelechargerPourZone[zoneId]);
-    	
+			if(this.isCancelled()){
+				// annulation demandée, fini la tache dés que possible
+				break;
+			}		
     	}
     }
  	    	
@@ -440,6 +443,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosPrincipalesFiches - nbPhotosPrincDejaLaPourZone : "+nbPhotosPrinRecuesPourZone );
 				publishProgress( nbPhotosPrinRecuesPourZone );
     		}
+			if(this.isCancelled()){
+				// annulation demandée, fini la tache dés que possible
+				return 0;
+			}		
 	
     	} // fin ZoneGeo Images Principales
     	return 0;
@@ -546,8 +553,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 							// toutes les 200 images ajoutées fait une micro pause pour économiser le CPU pour l'UI
 	        				Thread.sleep(4 * tempo); // wait for 200 milliseconds before running another loop
 						}
-						
-						
+						if(this.isCancelled()){
+							// annulation demandée, fini la tache dés que possible
+							break;
+						}		
 					}
 	    		} catch (IOException e) {
 	    			Log.e(LOG_TAG, e.getMessage(), e);
@@ -555,11 +564,14 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	    			Log.e(LOG_TAG, e.getMessage(), e);
 				}
 			}
-		
+			
 			//Enregistrement du nombre total de photos téléchargée pour afficher avancement
 			paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, false), nbPhotosRecuesPourZone);
 			publishProgress( nbPhotosRecuesPourZone );
-			
+			if(this.isCancelled()){
+				// annulation demandée, fini la tache dés que possible
+				return 0;
+			}		
 		} // Fin Pour Chaque ZoneGeo Toutes Photos
 		return 0;
 	}
@@ -631,8 +643,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 					// toutes les 200 images ajoutées fait une micro pause pour économiser le CPU pour l'UI
     				Thread.sleep(4 * tempo); // wait for 200 milliseconds before running another loop
 				}
-				
-						
+				if(this.isCancelled()){
+					// annulation demandée, fini la tache dés que possible
+					break;
+				}				
 			}
 		} catch (IOException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
@@ -708,8 +722,10 @@ public int telechargementPhotosBibliographie(DorisDBHelper dorisDBHelper){
 					// toutes les 200 images ajoutées fait une micro pause pour économiser le CPU pour l'UI
     				Thread.sleep(4 * tempo); // wait for 200 milliseconds before running another loop
 				}
-				
-						
+				if(this.isCancelled()){
+					// annulation demandée, fini la tache dés que possible
+					break;
+				}		
 			}
 		} catch (IOException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
@@ -790,9 +806,17 @@ public int telechargementPhotosGlossaire(DorisDBHelper dorisDBHelper){
 						// toutes les 200 images ajoutées fait une micro pause pour économiser le CPU pour l'UI
 						Thread.sleep(4 * tempo); // wait for 200 milliseconds before running another loop
 					}
+					if(this.isCancelled()){
+						// annulation demandée, fini la tache dés que possible
+						break;
+					}		
 					
 				}
 			}
+			if(this.isCancelled()){
+				// annulation demandée, fini la tache dés que possible
+				break;
+			}		
 		}
 	} catch (IOException e) {
 		Log.e(LOG_TAG, e.getMessage(), e);

@@ -72,11 +72,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
+import java.io.IOException;
 //Start of user code additional imports EtatModeHorsLigne_CustomViewActivity
 import java.util.HashMap;
 import java.util.List;
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -94,6 +96,7 @@ import fr.ffessm.doris.android.async.DeplacePhotos_BgActivity;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
+import fr.ffessm.doris.android.datamodel.SQLiteDataBaseHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.tools.App_Outils;
@@ -409,6 +412,72 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	}
     }
     
+    private AsyncComputeLongRefreshScreenData lastAsyncComputeLongRefreshScreenData = null;
+    
+    /**
+     * Classe utilisée pour rafraichir l'ihm, mais qui prend un peu de temps et ne peu pas être mis dans refreshScreenData sinon on pénalise le reste
+     *
+     */
+    private class AsyncComputeLongRefreshScreenData extends AsyncTask<Void, Void, Void> {
+
+    	String internalUsedSize =  "";
+		String primaryUsedSize =  "";
+		public boolean needRestart = false;
+		
+		public AsyncComputeLongRefreshScreenData() {
+			super();
+		}
+
+		@Override
+		protected void onPreExecute() {
+			// show your progress dialog
+
+		}
+
+		@Override
+		protected Void doInBackground(Void... voids) {
+			Photos_Outils photo_Outils = new Photos_Outils(EtatModeHorsLigne_CustomViewActivity.this);
+			internalUsedSize =  Disque_Outils.getHumanDiskUsage(photo_Outils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL));
+			primaryUsedSize =  Disque_Outils.getHumanDiskUsage(photo_Outils.getPhotosDiskUsage(ImageLocation.PRIMARY));
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void params) {
+			TextView etatDiskTextView = (TextView) findViewById(R.id.etatmodehorsligne_customview_diskusage_description_textView);
+			Photos_Outils photo_Outils = new Photos_Outils(EtatModeHorsLigne_CustomViewActivity.this);
+			StringBuilder etatDiskStringBuilder = new StringBuilder();
+			etatDiskStringBuilder.append("(Espace utilisé / disponible / total)\n");
+			etatDiskStringBuilder.append("Mémoire interne : "+internalUsedSize+" / ");
+			etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().first)+" / ");
+			etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().second)+"\n");
+			//etatDiskStringBuilder.append(DiskEnvironment.getInternalStorage().getFile().getAbsolutePath()+"\n");
+			//etatDiskStringBuilder.append("Donnée application="+this.getDir(Photos_Outils.MED_RES_FICHE_FOLDER, Context.MODE_PRIVATE)+"\n");
+			etatDiskStringBuilder.append("Disque primaire : "+primaryUsedSize+" / ");
+			etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().first)+" / ");
+			etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().second)+"\n");
+			//etatDiskStringBuilder.append(DiskEnvironment.getPrimaryExternalStorage().getFile().getAbsolutePath()+"\n");
+			if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
+				String secondaryUsedSize = Disque_Outils.getHumanDiskUsage(photo_Outils.getPhotosDiskUsage(ImageLocation.SECONDARY));
+				etatDiskStringBuilder.append("Disque secondaire : "+secondaryUsedSize+" / ");
+				try {
+					etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().first)+" / ");
+					etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().second)+"\n");
+					// etatDiskStringBuilder.append(DiskEnvironment.getSecondaryExternalStorage().getFile().getAbsolutePath()+"\n");
+				} catch (NoSecondaryStorageException e) {
+					etatDiskStringBuilder.append(" not Available");
+				}
+				
+			}
+			//etatDiskStringBuilder.append("Photo actuellement sur : "+new Photos_Outils(EtatModeHorsLigne_CustomViewActivity.this).getPreferedLocation()+"\n");
+			etatDiskTextView.setText(etatDiskStringBuilder.toString());
+			
+			if(needRestart)	this.execute();
+		}
+		
+		
+
+	}
 	//End of user code
 
     /** refresh screen from data 
@@ -433,38 +502,18 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			updateProgressBarZone(zoneGeo, progressBarZones.get(zoneGeo.getId()));
 		}
 		
-		// mise à jour de l'espace disque occupé
-		TextView etatDiskTextView = (TextView) findViewById(R.id.etatmodehorsligne_customview_diskusage_description_textView);
+		
+		
+		// déclenche le calcul de l'espace disque utilisé
+		if(lastAsyncComputeLongRefreshScreenData == null || lastAsyncComputeLongRefreshScreenData.getStatus() != Status.FINISHED){
+			// ne relance pas si déjà en cours
+			lastAsyncComputeLongRefreshScreenData = (AsyncComputeLongRefreshScreenData) new AsyncComputeLongRefreshScreenData().execute();
+		}
+		
+		// Affiche les boutons suivant les configurations possibles
 		Photos_Outils photo_Outils = new Photos_Outils(this);
 		// disque courant
-		ImageLocation currentImageLocation = photo_Outils.getPreferedLocation();
-		StringBuilder etatDiskStringBuilder = new StringBuilder();
-		etatDiskStringBuilder.append("(Espace utilisé / disponible / total)\n");
-		String internalUsedSize = Disque_Outils.getHumanDiskUsage(photo_Outils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL));
-		String primaryUsedSize = Disque_Outils.getHumanDiskUsage(photo_Outils.getPhotosDiskUsage(ImageLocation.PRIMARY));
-		etatDiskStringBuilder.append("Mémoire interne : "+internalUsedSize+" / ");
-		etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().first)+" / ");
-		etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().second)+"\n");
-		//etatDiskStringBuilder.append(DiskEnvironment.getInternalStorage().getFile().getAbsolutePath()+"\n");
-		//etatDiskStringBuilder.append("Donnée application="+this.getDir(Photos_Outils.MED_RES_FICHE_FOLDER, Context.MODE_PRIVATE)+"\n");
-		etatDiskStringBuilder.append("Disque primaire : "+primaryUsedSize+" / ");
-		etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().first)+" / ");
-		etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().second)+"\n");
-		//etatDiskStringBuilder.append(DiskEnvironment.getPrimaryExternalStorage().getFile().getAbsolutePath()+"\n");
-		if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
-			String secondaryUsedSize = Disque_Outils.getHumanDiskUsage(photo_Outils.getPhotosDiskUsage(ImageLocation.SECONDARY));
-			etatDiskStringBuilder.append("Disque secondaire : "+secondaryUsedSize+" / ");
-			try {
-				etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().first)+" / ");
-				etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().second)+"\n");
-				// etatDiskStringBuilder.append(DiskEnvironment.getSecondaryExternalStorage().getFile().getAbsolutePath()+"\n");
-			} catch (NoSecondaryStorageException e) {
-				etatDiskStringBuilder.append(" not Available");
-			}
-			
-		}
-		//etatDiskStringBuilder.append("Photo actuellement sur : "+new Photos_Outils(EtatModeHorsLigne_CustomViewActivity.this).getPreferedLocation()+"\n");
-		etatDiskTextView.setText(etatDiskStringBuilder.toString());
+		ImageLocation currentImageLocation = photo_Outils.getPreferedLocation();		
 		// vérifie qu'il n'y a pas un déplacement en cours
 		boolean deplacementEnCours = DorisApplicationContext.getInstance().deplacePhotos_BgActivity != null;
 		
