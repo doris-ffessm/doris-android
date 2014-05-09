@@ -43,6 +43,9 @@ termes.
 
 package fr.ffessm.doris.android.sitedoris;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -247,45 +250,69 @@ public class Common_Outils {
 	public String formatStringNormalizer(String string) {
 	    char[] charsData = new char[string.length()];
 	    string.getChars(0, charsData.length, charsData, 0);
-	 
+
+	    String charsDataNormalized = "";
+	    
 	    char c;
 	    for (int i = 0; i < charsData.length; i++) {
-	        if ((c = charsData[i]) >= 'A' && c <= 'Z') {
-	            charsData[i] = (char) (c - 'A' + 'a');
+	    	// On prend tout d'abord le caractère d'origine puis si besoin il sera remplacé
+	    	c = charsData[i];
+	    	
+	        // Met en minuscule les lettres de A à Z
+	    	if (c >= 'A' && c <= 'Z') {
+	        	c = (char) (c - 'A' + 'a');
 	        } else {
+	        	if ( c >= '\u00c0' && c <= '\u00df') {
+		        	c = (char) (c - '\u00c0' + '\u00e0');
+	        	}
+
 	            switch (c) {
 	            case '\u00e0':
 	            case '\u00e2':
 	            case '\u00e4':
-	                charsData[i] = 'a';
+	            	c = 'a';
 	                break;
 	            case '\u00e7':
-	                charsData[i] = 'c';
+	            	c = 'c';
 	                break;
 	            case '\u00e8':
 	            case '\u00e9':
 	            case '\u00ea':
 	            case '\u00eb':
-	                charsData[i] = 'e';
+	            	c = 'e';
 	                break;
 	            case '\u00ee':
 	            case '\u00ef':
-	                charsData[i] = 'i';
+	            	c = 'i';
 	                break;
 	            case '\u00f4':
 	            case '\u00f6':
-	                charsData[i] = 'o';
+	            	c = 'o';
 	                break;
 	            case '\u00f9':
 	            case '\u00fb':
 	            case '\u00fc':
-	                charsData[i] = 'u';
+	            	c = 'u';
+	                break;
+	            case '\u0152':
+	            case '\u0153':
+	            	c = 'o';
+	            	charsDataNormalized += c;
+	            	c = 'e';
+	                break;
+	            case '\u00e6':
+	            	c = 'a';
+	            	charsDataNormalized += c;
+	            	c = 'e';
 	                break;
 	            }
 	        }
+        	//log.debug("formatStringNormalizer() - charsData["+i+"] : " + charsData[i]
+        	//		+ " - c : " + c);
+        	charsDataNormalized += c;
 	    }
 	 
-	    return new String(charsData);
+	    return charsDataNormalized;
 	}
-
+	
 }

@@ -965,14 +965,14 @@ public class Fiche {
 		
 		// Texte pour recherche rapide dans les listes de fiches
 		StringBuilder sbTextePourRechercheRapide = new StringBuilder();
-		if (getNomCommun() != null && !getNomCommun().equals(Constants.FICHE_NOMCOMMUN_VALUE_IF_EMPTY)) {
+		if (getNomCommun() != null) {
 			sbTextePourRechercheRapide.append(getNomCommun());
 		}
-		if (getNomScientifique() != null) sbTextePourRechercheRapide.append(getNomScientifique().replaceAll("\\([^\\)]*\\)", ""));
+		if (getNomScientifique() != null) sbTextePourRechercheRapide.append(" "+getNomScientifique().replaceAll("\\([^\\)]*\\)", ""));
 		sbTextePourRechercheRapide.append(" "+autresDenominationsPourRechercheRapide.trim());
 		
 		sbTextePourRechercheRapide = new StringBuilder(sbTextePourRechercheRapide.toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "") );
-		setTextePourRechercheRapide(commonOutils.formatStringNormalizer(sbTextePourRechercheRapide.toString()).toLowerCase());
+		setTextePourRechercheRapide( commonOutils.formatStringNormalizer(sbTextePourRechercheRapide.toString()).toLowerCase() );
 		
 		// RAZ
 		source = null;
