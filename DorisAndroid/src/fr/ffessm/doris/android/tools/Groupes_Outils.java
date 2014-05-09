@@ -102,13 +102,13 @@ public class Groupes_Outils {
 		boolean result = false;
 		Groupe groupeFiche = fiche.getGroupe();
 		if(groupeFiche == null){
-			Log.w(LOG_TAG, "PB pas de groupe pour la fiche isFichePartOfGroupe("+fiche.getNomCommun()+" "+fiche.getId()+", "+searchedGroupe.getNomGroupe()+")");
+			Log.w(LOG_TAG, "PB pas de groupe pour la fiche isFichePartOfGroupe("+fiche.getNomCommunNeverEmpty()+" "+fiche.getId()+", "+searchedGroupe.getNomGroupe()+")");
 			return true;
 		}
 		groupeFiche.setContextDB(fiche.getContextDB());
 		if(groupeFiche.getId() == searchedGroupe.getId()) result= true;
 		else result= isGroupePartOfGroupe(groupeFiche, searchedGroupe);
-		if(BuildConfig.DEBUG) Log.d(LOG_TAG, "isFichePartOfGroupe("+fiche.getNomCommun()+", "+searchedGroupe.getNomGroupe()+") ="+result);
+		if(BuildConfig.DEBUG) Log.d(LOG_TAG, "isFichePartOfGroupe("+fiche.getNomCommunNeverEmpty()+", "+searchedGroupe.getNomGroupe()+") ="+result);
 		return result;
 	}
 	public static boolean isGroupePartOfGroupe(Groupe groupe, Groupe searchedGroupe){

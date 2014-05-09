@@ -84,6 +84,7 @@ import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
 import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
+import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
@@ -182,7 +183,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 			    		Integer.parseInt(resultColumns[1]),
 			    		Integer.parseInt(resultColumns[2])) );
 			}
-			Log.d(LOG_TAG, "doInBackground() - Fiches de la Base : "+listeFichesBase.size() );
+			//Log.d(LOG_TAG, "doInBackground() - Fiches de la Base : "+listeFichesBase.size() );
     	} catch(java.sql.SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
     	}
@@ -195,7 +196,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     	// zoneGeo : 3 - Faune et flore subaquatiques de l'Indo-Pacifique
     	// zoneGeo : 4 - Faune et flore subaquatiques des Caraïbes
     	// zoneGeo : 5 - Faune et flore subaquatiques de l'Atlantique Nord-Ouest
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
 		
 		mNotificationHelper.setContentTitle(context.getString(R.string.bg_notifTitle_fichesZoneGeo));
 		mNotificationHelper.setRacineTickerText(context.getString(R.string.bg_notifText_fichesZoneGeo));
@@ -208,14 +209,14 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		
 		List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
     	listeGroupes.addAll(dbHelper.getGroupeDao().queryForAll());
-		Log.d(LOG_TAG, "doInBackground() - listeGroupes.size : "+listeGroupes.size());
+		//Log.d(LOG_TAG, "doInBackground() - listeGroupes.size : "+listeGroupes.size());
 		
     	List<Participant> listeParticipants = new ArrayList<Participant>(0);
 		listeParticipants.addAll(dbHelper.getParticipantDao().queryForAll());
-		Log.d(LOG_TAG, "doInBackground() - listeParticipants.size : "+listeParticipants.size());
+		//Log.d(LOG_TAG, "doInBackground() - listeParticipants.size : "+listeParticipants.size());
 		
 		for (ZoneGeographique zoneGeo : listeZoneGeo) {
-    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
+    		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
     		avancement++;
     		publishProgress(avancement);
     		
@@ -226,25 +227,25 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 	
 				// Récupération de la liste Fiches depuis le Site
 		    	String urlListeFiches =  Constants.getListeFichesUrl(zoneId);
-		    	Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlListeFiches);
+		    	//Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlListeFiches);
 		    			 
 		    	try {
-		    		contenuFichierHtml = reseauOutils.getHtml(urlListeFiches);
+		    		contenuFichierHtml = reseauOutils.getHtml(urlListeFiches, FileHtmlKind.LISTE_FICHES);
 				} catch (IOException e) {
 					Log.w(LOG_TAG, e.getMessage(), e);
 				}   
 		    	
-		    	Log.d(LOG_TAG, "doInBackground() - 10");
+		    	//Log.d(LOG_TAG, "doInBackground() - 10");
 		    	
 		    	HashSet<FicheLight> listeFichesSite = siteDoris.getListeFichesFromHtml(contenuFichierHtml);
-		    	Log.d(LOG_TAG, "doInBackground() - Fiches de la Base : "+listeFichesBase.size() );
-		    	Log.d(LOG_TAG, "doInBackground() - Fiches du Site : "+listeFichesSite.size() );
+		    	//Log.d(LOG_TAG, "doInBackground() - Fiches de la Base : "+listeFichesBase.size() );
+		    	//Log.d(LOG_TAG, "doInBackground() - Fiches du Site : "+listeFichesSite.size() );
 		    	
 		    	
 		    	// Analyse différences entre les 2 listes
 		    	
 		    	HashSet<FicheLight> listeFichesUpdated = siteDoris.getListeFichesUpdated(listeFichesBase, listeFichesSite);
-		    	Log.d(LOG_TAG, "doInBackground() - Fiches Updated : "+listeFichesUpdated.size() );
+		    	//Log.d(LOG_TAG, "doInBackground() - Fiches Updated : "+listeFichesUpdated.size() );
 		    	listeFichesSite.clear();
 		    	
 		    	// Mises à jour fiches
@@ -254,14 +255,14 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		    		mNotificationHelper.setMaxItemToProcess(""+avancementMax);
 		    		
 			    	for (FicheLight ficheLight : listeFichesUpdated){
-			    		Log.d(LOG_TAG, "doInBackground() - fiche modifiée : "+ficheLight.getNumeroFiche());
+			    		//Log.d(LOG_TAG, "doInBackground() - fiche modifiée : "+ficheLight.getNumeroFiche());
 			    		
 			    		// Récupération Fiche du Site
 			        	String urlFiche =  Constants.getFicheFromIdUrl( ficheLight.getNumeroFiche() );
 			        	Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlFiche);
 			        	
 			        	try {
-			        		contenuFichierHtml = reseauOutils.getHtml(urlFiche);
+			        		contenuFichierHtml = reseauOutils.getHtml(urlFiche, FileHtmlKind.FICHE);
 			    		} catch (IOException e) {
 			    			Log.w(LOG_TAG, e.getMessage(), e);
 			    		}   
@@ -276,7 +277,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 			        	ficheDeLaBase.setEtatFiche(ficheLight.getEtatFiche());
 						try {
 							ficheDeLaBase.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
-							Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheDeLaBase.getNomCommun());
+							//Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheDeLaBase.getNomCommun());
 		
 							dbHelper.getDorisDBHelper().ficheDao.update(
 									ficheDeLaBase
@@ -297,7 +298,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     		}
 		}
 		
-		Log.d(LOG_TAG, "doInBackground() - Fin");
+		//Log.d(LOG_TAG, "doInBackground() - Fin");
 		// End of user code
         
 		// Start of user code end of task VerifieMAJFiches_BgActivity

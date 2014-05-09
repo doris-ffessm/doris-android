@@ -46,6 +46,7 @@ import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -63,9 +64,6 @@ public class ThemeUtil {
 		activity.finish();
 		activity.startActivity(new Intent(activity, activity.getClass()));
 	}
-	
-	
-	
 
 	public static void onActivityCreateSetTheme(Activity activity)
 	{
@@ -90,6 +88,13 @@ public class ThemeUtil {
     		Log.d(LOG_TAG, "theme HoloLight ="+ theme);
     		activity.setTheme(R.style.Theme_AppHoloLight);
     	}
+	}
+	
+	// Permet d'obtenir id de l'image pour setImageResource (différente selon les thèmes)
+	public static int attrToResId(Activity activity, int attr) {
 		
+		TypedArray a = activity.getTheme().obtainStyledAttributes(new int[] { attr });
+		//Log.d(LOG_TAG, "attrToResId() - a.getResourceId(0, 0) ="+ a.getResourceId(0, 0));
+		return a.getResourceId(0, 0);
 	}
 }

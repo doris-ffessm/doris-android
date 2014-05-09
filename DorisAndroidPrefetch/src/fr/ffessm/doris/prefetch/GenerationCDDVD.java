@@ -60,6 +60,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
 public class GenerationCDDVD {
@@ -522,7 +523,7 @@ public class GenerationCDDVD {
 		// Modification Fichiers HTML : lien, images
 		File dossierCD = new File(fichierCDLien+PrefetchConstants.DOSSIER_HTML);
 		for (File fichierHtml:dossierCD.listFiles()) {
-			String contenuFichier = prefetchTools.getFichierTxtFromDisk(fichierHtml);
+			String contenuFichier = prefetchTools.getFichierTxtFromDisk(fichierHtml, FileHtmlKind.AUTRE);
 			
 			contenuFichier = contenuFichier.replace("href=\""+Constants.getSiteUrl(),"href=\"");
 			
@@ -616,7 +617,7 @@ public class GenerationCDDVD {
 				
 				log.debug("transfoHtml() - groupes_zone : "+fichierHtml.getName()+" - "+numZone);
 				
-				String contenuFichier = prefetchTools.getFichierTxtFromDisk(fichierHtml);
+				String contenuFichier = prefetchTools.getFichierTxtFromDisk(fichierHtml, FileHtmlKind.GROUPES_ZONE);
 		
 				// Lien vers 1ère page des espèces du Groupe
 				// fiches_liste.asp?groupe_numero=51 pour la zone 10
@@ -642,7 +643,7 @@ public class GenerationCDDVD {
 			}
 			// Les pages contenant les espèces du Groupe : groupe-10-2-73-1.html
 			if (fichierHtml.getName().contains("groupe-")){
-				log.debug("transfoHtml() - fichier groupe : "+fichierHtml.getName());
+				//log.debug("transfoHtml() - fichier groupe : "+fichierHtml.getName());
 				String[] info = fichierHtml.getName().replace(".html", "").split("-");
 				String numZone = info[1].trim();
 				String numGroupe = info[2].trim();
@@ -655,7 +656,7 @@ public class GenerationCDDVD {
 				int numPageSuivante = Integer.valueOf(numPage)+1;
 				int numPagePrecedente = Integer.valueOf(numPage)-1;
 				
-				String contenuFichier = prefetchTools.getFichierTxtFromDisk(fichierHtml);
+				String contenuFichier = prefetchTools.getFichierTxtFromDisk(fichierHtml, FileHtmlKind.GROUPE);
 				//log.debug("transfoHtml() - contenuFichier : "+contenuFichier.length());
 				
 				// Lien vers la page de tous les groupes de la zone

@@ -63,7 +63,7 @@
 		        android:layout_height="wrap_content"
 		        android:layout_alignParentBottom="true"
 		        android:layout_alignParentRight="true"
-		        android:background="@drawable/groupe_icon_background"
+		        android:background="?attr/ic_action_background"
        	        android:onClick="onClickBioComplete"
 		        android:orientation="vertical" >
 

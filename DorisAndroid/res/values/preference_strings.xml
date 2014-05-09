@@ -158,14 +158,14 @@
 	<string-array name="pref_theme_values">
         <item>DORISAndroid</item>
         <item>PureBlack</item>
-        <item>Holo</item>
         <item>HoloLight</item>
+        <item>Holo</item>
     </string-array>
 	<string-array name="pref_theme_lib">
 	    <item>DORISAndroid (défault)</item>
         <item>Noir intense</item>
+        <item>Holo Light (clair)</item>
         <item>Holo (sombre)</item>
-        <item>Holo light (clair) (expérimental)</item>
     </string-array>
 	
 	

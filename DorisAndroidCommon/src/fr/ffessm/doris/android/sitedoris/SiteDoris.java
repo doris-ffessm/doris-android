@@ -75,7 +75,7 @@ public class SiteDoris {
     
 	public HashSet<FicheLight> getListeFichesFromHtml(String inCodePageHtml) {
     	//log.info("getListeFichesFromHtml()- Début");
-    	
+		//log.debug("getListeFichesFromHtml()- inCodePageHtml.length() : " + inCodePageHtml.length());
 		Common_Outils commonOutils = new Common_Outils();
 		
     	HashSet<FicheLight> listeFiches = new HashSet<FicheLight>(0);
@@ -83,9 +83,8 @@ public class SiteDoris {
     	// Dans les version suivante de Jericho le niveau de trace a changé
     	//Config.LoggerProvider = LoggerProvider.DISABLED;
     	
-    	
     	Source source=new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(inCodePageHtml),false ) );
-    	//log.info("getListeFichesFromHtml()- 010");
+
     	source.fullSequentialParse();
     	//log.debug("getListeFichesFromHtml()- source.length() : " + source.length());
     	//log.debug("getListeFichesFromHtml()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
@@ -114,7 +113,7 @@ public class SiteDoris {
     				int ficheId = Integer.parseInt(elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "").replaceAll("&.*", ""));
     				int ficheEtat = Integer.parseInt(elementTDA.getAttributeValue("href").replaceAll(".*fiche_etat=", "").replaceAll("&.*", ""));
     				
-    				log.debug("getListeFichesFromHtml() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
+    				//log.debug("getListeFichesFromHtml() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
     				
     				FicheLight fiche = new FicheLight(ficheId, ficheEtat, ficheNomScientifique, ficheNomCommun);
       				
@@ -126,7 +125,7 @@ public class SiteDoris {
     	
     	source = null;
     	listeElementsTD = null;
-		//log.info("getListeFichesFromHtml()- Fin");
+		log.info("getListeFichesFromHtml()- Fin");
 		return listeFiches;
     }
 	
@@ -180,7 +179,7 @@ public class SiteDoris {
 							String nom = elementTD.getRenderer().toString().replaceAll("\\(.*", "").trim();
 							String description = elementTD.getRenderer().toString().replaceAll(".*\\((.*)\\).*", "$1").trim();
 							if (nom.equals(description)) description = "";
-							log.info("getGroupes() - groupe 1 : "+nom+" - "+description);
+							//log.info("getGroupes() - groupe 1 : "+nom+" - "+description);
 							
 							groupe = new Groupe(0, 0, nom, description, "images/pucecarre.gif", "");
 							listeGroupes.add(groupe);
@@ -239,7 +238,7 @@ public class SiteDoris {
 													String nom = elementA.getRenderer().toString().replaceAll("\\(.*", "").trim();
 													String description = elementA.getRenderer().toString().replaceAll(".*\\((.*)\\).*", "$1").trim();
 													if (nom.equals(description)) description = "";
-													log.info("getGroupes() - groupe 2 : "+nom+" - "+description+" <- "+groupeNiveau1Courant.getNomGroupe());
+													//log.info("getGroupes() - groupe 2 : "+nom+" - "+description+" <- "+groupeNiveau1Courant.getNomGroupe());
 													
 													String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
 													
@@ -256,7 +255,7 @@ public class SiteDoris {
 													String nom = elementA.getRenderer().toString().replaceAll("\\(.*", "").trim();
 													String description = elementA.getRenderer().toString().replaceAll(".*\\((.*)\\).*", "$1").trim();
 													if (nom.equals(description)) description = "";
-													log.info("getGroupes() - groupe 3 : "+numGroupe+" - "+nom+" - "+description+" <- "+groupeNiveau2Courant.getNomGroupe());
+													//log.info("getGroupes() - groupe 3 : "+numGroupe+" - "+nom+" - "+description+" <- "+groupeNiveau2Courant.getNomGroupe());
 													
 													// Récupération de la vignette du Groupe
 													String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
@@ -291,7 +290,7 @@ public class SiteDoris {
 												String nom = elementAG4.getRenderer().toString().replaceAll("\\x85","...").replaceAll("\\(.*", "").trim();
 												String description = elementAG4.getRenderer().toString().replaceAll("\\x85","...").replaceAll(".*\\((.*)\\).*", "$1").trim();
 												if (nom.equals(description)) description = "";
-												log.info("getGroupes() - groupe 4 : "+numGroupe+" - "+nom+" - "+description+" <- "+groupeNiveau3Courant.getNomGroupe());
+												//log.info("getGroupes() - groupe 4 : "+numGroupe+" - "+nom+" - "+description+" <- "+groupeNiveau3Courant.getNomGroupe());
 
 												// Récupération de la vignette du Groupe
 												String urlPhotoGroupe = elementIMG.getAttributeValue("src").toString();
@@ -324,8 +323,8 @@ public class SiteDoris {
 
     public Groupe getGroupeFromListeGroupes(List<Groupe> listeGroupes, int numGroupe, int numSousGroupe){
     	//log.trace("getGroupeFromListeGroupes() - Début");
-    	log.debug("getGroupeFromListeGroupes() - numGroupe : "+numGroupe);
-    	log.debug("getGroupeFromListeGroupes() - numSousGroupe : "+numSousGroupe);
+    	//log.debug("getGroupeFromListeGroupes() - numGroupe : "+numGroupe);
+    	//log.debug("getGroupeFromListeGroupes() - numSousGroupe : "+numSousGroupe);
     	
     	// Contrôle basique des entrées
     	if (numGroupe == 0) {
@@ -336,14 +335,14 @@ public class SiteDoris {
     	for (Groupe groupe : listeGroupes) {
     	
     		if ( groupe.getNumeroGroupe() == numGroupe && ( numSousGroupe == 0 || groupe.getNumeroSousGroupe() == numSousGroupe) ) {
-    			log.debug("getGroupeFromListeGroupes() - Groupe Trouvé : "+groupe.getId()+" - "+groupe.getNomGroupe());
+    			//log.debug("getGroupeFromListeGroupes() - Groupe Trouvé : "+groupe.getId()+" - "+groupe.getNomGroupe());
     			//log.trace("getGroupeFromListeGroupes() - Fin");
     			return groupe;
     		}
     		
     	}
     	
-    	log.debug("getGroupeFromListeGroupes() - Fin (sans avoir trouvé de groupe correspondant)");
+    	//log.debug("getGroupeFromListeGroupes() - Fin (sans avoir trouvé de groupe correspondant)");
 		return null;
     }
 
@@ -373,24 +372,18 @@ public class SiteDoris {
     	for (Element elementTD : listeElementsTD) {
     		if(elementTD.getAttributeValue("class").equals("normal_noir_gras")){
     			// c'est le titre
-    	    	Element titrePhotoCouranteElem = null;
-    			titrePhotoCouranteElem = elementTD;
-    			titrePhotoCourante = titrePhotoCouranteElem.getRenderer().toString();
-    			titrePhotoCourante = titrePhotoCouranteElem.getRenderer().toString().trim();
-    			titrePhotoCourante = titrePhotoCourante.replaceAll("[0-9].-", "").trim();
-    			titrePhotoCourante = titrePhotoCourante.replaceAll("[0-9].", "").trim();
+    			titrePhotoCourante = elementTD.getRenderer().toString().trim();
+    			titrePhotoCourante = titrePhotoCourante.replaceAll("[0-9].-", "").trim().replaceAll("[0-9].", "").trim();
     		}
+    		
     		if(elementTD.getAttributeValue("class").equals("normal")){
     			// c'est la description
-    	    	Element descritionPhotoCouranteElem = null;
-    			descritionPhotoCouranteElem = elementTD;
-
-    			descritionPhotoCourante = commonOutils.nettoyageTextes(descritionPhotoCouranteElem.getRenderer().toString());
-    			
+    			descritionPhotoCourante = commonOutils.nettoyageTextes(elementTD.getRenderer().toString());
     			//Suppression Balises (A en particulier)
     			//TODO : Mettre un lien un jour si ergonomie le permet
     			descritionPhotoCourante = descritionPhotoCourante.replaceAll("<[^>]*>", "").trim();
     		}
+    		
     		if(elementTD.getAttributeValue("class").equals("liste1")){
     			// c'est l'image
     			Element elementIMG = elementTD.getFirstElement(HTMLElementName.IMG);
@@ -407,8 +400,7 @@ public class SiteDoris {
 	    				PhotoFiche photoFiche = new PhotoFiche(cleURL,titrePhotoCourante, descritionPhotoCourante);
 	    				listePhotosFiche.add(photoFiche);
 	    			}
-	    			
-	    			
+
 	    			titrePhotoCourante = null;
 	    			descritionPhotoCourante = null;
     			}
@@ -480,7 +472,7 @@ public class SiteDoris {
 				
 				if (numeroTR % 4 == 1){
 					Element elementTDTitre2ParticipantNom = elementTR.getFirstElementByClass("titre2");
-					log.info("getListeParticipantsParInitiale() - Nom Participant : "+elementTDTitre2ParticipantNom.getRenderer() );
+					//log.info("getListeParticipantsParInitiale() - Nom Participant : "+elementTDTitre2ParticipantNom.getRenderer() );
 					participantNom = elementTDTitre2ParticipantNom.getRenderer().toString().trim();
 					
 					List<? extends Element> listeElementsTDTitre2ParticipantKind = elementTR.getAllElementsByClass("normal_gris_gras");
@@ -488,11 +480,11 @@ public class SiteDoris {
 
 						if ( elementTDTitre2.getFirstElement(HTMLElementName.IMG) != null ){
 							String kind = elementTDTitre2.getFirstElement(HTMLElementName.IMG).getAttributeValue("alt");
-							log.info("getListeParticipantsParInitiale() - Participant Kind : "+ kind + " - " +Constants.getTypeParticipant(kind));
+							//log.info("getListeParticipantsParInitiale() - Participant Kind : "+ kind + " - " +Constants.getTypeParticipant(kind));
 							//TODO : Il faudra mettre autre chose
 							participantKind += Constants.getTypeParticipant(kind).ordinal()+";";
 						} else {
-							log.info("getListeParticipantsParInitiale() - Participant Provenance : "+elementTDTitre2.getRenderer().toString().trim() );
+							//log.info("getListeParticipantsParInitiale() - Participant Provenance : "+elementTDTitre2.getRenderer().toString().trim() );
 							participantDescription = elementTDTitre2.getRenderer().toString().trim()+"<br/>";
 						}
 					}
@@ -516,7 +508,7 @@ public class SiteDoris {
 					if (participantId.indexOf("&")!=-1){
 						participantId=participantId.substring(0, participantId.indexOf("&") );
 					}
-					log.info("getListeParticipantsParInitiale() - id Participant : "+participantId);
+					//log.info("getListeParticipantsParInitiale() - id Participant : "+participantId);
 					
 					List<? extends Element> listeElementsIMGParticipantPhoto = elementTR.getAllElements(HTMLElementName.IMG);
 					for (Element elementIMG : listeElementsIMGParticipantPhoto) {
@@ -525,7 +517,7 @@ public class SiteDoris {
 							if ( elementIMG.getAttributeValue("src").contains("gestionenligne/photos_vig") ){
 								participantUrlPhoto = elementIMG.getAttributeValue("src");
 								participantUrlPhoto = participantUrlPhoto.replace(" ", "%20");	// on s'assure d'avoir une url valide
-								log.info("getListeParticipantsParInitiale() - participantUrlPhoto : "+participantUrlPhoto);
+								//log.info("getListeParticipantsParInitiale() - participantUrlPhoto : "+participantUrlPhoto);
 							}
 						}
 					}
@@ -546,10 +538,8 @@ public class SiteDoris {
 									}
 								} else if (numeroTD==2){
 									String description = elementTD.getRenderer().toString();
-									//description = Outils.remplacementBalises(description, true);
-									//description = Outils.nettoyageTextes(description);
 									
-									log.info("getListeParticipantsParInitiale() - Description : "+description);
+									//log.info("getListeParticipantsParInitiale() - Description : "+description);
 									if (!description.isEmpty()) participantDescription += description+"<br/>";
 								}
 							}
@@ -558,10 +548,10 @@ public class SiteDoris {
 					listeElementsTD = null;
 				}
 				if (numeroTR % 4 == 3){
-					participantDescription = commonOutils.remplacementBalises(participantDescription, true);
-					participantDescription = commonOutils.nettoyageTextes(participantDescription);
-					log.info("getListeParticipantsParInitiale() - participantKind : "+participantKind);
-					log.info("getListeParticipantsParInitiale() - participantDescription : "+participantDescription);
+					participantDescription = commonOutils.nettoyageTextes(
+											commonOutils.remplacementBalises(participantDescription, true) );
+					//log.info("getListeParticipantsParInitiale() - participantKind : "+participantKind);
+					//log.info("getListeParticipantsParInitiale() - participantDescription : "+participantDescription);
 					
 					listeParticipants.add(new Participant( participantNom, Integer.valueOf(participantId), participantUrlPhoto, participantKind, participantDescription) );
 					participantNom = "";
@@ -573,11 +563,10 @@ public class SiteDoris {
 			}
     	} // Fin Pour Chaque TR
     	
-    	log.debug("getListeParticipantsParInitiale() - listeParticipants : "+listeParticipants.size());
+    	//log.debug("getListeParticipantsParInitiale() - listeParticipants : "+listeParticipants.size());
 		
     	source = null;
     	listeElementsTR = null;
-    	
     	
     	
     	//log.debug("getListeParticipantsParInitiale() - Fin");
@@ -586,8 +575,8 @@ public class SiteDoris {
     
     public HashSet<FicheLight> getListeFichesUpdated(HashSet<FicheLight> inListeFichesRef, HashSet<FicheLight> inListeFichesSite) {
     	//log.debug("getListeFichesUpdated()- Début");
-    	log.debug("getListeFichesUpdated()- Liste Base : "+inListeFichesRef.size());
-    	log.debug("getListeFichesUpdated()- Liste Site : "+inListeFichesSite.size());
+    	//log.debug("getListeFichesUpdated()- Liste Base : "+inListeFichesRef.size());
+    	//log.debug("getListeFichesUpdated()- Liste Site : "+inListeFichesSite.size());
     	
     	HashSet<FicheLight> listeFichesUpdated = new HashSet<FicheLight>(0);
      	
@@ -613,7 +602,7 @@ public class SiteDoris {
     		}
     		
     	}
-    	log.debug("getListeFichesUpdated()- Liste Site Updated : "+listeFichesUpdated.size());
+    	//log.debug("getListeFichesUpdated()- Liste Site Updated : "+listeFichesUpdated.size());
     	
 		//log.debug("getListeFichesUpdated()- Fin");
 		return listeFichesUpdated;
@@ -632,7 +621,7 @@ public class SiteDoris {
     	for (Participant participant : listeParticipants) {
     	
     		if ( participant.getId() == numParticipant) {
-    			log.debug("getParticipantFromListeParticipants() - Participant Trouvé : "+participant.getId());
+    			//log.debug("getParticipantFromListeParticipants() - Participant Trouvé : "+participant.getId());
     			//log.trace("getParticipantFromListeParticipants() - Fin");
     			return participant;
     		}
@@ -653,16 +642,16 @@ public class SiteDoris {
     	
     	Source source=new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(inCodePageHtml), false ) );
     	source.fullSequentialParse();
-    	log.debug("getListeDefinitionsParInitialeFromHtml()- source.length() : " + source.length());
+    	//log.debug("getListeDefinitionsParInitialeFromHtml()- source.length() : " + source.length());
     	
     	List<? extends Element> listeElementsTD = source.getAllElementsByClass("liste0");
-    	log.debug("getListeDefinitionsParInitialeFromHtml()- source.length() : " + source.length());
+    	//log.debug("getListeDefinitionsParInitialeFromHtml()- source.length() : " + source.length());
         		
     	for (Element elementTD : listeElementsTD) {
-    		log.debug("getListeDefinitionsParInitialeFromHtml()- elementTD : " +elementTD.getRenderer().toString());
+    		//log.debug("getListeDefinitionsParInitialeFromHtml()- elementTD : " +elementTD.getRenderer().toString());
 			if (elementTD.getRenderer().toString().trim().replaceAll("<[^>]*>", "").isEmpty() ) {
 				String numeroDefinition =  elementTD.getRenderer().toString().trim().replaceAll(".*glossaire_numero=([^&]*)&.*", "$1");
-				log.debug("getListeDefinitionsParInitialeFromHtml()- numeroDefinition : " +numeroDefinition);
+				//log.debug("getListeDefinitionsParInitialeFromHtml()- numeroDefinition : " +numeroDefinition);
 			
 				listeDefinitions.add(new DefinitionGlossaire(Integer.valueOf(numeroDefinition),"","",""));
 			
@@ -751,14 +740,14 @@ public class SiteDoris {
     				//log.debug("getListeBiblioFromHtml() - annee : " + annee);
     				
     				String auteurs = bibliographie.replaceAll("^(.*), "+annee+",.*$", "$1").trim();
-    				log.debug("getListeBiblioFromHtml() - auteurs : " + auteurs);
+    				//log.debug("getListeBiblioFromHtml() - auteurs : " + auteurs);
     				
     				String titre = "";
     				//log.debug("getListeBiblioFromHtml() - STRONG : " + elementA.getFirstElement(HTMLElementName.STRONG));
     				if (elementA.getFirstElement(HTMLElementName.STRONG) != null) {
     					titre = elementA.getFirstElement(HTMLElementName.STRONG).getRenderer().toString().trim().replaceAll("\n|\r", "").trim();
     				}
-    				log.debug("getListeBiblioFromHtml() - titre : " + titre);
+    				//log.debug("getListeBiblioFromHtml() - titre : " + titre);
 
     				String edition = Pattern.compile(".*"+titre+",(.*)$", Pattern.DOTALL).matcher(bibliographie).replaceAll("$1");
     				//log.debug("getListeBiblioFromHtml() - edition : " + edition);

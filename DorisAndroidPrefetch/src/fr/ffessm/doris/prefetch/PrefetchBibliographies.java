@@ -58,6 +58,7 @@ import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Common_Outils;
+import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
 
@@ -106,7 +107,7 @@ public class PrefetchBibliographies {
 				
 				if ( action != ActionKind.NODWNLD){
 					if (prefetchTools.getFichierFromUrl(Constants.getListeBibliographiesUrl(pageCourante), listeBibliographies)) {
-						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeBibliographies));
+						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeBibliographies), FileHtmlKind.LISTE_BIBLIO);
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la liste des Bibliographies : " + listeBibliographies);
 						System.exit(1);
@@ -115,7 +116,7 @@ public class PrefetchBibliographies {
 					// NODWNLD
 					listeBibliographies = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeBibliographies-"+pageCourante+".html";
 					if (new File(listeBibliographies).exists()) {
-						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeBibliographies));
+						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeBibliographies), FileHtmlKind.LISTE_BIBLIO);
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la liste des Bibliographies : " + listeBibliographies);
 						System.exit(1);
@@ -158,7 +159,7 @@ public class PrefetchBibliographies {
 						if( ! prefetchTools.isFileExistingPath( fichierBiblioRef ) ){
 							if ( prefetchTools.getFichierFromUrl( urlBiblio, fichierBiblio ) ) {
 								nbBiblioTelechargees += 1;
-								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierBiblio));
+								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierBiblio), FileHtmlKind.BIBLIO);
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la Biblio : "+urlBiblio);
 								continue;
@@ -168,21 +169,21 @@ public class PrefetchBibliographies {
 						if ( ! new File(fichierBiblioRef).exists() ) {
 							if (prefetchTools.getFichierFromUrl(urlBiblio, fichierBiblio)) {
 								nbBiblioTelechargees += 1;
-								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierBiblio));
+								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierBiblio), FileHtmlKind.BIBLIO);
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la Biblio : "+urlBiblio);
 								continue;
 							}
 						} else {
 							if (new File(fichierBiblioRef).exists()) {
-								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierBiblioRef));
+								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierBiblioRef), FileHtmlKind.BIBLIO);
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la Biblio sur le disque : "+fichierBiblioRef+" a échoué.");
 							}
 						}
 					} else if ( action == ActionKind.NODWNLD ) {
 						if (new File(fichierBiblioRef).exists()) {
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierBiblioRef));
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierBiblioRef), FileHtmlKind.BIBLIO);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la Biblio sur le disque : "+fichierBiblioRef+" a échoué.");
 						}

@@ -213,11 +213,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	    if (ficheId != 0) ficheNumero = entry.getNumeroFiche();
 	    else if (ficheNumero != 0) ficheId = entry.getId();
 
-		getSupportActionBar().setTitle(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
+		getSupportActionBar().setTitle(entry.getNomCommunNeverEmpty().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
 		getSupportActionBar().setSubtitle(textesOutils.textToSpannableStringDoris(entry.getNomScientifique()));
 		
     	((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText( textesOutils.textToSpannableStringDoris(entry.getNomScientifique()) );
-		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommun().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
+		((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommunNeverEmpty().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
 		((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText("N° "+((Integer)entry.getNumeroFiche()).toString());					
 		((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer)entry.getEtatFiche()).toString());	
 		
@@ -314,7 +314,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 				}
 			}
 			// Section Groupe Phylogénique
-			if(entry.getGroupe().getNumeroGroupe() != 0){
+			if(entry.getGroupe() != null && entry.getGroupe().getNumeroGroupe() != 0){
 				addFoldableGroupeView(containerLayout, getString(R.string.detailsfiche_elementview_groupes_label), entry.getGroupe());
 			}
 			
@@ -389,10 +389,12 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			} // Fin contenu Fiche
 			
 			// Arbre Phylogénique
-			Collection<ClassificationFiche> classificationFicheCollect = entry.getClassification();
-
-			if(classificationFicheCollect.size() != 0){
-				addFoldableArbrePhylogenetiqueView(containerLayout, classificationFicheCollect);
+			if (entry.getClassification() != null ){
+				Collection<ClassificationFiche> classificationFicheCollect = entry.getClassification();
+	
+				if(classificationFicheCollect.size() != 0){
+					addFoldableArbrePhylogenetiqueView(containerLayout, classificationFicheCollect);
+				}
 			}
 			
 			isOnCreate = false;
@@ -534,7 +536,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         // Bouton de fermeture et d'ouverure du texte de la section
         ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
         
-        FoldableClickListener foldable = new FoldableClickListener(contenuText, foldButton, ImageButtonKind.DETAILS_FICHE);
+        FoldableClickListener foldable = new FoldableClickListener(this, contenuText, foldButton, ImageButtonKind.DETAILS_FICHE);
         allFoldableDetails.add(foldable);
         foldButton.setOnClickListener(foldable);
         
@@ -589,7 +591,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         	int identifierIcone1Groupe = context.getResources().getIdentifier(groupe.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw",  context.getPackageName());
         	Bitmap bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(identifierIcone1Groupe));
         	icone1.setImageBitmap(bitmap);
-        	icone1.setBackgroundResource(R.drawable.groupe_icon_background);
+        	icone1.setBackgroundResource( ThemeUtil.attrToResId(((DetailsFiche_ElementViewActivity)context), R.attr.ic_action_background) );
         	texte1.setText(groupe.getNomGroupe());
         	icone1.setOnClickListener(new OnClickListener() {
 				@Override
@@ -606,7 +608,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         	int identifierIcone1Groupe = context.getResources().getIdentifier(groupePere.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw",  context.getPackageName());
         	Bitmap bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(identifierIcone1Groupe));
         	icone1.setImageBitmap(bitmap);
-        	icone1.setBackgroundResource(R.drawable.groupe_icon_background);
+        	icone1.setBackgroundResource( ThemeUtil.attrToResId(((DetailsFiche_ElementViewActivity)context), R.attr.ic_action_background) );
         	texte1.setText(groupePere.getNomGroupe());
         	icone1.setOnClickListener(new OnClickListener() {
 				@Override
@@ -621,7 +623,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
            	int identifierIcone2Groupe = context.getResources().getIdentifier(groupe.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw",  context.getPackageName());
            	bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(identifierIcone2Groupe));
         	icone2.setImageBitmap(bitmap);
-        	icone2.setBackgroundResource(R.drawable.groupe_icon_background);
+        	icone2.setBackgroundResource( ThemeUtil.attrToResId(((DetailsFiche_ElementViewActivity)context), R.attr.ic_action_background) );
         	texte2.setText(groupe.getNomGroupe());
         	icone2.setOnClickListener(new OnClickListener() {
 				@Override
@@ -637,7 +639,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         // Bouton d'Affichage et de Masque de la section
         ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
         
-        FoldableClickListener foldable = new FoldableClickListener(sectionIcones, foldButton, ImageButtonKind.DETAILS_FICHE);
+        FoldableClickListener foldable = new FoldableClickListener(this, sectionIcones, foldButton, ImageButtonKind.DETAILS_FICHE);
         allFoldableDetails.add(foldable);
         foldButton.setOnClickListener(foldable);
         
@@ -712,7 +714,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 		        // Ouverture fermeture des descriptions des Classifications
 				LinearLayout descriptionClassificationLayout = (LinearLayout) convertArbreView.findViewById(R.id.LinearLayout_description);
 				
-		        FoldableClickListener descriptionClassificationFoldable = new FoldableClickListener(descriptionClassificationLayout, descriptionClassificationButton, ImageButtonKind.DESCRIPTION_ARBRE_PHYLO);
+		        FoldableClickListener descriptionClassificationFoldable = new FoldableClickListener(this, descriptionClassificationLayout, descriptionClassificationButton, ImageButtonKind.DESCRIPTION_ARBRE_PHYLO);
 		        allFoldableClassificationDescription.add(descriptionClassificationFoldable);
 
 		        // Par défaut on cache la description 
@@ -735,7 +737,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         // Ouverture fermeture de l'arbre
         ImageButton detailsTableauButton = (ImageButton) convertView.findViewById(R.id.details_tableau_phylogenetique_fold_unflod_section_imageButton);
         
-        FoldableClickListener detailsTableaufoldable = new FoldableClickListener(sectionArbre, detailsTableauButton, ImageButtonKind.DETAILS_FICHE);
+        FoldableClickListener detailsTableaufoldable = new FoldableClickListener(this, sectionArbre, detailsTableauButton, ImageButtonKind.DETAILS_FICHE);
         allFoldableDetails.add(detailsTableaufoldable);
         detailsTableauButton.setOnClickListener(detailsTableaufoldable);
         

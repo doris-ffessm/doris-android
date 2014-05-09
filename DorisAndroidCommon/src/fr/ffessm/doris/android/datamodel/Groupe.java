@@ -184,13 +184,12 @@ C'est ce texte. */
 	
 	
 	public void descriptionDetailleeFromHtml(String htmlGroupe){
-		log.trace("descriptionDetailleeFromHtml() - Début");
+		//log.trace("descriptionDetailleeFromHtml() - Début");
 		
 		Common_Outils commonOutils = new Common_Outils();
     	
 		// Dans les version suivante de Jericho le niveau de trace a changé
     	//Config.LoggerProvider = LoggerProvider.DISABLED;
-		
 		Source source = new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(htmlGroupe), true));
 		source.fullSequentialParse();
 
@@ -204,14 +203,14 @@ C'est ce texte. */
 		Element elementTRPere = elementTDtitre2.getParentElement().getParentElement();
 		Element elementTDTexte = elementTRPere.getFirstElementByClass("normal");
 		
-		log.trace("descriptionDetailleeFromHtml() - Description Détaillée Groupe : "+elementTDTexte.toString());
+		//log.trace("descriptionDetailleeFromHtml() - Description Détaillée Groupe : "+elementTDTexte.toString());
 		
 		descriptionDetailleeGroupe = commonOutils.nettoyageTextes(
 										elementTDTexte.getRenderer().toString().trim());
 
 		source = null;
 		
-		log.trace("descriptionDetailleeFromHtml() - Fin");
+		//log.trace("descriptionDetailleeFromHtml() - Fin");
 	}
 
 	// End of user code

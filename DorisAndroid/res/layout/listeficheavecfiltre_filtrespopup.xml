@@ -17,16 +17,17 @@
         android:src="@drawable/popupwindow_background" />
 	
     <Button
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentTop="true"
-	    android:layout_centerHorizontal="true"
-	    android:layout_marginTop="20dp"
+        android:id="@+id/listeavecfiltre_filtrespopup_GroupeButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-	    android:id="@+id/listeavecfiltre_filtrespopup_GroupeButton"
-	    android:text="@string/listeficheavecfiltre_popup_filtreEspece_sans"/>
+        android:layout_marginTop="20dp"
+        android:text="@string/listeficheavecfiltre_popup_filtreEspece_sans"
+        android:textColor="#fff3f3f3" />
 
     <Button
         android:id="@+id/listeavecfiltre_filtrespopup_ZoneGeoButton"
@@ -37,7 +38,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
-        android:text="@string/listeficheavecfiltre_popup_filtreGeographique_sans" />
+        android:text="@string/listeficheavecfiltre_popup_filtreGeographique_sans"
+		android:textColor="#fff3f3f3" />
 
     <ImageView
         android:id="@+id/listeavecfiltre_filtrespopup_bottom_backgroundimageView"

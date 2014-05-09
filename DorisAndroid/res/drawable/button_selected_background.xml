@@ -4,8 +4,10 @@
  
     <corners android:radius="3dp" />
  
-    <solid android:color="#000000" />
+    <!-- fond transparent -->
+    <solid android:color="#00000000" />
  
+    <!-- contour orange -->
     <stroke
         android:width="2px"
         android:color="#ffa500" />

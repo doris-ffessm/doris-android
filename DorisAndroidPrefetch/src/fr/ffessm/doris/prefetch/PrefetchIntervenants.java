@@ -59,6 +59,7 @@ import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Common_Outils;
+import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
 
@@ -113,7 +114,7 @@ public class PrefetchIntervenants {
 				
 				if (action != ActionKind.NODWNLD){
 					if (prefetchTools.getFichierFromUrl(Constants.getListeParticipantsUrl(""+initiale), listeParticipantsFichier)) {
-						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeParticipantsFichier));
+						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeParticipantsFichier), FileHtmlKind.LISTE_PARTICIPANTS);
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la liste des Participants : "+initiale);
 						System.exit(1);
@@ -122,7 +123,7 @@ public class PrefetchIntervenants {
 					// NODWNLD
 					listeParticipantsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeParticipants-"+initiale+".html";
 					if (new File(listeParticipantsFichier).exists()) {
-						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeParticipantsFichier));
+						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeParticipantsFichier), FileHtmlKind.LISTE_PARTICIPANTS);
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la liste des Participants : "+initiale);
 						System.exit(1);

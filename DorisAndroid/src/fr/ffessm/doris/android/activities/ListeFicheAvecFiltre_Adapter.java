@@ -151,7 +151,10 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		
 		String ordreTri = prefs.getString(context.getString(R.string.pref_key_accueil_fiches_ordre), "Commun");
 		String orderByClause = "";
-		if (ordreTri.equals("Commun")) orderByClause = " ORDER BY Fiche.NomCommun";
+		if (ordreTri.equals("Commun")) orderByClause = " ORDER BY Fiche.textePourRechercheRapide";
+		if (ordreTri.equals("Scientifique")) orderByClause = " ORDER BY Fiche.nomScientifique";
+		
+		
 		
 		String filtreEtat = prefs.getString(context.getString(R.string.pref_key_accueil_etat_fiches_affiche), "toutes");
 		String whereSuffixClauseWHERE = "";
@@ -271,7 +274,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
-		labelSB.append(entry.getNomCommun());
+		labelSB.append(entry.getNomCommunNeverEmpty());
 		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
 
@@ -474,8 +477,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	
 	protected char getFirstCharForIndex(Fiche entry){
 		//Start of user code protected ListeFicheAvecFiltre_Adapter binarySearch custom
-		if(entry.getNomCommun().length() == 0) return '#';
-    	return entry.getNomCommun().charAt(0);
+		if(entry.getNomCommunNeverEmpty().length() == 0) return '#';
+    	return entry.getNomCommunNeverEmpty().charAt(0);
 	  	//End of user code
 	}
 

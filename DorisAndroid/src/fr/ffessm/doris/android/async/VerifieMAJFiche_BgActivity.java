@@ -67,6 +67,7 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
+import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.DorisApplicationContext;
 // End of user code
@@ -121,22 +122,22 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
     	// Start of user code main loop of task VerifieMAJFiche_BgActivity
 		// This is where we would do the actual job
 
-    	Log.d(LOG_TAG, "doInBackground() - numeroFiche : "+numeroFiche);
+    	//Log.d(LOG_TAG, "doInBackground() - numeroFiche : "+numeroFiche);
     	
     	// Récupération Fiche de la Base
     	Fiche ficheDeLaBase = (new DataBase_Outils(dbHelper.getDorisDBHelper())).queryFicheByNumeroFiche(numeroFiche);
 		ficheDeLaBase.setContextDB(dbHelper.getDorisDBHelper());
 		Log.d(LOG_TAG, "doInBackground() - Fiche de la Base : "+ficheDeLaBase.getEtatFiche()+" - "
-				+ ficheDeLaBase.getNomCommun() + " - " + ficheDeLaBase.getDateCreation()
+				+ ficheDeLaBase.getNomCommunNeverEmpty() + " - " + ficheDeLaBase.getDateCreation()
 				+ " - " + ficheDeLaBase.getDateModification());
 		
 		// Récupération Fiche du Site
     	String urlFiche =  Constants.getFicheFromIdUrl( numeroFiche );
-    	Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlFiche);
+    	//Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlFiche);
     	
     	String contenuFichierHtml = "";
     	try {
-    		contenuFichierHtml = reseauOutils.getHtml(urlFiche);
+    		contenuFichierHtml = reseauOutils.getHtml(urlFiche, FileHtmlKind.FICHE);
 		} catch (IOException e) {
 			Log.w(LOG_TAG, e.getMessage(), e);
 		}   
@@ -145,8 +146,8 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
     	ficheSite.setContextDB(dbHelper.getDorisDBHelper());
     	
 		ficheSite.getFicheEtatDateModifFromHtml(contenuFichierHtml);
-		Log.d(LOG_TAG, "doInBackground() - Fiche du Site : "+ficheSite.getEtatFiche()+" - "
-				+ ficheSite.getDateModification());
+		//Log.d(LOG_TAG, "doInBackground() - Fiche du Site : "+ficheSite.getEtatFiche()+" - "
+		//		+ ficheSite.getDateModification());
 		
 		//Si le statut a changé ou que la date de mise à jour a évolué, on continue
 		if ( ficheSite.getEtatFiche() != ficheDeLaBase.getEtatFiche()
@@ -154,11 +155,11 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
 
 	    	List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
 	    	listeGroupes.addAll(dbHelper.getGroupeDao().queryForAll());
-			Log.d(LOG_TAG, "doInBackground() - listeGroupes.size : "+listeGroupes.size());
+			//Log.d(LOG_TAG, "doInBackground() - listeGroupes.size : "+listeGroupes.size());
 			
 	    	List<Participant> listeParticipants = new ArrayList<Participant>(0);
 			listeParticipants.addAll(dbHelper.getParticipantDao().queryForAll());
-			Log.d(LOG_TAG, "doInBackground() - listeParticipants.size : "+listeParticipants.size());
+			//Log.d(LOG_TAG, "doInBackground() - listeParticipants.size : "+listeParticipants.size());
 			
 			try {
 				// Nécessaire pour que la mise à jour suivante fonctionne
@@ -171,7 +172,7 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
 				
 				// Mise à jour réelle de la Fiche
 				ficheDeLaBase.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
-				Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheDeLaBase.getNomCommun());
+				//Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheDeLaBase.getNomCommun());
 
 				dbHelper.getDorisDBHelper().ficheDao.update(
 						ficheDeLaBase

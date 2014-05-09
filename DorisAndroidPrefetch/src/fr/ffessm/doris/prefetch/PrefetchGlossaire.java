@@ -57,6 +57,7 @@ import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
+import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
 
@@ -114,7 +115,7 @@ public class PrefetchGlossaire {
 						log.info("Récup. Liste des Définitions : " + listeDefinitionsFichier);
 						
 						if (prefetchTools.getFichierFromUrl(Constants.getListeDefinitionsUrl(""+initiale,""+numero ), listeDefinitionsFichier)) {
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeDefinitionsFichier));
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeDefinitionsFichier), FileHtmlKind.LISTE_TERMES);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale+"-"+numero);
 							System.exit(1);
@@ -125,7 +126,7 @@ public class PrefetchGlossaire {
 						log.info("Récup. Liste des Définitions : " + listeDefinitionsFichier);
 						
 						if (new File(listeDefinitionsFichier).exists()) {
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeDefinitionsFichier));
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeDefinitionsFichier), FileHtmlKind.LISTE_TERMES);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale+"-"+numero);
 							System.exit(1);
@@ -166,7 +167,7 @@ public class PrefetchGlossaire {
 				if ( action == ActionKind.INIT ) {
 					if (prefetchTools.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
 						nbDefinitionTelechargees += 1;
-						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalDefinition));
+						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalDefinition), FileHtmlKind.TERME);
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la définition : "+urlDefinition);
 						continue;
@@ -175,21 +176,21 @@ public class PrefetchGlossaire {
 					if ( ! new File(fichierRefDefinition).exists() ) {
 						if (prefetchTools.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
 							nbDefinitionTelechargees += 1;
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalDefinition));
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalDefinition), FileHtmlKind.TERME);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la définition : "+urlDefinition);
 							continue;
 						}
 					} else {
 						if (new File(fichierRefDefinition).exists()) {
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierRefDefinition));
+							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierRefDefinition), FileHtmlKind.TERME);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la définition sur le disque : "+fichierRefDefinition+" a échoué.");
 						}
 					}
 				} else if ( action == ActionKind.NODWNLD ) {
 					if (new File(fichierRefDefinition).exists()) {
-						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierRefDefinition));
+						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierRefDefinition), FileHtmlKind.TERME);
 					} else {
 						log.error("Une erreur est survenue lors de la récupération de la définition sur le disque : "+fichierRefDefinition+" a échoué.");
 					}

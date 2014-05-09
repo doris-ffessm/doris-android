@@ -1,23 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
+    <style name="Theme.AppDorisAndroid" parent="Theme.AppCompat">
+        
+        <item name="android:windowContentOverlay">@null</item>
+    	<item name="android:windowBackground">@drawable/app_background</item>
+    	
+		<item name="attr/ic_action_participants">@drawable/ic_action_participants</item>
+    	<item name="attr/ic_action_glossaire">@drawable/ic_action_glossaire</item>
+    	<item name="attr/ic_action_bibliographie">@drawable/ic_action_bibliographie</item>
+    	<item name="attr/ic_action_search">@drawable/ic_action_search</item>
+    	<item name="attr/ic_action_arbre_phylogenetique">@drawable/ic_action_arbre_phylogenetique</item>
+		<item name="attr/ic_app_more_informations">@drawable/ic_app_more_informations</item>
+    	
+    	<item name="attr/ic_app_filter_settings">@drawable/ic_app_filter_settings</item>
+    	<item name="attr/ic_app_filter_settings_actif">@drawable/ic_app_filter_settings_actif</item>
+    	
+    	<item name="attr/ic_action_background">@drawable/icon_background</item>
     </style>
 
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-   
+    <style name="Theme.AppPureBlack" parent="Theme.AppCompat">
+        <item name="android:windowContentOverlay">@null</item>
+    	<item name="android:windowBackground">@drawable/app_background_pureblack</item>
     </style>
     
+    
+    <style name="Theme.AppHolo" parent="Theme.AppCompat"> 
+    </style>
+    
+    <style name="Theme.AppHoloLight" parent="Theme.AppCompat.Light">
+        
+        <item name="attr/ic_action_participants">@drawable/ic_action_participants_light</item>
+       	<item name="attr/ic_action_glossaire">@drawable/ic_action_glossaire_light</item>
+    	<item name="attr/ic_action_bibliographie">@drawable/ic_action_bibliographie_light</item>
+    	<item name="attr/ic_action_search">@drawable/ic_action_search_light</item>
+    	<item name="attr/ic_action_arbre_phylogenetique">@drawable/ic_action_arbre_phylogenetique_light</item>
+    	<item name="attr/ic_app_more_informations">@drawable/ic_app_more_informations_light</item>
+    	
+    	<item name="attr/ic_app_filter_settings">@drawable/ic_app_filter_settings_light</item>
+    	<item name="attr/ic_app_filter_settings_actif">@drawable/ic_app_filter_settings_actif_light</item>
+    	
+    	<item name="attr/ic_action_background">@drawable/icon_background_light</item>
+    </style>
+    
+    
+    <style name="Theme.AppDorisAndroidPreferences" parent="Theme.AppCompat">
+        <item name="android:windowFullscreen">true</item>
+	    <item name="android:windowBackground">@drawable/app_background</item>
+	    <item name="android:background">#FF000000</item>
+		<item name="android:colorBackground">#FF000000</item>
+		<item name="android:textAppearance">@android:style/TextAppearance.Small</item>
+		
+	</style>
+	
+        
+    <!-- Ligne Horizontale utilisée dans les listes, entre les sections des fiches, etc. -->
 	<style name="Separateur">
 	    <item name="android:layout_width">match_parent</item>
 	    <item name="android:layout_height">1dp</item>
@@ -29,5 +66,5 @@
 	<string name="detailsfiche_elementview_couleur_lienfiche">#0168A1</string>
 	<string name="detailsfiche_elementview_couleur_liendefinition">#80AA00</string>
 	<string name="detailsfiche_elementview_couleur_lienparticipant">#EE4400</string>
-	
+
 </resources>

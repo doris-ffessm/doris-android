@@ -2,11 +2,11 @@
     xmlns:dorisandroid="http://schemas.android.com/apk/res-auto">
  	
 	<item android:id="@+id/listeficheavecfiltres_classlistview_popupfiltre_action_filtreEspece"
-	      android:icon="@drawable/app_filter_settings_32"
+	      android:icon="?attr/ic_app_filter_settings"
 	      android:title="@string/listeficheavecfiltre_popup_filtreEspece_sans"
 	      android:showAsAction="never" />
 	<item android:id="@+id/listeficheavecfiltres_classlistview_popupfiltre_action_filtreGeographique"
-	      android:icon="@drawable/app_filter_settings_32"
+	      android:icon="?attr/ic_app_filter_settings"
 	      android:title="@string/listeficheavecfiltre_popup_filtreGeographique_sans"
 	      android:showAsAction="never" />
 
