@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="listebibliographieavecfiltre_classlistview_auteur_nbcarmax">40</string>
+    <string name="listebibliographieavecfiltre_classlistview_titre_nbcarmax">60</string>
+    
 	<string name="listebibliographieavecfiltre_classlistview_no_result">Aucune entrée bibliographique ne correspond à votre recherche.</string>
 	
 </resources>

@@ -88,6 +88,7 @@ import com.squareup.picasso.Picasso;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
+import fr.ffessm.doris.android.tools.Textes_Outils;
 //End of user code
 import fr.ffessm.doris.android.tools.ThemeUtil;
 
@@ -108,6 +109,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	SharedPreferences prefs;
 	//Start of user code protected additional GroupeSelection_Adapter attributes
 	boolean depuisAccueil = false;
+	private Textes_Outils textesOutils;
 	
 	public GroupeSelection_Adapter(Context context, DorisDBHelper contextDB, boolean depuisAccueil) {
 		super();
@@ -116,6 +118,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		updateList();
 		
+		textesOutils = new Textes_Outils(context);
 		this.depuisAccueil = depuisAccueil;
 	}
 	
@@ -168,7 +171,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-		
+		// Start of user code protected additional GroupeSelection_Adapter getView_assign code
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -189,7 +192,8 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		detailsSB.append(entry.getDescriptionGroupe().toString());
 		detailsSB.append(" ");
         tvDetails.setText(detailsSB.toString());
-		
+        // End of user code
+        
         // assign the entry to the row in order to ease GUI interactions
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.groupeselection_listviewrow);
         llRow.setTag(entry);
@@ -280,15 +284,10 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			Button backToParentButton = new Button(context);
 			navigationLayout.addView(backToParentButton);
 	    	
-	        //TODO:Valeur en dure :-(
-	        int longueurMax = 20;
-	        String groupeNom = currentRootGroupe.getNomGroupe().trim();
-	        if (groupeNom.length() > longueurMax ) {
-	        	groupeNom = groupeNom.substring(0, longueurMax);
-	        	groupeNom = groupeNom.replaceAll(" [^ ]*$", "");
-	        	groupeNom = groupeNom + "\u00A0\u2026";
-	        }
-	        backToParentButton.setText(groupeNom);
+	        backToParentButton.setText(
+        		textesOutils.raccourcir( currentRootGroupe.getNomGroupe().trim(), 
+	        		Integer.parseInt(context.getString(R.string.groupselection_listview_groupe_nbcarmax))
+	        		));
 
 	        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
 			layoutParams.leftMargin =2;
@@ -328,15 +327,11 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			
 			//Log.w(LOG_TAG,"addBackToParentGroupButton parent="+parent);
 			//Log.d(LOG_TAG,"addBackToParentGroupButton parent.getNomGroupe="+parent.getNomGroupe());
-	        //TODO:Valeur en dure :-(
-	        int longueurMax = 10;
-	        String groupeNom = parent.getNomGroupe().trim();
-	        if (groupeNom.length() > longueurMax ) {
-	        	groupeNom = groupeNom.substring(0, longueurMax);
-	        	groupeNom = groupeNom.replaceAll(" [^ ]*$", "");
-	        	groupeNom = groupeNom + "\u00A0\u2026";
-	        }
-			backToParentButton.setText(groupeNom);
+
+	        backToParentButton.setText(
+        		textesOutils.raccourcir( parent.getNomGroupe().trim(), 
+	        		Integer.parseInt(context.getString(R.string.groupselection_listview_groupe_nbcarmax))
+	        		));
 
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
 			layoutParams.leftMargin =2;

@@ -3,6 +3,9 @@
 <resources>
 	<!--Start of user code protecteddetailentreeglossaire_elementview_strings.xml
 	-->	
+	<string name="detailentreeglossaire_elementview_details_nbcarmax">80</string>
+	
+	
 	<string name="detailentreeglossaire_elementview_numerodoris_label">N°</string>
 	<string name="detailentreeglossaire_elementview_terme_label"></string>
 	<string name="detailentreeglossaire_elementview_definition_label">Definition\u00A0: </string>

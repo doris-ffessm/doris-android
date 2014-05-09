@@ -259,7 +259,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-		
+		// Start of user code protected additional ListeFicheAvecFiltre_Adapter getView_assign code
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -277,7 +277,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		labelSB.append(entry.getNomCommunNeverEmpty());
 		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
-
+        // End of user code
 		
         // assign the entry to the row in order to ease GUI interactions
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.listeficheavecfiltre_listviewrow);

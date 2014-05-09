@@ -3,6 +3,9 @@
 <resources>	
 	<!-- Start of user code customView_strings groupselection
 	-->
+	<string name="groupselection_listview_groupe_nbcarmax">8</string>
+	<string name="groupselection_listview_groupe_selected_nbcarmax">10</string>
+
 	<!-- freely add here the desired resource String for your custom view -->
 	<string name="groupselection_listview_title">Sélection du groupe</string>
 	<string name="groupselection_listview_filtre_espece_courant_label">"Filtre actuel\u00A0: "</string>

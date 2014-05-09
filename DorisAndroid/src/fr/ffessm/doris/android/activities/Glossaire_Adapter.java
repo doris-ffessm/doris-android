@@ -54,6 +54,7 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Textes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
 
@@ -104,6 +105,8 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 	SharedPreferences prefs;
 	//Start of user code protected additional Glossaire_Adapter attributes
 	// additional attributes
+	
+	private Textes_Outils textesOutils;
 	//End of user code
 
 	public Glossaire_Adapter(Context context, DorisDBHelper contextDB) {
@@ -119,7 +122,11 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 		// TODO find a way to query in a lazier way
 		try{
 			this.definitionGlossaireList = _contextDB.definitionGlossaireDao.queryForAll();
+			// Ne sera pas trié correctement à cause des accents, il aurait fallu un champ tri
+			//this.definitionGlossaireList = _contextDB.definitionGlossaireDao.query(_contextDB.definitionGlossaireDao.queryBuilder().orderBy("terme", true).prepare());
 			this.filteredDefinitionGlossaireList = this.definitionGlossaireList;
+			
+			textesOutils = new Textes_Outils(context);
 		} catch (java.sql.SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
 		}
@@ -146,7 +153,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-		
+		// Start of user code protected additional Glossaire_Adapter getView_assign code
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -166,11 +173,13 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
         tvLabel.setText(labelSB.toString());
 
         TextView tvDetails = (TextView) convertView.findViewById(R.id.glossaire_listviewrow_details);
-		StringBuilder detailsSB = new StringBuilder();
-		detailsSB.append(entry.getDefinition().toString());
-		detailsSB.append(" ");
-        tvDetails.setText(detailsSB.toString());
-		
+        tvDetails.setText(
+        	textesOutils.raccourcir( entry.getDefinition().toString()
+        								.replaceAll("^[^\\)]*\\)\\.", "").replaceAll("\\{\\{[^\\}]*\\}\\}", "").trim(), 
+    								Integer.parseInt(context.getString(R.string.detailentreeglossaire_elementview_details_nbcarmax))
+        		) );
+        // End of user code
+        
         // assign the entry to the row in order to ease GUI interactions
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.glossaire_listviewrow);
         llRow.setTag(entry);
@@ -213,18 +222,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
         	imageView.setImageResource(R.drawable.app_ic_launcher);
         }
         
-        // MaJ Titre et Début définition
-        //TODO:Valeur en dure :-(
-        int longueurMax = 80;
-        String texteRow = entry.getDefinition().toString().replaceAll("^[^\\)]*\\)\\.", "").trim();
-        texteRow = texteRow.replaceAll("\\{\\{[^\\}]*\\}\\}", "");
-        if (texteRow.length() > longueurMax ) {
-        	texteRow = texteRow.substring(0, longueurMax);
-        	texteRow = texteRow.replaceAll(" [^ ]*$", "");
-        	texteRow = texteRow + "\u00A0\u2026";
-        }
-        tvDetails.setText(texteRow);
-        
+
 		// End of user code
 
         return convertView;

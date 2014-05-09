@@ -151,7 +151,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-		
+		// Start of user code protected additional ListeParticipantAvecFiltre_Adapter getView_assign code
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -169,7 +169,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 		labelSB.append(entry.getNom());
 		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
-
+        // End of user code
 		
         // assign the entry to the row in order to ease GUI interactions
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.listeparticipantavecfiltre_listviewrow);

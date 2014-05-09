@@ -86,7 +86,16 @@ public class Textes_Outils {
 		this.context = context;
 	}
 	
-
+	public String raccourcir(String texte, int longueurMax){
+	    if (texte.length() > longueurMax ) {
+	    	texte = texte.substring(0, longueurMax);
+	    	texte = texte.replaceAll(" [^ ]*$", "");
+	    	texte = texte + "\u00A0\u2026";
+	    }
+	    return texte;
+	}    
+	
+	
     public static class TextSpan {
     	
     	public enum SpanType {

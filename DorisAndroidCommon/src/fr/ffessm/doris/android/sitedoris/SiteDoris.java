@@ -701,6 +701,7 @@ public class SiteDoris {
     
     public List<EntreeBibliographie> getListeBiblioFromHtml(String inCodePageHtml) {
     	//log.trace("getListeBiblioFromHtml()- Début");
+    	//log.debug("getListeBiblioFromHtml()- inCodePageHtml : " + inCodePageHtml);
     	
     	Common_Outils commonOutils = new Common_Outils();
     	
@@ -712,7 +713,7 @@ public class SiteDoris {
 		// idBiblio : 618
 		// auteurs : Jourdan A.-J.-L.
     	inCodePageHtml = Pattern.compile("</,[^<>]*<strong>", Pattern.DOTALL).matcher(inCodePageHtml).replaceAll(",");
-	    	
+    	
     	Source source=new Source(commonOutils.nettoyageBalises(inCodePageHtml) );
     	source.fullSequentialParse();
     	//log.debug("getListeBiblioFromHtml()- source.length() : " + source.length());
@@ -727,14 +728,15 @@ public class SiteDoris {
     		
 			if (elementA.getAttributeValue("class") != null){
     			if (elementA.getAttributeValue("class").toString().equals("normal")) {
-    	    		//log.debug("getListeBiblioFromHtml() - - - - - - - -");
+    				//log.debug("getListeBiblioFromHtml() - - - - - - - -");
+    				//log.debug("getListeBiblioFromHtml() - elementA : " + elementA.toString().replaceAll("\n|\r", ""));
     				//log.debug("getListeBiblioFromHtml() - elementA : " + elementA.getContent().toString().replaceAll("\n|\r", ""));
     				
     				String bibliographie = elementA.getRenderer().toString().replaceAll("\n|\r", "").trim();
     				//log.debug("getListeBiblioFromHtml() - bibliographie : " + bibliographie);
     				
     				String idBiblio = elementA.getAttributeValue("href").replaceAll("[^=]*=([0-9]*)", "$1");
-    				log.debug("getListeBiblioFromHtml() - idBiblio : " + idBiblio);
+    				//log.debug("getListeBiblioFromHtml() - idBiblio : " + idBiblio);
     				
     				String annee = bibliographie.replaceAll(".*, ([0-9]{4}),.*", "$1").trim();
     				//log.debug("getListeBiblioFromHtml() - annee : " + annee);
@@ -752,14 +754,14 @@ public class SiteDoris {
     				String edition = Pattern.compile(".*"+titre+",(.*)$", Pattern.DOTALL).matcher(bibliographie).replaceAll("$1");
     				//log.debug("getListeBiblioFromHtml() - edition : " + edition);
 
-    				// l'illustration éventuelle dans cleURLIllustration, update après avoir téléchargé la page de l'entrée bibliographique
+    				// l'illustration éventuelle dans cleURLIllustration, update après avoir téléchargée la page de l'entrée bibliographique
     				listeBiblio.add(new EntreeBibliographie( Integer.valueOf(idBiblio),
     						commonOutils.nettoyageTextes(titre).trim(),
     						commonOutils.nettoyageTextes(auteurs).trim(),
     						annee,
     						commonOutils.nettoyageTextes(edition).trim(),
     						"",
-    						(commonOutils.formatStringNormalizer(titre+" "+auteurs)).toLowerCase() ));
+    						(commonOutils.formatStringNormalizer(auteurs+" "+titre)).toLowerCase() ));
     			}
 			}
 			

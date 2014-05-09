@@ -135,7 +135,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup viewGroup) {
-		
+		// Start of user code protected additional ZoneGeoSelection_Adapter getView_assign code
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -150,7 +150,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 		labelSB.append(entry.getNom());
 		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
-
+        // End of user code
 		
         // assign the entry to the row in order to ease GUI interactions
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.zonegeoselection_listviewrow);
