@@ -281,7 +281,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			navigationLayout.addView(backToParentButton);
 	    	
 	        //TODO:Valeur en dure :-(
-	        int longueurMax = 16;
+	        int longueurMax = 20;
 	        String groupeNom = currentRootGroupe.getNomGroupe().trim();
 	        if (groupeNom.length() > longueurMax ) {
 	        	groupeNom = groupeNom.substring(0, longueurMax);
@@ -294,7 +294,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			layoutParams.leftMargin =2;
 			layoutParams.rightMargin = 2;
 			backToParentButton.setBackgroundResource(R.drawable.button_background);
-			backToParentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+			backToParentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 			backToParentButton.setPadding(5, 0, 5, 0);
 	    	
 		}
@@ -309,11 +309,11 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			// ajout du nouveau bouton standard
 			ImageButton backToParentButton = new ImageButton(context);
 			navigationLayout.addView(backToParentButton);
+			
 			backToParentButton.setImageResource( ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_arbre_phylogenetique) );
 			backToParentButton.setBackgroundResource(R.drawable.button_selected_background);
+			
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
-			//layoutParams.leftMargin =2;
-			//layoutParams.rightMargin = 2;
 			backToParentButton.setLayoutParams(layoutParams);
 			backToParentButton.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -321,8 +321,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 					buildTreeForRoot(parent);
 				}
 			});
-		}
-		else{
+		} else {
 			// ajout du nouveau bouton
 			Button backToParentButton = new Button(context);
 			navigationLayout.addView(backToParentButton);
@@ -347,9 +346,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			backToParentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 
 			backToParentButton.setPadding(5, 0, 5, 0);
-			backToParentButton.setHeight(BitmapFactory.decodeResource(context.getResources(),
-										ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_arbre_phylogenetique) )
-										.getHeight());
+
 			backToParentButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
