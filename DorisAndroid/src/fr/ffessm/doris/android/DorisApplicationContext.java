@@ -86,6 +86,8 @@ public class DorisApplicationContext {
 	public VerifieMAJFiches_BgActivity verifieMAJFiches_BgActivity = null;
 	public DeplacePhotos_BgActivity deplacePhotos_BgActivity = null;
 	
+	public boolean isMovingPhotos = false;
+	
 	/** listener that have registered for being notified of data changes */
 	private ArrayList<DataChangedListener>  dataChangeListeners = new ArrayList<DataChangedListener>();
 	
