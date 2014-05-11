@@ -220,13 +220,12 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     		avancement++;
     		publishProgress(avancement);
     		
-    		int zoneId = zoneGeo.getId();
     		String contenuFichierHtml = "";
     		
-    		if ( fichesOutils.isMajNecessaireZone(zoneId,typeLancement) ) {
+    		if ( fichesOutils.isMajNecessaireZone(zoneGeo.getZoneGeoKind(),typeLancement) ) {
 	
 				// Récupération de la liste Fiches depuis le Site
-		    	String urlListeFiches =  Constants.getListeFichesUrl(zoneId);
+		    	String urlListeFiches =  Constants.getListeFichesUrl(zoneGeo.getId());
 		    	//Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlListeFiches);
 		    			 
 		    	try {
@@ -293,7 +292,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 			    	}
 		    	}
 		    	
-		    	fichesOutils.setDateMajListeFichesTypeZoneGeo(zoneId);
+		    	fichesOutils.setDateMajListeFichesTypeZoneGeo(zoneGeo.getZoneGeoKind());
 		    	
     		}
 		}

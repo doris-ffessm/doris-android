@@ -321,7 +321,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
     		//Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
     		
     		Photos_Outils photosOutils = new Photos_Outils(context);
-        	if(photosOutils.isAvailablePhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
+        	if(photosOutils.isAvailableInFolderPhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
         		try {
         			//Log.d(LOG_TAG, "from disk : "+photoPrincipale.getCleURL());
 					Picasso.with(context)

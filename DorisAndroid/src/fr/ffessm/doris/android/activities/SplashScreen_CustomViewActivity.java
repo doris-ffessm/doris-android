@@ -107,10 +107,8 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 			try {
 				// récupère les info sur la version actuelle
 				PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-				String versionCodeActuel = Integer.toString(pInfo.versionCode);
 				
-				// TODO : Guillaume - temporaire pour forcer la mise à jour de la base de données
-				
+				// Pour les développeurs : permet de forcer la mise à jour de la base de données
 				boolean maj_base_prochain_demarrage = prefs.getBoolean(getString(R.string.pref_key_debug_maj_base_prochain_demarrage), false);
 
 				if(pInfo.versionCode != derniereVersionExecutee || maj_base_prochain_demarrage){

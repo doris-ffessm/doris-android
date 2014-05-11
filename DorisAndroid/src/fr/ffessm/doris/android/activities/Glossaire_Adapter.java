@@ -206,7 +206,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
         	Log.i(LOG_TAG, "getView() - nomPhoto1erePhoto : " +nom1erePhoto);
         	
         	Photos_Outils photosOutils = new Photos_Outils(context);
-	        if(photosOutils.isAvailablePhoto(nom1erePhoto, ImageType.ILLUSTRATION_DEFINITION)){
+	        if(photosOutils.isAvailableInFolderPhoto(nom1erePhoto, ImageType.ILLUSTRATION_DEFINITION)){
 	    		try {
 					Picasso.with(context).load(photosOutils.getPhotoFile(nom1erePhoto, ImageType.ILLUSTRATION_DEFINITION))
 						.resize(defaultIconSize, defaultIconSize)

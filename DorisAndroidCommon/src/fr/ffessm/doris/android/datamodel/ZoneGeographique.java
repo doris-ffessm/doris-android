@@ -60,7 +60,9 @@ import org.apache.commons.logging.LogFactory;
 
 import fr.ffessm.doris.android.datamodel.associations.*;
 
+
 // Start of user code additional import for ZoneGeographique
+import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 // End of user code
 
 /** 
@@ -133,6 +135,26 @@ public class ZoneGeographique {
 	// End of user code
 
 	// Start of user code ZoneGeographique additional user properties
+	
+	public ZoneGeographiqueKind getZoneGeoKind() {
+	   	switch (_id) {
+	   	case -1:
+    		return ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES;
+	   	case 1:
+    		return ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE;
+		case 2:
+			return ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE;
+		case 3:
+			return ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE;
+		case 4:
+			return ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES;
+		case 5:
+			return ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST;
+		default:
+			return null;
+		}
+	}
+	
 	
 	// Ce serait mieux dans la base mais en attendant ce sera en dur ici
 	public java.lang.String getIcone() {

@@ -147,7 +147,7 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
         	
         	Photos_Outils photosOutils = new Photos_Outils(context);
         	
-	        if(photosOutils.isAvailablePhoto(nomPhoto, ImageType.ILLUSTRATION_BIBLIO)){
+	        if(photosOutils.isAvailableInFolderPhoto(nomPhoto, ImageType.ILLUSTRATION_BIBLIO)){
 	    		try {
 					Picasso.with(context).load(photosOutils.getPhotoFile(nomPhoto, ImageType.ILLUSTRATION_BIBLIO))
 						.fit()

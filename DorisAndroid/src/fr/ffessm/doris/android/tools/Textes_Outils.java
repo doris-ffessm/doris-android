@@ -498,7 +498,7 @@ public class Textes_Outils {
 	    	        ImageSpan imageSpan = null;
 	    	        Photos_Outils photosOutils = new Photos_Outils(context);
 	    	        
-	    	        if(photosOutils.isAvailablePhoto(nomPhoto, Photos_Outils.ImageType.ILLUSTRATION_DEFINITION)){
+	    	        if(photosOutils.isAvailableInFolderPhoto(nomPhoto, Photos_Outils.ImageType.ILLUSTRATION_DEFINITION)){
 	    	        	//Log.d(LOG_TAG, "textToSpannableStringDoris()- isAvailablePhoto");
 	    	        	try {
 	    	        		String path = photosOutils.getPhotoFile(nomPhoto, Photos_Outils.ImageType.ILLUSTRATION_DEFINITION).getAbsolutePath();

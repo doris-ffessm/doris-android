@@ -4,6 +4,16 @@
 	<!-- Start of user code customView_strings etatmodehorsligne
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
+	
+	<!-- On sur-estime exprès un peu -->
+	<!-- 185 Mo / 23890 vignettes => 8 ko -->
+	<string name="etatmodehorsligne_taillemoy_vignette">10</string>
+	<!-- 533 Mo / 22549 vignettes => 24 ko -->
+	<string name="etatmodehorsligne_taillemoy_med_res">25</string>
+	<!-- 1.9Go / 22547 vignettes => 88 ko -->
+	<string name="etatmodehorsligne_taillemoy_hi_res">90</string>
+	
+	
 	<string name="etatmodehorsligne_customview_titre_text">État du Mode Hors Ligne</string>
 	<string name="etatmodehorsligne_customview_description_text">"DORISAndroid peut fonctionner sans internet. Pour cela vous devez avoir téléchargé les fiches et images à l'avance. Pour économiser votre forfait faites le en Wifi."</string>
 	<string name="etatmodehorsligne_customview_description_text_2">Ajustez vos paramètres en fonction de vos besoins et de votre espace disque disponible.</string>

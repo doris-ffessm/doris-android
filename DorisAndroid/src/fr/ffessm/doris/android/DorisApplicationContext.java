@@ -125,6 +125,7 @@ public class DorisApplicationContext {
 		int screenlayout_size = context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 		int screenlayout_density= context.getResources().getDisplayMetrics().densityDpi;
 		Log.d(LOG_TAG, "ensureDefaultPreferencesInitialization "+screenlayout_density+" "+screenlayout_size);
+		
 		// Taille par défaut des images téléchargées en mode on-line
 		String qualitePhotoSgtring = paramOutils.getParamString(R.string.pref_key_mode_connecte_qualite_photo,"");
 		if(qualitePhotoSgtring.equals("")){
@@ -132,22 +133,22 @@ public class DorisApplicationContext {
 			// adapte la taille par défaut des images téléchargée (mode online) en fonction de la taille de l'écran et la densité 
 			if(screenlayout_size >= Configuration.SCREENLAYOUT_SIZE_LARGE || screenlayout_density>=DisplayMetrics.DENSITY_HIGH){
 				Log.d(LOG_TAG, "ensureDefaultPreferencesInitialization HI_RES");
-		    	// LARGE ou XLARGE -> par defaut HI_RES
+		    	// LARGE ou XLARGE -> par défaut HI_RES
 				ed.putString(context.getString(R.string.pref_key_mode_connecte_qualite_photo), "HI_RES");
 			}
 			else{
 				Log.d(LOG_TAG, "ensureDefaultPreferencesInitialization MED_RES");
-				// par defaut MED_RES
+				// par défaut MED_RES
 				ed.putString(context.getString(R.string.pref_key_mode_connecte_qualite_photo), "MED_RES");				
 			}
 			ed.commit();
 		}
-		// TODO fatoriser ce code qui semble redondant plutot
-		// Taille des icones des listes
+		// TODO factoriser ce code qui semble plutôt redondant 
+		// Taille des icônes des listes
 		String iconSizeString = paramOutils.getParamString(R.string.pref_key_list_icon_size, "");
 		if(iconSizeString.equals("")){
 			SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-			// adapte la taille par défaut des icones en fonction de la densité et la taille de l'écran 
+			// adapte la taille par défaut des icônes en fonction de la densité et la taille de l'écran 
 			switch(screenlayout_density)
 			{
 			case DisplayMetrics.DENSITY_LOW:

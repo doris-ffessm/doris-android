@@ -190,7 +190,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
         	
             
             Photos_Outils photosOutils = new Photos_Outils(context);
-	        if(photosOutils.isAvailablePhoto(entry.getPhotoNom(), ImageType.PORTRAITS)){
+	        if(photosOutils.isAvailableInFolderPhoto(entry.getPhotoNom(), ImageType.PORTRAITS)){
 	    		try {
 					Picasso.with(context).load(photosOutils.getPhotoFile(entry.getPhotoNom(), ImageType.PORTRAITS))
 						.resize(defaultIconSize, defaultIconSize)

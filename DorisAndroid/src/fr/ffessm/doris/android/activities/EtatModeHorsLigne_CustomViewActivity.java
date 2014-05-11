@@ -172,26 +172,20 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     protected void updateProgressBarZone(ZoneGeographique inZoneGeo, MultiProgressBar progressBarZone){
     	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
     	Fiches_Outils fichesOutils = new Fiches_Outils(getContext());
-    	String uri = fichesOutils.getZoneIcone(inZoneGeo.getId());
+    	String uri = fichesOutils.getZoneIcone(inZoneGeo.getZoneGeoKind());
     	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
     	int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
 	   
     	boolean affichageBarrePhotoPrinc;
     	boolean affichageBarrePhoto;
     	String summaryTexte = "";
-    	int nbFichesZoneGeo = 0;
+    	int nbFichesZoneGeo = fichesOutils.getNbFichesZoneGeo(inZoneGeo.getZoneGeoKind());
     	int avancementPhotoPrinc =0;
     	int avancementPhoto =0;
+	   	   
+    	Photos_Outils.PrecharMode precharModeZoneGeo = photosOutils.getPrecharModeZoneGeo(inZoneGeo.getZoneGeoKind());
 	   
-    	if (inZoneGeo.getId() == -1){
-    		nbFichesZoneGeo = (int)getHelper().getFicheDao().countOf();
-    	} else {
-    		nbFichesZoneGeo = getHelper().getFiches_ZonesGeographiquesDao().queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, inZoneGeo.getId()).size();
-    	}
-	   
-	   Photos_Outils.PrecharMode precharModeZoneGeo = photosOutils.getPrecharModeZoneGeo(inZoneGeo.getId());
-	   
-	   if ( precharModeZoneGeo == Photos_Outils.PrecharMode.P0 ) {
+    	if ( precharModeZoneGeo == Photos_Outils.PrecharMode.P0 ) {
 	
 		   affichageBarrePhotoPrinc = false;
 		   affichageBarrePhoto = false;
@@ -199,11 +193,11 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		   summaryTexte = getContext().getString(R.string.avancement_progressbar_aucune_summary);
 		   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
 		   
-	   } else {
-		   int nbPhotosPrincATelecharger = photosOutils.getAPrecharQteZoneGeo(inZoneGeo.getId(), true);
-		   int nbPhotosATelecharger = photosOutils.getAPrecharQteZoneGeo(inZoneGeo.getId(), false);
-		   int nbPhotosPrincDejaLa = photosOutils.getDejaLaQteZoneGeo(inZoneGeo.getId(), true);
-		   int nbPhotosDejaLa = photosOutils.getDejaLaQteZoneGeo(inZoneGeo.getId(), false);
+    	} else {
+		   int nbPhotosPrincATelecharger = photosOutils.getAPrecharQteZoneGeo(inZoneGeo.getZoneGeoKind(), true);
+		   int nbPhotosATelecharger = photosOutils.getAPrecharQteZoneGeo(inZoneGeo.getZoneGeoKind(), false);
+		   int nbPhotosPrincDejaLa = photosOutils.getDejaLaQteZoneGeo(inZoneGeo.getZoneGeoKind(), true);
+		   int nbPhotosDejaLa = photosOutils.getDejaLaQteZoneGeo(inZoneGeo.getZoneGeoKind(), false);
 		   
 		   affichageBarrePhotoPrinc = true;
 		   affichageBarrePhoto = true;

@@ -149,7 +149,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	                        	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_vig");
 	                        	 disqueOutils.clearFolder(photosOutils.getImageFolderVignette(), 0);
 
-	                        	 paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_vignettes, photosOutils.getImageCount(ImageType.VIGNETTE));
+	                        	 paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_vignettes, photosOutils.getImageCountInFolder(ImageType.VIGNETTE));
 	                        	 paramOutils.setParamLong(R.string.pref_key_size_folder_vignettes, photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE));
 	                        	 btnVideVig.setSummary(getVigSummary());	
 	                         }
@@ -190,7 +190,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	                        	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_med_res");
 	                        	 disqueOutils.clearFolder(photosOutils.getImageFolderMedRes(), 0);
 
-	                        	 paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_med_res, photosOutils.getImageCount(ImageType.MED_RES));
+	                        	 paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_med_res, photosOutils.getImageCountInFolder(ImageType.MED_RES));
 	                        	 paramOutils.setParamLong(R.string.pref_key_size_folder_med_res, photosOutils.getPhotoDiskUsage(ImageType.MED_RES));
 	                        	 btnVideMedRes.setSummary(getMedResSummary());
 	                         }
@@ -231,7 +231,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	                        	 Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btn_reset_hi_res");
 	                        	 disqueOutils.clearFolder(photosOutils.getImageFolderHiRes(), 0);
 
-	                        	 paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_hi_res, photosOutils.getImageCount(ImageType.HI_RES));
+	                        	 paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_hi_res, photosOutils.getImageCountInFolder(ImageType.HI_RES));
 	                        	 paramOutils.setParamLong(R.string.pref_key_size_folder_hi_res, photosOutils.getPhotoDiskUsage(ImageType.HI_RES));
 	                        	 btnVideHiRes.setSummary(getHiResSummary());
 	                         }

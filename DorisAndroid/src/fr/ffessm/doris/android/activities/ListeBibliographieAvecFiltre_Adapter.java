@@ -210,7 +210,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
         	nomPhoto = Constants.PREFIX_IMGDSK_BIBLIO+nomPhoto;
         		
         	Photos_Outils photosOutils = new Photos_Outils(context);
-	        if(photosOutils.isAvailablePhoto(nomPhoto, ImageType.ILLUSTRATION_BIBLIO)){
+	        if(photosOutils.isAvailableInFolderPhoto(nomPhoto, ImageType.ILLUSTRATION_BIBLIO)){
 	    		try {
 					Picasso.with(context).load(photosOutils.getPhotoFile(nomPhoto, ImageType.ILLUSTRATION_BIBLIO))
 						.resize(defaultIconSize, defaultIconSize)

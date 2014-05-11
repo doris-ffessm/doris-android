@@ -184,7 +184,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
     	
         // TODO : pas très propre mais fonctionne => Modifier Outils ... vers entry.getIcone qd sera dispo
     	Fiches_Outils fichesOutils = new Fiches_Outils(context);
-    	String uri = fichesOutils.getZoneIcone(entry.getId()); 
+    	String uri = fichesOutils.getZoneIcone(entry.getZoneGeoKind()); 
     	int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
     	ivIcon.setImageResource(imageResource);
     	

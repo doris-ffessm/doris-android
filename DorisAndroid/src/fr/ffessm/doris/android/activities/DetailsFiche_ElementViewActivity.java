@@ -769,7 +769,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         
         Photos_Outils photosOutils = new Photos_Outils(this);
-        if(photosOutils.isAvailablePhoto(photoFiche.getCleURL(), ImageType.VIGNETTE)){
+        if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURL(), ImageType.VIGNETTE)){
     		try {
 				Picasso.with(this).load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.VIGNETTE))
 					.fit()

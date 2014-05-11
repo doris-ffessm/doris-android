@@ -127,7 +127,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         int largeur = ScreenTools.getScreenWidth(_activity);
         final PhotoFiche photoFiche = _PhotoFicheLists.get(position);
        
-        if(photosOutils.isAvailablePhoto(photoFiche.getCleURL(), ImageType.HI_RES)){
+        if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURL(), ImageType.HI_RES)){
     		try {
 				Picasso.with(_activity)
 					.load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.HI_RES))
@@ -139,7 +139,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 			}
     	}
     	else{
-    		if(photosOutils.isAvailablePhoto(photoFiche.getCleURL(), ImageType.MED_RES)){
+    		if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURL(), ImageType.MED_RES)){
         		try {
     				Picasso.with(_activity)
     					.load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.MED_RES))
@@ -164,7 +164,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     			
     			ChainedLoadImageViewCallback chainedLoadImageViewCallback = new ChainedLoadImageViewCallback(_activity, imgDisplay, 
     					dossier_photo+"/"+photoFiche.getCleURL(),largeur, hauteur, false, btnHiResNotAvailable); // vrai chargement de l'image dans le callback
-    			if(photosOutils.isAvailablePhoto(photoFiche.getCleURL(), ImageType.VIGNETTE)){
+    			if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURL(), ImageType.VIGNETTE)){
     				try {
 						Picasso.with(_activity)
 							.load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.VIGNETTE)) // charge d'abord la vignette depuis le disque

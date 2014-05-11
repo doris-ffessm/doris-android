@@ -167,7 +167,7 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
         if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {	     
         	
         	Photos_Outils photosOutils = new Photos_Outils(context);
-	        if(photosOutils.isAvailablePhoto(entry.getPhotoNom(), ImageType.PORTRAITS)){
+	        if(photosOutils.isAvailableInFolderPhoto(entry.getPhotoNom(), ImageType.PORTRAITS)){
 	    		try {
 					Picasso.with(context).load(photosOutils.getPhotoFile(entry.getPhotoNom(), ImageType.PORTRAITS))
 						.fit()

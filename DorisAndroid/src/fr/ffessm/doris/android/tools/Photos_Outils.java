@@ -70,7 +70,10 @@ import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
+import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 
 import android.app.Activity;
 import android.content.Context;
@@ -111,15 +114,26 @@ public class Photos_Outils {
 	public final String ILLUSTRATION_BIBLIO_FOLDER = VIGNETTES_FICHE_FOLDER;
 	
 	private Context context;
+	private Fiches_Outils fichesOutils;
 	
 	public Photos_Outils(Context context){
 		this.context = context;
+		this.fichesOutils = new Fiches_Outils(context);
 	}
 	
 	public enum ImageType {
 	    VIGNETTE, MED_RES, HI_RES, PORTRAITS, ILLUSTRATION_DEFINITION, ILLUSTRATION_BIBLIO
 	} 
 
+	/***
+	 * P0 : Aucune photo préchargée
+	 * P1 : La photo principale en qualité vignette
+	 * P2 : Toutes les photos en qualité vignette
+	 * P3 : La photo principale en qualité intermédiaire, les autres en vignette
+	 * P4 : Toutes les photos en qualité intermédiaire
+	 * P5 : La photo principale en haute résolution, les autres en intermédiaire
+	 * P6 : Toutes les photos en haute résolution
+	 */
 	public enum PrecharMode {
 	    P0, P1, P2, P3, P4, P5, P6 
 	}
@@ -191,21 +205,21 @@ public class Photos_Outils {
 		case P1 :
 		case P2 :
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - Vignettes" );
-			return isAvailablePhoto(photofiche.getCleURL(), ImageType.VIGNETTE);
+			return isAvailableInFolderPhoto(photofiche.getCleURL(), ImageType.VIGNETTE);
 		case P3 :
 		case P4 :
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - Medium" );
-			return isAvailablePhoto(photofiche.getCleURL(), ImageType.MED_RES);
+			return isAvailableInFolderPhoto(photofiche.getCleURL(), ImageType.MED_RES);
 		case P5 :
 		case P6 :
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - Hight" );
-	    	return isAvailablePhoto(photofiche.getCleURL(), ImageType.HI_RES);
+	    	return isAvailableInFolderPhoto(photofiche.getCleURL(), ImageType.HI_RES);
 		default:
 			return false;
 		}
 	}
 
-	public boolean isAvailablePhoto(String inPhotoURL, ImageType inImageType){
+	public boolean isAvailableInFolderPhoto(String inPhotoURL, ImageType inImageType){
 		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailablePhoto() - inPhotoURL : "+ inPhotoURL );
 		
 		File imageFolder = getImageFolder(inImageType);	
@@ -293,7 +307,7 @@ public class Photos_Outils {
 	}
 
 
-	public int getImageCount(ImageType inImageType){
+	public int getImageCountInFolder(ImageType inImageType){
 		return getImageFolder(inImageType).list().length;
 	}
 	
@@ -303,17 +317,16 @@ public class Photos_Outils {
     			+ getPhotoDiskUsage(ImageType.HI_RES)
     			+ getPhotoDiskUsage(ImageType.PORTRAITS);
 	}
+	
 	public long getPhotoDiskUsage(ImageType inImageType){
 		Disque_Outils disqueOutils = new Disque_Outils(context);
     	return disqueOutils.getDiskUsage(getImageFolder(inImageType) );
 	}
-
-
 	
-	public ImageType getImageQualityToDownload(boolean inPhotoPrincipale, int inIdZoneGeo){
+	public ImageType getImageQualityToDownload(boolean inPhotoPrincipale, ZoneGeographiqueKind inZoneGeo){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageQualityToDownload() - Début" );
 
-		PrecharMode prechargementMode = getPrecharModeZoneGeo(inIdZoneGeo);
+		PrecharMode prechargementMode = getPrecharModeZoneGeo(inZoneGeo);
 		
 		if (inPhotoPrincipale) {
 			switch(prechargementMode){
@@ -346,20 +359,20 @@ public class Photos_Outils {
 		
 	}
 	
-	public PrecharMode getPrecharModeZoneGeo(int inIdZoneGeo){
+	public PrecharMode getPrecharModeZoneGeo(ZoneGeographiqueKind inZoneGeo){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharModeZoneGeo() - Début" );
 		Param_Outils paramOutils = new Param_Outils(context);
 		
-		switch(inIdZoneGeo){
-		case 1 :
+		switch(inZoneGeo){
+		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
 			return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_france,"P1"));
-		case 2 :
+		case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE :
 			return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_eaudouce,"P1"));
-		case 3 :
+		case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
 			return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_indopac,"P1"));
-		case 4 :
+		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
 			return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_caraibes,"P1"));
-		case 5 :
+		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
 			return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_atlantno,"P1"));
 		default :
 			return null;
@@ -375,52 +388,52 @@ public class Photos_Outils {
 	 * @param inPrincipale concerne la photo principale ou n'importe quelle photo
 	 * @return
 	 */
-	public int getAPrecharQteZoneGeo(int inIdZoneGeo, Boolean inPrincipale){
+	public int getAPrecharQteZoneGeo(ZoneGeographiqueKind inZoneGeo, Boolean inPrincipale){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inIdZoneGeo );
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - data_nbphotos_atelecharger_france : "+getParamInt(context, R.string.pref_key_nbphotos_atelecharger_france, 0) );
 		Param_Outils paramOutils = new Param_Outils(context);
 		
 		if (inPrincipale) {
-			switch(inIdZoneGeo){
-			case -1 :
+			switch(inZoneGeo){
+			case FAUNE_FLORE_TOUTES_ZONES :
 				int nbAPrechar = paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_france, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_eaudouce, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_atlantno, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_indopac, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_caraibes, 0 );
 				return nbAPrechar;
-			case 1 :
+			case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_france, 0 );
-			case 2 :
+			case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_eaudouce, 0 );
-			case 3 :
+			case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_indopac, 0 );
-			case 4 :
+			case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_caraibes, 0 );
-			case 5 :
+			case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_atlantno, 0 );
 			default :
 				return 0;
 			}
 		} else {
-			switch(inIdZoneGeo){
-			case -1 :
+			switch(inZoneGeo){
+			case FAUNE_FLORE_TOUTES_ZONES :
 				int nbAPrechar = paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_france, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_eaudouce, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_atlantno, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_indopac, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_caraibes, 0 );
 				return nbAPrechar;
-			case 1 :
+			case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_france, 0 );
-			case 2 :
+			case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_eaudouce, 0 );
-			case 3 :
+			case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_indopac, 0 );
-			case 4 :
+			case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_caraibes, 0 );
-			case 5 :
+			case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_atlantno, 0 );
 			default :
 				return 0;
@@ -436,52 +449,52 @@ public class Photos_Outils {
 	 * @param inPrincipale concerne la photo principale ou n'importe quelle photo
 	 * @return
 	 */
-	public int getDejaLaQteZoneGeo(int inIdZoneGeo, Boolean inPrincipale){
+	public int getDejaLaQteZoneGeo(ZoneGeographiqueKind inZoneGeo, Boolean inPrincipale){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inIdZoneGeo );
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - data_nbphotos_recues_france : "+getParamInt(context, R.string.pref_key_nbphotos_recues_france, 0) );
 		Param_Outils paramOutils = new Param_Outils(context);
 		
 		if (inPrincipale) {
-			switch(inIdZoneGeo){
-			case -1 :
+			switch(inZoneGeo){
+			case FAUNE_FLORE_TOUTES_ZONES :
 				int nbAPrechar = paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_france, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_eaudouce, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_atlantno, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_indopac, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_caraibes, 0 );
 				return nbAPrechar;
-			case 1 :
+			case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_france, 0 );
-			case 2 :
+			case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_eaudouce, 0 );
-			case 3 :
+			case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_indopac, 0 );
-			case 4 :
+			case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_caraibes, 0 );
-			case 5 :
+			case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_atlantno, 0 );
 			default :
 				return 0;
 			}
 		} else {
-			switch(inIdZoneGeo){
-			case -1 :
+			switch(inZoneGeo){
+			case FAUNE_FLORE_TOUTES_ZONES :
 				int nbAPrechar = paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_france, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_eaudouce, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_atlantno, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_indopac, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_caraibes, 0 );
 				return nbAPrechar;
-			case 1 :
+			case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_france, 0 );
-			case 2 :
+			case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_eaudouce, 0 );
-			case 3 :
+			case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_indopac, 0 );
-			case 4 :
+			case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_caraibes, 0 );
-			case 5 :
+			case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_atlantno, 0 );
 			default :
 				return 0;
@@ -491,41 +504,41 @@ public class Photos_Outils {
 	
 	
 	/**
-	 * récupère l'id de la resource textuelle pour les clé des préférences pour récupérer ou stocker des info de photo à télécharger ou déjà téléchargée
-	 * zone par zone, photo principale ou pas
+	 * récupère l'id de la resource textuelle pour les clé des préférences pour récupérer ou stocker
+	 * des info de photo à télécharger ou déjà téléchargée zone par zone, photo principale ou pas
 	 * @param context
 	 * @param inIdZoneGeo
 	 * @param inPrincipale
 	 * @return
 	 */
 	// TODO : C'est crado mais c'est rassemblé ici
-	public int getKeyDataAPrecharZoneGeo(int inIdZoneGeo, Boolean inPrincipale){
+	public int getKeyDataAPrecharZoneGeo(ZoneGeographiqueKind inZoneGeo, Boolean inPrincipale){
 		if (inPrincipale) {
-			switch(inIdZoneGeo){
-			case 1 :
+			switch(inZoneGeo){
+			case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
 				return R.string.pref_key_nbphotosprinc_atelecharger_france;
-			case 2 :
+			case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE :
 				return R.string.pref_key_nbphotosprinc_atelecharger_eaudouce;
-			case 3 :
+			case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
 				return R.string.pref_key_nbphotosprinc_atelecharger_indopac;
-			case 4 :
+			case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
 				return R.string.pref_key_nbphotosprinc_atelecharger_caraibes;
-			case 5 :
+			case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
 				return R.string.pref_key_nbphotosprinc_atelecharger_atlantno;
 			default :
 				return 0;
 			}
 		} else {
-			switch(inIdZoneGeo){
-			case 1 :
+			switch(inZoneGeo){
+			case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
 				return R.string.pref_key_nbphotos_atelecharger_france;
-			case 2 :
+			case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE :
 				return R.string.pref_key_nbphotos_atelecharger_eaudouce;
-			case 3 :
+			case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
 				return R.string.pref_key_nbphotos_atelecharger_indopac;
-			case 4 :
+			case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
 				return R.string.pref_key_nbphotos_atelecharger_caraibes;
-			case 5 :
+			case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
 				return R.string.pref_key_nbphotos_atelecharger_atlantno;
 			default :
 				return 0;
@@ -533,33 +546,33 @@ public class Photos_Outils {
 		}
 	}
 	// TODO : Crado aussi
-	public int getKeyDataRecuesZoneGeo(int inIdZoneGeo, Boolean inPrincipale){
+	public int getKeyDataRecuesZoneGeo(ZoneGeographiqueKind inZoneGeo, Boolean inPrincipale){
 		if (inPrincipale) {
-			switch(inIdZoneGeo){
-			case 1 :
+			switch(inZoneGeo){
+			case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
 				return R.string.pref_key_nbphotosprinc_recues_france;
-			case 2 :
+			case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE :
 				return R.string.pref_key_nbphotosprinc_recues_eaudouce;
-			case 3 :
+			case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
 				return R.string.pref_key_nbphotosprinc_recues_indopac;
-			case 4 :
+			case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
 				return R.string.pref_key_nbphotosprinc_recues_caraibes;
-			case 5 :
+			case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
 				return R.string.pref_key_nbphotosprinc_recues_atlantno;
 			default :
 				return 0;
 			}
 		} else {
-			switch(inIdZoneGeo){
-			case 1 :
+			switch(inZoneGeo){
+			case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
 				return R.string.pref_key_nbphotos_recues_france;
-			case 2 :
+			case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE :
 				return R.string.pref_key_nbphotos_recues_eaudouce;
-			case 3 :
+			case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
 				return R.string.pref_key_nbphotos_recues_indopac;
-			case 4 :
+			case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
 				return R.string.pref_key_nbphotos_recues_caraibes;
-			case 5 :
+			case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
 				return R.string.pref_key_nbphotos_recues_atlantno;
 			default :
 				return 0;
@@ -600,27 +613,84 @@ public class Photos_Outils {
 		return false;	
 	}
 	
-	
-	
-    // TODO : En attendant d'obtenir la nouvelle version de Common
-	public String getZoneIcone(int inId) {
-	   	switch (inId) {
-	   	case -1:
-    		return context.getString(R.string.icone_touteszones);
-    	case 1:
-    		return context.getString(R.string.icone_france);
-		case 2:
-			return context.getString(R.string.icone_eaudouce);
-		case 3:
-			return context.getString(R.string.icone_indopac);
-		case 4:
-			return context.getString(R.string.icone_caraibes);
-		case 5:
-			return context.getString(R.string.icone_atlantno);
-		default:
-			return "";
+
+	public int getTailleMoyImageUnitaire(ImageType imageType) {
+	   	switch (imageType) {
+	   	case VIGNETTE :
+    		return Integer.parseInt(context.getString(R.string.etatmodehorsligne_taillemoy_vignette));
+    	case MED_RES :
+    	case PORTRAITS :
+    	case ILLUSTRATION_DEFINITION :
+    	case ILLUSTRATION_BIBLIO :
+    		return Integer.parseInt(context.getString(R.string.etatmodehorsligne_taillemoy_med_res));
+		case HI_RES :
+			return Integer.parseInt(context.getString(R.string.etatmodehorsligne_taillemoy_hi_res));
+		default :
+			return 0;
 		}
 	}
-   
-    
+	
+	/***
+	 * Pour estimer le volume de photos à télécharger / stocker :
+	 *   - on estime le nombre de photos
+	 *   - on multiplie par une constante qui sur-estime un peu
+	 */
+	public long getEstimVolPhotosParZone(PrecharMode precharMode, ZoneGeographiqueKind inZoneGeo){
+
+		int nbFichesTotal = fichesOutils.getNbFichesZoneGeo(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES);
+		
+		OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(context);
+		RuntimeExceptionDao<PhotoFiche, Integer> entriesDao = ormLiteDBHelper.getPhotoFicheDao();
+		int nbPhotosTotal = (int)entriesDao.countOf();
+		
+		int nbFichesZoneGeo = fichesOutils.getNbFichesZoneGeo(inZoneGeo);
+		
+		// On calcule le nombre de photos (hors principales) moyen par fiche
+		float nbPhotosParFiche = ( nbPhotosTotal - nbFichesTotal ) / nbFichesTotal;
+		
+		int volPhotosPrincipales = 0;
+		int volPhotos = 0;
+		
+		switch(precharMode){
+		case P0 :
+			return 0;
+		case P1 :
+			volPhotosPrincipales = nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.VIGNETTE);
+			return volPhotosPrincipales;
+		case P2 :
+			volPhotosPrincipales = nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.VIGNETTE);
+			volPhotos = (int)(nbFichesZoneGeo * nbPhotosParFiche * getTailleMoyImageUnitaire(ImageType.VIGNETTE));
+			return volPhotosPrincipales + volPhotos;
+		case P3 :
+			volPhotosPrincipales = nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.VIGNETTE)
+								+ nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.MED_RES);
+			volPhotos = (int)(nbFichesZoneGeo * nbPhotosParFiche * getTailleMoyImageUnitaire(ImageType.VIGNETTE));
+			return volPhotosPrincipales + volPhotos;
+		case P4 :
+			volPhotosPrincipales = nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.VIGNETTE)
+								+ nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.MED_RES);
+			volPhotos = (int)(nbFichesZoneGeo * nbPhotosParFiche * getTailleMoyImageUnitaire(ImageType.MED_RES));
+			return volPhotosPrincipales + volPhotos;
+		case P5 :
+			volPhotosPrincipales = nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.VIGNETTE)
+								+ nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.HI_RES);
+			volPhotos = (int)(nbFichesZoneGeo * nbPhotosParFiche * getTailleMoyImageUnitaire(ImageType.MED_RES));
+			return volPhotosPrincipales + volPhotos;
+		case P6 :
+			volPhotosPrincipales = nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.VIGNETTE)
+								+ nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.HI_RES);
+			volPhotos = (int)(nbFichesZoneGeo * nbPhotosParFiche * getTailleMoyImageUnitaire(ImageType.HI_RES));
+			return volPhotosPrincipales + volPhotos;
+		default:
+			return 0;
+		}
+		
+	}
+
+	
+
+			
+
+
+	
 }

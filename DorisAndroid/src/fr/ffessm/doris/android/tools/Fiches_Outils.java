@@ -45,11 +45,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+
 import android.content.Context;
 import android.util.Log;
 
-import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
+import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 
 public class Fiches_Outils {
 	private static final String LOG_TAG = Fiches_Outils.class.getCanonicalName();
@@ -72,17 +78,31 @@ public class Fiches_Outils {
     	MANUEL
     }
     
-	public MajListeFichesType getMajListeFichesTypeZoneGeo(int inIdZoneGeo){
-		switch(inIdZoneGeo){
-		case 1 :
+    public int getNbFichesZoneGeo(ZoneGeographiqueKind inZoneGeo) {
+    	OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(context);
+        
+    	if (inZoneGeo == ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES){
+			RuntimeExceptionDao<Fiche, Integer> entriesDao = ormLiteDBHelper.getFicheDao();
+			return (int)entriesDao.countOf();
+	   } else {
+		   RuntimeExceptionDao<Fiches_ZonesGeographiques, Integer> entriesDao = ormLiteDBHelper.getFiches_ZonesGeographiquesDao();
+		   return (int)entriesDao.queryForEq(
+				   Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME,
+				   Constants.getNumZoneForUrl(inZoneGeo) ).size();
+	   }
+    }
+    
+	public MajListeFichesType getMajListeFichesTypeZoneGeo(ZoneGeographiqueKind inZoneGeo){
+		switch(inZoneGeo){
+		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
 			return MajListeFichesType.valueOf(paramOutils.getParamString(R.string.pref_key_maj_liste_fiches_region_france,"M1"));
-		case 2 :
+		case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE :
 			return MajListeFichesType.valueOf(paramOutils.getParamString(R.string.pref_key_maj_liste_fiches_region_eaudouce,"M1"));
-		case 3 :
+		case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
 			return MajListeFichesType.valueOf(paramOutils.getParamString(R.string.pref_key_maj_liste_fiches_region_indopac,"M1"));
-		case 4 :
+		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
 			return MajListeFichesType.valueOf(paramOutils.getParamString(R.string.pref_key_maj_liste_fiches_region_caraibes,"M1"));
-		case 5 :
+		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
 			return MajListeFichesType.valueOf(paramOutils.getParamString(R.string.pref_key_maj_liste_fiches_region_atlantno,"M1"));
 		default :
 			return null;
@@ -102,22 +122,22 @@ public class Fiches_Outils {
 	}
 	
    
-	public Calendar getDerniereMajListeFichesTypeZoneGeo(int inIdZoneGeo) {
+	public Calendar getDerniereMajListeFichesTypeZoneGeo(ZoneGeographiqueKind inZoneGeo) {
 		String dernierMajDateCaract = "";
-		switch(inIdZoneGeo){
-		case 1:
+		switch(inZoneGeo){
+		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
 			dernierMajDateCaract = paramOutils.getParamString(R.string.pref_key_datedermaj_fiches_france, "01-01-2000");
 			break;
-		case 2:
+		case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
 			dernierMajDateCaract = paramOutils.getParamString(R.string.pref_key_datedermaj_fiches_eaudouce, "01-01-2000");
 			break;
-		case 3:
+		case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
 			dernierMajDateCaract = paramOutils.getParamString(R.string.pref_key_datedermaj_fiches_indopac, "01-01-2000");
 			break;
-		case 4:
+		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
 			dernierMajDateCaract = paramOutils.getParamString(R.string.pref_key_datedermaj_fiches_caraibes, "01-01-2000");
 			break;
-		case 5:
+		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
 			dernierMajDateCaract = paramOutils.getParamString(R.string.pref_key_datedermaj_fiches_atlantno, "01-01-2000");
 			break;
 		default :
@@ -138,27 +158,27 @@ public class Fiches_Outils {
 	}
 	
 	
-	public boolean setDateMajListeFichesTypeZoneGeo(int inIdZoneGeo) {
+	public boolean setDateMajListeFichesTypeZoneGeo(ZoneGeographiqueKind inZoneGeo) {
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setDateMajListeFichesTypeZoneGeo() - Début" );
 		Calendar aujourdHui = Calendar.getInstance();
  		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		String dateMajCaract = sdf.format(aujourdHui.getTime());
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setDateMajListeFichesTypeZoneGeo() - dateMajCaract : "+dateMajCaract );
 		
-		switch(inIdZoneGeo){
-		case 1:
+		switch(inZoneGeo){
+		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
 			paramOutils.setParamString(R.string.pref_key_datedermaj_fiches_france, dateMajCaract);
 			return true;
-		case 2:
+		case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
 			paramOutils.setParamString(R.string.pref_key_datedermaj_fiches_eaudouce, dateMajCaract);
 			return true;
-		case 3:
+		case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
 			paramOutils.setParamString(R.string.pref_key_datedermaj_fiches_indopac, dateMajCaract);
 			return true;
-		case 4:
+		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
 			paramOutils.setParamString(R.string.pref_key_datedermaj_fiches_caraibes, dateMajCaract);
 			return true;
-		case 5:
+		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
 			paramOutils.setParamString(R.string.pref_key_datedermaj_fiches_atlantno, dateMajCaract);
 			return true;
 		default :
@@ -168,8 +188,8 @@ public class Fiches_Outils {
 	}
 	
 	
-	public int getNbJoursDerMajListeFichesTypeZoneGeo(int inIdZoneGeo) {
-		Calendar jourDerniereMaj = getDerniereMajListeFichesTypeZoneGeo(inIdZoneGeo);
+	public int getNbJoursDerMajListeFichesTypeZoneGeo(ZoneGeographiqueKind inZoneGeo) {
+		Calendar jourDerniereMaj = getDerniereMajListeFichesTypeZoneGeo(inZoneGeo);
 		Calendar aujourdHui = Calendar.getInstance();
         aujourdHui.getTime();
          
@@ -177,13 +197,13 @@ public class Fiches_Outils {
         
 	}
 
-	public boolean isMajNecessaireZone(int zoneId, TypeLancement_kind typeLancement){
+	public boolean isMajNecessaireZone(ZoneGeographiqueKind zoneKind, TypeLancement_kind typeLancement){
     	// M0 : jamais
     	// M1 : sur demande
     	// M2 : chaque semaine
     	// M3 : chaque jour
 
-		MajListeFichesType majListeFichesType = getMajListeFichesTypeZoneGeo(zoneId);
+		MajListeFichesType majListeFichesType = getMajListeFichesTypeZoneGeo(zoneKind);
     	
 		// Si MO : jamais de Maj
     	if (majListeFichesType == MajListeFichesType.M0) return false;
@@ -191,7 +211,7 @@ public class Fiches_Outils {
     	// Si lancé Manuellement MAJ
     	if (typeLancement == TypeLancement_kind.MANUEL) return true; 
     	
-    	int nbJours = getNbJoursDerMajListeFichesTypeZoneGeo(zoneId);
+    	int nbJours = getNbJoursDerMajListeFichesTypeZoneGeo(zoneKind);
     	
 		// Si M2 : chaque semaine
         if (majListeFichesType == MajListeFichesType.M2 && nbJours > 7) return true;
@@ -202,19 +222,19 @@ public class Fiches_Outils {
     	return false;
     }
 	
-	public String getZoneIcone(int inId) {
-	   	switch (inId) {
-	   	case -1:
+	public String getZoneIcone(ZoneGeographiqueKind inZoneGeo) {
+	   	switch (inZoneGeo) {
+	   	case FAUNE_FLORE_TOUTES_ZONES:
     		return context.getString(R.string.icone_touteszones);
-    	case 1:
+    	case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
     		return context.getString(R.string.icone_france);
-		case 2:
+		case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
 			return context.getString(R.string.icone_eaudouce);
-		case 3:
+		case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
 			return context.getString(R.string.icone_indopac);
-		case 4:
+		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
 			return context.getString(R.string.icone_caraibes);
-		case 5:
+		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
 			return context.getString(R.string.icone_atlantno);
 		default:
 			return "";
