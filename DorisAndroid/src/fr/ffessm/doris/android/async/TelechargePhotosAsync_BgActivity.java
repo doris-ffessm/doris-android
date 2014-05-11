@@ -94,6 +94,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     // en milliseconde, on multiplie selon les contextes par 1, 2, 4
     int tempo = 50;
     
+    // timer utilisé pour déclencher un refresh que toutes les x nano
+    long notifyUITimer = System.nanoTime();
+    static long NOTIFY_UI_TIMER_LENGTH = 1000000*2000; //2000 miliseconds 
+    
     private Param_Outils paramOutils;
     private Photos_Outils photosOutils;
     
@@ -152,6 +156,9 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 		// This is where we would do the actual job
 		// you should indicates the progression using publishProgress()
     	try{
+    		// baisse la priorité pour s'assurer une meilleure réactivité
+			android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+    					
 			// do the initialization of the task here
 	    	// Téléchargement en tache de fond de toutes les photos de toutes les fiches correspondants aux critères de l'utilisateur
     		Reseau_Outils reseauOutils = new Reseau_Outils(context);
@@ -412,7 +419,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     						}
     						nbPhotosPrinRecuesPourZone++;
         				}
-	    					
+	    				/*	
     					if ( nbPhotosPrinRecuesPourZone % 100 == 0
 							|| (nbTelechargements != 0 && nbTelechargements % 10 == 0) )
     							publishProgress( nbPhotosPrinRecuesPourZone );	
@@ -420,6 +427,11 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 		    			//Enregistrement du nombre total de photos téléchargée pour afficher avancement au fur et à mesure
     					if (nbPhotosPrinRecuesPourZone % 200 == 0
 							|| (nbTelechargements != 0 && nbTelechargements % 10 == 0) ) {
+    						paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, true), nbPhotosPrinRecuesPourZone);
+    						DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+    					}*/
+    					if(hasNotifyUITimerElapsed()){
+    						publishProgress( nbPhotosPrinRecuesPourZone );
     						paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, true), nbPhotosPrinRecuesPourZone);
     						DorisApplicationContext.getInstance().notifyDataHasChanged(null);
     					}
@@ -533,7 +545,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 							nbPhotosRecuesPourZone++;
 	    				}
 						
-	    				if ( nbPhotosRecuesPourZone % 100 == 0
+	    				/*if ( nbPhotosRecuesPourZone % 100 == 0
     						|| (nbTelechargements != 0 && nbTelechargements % 10 == 0) )
 	    						publishProgress( nbPhotosRecuesPourZone );
 
@@ -545,7 +557,13 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 							//Enregistrement du nombre total de photos téléchargée pour afficher avancement
 							paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, false), nbPhotosRecuesPourZone);
 			        		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
-						}
+						}*/
+						if(hasNotifyUITimerElapsed()){
+							publishProgress( nbPhotosRecuesPourZone );
+    						//Enregistrement du nombre total de photos téléchargée pour afficher avancement
+							paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, false), nbPhotosRecuesPourZone);
+			        		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+    					}
 						if (nbPhotosRecuesPourZone % 150 == 0){	
 							if( this.isCancelled()) return nbPhotosRecuesPourZone;
 							if( reseauOutils.getConnectionType() == Reseau_Outils.ConnectionType.AUCUNE ) return nbPhotosRecuesPourZone;
@@ -837,6 +855,15 @@ public int telechargementPhotosGlossaire(DorisDBHelper dorisDBHelper){
     	paramOutils.setParamLong(R.string.pref_key_size_folder_hi_res, photosOutils.getPhotoDiskUsage(ImageType.HI_RES));
 
     }	
+    
+    public boolean hasNotifyUITimerElapsed(){
+    	long currentTime = System.nanoTime();
+    	if(currentTime - notifyUITimer > NOTIFY_UI_TIMER_LENGTH) {
+    		notifyUITimer = currentTime;
+    		return true;
+    	}
+    	return false;
+    }
 	// End of user code
 	
 }

@@ -59,6 +59,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
@@ -119,6 +120,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	
 	protected SparseArray< MultiProgressBar> progressBarZones = new SparseArray< MultiProgressBar>(); 
 	protected HashMap<String, View.OnClickListener> reusableClickListener = new HashMap<String, View.OnClickListener>();
+	
+	// cache pour éviter de refaire des accés BDD inutiles
+	protected List<ZoneGeographique> listeZoneGeo = null;
+	protected SparseIntArray lastFicheCount = null;
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -203,6 +208,25 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	} else {
     		nbFichesZoneGeo = getHelper().getFiches_ZonesGeographiquesDao().queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, inZoneGeo.getId()).size();
     	}
+    	/*
+    	boolean needRecomputeCount = DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity != null; // un update est en cours, besoin de recalculer
+    	if(lastFicheCount ==  null){
+    		needRecomputeCount = true;
+    		lastFicheCount = new SparseIntArray();
+    	}
+    	if(needRecomputeCount || lastFicheCount.get(inZoneGeo.getId()) == 0){	
+	    	if (inZoneGeo.getId() == -1){
+	    		nbFichesZoneGeo = (int)getHelper().getFicheDao().countOf();
+	    		lastFicheCount.put(inZoneGeo.getId(), nbFichesZoneGeo);
+	    	} else {
+	    		nbFichesZoneGeo = getHelper().getFiches_ZonesGeographiquesDao().queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, inZoneGeo.getId()).size();
+	    	}
+    		lastFicheCount.put(inZoneGeo.getId(), nbFichesZoneGeo);
+    	}
+    	else{
+
+    		nbFichesZoneGeo = lastFicheCount.get(inZoneGeo.getId());
+    	}*/
 	   
 	   Photos_Outils.PrecharMode precharModeZoneGeo = photosOutils.getPrecharModeZoneGeo(inZoneGeo.getId());
 	   
@@ -523,7 +547,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	zoneToutesZones.setId(-1);
     	zoneToutesZones.setNom(getContext().getString(R.string.avancement_touteszones_titre));
 		updateProgressBarZone(zoneToutesZones, progressBarZones.get(zoneToutesZones.getId()));
-		List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
+		if(listeZoneGeo == null) listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
 		for (ZoneGeographique zoneGeo : listeZoneGeo) {
 			updateProgressBarZone(zoneGeo, progressBarZones.get(zoneGeo.getId()));
 		}
