@@ -439,12 +439,20 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		}
 		@Override
 		protected Void doInBackground(Void... voids) {
+			// baisse la priorité pour s'assurer une meilleure réactivité
+			android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
 			// calcule en tache de fond
 			Photos_Outils photo_Outils = new Photos_Outils(EtatModeHorsLigne_CustomViewActivity.this);
 			internalUsedSize =  photo_Outils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL);
 			primaryUsedSize =  photo_Outils.getPhotosDiskUsage(ImageLocation.PRIMARY);
 			if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
 				secondaryUsedSize = photo_Outils.getPhotosDiskUsage(ImageLocation.SECONDARY);
+			}
+			if(needRestart){
+				// si besoin de recommencer, alors fait une mini pause avant redéclencher
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {}
 			}
 			return null;
 		}
@@ -620,6 +628,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			secondaryDiskBtn.setEnabled(false);
 			secondaryDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_secondary_btn_text_not_available);
 		}
+		
+		Log.d(LOG_TAG, "refreshScreenData thread = "+Thread.currentThread());
 		//End of user code
 	}
 

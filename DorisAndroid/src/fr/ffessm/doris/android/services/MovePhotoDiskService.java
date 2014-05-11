@@ -43,6 +43,10 @@ public class MovePhotoDiskService extends IntentService {
     // compteurs pour affichage dans les notifications et autre progress bar
     int nbFileToCopy=0;
     int nbcopiedFiles=0;
+    
+    // timer utilisé pour déclencher un refresh que toutes les x nano
+    long notifyUITimer = System.nanoTime();
+    static long NOTIFY_UI_TIMER_LENGTH = 1000000*1000; //1000 miliseconds 
 	
 	public MovePhotoDiskService() {
 		super(MovePhotoDiskService.class.getSimpleName());
@@ -51,7 +55,8 @@ public class MovePhotoDiskService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 
-        DorisApplicationContext.getInstance().isMovingPhotos = true;
+		//Log.d(LOG_TAG, "MovePhotoDiskService.onHandleIntent thread = "+Thread.currentThread());
+		DorisApplicationContext.getInstance().isMovingPhotos = true;
         DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 		
 		String initialTickerText = this.getString(R.string.deplacephotos_bg_initialTickerText);
@@ -111,6 +116,13 @@ public class MovePhotoDiskService extends IntentService {
     		return;
     	}
     	mNotificationHelper.setMaxItemToProcess(""+nbFileToCopy);
+    	
+    	// si beaucoup de travail, alors baisse la priorité pour minimiser l'impact sur l'ihm et les risques de plantage
+    	if(nbFileToCopy>2000)
+    		android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND + android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE);
+
+    	
+    	
     	ImageLocation destImageLocation;
     	if(dest.equals(INTERNAL)){
     		destImageLocation = ImageLocation.APP_INTERNAL;
@@ -191,11 +203,11 @@ public class MovePhotoDiskService extends IntentService {
     	// incrémente le compteur et notifie tous les 10
     	nbcopiedFiles++;
     	//if(nbcopiedFiles % 10 == 0)	publishProgress(nbcopiedFiles);
-    	if(nbcopiedFiles % 50 == 0)	{
+    	if(hasNotifyUITimerElapsed())	{
     		mNotificationHelper.progressUpdate(nbcopiedFiles);
-    		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
-    		Thread.yield();
-    	}
+    		DorisApplicationContext.getInstance().notifyDataHasChanged(null);	
+    	} 
+    	Thread.yield();
     	
 	    if (sourceLocation.isDirectory()) {
 	        if (!targetLocation.exists() && !targetLocation.mkdirs()) {
@@ -230,5 +242,14 @@ public class MovePhotoDiskService extends IntentService {
 	    }
 	    sourceLocation.delete();
 	}
+    
+    public boolean hasNotifyUITimerElapsed(){
+    	long currentTime = System.nanoTime();
+    	if(currentTime - notifyUITimer > NOTIFY_UI_TIMER_LENGTH) {
+    		notifyUITimer = currentTime;
+    		return true;
+    	}
+    	return false;
+    }
     
 }
