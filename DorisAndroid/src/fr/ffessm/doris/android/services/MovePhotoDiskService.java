@@ -9,14 +9,13 @@ import java.io.OutputStream;
 
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.async.DeplacePhotos_BgActivity;
 import fr.ffessm.doris.android.async.NotificationHelper;
+import fr.ffessm.doris.android.tools.LimitTimer;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageLocation;
 import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 import android.app.IntentService;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask.Status;
@@ -44,9 +43,8 @@ public class MovePhotoDiskService extends IntentService {
     int nbFileToCopy=0;
     int nbcopiedFiles=0;
     
-    // timer utilisé pour déclencher un refresh que toutes les x nano
-    long notifyUITimer = System.nanoTime();
-    static long NOTIFY_UI_TIMER_LENGTH = 1000000*1000; //1000 miliseconds 
+ // timer utilisé pour déclencher un refresh que toutes les x mili
+    LimitTimer limitTimer = new LimitTimer(2000); //2000 miliseconds
 	
 	public MovePhotoDiskService() {
 		super(MovePhotoDiskService.class.getSimpleName());
@@ -117,11 +115,23 @@ public class MovePhotoDiskService extends IntentService {
     	}
     	mNotificationHelper.setMaxItemToProcess(""+nbFileToCopy);
     	
-    	// si beaucoup de travail, alors baisse la priorité pour minimiser l'impact sur l'ihm et les risques de plantage
-    	if(nbFileToCopy>2000)
-    		android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND + android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE);
+    	// baisse la priorité pour minimiser l'impact sur l'ihm et les risques de plantage
+    	android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND + android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE);
 
     	
+    	
+    	if(dest.equals(DELETE)){
+    		clearFolder(source, Photos_Outils.VIGNETTES_FICHE_FOLDER);
+    		clearFolder(source, Photos_Outils.MED_RES_FICHE_FOLDER);
+    		clearFolder(source, Photos_Outils.HI_RES_FICHE_FOLDER);
+    		clearFolder(source, Photos_Outils.PORTRAITS_FOLDER);
+    		clearFolder(source, Photos_Outils.ILLUSTRATION_DEFINITION_FOLDER);
+    		clearFolder(source, Photos_Outils.ILLUSTRATION_BIBLIO_FOLDER);
+    		DorisApplicationContext.getInstance().isMovingPhotos = false;
+            DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+            mNotificationHelper.completed();
+    		return;
+    	}
     	
     	ImageLocation destImageLocation;
     	if(dest.equals(INTERNAL)){
@@ -203,7 +213,7 @@ public class MovePhotoDiskService extends IntentService {
     	// incrémente le compteur et notifie tous les 10
     	nbcopiedFiles++;
     	//if(nbcopiedFiles % 10 == 0)	publishProgress(nbcopiedFiles);
-    	if(hasNotifyUITimerElapsed())	{
+    	if(limitTimer.hasTimerElapsed())	{
     		mNotificationHelper.progressUpdate(nbcopiedFiles);
     		DorisApplicationContext.getInstance().notifyDataHasChanged(null);	
     	} 
@@ -243,13 +253,49 @@ public class MovePhotoDiskService extends IntentService {
 	    sourceLocation.delete();
 	}
     
-    public boolean hasNotifyUITimerElapsed(){
-    	long currentTime = System.nanoTime();
-    	if(currentTime - notifyUITimer > NOTIFY_UI_TIMER_LENGTH) {
-    		notifyUITimer = currentTime;
-    		return true;
+    protected void clearFolder(String source, String subFolderToMove){
+    	File sourceFolder;
+    	if(source.equals(PRIMARY)){
+    		sourceFolder = DiskEnvironment.getPrimaryExternalStorage().getFilesDir(this, subFolderToMove);
+    	}else if(source.equals(SECONDARY)){
+    		try {
+    			sourceFolder = DiskEnvironment.getSecondaryExternalStorage().getFilesDir(this, subFolderToMove);
+			} catch (NoSecondaryStorageException e) {
+				return;
+			}
     	}
-    	return false;
+    	else {
+    		// considère internal par défaut
+    		sourceFolder = this.getDir(subFolderToMove, Context.MODE_PRIVATE);
+    	}
+    	
+    	clearFolder(sourceFolder);
     }
+    public int clearFolder(File inFolder){
+		int deletedFiles = 0;
+	    if (inFolder!= null && inFolder.isDirectory()) {
+	        try {
+	            for (File child:inFolder.listFiles()) {
+
+	                //first delete subdirectories recursively
+	                if (child.isDirectory()) {
+	                    deletedFiles += clearFolder(child);
+	                }
+
+	                //then delete the files and subdirectories in this dir
+	                //only empty directories can be deleted, so subdirs have been done first
+	                if (child.delete()) {
+	                        deletedFiles++;
+	                    }
+	            }
+	        }
+	        catch(Exception e) {
+	        	Log.e(LOG_TAG, String.format("Failed to clean the folder, error %s", e.getMessage()));
+	        }
+	    }
+	    Log.d(LOG_TAG, "clearFolder() - Fichiers effacés : "+deletedFiles);
+	    return deletedFiles;
+	}
+    
     
 }

@@ -72,9 +72,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import java.io.IOException;
+import java.sql.SQLException;
 //Start of user code additional imports EtatModeHorsLigne_CustomViewActivity
 import java.util.HashMap;
 import java.util.List;
@@ -190,7 +193,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	}
     
     protected void updateProgressBarZone(ZoneGeographique inZoneGeo, MultiProgressBar progressBarZone){
-    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
+    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "updateProgressBarZone() - Début");
     	Fiches_Outils fichesOutils = new Fiches_Outils(getContext());
     	String uri = fichesOutils.getZoneIcone(inZoneGeo.getId());
     	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
@@ -203,12 +206,12 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	int avancementPhotoPrinc =0;
     	int avancementPhoto =0;
 	   
-    	if (inZoneGeo.getId() == -1){
+    	/*if (inZoneGeo.getId() == -1){
     		nbFichesZoneGeo = (int)getHelper().getFicheDao().countOf();
     	} else {
     		nbFichesZoneGeo = getHelper().getFiches_ZonesGeographiquesDao().queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, inZoneGeo.getId()).size();
-    	}
-    	/*
+    	}*/
+    	
     	boolean needRecomputeCount = DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity != null; // un update est en cours, besoin de recalculer
     	if(lastFicheCount ==  null){
     		needRecomputeCount = true;
@@ -219,14 +222,23 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	    		nbFichesZoneGeo = (int)getHelper().getFicheDao().countOf();
 	    		lastFicheCount.put(inZoneGeo.getId(), nbFichesZoneGeo);
 	    	} else {
-	    		nbFichesZoneGeo = getHelper().getFiches_ZonesGeographiquesDao().queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, inZoneGeo.getId()).size();
+	    		final String queryFichesForZone = "SELECT Fiche_id FROM fiches_ZonesGeographiques , Fiche WHERE ZoneGeographique_id="+inZoneGeo.getId()+" AND fiches_ZonesGeographiques.Fiche_id = Fiche._id";
+				GenericRawResults<String[]> rawResults = getHelper().getFicheDao().queryRaw(queryFichesForZone);
+				//try {
+					//nbFichesZoneGeo = rawResults.getResults().size();
+					nbFichesZoneGeo = countRows(rawResults);
+				/*} catch (SQLException e) {
+					Log.w(LOG_TAG,  "echec pour utiliser la requète rapide, passage en mode classique "+queryFichesForZone);
+					nbFichesZoneGeo = getHelper().getFiches_ZonesGeographiquesDao().queryForEq(Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME, inZoneGeo.getId()).size();
+				}*/
+				
 	    	}
     		lastFicheCount.put(inZoneGeo.getId(), nbFichesZoneGeo);
     	}
     	else{
-
+    		Log.d(LOG_TAG, "utilisation cache pour le compte des fiches de la zone "+inZoneGeo.getId());
     		nbFichesZoneGeo = lastFicheCount.get(inZoneGeo.getId());
-    	}*/
+    	}
 	   
 	   Photos_Outils.PrecharMode precharModeZoneGeo = photosOutils.getPrecharModeZoneGeo(inZoneGeo.getId());
 	   
@@ -336,7 +348,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
     	
     	// Avancement par Zone
-    	List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
+    	if(listeZoneGeo == null) listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
  			
 		for (ZoneGeographique zoneGeo : listeZoneGeo) {
 			MultiProgressBar progressBarZone = new MultiProgressBar(this);
@@ -438,8 +450,15 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     		reusableClickListener.put(source+"2NULL", new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// TODO déjà sur ce disque, supprime les fichiers
-					showToast("Suppression des fichiers photos pas encore implémenté.");
+					// utilise le déplcament sous forme de service
+					// use this to start and trigger a service
+					Intent i= new Intent(getApplicationContext(), MovePhotoDiskService.class);
+					// add data to the intent
+					i.putExtra(MovePhotoDiskService.SOURCE_DISK, source);
+					i.putExtra(MovePhotoDiskService.TARGET_DISK, MovePhotoDiskService.DELETE);
+					getApplicationContext().startService(i);
+					
+					DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 				}
 			});
     	}
@@ -526,6 +545,22 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		}
 		//etatDiskStringBuilder.append("Photo actuellement sur : "+new Photos_Outils(EtatModeHorsLigne_CustomViewActivity.this).getPreferedLocation()+"\n");
 		etatDiskTextView.setText(etatDiskStringBuilder.toString());
+    }
+    
+    /**
+     * fonction comptant les lignes, sans pour autant créer la liste (économise la mémoire pour les grandes listes)
+     * @param rawResult
+     * @return
+     */
+    public int countRows(GenericRawResults<String[]> rawResult){
+    	int count=0;
+    	for(String[] i : rawResult){
+    		count++;
+    	}
+    	try {
+			rawResult.close();
+		} catch (SQLException e) {}
+    	return count;
     }
     
 	//End of user code

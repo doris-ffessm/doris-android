@@ -73,6 +73,7 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.App_Outils;
+import fr.ffessm.doris.android.tools.LimitTimer;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
@@ -94,9 +95,8 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     // en milliseconde, on multiplie selon les contextes par 1, 2, 4
     int tempo = 50;
     
-    // timer utilisé pour déclencher un refresh que toutes les x nano
-    long notifyUITimer = System.nanoTime();
-    static long NOTIFY_UI_TIMER_LENGTH = 1000000*2000; //2000 miliseconds 
+    // timer utilisé pour déclencher un refresh que toutes les x mili
+    LimitTimer limitTimer = new LimitTimer(2000); //2000 miliseconds 
     
     private Param_Outils paramOutils;
     private Photos_Outils photosOutils;
@@ -430,7 +430,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     						paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, true), nbPhotosPrinRecuesPourZone);
     						DorisApplicationContext.getInstance().notifyDataHasChanged(null);
     					}*/
-    					if(hasNotifyUITimerElapsed()){
+    					if(limitTimer.hasTimerElapsed()){
     						publishProgress( nbPhotosPrinRecuesPourZone );
     						paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, true), nbPhotosPrinRecuesPourZone);
     						DorisApplicationContext.getInstance().notifyDataHasChanged(null);
@@ -558,7 +558,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 							paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, false), nbPhotosRecuesPourZone);
 			        		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 						}*/
-						if(hasNotifyUITimerElapsed()){
+						if(limitTimer.hasTimerElapsed()){
 							publishProgress( nbPhotosRecuesPourZone );
     						//Enregistrement du nombre total de photos téléchargée pour afficher avancement
 							paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneId, false), nbPhotosRecuesPourZone);
@@ -856,14 +856,7 @@ public int telechargementPhotosGlossaire(DorisDBHelper dorisDBHelper){
 
     }	
     
-    public boolean hasNotifyUITimerElapsed(){
-    	long currentTime = System.nanoTime();
-    	if(currentTime - notifyUITimer > NOTIFY_UI_TIMER_LENGTH) {
-    		notifyUITimer = currentTime;
-    		return true;
-    	}
-    	return false;
-    }
+    
 	// End of user code
 	
 }
