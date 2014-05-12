@@ -191,5 +191,9 @@ public class NotificationHelper {
 	public void setRacineTickerText(String racineTickerText) {
 		this.racineTickerText = racineTickerText;
 	}
+	
+	public void setNotificationID(int newNotificationID){
+		NOTIFICATION_ID = newNotificationID;
+	}
 	// End of user code
 }

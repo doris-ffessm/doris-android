@@ -63,7 +63,7 @@ public class Disque_Outils {
     	du.accept(inImageFolder);
     	return du.getSize();
 	}
-	public String getHumanDiskUsage(long inSize){
+	public static String getHumanDiskUsage(long inSize){
 		String sizeTexte = "";
 		// octet => ko
 		inSize = inSize/1024;

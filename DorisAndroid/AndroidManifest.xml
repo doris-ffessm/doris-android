@@ -9,6 +9,7 @@
 	<uses-sdk android:minSdkVersion="10" android:targetSdkVersion="17" />
 	<uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:icon="@drawable/app_ic_launcher"
@@ -196,6 +197,14 @@
 	            android:name="android.support.PARENT_ACTIVITY"
 	            android:value=".activities.ListeBibliographieAvecFiltre_ClassListViewActivity" />
 		</activity>
+		
+		<!--  List of services -->
+		<service
+		  android:name=".services.MovePhotoDiskService"
+		  android:icon="@drawable/app_ic_launcher"
+		  android:label="@string/move_disk_service_name"
+		  >
+		</service> 
     </application>
 
 </manifest>

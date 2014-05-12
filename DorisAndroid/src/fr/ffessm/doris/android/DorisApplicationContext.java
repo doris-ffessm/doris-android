@@ -52,6 +52,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
+import fr.ffessm.doris.android.async.DeplacePhotos_BgActivity;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.async.VerifieMAJFiche_BgActivity;
 import fr.ffessm.doris.android.async.VerifieMAJFiches_BgActivity;
@@ -83,6 +84,9 @@ public class DorisApplicationContext {
 	public TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = null;
 	public VerifieMAJFiche_BgActivity verifieMAJFiche_BgActivity = null;
 	public VerifieMAJFiches_BgActivity verifieMAJFiches_BgActivity = null;
+	public DeplacePhotos_BgActivity deplacePhotos_BgActivity = null;
+	
+	public boolean isMovingPhotos = false;
 	
 	/** listener that have registered for being notified of data changes */
 	private ArrayList<DataChangedListener>  dataChangeListeners = new ArrayList<DataChangedListener>();
