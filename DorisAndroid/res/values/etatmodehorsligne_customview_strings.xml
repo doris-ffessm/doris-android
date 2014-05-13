@@ -41,8 +41,11 @@
 	
 	<string name="etatmodehorsligne_customview_diskselection_internal_btn_text_selected">Supprimer de la mémoire interne</string>
 	<string name="etatmodehorsligne_customview_diskselection_internal_btn_text_not_selected">Déplacer vers mémoire interne</string>
+	
 	<string name="etatmodehorsligne_customview_diskselection_primary_btn_text_selected">Supprimer du disque primaire</string>
 	<string name="etatmodehorsligne_customview_diskselection_primary_btn_text_not_selected">Déplacer vers disque primaire</string>
+	<string name="etatmodehorsligne_customview_diskselection_primary_btn_text_not_available">Disque primaire non disponible</string>
+	
 	<string name="etatmodehorsligne_customview_diskselection_secondary_btn_text_selected">Supprimer du disque secondaire</string>
 	<string name="etatmodehorsligne_customview_diskselection_secondary_btn_text_not_selected">Déplacer vers disque secondaire</string>
 	<string name="etatmodehorsligne_customview_diskselection_secondary_btn_text_not_available">Disque secondaire non disponible</string>

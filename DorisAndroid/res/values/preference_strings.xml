@@ -162,7 +162,7 @@
         <item>Holo</item>
     </string-array>
 	<string-array name="pref_theme_lib">
-	    <item>DORISAndroid (défault)</item>
+	    <item>DORISAndroid (défaut)</item>
         <item>Noir intense</item>
         <item>Holo Light (clair)</item>
         <item>Holo (sombre)</item>

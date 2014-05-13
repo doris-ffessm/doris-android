@@ -51,6 +51,7 @@ import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageLocation;
+import fr.ffessm.doris.android.tools.Photos_Outils.PrecharMode;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -120,6 +121,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	Handler mHandler;
 	
 	Photos_Outils photosOutils = new Photos_Outils(getContext());
+	boolean disquePrimaireExiste = false;
+	boolean carteSDExiste = false;
 	
 	protected SparseArray< MultiProgressBar> progressBarZones = new SparseArray< MultiProgressBar>(); 
 	protected HashMap<String, View.OnClickListener> reusableClickListener = new HashMap<String, View.OnClickListener>();
@@ -319,7 +322,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		for (ZoneGeographique zoneGeo : listeZoneGeo) {
 			MultiProgressBar progressBarZone = new MultiProgressBar(this);
  		    updateProgressBarZone(zoneGeo, progressBarZone);
- 		    final int zoneGeoId = zoneGeo.getId();
 
  		   /* progressBarZone.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -330,27 +332,32 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 					startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
 				}
 			}); */
+ 		    
+ 		   final ZoneGeographique fZoneGeo = zoneGeo;
  		   progressBarZone.setOnClickListener(new View.OnClickListener() {
  				@Override
  				public void onClick(View v) {
- 					//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setOnClickListener() - zoneGeoId : "+zoneGeoId);
+ 					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setOnClickListener() - zoneGeoId : "+fZoneGeo.getId());
  					Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, Preference_PreferenceViewActivity.class);
  					
- 					String param = null;
+ 					Param_Outils paramOutils = new Param_Outils(getContext());
+ 					String param;
  					
- 					switch (zoneGeoId){
- 					case 1 :
- 						param = "mode_precharg_photo_region_france"; break;
- 					case 2 :
- 						param = "mode_precharg_photo_region_eaudouce"; break;
- 					case 3 :
- 						param = "mode_precharg_photo_region_atlantno"; break;
- 					case 4 :
- 						param = "mode_precharg_photo_region_indopac"; break;
- 					case 5 :
- 						param = "mode_precharg_photo_region_caraibes"; break;
+ 					switch(fZoneGeo.getZoneGeoKind()){
+ 					case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
+ 						param = paramOutils.getStringNameParam(R.string.pref_key_mode_precharg_photo_region_france);
+ 					case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE :
+ 						param = paramOutils.getStringNameParam(R.string.pref_key_mode_precharg_photo_region_eaudouce);
+ 					case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
+ 						param = paramOutils.getStringNameParam(R.string.pref_key_mode_precharg_photo_region_indopac);
+ 					case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
+ 						param = paramOutils.getStringNameParam(R.string.pref_key_mode_precharg_photo_region_caraibes);
+ 					case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
+ 						param = paramOutils.getStringNameParam(R.string.pref_key_mode_precharg_photo_region_atlantno);
+ 					default :
+ 						param = null;
  					}
-
+ 					
  					if (param != null){
  						intent.putExtra("type_parametre", "button_qualite_images_zones_key");
  						intent.putExtra("parametre", param);
@@ -362,10 +369,11 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
  					startActivity(intent);
  				}
  			});
- 		    progressBarZones.put(zoneGeoId, progressBarZone); 
+ 		    progressBarZones.put(fZoneGeo.getId(), progressBarZone); 
 	 		llContainerLayout.addView(progressBarZone);
 		} 
     }
+    
     protected void initOnClickListener(){
     	addReusableClickListener(DeplacePhotos_BgActivity.INTERNAL, DeplacePhotos_BgActivity.PRIMARY);
     	addReusableClickListener(DeplacePhotos_BgActivity.INTERNAL, DeplacePhotos_BgActivity.SECONDARY);
@@ -379,6 +387,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	addReusableClickListener(DeplacePhotos_BgActivity.SECONDARY, DeplacePhotos_BgActivity.PRIMARY);
     	addReusableClickListener(DeplacePhotos_BgActivity.SECONDARY, null);
     }
+    
     private void addReusableClickListener(final String source, final String target){
     	if(target != null){
 	    	reusableClickListener.put(source+"2"+target, new View.OnClickListener() {
@@ -388,7 +397,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 					/* DorisApplicationContext.getInstance().deplacePhotos_BgActivity = 
 							(DeplacePhotos_BgActivity) new DeplacePhotos_BgActivity(getApplicationContext(),getHelper()).
 							execute(source, target); */
-					// utilise le déplcament sous forme de service
+					// utilise le déplacement sous forme de service
 					// use this to start and trigger a service
 					Intent i= new Intent(getApplicationContext(), MovePhotoDiskService.class);
 					// add data to the intent
@@ -416,7 +425,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     		reusableClickListener.put(source+"2NULL", new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// utilise le déplcament sous forme de service
+					// utilise le déplacement sous forme de service
 					// use this to start and trigger a service
 					Intent i= new Intent(getApplicationContext(), MovePhotoDiskService.class);
 					// add data to the intent
@@ -453,8 +462,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			// calcule en tache de fond
 			Photos_Outils photo_Outils = new Photos_Outils(EtatModeHorsLigne_CustomViewActivity.this);
 			internalUsedSize =  photo_Outils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL);
-			primaryUsedSize =  photo_Outils.getPhotosDiskUsage(ImageLocation.PRIMARY);
-			if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
+			if(disquePrimaireExiste){
+				primaryUsedSize =  photo_Outils.getPhotosDiskUsage(ImageLocation.PRIMARY);
+			}
+			if(carteSDExiste){
 				secondaryUsedSize = photo_Outils.getPhotosDiskUsage(ImageLocation.SECONDARY);
 			}
 			if(needRestart){
@@ -488,22 +499,39 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		
     	TextView etatDiskTextView = (TextView) findViewById(R.id.etatmodehorsligne_customview_diskusage_description_textView);
 		StringBuilder etatDiskStringBuilder = new StringBuilder();
-		etatDiskStringBuilder.append("(Espace utilisé / disponible / total)\n");
+		etatDiskStringBuilder.append("                 (Espace utilisé / disponible / total)\n");
+		
+		// Mémoire interne
 		etatDiskStringBuilder.append("Mémoire interne : "+Disque_Outils.getHumanDiskUsage(internalUsedSize)+" / ");
 		etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().first)+" / ");
 		etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().second)+"\n");
 		//etatDiskStringBuilder.append(DiskEnvironment.getInternalStorage().getFile().getAbsolutePath()+"\n");
 		//etatDiskStringBuilder.append("Donnée application="+this.getDir(Photos_Outils.MED_RES_FICHE_FOLDER, Context.MODE_PRIVATE)+"\n");
-		etatDiskStringBuilder.append("Disque primaire : "+Disque_Outils.getHumanDiskUsage(primaryUsedSize)+" / ");
-		etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().first)+" / ");
-		etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().second)+"\n");
-		//etatDiskStringBuilder.append(DiskEnvironment.getPrimaryExternalStorage().getFile().getAbsolutePath()+"\n");
+		etatDiskStringBuilder.append("'Hash' pour vérifier si Disque primaire != Mémoire Interne : "
+				+DiskEnvironment.getInternalStorage().getSize().first+"-"+DiskEnvironment.getInternalStorage().getSize().second+"\n");
+		String hashMemoireInterne = DiskEnvironment.getInternalStorage().getSize().first+"-"+DiskEnvironment.getInternalStorage().getSize().second;
+		
+		// Disque primaire
+		// TODO : GMo : j'ai géré le non affichage mais il y a un 1 == 1/0 pour toujours activer afin de tester la fonction
+		if ( !hashMemoireInterne.equals( DiskEnvironment.getPrimaryExternalStorage().getSize().first+"-"+DiskEnvironment.getPrimaryExternalStorage().getSize().second )
+				|| 1 == 0) {
+			disquePrimaireExiste = true;
+			etatDiskStringBuilder.append("Disque primaire : "+Disque_Outils.getHumanDiskUsage(primaryUsedSize)+" / ");
+			etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().first)+" / ");
+			etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().second)+"\n");
+			//etatDiskStringBuilder.append(DiskEnvironment.getPrimaryExternalStorage().getFile().getAbsolutePath()+"\n");
+			etatDiskStringBuilder.append("'Hash' pour vérifier si Disque primaire != Mémoire Interne : "
+					+DiskEnvironment.getPrimaryExternalStorage().getSize().first+"-"+DiskEnvironment.getPrimaryExternalStorage().getSize().second+"\n");
+		}
+		
+		// Carte SD externe
 		if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
 			etatDiskStringBuilder.append("Disque secondaire : "+Disque_Outils.getHumanDiskUsage(secondaryUsedSize)+" / ");
 			try {
+				carteSDExiste = true;
 				etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().first)+" / ");
 				etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().second)+"\n");
-				// etatDiskStringBuilder.append(DiskEnvironment.getSecondaryExternalStorage().getFile().getAbsolutePath()+"\n");
+				//etatDiskStringBuilder.append(DiskEnvironment.getSecondaryExternalStorage().getFile().getAbsolutePath()+"\n");
 			} catch (NoSecondaryStorageException e) {
 				etatDiskStringBuilder.append(" not Available");
 			}
@@ -595,26 +623,31 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		//}
 		Button primaryDiskBtn = (Button) findViewById(R.id.etatmodehorsligne_customview_diskselection_primary_btn);
 		primaryDiskBtn.setEnabled(!deplacementEnCours);
-		//if(!deplacementEnCours){
-		switch (currentImageLocation){
-		case PRIMARY:
-			primaryDiskBtn.setOnClickListener(reusableClickListener.get(DeplacePhotos_BgActivity.PRIMARY+"2NULL"));
-			primaryDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_primary_btn_text_selected);
-			break;
-		case APP_INTERNAL:
-			primaryDiskBtn.setOnClickListener(reusableClickListener.get(DeplacePhotos_BgActivity.INTERNAL+"2"+ DeplacePhotos_BgActivity.PRIMARY));
-			primaryDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_primary_btn_text_not_selected);
-			break;
-		case SECONDARY:
-			primaryDiskBtn.setOnClickListener(reusableClickListener.get(DeplacePhotos_BgActivity.SECONDARY+"2"+ DeplacePhotos_BgActivity.PRIMARY));
-			primaryDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_primary_btn_text_not_selected);
-			break;
+		if(carteSDExiste){
+			//if(!deplacementEnCours){
+			switch (currentImageLocation){
+			case PRIMARY:
+				primaryDiskBtn.setOnClickListener(reusableClickListener.get(DeplacePhotos_BgActivity.PRIMARY+"2NULL"));
+				primaryDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_primary_btn_text_selected);
+				break;
+			case APP_INTERNAL:
+				primaryDiskBtn.setOnClickListener(reusableClickListener.get(DeplacePhotos_BgActivity.INTERNAL+"2"+ DeplacePhotos_BgActivity.PRIMARY));
+				primaryDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_primary_btn_text_not_selected);
+				break;
+			case SECONDARY:
+				primaryDiskBtn.setOnClickListener(reusableClickListener.get(DeplacePhotos_BgActivity.SECONDARY+"2"+ DeplacePhotos_BgActivity.PRIMARY));
+				primaryDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_primary_btn_text_not_selected);
+				break;
+			}
+		}else{
+			primaryDiskBtn.setEnabled(false);
+			primaryDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_primary_btn_text_not_available);
 		}
 			
 		//}
 		Button secondaryDiskBtn = (Button) findViewById(R.id.etatmodehorsligne_customview_diskselection_secondary_btn);
 		secondaryDiskBtn.setEnabled(!deplacementEnCours);
-		if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
+		if(carteSDExiste){
 			//if(!deplacementEnCours){
 			switch (currentImageLocation){
 			case SECONDARY:

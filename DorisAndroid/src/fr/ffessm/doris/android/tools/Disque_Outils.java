@@ -68,14 +68,15 @@ public class Disque_Outils {
 		// octet => ko
 		inSize = inSize/1024;
         if ( inSize < 1024 ) {
-        	sizeTexte = String.valueOf(Math.round(inSize)) + "\u00A0Ko";
+        	sizeTexte = "" + inSize + "\u00A0Ko";
         } else {
         	inSize = inSize / 1024;
         	if ( inSize < 1024 ) {
-        		sizeTexte = String.valueOf(Math.round(inSize)) + "\u00A0Mo";
+        		sizeTexte = "" + inSize + "\u00A0Mo";
         	} else {
-        		inSize = inSize / 1024;
-        		sizeTexte = String.valueOf(Math.round(inSize)) + "\u00A0Go";
+        		//Pour les Go il faut un peu plus de précision que les entiers
+        		float sizeGo = (float)inSize / 1024;
+        		sizeTexte = "" + (Math.round(sizeGo * 10.0) / 10.0) + "\u00A0Go";
         	}
         }
     	return sizeTexte;
