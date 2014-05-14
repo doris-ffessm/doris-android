@@ -45,6 +45,9 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.Date;
 
+import fr.ffessm.doris.android.tools.disk.Device;
+import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
+
 import android.content.Context;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -63,6 +66,7 @@ public class Disque_Outils {
     	du.accept(inImageFolder);
     	return du.getSize();
 	}
+	
 	public static String getHumanDiskUsage(long inSize){
 		String sizeTexte = "";
 		// octet => ko
@@ -132,4 +136,12 @@ public class Disque_Outils {
     	}
     }
 
+    // Permet d'obtenir une clé unique permettant de distinguer 2 partitions à un moment donné
+    // la concaténation de la taille de la partition et de la place utilisée en octet doit être à peu près sûr
+    public static String hashPartition(Device device){
+    	return device.getSize().first+"-"+device.getSize().second;
+		
+    }
+    
+    
 }
