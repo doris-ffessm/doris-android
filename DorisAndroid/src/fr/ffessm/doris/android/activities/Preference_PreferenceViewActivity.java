@@ -55,6 +55,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask.Status;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.widget.Toast;
@@ -69,6 +70,8 @@ import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 
 //End of user code
 
@@ -81,7 +84,8 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	
     final Param_Outils paramOutils = new Param_Outils(context);
     final Photos_Outils photosOutils = new Photos_Outils(context);
-    Disque_Outils disqueOutils = new Disque_Outils(context);
+    final Disque_Outils disqueOutils = new Disque_Outils(context);
+    long volumeTotalNecessaire = 0;
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -130,7 +134,27 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	        }
         }
 
+        // Affichage Estimation des Volumes pris par Choix des qualités de photos
+        photosOutils.initNbPhotosParFiche();
 
+        setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_france,
+        		ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE);
+        setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_eaudouce,
+        		ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE);
+        setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_indopac,
+        		ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE);
+        setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_caraibes,
+        		ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES);
+        setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_atlantno,
+        		ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST);
+        
+        final Preference btnQualiteImagesZonesKey = (Preference)getPreferenceManager().findPreference("button_qualite_images_zones_key");
+        btnQualiteImagesZonesKey.setSummary(
+    		context.getString(R.string.mode_precharg_photo_region_summary)+Disque_Outils.getHumanDiskUsage(volumeTotalNecessaire)
+    		);
+        
+        
+        // Gestion des Actions de Suppression des fichiers
         final Preference btnVideVig = (Preference)getPreferenceManager().findPreference("btn_reset_vig");
         if(btnVideVig != null) {
 	        btnVideVig.setSummary(getVigSummary());
@@ -340,21 +364,24 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     private String getVigSummary() {
     	String txt = context.getString(R.string.mode_precharg_reset_vig_summary);
     	txt = txt.replace("@nbPh", ""+paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_vignettes, 0)) ;
-    	txt = txt.replace("@size", ""+disqueOutils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_vignettes, 0L ) ) ) ;
+    	txt = txt.replace("@size", ""+Disque_Outils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_vignettes, 0L ) ) ) ;
     	return txt;
     }
+    
     private String getMedResSummary() {
         String txt = getApplicationContext().getString(R.string.mode_precharg_reset_med_res_summary); 
         txt = txt.replace("@nbPh", ""+paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_med_res, 0)) ;
-        txt = txt.replace("@size", ""+disqueOutils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_med_res, 0L ) ) ) ;
+        txt = txt.replace("@size", ""+Disque_Outils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_med_res, 0L ) ) ) ;
     	return txt;
     }
+    
     private String getHiResSummary() {
         String txt = getApplicationContext().getString(R.string.mode_precharg_reset_hi_res_summary); 
         txt = txt.replace("@nbPh", ""+paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_hi_res, 0)) ;
-        txt = txt.replace("@size", ""+disqueOutils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_hi_res, 0L ) ) ) ;
+        txt = txt.replace("@size", ""+Disque_Outils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_hi_res, 0L ) ) ) ;
     	return txt;
     }
+    
     private String getCacheSummary() {
     	int nbFichiersDansCache = 0;
     	for (File child:getApplicationContext().getCacheDir().listFiles()) {
@@ -367,7 +394,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     	// La division par 2 est très sale mais c'est bien le plus rapide :-)
     	// En le dossier est bizarrement structuré avec des dossiers renommés, mais en gros il y en a 2 par fichiers en cache
      	txt = txt.replace("@nbPh", ""+ Math.round(nbFichiersDansCache/2) );
-     	txt = txt.replace("@size", ""+disqueOutils.getHumanDiskUsage(disqueOutils.getDiskUsage(getApplicationContext().getCacheDir() ) ) ) ;
+     	txt = txt.replace("@size", ""+Disque_Outils.getHumanDiskUsage(disqueOutils.getDiskUsage(getApplicationContext().getCacheDir() ) ) ) ;
      	return txt;
     }
     
@@ -382,6 +409,33 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
             }
         }
         return dir.delete();
+    }
+
+    private void setLibelleModePrechargPhotoZone(int refPreference, ZoneGeographiqueKind zoneGeoKind) {
+    	CharSequence summary = "";
+    	
+	    ListPreference lp = (ListPreference)findPreference(context.getString(refPreference) );
+		
+	    CharSequence[] entries = lp.getEntries();
+	    CharSequence[] entryValues = lp.getEntryValues();
+	    
+	    for (int i = 0; i < entries.length; i++) {
+	    	long volumeNecessaire = photosOutils.getEstimVolPhotosParZone(
+					Photos_Outils.PrecharMode.valueOf(entryValues[i].toString()),
+					zoneGeoKind
+					); 
+	    	entries[i] = entries[i].toString().replace("#", Disque_Outils.getHumanDiskUsage(volumeNecessaire) );
+	    	
+	    	if ( entryValues[i].toString().equals(lp.getValue()) ) {
+	    		summary = entries[i];
+	    		volumeTotalNecessaire += volumeNecessaire;
+	    	}
+	    	
+	    }
+	    
+	    lp.setEntries(entries);
+	    lp.setEntryValues(entryValues);
+	    lp.setSummary(summary);
     }
 
     

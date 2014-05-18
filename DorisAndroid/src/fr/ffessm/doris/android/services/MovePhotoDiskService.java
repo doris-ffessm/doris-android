@@ -25,7 +25,7 @@ public class MovePhotoDiskService extends IntentService {
 
 
 	private static final String LOG_TAG = MovePhotoDiskService.class.getSimpleName();
-	// les differentes actions possibles pour cette activité
+	// les différentes actions possibles pour cette activité
     // premier argument = source location
     // second argument = destination ou delete action
     public static String INTERNAL = "INTERNAL";
@@ -44,7 +44,7 @@ public class MovePhotoDiskService extends IntentService {
     int nbcopiedFiles=0;
     
  // timer utilisé pour déclencher un refresh que toutes les x mili
-    LimitTimer limitTimer = new LimitTimer(2000); //2000 miliseconds
+    LimitTimer limitTimer = new LimitTimer(2000); //2000 Milliseconds
 	
 	public MovePhotoDiskService() {
 		super(MovePhotoDiskService.class.getSimpleName());
@@ -62,7 +62,7 @@ public class MovePhotoDiskService extends IntentService {
 		mNotificationHelper = new NotificationHelper(this, initialTickerText, notificationTitle, new Intent());
 		mNotificationHelper.setNotificationID(2);
         mNotificationHelper.createNotification();
-		// arrét des autres téléchargements si besoin
+		// Arrêt des autres téléchargements si besoin
 		// stop les téléchargements si besoin
     	if(DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null){
     		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);

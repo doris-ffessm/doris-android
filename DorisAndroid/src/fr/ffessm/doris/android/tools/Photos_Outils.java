@@ -141,7 +141,7 @@ public class Photos_Outils {
 	    P0, P1, P2, P3, P4, P5, P6 
 	}
 	
-	// type pour le chox de l'emplacement des photos
+	// type pour le choix de l'emplacement des photos
 	public enum ImageLocation {
 		APP_INTERNAL, PRIMARY, SECONDARY
 	}
@@ -749,18 +749,33 @@ public class Photos_Outils {
 	 *   - on estime le nombre de photos
 	 *   - on multiplie par une constante qui sur-estime un peu
 	 */
-	public long getEstimVolPhotosParZone(PrecharMode precharMode, ZoneGeographiqueKind inZoneGeo){
-
-		int nbFichesTotal = fichesOutils.getNbFichesZoneGeo(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES);
-		
+	private int nbFichesTotal;
+	private int nbPhotosTotal;
+	private float nbPhotosParFiche;
+	private int nbFichesZoneGeo[] = new int[ZoneGeographiqueKind.values().length];
+	
+	public void initNbPhotosParFiche() {
+		nbFichesTotal = fichesOutils.getNbFichesZoneGeo(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES);
+	
 		OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(context);
 		RuntimeExceptionDao<PhotoFiche, Integer> entriesDao = ormLiteDBHelper.getPhotoFicheDao();
-		int nbPhotosTotal = (int)entriesDao.countOf();
-		
-		int nbFichesZoneGeo = fichesOutils.getNbFichesZoneGeo(inZoneGeo);
-		
+		nbPhotosTotal = (int)entriesDao.countOf();
+	
 		// On calcule le nombre de photos (hors principales) moyen par fiche
-		float nbPhotosParFiche = ( nbPhotosTotal - nbFichesTotal ) / nbFichesTotal;
+		nbPhotosParFiche = ( nbPhotosTotal - nbFichesTotal ) / nbFichesTotal;
+		
+		for (ZoneGeographiqueKind zone : ZoneGeographiqueKind.values()){
+			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "initNbPhotosParFiche() - zone : "+zone);
+			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "initNbPhotosParFiche() - zone.ordinal() : "+zone.ordinal());
+			nbFichesZoneGeo[zone.ordinal()] = fichesOutils.getNbFichesZoneGeo(zone);
+		}
+		
+	}
+	
+	public long getEstimVolPhotosParZone(PrecharMode precharMode, ZoneGeographiqueKind inZoneGeo){
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getEstimVolPhotosParZone() - precharMode : "+precharMode);
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getEstimVolPhotosParZone() - inZoneGeo : "+inZoneGeo);
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getEstimVolPhotosParZone() - nbFichesZoneGeo : "+nbFichesZoneGeo[inZoneGeo.ordinal()]);
 		
 		int volPhotosPrincipales = 0;
 		int volPhotos = 0;
@@ -769,31 +784,31 @@ public class Photos_Outils {
 		case P0 :
 			return 0;
 		case P1 :
-			volPhotosPrincipales = nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.VIGNETTE);
+			volPhotosPrincipales = nbFichesZoneGeo[inZoneGeo.ordinal()] * getTailleMoyImageUnitaire(ImageType.VIGNETTE);
 			return volPhotosPrincipales;
 		case P2 :
-			volPhotosPrincipales = nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.VIGNETTE);
-			volPhotos = (int)(nbFichesZoneGeo * nbPhotosParFiche * getTailleMoyImageUnitaire(ImageType.VIGNETTE));
+			volPhotosPrincipales = nbFichesZoneGeo[inZoneGeo.ordinal()] * getTailleMoyImageUnitaire(ImageType.VIGNETTE);
+			volPhotos = (int)(nbFichesZoneGeo[inZoneGeo.ordinal()] * nbPhotosParFiche * getTailleMoyImageUnitaire(ImageType.VIGNETTE));
 			return volPhotosPrincipales + volPhotos;
 		case P3 :
-			volPhotosPrincipales = nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.VIGNETTE)
-								+ nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.MED_RES);
-			volPhotos = (int)(nbFichesZoneGeo * nbPhotosParFiche * getTailleMoyImageUnitaire(ImageType.VIGNETTE));
+			volPhotosPrincipales = nbFichesZoneGeo[inZoneGeo.ordinal()] * getTailleMoyImageUnitaire(ImageType.VIGNETTE)
+								+ nbFichesZoneGeo[inZoneGeo.ordinal()] * getTailleMoyImageUnitaire(ImageType.MED_RES);
+			volPhotos = (int)(nbFichesZoneGeo[inZoneGeo.ordinal()] * nbPhotosParFiche * getTailleMoyImageUnitaire(ImageType.VIGNETTE));
 			return volPhotosPrincipales + volPhotos;
 		case P4 :
-			volPhotosPrincipales = nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.VIGNETTE)
-								+ nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.MED_RES);
-			volPhotos = (int)(nbFichesZoneGeo * nbPhotosParFiche * getTailleMoyImageUnitaire(ImageType.MED_RES));
+			volPhotosPrincipales = nbFichesZoneGeo[inZoneGeo.ordinal()] * getTailleMoyImageUnitaire(ImageType.VIGNETTE)
+								+ nbFichesZoneGeo[inZoneGeo.ordinal()] * getTailleMoyImageUnitaire(ImageType.MED_RES);
+			volPhotos = (int)(nbFichesZoneGeo[inZoneGeo.ordinal()] * nbPhotosParFiche * getTailleMoyImageUnitaire(ImageType.MED_RES));
 			return volPhotosPrincipales + volPhotos;
 		case P5 :
-			volPhotosPrincipales = nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.VIGNETTE)
-								+ nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.HI_RES);
-			volPhotos = (int)(nbFichesZoneGeo * nbPhotosParFiche * getTailleMoyImageUnitaire(ImageType.MED_RES));
+			volPhotosPrincipales = nbFichesZoneGeo[inZoneGeo.ordinal()] * getTailleMoyImageUnitaire(ImageType.VIGNETTE)
+								+ nbFichesZoneGeo[inZoneGeo.ordinal()] * getTailleMoyImageUnitaire(ImageType.HI_RES);
+			volPhotos = (int)(nbFichesZoneGeo[inZoneGeo.ordinal()] * nbPhotosParFiche * getTailleMoyImageUnitaire(ImageType.MED_RES));
 			return volPhotosPrincipales + volPhotos;
 		case P6 :
-			volPhotosPrincipales = nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.VIGNETTE)
-								+ nbFichesZoneGeo * getTailleMoyImageUnitaire(ImageType.HI_RES);
-			volPhotos = (int)(nbFichesZoneGeo * nbPhotosParFiche * getTailleMoyImageUnitaire(ImageType.HI_RES));
+			volPhotosPrincipales = nbFichesZoneGeo[inZoneGeo.ordinal()] * getTailleMoyImageUnitaire(ImageType.VIGNETTE)
+								+ nbFichesZoneGeo[inZoneGeo.ordinal()] * getTailleMoyImageUnitaire(ImageType.HI_RES);
+			volPhotos = (int)(nbFichesZoneGeo[inZoneGeo.ordinal()] * nbPhotosParFiche * getTailleMoyImageUnitaire(ImageType.HI_RES));
 			return volPhotosPrincipales + volPhotos;
 		default:
 			return 0;

@@ -481,8 +481,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			// calcule en tache de fond
 			Photos_Outils photo_Outils = new Photos_Outils(EtatModeHorsLigne_CustomViewActivity.this);
 			internalUsedSize =  photo_Outils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL);
-			if ( !Disque_Outils.hashPartition(DiskEnvironment.getInternalStorage()).equals(
-					Disque_Outils.hashPartition(DiskEnvironment.getPrimaryExternalStorage()) )
+			if ( !Disque_Outils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
+					Disque_Outils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
 				) {
 				primaryUsedSize =  photo_Outils.getPhotosDiskUsage(ImageLocation.PRIMARY);
 			}
@@ -535,8 +535,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		
 		// Disque primaire (Carte SD Interne dans les paramètres)
 		// TODO : GMo : j'ai géré le non affichage mais il y a un 1 == 1/0 pour toujours activer afin de tester la fonction
-		if ( !Disque_Outils.hashPartition(DiskEnvironment.getInternalStorage()).equals(
-												Disque_Outils.hashPartition(DiskEnvironment.getPrimaryExternalStorage()) )
+		if ( !Disque_Outils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
+												Disque_Outils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
 				|| 1 == 0) {
 			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_customview_diskselection_primary_libelle)+" : ");
 			etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(primaryUsedSize)+" / ");
@@ -646,8 +646,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		//}
 		Button primaryDiskBtn = (Button) findViewById(R.id.etatmodehorsligne_customview_diskselection_primary_btn);
 		primaryDiskBtn.setEnabled(!deplacementEnCours);
-		if(!Disque_Outils.hashPartition(DiskEnvironment.getInternalStorage()).equals(
-				Disque_Outils.hashPartition(DiskEnvironment.getPrimaryExternalStorage()) )
+		if(!Disque_Outils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
+				Disque_Outils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
 			){
 			//if(!deplacementEnCours){
 			switch (currentImageLocation){

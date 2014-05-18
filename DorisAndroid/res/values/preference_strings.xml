@@ -101,6 +101,7 @@
     </string-array>
 	
 	<string name="mode_precharg_photo_region_prompt">Qualité des Images par Zone</string>
+	<string name="mode_precharg_photo_region_summary">"Volume nécessaire estimé : "</string>
     <string name="mode_precharg_photo_region_defaut">P1</string>
     
     <string name="mode_precharg_photo_region_france_prompt">- France Métropolitaine\u00A0?</string>
@@ -124,12 +125,12 @@
     </string-array>
 	<string-array name="mode_precharg_photo_answers_lib">
         <item>Aucune photo préchargée</item>
-        <item>La photo principale en qualité vignette</item>
-        <item>Toutes les photos en qualité vignette</item>
-        <item>La photo principale en qualité intermédiaire, les autres en vignette</item>
-        <item>Toutes les photos en qualité intermédiaire</item>
-        <item>La photo principale en haute résolution, les autres en intermédiaire</item>
-        <item>Toutes les photos en haute résolution</item>
+        <item>La photo principale en qualité vignette (environ #)</item>
+        <item>Toutes les photos en qualité vignette (environ #)</item>
+        <item>La photo principale en qualité intermédiaire, les autres en vignette (environ #)</item>
+        <item>Toutes les photos en qualité intermédiaire (environ #)</item>
+        <item>La photo principale en haute résolution, les autres en intermédiaire (environ #)</item>
+        <item>Toutes les photos en haute résolution (environ #)</item>
     </string-array>
         
 	<string name="icone_touteszones">drawable/doris_icone_toutes_zones</string>

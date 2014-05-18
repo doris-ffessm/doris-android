@@ -138,9 +138,13 @@ public class Disque_Outils {
 
     // Permet d'obtenir une clé unique permettant de distinguer 2 partitions à un moment donné
     // la concaténation de la taille de la partition et de la place utilisée en octet doit être à peu près sûr
-    public static String hashPartition(Device device){
-    	return device.getSize().first+"-"+device.getSize().second;
-		
+    public static String identifiantPartition(Device device){
+    	
+    	Log.d(LOG_TAG, "identifiantPartition() - getMountPoint : "+device.getMountPoint());
+    	Log.d(LOG_TAG, "identifiantPartition() - isRemovable : "+device.isRemovable());
+    	Log.d(LOG_TAG, "identifiantPartition() - taille disque  : "+device.getSize().first+" - place occupée : "+device.getSize().second);
+
+    	return device.getSize().first+"-"+device.isRemovable();
     }
     
     
