@@ -386,16 +386,14 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         		}
         		
 				try {
-					int nbTelechargements = 0;
+					//int nbTelechargements = 0;
 					
 					for (String[] resultColumns : listePhotoPrinc) {
-						
-						String photoPrincURL = resultColumns[0];
 
     					// Les vignettes des Photos Principales sont toujours téléchargées (si pas P0)
-    					if ( !hsImagesVigAllreadyAvailable.contains(photoPrincURL) ){
-    						photosOutils.getOrDownloadPhotoFile("/"+photoPrincURL, Photos_Outils.ImageType.VIGNETTE);
-    						nbTelechargements++;
+    					if ( !hsImagesVigAllreadyAvailable.contains(resultColumns[0]) ){
+    						photosOutils.getOrDownloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.VIGNETTE);
+    						//nbTelechargements++;
     					}
     					
 						// Comme on télécharge toujours la vignette, on ne fait avancer le compteur 
@@ -405,17 +403,17 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 						}
 						
         				if ( imageTypeImage == Photos_Outils.ImageType.MED_RES) {
-    						if ( !hsImagesMedResAllreadyAvailable.contains(photoPrincURL) ){
-    							photosOutils.getOrDownloadPhotoFile("/"+photoPrincURL, Photos_Outils.ImageType.MED_RES);
-        						nbTelechargements++;
+    						if ( !hsImagesMedResAllreadyAvailable.contains(resultColumns[0]) ){
+    							photosOutils.getOrDownloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.MED_RES);
+    							//nbTelechargements++;
     						}
     						nbPhotosPrinRecuesPourZone++;
         				}
         				
         				if ( imageTypeImage == Photos_Outils.ImageType.HI_RES) {
-    						if ( !hsImagesHiResAllreadyAvailable.contains(photoPrincURL) ){
-    							photosOutils.getOrDownloadPhotoFile("/"+photoPrincURL, Photos_Outils.ImageType.HI_RES);
-        						nbTelechargements++;
+    						if ( !hsImagesHiResAllreadyAvailable.contains(resultColumns[0]) ){
+    							photosOutils.getOrDownloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.HI_RES);
+    							//nbTelechargements++;
     						}
     						nbPhotosPrinRecuesPourZone++;
         				}
@@ -517,30 +515,28 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	    		}
 	    		
 			    try{
-			    	int nbTelechargements = 0;
+			    	//int nbTelechargements = 0;
 					for (String[] resultColumns : listePhotos) {
-					    
-						String photoURL = resultColumns[0];
 		        							
 						if ( imageTypeImage == Photos_Outils.ImageType.VIGNETTE ){
-							if ( !hsImagesVigAllreadyAvailable.contains(photoURL) ){
-								photosOutils.getOrDownloadPhotoFile("/"+photoURL, Photos_Outils.ImageType.VIGNETTE);
-	    						nbTelechargements++;
+							if ( !hsImagesVigAllreadyAvailable.contains(resultColumns[0]) ){
+								photosOutils.getOrDownloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.VIGNETTE);
+								//nbTelechargements++;
 	        				}
 							nbPhotosRecuesPourZone++;
 						}
 						if ( imageTypeImage == Photos_Outils.ImageType.MED_RES) {
-							if ( !hsImagesMedResAllreadyAvailable.contains(photoURL) ){
-								photosOutils.getOrDownloadPhotoFile("/"+photoURL, Photos_Outils.ImageType.MED_RES);
-	    						nbTelechargements++;
+							if ( !hsImagesMedResAllreadyAvailable.contains(resultColumns[0]) ){
+								photosOutils.getOrDownloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.MED_RES);
+								//nbTelechargements++;
 							}
 							nbPhotosRecuesPourZone++;
 	    				}
 	    				
 	    				if ( imageTypeImage == Photos_Outils.ImageType.HI_RES) {
-							if ( !hsImagesHiResAllreadyAvailable.contains(photoURL) ){
-								photosOutils.getOrDownloadPhotoFile("/"+photoURL, Photos_Outils.ImageType.HI_RES);
-	    						nbTelechargements++;
+							if ( !hsImagesHiResAllreadyAvailable.contains(resultColumns[0]) ){
+								photosOutils.getOrDownloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.HI_RES);
+								//nbTelechargements++;
 							}
 							nbPhotosRecuesPourZone++;
 	    				}
@@ -641,8 +637,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	    	int nbIntervenantsAnalyses = 0;
 			for (String[] resultColumns : listePhotos) {
 			    
-				String photoURL = resultColumns[0];
-				String photoSurDisque = photoURL.replace("gestionenligne/photos_vig", "");
+				String photoSurDisque = resultColumns[0].replace("gestionenligne/photos_vig", "");
 				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosIntervenants() - photoSurDisque : "+photoSurDisque );
 		    	
 				if ( !hsImagesVigAllreadyAvailable.contains(photoSurDisque) ){

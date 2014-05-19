@@ -356,11 +356,9 @@ public class Photos_Outils {
 	
 	public File getOrDownloadPhotoFile(String photoUrl, String photoDisque, ImageType imageType) throws IOException{
 		File result = null;	
-		String baseUrl = getbaseUrl(imageType);
-		File imageFolder = getImageFolder(imageType);
 		
 		if(!photoUrl.isEmpty()){
-			File fichierImage = new File(imageFolder, photoDisque);
+			File fichierImage = new File(getImageFolder(imageType), photoDisque);
 			if(fichierImage.exists()){
 				result = fichierImage;
 			}
@@ -368,9 +366,8 @@ public class Photos_Outils {
 		    
 				URL urlHtml = null;
 				try {
-					String urlNettoyee = baseUrl+photoUrl;
-					urlNettoyee = urlNettoyee.replace(" ", "%20");
-					urlHtml = new URL(urlNettoyee);
+					String urlNettoyee = getbaseUrl(imageType)+photoUrl;
+					urlHtml = new URL(urlNettoyee.replace(" ", "%20"));
 				} catch (MalformedURLException e ) {
 					Log.w(LOG_TAG, e.getMessage(), e);
 				}
