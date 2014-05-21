@@ -153,8 +153,19 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     		context.getString(R.string.mode_precharg_photo_region_summary)+Disque_Outils.getHumanDiskUsage(volumeTotalNecessaire)
     		);
         
+        final Preference btnAutresImagesKey = (Preference)getPreferenceManager().findPreference(
+        		context.getString(R.string.pref_key_mode_precharg_photo_autres));
+        btnAutresImagesKey.setSummary(
+    		context.getString(R.string.mode_precharg_photo_autres_summary)
+    			.replace("@size", Disque_Outils.getHumanDiskUsage(photosOutils.getEstimVolPhotosAutres()) )
+    		);
+        
         
         // Gestion des Actions de Suppression des fichiers
+        final Preference btnModePrechargReset = (Preference)getPreferenceManager().findPreference("button_mode_precharg_reset");
+        btnModePrechargReset.setSummary( getAllQualitySummary() );
+        
+        
         final Preference btnVideVig = (Preference)getPreferenceManager().findPreference("btn_reset_vig");
         if(btnVideVig != null) {
 	        btnVideVig.setSummary(getVigSummary());
@@ -382,6 +393,15 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     	return txt;
     }
     
+    private String getAllQualitySummary() {
+        String txt = getApplicationContext().getString(R.string.mode_precharg_reset_summary); 
+        long volumeTotal = paramOutils.getParamLong(R.string.pref_key_size_folder_vignettes, 0L )
+        		+ paramOutils.getParamLong(R.string.pref_key_size_folder_med_res, 0L )
+        		+ paramOutils.getParamLong(R.string.pref_key_size_folder_hi_res, 0L );
+        txt = txt.replace("@size", ""+Disque_Outils.getHumanDiskUsage( volumeTotal ) ) ;
+    	return txt;
+    }
+    
     private String getCacheSummary() {
     	int nbFichiersDansCache = 0;
     	for (File child:getApplicationContext().getCacheDir().listFiles()) {
@@ -424,7 +444,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 					Photos_Outils.PrecharMode.valueOf(entryValues[i].toString()),
 					zoneGeoKind
 					); 
-	    	entries[i] = entries[i].toString().replace("#", Disque_Outils.getHumanDiskUsage(volumeNecessaire) );
+	    	entries[i] = entries[i].toString().replace("@size", Disque_Outils.getHumanDiskUsage(volumeNecessaire) );
 	    	
 	    	if ( entryValues[i].toString().equals(lp.getValue()) ) {
 	    		summary = entries[i];

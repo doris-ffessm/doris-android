@@ -7,7 +7,7 @@
 	
 	<!-- On sur-estime exprès un peu -->
 	<!-- 185 Mo / 23890 vignettes => 8 ko soit 8200 octets-->
-	<string name="etatmodehorsligne_taillemoy_vignette">8200</string>
+	<string name="etatmodehorsligne_taillemoy_vignette">8500</string>
 	<!-- 533 Mo / 22549 vignettes => 24 ko -->
 	<string name="etatmodehorsligne_taillemoy_med_res">25000</string>
 	<!-- 1.9Go / 22547 vignettes => 88 ko -->

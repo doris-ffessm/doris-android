@@ -112,7 +112,7 @@
     <!-- <string name="mode_precharg_photo_favorite_prompt">- Fiches préférées ? (A FAIRE)</string> -->
   
     <string name="mode_precharg_photo_autres_prompt">Précharg. Autres Photos\u00A0?</string>
-    <string name="mode_precharg_photo_autres_summary">Photos Participants, Bibliographies, Glossaire\u00A0\u2026</string>
+    <string name="mode_precharg_photo_autres_summary">Photos Participants, Bibliographies et Glossaire (environ @size)</string>
 
 	<string-array name="mode_precharg_photo_answers_values">
         <item>P0</item>
@@ -125,12 +125,12 @@
     </string-array>
 	<string-array name="mode_precharg_photo_answers_lib">
         <item>Aucune photo préchargée</item>
-        <item>La photo principale en qualité vignette (environ #)</item>
-        <item>Toutes les photos en qualité vignette (environ #)</item>
-        <item>La photo principale en qualité intermédiaire, les autres en vignette (environ #)</item>
-        <item>Toutes les photos en qualité intermédiaire (environ #)</item>
-        <item>La photo principale en haute résolution, les autres en intermédiaire (environ #)</item>
-        <item>Toutes les photos en haute résolution (environ #)</item>
+        <item>La photo principale en qualité vignette (environ @size)</item>
+        <item>Toutes les photos en qualité vignette (environ @size)</item>
+        <item>La photo principale en qualité intermédiaire, les autres en vignette (environ @size)</item>
+        <item>Toutes les photos en qualité intermédiaire (environ @size)</item>
+        <item>La photo principale en haute résolution, les autres en intermédiaire (environ @size)</item>
+        <item>Toutes les photos en haute résolution (environ @size)</item>
     </string-array>
         
 	<string name="icone_touteszones">drawable/doris_icone_toutes_zones</string>
@@ -141,7 +141,7 @@
 	<string name="icone_atlantno">drawable/doris_icone_atl_n_o</string>
 
 	<string name="mode_precharg_reset_title">Espace occupé et Ré-Initialisation</string>
-	<string name="mode_precharg_reset_summary">Permet de consulter l\'espace disque occupé et d\'effacer les images téléchargées.</string>
+	<string name="mode_precharg_reset_summary">"@size d'images sont stockés, cliquez ici pour en supprimer."</string>
 	<string name="mode_precharg_reset_vig_title">Suppression vignettes</string>
 	<string name="mode_precharg_reset_vig_summary">Suppression des @nbPh vignettes téléchargées (@size)</string>
 	<string name="mode_precharg_reset_med_res_title">Suppression images de qualité intermédiaire</string>

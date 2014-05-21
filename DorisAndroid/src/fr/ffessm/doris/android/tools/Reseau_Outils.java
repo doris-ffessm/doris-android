@@ -123,10 +123,10 @@ public class Reseau_Outils {
 	    NetworkInfo netInfo = cm.getActiveNetworkInfo();
 	    
 	    if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "connectionType() - isOnline : true");
+	    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "connectionType() - isOnline : true");
 	    	
 	    	NetworkInfo mWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "connectionType() - mWifi.isConnected() : "+ mWifi.isConnected() );
+	    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "connectionType() - mWifi.isConnected() : "+ mWifi.isConnected() );
 	    	
 	    	if (mWifi.isConnected() ) {
 		    	return ConnectionType.WIFI;

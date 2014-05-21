@@ -223,7 +223,8 @@ public class Constants {
 	/*
 	 * Gestion Zones Géographiques
 	 */
-    public static ZoneGeographiqueKind getZoneGeographiqueFromId(int zoneId) {
+    //TODO : A Effacer ?
+    public static ZoneGeographiqueKind getZoneGeographiqueFromId_AEFFACER(int zoneId) {
     	switch (zoneId) {
 		case 1 :
 			return ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE;
@@ -235,6 +236,7 @@ public class Constants {
 			return ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES;
 		case 5 :
 			return ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST;
+			// Aurait du être -1 (10 est la clé pour url)
 		case 10 :
 			return ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES;
 		default:

@@ -136,6 +136,29 @@ public class ZoneGeographique {
 
 	// Start of user code ZoneGeographique additional user properties
 	
+	public ZoneGeographique(ZoneGeographiqueKind zoneGeoKind) {
+		switch (zoneGeoKind) {
+	   	case FAUNE_FLORE_TOUTES_ZONES:
+	   		this._id = -1;
+	   		break;
+	   	case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
+	   		this._id = 1;
+	   		break;
+		case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
+			this._id = 2;
+			break;
+		case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
+			this._id = 3;
+			break;
+		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
+			this._id = 4;
+			break;
+		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
+			this._id = 5;
+			break;
+		}
+	}
+	
 	public ZoneGeographiqueKind getZoneGeoKind() {
 	   	switch (_id) {
 	   	case -1:
@@ -154,7 +177,6 @@ public class ZoneGeographique {
 			return null;
 		}
 	}
-	
 	
 	// Ce serait mieux dans la base mais en attendant ce sera en dur ici
 	public java.lang.String getIcone() {

@@ -277,7 +277,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     
     protected View createNavigationZoneView(final ZoneGeographique zone){
     	final Context context = this;
-        final int zoneId = zone.getId();
         
     	LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewZone = inflater.inflate(R.layout.zonegeoselection_listviewrow, null);
@@ -300,7 +299,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			public void onClick(View v) {
 				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 				// positionne la recherche pour cette zone
-				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zoneId);
+				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zone.getId());
 				// réinitialise le filtre espèce
 				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), 1);
 		        ed.commit();				
@@ -310,7 +309,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		        b.putBoolean("GroupeSelection_depuisAccueil", true);
 		        toGroupeSelectionView.putExtras(b);
 		        showToast(getString(R.string.accueil_recherche_guidee_label_text)+"; "
-		        	+Constants.getTitreCourtZoneGeographique(Constants.getZoneGeographiqueFromId(zone.getId() )));
+		        	+Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
 		        
 		        startActivity(toGroupeSelectionView);
 			}
@@ -331,11 +330,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			public void onClick(View v) {
 				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 				// positionne la recherche pour cette zone
-				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zoneId);
+				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zone.getId());
 				// réinitialise le filtre espèce
 				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), 1);
 		        ed.commit();
-		        showToast(Constants.getTitreCourtZoneGeographique(Constants.getZoneGeographiqueFromId(zone.getId() )));
+		        showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
 				startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
 			}
 		});

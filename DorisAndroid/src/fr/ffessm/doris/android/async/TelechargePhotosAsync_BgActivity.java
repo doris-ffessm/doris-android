@@ -303,6 +303,11 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     		List<String[]> countPhoto = new ArrayList<String[]>(2);
     			    		
     		int zoneId = zoneGeo.getId();
+			// TODO : pas encore activé car ne marche pas toujours
+			// comme les 2 traitements ne sont pas synchronisés, la valeur change parfois trop vite pour le rafraichissement
+			//DorisApplicationContext.getInstance().zoneTraitee = zoneGeo.getZoneGeoKind();
+ 
+    		
     		nbPhotosPrincATelechargerPourZone[zoneId] = 0;
     		nbPhotosATelechargerPourZone[zoneId] = 0;
     		
@@ -354,12 +359,15 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     		
 			int nbPhotosPrinRecuesPourZone = 0;
     		int zoneId = zoneGeo.getId();
+			// TODO : pas encore activé car ne marche pas toujours
+			// comme les 2 traitements ne sont pas synchronisés, la valeur change parfois trop vite pour le rafraichissement
+			//DorisApplicationContext.getInstance().zoneTraitee = zoneGeo.getZoneGeoKind();
     		
     		if ( photosOutils.getPrecharModeZoneGeo(zoneGeo.getZoneGeoKind()) != Photos_Outils.PrecharMode.P0 ) {
 
         		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosPrincipalesFiches - countNbPhotoPrincZone : "+nbPhotosPrincATelechargerPourZone[zoneId] );
 		        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_imagesprinc)
-		        		+ Constants.getTitreCourtZoneGeographique(Constants.getZoneGeographiqueFromId(zoneId)));
+		        		+ Constants.getTitreCourtZoneGeographique(zoneGeo.getZoneGeoKind()));
 		        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_imagesprinc) );
 	    		mNotificationHelper.setMaxItemToProcess(""+nbPhotosPrincATelechargerPourZone[zoneId]);
     			publishProgress( 0 );
@@ -452,6 +460,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 				paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneGeo.getZoneGeoKind(), true), nbPhotosPrinRecuesPourZone);
 				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosPrincipalesFiches - nbPhotosPrincDejaLaPourZone : "+nbPhotosPrinRecuesPourZone );
 				publishProgress( nbPhotosPrinRecuesPourZone );
+				DorisApplicationContext.getInstance().notifyDataHasChanged(null);
     		}
 			if(this.isCancelled()){
 				// annulation demandée, fini la tache dés que possible
@@ -477,13 +486,16 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			int nbPhotosRecuesPourZone = 0;
 			
 			int zoneId = zoneGeo.getId();
-			        
+			// TODO : pas encore activé car ne marche pas toujours
+			// comme les 2 traitements ne sont pas synchronisés, la valeur change parfois trop vite pour le rafraichissement
+			//DorisApplicationContext.getInstance().zoneTraitee = zoneGeo.getZoneGeoKind();
+			
 			if ( photosOutils.getPrecharModeZoneGeo(zoneGeo.getZoneGeoKind()) != Photos_Outils.PrecharMode.P0 
 					&& photosOutils.getPrecharModeZoneGeo(zoneGeo.getZoneGeoKind()) != Photos_Outils.PrecharMode.P1 ) {
 	    		
 	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosFiches - countNbPhotoPrincZone : "+nbPhotosATelechargerPourZone[zoneId] );
 		        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_images)
-		        		+ Constants.getTitreCourtZoneGeographique(Constants.getZoneGeographiqueFromId(zoneId)));
+		        		+ Constants.getTitreCourtZoneGeographique(zoneGeo.getZoneGeoKind()) );
 		        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_images) );
 	    		mNotificationHelper.setMaxItemToProcess(""+nbPhotosATelechargerPourZone[zoneId]);
 	    		publishProgress( 0 );
@@ -582,6 +594,9 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			//Enregistrement du nombre total de photos téléchargée pour afficher avancement
 			paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneGeo.getZoneGeoKind(), false), nbPhotosRecuesPourZone);
 			publishProgress( nbPhotosRecuesPourZone );
+			DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+			
+			
 			if(this.isCancelled()){
 				// annulation demandée, fini la tache dés que possible
 				return 0;
@@ -611,7 +626,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			Log.e(LOG_TAG, e.getMessage(), e);
 		}
 		nbPhotosATelechargerPourParticipant = Integer.valueOf(countPhoto.get(0)[0]);
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosIntervenants() - nbPhotosATelechargerPourParticipant : "+nbPhotosATelechargerPourParticipant );
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosIntervenants() - nbPhotosATelechargerPourParticipant : "+nbPhotosATelechargerPourParticipant );
     	
         mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_imagesparticipants));
         mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_imagesparticipants) );
@@ -638,10 +653,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			for (String[] resultColumns : listePhotos) {
 			    
 				String photoSurDisque = resultColumns[0].replace("gestionenligne/photos_vig", "");
-				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosIntervenants() - photoSurDisque : "+photoSurDisque );
+				//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosIntervenants() - photoSurDisque : "+photoSurDisque );
 		    	
 				if ( !hsImagesVigAllreadyAvailable.contains(photoSurDisque) ){
-					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosIntervenants() - hsImagesVigAllreadyAvailable = false" );
+					//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosIntervenants() - hsImagesVigAllreadyAvailable = false" );
 					photosOutils.getOrDownloadPhotoFile(photoSurDisque, Photos_Outils.ImageType.PORTRAITS);
 				}
 				
@@ -690,7 +705,7 @@ public int telechargementPhotosBibliographie(DorisDBHelper dorisDBHelper){
 			Log.e(LOG_TAG, e.getMessage(), e);
 		}
 		nbPhotosATelechargerPourBiblio = Integer.valueOf(countPhoto.get(0)[0]);
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosBibliographie() - nbPhotosATelechargerPourBiblio : "+nbPhotosATelechargerPourBiblio );
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosBibliographie() - nbPhotosATelechargerPourBiblio : "+nbPhotosATelechargerPourBiblio );
     	
         mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_imagesbibliographie));
         mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_imagesbibliographie) );
@@ -717,10 +732,10 @@ public int telechargementPhotosBibliographie(DorisDBHelper dorisDBHelper){
 			    
 				String photoURL = resultColumns[0];
 				photoURL = photoURL.replace("gestionenligne/photos_biblio_moy/", "");
-				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosBibliographie() - photoURL : "+photoURL );
+				//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosBibliographie() - photoURL : "+photoURL );
 		    	
 				if ( !hsImagesVigAllreadyAvailable.contains(Constants.PREFIX_IMGDSK_BIBLIO + photoURL) ){
-					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosBibliographie() - hsImagesVigAllreadyAvailable = false" );
+					//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosBibliographie() - hsImagesVigAllreadyAvailable = false" );
 					photosOutils.getOrDownloadPhotoFile("/"+photoURL, Constants.PREFIX_IMGDSK_BIBLIO + photoURL, Photos_Outils.ImageType.ILLUSTRATION_BIBLIO);
 				}
 				
@@ -769,7 +784,7 @@ public int telechargementPhotosGlossaire(DorisDBHelper dorisDBHelper){
 		Log.e(LOG_TAG, e.getMessage(), e);
 	}
 	nbPhotosATelechargerPourGlossaire = Integer.valueOf(countPhoto.get(0)[0]);
-	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosGlossaire() - nbPhotosATelechargerPourGlossaire : "+nbPhotosATelechargerPourGlossaire );
+	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosGlossaire() - nbPhotosATelechargerPourGlossaire : "+nbPhotosATelechargerPourGlossaire );
 	
     mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_imagesglossaire));
     mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_imagesglossaire) );
@@ -801,10 +816,10 @@ public int telechargementPhotosGlossaire(DorisDBHelper dorisDBHelper){
 				if (!photoURL.isEmpty()) {
 		
 					photoURL = photoURL.replace("gestionenligne/diaporamaglo/", "");
-					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosGlossaire() - photoURL : "+photoURL );
+					//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosGlossaire() - photoURL : "+photoURL );
 			    	
 					if ( !hsImagesVigAllreadyAvailable.contains(Constants.PREFIX_IMGDSK_DEFINITION + photoURL) ){
-						if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosGlossaire() - hsImagesVigAllreadyAvailable = false" );
+						//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosGlossaire() - hsImagesVigAllreadyAvailable = false" );
 						photosOutils.getOrDownloadPhotoFile("/"+photoURL, Constants.PREFIX_IMGDSK_DEFINITION + photoURL, Photos_Outils.ImageType.ILLUSTRATION_DEFINITION);
 					}
 					

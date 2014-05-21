@@ -46,6 +46,7 @@ import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.services.MovePhotoDiskService;
+import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
@@ -208,13 +209,17 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	Message completeMessage = mHandler.obtainMessage(1, textmessage);
     	completeMessage.sendToTarget();
 	}
+    public void dataHasChanged(Object objmessage){
+    	Message completeMessage = mHandler.obtainMessage(1, objmessage);
+    	completeMessage.sendToTarget();
+	}
     
     public Context getContext(){
 		return this;
 	}
     
     protected void updateProgressBarZone(ZoneGeographique inZoneGeo, MultiProgressBar progressBarZone){
-    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
+    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "updateProgressBarZone() - inZoneGeo : "+inZoneGeo.getId()+" - "+inZoneGeo.getZoneGeoKind());
     	Fiches_Outils fichesOutils = new Fiches_Outils(getContext());
     	String uri = fichesOutils.getZoneIcone(inZoneGeo.getZoneGeoKind());
     	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
@@ -586,11 +591,24 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	zoneToutesZones.setId(-1);
     	zoneToutesZones.setNom(getContext().getString(R.string.avancement_touteszones_titre));
 		updateProgressBarZone(zoneToutesZones, progressBarZones.get(zoneToutesZones.getId()));
-		if(listeZoneGeo == null) listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
-		for (ZoneGeographique zoneGeo : listeZoneGeo) {
+		
+		// Si on sait sur quelle zone on travaille alors on ne met à jour que la progress barre de cette zone
+		
+		//Log.d(LOG_TAG, "refreshScreenData() - zoneTraitee : "+DorisApplicationContext.getInstance().zoneTraitee);
+		if (DorisApplicationContext.getInstance().zoneTraitee == null
+			|| DorisApplicationContext.getInstance().zoneTraitee == ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES ) {
+			if(listeZoneGeo == null) listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
+			for (ZoneGeographique zoneGeo : listeZoneGeo) {
+				updateProgressBarZone(zoneGeo, progressBarZones.get(zoneGeo.getId()));
+			}
+		} else {
+			ZoneGeographique zoneGeo = new ZoneGeographique(DorisApplicationContext.getInstance().zoneTraitee);
+			// Récupération Nom et Désignation dans la base
+			zoneGeo = this.getHelper().getZoneGeographiqueDao().queryForId(zoneGeo.getId());
+			//Log.d(LOG_TAG, "refreshScreenData() - zoneGeo : "+zoneGeo.getId()+" - "+zoneGeo.getNom());
+			
 			updateProgressBarZone(zoneGeo, progressBarZones.get(zoneGeo.getId()));
 		}
-		
 		
         //TODO : Temporaire tant que la fonction n'est pas tout à fait au point
         // Permet de n'activer le choix de l'emplacement des images que pour les personnes qui auront compris

@@ -41,23 +41,16 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.tools;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
@@ -67,7 +60,9 @@ import fr.ffessm.doris.android.activities.DetailsParticipant_ElementViewActivity
 import fr.ffessm.doris.android.activities.Glossaire_ClassListViewActivity;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
+import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.IntervenantFiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
@@ -77,32 +72,8 @@ import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 
-
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.text.SpannableString;
-import android.text.format.DateUtils;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.ImageSpan;
-import android.text.style.StyleSpan;
-import android.text.style.URLSpan;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 
@@ -755,15 +726,16 @@ public class Photos_Outils {
 		nbFichesTotal = fichesOutils.getNbFichesZoneGeo(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES);
 	
 		OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(context);
-		RuntimeExceptionDao<PhotoFiche, Integer> entriesDao = ormLiteDBHelper.getPhotoFicheDao();
-		nbPhotosTotal = (int)entriesDao.countOf();
-	
+		RuntimeExceptionDao<PhotoFiche, Integer> entriesFicheDao = ormLiteDBHelper.getPhotoFicheDao();
+		nbPhotosTotal = (int)entriesFicheDao.countOf();
+		entriesFicheDao = null;
+		
 		// On calcule le nombre de photos (hors principales) moyen par fiche
 		nbPhotosParFiche = ( nbPhotosTotal - nbFichesTotal ) / nbFichesTotal;
 		
 		for (ZoneGeographiqueKind zone : ZoneGeographiqueKind.values()){
-			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "initNbPhotosParFiche() - zone : "+zone);
-			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "initNbPhotosParFiche() - zone.ordinal() : "+zone.ordinal());
+			//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "initNbPhotosParFiche() - zone : "+zone);
+			//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "initNbPhotosParFiche() - zone.ordinal() : "+zone.ordinal());
 			nbFichesZoneGeo[zone.ordinal()] = fichesOutils.getNbFichesZoneGeo(zone);
 		}
 		
@@ -814,6 +786,37 @@ public class Photos_Outils {
 	}
 
 	
+	public long getEstimVolPhotosAutres(){
+		long nbPhotos = 0;
+		int volPhotos = 0;
+		OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(context);
+		
+		try {
+			nbPhotos = ormLiteDBHelper.getParticipantDao().countOf(
+				ormLiteDBHelper.getParticipantDao().queryBuilder().setCountOf(true).where().not().eq("cleURLPhotoParticipant", "").prepare());
+		} catch (SQLException error) {
+			error.printStackTrace();
+		}
+		volPhotos += (int)nbPhotos * getTailleMoyImageUnitaire(ImageType.PORTRAITS);
+		
+		try {
+			nbPhotos = ormLiteDBHelper.getEntreeBibliographieDao().countOf(
+				ormLiteDBHelper.getEntreeBibliographieDao().queryBuilder().setCountOf(true).where().not().eq("cleURLIllustration", "").prepare());
+		} catch (SQLException error) {
+			error.printStackTrace();
+		}
+		volPhotos += (int)nbPhotos * getTailleMoyImageUnitaire(ImageType.ILLUSTRATION_BIBLIO);
+
+		try {
+			nbPhotos = ormLiteDBHelper.getDefinitionGlossaireDao().countOf(
+				ormLiteDBHelper.getDefinitionGlossaireDao().queryBuilder().setCountOf(true).where().not().eq("cleURLIllustration", "").prepare());
+		} catch (SQLException error) {
+			error.printStackTrace();
+		}
+		volPhotos += (int)nbPhotos * getTailleMoyImageUnitaire(ImageType.ILLUSTRATION_DEFINITION);
+
+		return volPhotos;
+	}
 
 			
 
