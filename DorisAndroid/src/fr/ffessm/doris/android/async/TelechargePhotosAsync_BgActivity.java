@@ -303,10 +303,6 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     		List<String[]> countPhoto = new ArrayList<String[]>(2);
     			    		
     		int zoneId = zoneGeo.getId();
-			// TODO : pas encore activé car ne marche pas toujours
-			// comme les 2 traitements ne sont pas synchronisés, la valeur change parfois trop vite pour le rafraichissement
-			//DorisApplicationContext.getInstance().zoneTraitee = zoneGeo.getZoneGeoKind();
- 
     		
     		nbPhotosPrincATelechargerPourZone[zoneId] = 0;
     		nbPhotosATelechargerPourZone[zoneId] = 0;
@@ -359,9 +355,6 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     		
 			int nbPhotosPrinRecuesPourZone = 0;
     		int zoneId = zoneGeo.getId();
-			// TODO : pas encore activé car ne marche pas toujours
-			// comme les 2 traitements ne sont pas synchronisés, la valeur change parfois trop vite pour le rafraichissement
-			//DorisApplicationContext.getInstance().zoneTraitee = zoneGeo.getZoneGeoKind();
     		
     		if ( photosOutils.getPrecharModeZoneGeo(zoneGeo.getZoneGeoKind()) != Photos_Outils.PrecharMode.P0 ) {
 
@@ -437,6 +430,8 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     						DorisApplicationContext.getInstance().notifyDataHasChanged(null);
     					}*/
     					if(limitTimer.hasTimerElapsed()){
+    						DorisApplicationContext.getInstance().zoneTraitee = zoneGeo.getZoneGeoKind();
+    						
     						publishProgress( nbPhotosPrinRecuesPourZone );
     						paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneGeo.getZoneGeoKind(), true), nbPhotosPrinRecuesPourZone);
     						DorisApplicationContext.getInstance().notifyDataHasChanged(null);
@@ -486,9 +481,6 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			int nbPhotosRecuesPourZone = 0;
 			
 			int zoneId = zoneGeo.getId();
-			// TODO : pas encore activé car ne marche pas toujours
-			// comme les 2 traitements ne sont pas synchronisés, la valeur change parfois trop vite pour le rafraichissement
-			//DorisApplicationContext.getInstance().zoneTraitee = zoneGeo.getZoneGeoKind();
 			
 			if ( photosOutils.getPrecharModeZoneGeo(zoneGeo.getZoneGeoKind()) != Photos_Outils.PrecharMode.P0 
 					&& photosOutils.getPrecharModeZoneGeo(zoneGeo.getZoneGeoKind()) != Photos_Outils.PrecharMode.P1 ) {
@@ -567,6 +559,8 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			        		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 						}*/
 						if(limitTimer.hasTimerElapsed()){
+							DorisApplicationContext.getInstance().zoneTraitee = zoneGeo.getZoneGeoKind();
+							
 							publishProgress( nbPhotosRecuesPourZone );
     						//Enregistrement du nombre total de photos téléchargée pour afficher avancement
 							paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneGeo.getZoneGeoKind(), false), nbPhotosRecuesPourZone);
