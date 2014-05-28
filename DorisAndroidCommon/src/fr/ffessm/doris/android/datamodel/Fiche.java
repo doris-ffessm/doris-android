@@ -364,9 +364,11 @@ public class Fiche {
 		// on doit pouvoir obtenir une liste des zones d'observation assez propre
 		String listeZonesObservation = ElementTDcode_fiche.getFirstElementByClass("normal").getRenderer().toString().trim();
 		log.info("getFicheFromHtml() - listeZonesObservation : " + listeZonesObservation);
-		String[] zonesObservation = listeZonesObservation.split(",|et");
-		for (String zoneObservation : zonesObservation){
-			log.info("getFicheFromHtml() - zoneObservation : " + zoneObservation);
+		if (! listeZonesObservation.isEmpty()) {
+			String[] zonesObservation = listeZonesObservation.split(",|et");
+			for (String zoneObservation : zonesObservation){
+				log.info("getFicheFromHtml() - zoneObservation : " + zoneObservation);
+			}
 		}
 		
 		//Centrage sur la TABLE qui contient tout le texte et les images
