@@ -362,6 +362,7 @@ public class Fiche {
 		// TODO : (Une voit un test effectué modifier la phrase)
 		// Ce sont des saisies manuelles mais en utilisant la "," et le "et" comme séparateur
 		// on doit pouvoir obtenir une liste des zones d'observation assez propre
+		/*
 		String listeZonesObservation = ElementTDcode_fiche.getFirstElementByClass("normal").getRenderer().toString().trim();
 		log.info("getFicheFromHtml() - listeZonesObservation : " + listeZonesObservation);
 		if (! listeZonesObservation.isEmpty()) {
@@ -370,6 +371,7 @@ public class Fiche {
 				log.info("getFicheFromHtml() - zoneObservation : " + zoneObservation);
 			}
 		}
+		*/
 		
 		//Centrage sur la TABLE qui contient tout le texte et les images
 		Element ElementTable;
