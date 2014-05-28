@@ -205,6 +205,8 @@
         <item>96</item>
         <item>128</item>
         <item>192</item>
+        <item>256</item>
+        <item>384</item>
     </string-array>
 	<string-array name="icon_size_lib">
 	    <item>48</item>
@@ -212,6 +214,8 @@
         <item>96</item>
         <item>128</item>
         <item>192</item>
+        <item>256</item>
+        <item>384</item>
     </string-array>
     
 	<string name="pref_accueil_aff_iconesfede_prompt">Affichage Icônes Fédé.\u00A0?</string>
