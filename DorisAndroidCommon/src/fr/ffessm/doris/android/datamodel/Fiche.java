@@ -356,6 +356,19 @@ public class Fiche {
 		//log.info("getFicheFromHtml() - ref : " + ficheRef);
 		//log.info("getFicheFromHtml() - Etat Fiche : " + getEtatFiche());		
 		
+		
+		// Zones d'Observation (!!! <> Zone Géographie)
+		// Elles sont affichées entre le Nom Scientifique et le Nom Commun.
+		// TODO : (Une voit un test effectué modifier la phrase)
+		// Ce sont des saisies manuelles mais en utilisant la "," et le "et" comme séparateur
+		// on doit pouvoir obtenir une liste des zones d'observation assez propre
+		String listeZonesObservation = ElementTDcode_fiche.getFirstElementByClass("normal").getRenderer().toString().trim();
+		log.info("getFicheFromHtml() - listeZonesObservation : " + listeZonesObservation);
+		String[] zonesObservation = listeZonesObservation.split(",|et");
+		for (String zoneObservation : zonesObservation){
+			log.info("getFicheFromHtml() - zoneObservation : " + zoneObservation);
+		}
+		
 		//Centrage sur la TABLE qui contient tout le texte et les images
 		Element ElementTable;
 		List<? extends Element> listeElementsTable_TABLE;
