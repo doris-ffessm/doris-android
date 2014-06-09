@@ -42,6 +42,7 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
@@ -84,7 +85,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 
 	//Start of user code constants GroupeSelection_ClassListViewActivity
 	boolean depuisAccueil = false;
-	
+	final Context context = this;
 	//End of user code
     GroupeSelection_Adapter adapter;
 
@@ -208,7 +209,12 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	            return true;
 			//Start of user code additional menu action GroupeSelection_ClassListViewActivity
 
-		//End of user code
+	        case R.id.groupeselection_classlistview_action_aide:
+	        	AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
+				aide.affichageMessageHTML(context.getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
+				return true;  
+	            
+            //End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
 	        	TaskStackBuilder.create(this)

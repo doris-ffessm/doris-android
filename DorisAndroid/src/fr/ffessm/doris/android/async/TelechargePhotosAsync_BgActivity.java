@@ -521,14 +521,17 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			    try{
 			    	//int nbTelechargements = 0;
 					for (String[] resultColumns : listePhotos) {
-		        							
+
+						// On télécharge toujours la vignette si en mode <> P0 ou P1
+						if ( !hsImagesVigAllreadyAvailable.contains(resultColumns[0]) ){
+							photosOutils.getOrDownloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.VIGNETTE);
+							//nbTelechargements++;
+        				}
+						
 						if ( imageTypeImage == Photos_Outils.ImageType.VIGNETTE ){
-							if ( !hsImagesVigAllreadyAvailable.contains(resultColumns[0]) ){
-								photosOutils.getOrDownloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.VIGNETTE);
-								//nbTelechargements++;
-	        				}
 							nbPhotosRecuesPourZone++;
 						}
+
 						if ( imageTypeImage == Photos_Outils.ImageType.MED_RES) {
 							if ( !hsImagesMedResAllreadyAvailable.contains(resultColumns[0]) ){
 								photosOutils.getOrDownloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.MED_RES);

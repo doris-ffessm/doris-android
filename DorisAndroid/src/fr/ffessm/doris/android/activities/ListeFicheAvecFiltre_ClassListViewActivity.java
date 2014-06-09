@@ -43,6 +43,8 @@ package fr.ffessm.doris.android.activities;
 
 
 import java.util.HashMap;
+
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
 import fr.ffessm.doris.android.datamodel.*;
@@ -292,6 +294,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 				//searchPopupButtonManager.onClickFilterBtn(menuItemView);
 				showPopup();
 	            return true;
+	        case R.id.listeficheavecfiltre_action_aide:
+	        	AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
+				aide.affichageMessageHTML(context.getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
+				return true;
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:

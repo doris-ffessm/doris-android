@@ -43,6 +43,7 @@ package fr.ffessm.doris.android.activities;
 
 
 import fr.ffessm.doris.android.BuildConfig;
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
@@ -74,6 +75,9 @@ public class RechercheGuidee_CustomViewActivity extends OrmLiteActionBarActivity
 {
 	
 	//Start of user code constants RechercheGuidee_CustomViewActivity
+	
+	final Context context = this;
+	
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -129,8 +133,14 @@ public class RechercheGuidee_CustomViewActivity extends OrmLiteActionBarActivity
 	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
 	            return true;
 			//Start of user code additional menu action RechercheGuidee_CustomViewActivity
-
-		//End of user code
+	        
+			case R.id.rechercheguidee_customview_action_aide:
+	        	AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
+				aide.affichageMessageHTML(context.getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
+				return true;
+	            
+	            
+        	//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
 	        	TaskStackBuilder.create(this)

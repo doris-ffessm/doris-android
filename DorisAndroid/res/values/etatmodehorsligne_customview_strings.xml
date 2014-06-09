@@ -29,7 +29,7 @@
 	<string name="avancement_progressbar_jamais_summary">"@nbF Fiches ; le préchargement des photos n\'a jamais été lancé depuis la modification des paramètres."</string>
 	<string name="avancement_progressbar_P1_summary">"@nbF Fiches ; @nbPh sur @totalPh photos principales téléchargées"</string>
 	<string name="avancement_progressbar_PX_summary1">"@nbF Fiches ; @nbPh sur @totalPh photos principales"</string>
-	<string name="avancement_progressbar_PX_jamais_summary2">" et aucune photo téléchargées"</string>
+	<string name="avancement_progressbar_PX_jamais_summary2">" et aucune autre photo téléchargée"</string>
 	<string name="avancement_progressbar_PX_summary2">" et @nbPh sur @totalPh autres photos téléchargées"</string>
 	<string name="avancement_progressbar_limite1">25</string>
 	<string name="avancement_progressbar_couleur1">RED</string>
