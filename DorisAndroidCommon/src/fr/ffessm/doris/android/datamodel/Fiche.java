@@ -348,30 +348,48 @@ public class Fiche {
 		Element ElementTDcode_fiche;
 		ElementTDcode_fiche = source.getFirstElementByClass("code_fiche");
 		
-		//log.debug("getFiche() - ElementTDcode_fiche.toString() : " + ElementTDcode_fiche.toString());
 
 		String ficheRef = ElementTDcode_fiche.getFirstElementByClass("normalgris").getRenderer().toString().trim();
 		ficheRef = ficheRef.replaceAll("\\{\\{[^\\}]*\\}\\}", "").replace("(N°", "").replace(")", "").trim();
 		setNumeroFiche(Integer.parseInt(ficheRef));
 		//log.info("getFicheFromHtml() - ref : " + ficheRef);
 		//log.info("getFicheFromHtml() - Etat Fiche : " + getEtatFiche());		
+
 		
-		
-		// Zones d'Observation (!!! <> Zone Géographie)
+		// Zones d'Observation (!!! <> Zones Géographie)
 		// Elles sont affichées entre le Nom Scientifique et le Nom Commun.
-		// TODO : (Une voit un test effectué modifier la phrase)
+		// TODO : (Une fois un test effectué modifier la phrase)
 		// Ce sont des saisies manuelles mais en utilisant la "," et le "et" comme séparateur
 		// on doit pouvoir obtenir une liste des zones d'observation assez propre
-		/*
-		String listeZonesObservation = ElementTDcode_fiche.getFirstElementByClass("normal").getRenderer().toString().trim();
-		log.info("getFicheFromHtml() - listeZonesObservation : " + listeZonesObservation);
-		if (! listeZonesObservation.isEmpty()) {
-			String[] zonesObservation = listeZonesObservation.split(",|et");
-			for (String zoneObservation : zonesObservation){
-				log.info("getFicheFromHtml() - zoneObservation : " + zoneObservation);
+		// TODO : En fait, pas du tout, c'est très disparate  => un dico. ne doit pas pouvoir servir
+		if (ElementTDcode_fiche.getFirstElementByClass("normal") != null) {
+			String listeZonesObservation = ElementTDcode_fiche.getFirstElementByClass("normal").getRenderer().toString().trim();
+			
+			log.info("##01 -" + listeZonesObservation.trim());
+					
+			listeZonesObservation = listeZonesObservation.replace(", sauf", " sauf");
+			
+			i = 0;
+			while (listeZonesObservation.matches("^[^\\(]*\\([,^\\)]*\\).*") && i < 20) {
+				log.info("##11 -" + listeZonesObservation.trim());
+				listeZonesObservation = listeZonesObservation.replaceAll("(\\([^,\\)]*?),", "$1£");
+				i++;
 			}
+			log.info("##12 -" + listeZonesObservation.trim());
+			
+			
+			listeZonesObservation = listeZonesObservation.replaceAll("(\\([^,\\)]*?),", "$1£");
+			log.info("##21 -" + listeZonesObservation.trim());
+		
+			//log.info("getFicheFromHtml() - listeZonesObservation : " + listeZonesObservation);
+			if (! listeZonesObservation.isEmpty()) {
+				String[] zonesObservation = listeZonesObservation.split(",|et");
+				for (String zoneObservationTxt : zonesObservation){
+					log.info("##31 -" + zoneObservationTxt.trim());
+				}
+			}
+
 		}
-		*/
 		
 		//Centrage sur la TABLE qui contient tout le texte et les images
 		Element ElementTable;
