@@ -620,7 +620,7 @@ public class SiteDoris {
     	
     	for (Participant participant : listeParticipants) {
     	
-    		if ( participant.getId() == numParticipant) {
+    		if ( participant.getNumeroParticipant() == numParticipant) {
     			//log.debug("getParticipantFromListeParticipants() - Participant Trouvé : "+participant.getId());
     			//log.trace("getParticipantFromListeParticipants() - Fin");
     			return participant;
