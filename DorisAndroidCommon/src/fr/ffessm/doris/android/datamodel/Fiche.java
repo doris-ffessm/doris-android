@@ -791,17 +791,16 @@ public class Fiche {
 			//Recup du TD qui contient les infos DROITE (images et qui a fait la fiche)
 			//Recup du TR dont le 3ème TD fils contient les infos DROITE (images et qui a fait la fiche)
 			List<? extends Element> listeElementsEntoureDeGris = source.getAllElementsByClass("trait_cadregris");
-			//log.debug("getFiche() -  element : " + " - " + elementTable_TABLE.toString().substring(0, Math.min(elementTable_TABLE.toString().length(),30)));
 			
 			for (Element elementEntoureDeGris : listeElementsEntoureDeGris) {
-				//log.debug("getFiche() - elementEntoureDeGris : " + elementEntoureDeGris.toString().substring(0, Math.min(100,elementEntoureDeGris.toString().toString().length())));
+				//log.debug("getFicheFromHtml() - 540 - elementEntoureDeGris : " + elementEntoureDeGris.toString().substring(0, Math.min(100,elementEntoureDeGris.toString().toString().length())));
 				
 				// Les participants
 				// On vérifie que le cadre Gris contient la rubrique Participants
 				Element elementRubriqueinEntoureDeGris= elementEntoureDeGris.getFirstElementByClass("rubrique");
 				if (elementRubriqueinEntoureDeGris != null) {
 					//log.debug("getFicheFromHtml() - 550 - "+elementRubriqueinEntoureDeGris.getRenderer().toString());
-					if (elementRubriqueinEntoureDeGris.getRenderer().toString().trim().equals("Participants")) {
+					if (elementRubriqueinEntoureDeGris.getRenderer().toString().trim().contains("Participants")) {
 						// On parcourt les TD
 						// Si class=gris_gras et contenu texte != vide => qualité de la personne ci-après
 						// Si class=normal et contenu texte != vide => nom de la personne
@@ -811,13 +810,10 @@ public class Fiche {
 						String intervenantRef = null;
 						
 						String listeParticipantsTexteBrute = elementRubriqueinEntoureDeGris.getParentElement().getParentElement().getFirstElement(HTMLElementName.TABLE).getRenderer().toString();
-						//log.debug("getFiche() - 555 - "+listeParticipantsTexteBrute);
-		
-						//String[] listeParticipantsTexte = listeParticipantsTexteBrute.split("\n");
-						//log.debug("getFiche() - 560 - "+listeParticipantsTexte.length);
+						//log.debug("getFicheFromHtml() - 555 - "+listeParticipantsTexteBrute);
 						
 						for (String ligne : listeParticipantsTexteBrute.split("\n")) {
-							//log.debug("getFiche() - 565 - "+ligne.trim());
+							//log.debug("getFicheFromHtml() - 565 - "+ligne.trim());
 							
 							if ( Constants.getTypeParticipant(ligne.trim()) != null ){
 								intervenantQualite = Constants.getTypeParticipant(ligne.trim() );
