@@ -466,7 +466,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     
     /**
      * Classe utilisée pour rafraîchir l'ihm, mais qui prend un peu de temps
-     * et ne peut pas être mis dans refreshScreenData sinon on pénalise le reste
+     * et ne peut pas être mise dans refreshScreenData sinon on pénalise le reste
      */
     private class AsyncComputeLongRefreshScreenData extends AsyncTask<Void, Void, Void> {
 
@@ -485,17 +485,28 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			
 			// baisse la priorité pour s'assurer une meilleure réactivité
 			android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+			
 			// calcule en tache de fond
 			Photos_Outils photo_Outils = new Photos_Outils(EtatModeHorsLigne_CustomViewActivity.this);
+			
+			// Mémoire interne
+			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "AsyncComputeLongRefreshScreenData() - doInBackground() - Mémoire interne");
 			internalUsedSize =  photo_Outils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL);
+			
+			// Disque primaire (Carte SD Interne dans les paramètres)
 			if ( !Disque_Outils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
 					Disque_Outils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
 				) {
+				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "AsyncComputeLongRefreshScreenData() - doInBackground() - Disque primaire (Carte SD Interne)");
 				primaryUsedSize =  photo_Outils.getPhotosDiskUsage(ImageLocation.PRIMARY);
 			}
+			
+			// Carte SD externe (nommée amovible)
 			if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
+				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "AsyncComputeLongRefreshScreenData() - doInBackground() - Carte SD externe (nommée amovible)");
 				secondaryUsedSize = photo_Outils.getPhotosDiskUsage(ImageLocation.SECONDARY);
 			}
+			
 			if(needRestart){
 				// si besoin de recommencer, alors fait une mini pause avant redéclencher
 				try {
@@ -518,9 +529,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     
     /**
      * affiche les info d'utilisation du disque
-     * Note, cela a été séparé car normalement je voulais le mettre dans un asynctask, mais on ne peut en exécuté
+     * Note, cela a été séparé car normalement je voulais le mettre dans un asynctask, mais on ne peut en exécuter
      * qu'une à la fois, ce qui est bloqué si un téléchargement est en cours 
-     * -> prévoir de migrer ces asynctask dans des Service
+     * -> prévoir de migrer ces asynctask dans des Services
      * @param internalUsedSize
      * @param primaryUsedSize
      */
@@ -627,6 +638,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			if( DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null ||
 					DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity != null ||
 					DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity != null){
+				
+					Log.d(LOG_TAG, "refreshScreenData() - isSecondaryExternalStorageAvailable() : "+DiskEnvironment.isSecondaryExternalStorageAvailable());
+				
 				if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
 					refreshUsedDisk(photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL), photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY), photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY));
 				}
@@ -634,6 +648,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 					refreshUsedDisk(photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL), photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY), 0);
 				}
 			}
+			
 			// déclenche le calcul de l'espace disque utilisé
 			if(lastAsyncComputeLongRefreshScreenData != null){
 				if( lastAsyncComputeLongRefreshScreenData.getStatus() == Status.FINISHED){
@@ -646,6 +661,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			} else lastAsyncComputeLongRefreshScreenData = (AsyncComputeLongRefreshScreenData) new AsyncComputeLongRefreshScreenData().execute();
 			
 			// Affiche les boutons suivant les configurations possibles
+			
 			// disque courant
 			ImageLocation currentImageLocation = photosOutils.getPreferedLocation();		
 			// vérifie qu'il n'y a pas un déplacement en cours
