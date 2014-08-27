@@ -525,12 +525,15 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
      * @param primaryUsedSize
      */
     protected void refreshUsedDisk(long internalUsedSize, long primaryUsedSize, long secondaryUsedSize){
-		
+    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Début");
+    	
     	TextView etatDiskTextView = (TextView) findViewById(R.id.etatmodehorsligne_customview_diskusage_description_textView);
 		StringBuilder etatDiskStringBuilder = new StringBuilder();
 		etatDiskStringBuilder.append("                 (Espace utilisé / disponible / total)\n");
 		
 		// Mémoire interne
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Mémoire interne");
+		
 		etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_customview_diskselection_internal_libelle)+" : ");
 		etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(internalUsedSize)+" / ");
 		etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().first)+" / ");
@@ -543,8 +546,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		// Disque primaire (Carte SD Interne dans les paramètres)
 		// TODO : GMo : j'ai géré le non affichage mais il y a un 1 == 1/0 pour toujours activer afin de tester la fonction
 		if ( !Disque_Outils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
-												Disque_Outils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
+						Disque_Outils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
 				|| 1 == 0) {
+			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Disque primaire (Carte SD Interne)");
+			
 			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_customview_diskselection_primary_libelle)+" : ");
 			etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(primaryUsedSize)+" / ");
 			etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().first)+" / ");
@@ -556,6 +561,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		
 		// Carte SD externe (nommée amovible)
 		if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
+			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Carte SD externe (nommée amovible)");
+			
 			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_customview_diskselection_secondary_libelle)+" : ");
 			etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(secondaryUsedSize)+" / ");
 			try {
@@ -565,10 +572,11 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			} catch (NoSecondaryStorageException e) {
 				etatDiskStringBuilder.append(" not Available");
 			}
-			
 		}
 		//etatDiskStringBuilder.append("Photo actuellement sur : "+new Photos_Outils(EtatModeHorsLigne_CustomViewActivity.this).getPreferedLocation()+"\n");
 		etatDiskTextView.setText(etatDiskStringBuilder.toString());
+		
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Fin");
     }
     
 	//End of user code

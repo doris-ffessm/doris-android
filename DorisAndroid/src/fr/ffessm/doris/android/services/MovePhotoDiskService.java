@@ -83,6 +83,7 @@ public class MovePhotoDiskService extends IntentService {
     	String dest = intent.getStringExtra(TARGET_DISK);
 		// lance le job
     	// vérification des paramètres et calcul du nombre de fichier à copier
+    	Log.d(LOG_TAG, "onHandleIntent() - source : "+source);
     	if(source.equals(INTERNAL)){
     		nbFileToCopy = this.getDir(Photos_Outils.VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE).list().length;
     		nbFileToCopy += this.getDir(Photos_Outils.MED_RES_FICHE_FOLDER, Context.MODE_PRIVATE).list().length;
@@ -113,6 +114,8 @@ public class MovePhotoDiskService extends IntentService {
     		Log.e(LOG_TAG, "déplacement impossible, 1ier parametre incorrect : "+source);
     		return;
     	}
+    	
+    	Log.d(LOG_TAG, "onHandleIntent() - nbFileToCopy : "+nbFileToCopy);
     	mNotificationHelper.setMaxItemToProcess(""+nbFileToCopy);
     	
     	// baisse la priorité pour minimiser l'impact sur l'ihm et les risques de plantage
@@ -206,7 +209,7 @@ public class MovePhotoDiskService extends IntentService {
 		}
     }
     
-	byte[] buf = new byte[1024*10];
+	byte[] buf = new byte[1024];
 	
     public void moveDirectory(File sourceLocation , File targetLocation) throws IOException {
 

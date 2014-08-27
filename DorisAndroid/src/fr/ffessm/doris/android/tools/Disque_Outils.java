@@ -67,6 +67,18 @@ public class Disque_Outils {
     	return du.getSize();
 	}
 	
+	public long getDiskUsage(File inImageFolder, boolean pipot){
+		File[] files = inImageFolder.listFiles();
+		  int count = 0;
+		  for (File f : files)
+		    if (f.isDirectory())
+		      count += getDiskUsage(f);
+		    else
+		      count++;
+
+		  return count;
+	}
+	
 	public static String getHumanDiskUsage(long inSize){
 		String sizeTexte = "";
 		// octet => ko
@@ -126,14 +138,16 @@ public class Disque_Outils {
     	public boolean accept(File file) {
     		if (file.isFile())
     			size += file.length();
-    		else
+			else 
     			file.listFiles(this);
+
     		return false;
     	}
 
     	public long getSize() {
     		return size;
     	}
+
     }
 
     // Permet d'obtenir une clé unique permettant de distinguer 2 partitions à un moment donné

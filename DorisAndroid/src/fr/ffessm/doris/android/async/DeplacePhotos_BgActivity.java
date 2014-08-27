@@ -86,7 +86,7 @@ public class DeplacePhotos_BgActivity  extends AsyncTask<String,Integer, Integer
     
     // Start of user code additional attribute declarations InitialisationApplication_BgActivity
     
-    // les differentes actions possibles pour cette activité
+    // les différentes actions possibles pour cette activité
     // premier argument = source location
     // second argument = destination ou delete action
     public static String INTERNAL = "INTERNAL";
@@ -202,6 +202,8 @@ public class DeplacePhotos_BgActivity  extends AsyncTask<String,Integer, Integer
     		Log.e(LOG_TAG, "déplacement impossible, 1ier parametre incorrect : "+source);
     		return 0;
     	}
+    	Log.d(LOG_TAG, "doInBackground() - nbFileToCopy : "+nbFileToCopy);
+    	
     	mNotificationHelper.setMaxItemToProcess(""+nbFileToCopy);
     	ImageLocation destImageLocation;
     	if(dest.equals(INTERNAL)){

@@ -21,7 +21,7 @@
 	<string name="etatmodehorsligne_customview_etat_base_titre_text">Fiches et textes</string>
 	<string name="etatmodehorsligne_customview_etat_base_description_text">"Les textes des fiches correspondent à la base DORIS du\u00A0: "</string>
 	<string name="etatmodehorsligne_customview_diskusage_titre_text">Stockage des photos</string>
-	<string name="etatmodehorsligne_customview_diskusage_description_text"></string>
+	<string name="etatmodehorsligne_customview_diskusage_description_text">"Calcul de l'espace utilisé en cours"</string>
 	
 	<string name="avancement_titre">Avancement préchargement photos</string>
 	<string name="avancement_touteszones_titre">Avancement global</string>
