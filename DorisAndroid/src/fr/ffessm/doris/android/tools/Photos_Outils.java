@@ -84,8 +84,8 @@ public class Photos_Outils {
 	public static final String MED_RES_FICHE_FOLDER = "medium_res_images_fiches";
 	public static final String HI_RES_FICHE_FOLDER = "hi_res_images_fiches";
 	public static final String PORTRAITS_FOLDER = "portraits";
-	public static final String ILLUSTRATION_DEFINITION_FOLDER = VIGNETTES_FICHE_FOLDER;
-	public static final String ILLUSTRATION_BIBLIO_FOLDER = VIGNETTES_FICHE_FOLDER;
+	public static final String ILLUSTRATION_DEFINITION_FOLDER = "illustrations";
+	public static final String ILLUSTRATION_BIBLIO_FOLDER = "biblio";
 	
 	private Context context;
 	private Fiches_Outils fichesOutils;
@@ -234,6 +234,12 @@ public class Photos_Outils {
 	}
 	public void setPreferedLocation(ImageLocation preferedImageLocation){
 		Param_Outils paramOutil = new Param_Outils(context);
+		
+		// On enregistre l'emplacement préféré précédent afin de pouvoir faire une reprise si
+		// le traitement était interrompu avant sa fin
+		paramOutil.setParamInt(R.string.pref_key_prefered_disque_stockage_photo_precedent,
+				paramOutil.getParamInt(R.string.pref_key_prefered_disque_stockage_photo, 0) );
+		
 		switch (preferedImageLocation){
 		case APP_INTERNAL:
 			paramOutil.setParamInt(R.string.pref_key_prefered_disque_stockage_photo, 0);

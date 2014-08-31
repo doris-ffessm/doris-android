@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.async.NotificationHelper;
+import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.LimitTimer;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageLocation;
@@ -81,9 +82,13 @@ public class MovePhotoDiskService extends IntentService {
 		// Récupère les paramètres depuis l'intent
     	String source = intent.getStringExtra(SOURCE_DISK);
     	String dest = intent.getStringExtra(TARGET_DISK);
+    	
 		// lance le job
     	// vérification des paramètres et calcul du nombre de fichier à copier
     	Log.d(LOG_TAG, "onHandleIntent() - source : "+source);
+    	
+    	Disque_Outils disqueOutils = new Disque_Outils(this);
+    	
     	if(source.equals(INTERNAL)){
     		nbFileToCopy = this.getDir(Photos_Outils.VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE).list().length;
     		nbFileToCopy += this.getDir(Photos_Outils.MED_RES_FICHE_FOLDER, Context.MODE_PRIVATE).list().length;
@@ -92,24 +97,19 @@ public class MovePhotoDiskService extends IntentService {
     		nbFileToCopy += this.getDir(Photos_Outils.ILLUSTRATION_DEFINITION_FOLDER, Context.MODE_PRIVATE).list().length;
     		nbFileToCopy += this.getDir(Photos_Outils.ILLUSTRATION_BIBLIO_FOLDER, Context.MODE_PRIVATE).list().length;
     	}else if(source.equals(PRIMARY)){
-    		nbFileToCopy = DiskEnvironment.getPrimaryExternalStorage().getFilesDir(this, Photos_Outils.VIGNETTES_FICHE_FOLDER).list().length;
-    		nbFileToCopy += DiskEnvironment.getPrimaryExternalStorage().getFilesDir(this, Photos_Outils.MED_RES_FICHE_FOLDER).list().length;
-    		nbFileToCopy += DiskEnvironment.getPrimaryExternalStorage().getFilesDir(this, Photos_Outils.HI_RES_FICHE_FOLDER).list().length;
-    		nbFileToCopy += DiskEnvironment.getPrimaryExternalStorage().getFilesDir(this, Photos_Outils.PORTRAITS_FOLDER).list().length;
-    		nbFileToCopy += DiskEnvironment.getPrimaryExternalStorage().getFilesDir(this, Photos_Outils.ILLUSTRATION_DEFINITION_FOLDER).list().length;
-    		nbFileToCopy += DiskEnvironment.getPrimaryExternalStorage().getFilesDir(this, Photos_Outils.ILLUSTRATION_BIBLIO_FOLDER).list().length;
+   			nbFileToCopy = disqueOutils.getPrimaryExternalStorageNbFiles( Photos_Outils.VIGNETTES_FICHE_FOLDER );
+    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( Photos_Outils.MED_RES_FICHE_FOLDER );
+    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( Photos_Outils.HI_RES_FICHE_FOLDER );
+    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( Photos_Outils.PORTRAITS_FOLDER );
+    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( Photos_Outils.ILLUSTRATION_DEFINITION_FOLDER );
+    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( Photos_Outils.ILLUSTRATION_BIBLIO_FOLDER );
     	}else if(source.equals(SECONDARY)){
-    		try {
-				nbFileToCopy = DiskEnvironment.getSecondaryExternalStorage().getFilesDir(this, Photos_Outils.VIGNETTES_FICHE_FOLDER).list().length;			
-	    		nbFileToCopy += DiskEnvironment.getSecondaryExternalStorage().getFilesDir(this, Photos_Outils.MED_RES_FICHE_FOLDER).list().length;
-	    		nbFileToCopy += DiskEnvironment.getSecondaryExternalStorage().getFilesDir(this, Photos_Outils.HI_RES_FICHE_FOLDER).list().length;
-	    		nbFileToCopy += DiskEnvironment.getSecondaryExternalStorage().getFilesDir(this, Photos_Outils.PORTRAITS_FOLDER).list().length;
-	    		nbFileToCopy += DiskEnvironment.getSecondaryExternalStorage().getFilesDir(this, Photos_Outils.ILLUSTRATION_DEFINITION_FOLDER).list().length;
-	    		nbFileToCopy += DiskEnvironment.getSecondaryExternalStorage().getFilesDir(this, Photos_Outils.ILLUSTRATION_BIBLIO_FOLDER).list().length;
-    		} catch (NoSecondaryStorageException e) {
-    			Log.e(LOG_TAG, "déplacement impossible, pas de stockage secondaire");
-        		return;
-			}
+			nbFileToCopy = disqueOutils.getSecondaryExternalStorageNbFiles( Photos_Outils.VIGNETTES_FICHE_FOLDER );
+    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( Photos_Outils.MED_RES_FICHE_FOLDER );
+    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( Photos_Outils.HI_RES_FICHE_FOLDER );
+    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( Photos_Outils.PORTRAITS_FOLDER );
+    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( Photos_Outils.ILLUSTRATION_DEFINITION_FOLDER );
+    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( Photos_Outils.ILLUSTRATION_BIBLIO_FOLDER );
     	}else {
     		Log.e(LOG_TAG, "déplacement impossible, 1ier parametre incorrect : "+source);
     		return;

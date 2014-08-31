@@ -99,7 +99,7 @@ import com.j256.ormlite.dao.CloseableIterator;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.MultiProgressBar;
-import fr.ffessm.doris.android.async.DeplacePhotos_BgActivity;
+
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
@@ -398,17 +398,17 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     }
     
     protected void initOnClickListener(){
-    	addReusableClickListener(DeplacePhotos_BgActivity.INTERNAL, DeplacePhotos_BgActivity.PRIMARY);
-    	addReusableClickListener(DeplacePhotos_BgActivity.INTERNAL, DeplacePhotos_BgActivity.SECONDARY);
-    	addReusableClickListener(DeplacePhotos_BgActivity.INTERNAL, null);
+    	addReusableClickListener(MovePhotoDiskService.INTERNAL, MovePhotoDiskService.PRIMARY);
+    	addReusableClickListener(MovePhotoDiskService.INTERNAL, MovePhotoDiskService.SECONDARY);
+    	addReusableClickListener(MovePhotoDiskService.INTERNAL, null);
     	
-    	addReusableClickListener(DeplacePhotos_BgActivity.PRIMARY, DeplacePhotos_BgActivity.INTERNAL);
-    	addReusableClickListener(DeplacePhotos_BgActivity.PRIMARY, DeplacePhotos_BgActivity.SECONDARY);
-    	addReusableClickListener(DeplacePhotos_BgActivity.PRIMARY, null);
+    	addReusableClickListener(MovePhotoDiskService.PRIMARY, MovePhotoDiskService.INTERNAL);
+    	addReusableClickListener(MovePhotoDiskService.PRIMARY, MovePhotoDiskService.SECONDARY);
+    	addReusableClickListener(MovePhotoDiskService.PRIMARY, null);
     	
-    	addReusableClickListener(DeplacePhotos_BgActivity.SECONDARY, DeplacePhotos_BgActivity.INTERNAL);
-    	addReusableClickListener(DeplacePhotos_BgActivity.SECONDARY, DeplacePhotos_BgActivity.PRIMARY);
-    	addReusableClickListener(DeplacePhotos_BgActivity.SECONDARY, null);
+    	addReusableClickListener(MovePhotoDiskService.SECONDARY, MovePhotoDiskService.INTERNAL);
+    	addReusableClickListener(MovePhotoDiskService.SECONDARY, MovePhotoDiskService.PRIMARY);
+    	addReusableClickListener(MovePhotoDiskService.SECONDARY, null);
     }
     
     private void addReusableClickListener(final String source, final String target){
@@ -416,31 +416,18 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	    	reusableClickListener.put(source+"2"+target, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// déplace vers internal
-					/* DorisApplicationContext.getInstance().deplacePhotos_BgActivity = 
-							(DeplacePhotos_BgActivity) new DeplacePhotos_BgActivity(getApplicationContext(),getHelper()).
-							execute(source, target); */
+					// Déplace les fichiers de la source vers la cible
+
 					// utilise le déplacement sous forme de service
 					// use this to start and trigger a service
 					Intent i= new Intent(getApplicationContext(), MovePhotoDiskService.class);
 					// add data to the intent
 					i.putExtra("fr.ffessm.doris.android.SOURCE_DISK", source);
 					i.putExtra("fr.ffessm.doris.android.TARGET_DISK", target);
+					
 					getApplicationContext().startService(i);
 					
 					DorisApplicationContext.getInstance().notifyDataHasChanged(null);
-					/*
-					showToast(source+"2"+target);
-					ImageLocation destImageLocation;
-			    	if(target.equals(DeplacePhotos_BgActivity.INTERNAL)){
-			    		destImageLocation = ImageLocation.APP_INTERNAL;
-			    	}else if(target.equals(DeplacePhotos_BgActivity.PRIMARY)){
-			    		destImageLocation = ImageLocation.PRIMARY;
-			    	}else {destImageLocation = ImageLocation.SECONDARY;
-			    	}
-					new Photos_Outils(EtatModeHorsLigne_CustomViewActivity.this).setPreferedLocation(destImageLocation);
-			        DorisApplicationContext.getInstance().notifyDataHasChanged(null);
-			        */
 				}
 			});
     	}
@@ -678,15 +665,15 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			//if(!deplacementEnCours){
 			switch (currentImageLocation){
 			case APP_INTERNAL:
-				internalDiskBtn.setOnClickListener(reusableClickListener.get(DeplacePhotos_BgActivity.INTERNAL+"2NULL"));
+				internalDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.INTERNAL+"2NULL"));
 				internalDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_internal_btn_text_selected);
 				break;
 			case PRIMARY:
-				internalDiskBtn.setOnClickListener(reusableClickListener.get(DeplacePhotos_BgActivity.PRIMARY+"2"+ DeplacePhotos_BgActivity.INTERNAL));
+				internalDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.PRIMARY+"2"+ MovePhotoDiskService.INTERNAL));
 				internalDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_internal_btn_text_not_selected);
 				break;
 			case SECONDARY:
-				internalDiskBtn.setOnClickListener(reusableClickListener.get(DeplacePhotos_BgActivity.SECONDARY+"2"+ DeplacePhotos_BgActivity.INTERNAL));
+				internalDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.SECONDARY+"2"+ MovePhotoDiskService.INTERNAL));
 				internalDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_internal_btn_text_not_selected);
 				break;
 			}
@@ -700,15 +687,15 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				//if(!deplacementEnCours){
 				switch (currentImageLocation){
 				case PRIMARY:
-					primaryDiskBtn.setOnClickListener(reusableClickListener.get(DeplacePhotos_BgActivity.PRIMARY+"2NULL"));
+					primaryDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.PRIMARY+"2NULL"));
 					primaryDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_primary_btn_text_selected);
 					break;
 				case APP_INTERNAL:
-					primaryDiskBtn.setOnClickListener(reusableClickListener.get(DeplacePhotos_BgActivity.INTERNAL+"2"+ DeplacePhotos_BgActivity.PRIMARY));
+					primaryDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.INTERNAL+"2"+ MovePhotoDiskService.PRIMARY));
 					primaryDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_primary_btn_text_not_selected);
 					break;
 				case SECONDARY:
-					primaryDiskBtn.setOnClickListener(reusableClickListener.get(DeplacePhotos_BgActivity.SECONDARY+"2"+ DeplacePhotos_BgActivity.PRIMARY));
+					primaryDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.SECONDARY+"2"+ MovePhotoDiskService.PRIMARY));
 					primaryDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_primary_btn_text_not_selected);
 					break;
 				}
@@ -724,15 +711,15 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				//if(!deplacementEnCours){
 				switch (currentImageLocation){
 				case SECONDARY:
-					secondaryDiskBtn.setOnClickListener(reusableClickListener.get(DeplacePhotos_BgActivity.SECONDARY+"2NULL"));
+					secondaryDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.SECONDARY+"2NULL"));
 					secondaryDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_secondary_btn_text_selected);
 					break;
 				case APP_INTERNAL:
-					secondaryDiskBtn.setOnClickListener(reusableClickListener.get(DeplacePhotos_BgActivity.INTERNAL+"2"+ DeplacePhotos_BgActivity.SECONDARY));
+					secondaryDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.INTERNAL+"2"+ MovePhotoDiskService.SECONDARY));
 					secondaryDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_secondary_btn_text_not_selected);
 					break;
 				case PRIMARY:
-					secondaryDiskBtn.setOnClickListener(reusableClickListener.get(DeplacePhotos_BgActivity.PRIMARY+"2"+ DeplacePhotos_BgActivity.SECONDARY));
+					secondaryDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.PRIMARY+"2"+ MovePhotoDiskService.SECONDARY));
 					secondaryDiskBtn.setText(R.string.etatmodehorsligne_customview_diskselection_secondary_btn_text_not_selected);
 					break;
 				}

@@ -47,6 +47,7 @@ import java.util.Date;
 
 import fr.ffessm.doris.android.tools.disk.Device;
 import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
+import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 
 import android.content.Context;
 import android.text.format.DateUtils;
@@ -131,7 +132,28 @@ public class Disque_Outils {
 	    Log.d(LOG_TAG, "clearFolder() - Fichiers effacés : "+deletedFiles);
 	    return deletedFiles;
 	}
- 
+    
+    public int getPrimaryExternalStorageNbFiles(String fileStr){
+    	File file = DiskEnvironment.getPrimaryExternalStorage().getFilesDir(context, fileStr);
+    	if (file.isDirectory()) {
+    		return file.list().length;
+    	}
+    	return 0;
+    }
+    
+    public int getSecondaryExternalStorageNbFiles(String fileStr){
+    	try {
+	    	File file = DiskEnvironment.getSecondaryExternalStorage().getFilesDir(context, fileStr);
+	    	if (file.isDirectory()) {
+	    		return file.list().length;
+	    	}
+		} catch (NoSecondaryStorageException e) {
+			Log.e(LOG_TAG, "Erreur détermination SecondaryStorage");
+    		return 0;
+		}
+    	return 0;
+    }   
+    
     public class DisqueUsage_Outils implements FileFilter {
     	public DisqueUsage_Outils() {
     	};
