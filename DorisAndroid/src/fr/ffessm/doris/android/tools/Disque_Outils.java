@@ -62,12 +62,15 @@ public class Disque_Outils {
 	}
 
 	public long getDiskUsage(File inImageFolder){
+		Log.d(LOG_TAG, "Disque_Outils - getDiskUsage()");
 		DisqueUsage_Outils du = new DisqueUsage_Outils();
     	du.accept(inImageFolder);
+    	Log.d(LOG_TAG, "Disque_Outils - du.getSize() = "+du.getSize() );
     	return du.getSize();
 	}
 	
 	public long getDiskUsage(File inImageFolder, boolean pipot){
+
 		File[] files = inImageFolder.listFiles();
 		  int count = 0;
 		  for (File f : files)

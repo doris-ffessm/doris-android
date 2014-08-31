@@ -154,9 +154,9 @@ public class Photos_Outils {
 		}
 	}
 	/**
-	 * recupère le folder requis en utilisant les préférence utilsateur comme base
+	 * Récupère le folder requis en utilisant les préférences utilisateur comme base
 	 * Attention renvoie le disque interne si le disque secondaire n'est pas disponible
-	 * Utilioser la fonction is isPreferedLocationAvailable
+	 * Utiliser la fonction isPreferedLocationAvailable
 	 * @param requestedSubFolder
 	 * @return
 	 */
@@ -379,6 +379,7 @@ public class Photos_Outils {
 	}
 	
 	public long getPhotosDiskUsage(ImageLocation baseImageLocation){
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "Photos_Outils() - getPhotosDiskUsage()");
     	return getPhotoDiskUsage(baseImageLocation, ImageType.VIGNETTE)
     			+ getPhotoDiskUsage(baseImageLocation, ImageType.MED_RES)
     			+ getPhotoDiskUsage(baseImageLocation, ImageType.HI_RES)
@@ -401,7 +402,7 @@ public class Photos_Outils {
 	}
 	public long getPhotoDiskUsage(ImageLocation baseImageLocation, ImageType inImageType){
 		Disque_Outils disqueOutils = new Disque_Outils(context);
-		//Log.d(LOG_TAG, "getPhotoDiskUsage "+inImageType+" "+getImageFolder(inImageType));
+		Log.d(LOG_TAG, "getPhotoDiskUsage "+inImageType+" "+getImageFolder(inImageType));
     	return disqueOutils.getDiskUsage(getImageFolder(baseImageLocation, inImageType) );
 	}
 	
