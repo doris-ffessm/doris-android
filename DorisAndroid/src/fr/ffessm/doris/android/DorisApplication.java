@@ -46,6 +46,7 @@ import java.io.IOException;
 import org.acra.*;
 import org.acra.annotation.*;
 
+import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
 import fr.ffessm.doris.android.datamodel.SQLiteDataBaseHelper;
 
 import android.app.Application;
@@ -63,14 +64,17 @@ import android.util.Log;
 	)
 public class DorisApplication extends Application {
 
+	private static final String LOG_TAG = DorisApplication.class.getSimpleName();
+	
 	@Override
     public void onCreate() {
         super.onCreate();
-
+        if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Début");
+        
         // The following line triggers the initialization of ACRA
         ACRA.init(this);
         
-        
+ 
       /*  
         // The following initialize the DB from file
         SQLiteDataBaseHelper myDbHelper = new SQLiteDataBaseHelper(this);
@@ -86,6 +90,8 @@ public class DorisApplication extends Application {
          
         }
 */
+        
+        if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Fin");
     }
 	
 	

@@ -72,11 +72,14 @@ public class DorisApplicationContext {
 	
 	/** singleton contructor */
 	private DorisApplicationContext(){
-		
+		if (BuildConfig.DEBUG) Log.v(LOG_TAG, "DorisApplicationContext - Début");
+		if (BuildConfig.DEBUG) Log.v(LOG_TAG, "DorisApplicationContext - Fin");
 	}
 	
 	public static DorisApplicationContext getInstance(){
+		//if (BuildConfig.DEBUG) Log.v(LOG_TAG, "DorisApplicationContext - getInstance() - Début");
 		if(instance == null) instance = new DorisApplicationContext();
+		//if (BuildConfig.DEBUG) Log.v(LOG_TAG, "DorisApplicationContext - getInstance() - Fin");
 		return instance;
 	}
 	
@@ -122,7 +125,7 @@ public class DorisApplicationContext {
 	 * @param context
 	 */
 	public void ensureDefaultPreferencesInitialization(Context context){
-		
+		if (BuildConfig.DEBUG) Log.v(LOG_TAG, "ensureDefaultPreferencesInitialization() - Début");
 		
 		final Param_Outils paramOutils = new Param_Outils(context);
 		
@@ -209,11 +212,11 @@ public class DorisApplicationContext {
 			}
 			ed.commit();
 		}
-		// Taille des icones des page accueil
+		// Taille des icônes des page accueil
 		String acceuilIconSizeString = paramOutils.getParamString(R.string.pref_key_accueil_icon_size, "");
 		if(acceuilIconSizeString.equals("")){
 			SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-			// adapte la taille par défaut des icones en fonction de la densité et la taille de l'écran 
+			// adapte la taille par défaut des icônes en fonction de la densité et la taille de l'écran 
 			switch(screenlayout_density)
 			{
 			case DisplayMetrics.DENSITY_LOW:
@@ -271,6 +274,7 @@ public class DorisApplicationContext {
 			ed.commit();
 		}
 		
+		if (BuildConfig.DEBUG) Log.v(LOG_TAG, "ensureDefaultPreferencesInitialization() - Fin");
 	}
 	
 }

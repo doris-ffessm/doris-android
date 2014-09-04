@@ -105,6 +105,8 @@ import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.ThemeUtil;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageLocation;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 //End of user code
@@ -142,6 +144,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.accueil_customview);
         //Start of user code onCreate Accueil_CustomViewActivity
+        if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Début");
+        
 	/*	// si pas de fiche alors il faut initialiser la base à partir du prefetched_DB
 		RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
     	if(ficheDao.countOf() == 0){
@@ -169,7 +173,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             }
         };
 
-        // Affichage Icones Fédé.
+        // Affichage Icônes Fédé.
         if (!mustShowLogoFede || !paramOutils.getParamBoolean(R.string.pref_key_accueil_aff_iconesfede, true)){
         	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
         }
@@ -181,9 +185,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         	((ScrollView) findViewById(R.id.accueil_debug)).setVisibility(View.VISIBLE);
         }
 
-        // affichage zone géo
+        // Affichage zone géo
         createNavigationZonesGeoViews();
 
+        // TODO : GMo : ne marche plus ??? Bizarre
         //Lors du 1er démarrage de l'application dans la version actuelle,
         //on affiche la boite d'A Propos
         String VersionAffichageAPropos = paramOutils.getParamString(R.string.pref_key_a_propos_version, "");
@@ -201,7 +206,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			paramOutils.setParamString(R.string.pref_key_a_propos_version, appVersionName);
         }
         
-        if(DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null){
+        if(DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null
+        		|| DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity != null
+        		|| DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity != null){
         	// une tache précédente est en cours, on se réabonne aux évènements 
         	// (on est probablement sur une rotation d'écran)
         	Log.d(LOG_TAG, "onCreate() - une tache précédente est en cours, on se réabonne aux évènements");
@@ -216,22 +223,20 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         	if ( connectionType == Reseau_Outils.ConnectionType.WIFI 
 	        		|| (! wifiOnly && connectionType == Reseau_Outils.ConnectionType.GSM)){
 		
-        		Log.d(LOG_TAG, "onCreate() - Lancement préchargement");
-        		// On démarrage d'abord la MaJ des fiches, puis elle enchaînera avec telechargePhotosFiches
-        		/* DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity =
-        		 * 		(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(
-        		 * 			getApplicationContext(), this.getHelper()).execute("");
-        		 * */
-        		//VerifieMAJFiches_BgActivity verifieMAJFiches_BgActivity = DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity;		    	
-				
+        		Log.d(LOG_TAG, "onCreate() - Lancement MaJ des fiche");
+        		// On démarrage d'abord la MaJ des fiches,
+        		// puis cette dernière enchaînera avec telechargePhotosFiches
+
 	        	DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity =
 	        		(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext()/*,
 						this.getHelper()*/).execute(""+Fiches_Outils.TypeLancement_kind.START);
 
 	        }
-        } 
-        DorisApplicationContext.getInstance().addDataChangeListeners(this);
+        }
 
+        DorisApplicationContext.getInstance().addDataChangeListeners(this);
+        
+        if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Fin");
 		//End of user code
     }
     
@@ -431,7 +436,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	
 	
 	protected void updateProgressBarZone(ZoneGeographique inZoneGeo, MultiProgressBar progressBarZone){
-		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
+		   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
 		   
 		   String uri = fichesOutils.getZoneIcone(inZoneGeo.getZoneGeoKind());
 		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icône : "+uri);  
@@ -523,6 +528,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		   sbTexte.append(summaryTexte);
 		   
 		   progressBarZone.update(inZoneGeo.getNom(), sbTexte.toString(), imageZone, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto, downloadInProgress);
+		   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Après");
 	}
 	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -543,10 +549,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     public void refreshScreenData() {
     	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
     	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
-
-    	
-    	
-    	
+  	
     	/* 
     	DVK 
     	StringBuilder sbTexte = new StringBuilder();
@@ -592,9 +595,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	
     	//((ImageView) findViewById(R.id.accueil_recherche_guidee_icone)).setMaxHeight(iconeZine);
     	
-    	
     	// Affichage de chaque Zones - Toutes Zones en 1er
-    	// if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate); 
+    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate); 
     	ZoneGeographique zoneToutesZones = new ZoneGeographique();
     	zoneToutesZones.setId(-1);
     	zoneToutesZones.setNom(getContext().getString(R.string.avancement_touteszones_titre));
@@ -604,7 +606,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    	// Avancement et Affichage toutes Zones
 	    	MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this);
 	    	updateProgressBarZone(zoneToutesZones, progressBarZoneGenerale);
-	    	progressBarZones.put(zoneToutesZones.getId(), progressBarZoneGenerale); 
+	    	progressBarZones.put(zoneToutesZones.getId(), progressBarZoneGenerale);
+	    	
 	    	final Context context = this;
 	    	progressBarZoneGenerale.pbProgressBar_running.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -624,17 +627,16 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			});
 	    	llContainerLayout.addView(progressBarZoneGenerale);
 
-	    	
-	    	
     	} else {
-    		// if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - update progress bar : ");
+    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - updateProgressBarZone - Avant");
     		updateProgressBarZone(zoneToutesZones, progressBarZones.get(zoneToutesZones.getId()));
-    	
+    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - updateProgressBarZone - Après");
     	}
 		
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     	// Debbug
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Debbug : "+paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)); 
     	if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)){
 	    	StringBuilder sb = new StringBuilder();
 	    	sb.append("- - Debbug - -\n");
@@ -705,9 +707,28 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    	Fiches_Outils fichesOutils = new Fiches_Outils(getApplicationContext());
 	    	sb.append(fichesOutils.getDerniereMajListeFichesTypeZoneGeo(1));
 	    	*/
+	    	Param_Outils paramOutil = new Param_Outils(this);
 	    	
+	    	sb.append("prefered_disque : "+
+	    			paramOutil.getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
+	    					ImageLocation.APP_INTERNAL.ordinal() )+"\n");
+	    	sb.append("prefered_disque_precedent : "+
+	    			paramOutil.getParamInt(R.string.pref_key_prefered_disque_stockage_photo_precedent,
+	    					ImageLocation.APP_INTERNAL.ordinal() )+"\n");
+	    	sb.append("déplacement en cours : "+
+	    			paramOutil.getParamBoolean(R.string.pref_key_deplace_photo_encours, false)+"\n");
 	    	
 	    	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());
+	    	
+	    	Photos_Outils photosOutils = new Photos_Outils(this);
+	    	Log.d(LOG_TAG, "refreshScreenData() - 010");
+	    	Log.d(LOG_TAG, "refreshScreenData() - nb vig : "
+	    			+photosOutils.getImageCountInFolder(ImageType.VIGNETTE));
+	    	Log.d(LOG_TAG, "refreshScreenData() - 020");
+	    	Log.d(LOG_TAG, "refreshScreenData() - nb vig : "
+	    			+photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE));
+	    	Log.d(LOG_TAG, "refreshScreenData() - 030");
+	    	
     	}
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     	// Fin Debbug

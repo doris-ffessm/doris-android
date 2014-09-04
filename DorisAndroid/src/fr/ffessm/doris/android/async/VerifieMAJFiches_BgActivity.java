@@ -116,7 +116,8 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 	/** constructor */
     public VerifieMAJFiches_BgActivity(Context context/*, OrmLiteDBHelper dbHelper*/){
 		// Start of user code additional attribute declarations VerifieMAJFiches_BgActivity constructor
-		
+    	Log.d(LOG_TAG, "VerifieMAJFiches_BgActivity() - Début");
+    	
 		String initialTickerText = context.getString(R.string.bg_notifText_fichesInitial);
 		String notificationTitle = context.getString(R.string.bg_notifTitle_fichesInitial);
         //TODO : compléter EtatModeHorsLigne_CustomViewActivity ?
@@ -125,6 +126,8 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		fichesOutils = new Fiches_Outils(context);
 	    reseauOutils = new Reseau_Outils(context);
 	    paramOutils = new Param_Outils(context);
+	    
+	    Log.d(LOG_TAG, "VerifieMAJFiches_BgActivity() - Fin");
 	    
 		// End of user code
 	    this.dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
@@ -142,7 +145,10 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 		// Start of user code initialization of the task VerifieMAJFiches_BgActivity
 		// do the initialization of the task here
 		// once done, you should indicates to the notificationHelper how many item will be processed
-		//mNotificationHelper.setMaxNbPages(maxNbPages.toString());
+		
+    	Log.d(LOG_TAG, "doInBackground() - Début");
+    	
+    	//mNotificationHelper.setMaxNbPages(maxNbPages.toString());
         
         
         
@@ -305,7 +311,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     		}
 		}
 		
-		//Log.d(LOG_TAG, "doInBackground() - Fin");
+		Log.d(LOG_TAG, "doInBackground() - Fin");
 		// End of user code
         
 		// Start of user code end of task VerifieMAJFiches_BgActivity
@@ -329,12 +335,17 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
 		// Start of user code VerifieMAJFiches onPostExecute
+        //Log.d(LOG_TAG, "onPostExecute() - Début");
         
         if ( typeLancement == Fiches_Outils.TypeLancement_kind.START) {
-	        DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity =
-	        		(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(
-	        				context/*, dbHelper*/).execute("");
+        	
+        	Log.d(LOG_TAG, "onCreate() - Lancement Telechargement Photos");
+	        
+        	DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity =
+        		(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(
+    				context/*, dbHelper*/).execute("");
         }
+        //Log.d(LOG_TAG, "onPostExecute() - Fin");
         
 		// End of user code
     }

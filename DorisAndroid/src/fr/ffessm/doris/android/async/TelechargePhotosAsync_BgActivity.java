@@ -116,7 +116,9 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	/** constructor */
     public TelechargePhotosAsync_BgActivity(Context context/*, OrmLiteDBHelper dbHelper*/){
 		// Start of user code additional attribute declarations TelechargePhotosAsync_BgActivity constructor
-		String initialTickerText = context.getString(R.string.bg_notifText_imagesinitial);
+    	Log.d(LOG_TAG, "TelechargePhotosAsync_BgActivity() - Début");
+    	
+    	String initialTickerText = context.getString(R.string.bg_notifText_imagesinitial);
 		String notificationTitle = context.getString(R.string.bg_notifTitle_imagesinitial);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 
@@ -131,6 +133,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         	tempo = Integer.valueOf(preferences.getString(context.getString(R.string.pref_key_asynch_tempo), "50") );
         }catch(Exception e){}
 
+        Log.d(LOG_TAG, "TelechargePhotosAsync_BgActivity() - Fin");
 		// End of user code
         // use application wide helper
         this.dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
@@ -149,7 +152,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 		// Start of user code initialization of the task TelechargePhotosAsync_BgActivity
 		// do the initializatio of the task here
 		// once done, you should indicates to the notificationHelper how many item will be processed
-		//mNotificationHelper.setMaxNbPages(maxNbPages.toString());
+		
+    	Log.d(LOG_TAG, "doInBackground() - Début");
+    	
+    	//mNotificationHelper.setMaxNbPages(maxNbPages.toString());
 		// End of user code
     	
     	// Start of user code main loop of task TelechargePhotosAsync_BgActivity
@@ -237,6 +243,8 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 		// End of user code
         
 		// Start of user code end of task TelechargePhotosAsync_BgActivity
+    	
+    	Log.d(LOG_TAG, "doInBackground() - Fin");
 		// return the number of item processed
         return 0;
 		// End of user code

@@ -12,6 +12,7 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.async.NotificationHelper;
 import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.LimitTimer;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageLocation;
 import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
@@ -121,8 +122,7 @@ public class MovePhotoDiskService extends IntentService {
     	// baisse la priorité pour minimiser l'impact sur l'ihm et les risques de plantage
     	android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND + android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE);
 
-    	
-    	
+	
     	if(dest.equals(DELETE)){
     		clearFolder(source, Photos_Outils.VIGNETTES_FICHE_FOLDER);
     		clearFolder(source, Photos_Outils.MED_RES_FICHE_FOLDER);
@@ -148,6 +148,12 @@ public class MovePhotoDiskService extends IntentService {
     		Log.e(LOG_TAG, "déplacement impossible, second parametre incorrect : "+dest);
     		return;
     	}
+    	
+    	// Enregistrement du mouvement qui va être réalisé, afin de pouvoir le reprendre
+    	// s'il était interrompu
+        new Photos_Outils(this).setPreferedLocation(destImageLocation);
+        new Param_Outils(this).setParamBoolean(R.string.pref_key_deplace_photo_encours, true);
+        
     	// déplacement vignettes
     	moveFolderContent(source, dest, Photos_Outils.VIGNETTES_FICHE_FOLDER);
     	// déplacement med_res
@@ -163,7 +169,9 @@ public class MovePhotoDiskService extends IntentService {
 		// End of user code
         
 		// Start of user code end of task InitialisationApplication_BgActivity
-        new Photos_Outils(this).setPreferedLocation(destImageLocation);
+    	
+    	// Le traitement s'est terminé correctement
+    	new Param_Outils(this).setParamBoolean(R.string.pref_key_deplace_photo_encours, false);
 
         DorisApplicationContext.getInstance().isMovingPhotos = false;
         DorisApplicationContext.getInstance().notifyDataHasChanged(null);

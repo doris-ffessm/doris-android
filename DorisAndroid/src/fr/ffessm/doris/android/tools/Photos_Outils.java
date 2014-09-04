@@ -217,41 +217,30 @@ public class Photos_Outils {
 	}
 	
 	/**
-	 * renvoie l'emplacement préféré si disponible, sinon rebascule sur le précédent 
+	 * renvoie l'emplacement préféré si disponible, sinon emplacement par défaut : APP_INTERNAL
 	 */
 	public ImageLocation getPreferedLocation(){
 		Param_Outils paramOutil = new Param_Outils(context);
-		switch (paramOutil.getParamInt(R.string.pref_key_prefered_disque_stockage_photo, 0)){
-		case 1:
-			return ImageLocation.PRIMARY;
-		case 2:
-			return ImageLocation.SECONDARY;
-		case 0:
-			return ImageLocation.APP_INTERNAL;
-		default:
-			return ImageLocation.APP_INTERNAL;
-		}
+		
+		return ImageLocation.values()[
+              paramOutil.getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
+            		  ImageLocation.APP_INTERNAL.ordinal())
+        		  ];
+		
 	}
+	
 	public void setPreferedLocation(ImageLocation preferedImageLocation){
 		Param_Outils paramOutil = new Param_Outils(context);
 		
 		// On enregistre l'emplacement préféré précédent afin de pouvoir faire une reprise si
 		// le traitement était interrompu avant sa fin
 		paramOutil.setParamInt(R.string.pref_key_prefered_disque_stockage_photo_precedent,
-				paramOutil.getParamInt(R.string.pref_key_prefered_disque_stockage_photo, 0) );
+				paramOutil.getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
+						ImageLocation.APP_INTERNAL.ordinal() ) );
 		
-		switch (preferedImageLocation){
-		case APP_INTERNAL:
-			paramOutil.setParamInt(R.string.pref_key_prefered_disque_stockage_photo, 0);
-			break;
-		case PRIMARY:
-			paramOutil.setParamInt(R.string.pref_key_prefered_disque_stockage_photo, 1);
-			break;
-		case SECONDARY:
-			paramOutil.setParamInt(R.string.pref_key_prefered_disque_stockage_photo, 2);
-			break;
-		}
-		
+		paramOutil.setParamInt(R.string.pref_key_prefered_disque_stockage_photo,
+				preferedImageLocation.ordinal());
+				
 	}
 	
 	public String getbaseUrl(ImageType inImageType) { 
@@ -402,10 +391,15 @@ public class Photos_Outils {
     			+ getPhotoDiskUsage(ImageType.ILLUSTRATION_DEFINITION);
 	}
 	
-	public long getPhotoDiskUsage(ImageType inImageType){
+	public long getPhotoDiskUsage(ImageType inImageType,int pipot){
 		Disque_Outils disqueOutils = new Disque_Outils(context);
     	return disqueOutils.getDiskUsage(getImageFolder(inImageType) );
 	}
+	public long getPhotoDiskUsage(ImageType inImageType){
+    	return getImageFolder(inImageType).list().length * 8500 ;
+	}
+	
+	
 	public long getPhotoDiskUsage(ImageLocation baseImageLocation, ImageType inImageType){
 		Disque_Outils disqueOutils = new Disque_Outils(context);
 		Log.d(LOG_TAG, "getPhotoDiskUsage "+inImageType+" "+getImageFolder(inImageType));
