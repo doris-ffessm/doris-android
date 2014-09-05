@@ -79,14 +79,7 @@ import fr.ffessm.doris.android.R;
 
 public class Photos_Outils {
 	private static final String LOG_TAG = Photos_Outils.class.getCanonicalName();
-	
-	public static final String VIGNETTES_FICHE_FOLDER = "vignettes_fiches";
-	public static final String MED_RES_FICHE_FOLDER = "medium_res_images_fiches";
-	public static final String HI_RES_FICHE_FOLDER = "hi_res_images_fiches";
-	public static final String PORTRAITS_FOLDER = "portraits";
-	public static final String ILLUSTRATION_DEFINITION_FOLDER = "illustrations";
-	public static final String ILLUSTRATION_BIBLIO_FOLDER = "biblio";
-	
+		
 	private Context context;
 	private Fiches_Outils fichesOutils;
 	
@@ -138,17 +131,17 @@ public class Photos_Outils {
 	public File getImageFolder(ImageLocation baseImageLocation, ImageType inImageType) {
 		switch (inImageType) {
 		case VIGNETTE :
-			return getFolderFromBaseLocation(baseImageLocation, VIGNETTES_FICHE_FOLDER);
+			return getFolderFromBaseLocation(baseImageLocation, context.getString(R.string.folder_vignettes_fiches) );
 		case MED_RES :
-			return getFolderFromBaseLocation(baseImageLocation, MED_RES_FICHE_FOLDER);
+			return getFolderFromBaseLocation(baseImageLocation, context.getString(R.string.folder_med_res_fiches) );
 		case HI_RES :
-			return getFolderFromBaseLocation(baseImageLocation, HI_RES_FICHE_FOLDER);
+			return getFolderFromBaseLocation(baseImageLocation, context.getString(R.string.folder_hi_res_fiches) );
 		case PORTRAITS :
-			return getFolderFromBaseLocation(baseImageLocation, PORTRAITS_FOLDER);
+			return getFolderFromBaseLocation(baseImageLocation, context.getString(R.string.folder_portraits) );
 		case ILLUSTRATION_DEFINITION :
-			return getFolderFromBaseLocation(baseImageLocation, ILLUSTRATION_DEFINITION_FOLDER);
+			return getFolderFromBaseLocation(baseImageLocation, context.getString(R.string.folder_illustration_definitions) );
 		case ILLUSTRATION_BIBLIO :
-			return getFolderFromBaseLocation(baseImageLocation, ILLUSTRATION_BIBLIO_FOLDER);
+			return getFolderFromBaseLocation(baseImageLocation, context.getString(R.string.folder_illustration_biblio) );
 		default:
 			return null;
 		}
@@ -196,24 +189,24 @@ public class Photos_Outils {
 	}
 	
 	public File getImageFolderVignette() {
-		return getFolderFromPreferedLocation( VIGNETTES_FICHE_FOLDER );
+		return getFolderFromPreferedLocation( context.getString(R.string.folder_vignettes_fiches) );
 	}
 	public File getImageFolderMedRes() { 
-		return getFolderFromPreferedLocation( MED_RES_FICHE_FOLDER);
+		return getFolderFromPreferedLocation( context.getString(R.string.folder_med_res_fiches) );
 	}
 	public File getImageFolderHiRes() { 
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageFolderHiRes() - context : " + context.toString() );
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageFolderHiRes() - HI_RES_FICHE_FOLDER : " +HI_RES_FICHE_FOLDER);
-		return getFolderFromPreferedLocation( HI_RES_FICHE_FOLDER);
+		return getFolderFromPreferedLocation( context.getString(R.string.folder_hi_res_fiches) );
 	}
 	public File getImageFolderPortraits() { 
-		return getFolderFromPreferedLocation( PORTRAITS_FOLDER);
+		return getFolderFromPreferedLocation( context.getString(R.string.folder_portraits) );
 	}
 	public File getImageFolderGlossaire() { 
-		return getFolderFromPreferedLocation( ILLUSTRATION_DEFINITION_FOLDER );
+		return getFolderFromPreferedLocation( context.getString(R.string.folder_illustration_definitions) );
 	}
 	public File getImageFolderBiblio() { 
-		return getFolderFromPreferedLocation( ILLUSTRATION_BIBLIO_FOLDER );
+		return getFolderFromPreferedLocation( context.getString(R.string.folder_illustration_biblio) );
 	}
 	
 	/**
@@ -396,10 +389,8 @@ public class Photos_Outils {
     	return disqueOutils.getDiskUsage(getImageFolder(inImageType) );
 	}
 	public long getPhotoDiskUsage(ImageType inImageType){
-    	return getImageFolder(inImageType).list().length * 8500 ;
+    	return getImageFolder(inImageType).list().length * getTailleMoyImageUnitaire(inImageType) ;
 	}
-	
-	
 	public long getPhotoDiskUsage(ImageLocation baseImageLocation, ImageType inImageType){
 		Disque_Outils disqueOutils = new Disque_Outils(context);
 		Log.d(LOG_TAG, "getPhotoDiskUsage "+inImageType+" "+getImageFolder(inImageType));
@@ -702,10 +693,13 @@ public class Photos_Outils {
 	   	case VIGNETTE :
     		return Integer.parseInt(context.getString(R.string.etatmodehorsligne_taillemoy_vignette));
     	case MED_RES :
-    	case PORTRAITS :
-    	case ILLUSTRATION_DEFINITION :
-    	case ILLUSTRATION_BIBLIO :
     		return Integer.parseInt(context.getString(R.string.etatmodehorsligne_taillemoy_med_res));
+    	case PORTRAITS :
+    		return Integer.parseInt(context.getString(R.string.etatmodehorsligne_taillemoy_portraits));
+    	case ILLUSTRATION_DEFINITION :
+    		return Integer.parseInt(context.getString(R.string.etatmodehorsligne_taillemoy_illus_definiions));
+    	case ILLUSTRATION_BIBLIO :
+    		return Integer.parseInt(context.getString(R.string.etatmodehorsligne_taillemoy_illus_biblio));
 		case HI_RES :
 			return Integer.parseInt(context.getString(R.string.etatmodehorsligne_taillemoy_hi_res));
 		default :
