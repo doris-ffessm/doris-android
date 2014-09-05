@@ -120,7 +120,8 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     	
     	String initialTickerText = context.getString(R.string.bg_notifText_imagesinitial);
 		String notificationTitle = context.getString(R.string.bg_notifTitle_imagesinitial);
-        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
+        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle,
+        		new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		paramOutils = new Param_Outils(context);
