@@ -91,26 +91,26 @@ public class MovePhotoDiskService extends IntentService {
     	Disque_Outils disqueOutils = new Disque_Outils(this);
     	
     	if(source.equals(INTERNAL)){
-    		nbFileToCopy = this.getDir(Photos_Outils.VIGNETTES_FICHE_FOLDER, Context.MODE_PRIVATE).list().length;
-    		nbFileToCopy += this.getDir(Photos_Outils.MED_RES_FICHE_FOLDER, Context.MODE_PRIVATE).list().length;
-    		nbFileToCopy += this.getDir(Photos_Outils.HI_RES_FICHE_FOLDER, Context.MODE_PRIVATE).list().length;
-    		nbFileToCopy += this.getDir(Photos_Outils.PORTRAITS_FOLDER, Context.MODE_PRIVATE).list().length;
-    		nbFileToCopy += this.getDir(Photos_Outils.ILLUSTRATION_DEFINITION_FOLDER, Context.MODE_PRIVATE).list().length;
-    		nbFileToCopy += this.getDir(Photos_Outils.ILLUSTRATION_BIBLIO_FOLDER, Context.MODE_PRIVATE).list().length;
+    		nbFileToCopy = this.getDir(this.getString(R.string.folder_vignettes_fiches), Context.MODE_PRIVATE).list().length;
+    		nbFileToCopy += this.getDir(this.getString(R.string.folder_med_res_fiches), Context.MODE_PRIVATE).list().length;
+    		nbFileToCopy += this.getDir(this.getString(R.string.folder_hi_res_fiches), Context.MODE_PRIVATE).list().length;
+    		nbFileToCopy += this.getDir(this.getString(R.string.folder_portraits), Context.MODE_PRIVATE).list().length;
+    		nbFileToCopy += this.getDir(this.getString(R.string.folder_illustration_definitions), Context.MODE_PRIVATE).list().length;
+    		nbFileToCopy += this.getDir(this.getString(R.string.folder_illustration_biblio), Context.MODE_PRIVATE).list().length;
     	}else if(source.equals(PRIMARY)){
-   			nbFileToCopy = disqueOutils.getPrimaryExternalStorageNbFiles( Photos_Outils.VIGNETTES_FICHE_FOLDER );
-    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( Photos_Outils.MED_RES_FICHE_FOLDER );
-    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( Photos_Outils.HI_RES_FICHE_FOLDER );
-    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( Photos_Outils.PORTRAITS_FOLDER );
-    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( Photos_Outils.ILLUSTRATION_DEFINITION_FOLDER );
-    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( Photos_Outils.ILLUSTRATION_BIBLIO_FOLDER );
+   			nbFileToCopy = disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_vignettes_fiches) );
+    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_med_res_fiches) );
+    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_hi_res_fiches) );
+    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_portraits) );
+    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_definitions) );
+    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_biblio) );
     	}else if(source.equals(SECONDARY)){
-			nbFileToCopy = disqueOutils.getSecondaryExternalStorageNbFiles( Photos_Outils.VIGNETTES_FICHE_FOLDER );
-    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( Photos_Outils.MED_RES_FICHE_FOLDER );
-    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( Photos_Outils.HI_RES_FICHE_FOLDER );
-    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( Photos_Outils.PORTRAITS_FOLDER );
-    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( Photos_Outils.ILLUSTRATION_DEFINITION_FOLDER );
-    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( Photos_Outils.ILLUSTRATION_BIBLIO_FOLDER );
+			nbFileToCopy = disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_vignettes_fiches) );
+    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_med_res_fiches) );
+    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_hi_res_fiches) );
+    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_portraits) );
+    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_definitions) );
+    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_biblio) );
     	}else {
     		Log.e(LOG_TAG, "déplacement impossible, 1ier parametre incorrect : "+source);
     		return;
@@ -124,12 +124,12 @@ public class MovePhotoDiskService extends IntentService {
 
 	
     	if(dest.equals(DELETE)){
-    		clearFolder(source, Photos_Outils.VIGNETTES_FICHE_FOLDER);
-    		clearFolder(source, Photos_Outils.MED_RES_FICHE_FOLDER);
-    		clearFolder(source, Photos_Outils.HI_RES_FICHE_FOLDER);
-    		clearFolder(source, Photos_Outils.PORTRAITS_FOLDER);
-    		clearFolder(source, Photos_Outils.ILLUSTRATION_DEFINITION_FOLDER);
-    		clearFolder(source, Photos_Outils.ILLUSTRATION_BIBLIO_FOLDER);
+    		clearFolder(source, this.getString(R.string.folder_vignettes_fiches));
+    		clearFolder(source, this.getString(R.string.folder_med_res_fiches));
+    		clearFolder(source, this.getString(R.string.folder_hi_res_fiches));
+    		clearFolder(source, this.getString(R.string.folder_portraits));
+    		clearFolder(source, this.getString(R.string.folder_illustration_definitions));
+    		clearFolder(source, this.getString(R.string.folder_illustration_biblio));
     		DorisApplicationContext.getInstance().isMovingPhotos = false;
             DorisApplicationContext.getInstance().notifyDataHasChanged(null);
             mNotificationHelper.completed();
@@ -155,17 +155,17 @@ public class MovePhotoDiskService extends IntentService {
         new Param_Outils(this).setParamBoolean(R.string.pref_key_deplace_photo_encours, true);
         
     	// déplacement vignettes
-    	moveFolderContent(source, dest, Photos_Outils.VIGNETTES_FICHE_FOLDER);
+    	moveFolderContent(source, dest, this.getString(R.string.folder_vignettes_fiches));
     	// déplacement med_res
-    	moveFolderContent(source, dest, Photos_Outils.MED_RES_FICHE_FOLDER);
+    	moveFolderContent(source, dest, this.getString(R.string.folder_med_res_fiches));
     	// déplacement hi_res
-    	moveFolderContent(source, dest, Photos_Outils.HI_RES_FICHE_FOLDER);
+    	moveFolderContent(source, dest, this.getString(R.string.folder_hi_res_fiches));
     	// déplacement photos participants
-    	moveFolderContent(source, dest, Photos_Outils.PORTRAITS_FOLDER);
+    	moveFolderContent(source, dest, this.getString(R.string.folder_portraits));
     	// déplacement photos glossaire
-    	moveFolderContent(source, dest, Photos_Outils.ILLUSTRATION_DEFINITION_FOLDER);
+    	moveFolderContent(source, dest, this.getString(R.string.folder_illustration_definitions));
     	// déplacement biblio
-    	moveFolderContent(source, dest, Photos_Outils.ILLUSTRATION_BIBLIO_FOLDER);
+    	moveFolderContent(source, dest, this.getString(R.string.folder_illustration_biblio));
 		// End of user code
         
 		// Start of user code end of task InitialisationApplication_BgActivity

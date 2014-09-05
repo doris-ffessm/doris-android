@@ -22,12 +22,12 @@
 	<string name="etatmodehorsligne_taillemoy_med_res">25000</string>
 	<!-- 1.9Go / 22547 images => 88 ko soit 90500 octets -->
 	<string name="etatmodehorsligne_taillemoy_hi_res">90500</string>
-	<!-- A Affiner => 24 ko soit 25500 octets -->
-	<string name="etatmodehorsligne_taillemoy_portraits">25000</string>
-	<!-- A Affiner => 24 ko soit 25500 octets -->
-	<string name="etatmodehorsligne_taillemoy_illus_definiions">25000</string>
-	<!-- A Affiner => 24 ko soit 25500 octets -->
-	<string name="etatmodehorsligne_taillemoy_illus_biblio">25000</string>
+	<!-- A Affiner => 10 ko soit 10240 octets -->
+	<string name="etatmodehorsligne_taillemoy_portraits">10500</string>
+	<!-- 7.2 Mo / 78 images => 95 ko soit 97300 octets -->
+	<string name="etatmodehorsligne_taillemoy_illus_definiions">97400</string>
+	<!-- 18.6 Mo / 686 images => 28 ko soit 28500 octets -->
+	<string name="etatmodehorsligne_taillemoy_illus_biblio">30000</string>
 	
 	<string name="etatmodehorsligne_customview_titre_text">État du Mode Hors Ligne</string>
 	<string name="etatmodehorsligne_customview_description_text">"DORISAndroid peut fonctionner sans internet. Pour cela vous devez avoir téléchargé les fiches et images à l'avance. Pour économiser votre forfait faites le en Wifi."</string>
