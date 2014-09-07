@@ -55,7 +55,9 @@ import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -79,18 +81,26 @@ public class AffichageMessageHTML {
 	
 	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getCanonicalName();
 	
-	private Param_Outils paramOutils;
+	private final Param_Outils paramOutils;
+	private final Disque_Outils disqueOutils;
+	private final Photos_Outils photosOutils;
 	
 	public AffichageMessageHTML(Context context, Activity activity, OrmLiteDBHelper dbHelper) {
 		this.context = context;
 		this.activity = activity;
 		this.dbHelper = dbHelper;
 		
-		paramOutils = new Param_Outils(context.getApplicationContext());
+		paramOutils = new Param_Outils(context);
+		disqueOutils = new Disque_Outils(context);
+		photosOutils = new Photos_Outils(context);
 	}
 	
 	public AffichageMessageHTML(Context context) {
 		this.context = context;
+		
+		paramOutils = new Param_Outils(context);
+		disqueOutils = new Disque_Outils(context);
+		photosOutils = new Photos_Outils(context);
 	}
 
 	/* *********************************************************************
@@ -195,28 +205,28 @@ public class AffichageMessageHTML {
 		}
     	
 		StringBuffer sizeFolderTexte =  new StringBuffer();
-		Disque_Outils disqueOutils = new Disque_Outils(context.getApplicationContext());
 		
-		if ( paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_vignettes, 0) !=0 ) {
-			sizeFolderTexte.append(System.getProperty("line.separator")); 
-			sizeFolderTexte.append("\t");
-			sizeFolderTexte.append(paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_vignettes, 0));
-			sizeFolderTexte.append(context.getString(R.string.a_propos_foldersize_vignettes));
-			sizeFolderTexte.append(disqueOutils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_vignettes, 0L ) ) );
+		//getImageCountInFolder
+		if ( photosOutils.getImageCountInFolder(ImageType.VIGNETTE) !=0 ) {
+			sizeFolderTexte.append( System.getProperty("line.separator") ); 
+			sizeFolderTexte.append( "\t" );
+			sizeFolderTexte.append( photosOutils.getImageCountInFolder(ImageType.VIGNETTE) );
+			sizeFolderTexte.append( context.getString(R.string.a_propos_foldersize_vignettes) );
+			sizeFolderTexte.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE) ) );
 		}
-		if ( paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_med_res, 0) !=0 ) {
-			sizeFolderTexte.append(System.getProperty("line.separator")); 
-			sizeFolderTexte.append("\t");
-			sizeFolderTexte.append(paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_med_res, 0));
-			sizeFolderTexte.append(context.getString(R.string.a_propos_foldersize_med_res));
-			sizeFolderTexte.append(disqueOutils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_med_res, 0L ) ) );
+		if ( photosOutils.getImageCountInFolder(ImageType.MED_RES) !=0 ) {
+			sizeFolderTexte.append( System.getProperty("line.separator") ); 
+			sizeFolderTexte.append( "\t" );
+			sizeFolderTexte.append( photosOutils.getImageCountInFolder(ImageType.MED_RES) );
+			sizeFolderTexte.append( context.getString(R.string.a_propos_foldersize_med_res) );
+			sizeFolderTexte.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsage(ImageType.MED_RES) ) );
 		}
-		if ( paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_hi_res, 0) !=0 ) {
-			sizeFolderTexte.append(System.getProperty("line.separator")); 
-			sizeFolderTexte.append("\t");
-			sizeFolderTexte.append(paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_hi_res, 0));
-			sizeFolderTexte.append(context.getString(R.string.a_propos_foldersize_hi_res));
-			sizeFolderTexte.append(disqueOutils.getHumanDiskUsage(paramOutils.getParamLong(R.string.pref_key_size_folder_hi_res, 0L ) ) );
+		if ( photosOutils.getImageCountInFolder(ImageType.HI_RES) !=0 ) {
+			sizeFolderTexte.append( System.getProperty("line.separator") ); 
+			sizeFolderTexte.append( "\t" );
+			sizeFolderTexte.append( photosOutils.getImageCountInFolder(ImageType.HI_RES) );
+			sizeFolderTexte.append( context.getString(R.string.a_propos_foldersize_hi_res) );
+			sizeFolderTexte.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsage(ImageType.HI_RES) ) );
 		}
 		
 		if (sizeFolderTexte.length()!=0) {

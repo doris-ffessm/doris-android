@@ -707,16 +707,15 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    	Fiches_Outils fichesOutils = new Fiches_Outils(getApplicationContext());
 	    	sb.append(fichesOutils.getDerniereMajListeFichesTypeZoneGeo(1));
 	    	*/
-	    	Param_Outils paramOutil = new Param_Outils(this);
 	    	
 	    	sb.append("prefered_disque : "+
-	    			paramOutil.getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
+	    			paramOutils.getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
 	    					ImageLocation.APP_INTERNAL.ordinal() )+"\n");
 	    	sb.append("prefered_disque_precedent : "+
-	    			paramOutil.getParamInt(R.string.pref_key_prefered_disque_stockage_photo_precedent,
+	    			paramOutils.getParamInt(R.string.pref_key_prefered_disque_stockage_photo_precedent,
 	    					ImageLocation.APP_INTERNAL.ordinal() )+"\n");
 	    	sb.append("déplacement en cours : "+
-	    			paramOutil.getParamBoolean(R.string.pref_key_deplace_photo_encours, false)+"\n");
+	    			paramOutils.getParamBoolean(R.string.pref_key_deplace_photo_encours, false)+"\n");
 	    	
 	    	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());
 	    	

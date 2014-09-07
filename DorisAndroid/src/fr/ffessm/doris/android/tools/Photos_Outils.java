@@ -82,10 +82,12 @@ public class Photos_Outils {
 		
 	private Context context;
 	private Fiches_Outils fichesOutils;
+	private Param_Outils paramOutils;
 	
 	public Photos_Outils(Context context){
 		this.context = context;
 		this.fichesOutils = new Fiches_Outils(context);
+		this.paramOutils = new Param_Outils(context);
 	}
 	
 	public enum ImageType {
@@ -195,8 +197,8 @@ public class Photos_Outils {
 		return getFolderFromPreferedLocation( context.getString(R.string.folder_med_res_fiches) );
 	}
 	public File getImageFolderHiRes() { 
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageFolderHiRes() - context : " + context.toString() );
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageFolderHiRes() - HI_RES_FICHE_FOLDER : " +HI_RES_FICHE_FOLDER);
+		//Log.d(LOG_TAG, "getImageFolderHiRes() - context : " + context.toString() );
+		//Log.d(LOG_TAG, "getImageFolderHiRes() - HI_RES_FICHE_FOLDER : " +HI_RES_FICHE_FOLDER);
 		return getFolderFromPreferedLocation( context.getString(R.string.folder_hi_res_fiches) );
 	}
 	public File getImageFolderPortraits() { 
@@ -213,25 +215,23 @@ public class Photos_Outils {
 	 * renvoie l'emplacement préféré si disponible, sinon emplacement par défaut : APP_INTERNAL
 	 */
 	public ImageLocation getPreferedLocation(){
-		Param_Outils paramOutil = new Param_Outils(context);
-		
+	
 		return ImageLocation.values()[
-              paramOutil.getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
+              paramOutils.getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
             		  ImageLocation.APP_INTERNAL.ordinal())
         		  ];
 		
 	}
 	
 	public void setPreferedLocation(ImageLocation preferedImageLocation){
-		Param_Outils paramOutil = new Param_Outils(context);
-		
+
 		// On enregistre l'emplacement préféré précédent afin de pouvoir faire une reprise si
 		// le traitement était interrompu avant sa fin
-		paramOutil.setParamInt(R.string.pref_key_prefered_disque_stockage_photo_precedent,
-				paramOutil.getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
+		paramOutils.setParamInt(R.string.pref_key_prefered_disque_stockage_photo_precedent,
+				paramOutils.getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
 						ImageLocation.APP_INTERNAL.ordinal() ) );
 		
-		paramOutil.setParamInt(R.string.pref_key_prefered_disque_stockage_photo,
+		paramOutils.setParamInt(R.string.pref_key_prefered_disque_stockage_photo,
 				preferedImageLocation.ordinal());
 				
 	}
@@ -257,8 +257,7 @@ public class Photos_Outils {
 	
 	public boolean isAvailableImagePhotoFiche(PhotoFiche photofiche){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - photofiche : "+ photofiche );
-		Param_Outils paramOutils = new Param_Outils(context);
-		
+	
 		switch(PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_region_ttzones,"P1"))){
 		case P1 :
 		case P2 :
@@ -384,6 +383,7 @@ public class Photos_Outils {
     			+ getPhotoDiskUsage(ImageType.ILLUSTRATION_DEFINITION);
 	}
 	
+	//TODO : A SUPPRIMER si Estimation OK
 	public long getPhotoDiskUsage(ImageType inImageType,int pipot){
 		Disque_Outils disqueOutils = new Disque_Outils(context);
     	return disqueOutils.getDiskUsage(getImageFolder(inImageType) );
@@ -391,10 +391,14 @@ public class Photos_Outils {
 	public long getPhotoDiskUsage(ImageType inImageType){
     	return getImageFolder(inImageType).list().length * getTailleMoyImageUnitaire(inImageType) ;
 	}
-	public long getPhotoDiskUsage(ImageLocation baseImageLocation, ImageType inImageType){
+	//TODO : A SUPPRIMER si Estimation OK
+	public long getPhotoDiskUsage(ImageLocation baseImageLocation, ImageType inImageType,int pipot){
 		Disque_Outils disqueOutils = new Disque_Outils(context);
 		Log.d(LOG_TAG, "getPhotoDiskUsage "+inImageType+" "+getImageFolder(inImageType));
     	return disqueOutils.getDiskUsage(getImageFolder(baseImageLocation, inImageType) );
+	}
+	public long getPhotoDiskUsage(ImageLocation baseImageLocation, ImageType inImageType){
+    	return getImageFolder(baseImageLocation, inImageType).list().length * getTailleMoyImageUnitaire(inImageType) ;
 	}
 	
 	public ImageType getImageQualityToDownload(boolean inPhotoPrincipale, ZoneGeographiqueKind inZoneGeo){
@@ -435,7 +439,6 @@ public class Photos_Outils {
 	
 	public PrecharMode getPrecharModeZoneGeo(ZoneGeographiqueKind inZoneGeo){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharModeZoneGeo() - Début" );
-		Param_Outils paramOutils = new Param_Outils(context);
 		
 		switch(inZoneGeo){
 		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
@@ -466,7 +469,6 @@ public class Photos_Outils {
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inIdZoneGeo );
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - data_nbphotos_atelecharger_france : "+getParamInt(context, R.string.pref_key_nbphotos_atelecharger_france, 0) );
-		Param_Outils paramOutils = new Param_Outils(context);
 		
 		if (inPrincipale) {
 			switch(inZoneGeo){
@@ -527,7 +529,6 @@ public class Photos_Outils {
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inIdZoneGeo );
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - data_nbphotos_recues_france : "+getParamInt(context, R.string.pref_key_nbphotos_recues_france, 0) );
-		Param_Outils paramOutils = new Param_Outils(context);
 		
 		if (inPrincipale) {
 			switch(inZoneGeo){
@@ -658,7 +659,6 @@ public class Photos_Outils {
 	
 	public boolean isPrecharModeOnlyP0(){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharMode() - Début" );
-		Param_Outils paramOutils = new Param_Outils(context);
 		
 		if ( PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_france,"P1")) == PrecharMode.P0 
 			&& PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_eaudouce,"P1")) == PrecharMode.P0
@@ -671,7 +671,6 @@ public class Photos_Outils {
 	
 	public boolean isPrecharModeOnlyP0orP1(){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharMode() - Début" );
-		Param_Outils paramOutils = new Param_Outils(context);
 		
 		if ( ( PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_france,"P1")) == PrecharMode.P0 
 				|| PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_france,"P1")) == PrecharMode.P1 )
@@ -813,8 +812,4 @@ public class Photos_Outils {
 		return volPhotos;
 	}
 
-			
-
-
-	
 }

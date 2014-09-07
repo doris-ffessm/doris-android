@@ -123,11 +123,12 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	
 	Photos_Outils photosOutils = new Photos_Outils(getContext());
 	Param_Outils paramOutils = new Param_Outils(getContext());
+	Disque_Outils disqueOutils = new Disque_Outils( getContext() );
 	
 	protected SparseArray< MultiProgressBar> progressBarZones = new SparseArray< MultiProgressBar>(); 
 	protected HashMap<String, View.OnClickListener> reusableClickListener = new HashMap<String, View.OnClickListener>();
 	
-	// cache pour éviter de refaire des accés BDD inutiles
+	// cache pour éviter de refaire des accès BDD inutiles
 	protected List<ZoneGeographique> listeZoneGeo = null;
 	protected SparseIntArray lastFicheCount = null;
 	//End of user code
@@ -363,7 +364,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
  					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setOnClickListener() - zoneGeoId : "+fZoneGeo.getId());
  					Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, Preference_PreferenceViewActivity.class);
  					
- 					Param_Outils paramOutils = new Param_Outils(getContext());
  					String param;
  					
  					switch(fZoneGeo.getZoneGeoKind()){
@@ -472,26 +472,23 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			
 			// baisse la priorité pour s'assurer une meilleure réactivité
 			android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
-			
-			// calcule en tache de fond
-			Photos_Outils photo_Outils = new Photos_Outils(EtatModeHorsLigne_CustomViewActivity.this);
-			
+						
 			// Mémoire interne
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "AsyncComputeLongRefreshScreenData() - doInBackground() - Mémoire interne");
-			internalUsedSize =  photo_Outils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL);
+			internalUsedSize =  photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL);
 			
 			// Disque primaire (Carte SD Interne dans les paramètres)
-			if ( !Disque_Outils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
-					Disque_Outils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
+			if ( !disqueOutils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
+					disqueOutils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
 				) {
 				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "AsyncComputeLongRefreshScreenData() - doInBackground() - Disque primaire (Carte SD Interne)");
-				primaryUsedSize =  photo_Outils.getPhotosDiskUsage(ImageLocation.PRIMARY);
+				primaryUsedSize =  photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY);
 			}
 			
 			// Carte SD externe (nommée amovible)
 			if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
 				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "AsyncComputeLongRefreshScreenData() - doInBackground() - Carte SD externe (nommée amovible)");
-				secondaryUsedSize = photo_Outils.getPhotosDiskUsage(ImageLocation.SECONDARY);
+				secondaryUsedSize = photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY);
 			}
 			
 			if(needRestart){
@@ -533,9 +530,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Mémoire interne");
 		
 		etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_customview_diskselection_internal_libelle)+" : ");
-		etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(internalUsedSize)+" / ");
-		etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().first)+" / ");
-		etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().second)+"\n");
+		etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(internalUsedSize)+" / ");
+		etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().first)+" / ");
+		etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().second)+"\n");
 		//etatDiskStringBuilder.append(DiskEnvironment.getInternalStorage().getFile().getAbsolutePath()+"\n");
 		//etatDiskStringBuilder.append("Donnée application="+this.getDir(Photos_Outils.MED_RES_FICHE_FOLDER, Context.MODE_PRIVATE)+"\n");
 		//etatDiskStringBuilder.append("'Hash' pour vérifier si Carte SD Interne != Stockage interne : "
@@ -543,15 +540,15 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		
 		// Disque primaire (Carte SD Interne dans les paramètres)
 		// TODO : GMo : j'ai géré le non affichage mais il y a un 1 == 1/0 pour toujours activer afin de tester la fonction
-		if ( !Disque_Outils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
-						Disque_Outils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
+		if ( !disqueOutils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
+				disqueOutils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
 				|| 1 == 0) {
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Disque primaire (Carte SD Interne)");
 			
 			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_customview_diskselection_primary_libelle)+" : ");
-			etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(primaryUsedSize)+" / ");
-			etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().first)+" / ");
-			etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().second)+"\n");
+			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(primaryUsedSize)+" / ");
+			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().first)+" / ");
+			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().second)+"\n");
 			//etatDiskStringBuilder.append(DiskEnvironment.getPrimaryExternalStorage().getFile().getAbsolutePath()+"\n");
 			//etatDiskStringBuilder.append("'Hash' pour vérifier si Carte SD Interne != Stockage interne : "
 			//		+DiskEnvironment.getPrimaryExternalStorage().getSize().first+"-"+DiskEnvironment.getPrimaryExternalStorage().getSize().second+"\n");
@@ -562,10 +559,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Carte SD externe (nommée amovible)");
 			
 			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_customview_diskselection_secondary_libelle)+" : ");
-			etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(secondaryUsedSize)+" / ");
+			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(secondaryUsedSize)+" / ");
 			try {
-				etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().first)+" / ");
-				etatDiskStringBuilder.append(Disque_Outils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().second)+"\n");
+				etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().first)+" / ");
+				etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().second)+"\n");
 				//etatDiskStringBuilder.append(DiskEnvironment.getSecondaryExternalStorage().getFile().getAbsolutePath()+"\n");
 			} catch (NoSecondaryStorageException e) {
 				etatDiskStringBuilder.append(" not Available");
@@ -616,7 +613,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			updateProgressBarZone(zoneGeo, progressBarZones.get(zoneGeo.getId()));
 		}
 		
-        //TODO : Temporaire tant que la fonction n'est pas tout à fait au point
+        // TODO : Temporaire tant que la fonction n'est pas tout à fait au point
         // Permet de n'activer le choix de l'emplacement des images que pour les personnes qui auront compris
         // que c'est en dev.
         if (paramOutils.getParamBoolean(R.string.pref_key_deplacer_images_debug, false)){
@@ -681,8 +678,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			//}
 			Button primaryDiskBtn = (Button) findViewById(R.id.etatmodehorsligne_customview_diskselection_primary_btn);
 			primaryDiskBtn.setEnabled(!deplacementEnCours);
-			if(!Disque_Outils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
-					Disque_Outils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
+			if(!disqueOutils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
+					disqueOutils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
 				){
 				//if(!deplacementEnCours){
 				switch (currentImageLocation){

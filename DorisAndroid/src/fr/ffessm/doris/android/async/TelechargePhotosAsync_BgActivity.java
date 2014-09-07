@@ -100,6 +100,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     
     private Param_Outils paramOutils;
     private Photos_Outils photosOutils;
+    private Reseau_Outils reseauOutils;
     
     Integer nbPhotosPrincATelechargerPourZone[] = new Integer[10];
 	Integer nbPhotosATelechargerPourZone[] = new Integer[10];
@@ -110,7 +111,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	Integer nbPhotosATelechargerPourBiblio = 0;
 	Integer nbPhotosATelechargerPourGlossaire = 0;
 	
-	Reseau_Outils reseauOutils;
+
 	// End of user code
     
 	/** constructor */
@@ -124,9 +125,9 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         		new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		
 		paramOutils = new Param_Outils(context);
 		photosOutils = new Photos_Outils(context);
-		
 		reseauOutils = new Reseau_Outils(context);
 		
 		// TODO : Tempo pour ralentir traitement : lecture paramètre temporaire
@@ -265,7 +266,6 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         // termine de notifier les vues qui pouvaient être intéressées
 		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 		
-		majParamNbandSize();
 		// End of user code
 	}
     protected void onPostExecute(Integer result)    {
@@ -277,7 +277,6 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         // termine de notifier les vues qui pouvaient être intéressées
         DorisApplicationContext.getInstance().notifyDataHasChanged(null);
         
-        majParamNbandSize();
 		// End of user code
     }
 
@@ -860,17 +859,7 @@ public int telechargementPhotosGlossaire(DorisDBHelper dorisDBHelper){
 
 	return 0;
 }
-
-
-    public void majParamNbandSize() {
-    	paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_vignettes, photosOutils.getImageCountInFolder(ImageType.VIGNETTE));
-    	paramOutils.setParamLong(R.string.pref_key_size_folder_vignettes, photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE));
-    	paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_med_res, photosOutils.getImageCountInFolder(ImageType.MED_RES));
-    	paramOutils.setParamLong(R.string.pref_key_size_folder_med_res, photosOutils.getPhotoDiskUsage(ImageType.MED_RES));
-    	paramOutils.setParamInt(R.string.pref_key_nbphotos_recues_hi_res, photosOutils.getImageCountInFolder(ImageType.HI_RES));
-    	paramOutils.setParamLong(R.string.pref_key_size_folder_hi_res, photosOutils.getPhotoDiskUsage(ImageType.HI_RES));
-
-    }	
+	
 	// End of user code
 	
 }
