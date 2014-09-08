@@ -176,6 +176,7 @@ public class Disque_Outils {
     }
 
     // Permet d'obtenir une clé unique permettant de distinguer 2 partitions à un moment donné
+    // En fait, dans le cas où il n'y a pas physiquement de Carte SD Interne, Android en a une logique qu'il faut ignorée  
     // la concaténation de la taille de la partition et de la place utilisée en octet doit être à peu près sûr
     public String identifiantPartition(Device device){
     	
@@ -183,7 +184,14 @@ public class Disque_Outils {
     	Log.d(LOG_TAG, "identifiantPartition() - isRemovable : "+device.isRemovable());
     	Log.d(LOG_TAG, "identifiantPartition() - taille disque  : "+device.getSize().first+" - place occupée : "+device.getSize().second);
 
-    	return device.getSize().first+"-"+device.isRemovable();
+    	// bizarrement device.getSize().first semble parfois changer pour le même device
+    	// En conparrant en méga (1024*1024=1048576), c'est OK, du coup on regarde aussi la place dispo.
+    	// Les 2 appels à cette fonction se succédant très rapidement, 10 Mo n'ont pas pu avoir été écrit
+    	int tailleDisque = Math.round(device.getSize().first / 1048576);
+    	int tailleDisqueDispo = Math.round(device.getSize().second / 10485760);
+    	Log.d(LOG_TAG, "identifiantPartition() - taille disque  : "+tailleDisque+" Mo - place occupée : "+tailleDisqueDispo+" *10 Mo");
+
+    	return tailleDisque+"-"+tailleDisqueDispo+"-"+device.isRemovable();
     }
     
     
