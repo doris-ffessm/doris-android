@@ -175,8 +175,11 @@ public class Disque_Outils {
 
     }
 
-    // Permet d'obtenir une clé unique permettant de distinguer 2 partitions à un moment donné
-    // la concaténation de la taille de la partition et de la place utilisée en octet doit être à peu près sûr
+    // Fonction qui permet d'obtenir une clé unique permettant de distinguer les 2 partitions à un moment donné
+    
+    // Qd il n'y a qu'une partition interne, Android en affiche qd même une seconde, il n'est donc pas facile
+    // de savoir si nous sommes dans le cas de 2 réellement différentes ou non
+
     public String identifiantPartition(Device device){
     	
     	Log.d(LOG_TAG, "identifiantPartition() - getMountPoint : "+device.getMountPoint());

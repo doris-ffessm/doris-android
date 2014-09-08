@@ -383,19 +383,9 @@ public class Photos_Outils {
     			+ getPhotoDiskUsage(ImageType.ILLUSTRATION_DEFINITION);
 	}
 	
-	//TODO : A SUPPRIMER si Estimation OK
-	public long getPhotoDiskUsage(ImageType inImageType,int pipot){
-		Disque_Outils disqueOutils = new Disque_Outils(context);
-    	return disqueOutils.getDiskUsage(getImageFolder(inImageType) );
-	}
+	
 	public long getPhotoDiskUsage(ImageType inImageType){
     	return getImageFolder(inImageType).list().length * getTailleMoyImageUnitaire(inImageType) ;
-	}
-	//TODO : A SUPPRIMER si Estimation OK
-	public long getPhotoDiskUsage(ImageLocation baseImageLocation, ImageType inImageType,int pipot){
-		Disque_Outils disqueOutils = new Disque_Outils(context);
-		Log.d(LOG_TAG, "getPhotoDiskUsage "+inImageType+" "+getImageFolder(inImageType));
-    	return disqueOutils.getDiskUsage(getImageFolder(baseImageLocation, inImageType) );
 	}
 	public long getPhotoDiskUsage(ImageLocation baseImageLocation, ImageType inImageType){
     	return getImageFolder(baseImageLocation, inImageType).list().length * getTailleMoyImageUnitaire(inImageType) ;

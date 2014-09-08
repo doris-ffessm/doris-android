@@ -207,26 +207,44 @@ public class AffichageMessageHTML {
 		StringBuffer sizeFolderTexte =  new StringBuffer();
 		
 		//getImageCountInFolder
-		if ( photosOutils.getImageCountInFolder(ImageType.VIGNETTE) !=0 ) {
+		int sizeFolder = photosOutils.getImageCountInFolder(ImageType.VIGNETTE);
+		if ( sizeFolder !=0 ) {
 			sizeFolderTexte.append( System.getProperty("line.separator") ); 
 			sizeFolderTexte.append( "\t" );
-			sizeFolderTexte.append( photosOutils.getImageCountInFolder(ImageType.VIGNETTE) );
+			sizeFolderTexte.append( sizeFolder );
 			sizeFolderTexte.append( context.getString(R.string.a_propos_foldersize_vignettes) );
 			sizeFolderTexte.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE) ) );
 		}
-		if ( photosOutils.getImageCountInFolder(ImageType.MED_RES) !=0 ) {
+		sizeFolder = photosOutils.getImageCountInFolder(ImageType.MED_RES);
+		if ( sizeFolder !=0 ) {
 			sizeFolderTexte.append( System.getProperty("line.separator") ); 
 			sizeFolderTexte.append( "\t" );
-			sizeFolderTexte.append( photosOutils.getImageCountInFolder(ImageType.MED_RES) );
+			sizeFolderTexte.append( sizeFolder );
 			sizeFolderTexte.append( context.getString(R.string.a_propos_foldersize_med_res) );
 			sizeFolderTexte.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsage(ImageType.MED_RES) ) );
 		}
-		if ( photosOutils.getImageCountInFolder(ImageType.HI_RES) !=0 ) {
+		sizeFolder = photosOutils.getImageCountInFolder(ImageType.HI_RES);
+		if ( sizeFolder !=0 ) {
 			sizeFolderTexte.append( System.getProperty("line.separator") ); 
 			sizeFolderTexte.append( "\t" );
-			sizeFolderTexte.append( photosOutils.getImageCountInFolder(ImageType.HI_RES) );
+			sizeFolderTexte.append( sizeFolder );
 			sizeFolderTexte.append( context.getString(R.string.a_propos_foldersize_hi_res) );
 			sizeFolderTexte.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsage(ImageType.HI_RES) ) );
+		}
+		sizeFolder = photosOutils.getImageCountInFolder(ImageType.PORTRAITS)
+				+ photosOutils.getImageCountInFolder(ImageType.ILLUSTRATION_BIBLIO)
+				+ photosOutils.getImageCountInFolder(ImageType.ILLUSTRATION_DEFINITION);
+		if ( sizeFolder !=0 ) {
+			sizeFolderTexte.append( System.getProperty("line.separator") ); 
+			sizeFolderTexte.append( "\t" );
+			sizeFolderTexte.append( sizeFolder );
+			sizeFolderTexte.append( context.getString(R.string.a_propos_foldersize_autres) );
+			sizeFolderTexte.append(
+					disqueOutils.getHumanDiskUsage(
+						photosOutils.getPhotoDiskUsage(ImageType.PORTRAITS)
+						+ photosOutils.getPhotoDiskUsage(ImageType.ILLUSTRATION_BIBLIO)
+						+ photosOutils.getPhotoDiskUsage(ImageType.ILLUSTRATION_DEFINITION)
+					) );
 		}
 		
 		if (sizeFolderTexte.length()!=0) {
