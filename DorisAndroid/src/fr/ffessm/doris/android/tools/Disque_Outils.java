@@ -190,7 +190,7 @@ public class Disque_Outils {
     	Log.d(LOG_TAG, "identifiantPartition() - taille disque  : "+device.getSize().first+" - place occupée : "+device.getSize().second);
 
     	// bizarrement device.getSize().first semble parfois changer pour le même device
-    	// En conparrant en méga (1024*1024=1048576), c'est OK, du coup on regarde aussi la place dispo.
+    	// En comparant en méga (1024*1024=1048576), c'est OK, du coup on regarde aussi la place dispo.
     	// Les 2 appels à cette fonction se succédant très rapidement, 10 Mo n'ont pas pu avoir été écrit
     	int tailleDisque = Math.round(device.getSize().first / 1048576);
     	int tailleDisqueDispo = Math.round(device.getSize().second / 10485760);

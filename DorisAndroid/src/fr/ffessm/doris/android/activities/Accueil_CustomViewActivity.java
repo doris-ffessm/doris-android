@@ -319,9 +319,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		        startActivity(toGroupeSelectionView);
 			}
 		});
-        
-        String uri = fichesOutils.getZoneIcone(zone.getZoneGeoKind()); 
-        int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
+         
+        int imageZone = fichesOutils.getZoneIconeId(zone.getZoneGeoKind());
         
         ImageView ivIcone = (ImageView)viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
         ivIcone.setImageResource(imageZone);   
@@ -438,10 +437,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	protected void updateProgressBarZone(ZoneGeographique inZoneGeo, MultiProgressBar progressBarZone){
 		   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
 		   
-		   String uri = fichesOutils.getZoneIcone(inZoneGeo.getZoneGeoKind());
-		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icône : "+uri);  
-		   int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
-		   
 		   boolean affichageBarrePhotoPrinc;
 		   boolean affichageBarrePhoto;
 		   String summaryTexte = "";
@@ -527,7 +522,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		   sbTexte.append("\n");
 		   sbTexte.append(summaryTexte);
 		   
-		   progressBarZone.update(inZoneGeo.getNom(), sbTexte.toString(), imageZone, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto, downloadInProgress);
+		   progressBarZone.update(sbTexte.toString(), affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto, downloadInProgress);
 		   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Après");
 	}
 	
@@ -604,7 +599,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    	llContainerLayout =  (LinearLayout) findViewById(R.id.accueil_progress_layout);
 	    	
 	    	// Avancement et Affichage toutes Zones
-	    	MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this);
+	    	int imageZone = fichesOutils.getZoneIconeId(zoneToutesZones.getZoneGeoKind());
+	    	
+	    	MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this,zoneToutesZones.getNom(), imageZone, false);
 	    	updateProgressBarZone(zoneToutesZones, progressBarZoneGenerale);
 	    	progressBarZones.put(zoneToutesZones.getId(), progressBarZoneGenerale);
 	    	

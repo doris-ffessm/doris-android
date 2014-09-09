@@ -124,6 +124,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	Photos_Outils photosOutils = new Photos_Outils(getContext());
 	Param_Outils paramOutils = new Param_Outils(getContext());
 	Disque_Outils disqueOutils = new Disque_Outils( getContext() );
+	Fiches_Outils fichesOutils = new Fiches_Outils(getContext());
 	
 	protected SparseArray< MultiProgressBar> progressBarZones = new SparseArray< MultiProgressBar>(); 
 	protected HashMap<String, View.OnClickListener> reusableClickListener = new HashMap<String, View.OnClickListener>();
@@ -221,10 +222,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     
     protected void updateProgressBarZone(ZoneGeographique inZoneGeo, MultiProgressBar progressBarZone){
     	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "updateProgressBarZone() - inZoneGeo : "+inZoneGeo.getId()+" - "+inZoneGeo.getZoneGeoKind());
-    	Fiches_Outils fichesOutils = new Fiches_Outils(getContext());
-    	String uri = fichesOutils.getZoneIcone(inZoneGeo.getZoneGeoKind());
-    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - uri icone : "+uri);  
-    	int imageZone = getContext().getResources().getIdentifier(uri, null, getContext().getPackageName());
 	   
     	boolean affichageBarrePhotoPrinc;
     	boolean affichageBarrePhoto;
@@ -299,7 +296,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		   downloadInProgress = true;
 	   }
 	   
-	   progressBarZone.update(inZoneGeo.getNom(), summaryTexte, imageZone, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto, downloadInProgress);
+	   progressBarZone.update(summaryTexte, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto, downloadInProgress);
 	}
     
     protected void createProgressZone(){
@@ -311,7 +308,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	zoneToutesZones.setId(-1);
     	zoneToutesZones.setNom(getContext().getString(R.string.avancement_touteszones_titre));
     	
-    	MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this);
+    	int imageZone = fichesOutils.getZoneIconeId(zoneToutesZones.getZoneGeoKind());
+    	
+    	MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this,zoneToutesZones.getNom(),imageZone,true);
     	updateProgressBarZone(zoneToutesZones, progressBarZoneGenerale);
     	progressBarZones.put(zoneToutesZones.getId(), progressBarZoneGenerale); 
     	
@@ -344,7 +343,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	if(listeZoneGeo == null) listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
  			
 		for (ZoneGeographique zoneGeo : listeZoneGeo) {
-			MultiProgressBar progressBarZone = new MultiProgressBar(this);
+			imageZone = fichesOutils.getZoneIconeId(zoneGeo.getZoneGeoKind());
+			
+			MultiProgressBar progressBarZone = new MultiProgressBar(this, zoneGeo.getNom(), imageZone, false);
  		    updateProgressBarZone(zoneGeo, progressBarZone);
 
  		   /* progressBarZone.setOnClickListener(new View.OnClickListener() {

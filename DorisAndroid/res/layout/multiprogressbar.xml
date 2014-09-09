@@ -38,10 +38,10 @@
 	            android:layout_height="wrap_content"
 	            android:ellipsize="marquee"
 	            android:fadingEdge="horizontal"
-	            android:text="Nom Commun"
+	            android:text="Nom Zone Géo"
 	            tools:ignore="HardcodedText"
 	            android:textAppearance="?android:attr/textAppearanceMedium"/>
-
+		
 			<ProgressBar
 			    android:id="@+id/multiprogressbar_progressBar1"
 			    style="?android:attr/progressBarStyleHorizontal"
@@ -73,7 +73,7 @@
 	            android:paddingLeft="4dip"
 	            android:paddingRight="4dip"
 	            android:paddingTop="4dip"
-	            android:text="Nom Scientifique"
+	            android:text="Texte Avancement"
 	            android:textAppearance="?android:attr/textAppearanceSmall"
 	            android:textColor="?android:attr/textColorSecondary"
 	            tools:ignore="HardcodedText" />
@@ -88,6 +88,19 @@
 	        android:minHeight="24dp"
 	        android:minWidth="24dp"
 	        android:visibility="gone" />
+
+	    <ImageButton
+	        android:id="@+id/multiprogressbar_fold_unflod_section_imageButton"
+	        android:layout_width="wrap_content"
+	        android:layout_height="40dp"
+	        android:layout_alignParentRight="true"
+	        android:layout_alignTop="@+id/multiprogressbar_title"
+	        android:adjustViewBounds="true"
+	        android:background="@android:color/transparent"
+	        android:contentDescription="@string/detailsfiche_elementview_fold_unflod_section_hint_text"
+	        android:scaleType="centerInside"
+	        android:src="@drawable/app_expander_ic_minimized"
+			android:visibility="gone"/>
 	
 	    </RelativeLayout>
 

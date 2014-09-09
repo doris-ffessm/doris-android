@@ -240,4 +240,12 @@ public class Fiches_Outils {
 			return "";
 		}
 	}
+	
+	public int getZoneIconeId(ZoneGeographiqueKind inZoneGeo) {
+		return context.getResources().getIdentifier(getZoneIcone(inZoneGeo), null, context.getPackageName());
+	}
+
+	
+	
+	
 }

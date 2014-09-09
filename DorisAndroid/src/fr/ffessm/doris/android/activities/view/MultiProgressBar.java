@@ -50,6 +50,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -71,8 +72,10 @@ public class MultiProgressBar extends LinearLayout {
 	public ProgressBar pbProgressBar2;
 	/** global running progress bar */
 	public ProgressBar pbProgressBar_running;
-
-	public MultiProgressBar(Context context) {
+	/** global fold_unflod_section button */
+	public ImageButton 	btnFoldUnflodSection;
+	
+	public MultiProgressBar(Context context, String inTitre, int inIconResId, boolean inAffBtnFoldUnflodSection) {
 		super(context);
 		this.context = context;
 		LayoutInflater inflater = (LayoutInflater) context
@@ -86,18 +89,22 @@ public class MultiProgressBar extends LinearLayout {
 		pbProgressBar1 = (ProgressBar) findViewById(R.id.multiprogressbar_progressBar1);
 		pbProgressBar2 = (ProgressBar) findViewById(R.id.multiprogressbar_progressBar2);
 		pbProgressBar_running = (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);
-	}
-
-	public void update(String inTitre, String inSummary, int inIconResId,
-			boolean inDisplayBar1, int inAvancBar1) {
+		
+		btnFoldUnflodSection = (ImageButton) findViewById(R.id.multiprogressbar_fold_unflod_section_imageButton);
+		
+		// Initialisation Titre, Icône et Affichage du bouton Fold / Unfold
 		tvTitleText.setText(inTitre);
-
+		
 		ivIcon.setImageResource(inIconResId);
-
 		Param_Outils paramOutils = new Param_Outils(context.getApplicationContext());
 		int iconeZine = Integer.valueOf(paramOutils.getParamString(
 				R.string.pref_key_accueil_icon_size, "64"));
 		ivIcon.setMaxHeight(iconeZine);
+		
+		if (inAffBtnFoldUnflodSection) btnFoldUnflodSection.setVisibility(View.VISIBLE);
+	}
+
+	public void update(String inSummary, boolean inDisplayBar1, int inAvancBar1) {
 
 		tvSummaryText.setText(inSummary);
 
@@ -144,12 +151,14 @@ public class MultiProgressBar extends LinearLayout {
 				Mode.valueOf(context
 						.getString(R.string.avancement_progressbar_mode)));
 	}
-	public void update(String inTitre, String inSummary, int inIconResId,
+	
+	
+	public void update(String inSummary,
 			boolean inDisplayBar1, int inAvancBar1, 
 			boolean inDisplayBar2, int inAvancBar2, 
 			boolean inDisplayRunningBar) {
 		
-		update(inTitre, inSummary, inIconResId, inDisplayBar1, inAvancBar1);
+		update(inSummary, inDisplayBar1, inAvancBar1);
 		
 		
 		if (inDisplayBar2) {

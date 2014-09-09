@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:fadingEdge="horizontal"
-            android:text="Nom Commun"
+            android:text="Nom Zone"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
         <ProgressBar
             android:id="@+id/progressBar"
@@ -73,6 +73,6 @@
             android:maxLines="4"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary"
-			android:text="Nom Scientifique"/>
+			android:text="Texte avancement"/>
     </RelativeLayout>
 </LinearLayout>
