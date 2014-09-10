@@ -43,11 +43,16 @@ termes.
 package fr.ffessm.doris.android.activities.view;
 
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.ListeFicheAvecFiltre_ClassListViewActivity;
+import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -55,11 +60,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MultiProgressBar extends LinearLayout {
 
-	Context context;
-
+	private Context context;
+	
 	/** title */
 	public TextView tvTitleText;
 	/** icon */
@@ -73,7 +79,11 @@ public class MultiProgressBar extends LinearLayout {
 	/** global running progress bar */
 	public ProgressBar pbProgressBar_running;
 	/** global fold_unflod_section button */
-	public ImageButton 	btnFoldUnflodSection;
+	public ImageButton btnFoldUnflodSection;
+	private LinearLayout llFoldUnflodSection;
+	private int image_courante;
+	private int image_maximize;
+	private int image_minimize;
 	
 	public MultiProgressBar(Context context, String inTitre, int inIconResId, boolean inAffBtnFoldUnflodSection) {
 		super(context);
@@ -91,6 +101,7 @@ public class MultiProgressBar extends LinearLayout {
 		pbProgressBar_running = (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);
 		
 		btnFoldUnflodSection = (ImageButton) findViewById(R.id.multiprogressbar_fold_unflod_section_imageButton);
+		llFoldUnflodSection = (LinearLayout) findViewById(R.id.multiprogressbar_fold_unflod_section_linearlayout);
 		
 		// Initialisation Titre, Icône et Affichage du bouton Fold / Unfold
 		tvTitleText.setText(inTitre);
@@ -101,7 +112,14 @@ public class MultiProgressBar extends LinearLayout {
 				R.string.pref_key_accueil_icon_size, "64"));
 		ivIcon.setMaxHeight(iconeZine);
 		
-		if (inAffBtnFoldUnflodSection) btnFoldUnflodSection.setVisibility(View.VISIBLE);
+		
+		if (inAffBtnFoldUnflodSection) {
+			image_maximize = R.drawable.app_expander_ic_maximized;
+			image_minimize = R.drawable.app_expander_ic_minimized;
+			image_courante = image_maximize;
+			btnFoldUnflodSection.setImageResource(image_courante);
+			btnFoldUnflodSection.setVisibility(View.VISIBLE);
+		}
 	}
 
 	public void update(String inSummary, boolean inDisplayBar1, int inAvancBar1) {
@@ -212,4 +230,35 @@ public class MultiProgressBar extends LinearLayout {
 		
 	}
 	
+	
+	public void fold(){
+		llFoldUnflodSection.setVisibility(View.GONE);
+	}
+	public void unfold(){
+		llFoldUnflodSection.setVisibility(View.VISIBLE);
+	}
+	public void fold_unfold(){
+		if(llFoldUnflodSection.getVisibility() == View.GONE){
+			llFoldUnflodSection.setVisibility(View.VISIBLE);
+		}
+		else{
+			llFoldUnflodSection.setVisibility(View.GONE);
+		}
+	}
+	
+	public void btn_fold(){
+		btnFoldUnflodSection.setImageResource(image_maximize);
+	}
+	public void btn_unfold(){
+		btnFoldUnflodSection.setImageResource(image_minimize);
+	}
+	public void btn_fold_unfold(){
+		if(image_courante == image_maximize){
+			image_courante = image_minimize;
+		}
+		else{
+			image_courante = image_maximize;
+		}
+		btnFoldUnflodSection.setImageResource(image_courante);
+	}
 }

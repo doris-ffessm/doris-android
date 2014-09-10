@@ -588,7 +588,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         TextView titreText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_titre);
         titreText.setText(titre);
         
-        // Icones de la Section
+        // Icônes de la Section
         RelativeLayout sectionIcones = (RelativeLayout) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_icones);
         
         final Groupe groupePere = getHelper().getGroupeDao().queryForId(groupe.getGroupePere().getId());
