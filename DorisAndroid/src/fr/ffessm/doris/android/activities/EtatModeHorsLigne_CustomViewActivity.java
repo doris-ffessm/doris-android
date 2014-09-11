@@ -52,6 +52,7 @@ import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageLocation;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.ffessm.doris.android.tools.Photos_Outils.PrecharMode;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
@@ -547,11 +548,78 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	
     	TextView etatDiskTextView = (TextView) findViewById(R.id.etatmodehorsligne_customview_diskusage_description_textView);
 		StringBuilder etatDiskStringBuilder = new StringBuilder();
+
+    	/*
+    	 * Espace de Stockage Sélectionné
+    	 */
+		etatDiskStringBuilder.append( "Espace de Stockage utilisé :\n\t" ); 
+		switch (photosOutils.getPreferedLocation()){
+		case APP_INTERNAL:
+			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_customview_diskselection_internal_libelle) );
+			break;
+		case PRIMARY:
+			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_customview_diskselection_primary_libelle) );
+			break;
+		case SECONDARY:
+			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_customview_diskselection_secondary_libelle) );
+			break;
+		}
+		etatDiskStringBuilder.append( "\n\n" ); 
+		
+    	/*
+    	 * Photos disponibles sur l'Espace de Stockage Sélectionné
+    	 */
+		etatDiskStringBuilder.append( "Nb Images et Taille Dossiers\u00A0:\n" ); 
+		int sizeFolder = photosOutils.getImageCountInFolder(ImageType.VIGNETTE);
+		if ( sizeFolder !=0 ) {
+			etatDiskStringBuilder.append( "\t" );
+			etatDiskStringBuilder.append( sizeFolder );
+			etatDiskStringBuilder.append( getContext().getString(R.string.a_propos_foldersize_vignettes) );
+			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE) ) );
+			etatDiskStringBuilder.append( "\n" );
+		}
+		sizeFolder = photosOutils.getImageCountInFolder(ImageType.MED_RES);
+		if ( sizeFolder !=0 ) {
+			etatDiskStringBuilder.append( "\t" );
+			etatDiskStringBuilder.append( sizeFolder );
+			etatDiskStringBuilder.append( getContext().getString(R.string.a_propos_foldersize_med_res) );
+			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsage(ImageType.MED_RES) ) );
+			etatDiskStringBuilder.append( "\n" );
+		}
+		sizeFolder = photosOutils.getImageCountInFolder(ImageType.HI_RES);
+		if ( sizeFolder !=0 ) {
+			etatDiskStringBuilder.append( "\t" );
+			etatDiskStringBuilder.append( sizeFolder );
+			etatDiskStringBuilder.append( getContext().getString(R.string.a_propos_foldersize_hi_res) );
+			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsage(ImageType.HI_RES) ) );
+			etatDiskStringBuilder.append( "\n" );
+		}
+		sizeFolder = photosOutils.getImageCountInFolder(ImageType.PORTRAITS)
+				+ photosOutils.getImageCountInFolder(ImageType.ILLUSTRATION_BIBLIO)
+				+ photosOutils.getImageCountInFolder(ImageType.ILLUSTRATION_DEFINITION);
+		if ( sizeFolder !=0 ) {
+			etatDiskStringBuilder.append( "\t" );
+			etatDiskStringBuilder.append( sizeFolder );
+			etatDiskStringBuilder.append( getContext().getString(R.string.a_propos_foldersize_autres) );
+			etatDiskStringBuilder.append(
+					disqueOutils.getHumanDiskUsage(
+						photosOutils.getPhotoDiskUsage(ImageType.PORTRAITS)
+						+ photosOutils.getPhotoDiskUsage(ImageType.ILLUSTRATION_BIBLIO)
+						+ photosOutils.getPhotoDiskUsage(ImageType.ILLUSTRATION_DEFINITION)
+					) );
+			etatDiskStringBuilder.append( "\n" );
+		}
+
+    	/*
+    	 * Utilisation des Disques
+    	 */
+		etatDiskStringBuilder.append( "\nUtilisation des Disques\n" ); 
 		etatDiskStringBuilder.append("                 (Espace utilisé / disponible / total)\n");
 		
 		// Mémoire interne
 		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Mémoire interne");
 		
+		etatDiskStringBuilder.append( "\t" );
 		etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_customview_diskselection_internal_libelle)+" : ");
 		etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(internalUsedSize)+" / ");
 		etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().first)+" / ");
@@ -568,6 +636,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				|| 1 == 0) {
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Disque primaire (Carte SD Interne)");
 			
+			etatDiskStringBuilder.append( "\t" );
 			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_customview_diskselection_primary_libelle)+" : ");
 			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(primaryUsedSize)+" / ");
 			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().first)+" / ");
@@ -581,6 +650,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Carte SD externe (nommée amovible)");
 			
+			etatDiskStringBuilder.append( "\t" );
 			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_customview_diskselection_secondary_libelle)+" : ");
 			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(secondaryUsedSize)+" / ");
 			try {

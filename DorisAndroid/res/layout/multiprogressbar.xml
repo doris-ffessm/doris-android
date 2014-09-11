@@ -18,18 +18,19 @@
         <ImageButton
             android:id="@+id/multiprogressbar_fold_unflod_section_imageButton"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:background="@android:color/transparent"
             android:contentDescription="@string/detailsfiche_elementview_fold_unflod_section_hint_text"
             android:scaleType="centerInside"
             android:src="@drawable/app_expander_ic_minimized"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 	    
         <TextView
             android:id="@+id/multiprogressbar_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
             android:layout_weight="36"
             android:ellipsize="marquee"
             android:fadingEdge="horizontal"
