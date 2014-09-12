@@ -32,11 +32,17 @@
 	<string name="etatmodehorsligne_customview_titre_text">État du Mode Hors Ligne</string>
 	<string name="etatmodehorsligne_customview_description_text">"DORISAndroid peut fonctionner sans internet. Pour cela vous devez avoir téléchargé les fiches et images à l'avance. Pour économiser votre forfait faites le en Wifi."</string>
 	<string name="etatmodehorsligne_customview_description_text_2">Ajustez vos paramètres en fonction de vos besoins et de votre espace disque disponible.</string>
-	<string name="etatmodehorsligne_customview_etat_photos_titre_text">Téléchargement photos</string>
+	
 	<string name="etatmodehorsligne_customview_etat_base_titre_text">Fiches et textes</string>
 	<string name="etatmodehorsligne_customview_etat_base_description_text">"Les textes des fiches correspondent à la base DORIS du\u00A0: "</string>
-	<string name="etatmodehorsligne_customview_diskusage_titre_text">Stockage des photos</string>
-	<string name="etatmodehorsligne_customview_diskusage_description_text">"Calcul de l'espace utilisé en cours"</string>
+	
+	<string name="etatmodehorsligne_customview_avancement_titre_text">Téléchargement photos</string>
+	
+	<string name="etatmodehorsligne_customview_gestion_photos_titre_text">Stockage des photos</string>
+	<string name="etatmodehorsligne_customview_gestion_photos_description_text">"Calcul du nombre de photos stockées"</string>
+	
+	<string name="etatmodehorsligne_customview_gestion_disk_titre_text">Gestion du Stockage</string>
+	<string name="etatmodehorsligne_customview_gestion_disk_description_text">"Calcul de l'espace utilisé en cours"</string>
 	
 	<string name="avancement_titre">Avancement préchargement photos</string>
 	<string name="avancement_touteszones_titre">Avancement global</string>
@@ -53,6 +59,12 @@
 	<string name="avancement_progressbar_limite3">75</string>
 	<string name="avancement_progressbar_couleur3">YELLOW</string>
 	<string name="avancement_progressbar_couleur4">GREEN</string>
+	
+	<string name="etatmodehorsligne_foldersize_titre">Nb Images et Taille Dossiers\u00A0:</string>
+	<string name="etatmodehorsligne_foldersize_vignettes">" vignettes\u00A0- "</string>
+	<string name="etatmodehorsligne_foldersize_med_res">" images Qualité Intermédiaire\u00A0- "</string>
+	<string name="etatmodehorsligne_foldersize_hi_res">" images Haute Qualité\u00A0- "</string>
+	<string name="etatmodehorsligne_foldersize_autres">" autres images\u00A0- "</string>
 	
 	<string name="etatmodehorsligne_customview_diskselection_internal_libelle">Stockage Interne</string>
 	<string name="etatmodehorsligne_customview_diskselection_internal_btn_text_selected">Supprimer du Stockage Interne</string>

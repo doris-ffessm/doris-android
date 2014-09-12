@@ -7,13 +7,8 @@
 	<string name="a_propos_menu">À propos</string>
 	<string name="a_propos_label">""À propos\u00A0- "</string>
 	<string name="a_propos_txt">""Version\u00A0: "</string>
-	<string name="a_propos_base_date">"Dernière MaJ le\u00A0: "</string>
-	<string name="a_propos_foldersize_titre">Nb Images et Taille Dossiers\u00A0:</string>
-	<string name="a_propos_foldersize_vignettes">" vignettes\u00A0- "</string>
-	<string name="a_propos_foldersize_med_res">" images Qualité Intermédiaire\u00A0- "</string>
-	<string name="a_propos_foldersize_hi_res">" images Haute Qualité\u00A0- "</string>
-	<string name="a_propos_foldersize_autres">" autres images\u00A0- "</string>
-	
+	<string name="a_propos_base_date">"MàJ de la Base le\u00A0: "</string>
+		
 	<string name="aide_menu">Aide</string>
 	<string name="aide_label">Guide Utilisateur</string>
 	<!-- End of user code
