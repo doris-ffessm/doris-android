@@ -9,37 +9,31 @@
     <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
     <!--  Textes Explicatifs									   -->
     <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
-    <TextView
-	        android:id="@+id/etatmodehorsligne_customview_titre_textView"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textAppearance="?android:attr/textAppearanceMedium"
-	        android:textColor="?android:attr/textColorPrimary"
-	        android:text="@string/etatmodehorsligne_customview_titre_text" />
+
 	<ScrollView 
 	        android:id="@+id/scrollView1"
 	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content" >
+	        android:layout_height="wrap_content">
 		<LinearLayout 
 		    android:layout_width="match_parent"
 		    android:layout_height="match_parent"
 		    android:orientation="vertical">
 		    <TextView
-		        android:id="@+id/etatmodehorsligne_customview_description_textView"
+		        android:id="@+id/etatmodehorsligne_description_textView"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textAppearance="?android:attr/textAppearanceSmall"
 				android:textColor="?android:attr/textColorSecondary"
-		        android:text="@string/etatmodehorsligne_customview_description_text" />
+		        android:text="@string/etatmodehorsligne_description_text" />
 		    
 		    
 		    <TextView
-		        android:id="@+id/etatmodehorsligne_customview_description_textView2"
+		        android:id="@+id/etatmodehorsligne_description_textView2"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textAppearance="?android:attr/textAppearanceSmall"
 				android:textColor="?android:attr/textColorSecondary"
-		        android:text="@string/etatmodehorsligne_customview_description_text_2" />
+		        android:text="@string/etatmodehorsligne_description_text_2" />
 		    
     <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
     <!--  Date de la dernière mise à jour de la base			   -->
@@ -50,20 +44,21 @@
 			    android:layout_marginTop="10dp" />
 			
 			<TextView
-		        android:id="@+id/etatmodehorsligne_customview_etat_base_titre_textView"
+		        android:id="@+id/etatmodehorsligne_etat_base_titre_textView"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textAppearance="?android:attr/textAppearanceMedium"
 		        android:textColor="?android:attr/textColorPrimary"
-		        android:text="@string/etatmodehorsligne_customview_etat_base_titre_text" />
+		        android:text="@string/etatmodehorsligne_etat_base_titre_text" />
 		
 		    <TextView
-		        android:id="@+id/etatmodehorsligne_customview_etat_base_description_textView"
+		        android:id="@+id/etatmodehorsligne_etat_base_description_textView"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
+		        android:layout_marginTop="2dp"
 		        android:textAppearance="?android:attr/textAppearanceSmall"
 				android:textColor="?android:attr/textColorSecondary"
-		        android:text="@string/etatmodehorsligne_customview_etat_base_description_text" />
+		        android:text="@string/etatmodehorsligne_etat_base_description_text" />
 
 	<!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
     <!-- Avancement Global et par Zone du Téléchargement des Photos-->
@@ -74,14 +69,14 @@
 		        android:layout_marginTop="10dp" />
 
 		    <TextView
-		        android:id="@+id/etatmodehorsligne_customview_etat_photos_titre_textView"
+		        android:id="@+id/etatmodehorsligne_etat_photos_titre_textView"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textAppearance="?android:attr/textAppearanceMedium"
 		        android:textColor="?android:attr/textColorPrimary"
-		        android:text="@string/etatmodehorsligne_customview_avancement_titre_text" />
+		        android:text="@string/etatmodehorsligne_avancement_titre_text" />
 		    <LinearLayout
-			        android:id="@+id/etatmodehorsligne_customview_avancements_layout"
+			        android:id="@+id/etatmodehorsligne_avancements_layout"
 			        android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
 			        android:orientation="vertical" >
@@ -93,46 +88,125 @@
     <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
 			<View style="@style/Separateur" />
 			
-		 	<LinearLayout
+			<LinearLayout
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
 			    android:layout_marginTop="2dp"
-			    android:orientation="horizontal" >
+			    android:orientation="vertical" >
 			    
-	            <ImageButton
-	                android:id="@+id/etatmodehorsligne_customview_gestion_photos_fold_unflod_section_imageButton"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:adjustViewBounds="true"
-	                android:background="@android:color/transparent"
-	                android:contentDescription="@string/detailsfiche_elementview_fold_unflod_section_hint_text"
-	                android:scaleType="centerInside"
-	                android:src="@drawable/app_expander_ic_minimized" />
-		 	            
 	            <TextView
-		            android:id="@+id/etatmodehorsligne_customview_gestion_photos_titre_textView"
+		            android:id="@+id/etatmodehorsligne_gestion_photos_titre_textView"
 		            android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
-		            android:layout_marginLeft="2dp"
-		            android:layout_weight="36"
-		            android:ellipsize="marquee"
-		            android:fadingEdge="horizontal"
-		            android:paddingLeft="4dp"
-		            android:paddingRight="4dp"
 		            android:textAppearance="?android:attr/textAppearanceMedium"
 		            android:textColor="?android:attr/textColorPrimary"
-			        android:text="@string/etatmodehorsligne_customview_gestion_photos_titre_text" />
-	            
-			</LinearLayout>        
-			    
-		    <TextView
-		        android:id="@+id/etatmodehorsligne_customview_gestion_photos_description_textView"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textAppearance="?android:attr/textAppearanceSmall"
-				android:textColor="?android:attr/textColorSecondary"
-		        android:text="@string/etatmodehorsligne_customview_gestion_photos_description_text" />
+			        android:text="@string/etatmodehorsligne_gestion_photos_titre_text" />
+			    		            
+			 	<LinearLayout
+				    android:layout_width="match_parent"
+				    android:layout_height="wrap_content"
+				    android:layout_marginTop="4dp"
+				    android:orientation="horizontal" >
+				    
+    	            <ImageButton
+		                android:id="@+id/etatmodehorsligne_gestion_photos_fold_unflod_section_imageButton"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:adjustViewBounds="true"
+		                android:background="@android:color/transparent"
+		                android:contentDescription="@string/detailsfiche_elementview_fold_unflod_section_hint_text"
+		                android:scaleType="centerInside"
+		                android:src="@drawable/app_expander_ic_minimized" />
+			 	    	            
+       			    <TextView
+				        android:id="@+id/etatmodehorsligne_gestion_photos_description_textView"
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:layout_marginLeft="2dp"
+				        android:textAppearance="?android:attr/textAppearanceSmall"
+						android:textColor="?android:attr/textColorSecondary"
+				        android:text="@string/etatmodehorsligne_gestion_photos_description_text" />
+	    	            
+				</LinearLayout>
+			    <TableLayout
+			        android:id="@+id/etatmodehorsligne_gestion_reset_linearlayout"
+			        android:layout_width="match_parent"
+			        android:layout_height="wrap_content"
+   				    android:layout_marginTop="2dp"
+				    android:layout_marginLeft="24dp"
+			        android:shrinkColumns="*"
+			        android:stretchColumns="*" >
+			
+					<TableRow
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content" >
+       			    
+				        <Button
+				            android:id="@+id/etatmodehorsligne_gestion_reset_vig_btn"
+				            style="?android:attr/buttonStyleSmall"
+				            android:layout_width="0dp"
+				            android:layout_height="match_parent"
+				            android:layout_weight="0.5"
+				            android:enabled="false"
+				            android:text="@string/etatmodehorsligne_gestion_reset_vignettes_btn_lib" />
 
+	   			        <Button
+	   			            android:id="@+id/etatmodehorsligne_gestion_reset_autres_btn"
+	   			            style="?android:attr/buttonStyleSmall"
+	   			            android:layout_width="0dp"
+	   			            android:layout_height="match_parent"
+	   			            android:layout_weight="0.5"
+	   			            android:enabled="false"
+	   			            android:text="@string/etatmodehorsligne_gestion_reset_autres_btn_lib" />
+
+   			        </TableRow>
+
+   					<TableRow
+   					    android:layout_width="wrap_content"
+   					    android:layout_height="wrap_content" >
+
+	   			        <Button
+	   			            android:id="@+id/etatmodehorsligne_gestion_reset_med_btn"
+	   			            style="?android:attr/buttonStyleSmall"
+	   			            android:layout_width="0dp"
+	   			            android:layout_height="match_parent"
+	   			            android:layout_weight="0.5"
+	   			            android:enabled="false"
+	   			            android:text="@string/etatmodehorsligne_gestion_reset_med_res_btn_lib" />
+	   			               			    
+				        <Button
+				            android:id="@+id/etatmodehorsligne_gestion_reset_cache_btn"
+				            style="?android:attr/buttonStyleSmall"
+				            android:layout_width="0dp"
+				            android:layout_height="match_parent"
+				            android:layout_weight="0.5"
+				            android:enabled="false"
+				            android:text="@string/etatmodehorsligne_gestion_reset_cache_btn_lib" />
+	   			        
+   			        </TableRow>
+   			        
+   					<TableRow
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content" >
+   			               			    
+				        <Button
+				            android:id="@+id/etatmodehorsligne_gestion_reset_hi_btn"
+				            style="?android:attr/buttonStyleSmall"
+				            android:layout_width="0dp"
+	   			            android:layout_height="match_parent"
+	   			            android:layout_weight="0.5"
+				            android:enabled="false"
+				            android:text="@string/etatmodehorsligne_gestion_reset_hi_res_btn_lib" />
+	   			        <LinearLayout
+						    android:layout_width="0dp"
+						    android:layout_height="match_parent"
+						    android:layout_weight="0.5"/>
+	   			            
+						    
+   			        </TableRow>  					
+   			    </TableLayout>
+		    </LinearLayout> 
+			    
     <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
     <!--  Gestion des Photos Stockés                   			   -->
     <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->		    
@@ -144,13 +218,13 @@
 			<View style="@style/Separateur" />
 
 		    <LinearLayout
-		        android:id="@+id/etatmodehorsligne_customview_gestion_disk_layout"
+		        android:id="@+id/etatmodehorsligne_gestion_disk_layout"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
 		        android:orientation="horizontal" >
 
    	            <ImageButton
-	                android:id="@+id/etatmodehorsligne_customview_gestion_disk_fold_unflod_section_imageButton"
+	                android:id="@+id/etatmodehorsligne_gestion_disk_fold_unflod_section_imageButton"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:adjustViewBounds="true"
@@ -160,17 +234,17 @@
 	                android:src="@drawable/app_expander_ic_minimized" />
 		        	            
 		    	<TextView
-		    	    android:id="@+id/etatmodehorsligne_customview_gestion_disk_titre_textView"
+		    	    android:id="@+id/etatmodehorsligne_gestion_disk_titre_textView"
 		    	    android:layout_width="wrap_content"
 		    	    android:layout_height="wrap_content"
 		    	    android:layout_marginLeft="2dp"
 		    	    android:layout_weight="36"
-		    	    android:text="@string/etatmodehorsligne_customview_gestion_disk_titre_text"
+		    	    android:text="@string/etatmodehorsligne_gestion_disk_titre_text"
 		    	    android:textAppearance="?android:attr/textAppearanceMedium"
 		    	    android:textColor="?android:attr/textColorPrimary" />
 		    	
 				<ProgressBar
-				    android:id="@+id/etatmodehorsligne_customview_gestion_disk_buttons_progressBar"
+				    android:id="@+id/etatmodehorsligne_gestion_disk_buttons_progressBar"
 				    style="?android:attr/progressBarStyleSmall"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
@@ -182,46 +256,46 @@
 			</LinearLayout>
 		    
 		    <TextView
-		        android:id="@+id/etatmodehorsligne_customview_gestion_disk_description_textView"
+		        android:id="@+id/etatmodehorsligne_gestion_disk_description_textView"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textAppearance="?android:attr/textAppearanceSmall"
 				android:textColor="?android:attr/textColorSecondary"
-		        android:text="@string/etatmodehorsligne_customview_gestion_disk_description_text" />
+		        android:text="@string/etatmodehorsligne_gestion_disk_description_text" />
 		    
     <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
     <!--  Gestion des Disques                                      -->
     <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
     
 		    <LinearLayout
-			        android:id="@+id/etatmodehorsligne_customview_gestion_disk_buttons_layout"
+			        android:id="@+id/etatmodehorsligne_gestion_disk_buttons_layout"
 			        android:layout_width="fill_parent"
 			        android:layout_height="wrap_content"
 			        android:orientation="horizontal" >
 
 		        <Button
-		            android:id="@+id/etatmodehorsligne_customview_diskselection_internal_btn"
+		            android:id="@+id/etatmodehorsligne_diskselection_internal_btn"
 		            style="?android:attr/buttonStyleSmall"
 		            android:layout_width="0dp"
 		            android:layout_height="match_parent"
 		            android:layout_weight="0.33"
-		            android:text="@string/etatmodehorsligne_customview_diskselection_internal_btn_text_selected" />
+		            android:text="@string/etatmodehorsligne_diskselection_internal_btn_text_selected" />
 
 				<Button
-				    android:id="@+id/etatmodehorsligne_customview_diskselection_primary_btn"
+				    android:id="@+id/etatmodehorsligne_diskselection_primary_btn"
 				    style="?android:attr/buttonStyleSmall"
 		            android:layout_width="0dp"
 		            android:layout_height="match_parent"
 		            android:layout_weight="0.33"
-				    android:text="@string/etatmodehorsligne_customview_diskselection_primary_btn_text_not_selected" />
+				    android:text="@string/etatmodehorsligne_diskselection_primary_btn_text_not_selected" />
 
 				<Button
-		            android:id="@+id/etatmodehorsligne_customview_diskselection_secondary_btn"
+		            android:id="@+id/etatmodehorsligne_diskselection_secondary_btn"
 		            style="?android:attr/buttonStyleSmall"
 		            android:layout_width="0dp"
 		            android:layout_height="match_parent"
 		            android:layout_weight="0.33"
-		            android:text="@string/etatmodehorsligne_customview_diskselection_secondary_btn_text_not_available" />
+		            android:text="@string/etatmodehorsligne_diskselection_secondary_btn_text_not_available" />
 
 			</LinearLayout>
 		</LinearLayout>

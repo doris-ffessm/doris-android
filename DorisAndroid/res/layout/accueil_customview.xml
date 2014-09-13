@@ -88,7 +88,7 @@
 		        android:padding="3dip"
 	    		android:textAppearance="?android:attr/textAppearanceMedium" 
 	    		android:textColor="?android:attr/textColorPrimary"
-				android:text="@string/etatmodehorsligne_customview_titre_text"/>
+				android:text="@string/etatmodehorsligne_titre_text"/>
 			<!-- layout that will receive the progress -->
 			<LinearLayout
 		        android:id="@+id/accueil_progress_layout"

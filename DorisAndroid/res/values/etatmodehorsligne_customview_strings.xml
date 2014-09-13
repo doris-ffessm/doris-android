@@ -29,23 +29,19 @@
 	<!-- 18.6 Mo / 686 images => 28 ko soit 28500 octets -->
 	<string name="etatmodehorsligne_taillemoy_illus_biblio">30000</string>
 	
-	<string name="etatmodehorsligne_customview_titre_text">État du Mode Hors Ligne</string>
-	<string name="etatmodehorsligne_customview_description_text">"DORISAndroid peut fonctionner sans internet. Pour cela vous devez avoir téléchargé les fiches et images à l'avance. Pour économiser votre forfait faites le en Wifi."</string>
-	<string name="etatmodehorsligne_customview_description_text_2">Ajustez vos paramètres en fonction de vos besoins et de votre espace disque disponible.</string>
+	<string name="etatmodehorsligne_titre_text">État du Mode Hors Ligne</string>
+	<string name="etatmodehorsligne_description_text">"DORISAndroid peut fonctionner sans internet. Pour cela vous devez avoir téléchargé les fiches et images à l'avance. Pour économiser votre forfait faites le en Wifi."</string>
+	<string name="etatmodehorsligne_description_text_2">Ajustez vos paramètres en fonction de vos besoins et de votre espace disque disponible.</string>
 	
-	<string name="etatmodehorsligne_customview_etat_base_titre_text">Fiches et textes</string>
-	<string name="etatmodehorsligne_customview_etat_base_description_text">"Les textes des fiches correspondent à la base DORIS du\u00A0: "</string>
+	<string name="etatmodehorsligne_etat_base_titre_text">Fiches et textes</string>
+	<string name="etatmodehorsligne_etat_base_description_text">"Les textes des fiches correspondent à la base DORIS du\u00A0: "</string>
 	
-	<string name="etatmodehorsligne_customview_avancement_titre_text">Téléchargement photos</string>
+	<!-- Avancement Global et par Zone du Téléchargement des Photos -->
 	
-	<string name="etatmodehorsligne_customview_gestion_photos_titre_text">Stockage des photos</string>
-	<string name="etatmodehorsligne_customview_gestion_photos_description_text">"Calcul du nombre de photos stockées"</string>
-	
-	<string name="etatmodehorsligne_customview_gestion_disk_titre_text">Gestion du Stockage</string>
-	<string name="etatmodehorsligne_customview_gestion_disk_description_text">"Calcul de l'espace utilisé en cours"</string>
-	
+	<string name="etatmodehorsligne_avancement_titre_text">Téléchargement photos</string>
+		
 	<string name="avancement_titre">Avancement préchargement photos</string>
-	<string name="avancement_touteszones_titre">Avancement global</string>
+	<string name="avancement_touteszones_titre">Avancement global préchargement photos</string>
 	<string name="avancement_progressbar_aucune_summary">"@nbF Fiches ; aucune photo ne doit être téléchargée pour cette zone"</string>
 	<string name="avancement_progressbar_jamais_summary">"@nbF Fiches ; le préchargement des photos n\'a jamais été lancé depuis la modification des paramètres."</string>
 	<string name="avancement_progressbar_P1_summary">"@nbF Fiches ; @nbPh sur @totalPh photos principales téléchargées"</string>
@@ -60,25 +56,46 @@
 	<string name="avancement_progressbar_couleur3">YELLOW</string>
 	<string name="avancement_progressbar_couleur4">GREEN</string>
 	
+	
+	<!-- Photos disponibles sur l'Espace de Stockage Sélectionné -->
+	
+	<string name="etatmodehorsligne_gestion_photos_titre_text">Stockage des photos</string>
+	<string name="etatmodehorsligne_gestion_photos_description_text">"Calcul du nombre de photos stockées"</string>
+		
 	<string name="etatmodehorsligne_foldersize_titre">Nb Images et Taille Dossiers\u00A0:</string>
 	<string name="etatmodehorsligne_foldersize_vignettes">" vignettes\u00A0- "</string>
 	<string name="etatmodehorsligne_foldersize_med_res">" images Qualité Intermédiaire\u00A0- "</string>
 	<string name="etatmodehorsligne_foldersize_hi_res">" images Haute Qualité\u00A0- "</string>
 	<string name="etatmodehorsligne_foldersize_autres">" autres images\u00A0- "</string>
+	<string name="etatmodehorsligne_foldersize_cache">" cache\u00A0- "</string>
+	<string name="etatmodehorsligne_foldersize_vide">Aucune photo préchargée"</string>
 	
-	<string name="etatmodehorsligne_customview_diskselection_internal_libelle">Stockage Interne</string>
-	<string name="etatmodehorsligne_customview_diskselection_internal_btn_text_selected">Supprimer du Stockage Interne</string>
-	<string name="etatmodehorsligne_customview_diskselection_internal_btn_text_not_selected">Déplacer vers le Stockage Interne</string>
+	<string name="etatmodehorsligne_gestion_reset_vignettes_btn_lib">"Supprimer vignettes"</string>
+	<string name="etatmodehorsligne_gestion_reset_med_res_btn_lib">"Supp. images Qualité Interméd."</string>
+	<string name="etatmodehorsligne_gestion_reset_hi_res_btn_lib">"Supp. images Haute Qualité"</string>
+	<string name="etatmodehorsligne_gestion_reset_autres_btn_lib">"Supprimer autres images"</string>
+	<string name="etatmodehorsligne_gestion_reset_cache_btn_lib">"Vider le cache"</string>
 	
-	<string name="etatmodehorsligne_customview_diskselection_primary_libelle">Carte SD Interne</string>
-	<string name="etatmodehorsligne_customview_diskselection_primary_btn_text_selected">Supprimer de la Carte SD Interne</string>
-	<string name="etatmodehorsligne_customview_diskselection_primary_btn_text_not_selected">Déplacer vers la Carte SD Interne</string>
-	<string name="etatmodehorsligne_customview_diskselection_primary_btn_text_not_available">Carte SD Interne non disponible</string>
 	
-	<string name="etatmodehorsligne_customview_diskselection_secondary_libelle">Carte SD Amovible</string>
-	<string name="etatmodehorsligne_customview_diskselection_secondary_btn_text_selected">Supprimer de la Carte SD Amovible</string>
-	<string name="etatmodehorsligne_customview_diskselection_secondary_btn_text_not_selected">Déplacer vers la Carte SD Amovible</string>
-	<string name="etatmodehorsligne_customview_diskselection_secondary_btn_text_not_available">Carte SD Amovible non disponible</string>
+	<!-- Utilisation des Disques -->
+	
+	<string name="etatmodehorsligne_gestion_disk_titre_text">Gestion du Stockage</string>
+	<string name="etatmodehorsligne_gestion_disk_description_text">"Calcul de l'espace utilisé en cours"</string>
+	
+	<string name="etatmodehorsligne_diskselection_internal_libelle">Stockage Interne</string>
+	<string name="etatmodehorsligne_diskselection_internal_btn_text_selected">Supprimer du Stockage Interne</string>
+	<string name="etatmodehorsligne_diskselection_internal_btn_text_not_selected">Déplacer vers le Stockage Interne</string>
+	
+	<string name="etatmodehorsligne_diskselection_primary_libelle">Carte SD Interne</string>
+	<string name="etatmodehorsligne_diskselection_primary_btn_text_selected">Supprimer de la Carte SD Interne</string>
+	<string name="etatmodehorsligne_diskselection_primary_btn_text_not_selected">Déplacer vers la Carte SD Interne</string>
+	<string name="etatmodehorsligne_diskselection_primary_btn_text_not_available">Carte SD Interne non disponible</string>
+	
+	<string name="etatmodehorsligne_diskselection_secondary_libelle">Carte SD Amovible</string>
+	<string name="etatmodehorsligne_diskselection_secondary_btn_text_selected">Supprimer de la Carte SD Amovible</string>
+	<string name="etatmodehorsligne_diskselection_secondary_btn_text_not_selected">Déplacer vers la Carte SD Amovible</string>
+	<string name="etatmodehorsligne_diskselection_secondary_btn_text_not_available">Carte SD Amovible non disponible</string>
+	
 	<!-- End of user code
 	-->
 </resources>

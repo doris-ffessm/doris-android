@@ -670,11 +670,12 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	     		}
 	     	}
 	     	*/
-	    	/*
+	    	
 	     	sb.append("- - - - - -\n");
 	     	sb.append(getApplicationContext().getFilesDir().getAbsolutePath()+"\n");
 	     	sb.append(getApplicationContext().getFilesDir().listFiles().length+"\n");
 	     	sb.append("- - - - - -\n");
+	     	/*
 	     	URI uri = null;
 	     	try {
 	     		uri = new URI("file:///android_res/raw/images_groupe_1.gif");
