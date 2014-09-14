@@ -23,20 +23,32 @@ import android.content.Intent;
 import android.os.AsyncTask.Status;
 import android.util.Log;
 
+/* 
+ * TODO : Peut-être faudra-t-il le renommer car il fait maintenant :
+ *     - les déplacements entre emplacements
+ *     - la suppression de tous les fichiers d'un emplacement
+ *     - la suppression des fichiers par Type d'Image
+ */
+
+
 public class MovePhotoDiskService extends IntentService {
 
 
 	private static final String LOG_TAG = MovePhotoDiskService.class.getSimpleName();
 	// les différentes actions possibles pour cette activité
-    // premier argument = source location
+	public static String MOVE = "MOVE";
+	public static String DELETE_DISK = "DELETE_DISK";
+	public static String DELETE_FOLDER = "DELETE_FOLDER";
+	
+	// premier argument = source location
     // second argument = destination ou delete action
     public static String INTERNAL = "INTERNAL";
     public static String PRIMARY = "PRIMARY";
     public static String SECONDARY = "SECONDARY";
-    public static String DELETE = "DELETE";
     
-    public static String SOURCE_DISK = "fr.ffessm.doris.android.SOURCE_DISK";
-    public static String TARGET_DISK = "fr.ffessm.doris.android.TARGET_DISK";
+    public static String ACTION = "fr.ffessm.doris.android.ACTION";
+    public static String SOURCE = "fr.ffessm.doris.android.SOURCE";
+    public static String TARGET = "fr.ffessm.doris.android.TARGET";
     
     
     private NotificationHelper mNotificationHelper;
@@ -55,7 +67,19 @@ public class MovePhotoDiskService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 
-		//Log.d(LOG_TAG, "MovePhotoDiskService.onHandleIntent thread = "+Thread.currentThread());
+		// Récupère les paramètres depuis l'intent
+		String action = intent.getStringExtra(ACTION);
+    	String source = intent.getStringExtra(SOURCE);
+    	String dest = intent.getStringExtra(TARGET);
+    	Log.d(LOG_TAG, "onHandleIntent() - action : "+action);
+    	Log.d(LOG_TAG, "onHandleIntent() - source : "+source);
+    	Log.d(LOG_TAG, "onHandleIntent() - dest : "+dest);
+    	
+    	
+		// lance le job
+    	// vérification des paramètres et calcul du nombre de fichier à copier
+    	
+   		//Log.d(LOG_TAG, "MovePhotoDiskService.onHandleIntent thread = "+Thread.currentThread());
 		DorisApplicationContext.getInstance().isMovingPhotos = true;
         DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 		
@@ -77,53 +101,49 @@ public class MovePhotoDiskService extends IntentService {
 				} catch (InterruptedException e) {}
     		}
     	}
-    	mNotificationHelper.setContentTitle(this.getString(R.string.deplacephotos_bg_initialTickerText));
-		
-		
-		// Récupère les paramètres depuis l'intent
-    	String source = intent.getStringExtra(SOURCE_DISK);
-    	String dest = intent.getStringExtra(TARGET_DISK);
-    	
-		// lance le job
-    	// vérification des paramètres et calcul du nombre de fichier à copier
-    	Log.d(LOG_TAG, "onHandleIntent() - source : "+source);
-    	
-    	Disque_Outils disqueOutils = new Disque_Outils(this);
-    	
-    	if(source.equals(INTERNAL)){
-    		nbFileToCopy = this.getDir(this.getString(R.string.folder_vignettes_fiches), Context.MODE_PRIVATE).list().length;
-    		nbFileToCopy += this.getDir(this.getString(R.string.folder_med_res_fiches), Context.MODE_PRIVATE).list().length;
-    		nbFileToCopy += this.getDir(this.getString(R.string.folder_hi_res_fiches), Context.MODE_PRIVATE).list().length;
-    		nbFileToCopy += this.getDir(this.getString(R.string.folder_portraits), Context.MODE_PRIVATE).list().length;
-    		nbFileToCopy += this.getDir(this.getString(R.string.folder_illustration_definitions), Context.MODE_PRIVATE).list().length;
-    		nbFileToCopy += this.getDir(this.getString(R.string.folder_illustration_biblio), Context.MODE_PRIVATE).list().length;
-    	}else if(source.equals(PRIMARY)){
-   			nbFileToCopy = disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_vignettes_fiches) );
-    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_med_res_fiches) );
-    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_hi_res_fiches) );
-    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_portraits) );
-    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_definitions) );
-    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_biblio) );
-    	}else if(source.equals(SECONDARY)){
-			nbFileToCopy = disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_vignettes_fiches) );
-    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_med_res_fiches) );
-    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_hi_res_fiches) );
-    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_portraits) );
-    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_definitions) );
-    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_biblio) );
-    	}else {
-    		Log.e(LOG_TAG, "déplacement impossible, 1ier parametre incorrect : "+source);
-    		return;
-    	}
-    	
-    	Log.d(LOG_TAG, "onHandleIntent() - nbFileToCopy : "+nbFileToCopy);
-    	mNotificationHelper.setMaxItemToProcess(""+nbFileToCopy);
     	
     	// baisse la priorité pour minimiser l'impact sur l'ihm et les risques de plantage
     	android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND + android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE);
 
+    	mNotificationHelper.setContentTitle(this.getString(R.string.deplacephotos_bg_initialTickerText));
+    	
+
+    	if(action.equals(MOVE) || action.equals(DELETE_DISK)){
+	    	
+	    	Disque_Outils disqueOutils = new Disque_Outils(this);
+	    	
+	    	if(source.equals(INTERNAL)){
+	    		nbFileToCopy = this.getDir(this.getString(R.string.folder_vignettes_fiches), Context.MODE_PRIVATE).list().length;
+	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_med_res_fiches), Context.MODE_PRIVATE).list().length;
+	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_hi_res_fiches), Context.MODE_PRIVATE).list().length;
+	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_portraits), Context.MODE_PRIVATE).list().length;
+	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_illustration_definitions), Context.MODE_PRIVATE).list().length;
+	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_illustration_biblio), Context.MODE_PRIVATE).list().length;
+	    	}else if(source.equals(PRIMARY)){
+	   			nbFileToCopy = disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_vignettes_fiches) );
+	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_med_res_fiches) );
+	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_hi_res_fiches) );
+	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_portraits) );
+	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_definitions) );
+	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_biblio) );
+	    	}else if(source.equals(SECONDARY)){
+				nbFileToCopy = disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_vignettes_fiches) );
+	    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_med_res_fiches) );
+	    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_hi_res_fiches) );
+	    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_portraits) );
+	    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_definitions) );
+	    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_biblio) );
+	    	}else {
+	    		Log.e(LOG_TAG, "déplacement impossible, 1ier parametre incorrect : "+source);
+	    		return;
+	    	}
+	    	
+	    	Log.d(LOG_TAG, "onHandleIntent() - nbFileToCopy : "+nbFileToCopy);
+	    	mNotificationHelper.setMaxItemToProcess(""+nbFileToCopy);
+    	}
+
 	
-    	if(dest.equals(DELETE)){
+    	if(action.equals(DELETE_DISK)){
     		clearFolder(source, this.getString(R.string.folder_vignettes_fiches));
     		clearFolder(source, this.getString(R.string.folder_med_res_fiches));
     		clearFolder(source, this.getString(R.string.folder_hi_res_fiches));
@@ -136,47 +156,48 @@ public class MovePhotoDiskService extends IntentService {
     		return;
     	}
     	
-    	ImageLocation destImageLocation;
-    	if(dest.equals(INTERNAL)){
-    		destImageLocation = ImageLocation.APP_INTERNAL;
-    	}else if(dest.equals(PRIMARY)){
-    		destImageLocation = ImageLocation.PRIMARY;
-    	}else if(dest.equals(SECONDARY)){
-    		destImageLocation = ImageLocation.SECONDARY;
+    	if(action.equals(MOVE)){
+	    	ImageLocation destImageLocation;
+	    	if(dest.equals(INTERNAL)){
+	    		destImageLocation = ImageLocation.APP_INTERNAL;
+	    	}else if(dest.equals(PRIMARY)){
+	    		destImageLocation = ImageLocation.PRIMARY;
+	    	}else if(dest.equals(SECONDARY)){
+	    		destImageLocation = ImageLocation.SECONDARY;
+	    	}
+	    	else {
+	    		Log.e(LOG_TAG, "déplacement impossible, second parametre incorrect : "+dest);
+	    		return;
+	    	}
+	    	
+	    	// Enregistrement du mouvement qui va être réalisé, afin de pouvoir le reprendre
+	    	// s'il était interrompu
+	        new Photos_Outils(this).setPreferedLocation(destImageLocation);
+	        new Param_Outils(this).setParamBoolean(R.string.pref_key_deplace_photo_encours, true);
+	        
+	    	// déplacement vignettes
+	    	moveFolderContent(source, dest, this.getString(R.string.folder_vignettes_fiches));
+	    	// déplacement med_res
+	    	moveFolderContent(source, dest, this.getString(R.string.folder_med_res_fiches));
+	    	// déplacement hi_res
+	    	moveFolderContent(source, dest, this.getString(R.string.folder_hi_res_fiches));
+	    	// déplacement photos participants
+	    	moveFolderContent(source, dest, this.getString(R.string.folder_portraits));
+	    	// déplacement photos glossaire
+	    	moveFolderContent(source, dest, this.getString(R.string.folder_illustration_definitions));
+	    	// déplacement biblio
+	    	moveFolderContent(source, dest, this.getString(R.string.folder_illustration_biblio));
+			// End of user code
+	        
+			// Start of user code end of task InitialisationApplication_BgActivity
+	    	
+	    	// Le traitement s'est terminé correctement
+	    	new Param_Outils(this).setParamBoolean(R.string.pref_key_deplace_photo_encours, false);
+	
+	        DorisApplicationContext.getInstance().isMovingPhotos = false;
+	        DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+	        mNotificationHelper.completed();
     	}
-    	else {
-    		Log.e(LOG_TAG, "déplacement impossible, second parametre incorrect : "+dest);
-    		return;
-    	}
-    	
-    	// Enregistrement du mouvement qui va être réalisé, afin de pouvoir le reprendre
-    	// s'il était interrompu
-        new Photos_Outils(this).setPreferedLocation(destImageLocation);
-        new Param_Outils(this).setParamBoolean(R.string.pref_key_deplace_photo_encours, true);
-        
-    	// déplacement vignettes
-    	moveFolderContent(source, dest, this.getString(R.string.folder_vignettes_fiches));
-    	// déplacement med_res
-    	moveFolderContent(source, dest, this.getString(R.string.folder_med_res_fiches));
-    	// déplacement hi_res
-    	moveFolderContent(source, dest, this.getString(R.string.folder_hi_res_fiches));
-    	// déplacement photos participants
-    	moveFolderContent(source, dest, this.getString(R.string.folder_portraits));
-    	// déplacement photos glossaire
-    	moveFolderContent(source, dest, this.getString(R.string.folder_illustration_definitions));
-    	// déplacement biblio
-    	moveFolderContent(source, dest, this.getString(R.string.folder_illustration_biblio));
-		// End of user code
-        
-		// Start of user code end of task InitialisationApplication_BgActivity
-    	
-    	// Le traitement s'est terminé correctement
-    	new Param_Outils(this).setParamBoolean(R.string.pref_key_deplace_photo_encours, false);
-
-        DorisApplicationContext.getInstance().isMovingPhotos = false;
-        DorisApplicationContext.getInstance().notifyDataHasChanged(null);
-        mNotificationHelper.completed();
-    	
 	}
 
 	

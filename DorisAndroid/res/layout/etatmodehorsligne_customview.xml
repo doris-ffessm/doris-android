@@ -128,12 +128,17 @@
 				        android:text="@string/etatmodehorsligne_gestion_photos_description_text" />
 	    	            
 				</LinearLayout>
+							 				    
+    <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
+    <!--  Gestion des Photos Stockés                   			   -->
+    <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->		    
+	
 			    <TableLayout
 			        android:id="@+id/etatmodehorsligne_gestion_reset_linearlayout"
 			        android:layout_width="match_parent"
 			        android:layout_height="wrap_content"
-   				    android:layout_marginTop="2dp"
-				    android:layout_marginLeft="24dp"
+			        android:layout_marginLeft="24dp"
+			        android:layout_marginTop="2dp"
 			        android:shrinkColumns="*"
 			        android:stretchColumns="*" >
 			
@@ -193,10 +198,11 @@
 				            android:id="@+id/etatmodehorsligne_gestion_reset_hi_btn"
 				            style="?android:attr/buttonStyleSmall"
 				            android:layout_width="0dp"
-	   			            android:layout_height="match_parent"
-	   			            android:layout_weight="0.5"
+				            android:layout_height="match_parent"
+				            android:layout_weight="0.5"
 				            android:enabled="false"
 				            android:text="@string/etatmodehorsligne_gestion_reset_hi_res_btn_lib" />
+
 	   			        <LinearLayout
 						    android:layout_width="0dp"
 						    android:layout_height="match_parent"
@@ -206,11 +212,7 @@
    			        </TableRow>  					
    			    </TableLayout>
 		    </LinearLayout> 
-			    
-    <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
-    <!--  Gestion des Photos Stockés                   			   -->
-    <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->		    
-		    
+	    
     <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
     <!--  Utilisation des Disques                    			   -->
     <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
@@ -266,38 +268,105 @@
     <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
     <!--  Gestion des Disques                                      -->
     <!--  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -->
-    
-		    <LinearLayout
-			        android:id="@+id/etatmodehorsligne_gestion_disk_buttons_layout"
-			        android:layout_width="fill_parent"
-			        android:layout_height="wrap_content"
-			        android:orientation="horizontal" >
+		    <TableLayout
+		        android:id="@+id/etatmodehorsligne_gestion_disk_buttons_tablelayout"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+			    android:layout_marginTop="2dp"
+			    android:layout_marginLeft="24dp"
+		        android:shrinkColumns="*"
+		        android:stretchColumns="*" >
+			
+				<TableRow
+				    android:id="@+id/etatmodehorsligne_gestion_disk_internal_row"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content" >
 
-		        <Button
-		            android:id="@+id/etatmodehorsligne_diskselection_internal_btn"
-		            style="?android:attr/buttonStyleSmall"
-		            android:layout_width="0dp"
-		            android:layout_height="match_parent"
-		            android:layout_weight="0.33"
-		            android:text="@string/etatmodehorsligne_diskselection_internal_btn_text_selected" />
+			        <Button
+			            android:id="@+id/etatmodehorsligne_diskselection_internal_depl_btn"
+			            style="?android:attr/buttonStyleSmall"
+			            android:layout_width="0dp"
+			            android:layout_height="match_parent"
+			            android:layout_weight="0.33"
+			            android:text="@string/etatmodehorsligne_diskselection_internal_depl_btn_text_selected" />
+	
+					<Button
+					    android:id="@+id/etatmodehorsligne_diskselection_internal_stop_btn"
+					    style="?android:attr/buttonStyleSmall"
+			            android:layout_width="0dp"
+			            android:layout_height="match_parent"
+			            android:layout_weight="0.33"
+					    android:text="@string/etatmodehorsligne_diskselection_internal_stop_btn_text_selected" />
+	
+					<Button
+			            android:id="@+id/etatmodehorsligne_diskselection_internal_supp_btn"
+			            style="?android:attr/buttonStyleSmall"
+			            android:layout_width="0dp"
+			            android:layout_height="match_parent"
+			            android:layout_weight="0.33"
+			            android:text="@string/etatmodehorsligne_diskselection_internal_supp_btn_text_selected" />
+				</TableRow>
+				
+				<TableRow
+				    android:id="@+id/etatmodehorsligne_gestion_disk_primary_row"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content" >
 
-				<Button
-				    android:id="@+id/etatmodehorsligne_diskselection_primary_btn"
-				    style="?android:attr/buttonStyleSmall"
-		            android:layout_width="0dp"
-		            android:layout_height="match_parent"
-		            android:layout_weight="0.33"
-				    android:text="@string/etatmodehorsligne_diskselection_primary_btn_text_not_selected" />
+			        <Button
+			            android:id="@+id/etatmodehorsligne_diskselection_primary_depl_btn"
+			            style="?android:attr/buttonStyleSmall"
+			            android:layout_width="0dp"
+			            android:layout_height="match_parent"
+			            android:layout_weight="0.33"
+			            android:text="@string/etatmodehorsligne_diskselection_primary_depl_btn_text_selected" />
+	
+					<Button
+					    android:id="@+id/etatmodehorsligne_diskselection_primary_stop_btn"
+					    style="?android:attr/buttonStyleSmall"
+			            android:layout_width="0dp"
+			            android:layout_height="match_parent"
+			            android:layout_weight="0.33"
+					    android:text="@string/etatmodehorsligne_diskselection_primary_stop_btn_text_selected" />
+	
+					<Button
+			            android:id="@+id/etatmodehorsligne_diskselection_primary_supp_btn"
+			            style="?android:attr/buttonStyleSmall"
+			            android:layout_width="0dp"
+			            android:layout_height="match_parent"
+			            android:layout_weight="0.33"
+			            android:text="@string/etatmodehorsligne_diskselection_primary_supp_btn_text_selected" />
+				</TableRow>
+				
+				<TableRow
+				    android:id="@+id/etatmodehorsligne_gestion_disk_secondary_row"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content" >
 
-				<Button
-		            android:id="@+id/etatmodehorsligne_diskselection_secondary_btn"
-		            style="?android:attr/buttonStyleSmall"
-		            android:layout_width="0dp"
-		            android:layout_height="match_parent"
-		            android:layout_weight="0.33"
-		            android:text="@string/etatmodehorsligne_diskselection_secondary_btn_text_not_available" />
-
-			</LinearLayout>
+			        <Button
+			            android:id="@+id/etatmodehorsligne_diskselection_secondary_depl_btn"
+			            style="?android:attr/buttonStyleSmall"
+			            android:layout_width="0dp"
+			            android:layout_height="match_parent"
+			            android:layout_weight="0.33"
+			            android:text="@string/etatmodehorsligne_diskselection_secondary_depl_btn_text_selected" />
+	
+					<Button
+					    android:id="@+id/etatmodehorsligne_diskselection_secondary_stop_btn"
+					    style="?android:attr/buttonStyleSmall"
+			            android:layout_width="0dp"
+			            android:layout_height="match_parent"
+			            android:layout_weight="0.33"
+					    android:text="@string/etatmodehorsligne_diskselection_secondary_stop_btn_text_selected" />
+	
+					<Button
+			            android:id="@+id/etatmodehorsligne_diskselection_secondary_supp_btn"
+			            style="?android:attr/buttonStyleSmall"
+			            android:layout_width="0dp"
+			            android:layout_height="match_parent"
+			            android:layout_weight="0.33"
+			            android:text="@string/etatmodehorsligne_diskselection_secondary_supp_btn_text_selected" />
+				</TableRow>
+			</TableLayout>
 		</LinearLayout>
 	</ScrollView>
 </LinearLayout>	
