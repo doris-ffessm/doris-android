@@ -84,6 +84,7 @@ import android.widget.Toast;
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -140,6 +141,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	protected HashMap<String, View.OnClickListener> reusableClickListener = new HashMap<String, View.OnClickListener>();
 	
 	/** bouton fold unflod Photos disponibles */
+	private LinearLayout llGestionPhotos;
 	private int image_maximize;
 	private int image_minimize;
 	private ImageButton btnFoldUnflodGestionPhotos;
@@ -438,6 +440,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     
     protected void createGestionPhotos(){
 
+    	llGestionPhotos = (LinearLayout) findViewById(R.id.etatmodehorsligne_gestion_photos_linearlayout);
 		btnFoldUnflodGestionPhotos = (ImageButton) findViewById(R.id.etatmodehorsligne_gestion_photos_fold_unflod_section_imageButton);
 		tlFoldUnflodGestionPhotos = (TableLayout) findViewById(R.id.etatmodehorsligne_gestion_reset_linearlayout);
 
@@ -451,52 +454,105 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		btnGestionPhotosResetCache = (Button) findViewById(R.id.etatmodehorsligne_gestion_reset_cache_btn);
 		
     	// Masquage des Boutons de suppression des photos
-		btnFoldUnflodGestionPhotos.setOnClickListener(new ImageButton.OnClickListener() {
+		llGestionPhotos.setOnClickListener(new LinearLayout.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(tlFoldUnflodGestionPhotos.getVisibility() == View.GONE){
-					tlFoldUnflodGestionPhotos.setVisibility(View.VISIBLE);
-					imageCouranteGestionPhotos = image_maximize;
-				}
-				else{
-					tlFoldUnflodGestionPhotos.setVisibility(View.GONE);
-					imageCouranteGestionPhotos = image_minimize;
-				}
-				btnFoldUnflodGestionPhotos.setImageResource(imageCouranteGestionPhotos);
+				foldUnflodGestionPhotos();
+			}
+		});
+		btnFoldUnflodGestionPhotos.setOnClickListener(new LinearLayout.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				foldUnflodGestionPhotos();
 			}
 		});
 		
-    	// Suppression des Vignettes 
+    	// Suppression des Images
 		btnGestionPhotosResetVig.setOnClickListener(new ImageButton.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(getContext());
-	           	alertDialogbD.setMessage(getContext().getString(R.string.mode_precharg_reset_confirmation));
-	           	alertDialogbD.setCancelable(true);
-	           	 
-	           	// On vide le dossier si validé
-	           	alertDialogbD.setPositiveButton(getContext().getString(R.string.btn_yes),
-	           			new DialogInterface.OnClickListener() {
-	                    	public void onClick(DialogInterface dialog, int id) {
-	                       	Log.d(LOG_TAG, "onCreate() - onPreferenceClick() : btnGestionPhotosResetVig");
-	                       	disqueOutils.clearFolder(photosOutils.getImageFolderVignette(), 0);
-	
-	                        }
-	                	});
-	           	// Abandon donc Rien à Faire
-	           	alertDialogbD.setNegativeButton(getContext().getString(R.string.btn_annul),
-	           			new DialogInterface.OnClickListener() {
-	                    	public void onClick(DialogInterface dialog, int id) {
-	                    		dialog.cancel();
-	                    	}
-	                	});
-
-                AlertDialog alertDialog = alertDialogbD.create();
-                alertDialog.show();
-           	 
+				gestionPhotosResetDossier("Vignettes");
 			}
 		});
+		btnGestionPhotosResetMedRes.setOnClickListener(new ImageButton.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				gestionPhotosResetDossier("MedRes");
+			}
+		});
+		btnGestionPhotosResetHiRes.setOnClickListener(new ImageButton.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				gestionPhotosResetDossier("HiRes");
+			}
+		});
+		btnGestionPhotosResetAutres.setOnClickListener(new ImageButton.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				gestionPhotosResetDossier("Autres");
+			}
+		});
+		btnGestionPhotosResetCache.setOnClickListener(new ImageButton.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				gestionPhotosResetDossier("Cache");
+			}
+		});
+		
+    }
+    
+    protected void foldUnflodGestionPhotos() {
+		if(tlFoldUnflodGestionPhotos.getVisibility() == View.GONE){
+			tlFoldUnflodGestionPhotos.setVisibility(View.VISIBLE);
+			imageCouranteGestionPhotos = image_maximize;
+		}
+		else{
+			tlFoldUnflodGestionPhotos.setVisibility(View.GONE);
+			imageCouranteGestionPhotos = image_minimize;
+		}
+		btnFoldUnflodGestionPhotos.setImageResource(imageCouranteGestionPhotos);
+    }
+    
+    protected void gestionPhotosResetDossier(final String dossierAEffacer) {
     	
+		AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(getContext());
+       	alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_gestion_reset_confirmation));
+       	alertDialogbD.setCancelable(true);
+       	 
+       	// On vide le dossier si validé
+       	alertDialogbD.setPositiveButton(getContext().getString(R.string.btn_yes),
+       			new DialogInterface.OnClickListener() {
+                	public void onClick(DialogInterface dialog, int id) {
+                   	
+	                   	if (dossierAEffacer.equals("Vignettes")){
+	                   		disqueOutils.clearFolder(photosOutils.getImageFolderVignette(), 0);
+	                   		
+	                   	} else if (dossierAEffacer.equals("MedRes")){
+	                   		disqueOutils.clearFolder(photosOutils.getImageFolderMedRes(), 0);
+	                   		
+	                   	} else if (dossierAEffacer.equals("HiRes")){
+	                   		disqueOutils.clearFolder(photosOutils.getImageFolderHiRes(), 0);
+	                   		
+	                   	} else if (dossierAEffacer.equals("Autres")){
+	                   		disqueOutils.clearFolder(photosOutils.getImageFolderPortraits(), 0);
+	                   		disqueOutils.clearFolder(photosOutils.getImageFolderGlossaire(), 0);
+	                   		disqueOutils.clearFolder(photosOutils.getImageFolderBiblio(), 0);
+	                   		
+	                   	} else if (dossierAEffacer.equals("Cache")){
+	                   		disqueOutils.clearFolder(getContext().getCacheDir(), 0);
+	                   	} 
+                	}
+            	});
+       	// Abandon donc Rien à Faire
+       	alertDialogbD.setNegativeButton(getContext().getString(R.string.btn_annul),
+       			new DialogInterface.OnClickListener() {
+                	public void onClick(DialogInterface dialog, int id) {
+                		dialog.cancel();
+                	}
+            	});
+
+        AlertDialog alertDialog = alertDialogbD.create();
+        alertDialog.show();
     }
     
     protected void createGestionDisk(){
@@ -512,25 +568,23 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         	tlFoldUnflodGestionDisk.setVisibility(View.VISIBLE);
         	
         	btnFoldUnflodGestionDisk = (ImageButton) findViewById(R.id.etatmodehorsligne_gestion_disk_fold_unflod_section_imageButton);
-        	
+         	
         	initOnClickListener();
         
     		imageCouranteGestionDisk = image_maximize;
     		btnFoldUnflodGestionDisk.setImageResource(imageCouranteGestionDisk);
 
         	// Masquage des Boutons de suppression des photos
+    		llGestionDisk.setOnClickListener(new ImageButton.OnClickListener() {
+    			@Override
+    			public void onClick(View v) {
+    				foldUnflodGestionDisk();
+    			}
+    		}); 
     		btnFoldUnflodGestionDisk.setOnClickListener(new ImageButton.OnClickListener() {
     			@Override
     			public void onClick(View v) {
-    				if(tlFoldUnflodGestionDisk.getVisibility() == View.GONE){
-    					tlFoldUnflodGestionDisk.setVisibility(View.VISIBLE);
-    					imageCouranteGestionDisk = image_maximize;
-    				}
-    				else{
-    					tlFoldUnflodGestionDisk.setVisibility(View.GONE);
-    					imageCouranteGestionDisk = image_minimize;
-    				}
-    				btnFoldUnflodGestionDisk.setImageResource(imageCouranteGestionDisk);
+    				foldUnflodGestionDisk();
     			}
     		});   
         
@@ -553,7 +607,24 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	
     }
     
+    protected void foldUnflodGestionDisk(){
+		if(tlFoldUnflodGestionDisk.getVisibility() == View.GONE){
+			tlFoldUnflodGestionDisk.setVisibility(View.VISIBLE);
+			imageCouranteGestionDisk = image_maximize;
+		}
+		else{
+			tlFoldUnflodGestionDisk.setVisibility(View.GONE);
+			imageCouranteGestionDisk = image_minimize;
+		}
+		btnFoldUnflodGestionDisk.setImageResource(imageCouranteGestionDisk);
+    }
+    
     protected void initOnClickListener(){
+    	
+    	//addReusableClickListener(MovePhotoDiskService.DELETE_FOLDER, MovePhotoDiskService.INTERNAL, "");
+    	
+    	
+    	
     	addReusableClickListener(MovePhotoDiskService.MOVE, MovePhotoDiskService.INTERNAL, MovePhotoDiskService.PRIMARY);
     	addReusableClickListener(MovePhotoDiskService.MOVE, MovePhotoDiskService.INTERNAL, MovePhotoDiskService.SECONDARY);
     	addReusableClickListener(MovePhotoDiskService.DELETE_DISK, MovePhotoDiskService.INTERNAL, null);
@@ -747,6 +818,20 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			btnGestionPhotosResetAutres.setEnabled(false);
 		}
 		
+		sizeFolder = photosOutils.getImageCountInCache();
+		if ( sizeFolder !=0 ) {
+			auMoins1DossierNonVide = true;
+			
+			etatDiskStringBuilder.append( "\n\t\t" );
+			etatDiskStringBuilder.append( sizeFolder );
+			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_cache) );
+			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getCacheUsage() ) );
+			
+			btnGestionPhotosResetCache.setEnabled(true);
+		} else {
+			btnGestionPhotosResetCache.setEnabled(false);
+		}
+		
 		if (!auMoins1DossierNonVide){
 			etatDiskStringBuilder.append( "\n\t\t" );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_vide) );
@@ -772,7 +857,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	/*
     	 * Espace de Stockage Sélectionné
     	 */
-		TextView gestionDiskTextView = (TextView) findViewById(R.id.etatmodehorsligne_gestion_disk_description_textView);
 		
 		etatDiskStringBuilder.append( "Espace de Stockage utilisé :\n\t\t" ); 
 		switch (photosOutils.getPreferedLocation()){
@@ -839,6 +923,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			}
 		}
 		//etatDiskStringBuilder.append("Photo actuellement sur : "+new Photos_Outils(EtatModeHorsLigne_CustomViewActivity.this).getPreferedLocation()+"\n");
+		TextView gestionDiskTextView = (TextView) findViewById(R.id.etatmodehorsligne_gestion_disk_description_textView);
+
 		gestionDiskTextView.setText(etatDiskStringBuilder.toString());
 		
 		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Fin");

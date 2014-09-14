@@ -146,41 +146,6 @@
             android:defaultValue="false"
             android:layout="@layout/preference_layout_preference"
             />
-        <PreferenceScreen
-	        android:key="button_mode_precharg_reset"
-	        android:title="@string/mode_precharg_reset_title"
-	        android:summary="@string/mode_precharg_reset_summary"
-	        android:persistent="false"
-			android:layout="@layout/preference_layout_preferencescreen">
-	        <Preference
-	           	android:key="btn_reset_vig"
-	           	android:title="@string/mode_precharg_reset_vig_title"
-	           	android:summary="@string/mode_precharg_reset_vig_summary"
-				android:enabled="true"
-				android:selectable="true"
-				android:layout="@layout/preference_layout_preference"/>
-	        <Preference
-	           	android:key="btn_reset_med_res"
-	           	android:title="@string/mode_precharg_reset_med_res_title"
-	           	android:summary="@string/mode_precharg_reset_med_res_summary"
-				android:enabled="true"
-				android:selectable="true"
-				android:layout="@layout/preference_layout_preference"/>
-	        <Preference
-	           	android:key="btn_reset_hi_res"
-	           	android:title="@string/mode_precharg_reset_hi_res_title"
-	           	android:summary="@string/mode_precharg_reset_hi_res_summary"
-				android:enabled="true"
-				android:selectable="true"
-				android:layout="@layout/preference_layout_preference"/>
-	        <Preference
-	           	android:key="btn_reset_cache"
-	           	android:title="@string/mode_precharg_reset_cache_title"
-	           	android:summary="@string/mode_precharg_reset_cache_summary"
-				android:enabled="true"
-				android:selectable="true"
-				android:layout="@layout/preference_layout_preference"/>
-        </PreferenceScreen>
 	</PreferenceScreen>
 
 	<PreferenceScreen

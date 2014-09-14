@@ -139,18 +139,6 @@
 	<string name="icone_indopac">drawable/doris_icone_indo_pac</string>
 	<string name="icone_caraibes">drawable/doris_icone_caraibes</string>
 	<string name="icone_atlantno">drawable/doris_icone_atl_n_o</string>
-
-	<string name="mode_precharg_reset_title">Espace occupé et Ré-Initialisation</string>
-	<string name="mode_precharg_reset_summary">"@size d'images sont stockés, cliquez ici pour en supprimer."</string>
-	<string name="mode_precharg_reset_vig_title">Suppression vignettes</string>
-	<string name="mode_precharg_reset_vig_summary">Suppression des @nbPh vignettes téléchargées (@size)</string>
-	<string name="mode_precharg_reset_med_res_title">Suppression images de qualité intermédiaire</string>
-	<string name="mode_precharg_reset_med_res_summary">Suppression des @nbPh images téléchargées (@size)</string>
-	<string name="mode_precharg_reset_hi_res_title">Suppression images en haute résolution</string>
-	<string name="mode_precharg_reset_hi_res_summary">Suppression des @nbPh images téléchargées (@size)</string>
-	<string name="mode_precharg_reset_cache_title">Vider le cache</string>
-	<string name="mode_precharg_reset_cache_summary">Vider le cache du mode connecté\u00A0: @nbPh fichiers (@size)</string>
-	<string name="mode_precharg_reset_confirmation">Êtes-vous certain de vouloir vider ce dossier ?</string>
 	
 	<string name="presentation_preference_category_title">Présentation</string>
 	<string name="presentation_preference_category_summary">Affich. par défaut, Taille icônes, etc.</string>

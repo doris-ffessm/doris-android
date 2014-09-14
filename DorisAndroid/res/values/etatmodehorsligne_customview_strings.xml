@@ -75,7 +75,7 @@
 	<string name="etatmodehorsligne_gestion_reset_hi_res_btn_lib">"Supp. images Haute Qualité"</string>
 	<string name="etatmodehorsligne_gestion_reset_autres_btn_lib">"Supprimer autres images"</string>
 	<string name="etatmodehorsligne_gestion_reset_cache_btn_lib">"Vider le cache"</string>
-	
+	<string name="etatmodehorsligne_gestion_reset_confirmation">Êtes-vous certain de vouloir vider ce dossier ?</string>
 	
 	<!-- Utilisation des Disques -->
 	

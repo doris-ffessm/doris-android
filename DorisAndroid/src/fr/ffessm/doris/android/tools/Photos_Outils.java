@@ -83,11 +83,13 @@ public class Photos_Outils {
 	private Context context;
 	private Fiches_Outils fichesOutils;
 	private Param_Outils paramOutils;
+	private Disque_Outils disqueOutils;
 	
 	public Photos_Outils(Context context){
 		this.context = context;
 		this.fichesOutils = new Fiches_Outils(context);
 		this.paramOutils = new Param_Outils(context);
+		this.disqueOutils = new Disque_Outils(context);
 	}
 	
 	public enum ImageType {
@@ -365,6 +367,17 @@ public class Photos_Outils {
 		return getImageFolder(inImageType).list().length;
 	}
 	
+	public int getImageCountInCache(){
+		int nbFichiersDansCache = 0;
+		for (File child:context.getCacheDir().listFiles()) {
+     		if (child.getName().equals("picasso-cache") ) {
+     			nbFichiersDansCache = child.listFiles().length;
+  	     		break;
+     		}
+     	}
+		return nbFichiersDansCache;
+	}
+	
 	public long getPhotosDiskUsage(ImageLocation baseImageLocation){
 		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "Photos_Outils() - getPhotosDiskUsage()");
     	return getPhotoDiskUsage(baseImageLocation, ImageType.VIGNETTE)
@@ -390,6 +403,10 @@ public class Photos_Outils {
 	public long getPhotoDiskUsage(ImageLocation baseImageLocation, ImageType inImageType){
     	return getImageFolder(baseImageLocation, inImageType).list().length * getTailleMoyImageUnitaire(inImageType) ;
 	}
+	public long getCacheUsage(){
+    	return disqueOutils.getDiskUsage(context.getCacheDir() ) ;
+	}
+	
 	
 	public ImageType getImageQualityToDownload(boolean inPhotoPrincipale, ZoneGeographiqueKind inZoneGeo){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageQualityToDownload() - Début" );
@@ -802,4 +819,5 @@ public class Photos_Outils {
 		return volPhotos;
 	}
 
+	
 }
