@@ -35,20 +35,29 @@ public class MovePhotoDiskService extends IntentService {
 
 
 	private static final String LOG_TAG = MovePhotoDiskService.class.getSimpleName();
-	// les différentes actions possibles pour cette activité
-	public static String MOVE = "MOVE";
-	public static String DELETE_DISK = "DELETE_DISK";
-	public static String DELETE_FOLDER = "DELETE_FOLDER";
 	
-	// premier argument = source location
-    // second argument = destination ou delete action
-    public static String INTERNAL = "INTERNAL";
-    public static String PRIMARY = "PRIMARY";
-    public static String SECONDARY = "SECONDARY";
+	// premier argument = Action
+	// deuxième argument = Source location ou Dossier à traiter
+    // troisième = Destination
+	
+	// les différentes actions possibles pour cette activité
+	public static String ACT_MOVE = "MOVE";
+	public static String ACT_DELETE_DISK = "DELETE_DISK";
+	public static String ACT_DELETE_FOLDER = "DELETE_FOLDER";
+	
+    public static String SRC_INTERNAL = "INTERNAL";
+    public static String SRC_PRIMARY = "PRIMARY";
+    public static String SRC_SECONDARY = "SECONDARY";
     
-    public static String ACTION = "fr.ffessm.doris.android.ACTION";
-    public static String SOURCE = "fr.ffessm.doris.android.SOURCE";
-    public static String TARGET = "fr.ffessm.doris.android.TARGET";
+    public static String SRC_DOS_VIGNETTES = "Vignettes";
+    public static String SRC_DOS_MEDRES = "MedRes";
+    public static String SRC_DOS_HIRES = "HiRes";
+    public static String SRC_DOS_AUTRES = "Autres";
+	public static String SRC_DOS_CACHE = "Cache";
+	
+    public static String INTENT_ACTION = "fr.ffessm.doris.android.ACTION";
+    public static String INTENT_SOURCE = "fr.ffessm.doris.android.SOURCE";
+    public static String INTENT_TARGET = "fr.ffessm.doris.android.TARGET";
     
     
     private NotificationHelper mNotificationHelper;
@@ -67,10 +76,13 @@ public class MovePhotoDiskService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 
+		Disque_Outils disqueOutils = new Disque_Outils(this);
+		Photos_Outils photosOutils = new Photos_Outils(this);
+		
 		// Récupère les paramètres depuis l'intent
-		String action = intent.getStringExtra(ACTION);
-    	String source = intent.getStringExtra(SOURCE);
-    	String dest = intent.getStringExtra(TARGET);
+		String action = intent.getStringExtra(INTENT_ACTION);
+    	String source = intent.getStringExtra(INTENT_SOURCE);
+    	String dest = intent.getStringExtra(INTENT_TARGET);
     	Log.d(LOG_TAG, "onHandleIntent() - action : "+action);
     	Log.d(LOG_TAG, "onHandleIntent() - source : "+source);
     	Log.d(LOG_TAG, "onHandleIntent() - dest : "+dest);
@@ -108,25 +120,23 @@ public class MovePhotoDiskService extends IntentService {
     	mNotificationHelper.setContentTitle(this.getString(R.string.deplacephotos_bg_initialTickerText));
     	
 
-    	if(action.equals(MOVE) || action.equals(DELETE_DISK)){
+    	if(action.equals(ACT_MOVE) || action.equals(ACT_DELETE_DISK)){
 	    	
-	    	Disque_Outils disqueOutils = new Disque_Outils(this);
-	    	
-	    	if(source.equals(INTERNAL)){
+	    	if(source.equals(SRC_INTERNAL)){
 	    		nbFileToCopy = this.getDir(this.getString(R.string.folder_vignettes_fiches), Context.MODE_PRIVATE).list().length;
 	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_med_res_fiches), Context.MODE_PRIVATE).list().length;
 	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_hi_res_fiches), Context.MODE_PRIVATE).list().length;
 	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_portraits), Context.MODE_PRIVATE).list().length;
 	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_illustration_definitions), Context.MODE_PRIVATE).list().length;
 	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_illustration_biblio), Context.MODE_PRIVATE).list().length;
-	    	}else if(source.equals(PRIMARY)){
+	    	}else if(source.equals(SRC_PRIMARY)){
 	   			nbFileToCopy = disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_vignettes_fiches) );
 	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_med_res_fiches) );
 	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_hi_res_fiches) );
 	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_portraits) );
 	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_definitions) );
 	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_biblio) );
-	    	}else if(source.equals(SECONDARY)){
+	    	}else if(source.equals(SRC_SECONDARY)){
 				nbFileToCopy = disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_vignettes_fiches) );
 	    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_med_res_fiches) );
 	    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_hi_res_fiches) );
@@ -143,7 +153,7 @@ public class MovePhotoDiskService extends IntentService {
     	}
 
 	
-    	if(action.equals(DELETE_DISK)){
+    	if(action.equals(ACT_DELETE_DISK)){
     		clearFolder(source, this.getString(R.string.folder_vignettes_fiches));
     		clearFolder(source, this.getString(R.string.folder_med_res_fiches));
     		clearFolder(source, this.getString(R.string.folder_hi_res_fiches));
@@ -156,13 +166,13 @@ public class MovePhotoDiskService extends IntentService {
     		return;
     	}
     	
-    	if(action.equals(MOVE)){
+    	if(action.equals(ACT_MOVE)){
 	    	ImageLocation destImageLocation;
-	    	if(dest.equals(INTERNAL)){
+	    	if(dest.equals(SRC_INTERNAL)){
 	    		destImageLocation = ImageLocation.APP_INTERNAL;
-	    	}else if(dest.equals(PRIMARY)){
+	    	}else if(dest.equals(SRC_PRIMARY)){
 	    		destImageLocation = ImageLocation.PRIMARY;
-	    	}else if(dest.equals(SECONDARY)){
+	    	}else if(dest.equals(SRC_SECONDARY)){
 	    		destImageLocation = ImageLocation.SECONDARY;
 	    	}
 	    	else {
@@ -198,14 +208,38 @@ public class MovePhotoDiskService extends IntentService {
 	        DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 	        mNotificationHelper.completed();
     	}
+    	
+    	
+    	if(action.equals(ACT_DELETE_FOLDER)){
+
+           	if (source.equals(SRC_DOS_VIGNETTES)){
+           		disqueOutils.clearFolder(photosOutils.getImageFolderVignette(), 0);
+           		
+           	} else if (source.equals(SRC_DOS_MEDRES)){
+           		disqueOutils.clearFolder(photosOutils.getImageFolderMedRes(), 0);
+           		
+           	} else if (source.equals(SRC_DOS_HIRES)){
+           		disqueOutils.clearFolder(photosOutils.getImageFolderHiRes(), 0);
+           		
+           	} else if (source.equals(SRC_DOS_AUTRES)){
+           		disqueOutils.clearFolder(photosOutils.getImageFolderPortraits(), 0);
+           		disqueOutils.clearFolder(photosOutils.getImageFolderGlossaire(), 0);
+           		disqueOutils.clearFolder(photosOutils.getImageFolderBiblio(), 0);
+           		
+           	} else if (source.equals(SRC_DOS_CACHE)){
+           		disqueOutils.clearFolder(this.getCacheDir(), 0);
+           		
+           	} 
+           	
+    	}
 	}
 
 	
 	protected void moveFolderContent(String source, String destination, String subFolderToMove){
     	File sourceFolder;
-    	if(source.equals(PRIMARY)){
+    	if(source.equals(SRC_PRIMARY)){
     		sourceFolder = DiskEnvironment.getPrimaryExternalStorage().getFilesDir(this, subFolderToMove);
-    	}else if(source.equals(SECONDARY)){
+    	}else if(source.equals(SRC_SECONDARY)){
     		try {
     			sourceFolder = DiskEnvironment.getSecondaryExternalStorage().getFilesDir(this, subFolderToMove);
 			} catch (NoSecondaryStorageException e) {
@@ -217,9 +251,9 @@ public class MovePhotoDiskService extends IntentService {
     		sourceFolder = this.getDir(subFolderToMove, Context.MODE_PRIVATE);
     	}
     	File destFolder;
-    	if(destination.equals(PRIMARY)){
+    	if(destination.equals(SRC_PRIMARY)){
     		destFolder = DiskEnvironment.getPrimaryExternalStorage().getFilesDir(this, subFolderToMove);
-    	}else if(destination.equals(SECONDARY)){
+    	}else if(destination.equals(SRC_SECONDARY)){
     		try {
     			destFolder = DiskEnvironment.getSecondaryExternalStorage().getFilesDir(this, subFolderToMove);
 			} catch (NoSecondaryStorageException e) {
@@ -287,9 +321,9 @@ public class MovePhotoDiskService extends IntentService {
     
     protected void clearFolder(String source, String subFolderToMove){
     	File sourceFolder;
-    	if(source.equals(PRIMARY)){
+    	if(source.equals(SRC_PRIMARY)){
     		sourceFolder = DiskEnvironment.getPrimaryExternalStorage().getFilesDir(this, subFolderToMove);
-    	}else if(source.equals(SECONDARY)){
+    	}else if(source.equals(SRC_SECONDARY)){
     		try {
     			sourceFolder = DiskEnvironment.getSecondaryExternalStorage().getFilesDir(this, subFolderToMove);
 			} catch (NoSecondaryStorageException e) {
