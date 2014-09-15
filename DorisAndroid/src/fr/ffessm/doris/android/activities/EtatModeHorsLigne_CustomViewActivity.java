@@ -184,6 +184,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	    image_maximize = R.drawable.app_expander_ic_maximized;
 		image_minimize = R.drawable.app_expander_ic_minimized;
 		
+		// Création de la liste des appels au service de suppression et déplacement des images
+    	initOnClickListener();
+    	
 	    // Gestion Photos
 		createGestionPhotos();
 		
@@ -468,16 +471,12 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		});
 		
     	// Suppression des Images
-		
-		//btnGestionPhotosResetVig.setOnClickListener(reusableClickListener.get(
-		//	MovePhotoDiskService.ACT_DELETE_FOLDER+"-"+MovePhotoDiskService.SRC_DOS_VIGNETTES) );
-		btnGestionPhotosResetVig.setOnClickListener(new ImageButton.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showToast("Test Bouton Delete Vignettes");
-			}
-		});
-				
+
+		btnGestionPhotosResetVig.setOnClickListener(reusableClickListener.get(
+			MovePhotoDiskService.ACT_DELETE_FOLDER+"-"+MovePhotoDiskService.SRC_DOS_VIGNETTES) );
+
+
+	
 		btnGestionPhotosResetCache.setOnClickListener(reusableClickListener.get(
 				MovePhotoDiskService.ACT_DELETE_FOLDER+"-"+MovePhotoDiskService.SRC_DOS_CACHE) );
 		
@@ -543,9 +542,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         	tlFoldUnflodGestionDisk.setVisibility(View.VISIBLE);
         	
         	btnFoldUnflodGestionDisk = (ImageButton) findViewById(R.id.etatmodehorsligne_gestion_disk_fold_unflod_section_imageButton);
-         	
-        	initOnClickListener();
-        
+        	
     		imageCouranteGestionDisk = image_maximize;
     		btnFoldUnflodGestionDisk.setImageResource(imageCouranteGestionDisk);
 
@@ -641,6 +638,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     		reusableClickListener.put(action+"-"+source, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					
 					// utilise le déplacement sous forme de service
 					// use this to start and trigger a service
 					Intent i= new Intent(getApplicationContext(), MovePhotoDiskService.class);
@@ -655,15 +653,15 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			});
     	}
     	else if ( action.equals(MovePhotoDiskService.ACT_DELETE_FOLDER) ) {
-    		showToast("Création reusableClickListener - "+action+"-"+source);
+
+    		Log.d(LOG_TAG, "Création reusableClickListener - "+action+"-"+source);
     		
     		reusableClickListener.put(action+"-"+source, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					
-					showToast("Utilisation reusableClickListener - "+action+"-"+source);
+					Log.d(LOG_TAG, "Utilisation reusableClickListener - "+action+"-"+source);
 					
-					/*
 					AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(getContext());
 			       	alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_gestion_reset_confirmation));
 			       	alertDialogbD.setCancelable(true);
@@ -697,7 +695,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
 			        AlertDialog alertDialog = alertDialogbD.create();
 			        alertDialog.show();
-					*/
 	
 				}
 			});
