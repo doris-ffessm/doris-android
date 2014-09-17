@@ -200,9 +200,9 @@
 		
 		<!--  List of services -->
 		<service
-		  android:name=".services.MovePhotoDiskService"
+		  android:name=".services.GestionPhotoDiskService"
 		  android:icon="@drawable/app_ic_launcher"
-		  android:label="@string/move_disk_service_name"
+		  android:label="@string/gestion_photos_disk_service_name"
 		  >
 		</service> 
     </application>

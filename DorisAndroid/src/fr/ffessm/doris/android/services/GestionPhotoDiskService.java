@@ -10,6 +10,8 @@ import java.io.OutputStream;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.async.NotificationHelper;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
+import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.LimitTimer;
 import fr.ffessm.doris.android.tools.Param_Outils;
@@ -31,10 +33,10 @@ import android.util.Log;
  */
 
 
-public class MovePhotoDiskService extends IntentService {
+public class GestionPhotoDiskService extends IntentService {
 
 
-	private static final String LOG_TAG = MovePhotoDiskService.class.getSimpleName();
+	private static final String LOG_TAG = GestionPhotoDiskService.class.getSimpleName();
 	
 	// premier argument = Action
 	// deuxième argument = Source location ou Dossier à traiter
@@ -62,6 +64,10 @@ public class MovePhotoDiskService extends IntentService {
     
     private NotificationHelper mNotificationHelper;
     
+    Param_Outils paramOutils;
+	Disque_Outils disqueOutils;
+	Photos_Outils photosOutils;
+	
     // compteurs pour affichage dans les notifications et autre progress bar
     int nbFileToCopy=0;
     int nbcopiedFiles=0;
@@ -69,15 +75,16 @@ public class MovePhotoDiskService extends IntentService {
  // timer utilisé pour déclencher un refresh que toutes les x mili
     LimitTimer limitTimer = new LimitTimer(2000); //2000 Milliseconds
 	
-	public MovePhotoDiskService() {
-		super(MovePhotoDiskService.class.getSimpleName());
+	public GestionPhotoDiskService() {
+		super(GestionPhotoDiskService.class.getSimpleName());
+		
+		paramOutils = new Param_Outils(this);
+		disqueOutils = new Disque_Outils(this);
+		photosOutils = new Photos_Outils(this);
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-
-		Disque_Outils disqueOutils = new Disque_Outils(this);
-		Photos_Outils photosOutils = new Photos_Outils(this);
 		
 		// Récupère les paramètres depuis l'intent
 		String action = intent.getStringExtra(INTENT_ACTION);
@@ -95,11 +102,22 @@ public class MovePhotoDiskService extends IntentService {
 		DorisApplicationContext.getInstance().isMovingPhotos = true;
         DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 		
-		String initialTickerText = this.getString(R.string.deplacephotos_bg_initialTickerText);
-		String notificationTitle = this.getString(R.string.deplacephotos_bg_notificationTitle);
+        String initialTickerText = "";
+		String notificationTitle = "";
+        if(action.equals(ACT_MOVE) || action.equals(ACT_DELETE_DISK)){
+			initialTickerText = this.getString(R.string.deplacephotos_bg_initialTickerText);
+			notificationTitle = this.getString(R.string.deplacephotos_bg_notificationTitle);
+        }
+        if(action.equals(ACT_DELETE_FOLDER)){
+			initialTickerText = this.getString(R.string.suppressionphotos_bg_initialTickerText);
+			notificationTitle = this.getString(R.string.suppressionphotos_bg_notificationTitle);
+        }
+		
 		mNotificationHelper = new NotificationHelper(this, initialTickerText, notificationTitle, new Intent());
 		mNotificationHelper.setNotificationID(2);
         mNotificationHelper.createNotification();
+        
+        
 		// Arrêt des autres téléchargements si besoin
 		// stop les téléchargements si besoin
     	if(DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null){
@@ -117,7 +135,7 @@ public class MovePhotoDiskService extends IntentService {
     	// baisse la priorité pour minimiser l'impact sur l'ihm et les risques de plantage
     	android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND + android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE);
 
-    	mNotificationHelper.setContentTitle(this.getString(R.string.deplacephotos_bg_initialTickerText));
+    	mNotificationHelper.setContentTitle(initialTickerText);
     	
 
     	if(action.equals(ACT_MOVE) || action.equals(ACT_DELETE_DISK)){
@@ -160,6 +178,11 @@ public class MovePhotoDiskService extends IntentService {
     		clearFolder(source, this.getString(R.string.folder_portraits));
     		clearFolder(source, this.getString(R.string.folder_illustration_definitions));
     		clearFolder(source, this.getString(R.string.folder_illustration_biblio));
+    		
+    		// On remet à jour les compteurs de téléchargement, ils seront recalculés lors des
+           	// prochain téléchargement
+    		reset_nbphotos_recues();
+    		
     		DorisApplicationContext.getInstance().isMovingPhotos = false;
             DorisApplicationContext.getInstance().notifyDataHasChanged(null);
             mNotificationHelper.completed();
@@ -215,11 +238,19 @@ public class MovePhotoDiskService extends IntentService {
            	if (source.equals(SRC_DOS_VIGNETTES)){
            		disqueOutils.clearFolder(photosOutils.getImageFolderVignette(), 0);
            		
+               	// On remet à jour les compteurs de téléchargement, ils seront recalculés lors des
+               	// prochain téléchargement
+               	reset_nbphotos_recues();
+           		
            	} else if (source.equals(SRC_DOS_MEDRES)){
            		disqueOutils.clearFolder(photosOutils.getImageFolderMedRes(), 0);
            		
+           		reset_nbphotos_recues();
+           		
            	} else if (source.equals(SRC_DOS_HIRES)){
            		disqueOutils.clearFolder(photosOutils.getImageFolderHiRes(), 0);
+           		
+           		reset_nbphotos_recues();
            		
            	} else if (source.equals(SRC_DOS_AUTRES)){
            		disqueOutils.clearFolder(photosOutils.getImageFolderPortraits(), 0);
@@ -229,8 +260,12 @@ public class MovePhotoDiskService extends IntentService {
            	} else if (source.equals(SRC_DOS_CACHE)){
            		disqueOutils.clearFolder(this.getCacheDir(), 0);
            		
-           	} 
+           	}
            	
+           	DorisApplicationContext.getInstance().isMovingPhotos = false;
+	        DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+	        mNotificationHelper.completed();
+
     	}
 	}
 
@@ -337,6 +372,7 @@ public class MovePhotoDiskService extends IntentService {
     	
     	clearFolder(sourceFolder);
     }
+    
     public int clearFolder(File inFolder){
 		int deletedFiles = 0;
 	    if (inFolder!= null && inFolder.isDirectory()) {
@@ -363,5 +399,34 @@ public class MovePhotoDiskService extends IntentService {
 	    return deletedFiles;
 	}
     
+    
+    public void reset_nbphotos_recues(){
+    	
+    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    			ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE, true), 0);
+    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    			ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE, false), 0);
+    	
+    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    			ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE, true), 0);
+    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    			ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE, false), 0);
+    	
+    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    			ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE, true), 0);
+    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    			ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE, false), 0);
+    	
+    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    			ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES, true), 0);
+    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    			ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES, false), 0);
+    	
+    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    			ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST, true), 0);       	
+    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    			ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST, false), 0); 
+
+    }
     
 }

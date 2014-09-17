@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resource Strings speifc to telechargefiches Custom View -->
+<resources>	
+	<!--Start of user code BackgroundActivity_stringstelechargefiches
+	-->
+	<!-- freely add here the desired resource String for your custom view -->
+	<string name="gestion_photos_disk_service_name">"Déplacement &amp; Suppression Photos DORIS"</string>
+	
+	<string name="deplacephotos_bg_initialTickerText">Déplacement Photos</string>
+	<string name="deplacephotos_bg_notificationTitle">Déplacement Photos</string>
+	
+	<string name="suppressionphotos_bg_initialTickerText">Suppression Photos</string>
+	<string name="suppressionphotos_bg_notificationTitle">Suppression Photos</string>
+	
+	<!--End of user code
+	-->
+</resources>

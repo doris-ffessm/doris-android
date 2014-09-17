@@ -45,7 +45,7 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.services.MovePhotoDiskService;
+import fr.ffessm.doris.android.services.GestionPhotoDiskService;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
@@ -471,48 +471,20 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		});
 		
     	// Suppression des Images
-
 		btnGestionPhotosResetVig.setOnClickListener(reusableClickListener.get(
-			MovePhotoDiskService.ACT_DELETE_FOLDER+"-"+MovePhotoDiskService.SRC_DOS_VIGNETTES) );
+			GestionPhotoDiskService.ACT_DELETE_FOLDER+"-"+GestionPhotoDiskService.SRC_DOS_VIGNETTES) );
 
-
+		btnGestionPhotosResetMedRes.setOnClickListener(reusableClickListener.get(
+				GestionPhotoDiskService.ACT_DELETE_FOLDER+"-"+GestionPhotoDiskService.SRC_DOS_MEDRES) );
+		
+		btnGestionPhotosResetHiRes.setOnClickListener(reusableClickListener.get(
+				GestionPhotoDiskService.ACT_DELETE_FOLDER+"-"+GestionPhotoDiskService.SRC_DOS_HIRES) );
+		
+		btnGestionPhotosResetAutres.setOnClickListener(reusableClickListener.get(
+				GestionPhotoDiskService.ACT_DELETE_FOLDER+"-"+GestionPhotoDiskService.SRC_DOS_AUTRES) );
 	
 		btnGestionPhotosResetCache.setOnClickListener(reusableClickListener.get(
-				MovePhotoDiskService.ACT_DELETE_FOLDER+"-"+MovePhotoDiskService.SRC_DOS_CACHE) );
-		
-		
-		/*
-		btnGestionPhotosResetVig.setOnClickListener(new ImageButton.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				gestionPhotosResetDossier("Vignettes");
-			}
-		});
-		btnGestionPhotosResetMedRes.setOnClickListener(new ImageButton.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				gestionPhotosResetDossier("MedRes");
-			}
-		});
-		btnGestionPhotosResetHiRes.setOnClickListener(new ImageButton.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				gestionPhotosResetDossier("HiRes");
-			}
-		});
-		btnGestionPhotosResetAutres.setOnClickListener(new ImageButton.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				gestionPhotosResetDossier("Autres");
-			}
-		});
-		btnGestionPhotosResetCache.setOnClickListener(new ImageButton.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				//gestionPhotosResetDossier("Cache");
-			}
-		});
-		*/
+				GestionPhotoDiskService.ACT_DELETE_FOLDER+"-"+GestionPhotoDiskService.SRC_DOS_CACHE) );
 		
     }
     
@@ -593,28 +565,28 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     
     protected void initOnClickListener(){
     	
-    	addReusableClickListener(MovePhotoDiskService.ACT_DELETE_FOLDER, MovePhotoDiskService.SRC_DOS_VIGNETTES, null);
-    	addReusableClickListener(MovePhotoDiskService.ACT_DELETE_FOLDER, MovePhotoDiskService.SRC_DOS_MEDRES, null);
-    	addReusableClickListener(MovePhotoDiskService.ACT_DELETE_FOLDER, MovePhotoDiskService.SRC_DOS_HIRES, null);
-    	addReusableClickListener(MovePhotoDiskService.ACT_DELETE_FOLDER, MovePhotoDiskService.SRC_DOS_AUTRES, null);
-    	addReusableClickListener(MovePhotoDiskService.ACT_DELETE_FOLDER, MovePhotoDiskService.SRC_DOS_CACHE, null);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_DELETE_FOLDER, GestionPhotoDiskService.SRC_DOS_VIGNETTES, null);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_DELETE_FOLDER, GestionPhotoDiskService.SRC_DOS_MEDRES, null);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_DELETE_FOLDER, GestionPhotoDiskService.SRC_DOS_HIRES, null);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_DELETE_FOLDER, GestionPhotoDiskService.SRC_DOS_AUTRES, null);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_DELETE_FOLDER, GestionPhotoDiskService.SRC_DOS_CACHE, null);
     	
-    	addReusableClickListener(MovePhotoDiskService.ACT_MOVE, MovePhotoDiskService.SRC_INTERNAL, MovePhotoDiskService.SRC_PRIMARY);
-    	addReusableClickListener(MovePhotoDiskService.ACT_MOVE, MovePhotoDiskService.SRC_INTERNAL, MovePhotoDiskService.SRC_SECONDARY);
-    	addReusableClickListener(MovePhotoDiskService.ACT_DELETE_DISK, MovePhotoDiskService.SRC_INTERNAL, null);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, GestionPhotoDiskService.SRC_INTERNAL, GestionPhotoDiskService.SRC_PRIMARY);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, GestionPhotoDiskService.SRC_INTERNAL, GestionPhotoDiskService.SRC_SECONDARY);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_DELETE_DISK, GestionPhotoDiskService.SRC_INTERNAL, null);
     	
-    	addReusableClickListener(MovePhotoDiskService.ACT_MOVE, MovePhotoDiskService.SRC_PRIMARY, MovePhotoDiskService.SRC_INTERNAL);
-    	addReusableClickListener(MovePhotoDiskService.ACT_MOVE, MovePhotoDiskService.SRC_PRIMARY, MovePhotoDiskService.SRC_SECONDARY);
-    	addReusableClickListener(MovePhotoDiskService.ACT_DELETE_DISK, MovePhotoDiskService.SRC_PRIMARY, null);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, GestionPhotoDiskService.SRC_PRIMARY, GestionPhotoDiskService.SRC_INTERNAL);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, GestionPhotoDiskService.SRC_PRIMARY, GestionPhotoDiskService.SRC_SECONDARY);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_DELETE_DISK, GestionPhotoDiskService.SRC_PRIMARY, null);
     	
-    	addReusableClickListener(MovePhotoDiskService.ACT_MOVE, MovePhotoDiskService.SRC_SECONDARY, MovePhotoDiskService.SRC_INTERNAL);
-    	addReusableClickListener(MovePhotoDiskService.ACT_MOVE, MovePhotoDiskService.SRC_SECONDARY, MovePhotoDiskService.SRC_PRIMARY);
-    	addReusableClickListener(MovePhotoDiskService.ACT_DELETE_DISK, MovePhotoDiskService.SRC_SECONDARY, null);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, GestionPhotoDiskService.SRC_SECONDARY, GestionPhotoDiskService.SRC_INTERNAL);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, GestionPhotoDiskService.SRC_SECONDARY, GestionPhotoDiskService.SRC_PRIMARY);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_DELETE_DISK, GestionPhotoDiskService.SRC_SECONDARY, null);
     }
     
     private void addReusableClickListener(final String action, final String source, final String target){
     	
-    	if ( action.equals(MovePhotoDiskService.ACT_MOVE) ) {
+    	if ( action.equals(GestionPhotoDiskService.ACT_MOVE) ) {
 	    	reusableClickListener.put(action+"-"+source+"2"+target, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -622,11 +594,11 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
 					// utilise le déplacement sous forme de service
 					// use this to start and trigger a service
-					Intent i= new Intent(getApplicationContext(), MovePhotoDiskService.class);
+					Intent i= new Intent(getApplicationContext(), GestionPhotoDiskService.class);
 					// add data to the intent
-					i.putExtra(MovePhotoDiskService.INTENT_ACTION, MovePhotoDiskService.ACT_MOVE);
-					i.putExtra(MovePhotoDiskService.INTENT_SOURCE, source);
-					i.putExtra(MovePhotoDiskService.INTENT_TARGET, target);
+					i.putExtra(GestionPhotoDiskService.INTENT_ACTION, GestionPhotoDiskService.ACT_MOVE);
+					i.putExtra(GestionPhotoDiskService.INTENT_SOURCE, source);
+					i.putExtra(GestionPhotoDiskService.INTENT_TARGET, target);
 					
 					getApplicationContext().startService(i);
 					
@@ -634,25 +606,25 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				}
 			});
     	}
-    	else if ( action.equals(MovePhotoDiskService.ACT_DELETE_DISK) ) {
+    	else if ( action.equals(GestionPhotoDiskService.ACT_DELETE_DISK) ) {
     		reusableClickListener.put(action+"-"+source, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					
 					// utilise le déplacement sous forme de service
 					// use this to start and trigger a service
-					Intent i= new Intent(getApplicationContext(), MovePhotoDiskService.class);
+					Intent i= new Intent(getApplicationContext(), GestionPhotoDiskService.class);
 					// add data to the intent
-					i.putExtra(MovePhotoDiskService.INTENT_ACTION, MovePhotoDiskService.ACT_DELETE_DISK);
-					i.putExtra(MovePhotoDiskService.INTENT_SOURCE, source);
-					i.putExtra(MovePhotoDiskService.INTENT_TARGET, "");
+					i.putExtra(GestionPhotoDiskService.INTENT_ACTION, GestionPhotoDiskService.ACT_DELETE_DISK);
+					i.putExtra(GestionPhotoDiskService.INTENT_SOURCE, source);
+					i.putExtra(GestionPhotoDiskService.INTENT_TARGET, "");
 					getApplicationContext().startService(i);
 					
 					DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 				}
 			});
     	}
-    	else if ( action.equals(MovePhotoDiskService.ACT_DELETE_FOLDER) ) {
+    	else if ( action.equals(GestionPhotoDiskService.ACT_DELETE_FOLDER) ) {
 
     		Log.d(LOG_TAG, "Création reusableClickListener - "+action+"-"+source);
     		
@@ -666,8 +638,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			       	alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_gestion_reset_confirmation));
 			       	alertDialogbD.setCancelable(true);
 			       	
-
-			       	
 			       	// On vide le dossier si validé
 			       	alertDialogbD.setPositiveButton(getContext().getString(R.string.btn_yes),
 			       			new DialogInterface.OnClickListener() {
@@ -675,11 +645,11 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
 			    					// utilise la suppression sous forme de service
 
-			    					Intent i= new Intent(getApplicationContext(), MovePhotoDiskService.class);
+			    					Intent i= new Intent(getApplicationContext(), GestionPhotoDiskService.class);
 
-			    					i.putExtra(MovePhotoDiskService.INTENT_ACTION, MovePhotoDiskService.ACT_DELETE_FOLDER);
-			    					i.putExtra(MovePhotoDiskService.INTENT_SOURCE, source);
-			    					i.putExtra(MovePhotoDiskService.INTENT_TARGET, "");
+			    					i.putExtra(GestionPhotoDiskService.INTENT_ACTION, GestionPhotoDiskService.ACT_DELETE_FOLDER);
+			    					i.putExtra(GestionPhotoDiskService.INTENT_SOURCE, source);
+			    					i.putExtra(GestionPhotoDiskService.INTENT_TARGET, "");
 			    					getApplicationContext().startService(i);
 			    					
 			    					DorisApplicationContext.getInstance().notifyDataHasChanged(null);
@@ -698,8 +668,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	
 				}
 			});
-    		
-    	
+
     	}
     }
     
@@ -1062,15 +1031,15 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		//if(!deplacementEnCours){
 		switch (currentImageLocation){
 		case APP_INTERNAL:
-			internalDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.ACT_DELETE_DISK+"-"+MovePhotoDiskService.SRC_INTERNAL));
+			internalDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_INTERNAL));
 			internalDiskBtn.setText(R.string.etatmodehorsligne_diskselection_internal_depl_btn_text_selected);
 			break;
 		case PRIMARY:
-			internalDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.ACT_MOVE+"-"+MovePhotoDiskService.SRC_PRIMARY+"2"+ MovePhotoDiskService.SRC_INTERNAL));
+			internalDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_PRIMARY+"2"+ GestionPhotoDiskService.SRC_INTERNAL));
 			internalDiskBtn.setText(R.string.etatmodehorsligne_diskselection_internal_depl_btn_text_selected);
 			break;
 		case SECONDARY:
-			internalDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.ACT_MOVE+"-"+MovePhotoDiskService.SRC_SECONDARY+"2"+ MovePhotoDiskService.SRC_INTERNAL));
+			internalDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_SECONDARY+"2"+ GestionPhotoDiskService.SRC_INTERNAL));
 			internalDiskBtn.setText(R.string.etatmodehorsligne_diskselection_internal_depl_btn_text_selected);
 			break;
 		}
@@ -1084,15 +1053,15 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			//if(!deplacementEnCours){
 			switch (currentImageLocation){
 			case PRIMARY:
-				primaryDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.ACT_DELETE_DISK+"-"+MovePhotoDiskService.SRC_PRIMARY));
+				primaryDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_PRIMARY));
 				primaryDiskBtn.setText(R.string.etatmodehorsligne_diskselection_internal_stop_btn_text_selected);
 				break;
 			case APP_INTERNAL:
-				primaryDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.ACT_MOVE+"-"+MovePhotoDiskService.SRC_INTERNAL+"2"+ MovePhotoDiskService.SRC_PRIMARY));
+				primaryDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_INTERNAL+"2"+ GestionPhotoDiskService.SRC_PRIMARY));
 				primaryDiskBtn.setText(R.string.etatmodehorsligne_diskselection_internal_stop_btn_text_selected);
 				break;
 			case SECONDARY:
-				primaryDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.ACT_MOVE+"-"+MovePhotoDiskService.SRC_SECONDARY+"2"+ MovePhotoDiskService.SRC_PRIMARY));
+				primaryDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_SECONDARY+"2"+ GestionPhotoDiskService.SRC_PRIMARY));
 				primaryDiskBtn.setText(R.string.etatmodehorsligne_diskselection_internal_stop_btn_text_selected);
 				break;
 			}
@@ -1108,15 +1077,15 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			//if(!deplacementEnCours){
 			switch (currentImageLocation){
 			case SECONDARY:
-				secondaryDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.ACT_DELETE_DISK+"-"+MovePhotoDiskService.SRC_SECONDARY));
+				secondaryDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_SECONDARY));
 				secondaryDiskBtn.setText(R.string.etatmodehorsligne_diskselection_secondary_depl_btn_text_selected);
 				break;
 			case APP_INTERNAL:
-				secondaryDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.ACT_MOVE+"-"+MovePhotoDiskService.SRC_INTERNAL+"2"+ MovePhotoDiskService.SRC_SECONDARY));
+				secondaryDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_INTERNAL+"2"+ GestionPhotoDiskService.SRC_SECONDARY));
 				secondaryDiskBtn.setText(R.string.etatmodehorsligne_diskselection_secondary_depl_btn_text_selected);
 				break;
 			case PRIMARY:
-				secondaryDiskBtn.setOnClickListener(reusableClickListener.get(MovePhotoDiskService.ACT_MOVE+"-"+MovePhotoDiskService.SRC_PRIMARY+"2"+ MovePhotoDiskService.SRC_SECONDARY));
+				secondaryDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_PRIMARY+"2"+ GestionPhotoDiskService.SRC_SECONDARY));
 				secondaryDiskBtn.setText(R.string.etatmodehorsligne_diskselection_secondary_depl_btn_text_selected);
 				break;
 			}
