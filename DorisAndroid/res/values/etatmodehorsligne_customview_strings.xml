@@ -84,17 +84,22 @@
 	
 	<string name="etatmodehorsligne_diskselection_internal_libelle">Stockage Interne</string>
 	<string name="etatmodehorsligne_diskselection_internal_depl_btn_text_selected">Déplacer vers le Stockage Interne</string>
+	<string name="etatmodehorsligne_diskselection_internal_repr_btn_text_selected">Reprise déplacement vers le Stockage Interne</string>
 	<string name="etatmodehorsligne_diskselection_internal_stop_btn_text_selected">Arrêt déplacement vers le Stockage Interne</string>
 	<string name="etatmodehorsligne_diskselection_internal_supp_btn_text_selected">Vider le Stockage Interne</string>
-	
+	<string name="etatmodehorsligne_diskselection_internal_btn_text_not_available">Aucun mouvement possible</string>
+		
 	<string name="etatmodehorsligne_diskselection_primary_libelle">Carte SD Interne</string>
 	<string name="etatmodehorsligne_diskselection_primary_depl_btn_text_selected">Déplacer vers la Carte SD Interne</string>
+	<string name="etatmodehorsligne_diskselection_primary_repr_btn_text_selected">Reprise déplacement vers la Carte SD Interne</string>
 	<string name="etatmodehorsligne_diskselection_primary_stop_btn_text_selected">Arrêt déplacement vers la Carte SD Interne</string>
 	<string name="etatmodehorsligne_diskselection_primary_supp_btn_text_selected">Vider la Carte SD Interne</string>
+	<!-- Pas vraiment utile car de toutes les façons, si pas dispo. l'utilisateur ne peut rien y faire, gardé par souci de cohérence pour l'instant -->
 	<string name="etatmodehorsligne_diskselection_primary_btn_text_not_available">Carte SD Interne non disponible</string>
 	
 	<string name="etatmodehorsligne_diskselection_secondary_libelle">Carte SD Externe</string>
 	<string name="etatmodehorsligne_diskselection_secondary_depl_btn_text_selected">Déplacer vers la Carte SD Externe</string>
+	<string name="etatmodehorsligne_diskselection_secondary_repr_btn_text_selected">Reprise déplacement la Carte SD Externe</string>
 	<string name="etatmodehorsligne_diskselection_secondary_stop_btn_text_selected">Arrêt déplacement vers la Carte SD Externe</string>
 	<string name="etatmodehorsligne_diskselection_secondary_supp_btn_text_selected">Vider la Carte SD Externe</string>
 	<string name="etatmodehorsligne_diskselection_secondary_btn_text_not_available">Carte SD Externe non disponible</string>

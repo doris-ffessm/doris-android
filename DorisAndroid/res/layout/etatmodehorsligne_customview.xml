@@ -304,14 +304,6 @@
 			            android:text="@string/etatmodehorsligne_diskselection_internal_depl_btn_text_selected" />
 	
 					<Button
-					    android:id="@+id/etatmodehorsligne_diskselection_internal_stop_btn"
-					    style="?android:attr/buttonStyleSmall"
-			            android:layout_width="0dp"
-			            android:layout_height="match_parent"
-			            android:layout_weight="0.33"
-					    android:text="@string/etatmodehorsligne_diskselection_internal_stop_btn_text_selected" />
-	
-					<Button
 			            android:id="@+id/etatmodehorsligne_diskselection_internal_supp_btn"
 			            style="?android:attr/buttonStyleSmall"
 			            android:layout_width="0dp"
@@ -332,15 +324,7 @@
 			            android:layout_height="match_parent"
 			            android:layout_weight="0.33"
 			            android:text="@string/etatmodehorsligne_diskselection_primary_depl_btn_text_selected" />
-	
-					<Button
-					    android:id="@+id/etatmodehorsligne_diskselection_primary_stop_btn"
-					    style="?android:attr/buttonStyleSmall"
-			            android:layout_width="0dp"
-			            android:layout_height="match_parent"
-			            android:layout_weight="0.33"
-					    android:text="@string/etatmodehorsligne_diskselection_primary_stop_btn_text_selected" />
-	
+		
 					<Button
 			            android:id="@+id/etatmodehorsligne_diskselection_primary_supp_btn"
 			            style="?android:attr/buttonStyleSmall"
@@ -362,14 +346,6 @@
 			            android:layout_height="match_parent"
 			            android:layout_weight="0.33"
 			            android:text="@string/etatmodehorsligne_diskselection_secondary_depl_btn_text_selected" />
-	
-					<Button
-					    android:id="@+id/etatmodehorsligne_diskselection_secondary_stop_btn"
-					    style="?android:attr/buttonStyleSmall"
-			            android:layout_width="0dp"
-			            android:layout_height="match_parent"
-			            android:layout_weight="0.33"
-					    android:text="@string/etatmodehorsligne_diskselection_secondary_stop_btn_text_selected" />
 	
 					<Button
 			            android:id="@+id/etatmodehorsligne_diskselection_secondary_supp_btn"

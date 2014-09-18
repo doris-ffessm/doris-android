@@ -252,12 +252,6 @@
             android:defaultValue="50"
             android:layout="@layout/preference_layout_preference"
             />
-        <CheckBoxPreference android:key="@string/pref_key_deplacer_images_debug"
-            android:title="Activation du choix de l'emplacement des images"
-            android:summary="Fonctionnalité en cours de développement (pas encore très stable donc)"  
-            android:defaultValue="false"
-            android:layout="@layout/preference_layout_preference"
-            />
      </PreferenceScreen>
  
 

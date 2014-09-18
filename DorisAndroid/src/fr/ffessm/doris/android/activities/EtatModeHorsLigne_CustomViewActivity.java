@@ -140,7 +140,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	protected List<MultiProgressBar> allFoldableProgressBarZones = new ArrayList<MultiProgressBar>();
 	protected HashMap<String, View.OnClickListener> reusableClickListener = new HashMap<String, View.OnClickListener>();
 	
-	/** bouton fold unflod Photos disponibles */
+	/** Boutons Photos */
 	private LinearLayout llGestionPhotos;
 	private int image_maximize;
 	private int image_minimize;
@@ -153,11 +153,17 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	private Button btnGestionPhotosResetAutres;
 	private Button btnGestionPhotosResetCache;
 	
-	/** bouton fold unflod Utilisation des Disques */
+	/** Boutons Utilisation des Disques */
 	private LinearLayout llGestionDisk;
 	private ImageButton btnFoldUnflodGestionDisk;
 	private TableLayout tlFoldUnflodGestionDisk;
 	private int imageCouranteGestionDisk;
+	private Button btnInternalDiskDepl;
+	private Button btnInternalDiskSupp;
+	private Button btnPrimaryDiskDepl;
+	private Button btnPrimaryDiskSupp;
+	private Button btnSecondaryDiskDepl;
+	private Button btnSecondaryDiskSupp;
 	
 	// cache pour éviter de refaire des accès BDD inutiles
 	protected List<ZoneGeographique> listeZoneGeo = null;
@@ -470,7 +476,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			}
 		});
 		
-    	// Suppression des Images
+    	// Boutons de Suppression des Images par Type
 		btnGestionPhotosResetVig.setOnClickListener(reusableClickListener.get(
 			GestionPhotoDiskService.ACT_DELETE_FOLDER+"-"+GestionPhotoDiskService.SRC_DOS_VIGNETTES) );
 
@@ -504,50 +510,65 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     protected void createGestionDisk(){
     	
     	llGestionDisk = (LinearLayout) findViewById(R.id.etatmodehorsligne_gestion_disk_layout);
-		tlFoldUnflodGestionDisk = (TableLayout) findViewById(R.id.etatmodehorsligne_gestion_disk_buttons_tablelayout);
+ 		tlFoldUnflodGestionDisk = (TableLayout) findViewById(R.id.etatmodehorsligne_gestion_disk_buttons_tablelayout);
+    	btnFoldUnflodGestionDisk = (ImageButton) findViewById(R.id.etatmodehorsligne_gestion_disk_fold_unflod_section_imageButton);
+    	
+		imageCouranteGestionDisk = image_maximize;
+		btnFoldUnflodGestionDisk.setImageResource(imageCouranteGestionDisk);
 
-        //TODO : Temporaire tant que la fonction n'est pas tout à fait au point
-        // Permet de n'activer le choix de l'emplacement des images que pour les personnes qui auront compris
-        // que c'est en dev.
-        if (paramOutils.getParamBoolean(R.string.pref_key_deplacer_images_debug, false)){
-        	llGestionDisk.setVisibility(View.VISIBLE);
-        	tlFoldUnflodGestionDisk.setVisibility(View.VISIBLE);
-        	
-        	btnFoldUnflodGestionDisk = (ImageButton) findViewById(R.id.etatmodehorsligne_gestion_disk_fold_unflod_section_imageButton);
-        	
-    		imageCouranteGestionDisk = image_maximize;
-    		btnFoldUnflodGestionDisk.setImageResource(imageCouranteGestionDisk);
+		btnInternalDiskDepl = (Button) findViewById(R.id.etatmodehorsligne_diskselection_internal_depl_btn);
+		btnInternalDiskSupp = (Button) findViewById(R.id.etatmodehorsligne_diskselection_internal_supp_btn);
+		btnPrimaryDiskDepl = (Button) findViewById(R.id.etatmodehorsligne_diskselection_primary_depl_btn);
+		btnPrimaryDiskSupp = (Button) findViewById(R.id.etatmodehorsligne_diskselection_primary_supp_btn);
+		btnSecondaryDiskDepl = (Button) findViewById(R.id.etatmodehorsligne_diskselection_secondary_depl_btn);
+		btnSecondaryDiskSupp = (Button) findViewById(R.id.etatmodehorsligne_diskselection_secondary_supp_btn);
+		
+    	// Masquage de l'ensemble des Boutons de suppression des photos
+		llGestionDisk.setOnClickListener(new ImageButton.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				foldUnflodGestionDisk();
+			}
+		}); 
+		btnFoldUnflodGestionDisk.setOnClickListener(new ImageButton.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				foldUnflodGestionDisk();
+			}
+		});   
+    
+		// Quels emplacements sont disponibles
+		// TODO : le mettre à un seul endroit et utiliser partout
+		boolean carteInterneDispo = false;
+		if (! disqueOutils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
+				disqueOutils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) ) )
+			carteInterneDispo = true;
+		Log.d(LOG_TAG, "createGestionDisk() - carteInterneDispo : "+carteInterneDispo);
+		
+		boolean carteExterneDispo = DiskEnvironment.isSecondaryExternalStorageAvailable();
+		Log.d(LOG_TAG, "createGestionDisk() - carteExterneDispo : "+carteExterneDispo);
+		
+		// Si ni la carte Interne, ni la Carte Externe ne sont présentes aucun mouvement n'est possible
+		if( (! carteInterneDispo) && (! carteExterneDispo) ){
+			btnInternalDiskDepl.setEnabled(false);
+			btnInternalDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_btn_text_not_available));
+		}
+		
+		// Affichage ou non de la Carte Interne
+		if ( ! carteInterneDispo ) {
+			TableRow trGestionDiskPrimary = (TableRow) findViewById(R.id.etatmodehorsligne_gestion_disk_primary_row);
+			trGestionDiskPrimary.setVisibility(View.GONE);
+		}
+		
+		// Désactivation des boutons de la carte externe qd elle n'est pas disponible
+		if( ! carteExterneDispo ){
+			btnSecondaryDiskDepl.setEnabled(false);
+			btnSecondaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_secondary_btn_text_not_available));
+			
+			btnSecondaryDiskSupp.setVisibility(View.INVISIBLE);
+			
+		}
 
-        	// Masquage des Boutons de suppression des photos
-    		llGestionDisk.setOnClickListener(new ImageButton.OnClickListener() {
-    			@Override
-    			public void onClick(View v) {
-    				foldUnflodGestionDisk();
-    			}
-    		}); 
-    		btnFoldUnflodGestionDisk.setOnClickListener(new ImageButton.OnClickListener() {
-    			@Override
-    			public void onClick(View v) {
-    				foldUnflodGestionDisk();
-    			}
-    		});   
-        
-    		if ( disqueOutils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
-    				disqueOutils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
-    				) {
-    			TableRow trGestionDiskPrimary = (TableRow) findViewById(R.id.etatmodehorsligne_gestion_disk_primary_row);
-    			trGestionDiskPrimary.setVisibility(View.GONE);
-    		}
-    		
-    		if( !DiskEnvironment.isSecondaryExternalStorageAvailable() ){
-    			TableRow trGestionDiskSecondary = (TableRow) findViewById(R.id.etatmodehorsligne_gestion_disk_secondary_row);
-    			trGestionDiskSecondary.setVisibility(View.GONE);
-    		}
-    		
-        } else {
-        	llGestionDisk.setVisibility(View.GONE);
-        	tlFoldUnflodGestionDisk.setVisibility(View.GONE);
-        }
     	
     }
     
@@ -942,15 +963,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	// mise à jour des progress bar
     	refreshProgressBarZone();
 
-    	
     	// mise à jour de la Gestion des Disques
-        // TODO : Temporaire tant que la fonction n'est pas tout à fait au point
-        // Permet de n'activer le choix de l'emplacement des images que pour les personnes qui auront compris
-        // que c'est en dev.
-        if (paramOutils.getParamBoolean(R.string.pref_key_deplacer_images_debug, false)){
-        	refreshGestionDisk();
-        }
-        
+       	refreshGestionDisk();
+       
 		//End of user code
 	}
 
