@@ -508,7 +508,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     
     
     protected void createGestionDisk(){
-    	
+
     	llGestionDisk = (LinearLayout) findViewById(R.id.etatmodehorsligne_gestion_disk_layout);
  		tlFoldUnflodGestionDisk = (TableLayout) findViewById(R.id.etatmodehorsligne_gestion_disk_buttons_tablelayout);
     	btnFoldUnflodGestionDisk = (ImageButton) findViewById(R.id.etatmodehorsligne_gestion_disk_fold_unflod_section_imageButton);
@@ -536,40 +536,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				foldUnflodGestionDisk();
 			}
 		});   
-    
-		// Quels emplacements sont disponibles
-		// TODO : le mettre à un seul endroit et utiliser partout
-		boolean carteInterneDispo = false;
-		if (! disqueOutils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
-				disqueOutils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) ) )
-			carteInterneDispo = true;
-		Log.d(LOG_TAG, "createGestionDisk() - carteInterneDispo : "+carteInterneDispo);
-		
-		boolean carteExterneDispo = DiskEnvironment.isSecondaryExternalStorageAvailable();
-		Log.d(LOG_TAG, "createGestionDisk() - carteExterneDispo : "+carteExterneDispo);
-		
-		// Si ni la carte Interne, ni la Carte Externe ne sont présentes aucun mouvement n'est possible
-		if( (! carteInterneDispo) && (! carteExterneDispo) ){
-			btnInternalDiskDepl.setEnabled(false);
-			btnInternalDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_btn_text_not_available));
-		}
-		
-		// Affichage ou non de la Carte Interne
-		if ( ! carteInterneDispo ) {
-			TableRow trGestionDiskPrimary = (TableRow) findViewById(R.id.etatmodehorsligne_gestion_disk_primary_row);
-			trGestionDiskPrimary.setVisibility(View.GONE);
-		}
-		
-		// Désactivation des boutons de la carte externe qd elle n'est pas disponible
-		if( ! carteExterneDispo ){
-			btnSecondaryDiskDepl.setEnabled(false);
-			btnSecondaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_secondary_btn_text_not_available));
-			
-			btnSecondaryDiskSupp.setVisibility(View.INVISIBLE);
-			
-		}
-
-    	
+  	
     }
     
     protected void foldUnflodGestionDisk(){
@@ -1017,6 +984,70 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			}
 		}
 		
+		
+		// Quels emplacements sont disponibles
+		// TODO : le mettre à un seul endroit et utiliser partout
+		boolean carteInterneDispo = false;
+		if (! disqueOutils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
+				disqueOutils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) ) )
+			carteInterneDispo = true;
+		Log.d(LOG_TAG, "createGestionDisk() - carteInterneDispo : "+carteInterneDispo);
+		
+		boolean carteExterneDispo = DiskEnvironment.isSecondaryExternalStorageAvailable();
+		Log.d(LOG_TAG, "createGestionDisk() - carteExterneDispo : "+carteExterneDispo);
+		
+		// Si ni la carte Interne, ni la Carte Externe ne sont présentes aucun mouvement n'est possible
+		boolean btnEnable = false;
+		if( carteInterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 ){
+			btnEnable = true;
+		}
+		if( carteExterneDispo) {
+			if( photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY) != 0 ){
+				btnEnable = true;
+			}
+		}
+		
+		if( ! btnEnable ){
+			btnInternalDiskDepl.setEnabled(false);
+			btnInternalDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_btn_text_not_available));
+		}
+		if( photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL) == 0 ) {
+			btnInternalDiskSupp.setEnabled(false);
+		}
+		
+		// Affichage ou non de la Carte Interne
+		if ( ! carteInterneDispo ) {
+			TableRow trGestionDiskPrimary = (TableRow) findViewById(R.id.etatmodehorsligne_gestion_disk_primary_row);
+			trGestionDiskPrimary.setVisibility(View.GONE);
+		} else {
+			btnEnable = false;
+			if( ( photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0 )
+					|| ( carteExterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY) != 0 ) ){
+				btnEnable = true;
+			}
+			if( ! btnEnable ){
+				btnPrimaryDiskDepl.setEnabled(false);
+				btnPrimaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_btn_text_not_available));
+			}
+			if( photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) == 0 ) {
+				btnPrimaryDiskSupp.setEnabled(false);
+			}
+		}
+		
+		// Désactivation des boutons de la carte externe qd elle n'est pas disponible
+		btnEnable = false;
+		if( ( photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0 )
+				|| ( carteInterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 ) ){
+			btnEnable = true;
+		}
+		if( ! btnEnable ){
+			btnSecondaryDiskDepl.setEnabled(false);
+			btnSecondaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_secondary_btn_text_not_available));
+		}
+		if( photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY) == 0 ) {
+			btnSecondaryDiskSupp.setEnabled(false);
+		}
+		
 		// déclenche le calcul de l'espace disque utilisé
 		if(lastAsyncComputeLongRefreshScreenData != null){
 			if( lastAsyncComputeLongRefreshScreenData.getStatus() == Status.FINISHED){
@@ -1041,75 +1072,75 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		}
 		else deplacementEnCoursProgressBar.setVisibility(View.GONE);
 		
-		Button internalDiskBtn = (Button) findViewById(R.id.etatmodehorsligne_diskselection_internal_depl_btn);
-		internalDiskBtn.setEnabled(!deplacementEnCours);
-		//if(!deplacementEnCours){
+
+		btnInternalDiskDepl.setEnabled(!deplacementEnCours);
+
 		switch (currentImageLocation){
 		case APP_INTERNAL:
-			internalDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_INTERNAL));
-			internalDiskBtn.setText(R.string.etatmodehorsligne_diskselection_internal_depl_btn_text_selected);
+			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_INTERNAL));
+			btnInternalDiskDepl.setText(R.string.etatmodehorsligne_diskselection_internal_depl_btn_text_selected);
 			break;
 		case PRIMARY:
-			internalDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_PRIMARY+"2"+ GestionPhotoDiskService.SRC_INTERNAL));
-			internalDiskBtn.setText(R.string.etatmodehorsligne_diskselection_internal_depl_btn_text_selected);
+			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_PRIMARY+"2"+ GestionPhotoDiskService.SRC_INTERNAL));
+			btnInternalDiskDepl.setText(R.string.etatmodehorsligne_diskselection_internal_depl_btn_text_selected);
 			break;
 		case SECONDARY:
-			internalDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_SECONDARY+"2"+ GestionPhotoDiskService.SRC_INTERNAL));
-			internalDiskBtn.setText(R.string.etatmodehorsligne_diskselection_internal_depl_btn_text_selected);
+			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_SECONDARY+"2"+ GestionPhotoDiskService.SRC_INTERNAL));
+			btnInternalDiskDepl.setText(R.string.etatmodehorsligne_diskselection_internal_depl_btn_text_selected);
 			break;
 		}
 			
 		//}
-		Button primaryDiskBtn = (Button) findViewById(R.id.etatmodehorsligne_diskselection_primary_depl_btn);
-		primaryDiskBtn.setEnabled(!deplacementEnCours);
+
+		btnPrimaryDiskDepl.setEnabled(!deplacementEnCours);
 		if(!disqueOutils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
 				disqueOutils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
 			){
 			//if(!deplacementEnCours){
 			switch (currentImageLocation){
 			case PRIMARY:
-				primaryDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_PRIMARY));
-				primaryDiskBtn.setText(R.string.etatmodehorsligne_diskselection_internal_stop_btn_text_selected);
+				btnPrimaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_PRIMARY));
+				btnPrimaryDiskDepl.setText(R.string.etatmodehorsligne_diskselection_internal_stop_btn_text_selected);
 				break;
 			case APP_INTERNAL:
-				primaryDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_INTERNAL+"2"+ GestionPhotoDiskService.SRC_PRIMARY));
-				primaryDiskBtn.setText(R.string.etatmodehorsligne_diskselection_internal_stop_btn_text_selected);
+				btnPrimaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_INTERNAL+"2"+ GestionPhotoDiskService.SRC_PRIMARY));
+				btnPrimaryDiskDepl.setText(R.string.etatmodehorsligne_diskselection_internal_stop_btn_text_selected);
 				break;
 			case SECONDARY:
-				primaryDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_SECONDARY+"2"+ GestionPhotoDiskService.SRC_PRIMARY));
-				primaryDiskBtn.setText(R.string.etatmodehorsligne_diskselection_internal_stop_btn_text_selected);
+				btnPrimaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_SECONDARY+"2"+ GestionPhotoDiskService.SRC_PRIMARY));
+				btnPrimaryDiskDepl.setText(R.string.etatmodehorsligne_diskselection_internal_stop_btn_text_selected);
 				break;
 			}
 		}else{
-			primaryDiskBtn.setEnabled(false);
-			primaryDiskBtn.setText(R.string.etatmodehorsligne_diskselection_primary_btn_text_not_available);
+			btnPrimaryDiskDepl.setEnabled(false);
+			btnPrimaryDiskDepl.setText(R.string.etatmodehorsligne_diskselection_primary_btn_text_not_available);
 		}
 			
 		//}
-		Button secondaryDiskBtn = (Button) findViewById(R.id.etatmodehorsligne_diskselection_secondary_depl_btn);
-		secondaryDiskBtn.setEnabled(!deplacementEnCours);
+
+		//btnSecondaryDiskDepl.setEnabled(!deplacementEnCours);
 		if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
 			//if(!deplacementEnCours){
 			switch (currentImageLocation){
 			case SECONDARY:
-				secondaryDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_SECONDARY));
-				secondaryDiskBtn.setText(R.string.etatmodehorsligne_diskselection_secondary_depl_btn_text_selected);
+				btnSecondaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_SECONDARY));
+				btnSecondaryDiskDepl.setText(R.string.etatmodehorsligne_diskselection_secondary_depl_btn_text_selected);
 				break;
 			case APP_INTERNAL:
-				secondaryDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_INTERNAL+"2"+ GestionPhotoDiskService.SRC_SECONDARY));
-				secondaryDiskBtn.setText(R.string.etatmodehorsligne_diskselection_secondary_depl_btn_text_selected);
+				btnSecondaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_INTERNAL+"2"+ GestionPhotoDiskService.SRC_SECONDARY));
+				btnSecondaryDiskDepl.setText(R.string.etatmodehorsligne_diskselection_secondary_depl_btn_text_selected);
 				break;
 			case PRIMARY:
-				secondaryDiskBtn.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_PRIMARY+"2"+ GestionPhotoDiskService.SRC_SECONDARY));
-				secondaryDiskBtn.setText(R.string.etatmodehorsligne_diskselection_secondary_depl_btn_text_selected);
+				btnSecondaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_PRIMARY+"2"+ GestionPhotoDiskService.SRC_SECONDARY));
+				btnSecondaryDiskDepl.setText(R.string.etatmodehorsligne_diskselection_secondary_depl_btn_text_selected);
 				break;
 			}
 				
 			//}
 		}
 		else{
-			secondaryDiskBtn.setEnabled(false);
-			secondaryDiskBtn.setText(R.string.etatmodehorsligne_diskselection_secondary_btn_text_not_available);
+			btnSecondaryDiskDepl.setEnabled(false);
+			btnSecondaryDiskDepl.setText(R.string.etatmodehorsligne_diskselection_secondary_btn_text_not_available);
 		}
 		
 		Log.d(LOG_TAG, "refreshScreenData thread = "+Thread.currentThread());

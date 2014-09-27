@@ -169,7 +169,9 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     					
 			// do the initialization of the task here
 	    	// Téléchargement en tache de fond de toutes les photos de toutes les fiches correspondants aux critères de l'utilisateur
-    		Reseau_Outils reseauOutils = new Reseau_Outils(context);
+    		
+			
+			Reseau_Outils reseauOutils = new Reseau_Outils(context);
     		if(reseauOutils.getConnectionType() == Reseau_Outils.ConnectionType.AUCUNE){
 	        	Log.d(LOG_TAG, "pas connexion internet : annulation du téléchargement");
 	        	return 0;
@@ -183,7 +185,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	    	
 	    	DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 	    	DorisDBHelper dorisDBHelper = dbHelper.getDorisDBHelper();
-	    	
+
 	    	
 	    	/* On commence par compter les photos à télécharger pour que les indicateurs d'avancement soient
 	    	 * juste et ergonomique

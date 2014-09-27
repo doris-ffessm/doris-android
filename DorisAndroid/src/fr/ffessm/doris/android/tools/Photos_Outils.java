@@ -303,7 +303,10 @@ public class Photos_Outils {
 
 	public HashSet<String> getAllPhotosAvailable(ImageType inImageType){
 		HashSet<String> hsPhotosAvailable = new HashSet<String>();
-		File imageFolder = getImageFolder(inImageType);		
+		File imageFolder = getImageFolder(inImageType);
+		
+		if (! imageFolder.exists() ) return hsPhotosAvailable;
+		
 		for (File file : imageFolder.listFiles()) {
 			hsPhotosAvailable.add(file.getName());
 		}
@@ -318,7 +321,15 @@ public class Photos_Outils {
 		File result = null;	
 		
 		if(!photoUrl.isEmpty()){
-			File fichierImage = new File(getImageFolder(imageType), photoDisque);
+			
+			File imageFolder = getImageFolder(imageType);
+			
+	    	/* On crée les dossiers s'ils étaient inexistants */
+			if (!imageFolder.exists() && !imageFolder.mkdirs()) {
+	            throw new IOException("Cannot create dir " + imageFolder.getAbsolutePath());
+	        }
+			
+	    	File fichierImage = new File(imageFolder, photoDisque);
 			if(fichierImage.exists()){
 				result = fichierImage;
 			}
@@ -364,6 +375,10 @@ public class Photos_Outils {
 
 
 	public int getImageCountInFolder(ImageType inImageType){
+		
+		// Si le dossier n'a jamais été créé on renvoie 0
+		if (! getImageFolder(inImageType).exists() ) return 0;
+				
 		return getImageFolder(inImageType).list().length;
 	}
 	
@@ -398,9 +413,17 @@ public class Photos_Outils {
 	
 	
 	public long getPhotoDiskUsage(ImageType inImageType){
+		// Si le dossier n'a jamais été créé on renvoie 0
+		if (! getImageFolder(inImageType).exists() ) return 0;
     	return getImageFolder(inImageType).list().length * getTailleMoyImageUnitaire(inImageType) ;
 	}
 	public long getPhotoDiskUsage(ImageLocation baseImageLocation, ImageType inImageType){
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "Photos_Outils() - getPhotoDiskUsage() - baseImageLocation : "+baseImageLocation.name());
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "Photos_Outils() - getPhotoDiskUsage() - inImageType : "+inImageType.name());
+		
+		// Si le dossier n'a jamais été créé on renvoie 0
+		if (! getImageFolder(baseImageLocation, inImageType).exists() ) return 0;
+
     	return getImageFolder(baseImageLocation, inImageType).list().length * getTailleMoyImageUnitaire(inImageType) ;
 	}
 	public long getCacheUsage(){
