@@ -394,7 +394,7 @@ public class Photos_Outils {
 	}
 	
 	public long getPhotosDiskUsage(ImageLocation baseImageLocation){
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "Photos_Outils() - getPhotosDiskUsage()");
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "Photos_Outils() - getPhotosDiskUsage()");
     	return getPhotoDiskUsage(baseImageLocation, ImageType.VIGNETTE)
     			+ getPhotoDiskUsage(baseImageLocation, ImageType.MED_RES)
     			+ getPhotoDiskUsage(baseImageLocation, ImageType.HI_RES)

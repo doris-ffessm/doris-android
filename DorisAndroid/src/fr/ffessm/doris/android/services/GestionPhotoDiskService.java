@@ -104,11 +104,11 @@ public class GestionPhotoDiskService extends IntentService {
 		
         String initialTickerText = "";
 		String notificationTitle = "";
-        if(action.equals(ACT_MOVE) || action.equals(ACT_DELETE_DISK)){
+        if(action.equals(ACT_MOVE)){
 			initialTickerText = this.getString(R.string.deplacephotos_bg_initialTickerText);
 			notificationTitle = this.getString(R.string.deplacephotos_bg_notificationTitle);
         }
-        if(action.equals(ACT_DELETE_FOLDER)){
+        if(action.equals(ACT_DELETE_FOLDER) || action.equals(ACT_DELETE_DISK)){
 			initialTickerText = this.getString(R.string.suppressionphotos_bg_initialTickerText);
 			notificationTitle = this.getString(R.string.suppressionphotos_bg_notificationTitle);
         }

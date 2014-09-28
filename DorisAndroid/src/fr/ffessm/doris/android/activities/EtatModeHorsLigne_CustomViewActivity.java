@@ -484,7 +484,18 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				foldUnflodGestionDisk();
 			}
 		});   
-  	
+ 		
+		// les boutons Supprimer ont toujours le même setOnClickListener, on l'associe donc ici.
+		// Pour les Déplacements, c'est dans le refreshusedDisk()
+		btnInternalDiskSupp.setOnClickListener(
+			reusableClickListener.get(
+				GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_INTERNAL));
+		btnPrimaryDiskSupp.setOnClickListener(
+				reusableClickListener.get(
+					GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_PRIMARY));
+		btnSecondaryDiskSupp.setOnClickListener(
+				reusableClickListener.get(
+					GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_SECONDARY));
     }
     
     protected void foldUnflodGestionDisk(){
@@ -522,7 +533,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	// & Mise à jour des Boutons de Gestion des Dossiers
 		refreshFolderSize();
 		
-		// Mise à jour de l'utilisation des dossiers 
+		// Mise à jour de l'utilisation des Disques 
 		refreshUsedDisk();
 		
     	// mise à jour des Boutons de Gestion des Disques
@@ -851,57 +862,116 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	//End of user code
    
     public void refreshGestionDisk() {
+    	
 		// Si ni la carte Interne, ni la Carte Externe ne sont présentes aucun mouvement n'est possible
-		boolean btnEnable = false;
-		if( carteInterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 ){
-			btnEnable = true;
-		}
-		if( carteExterneDispo) {
-			if( photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY) != 0 ){
-				btnEnable = true;
-			}
-		}
+		if ( ( carteInterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 )
+			|| ( carteExterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY) != 0 ) ) {
+			
+			btnInternalDiskDepl.setEnabled(true);
+			btnInternalDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_depl_btn_text_selected));
 		
-		if( ! btnEnable ){
+		} else {
+			
 			btnInternalDiskDepl.setEnabled(false);
 			btnInternalDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_btn_text_not_available));
+
 		}
-		if( photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL) == 0 ) {
+
+		if( photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0 ) {
+			btnInternalDiskSupp.setEnabled(true);
+			btnInternalDiskSupp.setText(getString(R.string.etatmodehorsligne_diskselection_internal_supp_btn_text_selected));
+		} else {
 			btnInternalDiskSupp.setEnabled(false);
+			btnInternalDiskSupp.setText(getString(R.string.etatmodehorsligne_gestion_disk_supp_btn_vide_text));
 		}
 		
+	 	/**
+			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(
+				GestionPhotoDiskServiceq.ACT_DELETE_FOLDER+"-"+GestionPhotoDiskService.SRC_DOS_VIGNETTES) );
+	    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, GestionPhotoDiskService.SRC_INTERNAL, GestionPhotoDiskService.SRC_PRIMARY);
+	 	 **/
+			
+
+		
 		// Affichage ou non de la Carte Interne
-		if ( ! carteInterneDispo ) {
+		if ( carteInterneDispo ) {
 			TableRow trGestionDiskPrimary = (TableRow) findViewById(R.id.etatmodehorsligne_gestion_disk_primary_row);
-			trGestionDiskPrimary.setVisibility(View.GONE);
-		} else {
-			btnEnable = false;
+			trGestionDiskPrimary.setVisibility(View.VISIBLE);
+			
 			if( ( photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0 )
 					|| ( carteExterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY) != 0 ) ){
-				btnEnable = true;
-			}
-			if( ! btnEnable ){
+				btnPrimaryDiskDepl.setEnabled(true);
+				btnPrimaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_btn_text_not_available));
+
+			} else {
 				btnPrimaryDiskDepl.setEnabled(false);
 				btnPrimaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_btn_text_not_available));
 			}
-			if( photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) == 0 ) {
+			
+			if( photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 ) {
+				btnPrimaryDiskSupp.setEnabled(true);
+				btnPrimaryDiskSupp.setText(getString(R.string.etatmodehorsligne_diskselection_secondary_supp_btn_text_selected));
+			} else {
 				btnPrimaryDiskSupp.setEnabled(false);
+				btnPrimaryDiskSupp.setText(getString(R.string.etatmodehorsligne_gestion_disk_supp_btn_vide_text));
 			}
+
+		} else {
+			TableRow trGestionDiskPrimary = (TableRow) findViewById(R.id.etatmodehorsligne_gestion_disk_primary_row);
+			trGestionDiskPrimary.setVisibility(View.GONE);
 		}
 		
+		
 		// Désactivation des boutons de la carte externe qd elle n'est pas disponible
-		btnEnable = false;
-		if( ( photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0 )
-				|| ( carteInterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 ) ){
-			btnEnable = true;
-		}
-		if( ! btnEnable ){
+		if ( DiskEnvironment.isSecondaryExternalStorageAvailable() ){
+			
+			btnSecondaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_secondary_depl_btn_text_selected));
+			
+			if ( ( photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0 )
+					|| ( carteInterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 ) ){
+
+					btnSecondaryDiskDepl.setEnabled(true);
+
+			} else {
+
+				btnSecondaryDiskDepl.setEnabled(false);
+			}
+			
+			btnSecondaryDiskSupp.setVisibility(View.VISIBLE);
+			if ( photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY) != 0 ) {
+				btnSecondaryDiskSupp.setEnabled(true);
+				btnSecondaryDiskSupp.setText(getString(R.string.etatmodehorsligne_diskselection_secondary_supp_btn_text_selected));
+				
+			} else {
+				btnSecondaryDiskSupp.setEnabled(false);
+				btnSecondaryDiskSupp.setText(getString(R.string.etatmodehorsligne_gestion_disk_supp_btn_vide_text));
+				
+			}
+			
+		} else {
+			// Si pas de carte amovible : message disant qu'il n'y en a pas et on masque bouton supprimant toutes les images
 			btnSecondaryDiskDepl.setEnabled(false);
 			btnSecondaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_secondary_btn_text_not_available));
+			
+			btnSecondaryDiskSupp.setVisibility(View.INVISIBLE);
 		}
-		if( photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY) == 0 ) {
-			btnSecondaryDiskSupp.setEnabled(false);
+		
+		
+		// Que fait chaque Clic
+		ImageLocation currentImageLocation = photosOutils.getPreferedLocation();		
+
+		switch (currentImageLocation){
+		case APP_INTERNAL:
+			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_INTERNAL));
+			break;
+		case PRIMARY:
+			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_PRIMARY+"2"+ GestionPhotoDiskService.SRC_INTERNAL));
+			break;
+		case SECONDARY:
+			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_SECONDARY+"2"+ GestionPhotoDiskService.SRC_INTERNAL));
+			break;
 		}
+
 		
 		/*
 		// déclenche le calcul de l'espace disque utilisé
@@ -1027,22 +1097,49 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			});
     	}
     	else if ( action.equals(GestionPhotoDiskService.ACT_DELETE_DISK) ) {
+    		
+    		Log.d(LOG_TAG, "Création reusableClickListener - "+action+"-"+source);
+    		
     		reusableClickListener.put(action+"-"+source, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					
-					// utilise le déplacement sous forme de service
-					// use this to start and trigger a service
-					Intent i= new Intent(getApplicationContext(), GestionPhotoDiskService.class);
-					// add data to the intent
-					i.putExtra(GestionPhotoDiskService.INTENT_ACTION, GestionPhotoDiskService.ACT_DELETE_DISK);
-					i.putExtra(GestionPhotoDiskService.INTENT_SOURCE, source);
-					i.putExtra(GestionPhotoDiskService.INTENT_TARGET, "");
-					getApplicationContext().startService(i);
-					
-					DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+
+					AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(getContext());
+			       	alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_gestion_reset_confirmation));
+			       	alertDialogbD.setCancelable(true);
+			       	
+			       	// On vide le disque si validé
+			       	alertDialogbD.setPositiveButton(getContext().getString(R.string.btn_yes),
+		       			new DialogInterface.OnClickListener() {
+		                	public void onClick(DialogInterface dialog, int id) {
+
+		    					// utilise la suppression sous forme de service
+
+		    					Intent i= new Intent(getApplicationContext(), GestionPhotoDiskService.class);
+
+		    					i.putExtra(GestionPhotoDiskService.INTENT_ACTION, GestionPhotoDiskService.ACT_DELETE_DISK);
+		    					i.putExtra(GestionPhotoDiskService.INTENT_SOURCE, source);
+		    					i.putExtra(GestionPhotoDiskService.INTENT_TARGET, "");
+		    					getApplicationContext().startService(i);
+		    					
+		    					DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+		    				}
+		    			});
+		                		
+			       	// Abandon donc Rien à Faire
+			       	alertDialogbD.setNegativeButton(getContext().getString(R.string.btn_annul),
+			       			new DialogInterface.OnClickListener() {
+			                	public void onClick(DialogInterface dialog, int id) {
+			                		dialog.cancel();
+			                	}
+			            	});
+
+			        AlertDialog alertDialog = alertDialogbD.create();
+			        alertDialog.show();
+	
 				}
-			});
+			});	                		
+
     	}
     	else if ( action.equals(GestionPhotoDiskService.ACT_DELETE_FOLDER) ) {
 
@@ -1051,9 +1148,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     		reusableClickListener.put(action+"-"+source, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					
-					Log.d(LOG_TAG, "Utilisation reusableClickListener - "+action+"-"+source);
-					
+										
 					AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(getContext());
 			       	alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_gestion_reset_confirmation));
 			       	alertDialogbD.setCancelable(true);
