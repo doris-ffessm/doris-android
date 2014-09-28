@@ -962,13 +962,16 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
 		switch (currentImageLocation){
 		case APP_INTERNAL:
-			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_INTERNAL));
+			btnPrimaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_INTERNAL+"2"+ GestionPhotoDiskService.SRC_PRIMARY));
+			btnSecondaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_INTERNAL+"2"+ GestionPhotoDiskService.SRC_SECONDARY));
 			break;
 		case PRIMARY:
 			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_PRIMARY+"2"+ GestionPhotoDiskService.SRC_INTERNAL));
+			btnSecondaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_PRIMARY+"2"+ GestionPhotoDiskService.SRC_SECONDARY));
 			break;
 		case SECONDARY:
 			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_SECONDARY+"2"+ GestionPhotoDiskService.SRC_INTERNAL));
+			btnPrimaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_SECONDARY+"2"+ GestionPhotoDiskService.SRC_PRIMARY));
 			break;
 		}
 
@@ -998,71 +1001,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		}
 		else deplacementEnCoursProgressBar.setVisibility(View.GONE);
 		
-
-		btnInternalDiskDepl.setEnabled(!deplacementEnCours);
-
-		switch (currentImageLocation){
-		case APP_INTERNAL:
-			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_INTERNAL));
-			btnInternalDiskDepl.setText(R.string.etatmodehorsligne_diskselection_internal_depl_btn_text_selected);
-			break;
-		case PRIMARY:
-			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_PRIMARY+"2"+ GestionPhotoDiskService.SRC_INTERNAL));
-			btnInternalDiskDepl.setText(R.string.etatmodehorsligne_diskselection_internal_depl_btn_text_selected);
-			break;
-		case SECONDARY:
-			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_SECONDARY+"2"+ GestionPhotoDiskService.SRC_INTERNAL));
-			btnInternalDiskDepl.setText(R.string.etatmodehorsligne_diskselection_internal_depl_btn_text_selected);
-			break;
-		}
-			
-		//}
-
-		btnPrimaryDiskDepl.setEnabled(!deplacementEnCours);
-		if(!disqueOutils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
-				disqueOutils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
-			){
-			//if(!deplacementEnCours){
-			switch (currentImageLocation){
-			case PRIMARY:
-				btnPrimaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_PRIMARY));
-				btnPrimaryDiskDepl.setText(R.string.etatmodehorsligne_diskselection_internal_stop_btn_text_selected);
-				break;
-			case APP_INTERNAL:
-				btnPrimaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_INTERNAL+"2"+ GestionPhotoDiskService.SRC_PRIMARY));
-				btnPrimaryDiskDepl.setText(R.string.etatmodehorsligne_diskselection_internal_stop_btn_text_selected);
-				break;
-			case SECONDARY:
-				btnPrimaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_SECONDARY+"2"+ GestionPhotoDiskService.SRC_PRIMARY));
-				btnPrimaryDiskDepl.setText(R.string.etatmodehorsligne_diskselection_internal_stop_btn_text_selected);
-				break;
-			}
-		}else{
-			btnPrimaryDiskDepl.setEnabled(false);
-			btnPrimaryDiskDepl.setText(R.string.etatmodehorsligne_diskselection_primary_btn_text_not_available);
-		}
-			
-		//}
-
-		//btnSecondaryDiskDepl.setEnabled(!deplacementEnCours);
-		if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
-			//if(!deplacementEnCours){
-			switch (currentImageLocation){
-			case SECONDARY:
-				btnSecondaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_SECONDARY));
-				btnSecondaryDiskDepl.setText(R.string.etatmodehorsligne_diskselection_secondary_depl_btn_text_selected);
-				break;
-			case APP_INTERNAL:
-				btnSecondaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_INTERNAL+"2"+ GestionPhotoDiskService.SRC_SECONDARY));
-				btnSecondaryDiskDepl.setText(R.string.etatmodehorsligne_diskselection_secondary_depl_btn_text_selected);
-				break;
-			case PRIMARY:
-				btnSecondaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_PRIMARY+"2"+ GestionPhotoDiskService.SRC_SECONDARY));
-				btnSecondaryDiskDepl.setText(R.string.etatmodehorsligne_diskselection_secondary_depl_btn_text_selected);
-				break;
-			}
-				
-			//}
 		}
 		else{
 			btnSecondaryDiskDepl.setEnabled(false);
@@ -1082,17 +1020,48 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				public void onClick(View v) {
 					// Déplace les fichiers de la source vers la cible
 
-					// utilise le déplacement sous forme de service
-					// use this to start and trigger a service
-					Intent i= new Intent(getApplicationContext(), GestionPhotoDiskService.class);
-					// add data to the intent
-					i.putExtra(GestionPhotoDiskService.INTENT_ACTION, GestionPhotoDiskService.ACT_MOVE);
-					i.putExtra(GestionPhotoDiskService.INTENT_SOURCE, source);
-					i.putExtra(GestionPhotoDiskService.INTENT_TARGET, target);
+					AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(getContext());
 					
-					getApplicationContext().startService(i);
 					
-					DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+					if ( target.equals(GestionPhotoDiskService.SRC_INTERNAL) ) {
+						alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_diskselection_internal_confirmation));
+					} else if ( target.equals(GestionPhotoDiskService.SRC_PRIMARY) ) {
+						alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_diskselection_primary_confirmation));
+					} else if ( target.equals(GestionPhotoDiskService.SRC_SECONDARY) ) {
+						alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_diskselection_secondary_confirmation));
+					}
+			       	alertDialogbD.setCancelable(true);
+			       	
+			       	// On vide le disque si validé
+			       	alertDialogbD.setPositiveButton(getContext().getString(R.string.btn_yes),
+		       			new DialogInterface.OnClickListener() {
+		                	public void onClick(DialogInterface dialog, int id) {
+
+								// utilise le déplacement sous forme de service
+								// use this to start and trigger a service
+								Intent i= new Intent(getApplicationContext(), GestionPhotoDiskService.class);
+								// add data to the intent
+								i.putExtra(GestionPhotoDiskService.INTENT_ACTION, GestionPhotoDiskService.ACT_MOVE);
+								i.putExtra(GestionPhotoDiskService.INTENT_SOURCE, source);
+								i.putExtra(GestionPhotoDiskService.INTENT_TARGET, target);
+								
+								getApplicationContext().startService(i);
+								
+								DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+								
+		    				}
+		    			});
+		                		
+			       	// Abandon donc Rien à Faire
+			       	alertDialogbD.setNegativeButton(getContext().getString(R.string.btn_annul),
+			       			new DialogInterface.OnClickListener() {
+			                	public void onClick(DialogInterface dialog, int id) {
+			                		dialog.cancel();
+			                	}
+			            	});
+
+			        AlertDialog alertDialog = alertDialogbD.create();
+			        alertDialog.show();
 				}
 			});
     	}
