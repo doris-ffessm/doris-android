@@ -103,7 +103,7 @@
 	<string name="etatmodehorsligne_diskselection_secondary_libelle">Carte SD Externe</string>
 	<string name="etatmodehorsligne_diskselection_secondary_confirmation">Êtes-vous certain de vouloir déplacer les images vers la Carte SD Externe ?</string>
 	<string name="etatmodehorsligne_diskselection_secondary_depl_btn_text_selected">Déplacer vers la Carte SD Externe</string>
-	<string name="etatmodehorsligne_diskselection_secondary_repr_btn_text_selected">Reprise déplacement la Carte SD Externe</string>
+	<string name="etatmodehorsligne_diskselection_secondary_repr_btn_text_selected">Reprise déplacement vers la Carte SD Externe</string>
 	<string name="etatmodehorsligne_diskselection_secondary_stop_btn_text_selected">Arrêt déplacement vers la Carte SD Externe</string>
 	<string name="etatmodehorsligne_diskselection_secondary_supp_btn_text_selected">Vider la Carte SD Externe</string>
 	<string name="etatmodehorsligne_diskselection_secondary_btn_text_not_available">Carte SD Externe non disponible</string>

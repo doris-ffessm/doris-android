@@ -435,7 +435,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	
 	
 	protected void updateProgressBarZone(ZoneGeographique inZoneGeo, MultiProgressBar progressBarZone){
-		   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Début");
+		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "updateProgressBarZone() - Début");
 		   
 		   boolean affichageBarrePhotoPrinc;
 		   boolean affichageBarrePhoto;
@@ -523,7 +523,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		   sbTexte.append(summaryTexte);
 		   
 		   progressBarZone.update(sbTexte.toString(), affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto, downloadInProgress);
-		   if (BuildConfig.DEBUG) Log.d(LOG_TAG, "addProgressBarZone() - Après");
+		   // if (BuildConfig.DEBUG) Log.d(LOG_TAG, "updateProgressBarZone() - Après");
 	}
 	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -712,6 +712,12 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    	sb.append("prefered_disque_precedent : "+
 	    			paramOutils.getParamInt(R.string.pref_key_prefered_disque_stockage_photo_precedent,
 	    					ImageLocation.APP_INTERNAL.ordinal() )+"\n");
+	    	sb.append("prefered_disque_precedent : "+
+	    			ImageLocation.values()[paramOutils.getParamInt(R.string.pref_key_prefered_disque_stockage_photo_precedent,
+	    					ImageLocation.APP_INTERNAL.ordinal() )]+"\n");
+	    	
+	    	
+
 	    	sb.append("déplacement en cours : "+
 	    			paramOutils.getParamBoolean(R.string.pref_key_deplace_photo_encours, false)+"\n");
 	    	

@@ -217,12 +217,19 @@ public class Photos_Outils {
 	 * renvoie l'emplacement préféré si disponible, sinon emplacement par défaut : APP_INTERNAL
 	 */
 	public ImageLocation getPreferedLocation(){
-	
 		return ImageLocation.values()[
               paramOutils.getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
             		  ImageLocation.APP_INTERNAL.ordinal())
         		  ];
-		
+	}
+	/**
+	 * renvoie l'emplacement précédent si disponible, sinon emplacement par défaut : APP_INTERNAL
+	 */
+	public ImageLocation getLocationPrecedente(){
+		return ImageLocation.values()[
+              paramOutils.getParamInt(R.string.pref_key_prefered_disque_stockage_photo_precedent,
+            		  ImageLocation.APP_INTERNAL.ordinal())
+        		  ];
 	}
 	
 	public void setPreferedLocation(ImageLocation preferedImageLocation){
@@ -412,19 +419,30 @@ public class Photos_Outils {
 	}
 	
 	
-	public long getPhotoDiskUsage(ImageType inImageType){
-		// Si le dossier n'a jamais été créé on renvoie 0
-		if (! getImageFolder(inImageType).exists() ) return 0;
-    	return getImageFolder(inImageType).list().length * getTailleMoyImageUnitaire(inImageType) ;
+	public long getPhotoDiskUsage(ImageType inImageType) {
+		try {
+			// Si le dossier n'a jamais été créé on renvoie 0
+			if (! getImageFolder(inImageType).exists() ) return 0;
+			
+	    	return getImageFolder(inImageType).list().length * getTailleMoyImageUnitaire(inImageType) ;
+		} catch (Exception e) {
+			Log.e(LOG_TAG, "Dossier inexisant - il a peut-être été supprimé durant ce traiement", e);
+		}
+		return 0;
 	}
 	public long getPhotoDiskUsage(ImageLocation baseImageLocation, ImageType inImageType){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "Photos_Outils() - getPhotoDiskUsage() - baseImageLocation : "+baseImageLocation.name());
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "Photos_Outils() - getPhotoDiskUsage() - inImageType : "+inImageType.name());
-		
-		// Si le dossier n'a jamais été créé on renvoie 0
-		if (! getImageFolder(baseImageLocation, inImageType).exists() ) return 0;
-
-    	return getImageFolder(baseImageLocation, inImageType).list().length * getTailleMoyImageUnitaire(inImageType) ;
+		try {
+			// Si le dossier n'a jamais été créé on renvoie 0
+			if (! getImageFolder(baseImageLocation, inImageType).exists() ) return 0;
+	
+	    	return getImageFolder(baseImageLocation, inImageType).list().length * getTailleMoyImageUnitaire(inImageType) ;
+	    	
+		} catch (Exception e) {
+			Log.e(LOG_TAG, "Dossier inexisant - il a peut-être été supprimé durant ce traiement", e);
+		}
+		return 0;
 	}
 	public long getCacheUsage(){
     	return disqueOutils.getDiskUsage(context.getCacheDir() ) ;

@@ -383,17 +383,17 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	addReusableClickListener(GestionPhotoDiskService.ACT_DELETE_FOLDER, GestionPhotoDiskService.SRC_DOS_AUTRES, null);
     	addReusableClickListener(GestionPhotoDiskService.ACT_DELETE_FOLDER, GestionPhotoDiskService.SRC_DOS_CACHE, null);
     	
-    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, GestionPhotoDiskService.SRC_INTERNAL, GestionPhotoDiskService.SRC_PRIMARY);
-    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, GestionPhotoDiskService.SRC_INTERNAL, GestionPhotoDiskService.SRC_SECONDARY);
-    	addReusableClickListener(GestionPhotoDiskService.ACT_DELETE_DISK, GestionPhotoDiskService.SRC_INTERNAL, null);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, ImageLocation.APP_INTERNAL.name(), ImageLocation.PRIMARY.name());
+    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, ImageLocation.APP_INTERNAL.name(), ImageLocation.SECONDARY.name());
+    	addReusableClickListener(GestionPhotoDiskService.ACT_DELETE_DISK, ImageLocation.APP_INTERNAL.name(), null);
     	
-    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, GestionPhotoDiskService.SRC_PRIMARY, GestionPhotoDiskService.SRC_INTERNAL);
-    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, GestionPhotoDiskService.SRC_PRIMARY, GestionPhotoDiskService.SRC_SECONDARY);
-    	addReusableClickListener(GestionPhotoDiskService.ACT_DELETE_DISK, GestionPhotoDiskService.SRC_PRIMARY, null);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, ImageLocation.PRIMARY.name(), ImageLocation.APP_INTERNAL.name());
+    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, ImageLocation.PRIMARY.name(), ImageLocation.SECONDARY.name());
+    	addReusableClickListener(GestionPhotoDiskService.ACT_DELETE_DISK, ImageLocation.PRIMARY.name(), null);
     	
-    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, GestionPhotoDiskService.SRC_SECONDARY, GestionPhotoDiskService.SRC_INTERNAL);
-    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, GestionPhotoDiskService.SRC_SECONDARY, GestionPhotoDiskService.SRC_PRIMARY);
-    	addReusableClickListener(GestionPhotoDiskService.ACT_DELETE_DISK, GestionPhotoDiskService.SRC_SECONDARY, null);
+    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, ImageLocation.SECONDARY.name(), ImageLocation.APP_INTERNAL.name());
+    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, ImageLocation.SECONDARY.name(), ImageLocation.PRIMARY.name());
+    	addReusableClickListener(GestionPhotoDiskService.ACT_DELETE_DISK, ImageLocation.SECONDARY.name(), null);
     }
     
     protected void createGestionPhotos(){
@@ -489,13 +489,13 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		// Pour les Déplacements, c'est dans le refreshusedDisk()
 		btnInternalDiskSupp.setOnClickListener(
 			reusableClickListener.get(
-				GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_INTERNAL));
+				GestionPhotoDiskService.ACT_DELETE_DISK+"-"+ImageLocation.APP_INTERNAL.name()));
 		btnPrimaryDiskSupp.setOnClickListener(
 				reusableClickListener.get(
-					GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_PRIMARY));
+					GestionPhotoDiskService.ACT_DELETE_DISK+"-"+ImageLocation.PRIMARY.name()));
 		btnSecondaryDiskSupp.setOnClickListener(
 				reusableClickListener.get(
-					GestionPhotoDiskService.ACT_DELETE_DISK+"-"+GestionPhotoDiskService.SRC_SECONDARY));
+					GestionPhotoDiskService.ACT_DELETE_DISK+"-"+ImageLocation.SECONDARY.name()));
     }
     
     protected void foldUnflodGestionDisk(){
@@ -666,7 +666,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
      * & Gestion des boutons de vidages des dossiers de l'Espace de Stockage Sélectionné
      */
     protected void refreshFolderSize(){
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshFolderSize() - Début");
+    	// if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshFolderSize() - Début");
     	
 		StringBuilder etatDiskStringBuilder = new StringBuilder();
 		Boolean auMoins1DossierNonVide = false;
@@ -688,6 +688,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		} else {
 			btnGestionPhotosResetVig.setEnabled(false);
 		}
+		// Si Travail en cours => Bouton Disabled
+		if (DorisApplicationContext.getInstance().isMovingPhotos) btnGestionPhotosResetVig.setEnabled(false);
+		
+		
 		
 		sizeFolder = photosOutils.getImageCountInFolder(ImageType.MED_RES);
 		if ( sizeFolder !=0 ) {
@@ -702,6 +706,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		} else {
 			btnGestionPhotosResetMedRes.setEnabled(false);
 		}
+		if (DorisApplicationContext.getInstance().isMovingPhotos) btnGestionPhotosResetMedRes.setEnabled(false);
 		
 		sizeFolder = photosOutils.getImageCountInFolder(ImageType.HI_RES);
 		if ( sizeFolder !=0 ) {
@@ -716,6 +721,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		} else {
 			btnGestionPhotosResetHiRes.setEnabled(false);
 		}
+		if (DorisApplicationContext.getInstance().isMovingPhotos) btnGestionPhotosResetHiRes.setEnabled(false);
 		
 		sizeFolder = photosOutils.getImageCountInFolder(ImageType.PORTRAITS)
 				+ photosOutils.getImageCountInFolder(ImageType.ILLUSTRATION_BIBLIO)
@@ -737,6 +743,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		} else {
 			btnGestionPhotosResetAutres.setEnabled(false);
 		}
+		if (DorisApplicationContext.getInstance().isMovingPhotos) btnGestionPhotosResetAutres.setEnabled(false);
+		
 		
 		sizeFolder = photosOutils.getImageCountInCache();
 		if ( sizeFolder !=0 ) {
@@ -751,6 +759,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		} else {
 			btnGestionPhotosResetCache.setEnabled(false);
 		}
+		if (DorisApplicationContext.getInstance().isMovingPhotos) btnGestionPhotosResetCache.setEnabled(false);
+		
 		
 		if (!auMoins1DossierNonVide){
 			etatDiskStringBuilder.append( "\n\t\t" );
@@ -759,7 +769,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		
 		gestionPhotosTextView.setText(etatDiskStringBuilder.toString());
 		
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshFolderSize() - Fin");
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshFolderSize() - Fin");
     }
         
     /**
@@ -780,7 +790,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		}   	
     }
     protected void refreshUsedDisk(long internalUsedSize, long primaryUsedSize, long secondaryUsedSize){
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Début");
+    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Début");
     	
 		StringBuilder etatDiskStringBuilder = new StringBuilder();
 		
@@ -857,12 +867,19 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
 		gestionDiskTextView.setText(etatDiskStringBuilder.toString());
 		
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Fin");
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Fin");
     }
 	//End of user code
    
     public void refreshGestionDisk() {
     	
+    	boolean deplaceEnCours = paramOutils.getParamBoolean(R.string.pref_key_deplace_photo_encours, false);
+    	
+		ImageLocation imageLocationCourante = photosOutils.getPreferedLocation();		
+		ImageLocation imageLocationPrecedente = photosOutils.getLocationPrecedente();	
+
+    	
+    	// -- Mémoire Interne -- //
 		// Si ni la carte Interne, ni la Carte Externe ne sont présentes aucun mouvement n'est possible
 		if ( ( carteInterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 )
 			|| ( carteExterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY) != 0 ) ) {
@@ -870,13 +887,22 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			btnInternalDiskDepl.setEnabled(true);
 			btnInternalDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_depl_btn_text_selected));
 		
+			// Si un déplacement vers la Mémoire Interne a été arrêté avant sa fin et qu'aucun mouvement n'a repris
+			// On propose la reprise
+			if ( ( ! DorisApplicationContext.getInstance().isMovingPhotos )
+				&& ( deplaceEnCours )
+				&& ( imageLocationCourante == ImageLocation.APP_INTERNAL )) {
+				btnInternalDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_repr_btn_text_selected));
+			}
+				
 		} else {
 			
 			btnInternalDiskDepl.setEnabled(false);
 			btnInternalDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_btn_text_not_available));
 
 		}
-
+		if (DorisApplicationContext.getInstance().isMovingPhotos) btnInternalDiskDepl.setEnabled(false);
+		
 		if( photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0 ) {
 			btnInternalDiskSupp.setEnabled(true);
 			btnInternalDiskSupp.setText(getString(R.string.etatmodehorsligne_diskselection_internal_supp_btn_text_selected));
@@ -884,15 +910,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			btnInternalDiskSupp.setEnabled(false);
 			btnInternalDiskSupp.setText(getString(R.string.etatmodehorsligne_gestion_disk_supp_btn_vide_text));
 		}
-		
-	 	/**
-			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(
-				GestionPhotoDiskServiceq.ACT_DELETE_FOLDER+"-"+GestionPhotoDiskService.SRC_DOS_VIGNETTES) );
-	    	addReusableClickListener(GestionPhotoDiskService.ACT_MOVE, GestionPhotoDiskService.SRC_INTERNAL, GestionPhotoDiskService.SRC_PRIMARY);
-	 	 **/
-			
+		if (DorisApplicationContext.getInstance().isMovingPhotos) btnInternalDiskSupp.setEnabled(false);	
 
 		
+		// -- Carte Mémoire Interne (Non Amovible, en fait une partition de la Mémoire Interne destinée à stocker les données des Applications) -- //
 		// Affichage ou non de la Carte Interne
 		if ( carteInterneDispo ) {
 			TableRow trGestionDiskPrimary = (TableRow) findViewById(R.id.etatmodehorsligne_gestion_disk_primary_row);
@@ -903,10 +924,19 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				btnPrimaryDiskDepl.setEnabled(true);
 				btnPrimaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_btn_text_not_available));
 
+				// Si un déplacement vers le Carte Mémoire Interne a été arrêté avant sa fin et qu'aucun mouvement n'a repris
+				// On propose la reprise
+				if ( ( ! DorisApplicationContext.getInstance().isMovingPhotos )
+					&& ( deplaceEnCours )
+					&& ( imageLocationCourante == ImageLocation.PRIMARY )) {
+					btnPrimaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_primary_repr_btn_text_selected));
+				}
+				
 			} else {
 				btnPrimaryDiskDepl.setEnabled(false);
 				btnPrimaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_btn_text_not_available));
 			}
+			if (DorisApplicationContext.getInstance().isMovingPhotos) btnPrimaryDiskDepl.setEnabled(false);
 			
 			if( photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 ) {
 				btnPrimaryDiskSupp.setEnabled(true);
@@ -915,13 +945,15 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				btnPrimaryDiskSupp.setEnabled(false);
 				btnPrimaryDiskSupp.setText(getString(R.string.etatmodehorsligne_gestion_disk_supp_btn_vide_text));
 			}
-
+			if (DorisApplicationContext.getInstance().isMovingPhotos) btnPrimaryDiskSupp.setEnabled(false);
+			
 		} else {
 			TableRow trGestionDiskPrimary = (TableRow) findViewById(R.id.etatmodehorsligne_gestion_disk_primary_row);
 			trGestionDiskPrimary.setVisibility(View.GONE);
 		}
 		
 		
+		// -- Carte Mémoire Externe (Amovible) -- //
 		// Désactivation des boutons de la carte externe qd elle n'est pas disponible
 		if ( DiskEnvironment.isSecondaryExternalStorageAvailable() ){
 			
@@ -929,24 +961,31 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			
 			if ( ( photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0 )
 					|| ( carteInterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 ) ){
-
 					btnSecondaryDiskDepl.setEnabled(true);
-
+					
+					// Si un déplacement vers le Carte Mémoire Externe a été arrêté avant sa fin et qu'aucun mouvement n'a repris
+					// On propose la reprise
+					if ( ( ! DorisApplicationContext.getInstance().isMovingPhotos )
+						&& ( deplaceEnCours )
+						&& ( imageLocationCourante == ImageLocation.SECONDARY )) {
+						btnSecondaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_secondary_repr_btn_text_selected));
+					}
+					
 			} else {
-
 				btnSecondaryDiskDepl.setEnabled(false);
 			}
+			if (DorisApplicationContext.getInstance().isMovingPhotos) btnSecondaryDiskDepl.setEnabled(false);
 			
 			btnSecondaryDiskSupp.setVisibility(View.VISIBLE);
 			if ( photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY) != 0 ) {
 				btnSecondaryDiskSupp.setEnabled(true);
 				btnSecondaryDiskSupp.setText(getString(R.string.etatmodehorsligne_diskselection_secondary_supp_btn_text_selected));
-				
 			} else {
 				btnSecondaryDiskSupp.setEnabled(false);
 				btnSecondaryDiskSupp.setText(getString(R.string.etatmodehorsligne_gestion_disk_supp_btn_vide_text));
-				
 			}
+			if (DorisApplicationContext.getInstance().isMovingPhotos) btnSecondaryDiskSupp.setEnabled(false);
+			
 			
 		} else {
 			// Si pas de carte amovible : message disant qu'il n'y en a pas et on masque bouton supprimant toutes les images
@@ -956,59 +995,36 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			btnSecondaryDiskSupp.setVisibility(View.INVISIBLE);
 		}
 		
-		
-		// Que fait chaque Clic
-		ImageLocation currentImageLocation = photosOutils.getPreferedLocation();		
 
-		switch (currentImageLocation){
+		
+		switch (imageLocationCourante){
 		case APP_INTERNAL:
-			btnPrimaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_INTERNAL+"2"+ GestionPhotoDiskService.SRC_PRIMARY));
-			btnSecondaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_INTERNAL+"2"+ GestionPhotoDiskService.SRC_SECONDARY));
+			if (deplaceEnCours) {
+				btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+imageLocationPrecedente.name()+"2"+ImageLocation.APP_INTERNAL.name()));
+			}
+			btnPrimaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+ImageLocation.APP_INTERNAL.name()+"2"+ ImageLocation.PRIMARY.name()));
+			btnSecondaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+ImageLocation.APP_INTERNAL.name()+"2"+ ImageLocation.SECONDARY.name()));
 			break;
 		case PRIMARY:
-			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_PRIMARY+"2"+ GestionPhotoDiskService.SRC_INTERNAL));
-			btnSecondaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_PRIMARY+"2"+ GestionPhotoDiskService.SRC_SECONDARY));
+			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+ImageLocation.PRIMARY.name()+"2"+ ImageLocation.APP_INTERNAL.name()));
+			if (deplaceEnCours) {
+				btnPrimaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+imageLocationPrecedente.name()+"2"+ImageLocation.PRIMARY.name()));
+			}
+			btnSecondaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+ImageLocation.PRIMARY.name()+"2"+ ImageLocation.SECONDARY.name()));
 			break;
 		case SECONDARY:
-			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_SECONDARY+"2"+ GestionPhotoDiskService.SRC_INTERNAL));
-			btnPrimaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+GestionPhotoDiskService.SRC_SECONDARY+"2"+ GestionPhotoDiskService.SRC_PRIMARY));
+			btnInternalDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+ImageLocation.SECONDARY.name()+"2"+ ImageLocation.APP_INTERNAL.name()));
+			btnPrimaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+ImageLocation.SECONDARY.name()+"2"+ ImageLocation.PRIMARY.name()));
+			if (deplaceEnCours) {
+				btnSecondaryDiskDepl.setOnClickListener(reusableClickListener.get(GestionPhotoDiskService.ACT_MOVE+"-"+imageLocationPrecedente.name()+"2"+ImageLocation.SECONDARY.name()));
+			}
 			break;
 		}
 
 		
 		/*
-		// déclenche le calcul de l'espace disque utilisé
-		if(lastAsyncComputeLongRefreshScreenData != null){
-			if( lastAsyncComputeLongRefreshScreenData.getStatus() == Status.FINISHED){
-				// ne relance pas si déjà en cours
-				lastAsyncComputeLongRefreshScreenData = (AsyncComputeLongRefreshScreenData) new AsyncComputeLongRefreshScreenData().execute();
-			}
-			else{
-				lastAsyncComputeLongRefreshScreenData.needRestart = true;
-			}
-		} else lastAsyncComputeLongRefreshScreenData = (AsyncComputeLongRefreshScreenData) new AsyncComputeLongRefreshScreenData().execute();
-		
-		// Affiche les boutons suivant les configurations possibles
-		
-		// disque courant
-		ImageLocation currentImageLocation = photosOutils.getPreferedLocation();		
-		// vérifie qu'il n'y a pas un déplacement en cours
-		boolean deplacementEnCours = DorisApplicationContext.getInstance().isMovingPhotos;
-		
-		ProgressBar deplacementEnCoursProgressBar = (ProgressBar) findViewById(R.id.etatmodehorsligne_gestion_disk_buttons_progressBar);
-		if(deplacementEnCours){
-			deplacementEnCoursProgressBar.setVisibility(View.VISIBLE);
-		}
-		else deplacementEnCoursProgressBar.setVisibility(View.GONE);
-		
-		}
-		else{
-			btnSecondaryDiskDepl.setEnabled(false);
-			btnSecondaryDiskDepl.setText(R.string.etatmodehorsligne_diskselection_secondary_btn_text_not_available);
-		}
-		
-		Log.d(LOG_TAG, "refreshScreenData thread = "+Thread.currentThread());
-		*/
+    	paramOutils.getParamBoolean(R.string.pref_key_deplace_photo_encours, false)
+		 */
 
 	}
     
@@ -1023,11 +1039,11 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 					AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(getContext());
 					
 					
-					if ( target.equals(GestionPhotoDiskService.SRC_INTERNAL) ) {
+					if ( target.equals(ImageLocation.APP_INTERNAL.name()) ) {
 						alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_diskselection_internal_confirmation));
-					} else if ( target.equals(GestionPhotoDiskService.SRC_PRIMARY) ) {
+					} else if ( target.equals(ImageLocation.PRIMARY.name()) ) {
 						alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_diskselection_primary_confirmation));
-					} else if ( target.equals(GestionPhotoDiskService.SRC_SECONDARY) ) {
+					} else if ( target.equals(ImageLocation.SECONDARY.name()) ) {
 						alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_diskselection_secondary_confirmation));
 					}
 			       	alertDialogbD.setCancelable(true);

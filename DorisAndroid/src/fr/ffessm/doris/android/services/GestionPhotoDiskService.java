@@ -47,9 +47,7 @@ public class GestionPhotoDiskService extends IntentService {
 	public static String ACT_DELETE_DISK = "DELETE_DISK";
 	public static String ACT_DELETE_FOLDER = "DELETE_FOLDER";
 	
-    public static String SRC_INTERNAL = "INTERNAL";
-    public static String SRC_PRIMARY = "PRIMARY";
-    public static String SRC_SECONDARY = "SECONDARY";
+
     
     public static String SRC_DOS_VIGNETTES = "Vignettes";
     public static String SRC_DOS_MEDRES = "MedRes";
@@ -140,21 +138,21 @@ public class GestionPhotoDiskService extends IntentService {
 
     	if(action.equals(ACT_MOVE) || action.equals(ACT_DELETE_DISK)){
 	    	
-	    	if(source.equals(SRC_INTERNAL)){
+	    	if( source.equals(ImageLocation.APP_INTERNAL.name()) ){
 	    		nbFileToCopy = this.getDir(this.getString(R.string.folder_vignettes_fiches), Context.MODE_PRIVATE).list().length;
 	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_med_res_fiches), Context.MODE_PRIVATE).list().length;
 	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_hi_res_fiches), Context.MODE_PRIVATE).list().length;
 	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_portraits), Context.MODE_PRIVATE).list().length;
 	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_illustration_definitions), Context.MODE_PRIVATE).list().length;
 	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_illustration_biblio), Context.MODE_PRIVATE).list().length;
-	    	}else if(source.equals(SRC_PRIMARY)){
+	    	}else if(source.equals(ImageLocation.PRIMARY.name())){
 	   			nbFileToCopy = disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_vignettes_fiches) );
 	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_med_res_fiches) );
 	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_hi_res_fiches) );
 	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_portraits) );
 	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_definitions) );
 	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_biblio) );
-	    	}else if(source.equals(SRC_SECONDARY)){
+	    	}else if(source.equals(ImageLocation.SECONDARY.name())){
 				nbFileToCopy = disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_vignettes_fiches) );
 	    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_med_res_fiches) );
 	    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_hi_res_fiches) );
@@ -191,11 +189,11 @@ public class GestionPhotoDiskService extends IntentService {
     	
     	if(action.equals(ACT_MOVE)){
 	    	ImageLocation destImageLocation;
-	    	if(dest.equals(SRC_INTERNAL)){
+	    	if(dest.equals(ImageLocation.APP_INTERNAL.name())){
 	    		destImageLocation = ImageLocation.APP_INTERNAL;
-	    	}else if(dest.equals(SRC_PRIMARY)){
+	    	}else if(dest.equals(ImageLocation.PRIMARY.name())){
 	    		destImageLocation = ImageLocation.PRIMARY;
-	    	}else if(dest.equals(SRC_SECONDARY)){
+	    	}else if(dest.equals(ImageLocation.SECONDARY.name())){
 	    		destImageLocation = ImageLocation.SECONDARY;
 	    	}
 	    	else {
@@ -205,9 +203,12 @@ public class GestionPhotoDiskService extends IntentService {
 	    	
 	    	// Enregistrement du mouvement qui va être réalisé, afin de pouvoir le reprendre
 	    	// s'il était interrompu
-	        new Photos_Outils(this).setPreferedLocation(destImageLocation);
-	        new Param_Outils(this).setParamBoolean(R.string.pref_key_deplace_photo_encours, true);
-	        
+	    	// ATTENTION : si on est déjà en reprise, il ne faut pas écraser la valeur précédente évidement
+	    	if ( paramOutils.getParamBoolean(R.string.pref_key_deplace_photo_encours, false) ) {
+	    		photosOutils.setPreferedLocation(destImageLocation);
+	    		paramOutils.setParamBoolean(R.string.pref_key_deplace_photo_encours, true);
+	    	}
+	    	
 	    	// déplacement vignettes
 	    	moveFolderContent(source, dest, this.getString(R.string.folder_vignettes_fiches));
 	    	// déplacement med_res
@@ -272,9 +273,9 @@ public class GestionPhotoDiskService extends IntentService {
 	
 	protected void moveFolderContent(String source, String destination, String subFolderToMove){
     	File sourceFolder;
-    	if(source.equals(SRC_PRIMARY)){
+    	if(source.equals(ImageLocation.PRIMARY.name())){
     		sourceFolder = DiskEnvironment.getPrimaryExternalStorage().getFilesDir(this, subFolderToMove);
-    	}else if(source.equals(SRC_SECONDARY)){
+    	}else if(source.equals(ImageLocation.SECONDARY.name())){
     		try {
     			sourceFolder = DiskEnvironment.getSecondaryExternalStorage().getFilesDir(this, subFolderToMove);
 			} catch (NoSecondaryStorageException e) {
@@ -286,9 +287,9 @@ public class GestionPhotoDiskService extends IntentService {
     		sourceFolder = this.getDir(subFolderToMove, Context.MODE_PRIVATE);
     	}
     	File destFolder;
-    	if(destination.equals(SRC_PRIMARY)){
+    	if(destination.equals(ImageLocation.PRIMARY.name())){
     		destFolder = DiskEnvironment.getPrimaryExternalStorage().getFilesDir(this, subFolderToMove);
-    	}else if(destination.equals(SRC_SECONDARY)){
+    	}else if(destination.equals(ImageLocation.SECONDARY.name())){
     		try {
     			destFolder = DiskEnvironment.getSecondaryExternalStorage().getFilesDir(this, subFolderToMove);
 			} catch (NoSecondaryStorageException e) {
@@ -356,9 +357,9 @@ public class GestionPhotoDiskService extends IntentService {
     
     protected void clearFolder(String source, String subFolderToMove){
     	File sourceFolder;
-    	if(source.equals(SRC_PRIMARY)){
+    	if(source.equals(ImageLocation.PRIMARY.name())){
     		sourceFolder = DiskEnvironment.getPrimaryExternalStorage().getFilesDir(this, subFolderToMove);
-    	}else if(source.equals(SRC_SECONDARY)){
+    	}else if(source.equals(ImageLocation.SECONDARY.name())){
     		try {
     			sourceFolder = DiskEnvironment.getSecondaryExternalStorage().getFilesDir(this, subFolderToMove);
 			} catch (NoSecondaryStorageException e) {
