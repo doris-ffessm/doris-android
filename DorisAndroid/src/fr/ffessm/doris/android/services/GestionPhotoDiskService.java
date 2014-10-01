@@ -25,13 +25,6 @@ import android.content.Intent;
 import android.os.AsyncTask.Status;
 import android.util.Log;
 
-/* 
- * TODO : Peut-être faudra-t-il le renommer car il fait maintenant :
- *     - les déplacements entre emplacements
- *     - la suppression de tous les fichiers d'un emplacement
- *     - la suppression des fichiers par Type d'Image
- */
-
 
 public class GestionPhotoDiskService extends IntentService {
 
@@ -71,7 +64,7 @@ public class GestionPhotoDiskService extends IntentService {
     int nbcopiedFiles=0;
     
  // timer utilisé pour déclencher un refresh que toutes les x mili
-    LimitTimer limitTimer = new LimitTimer(2000); //2000 Milliseconds
+    LimitTimer limitTimer = new LimitTimer(3000); //2000 Milliseconds
 	
 	public GestionPhotoDiskService() {
 		super(GestionPhotoDiskService.class.getSimpleName());
@@ -201,10 +194,14 @@ public class GestionPhotoDiskService extends IntentService {
 	    		return;
 	    	}
 	    	
-	    	// Enregistrement du mouvement qui va être réalisé, afin de pouvoir le reprendre
-	    	// s'il était interrompu
+	    	// Enregistrement du mouvement qui va être réalisé, afin de pouvoir le reprendre s'il était interrompu
 	    	// ATTENTION : si on est déjà en reprise, il ne faut pas écraser la valeur précédente évidement
-	    	if ( paramOutils.getParamBoolean(R.string.pref_key_deplace_photo_encours, false) ) {
+	    	// Une action reprise aurait été plus simple ici mais aurait nécessité + de boulot dans EtatModeHorsLigne
+	    	if ( (! paramOutils.getParamBoolean(R.string.pref_key_deplace_photo_encours, false) ) 
+	    		|| ( destImageLocation.ordinal() 
+	    				!= paramOutils.getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
+	    						ImageLocation.APP_INTERNAL.ordinal() ) )
+				) {
 	    		photosOutils.setPreferedLocation(destImageLocation);
 	    		paramOutils.setParamBoolean(R.string.pref_key_deplace_photo_encours, true);
 	    	}

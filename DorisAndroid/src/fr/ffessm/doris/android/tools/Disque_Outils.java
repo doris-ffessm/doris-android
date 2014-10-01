@@ -185,16 +185,16 @@ public class Disque_Outils {
     // la concaténation de la taille de la partition et de la place utilisée en octet doit être à peu près sûr
     public String identifiantPartition(Device device){
     	
-    	Log.d(LOG_TAG, "identifiantPartition() - getMountPoint : "+device.getMountPoint());
-    	Log.d(LOG_TAG, "identifiantPartition() - isRemovable : "+device.isRemovable());
-    	Log.d(LOG_TAG, "identifiantPartition() - taille disque  : "+device.getSize().first+" - place occupée : "+device.getSize().second);
+    	//Log.d(LOG_TAG, "identifiantPartition() - getMountPoint : "+device.getMountPoint());
+    	//Log.d(LOG_TAG, "identifiantPartition() - isRemovable : "+device.isRemovable());
+    	//Log.d(LOG_TAG, "identifiantPartition() - taille disque  : "+device.getSize().first+" - place occupée : "+device.getSize().second);
 
     	// bizarrement device.getSize().first semble parfois changer pour le même device
     	// En comparant en méga (1024*1024=1048576), c'est OK, du coup on regarde aussi la place dispo.
     	// Les 2 appels à cette fonction se succédant très rapidement, 10 Mo n'ont pas pu avoir été écrit
     	int tailleDisque = Math.round(device.getSize().first / 1048576);
     	int tailleDisqueDispo = Math.round(device.getSize().second / 10485760);
-    	Log.d(LOG_TAG, "identifiantPartition() - taille disque  : "+tailleDisque+" Mo - place occupée : "+tailleDisqueDispo+" *10 Mo");
+    	//Log.d(LOG_TAG, "identifiantPartition() - taille disque  : "+tailleDisque+" Mo - place occupée : "+tailleDisqueDispo+" *10 Mo");
 
     	return tailleDisque+"-"+tailleDisqueDispo+"-"+device.isRemovable();
     }

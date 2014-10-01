@@ -64,7 +64,7 @@
 		
 	<string name="etatmodehorsligne_foldersize_titre">Nb Images et Taille Dossiers\u00A0:</string>
 	<string name="etatmodehorsligne_foldersize_vignettes">" vignettes\u00A0- "</string>
-	<string name="etatmodehorsligne_foldersize_med_res">" images Qualité Intermédiaire\u00A0- "</string>
+	<string name="etatmodehorsligne_foldersize_med_res">" images Qualité Interméd.\u00A0- "</string>
 	<string name="etatmodehorsligne_foldersize_hi_res">" images Haute Qualité\u00A0- "</string>
 	<string name="etatmodehorsligne_foldersize_autres">" autres images\u00A0- "</string>
 	<string name="etatmodehorsligne_foldersize_cache">" cache\u00A0- "</string>
@@ -97,8 +97,7 @@
 	<string name="etatmodehorsligne_diskselection_primary_repr_btn_text_selected">Reprise déplacement vers la Carte SD Interne</string>
 	<string name="etatmodehorsligne_diskselection_primary_stop_btn_text_selected">Arrêt déplacement vers la Carte SD Interne</string>
 	<string name="etatmodehorsligne_diskselection_primary_supp_btn_text_selected">Vider la Carte SD Interne</string>
-	<!-- Pas vraiment utile car de toutes les façons, si pas dispo. l'utilisateur ne peut rien y faire, gardé par souci de cohérence pour l'instant -->
-	<string name="etatmodehorsligne_diskselection_primary_btn_text_not_available">Carte SD Interne non disponible</string>
+	<string name="etatmodehorsligne_diskselection_primary_btn_text_not_available">Aucun mouvement possible vers la Carte SD Interne</string>
 	
 	<string name="etatmodehorsligne_diskselection_secondary_libelle">Carte SD Externe</string>
 	<string name="etatmodehorsligne_diskselection_secondary_confirmation">Êtes-vous certain de vouloir déplacer les images vers la Carte SD Externe ?</string>

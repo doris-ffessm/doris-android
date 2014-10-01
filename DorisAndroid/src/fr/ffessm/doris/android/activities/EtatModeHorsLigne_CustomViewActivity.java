@@ -679,7 +679,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		if ( sizeFolder !=0 ) {
 			auMoins1DossierNonVide = true;
 			
-			etatDiskStringBuilder.append( "\n\t\t" );
+			etatDiskStringBuilder.append( "\n\t" );
 			etatDiskStringBuilder.append( sizeFolder );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_vignettes) );
 			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE) ) );
@@ -697,7 +697,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		if ( sizeFolder !=0 ) {
 			auMoins1DossierNonVide = true;
 			
-			etatDiskStringBuilder.append( "\n\t\t" );
+			etatDiskStringBuilder.append( "\n\t" );
 			etatDiskStringBuilder.append( sizeFolder );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_med_res) );
 			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsage(ImageType.MED_RES) ) );
@@ -712,7 +712,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		if ( sizeFolder !=0 ) {
 			auMoins1DossierNonVide = true;
 			
-			etatDiskStringBuilder.append( "\n\t\t" );
+			etatDiskStringBuilder.append( "\n\t" );
 			etatDiskStringBuilder.append( sizeFolder );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_hi_res) );
 			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsage(ImageType.HI_RES) ) );
@@ -729,7 +729,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		if ( sizeFolder !=0 ) {
 			auMoins1DossierNonVide = true;
 			
-			etatDiskStringBuilder.append( "\n\t\t" );
+			etatDiskStringBuilder.append( "\n\t" );
 			etatDiskStringBuilder.append( sizeFolder );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_autres) );
 			etatDiskStringBuilder.append(
@@ -750,7 +750,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		if ( sizeFolder !=0 ) {
 			auMoins1DossierNonVide = true;
 			
-			etatDiskStringBuilder.append( "\n\t\t" );
+			etatDiskStringBuilder.append( "\n\t" );
 			etatDiskStringBuilder.append( sizeFolder );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_cache) );
 			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getCacheUsage() ) );
@@ -763,11 +763,19 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		
 		
 		if (!auMoins1DossierNonVide){
-			etatDiskStringBuilder.append( "\n\t\t" );
+			etatDiskStringBuilder.append( "\n\t" );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_vide) );
 		}
 		
 		gestionPhotosTextView.setText(etatDiskStringBuilder.toString());
+		
+		// Si encours de traitement on affiche la ProgressBar sinon on la cache
+		ProgressBar deplacementEnCoursProgressBar = (ProgressBar) findViewById(R.id.etatmodehorsligne_gestion_photos_buttons_progressBar);
+		if (DorisApplicationContext.getInstance().isMovingPhotos) {
+			deplacementEnCoursProgressBar.setVisibility(View.VISIBLE);
+		}
+		else deplacementEnCoursProgressBar.setVisibility(View.GONE);
+		
 		
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshFolderSize() - Fin");
     }
@@ -798,7 +806,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	 * Espace de Stockage Sélectionné
     	 */
 		
-		etatDiskStringBuilder.append( "Espace de Stockage utilisé :\n\t\t" ); 
+		etatDiskStringBuilder.append( "Espace de Stockage utilisé :\n\t" ); 
 		switch (photosOutils.getPreferedLocation()){
 		case APP_INTERNAL:
 			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_internal_libelle) );
@@ -816,13 +824,12 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	 * Utilisation des Disques
     	 */
 		etatDiskStringBuilder.append( "Utilisation des Disques\n" ); 
-		etatDiskStringBuilder.append("\t\t\t\t\t\t\t\t(Espace utilisé / disponible / total)\n");
+		etatDiskStringBuilder.append("\t(Espace utilisé / disponible / total)\n");
 		
 		// Mémoire interne
 		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Mémoire interne");
 		
-		etatDiskStringBuilder.append( "\t\t" );
-		etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_internal_libelle)+" : ");
+		etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_internal_libelle)+" :\n\t");
 		etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(internalUsedSize)+" / ");
 		etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().first)+" / ");
 		etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().second)+"\n");
@@ -837,8 +844,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				) {
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Disque primaire (Carte SD Interne)");
 			
-			etatDiskStringBuilder.append( "\t\t" );
-			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_primary_libelle)+" : ");
+			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_primary_libelle)+" :\n\t");
 			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(primaryUsedSize)+" / ");
 			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().first)+" / ");
 			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().second)+"\n");
@@ -851,8 +857,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Carte SD externe (nommée amovible)");
 			
-			etatDiskStringBuilder.append( "\t\t" );
-			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_secondary_libelle)+" : ");
+			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_secondary_libelle)+" :\n\t");
 			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(secondaryUsedSize)+" / ");
 			try {
 				etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().first)+" / ");
@@ -866,6 +871,13 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		TextView gestionDiskTextView = (TextView) findViewById(R.id.etatmodehorsligne_gestion_disk_description_textView);
 
 		gestionDiskTextView.setText(etatDiskStringBuilder.toString());
+		
+		// Si encours de traitement on affiche la ProgressBar sinon on la cache
+		ProgressBar deplacementEnCoursProgressBar = (ProgressBar) findViewById(R.id.etatmodehorsligne_gestion_disk_buttons_progressBar);
+		if (DorisApplicationContext.getInstance().isMovingPhotos) {
+			deplacementEnCoursProgressBar.setVisibility(View.VISIBLE);
+		}
+		else deplacementEnCoursProgressBar.setVisibility(View.GONE);
 		
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Fin");
     }
@@ -922,7 +934,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			if( ( photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0 )
 					|| ( carteExterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY) != 0 ) ){
 				btnPrimaryDiskDepl.setEnabled(true);
-				btnPrimaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_btn_text_not_available));
+				btnPrimaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_primary_depl_btn_text_selected));
 
 				// Si un déplacement vers le Carte Mémoire Interne a été arrêté avant sa fin et qu'aucun mouvement n'a repris
 				// On propose la reprise
@@ -934,13 +946,13 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				
 			} else {
 				btnPrimaryDiskDepl.setEnabled(false);
-				btnPrimaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_btn_text_not_available));
+				btnPrimaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_primary_btn_text_not_available));
 			}
 			if (DorisApplicationContext.getInstance().isMovingPhotos) btnPrimaryDiskDepl.setEnabled(false);
 			
 			if( photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 ) {
 				btnPrimaryDiskSupp.setEnabled(true);
-				btnPrimaryDiskSupp.setText(getString(R.string.etatmodehorsligne_diskselection_secondary_supp_btn_text_selected));
+				btnPrimaryDiskSupp.setText(getString(R.string.etatmodehorsligne_diskselection_primary_supp_btn_text_selected));
 			} else {
 				btnPrimaryDiskSupp.setEnabled(false);
 				btnPrimaryDiskSupp.setText(getString(R.string.etatmodehorsligne_gestion_disk_supp_btn_vide_text));
@@ -1048,7 +1060,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 					}
 			       	alertDialogbD.setCancelable(true);
 			       	
-			       	// On vide le disque si validé
+			       	// On déplace le disque si validé
 			       	alertDialogbD.setPositiveButton(getContext().getString(R.string.btn_yes),
 		       			new DialogInterface.OnClickListener() {
 		                	public void onClick(DialogInterface dialog, int id) {
@@ -1171,71 +1183,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
     	}
     }
-    
-    private AsyncComputeLongRefreshScreenData lastAsyncComputeLongRefreshScreenData = null;
-    
-    /**
-     * Classe utilisée pour rafraîchir l'ihm, mais qui prend un peu de temps
-     * et ne peut pas être mise dans refreshScreenData sinon on pénalise le reste
-     */
-    private class AsyncComputeLongRefreshScreenData extends AsyncTask<Void, Void, Void> {
-
-    	long internalUsedSize =  0;
-    	long primaryUsedSize =  0;
-    	long secondaryUsedSize = 0;
-		public boolean needRestart = false;
-		
-		public AsyncComputeLongRefreshScreenData() {
-			super();
-		}
-		
-		@Override
-		protected Void doInBackground(Void... voids) {
-			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "AsyncComputeLongRefreshScreenData() - doInBackground()");
-			
-			// baisse la priorité pour s'assurer une meilleure réactivité
-			android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
-						
-			// Mémoire interne
-			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "AsyncComputeLongRefreshScreenData() - doInBackground() - Mémoire interne");
-			internalUsedSize =  photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL);
-			
-			// Disque primaire (Carte SD Interne dans les paramètres)
-			if ( !disqueOutils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
-					disqueOutils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
-				) {
-				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "AsyncComputeLongRefreshScreenData() - doInBackground() - Disque primaire (Carte SD Interne)");
-				primaryUsedSize =  photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY);
-			}
-			
-			// Carte SD externe (nommée amovible)
-			if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
-				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "AsyncComputeLongRefreshScreenData() - doInBackground() - Carte SD externe (nommée amovible)");
-				secondaryUsedSize = photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY);
-			}
-			
-			if(needRestart){
-				// si besoin de recommencer, alors fait une mini pause avant redéclencher
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {}
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void params) {
-			refreshFolderSize();
-			
-			refreshUsedDisk(internalUsedSize, primaryUsedSize, secondaryUsedSize);
-			
-			if(needRestart)	{
-				// une notification a été reçue pendant qu'on travaillait, faut la relancer pour recommencer
-				lastAsyncComputeLongRefreshScreenData = (AsyncComputeLongRefreshScreenData) new AsyncComputeLongRefreshScreenData().execute();
-			}
-		}
-	}
-    
+   
  
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
