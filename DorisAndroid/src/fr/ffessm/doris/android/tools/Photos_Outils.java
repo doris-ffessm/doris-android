@@ -69,6 +69,7 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
+import fr.ffessm.doris.android.tools.Disque_Outils.ImageLocation;
 import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 
@@ -79,58 +80,58 @@ import fr.ffessm.doris.android.R;
 
 public class Photos_Outils {
 	private static final String LOG_TAG = Photos_Outils.class.getCanonicalName();
-		
+	
+	public enum ImageType {
+	    VIGNETTE,
+	    MED_RES,
+		HI_RES, 
+		PORTRAITS, 
+		ILLUSTRATION_DEFINITION, 
+		ILLUSTRATION_BIBLIO
+	} 
+
+	public enum PrecharMode {
+		// P0 : Aucune photo préchargée
+	    P0,
+	    // P1 : La photo principale en qualité vignette
+	    P1, 
+	    // P2 : Toutes les photos en qualité vignette
+	    P2, 
+	    // P3 : La photo principale en qualité intermédiaire, les autres en vignette
+	    P3, 
+	    // P4 : Toutes les photos en qualité intermédiaire
+	    P4, 
+	    // P5 : La photo principale en haute résolution, les autres en intermédiaire
+	    P5, 
+	    // P6 : Toutes les photos en haute résolution
+	    P6 
+	}
+	
+	
 	private Context context;
 	private Fiches_Outils fichesOutils;
 	private Param_Outils paramOutils;
 	private Disque_Outils disqueOutils;
 	
+	// [Disque] [ImageType]
+	public int imagesNbInFolder[][] = new int [3] [10];
+	
+	// Constructeur
 	public Photos_Outils(Context context){
 		this.context = context;
 		this.fichesOutils = new Fiches_Outils(context);
 		this.paramOutils = new Param_Outils(context);
 		this.disqueOutils = new Disque_Outils(context);
 	}
-	
-	public enum ImageType {
-	    VIGNETTE, MED_RES, HI_RES, PORTRAITS, ILLUSTRATION_DEFINITION, ILLUSTRATION_BIBLIO
-	} 
 
-	/***
-	 * P0 : Aucune photo préchargée
-	 * P1 : La photo principale en qualité vignette
-	 * P2 : Toutes les photos en qualité vignette
-	 * P3 : La photo principale en qualité intermédiaire, les autres en vignette
-	 * P4 : Toutes les photos en qualité intermédiaire
-	 * P5 : La photo principale en haute résolution, les autres en intermédiaire
-	 * P6 : Toutes les photos en haute résolution
-	 */
-	public enum PrecharMode {
-	    P0, P1, P2, P3, P4, P5, P6 
-	}
-	
-	// type pour le choix de l'emplacement des photos
-	public enum ImageLocation {
-		APP_INTERNAL, PRIMARY, SECONDARY
-	}
-	
-	public File getImageFolder(ImageType inImageType) { 
-		switch (inImageType) {
-		case VIGNETTE :
-			return getImageFolderVignette();
-		case MED_RES :
-			return getImageFolderMedRes();
-		case HI_RES :
-			return getImageFolderHiRes();
-		case PORTRAITS :
-			return getImageFolderPortraits();
-		case ILLUSTRATION_DEFINITION :
-			return getImageFolderGlossaire();
-		case ILLUSTRATION_BIBLIO :
-			return getImageFolderBiblio();
-		default:
-			return null;
-		}
+
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+	 * 
+	 * Dossiers de Stockage des Images
+	 * 
+	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	public File getImageFolderInPreferedLocation(ImageType inImageType) { 
+		return getImageFolder(getPreferedLocation(), inImageType);
 	}
 	public File getImageFolder(ImageLocation baseImageLocation, ImageType inImageType) {
 		switch (inImageType) {
@@ -178,19 +179,7 @@ public class Photos_Outils {
 			return context.getDir( requestedSubFolder , Context.MODE_PRIVATE);
 		}
 	}
-	
-	public boolean isPreferedLocationAvailable(){
-		switch(getPreferedLocation()){
-		case SECONDARY:
-			try {
-				return DiskEnvironment.getSecondaryExternalStorage().isAvailable();
-			} catch (NoSecondaryStorageException e) {
-				return false;
-			}
-		default:
-			return true;
-		}
-	}
+
 	
 	public File getImageFolderVignette() {
 		return getFolderFromPreferedLocation( context.getString(R.string.folder_vignettes_fiches) );
@@ -199,8 +188,6 @@ public class Photos_Outils {
 		return getFolderFromPreferedLocation( context.getString(R.string.folder_med_res_fiches) );
 	}
 	public File getImageFolderHiRes() { 
-		//Log.d(LOG_TAG, "getImageFolderHiRes() - context : " + context.toString() );
-		//Log.d(LOG_TAG, "getImageFolderHiRes() - HI_RES_FICHE_FOLDER : " +HI_RES_FICHE_FOLDER);
 		return getFolderFromPreferedLocation( context.getString(R.string.folder_hi_res_fiches) );
 	}
 	public File getImageFolderPortraits() { 
@@ -245,6 +232,11 @@ public class Photos_Outils {
 				
 	}
 	
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+	 * 
+	 * URL de téléchargement des Images
+	 * 
+	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	public String getbaseUrl(ImageType inImageType) { 
 		switch (inImageType) {
 		case VIGNETTE:
@@ -264,31 +256,15 @@ public class Photos_Outils {
 		}
 	}
 	
-	public boolean isAvailableImagePhotoFiche(PhotoFiche photofiche){
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - photofiche : "+ photofiche );
-	
-		switch(PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_region_ttzones,"P1"))){
-		case P1 :
-		case P2 :
-			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - Vignettes" );
-			return isAvailableInFolderPhoto(photofiche.getCleURL(), ImageType.VIGNETTE);
-		case P3 :
-		case P4 :
-			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - Medium" );
-			return isAvailableInFolderPhoto(photofiche.getCleURL(), ImageType.MED_RES);
-		case P5 :
-		case P6 :
-			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "isAvailableImagePhotoFiche() - Hight" );
-	    	return isAvailableInFolderPhoto(photofiche.getCleURL(), ImageType.HI_RES);
-		default:
-			return false;
-		}
-	}
-
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+	 * 
+	 * Photos sur Disque
+	 * 
+	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	public boolean isAvailableInFolderPhoto(String inPhotoURL, ImageType inImageType){
 		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailablePhoto() - inPhotoURL : "+ inPhotoURL );
 		
-		File imageFolder = getImageFolder(inImageType);	
+		File imageFolder = getImageFolderInPreferedLocation(inImageType);	
 		if(!inPhotoURL.isEmpty()){
 			File fichierImage = new File(imageFolder, inPhotoURL);
 			//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailablePhoto() - fichierImage : "+ fichierImage.toString() );
@@ -299,18 +275,16 @@ public class Photos_Outils {
 		return false;
 	}
 	
-	
 	public File getPhotoFile(String photoURL, ImageType inImageType) throws IOException{
 		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getPhotoFile() - photoURL : "+ photoURL );
 		
-		File imageFolder = getImageFolder(inImageType);		
+		File imageFolder = getImageFolderInPreferedLocation(inImageType);		
 		return new File(imageFolder, photoURL);
 	}
-	
 
 	public HashSet<String> getAllPhotosAvailable(ImageType inImageType){
 		HashSet<String> hsPhotosAvailable = new HashSet<String>();
-		File imageFolder = getImageFolder(inImageType);
+		File imageFolder = getImageFolderInPreferedLocation(inImageType);
 		
 		if (! imageFolder.exists() ) return hsPhotosAvailable;
 		
@@ -319,6 +293,7 @@ public class Photos_Outils {
 		}
 		return hsPhotosAvailable;
 	}
+	
 	
 	public File getOrDownloadPhotoFile(String photoUrl, ImageType imageType) throws IOException{
 		return getOrDownloadPhotoFile(photoUrl, photoUrl, imageType);
@@ -329,7 +304,7 @@ public class Photos_Outils {
 		
 		if(!photoUrl.isEmpty()){
 			
-			File imageFolder = getImageFolder(imageType);
+			File imageFolder = getImageFolderInPreferedLocation(imageType);
 			
 	    	/* On crée les dossiers s'ils étaient inexistants */
 			if (!imageFolder.exists() && !imageFolder.mkdirs()) {
@@ -380,25 +355,71 @@ public class Photos_Outils {
 		return result;
 	}
 
+	
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+	 * 
+	 * Taille des Dossiers (Nb Fichiers)
+	 * 
+	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	public void refreshImagesNbInFolder(){
 
-	public int getImageCountInFolder(ImageType inImageType){
-		
-		// Si le dossier n'a jamais été créé on renvoie 0
-		if (! getImageFolder(inImageType).exists() ) return 0;
-				
-		return getImageFolder(inImageType).list().length;
+		for (ImageLocation imageLocation : ImageLocation.values()) {
+			// Pour chaque Type d'Images
+			for (ImageType imageType : ImageType.values()) {
+				// Primary et Secondary n existe pas forcément
+				if (disqueOutils.isStorageExist(imageLocation)) {
+					// Si le Dossier n existe pas 0, sinon on compte
+					if (! getImageFolder(imageLocation, imageType).exists() ) {
+						imagesNbInFolder [imageLocation.ordinal()] [imageType.ordinal()] = 0;
+					} else {
+						imagesNbInFolder [imageLocation.ordinal()] [imageType.ordinal()] = 
+							getImageFolder(imageLocation, imageType).list().length;
+					}
+				} else {
+					imagesNbInFolder [imageLocation.ordinal()] [imageType.ordinal()] = 0;
+				}
+				Log.d(LOG_TAG, "refreshImagesNbInFolder() : "+imageLocation+" - "+imageType+" - "
+						+imagesNbInFolder [imageLocation.ordinal()] [imageType.ordinal()] );
+			}
+		}
 	}
 	
+	public int getImageCountInFolderInPreferedLocation(ImageType inImageType){
+		return getImageCountInFolder(getPreferedLocation(), inImageType);
+	}
+	public int getImageCountInFolder(ImageLocation baseImageLocation, ImageType inImageType){
+		return imagesNbInFolder[baseImageLocation.ordinal()] [inImageType.ordinal()];
+	}	
+
 	public int getImageCountInCache(){
-		int nbFichiersDansCache = 0;
-		
-	//	Log.d(LOG_TAG, "Photos_Outils() - getImageCountInCache() cahcelocation="+context.getCacheDir().getPath());
+		//	Log.d(LOG_TAG, "Photos_Outils() - getImageCountInCache() cahcelocation="+context.getCacheDir().getPath());
 		File picasoFolder = new File(context.getCacheDir().getPath()+"/picasso-cache");
 		if(picasoFolder.exists()) return picasoFolder.listFiles().length;
-
-		return nbFichiersDansCache;
+		else return 0;
 	}
 	
+	
+	public int getImageCountInAllFoldersInPreferedLocation(){
+    	return getImageCountInAllFolders(getPreferedLocation());
+	}
+	public int getImageCountInAllFolders(ImageLocation baseImageLocation){
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "Photos_Outils() - getPhotosDiskUsage()");
+    	return getImageCountInFolder(baseImageLocation, ImageType.VIGNETTE)
+    			+ getImageCountInFolder(baseImageLocation, ImageType.MED_RES)
+    			+ getImageCountInFolder(baseImageLocation, ImageType.HI_RES)
+    			+ getImageCountInFolder(baseImageLocation, ImageType.PORTRAITS)
+    			+ getImageCountInFolder(baseImageLocation, ImageType.ILLUSTRATION_BIBLIO)
+    			+ getImageCountInFolder(baseImageLocation, ImageType.ILLUSTRATION_DEFINITION);
+	}
+	
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+	 * 
+	 * Taille des Dossiers (en Ko, Mo, etc.)
+	 * 
+	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */	
+	public long getPhotosDiskUsageInPreferedLocation(){
+    	return getPhotosDiskUsage(getPreferedLocation());
+	}
 	public long getPhotosDiskUsage(ImageLocation baseImageLocation){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "Photos_Outils() - getPhotosDiskUsage()");
     	return getPhotoDiskUsage(baseImageLocation, ImageType.VIGNETTE)
@@ -408,51 +429,24 @@ public class Photos_Outils {
     			+ getPhotoDiskUsage(baseImageLocation, ImageType.ILLUSTRATION_BIBLIO)
     			+ getPhotoDiskUsage(baseImageLocation, ImageType.ILLUSTRATION_DEFINITION);
 	}
-	public long getPhotosDiskUsage(){
-    	return getPhotoDiskUsage(ImageType.VIGNETTE)
-    			+ getPhotoDiskUsage(ImageType.MED_RES)
-    			+ getPhotoDiskUsage(ImageType.HI_RES)
-    			+ getPhotoDiskUsage(ImageType.PORTRAITS)
-    			+ getPhotoDiskUsage(ImageType.ILLUSTRATION_BIBLIO)
-    			+ getPhotoDiskUsage(ImageType.ILLUSTRATION_DEFINITION);
-	}
 	
 	
-	public long getPhotoDiskUsage(ImageType inImageType) {
-		try {
-			// Si le dossier n'a jamais été créé on renvoie 0
-			if (! getImageFolder(inImageType).exists() ) return 0;
-			
-	    	return getImageFolder(inImageType).list().length * getTailleMoyImageUnitaire(inImageType) ;
-		} catch (Exception e) {
-			Log.e(LOG_TAG, "Dossier inexisant - il a peut-être été supprimé durant ce traiement", e);
-		}
-		return 0;
+	public long getPhotoDiskUsageInPreferedLocation(ImageType inImageType) {
+		return getPhotoDiskUsage(getPreferedLocation(), inImageType);
 	}
 	public long getPhotoDiskUsage(ImageLocation baseImageLocation, ImageType inImageType){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "Photos_Outils() - getPhotoDiskUsage() - baseImageLocation : "+baseImageLocation.name());
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "Photos_Outils() - getPhotoDiskUsage() - inImageType : "+inImageType.name());
-		try {
-			// Si le dossier n'a jamais été créé on renvoie 0
-			if (! getImageFolder(baseImageLocation, inImageType).exists() ) return 0;
-	
-	    	return getImageFolder(baseImageLocation, inImageType).list().length * getTailleMoyImageUnitaire(inImageType) ;
-	    	
-		} catch (Exception e) {
-			Log.e(LOG_TAG, "Dossier inexisant - il a peut-être été supprimé durant ce traiement", e);
-		} 
-		return 0;
+    	return getImageCountInFolder(baseImageLocation, inImageType) * getTailleMoyImageUnitaire(inImageType) ;
 	}
-	public long getCacheUsage(){
-    	return disqueOutils.getDiskUsage(context.getCacheDir() ) ;
-	}
-	public long getPicasoCacheUsage(){
-		File picasoFolder = new File(context.getCacheDir().getPath()+"/picasso-cache");
-		if(picasoFolder.exists()) return disqueOutils.getDiskUsage(picasoFolder);
-		else return 0 ;
-	}
+
+
 	
-	
+	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+	 * 
+	 * Gestion téléchargements
+	 * 
+	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */	
 	public ImageType getImageQualityToDownload(boolean inPhotoPrincipale, ZoneGeographiqueKind inZoneGeo){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getImageQualityToDownload() - Début" );
 

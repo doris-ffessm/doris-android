@@ -56,10 +56,28 @@ import android.util.Log;
 public class Disque_Outils {
 	private static final String LOG_TAG = Disque_Outils.class.getCanonicalName();
 		
+	// type pour le choix de l'emplacement des photos
+	public enum ImageLocation {
+		// Mémoire Interne où sont installées les Applications
+		// Certains appareils n'ont que cet emplacement mémoire
+		APP_INTERNAL,
+		// Mémoire Interne dédiée aux données des applications (n'existe pas toujours)
+		// Surtout même qd elle n'existe pas physiquement elle existe logiquement,
+		// il faut donc les différencier ... voir identifiantPartition() plus bas
+		PRIMARY,
+		// Carte Mémoire amovible
+		SECONDARY
+	}
+	
 	private Context context;
+	
+	private boolean isPrimaryExternalStorageExist;
+	private boolean isSecondaryExternalStorageExist;
 	
 	public Disque_Outils(Context context){
 		this.context = context;
+		
+		refresh();
 	}
 
 	public long getDiskUsage(File inImageFolder){
@@ -133,27 +151,6 @@ public class Disque_Outils {
 	    return deletedFiles;
 	}
     
-    public int getPrimaryExternalStorageNbFiles(String fileStr){
-    	File file = DiskEnvironment.getPrimaryExternalStorage().getFilesDir(context, fileStr);
-    	if (file.isDirectory()) {
-    		return file.list().length;
-    	}
-    	return 0;
-    }
-    
-    public int getSecondaryExternalStorageNbFiles(String fileStr){
-    	try {
-	    	File file = DiskEnvironment.getSecondaryExternalStorage().getFilesDir(context, fileStr);
-	    	if (file.isDirectory()) {
-	    		return file.list().length;
-	    	}
-		} catch (NoSecondaryStorageException e) {
-			Log.e(LOG_TAG, "Erreur détermination SecondaryStorage");
-    		return 0;
-		}
-    	return 0;
-    }   
-    
     public class DisqueUsage_Outils implements FileFilter {
     	public DisqueUsage_Outils() {
     	};
@@ -175,6 +172,32 @@ public class Disque_Outils {
 
     }
 
+    public void refresh(){
+    	if ( ! identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
+				 identifiantPartition(DiskEnvironment.getPrimaryExternalStorage() ) )
+			 ) {
+				isPrimaryExternalStorageExist = true;
+		} else {
+				isPrimaryExternalStorageExist = false;
+		}
+    	
+    	isSecondaryExternalStorageExist = DiskEnvironment.isSecondaryExternalStorageAvailable();
+    }
+    
+    public boolean isStorageExist(ImageLocation imageLocation){
+    	switch (imageLocation) {
+		case APP_INTERNAL :
+			return true;
+		case PRIMARY :
+			return isPrimaryExternalStorageExist;
+		case SECONDARY :
+			return isSecondaryExternalStorageExist;
+		default:
+			return false;
+    	}
+    }
+    
+    
     // Fonction qui permet d'obtenir une clé unique permettant de distinguer les 2 partitions à un moment donné
     
     // Qd il n'y a qu'une partition interne, Android en affiche qd même une seconde, il n'est donc pas facile

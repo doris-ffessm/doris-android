@@ -98,6 +98,7 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.tools.Disque_Outils.ImageLocation;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
@@ -105,7 +106,6 @@ import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.ffessm.doris.android.tools.Photos_Outils.ImageLocation;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -725,11 +725,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    	
 	    	Photos_Outils photosOutils = new Photos_Outils(this);
 	    	Log.d(LOG_TAG, "refreshScreenData() - 010");
-	    	Log.d(LOG_TAG, "refreshScreenData() - nb vig : "
-	    			+photosOutils.getImageCountInFolder(ImageType.VIGNETTE));
+	    	//Log.d(LOG_TAG, "refreshScreenData() - nb vig : "
+	    	//		+photosOutils.getImageCountInFolder(ImageType.VIGNETTE));
 	    	Log.d(LOG_TAG, "refreshScreenData() - 020");
-	    	Log.d(LOG_TAG, "refreshScreenData() - nb vig : "
-	    			+photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE));
+	    	//Log.d(LOG_TAG, "refreshScreenData() - nb vig : "
+	    	//		+photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE));
 	    	Log.d(LOG_TAG, "refreshScreenData() - 030");
 	    	
     	}

@@ -48,10 +48,10 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.services.GestionPhotoDiskService;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.android.tools.Disque_Outils;
+import fr.ffessm.doris.android.tools.Disque_Outils.ImageLocation;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
-import fr.ffessm.doris.android.tools.Photos_Outils.ImageLocation;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.ffessm.doris.android.tools.Photos_Outils.PrecharMode;
 import fr.ffessm.doris.android.tools.ThemeUtil;
@@ -526,6 +526,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	// Mise à jour des Barres d'avancement
     	refreshProgressBarZone();
     	
+    	// Mise à jour du nombres de fichiers par dossier
+		photosOutils.refreshImagesNbInFolder();
+		
     	// Mise à jour des disques disponibles
     	refreshDiskDisponible();
     	
@@ -677,14 +680,14 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
 		etatDiskStringBuilder.append( "Nb Images et Taille Dossiers\u00A0:" ); 
 		
-		int sizeFolder = photosOutils.getImageCountInFolder(ImageType.VIGNETTE);
+		int sizeFolder = photosOutils.getImageCountInFolderInPreferedLocation(ImageType.VIGNETTE);
 		if ( sizeFolder !=0 ) {
 			auMoins1DossierNonVide = true;
 			
 			etatDiskStringBuilder.append( "\n\t" );
 			etatDiskStringBuilder.append( sizeFolder );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_vignettes) );
-			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE) ) );
+			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsageInPreferedLocation(ImageType.VIGNETTE) ) );
 			
 			btnGestionPhotosResetVig.setEnabled(true);
 		} else {
@@ -695,14 +698,14 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		
 		
 		
-		sizeFolder = photosOutils.getImageCountInFolder(ImageType.MED_RES);
+		sizeFolder = photosOutils.getImageCountInFolderInPreferedLocation(ImageType.MED_RES);
 		if ( sizeFolder !=0 ) {
 			auMoins1DossierNonVide = true;
 			
 			etatDiskStringBuilder.append( "\n\t" );
 			etatDiskStringBuilder.append( sizeFolder );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_med_res) );
-			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsage(ImageType.MED_RES) ) );
+			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsageInPreferedLocation(ImageType.MED_RES) ) );
 			
 			btnGestionPhotosResetMedRes.setEnabled(true);
 		} else {
@@ -710,14 +713,14 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		}
 		if (isMovingPhotos) btnGestionPhotosResetMedRes.setEnabled(false);
 		
-		sizeFolder = photosOutils.getImageCountInFolder(ImageType.HI_RES);
+		sizeFolder = photosOutils.getImageCountInFolderInPreferedLocation(ImageType.HI_RES);
 		if ( sizeFolder !=0 ) {
 			auMoins1DossierNonVide = true;
 			
 			etatDiskStringBuilder.append( "\n\t" );
 			etatDiskStringBuilder.append( sizeFolder );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_hi_res) );
-			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsage(ImageType.HI_RES) ) );
+			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsageInPreferedLocation(ImageType.HI_RES) ) );
 			
 			btnGestionPhotosResetHiRes.setEnabled(true);
 		} else {
@@ -725,9 +728,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		}
 		if (isMovingPhotos) btnGestionPhotosResetHiRes.setEnabled(false);
 		
-		sizeFolder = photosOutils.getImageCountInFolder(ImageType.PORTRAITS)
-				+ photosOutils.getImageCountInFolder(ImageType.ILLUSTRATION_BIBLIO)
-				+ photosOutils.getImageCountInFolder(ImageType.ILLUSTRATION_DEFINITION);
+		sizeFolder = photosOutils.getImageCountInFolderInPreferedLocation(ImageType.PORTRAITS)
+				+ photosOutils.getImageCountInFolderInPreferedLocation(ImageType.ILLUSTRATION_BIBLIO)
+				+ photosOutils.getImageCountInFolderInPreferedLocation(ImageType.ILLUSTRATION_DEFINITION);
 		if ( sizeFolder !=0 ) {
 			auMoins1DossierNonVide = true;
 			
@@ -736,9 +739,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_autres) );
 			etatDiskStringBuilder.append(
 					disqueOutils.getHumanDiskUsage(
-						photosOutils.getPhotoDiskUsage(ImageType.PORTRAITS)
-						+ photosOutils.getPhotoDiskUsage(ImageType.ILLUSTRATION_BIBLIO)
-						+ photosOutils.getPhotoDiskUsage(ImageType.ILLUSTRATION_DEFINITION)
+						photosOutils.getPhotoDiskUsageInPreferedLocation(ImageType.PORTRAITS)
+						+ photosOutils.getPhotoDiskUsageInPreferedLocation(ImageType.ILLUSTRATION_BIBLIO)
+						+ photosOutils.getPhotoDiskUsageInPreferedLocation(ImageType.ILLUSTRATION_DEFINITION)
 					) );
 			
 			btnGestionPhotosResetAutres.setEnabled(true);
@@ -755,7 +758,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			etatDiskStringBuilder.append( "\n\t" );
 			etatDiskStringBuilder.append( sizeFolder );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_cache) );
-			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPicasoCacheUsage() ) );
+			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getImageCountInCache() ) );
 			
 			btnGestionPhotosResetCache.setEnabled(true);
 		} else {

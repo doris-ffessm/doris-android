@@ -13,10 +13,10 @@ import fr.ffessm.doris.android.async.NotificationHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.android.tools.Disque_Outils;
+import fr.ffessm.doris.android.tools.Disque_Outils.ImageLocation;
 import fr.ffessm.doris.android.tools.LimitTimer;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
-import fr.ffessm.doris.android.tools.Photos_Outils.ImageLocation;
 import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 import android.app.IntentService;
@@ -131,33 +131,11 @@ public class GestionPhotoDiskService extends IntentService {
     	
 
     	if(action.equals(ACT_MOVE) || action.equals(ACT_DELETE_DISK)){
-	    	
-	    	if( source.equals(ImageLocation.APP_INTERNAL.name()) ){
-	    		nbFileToCopy = this.getDir(this.getString(R.string.folder_vignettes_fiches), Context.MODE_PRIVATE).list().length;
-	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_med_res_fiches), Context.MODE_PRIVATE).list().length;
-	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_hi_res_fiches), Context.MODE_PRIVATE).list().length;
-	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_portraits), Context.MODE_PRIVATE).list().length;
-	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_illustration_definitions), Context.MODE_PRIVATE).list().length;
-	    		nbFileToCopy += this.getDir(this.getString(R.string.folder_illustration_biblio), Context.MODE_PRIVATE).list().length;
-	    	}else if(source.equals(ImageLocation.PRIMARY.name())){
-	   			nbFileToCopy = disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_vignettes_fiches) );
-	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_med_res_fiches) );
-	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_hi_res_fiches) );
-	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_portraits) );
-	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_definitions) );
-	    		nbFileToCopy += disqueOutils.getPrimaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_biblio) );
-	    	}else if(source.equals(ImageLocation.SECONDARY.name())){
-				nbFileToCopy = disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_vignettes_fiches) );
-	    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_med_res_fiches) );
-	    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_hi_res_fiches) );
-	    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_portraits) );
-	    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_definitions) );
-	    		nbFileToCopy += disqueOutils.getSecondaryExternalStorageNbFiles( this.getString(R.string.folder_illustration_biblio) );
-	    	}else {
-	    		Log.e(LOG_TAG, "déplacement impossible, 1ier parametre incorrect : "+source);
-	    		return;
-	    	}
-	    	
+    		// Mise à jour du nombres de fichiers par dossier
+    		photosOutils.refreshImagesNbInFolder();
+    		
+    		nbFileToCopy = photosOutils.getImageCountInAllFolders(ImageLocation.valueOf(source));
+    		
 	    	Log.d(LOG_TAG, "onHandleIntent() - nbFileToCopy : "+nbFileToCopy);
 	    	mNotificationHelper.setMaxItemToProcess(""+nbFileToCopy);
     	}
@@ -307,22 +285,39 @@ public class GestionPhotoDiskService extends IntentService {
     }
     
 	byte[] buf = new byte[1024];
-	
+	InputStream in;
+    OutputStream out;
+    int len;
+    
     public void moveDirectory(File sourceLocation , File targetLocation) throws IOException {
 
     	// incrémente le compteur et pause tous les ??? (utile pour les vignettes)
+    	
     	nbcopiedFiles++;
+    	/*
     	try {
     		if(nbcopiedFiles % 20 == 0) Thread.sleep(250);
     	} catch (Exception e) {
 			Log.e(LOG_TAG, "Problem pause", e);
 		}
+    	*/
     	
     	if(limitTimer.hasTimerElapsed())	{
+    		Log.d(LOG_TAG, "moveDirectory() - nbcopiedFiles : "+nbcopiedFiles);
+    		
     		mNotificationHelper.progressUpdate(nbcopiedFiles);
-    		DorisApplicationContext.getInstance().notifyDataHasChanged(null);	
+    		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+    		
+    		
+    		Thread.yield();
+    		try {
+        		Thread.sleep(250);
+        	} catch (Exception e) {
+    			Log.e(LOG_TAG, "Problem pause", e);
+    		}
+    		Log.d(LOG_TAG, "moveDirectory() - Après Pause");
     	} 
-    	Thread.yield();
+    	//Thread.yield();
     	
 	    if (sourceLocation.isDirectory()) {
 	        if (!targetLocation.exists() && !targetLocation.mkdirs()) {
@@ -343,17 +338,18 @@ public class GestionPhotoDiskService extends IntentService {
 	            throw new IOException("Cannot create dir " + directory.getAbsolutePath());
 	        }
 
-	        InputStream in = new FileInputStream(sourceLocation);
-	        OutputStream out = new FileOutputStream(targetLocation);
+	        in = new FileInputStream(sourceLocation);
+	        out = new FileOutputStream(targetLocation);
 
 	        // Copy the bits from instream to outstream
 	        //byte[] buf = new byte[1024];
-	        int len;
+
 	        while ((len = in.read(buf)) > 0) {
 	            out.write(buf, 0, len);
 	        }
 	        in.close();
 	        out.close();
+	        
 	    }
 	    sourceLocation.delete();
 	}
