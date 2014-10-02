@@ -140,6 +140,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	protected List<MultiProgressBar> allFoldableProgressBarZones = new ArrayList<MultiProgressBar>();
 	protected HashMap<String, View.OnClickListener> reusableClickListener = new HashMap<String, View.OnClickListener>();
 	
+	/** Si déplacement Photos en cours, des mises à jour ne sont pas nécessaires
+	 * des boutons doivent être désactivés */
+	Boolean isMovingPhotos = false;
+	
 	/** Disques Dispo */
 	boolean carteInterneDispo =  false;
 	boolean carteExterneDispo = false;
@@ -515,6 +519,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     public void refreshScreenData() {
     	//Start of user code action when refreshing the screen EtatModeHorsLigne_CustomViewActivity
     	
+    	isMovingPhotos = DorisApplicationContext.getInstance().isMovingPhotos;
+		
     	// mise à jour de la date de la base
     	TextView etatBase = (TextView) findViewById(R.id.etatmodehorsligne_etat_base_description_textView);
     	CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
@@ -524,7 +530,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		}
  
     	// Mise à jour des Barres d'avancement
-    	refreshProgressBarZone();
+    	if (!isMovingPhotos) refreshProgressBarZone();
     	
     	// Mise à jour du nombres de fichiers par dossier
 		photosOutils.refreshImagesNbInFolder();
@@ -673,8 +679,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	
 		StringBuilder etatDiskStringBuilder = new StringBuilder();
 		Boolean auMoins1DossierNonVide = false;
-		
-		Boolean isMovingPhotos = DorisApplicationContext.getInstance().isMovingPhotos;
 		
     	TextView gestionPhotosTextView = (TextView) findViewById(R.id.etatmodehorsligne_gestion_photos_description_textView);
 
