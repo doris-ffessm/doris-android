@@ -753,7 +753,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			etatDiskStringBuilder.append( "\n\t" );
 			etatDiskStringBuilder.append( sizeFolder );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_cache) );
-			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getCacheUsage() ) );
+			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPicasoCacheUsage() ) );
 			
 			btnGestionPhotosResetCache.setEnabled(true);
 		} else {
