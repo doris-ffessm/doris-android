@@ -746,19 +746,19 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		if (DorisApplicationContext.getInstance().isMovingPhotos) btnGestionPhotosResetAutres.setEnabled(false);
 		
 		
-//		sizeFolder = photosOutils.getImageCountInCache();
-//		if ( sizeFolder !=0 ) {
-//			auMoins1DossierNonVide = true;
-//			
-//			etatDiskStringBuilder.append( "\n\t" );
-//			etatDiskStringBuilder.append( sizeFolder );
-//			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_cache) );
-//		//	etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPicasoCacheUsage() ) );
-//			
-//			btnGestionPhotosResetCache.setEnabled(true);
-//		} else {
-//			btnGestionPhotosResetCache.setEnabled(false);
-//		}
+		sizeFolder = photosOutils.getImageCountInCache();
+		if ( sizeFolder !=0 ) {
+			auMoins1DossierNonVide = true;
+			
+			etatDiskStringBuilder.append( "\n\t" );
+			etatDiskStringBuilder.append( sizeFolder );
+			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_cache) );
+			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPicasoCacheUsage() ) );
+			
+			btnGestionPhotosResetCache.setEnabled(true);
+		} else {
+			btnGestionPhotosResetCache.setEnabled(false);
+		}
 		if (DorisApplicationContext.getInstance().isMovingPhotos) btnGestionPhotosResetCache.setEnabled(false);
 		
 		
