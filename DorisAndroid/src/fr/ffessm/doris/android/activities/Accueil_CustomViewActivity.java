@@ -625,9 +625,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    	llContainerLayout.addView(progressBarZoneGenerale);
 
     	} else {
-    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - updateProgressBarZone - Avant");
+    		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - updateProgressBarZone - Avant");
     		updateProgressBarZone(zoneToutesZones, progressBarZones.get(zoneToutesZones.getId()));
-    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - updateProgressBarZone - Après");
+    		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - updateProgressBarZone - Après");
     	}
 		
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

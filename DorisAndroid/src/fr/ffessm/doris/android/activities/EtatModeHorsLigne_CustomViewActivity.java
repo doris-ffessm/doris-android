@@ -655,10 +655,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		if (! disqueOutils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
 				disqueOutils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) ) )
 			carteInterneDispo = true;
-		Log.d(LOG_TAG, "createGestionDisk() - carteInterneDispo : "+carteInterneDispo);
+		//Log.d(LOG_TAG, "createGestionDisk() - carteInterneDispo : "+carteInterneDispo);
 		
 		carteExterneDispo = DiskEnvironment.isSecondaryExternalStorageAvailable();
-		Log.d(LOG_TAG, "createGestionDisk() - carteExterneDispo : "+carteExterneDispo);
+		//Log.d(LOG_TAG, "createGestionDisk() - carteExterneDispo : "+carteExterneDispo);
     }
 
     /**
@@ -827,7 +827,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		etatDiskStringBuilder.append("\t(Espace utilisé / disponible / total)\n");
 		
 		// Mémoire interne
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Mémoire interne");
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Mémoire interne");
 		
 		etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_internal_libelle)+" :\n\t");
 		etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(internalUsedSize)+" / ");
@@ -842,7 +842,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		if ( !disqueOutils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
 				disqueOutils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
 				) {
-			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Disque primaire (Carte SD Interne)");
+			//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Disque primaire (Carte SD Interne)");
 			
 			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_primary_libelle)+" :\n\t");
 			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(primaryUsedSize)+" / ");
@@ -855,7 +855,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		
 		// Carte SD externe (nommée amovible)
 		if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
-			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Carte SD externe (nommée amovible)");
+			//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Carte SD externe (nommée amovible)");
 			
 			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_secondary_libelle)+" :\n\t");
 			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(secondaryUsedSize)+" / ");
@@ -1095,7 +1095,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	}
     	else if ( action.equals(GestionPhotoDiskService.ACT_DELETE_DISK) ) {
     		
-    		Log.d(LOG_TAG, "Création reusableClickListener - "+action+"-"+source);
+    		//Log.d(LOG_TAG, "Création reusableClickListener - "+action+"-"+source);
     		
     		reusableClickListener.put(action+"-"+source, new View.OnClickListener() {
 				@Override
@@ -1140,7 +1140,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	}
     	else if ( action.equals(GestionPhotoDiskService.ACT_DELETE_FOLDER) ) {
 
-    		Log.d(LOG_TAG, "Création reusableClickListener - "+action+"-"+source);
+    		//Log.d(LOG_TAG, "Création reusableClickListener - "+action+"-"+source);
     		
     		reusableClickListener.put(action+"-"+source, new View.OnClickListener() {
 				@Override

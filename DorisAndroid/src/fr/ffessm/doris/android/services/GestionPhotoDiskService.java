@@ -64,7 +64,7 @@ public class GestionPhotoDiskService extends IntentService {
     int nbcopiedFiles=0;
     
  // timer utilisé pour déclencher un refresh que toutes les x mili
-    LimitTimer limitTimer = new LimitTimer(3000); //2000 Milliseconds
+    LimitTimer limitTimer = new LimitTimer(5000); //5 secondes
 	
 	public GestionPhotoDiskService() {
 		super(GestionPhotoDiskService.class.getSimpleName());
@@ -124,6 +124,7 @@ public class GestionPhotoDiskService extends IntentService {
     	}
     	
     	// baisse la priorité pour minimiser l'impact sur l'ihm et les risques de plantage
+    	// 0 = Normal ; background = 10 et more_favorable = -1 => 9
     	android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND + android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE);
 
     	mNotificationHelper.setContentTitle(initialTickerText);
@@ -309,9 +310,14 @@ public class GestionPhotoDiskService extends IntentService {
 	
     public void moveDirectory(File sourceLocation , File targetLocation) throws IOException {
 
-    	// incrémente le compteur et notifie tous les 10
+    	// incrémente le compteur et pause tous les ??? (utile pour les vignettes)
     	nbcopiedFiles++;
-    	//if(nbcopiedFiles % 10 == 0)	publishProgress(nbcopiedFiles);
+    	try {
+    		if(nbcopiedFiles % 20 == 0) Thread.sleep(250);
+    	} catch (Exception e) {
+			Log.e(LOG_TAG, "Problem pause", e);
+		}
+    	
     	if(limitTimer.hasTimerElapsed())	{
     		mNotificationHelper.progressUpdate(nbcopiedFiles);
     		DorisApplicationContext.getInstance().notifyDataHasChanged(null);	
