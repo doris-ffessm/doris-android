@@ -391,12 +391,11 @@ public class Photos_Outils {
 	
 	public int getImageCountInCache(){
 		int nbFichiersDansCache = 0;
-		for (File child:context.getCacheDir().listFiles()) {
-     		if (child.getName().equals("picasso-cache") ) {
-     			nbFichiersDansCache = child.listFiles().length;
-  	     		break;
-     		}
-     	}
+		
+	//	Log.d(LOG_TAG, "Photos_Outils() - getImageCountInCache() cahcelocation="+context.getCacheDir().getPath());
+		File picasoFolder = new File(context.getCacheDir().getPath()+"/picasso-cache");
+		if(picasoFolder.exists()) return picasoFolder.listFiles().length;
+
 		return nbFichiersDansCache;
 	}
 	
@@ -441,11 +440,16 @@ public class Photos_Outils {
 	    	
 		} catch (Exception e) {
 			Log.e(LOG_TAG, "Dossier inexisant - il a peut-être été supprimé durant ce traiement", e);
-		}
+		} 
 		return 0;
 	}
 	public long getCacheUsage(){
     	return disqueOutils.getDiskUsage(context.getCacheDir() ) ;
+	}
+	public long getPicasoCacheUsage(){
+		File picasoFolder = new File(context.getCacheDir().getPath()+"/picasso-cache");
+		if(picasoFolder.exists()) return disqueOutils.getDiskUsage(picasoFolder);
+		else return 0 ;
 	}
 	
 	
