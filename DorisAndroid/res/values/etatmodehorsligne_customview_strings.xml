@@ -67,7 +67,7 @@
 	<string name="etatmodehorsligne_foldersize_med_res">" images Qualité Interméd.\u00A0- "</string>
 	<string name="etatmodehorsligne_foldersize_hi_res">" images Haute Qualité\u00A0- "</string>
 	<string name="etatmodehorsligne_foldersize_autres">" autres images\u00A0- "</string>
-	<string name="etatmodehorsligne_foldersize_cache">" cache\u00A0- "</string>
+	<string name="etatmodehorsligne_foldersize_cache">" images dans le cache"</string>
 	<string name="etatmodehorsligne_foldersize_vide">Aucune photo préchargée"</string>
 	
 	<string name="etatmodehorsligne_gestion_reset_vignettes_btn_lib">"Supprimer vignettes"</string>

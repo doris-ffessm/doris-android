@@ -261,28 +261,48 @@ public class Photos_Outils {
 	 * Photos sur Disque
 	 * 
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	// Si on ne trouve pas le fichier dans le dossier, on regarde dans le sous-dossier
+	// se nommant comme la 1ère lettre du fichier (en FAT32 on peut avoir jusqu'à 65536
+	// sauf que ce doit être de noms courts
+	// Réellement ça pète vers 18000
+	public File getSousDossierPhoto(File imageFolder, String inPhotoURL){
+		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getSousDossierPhoto() - imageFolder : "+ imageFolder );
+		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getSousDossierPhoto() - inPhotoURL : "+ inPhotoURL );
+		return new File (imageFolder.getPath()+"/"+inPhotoURL.charAt(1));
+	}
+	
 	public boolean isAvailableInFolderPhoto(String inPhotoURL, ImageType inImageType){
-		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailablePhoto() - inPhotoURL : "+ inPhotoURL );
+		if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailablePhoto() - inPhotoURL : "+ inPhotoURL );
 		
-		File imageFolder = getImageFolderInPreferedLocation(inImageType);	
+		File imageFolder = getImageFolderInPreferedLocation(inImageType);
+		
 		if(!inPhotoURL.isEmpty()){
-			File fichierImage = new File(imageFolder, inPhotoURL);
 			//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailablePhoto() - fichierImage : "+ fichierImage.toString() );
-			if(fichierImage.exists()){
-				return true;
-			}
+			if (new File(imageFolder, inPhotoURL).exists()) return true;
+			if (new File(
+						getSousDossierPhoto(imageFolder, inPhotoURL),
+						inPhotoURL)
+					.exists()
+				) return true;
 		}
 		return false;
 	}
 	
-	public File getPhotoFile(String photoURL, ImageType inImageType) throws IOException{
-		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getPhotoFile() - photoURL : "+ photoURL );
+	public File getPhotoFile(String inPhotoURL, ImageType inImageType) throws IOException{
+		if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getPhotoFile() - photoURL : "+ inPhotoURL );
 		
-		File imageFolder = getImageFolderInPreferedLocation(inImageType);		
-		return new File(imageFolder, photoURL);
+		File imageFolder = getImageFolderInPreferedLocation(inImageType);
+		
+		File fichierImage = new File(imageFolder, inPhotoURL);
+		if (fichierImage.exists()) return fichierImage;
+		
+		fichierImage = new File( getSousDossierPhoto(imageFolder, inPhotoURL) ,inPhotoURL);
+		if (fichierImage.exists()) return fichierImage;
+		
+		return null;
 	}
 
-	public HashSet<String> getAllPhotosAvailable(ImageType inImageType){
+	public HashSet<String> getAllPhotosAvailableZZZZZZ(ImageType inImageType){
 		HashSet<String> hsPhotosAvailable = new HashSet<String>();
 		File imageFolder = getImageFolderInPreferedLocation(inImageType);
 		
@@ -293,30 +313,54 @@ public class Photos_Outils {
 		}
 		return hsPhotosAvailable;
 	}
+	public HashSet<String> getAllPhotosAvailable(ImageType inImageType){
+		return getAllFilesAvailable(getImageFolderInPreferedLocation(inImageType));
+	}
+	public HashSet<String> getAllFilesAvailable(File inDossier){
+		if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getAllFilesAvailable() - inDossier : "+ inDossier.getPath() );
+		HashSet<String> hsPhotosAvailable = new HashSet<String>();
+		
+		for (File file : inDossier.listFiles()) {
+			if (file.isDirectory()){
+				hsPhotosAvailable.addAll( getAllFilesAvailable(file) );
+			} else {
+				hsPhotosAvailable.add(file.getName());
+			}
+		}
+		return hsPhotosAvailable;
+	}
+	
+	
 	
 	
 	public void downloadPhotoFile(String photoUrl, ImageType imageType) throws IOException{
 		downloadPhotoFile(photoUrl, photoUrl, imageType);
 	}
 	
-	public void downloadPhotoFile(String photoUrl, String photoDisque, ImageType imageType) throws IOException{
-		//Log.d(LOG_TAG, "getOrDownloadPhotoFile() : "+imageType+" - "+photoUrl+" - "+photoDisque );
-		if(!photoUrl.isEmpty()){
+	public void downloadPhotoFile(String inPhotoUrl, String inPhotoDisque, ImageType inImageType) throws IOException{
+		//Log.d(LOG_TAG, "downloadPhotoFile() : "+imageType+" - "+photoUrl+" - "+photoDisque );
+		if(!inPhotoUrl.isEmpty()){
 			
-			File imageFolder = getImageFolderInPreferedLocation(imageType);
-            
+			//File imageFolder = getImageFolderInPreferedLocation(inImageType);
+			// Chaque image est stockée dans un sous dossier s'appelant comme la 1ère lettre du fichier
+			File imageFolder = getSousDossierPhoto(
+					getImageFolderInPreferedLocation(inImageType),
+					inPhotoDisque
+				);
+			
 	    	/* On crée les dossiers s'ils étaient inexistants */
 			if (!imageFolder.exists() && !imageFolder.mkdirs()) {
 	            throw new IOException("Cannot create dir " + imageFolder.getAbsolutePath());
 	        }
 			
-	    	File fichierImage = new File(imageFolder, photoDisque);
+	    	File fichierImage = new File(imageFolder, inPhotoDisque);
 			if(!fichierImage.exists()){
 		    
 				URL urlHtml = null;
 				try {
-					String urlNettoyee = getbaseUrl(imageType)+photoUrl;
-					urlHtml = new URL(urlNettoyee.replace(" ", "%20"));
+					urlHtml = new URL(
+							getbaseUrl(inImageType)+inPhotoUrl.replace(" ", "%20")
+						);
 				} catch (MalformedURLException e ) {
 					Log.w(LOG_TAG, e.getMessage(), e);
 				}
@@ -329,7 +373,7 @@ public class Photos_Outils {
 		            
 		            // download the file
 		            InputStream input = urlConnection.getInputStream();
-		            Log.d(LOG_TAG, "getOrDownloadPhotoFile() : "+fichierImage.getCanonicalPath() );
+		            Log.d(LOG_TAG, "downloadPhotoFile() : "+fichierImage.getCanonicalPath() );
 		            OutputStream output = new FileOutputStream(fichierImage);
 
 		            byte data[] = new byte[1024];
@@ -369,7 +413,7 @@ public class Photos_Outils {
 						imagesNbInFolder [imageLocation.ordinal()] [imageType.ordinal()] = 0;
 					} else {
 						imagesNbInFolder [imageLocation.ordinal()] [imageType.ordinal()] = 
-							getImageFolder(imageLocation, imageType).list().length;
+							disqueOutils.nbFileInFolder(getImageFolder(imageLocation, imageType) );
 					}
 				} else {
 					imagesNbInFolder [imageLocation.ordinal()] [imageType.ordinal()] = 0;
@@ -379,6 +423,8 @@ public class Photos_Outils {
 			}
 		}
 	}
+
+	
 	
 	public int getImageCountInFolderInPreferedLocation(ImageType inImageType){
 		return getImageCountInFolder(getPreferedLocation(), inImageType);

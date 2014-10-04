@@ -683,8 +683,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		Boolean auMoins1DossierNonVide = false;
 		
     	TextView gestionPhotosTextView = (TextView) findViewById(R.id.etatmodehorsligne_gestion_photos_description_textView);
-
-		etatDiskStringBuilder.append( "Nb Images et Taille Dossiers\u00A0:" ); 
+    	
+		etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_titre) ); 
 		
 		int sizeFolder = photosOutils.getImageCountInFolderInPreferedLocation(ImageType.VIGNETTE);
 		if ( sizeFolder !=0 ) {
@@ -764,7 +764,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			etatDiskStringBuilder.append( "\n\t" );
 			etatDiskStringBuilder.append( sizeFolder );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_cache) );
-			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getImageCountInCache() ) );
 			
 			btnGestionPhotosResetCache.setEnabled(true);
 		} else {

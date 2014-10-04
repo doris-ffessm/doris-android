@@ -248,37 +248,16 @@ public class GestionPhotoDiskService extends IntentService {
 
 	
 	protected void moveFolderContent(String source, String destination, String subFolderToMove){
-    	File sourceFolder;
-    	if(source.equals(ImageLocation.PRIMARY.name())){
-    		sourceFolder = DiskEnvironment.getPrimaryExternalStorage().getFilesDir(this, subFolderToMove);
-    	}else if(source.equals(ImageLocation.SECONDARY.name())){
-    		try {
-    			sourceFolder = DiskEnvironment.getSecondaryExternalStorage().getFilesDir(this, subFolderToMove);
-			} catch (NoSecondaryStorageException e) {
-				return;
-			}
-    	}
-    	else {
-    		// considère internal par défaut
-    		sourceFolder = this.getDir(subFolderToMove, Context.MODE_PRIVATE);
-    	}
-    	File destFolder;
-    	if(destination.equals(ImageLocation.PRIMARY.name())){
-    		destFolder = DiskEnvironment.getPrimaryExternalStorage().getFilesDir(this, subFolderToMove);
-    	}else if(destination.equals(ImageLocation.SECONDARY.name())){
-    		try {
-    			destFolder = DiskEnvironment.getSecondaryExternalStorage().getFilesDir(this, subFolderToMove);
-			} catch (NoSecondaryStorageException e) {
-				return;
-			}
-    	}
-    	else {
-    		destFolder = this.getDir(subFolderToMove, Context.MODE_PRIVATE);
-    	}
+    	File sourceFolder = photosOutils.getFolderFromBaseLocation(
+    			ImageLocation.valueOf(source), subFolderToMove
+			);
     	
+    	File destFolder = photosOutils.getFolderFromBaseLocation(
+    			ImageLocation.valueOf(destination), subFolderToMove
+			);
     	
     	try {
-    		Log.d(LOG_TAG, "getOrDownloadPhotoFile() - destFolder : "+destFolder.getCanonicalPath() );
+    		Log.d(LOG_TAG, "moveFolderContent() - destFolder : "+destFolder.getCanonicalPath() );
 			moveDirectory(sourceFolder, destFolder);
 		} catch (IOException e) {
 			Log.e(LOG_TAG, "Problem copying", e);
@@ -293,15 +272,7 @@ public class GestionPhotoDiskService extends IntentService {
     public void moveDirectory(File sourceLocation , File targetLocation) throws IOException {
 
     	// incrémente le compteur et pause tous les ??? (utile pour les vignettes)
-    	
     	nbcopiedFiles++;
-    	/*
-    	try {
-    		if(nbcopiedFiles % 20 == 0) Thread.sleep(250);
-    	} catch (Exception e) {
-			Log.e(LOG_TAG, "Problem pause", e);
-		}
-    	*/
     	
     	if(limitTimer.hasTimerElapsed())	{
     		Log.d(LOG_TAG, "moveDirectory() - nbcopiedFiles : "+nbcopiedFiles);
@@ -309,16 +280,13 @@ public class GestionPhotoDiskService extends IntentService {
     		mNotificationHelper.progressUpdate(nbcopiedFiles);
     		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
     		
-    		
     		Thread.yield();
     		try {
         		Thread.sleep(250);
         	} catch (Exception e) {
     			Log.e(LOG_TAG, "Problem pause", e);
     		}
-    		Log.d(LOG_TAG, "moveDirectory() - Après Pause");
     	} 
-    	//Thread.yield();
     	
 	    if (sourceLocation.isDirectory()) {
 	        if (!targetLocation.exists() && !targetLocation.mkdirs()) {
@@ -375,6 +343,7 @@ public class GestionPhotoDiskService extends IntentService {
     }
     
     public int clearFolder(File inFolder){
+    	
 		int deletedFiles = 0;
 	    if (inFolder!= null && inFolder.isDirectory()) {
 	        try {
@@ -388,15 +357,29 @@ public class GestionPhotoDiskService extends IntentService {
 	                //then delete the files and subdirectories in this dir
 	                //only empty directories can be deleted, so subdirs have been done first
 	                if (child.delete()) {
-	                        deletedFiles++;
-	                    }
+	                	deletedFiles++;
+                    }
 	            }
 	        }
 	        catch(Exception e) {
 	        	Log.e(LOG_TAG, String.format("Failed to clean the folder, error %s", e.getMessage()));
 	        }
 	    }
-	    Log.d(LOG_TAG, "clearFolder() - Fichiers effacés : "+deletedFiles);
+
+	    
+	    if(limitTimer.hasTimerElapsed())	{
+		    Log.d(LOG_TAG, "clearFolder() - Fichiers effacés : "+deletedFiles);
+    		
+    		//mNotificationHelper.progressUpdate(nbcopiedFiles);
+    		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+    		
+    		Thread.yield();
+    		try {
+        		Thread.sleep(250);
+        	} catch (Exception e) {
+    			Log.e(LOG_TAG, "Problem pause", e);
+    		}
+    	} 
 	    return deletedFiles;
 	}
     

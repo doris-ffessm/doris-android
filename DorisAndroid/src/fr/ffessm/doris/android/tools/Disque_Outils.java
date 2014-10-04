@@ -79,28 +79,19 @@ public class Disque_Outils {
 		
 		refresh();
 	}
-
-	public long getDiskUsage(File inImageFolder){
-		Log.d(LOG_TAG, "Disque_Outils - getDiskUsage()");
-		DisqueUsage_Outils du = new DisqueUsage_Outils();
-    	du.accept(inImageFolder);
-    	Log.d(LOG_TAG, "Disque_Outils - du.getSize() = "+du.getSize() );
-    	return du.getSize();
-	}
 	
-	public long getDiskUsage(File inImageFolder, boolean pipot){
-
-		File[] files = inImageFolder.listFiles();
-		  int count = 0;
-		  for (File f : files)
-		    if (f.isDirectory())
-		      count += getDiskUsage(f);
-		    else
-		      count++;
-
-		  return count;
-	}
-	
+    public void refresh(){
+    	if ( ! identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
+				 identifiantPartition(DiskEnvironment.getPrimaryExternalStorage() ) )
+			 ) {
+				isPrimaryExternalStorageExist = true;
+		} else {
+				isPrimaryExternalStorageExist = false;
+		}
+    	
+    	isSecondaryExternalStorageExist = DiskEnvironment.isSecondaryExternalStorageAvailable();
+    }
+    
 	public String getHumanDiskUsage(long inSize){
 		String sizeTexte = "";
 		// octet => ko
@@ -120,7 +111,30 @@ public class Disque_Outils {
     	return sizeTexte;
 	}
 
-
+	public int nbFileInFolder(File inFolder){
+		//Log.d(LOG_TAG, "nbFileInFolder() - inFolder : "+inFolder+" - length : "+inFolder.list().length);
+		
+		int nbFiles = 0;
+		
+		//TODO : Crado mais "temporaire"
+		// c'est utile pour la phase transitoire
+		// Si on a beaucoup d'images dans le dossier c'est sans doute que les images sont téléchargées 
+		// à l'ancienne manière.
+		// Si on a moins de 62 (26 * 2 + 10) fichiers on peut supposer que ce sont des dossiers.
+		// De toutes les façons ça ira vite avec si peu de fichiers
+		if (inFolder.list().length > 100) return (int) inFolder.list().length;
+			
+		for (File child:inFolder.listFiles()) {
+			if (child.isDirectory()) {
+				nbFiles += child.list().length;
+            } else {
+            	nbFiles++;
+            }
+		}
+		
+		return nbFiles;
+	}
+	
 	
     public int clearFolder(File inFolder, int inNbJours){
 		int deletedFiles = 0;
@@ -150,39 +164,7 @@ public class Disque_Outils {
 	    Log.d(LOG_TAG, "clearFolder() - Fichiers effacés : "+deletedFiles);
 	    return deletedFiles;
 	}
-    
-    public class DisqueUsage_Outils implements FileFilter {
-    	public DisqueUsage_Outils() {
-    	};
 
-    	private long size = 0;
-
-    	public boolean accept(File file) {
-    		if (file.isFile())
-    			size += file.length();
-			else 
-    			file.listFiles(this);
-
-    		return false;
-    	}
-
-    	public long getSize() {
-    		return size;
-    	}
-
-    }
-
-    public void refresh(){
-    	if ( ! identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
-				 identifiantPartition(DiskEnvironment.getPrimaryExternalStorage() ) )
-			 ) {
-				isPrimaryExternalStorageExist = true;
-		} else {
-				isPrimaryExternalStorageExist = false;
-		}
-    	
-    	isSecondaryExternalStorageExist = DiskEnvironment.isSecondaryExternalStorageAvailable();
-    }
     
     public boolean isStorageExist(ImageLocation imageLocation){
     	switch (imageLocation) {
