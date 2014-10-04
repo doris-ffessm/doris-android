@@ -96,7 +96,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     int tempo = 50;
     
     // timer utilisé pour déclencher un refresh que toutes les x mili
-    LimitTimer limitTimer = new LimitTimer(2000); //2000 miliseconds 
+    LimitTimer limitTimer = new LimitTimer(5000); //5 secondes 
     
     private Param_Outils paramOutils;
     private Photos_Outils photosOutils;
@@ -118,6 +118,8 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     public TelechargePhotosAsync_BgActivity(Context context/*, OrmLiteDBHelper dbHelper*/){
 		// Start of user code additional attribute declarations TelechargePhotosAsync_BgActivity constructor
     	Log.d(LOG_TAG, "TelechargePhotosAsync_BgActivity() - Début");
+    	
+    	DorisApplicationContext.getInstance().isTelechPhotos = true;
     	
     	String initialTickerText = context.getString(R.string.bg_notifText_imagesinitial);
 		String notificationTitle = context.getString(R.string.bg_notifTitle_imagesinitial);
@@ -183,7 +185,6 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	        	return 0;
 	    	}
 	    	
-	    	DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 	    	DorisDBHelper dorisDBHelper = dbHelper.getDorisDBHelper();
 
 	    	
@@ -198,11 +199,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	    	// zoneGeo : 4 - Faune et flore subaquatiques des Caraïbes
 	    	// zoneGeo : 5 - Faune et flore subaquatiques de l'Atlantique Nord-Ouest
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
-
-			DorisApplicationContext.getInstance().notifyDataHasChanged(null);
-	    	
 			nbPhotosFichesATelecharger(dorisDBHelper, listeZoneGeo);
-
+			DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+			
+			
 	    	// -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 			// On commence par traiter les photos principales des Fiches
 			
@@ -263,7 +263,9 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 		super.onCancelled();
 		mNotificationHelper.completed();
 		// Start of user code TelechargePhotosAsync onCancelled
-
+		
+		DorisApplicationContext.getInstance().isTelechPhotos = false;
+		
 		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = null;
         // termine de notifier les vues qui pouvaient être intéressées
 		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
@@ -275,6 +277,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         mNotificationHelper.completed();
 		// Start of user code TelechargePhotosAsync onPostExecute
         // retire l'activité qui est maintenant finie
+        DorisApplicationContext.getInstance().isTelechPhotos = false;
         DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity = null;
         // termine de notifier les vues qui pouvaient être intéressées
         DorisApplicationContext.getInstance().notifyDataHasChanged(null);
@@ -403,7 +406,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
     					// Les vignettes des Photos Principales sont toujours téléchargées (si pas P0)
     					if ( !hsImagesVigAllreadyAvailable.contains(resultColumns[0]) ){
-    						photosOutils.getOrDownloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.VIGNETTE);
+    						photosOutils.downloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.VIGNETTE);
     						//nbTelechargements++;
     					}
     					
@@ -415,7 +418,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 						
         				if ( imageTypeImage == Photos_Outils.ImageType.MED_RES) {
     						if ( !hsImagesMedResAllreadyAvailable.contains(resultColumns[0]) ){
-    							photosOutils.getOrDownloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.MED_RES);
+    							photosOutils.downloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.MED_RES);
     							//nbTelechargements++;
     						}
     						nbPhotosPrinRecuesPourZone++;
@@ -423,7 +426,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         				
         				if ( imageTypeImage == Photos_Outils.ImageType.HI_RES) {
     						if ( !hsImagesHiResAllreadyAvailable.contains(resultColumns[0]) ){
-    							photosOutils.getOrDownloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.HI_RES);
+    							photosOutils.downloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.HI_RES);
     							//nbTelechargements++;
     						}
     						nbPhotosPrinRecuesPourZone++;
@@ -462,10 +465,12 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 				}
 
     			//Enregistrement du nombre total de photos téléchargée pour afficher avancement
+				// systématiquement donc, i.e. on n'aattend pas les n secondes habituelles
 				paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneGeo.getZoneGeoKind(), true), nbPhotosPrinRecuesPourZone);
 				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosPrincipalesFiches - nbPhotosPrincDejaLaPourZone : "+nbPhotosPrinRecuesPourZone );
 				publishProgress( nbPhotosPrinRecuesPourZone );
 				DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+
     		}
 			if(this.isCancelled()){
 				// annulation demandée, fini la tache dés que possible
@@ -534,7 +539,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
 						// On télécharge toujours la vignette si en mode <> P0 ou P1
 						if ( !hsImagesVigAllreadyAvailable.contains(resultColumns[0]) ){
-							photosOutils.getOrDownloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.VIGNETTE);
+							photosOutils.downloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.VIGNETTE);
 							//nbTelechargements++;
         				}
 						
@@ -544,7 +549,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
 						if ( imageTypeImage == Photos_Outils.ImageType.MED_RES) {
 							if ( !hsImagesMedResAllreadyAvailable.contains(resultColumns[0]) ){
-								photosOutils.getOrDownloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.MED_RES);
+								photosOutils.downloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.MED_RES);
 								//nbTelechargements++;
 							}
 							nbPhotosRecuesPourZone++;
@@ -552,7 +557,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	    				
 	    				if ( imageTypeImage == Photos_Outils.ImageType.HI_RES) {
 							if ( !hsImagesHiResAllreadyAvailable.contains(resultColumns[0]) ){
-								photosOutils.getOrDownloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.HI_RES);
+								photosOutils.downloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.HI_RES);
 								//nbTelechargements++;
 							}
 							nbPhotosRecuesPourZone++;
@@ -664,7 +669,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 		    	
 				if ( !hsImagesVigAllreadyAvailable.contains(photoSurDisque) ){
 					//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosIntervenants() - hsImagesVigAllreadyAvailable = false" );
-					photosOutils.getOrDownloadPhotoFile(photoSurDisque, Photos_Outils.ImageType.PORTRAITS);
+					photosOutils.downloadPhotoFile(photoSurDisque, Photos_Outils.ImageType.PORTRAITS);
 				}
 				
 				nbIntervenantsAnalyses++;
@@ -743,7 +748,7 @@ public int telechargementPhotosBibliographie(DorisDBHelper dorisDBHelper){
 		    	
 				if ( !hsImagesVigAllreadyAvailable.contains(Constants.PREFIX_IMGDSK_BIBLIO + photoURL) ){
 					//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosBibliographie() - hsImagesVigAllreadyAvailable = false" );
-					photosOutils.getOrDownloadPhotoFile("/"+photoURL, Constants.PREFIX_IMGDSK_BIBLIO + photoURL, Photos_Outils.ImageType.ILLUSTRATION_BIBLIO);
+					photosOutils.downloadPhotoFile("/"+photoURL, Constants.PREFIX_IMGDSK_BIBLIO + photoURL, Photos_Outils.ImageType.ILLUSTRATION_BIBLIO);
 				}
 				
 				nbBiblioAnalyses++;
@@ -827,7 +832,7 @@ public int telechargementPhotosGlossaire(DorisDBHelper dorisDBHelper){
 			    	
 					if ( !hsImagesVigAllreadyAvailable.contains(Constants.PREFIX_IMGDSK_DEFINITION + photoURL) ){
 						//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosGlossaire() - hsImagesVigAllreadyAvailable = false" );
-						photosOutils.getOrDownloadPhotoFile("/"+photoURL, Constants.PREFIX_IMGDSK_DEFINITION + photoURL, Photos_Outils.ImageType.ILLUSTRATION_DEFINITION);
+						photosOutils.downloadPhotoFile("/"+photoURL, Constants.PREFIX_IMGDSK_DEFINITION + photoURL, Photos_Outils.ImageType.ILLUSTRATION_DEFINITION);
 					}
 					
 					nbTermesAnalyses++;

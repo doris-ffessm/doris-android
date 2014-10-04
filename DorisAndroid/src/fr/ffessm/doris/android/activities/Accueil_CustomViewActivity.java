@@ -98,6 +98,7 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.Disque_Outils.ImageLocation;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.App_Outils;
@@ -107,6 +108,8 @@ import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
+import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 //End of user code
@@ -642,95 +645,31 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    	while (it.hasNext()) {
 	    		sb.append("Date base locale : " + it.next().getDateBase()+"\n");
 			}
-	    	/*
-	    	RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
-	    	sb.append("Nombres de fiches dans la base locale : "+ficheDao.countOf());
-	     	RuntimeExceptionDao<PhotoFiche, Integer> photoFicheDao = getHelper().getPhotoFicheDao();
-	    	sb.append("\nNombres de photos référencées : "+photoFicheDao.countOf());
-	    	sb.append("\n\tNombres de photos téléchargées : "+Outils.getVignetteCount(this.getApplicationContext()));
-	    	double sizeInMiB = Outils.getPhotosDiskUsage(getApplicationContext())/(double)(1024.0*1024.0);
-	    	sb.append("\t("+String.format("%.2f", sizeInMiB)+" MiB)");
-	    	*/
-	    	
-	    	// Test pour voir où est le cache Picasso
-	    	/*
-	    	sb.append("\n- - - - - -\n");
-	    	sb.append(getApplicationContext().getCacheDir().getAbsolutePath()+"\n");
-	     	for (File child:getApplicationContext().getCacheDir().listFiles()) {
-	     		sb.append(child.getAbsolutePath()+"\n");
-	     		if (child.getName().equals("picasso-cache") ) {
-	     			sb.append(""+String.format("%.2f", Outils.getDiskUsage(getApplicationContext(), child)/(double)(1024.0*1024.0) )+" MiB)\n");
-	     			
-	     			int i = 0;
-	     			for (File subchild:child.listFiles()) {
-	     	     		sb.append("\t\t"+subchild.getName()+"\n");
-	     	     		i++;
-	     	     		if ( i >5) break;
-	     			}
-	     		}
-	     	}
-	     	*/
 	    	
 	     	sb.append("- - - - - -\n");
 	     	sb.append(getApplicationContext().getFilesDir().getAbsolutePath()+"\n");
 	     	sb.append(getApplicationContext().getFilesDir().listFiles().length+"\n");
 	     	sb.append("- - - - - -\n");
-	     	/*
-	     	URI uri = null;
-	     	try {
-	     		uri = new URI("file:///android_res/raw/images_groupe_1.gif");
-	     	} catch (URISyntaxException e) {
-	     		
-	     	}
-	     	File file = new File(uri);
-	     	sb.append(file.getAbsolutePath()+"\n");
-	     	sb.append("dir ? : "+file.isDirectory()+" - file ? : "+file.isFile()+"\n");
-	     	if (file.isDirectory()) {
-		     	for (File child:file.listFiles()) {
-		     		sb.append(child.getAbsolutePath()+"\n");
-		     		if (child.isDirectory()) {
-			     		for (File subChild:child.listFiles()) {
-			     			sb.append(" - "+subChild.getAbsolutePath()+"\n");
-			     		}
-		     		}
-		     	}
-	     	}
-	     	// TODO : Piste pour sauvegarder les images après téléchargement
-	     	// Cf. http://stackoverflow.com/questions/19345576/cannot-draw-recycled-bitmaps-exception-with-picasso
-	     	// et surtout : http://www.basic4ppc.com/android/forum/threads/picasso-image-downloading-and-caching-library.31495/
-	    	// Fin test
-	    	*/
-	    	
-	    	/*
-	    	Fiches_Outils fichesOutils = new Fiches_Outils(getApplicationContext());
-	    	sb.append(fichesOutils.getDerniereMajListeFichesTypeZoneGeo(1));
-	    	*/
+
 	    	
 	    	sb.append("prefered_disque : "+
-	    			paramOutils.getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
-	    					ImageLocation.APP_INTERNAL.ordinal() )+"\n");
-	    	sb.append("prefered_disque_precedent : "+
-	    			paramOutils.getParamInt(R.string.pref_key_prefered_disque_stockage_photo_precedent,
-	    					ImageLocation.APP_INTERNAL.ordinal() )+"\n");
-	    	sb.append("prefered_disque_precedent : "+
-	    			ImageLocation.values()[paramOutils.getParamInt(R.string.pref_key_prefered_disque_stockage_photo_precedent,
+	    			ImageLocation.values()[paramOutils.getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
 	    					ImageLocation.APP_INTERNAL.ordinal() )]+"\n");
 	    	
+	    	Disque_Outils disqueOutils = new Disque_Outils(getContext());
+	    	sb.append("Disque Interne - Place Dispo. : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().first)+"\n");
+	    	try {
+				sb.append("Disque Externe - Place Dispo. : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().first)+"\n");
+			} catch (NoSecondaryStorageException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	    	
-
 	    	sb.append("déplacement en cours : "+
 	    			paramOutils.getParamBoolean(R.string.pref_key_deplace_photo_encours, false)+"\n");
 	    	
 	    	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());
 	    	
-	    	Photos_Outils photosOutils = new Photos_Outils(this);
-	    	Log.d(LOG_TAG, "refreshScreenData() - 010");
-	    	//Log.d(LOG_TAG, "refreshScreenData() - nb vig : "
-	    	//		+photosOutils.getImageCountInFolder(ImageType.VIGNETTE));
-	    	Log.d(LOG_TAG, "refreshScreenData() - 020");
-	    	//Log.d(LOG_TAG, "refreshScreenData() - nb vig : "
-	    	//		+photosOutils.getPhotoDiskUsage(ImageType.VIGNETTE));
-	    	Log.d(LOG_TAG, "refreshScreenData() - 030");
 	    	
     	}
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

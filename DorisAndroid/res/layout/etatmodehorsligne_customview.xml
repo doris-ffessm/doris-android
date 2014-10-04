@@ -105,6 +105,7 @@
 			            android:id="@+id/etatmodehorsligne_gestion_photos_titre_textView"
 			            android:layout_width="wrap_content"
 			            android:layout_height="wrap_content"
+			            android:layout_weight="36"
 			            android:textAppearance="?android:attr/textAppearanceMedium"
 			            android:textColor="?android:attr/textColorPrimary"
 				        android:text="@string/etatmodehorsligne_gestion_photos_titre_text" />

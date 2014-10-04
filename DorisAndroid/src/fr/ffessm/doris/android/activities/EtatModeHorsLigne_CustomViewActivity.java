@@ -143,6 +143,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	/** Si déplacement Photos en cours, des mises à jour ne sont pas nécessaires
 	 * des boutons doivent être désactivés */
 	Boolean isMovingPhotos = false;
+	Boolean isTelechPhotos = false;
 	
 	/** Disques Dispo */
 	boolean carteInterneDispo =  false;
@@ -520,7 +521,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	//Start of user code action when refreshing the screen EtatModeHorsLigne_CustomViewActivity
     	
     	isMovingPhotos = DorisApplicationContext.getInstance().isMovingPhotos;
-		
+    	isTelechPhotos = DorisApplicationContext.getInstance().isTelechPhotos;
+    	
     	// mise à jour de la date de la base
     	TextView etatBase = (TextView) findViewById(R.id.etatmodehorsligne_etat_base_description_textView);
     	CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
@@ -543,7 +545,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		refreshFolderSize();
 		
 		// Mise à jour de l'utilisation des Disques 
-		refreshUsedDisk();
+		if (!isTelechPhotos) refreshUsedDisk();
 		
     	// mise à jour des Boutons de Gestion des Disques
        	refreshGestionDisk();
@@ -698,7 +700,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			btnGestionPhotosResetVig.setEnabled(false);
 		}
 		// Si Travail en cours => Bouton Disabled
-		if (isMovingPhotos) btnGestionPhotosResetVig.setEnabled(false);
+		if (isMovingPhotos || isTelechPhotos) btnGestionPhotosResetVig.setEnabled(false);
 		
 		
 		
@@ -715,7 +717,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		} else {
 			btnGestionPhotosResetMedRes.setEnabled(false);
 		}
-		if (isMovingPhotos) btnGestionPhotosResetMedRes.setEnabled(false);
+		if (isMovingPhotos || isTelechPhotos) btnGestionPhotosResetMedRes.setEnabled(false);
 		
 		sizeFolder = photosOutils.getImageCountInFolderInPreferedLocation(ImageType.HI_RES);
 		if ( sizeFolder !=0 ) {
@@ -730,7 +732,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		} else {
 			btnGestionPhotosResetHiRes.setEnabled(false);
 		}
-		if (isMovingPhotos) btnGestionPhotosResetHiRes.setEnabled(false);
+		if (isMovingPhotos || isTelechPhotos) btnGestionPhotosResetHiRes.setEnabled(false);
 		
 		sizeFolder = photosOutils.getImageCountInFolderInPreferedLocation(ImageType.PORTRAITS)
 				+ photosOutils.getImageCountInFolderInPreferedLocation(ImageType.ILLUSTRATION_BIBLIO)
@@ -752,7 +754,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		} else {
 			btnGestionPhotosResetAutres.setEnabled(false);
 		}
-		if (isMovingPhotos) btnGestionPhotosResetAutres.setEnabled(false);
+		if (isMovingPhotos || isTelechPhotos) btnGestionPhotosResetAutres.setEnabled(false);
 		
 		
 		sizeFolder = photosOutils.getImageCountInCache();
@@ -768,7 +770,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		} else {
 			btnGestionPhotosResetCache.setEnabled(false);
 		}
-		if (isMovingPhotos) btnGestionPhotosResetCache.setEnabled(false);
+		if (isMovingPhotos || isTelechPhotos) btnGestionPhotosResetCache.setEnabled(false);
 		
 		
 		if (!auMoins1DossierNonVide){
@@ -810,8 +812,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Début");
     	
 		StringBuilder etatDiskStringBuilder = new StringBuilder();
-		
-		Boolean isMovingPhotos = DorisApplicationContext.getInstance().isMovingPhotos;
 		
     	/*
     	 * Espace de Stockage Sélectionné
@@ -900,7 +900,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	boolean deplaceEnCours = paramOutils.getParamBoolean(R.string.pref_key_deplace_photo_encours, false);
     	
     	// Processus de Déplacement en cours
-    	Boolean isMovingPhotos = DorisApplicationContext.getInstance().isMovingPhotos;
     	
 		ImageLocation imageLocationCourante = photosOutils.getPreferedLocation();		
 		ImageLocation imageLocationPrecedente = photosOutils.getLocationPrecedente();	
@@ -928,7 +927,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			btnInternalDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_btn_text_not_available));
 
 		}
-		if (isMovingPhotos) btnInternalDiskDepl.setEnabled(false);
+		if (isMovingPhotos || isTelechPhotos) btnInternalDiskDepl.setEnabled(false);
 		
 		if( photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0 ) {
 			btnInternalDiskSupp.setEnabled(true);
@@ -937,7 +936,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			btnInternalDiskSupp.setEnabled(false);
 			btnInternalDiskSupp.setText(getString(R.string.etatmodehorsligne_gestion_disk_supp_btn_vide_text));
 		}
-		if (isMovingPhotos) btnInternalDiskSupp.setEnabled(false);	
+		if (isMovingPhotos || isTelechPhotos) btnInternalDiskSupp.setEnabled(false);	
 
 		
 		// -- Carte Mémoire Interne (Non Amovible, en fait une partition de la Mémoire Interne destinée à stocker les données des Applications) -- //
@@ -963,7 +962,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				btnPrimaryDiskDepl.setEnabled(false);
 				btnPrimaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_primary_btn_text_not_available));
 			}
-			if (isMovingPhotos) btnPrimaryDiskDepl.setEnabled(false);
+			if (isMovingPhotos || isTelechPhotos) btnPrimaryDiskDepl.setEnabled(false);
 			
 			if( photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 ) {
 				btnPrimaryDiskSupp.setEnabled(true);
@@ -972,7 +971,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				btnPrimaryDiskSupp.setEnabled(false);
 				btnPrimaryDiskSupp.setText(getString(R.string.etatmodehorsligne_gestion_disk_supp_btn_vide_text));
 			}
-			if (isMovingPhotos) btnPrimaryDiskSupp.setEnabled(false);
+			if (isMovingPhotos || isTelechPhotos) btnPrimaryDiskSupp.setEnabled(false);
 			
 		} else {
 			TableRow trGestionDiskPrimary = (TableRow) findViewById(R.id.etatmodehorsligne_gestion_disk_primary_row);
@@ -1001,7 +1000,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			} else {
 				btnSecondaryDiskDepl.setEnabled(false);
 			}
-			if (isMovingPhotos) btnSecondaryDiskDepl.setEnabled(false);
+			if (isMovingPhotos || isTelechPhotos) btnSecondaryDiskDepl.setEnabled(false);
 			
 			btnSecondaryDiskSupp.setVisibility(View.VISIBLE);
 			if ( photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY) != 0 ) {
@@ -1011,7 +1010,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				btnSecondaryDiskSupp.setEnabled(false);
 				btnSecondaryDiskSupp.setText(getString(R.string.etatmodehorsligne_gestion_disk_supp_btn_vide_text));
 			}
-			if (isMovingPhotos) btnSecondaryDiskSupp.setEnabled(false);
+			if (isMovingPhotos || isTelechPhotos) btnSecondaryDiskSupp.setEnabled(false);
 			
 			
 		} else {

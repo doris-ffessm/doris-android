@@ -88,6 +88,7 @@ public class DorisApplicationContext {
 	public VerifieMAJFiche_BgActivity verifieMAJFiche_BgActivity = null;
 	public VerifieMAJFiches_BgActivity verifieMAJFiches_BgActivity = null;
 	
+	public boolean isTelechPhotos = false;
 	public boolean isMovingPhotos = false;
 	public ZoneGeographiqueKind zoneTraitee = null;
 	

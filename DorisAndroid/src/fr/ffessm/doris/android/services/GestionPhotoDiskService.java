@@ -132,7 +132,7 @@ public class GestionPhotoDiskService extends IntentService {
 
     	if(action.equals(ACT_MOVE) || action.equals(ACT_DELETE_DISK)){
     		// Mise à jour du nombres de fichiers par dossier
-    		photosOutils.refreshImagesNbInFolder();
+    		//photosOutils.refreshImagesNbInFolder();
     		
     		nbFileToCopy = photosOutils.getImageCountInAllFolders(ImageLocation.valueOf(source));
     		
@@ -278,6 +278,7 @@ public class GestionPhotoDiskService extends IntentService {
     	
     	
     	try {
+    		Log.d(LOG_TAG, "getOrDownloadPhotoFile() - destFolder : "+destFolder.getCanonicalPath() );
 			moveDirectory(sourceFolder, destFolder);
 		} catch (IOException e) {
 			Log.e(LOG_TAG, "Problem copying", e);

@@ -164,7 +164,7 @@ public class Photos_Outils {
 	}
 	
 	public File getFolderFromBaseLocation(ImageLocation baseImageLocation, String requestedSubFolder) {
-		//Log.d(LOG_TAG, "getFolderFromPreferedLocation("+ requestedSubFolder+") "+getPreferedLocation());
+		//Log.d(LOG_TAG, "getFolderFromPreferedLocation("+ requestedSubFolder+") sur : "+baseImageLocation);
 		switch(baseImageLocation){
 		case PRIMARY:
 			return DiskEnvironment.getPrimaryExternalStorage().getFilesDir(context, requestedSubFolder);
@@ -295,27 +295,23 @@ public class Photos_Outils {
 	}
 	
 	
-	public File getOrDownloadPhotoFile(String photoUrl, ImageType imageType) throws IOException{
-		return getOrDownloadPhotoFile(photoUrl, photoUrl, imageType);
+	public void downloadPhotoFile(String photoUrl, ImageType imageType) throws IOException{
+		downloadPhotoFile(photoUrl, photoUrl, imageType);
 	}
 	
-	public File getOrDownloadPhotoFile(String photoUrl, String photoDisque, ImageType imageType) throws IOException{
-		File result = null;	
-		
+	public void downloadPhotoFile(String photoUrl, String photoDisque, ImageType imageType) throws IOException{
+		//Log.d(LOG_TAG, "getOrDownloadPhotoFile() : "+imageType+" - "+photoUrl+" - "+photoDisque );
 		if(!photoUrl.isEmpty()){
 			
 			File imageFolder = getImageFolderInPreferedLocation(imageType);
-			
+            
 	    	/* On crée les dossiers s'ils étaient inexistants */
 			if (!imageFolder.exists() && !imageFolder.mkdirs()) {
 	            throw new IOException("Cannot create dir " + imageFolder.getAbsolutePath());
 	        }
 			
 	    	File fichierImage = new File(imageFolder, photoDisque);
-			if(fichierImage.exists()){
-				result = fichierImage;
-			}
-			else{
+			if(!fichierImage.exists()){
 		    
 				URL urlHtml = null;
 				try {
@@ -333,6 +329,7 @@ public class Photos_Outils {
 		            
 		            // download the file
 		            InputStream input = urlConnection.getInputStream();
+		            Log.d(LOG_TAG, "getOrDownloadPhotoFile() : "+fichierImage.getCanonicalPath() );
 		            OutputStream output = new FileOutputStream(fichierImage);
 
 		            byte data[] = new byte[1024];
@@ -352,7 +349,6 @@ public class Photos_Outils {
 			}
 		}
 		
-		return result;
 	}
 
 	
