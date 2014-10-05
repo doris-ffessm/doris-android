@@ -132,7 +132,8 @@ public class GestionPhotoDiskService extends IntentService {
 
     	if(action.equals(ACT_MOVE) || action.equals(ACT_DELETE_DISK)){
     		// Mise à jour du nombres de fichiers par dossier
-    		//photosOutils.refreshImagesNbInFolder();
+    		// Obligatoire pour que le Max soit initialisé
+    		photosOutils.refreshImagesNbInFolder();
     		
     		nbFileToCopy = photosOutils.getImageCountInAllFolders(ImageLocation.valueOf(source));
     		
@@ -271,7 +272,7 @@ public class GestionPhotoDiskService extends IntentService {
     
     public void moveDirectory(File sourceLocation , File targetLocation) throws IOException {
 
-    	// incrémente le compteur et pause tous les ??? (utile pour les vignettes)
+    	// incrémente le compteur pour affichage de l'avancement
     	nbcopiedFiles++;
     	
     	if(limitTimer.hasTimerElapsed())	{
@@ -288,27 +289,29 @@ public class GestionPhotoDiskService extends IntentService {
     		}
     	} 
     	
+    	// Si c'est un dossier, on boucle par récurrence pour l'entrée,
+    	// par contre on passe toujours la même destination.
+    	// Ainsi que l'on soit dans l'ancienne ou nouvelle méthode de stockage
+    	// après le mouvement on sera dans la nouvelle
 	    if (sourceLocation.isDirectory()) {
-	        if (!targetLocation.exists() && !targetLocation.mkdirs()) {
-	            throw new IOException("Cannot create dir " + targetLocation.getAbsolutePath());
-	        }
 
 	        String[] children = sourceLocation.list();
 	        for (int i=0; i<children.length; i++) {
-	            moveDirectory(new File(sourceLocation, children[i]),
-	                    new File(targetLocation, children[i]));
+	            moveDirectory(new File(sourceLocation, children[i]), targetLocation);
 	        }
+	        
 	    } else {
 
+	        // On crée le dossier de destination si nécessaire
+	        //File directory = targetLocation.getParentFile();
+	    	File dossierDestination = photosOutils.getSousDossierPhoto(targetLocation, sourceLocation.getName());
 	    	
-	        // make sure the directory we plan to store the recording in exists
-	        File directory = targetLocation.getParentFile();
-	        if (directory != null && !directory.exists() && !directory.mkdirs()) {
-	            throw new IOException("Cannot create dir " + directory.getAbsolutePath());
+	    	if (dossierDestination != null && !dossierDestination.exists() && !dossierDestination.mkdirs()) {
+	            throw new IOException("Cannot create dir " + dossierDestination.getAbsolutePath());
 	        }
 
 	        in = new FileInputStream(sourceLocation);
-	        out = new FileOutputStream(targetLocation);
+	        out = new FileOutputStream( new File( dossierDestination ,sourceLocation.getName() ) );
 
 	        // Copy the bits from instream to outstream
 	        //byte[] buf = new byte[1024];
