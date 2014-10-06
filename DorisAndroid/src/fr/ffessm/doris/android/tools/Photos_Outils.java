@@ -268,7 +268,11 @@ public class Photos_Outils {
 	public File getSousDossierPhoto(File imageFolder, String inPhotoURL){
 		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getSousDossierPhoto() - imageFolder : "+ imageFolder );
 		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getSousDossierPhoto() - inPhotoURL : "+ inPhotoURL );
-		return new File (imageFolder.getPath()+"/"+inPhotoURL.charAt(1));
+		
+		// Qd on télécharge, il y a un / devant les images des fiches mais pas pour les autres types d'images.
+		// De plus, on appelle parfois cette fonction après avoir déjà supprimer le /, donc ici on l'enlève
+		// qd il existe et on a toujours la même lettre
+		return new File (imageFolder.getPath()+"/"+inPhotoURL.replace("/", "").charAt(0));
 	}
 	
 	public boolean isAvailableInFolderPhoto(String inPhotoURL, ImageType inImageType){
