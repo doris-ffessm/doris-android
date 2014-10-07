@@ -126,13 +126,13 @@ public class DorisApplicationContext {
 	 * @param context
 	 */
 	public void ensureDefaultPreferencesInitialization(Context context){
-		if (BuildConfig.DEBUG) Log.v(LOG_TAG, "ensureDefaultPreferencesInitialization() - Début");
+		//if (BuildConfig.DEBUG) Log.v(LOG_TAG, "ensureDefaultPreferencesInitialization() - Début");
 		
 		final Param_Outils paramOutils = new Param_Outils(context);
 		
 		int screenlayout_size = context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
 		int screenlayout_density= context.getResources().getDisplayMetrics().densityDpi;
-		Log.d(LOG_TAG, "ensureDefaultPreferencesInitialization "+screenlayout_density+" "+screenlayout_size);
+		//Log.d(LOG_TAG, "ensureDefaultPreferencesInitialization "+screenlayout_density+" "+screenlayout_size);
 		
 		// Taille par défaut des images téléchargées en mode on-line
 		String qualitePhotoSgtring = paramOutils.getParamString(R.string.pref_key_mode_connecte_qualite_photo,"");
@@ -140,12 +140,12 @@ public class DorisApplicationContext {
 			SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 			// adapte la taille par défaut des images téléchargée (mode online) en fonction de la taille de l'écran et la densité 
 			if(screenlayout_size >= Configuration.SCREENLAYOUT_SIZE_LARGE || screenlayout_density>=DisplayMetrics.DENSITY_HIGH){
-				Log.d(LOG_TAG, "ensureDefaultPreferencesInitialization HI_RES");
+				//Log.d(LOG_TAG, "ensureDefaultPreferencesInitialization HI_RES");
 		    	// LARGE ou XLARGE -> par défaut HI_RES
 				ed.putString(context.getString(R.string.pref_key_mode_connecte_qualite_photo), "HI_RES");
 			}
 			else{
-				Log.d(LOG_TAG, "ensureDefaultPreferencesInitialization MED_RES");
+				//Log.d(LOG_TAG, "ensureDefaultPreferencesInitialization MED_RES");
 				// par défaut MED_RES
 				ed.putString(context.getString(R.string.pref_key_mode_connecte_qualite_photo), "MED_RES");				
 			}
@@ -275,7 +275,7 @@ public class DorisApplicationContext {
 			ed.commit();
 		}
 		
-		if (BuildConfig.DEBUG) Log.v(LOG_TAG, "ensureDefaultPreferencesInitialization() - Fin");
+		//if (BuildConfig.DEBUG) Log.v(LOG_TAG, "ensureDefaultPreferencesInitialization() - Fin");
 	}
 	
 }

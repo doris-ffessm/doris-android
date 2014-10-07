@@ -60,8 +60,8 @@ public class GestionPhotoDiskService extends IntentService {
 	Photos_Outils photosOutils;
 	
     // compteurs pour affichage dans les notifications et autre progress bar
-    int nbFileToCopy=0;
-    int nbcopiedFiles=0;
+    int nbFilesToCopyOrDelete=0;
+    int nbFilesCopiedOrDeleted=0;
     
  // timer utilisé pour déclencher un refresh que toutes les x mili
     LimitTimer limitTimer = new LimitTimer(5000); //5 secondes
@@ -135,10 +135,10 @@ public class GestionPhotoDiskService extends IntentService {
     		// Obligatoire pour que le Max soit initialisé
     		photosOutils.refreshImagesNbInFolder();
     		
-    		nbFileToCopy = photosOutils.getImageCountInAllFolders(ImageLocation.valueOf(source));
+    		nbFilesToCopyOrDelete = photosOutils.getImageCountInAllFolders(ImageLocation.valueOf(source));
     		
-	    	Log.d(LOG_TAG, "onHandleIntent() - nbFileToCopy : "+nbFileToCopy);
-	    	mNotificationHelper.setMaxItemToProcess(""+nbFileToCopy);
+	    	Log.d(LOG_TAG, "onHandleIntent() - nbFilesToCopyOrDelete : "+nbFilesToCopyOrDelete);
+	    	mNotificationHelper.setMaxItemToProcess(""+nbFilesToCopyOrDelete);
     	}
 
 	
@@ -249,6 +249,9 @@ public class GestionPhotoDiskService extends IntentService {
 
 	
 	protected void moveFolderContent(String source, String destination, String subFolderToMove){
+		//Log.d(LOG_TAG, "moveFolderContent() - source : "+source );
+		//Log.d(LOG_TAG, "moveFolderContent() - destination : "+destination );
+		//Log.d(LOG_TAG, "moveFolderContent() - subFolderToMove : "+subFolderToMove );
     	File sourceFolder = photosOutils.getFolderFromBaseLocation(
     			ImageLocation.valueOf(source), subFolderToMove
 			);
@@ -258,7 +261,7 @@ public class GestionPhotoDiskService extends IntentService {
 			);
     	
     	try {
-    		Log.d(LOG_TAG, "moveFolderContent() - destFolder : "+destFolder.getCanonicalPath() );
+    		//Log.d(LOG_TAG, "moveFolderContent() - destFolder : "+destFolder.getCanonicalPath() );
 			moveDirectory(sourceFolder, destFolder);
 		} catch (IOException e) {
 			Log.e(LOG_TAG, "Problem copying", e);
@@ -273,12 +276,12 @@ public class GestionPhotoDiskService extends IntentService {
     public void moveDirectory(File sourceLocation , File targetLocation) throws IOException {
 
     	// incrémente le compteur pour affichage de l'avancement
-    	nbcopiedFiles++;
+    	nbFilesCopiedOrDeleted++;
     	
     	if(limitTimer.hasTimerElapsed())	{
-    		Log.d(LOG_TAG, "moveDirectory() - nbcopiedFiles : "+nbcopiedFiles);
+    		Log.d(LOG_TAG, "moveDirectory() - nbFilesCopiedOrDeleted : "+nbFilesCopiedOrDeleted);
     		
-    		mNotificationHelper.progressUpdate(nbcopiedFiles);
+    		mNotificationHelper.progressUpdate(nbFilesCopiedOrDeleted);
     		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
     		
     		Thread.yield();
@@ -310,6 +313,10 @@ public class GestionPhotoDiskService extends IntentService {
 	            throw new IOException("Cannot create dir " + dossierDestination.getAbsolutePath());
 	        }
 
+	    	Log.i(LOG_TAG, "moveDirectory() - sourceLocation : "+ sourceLocation.getAbsolutePath() );
+	    	Log.i(LOG_TAG, "moveDirectory() - dossierDestination : "+ dossierDestination );
+	    	Log.i(LOG_TAG, "moveDirectory() - sourceLocation : "+ sourceLocation.getName() );
+	    	
 	        in = new FileInputStream(sourceLocation);
 	        out = new FileOutputStream( new File( dossierDestination ,sourceLocation.getName() ) );
 
@@ -345,22 +352,21 @@ public class GestionPhotoDiskService extends IntentService {
     	clearFolder(sourceFolder);
     }
     
-    public int clearFolder(File inFolder){
+    public void clearFolder(File inFolder){
     	
-		int deletedFiles = 0;
 	    if (inFolder!= null && inFolder.isDirectory()) {
 	        try {
 	            for (File child:inFolder.listFiles()) {
 
 	                //first delete subdirectories recursively
 	                if (child.isDirectory()) {
-	                    deletedFiles += clearFolder(child);
+	                    clearFolder(child);
 	                }
 
 	                //then delete the files and subdirectories in this dir
 	                //only empty directories can be deleted, so subdirs have been done first
 	                if (child.delete()) {
-	                	deletedFiles++;
+	                	nbFilesCopiedOrDeleted++;
                     }
 	            }
 	        }
@@ -371,9 +377,9 @@ public class GestionPhotoDiskService extends IntentService {
 
 	    
 	    if(limitTimer.hasTimerElapsed())	{
-		    Log.d(LOG_TAG, "clearFolder() - Fichiers effacés : "+deletedFiles);
+		    Log.d(LOG_TAG, "clearFolder() - Fichiers effacés : "+nbFilesCopiedOrDeleted);
     		
-    		//mNotificationHelper.progressUpdate(nbcopiedFiles);
+    		mNotificationHelper.progressUpdate(nbFilesCopiedOrDeleted);
     		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
     		
     		Thread.yield();
@@ -383,7 +389,6 @@ public class GestionPhotoDiskService extends IntentService {
     			Log.e(LOG_TAG, "Problem pause", e);
     		}
     	} 
-	    return deletedFiles;
 	}
     
     

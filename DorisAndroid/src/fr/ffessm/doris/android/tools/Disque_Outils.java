@@ -122,14 +122,26 @@ public class Disque_Outils {
 		// à l'ancienne manière.
 		// Si on a moins de 62 (26 * 2 + 10) fichiers on peut supposer que ce sont des dossiers.
 		// De toutes les façons ça ira vite avec si peu de fichiers
-		if (inFolder.list().length > 100) return (int) inFolder.list().length;
+		try {
 			
+			if (inFolder.list().length > 100) return (int) inFolder.list().length;
+		
+		} catch(Exception e) {
+        	Log.e(LOG_TAG, String.format("Le dossier n'existe pas : error %s", e.getMessage()));
+		}
+		
 		for (File child:inFolder.listFiles()) {
-			if (child.isDirectory()) {
-				nbFiles += child.list().length;
-            } else {
-            	nbFiles++;
-            }
+			try {
+			
+				if (child.isDirectory()) {
+					if (child.exists()) nbFiles += child.list().length;
+	            } else {
+	            	nbFiles++;
+	            }
+				
+			} catch(Exception e) {
+	        	Log.e(LOG_TAG, String.format("Le dossier n'existe pas : error %s", e.getMessage()));
+			}
 		}
 		
 		return nbFiles;

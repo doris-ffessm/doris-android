@@ -176,6 +176,8 @@ public class Photos_Outils {
 			}
 		case APP_INTERNAL: 
 		default:
+			//Log.d(LOG_TAG, "getFolderFromPreferedLocation() : "+ context.getDir( "" , Context.MODE_PRIVATE));
+			//Log.d(LOG_TAG, "getFolderFromPreferedLocation() : "+ context.getDir( requestedSubFolder , Context.MODE_PRIVATE));
 			return context.getDir( requestedSubFolder , Context.MODE_PRIVATE);
 		}
 	}
@@ -276,24 +278,24 @@ public class Photos_Outils {
 	}
 	
 	public boolean isAvailableInFolderPhoto(String inPhotoURL, ImageType inImageType){
-		if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - inPhotoURL : "+ inPhotoURL );
+		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - inPhotoURL : "+ inPhotoURL );
 		
 		File imageFolder = getImageFolderInPreferedLocation(inImageType);
 
-		if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - imageFolder : "+ imageFolder.toString() );
-		if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - imageFolder : "+ imageFolder.exists() );
+		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - imageFolder : "+ imageFolder.toString() );
+		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - imageFolder : "+ imageFolder.exists() );
 		
 		if(!inPhotoURL.isEmpty()){
 			
 			if (new File(imageFolder, inPhotoURL).exists()) return true;
 			
-			if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - getSousDossierPhoto : "+ getSousDossierPhoto(imageFolder, inPhotoURL) );
-			if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - getSousDossierPhoto : "+ getSousDossierPhoto(imageFolder, inPhotoURL).exists() );
+			//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - getSousDossierPhoto : "+ getSousDossierPhoto(imageFolder, inPhotoURL) );
+			//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - getSousDossierPhoto : "+ getSousDossierPhoto(imageFolder, inPhotoURL).exists() );
 			File test = new File(
 					getSousDossierPhoto(imageFolder, inPhotoURL),
 					inPhotoURL);
-			if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - test : "+ test.getAbsolutePath() );
-			if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - test.exists() : "+ test.exists() );
+			//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - test : "+ test.getAbsolutePath() );
+			//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - test.exists() : "+ test.exists() );
 			
 			if (new File(
 						getSousDossierPhoto(imageFolder, inPhotoURL),
@@ -301,7 +303,7 @@ public class Photos_Outils {
 					.exists()
 				) return true;
 		}
-		if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - return false;");
+		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - return false;");
 		return false;
 	}
 	
