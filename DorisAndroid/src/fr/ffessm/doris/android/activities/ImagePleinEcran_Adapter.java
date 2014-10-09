@@ -260,8 +260,9 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     		if (thisTime - lastTouchTime < 250) {
     			// Double Click on affiche la Description de l'image
     			
-        		String texteAff = "Double Click - j'aurais aimé zommer x2 (comme Google Photo)";
-        		Toast.makeText(_activity, texteAff, Toast.LENGTH_LONG).show();
+    			// TODO :
+        		//String texteAff = "Double Click - j'aurais aimé zommer x2 (comme Google Photo)";
+        		//Toast.makeText(_activity, texteAff, Toast.LENGTH_LONG).show();
         		
         		lastTouchTime = -1;
     		} else if (lastTouchTime != -1){

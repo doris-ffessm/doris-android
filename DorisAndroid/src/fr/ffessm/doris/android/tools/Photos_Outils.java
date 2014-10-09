@@ -321,17 +321,7 @@ public class Photos_Outils {
 		return null;
 	}
 
-	public HashSet<String> getAllPhotosAvailableZZZZZZ(ImageType inImageType){
-		HashSet<String> hsPhotosAvailable = new HashSet<String>();
-		File imageFolder = getImageFolderInPreferedLocation(inImageType);
-		
-		if (! imageFolder.exists() ) return hsPhotosAvailable;
-		
-		for (File file : imageFolder.listFiles()) {
-			hsPhotosAvailable.add(file.getName());
-		}
-		return hsPhotosAvailable;
-	}
+
 	public HashSet<String> getAllPhotosAvailable(ImageType inImageType){
 		return getAllFilesAvailable(getImageFolderInPreferedLocation(inImageType));
 	}
