@@ -349,14 +349,19 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
  					switch(fZoneGeo.getZoneGeoKind()){
  					case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
  						param = paramOutils.getStringNameParam(R.string.pref_key_mode_precharg_photo_region_france);
+ 						break;
  					case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE :
  						param = paramOutils.getStringNameParam(R.string.pref_key_mode_precharg_photo_region_eaudouce);
+ 						break;
  					case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
  						param = paramOutils.getStringNameParam(R.string.pref_key_mode_precharg_photo_region_indopac);
+ 						break;
  					case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
  						param = paramOutils.getStringNameParam(R.string.pref_key_mode_precharg_photo_region_caraibes);
+ 						break;
  					case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
  						param = paramOutils.getStringNameParam(R.string.pref_key_mode_precharg_photo_region_atlantno);
+ 						break;
  					default :
  						param = null;
  					}
