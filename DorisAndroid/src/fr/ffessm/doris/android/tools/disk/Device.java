@@ -32,6 +32,7 @@ public abstract class Device  {
 	public final String getMountPoint() { return mMountPoint; }
 	public abstract String getName();
 	public abstract boolean isRemovable();
+	public abstract boolean isEmulated();
 	public abstract boolean isAvailable();
 	public abstract boolean isWriteable();
 

@@ -2,7 +2,12 @@ package fr.ffessm.doris.android.tools.disk;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
+import fr.ffessm.doris.android.tools.disk.StorageHelper.StorageVolume;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -169,7 +174,7 @@ import android.util.Log;
 
 
 public class DiskEnvironment {
-	private static final String TAG = "Environment2";
+	private static final String LOG_TAG = DiskEnvironment.class.getSimpleName();
 	private static final boolean DEBUG = true;
 	
 	private static ArrayList<DeviceDiv> mDeviceList = null;
@@ -180,7 +185,7 @@ public class DiskEnvironment {
 	
 	public final static String PATH_PREFIX = "/Android/data/";
 	static {
-	rescanDevices();
+		rescanDevices();
 	}
 	
 	
@@ -191,7 +196,10 @@ public class DiskEnvironment {
 	* false wenn nicht eingelegt oder kein Slot vorhanden
 	*/
 	public static boolean isSecondaryExternalStorageAvailable() {
-	return mSecondary!=null && mSecondary.isAvailable();
+		Log.d(LOG_TAG, "isSecondaryExternalStorageAvailable() - mSecondary : "+mSecondary);
+		if( mSecondary!=null) Log.d(LOG_TAG, "isSecondaryExternalStorageAvailable() - mSecondary : "+mSecondary.getName()+" isAvailable "+mSecondary.isAvailable() + " mount " +mSecondary.getMountPoint());
+		Log.d(LOG_TAG, "isSecondaryExternalStorageAvailable() - getExternalStorageState "+ Environment.getExternalStorageState());
+		return mSecondary!=null && mSecondary.isAvailable();
 	}
 	
 	
@@ -234,8 +242,8 @@ public class DiskEnvironment {
 	* @see #isSecondaryExternalStorageAvailable()
 	*/
 	public static String getSecondaryExternalStorageState() throws NoSecondaryStorageException {
-	if (mSecondary==null) throw new NoSecondaryStorageException();
-	return mSecondary.getState();
+		if (mSecondary==null) throw new NoSecondaryStorageException();
+		return mSecondary.getState();
 	}
 	
 	
@@ -260,7 +268,7 @@ public class DiskEnvironment {
 	* Replica of the context method getExternalFilesDir (String) with two differences:
 	* <ol>
 	* <li> You have to pass Context
-	* <li> The directory is not deleted when the app is uninstalled
+	* <li> except for version >= KITKAT, The directory is not deleted when the app is uninstalled
 	* </ Ol>
 	* @param Context of the application
 	* @param s ein String aus Environment.DIRECTORY_xxx, kann aber auch
@@ -268,10 +276,15 @@ public class DiskEnvironment {
 	* @return das Verzeichnis. Wird angelegt, wenn man Schreibzugriff hat
 	* @throws NoSecondaryStorageException falls keine Zwei-SD vorhanden
 	*/
+	@SuppressLint("NewApi")
 	public static File getSecondaryExternalFilesDir(Context context, String s) throws NoSecondaryStorageException {
-	if (mSecondary==null) throw new NoSecondaryStorageException();
-	if (context==null) throw new IllegalArgumentException("context cannot be null");
-	return mSecondary.getFilesDir(context, s);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			File[] files =context.getExternalFilesDirs(s);
+			if(files.length<2) throw new NoSecondaryStorageException();
+		} 
+		if (mSecondary==null) throw new NoSecondaryStorageException();
+		if (context==null) throw new IllegalArgumentException("context cannot be null");
+		return mSecondary.getFilesDir(context, s);		
 	}
 	
 	
@@ -290,7 +303,7 @@ public class DiskEnvironment {
 	public static File getCardDirectory() {
 	if (isSecondaryExternalStorageAvailable())
 	try {return getSecondaryExternalStorageDirectory();}
-	catch (NoSecondaryStorageException e) {throw new RuntimeException("NoSecondaryException trotz Available"); }
+	catch (NoSecondaryStorageException e) {throw new RuntimeException("NoSecondaryException received even if the storage is declared available"); }
 	else
 	return Environment.getExternalStorageDirectory();
 	}
@@ -298,7 +311,7 @@ public class DiskEnvironment {
 	public static File getCardPublicDirectory(String dir) {
 	if (isSecondaryExternalStorageAvailable())
 	try {return getSecondaryExternalStoragePublicDirectory(dir);}
-	catch (NoSecondaryStorageException e) {throw new RuntimeException("NoSecondaryException trotz Available"); }
+	catch (NoSecondaryStorageException e) {throw new RuntimeException("NoSecondaryException received even if the storage is declared available"); }
 	else
 	return mPrimary.getPublicDirectory(dir);
 	}
@@ -306,7 +319,7 @@ public class DiskEnvironment {
 	public static String getCardState() {
 	if (isSecondaryExternalStorageAvailable())
 	try {return getSecondaryExternalStorageState();}
-	catch (NoSecondaryStorageException e) {throw new RuntimeException("NoSecondaryException trotz Available"); }
+	catch (NoSecondaryStorageException e) {throw new RuntimeException("NoSecondaryException received even if the storage is declared available"); }
 	else
 	return Environment.getExternalStorageState();
 	}
@@ -314,7 +327,7 @@ public class DiskEnvironment {
 	public static File getCardCacheDir(Context ctx) {
 	if (isSecondaryExternalStorageAvailable())
 	try {return getSecondaryExternalCacheDir(ctx);}
-	catch (NoSecondaryStorageException e) {throw new RuntimeException("NoSecondaryException trotz Available"); }
+	catch (NoSecondaryStorageException e) {throw new RuntimeException("NoSecondaryException received even if the storage is declared available"); }
 	else
 	return mPrimary.getCacheDir(ctx);
 	}
@@ -322,7 +335,7 @@ public class DiskEnvironment {
 	public static File getCardFilesDir(Context ctx, String dir) {
 	if (isSecondaryExternalStorageAvailable())
 	try {return getSecondaryExternalFilesDir(ctx, dir);}
-	catch (NoSecondaryStorageException e) {throw new RuntimeException("NoSecondaryException trotz Available"); }
+	catch (NoSecondaryStorageException e) {throw new RuntimeException("NoSecondaryException received even if the storage is declared available"); }
 	else
 	return mPrimary.getFilesDir(ctx, dir);
 	}
@@ -438,7 +451,7 @@ public class DiskEnvironment {
 	if (mDeviceList==null) rescanDevices();
 	BroadcastReceiver br = new BroadcastReceiver() {
 	@Override public void onReceive(Context context, Intent intent) {
-	if (DEBUG) Log.i(TAG, "Storage: "+intent.getAction()+"-"+intent.getData());
+	if (DEBUG) Log.i(LOG_TAG, "Storage: "+intent.getAction()+"-"+intent.getData());
 	updateDevices();
 	if (r!=null) r.run();
 	}
@@ -463,7 +476,7 @@ public class DiskEnvironment {
 	if (mDeviceList==null) rescanDevices();
 	BroadcastReceiver br = new BroadcastReceiver() {
 	@Override public void onReceive(Context context, Intent intent) {
-	if (DEBUG) Log.i(TAG, "Storage: "+intent.getAction()+"-"+intent.getData());
+	if (DEBUG) Log.i(LOG_TAG, "Storage: "+intent.getAction()+"-"+intent.getData());
 	updateDevices();
 	if (r!=null) r.onReceive(context, intent);
 	}
@@ -496,41 +509,74 @@ public class DiskEnvironment {
 	*/
 	@SuppressLint("NewApi")
 	public static void rescanDevices() {
-	mDeviceList = new ArrayList<DeviceDiv>(10);
-	mPrimary = new DeviceExternal();
-	
-	// vold.fstab lesen; TODO bei Misserfolg eine andere Methode
-	if (!scanVold("vold.fstab")) scanVold("vold.conf");
-	
-	     // zeigen /mnt/sdcard und /data auf denselben Speicher?
-	     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-	     mExternalEmulated = Environment.isExternalStorageEmulated();
-	     } else {
-	     // vor Honeycom gab es den unified memory noch nicht
-	     mExternalEmulated = false;
-	     }
-	
-	// Pfad zur zweiten SD-Karte suchen; bisher nur Methode 1 implementiert
-	// Methode 1: einfach der erste Eintrag in vold.fstab, ggf. um ein /mnt/sdcard-Doppel bereinigt
-	// Methode 2: das erste mit "sd", falls nicht vorhanden das erste mit "ext"
-	// Methode 3: das erste verfügbare
-	if (mDeviceList.size()==0) {
-	mSecondary = null;
-	// TODO Geräte mit interner SD und Android 2 wie Nexus S
-	// if (nexus) mPrimary.setRemovable(false);
-	} else {
-	mSecondary = mDeviceList.get(0);
-	if (mSecondary.getName().contains("usb")) {
-	// z.B. HTC One X+
-	mSecondary = null;
-	} else {
-	// jau, SD gefunden
-	mSecondary.setName("SD-Card");
-	// Hack
-	if (mPrimary.isRemovable()) Log.w(TAG, "isExternStorageRemovable overwrite (secondary sd found) auf false");
-	mPrimary.setRemovable(false);
-	}
-	}
+		
+		
+		mDeviceList = new ArrayList<DeviceDiv>(10);
+		mPrimary = new DeviceExternal();
+		
+		// vold.fstab lesen; TODO bei Misserfolg eine andere Methode
+		if (!scanVold("vold.fstab")) scanVold("vold.conf");
+		
+	    // zeigen /mnt/sdcard und /data auf denselben Speicher?
+	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+	    	 mExternalEmulated = Environment.isExternalStorageEmulated();
+	    } else {
+		     // vor Honeycom gab es den unified memory noch nicht
+		     mExternalEmulated = false;
+	    }
+		
+	    // search path to the second SD card; been implemented only method 1
+	    // Method 1: just the first entry in vold.fstab, possibly a mnt / / sdcard double-adjusted
+	    // Method 2: the first with "sd", if not available the first with "ext"
+	    // Method 3: the first available
+		if (mDeviceList.size()==0) {
+			mSecondary = null;
+			// TODO Geräte mit interner SD und Android 2 wie Nexus S
+			// if (nexus) mPrimary.setRemovable(false);
+		} else {
+			mSecondary = mDeviceList.get(0);
+			if (mSecondary.getName().contains("usb")) {
+				// z.B. HTC One X+
+				mSecondary = null;
+			} else {
+				// jau, SD gefunden
+				mSecondary.setName("SD-Card");
+				// Hack
+				if (mPrimary.isRemovable()) Log.w(LOG_TAG, "isExternStorageRemovable overwrite (secondary sd found) auf false");
+				mPrimary.setRemovable(false);
+			}
+		}
+		
+		// if not valid, try the alternat method to find the mount point
+		if(mSecondary != null && !mSecondary.isAvailable()){
+			// check with alternate method
+			Log.d(LOG_TAG, "rescanDevices() - mSecondary not available trying alternate method");
+			
+			
+			
+			List<StorageVolume> listStorages = StorageHelper.getStorages(false);
+			for(StorageVolume storage : listStorages){
+				Log.d(LOG_TAG, "rescanDevices() - StorageVolume "+storage.toString());
+				if(storage.isRemovable() && !storage.isEmulated()){
+				    try {
+					SimpleStringSplitter sp = new SimpleStringSplitter(' ');
+				     sp.setString(storage.fileSystem+" "+storage.file.getCanonicalPath());
+						
+					
+						 Log.d(LOG_TAG, "rescanDevices() - trying new storage "+storage.fileSystem+" "+storage.file.getCanonicalPath()+" "+storage.device);
+						 
+						 DeviceDiv d = new DeviceDiv(sp);
+						 mSecondary = d;
+						 
+						 
+						 
+				    } catch (IOException e) {
+						Log.e(LOG_TAG, e.getMessage(), e);
+					}
+				}
+			}
+		}
+		
 	}
 	
 	
@@ -575,7 +621,7 @@ public class DiskEnvironment {
 	         f = sp.next();
 	         if (f.contains("nonremovable")) {
 	         mPrimary.setRemovable(false);
-	         Log.w(TAG, "isExternStorageRemovable overwrite ('nonremovable') auf false");
+	         Log.w(LOG_TAG, "isExternStorageRemovable overwrite ('nonremovable') auf false");
 	         }
 	         }
 	         prefixScan = false;
@@ -593,24 +639,24 @@ public class DiskEnvironment {
 	         f = sp.next();
 	         if ("disable".equals(f)) {
 	         mPrimary.setRemovable(false);
-	         Log.w(TAG, "isExternStorageRemovable overwrite ('discard=disable') auf false");
+	         Log.w(LOG_TAG, "isExternStorageRemovable overwrite ('discard=disable') auf false");
 	         } else if ("enable".equals(f)) {
 	         // ha, denkste... bisher habe ich den Eintrag nur bei zwei Handys gefunden, (Galaxy Note, Galaxy Mini 2), und
 	         // da stimmte er *nicht*, sondern die Karten waren nicht herausnehmbar.
 	         // mPrimary.mRemovable = true;
-	         Log.w(TAG, "isExternStorageRemovable overwrite overwrite ('discard=enable'), bleibt auf "+mPrimary.isRemovable());
+	         Log.w(LOG_TAG, "isExternStorageRemovable overwrite overwrite ('discard=enable'), bleibt auf "+mPrimary.isRemovable());
 	         } else
-	         Log.w(TAG, "disable-Eintrag unverständlich: "+f);
+	         Log.w(LOG_TAG, "disable-Eintrag unverständlich: "+f);
 	         }
 	        
 	         }
 	     s = buf.readLine();
 	     }
 	     buf.close();
-	     Log.v(TAG, name+" gelesen; Geräte gefunden: "+mDeviceList.size());
+	     Log.v(LOG_TAG, name+" gelesen; Geräte gefunden: "+mDeviceList.size());
 	     return true;
 	     } catch (Exception e) {
-	     Log.e(TAG, "kann "+name+" nicht lesen: "+e.getMessage());
+	     Log.e(LOG_TAG, "kann "+name+" nicht lesen: "+e.getMessage());
 	     return false;
 	     }
 	}

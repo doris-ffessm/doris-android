@@ -2,6 +2,8 @@ package fr.ffessm.doris.android.tools.disk;
 
 import java.io.File;
 
+import fr.ffessm.doris.android.tools.Textes_Outils;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -24,7 +26,8 @@ import android.os.Environment;
  *
  */
 class DeviceExternal extends Device {
-	private boolean mRemovable; 
+	private boolean mRemovable;
+	private boolean mEmulated = false;
 	private String mState;
 	
 	/**
@@ -41,11 +44,18 @@ class DeviceExternal extends Device {
 		File f = Environment.getExternalStorageDirectory();
 		mMountPoint = f.getAbsolutePath();
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) 
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
     		setRemovable(Environment.isExternalStorageRemovable()); // Gingerbread weiß es genau
-		else 
+		}
+		else {
 			setRemovable(true); // Default ist, dass eine SD-Karte rausgenommen werden kann
-		
+		}
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			mEmulated = Environment.isExternalStorageEmulated();
+		} else {
+			// utilise le nom du point d emontage pour avoir une idee s'il est emule ou pas
+			mEmulated = Textes_Outils.containsIgnoreCase(mMountPoint, "emulated");
+		}
 		updateState();
 	}
 
@@ -67,6 +77,11 @@ class DeviceExternal extends Device {
 	public boolean isRemovable() { return mRemovable; }
 
 	protected final void setRemovable(boolean remove) { mRemovable = remove; }
+	
+
+	@Override
+	public boolean isEmulated() { return mEmulated; }
+	protected final void setEmulated(boolean emulated) { mEmulated = emulated; }
 
 	@Override
 	public boolean isAvailable() {

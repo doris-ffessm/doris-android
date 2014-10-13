@@ -95,6 +95,31 @@ public class Textes_Outils {
 	    return texte;
 	}    
 	
+	/**
+     * Checks ifString contains a search String irrespective of case, handling.
+     * Case-insensitivity is defined as by
+     * {@link String#equalsIgnoreCase(String)}.
+     * 
+     * @param str
+     *            the String to check, may be null
+     * @param searchStr
+     *            the String to find, may be null
+     * @return true if the String contains the search String irrespective of
+     *         case or false if not or {@code null} string input
+     */
+    public static boolean containsIgnoreCase(final String str, final String searchStr) {
+        if (str == null || searchStr == null) {
+            return false;
+        }
+        final int len = searchStr.length();
+        final int max = str.length() - len;
+        for (int i = 0; i <= max; i++) {
+            if (str.regionMatches(true, i, searchStr, 0, len)) {
+                return true;
+            }
+        }
+        return false;
+    }
 	
     public static class TextSpan {
     	

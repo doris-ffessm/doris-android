@@ -118,6 +118,8 @@ import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
+import fr.ffessm.doris.android.tools.disk.StorageHelper;
+import fr.ffessm.doris.android.tools.disk.StorageHelper.StorageVolume;
 //End of user code
 public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 //Start of user code additional implements EtatModeHorsLigne_CustomViewActivity
@@ -667,10 +669,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     
     private void refreshDiskDisponible() {
 		// Quels emplacements sont disponibles
-		carteInterneDispo = false;
-		if (! disqueOutils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
-				disqueOutils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) ) )
-			carteInterneDispo = true;
+		carteInterneDispo = !DiskEnvironment.getPrimaryExternalStorage().isEmulated();
 		//Log.d(LOG_TAG, "createGestionDisk() - carteInterneDispo : "+carteInterneDispo);
 		
 		carteExterneDispo = DiskEnvironment.isSecondaryExternalStorageAvailable();
@@ -854,9 +853,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		//		+DiskEnvironment.getInternalStorage().getSize().first+"-"+DiskEnvironment.getInternalStorage().getSize().second+"\n");
 		
 		// Disque primaire (Carte SD Interne dans les paramètres)
-		if ( !disqueOutils.identifiantPartition(DiskEnvironment.getInternalStorage()).equals(
-				disqueOutils.identifiantPartition(DiskEnvironment.getPrimaryExternalStorage()) )
-				) {
+		if ( !DiskEnvironment.getPrimaryExternalStorage().isEmulated()) {
 			//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Disque primaire (Carte SD Interne)");
 			
 			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_primary_libelle)+" :\n\t");
@@ -866,6 +863,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			//etatDiskStringBuilder.append(DiskEnvironment.getPrimaryExternalStorage().getFile().getAbsolutePath()+"\n");
 			//etatDiskStringBuilder.append("'Hash' pour vérifier si Carte SD Interne != Stockage interne : "
 			//		+DiskEnvironment.getPrimaryExternalStorage().getSize().first+"-"+DiskEnvironment.getPrimaryExternalStorage().getSize().second+"\n");
+		}
+			
+		for(StorageVolume store : StorageHelper.getStorages(true)){
+			Log.d(LOG_TAG, "refreshUsedDisk() - StorageVolume "+store.toString());
 		}
 		
 		// Carte SD externe (nommée amovible)
@@ -878,6 +879,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().first)+" / ");
 				etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().second)+"\n");
 				//etatDiskStringBuilder.append(DiskEnvironment.getSecondaryExternalStorage().getFile().getAbsolutePath()+"\n");
+				
 			} catch (NoSecondaryStorageException e) {
 				etatDiskStringBuilder.append(" not Available");
 			}
