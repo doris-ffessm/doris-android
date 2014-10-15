@@ -71,5 +71,10 @@ class DeviceIntern extends Device {
 	@Override
 	public String getState() { return Environment.MEDIA_MOUNTED; }
 
+	@Override
+	public boolean isEmulated() {
+		return false;
+	}
+
 }
 

@@ -170,7 +170,8 @@ public class Photos_Outils {
 			return DiskEnvironment.getPrimaryExternalStorage().getFilesDir(context, requestedSubFolder);
 		case SECONDARY:
 			try {
-				return DiskEnvironment.getSecondaryExternalStorage().getFilesDir(context, requestedSubFolder);
+				return DiskEnvironment.getSecondaryExternalFilesDir(context, requestedSubFolder);
+				//return DiskEnvironment.getSecondaryExternalStorage().getFilesDir(context, requestedSubFolder);
 			} catch (NoSecondaryStorageException e) {
 				return context.getDir( requestedSubFolder , Context.MODE_PRIVATE);
 			}
