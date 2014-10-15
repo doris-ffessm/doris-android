@@ -154,6 +154,7 @@ public class AffichageMessageHTML {
 	    	        
     	    		Bundle b = new Bundle();
 	    	        b.putInt("participantId", entriesDao.queryForEq("numeroParticipant", Integer.valueOf( inUrl.replace("participant://", "") ) ).get(0).getId() );
+	    	        ormLiteDBHelper.getParticipantDao().clearObjectCache();
 	    	        
 	    	        toParticipantView.putExtras(b);
 	    			context.startActivity(toParticipantView);

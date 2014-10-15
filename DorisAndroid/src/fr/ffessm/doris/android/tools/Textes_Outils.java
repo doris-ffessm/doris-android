@@ -405,6 +405,7 @@ public class Textes_Outils {
 			                OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(context);
 			                RuntimeExceptionDao<Fiche, Integer> entriesDao = ormLiteDBHelper.getFicheDao();
 			                bundle.putInt("ficheId", entriesDao.queryForEq("numeroFiche", Integer.valueOf(ts.info)).get(0).getId() );
+			                ormLiteDBHelper.close();
 			                
 			        		toDetailView.putExtras(bundle);
 			        		context.startActivity(toDetailView);
@@ -492,7 +493,7 @@ public class Textes_Outils {
 							} catch (SQLException e) {
 								e.printStackTrace();
 							}
-
+			                ormLiteDBHelper.close();
 			                
 			                if(idDefinition != 0){
 		                    	

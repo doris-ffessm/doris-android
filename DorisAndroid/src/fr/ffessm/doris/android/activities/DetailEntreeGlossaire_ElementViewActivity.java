@@ -119,7 +119,8 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
     	RuntimeExceptionDao<DefinitionGlossaire, Integer> entriesDao = getHelper().getDefinitionGlossaireDao();
 		// Start of user code protectedDetailEntreeGlossaire_ElementViewActivity.refreshScreenData
     	DefinitionGlossaire entry = entriesDao.queryForId(definitionGlossaireId);
-    	entry.setContextDB(getHelper().getDorisDBHelper());
+    	
+    	//entry.setContextDB(getHelper().getDorisDBHelper());
 /*
     	Log.d(LOG_TAG, "refreshScreenData() - id : " + ((Integer)entry.getNumeroDoris()).toString());
     	Log.d(LOG_TAG, "refreshScreenData() - terme : " + entry.getTerme());

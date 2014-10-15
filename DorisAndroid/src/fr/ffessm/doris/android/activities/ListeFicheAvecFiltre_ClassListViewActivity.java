@@ -229,7 +229,19 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
     }
 
 	//Start of user code additional  ListeFicheAvecFiltre_ClassListViewActivity methods
+	@Override
+	protected void onDestroy(){
+		Log.d(LOG_TAG, "onDestroy()");
 	
+		//On vide le cache des infos liées aux fiches
+		getHelper().getFicheDao().clearObjectCache();
+		getHelper().getFiches_DefinitionsGlossaireDao().clearObjectCache();
+		getHelper().getFiches_ZonesGeographiquesDao().clearObjectCache();
+		getHelper().getIntervenantFicheDao().clearObjectCache();
+		getHelper().getPhotoFicheDao().clearObjectCache();
+		
+		super.onDestroy();
+	}
 	//End of user code
 
 	@Override

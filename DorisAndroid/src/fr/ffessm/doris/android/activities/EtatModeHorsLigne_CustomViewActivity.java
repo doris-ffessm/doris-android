@@ -81,6 +81,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
@@ -195,6 +196,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	    getSupportActionBar().setTitle(getContext().getString(R.string.etatmodehorsligne_titre_text));
         
 	    // Avancement Téléchargement Photos
+    	if(listeZoneGeo == null) listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
+    	this.getHelper().getZoneGeographiqueDao().clearObjectCache();
 	    createProgressBarZone();
         
 	    // Images des boutons
@@ -321,7 +324,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
     	
     	// Avancement par Zone
-    	if(listeZoneGeo == null) listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
  			
 		for (ZoneGeographique zoneGeo : listeZoneGeo) {
 			imageZone = fichesOutils.getZoneIconeId(zoneGeo.getZoneGeoKind());
@@ -537,7 +539,12 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     		etatBase.setText(getString(R.string.etatmodehorsligne_etat_base_description_text)+it.next().getDateBase());
     		//sb.append("Date base locale : " + it.next().getDateBase()+"\n");
 		}
- 
+    	try {
+			it.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    	
     	// Mise à jour des Barres d'avancement
     	if (!isMovingPhotos) refreshProgressBarZone();
     	
@@ -573,7 +580,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		//Log.d(LOG_TAG, "refreshScreenData() - zoneTraitee : "+DorisApplicationContext.getInstance().zoneTraitee);
 		if (DorisApplicationContext.getInstance().zoneTraitee == null
 			|| DorisApplicationContext.getInstance().zoneTraitee == ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES ) {
-			if(listeZoneGeo == null) listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
 			for (ZoneGeographique zoneGeo : listeZoneGeo) {
 				updateProgressBarZone(zoneGeo, progressBarZones.get(zoneGeo.getId()));
 			}

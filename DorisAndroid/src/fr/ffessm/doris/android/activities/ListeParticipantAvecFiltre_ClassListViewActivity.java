@@ -139,6 +139,7 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
     		ListView list = (ListView) findViewById(R.id.listeparticipantavecfiltre_listview);
     		list.invalidateViews();
     	}
+    	
 		//End of user code
 		populateIndexBarHashMap();
 	}
@@ -204,7 +205,16 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
     }
 
 	//Start of user code additional  ListeParticipantAvecFiltre_ClassListViewActivity methods
-
+	@Override
+	protected void onDestroy(){
+		Log.d(LOG_TAG, "onDestroy()");
+	
+		//On vide le cache des infos de la Bibliographie
+		getHelper().getParticipantDao().clearObjectCache();
+		
+		
+		super.onDestroy();
+	}
 	//End of user code
 
 	@Override

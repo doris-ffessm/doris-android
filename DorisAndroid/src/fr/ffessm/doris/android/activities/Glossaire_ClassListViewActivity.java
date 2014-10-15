@@ -197,7 +197,16 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
     }
 
 	//Start of user code additional  Glossaire_ClassListViewActivity methods
-
+	@Override
+	protected void onDestroy(){
+		Log.d(LOG_TAG, "onDestroy()");
+	
+		//On vide le cache des infos de la Bibliographie
+		getHelper().getDefinitionGlossaireDao().clearObjectCache();
+		
+		
+		super.onDestroy();
+	}
 	//End of user code
 
 	@Override

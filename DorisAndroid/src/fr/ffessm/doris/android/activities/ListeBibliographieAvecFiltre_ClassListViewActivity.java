@@ -130,6 +130,7 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
 	protected void onResume() {
 		super.onResume();
 		//Start of user code onResume additions ListeBibliographieAvecFiltre_ClassListViewActivity
+		
 		//End of user code
 		populateIndexBarHashMap();
 	}
@@ -195,7 +196,16 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
     }
 
 	//Start of user code additional  ListeBibliographieAvecFiltre_ClassListViewActivity methods
+	 @Override
+	 protected void onDestroy(){
+    	Log.d(LOG_TAG, "onDestroy()");
 
+		//On vide le cache des infos de la Bibliographie
+		getHelper().getEntreeBibliographieDao().clearObjectCache();
+		
+		
+    	super.onDestroy();
+	 }
 	//End of user code
 
 	@Override

@@ -45,6 +45,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import android.content.Context;
@@ -63,10 +64,12 @@ public class Fiches_Outils {
 	private static Context context;
 	
 	private Param_Outils paramOutils;
+	private OrmLiteDBHelper ormLiteDBHelper;
 	
 	public Fiches_Outils(Context context) {
 		Fiches_Outils.context = context;
 		paramOutils = new Param_Outils(context);
+		ormLiteDBHelper = new OrmLiteDBHelper(context);
 	}
 	
 	public enum MajListeFichesType {
@@ -79,18 +82,25 @@ public class Fiches_Outils {
     }
     
     public int getNbFichesZoneGeo(ZoneGeographiqueKind inZoneGeo) {
-    	OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(context);
-        
+    	
+    	int nbFiches = 0;
+    	
     	if (inZoneGeo == ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES){
 			RuntimeExceptionDao<Fiche, Integer> entriesDao = ormLiteDBHelper.getFicheDao();
-			return (int)entriesDao.countOf();
+			nbFiches = (int)entriesDao.countOf();
+			
 	   } else {
 		   RuntimeExceptionDao<Fiches_ZonesGeographiques, Integer> entriesDao = ormLiteDBHelper.getFiches_ZonesGeographiquesDao();
-		   return (int)entriesDao.queryForEq(
+		   nbFiches= (int)entriesDao.queryForEq(
 				   Fiches_ZonesGeographiques.ZONEGEOGRAPHIQUE_ID_FIELD_NAME,
 				   Constants.getNumZoneForUrl(inZoneGeo) ).size();
 	   }
+    	
+    	ormLiteDBHelper.getFicheDao().clearObjectCache();
+    	return nbFiches;
     }
+    
+    
     
 	public MajListeFichesType getMajListeFichesTypeZoneGeo(ZoneGeographiqueKind inZoneGeo){
 		switch(inZoneGeo){

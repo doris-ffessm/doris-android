@@ -824,6 +824,7 @@ public class Photos_Outils {
 		RuntimeExceptionDao<PhotoFiche, Integer> entriesFicheDao = ormLiteDBHelper.getPhotoFicheDao();
 		nbPhotosTotal = (int)entriesFicheDao.countOf();
 		entriesFicheDao = null;
+		ormLiteDBHelper.close();
 		
 		// On calcule le nombre de photos (hors principales) moyen par fiche
 		nbPhotosParFiche = ( nbPhotosTotal - nbFichesTotal ) / nbFichesTotal;

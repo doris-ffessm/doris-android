@@ -63,6 +63,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.GenericRawResults;
 
 import android.preference.PreferenceManager;
@@ -360,6 +361,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 				break;
 			}		
     	}
+
+    	//DaoManager.clearCache();
+    	DaoManager.unregisterDao(dbHelper.getConnectionSource(), dorisDBHelper.photoFicheDao);
+    	
     }
  	    	
     public int telechargementPhotosPrincipalesFiches(List<ZoneGeographique> listeZoneGeo){
@@ -402,6 +407,9 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         		} catch (java.sql.SQLException e) {
         			Log.e(LOG_TAG, e.getMessage(), e);
         		}
+        		
+            	//DaoManager.clearCache();
+            	DaoManager.unregisterDao(dbHelper.getConnectionSource(), dorisDBHelper.photoFicheDao);
         		
 				try {
 					//int nbTelechargements = 0;
@@ -537,6 +545,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	    			Log.e(LOG_TAG, e.getMessage(), e);
 	    		}
 	    		
+	        	//DaoManager.clearCache();
+	        	DaoManager.unregisterDao(dbHelper.getConnectionSource(), dorisDBHelper.fiches_ZonesGeographiquesDao);
+	        	
+	        	
 			    try{
 			    	//int nbTelechargements = 0;
 					for (String[] resultColumns : listePhotos) {
