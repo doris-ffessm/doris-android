@@ -57,7 +57,7 @@ import fr.ffessm.doris.android.datamodel.associations.*;
  */
 public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	
-	public static final String TAG = "OrmLiteDBHelper";
+	public static final String LOG_TAG = "OrmLiteDBHelper";
 	
 	// name of the database file for your application -- change to something appropriate for your app
 	private static final String DATABASE_NAME = "DorisAndroid.db";
@@ -390,6 +390,7 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
      *
      */
 	public DorisDBHelper getDorisDBHelper(){
+		
 		DorisDBHelper helper = new DorisDBHelper();
 		try{
 			helper.ficheDao = getDao(Fiche.class);

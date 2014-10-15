@@ -341,7 +341,11 @@ public class Photos_Outils {
 	
 	
 	
-	
+    private byte buffer[] = new byte[1024];
+	InputStream input;
+    OutputStream output;
+    private int count;
+    
 	public void downloadPhotoFile(String photoUrl, ImageType imageType) throws IOException{
 		downloadPhotoFile(photoUrl, photoUrl, imageType);
 	}
@@ -381,16 +385,15 @@ public class Photos_Outils {
 			        urlConnection.connect();
 		            
 		            // download the file
-		            InputStream input = urlConnection.getInputStream();
+		            input = urlConnection.getInputStream();
 		            Log.d(LOG_TAG, "downloadPhotoFile() : "+fichierImage.getCanonicalPath() );
-		            OutputStream output = new FileOutputStream(fichierImage);
+		            output = new FileOutputStream(fichierImage);
 
-		            byte data[] = new byte[1024];
-		            int count;
-		            while ((count = input.read(data)) != -1) {
-		                output.write(data, 0, count);
+		            while ( ( count = input.read(buffer) ) != -1) {
+		                output.write(buffer, 0, count);
 		            }
 
+		            urlConnection.disconnect();
 		            output.flush();
 		            output.close();
 		            input.close();

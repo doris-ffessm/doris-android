@@ -89,6 +89,8 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     private NotificationHelper mNotificationHelper;
     private OrmLiteDBHelper dbHelper;
     private Context context;
+    private DorisDBHelper dorisDBHelper;
+    
     
     // Start of user code additional attribute declarations TelechargePhotosAsync_BgActivity
     // Permet de ralentir le traitement pour laisser du temps processeur aux autres applications
@@ -140,8 +142,12 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         Log.d(LOG_TAG, "TelechargePhotosAsync_BgActivity() - Fin");
 		// End of user code
         // use application wide helper
+        
+        this.context = context.getApplicationContext();
+        
         this.dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
-		this.context = context.getApplicationContext();
+        this.dorisDBHelper = dbHelper.getDorisDBHelper();
+        
     }
 
     protected void onPreExecute(){
@@ -185,8 +191,6 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	        	return 0;
 	    	}
 	    	
-	    	DorisDBHelper dorisDBHelper = dbHelper.getDorisDBHelper();
-
 	    	
 	    	/* On commence par compter les photos à télécharger pour que les indicateurs d'avancement soient
 	    	 * juste et ergonomique
@@ -199,7 +203,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	    	// zoneGeo : 4 - Faune et flore subaquatiques des Caraïbes
 	    	// zoneGeo : 5 - Faune et flore subaquatiques de l'Atlantique Nord-Ouest
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
-			nbPhotosFichesATelecharger(dorisDBHelper, listeZoneGeo);
+			nbPhotosFichesATelecharger(listeZoneGeo);
 			DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 			
 			
@@ -209,7 +213,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			// Photos déjà sur l'appareil
 	   		photosDejaTelechargees();
 	   		
-			telechargementPhotosPrincipalesFiches(dorisDBHelper, listeZoneGeo);
+			telechargementPhotosPrincipalesFiches(listeZoneGeo);
 			if( this.isCancelled()) return 0;
 			
     		// -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
@@ -218,7 +222,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			// Photos déjà sur l'appareil
 	   		photosDejaTelechargees();
 	   		
-			telechargementPhotosFiches(dorisDBHelper, listeZoneGeo);
+			telechargementPhotosFiches(listeZoneGeo);
 			if( this.isCancelled()) return 0;
 
     		// -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
@@ -228,13 +232,13 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	   		photosDejaTelechargees();
 	   		
 			if (paramOutils.getParamBoolean(R.string.pref_key_mode_precharg_photo_autres, false)) {
-				telechargementPhotosIntervenants(dorisDBHelper);
+				telechargementPhotosIntervenants();
 				if( this.isCancelled()) return 0;
 				
-				telechargementPhotosBibliographie(dorisDBHelper);
+				telechargementPhotosBibliographie();
 				if( this.isCancelled()) return 0;
 				
-				telechargementPhotosGlossaire(dorisDBHelper);
+				telechargementPhotosGlossaire();
 				if( this.isCancelled()) return 0;
 			}
 			
@@ -304,7 +308,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	/* On commence par compter les photos à télécharger pour que les indicateurs d'avancement soient
 	 * juste et ergonomique
 	 */
-    public void nbPhotosFichesATelecharger(DorisDBHelper dorisDBHelper, List<ZoneGeographique> listeZoneGeo) {	
+    public void nbPhotosFichesATelecharger(List<ZoneGeographique> listeZoneGeo) {	
         mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitle_imagesinitial));
         mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_notifText_imagesinitial) );
 		mNotificationHelper.setMaxItemToProcess(""+0);
@@ -358,7 +362,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     	}
     }
  	    	
-    public int telechargementPhotosPrincipalesFiches(DorisDBHelper dorisDBHelper, List<ZoneGeographique> listeZoneGeo){
+    public int telechargementPhotosPrincipalesFiches(List<ZoneGeographique> listeZoneGeo){
 
     	for (ZoneGeographique zoneGeo : listeZoneGeo) {
     		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosPrincipalesFiches - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
@@ -465,7 +469,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 				}
 
     			//Enregistrement du nombre total de photos téléchargée pour afficher avancement
-				// systématiquement donc, i.e. on n'aattend pas les n secondes habituelles
+				// systématiquement donc, i.e. on n'attend pas les n secondes habituelles
 				paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(zoneGeo.getZoneGeoKind(), true), nbPhotosPrinRecuesPourZone);
 				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosPrincipalesFiches - nbPhotosPrincDejaLaPourZone : "+nbPhotosPrinRecuesPourZone );
 				publishProgress( nbPhotosPrinRecuesPourZone );
@@ -481,7 +485,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     	return 0;
     }
 
-    public int telechargementPhotosFiches(DorisDBHelper dorisDBHelper, List<ZoneGeographique> listeZoneGeo){
+    public int telechargementPhotosFiches(List<ZoneGeographique> listeZoneGeo){
 
     	GenericRawResults<String[]> rawResults = null;
 		Photos_Outils.ImageType imageTypeImage;
@@ -618,7 +622,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	}
     
 
-    public int telechargementPhotosIntervenants(DorisDBHelper dorisDBHelper){
+    public int telechargementPhotosIntervenants(){
     	
     	GenericRawResults<String[]> rawResults = null;
 		
@@ -697,7 +701,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 		return 0;
 	}
     
-    public int telechargementPhotosBibliographie(DorisDBHelper dorisDBHelper){
+    public int telechargementPhotosBibliographie(){
     	
     	GenericRawResults<String[]> rawResults = null;
 		
@@ -776,7 +780,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 		return 0;
 	}
 
-    public int telechargementPhotosGlossaire(DorisDBHelper dorisDBHelper){
+    public int telechargementPhotosGlossaire(){
 	
 		GenericRawResults<String[]> rawResults = null;
 		

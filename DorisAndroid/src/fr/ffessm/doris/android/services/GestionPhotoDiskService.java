@@ -269,8 +269,8 @@ public class GestionPhotoDiskService extends IntentService {
     }
     
 	byte[] buf = new byte[1024];
-	InputStream in;
-    OutputStream out;
+	InputStream input;
+    OutputStream output;
     int len;
     
     public void moveDirectory(File sourceLocation , File targetLocation) throws IOException {
@@ -317,18 +317,18 @@ public class GestionPhotoDiskService extends IntentService {
 	    	Log.i(LOG_TAG, "moveDirectory() - dossierDestination : "+ dossierDestination );
 	    	Log.i(LOG_TAG, "moveDirectory() - sourceLocation : "+ sourceLocation.getName() );
 	    	
-	        in = new FileInputStream(sourceLocation);
-	        out = new FileOutputStream( new File( dossierDestination ,sourceLocation.getName() ) );
+	    	input = new FileInputStream(sourceLocation);
+	        output = new FileOutputStream( new File( dossierDestination ,sourceLocation.getName() ) );
 
 	        // Copy the bits from instream to outstream
 	        //byte[] buf = new byte[1024];
 
-	        while ((len = in.read(buf)) > 0) {
-	            out.write(buf, 0, len);
+	        while ((len = input.read(buf)) > 0) {
+	        	output.write(buf, 0, len);
 	        }
-	        in.close();
-	        out.close();
-	        
+	        output.flush();
+	        output.close();
+	        input.close();
 	    }
 	    sourceLocation.delete();
 	}
