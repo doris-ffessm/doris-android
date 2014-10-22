@@ -95,6 +95,7 @@ import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.Textes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
@@ -122,6 +123,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	// additional attributes
 
 	protected Groupe filtreGroupe;
+	protected Photos_Outils photosOutils;
+	protected Reseau_Outils reseauOutils;
+	
 	// vide signifie que l'on accepte tout
 	protected ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
 	int filteredZoneGeoId = -1;
@@ -148,6 +152,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	protected void updateList(){
 		// Start of user code protected ListeFicheAvecFiltre_Adapter updateList
 		// TODO find a way to query in a lazier way
+		
+		photosOutils = new Photos_Outils(context);
+		reseauOutils  = new Reseau_Outils(context);
 		
 		String ordreTri = prefs.getString(context.getString(R.string.pref_key_accueil_fiches_ordre), "Commun");
 		String orderByClause = "";
@@ -320,10 +327,10 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
     		//Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
     		
-    		Photos_Outils photosOutils = new Photos_Outils(context);
+    		
         	if(photosOutils.isAvailableInFolderPhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
         		try {
-        			//Log.d(LOG_TAG, "from disk : "+photoPrincipale.getCleURL());
+        			Log.d(LOG_TAG, "from disk : "+photoPrincipale.getCleURL());
 					Picasso.with(context)
 						.load(photosOutils.getPhotoFile(photoPrincipale.getCleURL(), ImageType.VIGNETTE))
 						.resize(defaultIconSize, defaultIconSize)
@@ -335,16 +342,23 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				}
         	}
         	else{
-        		// pas préchargée en local pour l'instant, cherche sur internet
-        		//Log.d(LOG_TAG, "from internet : "+photoPrincipale.getCleURL());
+        		// pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
         		
-        		Picasso.with(context)
-        			.load(Constants.VIGNETTE_BASE_URL+"/"+photoPrincipale.getCleURL())
-					.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
-					.resize(defaultIconSize, defaultIconSize)
-					.centerInside()
-					.error(R.drawable.doris_icone_doris_large_pas_connecte)
-        			.into(ivIcon);
+        		if (reseauOutils.isTelechargementsModeConnectePossible()) {
+
+	        		//Log.d(LOG_TAG, "from internet : "+photoPrincipale.getCleURL());
+	        		
+	        		Picasso.with(context)
+	        			.load(Constants.VIGNETTE_BASE_URL+"/"+photoPrincipale.getCleURL())
+						.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
+						.resize(defaultIconSize, defaultIconSize)
+						.centerInside()
+						.error(R.drawable.doris_icone_doris_large_pas_connecte)
+	        			.into(ivIcon);
+        		} else {
+        			// remet l'icone de base
+                	ivIcon.setImageResource(R.drawable.app_ic_launcher);
+        		}
         	}
         }
         else{

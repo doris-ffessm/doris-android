@@ -120,6 +120,7 @@ import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.Textes_Outils;
 // End of user code
 
@@ -140,6 +141,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	
 	final Textes_Outils textesOutils = new Textes_Outils(context);
 	final Param_Outils paramOutils = new Param_Outils(context);
+	final Reseau_Outils reseauOutils = new Reseau_Outils(context);
 	
 	protected int ficheNumero;
 	
@@ -790,14 +792,20 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			}
     	}
     	else{
-    		// pas préchargée en local pour l'instant, cherche sur internet
-    		Picasso.with(this)
-    			.load(Constants.VIGNETTE_BASE_URL+"/"+photoFiche.getCleURL())
-				.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
-				.error(R.drawable.doris_icone_doris_large_pas_connecte)
-				.fit()
-				.centerInside()
-    			.into(imageView);
+    		// pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
+    		
+    		if (reseauOutils.isTelechargementsModeConnectePossible()) {
+
+	    		Picasso.with(this)
+	    			.load(Constants.VIGNETTE_BASE_URL+"/"+photoFiche.getCleURL())
+					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
+					.error(R.drawable.doris_icone_doris_large_pas_connecte)
+					.fit()
+					.centerInside()
+	    			.into(imageView);
+    		} else {
+    			imageView.setImageResource(R.drawable.doris_icone_doris_large_pas_connecte);
+    		}
     	}
         
         layout.addView(imageView);

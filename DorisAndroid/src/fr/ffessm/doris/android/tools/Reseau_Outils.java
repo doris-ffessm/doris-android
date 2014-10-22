@@ -105,9 +105,11 @@ public class Reseau_Outils {
 	private static final String LOG_TAG = Reseau_Outils.class.getCanonicalName();
 	
 	private Context context;
+	private Param_Outils paramOutils;
 	
 	public Reseau_Outils(Context context){
 		this.context = context;
+		this.paramOutils = new Param_Outils(context);
 	}
 	
 	public enum ConnectionType {
@@ -138,8 +140,28 @@ public class Reseau_Outils {
 	    }
 	}
 	
+	public boolean isTelechargementsModeConnectePossible() {
 	
-    
+		boolean wifiOnly = paramOutils.getParamBoolean(R.string.pref_key_mode_connecte_wifi_only, true);
+		//Log.d(LOG_TAG, "isTelechargementsModeConnectePossible() - wifiOnly : "+wifiOnly);
+		
+		if ( wifiOnly ) {
+			return (getConnectionType() == Reseau_Outils.ConnectionType.WIFI);
+		} else {
+			return true;
+		}	
+		
+	}
+	
+	public boolean isTelechargementsPrechargPossible() {
+		
+		boolean wifiOnly = paramOutils.getParamBoolean(R.string.pref_key_mode_connecte_wifi_only, true);
+		Log.d(LOG_TAG, "onCreate() - wifiOnly : "+wifiOnly);
+
+		return ( getConnectionType() == Reseau_Outils.ConnectionType.WIFI 
+	    		|| ( getConnectionType() == Reseau_Outils.ConnectionType.GSM && ! wifiOnly) );
+	}
+	
 	/* *********************************************************************
 	 * POUR L'INSTANT ICI, VOIR PLUS TARD POUR EN AVOIR UN COMMUN AVEC PREFECTCH SI POSSIBLE
 	 * ISSU DE DORIS for ANDROID 1
