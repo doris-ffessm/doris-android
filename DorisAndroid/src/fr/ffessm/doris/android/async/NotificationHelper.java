@@ -98,7 +98,7 @@ public class NotificationHelper {
         //create the content which is shown in the notification pulldown
         // Start of user code notification helper additional status message
         CharSequence contentText = "";
-        if (!maxItemToProcess.equals("???")) {
+        if ( !maxItemToProcess.equals("???") && !maxItemToProcess.equals("0") ) {
         	contentText = "0 / "+maxItemToProcess; //Text of the notification in the pull down
         } else {
         	contentText = "";
@@ -141,7 +141,7 @@ public class NotificationHelper {
 
 		// Start of user code notification helper additional status message
     	CharSequence contentText = "";
-        if (!maxItemToProcess.equals("???")) {
+        if ( !maxItemToProcess.equals("???") && !maxItemToProcess.equals("0") ) {
         	contentText = racineTickerText + nbItemsComplete + " / " +maxItemToProcess;
         } else {
         	contentText = racineTickerText;

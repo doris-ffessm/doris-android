@@ -124,8 +124,9 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     	
     	DorisApplicationContext.getInstance().isTelechPhotos = true;
     	
-    	String initialTickerText = context.getString(R.string.bg_notifText_imagesinitial);
 		String notificationTitle = context.getString(R.string.bg_notifTitle_imagesinitial);
+		
+    	String initialTickerText = context.getString(R.string.bg_notifText_imagesinitial);
         mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle,
         		new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 
@@ -212,6 +213,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			// On commence par traiter les photos principales des Fiches
 			
 			// Photos déjà sur l'appareil
+			mNotificationHelper.setContentTitle(context.getString(R.string.bg_notifTitle_imagesinitial));
+		    mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_notifText_rechercheImagesDispo) );
+			mNotificationHelper.setMaxItemToProcess(""+0);
+			
 	   		photosDejaTelechargees();
 	   		
 			telechargementPhotosPrincipalesFiches(listeZoneGeo);
@@ -221,6 +226,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			// -- Puis toutes les autres des Fiches (pas principales) --
 			
 			// Photos déjà sur l'appareil
+			mNotificationHelper.setContentTitle(context.getString(R.string.bg_notifTitle_imagesinitial));
+			mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_notifText_rechercheImagesDispo) );
+			mNotificationHelper.setMaxItemToProcess(""+0);
+			
 	   		photosDejaTelechargees();
 	   		
 			telechargementPhotosFiches(listeZoneGeo);
@@ -228,9 +237,6 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
     		// -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 			// -- Les photos des Intervenants --
-			
-			// Photos déjà sur l'appareil
-	   		photosDejaTelechargees();
 	   		
 			if (paramOutils.getParamBoolean(R.string.pref_key_mode_precharg_photo_autres, false)) {
 				telechargementPhotosIntervenants();
