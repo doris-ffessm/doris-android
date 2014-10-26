@@ -78,8 +78,9 @@ public class GenerationCDDVD {
 	
 	public List<Groupe> listeGroupes;
 	
-	String fichierCDLien = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD;
-	File dossierCD = new File(fichierCDLien + "/" +PrefetchConstants.DOSSIER_HTML);
+	String dossierCD = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CDDVD_MED;
+	String dossierDVD = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CDDVD_HI;
+	//TODO : File dossierCD = new File(fichierCDLien + "/" +PrefetchConstants.DOSSIER_HTML);
 	
 	// Pour debbug creationCD(), transfoHtml()
 	public GenerationCDDVD() {
@@ -128,41 +129,29 @@ public class GenerationCDDVD {
 			}
 		}
 	
-		// Création du dossier CD et DVD
-		log.debug("doMain() - Création du dossier CD");
-		creationCD();
-
-		log.debug("doMain() - transfoHtml");
-		transfoHtml( PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD + "/" );
-
-		//TODO : Création DVD
-
-		
-		// Zip CD si demandé puis effacement du dossier CD
-		if (zipCDDVD) {
-			log.debug("doMain() - zip CD");
-			try { 
-			    ZipOutputStream zipOS = new ZipOutputStream(
-		    		new FileOutputStream(fichierCDLien + ".zip")
-	    		); 
-
-			    prefetchTools.zipDossier(fichierCDLien, zipOS); 
-
-			    zipOS.close(); 
-			} catch(Exception e) { 
-				log.info("Erreur lors du ZIP du CD");
-				e.printStackTrace();
-				System.exit(1);
-			}
+		// Création du dossier CD
+		if( action == ActionKind.CDDVD_MED ){
+			log.debug("doMain() - Création du dossier CD");
+			creationCDDVD( dossierCD );
+	
+			log.debug("doMain() - transfoHtml");
+			transfoHtml( dossierCD + "/" );
 			
-			try {
-				FileUtils.deleteDirectory(dossierCD);
-				log.info("Suppression de : " + dossierCD.getAbsolutePath());
-			} catch (IOException e) {
-				log.info("Problème suppression de : " + dossierCD.getAbsolutePath());
-				e.printStackTrace();
+			if (zipCDDVD) {
+				zipCDDVD(dossierCD);
 			}
-			log.debug("doMain() - Fin zip CD");
+		}
+		// Création DVD
+		if( action == ActionKind.CDDVD_HI ){
+			log.debug("doMain() - Création du dossier DVD");
+			creationCDDVD( dossierDVD );
+	
+			log.debug("doMain() - transfoHtml");
+			transfoHtml( dossierDVD + "/" );
+			
+			if (zipCDDVD) {
+				zipCDDVD(dossierDVD);
+			}
 		}
 	
 	}
@@ -403,40 +392,42 @@ public class GenerationCDDVD {
 	}
 	
 	
-	public void creationCD(){
-		log.debug("creationCD() - Début");
+	public void creationCDDVD(String dossierCDDVDName){
+		log.debug("creationCDDVD() - Début");
 
-		// Création Dossier HTML du CD
-		log.info("Création Dossier HTML du CD");
+		File dossierCDDVD = new File(dossierCDDVDName + "/" +PrefetchConstants.DOSSIER_HTML);
+		
+		// Création Dossier HTML du CD ou du DVD
+		log.info("Création Dossier HTML du CD ou du DVD");
 		
 		String fichierRefLien = PrefetchConstants.DOSSIER_RACINE + "/";
 		
 		File dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_HTML_REF);
 		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
+			FileUtils.copyDirectory(dossierRef, dossierCDDVD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_HTML);
 		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
+			FileUtils.copyDirectory(dossierRef, dossierCDDVD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		// Création Dossier Icones du CD
-		log.info("Création Dossier Icones du CD");
-		dossierCD = new File(fichierCDLien + "/" +PrefetchConstants.SOUSDOSSIER_ICONES);
+		// Création Dossier Icones du CD ou du DVD
+		log.info("Création Dossier Icones du CD ou du DVD");
+		dossierCDDVD = new File(dossierCDDVDName + "/" +PrefetchConstants.SOUSDOSSIER_ICONES);
 		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES_REF+"/"+PrefetchConstants.SOUSDOSSIER_ICONES);
 		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
+			FileUtils.copyDirectory(dossierRef, dossierCDDVD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES+"/"+PrefetchConstants.SOUSDOSSIER_ICONES);
 		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
+			FileUtils.copyDirectory(dossierRef, dossierCDDVD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -445,84 +436,104 @@ public class GenerationCDDVD {
 		// jolies retouchées, on remet ici celles de l'appli.
 		dossierRef = new File(PrefetchConstants.DOSSIER_RES_IMAGES);
 		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
+			FileUtils.copyDirectory(dossierRef, dossierCDDVD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		// Création Dossier Vignettes du CD
-		log.info("Création Dossier Vignettes du CD");
-		dossierCD = new File(fichierCDLien + "/" +PrefetchConstants.SOUSDOSSIER_VIGNETTES);
+		// Création Dossier Vignettes du CD ou du DVD
+		log.info("Création Dossier Vignettes du CD ou du DVD");
+		dossierCDDVD = new File(dossierCDDVDName + "/" +PrefetchConstants.SOUSDOSSIER_VIGNETTES);
 		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES_REF+"/"+PrefetchConstants.SOUSDOSSIER_VIGNETTES);
 		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
+			FileUtils.copyDirectory(dossierRef, dossierCDDVD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES+"/"+PrefetchConstants.SOUSDOSSIER_VIGNETTES);
 		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
+			FileUtils.copyDirectory(dossierRef, dossierCDDVD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		// Création Dossier Images du CD
-		log.info("Création Dossier Images du CD");
-		dossierCD = new File(fichierCDLien + "/" +PrefetchConstants.SOUSDOSSIER_MED_RES);
+		// Création Dossier Images du CD (seulement celles de qualité intermédiaire) ou du DVD
+		log.info("Création Dossier Images du CD ou du DVD");
+		dossierCDDVD = new File(dossierCDDVDName + "/" +PrefetchConstants.SOUSDOSSIER_MED_RES);
 		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES_REF+"/"+PrefetchConstants.SOUSDOSSIER_MED_RES);
 		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
+			FileUtils.copyDirectory(dossierRef, dossierCDDVD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES+"/"+PrefetchConstants.SOUSDOSSIER_MED_RES);
 		try {
-			FileUtils.copyDirectory(dossierRef, dossierCD);
+			FileUtils.copyDirectory(dossierRef, dossierCDDVD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		// Copie du Fichier permettant d'aller directement sur la page d'accueil depuis la racine du CD
+		// Création Dossier Images du DVD (on ajoute celles en qualité maximum)
+		if( action == ActionKind.CDDVD_HI ){
+			log.info("Création Dossier Images du DVD");
+			dossierCDDVD = new File(dossierCDDVDName + "/" +PrefetchConstants.SOUSDOSSIER_HI_RES);
+			dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES_REF+"/"+PrefetchConstants.SOUSDOSSIER_HI_RES);
+			try {
+				FileUtils.copyDirectory(dossierRef, dossierCDDVD);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			dossierRef = new File(fichierRefLien+PrefetchConstants.DOSSIER_IMAGES+"/"+PrefetchConstants.SOUSDOSSIER_HI_RES);
+			try {
+				FileUtils.copyDirectory(dossierRef, dossierCDDVD);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		// Copie du Fichier permettant d'aller directement sur la page d'accueil depuis la racine du CD ou du DVD
 		log.info("Copie du Fichier : Doris_CD.html");
-		dossierCD = new File(fichierCDLien);
+		dossierCDDVD = new File(dossierCDDVDName);
 		File fichierRef = new File(PrefetchConstants.DOSSIER_RES_HTML +"/" +"Doris_CD.html");
 		try {
-			FileUtils.copyFileToDirectory(fichierRef, dossierCD);
+			FileUtils.copyFileToDirectory(fichierRef, dossierCDDVD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		// Copie de la page d'erreur
 		log.info("Copie du Fichier : indisponible_CDDVD.html");
-		dossierCD = new File(fichierCDLien + "/" + PrefetchConstants.DOSSIER_HTML);
+		dossierCDDVD = new File(dossierCDDVDName + "/" + PrefetchConstants.DOSSIER_HTML);
 		fichierRef = new File(PrefetchConstants.DOSSIER_RES_HTML+"/"+"indisponible_CDDVD.html");
 		try {
-			FileUtils.copyFileToDirectory(fichierRef, dossierCD);
+			FileUtils.copyFileToDirectory(fichierRef, dossierCDDVD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		// Copie de l'image du Doris de remplacement
 		log.info("Copie du Fichier : doris_icone_doris_large.png");
-		dossierCD = new File(fichierCDLien + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_ICONES);
+		dossierCDDVD = new File(dossierCDDVDName + "/" + PrefetchConstants.DOSSIER_IMAGES + "/" + PrefetchConstants.SOUSDOSSIER_ICONES);
 		fichierRef = new File(PrefetchConstants.DOSSIER_RES_IMAGES+"/"+"doris_icone_doris_large.png");
 		try {
-			FileUtils.copyFileToDirectory(fichierRef, dossierCD);
+			FileUtils.copyFileToDirectory(fichierRef, dossierCDDVD);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		log.debug("creationCD() - Fin");
+		log.debug("creationCDDVD() - Fin");
 	}
 
 	
 	
-	public void transfoHtml(String fichierCDLien){
+	public void transfoHtml(String dossierCDDVDName){
 		log.debug("transfoHtml() - Début");
 
 		// Modification Fichiers HTML : lien, images
-		File dossierCD = new File(fichierCDLien+PrefetchConstants.DOSSIER_HTML);
-		for (File fichierHtml:dossierCD.listFiles()) {
+		File dossierCDDVD = new File(dossierCDDVDName+PrefetchConstants.DOSSIER_HTML);
+		
+		for (File fichierHtml:dossierCDDVD.listFiles()) {
 			String contenuFichier = prefetchTools.getFichierTxtFromDisk(fichierHtml, FileHtmlKind.AUTRE);
 			
 			contenuFichier = contenuFichier.replace("href=\""+Constants.getSiteUrl(),"href=\"");
@@ -594,7 +605,7 @@ public class GenerationCDDVD {
 					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_MED_RES+lienRegExp.getFichier());
 					break;
 				case HI_RES :
-					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_MED_RES+lienRegExp.getFichier());
+					contenuFichier = contenuFichier.replaceAll(lienRegExp.getUrl(),"../"+PrefetchConstants.SOUSDOSSIER_HI_RES+lienRegExp.getFichier());
 					break;
 				}
 			}
@@ -608,7 +619,7 @@ public class GenerationCDDVD {
 
 		// Les liens entre les pages de Groupes ne pouvaient être réalisé purement avec des expressions régulières
 		// On re-parcourt donc l'ensemble des fichiers contenant groupe dans leur nom.
-		for (File fichierHtml : dossierCD.listFiles()) {
+		for (File fichierHtml : dossierCDDVD.listFiles()) {
 			
 			// Les pages contenant l'arborescence des Groupes : groupes_zone-11.html
 			if (fichierHtml.getName().contains("groupes_zone")){
@@ -691,6 +702,36 @@ public class GenerationCDDVD {
 		}
 		
 		log.debug("transfoHtml() - Fin");
+	}
+	
+	
+	public void zipCDDVD(String dossierCDDVDName){
+		log.debug("zipCDDVD() - Début");
+
+		File dossierCDDVD = new File(dossierCDDVDName);
+	
+		try { 
+		    ZipOutputStream zipOS = new ZipOutputStream(
+	    		new FileOutputStream(dossierCDDVDName + ".zip")
+    		); 
+
+		    prefetchTools.zipDossier(dossierCDDVDName, zipOS); 
+
+		    zipOS.close(); 
+		} catch(Exception e) { 
+			log.info("Erreur lors du ZIP du CD ou du DVD");
+			e.printStackTrace();
+			System.exit(1);
+		}
+		
+		try {
+			FileUtils.deleteDirectory(dossierCDDVD);
+			log.info("Suppression de : " + dossierCDDVD.getAbsolutePath());
+		} catch (IOException e) {
+			log.info("Problème suppression de : " + dossierCDDVD.getAbsolutePath());
+			e.printStackTrace();
+		}
+		log.debug("zipCDDVD() - Fin");
 	}
 	
 	

@@ -76,7 +76,8 @@ public class PrefetchDorisWebSite {
 		INIT,
 		UPDATE,
 		NODWNLD,
-		CDDVD,
+		CDDVD_MED,
+		CDDVD_HI,
 		TEST,
 		DB_TO_ANDROID,
 		DWNLD_TO_REF,
@@ -133,7 +134,7 @@ public class PrefetchDorisWebSite {
 			log.debug("doMain() - Fin TEST");
 			
 		} else if(action == ActionKind.INIT || action == ActionKind.UPDATE || action == ActionKind.NODWNLD
-				|| action == ActionKind.CDDVD ) {
+				|| action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
 			
 			// Vérification, Création, Sauvegarde des dossiers de travail
 			renommageDossiers(action);
@@ -228,7 +229,7 @@ public class PrefetchDorisWebSite {
 				
 				
 				// - - - Génération CD et DVD  - - - 
-				if ( action == ActionKind.CDDVD ) {
+				if ( action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI) {
 					GenerationCDDVD generationCDDVD = new GenerationCDDVD(dbContext, connectionSource, action, zipCDDVD);
 					generationCDDVD.generation();
 				}
@@ -497,7 +498,7 @@ public class PrefetchDorisWebSite {
 			// Permet de Zipper le CD à l'issue de sa génération
 			if ( arg.startsWith("-Z") || arg.startsWith("--zip")) {
 				log.debug("checkArgs() - arg : " + arg);
-				if (action == ActionKind.CDDVD) {
+				if (action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI) {
 					zipCDDVD = true;
 				} else {
 					help();
@@ -537,7 +538,8 @@ public class PrefetchDorisWebSite {
 		System.out.println("  INIT              Toutes les fiches sont retéléchargées sur doris.ffessm.fr et retraitées pour créer la base (images comprises)");
 		System.out.println("  NODWNLD dossier   Pas de téléchargement, travail sur un dossier de référznce (utile en dév.)");
 		System.out.println("  UPDATE            En plus des nouvelles fiches, définitions et intervenants, on retélécharge les fiches qui ont changées de statut");
-		System.out.println("  CDDVD          	Comme UPDATE + Permet de télécharger les photos manquantes et de créer un dossier de la taille d'un CD (images en qualité inter.) et un de la taille d'un DVD (images en qualité max.)");
+		System.out.println("  CDDVD_MED        	Comme UPDATE + Permet de télécharger les photos manquantes et de créer un dossier de la taille d'environ un CD (images en qualité inter.) dans lequel il est possible de naviguer sans connection internet");
+		System.out.println("  CDDVD_HI        	Comme UPDATE + Permet de télécharger les photos manquantes et de créer un dossier avec toutes les images disponibles dans lequel il est possible de naviguer sans connection internet (peut servir de sauvegarde du site)");
 		System.out.println("  TEST          	Pour les développeurs");
 		System.out.println("  DB_TO_ANDROID     Déplace la base du Prefetch vers DorisAndroid");
 		System.out.println("  DWNLD_TO_REF      Déplace fichiers de html vers html_ref et ceux de images vers images_ref");
@@ -570,7 +572,8 @@ public class PrefetchDorisWebSite {
 			// avant d'être recréé vide
 	
 			// Le dossier des fichiers html téléchargés
-			if(inAction == ActionKind.INIT || inAction == ActionKind.UPDATE  || inAction == ActionKind.CDDVD ){
+			if(inAction == ActionKind.INIT || inAction == ActionKind.UPDATE 
+					|| inAction == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ){
 				File dossierHtml = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML);
 				if (dossierHtml.exists()){
 					File dossierHtmlNew = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML +"_"+ suffixe);
@@ -584,7 +587,7 @@ public class PrefetchDorisWebSite {
 			}
 			
 			// Le dossier des images téléchargées
-			if( inAction == ActionKind.CDDVD ){
+			if( inAction == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ){
 				File dossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES);
 				if (dossierImages.exists()){
 					File dossierImagesNew = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES +"_"+ suffixe);
@@ -598,11 +601,11 @@ public class PrefetchDorisWebSite {
 			}
 			
 			// Le dossier du CD ou DVD
-			if ( inAction == ActionKind.CDDVD ) {
+			if ( inAction == ActionKind.CDDVD_MED ) {
 				
-				File dossierCD = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD);
+				File dossierCD = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CDDVD_MED);
 				if (dossierCD.exists()){
-					File dossierCDNew = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD +"_"+ suffixe);
+					File dossierCDNew = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CDDVD_MED +"_"+ suffixe);
 					if(dossierCD.renameTo(dossierCDNew)){
 						log.info("Sauvegarde du dossier CD : " + dossierCDNew.getAbsolutePath());
 					}else{
@@ -610,10 +613,12 @@ public class PrefetchDorisWebSite {
 						System.exit(1);
 					}
 				}
-
-				File dossierDVD = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_DVD);
+			}
+			
+			if ( inAction == ActionKind.CDDVD_HI ) {
+				File dossierDVD = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CDDVD_HI);
 				if (dossierDVD.exists()){
-					File dossierDVDNew = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_DVD +"_"+ suffixe);
+					File dossierDVDNew = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CDDVD_HI +"_"+ suffixe);
 					if(dossierDVD.renameTo(dossierDVDNew)){
 						log.info("Sauvegarde du dossier DVD : " + dossierDVDNew.getAbsolutePath());
 					}else{
@@ -625,7 +630,8 @@ public class PrefetchDorisWebSite {
 			}
 			
 			// Le fichier de la base de données
-			if(inAction == ActionKind.INIT || inAction == ActionKind.UPDATE || inAction == ActionKind.NODWNLD  || inAction == ActionKind.CDDVD ) {
+			if(inAction == ActionKind.INIT || inAction == ActionKind.UPDATE || inAction == ActionKind.NODWNLD
+					|| inAction == ActionKind.CDDVD_MED || inAction == ActionKind.CDDVD_HI ) {
 	
 				String dataBaseName = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.lastIndexOf(".") );
 				log.debug("dataBaseName : " + dataBaseName);
@@ -667,7 +673,8 @@ public class PrefetchDorisWebSite {
 		}
 
 		// Le dossier des fichiers html téléchargés ( ./run/html/ )
-		if(inAction == ActionKind.INIT || inAction == ActionKind.UPDATE  || inAction == ActionKind.CDDVD ){
+		if(inAction == ActionKind.INIT || inAction == ActionKind.UPDATE  || inAction == ActionKind.CDDVD_MED
+				|| inAction == ActionKind.CDDVD_HI ){
 			File dossierHtml = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML);
 
 			if (dossierHtml.mkdir()) {
@@ -679,7 +686,7 @@ public class PrefetchDorisWebSite {
 		}
 		
 		// Le dossier des images téléchargées ( ./run/images/ )
-		if( inAction == ActionKind.CDDVD ){
+		if( inAction == ActionKind.CDDVD_MED || inAction == ActionKind.CDDVD_HI ){
 			File dossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES);
 
 			if (dossierImages.mkdir()) {
@@ -729,9 +736,9 @@ public class PrefetchDorisWebSite {
 		}
 		
 		// Le dossier du CD ou DVD ( ./run/cd/ )
-		if( inAction == ActionKind.CDDVD ){
+		if( inAction == ActionKind.CDDVD_MED ){
 			
-			File dossierCD = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CD);
+			File dossierCD = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CDDVD_MED);
 
 			if (dossierCD.mkdir()) {
 				log.info("Création du dossier CD : " + dossierCD.getAbsolutePath());
@@ -739,9 +746,11 @@ public class PrefetchDorisWebSite {
 				log.error("Echec de la Création du dossier CD : " + dossierCD.getAbsolutePath());
 				System.exit(1);
 			}
-			
-			/* TODO : DVD
-			File dossierDVD = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_DVD);
+		}
+		
+		if( inAction == ActionKind.CDDVD_HI ){
+
+			File dossierDVD = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_CDDVD_HI);
 
 			if (dossierDVD.mkdir()) {
 				log.info("Création du dossier DVD : " + dossierDVD.getAbsolutePath());
@@ -749,7 +758,7 @@ public class PrefetchDorisWebSite {
 				log.error("Echec de la Création du dossier DVD : " + dossierDVD.getAbsolutePath());
 				System.exit(1);
 			}
-			*/
+
 		}
 	}
 	
@@ -763,8 +772,8 @@ public class PrefetchDorisWebSite {
 		log.debug("creationDossiers() - Dossier html : " + PrefetchConstants.DOSSIER_HTML_REF);
 		
 		//	Vérification que le dossier html Référence existe ( ./run/html_ref/ )
-		if( inAction == ActionKind.NODWNLD || inAction == ActionKind.UPDATE
-				|| inAction == ActionKind.CDDVD || inAction == ActionKind.DWNLD_TO_REF ){
+		if( inAction == ActionKind.NODWNLD || inAction == ActionKind.UPDATE || inAction == ActionKind.CDDVD_MED
+				|| inAction == ActionKind.CDDVD_HI || inAction == ActionKind.DWNLD_TO_REF ){
 			File dossierReference = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF);
 			if (dossierReference.mkdir()) {
 				log.info("Création du dossier : " + dossierReference.getAbsolutePath());
@@ -772,7 +781,7 @@ public class PrefetchDorisWebSite {
 		}
 		
 		//	Vérification que les dossiers Images Référence existe
-		if( inAction == ActionKind.CDDVD  || inAction == ActionKind.DWNLD_TO_REF ){
+		if( inAction == ActionKind.CDDVD_MED || inAction == ActionKind.CDDVD_HI || inAction == ActionKind.DWNLD_TO_REF ){
 			
 			// ( ./run/images_ref/ )
 			File dossierImagesReference = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF);

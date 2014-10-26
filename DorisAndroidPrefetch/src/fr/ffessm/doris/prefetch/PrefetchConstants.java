@@ -65,8 +65,8 @@ public class PrefetchConstants {
 	public final static String SOUSDOSSIER_MED_RES = "medium_res_images_fiches";
 	public final static String SOUSDOSSIER_HI_RES = "hi_res_images_fiches";
 	
-	public final static String DOSSIER_CD = "cd";
-	public final static String DOSSIER_DVD = "dvd";
+	public final static String DOSSIER_CDDVD_MED = "cd";
+	public final static String DOSSIER_CDDVD_HI = "dvd";
 	
 	// Nombre maximum de fiches/groupes/etc traités (--max=K permet de changer cette valeur)
 	// Si nbMaxFichesTraitees != nbMaxFichesTraiteesDef alors on limite aussi le nombre de groupes

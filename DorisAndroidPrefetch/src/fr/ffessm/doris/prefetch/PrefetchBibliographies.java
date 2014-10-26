@@ -165,7 +165,7 @@ public class PrefetchBibliographies {
 								continue;
 							}
 						}
-					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
+					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
 						if ( ! new File(fichierBiblioRef).exists() ) {
 							if (prefetchTools.getFichierFromUrl(urlBiblio, fichierBiblio)) {
 								nbBiblioTelechargees += 1;
@@ -204,7 +204,7 @@ public class PrefetchBibliographies {
 							    }
 							});
 					
-						if ( action == ActionKind.CDDVD ) {
+						if ( action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI  ) {
 							String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
 							String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
 							

@@ -140,7 +140,9 @@ public class PrefetchGroupes {
 					String fichierLocalContenuGroupe = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
 					String fichierRefContenuGroupe = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/groupe-10-"+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe()+"-1.html";
 					
-					if ( action != ActionKind.NODWNLD && action != ActionKind.CDDVD && action != ActionKind.UPDATE){
+					if ( action != ActionKind.NODWNLD && action != ActionKind.CDDVD_MED
+							|| action == ActionKind.CDDVD_HI && action != ActionKind.UPDATE){
+						
 						if (prefetchTools.getFichierFromUrl(Constants.getGroupeContenuUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES),
 								groupe.getNumeroGroupe(), groupe.getNumeroSousGroupe(), 1), fichierLocalContenuGroupe)) {
 							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalContenuGroupe), FileHtmlKind.GROUPE);
@@ -148,7 +150,10 @@ public class PrefetchGroupes {
 							log.error("Une erreur est survenue lors du téléchargement du groupe : "+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe());
 							System.exit(1);
 						}
-					} else if (action == ActionKind.CDDVD || action == ActionKind.UPDATE) {
+						
+					} else if (action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI
+							|| action == ActionKind.UPDATE) {
+						
 						// UPDATE ou CDDVD
 						if ( prefetchTools.isFileExistingPath( fichierRefContenuGroupe ) ) {
 							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierRefContenuGroupe), FileHtmlKind.GROUPE);
@@ -159,6 +164,7 @@ public class PrefetchGroupes {
 							log.error("Une erreur est survenue lors du téléchargement du groupe : "+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe());
 							System.exit(1);
 						}
+						
 					} else {
 						// NODWNLD
 						if ( prefetchTools.isFileExistingPath( fichierRefContenuGroupe ) ) {
@@ -183,7 +189,7 @@ public class PrefetchGroupes {
 				}
 			}
 			// Téléchargement des pages de Groupes
-			if ( action == ActionKind.CDDVD ){
+			if ( action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ){
 
 				List<ZoneGeographiqueKind> listZone = Arrays.asList(ZoneGeographiqueKind.values());
 				for (ZoneGeographiqueKind zone : listZone ) {

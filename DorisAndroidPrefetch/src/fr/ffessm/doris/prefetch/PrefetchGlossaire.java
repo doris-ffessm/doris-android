@@ -172,7 +172,7 @@ public class PrefetchGlossaire {
 						log.error("Une erreur est survenue lors de la récupération de la définition : "+urlDefinition);
 						continue;
 					}
-				} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
+				} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
 					if ( ! new File(fichierRefDefinition).exists() ) {
 						if (prefetchTools.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
 							nbDefinitionTelechargees += 1;
@@ -214,7 +214,7 @@ public class PrefetchGlossaire {
 				}
 				
 				//Si des photos dans la définition, il faut les télécharger dans le cas CDDVD
-				if (action == ActionKind.CDDVD){
+				if (action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI){
 					
 					String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
 					String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";

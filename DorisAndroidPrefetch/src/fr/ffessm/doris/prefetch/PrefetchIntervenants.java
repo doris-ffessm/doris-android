@@ -151,7 +151,7 @@ public class PrefetchIntervenants {
 			// Pas la peine de récupérer la page de chacun des intervenants
 			// Toutes les infos sont déjà dans les listes ci dessus 
 			// mais pour CDDVD ça fait plus propre
-			if ( action == ActionKind.CDDVD ) {
+			if ( action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
 				String pageIntervenantRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/";
 				String pageIntervenantRacineRef = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/";
 				
@@ -170,7 +170,7 @@ public class PrefetchIntervenants {
 			}
 			
 			// Téléchargement Photos Participants
-			if ( action == ActionKind.CDDVD ) {
+			if ( action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
 				String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
 				String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
 	

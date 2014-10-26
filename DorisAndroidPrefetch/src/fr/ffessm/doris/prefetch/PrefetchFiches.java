@@ -181,7 +181,7 @@ public class PrefetchFiches {
 
 			log.info("Mise à jours de "+listeFichesTravail.size()+" fiches.");
 			HashSet<FicheLight> listFichesModif = null;
-			if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
+			if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI) {
 				listFichesModif = siteDoris.getListeFichesUpdated(listFichesFromRef, listeFichesTravail);
 			}
 			listFichesFromRef = null;
@@ -232,7 +232,7 @@ public class PrefetchFiches {
 								continue;
 							}
 						}
-					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
+					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
 	
 						if ( fichierRefFiche.exists() && !listFichesModif.contains(ficheLight)) {
 							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierRefFiche, FileHtmlKind.FICHE);
@@ -302,7 +302,7 @@ public class PrefetchFiches {
 							log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
 							continue;
 						}
-					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD ) {
+					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
 						if (fichierRefListePhotos.exists() && !listFichesModif.contains(fiche)) {
 							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierRefListePhotos, FileHtmlKind.FICHE);
 						} else {
@@ -345,7 +345,7 @@ public class PrefetchFiches {
 							});
 						
 						// Téléchargement Photos
-						if ( action == ActionKind.CDDVD ) {
+						if ( action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
 
 							fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
 							fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";

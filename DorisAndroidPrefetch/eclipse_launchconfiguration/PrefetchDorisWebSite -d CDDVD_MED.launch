@@ -7,6 +7,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="fr.ffessm.doris.prefetch.PrefetchDorisWebSite"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-d --zip --max=10 CDDVD"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-d CDDVD_MED"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="DorisAndroidPrefetch"/>
 </launchConfiguration>
