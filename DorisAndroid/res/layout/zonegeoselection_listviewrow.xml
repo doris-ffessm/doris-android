@@ -36,7 +36,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/zonegeoselection_listviewrow_icon"
-            android:layout_toLeftOf="@+id/zonegeoselection__selectBtn"
+            android:layout_toLeftOf="@+id/zonegeoselection_selectBtn"
             android:layout_toRightOf="@+id/zonegeoselection_listviewrow_icon"
             android:orientation="vertical"
 			android:paddingLeft="4dip"
@@ -60,7 +60,7 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/zonegeoselection__selectBtn"
+            android:id="@+id/zonegeoselection_selectBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/zonegeoselection_listviewrow_icon"

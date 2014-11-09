@@ -26,6 +26,7 @@
 	<string name="pref_key_mode_precharg_photo_autres">mode_precharg_photo_autres</string>
 
 	<string name="pref_key_theme">pref_key_theme</string>
+	<string name="pref_key_accueil_liste_ou_arbre_pardefaut">pref_accueil_liste_ou_arbre_pardefaut</string>
 	<string name="pref_key_accueil_fiches_ordre">pref_accueil_fiches_ordre</string>
 	<string name="pref_key_accueil_etat_fiches_affiche">pref_accueil_etat_fiches_affiche</string>
 	<string name="pref_key_accueil_icon_size">pref_accueil_icon_size</string>
@@ -156,8 +157,19 @@
         <item>Holo Light (clair)</item>
         <item>Holo (sombre)</item>
     </string-array>
-	
-	
+
+	<string name="accueil_liste_ou_arbre_prompt">"Accès principal aux fiches"</string>
+	<string name="accueil_liste_ou_arbre_prompt_summary">(càd en cliquant sur la Zone)</string>
+	<string name="accueil_liste_ou_arbre_default">liste</string>
+	<string-array name="accueil_liste_ou_arbre_values">
+        <item>liste</item>
+        <item>arbre</item>
+    </string-array>
+   	<string-array name="accueil_liste_ou_arbre_lib">
+	    <item>Par leur ordre alphabétique</item>
+        <item>"Par l'arbre phylogénétique"</item>
+    </string-array>
+    
 	<string name="accueil_fiches_ordre_prompt">"Ordre de tri des fiches"</string>
 	<string name="accueil_fiches_ordre_default">Commun</string>
 	<string-array name="accueil_fiches_ordre_values">

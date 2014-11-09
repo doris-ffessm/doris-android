@@ -158,7 +158,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
         
 		// Start of user code protected additional ZoneGeoSelection_Adapter getView code
 		
-        ImageButton selectbutton = (ImageButton) convertView.findViewById(R.id.zonegeoselection__selectBtn);
+        ImageButton selectbutton = (ImageButton) convertView.findViewById(R.id.zonegeoselection_selectBtn);
         selectbutton.setFocusable(false);
         selectbutton.setClickable(true);
         selectbutton.setOnClickListener(new View.OnClickListener() {
