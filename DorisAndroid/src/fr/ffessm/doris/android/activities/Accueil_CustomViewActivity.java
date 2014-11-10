@@ -361,7 +361,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			        b.putBoolean("GroupeSelection_depuisAccueil", true);
 			        toGroupeSelectionView.putExtras(b);
 			        
-			        showToast(getString(R.string.accueil_recherche_guidee_label_text)+"; "
+			        showToast(getString(R.string.accueil_recherche_guidee_label_text)+" ; "
 			        	+Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
 			        startActivity(toGroupeSelectionView);
 			        

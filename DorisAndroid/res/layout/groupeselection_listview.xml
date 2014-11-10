@@ -37,7 +37,7 @@
 		        android:layout_margin="0dp"
 			    android:text=""
 			    android:drawablePadding="0dp"
-			    android:src="@android:drawable/ic_menu_set_as"
+			    android:src="?attr/ic_action_liste_fiches"
 			    android:scaleType="fitCenter"
 		        android:background="@android:color/transparent"
 		        android:onClick="onClickCurrentGroup"

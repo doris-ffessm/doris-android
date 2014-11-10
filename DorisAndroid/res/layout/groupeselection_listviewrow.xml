@@ -65,7 +65,7 @@
 	        android:layout_marginLeft="4dip"
 	        android:layout_marginRight="4dip"
 	        android:layout_marginTop="4dip"
-	        android:src="@drawable/app_expander_ic_minimized" >
+	        android:src="?attr/ic_action_arbre_phylogenetique" >
     	</ImageView>
 		<ImageButton
 		    android:id="@+id/groupeselection_btnSelect"
@@ -77,7 +77,7 @@
 	        android:layout_margin="0dp"
 		    android:text=""
 		    android:drawablePadding="0dp"
-		    android:src="@drawable/ic_action_liste_fiches"
+		    android:src="?attr/ic_action_liste_fiches"
 		    android:scaleType="fitCenter"
 	        android:background="@android:color/transparent"
 	     />
