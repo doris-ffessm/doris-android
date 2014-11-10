@@ -351,8 +351,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), 1);
 		        ed.commit();
 		        
-		        switch(accueil_liste_ou_arbre_pardefaut){
-		        case "arbre" :
+		       if (accueil_liste_ou_arbre_pardefaut.equals("arbre")){
 		        	// Si choix de l'utilisateur, on accède à l'arbre en cliquant sur la zone
 		        	
 		        	//Permet de revenir à l'accueil après recherche par le groupe, si false on irait dans la liste en quittant
@@ -364,9 +363,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			        showToast(getString(R.string.accueil_recherche_guidee_label_text)+" ; "
 			        	+Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
 			        startActivity(toGroupeSelectionView);
-			        
-		        	break;
-		    	default:
+		       } else {
 		    		// Par défaut, on ouvre la liste des fiches en cliquant sur la zone
 		    		showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
 					startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
@@ -381,12 +378,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         
         // Image
         ImageButton imgSelect = (ImageButton) viewZone.findViewById(R.id.zonegeoselection_selectBtn);
-        switch(accueil_liste_ou_arbre_pardefaut){
-        case "arbre" :
+        if (accueil_liste_ou_arbre_pardefaut.equals("arbre")) {
         	imgSelect.setImageResource(
         			ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_liste_fiches) );
-        	break;
-    	default:
+        } else {
     		imgSelect.setImageResource(
     			ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_arbre_phylogenetique) );
         }
@@ -402,14 +397,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), 1);
 		        ed.commit();	
 		        
-		        switch(accueil_liste_ou_arbre_pardefaut){
-		        case "arbre" :
+		        if (accueil_liste_ou_arbre_pardefaut.equals("arbre")) {
 		        	// Si choix de l'utilisateur, on accède à l'arbre en cliquant sur la zone donc aux fiches en cliquant sur le bouton secondaire
 		    		showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
 					startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
-
-		        	break;
-		    	default:
+		        } else {
 		    		// Par défaut, on ouvre la liste des fiches en cliquant sur la zone donc on ouvre l'arbre qd clic sur bouton droit
 
 		        	//Permet de revenir à l'accueil après recherche par le groupe, si false on irait dans la liste en quittant
