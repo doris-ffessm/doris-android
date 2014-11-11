@@ -46,6 +46,7 @@ import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -94,6 +95,9 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 	
 	final Context context = this;
 	
+	Photos_Outils photosOutils = new Photos_Outils(context);
+	Reseau_Outils reseauOutils = new Reseau_Outils(context);
+	
 // End of user code
 	
 	/** Called when the activity is first created. */
@@ -140,34 +144,38 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 		contenuUrl.setText(richtext);
 		contenuUrl.setMovementMethod(LinkMovementMethod.getInstance());
 		
-        ImageView trombineView = (ImageView) findViewById(R.id.detailsbibliographie_elementview_icon);
+        ImageView biblioView = (ImageView) findViewById(R.id.detailsbibliographie_elementview_icon);
         if ( !entry.getCleURLIllustration().isEmpty() ) {
         	String nomPhoto = entry.getCleURLIllustration().replace("gestionenligne/photos_biblio_moy/","");
         	nomPhoto = Constants.PREFIX_IMGDSK_BIBLIO+nomPhoto;
-        	
-        	Photos_Outils photosOutils = new Photos_Outils(context);
         	
 	        if(photosOutils.isAvailableInFolderPhoto(nomPhoto, ImageType.ILLUSTRATION_BIBLIO)){
 	    		try {
 					Picasso.with(context).load(photosOutils.getPhotoFile(nomPhoto, ImageType.ILLUSTRATION_BIBLIO))
 						.fit()
 						.centerInside()
-						.into(trombineView);
+						.into(biblioView);
 				} catch (IOException e) {
 				}
 	    	}
 	    	else{
 	    		// pas préchargée en local pour l'instant, cherche sur internet
-	    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLIllustration() : "+Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+entry.getCleURLIllustration());
-	    		String urlPhoto = entry.getCleURLIllustration().replace("gestionenligne/photos_biblio_moy/", "");
-	    		urlPhoto= Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+urlPhoto;
-	    		Picasso.with(context)
-	    			.load(urlPhoto)
-					.placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par défaut pour commencer
-					.error(R.drawable.app_bibliographie_doris_non_connecte)
-					.fit()
-					.centerInside()
-	    			.into(trombineView);
+	    		
+	    		if (reseauOutils.isTelechargementsModeConnectePossible()) {
+	    			
+		    		//Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLIllustration() : "+Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+entry.getCleURLIllustration());
+		    		String urlPhoto = entry.getCleURLIllustration().replace("gestionenligne/photos_biblio_moy/", "");
+		    		urlPhoto= Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+urlPhoto;
+		    		Picasso.with(context)
+		    			.load(urlPhoto)
+						.placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par défaut pour commencer
+						.error(R.drawable.app_bibliographie_doris_non_connecte)
+						.fit()
+						.centerInside()
+		    			.into(biblioView);
+	    		} else {
+	    			biblioView.setImageResource(R.drawable.app_bibliographie_doris_non_connecte);
+	    		}
 	    	}
         }
         

@@ -91,6 +91,7 @@ import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.Textes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
@@ -116,12 +117,19 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
 	//Start of user code protected additional ListeBibliographieAvecFiltre_Adapter attributes
 	// additional attributes
 	private Textes_Outils textesOutils;
+	private Photos_Outils photosOutils;
+	private Reseau_Outils reseauOutils;
 	//End of user code
 
 	public ListeBibliographieAvecFiltre_Adapter(Context context, DorisDBHelper contextDB) {
 		super();
 		this.context = context;
 		this._contextDB = contextDB;
+		
+		photosOutils = new Photos_Outils(context);
+		textesOutils = new Textes_Outils(context);
+		reseauOutils = new Reseau_Outils(context);
+		
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		updateList();
 	}
@@ -129,7 +137,6 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
 	protected void updateList(){
 		// Start of user code protected ListeBibliographieAvecFiltre_Adapter updateList
 		// TODO find a way to query in a lazier way
-		textesOutils = new Textes_Outils(context);
 		
 		try{
 			//this.entreeBibliographieList = _contextDB.entreeBibliographieDao.queryForAll();
@@ -209,7 +216,6 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
         	String nomPhoto = entry.getCleURLIllustration().replace("gestionenligne/photos_biblio_moy/","");
         	nomPhoto = Constants.PREFIX_IMGDSK_BIBLIO+nomPhoto;
         		
-        	Photos_Outils photosOutils = new Photos_Outils(context);
 	        if(photosOutils.isAvailableInFolderPhoto(nomPhoto, ImageType.ILLUSTRATION_BIBLIO)){
 	    		try {
 					Picasso.with(context).load(photosOutils.getPhotoFile(nomPhoto, ImageType.ILLUSTRATION_BIBLIO))
@@ -221,16 +227,22 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
 	    	}
 	    	else{
 	    		// pas préchargée en local pour l'instant, cherche sur internet
-	    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLIllustration() : "+Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+entry.getCleURLIllustration());
-	    		String urlPhoto = entry.getCleURLIllustration().replace("gestionenligne/photos_biblio_moy/", "");
-	    		urlPhoto= Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+urlPhoto;
-	    		Picasso.with(context)
-	    			.load(urlPhoto)
-					.placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par défaut pour commencer
-					.error(R.drawable.app_bibliographie_doris_non_connecte)
-					.resize(defaultIconSize, defaultIconSize)
-					.centerInside()
-	    			.into(imageView);
+	    		
+	    		if (reseauOutils.isTelechargementsModeConnectePossible()) {
+	    			
+		    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLIllustration() : "+Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+entry.getCleURLIllustration());
+		    		String urlPhoto = entry.getCleURLIllustration().replace("gestionenligne/photos_biblio_moy/", "");
+		    		urlPhoto= Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+urlPhoto;
+		    		Picasso.with(context)
+		    			.load(urlPhoto)
+						.placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par défaut pour commencer
+						.error(R.drawable.app_bibliographie_doris_non_connecte)
+						.resize(defaultIconSize, defaultIconSize)
+						.centerInside()
+		    			.into(imageView);
+	    		} else {
+	    			imageView.setImageResource(R.drawable.app_bibliographie_doris_non_connecte);
+	    		}
 	    	}
         }
         else{

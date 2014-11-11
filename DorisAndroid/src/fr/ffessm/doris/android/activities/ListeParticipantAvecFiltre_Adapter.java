@@ -85,6 +85,8 @@ import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+import fr.ffessm.doris.android.tools.Reseau_Outils;
+
 import java.io.IOException;
 
 //End of user code
@@ -108,6 +110,10 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 	SharedPreferences prefs;
 	//Start of user code protected additional ListeParticipantAvecFiltre_Adapter attributes
 	// additional attributes
+	
+    Photos_Outils photosOutils;
+    Reseau_Outils reseauOutils;
+    
 	//End of user code
 
 	public ListeParticipantAvecFiltre_Adapter(Context context, DorisDBHelper contextDB) {
@@ -115,6 +121,11 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 		this.context = context;
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		
+	    photosOutils = new Photos_Outils(context);
+	    reseauOutils = new Reseau_Outils(context);
+		
 		updateList();
 	}
 	
@@ -189,7 +200,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
         if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {
         	
             
-            Photos_Outils photosOutils = new Photos_Outils(context);
+
 	        if(photosOutils.isAvailableInFolderPhoto(entry.getPhotoNom(), ImageType.PORTRAITS)){
 	    		try {
 					Picasso.with(context).load(photosOutils.getPhotoFile(entry.getPhotoNom(), ImageType.PORTRAITS))
@@ -201,15 +212,22 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 	    	}
 	    	else{
 	    		// pas préchargée en local pour l'instant, cherche sur internet
-	    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLPhotoParticipant() : "+Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom());
-	    		String urlPhoto= Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom();
-	    		Picasso.with(context)
-	    			.load(urlPhoto.replace(" ", "%20"))
-					.placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
-					.error(R.drawable.app_ic_participant_pas_connecte)
-					.resize(defaultIconSize, defaultIconSize)
-					.centerInside()
-	    			.into(trombineView);
+	    		
+	    		if (reseauOutils.isTelechargementsModeConnectePossible()) {
+
+		    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLPhotoParticipant() : "+Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom());
+		    		String urlPhoto= Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom();
+		    		Picasso.with(context)
+		    			.load(urlPhoto.replace(" ", "%20"))
+						.placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
+						.error(R.drawable.app_ic_participant_pas_connecte)
+						.resize(defaultIconSize, defaultIconSize)
+						.centerInside()
+		    			.into(trombineView);
+	    		} else {
+	    			
+	    			trombineView.setImageResource(R.drawable.app_ic_participant_pas_connecte);
+	    		}
 	    	}
         }
         else{
