@@ -422,11 +422,16 @@ public class Photos_Outils {
 				// Primary et Secondary n existe pas forcément
 				if (disqueOutils.isStorageExist(imageLocation)) {
 					// Si le Dossier n existe pas 0, sinon on compte
-					if (! getImageFolder(imageLocation, imageType).exists() ) {
+					if(getImageFolder(imageLocation, imageType) == null){
+						Log.w(LOG_TAG, "refreshImagesNbInFolder() : warning : folder doesn't exist for "+imageLocation+" - "+imageType + " but disqueOutils.isStorageExist doesn't detect it");
 						imagesNbInFolder [imageLocation.ordinal()] [imageType.ordinal()] = 0;
-					} else {
-						imagesNbInFolder [imageLocation.ordinal()] [imageType.ordinal()] = 
-							disqueOutils.nbFileInFolder(getImageFolder(imageLocation, imageType) );
+					}else{
+						if (! getImageFolder(imageLocation, imageType).exists() ) {
+							imagesNbInFolder [imageLocation.ordinal()] [imageType.ordinal()] = 0;
+						} else {
+							imagesNbInFolder [imageLocation.ordinal()] [imageType.ordinal()] = 
+								disqueOutils.nbFileInFolder(getImageFolder(imageLocation, imageType) );
+						}
 					}
 				} else {
 					imagesNbInFolder [imageLocation.ordinal()] [imageType.ordinal()] = 0;
