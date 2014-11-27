@@ -88,8 +88,15 @@ public class SiteDoris {
     	source.fullSequentialParse();
     	//log.debug("getListeFichesFromHtml()- source.length() : " + source.length());
     	//log.debug("getListeFichesFromHtml()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
-
-    	Element elementTableracine=source.getFirstElementByClass("titre_page").getParentElement().getParentElement();
+    	
+    	Element elementTableracine;
+    	try{
+    		elementTableracine=source.getFirstElementByClass("titre_page").getParentElement().getParentElement();
+    	}
+    	catch ( NullPointerException e){
+    		log.error("Probleme lors de la récupération de la liste des fiches, peut etre du a une connexion web defectueuse ou a un changement sur le site web Doris",  e);
+    		return listeFiches;
+    	}
     	//log.debug("getListeFichesFromHtml()- elementTableracine.length() : " + elementTableracine.length());
     	//log.debug("getListeFichesFromHtml()- elementTableracine : " + elementTableracine.toString().substring(0, Math.min(100, elementTableracine.toString().length())));
 
