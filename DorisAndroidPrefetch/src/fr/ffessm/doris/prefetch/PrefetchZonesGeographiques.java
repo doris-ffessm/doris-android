@@ -115,7 +115,7 @@ public class PrefetchZonesGeographiques {
 	}
 	
 	private void majZoneGeographique(ConnectionSource connectionSource, ZoneGeographiqueKind zoneKind){
-		log.debug("majZoneGeographique() - Début");
+		//log.debug("majZoneGeographique() - Début");
 		
 		PrefetchTools prefetchTools = new PrefetchTools();
 		SiteDoris siteDoris = new SiteDoris();
@@ -179,7 +179,7 @@ public class PrefetchZonesGeographiques {
 		} catch (SQLException e) {
 			log.error("impossible d'associer Fiches et Zone Géographique", e);
 		}
-		log.debug("majZoneGeographique() - Fin");
+		//log.debug("majZoneGeographique() - Fin");
 	}
 	
 }

@@ -129,6 +129,7 @@ public class Constants {
     public enum FileHtmlKind {
     	LISTE_FICHES,
     	FICHE,
+    	LISTE_PHOTOS_FICHE,
     	LISTE_BIBLIO,
     	BIBLIO,
     	LISTE_TERMES,

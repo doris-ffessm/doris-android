@@ -125,7 +125,7 @@ public class SiteDoris {
     	
     	source = null;
     	listeElementsTD = null;
-		log.info("getListeFichesFromHtml()- Fin");
+		//log.info("getListeFichesFromHtml()- Fin");
 		return listeFiches;
     }
 	

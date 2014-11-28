@@ -350,7 +350,7 @@ public class GenerationCDDVD {
 		regExpPourNettoyer.add(new Lien(LienKind.PAGE, "href=\"biblio.asp\\?page=Precedent[^\"]*","href=\""));
 
 		regExpPourNettoyer.add(new Lien(LienKind.VIGNETTE, "gestionenligne/diaporamaglo/([^.]*).jpg","/"+Constants.PREFIX_IMGDSK_DEFINITION+"$1.jpg"));
-				
+		
 		// Si un espace dans le nom des photos alors on le remplace par un _
 		//regExpPourNettoyer.add(new Lien(LienKind.PAGE, "<img src="../vignettes_fiches/ electra_posidoniae-dh02.jpg"","href=\""));
 
@@ -394,11 +394,11 @@ public class GenerationCDDVD {
 	
 	public void creationCDDVD(String dossierCDDVDName){
 		log.debug("creationCDDVD() - Début");
-
-		File dossierCDDVD = new File(dossierCDDVDName + "/" +PrefetchConstants.DOSSIER_HTML);
 		
 		// Création Dossier HTML du CD ou du DVD
-		log.info("Création Dossier HTML du CD ou du DVD");
+		log.info("Création Dossier HTML du CD ou du DVD : "+dossierCDDVDName);
+
+		File dossierCDDVD = new File(dossierCDDVDName + "/" +PrefetchConstants.DOSSIER_HTML);
 		
 		String fichierRefLien = PrefetchConstants.DOSSIER_RACINE + "/";
 		
@@ -617,6 +617,7 @@ public class GenerationCDDVD {
 			}
 		} // Fin pour chaque fichier du dossier html
 
+		
 		// Les liens entre les pages de Groupes ne pouvaient être réalisé purement avec des expressions régulières
 		// On re-parcourt donc l'ensemble des fichiers contenant groupe dans leur nom.
 		for (File fichierHtml : dossierCDDVD.listFiles()) {
@@ -652,6 +653,8 @@ public class GenerationCDDVD {
 					e.printStackTrace();
 				}
 			}
+			
+			
 			// Les pages contenant les espèces du Groupe : groupe-10-2-73-1.html
 			if (fichierHtml.getName().contains("groupe-")){
 				//log.debug("transfoHtml() - fichier groupe : "+fichierHtml.getName());
@@ -700,6 +703,43 @@ public class GenerationCDDVD {
 				}
 			}
 		}
+		
+
+		// Si DVD, on ajoute un lien de la photo Médium vers celle de Haute Qualité
+		// Comme spécifique à un "type de fichier" html, on le fait seulement ici, si nécessaire
+		if( action == ActionKind.CDDVD_HI ){
+			
+			log.debug("transfoHtml() - CDDVD_HI - 010");
+			
+			for (File fichierHtml : dossierCDDVD.listFiles()) {
+				if (fichierHtml.getName().contains("_listePhotos.html")){
+					
+					log.debug("transfoHtml() - CDDVD_HI - 020 - "+fichierHtml.getName());
+					
+					String contenuFichier = prefetchTools.getFichierTxtFromDisk(fichierHtml, FileHtmlKind.LISTE_PHOTOS_FICHE);
+					
+					log.debug("transfoHtml() - CDDVD_HI - 021 - "+contenuFichier.length());
+					//<img src="../medium_res_images_fiches/tripterygion_delaisi-da7.jpg" alt="Cliq[...]photo..." width="345"  border="0" >
+					/*contenuFichier = contenuFichier.replaceAll(
+						"(<img src=\"\\.\\./medium_res_images_fiches/)([^\"]*)(\"^[>]*>)",
+						"<a href=\"$2\">$1$2$3</a>");*/
+					
+					contenuFichier = contenuFichier.replaceAll(
+							"(<img src=\"\\.\\./"+PrefetchConstants.SOUSDOSSIER_MED_RES+"/)([^\"]*)(\"[^>]*>)",
+							"<a href=\"\\.\\./"+PrefetchConstants.SOUSDOSSIER_HI_RES+"/$2\" style=\"display: inline;\">$1$2$3</a>");
+					
+					
+					try {
+						FileUtils.write(fichierHtml, contenuFichier, "iso-8859-1");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					
+				}
+			}
+		}
+		
 		
 		log.debug("transfoHtml() - Fin");
 	}

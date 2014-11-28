@@ -83,7 +83,7 @@ import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesObservations;
 public class PrefetchDBTools {
 	
 	// Initialisation de la Gestion des Log 
-	public static Log log = LogFactory.getLog(PrefetchFiches.class);
+	public static Log log = LogFactory.getLog(PrefetchDBTools.class);
 	
 	// Constructeur
 	public PrefetchDBTools(){

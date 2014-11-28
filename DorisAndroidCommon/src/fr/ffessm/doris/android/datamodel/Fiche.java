@@ -365,27 +365,27 @@ public class Fiche {
 		if (ElementTDcode_fiche.getFirstElementByClass("normal") != null) {
 			String listeZonesObservation = ElementTDcode_fiche.getFirstElementByClass("normal").getRenderer().toString().trim();
 			
-			log.info("##01 -" + listeZonesObservation.trim());
+			//log.info("##01 -" + listeZonesObservation.trim());
 					
 			listeZonesObservation = listeZonesObservation.replace(", sauf", " sauf");
 			
 			i = 0;
 			while (listeZonesObservation.matches("^[^\\(]*\\([,^\\)]*\\).*") && i < 20) {
-				log.info("##11 -" + listeZonesObservation.trim());
+				//log.info("##11 -" + listeZonesObservation.trim());
 				listeZonesObservation = listeZonesObservation.replaceAll("(\\([^,\\)]*?),", "$1£");
 				i++;
 			}
-			log.info("##12 -" + listeZonesObservation.trim());
+			//log.info("##12 -" + listeZonesObservation.trim());
 			
 			
 			listeZonesObservation = listeZonesObservation.replaceAll("(\\([^,\\)]*?),", "$1£");
-			log.info("##21 -" + listeZonesObservation.trim());
+			//log.info("##21 -" + listeZonesObservation.trim());
 		
 			//log.info("getFicheFromHtml() - listeZonesObservation : " + listeZonesObservation);
 			if (! listeZonesObservation.isEmpty()) {
 				String[] zonesObservation = listeZonesObservation.split(",|et");
 				for (String zoneObservationTxt : zonesObservation){
-					log.info("##31 -" + zoneObservationTxt.trim());
+					//log.info("##31 -" + zoneObservationTxt.trim());
 				}
 			}
 
