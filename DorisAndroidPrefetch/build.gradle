@@ -41,17 +41,29 @@ task(updateDorisDB, dependsOn: 'classes', type: JavaExec) {
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-// * CDDVD : Permet de créer la base et le CD hors ligne du Site
+// * CD : Permet de créer la base et le CD hors ligne du Site.
 // * Ce mode utilise html_ref et de images_ref ce qui permet de ne pas tout
 // * re-télécharger systématiquement.
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 
-task(buildDorisCDDVD, dependsOn: 'classes', type: JavaExec) {
+task(buildDorisCD, dependsOn: 'classes', type: JavaExec) {
 	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
 	args '-v', 'CDDVD_MED'
 }
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+// * DVD : Permet de créer la base et le DVD hors ligne du Site avec toutes
+// * les images, c'est à dire les images en la meilleure qualité comprises.
+// * Ce mode utilise html_ref et de images_ref ce qui permet de ne pas tout
+// * re-télécharger systématiquement.
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+
+task(buildDorisDVD, dependsOn: 'classes', type: JavaExec) {
+	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
+	classpath = sourceSets.main.runtimeClasspath
+	args '-v', 'CDDVD_HI'
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 // * Utile quand on veut créer un Base complètement à jour => tout le site sera
