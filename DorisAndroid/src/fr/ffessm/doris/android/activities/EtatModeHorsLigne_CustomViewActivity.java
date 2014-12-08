@@ -534,15 +534,19 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	
     	// mise à jour de la date de la base
     	TextView etatBase = (TextView) findViewById(R.id.etatmodehorsligne_etat_base_description_textView);
-    	CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
-    	while (it.hasNext()) {
-    		etatBase.setText(getString(R.string.etatmodehorsligne_etat_base_description_text)+it.next().getDateBase());
-    		//sb.append("Date base locale : " + it.next().getDateBase()+"\n");
-		}
     	try {
+	    	CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
+	    	while (it.hasNext()) {
+	    		etatBase.setText(getString(R.string.etatmodehorsligne_etat_base_description_text)+it.next().getDateBase());
+	    		//sb.append("Date base locale : " + it.next().getDateBase()+"\n");
+			}
 			it.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Log.e(LOG_TAG, e.getMessage(), e);
+		} catch (java.lang.IllegalStateException e){
+			Log.e(LOG_TAG, e.getMessage(), e);	
+			// en cas d'erreur d'état, on annule tout, on est probablement en train de clore l'appli
+			return;
 		}
     	
     	// Mise à jour des Barres d'avancement
