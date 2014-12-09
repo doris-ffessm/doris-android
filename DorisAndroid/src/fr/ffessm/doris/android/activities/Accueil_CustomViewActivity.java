@@ -712,12 +712,13 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    	
 	    	Disque_Outils disqueOutils = new Disque_Outils(getContext());
 	    	sb.append("Disque Interne - Place Dispo. : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().first)+"\n");
-	    	try {
-				sb.append("Disque Externe - Place Dispo. : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().first)+"\n");
-			} catch (NoSecondaryStorageException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	    	if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
+		    	try {
+					sb.append("Disque Externe - Place Dispo. : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().first)+"\n");
+				} catch (NoSecondaryStorageException e) {
+					Log.e(LOG_TAG, e.getMessage(), e);
+				}
+	    	}
 	    	
 	    	sb.append("déplacement en cours : "+
 	    			paramOutils.getParamBoolean(R.string.pref_key_deplace_photo_encours, false)+"\n");
