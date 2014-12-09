@@ -412,7 +412,7 @@ public class SiteDoris {
 	    			descritionPhotoCourante = null;
     			}
     			else{
-    				log.warn("getListePhotosFiche() - ignore photo incorrecte pour la fiche "+fiche.getNumeroFiche());
+    				log.warn("getListePhotosFiche() - Ignore photo incorrecte pour la fiche "+fiche.getNumeroFiche()+" - "+fiche.getNomCommun());
     				// ignore l'image si image manquante
     				continue;
     			}

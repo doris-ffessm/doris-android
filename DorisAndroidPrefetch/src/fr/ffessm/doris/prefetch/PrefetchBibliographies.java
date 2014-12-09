@@ -213,7 +213,7 @@ public class PrefetchBibliographies {
 								if (prefetchTools.getFichierFromUrl(Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+biblio.getNumeroDoris()+".jpg",
 										fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_BIBLIO+biblio.getNumeroDoris()+".jpg" )) {
 								} else {
-									log.info("Une erreur est survenue lors de la récupération de la photo de l'entrée Biblio. : "+biblio.getTitre() + ", il est probable qu'il n'y ait pas d'illustration.");
+									log.warn("Une erreur est survenue lors de la récupération de la photo de l'entrée Biblio. : "+biblio.getTitre() + ", il est probable qu'il n'y ait pas d'illustration.");
 								}
 							}
 						}
