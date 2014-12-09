@@ -60,6 +60,7 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
+import fr.ffessm.doris.android.sitedoris.ErrorCollector;
 import fr.ffessm.doris.prefetch.PrefetchConstants;
 
 public class PrefetchDorisWebSite {
@@ -107,285 +108,35 @@ public class PrefetchDorisWebSite {
 		log.info("Nb. Fiches Max : " + nbMaxFichesATraiter);
 		
 
+		// enable collection of Doris web site errors in an juit xml file
+		ErrorCollector.getInstance().collectErrors = true;
+		
 		// - - - - - - - - - - - -
 		// - - - Test  - - - - - -
 		if ( action == ActionKind.TEST ) {
-			log.debug("doMain() - Début TEST");
 			
-			// Vérification, Création, Sauvegarde des dossiers de travail
-			renommageDossiers(ActionKind.INIT);
-			creationDossiers(ActionKind.INIT);
-			creationDossiersRef(ActionKind.INIT);
-			
-			// - - - Base de Données - - -
-			PrefetchDBTools prefetchDBTools = new PrefetchDBTools();
-			prefetchDBTools.initializeSQLite(PrefetchConstants.DATABASE_URL);
-			connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
-			dbContext = prefetchDBTools.setupDatabase(connectionSource);
-			prefetchDBTools.databaseInitialisation(connectionSource);
-			outilsBase = new DataBase_Outils(dbContext);
-						
-			PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, ActionKind.INIT, nbMaxFichesATraiter);
-			if ( glossaire.prefetch() == -1 ) {
-				log.debug("doMain() - Erreur Glossaire" );
-				System.exit(1);
-			}
-			
-			log.debug("doMain() - Fin TEST");
+			testAction();
 			
 		} else if(action == ActionKind.INIT || action == ActionKind.UPDATE || action == ActionKind.NODWNLD
 				|| action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
 			
-			// Vérification, Création, Sauvegarde des dossiers de travail
-			renommageDossiers(action);
-			creationDossiers(action);
-			creationDossiersRef(action);
-			
-			// - - - Base de Données - - -
-			PrefetchDBTools prefetchDBTools = new PrefetchDBTools();
-			
-			// create empty DB and initialize it for Android
-			prefetchDBTools.initializeSQLite(PrefetchConstants.DATABASE_URL);
-			
-			// create our data-source for the database
-			connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
-			
-			// setup our database and DAOs
-			dbContext = prefetchDBTools.setupDatabase(connectionSource);
-			
-			prefetchDBTools.databaseInitialisation(connectionSource);
-			
-			outilsBase = new DataBase_Outils(dbContext);
-			
-			
-			try {
-				// - - - Groupes - - -
-				// Récupération de la liste des groupes sur le site de DORIS
-				// En UPDATE et CDDVD on re-télécharge que la liste
-	
-				PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, action, nbMaxFichesATraiter);
-				if ( groupes.prefetch() == -1 ) {
-					log.debug("doMain() - Erreur Groupes" );
-					System.exit(1);
-				}
-				log.debug("doMain() - debbug" );
-				
-				// - - - Intervenants - - -
-				// On boucle sur les initiales des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
-				// On récupère la liste des intervenants dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
-	
-				PrefetchIntervenants intervenants = new PrefetchIntervenants(dbContext, connectionSource, action, nbMaxFichesATraiter);
-				if ( intervenants.prefetch() == -1 ) {
-					log.debug("doMain() - Erreur Intervenants" );
-					System.exit(1);
-				}
-				
-				
-				// - - - Glossaire - - -
-				// On boucle sur les initiales des définitions (Cf site : doris.ffessm.fr/glossaire.asp?filtre=?)
-				// On récupère la liste des termes dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
-	
-				PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, action, nbMaxFichesATraiter);
-				if ( glossaire.prefetch() == -1 ) {
-					log.debug("doMain() - Erreur Glossaire" );
-					System.exit(1);
-				}
-				
-				// - - - Bibliographie - - -
-				// On boucle sur la page des Fiches tant que l'on trouve dans la page courante (n)
-				//biblio.asp?mapage=(n+1)&PageCourante=n
-				// On récupère les Bibliographies dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
-				
-				PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, action, nbMaxFichesATraiter);
-				if ( bibliographies.prefetch() == -1 ) {
-					log.debug("doMain() - Erreur Bibliographies" );
-					System.exit(1);
-				}
-				
-				// - - - Liste des Fiches - - -
-				// Récupération de la liste des fiches sur le site de DORIS
-				// Elles sont récupérées dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
-	
-				PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, action, nbMaxFichesATraiter,
-						groupes.listeGroupes, intervenants.listeParticipants);
-				if ( listeFiches.prefetch() == -1 ) {
-					log.debug("doMain() - Erreur Liste des Fiches" );
-					System.exit(1);
-				}
-	
-	
-				// - - - Mise à jour des zones géographiques - - -
-				PrefetchZonesGeographiques zonesGeographiques = new PrefetchZonesGeographiques(dbContext, connectionSource, action, nbMaxFichesATraiter);
-				if ( zonesGeographiques.prefetch() == -1 ) {
-					log.debug("doMain() - Erreur Mise à jour des zones géographiques" );
-					System.exit(1);
-				}
-				
-				
-				// - - - Enregistrement Date génération Base - - -
-				Date date = new Date();
-				SimpleDateFormat ft =  new SimpleDateFormat ("dd/MM/yyyy  HH:mm");
-				dbContext.dorisDB_metadataDao.create(new DorisDB_metadata(ft.format(date),""));
-				
-				
-				// - - - Génération CD et DVD  - - - 
-				if ( action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI) {
-					GenerationCDDVD generationCDDVD = new GenerationCDDVD(dbContext, connectionSource, action, zipCDDVD);
-					generationCDDVD.generation();
-				}
-				
-			} finally {
-				// destroy the data source which should close underlying connections
-				log.debug("doMain() - Fermeture Base");
-				if (connectionSource != null) {
-					connectionSource.close();
-				}
-			}
-		// Fin de <> TEST
+			cdDVDAction();		
 			
 		} else if ( action == ActionKind.DB_TO_ANDROID ) {
 			
-			log.debug("doMain() - Début Déplacement Base");
-			
-			// Consiste au déplacement du fichier de la base du run vers assets
-			String dataBaseRunString = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.length() );
-			log.debug("dataBase : " + dataBaseRunString);
-			
-			String dataBaseName = dataBaseRunString.substring(dataBaseRunString.lastIndexOf("/")+1, dataBaseRunString.length() );
-			log.debug("dataBaseName : " + dataBaseName);
-			
-			File dataBaseRunFile = new File(dataBaseRunString);
-			File dataBaseAndroidFile = new File("../DorisAndroid/assets/"+dataBaseName);
-			
-			if ( dataBaseRunFile.exists() ){
-				if ( dataBaseAndroidFile.exists() ){
-					try {
-						FileUtils.forceDelete(dataBaseAndroidFile);
-						log.info("Suppression du fichier précédent : " + dataBaseAndroidFile.getAbsolutePath());
-					} catch (IOException e) {
-						log.info("Problème suppression du fichier précédent : " + dataBaseAndroidFile.getAbsolutePath());
-						e.printStackTrace();
-					}
-				}
-				
-				try {
-					// Ne pas faire un moveTo car il faut que les 2 fichiers soient sur le même disque
-					// ça n'est pas le cas si on utilise un tmpfs pour run/database
-					FileUtils.moveFile(dataBaseRunFile, dataBaseAndroidFile);
-					log.info("Déplacement du fichier de la base vers : " + dataBaseAndroidFile.getAbsolutePath());
-				} catch (IOException e) {
-					log.error("Echec Déplacement du fichier de la base de : " + dataBaseRunFile.getAbsolutePath());
-					log.error("vers : " + dataBaseAndroidFile.getAbsolutePath());
-					e.printStackTrace();
-				}
-			} else {
-				log.error("Le fichier de la Base n'existe pas ou plus dans le Prefetch");
-				System.exit(1);
-			}
-			
-			log.debug("doMain() - Fin Déplacement Base");
+			dbToAndroidAction();
 			
 		} else if ( action == ActionKind.DWNLD_TO_REF ) {
 
-			log.debug("doMain() - Début Déplacement Fichiers vers Ref");
-			
-			// Consiste au déplacement des fichiers de html vers html_ref
-			// et ceux de images vers images_ref
-
-			// On commence par vérifier que les dossiers ref existent
-			creationDossiersRef(action);
-
-			// html -> html_ref
-			File dossierHtml = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML);
-			File dossierHtmlRef = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF);
-			try {
-				FileUtils.copyDirectory(dossierHtml, dossierHtmlRef);
-				FileUtils.deleteDirectory(dossierHtml);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			// images -> images_ref
-			File dossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES);
-			if (dossierImages.exists()) {
-				File dossierImagesRef = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF);
-				try {
-					FileUtils.copyDirectory(dossierImages, dossierImagesRef);
-					FileUtils.deleteDirectory(dossierImages);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-
-			log.debug("doMain() - Fin Déplacement Fichiers vers Ref");
+			downloadToRefAction();
 			
 		} else if ( action == ActionKind.ERASE_BUT_REF ) {
 			
-			log.debug("doMain() - Début Effacement Fichiers autres que Ref");
-			
-			// Effacement de tous les fichiers de run sauf image_ref et html_ref
-			
-			// Le chemin vers un dossier peut être écrit de façon différente
-			// Comparer 2 dossiers (File) ne fonctionne pas forcément, nous nous basons donc sur 
-			// sur la fin du chemin : pas top mais ça fonctionne
-			File dossierRun = new File(PrefetchConstants.DOSSIER_RACINE);
-			log.debug("dossierRun : " + dossierRun.getAbsolutePath());
-			
-			if ( dossierRun.exists() ){
-				
-				for (File dossierFils : dossierRun.listFiles()) {
-					
-					if ( dossierFils.isDirectory()
-							&& ! dossierFils.toString().matches(".*"+PrefetchConstants.DOSSIER_HTML_REF)
-							&& ! dossierFils.toString().matches(".*"+PrefetchConstants.DOSSIER_IMAGES_REF) ) {
-				
-						try {
-							// TODO : si dossier de la base dans tmpfs ne marche pas (évidement ?)
-							FileUtils.deleteDirectory(dossierFils);
-							log.info("Suppression de : " + dossierFils.getAbsolutePath());
-						} catch (IOException e) {
-							log.info("Problème suppression de : " + dossierFils.getAbsolutePath());
-							e.printStackTrace();
-						}
-						
-					}
-				}
-			} else {
-				// Ne devrait jamais arriver
-				log.error("Le dossier run n'existe pas !");
-				System.exit(1);
-			}
-			
-			log.debug("doMain() - Fin Effacement Fichiers autres que Ref");
+			eraseButRefAction();
 			
 		} else if ( action == ActionKind.ERASE_ALL ) {
 			
-			log.debug("doMain() - Début Effacement tous Dossiers");
-			
-			// Effacement de tous les fichiers de run
-			// à reserver à la mise à jour complète de la base : tâche "mensuelle"
-			
-			File dossierRun = new File(PrefetchConstants.DOSSIER_RACINE);
-			log.debug("dossierRun : " + dossierRun.getAbsolutePath());
-			
-			if ( dossierRun.exists() ){
-				
-				try {
-					FileUtils.cleanDirectory(dossierRun);
-					log.info("Suppression du contenu de : " + dossierRun.getAbsolutePath());
-				} catch (IOException e) {
-					log.info("Problème suppression du contenu de : " + dossierRun.getAbsolutePath());
-					e.printStackTrace();
-				}
-				
-			} else {
-				// Ne devrait jamais arriver
-				log.error("Le dossier run n'existe pas !");
-				System.exit(1);
-			}
-			
-			log.debug("doMain() - Fin Effacement tous Dossiers");
-			
+			eraseAllAction();
 		}
 
 		
@@ -393,8 +144,283 @@ public class PrefetchDorisWebSite {
 	}
 
 
+	private void testAction() throws Exception{
+		log.debug("doMain() - Début TEST");
+		
+		// Vérification, Création, Sauvegarde des dossiers de travail
+		renommageDossiers(ActionKind.INIT);
+		creationDossiers(ActionKind.INIT);
+		creationDossiersRef(ActionKind.INIT);
+		
+		// - - - Base de Données - - -
+		PrefetchDBTools prefetchDBTools = new PrefetchDBTools();
+		prefetchDBTools.initializeSQLite(PrefetchConstants.DATABASE_URL);
+		connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
+		dbContext = prefetchDBTools.setupDatabase(connectionSource);
+		prefetchDBTools.databaseInitialisation(connectionSource);
+		outilsBase = new DataBase_Outils(dbContext);
+					
+		PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, ActionKind.INIT, nbMaxFichesATraiter);
+		if ( glossaire.prefetch() == -1 ) {
+			log.debug("doMain() - Erreur Glossaire" );
+			System.exit(1);
+		}
+		
+		log.debug("doMain() - Fin TEST");
+	}
 	
 	
+	private void cdDVDAction()  throws Exception{
+		// Vérification, Création, Sauvegarde des dossiers de travail
+		renommageDossiers(action);
+		creationDossiers(action);
+		creationDossiersRef(action);
+		
+		// - - - Base de Données - - -
+		PrefetchDBTools prefetchDBTools = new PrefetchDBTools();
+		
+		// create empty DB and initialize it for Android
+		prefetchDBTools.initializeSQLite(PrefetchConstants.DATABASE_URL);
+		
+		// create our data-source for the database
+		connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
+		
+		// setup our database and DAOs
+		dbContext = prefetchDBTools.setupDatabase(connectionSource);
+		
+		prefetchDBTools.databaseInitialisation(connectionSource);
+		
+		outilsBase = new DataBase_Outils(dbContext);
+		
+		
+		try {
+			// - - - Groupes - - -
+			// Récupération de la liste des groupes sur le site de DORIS
+			// En UPDATE et CDDVD on re-télécharge que la liste
+
+			PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, action, nbMaxFichesATraiter);
+			if ( groupes.prefetch() == -1 ) {
+				log.debug("doMain() - Erreur Groupes" );
+				System.exit(1);
+			}
+			log.debug("doMain() - debbug" );
+			
+			// - - - Intervenants - - -
+			// On boucle sur les initiales des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
+			// On récupère la liste des intervenants dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
+
+			PrefetchIntervenants intervenants = new PrefetchIntervenants(dbContext, connectionSource, action, nbMaxFichesATraiter);
+			if ( intervenants.prefetch() == -1 ) {
+				log.debug("doMain() - Erreur Intervenants" );
+				System.exit(1);
+			}
+			
+			
+			// - - - Glossaire - - -
+			// On boucle sur les initiales des définitions (Cf site : doris.ffessm.fr/glossaire.asp?filtre=?)
+			// On récupère la liste des termes dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
+
+			PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, action, nbMaxFichesATraiter);
+			if ( glossaire.prefetch() == -1 ) {
+				log.debug("doMain() - Erreur Glossaire" );
+				System.exit(1);
+			}
+			
+			// - - - Bibliographie - - -
+			// On boucle sur la page des Fiches tant que l'on trouve dans la page courante (n)
+			//biblio.asp?mapage=(n+1)&PageCourante=n
+			// On récupère les Bibliographies dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
+			
+			PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, action, nbMaxFichesATraiter);
+			if ( bibliographies.prefetch() == -1 ) {
+				log.debug("doMain() - Erreur Bibliographies" );
+				System.exit(1);
+			}
+			
+			// - - - Liste des Fiches - - -
+			// Récupération de la liste des fiches sur le site de DORIS
+			// Elles sont récupérées dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
+
+			PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, action, nbMaxFichesATraiter,
+					groupes.listeGroupes, intervenants.listeParticipants);
+			if ( listeFiches.prefetch() == -1 ) {
+				log.debug("doMain() - Erreur Liste des Fiches" );
+				System.exit(1);
+			}
+
+
+			// - - - Mise à jour des zones géographiques - - -
+			PrefetchZonesGeographiques zonesGeographiques = new PrefetchZonesGeographiques(dbContext, connectionSource, action, nbMaxFichesATraiter);
+			if ( zonesGeographiques.prefetch() == -1 ) {
+				log.debug("doMain() - Erreur Mise à jour des zones géographiques" );
+				System.exit(1);
+			}
+			
+			
+			// - - - Enregistrement Date génération Base - - -
+			Date date = new Date();
+			SimpleDateFormat ft =  new SimpleDateFormat ("dd/MM/yyyy  HH:mm");
+			dbContext.dorisDB_metadataDao.create(new DorisDB_metadata(ft.format(date),""));
+			
+			
+			// - - - Génération CD et DVD  - - - 
+			if ( action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI) {
+				GenerationCDDVD generationCDDVD = new GenerationCDDVD(dbContext, connectionSource, action, zipCDDVD);
+				generationCDDVD.generation();
+			}
+			
+		} finally {
+			// destroy the data source which should close underlying connections
+			log.debug("doMain() - Fermeture Base");
+			if (connectionSource != null) {
+				connectionSource.close();
+			}
+		}
+	}
+	
+	private void dbToAndroidAction(){
+		log.debug("doMain() - Début Déplacement Base");
+		
+		// Consiste au déplacement du fichier de la base du run vers assets
+		String dataBaseRunString = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.length() );
+		log.debug("dataBase : " + dataBaseRunString);
+		
+		String dataBaseName = dataBaseRunString.substring(dataBaseRunString.lastIndexOf("/")+1, dataBaseRunString.length() );
+		log.debug("dataBaseName : " + dataBaseName);
+		
+		File dataBaseRunFile = new File(dataBaseRunString);
+		File dataBaseAndroidFile = new File("../DorisAndroid/assets/"+dataBaseName);
+		
+		if ( dataBaseRunFile.exists() ){
+			if ( dataBaseAndroidFile.exists() ){
+				try {
+					FileUtils.forceDelete(dataBaseAndroidFile);
+					log.info("Suppression du fichier précédent : " + dataBaseAndroidFile.getAbsolutePath());
+				} catch (IOException e) {
+					log.info("Problème suppression du fichier précédent : " + dataBaseAndroidFile.getAbsolutePath());
+					e.printStackTrace();
+				}
+			}
+			
+			try {
+				// Ne pas faire un moveTo car il faut que les 2 fichiers soient sur le même disque
+				// ça n'est pas le cas si on utilise un tmpfs pour run/database
+				FileUtils.moveFile(dataBaseRunFile, dataBaseAndroidFile);
+				log.info("Déplacement du fichier de la base vers : " + dataBaseAndroidFile.getAbsolutePath());
+			} catch (IOException e) {
+				log.error("Echec Déplacement du fichier de la base de : " + dataBaseRunFile.getAbsolutePath());
+				log.error("vers : " + dataBaseAndroidFile.getAbsolutePath());
+				e.printStackTrace();
+			}
+		} else {
+			log.error("Le fichier de la Base n'existe pas ou plus dans le Prefetch");
+			System.exit(1);
+		}
+		
+		log.debug("doMain() - Fin Déplacement Base");
+	}
+	
+	
+	private void downloadToRefAction() {
+		log.debug("doMain() - Début Déplacement Fichiers vers Ref");
+		
+		// Consiste au déplacement des fichiers de html vers html_ref
+		// et ceux de images vers images_ref
+
+		// On commence par vérifier que les dossiers ref existent
+		creationDossiersRef(action);
+
+		// html -> html_ref
+		File dossierHtml = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML);
+		File dossierHtmlRef = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF);
+		try {
+			FileUtils.copyDirectory(dossierHtml, dossierHtmlRef);
+			FileUtils.deleteDirectory(dossierHtml);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		// images -> images_ref
+		File dossierImages = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES);
+		if (dossierImages.exists()) {
+			File dossierImagesRef = new File(PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF);
+			try {
+				FileUtils.copyDirectory(dossierImages, dossierImagesRef);
+				FileUtils.deleteDirectory(dossierImages);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		log.debug("doMain() - Fin Déplacement Fichiers vers Ref");
+	}
+	
+	private void eraseButRefAction() {
+		log.debug("doMain() - Début Effacement Fichiers autres que Ref");
+		
+		// Effacement de tous les fichiers de run sauf image_ref et html_ref
+		
+		// Le chemin vers un dossier peut être écrit de façon différente
+		// Comparer 2 dossiers (File) ne fonctionne pas forcément, nous nous basons donc sur 
+		// sur la fin du chemin : pas top mais ça fonctionne
+		File dossierRun = new File(PrefetchConstants.DOSSIER_RACINE);
+		log.debug("dossierRun : " + dossierRun.getAbsolutePath());
+		
+		if ( dossierRun.exists() ){
+			
+			for (File dossierFils : dossierRun.listFiles()) {
+				
+				if ( dossierFils.isDirectory()
+						&& ! dossierFils.toString().matches(".*"+PrefetchConstants.DOSSIER_HTML_REF)
+						&& ! dossierFils.toString().matches(".*"+PrefetchConstants.DOSSIER_IMAGES_REF) ) {
+			
+					try {
+						// TODO : si dossier de la base dans tmpfs ne marche pas (évidement ?)
+						FileUtils.deleteDirectory(dossierFils);
+						log.info("Suppression de : " + dossierFils.getAbsolutePath());
+					} catch (IOException e) {
+						log.info("Problème suppression de : " + dossierFils.getAbsolutePath());
+						e.printStackTrace();
+					}
+					
+				}
+			}
+		} else {
+			// Ne devrait jamais arriver
+			log.error("Le dossier run n'existe pas !");
+			System.exit(1);
+		}
+		
+		log.debug("doMain() - Fin Effacement Fichiers autres que Ref");
+	}
+	
+	private void eraseAllAction() {
+		log.debug("doMain() - Début Effacement tous Dossiers");
+		
+		// Effacement de tous les fichiers de run
+		// à reserver à la mise à jour complète de la base : tâche "mensuelle"
+		
+		File dossierRun = new File(PrefetchConstants.DOSSIER_RACINE);
+		log.debug("dossierRun : " + dossierRun.getAbsolutePath());
+		
+		if ( dossierRun.exists() ){
+			
+			try {
+				FileUtils.cleanDirectory(dossierRun);
+				log.info("Suppression du contenu de : " + dossierRun.getAbsolutePath());
+			} catch (IOException e) {
+				log.info("Problème suppression du contenu de : " + dossierRun.getAbsolutePath());
+				e.printStackTrace();
+			}
+			
+		} else {
+			// Ne devrait jamais arriver
+			log.error("Le dossier run n'existe pas !");
+			System.exit(1);
+		}
+		
+		log.debug("doMain() - Fin Effacement tous Dossiers");
+	}
 	/**
 	 * Vérification des arguments passés à l'application
 	 * 
