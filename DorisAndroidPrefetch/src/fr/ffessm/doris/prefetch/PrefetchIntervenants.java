@@ -57,6 +57,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.ErrorCollector;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
@@ -105,9 +106,13 @@ public class PrefetchIntervenants {
 			} else {
 				listeFiltres="ab";
 			}
+
+			String errorGroup = "Check Intervenants";
+			ErrorCollector.getInstance().addGroup(errorGroup);
 			
 			for (char initiale : listeFiltres.toCharArray()){
 				log.debug("doMain() - Recup Participants : "+initiale);
+				
 				
 				String listeParticipantsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeParticipants-"+initiale+".html";
 				log.info("Récup. Liste des Participants : " + listeParticipantsFichier);
@@ -162,6 +167,7 @@ public class PrefetchIntervenants {
 								pageIntervenantRacine+"participant-"+participant.getNumeroParticipant()+".html") ) {
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom());
+							ErrorCollector.getInstance().addError(errorGroup, "Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom()+" "+Constants.getParticipantUrl(participant.getNumeroParticipant()));
 							//System.exit(1);
 						}
 					}

@@ -75,6 +75,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Constants.ParticipantKind;
+import fr.ffessm.doris.android.sitedoris.ErrorCollector;
 import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
@@ -355,6 +356,8 @@ public class Fiche {
 		//log.info("getFicheFromHtml() - ref : " + ficheRef);
 		//log.info("getFicheFromHtml() - Etat Fiche : " + getEtatFiche());		
 
+		String errorGroup = "Check structure fiche no "+ficheRef;
+		ErrorCollector.getInstance().addGroup(errorGroup);
 		
 		// Zones d'Observation (!!! <> Zones Géographie)
 		// Elles sont affichées entre le Nom Scientifique et le Nom Commun.
@@ -527,6 +530,10 @@ public class Fiche {
 										autreDenomination.setFiche(this);
 										_contextDB.autreDenominationDao.create(autreDenomination);
 									}
+
+									else{
+										ErrorCollector.getInstance().addError(errorGroup, "Rubrique autre dénomination existante mais vide");
+									}
 									
 								} else {
 									
@@ -549,6 +556,9 @@ public class Fiche {
 										SectionFiche contenu = new SectionFiche(positionSectionDansFiche, rubrique, contenuTexte);
 										contenu.setFiche(this);
 										_contextDB.sectionFicheDao.create(contenu);
+									}
+									else{
+										ErrorCollector.getInstance().addError(errorGroup, "Rubrique "+rubrique+" vide");
 									}
 								}
 							}
@@ -622,7 +632,10 @@ public class Fiche {
 											IntervenantFiche intervenantFiche = new IntervenantFiche(  participant, intervenantQualite.ordinal());
 											intervenantFiche.setFiche(this);
 											_contextDB.intervenantFicheDao.create(intervenantFiche);
-										}				
+										}
+										else{
+											ErrorCollector.getInstance().addError(errorGroup, "Participant "+intervenantRef+" introuvable dans la base");
+										}
 									}
 									
 								}

@@ -56,6 +56,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.ErrorCollector;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
@@ -101,6 +102,7 @@ public class PrefetchBibliographies {
 			
 			do {
 				log.debug("doMain() - pageCourante Bibliographie : "+pageCourante);
+				ErrorCollector.getInstance().addGroup("Biblio "+pageCourante);
 				
 				String listeBibliographies = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeBibliographies-"+pageCourante+".html";
 				log.info("Récup. Liste des Bibliographies : " + listeBibliographies);
@@ -109,6 +111,7 @@ public class PrefetchBibliographies {
 					if (prefetchTools.getFichierFromUrl(Constants.getListeBibliographiesUrl(pageCourante), listeBibliographies)) {
 						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeBibliographies), FileHtmlKind.LISTE_BIBLIO);
 					} else {
+						ErrorCollector.getInstance().addError("Biblio "+pageCourante, "Une erreur est survenue lors de la récupération de la liste des Bibliographies sur le lien :"+Constants.getListeBibliographiesUrl(pageCourante));
 						log.error("Une erreur est survenue lors de la récupération de la liste des Bibliographies : " + listeBibliographies);
 						System.exit(1);
 					}

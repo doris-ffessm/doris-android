@@ -60,6 +60,7 @@ import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
+import fr.ffessm.doris.android.sitedoris.ErrorCollector;
 import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
@@ -209,6 +210,9 @@ public class PrefetchFiches {
 				if (  nbFichesTraitees <= nbMaxFichesATraiter ) {
 					log.debug("doMain() - Traitement Fiche : "+ficheLight.getNomCommun());
 					
+					String errorGroup = "Fiche "+ficheLight.getNumeroFiche()+ " "+ficheLight.getNomCommun();
+					ErrorCollector.getInstance().addGroup(errorGroup);
+					
 					urlFiche =  Constants.getFicheFromIdUrl( ficheLight.getNumeroFiche() );
 					fichierSiteFicheUrl = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/fiche-"+ficheLight.getNumeroFiche()+".html";
 					fichierRefFicheUrl = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/fiche-"+ficheLight.getNumeroFiche()+".html";
@@ -221,6 +225,7 @@ public class PrefetchFiches {
 							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche, FileHtmlKind.FICHE);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
+							ErrorCollector.getInstance().addError(errorGroup, "Une erreur est survenue lors de la récupération de la fiche :" +urlFiche);
 							// Solution de contournement désespérée 
 							urlFiche = Constants.getFicheFromNomCommunUrl(ficheLight.getNomCommun());
 							log.error("=> Tentative sur : "+urlFiche);
@@ -229,6 +234,7 @@ public class PrefetchFiches {
 								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche, FileHtmlKind.FICHE);
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
+								ErrorCollector.getInstance().addError(errorGroup, "Une erreur est survenue lors de la récupération de la fiche :" +urlFiche);
 								continue;
 							}
 						}
@@ -243,6 +249,7 @@ public class PrefetchFiches {
 								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche, FileHtmlKind.FICHE);
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
+								ErrorCollector.getInstance().addError(errorGroup, "Une erreur est survenue lors de la récupération de la fiche :" +urlFiche);
 								// Solution de contournement désespérée 
 								urlFiche = Constants.getFicheFromNomCommunUrl(ficheLight.getNomCommun());
 								log.error("=> Tentative sur : "+urlFiche);
@@ -251,6 +258,7 @@ public class PrefetchFiches {
 									contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche, FileHtmlKind.FICHE);
 								} else {
 									log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
+									ErrorCollector.getInstance().addError(errorGroup, "Une erreur est survenue lors de la récupération de la fiche :" +urlFiche);
 									continue;
 								}
 							}
@@ -300,6 +308,7 @@ public class PrefetchFiches {
 							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierSiteListePhotos, FileHtmlKind.FICHE);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
+							ErrorCollector.getInstance().addError(errorGroup, "Une erreur est survenue lors de la récupération de la fiche :" +urlListePhotos);
 							continue;
 						}
 					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
@@ -319,6 +328,7 @@ public class PrefetchFiches {
 							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierRefListePhotos, FileHtmlKind.FICHE);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
+							ErrorCollector.getInstance().addError(errorGroup, "Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
 						}
 					}
 					
@@ -358,6 +368,8 @@ public class PrefetchFiches {
 										if (prefetchTools.getFichierFromUrl(Constants.VIGNETTE_BASE_URL+"/"+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+photoFiche.getCleURL().replace(" ", "_"))) {
 										} else {
 											log.error("Erreur sur une image 'Photos Vig' ; fiche : "+ficheLight.getNumeroFiche()+"-"+ficheLight.getNomCommun()+" ; url image : "+photoFiche.getCleURL());
+
+											ErrorCollector.getInstance().addError(errorGroup, "Erreur sur une image 'Photos Vig' ; fiche : "+ficheLight.getNumeroFiche()+"-"+ficheLight.getNomCommun()+" ; url image : "+photoFiche.getCleURL());
 											//System.exit(1);
 										}
 									}
@@ -366,6 +378,7 @@ public class PrefetchFiches {
 										if (prefetchTools.getFichierFromUrl(Constants.MOYENNE_BASE_URL+"/"+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_MED_RES+"/"+photoFiche.getCleURL().replace(" ", "_"))) {
 										} else {
 											log.error("Erreur sur une image 'Photos Moy' ; fiche : "+ficheLight.getNumeroFiche()+"-"+ficheLight.getNomCommun()+" ; url image : "+photoFiche.getCleURL());
+											ErrorCollector.getInstance().addError(errorGroup, "Erreur sur une image 'Photos Moy' ; fiche : "+ficheLight.getNumeroFiche()+"-"+ficheLight.getNomCommun()+" ; url image : "+photoFiche.getCleURL());
 											//System.exit(1);
 										}
 									}
@@ -375,6 +388,7 @@ public class PrefetchFiches {
 											if (prefetchTools.getFichierFromUrl(Constants.GRANDE_BASE_URL+"/"+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_HI_RES+"/"+photoFiche.getCleURL().replace(" ", "_"))) {
 											} else {
 												log.error("Erreur sur une image 'Photos' ; fiche : "+ficheLight.getNumeroFiche()+"-"+ficheLight.getNomCommun()+" ; url image : "+photoFiche.getCleURL());
+												ErrorCollector.getInstance().addError(errorGroup, "Erreur sur une image 'Photos' ; fiche : "+ficheLight.getNumeroFiche()+"-"+ficheLight.getNomCommun()+" ; url image : "+photoFiche.getCleURL());
 												//System.exit(1);
 											}
 										}

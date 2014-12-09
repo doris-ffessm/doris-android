@@ -71,8 +71,9 @@ public class SiteDoris {
 	
 	// Constructeur
     public SiteDoris(){
+    	
     }
-    
+        
 	public HashSet<FicheLight> getListeFichesFromHtml(String inCodePageHtml) {
     	//log.info("getListeFichesFromHtml()- Début");
 		//log.debug("getListeFichesFromHtml()- inCodePageHtml.length() : " + inCodePageHtml.length());
@@ -359,6 +360,8 @@ public class SiteDoris {
 			String inCodePageHtml) {
 		//log.trace("getListePhotosFiche()- Début");
 		Common_Outils commonOutils = new Common_Outils();
+		String errorGroup = "check photo descriptions for fiche "+fiche.getNumeroFiche()+" "+fiche.getNomCommun();
+		ErrorCollector.getInstance().addGroup(errorGroup);
 		
 		List<PhotoFiche> listePhotosFiche = new ArrayList<PhotoFiche>(0);
     	
@@ -373,7 +376,7 @@ public class SiteDoris {
     	
     	// titre de la photo courante
     	String titrePhotoCourante = null;
-    	// descritioon de la photo courante
+    	// descrition de la photo courante
     	String descritionPhotoCourante = null;
     	
     	for (Element elementTD : listeElementsTD) {
@@ -407,11 +410,17 @@ public class SiteDoris {
 	    				PhotoFiche photoFiche = new PhotoFiche(cleURL,titrePhotoCourante, descritionPhotoCourante);
 	    				listePhotosFiche.add(photoFiche);
 	    			}
-
+	    			if(titrePhotoCourante == null){
+	    				ErrorCollector.getInstance().addError(errorGroup, "photo sans titre pour la fiche "+fiche.getNumeroFiche()+" : "+elementIMG);
+	    			}
+	    			if(descritionPhotoCourante == null){
+	    				ErrorCollector.getInstance().addError(errorGroup, "photo sans description pour la fiche "+fiche.getNumeroFiche()+" : "+elementIMG);
+	    			}
 	    			titrePhotoCourante = null;
 	    			descritionPhotoCourante = null;
     			}
     			else{
+    				ErrorCollector.getInstance().addError(errorGroup, "description photo incorrecte pour la fiche "+fiche.getNumeroFiche()+" : "+elementIMG);
     				log.warn("getListePhotosFiche() - ignore photo incorrecte pour la fiche "+fiche.getNumeroFiche());
     				// ignore l'image si image manquante
     				continue;

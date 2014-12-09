@@ -106,10 +106,7 @@ public class PrefetchDorisWebSite {
 		action = checkArgs(args);
 		log.info("action : " + action);
 		log.info("Nb. Fiches Max : " + nbMaxFichesATraiter);
-		
-
-		// enable collection of Doris web site errors in an juit xml file
-		ErrorCollector.getInstance().collectErrors = true;
+				
 		
 		// - - - - - - - - - - - -
 		// - - - Test  - - - - - -
@@ -171,6 +168,10 @@ public class PrefetchDorisWebSite {
 	
 	
 	private void cdDVDAction()  throws Exception{
+		
+		// enable collection of Doris web site errors in an juit xml file
+		ErrorCollector.getInstance().collectErrors = true;
+				
 		// Vérification, Création, Sauvegarde des dossiers de travail
 		renommageDossiers(action);
 		creationDossiers(action);
@@ -268,6 +269,8 @@ public class PrefetchDorisWebSite {
 				GenerationCDDVD generationCDDVD = new GenerationCDDVD(dbContext, connectionSource, action, zipCDDVD);
 				generationCDDVD.generation();
 			}
+			
+			ErrorCollector.getInstance().saveErrorsAsJUnitFile(PrefetchConstants.DOSSIER_RACINE + "/dorisSite_testsuites.xml");
 			
 		} finally {
 			// destroy the data source which should close underlying connections
