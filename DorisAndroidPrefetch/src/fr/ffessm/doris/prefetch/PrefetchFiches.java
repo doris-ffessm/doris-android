@@ -328,7 +328,10 @@ public class PrefetchFiches {
 							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierRefListePhotos, FileHtmlKind.FICHE);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
-							ErrorCollector.getInstance().addError(errorGroup, "Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
+							if(ficheLight.getEtatFiche() == 4){
+								// c'est une erreur uniquement pour le fiche publiées
+								ErrorCollector.getInstance().addError(errorGroup, "Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
+							}
 						}
 					}
 					
