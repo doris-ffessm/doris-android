@@ -204,6 +204,8 @@ public class PrefetchDorisWebSite {
 				log.debug("doMain() - Erreur Groupes" );
 				System.exit(1);
 			}
+
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_RACINE + "/dorisSite_groupes_testsuites.xml");
 			log.debug("doMain() - debbug" );
 			
 			// - - - Intervenants - - -
@@ -215,7 +217,8 @@ public class PrefetchDorisWebSite {
 				log.debug("doMain() - Erreur Intervenants" );
 				System.exit(1);
 			}
-			
+
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_RACINE + "/dorisSite_intervenants_testsuites.xml");
 			
 			// - - - Glossaire - - -
 			// On boucle sur les initiales des définitions (Cf site : doris.ffessm.fr/glossaire.asp?filtre=?)
@@ -226,7 +229,8 @@ public class PrefetchDorisWebSite {
 				log.debug("doMain() - Erreur Glossaire" );
 				System.exit(1);
 			}
-			
+
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_RACINE + "/dorisSite_glossaire_testsuites.xml");
 			// - - - Bibliographie - - -
 			// On boucle sur la page des Fiches tant que l'on trouve dans la page courante (n)
 			//biblio.asp?mapage=(n+1)&PageCourante=n
@@ -237,7 +241,8 @@ public class PrefetchDorisWebSite {
 				log.debug("doMain() - Erreur Bibliographies" );
 				System.exit(1);
 			}
-			
+
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_RACINE + "/dorisSite_biblio_testsuites.xml");
 			// - - - Liste des Fiches - - -
 			// Récupération de la liste des fiches sur le site de DORIS
 			// Elles sont récupérées dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
@@ -249,6 +254,7 @@ public class PrefetchDorisWebSite {
 				System.exit(1);
 			}
 
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_RACINE + "/dorisSite_fiches_testsuites.xml");
 
 			// - - - Mise à jour des zones géographiques - - -
 			PrefetchZonesGeographiques zonesGeographiques = new PrefetchZonesGeographiques(dbContext, connectionSource, action, nbMaxFichesATraiter);
@@ -256,7 +262,8 @@ public class PrefetchDorisWebSite {
 				log.debug("doMain() - Erreur Mise à jour des zones géographiques" );
 				System.exit(1);
 			}
-			
+
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_RACINE + "/dorisSite_zonesgeo_testsuites.xml");
 			
 			// - - - Enregistrement Date génération Base - - -
 			Date date = new Date();
@@ -270,7 +277,6 @@ public class PrefetchDorisWebSite {
 				generationCDDVD.generation();
 			}
 			
-			ErrorCollector.getInstance().saveErrorsAsJUnitFile(PrefetchConstants.DOSSIER_RACINE + "/dorisSite_testsuites.xml");
 			
 		} finally {
 			// destroy the data source which should close underlying connections

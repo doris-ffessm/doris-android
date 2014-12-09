@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 /**
  * Classe utilisée pour collecter les erreurs du site et les mettre en forme pour être remontées à l'équipe
  *
@@ -53,7 +55,7 @@ public class ErrorCollector {
 		}
 	}
 	
-	public void saveErrorsAsJUnitFile(String fileName){
+	public void dumpErrorsAsJUnitFile(String fileName){
 		File file = new File(fileName);
 
 		try {
@@ -70,18 +72,21 @@ public class ErrorCollector {
 			bw.write("<testsuites disabled=\"\" errors=\"\" failures=\"\" name=\"\" tests=\"\" time=\"\">\n");
 									
 			
+			
 			for (Iterator<String> iterator = errorList.keySet().iterator(); iterator.hasNext();) {
 				String group =  iterator.next();
 				List<String> list = errorList.get(group);
+				String groupForXML = StringEscapeUtils.escapeXml(group);
 				bw.write("   <testsuite errors=\""+list.size()+"\" failures=\"\"  id=\"\"\n");
-				bw.write("              name=\""+group+"\" package=\"\" skipped=\"\" tests=\""+(list.size()==0?"1":list.size())+"\" time=\"\" timestamp=\"\">\n");
+				bw.write("              name=\""+groupForXML+"\" package=\"\" skipped=\"\" tests=\""+(list.size()==0?"1":list.size())+"\" time=\"\" timestamp=\"\">\n");
 				
 				if(list.size()==0){
-					bw.write("     <testcase assertions=\"\" classname=\"\" name=\""+group+" OK\" />\n");
+					bw.write("     <testcase assertions=\"\" classname=\"\" name=\""+groupForXML+" OK\" />\n");
 				}
 				for (String err : list) {
-					bw.write("     <testcase assertions=\"\" classname=\"\" name=\""+err+"\" >\n");
-					bw.write("        <error message=\"\"  type=\""+err+"\" />\n");
+					String errForXML = StringEscapeUtils.escapeXml(err);
+					bw.write("     <testcase assertions=\"\" classname=\"\" name=\""+errForXML+"\" >\n");
+					bw.write("        <error message=\"\"  type=\""+errForXML+"\" />\n");
 					bw.write("        <system-out/><system-err/>\n");
 					bw.write("     </testcase>\n");
 				}
@@ -95,6 +100,9 @@ public class ErrorCollector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		errorList.clear();
+		
 	}
 	
 	
