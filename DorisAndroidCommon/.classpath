@@ -6,6 +6,6 @@
 	<classpathentry kind="lib" path="libs/commons-lang3-3.1.jar"/>
 	<classpathentry kind="lib" path="libs/kxml2-2.3.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/ormlite-core-4.47.jar" sourcepath="/DorisAndroid/libs/src/ormlite-core-4.47-sources.jar"/>
-	<classpathentry kind="lib" path="libs/jericho-html-3.1.jar"/>
+	<classpathentry kind="lib" path="libs/jericho-html-3.1.jar" sourcepath="libs/jericho-html-3.4-dev.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

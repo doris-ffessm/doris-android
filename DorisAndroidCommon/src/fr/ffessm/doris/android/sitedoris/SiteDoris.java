@@ -421,7 +421,7 @@ public class SiteDoris {
     			}
     			else{
     				ErrorCollector.getInstance().addError(errorGroup, "description photo incorrecte pour la fiche "+fiche.getNumeroFiche()+" : "+elementIMG);
-    				log.warn("getListePhotosFiche() - ignore photo incorrecte pour la fiche "+fiche.getNumeroFiche());
+    				log.warn("getListePhotosFiche() - Ignore photo incorrecte pour la fiche "+fiche.getNumeroFiche()+" - "+fiche.getNomCommun());
     				// ignore l'image si image manquante
     				continue;
     			}
