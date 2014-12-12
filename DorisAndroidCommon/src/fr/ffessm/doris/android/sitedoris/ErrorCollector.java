@@ -77,8 +77,8 @@ public class ErrorCollector {
 				String group =  iterator.next();
 				List<String> list = errorList.get(group);
 				String groupForXML = StringEscapeUtils.escapeXml(group);
-				bw.write("   <testsuite errors=\""+list.size()+"\" failures=\"\"  id=\"\"\n");
-				bw.write("              name=\""+groupForXML+"\" package=\"\" skipped=\"\" tests=\""+(list.size()==0?"1":list.size())+"\" time=\"\" timestamp=\"\">\n");
+				bw.write("   <testsuite errors=\""+list.size()+"\" failures=\"0\"\n");
+				bw.write("              name=\""+groupForXML+"\" skipped=\"0\" tests=\""+(list.size()==0?"1":list.size())+"\" time=\"\" timestamp=\"\">\n");
 				
 				if(list.size()==0){
 					bw.write("     <testcase assertions=\"\" classname=\"\" name=\""+groupForXML+" OK\" />\n");
@@ -86,8 +86,10 @@ public class ErrorCollector {
 				for (String err : list) {
 					String errForXML = StringEscapeUtils.escapeXml(err);
 					bw.write("     <testcase assertions=\"\" classname=\"\" name=\""+errForXML+"\" >\n");
-					bw.write("        <error message=\"\"  type=\""+errForXML+"\" />\n");
-					bw.write("        <system-out/><system-err/>\n");
+					bw.write("        <error message=\""+errForXML+"\">\n");
+					bw.write("problem in "+groupForXML+", "+errForXML);
+					bw.write("</error/>\n");
+					/*bw.write("        <system-out/><system-err/>\n");*/
 					bw.write("     </testcase>\n");
 				}
 				
