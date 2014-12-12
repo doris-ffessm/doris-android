@@ -77,8 +77,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.ActionBar;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.view.ContextMenu;
@@ -463,8 +461,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             	return true;
         	case R.id.detailsfiche_elementview_action_maj_fiche:
         		DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity =
-        			(VerifieMAJFiche_BgActivity) new VerifieMAJFiche_BgActivity(getApplicationContext(),
-					this.getHelper()).execute(""+ficheNumero);
+        			(VerifieMAJFiche_BgActivity) new VerifieMAJFiche_BgActivity(getApplicationContext()).execute(""+ficheNumero);
         		// TODO : refreshScreenData();
             	return true;
 	        case R.id.detailsfiche_elementview_action_aide:

@@ -113,7 +113,6 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
 		ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.detailsparticipant_elementview);
 
-    	
 		ActionBar actionBar = getSupportActionBar();
 	    actionBar.setDisplayHomeAsUpEnabled(true);
 

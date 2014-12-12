@@ -42,7 +42,6 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
@@ -60,7 +59,6 @@ import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -74,8 +72,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedGroupeSelection_ClassListViewActivity_additionalimports
+import android.view.KeyEvent;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.BuildConfig;
 // End of user code
 

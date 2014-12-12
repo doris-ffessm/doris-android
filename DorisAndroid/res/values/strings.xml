@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">DORISAndroid</string>
 	<!--Start of user code remove protected zone to rebuild all default values
 		-->
+	<string name="app_name">DORISAndroid</string>
 	<string name="ffessm">"Fédération Française d\'Études et de Sports Sous-Marins"</string>
 	<string name="ffessm_url">http://www.ffessm.fr</string>
 		

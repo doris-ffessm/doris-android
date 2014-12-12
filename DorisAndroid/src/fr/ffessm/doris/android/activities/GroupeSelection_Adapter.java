@@ -51,15 +51,10 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Groupe;
 
 
-import android.app.ActionBar.LayoutParams;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -77,10 +72,14 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code protected additional GroupeSelection_Adapter imports
 // additional imports
-
+import android.app.ActionBar.LayoutParams;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -89,8 +88,8 @@ import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Textes_Outils;
-//End of user code
 import fr.ffessm.doris.android.tools.ThemeUtil;
+//End of user code
 
 public class GroupeSelection_Adapter extends BaseAdapter  {
 	
@@ -110,7 +109,16 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	//Start of user code protected additional GroupeSelection_Adapter attributes
 	boolean depuisAccueil = false;
 	private Textes_Outils textesOutils;
-	
+	// niveau de profondeur utilisé pour le listGroup par rapport au Groupe 
+    public Groupe currentRootGroupe;
+    
+    
+    /** custom constructor
+     * 
+     * @param context
+     * @param contextDB
+     * @param depuisAccueil
+     */
 	public GroupeSelection_Adapter(Context context, DorisDBHelper contextDB, boolean depuisAccueil) {
 		super();
 		this.context = context;
@@ -121,16 +129,15 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		textesOutils = new Textes_Outils(context);
 		this.depuisAccueil = depuisAccueil;
 	}
-	
-	// additional attributes
-	// niveau de profondeur utilisé pour le listGroup par rapport au Groupe 
-    public Groupe currentRootGroupe;
-	
+	// End of user code
+
 	public GroupeSelection_Adapter(Context context, DorisDBHelper contextDB) {
 		super();
 		this.context = context;
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        // Start of user code protected GroupeSelection_Adapter constructor
+		// End of user code
 		updateList();
 	}
 	
@@ -193,7 +200,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		detailsSB.append(" ");
         tvDetails.setText(detailsSB.toString());
         // End of user code
-        
+
         // assign the entry to the row in order to ease GUI interactions
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.groupeselection_listviewrow);
         llRow.setTag(entry);

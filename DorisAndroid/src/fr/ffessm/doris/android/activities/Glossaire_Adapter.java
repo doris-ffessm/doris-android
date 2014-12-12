@@ -41,7 +41,6 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -52,10 +51,6 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
-import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.tools.Photos_Outils;
-import fr.ffessm.doris.android.tools.Textes_Outils;
-import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
 
 import android.content.Context;
@@ -65,7 +60,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -80,10 +74,16 @@ import android.widget.Toast;
 
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.squareup.picasso.Picasso;
 
 //Start of user code protected additional Glossaire_Adapter imports
 // additional imports
+import android.view.ViewGroup.LayoutParams;
+import com.squareup.picasso.Picasso;
+import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Textes_Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+import java.io.IOException;
 //End of user code
 
 public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
@@ -114,6 +114,8 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 		this.context = context;
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        // Start of user code protected Glossaire_Adapter constructor
+		// End of user code
 		updateList();
 	}
 	
@@ -179,7 +181,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
     								Integer.parseInt(context.getString(R.string.detailentreeglossaire_elementview_details_nbcarmax))
         		) );
         // End of user code
-        
+
         // assign the entry to the row in order to ease GUI interactions
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.glossaire_listviewrow);
         llRow.setTag(entry);

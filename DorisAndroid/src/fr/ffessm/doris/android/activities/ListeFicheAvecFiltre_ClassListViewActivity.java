@@ -43,8 +43,6 @@ package fr.ffessm.doris.android.activities;
 
 
 import java.util.HashMap;
-
-import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
 import fr.ffessm.doris.android.datamodel.*;
@@ -84,9 +82,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity_additionalimports
-import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
-import android.preference.PreferenceManager;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -94,6 +90,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 // End of user code
 
 public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener , ActivityWithIndexBar{
@@ -235,7 +233,6 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	
 		//On vide le cache des infos liées aux fiches
 		getHelper().getFicheDao().clearObjectCache();
-		getHelper().getFiches_DefinitionsGlossaireDao().clearObjectCache();
 		getHelper().getFiches_ZonesGeographiquesDao().clearObjectCache();
 		getHelper().getIntervenantFicheDao().clearObjectCache();
 		getHelper().getPhotoFicheDao().clearObjectCache();

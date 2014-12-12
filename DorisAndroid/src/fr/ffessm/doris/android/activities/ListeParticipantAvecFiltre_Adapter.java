@@ -121,11 +121,10 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 		this.context = context;
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		
-		
+        // Start of user code protected ListeParticipantAvecFiltre_Adapter constructor
 	    photosOutils = new Photos_Outils(context);
 	    reseauOutils = new Reseau_Outils(context);
-		
+		// End of user code
 		updateList();
 	}
 	
@@ -181,7 +180,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
         // End of user code
-		
+
         // assign the entry to the row in order to ease GUI interactions
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.listeparticipantavecfiltre_listviewrow);
         llRow.setTag(entry);

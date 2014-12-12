@@ -146,6 +146,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		this.context = context;
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        // Start of user code protected ListeFicheAvecFiltre_Adapter constructor
+		// End of user code
 		updateList();
 	}
 	
@@ -285,7 +287,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
         // End of user code
-		
+
         // assign the entry to the row in order to ease GUI interactions
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.listeficheavecfiltre_listviewrow);
         llRow.setTag(entry);
@@ -435,7 +437,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		}
 		// End of user code
 		ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_icon);
-		ivIcon.setImageResource(R.drawable.app_ic_launcher);
+    	ivIcon.setImageResource(R.drawable.app_ic_launcher);
 		return convertView;
 	}
 	protected Fiche getFicheForId(Integer ficheId){

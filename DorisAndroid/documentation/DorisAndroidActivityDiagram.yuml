@@ -15,8 +15,6 @@
 (DetailEntreeGlossaire)-><DetailEntreeGlossaireChoice>
 (ListeBibliographieAvecFiltre)-><ListeBibliographieAvecFiltreChoice>
 (DetailsBibliographie)-><DetailsBibliographieChoice>
-(TelechargeFiches)->(end)
-(VerifieNouvellesFiches)->(end)
 (VerifieMAJFiches)->(end)
 (VerifieMAJFiche)->(end)
 (TelechargePhotosAsync)->(end)
@@ -26,7 +24,6 @@
 <AccueilChoice>->(EtatModeHorsLigne)
 <AccueilChoice>->(ListeParticipantAvecFiltre)
 <AccueilChoice>->(Glossaire)
-<AccueilChoice>->(VerifieNouvellesFiches)
 <AccueilChoice>->(VerifieMAJFiches)
 <AccueilChoice>->(TelechargePhotosAsync)
 <EtatModeHorsLigneChoice>->(TelechargePhotosAsync)

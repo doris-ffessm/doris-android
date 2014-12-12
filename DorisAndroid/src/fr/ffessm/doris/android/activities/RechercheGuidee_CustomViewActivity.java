@@ -43,7 +43,6 @@ package fr.ffessm.doris.android.activities;
 
 
 import fr.ffessm.doris.android.BuildConfig;
-import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
@@ -68,6 +67,9 @@ import android.widget.Toast;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code additional imports RechercheGuidee_CustomViewActivity
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
+
+
 //End of user code
 public class RechercheGuidee_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 //Start of user code additional implements RechercheGuidee_CustomViewActivity

@@ -76,7 +76,6 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.ZoneObservation;
-import fr.ffessm.doris.android.datamodel.associations.Fiches_DefinitionsGlossaire;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesObservations;
 
@@ -163,7 +162,6 @@ public class PrefetchDBTools {
 		TableUtils.createTable(connectionSource, DefinitionGlossaire.class);
 		TableUtils.createTable(connectionSource, Fiches_ZonesGeographiques.class);
 		TableUtils.createTable(connectionSource, Fiches_ZonesObservations.class);
-		TableUtils.createTable(connectionSource, Fiches_DefinitionsGlossaire.class);
 		TableUtils.createTable(connectionSource, EntreeBibliographie.class);
 		TableUtils.createTable(connectionSource, Classification.class);
 		TableUtils.createTable(connectionSource, ClassificationFiche.class);

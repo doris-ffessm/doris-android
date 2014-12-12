@@ -45,15 +45,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
-import fr.ffessm.doris.android.datamodel.Groupe;
 
 
 import android.content.Context;
@@ -125,12 +122,9 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
 		super();
 		this.context = context;
 		this._contextDB = contextDB;
-		
-		photosOutils = new Photos_Outils(context);
-		textesOutils = new Textes_Outils(context);
-		reseauOutils = new Reseau_Outils(context);
-		
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        // Start of user code protected ListeBibliographieAvecFiltre_Adapter constructor
+		// End of user code
 		updateList();
 	}
 	
@@ -195,7 +189,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
             		Integer.parseInt(context.getString(R.string.listebibliographieavecfiltre_classlistview_titre_nbcarmax))
             		) );
 		// End of user code
-        
+
         // assign the entry to the row in order to ease GUI interactions
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.listebibliographieavecfiltre_listviewrow);
         llRow.setTag(entry);

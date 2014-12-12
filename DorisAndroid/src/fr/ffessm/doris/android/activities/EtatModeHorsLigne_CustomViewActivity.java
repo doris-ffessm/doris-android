@@ -45,26 +45,14 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.services.GestionPhotoDiskService;
-import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
-import fr.ffessm.doris.android.tools.Disque_Outils;
-import fr.ffessm.doris.android.tools.Disque_Outils.ImageLocation;
-import fr.ffessm.doris.android.tools.Fiches_Outils;
-import fr.ffessm.doris.android.tools.Param_Outils;
-import fr.ffessm.doris.android.tools.Photos_Outils;
-import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
-import fr.ffessm.doris.android.tools.Photos_Outils.PrecharMode;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.SparseIntArray;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
@@ -73,27 +61,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
+//Start of user code additional imports EtatModeHorsLigne_CustomViewActivity
+import java.util.HashMap;
+import java.util.List;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-//Start of user code additional imports EtatModeHorsLigne_CustomViewActivity
-import java.util.HashMap;
-import java.util.List;
 
+import android.app.AlertDialog;
 import android.content.SharedPreferences;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
@@ -102,8 +85,13 @@ import android.os.Message;
 import android.os.AsyncTask.Status;
 import android.preference.PreferenceManager;
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import com.j256.ormlite.dao.CloseableIterator;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
@@ -121,6 +109,16 @@ import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 import fr.ffessm.doris.android.tools.disk.StorageHelper;
 import fr.ffessm.doris.android.tools.disk.StorageHelper.StorageVolume;
+
+import fr.ffessm.doris.android.services.GestionPhotoDiskService;
+import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
+import fr.ffessm.doris.android.tools.Disque_Outils;
+import fr.ffessm.doris.android.tools.Disque_Outils.ImageLocation;
+import fr.ffessm.doris.android.tools.Fiches_Outils;
+import fr.ffessm.doris.android.tools.Param_Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+import fr.ffessm.doris.android.tools.Photos_Outils.PrecharMode;
 //End of user code
 public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 //Start of user code additional implements EtatModeHorsLigne_CustomViewActivity
@@ -523,55 +521,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		}
 		btnFoldUnflodGestionDisk.setImageResource(imageCouranteGestionDisk);
     }
-
-    /** refresh screen from data 
-     */
-    public void refreshScreenData() {
-    	//Start of user code action when refreshing the screen EtatModeHorsLigne_CustomViewActivity
-    	
-    	isMovingPhotos = DorisApplicationContext.getInstance().isMovingPhotos;
-    	isTelechPhotos = DorisApplicationContext.getInstance().isTelechPhotos;
-    	
-    	// mise à jour de la date de la base
-    	TextView etatBase = (TextView) findViewById(R.id.etatmodehorsligne_etat_base_description_textView);
-    	try {
-	    	CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
-	    	while (it.hasNext()) {
-	    		etatBase.setText(getString(R.string.etatmodehorsligne_etat_base_description_text)+it.next().getDateBase());
-	    		//sb.append("Date base locale : " + it.next().getDateBase()+"\n");
-			}
-			it.close();
-		} catch (SQLException e) {
-			Log.e(LOG_TAG, e.getMessage(), e);
-		} catch (java.lang.IllegalStateException e){
-			Log.e(LOG_TAG, e.getMessage(), e);	
-			// en cas d'erreur d'état, on annule tout, on est probablement en train de clore l'appli
-			return;
-		}
-    	
-    	// Mise à jour des Barres d'avancement
-    	if (!isMovingPhotos) refreshProgressBarZone();
-    	
-    	// Mise à jour du nombres de fichiers par dossier
-		photosOutils.refreshImagesNbInFolder();
-		
-    	// Mise à jour des disques disponibles
-    	refreshDiskDisponible();
-    	
-    	// Mise à jour des tailles des dossiers 
-    	// & Mise à jour des Boutons de Gestion des Dossiers
-		refreshFolderSize();
-		
-		// Mise à jour de l'utilisation des Disques 
-		if (!isTelechPhotos) refreshUsedDisk();
-		
-    	// mise à jour des Boutons de Gestion des Disques
-       	refreshGestionDisk();
-       	
-		//End of user code
-	}
-
-    public void refreshProgressBarZone() {
+    
+    
+ public void refreshProgressBarZone() {
     	
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - update progress bar : ");
 		ZoneGeographique zoneToutesZones = new ZoneGeographique();
@@ -908,8 +860,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Fin");
     }
-	//End of user code
-   
+    
     public void refreshGestionDisk() {
     	
     	// Déplacement arrêté en cours
@@ -1213,8 +1164,56 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
     	}
     }
-   
- 
+
+	//End of user code
+
+    /** refresh screen from data 
+     */
+    public void refreshScreenData() {
+    	//Start of user code action when refreshing the screen EtatModeHorsLigne_CustomViewActivity
+    	
+    	isMovingPhotos = DorisApplicationContext.getInstance().isMovingPhotos;
+    	isTelechPhotos = DorisApplicationContext.getInstance().isTelechPhotos;
+    	
+    	// mise à jour de la date de la base
+    	TextView etatBase = (TextView) findViewById(R.id.etatmodehorsligne_etat_base_description_textView);
+    	try {
+	    	CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
+	    	while (it.hasNext()) {
+	    		etatBase.setText(getString(R.string.etatmodehorsligne_etat_base_description_text)+it.next().getDateBase());
+	    		//sb.append("Date base locale : " + it.next().getDateBase()+"\n");
+			}
+			it.close();
+		} catch (SQLException e) {
+			Log.e(LOG_TAG, e.getMessage(), e);
+		} catch (java.lang.IllegalStateException e){
+			Log.e(LOG_TAG, e.getMessage(), e);	
+			// en cas d'erreur d'état, on annule tout, on est probablement en train de clore l'appli
+			return;
+		}
+    	
+    	// Mise à jour des Barres d'avancement
+    	if (!isMovingPhotos) refreshProgressBarZone();
+    	
+    	// Mise à jour du nombres de fichiers par dossier
+		photosOutils.refreshImagesNbInFolder();
+		
+    	// Mise à jour des disques disponibles
+    	refreshDiskDisponible();
+    	
+    	// Mise à jour des tailles des dossiers 
+    	// & Mise à jour des Boutons de Gestion des Dossiers
+		refreshFolderSize();
+		
+		// Mise à jour de l'utilisation des Disques 
+		if (!isTelechPhotos) refreshUsedDisk();
+		
+    	// mise à jour des Boutons de Gestion des Disques
+       	refreshGestionDisk();
+       	
+		//End of user code
+	}
+
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -1285,7 +1284,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		super.onCreateSupportNavigateUpTaskStack(builder);
 		//End of user code
 	}
-	
 	private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }

@@ -54,26 +54,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
 // Start of user code additional imports TelechargePhotosAsync_BgActivity
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.GenericRawResults;
 
 import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
+import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.LimitTimer;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
@@ -88,12 +89,13 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	
 	
     private NotificationHelper mNotificationHelper;
-    private OrmLiteDBHelper dbHelper;
+    private OrmLiteDBHelper dbHelper;    
     private Context context;
-    private DorisDBHelper dorisDBHelper;
-    
     
     // Start of user code additional attribute declarations TelechargePhotosAsync_BgActivity
+
+    private DorisDBHelper dorisDBHelper;
+    
     // Permet de ralentir le traitement pour laisser du temps processeur aux autres applications
     // en milliseconde, on multiplie selon les contextes par 1, 2, 4
     int tempo = 50;
@@ -118,7 +120,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	// End of user code
     
 	/** constructor */
-    public TelechargePhotosAsync_BgActivity(Context context/*, OrmLiteDBHelper dbHelper*/){
+    public TelechargePhotosAsync_BgActivity(Context context){
+		this.dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
+		// use application wide helper
+        this.context = context.getApplicationContext();
 		// Start of user code additional attribute declarations TelechargePhotosAsync_BgActivity constructor
     	Log.d(LOG_TAG, "TelechargePhotosAsync_BgActivity() - Début");
     	
@@ -141,14 +146,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
         	tempo = Integer.valueOf(preferences.getString(context.getString(R.string.pref_key_asynch_tempo), "50") );
         }catch(Exception e){}
 
+        this.dorisDBHelper = dbHelper.getDorisDBHelper();
+        
         Log.d(LOG_TAG, "TelechargePhotosAsync_BgActivity() - Fin");
 		// End of user code
-        // use application wide helper
-        
-        this.context = context.getApplicationContext();
-        
-        this.dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
-        this.dorisDBHelper = dbHelper.getDorisDBHelper();
         
     }
 

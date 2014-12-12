@@ -102,6 +102,8 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 		this.context = context;
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        // Start of user code protected ZoneGeoSelection_Adapter constructor
+		// End of user code
 		updateList();
 	}
 	
@@ -151,7 +153,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
         // End of user code
-		
+
         // assign the entry to the row in order to ease GUI interactions
         LinearLayout llRow = (LinearLayout)convertView.findViewById(R.id.zonegeoselection_listviewrow);
         llRow.setTag(entry);

@@ -54,13 +54,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
 // Start of user code additional imports VerifieMAJFiche_BgActivity
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -77,16 +80,18 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
 	
 	
     private NotificationHelper mNotificationHelper;
-    private OrmLiteDBHelper dbHelper;
+    private OrmLiteDBHelper dbHelper;    
     private Context context;
     
-
-    // Start of user code additional attribute declarations VerifieMAJFiches_BgActivity
+    // Start of user code additional attribute declarations VerifieMAJFiche_BgActivity
     private Reseau_Outils reseauOutils;
 	// End of user code
     
 	/** constructor */
-    public VerifieMAJFiche_BgActivity(Context context, OrmLiteDBHelper dbHelper){
+    public VerifieMAJFiche_BgActivity(Context context){
+		this.dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
+		// use application wide helper
+        this.context = context.getApplicationContext();
 		// Start of user code additional attribute declarations VerifieMAJFiche_BgActivity constructor
     	reseauOutils = new Reseau_Outils(context);
     	
@@ -96,8 +101,7 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
 		mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 		
         // End of user code
-        this.dbHelper = dbHelper;
-		this.context = context;
+        
     }
 
     protected void onPreExecute(){

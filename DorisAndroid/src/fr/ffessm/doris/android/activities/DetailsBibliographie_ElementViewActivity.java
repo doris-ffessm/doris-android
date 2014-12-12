@@ -45,8 +45,6 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.Photos_Outils;
-import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -77,8 +75,9 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Reseau_Outils;
 import java.io.IOException;
 // End of user code
 

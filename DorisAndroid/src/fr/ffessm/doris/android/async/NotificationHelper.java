@@ -96,15 +96,15 @@ public class NotificationHelper {
        
         
         //create the content which is shown in the notification pulldown
-        // Start of user code notification helper additional status message
+		// Start of user code notification helper additional status message (createNotification)
         CharSequence contentText = "";
         if ( !maxItemToProcess.equals("???") && !maxItemToProcess.equals("0") ) {
         	contentText = "0 / "+maxItemToProcess; //Text of the notification in the pull down
         } else {
         	contentText = "";
         }
-        // End of user code
-        
+		// End of user code
+
         //you have to set a PendingIntent on a notification to tell the system what you want it to do when the notification is selected
         mContentIntent = PendingIntent.getActivity(
         		mContext,
@@ -139,7 +139,7 @@ public class NotificationHelper {
     public void progressUpdate(int nbItemsComplete) {
         //build up the new status message
 
-		// Start of user code notification helper additional status message
+		// Start of user code notification helper additional status message (progressUpdate)
     	CharSequence contentText = "";
         if ( !maxItemToProcess.equals("???") && !maxItemToProcess.equals("0") ) {
         	contentText = racineTickerText + nbItemsComplete + " / " +maxItemToProcess;

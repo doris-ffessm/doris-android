@@ -95,23 +95,22 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	// private Dao<Groupe, Integer> groupeDao = null;
 	private RuntimeExceptionDao<Groupe, Integer> groupeRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
-	// private Dao<DefinitionGlossaire, Integer> definitionGlossaireDao = null;
-	private RuntimeExceptionDao<DefinitionGlossaire, Integer> definitionGlossaireRuntimeDao = null;
-	// the DAO object we use to access the diveBudies table
 	// private Dao<DorisDB_metadata, Integer> dorisDB_metadataDao = null;
 	private RuntimeExceptionDao<DorisDB_metadata, Integer> dorisDB_metadataRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
 	// private Dao<EntreeBibliographie, Integer> entreeBibliographieDao = null;
 	private RuntimeExceptionDao<EntreeBibliographie, Integer> entreeBibliographieRuntimeDao = null;
 	// the DAO object we use to access the diveBudies table
-	// private Dao<EntreeBibliographie, Integer> entreeBibliographieDao = null;
-	private RuntimeExceptionDao<ClassificationFiche, Integer> classificationFicheRuntimeDao = null;
-	// the DAO object we use to access the diveBudies table
-	// private Dao<EntreeBibliographie, Integer> entreeBibliographieDao = null;
+	// private Dao<Classification, Integer> classificationDao = null;
 	private RuntimeExceptionDao<Classification, Integer> classificationRuntimeDao = null;
-
-	private RuntimeExceptionDao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesRuntimeDao = null;
-	private RuntimeExceptionDao<Fiches_DefinitionsGlossaire, Integer> fiches_DefinitionsGlossaireRuntimeDao = null;
+	// the DAO object we use to access the diveBudies table
+	// private Dao<DefinitionGlossaire, Integer> definitionGlossaireDao = null;
+	private RuntimeExceptionDao<DefinitionGlossaire, Integer> definitionGlossaireRuntimeDao = null;
+	// the DAO object we use to access the diveBudies table
+	// private Dao<ClassificationFiche, Integer> classificationFicheDao = null;
+	private RuntimeExceptionDao<ClassificationFiche, Integer> classificationFicheRuntimeDao = null;
+	
+		private RuntimeExceptionDao<Fiches_ZonesGeographiques, Integer> fiches_ZonesGeographiquesRuntimeDao = null;
 
 	public OrmLiteDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -280,17 +279,6 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 	}
 
 	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DefinitionGlossaire class. It will
-	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
-	 */
-	public RuntimeExceptionDao<DefinitionGlossaire, Integer> getDefinitionGlossaireDao() {
-		if (definitionGlossaireRuntimeDao == null) {
-			definitionGlossaireRuntimeDao = getRuntimeExceptionDao(DefinitionGlossaire.class);
-		}
-		return definitionGlossaireRuntimeDao;
-	}
-
-	/**
 	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DorisDB_metadata class. It will
 	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
 	 */
@@ -312,6 +300,39 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		return entreeBibliographieRuntimeDao;
 	}
 
+	/**
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our Classification class. It will
+	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
+	 */
+	public RuntimeExceptionDao<Classification, Integer> getClassificationDao() {
+		if (classificationRuntimeDao == null) {
+			classificationRuntimeDao = getRuntimeExceptionDao(Classification.class);
+		}
+		return classificationRuntimeDao;
+	}
+
+	/**
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our DefinitionGlossaire class. It will
+	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
+	 */
+	public RuntimeExceptionDao<DefinitionGlossaire, Integer> getDefinitionGlossaireDao() {
+		if (definitionGlossaireRuntimeDao == null) {
+			definitionGlossaireRuntimeDao = getRuntimeExceptionDao(DefinitionGlossaire.class);
+		}
+		return definitionGlossaireRuntimeDao;
+	}
+
+	/**
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our ClassificationFiche class. It will
+	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
+	 */
+	public RuntimeExceptionDao<ClassificationFiche, Integer> getClassificationFicheDao() {
+		if (classificationFicheRuntimeDao == null) {
+			classificationFicheRuntimeDao = getRuntimeExceptionDao(ClassificationFiche.class);
+		}
+		return classificationFicheRuntimeDao;
+	}
+
 	
 	
 	/**
@@ -324,42 +345,8 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		}
 		return fiches_ZonesGeographiquesRuntimeDao;
 	}
-	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our Fiches_DefinitionsGlossaire class. It will
-	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
-	 */
-	public RuntimeExceptionDao<Fiches_DefinitionsGlossaire, Integer> getFiches_DefinitionsGlossaireDao() {
-		if (fiches_DefinitionsGlossaireRuntimeDao == null) {
-			fiches_DefinitionsGlossaireRuntimeDao = getRuntimeExceptionDao(Fiches_DefinitionsGlossaire.class);
-		}
-		return fiches_DefinitionsGlossaireRuntimeDao;
-	}
 
 
-	/**
-
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our IntervenantFiche class. It will
-	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
-	 */
-	public RuntimeExceptionDao<ClassificationFiche, Integer> getClassificationFicheDao() {
-		if (classificationFicheRuntimeDao == null) {
-			classificationFicheRuntimeDao = getRuntimeExceptionDao(ClassificationFiche.class);
-		}
-		return classificationFicheRuntimeDao;
-	}
-
-	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our Participant class. It will
-	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
-	 */
-	public RuntimeExceptionDao<Classification, Integer> getClassificationDao() {
-		if (classificationRuntimeDao == null) {
-			classificationRuntimeDao = getRuntimeExceptionDao(Classification.class);
-		}
-		return classificationRuntimeDao;
-	}
-
-	
 	/**
 	 * Close the database connections and clear any cached DAOs.
 	 */
@@ -375,14 +362,12 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 		zoneGeographiqueRuntimeDao = null;
 		zoneObservationRuntimeDao = null;
 		groupeRuntimeDao = null;
-		definitionGlossaireRuntimeDao = null;
 		dorisDB_metadataRuntimeDao = null;
 		entreeBibliographieRuntimeDao = null;
-		fiches_ZonesGeographiquesRuntimeDao = null;
-		fiches_DefinitionsGlossaireRuntimeDao = null;
-		classificationFicheRuntimeDao = null;
 		classificationRuntimeDao = null;
-
+		definitionGlossaireRuntimeDao = null;
+		classificationFicheRuntimeDao = null;
+		fiches_ZonesGeographiquesRuntimeDao = null;
 	}
 
 	
@@ -390,7 +375,6 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
      *
      */
 	public DorisDBHelper getDorisDBHelper(){
-		
 		DorisDBHelper helper = new DorisDBHelper();
 		try{
 			helper.ficheDao = getDao(Fiche.class);
@@ -402,13 +386,12 @@ public class OrmLiteDBHelper extends OrmLiteSqliteOpenHelper{
 			helper.zoneGeographiqueDao = getDao(ZoneGeographique.class);
 			helper.zoneObservationDao = getDao(ZoneObservation.class);
 			helper.groupeDao = getDao(Groupe.class);
-			helper.definitionGlossaireDao = getDao(DefinitionGlossaire.class);
 			helper.dorisDB_metadataDao = getDao(DorisDB_metadata.class);
 			helper.entreeBibliographieDao = getDao(EntreeBibliographie.class);
-			helper.fiches_ZonesGeographiquesDao = getDao(Fiches_ZonesGeographiques.class);
-			helper.classificationFicheDao = getDao(ClassificationFiche.class);
 			helper.classificationDao = getDao(Classification.class);
-
+			helper.definitionGlossaireDao = getDao(DefinitionGlossaire.class);
+			helper.classificationFicheDao = getDao(ClassificationFiche.class);
+		helper.fiches_ZonesGeographiquesDao = getDao(Fiches_ZonesGeographiques.class);
 		} catch (SQLException e) {
 			Log.e(OrmLiteDBHelper.class.getName(), "Can't get ", e);
 		}

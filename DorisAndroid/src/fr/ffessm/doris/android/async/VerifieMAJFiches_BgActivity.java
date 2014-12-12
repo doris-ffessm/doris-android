@@ -46,53 +46,42 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-import android.text.format.Time;
 import android.util.Log;
-import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
-import fr.ffessm.doris.android.datamodel.DorisDBHelper;
-import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.datamodel.Participant;
-import fr.ffessm.doris.android.datamodel.ZoneGeographique;
-
-
-import fr.ffessm.doris.android.BuildConfig;
-import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
-// Start of user code additional imports VerifieMAJFiches_BgActivity
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+// Start of user code additional imports VerifieMAJFiches_BgActivity
+
 import com.j256.ormlite.dao.GenericRawResults;
 
+import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
+import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
 import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
-import fr.ffessm.doris.android.tools.App_Outils;
-import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.Participant;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 
 
-import java.io.File;
+import fr.ffessm.doris.android.DorisApplicationContext;
+
+
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 // End of user code
@@ -100,21 +89,25 @@ import java.util.HashSet;
 public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Integer>{
 	private static final String LOG_TAG = VerifieMAJFiches_BgActivity.class.getCanonicalName();
 	
+	
     private NotificationHelper mNotificationHelper;
-    private OrmLiteDBHelper dbHelper;
+    private OrmLiteDBHelper dbHelper;    
     private Context context;
     
     // Start of user code additional attribute declarations VerifieMAJFiches_BgActivity
     private Fiches_Outils fichesOutils;
     private Reseau_Outils reseauOutils;
-    private Param_Outils paramOutils;
+    //private Param_Outils paramOutils;
 
     Fiches_Outils.TypeLancement_kind typeLancement = Fiches_Outils.TypeLancement_kind.MANUEL;
     
 	// End of user code
     
 	/** constructor */
-    public VerifieMAJFiches_BgActivity(Context context/*, OrmLiteDBHelper dbHelper*/){
+    public VerifieMAJFiches_BgActivity(Context context){
+		this.dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
+		// use application wide helper
+        this.context = context.getApplicationContext();
 		// Start of user code additional attribute declarations VerifieMAJFiches_BgActivity constructor
     	Log.d(LOG_TAG, "VerifieMAJFiches_BgActivity() - Début");
     	
@@ -125,13 +118,12 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 
 		fichesOutils = new Fiches_Outils(context);
 	    reseauOutils = new Reseau_Outils(context);
-	    paramOutils = new Param_Outils(context);
+	   // paramOutils = new Param_Outils(context);
 	    
 	    Log.d(LOG_TAG, "VerifieMAJFiches_BgActivity() - Fin");
 	    
 		// End of user code
-	    this.dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
-		this.context = context;
+        
     }
 
     protected void onPreExecute(){
@@ -142,6 +134,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
     @Override
     protected Integer doInBackground(String... arg0) {
     	
+
 		// Start of user code initialization of the task VerifieMAJFiches_BgActivity
 		// do the initialization of the task here
 		// once done, you should indicates to the notificationHelper how many item will be processed
