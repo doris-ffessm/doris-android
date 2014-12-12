@@ -88,7 +88,7 @@ public class ErrorCollector {
 					bw.write("     <testcase assertions=\"\" classname=\"\" name=\""+errForXML+"\" >\n");
 					bw.write("        <error message=\""+errForXML+"\">\n");
 					bw.write("problem in "+groupForXML+", "+errForXML);
-					bw.write("</error/>\n");
+					bw.write("</error>\n");
 					/*bw.write("        <system-out/><system-err/>\n");*/
 					bw.write("     </testcase>\n");
 				}
