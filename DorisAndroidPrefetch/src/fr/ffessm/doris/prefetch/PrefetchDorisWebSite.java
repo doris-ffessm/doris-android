@@ -205,7 +205,7 @@ public class PrefetchDorisWebSite {
 				System.exit(1);
 			}
 
-			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_RACINE + "/dorisSite_groupes_testsuites.xml");
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_groupes_testsuites.xml");
 			log.debug("doMain() - debbug" );
 			
 			// - - - Intervenants - - -
@@ -218,7 +218,7 @@ public class PrefetchDorisWebSite {
 				System.exit(1);
 			}
 
-			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_RACINE + "/dorisSite_intervenants_testsuites.xml");
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_intervenants_testsuites.xml");
 			
 			// - - - Glossaire - - -
 			// On boucle sur les initiales des définitions (Cf site : doris.ffessm.fr/glossaire.asp?filtre=?)
@@ -230,7 +230,7 @@ public class PrefetchDorisWebSite {
 				System.exit(1);
 			}
 
-			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_RACINE + "/dorisSite_glossaire_testsuites.xml");
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_glossaire_testsuites.xml");
 			// - - - Bibliographie - - -
 			// On boucle sur la page des Fiches tant que l'on trouve dans la page courante (n)
 			//biblio.asp?mapage=(n+1)&PageCourante=n
@@ -242,7 +242,7 @@ public class PrefetchDorisWebSite {
 				System.exit(1);
 			}
 
-			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_RACINE + "/dorisSite_biblio_testsuites.xml");
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_biblio_testsuites.xml");
 			// - - - Liste des Fiches - - -
 			// Récupération de la liste des fiches sur le site de DORIS
 			// Elles sont récupérées dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
@@ -254,7 +254,7 @@ public class PrefetchDorisWebSite {
 				System.exit(1);
 			}
 
-			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_RACINE + "/dorisSite_fiches_testsuites.xml");
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_fiches_testsuites.xml");
 
 			// - - - Mise à jour des zones géographiques - - -
 			PrefetchZonesGeographiques zonesGeographiques = new PrefetchZonesGeographiques(dbContext, connectionSource, action, nbMaxFichesATraiter);
@@ -263,7 +263,7 @@ public class PrefetchDorisWebSite {
 				System.exit(1);
 			}
 
-			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_RACINE + "/dorisSite_zonesgeo_testsuites.xml");
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_zonesgeo_testsuites.xml");
 			
 			// - - - Enregistrement Date génération Base - - -
 			Date date = new Date();
@@ -705,6 +705,10 @@ public class PrefetchDorisWebSite {
 		File dossierDB = new File(PrefetchConstants.DOSSIER_DATABASE);
 		if (dossierDB.mkdirs()) {
 			log.info("Création du dossier : " + dossierDB.getAbsolutePath());
+		}
+		File dossierTests = new File(PrefetchConstants.DOSSIER_TESTS);
+		if (dossierDB.mkdirs()) {
+			log.info("Création du dossier : " + dossierTests.getAbsolutePath());
 		}
 
 		// Le dossier des fichiers html téléchargés ( ./run/html/ )
