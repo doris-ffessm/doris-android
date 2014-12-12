@@ -94,16 +94,14 @@ public class IntervenantFiche {
 	
 
 	/** Type d'intervention sur une fiche */ 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected int roleIntervenant;
 	
-	//GMo : Ajouté à la main 
+
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Participant participant;
 
-	//GMo : Ajouté à la main 
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiche;
 

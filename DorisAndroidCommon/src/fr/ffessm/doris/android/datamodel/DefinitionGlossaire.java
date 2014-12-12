@@ -97,26 +97,22 @@ public class DefinitionGlossaire {
 	
 
 	/** numéro de la définition sur le site Doris */ 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected int numeroDoris;
 
 	/** terme de l'entrée */ 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String terme;
 
 	/** définition de cette entrée */ 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
-	@DatabaseField(dataType = com.j256.ormlite.field.DataType.LONG_STRING)
+	/** TEST GM : SQLite = SQLite **/
+	@DatabaseField
 	protected java.lang.String definition;
 
 	/** Liste des URL des illustrations éventuelles de la définition (séparateur : ;) */ 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String cleURLIllustration;
 	

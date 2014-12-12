@@ -96,8 +96,7 @@ public class PhotoFiche {
 	public boolean fiche_mayNeedDBRefresh = true;
 	
 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String cleURL;
 
@@ -110,17 +109,15 @@ public class PhotoFiche {
 	/** TEST GM : File = SQLite **/
 	protected java.io.File imageGrande;
 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String titre;
 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField(dataType = com.j256.ormlite.field.DataType.LONG_STRING)
 	protected java.lang.String description;
 	
-	// GMo : Ajouté à la mano
+
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiche;
 

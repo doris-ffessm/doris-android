@@ -94,16 +94,14 @@ public class ClassificationFiche {
 	
 
 	/** Permet d'afficher le tableau dans l'ordre du site directement */ 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected int numOrdre;
 	
-	//GMo : Ajouté à la main 
+
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Classification classification;
 
-	//GMo : Ajouté à la main 
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiche;
 

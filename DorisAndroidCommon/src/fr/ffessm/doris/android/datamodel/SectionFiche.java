@@ -96,22 +96,19 @@ public class SectionFiche {
 	/** Sections Hautes de la Page < 100
 Sections Basses de la Page > 200
  */ 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected int numOrdre;
 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String titre;
 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String texte;
 	
-	//GMo : Ajouté à la mano
+
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiche;
 

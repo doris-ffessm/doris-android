@@ -49,13 +49,10 @@ import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 
-import java.lang.reflect.Array;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Collection;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.logging.Log;
@@ -64,6 +61,8 @@ import org.apache.commons.logging.LogFactory;
 import fr.ffessm.doris.android.datamodel.associations.*;
 
 // Start of user code additional import for Fiche
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import net.htmlparser.jericho.Attribute;
@@ -126,68 +125,56 @@ public class Fiche {
 	public boolean groupe_mayNeedDBRefresh = true;
 	
 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String nomScientifique;
 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String nomCommun;
 
 	/** Numéro de la fiche tel que connu par le site lui même */ 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected int numeroFiche;
 
 	/** Etat Avancement de la fiche 
 4 : Fiche Publiée - 1, 2, 3 : En cours de Rédaction - 5 : Fiche Proposée */ 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected int etatFiche;
 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String dateCreation;
 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String dateModification;
 
 	/** numéros des fiches liées séparé par des point virgules */ 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String numerofichesLiees;
 
 	/** Texte précalculé pour optimiser les recherches (sans accents, sans majuscules) avec autres dénominations */ 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField(dataType = com.j256.ormlite.field.DataType.LONG_STRING)
 	protected java.lang.String textePourRechercheRapide;
 
 	/** id des pictogrammes applicables à cette fiche séparés par des points virgules */ 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String pictogrammes;
 	
 
 	/** Liste des photos de la fiche */ 
-	// NOT Implemented non SQLite collection reference photosFiche;
-	// Start of user code photosFiche - Permet de ne pas perdre Implémentation Manuelle de : 
 	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
 	protected ForeignCollection<PhotoFiche> photosFiche;
-	// End of user code
 
 	/** zones géographiques où l'on peut trouver l'élément décrit par la fiche */ 
-	// NOT Implemented non SQLite many2many collection reference zonesGeographiques;
-	// Start of user code zonesGeographiques - Permet de ne pas perdre Implémentation Manuelle de : 
+	// work in progress, find association 
+	// Association many to many Fiches_ZonesGeographiques
 	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")	
 	protected ForeignCollection<Fiches_ZonesGeographiques> fiches_ZonesGeographiques;
 
@@ -210,53 +197,37 @@ public class Fiche {
 			log.error("Pb while adding association fiches_ZonesGeographiques",e);
 		}
 	}
-	// end work in progress
-	// End of user code
+	// end work in progress 	
+
+				
 
 	/** zones  où l'on peut observer l'élément décrit par la fiche */ 
-	// NOT Implemented non SQLite collection reference zonesObservation;
-	// Start of user code zonesObservation - Permet de ne pas perdre Implémentation Manuelle de :
 	@ForeignCollectionField(eager = false, foreignFieldName = "fiches")
 	protected ForeignCollection<ZoneObservation> zonesObservation;
-	// End of user code
 
 	/** contenu textuel de la fiche */ 
-	// NOT Implemented non SQLite collection reference contenu;
-	// Start of user code contenu - Permet de ne pas perdre Implémentation Manuelle de :
 	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
 	protected ForeignCollection<SectionFiche> contenu;
-	// End of user code
 
 	/** Photo par défaut de l'espèce présentée par cette fiche. Elle est aussi présente dans la liste "photosFiche". */ 
-	/** Contournement Guillaume car ref.storage est toujours vide chez moi **/
 	@DatabaseField(foreign = true)
 	protected PhotoFiche photoPrincipale;
 
 	/** Liste des autres dénominations de l'espèce présentée sur la fiche. */ 
-	// NOT Implemented non SQLite collection reference autresDenominations;
-	// Start of user code autresDenominations - Permet de ne pas perdre Implémentation Manuelle de : 
 	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
 	protected ForeignCollection<AutreDenomination> autresDenominations;
-	// End of user code
 
 	/** Permet d'identifier avec le sous-groupe (optionnel) le groupe auquel est rattaché la fiche */ 
-	/** Contournement Guillaume car ref.storage est toujours vide chez moi **/
 	@DatabaseField(foreign = true)
 	protected Groupe groupe;
 
 	/** intervenants sur une fiche */ 
-	// NOT Implemented non SQLite collection reference intervenants;
-	// Start of user code intervenants - Permet de ne pas perdre Implémentation Manuelle de :
 	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
 	protected ForeignCollection<IntervenantFiche> intervenants;
-	// End of user code
 
 	/** Tableau Phylogénétique */ 
-	// NOT Implemented non SQLite collection reference classification;
-	// Start of user code classification - Permet de ne pas perdre Implémentation Manuelle de : 
 	@ForeignCollectionField(eager = false, foreignFieldName = "fiche")
 	protected ForeignCollection<ClassificationFiche> classification;
-	// End of user code
 
 	// Start of user code Fiche additional user properties
 

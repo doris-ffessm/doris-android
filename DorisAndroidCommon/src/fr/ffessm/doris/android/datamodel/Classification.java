@@ -91,41 +91,33 @@ public class Classification {
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
-	public boolean fiche_mayNeedDBRefresh = true;
 	
 
 	/** Niveau de la Classification = Embranchement, Groupe, etc */ 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String niveau;
 
 	/** Terme Scientifique (international)
 C'est lui qui permet d'identifier la Classification */ 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String termeScientifique;
 
 	/** Terme Français
 (il n'est pas toujours renseigné) */ 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String termeFrancais;
 
 	/** Texte descriptif de la Classification */ 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String descriptif;
 	
 
-	// NOT Implemented non SQLite collection reference classificationFiche;
-	// Start of user code classificationFiche - Permet de ne pas perdre Implémentation Manuelle de : 
 	@ForeignCollectionField(eager = false, foreignFieldName = "classification")
 	protected ForeignCollection<ClassificationFiche> classificationFiche;
-	// End of user code
 
 	// Start of user code Classification additional user properties
 	// End of user code

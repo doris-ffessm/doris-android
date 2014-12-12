@@ -60,7 +60,6 @@ import org.apache.commons.logging.LogFactory;
 
 import fr.ffessm.doris.android.datamodel.associations.*;
 
-
 // Start of user code additional import for ZoneGeographique
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 // End of user code
@@ -93,19 +92,15 @@ public class ZoneGeographique {
 	 */
 	
 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String nom;
 
-	/** TEST GM :  = SQLite **/
-	/** Contournement Guillaume car att.storage est toujours vide chez moi **/
+	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String description;
 	
 
-	// NOT Implemented non SQLite many2many collection reference fiches;
-	// Start of user code fiches - Permet de ne pas perdre Implémentation Manuelle de : 
 	// work in progress, find association 
 	// Association many to many Fiches_ZonesGeographiques
 	@ForeignCollectionField(eager = false, foreignFieldName = "zoneGeographique")	
@@ -132,7 +127,7 @@ public class ZoneGeographique {
 	}
 	// end work in progress 	
 
-	// End of user code
+				
 
 	// Start of user code ZoneGeographique additional user properties
 	

@@ -91,12 +91,12 @@ public class ZoneObservation {
 	public boolean fiches_mayNeedDBRefresh = true;
 	
 
-	/** TEST GM :  = SQLite **/
+	/** TEST GM : SQLite = SQLite **/
 	// NOT Implemented<java.lang.String> nom;
 	// Start of user code nom- Permet de ne pas perdre Implémentation Manuelle de : 
 	// End of user code
 	
-	//GMo : Ajouté à la main
+
 	@DatabaseField(foreign = true) //, columnName = USER_ID_FIELD_NAME)
 	protected Fiche fiches;
 
