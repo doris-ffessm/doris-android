@@ -57,9 +57,7 @@ import android.util.Log;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 // Start of user code additional imports InitialisationApplication_BgActivity
-import android.widget.Toast;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
-import fr.ffessm.doris.android.datamodel.xml.XMLHelper;
 // End of user code
 
 public class InitialisationApplication_BgActivity  extends AsyncTask<String,Integer, Integer>{

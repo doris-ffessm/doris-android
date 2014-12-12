@@ -42,16 +42,13 @@ termes.
 package fr.ffessm.doris.android.tools;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.Date;
-
-import fr.ffessm.doris.android.tools.disk.Device;
-import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
-import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 
 import android.content.Context;
 import android.text.format.DateUtils;
 import android.util.Log;
+import fr.ffessm.doris.android.tools.disk.Device;
+import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
 
 public class Disque_Outils {
 	private static final String LOG_TAG = Disque_Outils.class.getSimpleName();

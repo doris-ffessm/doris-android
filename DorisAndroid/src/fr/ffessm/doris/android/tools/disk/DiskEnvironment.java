@@ -6,9 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
-import fr.ffessm.doris.android.tools.disk.StorageHelper.StorageVolume;
-
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,6 +16,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.text.TextUtils.SimpleStringSplitter;
 import android.util.Log;
+import fr.ffessm.doris.android.tools.disk.StorageHelper.StorageVolume;
 /**
 *
 * Hilfsklasse mit mehreren Funktionsblöcken, die auf die Problematik eingehen,

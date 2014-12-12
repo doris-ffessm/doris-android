@@ -52,31 +52,20 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.HashSet;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
-import fr.ffessm.doris.android.activities.DetailEntreeGlossaire_ElementViewActivity;
-import fr.ffessm.doris.android.activities.DetailsFiche_ElementViewActivity;
-import fr.ffessm.doris.android.activities.DetailsParticipant_ElementViewActivity;
-import fr.ffessm.doris.android.activities.Glossaire_ClassListViewActivity;
-import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
-import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
-import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
-import fr.ffessm.doris.android.datamodel.Fiche;
-import fr.ffessm.doris.android.datamodel.IntervenantFiche;
+import fr.ffessm.doris.android.BuildConfig;
+import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
-import fr.ffessm.doris.android.datamodel.ZoneGeographique;
-import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.android.tools.Disque_Outils.ImageLocation;
 import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
-
-import android.content.Context;
-import android.util.Log;
-import fr.ffessm.doris.android.BuildConfig;
-import fr.ffessm.doris.android.R;
 
 public class Photos_Outils {
 	private static final String LOG_TAG = Photos_Outils.class.getCanonicalName();
@@ -298,10 +287,7 @@ public class Photos_Outils {
 			//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - test : "+ test.getAbsolutePath() );
 			//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - test.exists() : "+ test.exists() );
 			
-			if (new File(
-						getSousDossierPhoto(imageFolder, inPhotoURL),
-						inPhotoURL)
-					.exists()
+			if (test.exists()
 				) return true;
 		}
 		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - return false;");

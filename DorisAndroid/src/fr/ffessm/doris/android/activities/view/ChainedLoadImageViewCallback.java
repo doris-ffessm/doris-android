@@ -45,7 +45,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.sitedoris.Constants;
 
 import android.content.Context;
 import android.view.View;

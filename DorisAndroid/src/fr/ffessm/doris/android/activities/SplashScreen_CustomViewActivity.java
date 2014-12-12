@@ -74,7 +74,6 @@ import android.os.AsyncTask;
 import android.widget.LinearLayout;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.datamodel.SQLiteDataBaseHelper;
-import fr.ffessm.doris.android.tools.ThemeUtil;
 //End of user code
 public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 //Start of user code additional implements SplashScreen_CustomViewActivity

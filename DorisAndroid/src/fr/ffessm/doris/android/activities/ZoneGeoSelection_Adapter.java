@@ -75,7 +75,6 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
-import fr.ffessm.doris.android.tools.App_Outils;
 //End of user code
 
 public class ZoneGeoSelection_Adapter extends BaseAdapter  {

@@ -41,18 +41,17 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.tools;
 
-import fr.ffessm.doris.android.BuildConfig;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ImageView;
+import fr.ffessm.doris.android.BuildConfig;
 
 public class TouchImageView extends ImageView {
 	private static final String LOG_TAG = TouchImageView.class.getCanonicalName();

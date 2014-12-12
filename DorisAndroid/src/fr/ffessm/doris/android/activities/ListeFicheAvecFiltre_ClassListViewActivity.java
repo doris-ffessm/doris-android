@@ -83,11 +83,9 @@ import android.widget.Toast;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity_additionalimports
 import android.graphics.drawable.BitmapDrawable;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 

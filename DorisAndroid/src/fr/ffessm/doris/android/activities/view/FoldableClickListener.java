@@ -45,7 +45,6 @@ package fr.ffessm.doris.android.activities.view;
 
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.DetailsFiche_ElementViewActivity;
-import fr.ffessm.doris.android.activities.GroupeSelection_ClassListViewActivity;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import android.content.Context;
 import android.view.View;

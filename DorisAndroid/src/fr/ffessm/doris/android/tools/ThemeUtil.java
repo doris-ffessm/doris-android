@@ -41,14 +41,13 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.tools;
 
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import fr.ffessm.doris.android.R;
 
 public class ThemeUtil {
 	

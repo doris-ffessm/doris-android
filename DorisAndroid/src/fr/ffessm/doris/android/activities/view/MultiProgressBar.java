@@ -42,17 +42,9 @@ termes.
 
 package fr.ffessm.doris.android.activities.view;
 
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.activities.ListeFicheAvecFiltre_ClassListViewActivity;
-import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.tools.App_Outils;
-import fr.ffessm.doris.android.tools.Param_Outils;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff.Mode;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -60,7 +52,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.Param_Outils;
 
 public class MultiProgressBar extends LinearLayout {
 

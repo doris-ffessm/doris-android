@@ -3,7 +3,6 @@ package fr.ffessm.doris.android.tools.disk;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,12 +12,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
-import fr.ffessm.doris.android.tools.disk.StorageHelper.StorageVolume.Type;
-
-
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Environment;
+import fr.ffessm.doris.android.tools.disk.StorageHelper.StorageVolume;
+import fr.ffessm.doris.android.tools.disk.StorageHelper.StorageVolume.Type;
 
 public final class StorageHelper {
 

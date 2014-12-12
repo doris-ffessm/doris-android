@@ -45,26 +45,11 @@ package fr.ffessm.doris.android.activities;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.squareup.picasso.Picasso;
-
-import fr.ffessm.doris.android.BuildConfig;
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.activities.view.ChainedLoadImageViewCallback;
-import fr.ffessm.doris.android.datamodel.PhotoFiche;
-import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.tools.App_Outils;
-import fr.ffessm.doris.android.tools.Param_Outils;
-import fr.ffessm.doris.android.tools.Photos_Outils;
-import fr.ffessm.doris.android.tools.Reseau_Outils;
-import fr.ffessm.doris.android.tools.ScreenTools;
-import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,6 +58,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.ZoomControls;
+
+import com.squareup.picasso.Picasso;
+
+import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.view.ChainedLoadImageViewCallback;
+import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.tools.Param_Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+import fr.ffessm.doris.android.tools.Reseau_Outils;
+import fr.ffessm.doris.android.tools.ScreenTools;
 
 public class ImagePleinEcran_Adapter extends PagerAdapter {
 

@@ -56,10 +56,9 @@ import com.j256.ormlite.support.ConnectionSource;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.android.sitedoris.ErrorCollector;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
-import fr.ffessm.doris.android.sitedoris.Common_Outils;
-import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
 

@@ -82,11 +82,8 @@ import android.view.ViewGroup.LayoutParams;
 import com.squareup.picasso.Picasso;
 import java.io.IOException;
 
-import org.apache.commons.lang3.text.StrBuilder;
 
 import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.tools.App_Outils;
-import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.Textes_Outils;

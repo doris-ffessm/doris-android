@@ -46,7 +46,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import fr.ffessm.doris.android.BuildConfig;
-import fr.ffessm.doris.android.R;
 
 public class App_Outils {
 	private static final String LOG_TAG = App_Outils.class.getCanonicalName();

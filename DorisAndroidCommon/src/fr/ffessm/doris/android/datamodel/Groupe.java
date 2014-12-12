@@ -62,8 +62,6 @@ import fr.ffessm.doris.android.datamodel.associations.*;
 
 // Start of user code additional import for Groupe
 import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.HTMLElementName;
-import net.htmlparser.jericho.LoggerProvider;
 import net.htmlparser.jericho.Source;
 
 

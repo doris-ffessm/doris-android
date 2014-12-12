@@ -41,19 +41,11 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android;
 
-import java.io.IOException;
-
-import org.acra.*;
-import org.acra.annotation.*;
-
-import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
-import fr.ffessm.doris.android.datamodel.SQLiteDataBaseHelper;
+import org.acra.ACRA;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 
 @ReportsCrashes(

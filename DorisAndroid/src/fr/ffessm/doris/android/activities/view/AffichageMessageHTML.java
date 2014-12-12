@@ -57,7 +57,6 @@ import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
-import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -115,7 +114,7 @@ public class AffichageMessageHTML {
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 		AlertDialog alertDialog = alertDialogBuilder.create();
 		
-    	LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+    	LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
     	View layout = inflater.inflate(R.layout.apropos_aide,
     	                               (ViewGroup) activity.findViewById(R.id.layout_root));

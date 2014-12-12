@@ -69,21 +69,15 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 //Start of user code additional imports EtatModeHorsLigne_CustomViewActivity
 import java.util.HashMap;
 import java.util.List;
-import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
-import android.content.SharedPreferences;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.AsyncTask.Status;
-import android.preference.PreferenceManager;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.widget.LinearLayout;
@@ -95,16 +89,12 @@ import android.widget.TableRow;
 import com.j256.ormlite.dao.CloseableIterator;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
-import fr.ffessm.doris.android.activities.view.FoldableClickListener;
 import fr.ffessm.doris.android.activities.view.MultiProgressBar;
 
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
-import fr.ffessm.doris.android.datamodel.SQLiteDataBaseHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
-import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
-import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 import fr.ffessm.doris.android.tools.disk.StorageHelper;
@@ -118,7 +108,6 @@ import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
-import fr.ffessm.doris.android.tools.Photos_Outils.PrecharMode;
 //End of user code
 public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 //Start of user code additional implements EtatModeHorsLigne_CustomViewActivity

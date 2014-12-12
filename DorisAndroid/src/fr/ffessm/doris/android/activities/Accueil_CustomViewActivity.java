@@ -65,9 +65,9 @@ import android.widget.Toast;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code additional imports Accueil_CustomViewActivity
-import java.util.HashMap;
 import java.util.List;
 
+import android.util.SparseArray;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask.Status;
@@ -92,11 +92,8 @@ import fr.ffessm.doris.android.async.VerifieMAJFiche_BgActivity;
 import fr.ffessm.doris.android.async.VerifieMAJFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
-import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
-import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
-import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.Disque_Outils.ImageLocation;
@@ -106,11 +103,8 @@ import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
-import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 //End of user code
 public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
@@ -132,7 +126,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	Param_Outils paramOutils = new Param_Outils(getContext());
 	Reseau_Outils reseauOutils = new Reseau_Outils(getContext());
 	
-	protected HashMap<Integer, MultiProgressBar> progressBarZones = new HashMap<Integer, MultiProgressBar>(); 
+	protected SparseArray< MultiProgressBar> progressBarZones = new SparseArray< MultiProgressBar>(); 
 	
 	// si false alors c'est que l'utilisateur a cliqué sur la croix pour le fermer, 
 	// tant que l'appli est ouverte elle ne se rouvrira pas, même en cas de rotation

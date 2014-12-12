@@ -49,11 +49,8 @@ import android.view.MenuItem;
 import fr.ffessm.doris.android.R;
 
 //Start of user code Preference preference activity additional imports
-import java.io.File;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask.Status;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -69,8 +66,6 @@ import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
-import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
-import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 
 //End of user code

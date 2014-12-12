@@ -45,11 +45,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
-
 import android.content.Context;
-import android.util.Log;
+
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.Fiche;
