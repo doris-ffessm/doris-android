@@ -707,7 +707,7 @@ public class PrefetchDorisWebSite {
 			log.info("Création du dossier : " + dossierDB.getAbsolutePath());
 		}
 		File dossierTests = new File(PrefetchConstants.DOSSIER_TESTS);
-		if (dossierDB.mkdirs()) {
+		if (dossierTests.mkdirs()) {
 			log.info("Création du dossier : " + dossierTests.getAbsolutePath());
 		}
 
