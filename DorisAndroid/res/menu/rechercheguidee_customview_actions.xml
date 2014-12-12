@@ -4,11 +4,6 @@
 	<!--Start of user code customView_menu for RechercheGuidee
 	-->
 	<!-- freely adapt here the desired layout for yourmenu -->
-
-	<item android:id="@+id/rechercheguidee_customview_action_preference"
-	      android:icon="@android:drawable/ic_menu_preferences"
-	      android:title="@string/preference_menu_title"
-	      android:showAsAction="never"  />
 	
 	<item android:id="@+id/rechercheguidee_customview_action_aide"
 	      android:icon="@android:drawable/ic_menu_help"
