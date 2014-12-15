@@ -90,7 +90,7 @@ public class ErrorCollector {
 			for (Iterator<String> iterator = errorList.keySet().iterator(); iterator.hasNext();) {
 				String group =  iterator.next();
 				List<ErrorMessage> list = errorList.get(group);
-				String classNameForGroup = group.replaceAll("", ".");
+				String classNameForGroup = group.replaceAll(" ", ".");
 				String groupForXML = StringEscapeUtils.escapeXml(classNameForGroup);
 				bw.write("   <testsuite errors=\""+list.size()+"\" failures=\"0\"\n");
 				bw.write("              name=\""+groupForXML+"\" skipped=\"0\" tests=\""+(list.size()==0?"1":list.size())+"\" time=\"\" timestamp=\"\">\n");
