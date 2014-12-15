@@ -225,7 +225,7 @@ public class PrefetchFiches {
 							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche, FileHtmlKind.FICHE);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
-							ErrorCollector.getInstance().addError(errorGroup, "Une erreur est survenue lors de la récupération de la fiche :" +urlFiche);
+							ErrorCollector.getInstance().addError(errorGroup, "fiche introuvable", "Une erreur est survenue lors de la récupération de la fiche (getFichierFromUrl) depuis l'url :" +urlFiche+ " , "+ficheLight.getNomCommun()+ " , fiche id="+ficheLight.getNumeroFiche());
 							// Solution de contournement désespérée 
 							urlFiche = Constants.getFicheFromNomCommunUrl(ficheLight.getNomCommun());
 							log.error("=> Tentative sur : "+urlFiche);
@@ -234,7 +234,8 @@ public class PrefetchFiches {
 								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche, FileHtmlKind.FICHE);
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
-								ErrorCollector.getInstance().addError(errorGroup, "Une erreur est survenue lors de la récupération de la fiche :" +urlFiche);
+								ErrorCollector.getInstance().addError(errorGroup, "fiche VRAIMENT introuvable", "Une erreur est survenue lors de la récupération de la fiche (getFichierFromUrl) depuis l'url :" +urlFiche+ " , "+ficheLight.getNomCommun()+ " , fiche id="+ficheLight.getNumeroFiche());
+								
 								continue;
 							}
 						}
@@ -249,7 +250,7 @@ public class PrefetchFiches {
 								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche, FileHtmlKind.FICHE);
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
-								ErrorCollector.getInstance().addError(errorGroup, "Une erreur est survenue lors de la récupération de la fiche :" +urlFiche);
+								ErrorCollector.getInstance().addError(errorGroup, "fiche introuvable", "Une erreur est survenue lors de la récupération de la fiche (getFichierFromUrl) depuis l'url :" +urlFiche+ " , "+ficheLight.getNomCommun()+ " , fiche id="+ficheLight.getNumeroFiche());
 								// Solution de contournement désespérée 
 								urlFiche = Constants.getFicheFromNomCommunUrl(ficheLight.getNomCommun());
 								log.error("=> Tentative sur : "+urlFiche);
@@ -258,7 +259,7 @@ public class PrefetchFiches {
 									contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche, FileHtmlKind.FICHE);
 								} else {
 									log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
-									ErrorCollector.getInstance().addError(errorGroup, "Une erreur est survenue lors de la récupération de la fiche :" +urlFiche);
+									ErrorCollector.getInstance().addError(errorGroup, "fiche VRAIMENT introuvable", "Une erreur est survenue lors de la récupération de la fiche (getFichierFromUrl) depuis l'url :" +urlFiche+ " , "+ficheLight.getNomCommun()+ " , fiche id="+ficheLight.getNumeroFiche());
 									continue;
 								}
 							}
@@ -308,7 +309,7 @@ public class PrefetchFiches {
 							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierSiteListePhotos, FileHtmlKind.FICHE);
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
-							ErrorCollector.getInstance().addError(errorGroup, "Une erreur est survenue lors de la récupération de la fiche :" +urlListePhotos);
+							ErrorCollector.getInstance().addError(errorGroup, "liste photo introuvable" ,"Une erreur est survenue lors de la récupération de la liste de photo pour la fiche "+fiche.getNumeroFiche()+" - "+fiche.getNomCommunNeverEmpty()+" url de la liste: " +urlListePhotos);
 							continue;
 						}
 					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {

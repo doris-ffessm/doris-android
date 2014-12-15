@@ -409,16 +409,16 @@ public class SiteDoris {
 	    				listePhotosFiche.add(photoFiche);
 	    			}
 	    			if(titrePhotoCourante == null){
-	    				ErrorCollector.getInstance().addError(errorGroup, "photo sans titre pour la fiche "+fiche.getNumeroFiche()+" : "+elementIMG);
+	    				ErrorCollector.getInstance().addError(errorGroup,"photo sans titre "+cleURL,  "photo sans titre pour la fiche "+fiche.getNumeroFiche()+" - "+fiche.getNomCommun()+" : "+elementIMG);
 	    			}
 	    			if(descritionPhotoCourante == null){
-	    				ErrorCollector.getInstance().addError(errorGroup, "photo sans description pour la fiche "+fiche.getNumeroFiche()+" : "+elementIMG);
+	    				ErrorCollector.getInstance().addError(errorGroup,"photo sans desription "+cleURL, "photo sans description pour la fiche "+fiche.getNumeroFiche()+" - "+fiche.getNomCommun()+" : "+elementIMG);
 	    			}
 	    			titrePhotoCourante = null;
 	    			descritionPhotoCourante = null;
     			}
     			else{
-    				ErrorCollector.getInstance().addError(errorGroup, "description photo incorrecte pour la fiche "+fiche.getNumeroFiche()+" : "+elementIMG);
+    				ErrorCollector.getInstance().addError(errorGroup, "description incorrecte pour photo ", "description photo incorrecte pour la fiche "+fiche.getNumeroFiche()+" - "+fiche.getNomCommun()+" : "+elementIMG);
     				log.warn("getListePhotosFiche() - Ignore photo incorrecte pour la fiche "+fiche.getNumeroFiche()+" - "+fiche.getNomCommun());
     				// ignore l'image si image manquante
     				continue;

@@ -503,7 +503,7 @@ public class Fiche {
 									}
 
 									else{
-										ErrorCollector.getInstance().addError(errorGroup, "Rubrique autre dénomination existante mais vide");
+										ErrorCollector.getInstance().addError(errorGroup, "rubrique autre dénomination vide", "Rubrique autre dénomination existante mais vide pour la fiche "+this.getNumeroFiche()+" -"+getNomCommun());
 									}
 									
 								} else {
@@ -529,7 +529,7 @@ public class Fiche {
 										_contextDB.sectionFicheDao.create(contenu);
 									}
 									else{
-										ErrorCollector.getInstance().addError(errorGroup, "Rubrique "+rubrique+" vide");
+										ErrorCollector.getInstance().addError(errorGroup, "rubrique "+rubrique+" vide", "Rubrique "+rubrique+" existante mais vide pour la fiche "+this.getNumeroFiche()+" -"+getNomCommun());
 									}
 								}
 							}

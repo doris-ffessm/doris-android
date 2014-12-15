@@ -110,7 +110,7 @@ public class PrefetchBibliographies {
 					if (prefetchTools.getFichierFromUrl(Constants.getListeBibliographiesUrl(pageCourante), listeBibliographies)) {
 						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeBibliographies), FileHtmlKind.LISTE_BIBLIO);
 					} else {
-						ErrorCollector.getInstance().addError("Biblio "+pageCourante, "Une erreur est survenue lors de la récupération de la liste des Bibliographies sur le lien :"+Constants.getListeBibliographiesUrl(pageCourante));
+						ErrorCollector.getInstance().addError("Biblio "+pageCourante, "probleme lien page "+pageCourante, "Une erreur est survenue lors de la récupération de la liste des Bibliographies sur le lien :"+Constants.getListeBibliographiesUrl(pageCourante));
 						log.error("Une erreur est survenue lors de la récupération de la liste des Bibliographies : " + listeBibliographies);
 						System.exit(1);
 					}
