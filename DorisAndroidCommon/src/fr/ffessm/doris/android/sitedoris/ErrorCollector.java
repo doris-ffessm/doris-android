@@ -74,18 +74,19 @@ public class ErrorCollector {
 			for (Iterator<String> iterator = errorList.keySet().iterator(); iterator.hasNext();) {
 				String group =  iterator.next();
 				List<String> list = errorList.get(group);
-				String groupForXML = StringEscapeUtils.escapeXml(group);
+				String classNameForGroup = group.replaceAll("", ".");
+				String groupForXML = StringEscapeUtils.escapeXml(classNameForGroup);
 				bw.write("   <testsuite errors=\""+list.size()+"\" failures=\"0\"\n");
 				bw.write("              name=\""+groupForXML+"\" skipped=\"0\" tests=\""+(list.size()==0?"1":list.size())+"\" time=\"\" timestamp=\"\">\n");
 				
 				if(list.size()==0){
-					bw.write("     <testcase assertions=\"\" classname=\"\" name=\""+groupForXML+" OK\" />\n");
+					bw.write("     <testcase assertions=\"\" classname=\""+groupForXML+"\" name=\""+groupForXML+" OK\" />\n");
 				}
 				for (String err : list) {
 					String errForXML = StringEscapeUtils.escapeXml(err);
-					bw.write("     <testcase assertions=\"\" classname=\"\" name=\""+errForXML+"\" >\n");
+					bw.write("     <testcase assertions=\"\" classname=\""+groupForXML+"\" name=\""+errForXML+"\" >\n");
 					bw.write("        <error message=\""+errForXML+"\">\n");
-					bw.write("problem in "+groupForXML+", "+errForXML);
+					bw.write(errForXML);
 					bw.write("</error>\n");
 					/*bw.write("        <system-out/><system-err/>\n");*/
 					bw.write("     </testcase>\n");

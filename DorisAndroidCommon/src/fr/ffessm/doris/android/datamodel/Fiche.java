@@ -327,7 +327,7 @@ public class Fiche {
 		//log.info("getFicheFromHtml() - ref : " + ficheRef);
 		//log.info("getFicheFromHtml() - Etat Fiche : " + getEtatFiche());		
 
-		String errorGroup = "Check structure fiche no "+ficheRef;
+		String errorGroup = "fiches.fiche_"+ficheRef;
 		ErrorCollector.getInstance().addGroup(errorGroup);
 		
 		// Zones d'Observation (!!! <> Zones Géographie)

@@ -358,7 +358,7 @@ public class SiteDoris {
 			String inCodePageHtml) {
 		//log.trace("getListePhotosFiche()- Début");
 		Common_Outils commonOutils = new Common_Outils();
-		String errorGroup = "check photo descriptions for fiche "+fiche.getNumeroFiche()+" "+fiche.getNomCommun();
+		String errorGroup = "fiches.fiche_"+fiche.getNumeroFiche()+".photos";
 		ErrorCollector.getInstance().addGroup(errorGroup);
 		
 		List<PhotoFiche> listePhotosFiche = new ArrayList<PhotoFiche>(0);

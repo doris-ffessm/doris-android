@@ -101,7 +101,7 @@ public class PrefetchBibliographies {
 			
 			do {
 				log.debug("doMain() - pageCourante Bibliographie : "+pageCourante);
-				ErrorCollector.getInstance().addGroup("Biblio "+pageCourante);
+				ErrorCollector.getInstance().addGroup("biblio.page_biblio_"+pageCourante);
 				
 				String listeBibliographies = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeBibliographies-"+pageCourante+".html";
 				log.info("Récup. Liste des Bibliographies : " + listeBibliographies);

@@ -210,7 +210,7 @@ public class PrefetchFiches {
 				if (  nbFichesTraitees <= nbMaxFichesATraiter ) {
 					log.debug("doMain() - Traitement Fiche : "+ficheLight.getNomCommun());
 					
-					String errorGroup = "Fiche "+ficheLight.getNumeroFiche()+ " "+ficheLight.getNomCommun();
+					String errorGroup = "fiches.fiche_"+ficheLight.getNumeroFiche();
 					ErrorCollector.getInstance().addGroup(errorGroup);
 					
 					urlFiche =  Constants.getFicheFromIdUrl( ficheLight.getNumeroFiche() );

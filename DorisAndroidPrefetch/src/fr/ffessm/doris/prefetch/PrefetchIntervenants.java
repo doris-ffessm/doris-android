@@ -105,7 +105,7 @@ public class PrefetchIntervenants {
 				listeFiltres="ab";
 			}
 
-			String errorGroup = "Check Intervenants";
+			String errorGroup = "intervenants.intervenants";
 			ErrorCollector.getInstance().addGroup(errorGroup);
 			
 			for (char initiale : listeFiltres.toCharArray()){
