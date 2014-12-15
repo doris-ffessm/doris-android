@@ -605,7 +605,7 @@ public class Fiche {
 											_contextDB.intervenantFicheDao.create(intervenantFiche);
 										}
 										else{
-											ErrorCollector.getInstance().addError(errorGroup, "Participant "+intervenantRef+" introuvable dans la base");
+											ErrorCollector.getInstance().addError(errorGroup, "Participant "+intervenantRef+" introuvable" , "Participant "+intervenantRef+" introuvable dans la base. Référencé par la fiche "+this.getNomScientifiqueTxt()+" - "+this.getNomCommunNeverEmpty());
 										}
 									}
 									
