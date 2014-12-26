@@ -45,6 +45,7 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -65,6 +66,8 @@ import android.widget.Toast;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import android.preference.PreferenceManager;
+import java.io.File;
+import java.io.FileOutputStream;
 //Start of user code additional imports SplashScreen_CustomViewActivity
 import java.io.IOException;
 import android.content.SharedPreferences;
@@ -189,6 +192,33 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 				throw new Error("Unable to create database");
 
 			}
+			
+			// Création d'un fichier “.nomedia” à la racine des dossiers photos afin qu'elles ne soient pas
+			// indexées par le moteur d'Android. 
+			// Elles n'apparaissent ainsi pas dans "Photos", on gagne bcp en temps d'indexation et bcp de place
+			// en thumbnails
+			Photos_Outils photosOutils = new Photos_Outils(this.context);
+			
+			File folderPreferedLocation = photosOutils.getFolderFromPreferedLocation("");
+			if (folderPreferedLocation != null && !folderPreferedLocation.exists() && !folderPreferedLocation.mkdirs()) {
+	            try {
+					throw new IOException("Cannot create dir " + photosOutils.getFolderFromPreferedLocation("").getAbsolutePath());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	        }
+			
+			File nomediaFile = new File(folderPreferedLocation, ".nomedia");
+			if ( nomediaFile != null && !nomediaFile.exists() ) {
+				try {
+					FileOutputStream noMediaOutStream = new FileOutputStream ( nomediaFile );
+		            noMediaOutStream.write ( 0 );
+		            noMediaOutStream.close ( );
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	        }
+			
 			return null;
 		}
 
