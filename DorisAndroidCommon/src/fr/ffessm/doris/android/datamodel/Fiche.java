@@ -327,7 +327,7 @@ public class Fiche {
 		//log.info("getFicheFromHtml() - ref : " + ficheRef);
 		//log.info("getFicheFromHtml() - Etat Fiche : " + getEtatFiche());		
 
-		String errorGroup = "Check structure fiche no "+ficheRef;
+		String errorGroup = "fiches.fiche_"+ficheRef;
 		ErrorCollector.getInstance().addGroup(errorGroup);
 		
 		// Zones d'Observation (!!! <> Zones Géographie)
@@ -503,7 +503,7 @@ public class Fiche {
 									}
 
 									else{
-										ErrorCollector.getInstance().addError(errorGroup, "Rubrique autre dénomination existante mais vide");
+										ErrorCollector.getInstance().addError(errorGroup, "rubrique autre dénomination vide", "Rubrique autre dénomination existante mais vide pour la fiche "+this.getNumeroFiche()+" -"+getNomCommun());
 									}
 									
 								} else {
@@ -529,7 +529,7 @@ public class Fiche {
 										_contextDB.sectionFicheDao.create(contenu);
 									}
 									else{
-										ErrorCollector.getInstance().addError(errorGroup, "Rubrique "+rubrique+" vide");
+										ErrorCollector.getInstance().addError(errorGroup, "rubrique "+rubrique+" vide", "Rubrique "+rubrique+" existante mais vide pour la fiche "+this.getNumeroFiche()+" -"+getNomCommun());
 									}
 								}
 							}
@@ -605,7 +605,7 @@ public class Fiche {
 											_contextDB.intervenantFicheDao.create(intervenantFiche);
 										}
 										else{
-											ErrorCollector.getInstance().addError(errorGroup, "Participant "+intervenantRef+" introuvable dans la base");
+											ErrorCollector.getInstance().addError(errorGroup, "Participant "+intervenantRef+" introuvable" , "Participant "+intervenantRef+" introuvable dans la base. Référencé par la fiche "+this.getNomScientifiqueTxt()+" - "+this.getNomCommunNeverEmpty());
 										}
 									}
 									

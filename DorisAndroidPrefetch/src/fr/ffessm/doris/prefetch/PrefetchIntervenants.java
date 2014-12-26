@@ -105,7 +105,7 @@ public class PrefetchIntervenants {
 				listeFiltres="ab";
 			}
 
-			String errorGroup = "Check Intervenants";
+			String errorGroup = "intervenants.intervenants";
 			ErrorCollector.getInstance().addGroup(errorGroup);
 			
 			for (char initiale : listeFiltres.toCharArray()){
@@ -165,7 +165,7 @@ public class PrefetchIntervenants {
 								pageIntervenantRacine+"participant-"+participant.getNumeroParticipant()+".html") ) {
 						} else {
 							log.error("Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom());
-							ErrorCollector.getInstance().addError(errorGroup, "Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom()+" "+Constants.getParticipantUrl(participant.getNumeroParticipant()));
+							ErrorCollector.getInstance().addError(errorGroup, "page photo participant introuvable", "Une erreur est survenue lors de la récupération de la page contenant la photo du participant : "+participant.getNom()+" , "+Constants.getParticipantUrl(participant.getNumeroParticipant()));
 							//System.exit(1);
 						}
 					}
@@ -195,6 +195,7 @@ public class PrefetchIntervenants {
 									fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_"))) {
 							} else {
 								log.error("Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom());
+								ErrorCollector.getInstance().addError(errorGroup, "image photo participant introuvable", "Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom()+" , "+Constants.SITE_RACINE_URL+photoURL);
 								//System.exit(1);
 							}
 						}
