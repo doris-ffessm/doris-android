@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.j256.ormlite.dao.RuntimeExceptionDao;
+//import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -115,7 +115,7 @@ public class SQLiteDataBaseHelper extends SQLiteOpenHelper {
 	 */
 	public static void removeOldDataBase() {
 
-		SQLiteDatabase checkDB = null;
+		//SQLiteDatabase checkDB = null;
 
 		String myPath = DB_PATH + DB_NAME;
 		File oldDB = new File(myPath);

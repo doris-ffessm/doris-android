@@ -45,12 +45,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
-import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 import fr.ffessm.doris.android.datamodel.associations.*;
+// Start of user code protected additional OrmLiteDBHelper imports
+// End of user code
 
 /**
  * ORMLite Data base helper, designed to be used by android Activity
