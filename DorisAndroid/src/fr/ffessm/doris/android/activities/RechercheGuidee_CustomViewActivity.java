@@ -42,34 +42,30 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
+
 
 //Start of user code additional imports RechercheGuidee_CustomViewActivity
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
+import fr.ffessm.doris.android.BuildConfig;
 
+import android.app.Activity;
+import android.content.Context;
+import android.util.Log;
+import android.view.View;
 
+import android.widget.Toast;
 //End of user code
 public class RechercheGuidee_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 //Start of user code additional implements RechercheGuidee_CustomViewActivity
@@ -77,6 +73,7 @@ public class RechercheGuidee_CustomViewActivity extends OrmLiteActionBarActivity
 {
 	
 	//Start of user code constants RechercheGuidee_CustomViewActivity
+	private static final String LOG_TAG = RechercheGuidee_CustomViewActivity.class.getSimpleName();
 	
 	final Context context = this;
 	
@@ -92,6 +89,7 @@ public class RechercheGuidee_CustomViewActivity extends OrmLiteActionBarActivity
 	    actionBar.setDisplayHomeAsUpEnabled(true);
 
         //Start of user code onCreate RechercheGuidee_CustomViewActivity
+	    if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() ");
 		//End of user code
     }
     
