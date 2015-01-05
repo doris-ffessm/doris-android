@@ -76,6 +76,7 @@ import com.j256.ormlite.dao.GenericRawResults;
 import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -606,7 +607,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 			} else {
 		// Start of user code protected ListeFicheAvecFiltre_Adapter filter prefix customisation
 				Common_Outils commonOutils = new Common_Outils();
-				final String prefixString = commonOutils.formatStringNormalizer(prefix.toString().toLowerCase());
+				final String prefixString = commonOutils.formatStringNormalizer(prefix.toString().toLowerCase(Locale.FRENCH));
 				//
 		// End of user code
 				boolean sort = sortAfterFilter();

@@ -70,6 +70,7 @@ import android.widget.TextView;
 import android.view.ViewGroup.LayoutParams;
 import com.squareup.picasso.Picasso;
 import java.io.IOException;
+import java.util.Locale;
 
 
 import fr.ffessm.doris.android.sitedoris.Constants;
@@ -357,7 +358,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
 		StringBuilder labelSB = new StringBuilder();
 		labelSB.append(entry.getTextePourRecherche());
 		labelSB.append(" ");
-		if(labelSB.toString().toLowerCase().contains(pattern)) return 1;
+		if(labelSB.toString().toLowerCase(Locale.FRENCH).contains(pattern)) return 1;
 		else return -1;
 		// End of user code
 	}
@@ -390,7 +391,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
 				}
 			} else {
 		// Start of user code protected ListeBibliographieAvecFiltre_Adapter filter prefix customisation
-				String prefixString = prefix.toString().toLowerCase();
+				String prefixString = prefix.toString().toLowerCase(Locale.FRENCH);
 		// End of user code
 				boolean sort = sortAfterFilter();
 				final List<EntreeBibliographie> values = entreeBibliographieList;

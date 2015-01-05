@@ -76,6 +76,7 @@ import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 
 import java.io.IOException;
+import java.util.Locale;
 
 //End of user code
 
@@ -343,7 +344,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 		StringBuilder labelSB = new StringBuilder();
 		labelSB.append(entry.getNom());
 		labelSB.append(" ");
-		if(labelSB.toString().toLowerCase().contains(pattern)) return 1;
+		if(labelSB.toString().toLowerCase(Locale.FRENCH).contains(pattern)) return 1;
 		else return -1;
 		// End of user code
 	}
@@ -376,7 +377,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 				}
 			} else {
 		// Start of user code protected ListeParticipantAvecFiltre_Adapter filter prefix customisation
-				String prefixString = prefix.toString().toLowerCase();
+				String prefixString = prefix.toString().toLowerCase(Locale.FRENCH);
 		// End of user code
 				boolean sort = sortAfterFilter();
 				final List<Participant> values = participantList;

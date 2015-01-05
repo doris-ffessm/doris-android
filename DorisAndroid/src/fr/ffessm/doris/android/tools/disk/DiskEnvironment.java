@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -678,12 +679,12 @@ public class DiskEnvironment {
 	* @return ein Array mit allen {@link Device}, die den Suchkriterien entsprechen
 	*/
 	public static Device[] getDevices(String key, boolean available, boolean intern, boolean data) {
-	if (key!=null) key = key.toLowerCase();
+	if (key!=null) key = key.toLowerCase(Locale.US);
 	ArrayList<Device> temp = new ArrayList<Device>(mDeviceList.size()+2);
 	if (data) temp.add(getInternalStorage());
 	if (intern && ( !available || mPrimary.isAvailable())) temp.add(mPrimary);
 	for (Device d : mDeviceList) {
-	if ( ((key==null) || d.getName().toLowerCase().contains(key)) && (!available || d.isAvailable()) ) temp.add(d);
+	if ( ((key==null) || d.getName().toLowerCase(Locale.US).contains(key)) && (!available || d.isAvailable()) ) temp.add(d);
 	}
 	return temp.toArray(new Device[temp.size()]);
 	}

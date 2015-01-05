@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
@@ -476,9 +477,9 @@ public class Textes_Outils {
 														//le É par exemple ne fonctionne pas avec LIKE dans SQLite
 														// Bug connu : http://www.sqlite.org/lang_expr.html#like
 														listeDefinitions = entriesDao.queryForAll();
-														String texteRecherche = terme.replaceAll("e$", "").replaceAll("ux$", "").toLowerCase();
+														String texteRecherche = terme.replaceAll("e$", "").replaceAll("ux$", "").toLowerCase(Locale.FRENCH);
 														for (DefinitionGlossaire definition : listeDefinitions){
-															if (definition.getTerme().toString().toLowerCase().contains(texteRecherche)) {
+															if (definition.getTerme().toString().toLowerCase(Locale.FRENCH).contains(texteRecherche)) {
 																idDefinition = definition.getId();
 																break;
 															}

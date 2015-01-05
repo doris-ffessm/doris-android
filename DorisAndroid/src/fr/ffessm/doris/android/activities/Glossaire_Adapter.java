@@ -73,6 +73,7 @@ import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Textes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import java.io.IOException;
+import java.util.Locale;
 //End of user code
 
 public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
@@ -335,7 +336,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 		StringBuilder labelSB = new StringBuilder();
 		labelSB.append(entry.getTerme());
 		labelSB.append(" ");
-		if(labelSB.toString().toLowerCase().contains(pattern)) return 1;
+		if(labelSB.toString().toLowerCase(Locale.FRENCH).contains(pattern)) return 1;
 		else return -1;
 		// End of user code
 	}
@@ -368,7 +369,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 				}
 			} else {
 		// Start of user code protected Glossaire_Adapter filter prefix customisation
-				String prefixString = prefix.toString().toLowerCase();
+				String prefixString = prefix.toString().toLowerCase(Locale.FRENCH);
 		// End of user code
 				boolean sort = sortAfterFilter();
 				final List<DefinitionGlossaire> values = definitionGlossaireList;

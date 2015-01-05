@@ -62,6 +62,7 @@ import fr.ffessm.doris.android.datamodel.associations.*;
 
 // Start of user code additional import for Fiche
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -294,7 +295,7 @@ public class Fiche {
 			
 			List<? extends Attribute> listeAttributs=elementTable.getAttributes();
 			for (Attribute attribut : listeAttributs) {
-				if (attribut.getName().toLowerCase().equals("width") &  attribut.getValue().equals("820")) {
+				if (attribut.getName().toLowerCase(Locale.FRENCH).equals("width") &  attribut.getValue().equals("820")) {
 					//log.debug("ciblePage() - Table Trouvée : " + attribut.getName() + " = " +  attribut.getValue());
 					tableResultats = elementTable;
 					break;
@@ -658,7 +659,7 @@ public class Fiche {
 							// Certaines fiches appartiennent à un groupe sans être dans un sous-groupe
 							// c'est pourquoi, on a d'abord initialiser les groupes
 							// et qu'on l'écrase ici. (on a l'arborescence des groupes par ailleurs)
-							sousgroupeRef = Integer.parseInt(attribut.getValue().toString().toLowerCase().replaceAll(".*images_sousgroupe/([0-9]*).(gif|jpg)","$1"));
+							sousgroupeRef = Integer.parseInt(attribut.getValue().toString().toLowerCase(Locale.FRENCH).replaceAll(".*images_sousgroupe/([0-9]*).(gif|jpg)","$1"));
 							//log.info("getFicheFromHtml() - sousgroupeRef : " + sousgroupeRef);
 
 							groupe = siteDoris.getGroupeFromListeGroupes(listeGroupes, groupeRef, sousgroupeRef);
@@ -762,7 +763,7 @@ public class Fiche {
 					for (Attribute attribut : listeAttributs) {
 						
 						if (attribut.getName().equals("src") && attribut.getValue().toString().startsWith("gestionenligne/images_sousgroupe/") ) {
-							sousgroupeRef = Integer.parseInt(attribut.getValue().toString().toLowerCase().replaceAll(".*images_sousgroupe/([0-9]*).(gif|jpg)","$1"));
+							sousgroupeRef = Integer.parseInt(attribut.getValue().toString().toLowerCase(Locale.FRENCH).replaceAll(".*images_sousgroupe/([0-9]*).(gif|jpg)","$1"));
 							//log.info("getFicheFromHtml() - sousgroupeRef : " + sousgroupeRef);
 
 							groupe = siteDoris.getGroupeFromListeGroupes(listeGroupes, groupeRef, sousgroupeRef);
@@ -987,7 +988,7 @@ public class Fiche {
 		sbTextePourRechercheRapide.append(" "+autresDenominationsPourRechercheRapide.trim());
 		
 		sbTextePourRechercheRapide = new StringBuilder(sbTextePourRechercheRapide.toString().replaceAll("\\{\\{[^\\}]*\\}\\}", "") );
-		setTextePourRechercheRapide( commonOutils.formatStringNormalizer(sbTextePourRechercheRapide.toString()).toLowerCase() );
+		setTextePourRechercheRapide( commonOutils.formatStringNormalizer(sbTextePourRechercheRapide.toString()).toLowerCase(Locale.FRENCH) );
 		
 		// RAZ
 		source = null;

@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import net.htmlparser.jericho.Element;
@@ -775,7 +776,7 @@ public class SiteDoris {
     						annee,
     						commonOutils.nettoyageTextes(edition).trim(),
     						"",
-    						(commonOutils.formatStringNormalizer(auteurs+" "+titre)).toLowerCase() ));
+    						(commonOutils.formatStringNormalizer(auteurs+" "+titre)).toLowerCase(Locale.FRENCH) ));
     			}
 			}
 			
