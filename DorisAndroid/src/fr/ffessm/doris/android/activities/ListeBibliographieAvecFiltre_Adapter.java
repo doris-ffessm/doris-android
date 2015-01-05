@@ -121,6 +121,11 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
         // Start of user code protected ListeBibliographieAvecFiltre_Adapter constructor
+		
+		photosOutils = new Photos_Outils(context);
+		textesOutils = new Textes_Outils(context);
+		reseauOutils = new Reseau_Outils(context);
+		
 		// End of user code
 		updateList();
 	}
