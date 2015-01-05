@@ -66,7 +66,6 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.datamodel.SQLiteDataBaseHelper;
 import fr.ffessm.doris.android.tools.Photos_Outils;
@@ -265,7 +264,4 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
         }
     }
 
-	private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
 }

@@ -794,7 +794,4 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         }
     }
 
-	private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
 }

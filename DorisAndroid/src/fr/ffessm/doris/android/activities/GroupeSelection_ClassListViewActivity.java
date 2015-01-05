@@ -47,31 +47,25 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedGroupeSelection_ClassListViewActivity_additionalimports
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -87,6 +81,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	boolean depuisAccueil = false;
 	final Context context = this;
 	//End of user code
+	
     GroupeSelection_Adapter adapter;
 
 
@@ -295,7 +290,5 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	
 	// End of user code
 
-	private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
+	
 }

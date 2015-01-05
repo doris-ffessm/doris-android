@@ -52,20 +52,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 // Start of user code protectedDetailsBibliographie_ElementViewActivity_additional_import
 import android.text.SpannableString;
@@ -239,7 +231,4 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 	// Start of user code protectedDetailsBibliographie_ElementViewActivity_additional_operations
 	// End of user code
 
-	private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
 }

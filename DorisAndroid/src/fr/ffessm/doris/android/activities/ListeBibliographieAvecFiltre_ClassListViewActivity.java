@@ -50,37 +50,28 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
-import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.LinearLayout;
-import android.preference.PreferenceManager;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.SearchViewCompat;
 import android.support.v7.widget.SearchView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 // Start of user code protectedListeBibliographieAvecFiltre_ClassListViewActivity_additionalimports
 // End of user code
 
@@ -90,8 +81,7 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
 
 	//Start of user code constants ListeBibliographieAvecFiltre_ClassListViewActivity
 	//End of user code
-	// Search EditText
-    //EditText inputSearch;
+	
     ListeBibliographieAvecFiltre_Adapter adapter;
 
 	Handler mHandler;
@@ -341,7 +331,5 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
     }
 	// End of user code
 
-	private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
+	
 }

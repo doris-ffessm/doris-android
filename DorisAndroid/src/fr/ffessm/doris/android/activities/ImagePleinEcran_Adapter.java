@@ -73,7 +73,7 @@ import fr.ffessm.doris.android.tools.ScreenTools;
 
 public class ImagePleinEcran_Adapter extends PagerAdapter {
 
-	private static final String LOG_TAG = ImagePleinEcran_Adapter.class.getCanonicalName();
+	//private static final String LOG_TAG = ImagePleinEcran_Adapter.class.getCanonicalName();
 	
 	private ImagePleinEcran_CustomViewActivity _activity;
     private ArrayList<PhotoFiche> _PhotoFicheLists;

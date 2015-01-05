@@ -40,10 +40,7 @@ pris connaissance de la licence CeCILL-B, et que vous en avez accepté les
 termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,26 +57,22 @@ import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.j256.ormlite.dao.GenericRawResults;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 //Start of user code protected additional ListeFicheAvecFiltre_Adapter imports
 // additional imports
 
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Toast;
+
+import com.j256.ormlite.dao.GenericRawResults;
 import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.sql.SQLException;

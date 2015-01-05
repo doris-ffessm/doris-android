@@ -65,7 +65,6 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 
-import android.widget.Toast;
 //End of user code
 public class RechercheGuidee_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 //Start of user code additional implements RechercheGuidee_CustomViewActivity
@@ -168,7 +167,4 @@ public class RechercheGuidee_CustomViewActivity extends OrmLiteActionBarActivity
 		super.onCreateSupportNavigateUpTaskStack(builder);
 		//End of user code
 	}
-	private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
 }

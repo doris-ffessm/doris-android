@@ -63,7 +63,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.support.v4.view.ViewPager;
-import android.widget.Toast;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
@@ -225,7 +224,4 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 		super.onCreateSupportNavigateUpTaskStack(builder);
 		//End of user code
 	}
-	private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
 }

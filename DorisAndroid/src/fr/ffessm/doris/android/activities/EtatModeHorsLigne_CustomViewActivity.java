@@ -1270,7 +1270,4 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		super.onCreateSupportNavigateUpTaskStack(builder);
 		//End of user code
 	}
-	private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
 }

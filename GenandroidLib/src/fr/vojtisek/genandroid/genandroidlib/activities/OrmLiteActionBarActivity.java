@@ -1,7 +1,6 @@
 package fr.vojtisek.genandroid.genandroidlib.activities;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.logger.Logger;
 import com.j256.ormlite.logger.LoggerFactory;
@@ -10,6 +9,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.widget.Toast;
 
 public class OrmLiteActionBarActivity<H extends OrmLiteSqliteOpenHelper> extends ActionBarActivity {
 
@@ -96,4 +96,8 @@ public class OrmLiteActionBarActivity<H extends OrmLiteSqliteOpenHelper> extends
 	public String toString() {
 		return getClass().getSimpleName() + "@" + Integer.toHexString(super.hashCode());
 	}
+	
+	protected void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
 }
