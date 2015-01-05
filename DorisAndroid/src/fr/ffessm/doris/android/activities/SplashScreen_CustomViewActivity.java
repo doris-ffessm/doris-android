@@ -45,7 +45,6 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -66,9 +65,9 @@ import android.widget.Toast;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import android.preference.PreferenceManager;
+//Start of user code additional imports SplashScreen_CustomViewActivity
 import java.io.File;
 import java.io.FileOutputStream;
-//Start of user code additional imports SplashScreen_CustomViewActivity
 import java.io.IOException;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -77,6 +76,7 @@ import android.os.AsyncTask;
 import android.widget.LinearLayout;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.datamodel.SQLiteDataBaseHelper;
+import fr.ffessm.doris.android.tools.Photos_Outils;
 //End of user code
 public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
 //Start of user code additional implements SplashScreen_CustomViewActivity
