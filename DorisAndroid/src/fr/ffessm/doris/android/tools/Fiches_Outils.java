@@ -44,6 +44,7 @@ package fr.ffessm.doris.android.tools;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import android.content.Context;
 
@@ -155,7 +156,7 @@ public class Fiches_Outils {
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getDerniereMajListeFichesTypeZoneGeo() - dernierMajDateCaract : "+dernierMajDateCaract );
 		
 		Calendar dernierMajDate = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
     	try {
 			dernierMajDate.setTime(sdf.parse(dernierMajDateCaract));
 		} catch (ParseException e) {
@@ -169,7 +170,7 @@ public class Fiches_Outils {
 	public boolean setDateMajListeFichesTypeZoneGeo(ZoneGeographiqueKind inZoneGeo) {
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setDateMajListeFichesTypeZoneGeo() - Début" );
 		Calendar aujourdHui = Calendar.getInstance();
- 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+ 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
 		String dateMajCaract = sdf.format(aujourdHui.getTime());
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setDateMajListeFichesTypeZoneGeo() - dateMajCaract : "+dateMajCaract );
 		

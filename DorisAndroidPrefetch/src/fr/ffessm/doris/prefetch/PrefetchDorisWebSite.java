@@ -46,6 +46,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
@@ -264,7 +265,7 @@ public class PrefetchDorisWebSite {
 			
 			// - - - Enregistrement Date génération Base - - -
 			Date date = new Date();
-			SimpleDateFormat ft =  new SimpleDateFormat ("dd/MM/yyyy  HH:mm");
+			SimpleDateFormat ft =  new SimpleDateFormat ("dd/MM/yyyy  HH:mm", Locale.US);
 			dbContext.dorisDB_metadataDao.create(new DorisDB_metadata(ft.format(date),""));
 			
 			
@@ -593,7 +594,7 @@ public class PrefetchDorisWebSite {
 		
 		// Calcul suffixe de renommage
 		Date maintenant = new Date(); 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyMMddhhmmss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyMMddhhmmss", Locale.US);
 		String suffixe = sdf.format(maintenant);
 		
 		// Si le dossier principal de travail ( ./run )  n'existe pas, on le créé
