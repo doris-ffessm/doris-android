@@ -70,7 +70,7 @@
     <View style="@style/Separateur"/>
 <!-- End of user code -->
 	<ListView 
-	    android:id="@+android:id/groupeselection_listview"
+	    android:id="@+id/groupeselection_listview"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent" >
 	</ListView>

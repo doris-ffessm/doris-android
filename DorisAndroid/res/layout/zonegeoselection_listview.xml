@@ -16,7 +16,7 @@
         android:layout_height="wrap_content" >
 		    
 	    <TextView
-	    	android:id="@+android:id/zonegeoselection_listview_filtre_courant"
+	    	android:id="@+id/zonegeoselection_listview_filtre_courant"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:paddingLeft="4dip"
@@ -39,7 +39,7 @@
 	<!--	
 End of user code -->
 	<ListView 
-	    android:id="@+android:id/zonegeoselection_listview"
+	    android:id="@+id/zonegeoselection_listview"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent" >
 	</ListView>

@@ -2,7 +2,7 @@
 <!-- Start of user code protected zonegeoselection_listviewrow linearlayout full_customization
 			-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+android:id/zonegeoselection_listviewrow"
+    android:id="@+id/zonegeoselection_listviewrow"
     android:layout_width="match_parent"
     android:layout_height="match_parent"    
 	android:layout_marginBottom="2dp"
