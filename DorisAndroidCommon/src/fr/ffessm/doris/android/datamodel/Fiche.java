@@ -360,7 +360,7 @@ public class Fiche {
 			if (! listeZonesObservation.isEmpty()) {
 				String[] zonesObservation = listeZonesObservation.split(",|et");
 				for (String zoneObservationTxt : zonesObservation){
-					//log.info("##31 -" + zoneObservationTxt.trim());
+					log.info("##31 -" + zoneObservationTxt.trim());
 				}
 			}
 
