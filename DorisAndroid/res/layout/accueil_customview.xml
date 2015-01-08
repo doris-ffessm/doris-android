@@ -107,6 +107,7 @@
 	    android:gravity="center_horizontal"
 	    android:orientation="vertical" >
 
+	    
 	    <ImageView
 	        android:id="@+id/accueil_logo_doris"
 	        android:layout_width="match_parent"
@@ -116,7 +117,15 @@
 	        android:maxHeight="40dp"
 	        android:onClick="onClickBtnIconeSiteWeb_doris"
 	        android:src="@drawable/doris_logo_site_doris" />
-
+		<ImageView
+	        android:id="@+id/accueil_logo_je_suis_charlie"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:adjustViewBounds="true"
+	        android:contentDescription="@string/accueil_customview_logo_doris_description"
+	        android:maxHeight="40dp"
+	        android:onClick="onClickBtnIconeJeSuisCharlie"
+	        android:src="@drawable/je_suis_charlie" />
 		<LinearLayout
 		    android:id="@+id/accueil_accueil_ffessm_layout"
 		    android:layout_width="wrap_content"

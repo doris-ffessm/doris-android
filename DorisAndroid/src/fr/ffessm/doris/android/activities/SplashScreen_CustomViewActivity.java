@@ -44,6 +44,7 @@ package fr.ffessm.doris.android.activities;
 
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -115,6 +116,10 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 					ed.putBoolean(getString(R.string.pref_key_debug_maj_base_prochain_demarrage), false);
 					ed.commit();
 				}
+				
+				// reset spécial "Je suis Charlie"
+				Param_Outils paramOutils = new Param_Outils(this);
+				paramOutils.setParamBoolean(R.string.pref_key_accueil_aff_iconesfede, true);
 				
 			} catch (NameNotFoundException e) {
 				
