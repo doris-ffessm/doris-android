@@ -117,10 +117,6 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 					ed.commit();
 				}
 				
-				// reset spécial "Je suis Charlie"
-				Param_Outils paramOutils = new Param_Outils(this);
-				paramOutils.setParamBoolean(R.string.pref_key_accueil_aff_iconesfede, true);
-				
 			} catch (NameNotFoundException e) {
 				
 			}
