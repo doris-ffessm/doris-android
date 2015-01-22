@@ -340,7 +340,7 @@ public class Fiche {
 		if (ElementTDcode_fiche.getFirstElementByClass("normal") != null) {
 			String listeZonesObservation = ElementTDcode_fiche.getFirstElementByClass("normal").getRenderer().toString().trim();
 			
-			//log.info("##01 -" + listeZonesObservation.trim());
+			log.info("##01 -" + listeZonesObservation.trim());
 					
 			listeZonesObservation = listeZonesObservation.replace(", sauf", " sauf");
 			
@@ -354,9 +354,8 @@ public class Fiche {
 			
 			
 			listeZonesObservation = listeZonesObservation.replaceAll("(\\([^,\\)]*?),", "$1£");
-			//log.info("##21 -" + listeZonesObservation.trim());
+			log.info("##21 -" + listeZonesObservation.trim());
 		
-			//log.info("getFicheFromHtml() - listeZonesObservation : " + listeZonesObservation);
 			if (! listeZonesObservation.isEmpty()) {
 				String[] zonesObservation = listeZonesObservation.split(",|et");
 				for (String zoneObservationTxt : zonesObservation){
