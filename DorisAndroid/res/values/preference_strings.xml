@@ -161,13 +161,15 @@
 	<string name="accueil_liste_ou_arbre_prompt">"Accès principal aux fiches"</string>
 	<string name="accueil_liste_ou_arbre_prompt_summary">(càd en cliquant sur la Zone)</string>
 	<string name="accueil_liste_ou_arbre_default">liste</string>
-	<string-array name="accueil_liste_ou_arbre_values">
+	<string-array name="accueil_listes_ou_arbre_values">
         <item>liste</item>
         <item>arbre</item>
+        <item>photos</item>
     </string-array>
-   	<string-array name="accueil_liste_ou_arbre_lib">
+   	<string-array name="accueil_listes_ou_arbre_lib">
 	    <item>Par leur ordre alphabétique</item>
         <item>"Par l'arbre phylogénétique"</item>
+        <item>Par les photos</item>
     </string-array>
     
 	<string name="accueil_fiches_ordre_prompt">"Ordre de tri des fiches"</string>

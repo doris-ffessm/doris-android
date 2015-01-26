@@ -148,10 +148,10 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
         
 		// Start of user code protected additional ZoneGeoSelection_Adapter getView code
 		
-        ImageButton selectbutton = (ImageButton) convertView.findViewById(R.id.zonegeoselection_selectBtn);
-        selectbutton.setFocusable(false);
-        selectbutton.setClickable(true);
-        selectbutton.setOnClickListener(new View.OnClickListener() {
+        ImageButton imgBtnH = (ImageButton) convertView.findViewById(R.id.zonegeoselection_selectBtn_h);
+        imgBtnH.setFocusable(false);
+        imgBtnH.setClickable(true);
+        imgBtnH.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -163,6 +163,20 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 			}
 		});
         
+        ImageButton imgBtnB = (ImageButton) convertView.findViewById(R.id.zonegeoselection_selectBtn_h);
+        imgBtnB.setFocusable(false);
+        imgBtnB.setClickable(true);
+        imgBtnB.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(context, "Filtre zone géographique : "+entry.getNom(), Toast.LENGTH_SHORT).show();
+				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), entry.getId());
+		        ed.commit();
+				((ZoneGeoSelection_ClassListViewActivity) context).finish();
+			}
+		});
         
         ImageView ivIcon = (ImageView) convertView.findViewById(R.id.zonegeoselection_listviewrow_icon);
         String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_accueil_icon_size), "128");

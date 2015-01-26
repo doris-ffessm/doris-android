@@ -36,7 +36,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/zonegeoselection_listviewrow_icon"
-            android:layout_toLeftOf="@+id/zonegeoselection_selectBtn"
+            android:layout_toLeftOf="@+id/zonegeoselection_selectBtn_h"
             android:layout_toRightOf="@+id/zonegeoselection_listviewrow_icon"
             android:orientation="vertical"
 			android:paddingLeft="4dip"
@@ -46,6 +46,7 @@
                 android:id="@+id/zonegeoselection_listviewrow_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Nom Zone"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="?android:attr/textColorPrimary" />
 
@@ -55,15 +56,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="3dp"
                 android:paddingLeft="4dip"
+                android:text="Exemples"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="?android:attr/textColorSecondary" />
+
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/zonegeoselection_selectBtn"
+            android:id="@+id/zonegeoselection_selectBtn_h"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/zonegeoselection_listviewrow_icon"
+            android:layout_alignTop="@+id/zonegeoselection_listviewrow_icon"
             android:layout_alignParentRight="true"
             android:layout_margin="0dp"
             android:layout_marginRight="5dp"
@@ -71,8 +74,22 @@
             android:drawablePadding="0dp"
             android:padding="3dp"
             android:scaleType="fitCenter"
-            android:src="?attr/ic_action_arbre_phylogenetique" />
-                
+            android:src="@drawable/ic_action_arbre_phylogenetique" />
+        
+         <ImageButton
+             android:id="@+id/zonegeoselection_selectBtn_b"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_alignParentRight="true"
+             android:layout_below="@+id/zonegeoselection_selectBtn_h"
+             android:layout_margin="0dp"
+             android:layout_marginRight="5dp"
+             android:background="@android:color/transparent"
+             android:drawablePadding="0dp"
+             android:padding="3dp"
+             android:scaleType="fitCenter"
+             android:src="@drawable/ic_action_arbre_phylogenetique" />
+      
     </RelativeLayout>
     
     <View style="@style/Separateur" />

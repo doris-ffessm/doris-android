@@ -354,6 +354,13 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			        showToast(getString(R.string.accueil_recherche_guidee_label_text)+" ; "
 			        	+Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
 			        startActivity(toGroupeSelectionView);
+			        
+		       } else if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
+			        
+		    		showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
+					startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
+
+			        
 		       } else {
 		    		// Par défaut, on ouvre la liste des fiches en cliquant sur la zone
 		    		showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
@@ -365,20 +372,35 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    
 	    
 	    
-        // Gestion du bouton secondaire (de droite)
+        // Gestion des boutons "secondaires" (de droite)
+        // Si Liste par Défaut : H = Arbre ; B = Photos
+        // Si Arbre par Défaut : H = Liste ; B = Photos
+        // Si Photos par Défaut : H = Liste ; B = Arbre
         
         // Image
-        ImageButton imgSelect = (ImageButton) viewZone.findViewById(R.id.zonegeoselection_selectBtn);
+        ImageButton imgBtnH = (ImageButton) viewZone.findViewById(R.id.zonegeoselection_selectBtn_h);
+        ImageButton imgBtnB = (ImageButton) viewZone.findViewById(R.id.zonegeoselection_selectBtn_b);
         if (accueil_liste_ou_arbre_pardefaut.equals("arbre")) {
-        	imgSelect.setImageResource(
+        	imgBtnH.setImageResource(
         			ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_liste_fiches) );
+        	imgBtnB.setImageResource(
+        			ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_app_more_informations) );
+        } else if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
+        	imgBtnH.setImageResource(
+    			ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_liste_fiches) );
+        	imgBtnB.setImageResource(
+        			ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_arbre_phylogenetique) );
         } else {
-    		imgSelect.setImageResource(
-    			ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_arbre_phylogenetique) );
+        	imgBtnH.setImageResource(
+        			ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_arbre_phylogenetique) );
+			imgBtnB.setImageResource(
+        			ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_app_more_informations) );
         }
         
-        // Clic
-        imgSelect.setOnClickListener(new View.OnClickListener() {
+        
+        
+        // Clic sur Bouton du Haut (si Liste par défaut Alors Bouton Haut => Arbre, sinon Bouton Haut => Liste)
+        imgBtnH.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
@@ -388,13 +410,36 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), 1);
 		        ed.commit();	
 		        
-		        if (accueil_liste_ou_arbre_pardefaut.equals("arbre")) {
-		        	// Si choix de l'utilisateur, on accède à l'arbre en cliquant sur la zone donc aux fiches en cliquant sur le bouton secondaire
+		        if (accueil_liste_ou_arbre_pardefaut.equals("liste")) {
+		        	//Permet de revenir à l'accueil après recherche par le groupe, si false on irait dans la liste en quittant
+					Intent toGroupeSelectionView = new Intent(context, GroupeSelection_ClassListViewActivity.class);
+			        Bundle b = new Bundle();
+			        b.putBoolean("GroupeSelection_depuisAccueil", true);
+			        toGroupeSelectionView.putExtras(b);
+			        
+			        showToast(getString(R.string.accueil_recherche_guidee_label_text)+"; "+Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
+			        startActivity(toGroupeSelectionView);
+		        } else {
 		    		showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
 					startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
-		        } else {
-		    		// Par défaut, on ouvre la liste des fiches en cliquant sur la zone donc on ouvre l'arbre qd clic sur bouton droit
+		        }
+	    		
+			}
+		});
+         
 
+        // Clic sur Bouton du Bas (si Photos par défaut Alors Bouton Bas => Arbre, sinon Bouton Bas => Photos)
+        imgBtnB.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+				// positionne la recherche pour cette zone
+				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zone.getId());
+				// réinitialise le filtre espèce
+				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), 1);
+		        ed.commit();	
+		        
+		        if (accueil_liste_ou_arbre_pardefaut.equals("photos")) {
 		        	//Permet de revenir à l'accueil après recherche par le groupe, si false on irait dans la liste en quittant
 					Intent toGroupeSelectionView = new Intent(context, GroupeSelection_ClassListViewActivity.class);
 			        Bundle b = new Bundle();
@@ -404,12 +449,13 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			        showToast(getString(R.string.accueil_recherche_guidee_label_text)+"; "
 			        	+Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
 			        startActivity(toGroupeSelectionView);
+		        } else {
+		    		showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
+					startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
+
 		        }
 			}
 		});
-         
-
-        
         
 
     	return viewZone;
