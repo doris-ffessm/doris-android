@@ -66,13 +66,13 @@
             android:id="@+id/zonegeoselection_selectBtn_h"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/zonegeoselection_listviewrow_icon"
             android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/zonegeoselection_listviewrow_icon"
             android:layout_margin="0dp"
-            android:layout_marginRight="5dp"
             android:background="@android:color/transparent"
             android:drawablePadding="0dp"
-            android:padding="3dp"
+            android:paddingRight="5dp"
+            android:paddingTop="3dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_action_arbre_phylogenetique" />
         
@@ -82,11 +82,11 @@
              android:layout_height="wrap_content"
              android:layout_alignParentRight="true"
              android:layout_below="@+id/zonegeoselection_selectBtn_h"
-             android:layout_margin="0dp"
-             android:layout_marginRight="5dp"
+             android:layout_marginBottom="3dp"
+             android:layout_marginTop="10dp"
              android:background="@android:color/transparent"
              android:drawablePadding="0dp"
-             android:padding="3dp"
+             android:paddingRight="5dp"
              android:scaleType="fitCenter"
              android:src="@drawable/ic_action_liste_images" />
       
