@@ -384,7 +384,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         	imgBtnH.setImageResource(
         			ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_liste_fiches) );
         	imgBtnB.setImageResource(
-        			ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_app_more_informations) );
+        			ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_liste_images) );
         } else if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
         	imgBtnH.setImageResource(
     			ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_liste_fiches) );
@@ -394,7 +394,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         	imgBtnH.setImageResource(
         			ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_arbre_phylogenetique) );
 			imgBtnB.setImageResource(
-        			ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_app_more_informations) );
+        			ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_liste_images) );
         }
         
         
