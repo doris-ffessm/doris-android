@@ -316,7 +316,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 			View.OnClickListener ficheLauncher = new View.OnClickListener()
 				{ @Override
 					public void onClick(View v) {
-						Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - getView");
+						Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - onClick");
 						Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
 						toDetailView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						Bundle b = new Bundle();
@@ -341,14 +341,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 				View.OnLongClickListener photoLauncher = new View.OnLongClickListener()
 				{ @Override
 					public boolean onLongClick(View v) {
-						Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - getView");
-						Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
-						toDetailView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						Bundle b = new Bundle();
-				        b.putInt("ficheId", entry.getId());
-						toDetailView.putExtras(b);
-						context.getApplicationContext().startActivity(toDetailView);
-						
+						Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - onLongClick");
 						Intent toImageView = new Intent(context, ImagePleinEcran_CustomViewActivity.class);
 						toImageView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						toImageView.putExtra("position", posImageCourante);
@@ -673,30 +666,4 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
    
     }
     
-    class OnImageClickListener implements OnClickListener {
-   	 
-        int _position;
-        int _ficheID;
-        Activity _activity;
- 
-        // constructor
-        public OnImageClickListener(int ficheID, int position, Activity activity) {
-            this._position = position;
-            this._activity = activity;
-            this._ficheID = ficheID;
-        }
- 
-        @Override
-        public void onClick(View v) {
-        	Log.d(LOG_TAG, "onClick() - v : "+v.toString());
-        	Log.d(LOG_TAG, "onClick() - _position : "+_position+" - _ficheID : "+_ficheID);
-            // on selecting grid view image
-            // launch full screen activity
-            Intent i = new Intent(_activity, ImagePleinEcran_CustomViewActivity.class);
-            i.putExtra("position", _position);
-            i.putExtra("ficheId", _ficheID);
-            _activity.startActivity(i);
-        }
- 
-    }
 }
