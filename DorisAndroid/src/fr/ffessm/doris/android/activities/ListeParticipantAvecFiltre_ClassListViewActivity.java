@@ -177,7 +177,7 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
 			toDetailView.putExtras(b);
 	        startActivity(toDetailView);
 		}
-		else if(view instanceof TextView && view.getId() == R.id.indexbar_alphabtes_row_textview){
+		else if(view instanceof TextView && view.getId() == R.id.indexbar_alphabet_row_textview){
 			// click on indexBar
 			TextView rowview=(TextView)view;
 			

@@ -33,7 +33,7 @@
 -->
 <!-- End of user code -->
     </LinearLayout>
-	<include layout="@layout/indexbar_alphabtes_row"
+	<include layout="@layout/indexbar_alphabet_row"
     	 	android:id="@+id/alphabet_row_layout"
     	 	android:visibility="invisible"/>
 	 	 

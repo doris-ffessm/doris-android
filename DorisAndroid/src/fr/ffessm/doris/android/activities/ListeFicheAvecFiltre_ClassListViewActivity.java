@@ -197,20 +197,20 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 			toDetailView.putExtras(b);
 	        startActivity(toDetailView);
 		}
-		else if(view instanceof TextView && view.getId() == R.id.indexbar_alphabtes_row_textview){
+		else if(view instanceof TextView && view.getId() == R.id.indexbar_alphabet_row_textview){
 			// click on indexBar
 			TextView rowview=(TextView)view;
 			
-			CharSequence alpahbet=rowview.getText();
+			CharSequence alphabet=rowview.getText();
 			
-			if(alpahbet==null || alpahbet.equals(""))
+			if(alphabet==null || alphabet.equals(""))
 				return;
 			
-			String selected_alpahbet=alpahbet.toString().trim();
-			Integer newPosition=alphabetToIndex.get(selected_alpahbet.charAt(0));
-			Log.d(LOG_TAG, "Selected Alphabet is:"+selected_alpahbet+"   position is:"+newPosition);
+			String selected_alphabet=alphabet.toString().trim();
+			Integer newPosition=alphabetToIndex.get(selected_alphabet.charAt(0));
+			Log.d(LOG_TAG, "Selected Alphabet is:"+selected_alphabet+"   position is:"+newPosition);
 			if(	newPosition != null){	
-				Toast.makeText(this, selected_alpahbet, Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, selected_alphabet, Toast.LENGTH_SHORT).show();
 				ListView listview=(ListView)findViewById(R.id.listeficheavecfiltre_listview);
 				listview.setSelection(newPosition);
 			}

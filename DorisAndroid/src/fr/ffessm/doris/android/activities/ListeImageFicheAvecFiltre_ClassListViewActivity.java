@@ -90,7 +90,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 	
 	private static final String LOG_TAG = ListeImageFicheAvecFiltre_ClassListViewActivity.class.getSimpleName();
 
-	//Start of user code constants ListeFicheAvecFiltre_ClassListViewActivity
+	//Start of user code constants ListeImageFicheAvecFiltre_ClassListViewActivity
 	
     MenuItem searchButtonMenuItem;
 
@@ -115,7 +115,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 
 		ListView list = (ListView) findViewById(R.id.listeimageficheavecfiltre_listview);
         list.setClickable(true);
-		//Start of user code onCreate ListeFicheAvecFiltre_ClassListViewActivity adapter creation
+		//Start of user code onCreate ListeImageFicheAvecFiltre_ClassListViewActivity adapter creation
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         adapter = new ListeImageFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper(), prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1));
 
@@ -131,7 +131,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 
 		// add handler for indexBar
         mHandler = new IndexBarHandler(this);
-		//Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
+		//Start of user code onCreate additions ListeImageFicheAvecFiltre_ClassListViewActivity
         
 		
 		//End of user code
@@ -140,8 +140,8 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//Start of user code onResume additions ListeFicheAvecFiltre_ClassListViewActivity
-		Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - onResume");
+		//Start of user code onResume additions ListeImageFicheAvecFiltre_ClassListViewActivity
+		Log.d(LOG_TAG, "ListeImageFicheAvecFiltre_ClassListViewActivity - onResume");
 		// refresh on resume, the preferences and filter may have changed 
 		// TODO peut être qu'il y a moyen de s'abonner aux changements de préférence et de ne le faire que dans ce cas ?
 		ListeImageFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter(); 
@@ -191,33 +191,37 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 		Log.d(LOG_TAG, "onItemClick "+view);
 		if(view instanceof LinearLayout && view.getId() == R.id.listeimageficheavecfiltre_listviewrow){
 			// normal case on main item
-	        Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
+	        
+			Toast.makeText(this, "Test dans ListeImageFicheAvecFiltre_ClassListViewActivity", Toast.LENGTH_SHORT).show();
+			
+			
+			Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
 	        Bundle b = new Bundle();
 	        b.putInt("ficheId", ((Fiche)view.getTag()).getId());
 			toDetailView.putExtras(b);
 	        startActivity(toDetailView);
 		}
-		else if(view instanceof TextView && view.getId() == R.id.indexbar_alphabtes_row_textview){
+		else if(view instanceof TextView && view.getId() == R.id.indexbar_alphabet_row_textview){
 			// click on indexBar
 			TextView rowview=(TextView)view;
 			
-			CharSequence alpahbet=rowview.getText();
+			CharSequence alphabet=rowview.getText();
 			
-			if(alpahbet==null || alpahbet.equals(""))
+			if(alphabet==null || alphabet.equals(""))
 				return;
 			
-			String selected_alpahbet=alpahbet.toString().trim();
-			Integer newPosition=alphabetToIndex.get(selected_alpahbet.charAt(0));
-			Log.d(LOG_TAG, "Selected Alphabet is:"+selected_alpahbet+"   position is:"+newPosition);
+			String selected_alphabet=alphabet.toString().trim();
+			Integer newPosition=alphabetToIndex.get(selected_alphabet.charAt(0));
+			Log.d(LOG_TAG, "Selected Alphabet is:"+selected_alphabet+"   position is:"+newPosition);
 			if(	newPosition != null){	
-				Toast.makeText(this, selected_alpahbet, Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, selected_alphabet, Toast.LENGTH_SHORT).show();
 				ListView listview=(ListView)findViewById(R.id.listeimageficheavecfiltre_listview);
 				listview.setSelection(newPosition);
 			}
 		}
     }
 
-	//Start of user code additional  ListeFicheAvecFiltre_ClassListViewActivity methods
+	//Start of user code additional  ListeImageFicheAvecFiltre_ClassListViewActivity methods
 	@Override
 	protected void onDestroy(){
 		Log.d(LOG_TAG, "onDestroy()");

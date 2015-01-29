@@ -56,6 +56,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.util.LruCache;
 import android.util.Log;
@@ -63,6 +64,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -309,13 +311,56 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 
 			LinearLayout photoGallery = (LinearLayout) convertView.findViewById(R.id.listeimageficheavecfiltre_elementview_photogallery);
 			photoGallery.removeAllViews();
+
+			photoGallery.setClickable(true);
+			View.OnClickListener ficheLauncher = new View.OnClickListener()
+				{ @Override
+					public void onClick(View v) {
+						Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - getView");
+						Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
+						toDetailView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						Bundle b = new Bundle();
+				        b.putInt("ficheId", entry.getId());
+						toDetailView.putExtras(b);
+						context.getApplicationContext().startActivity(toDetailView);
+					};
+				};
+			
+			photoGallery.setOnClickListener(ficheLauncher);
+			
 			int pos = 0;
 			for (PhotoFiche photoFiche : photosFiche) {
 				View photoView = insertPhoto(photoFiche);
 				//photoView.setOnClickListener(new OnImageClickListener(entry.getId(),pos,this));
+				//photoView.setOnClickListener(Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - getView"));
 				photoView.setPadding(0, 0, 2, 0);
 				photoGallery.addView(photoView);
 				pos++;
+				
+				final int posImageCourante = pos; 
+				View.OnLongClickListener photoLauncher = new View.OnLongClickListener()
+				{ @Override
+					public boolean onLongClick(View v) {
+						Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - getView");
+						Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
+						toDetailView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						Bundle b = new Bundle();
+				        b.putInt("ficheId", entry.getId());
+						toDetailView.putExtras(b);
+						context.getApplicationContext().startActivity(toDetailView);
+						
+						Intent toImageView = new Intent(context, ImagePleinEcran_CustomViewActivity.class);
+						toImageView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						toImageView.putExtra("position", posImageCourante);
+						toImageView.putExtra("ficheId", entry.getId());
+						context.startActivity(toImageView);
+			            
+						return true;
+					};
+				};
+			
+				photoView.setOnLongClickListener(photoLauncher);
+				
 			}
 			
 		}

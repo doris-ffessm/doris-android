@@ -113,7 +113,7 @@ public class IndexBarHandler extends Handler {
 			/*Main Task*/	
 			prepareArray(alphabets_list);
 			
-			ArrayAdapter<String> alphabets_adapter=	new AlphabetListviewAdapter(indexbar.getBaseContext(),R.layout.indexbar_alphabtes_row,alphabets_list, number_of_characters_omit);
+			ArrayAdapter<String> alphabets_adapter=	new AlphabetListviewAdapter(indexbar.getBaseContext(),R.layout.indexbar_alphabet_row,alphabets_list, number_of_characters_omit);
 			alphabets_listview.setAdapter(alphabets_adapter);
 			alphabets_listview.setOnItemClickListener((OnItemClickListener) indexbar);
 		}
