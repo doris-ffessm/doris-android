@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2014 - FFESSM
+ * Copyright (c) 2012-2015 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -54,6 +54,7 @@ import fr.ffessm.doris.android.datamodel.Groupe;
 public class Groupes_Outils {
 
 	public static final String LOG_TAG = Groupes_Outils.class.getSimpleName();
+	
 	public static Groupe getroot(List<Groupe> allGroupes){
 		// trouve le groupe racine
 		Groupe rootGroupe = null;
@@ -65,6 +66,7 @@ public class Groupes_Outils {
 		}
 		return rootGroupe;
 	}
+	
 	public static ArrayList<Groupe> getAllGroupesForLevel(ArrayList<Groupe> allGroupes, int listgroupLevel){
 		// trouve le groupe racine
 		Groupe rootGroupe = null;
@@ -84,6 +86,7 @@ public class Groupes_Outils {
 		}
 		return currentLevelGroupes;
 	}
+	
 	public static ArrayList<Groupe> getAllGroupesForNextLevel(ArrayList<Groupe> currentLevelGroupes){
 		ArrayList<Groupe> nextLevelGroups = new ArrayList<Groupe>();
 		for (Groupe groupe : currentLevelGroupes) {
@@ -91,6 +94,7 @@ public class Groupes_Outils {
 		}
 		return nextLevelGroups;
 	}
+	
 	public static List<Groupe> getAllGroupesForNextLevel(
 			List<Groupe> rawGroupes, Groupe rootGroupe) {
 		ArrayList<Groupe> nextLevelGroups = new ArrayList<Groupe>();
@@ -111,6 +115,7 @@ public class Groupes_Outils {
 		if(BuildConfig.DEBUG) Log.d(LOG_TAG, "isFichePartOfGroupe("+fiche.getNomCommunNeverEmpty()+", "+searchedGroupe.getNomGroupe()+") ="+result);
 		return result;
 	}
+	
 	public static boolean isGroupePartOfGroupe(Groupe groupe, Groupe searchedGroupe){
 		Groupe groupeParent = groupe.getGroupePere();
 		if(groupeParent == null) return false;
@@ -118,6 +123,7 @@ public class Groupes_Outils {
 		if(groupeParent.getId() == searchedGroupe.getId()) return true;
 		else return isGroupePartOfGroupe(groupeParent, searchedGroupe);
 	}
+	
 	public static ArrayList<Groupe> getAllSubGroupesForGroupe( Groupe groupe){
 		
 		ArrayList<Groupe> subGroupes = new ArrayList<Groupe>();
