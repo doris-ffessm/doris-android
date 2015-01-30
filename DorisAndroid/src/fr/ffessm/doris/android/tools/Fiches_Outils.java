@@ -43,15 +43,27 @@ package fr.ffessm.doris.android.tools;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+
+import org.apache.commons.lang3.text.StrBuilder;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.sitedoris.Constants;
@@ -66,9 +78,12 @@ public class Fiches_Outils {
 	private OrmLiteDBHelper ormLiteDBHelper;
 	
 	public Fiches_Outils(Context context) {
+		
 		Fiches_Outils.context = context;
 		paramOutils = new Param_Outils(context);
+		
 		ormLiteDBHelper = new OrmLiteDBHelper(context);
+		
 	}
 	
 	public enum MajListeFichesType {
@@ -97,6 +112,113 @@ public class Fiches_Outils {
     	
     	ormLiteDBHelper.getFicheDao().clearObjectCache();
     	return nbFiches;
+    }
+    
+    
+    public List<Integer> getListeIdFichesFiltrees(Context context, DorisDBHelper contextDB, int filteredZoneGeoId, int filteredGroupeId) {
+    	
+    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+    	List<Integer> ficheIdList = new ArrayList<Integer>();
+    	List<Integer> filteredFicheIdList = new ArrayList<Integer>();
+    	ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
+    	
+		String ordreTri = prefs.getString(context.getString(R.string.pref_key_accueil_fiches_ordre), "Commun");
+		String orderByClause = "";
+		if (ordreTri.equals("Commun")) orderByClause = " ORDER BY Fiche.textePourRechercheRapide";
+		if (ordreTri.equals("Scientifique")) orderByClause = " ORDER BY Fiche.nomScientifique";
+		
+		
+		String filtreEtat = prefs.getString(context.getString(R.string.pref_key_accueil_etat_fiches_affiche), "toutes");
+		String whereSuffixClauseWHERE = "";
+		String whereSuffixClauseAND = "";
+		//Fiches Publiées + En cours de Rédaction
+		if (filtreEtat.equals("pr")) {
+			whereSuffixClauseWHERE = " WHERE Fiche.etatFiche <> 5";
+			whereSuffixClauseAND = " AND Fiche.etatFiche <> 5";
+		}
+		//Fiches Publiées seulement
+		if (filtreEtat.equals("p")) {
+			whereSuffixClauseWHERE = " WHERE Fiche.etatFiche = 4";
+			whereSuffixClauseAND = " AND Fiche.etatFiche = 4";
+		}
+		
+		
+		try{
+			
+			if(filteredZoneGeoId == -1){
+				Log.d(LOG_TAG,  "_contextDB.ficheDao.queryForAll() - début "+ contextDB.ficheDao.countOf());
+				//this.ficheList = _contextDB.ficheDao.queryForAll();
+				ficheIdList = new ArrayList<Integer>((int) contextDB.ficheDao.countOf());
+				
+				
+				// récupère les id seulement des fiches
+				GenericRawResults<String[]> rawResults =
+						contextDB.ficheDao.queryRaw("SELECT _id FROM fiche"+whereSuffixClauseWHERE+orderByClause);
+				for (String[] resultColumns : rawResults) {
+				    String iDString = resultColumns[0];
+				    ficheIdList.add(Integer.parseInt(iDString));
+				}
+				
+				Log.d(LOG_TAG,  "_contextDB.ficheDao.queryForAll() - fin");
+			}
+			else{
+				final String queryFichesForZone = "SELECT Fiche_id FROM fiches_ZonesGeographiques , Fiche WHERE ZoneGeographique_id="+filteredZoneGeoId+whereSuffixClauseAND+" AND fiches_ZonesGeographiques.Fiche_id = Fiche._id"+orderByClause;
+				Log.d(LOG_TAG,  "queryFichesForZone - début - "+queryFichesForZone);
+				GenericRawResults<String[]> rawResults =
+						contextDB.ficheDao.queryRaw(queryFichesForZone);
+				ficheIdList = new ArrayList<Integer>();
+				for (String[] resultColumns : rawResults) {
+				    String iDString = resultColumns[0];
+				    ficheIdList.add(Integer.parseInt(iDString));
+				}
+				Log.d(LOG_TAG,  "queryFichesForZone - fin");
+			}
+			
+		} catch (java.sql.SQLException e) {
+			Log.e(LOG_TAG, e.getMessage(), e);
+		}
+
+			
+		try{	
+			// si filtre espèce actif, récupérer la liste des fiches pour les groupes accepté, puis faire un diff avec le filtre précédent
+			
+			if(filteredGroupeId != 1){
+				// récupère la liste des groupes acceptés
+				Groupe searchedGroupe = contextDB.groupeDao.queryForId(filteredGroupeId);
+				//Log.d(LOG_TAG, "filter _contextDB="+_contextDB);
+				searchedGroupe.setContextDB(contextDB);
+				acceptedGroupeId = new ArrayList<Integer>();
+				for (Groupe groupe : Groupes_Outils.getAllSubGroupesForGroupe(searchedGroupe)) {
+					acceptedGroupeId.add(groupe.getId());
+				}
+				StrBuilder queryIdForGroupes = new StrBuilder("SELECT _id FROM fiche WHERE groupe_id IN (");
+				queryIdForGroupes.appendWithSeparators(acceptedGroupeId, ", ");
+				queryIdForGroupes.append(")"+whereSuffixClauseAND+orderByClause+";");
+				Log.d(LOG_TAG,  "queryIdForGroupes = "+queryIdForGroupes);
+				GenericRawResults<String[]> rawResults =
+						contextDB.ficheDao.queryRaw(queryIdForGroupes.toString());
+				Set<Integer> ficheIdForGroupeList = new HashSet<Integer>();
+				for (String[] resultColumns : rawResults) {
+				    String iDString = resultColumns[0];
+				    ficheIdForGroupeList.add(Integer.parseInt(iDString));
+				}
+				// conserve uniquement les id des fiches qui sont dans les 2 filtres
+				List<Integer> groupFilteredFicheIdList = new ArrayList<Integer>();
+				for(Integer i : ficheIdList){
+					if(ficheIdForGroupeList.contains(i)) groupFilteredFicheIdList.add(i);
+				}
+				// remplace la liste par celle filtrée pour les groupes aussi
+				ficheIdList = groupFilteredFicheIdList;
+			}
+			filteredFicheIdList = ficheIdList;
+			
+			
+		} catch (java.sql.SQLException e) {
+			Log.e(LOG_TAG, e.getMessage(), e);
+		}
+		
+		return filteredFicheIdList;
     }
     
     

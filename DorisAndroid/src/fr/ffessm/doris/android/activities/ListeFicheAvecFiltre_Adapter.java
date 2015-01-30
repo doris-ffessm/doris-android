@@ -74,6 +74,7 @@ import android.widget.Toast;
 
 import com.j256.ormlite.dao.GenericRawResults;
 import com.squareup.picasso.Picasso;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Locale;
@@ -87,6 +88,7 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
@@ -119,6 +121,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	protected Groupe filtreGroupe;
 	protected Photos_Outils photosOutils;
 	protected Reseau_Outils reseauOutils;
+	protected Fiches_Outils fichesOutils;
 	
 	// vide signifie que l'on accepte tout
 	protected ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
@@ -131,6 +134,11 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		this._contextDB = contextDB;
 		this.filteredZoneGeoId = filteredZoneGeoId;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		reseauOutils = new Reseau_Outils(context);
+		photosOutils = new Photos_Outils(context);
+		fichesOutils = new Fiches_Outils(context);
+		
 		updateList();
 	} 
 	//End of user code
@@ -141,104 +149,23 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
         // Start of user code protected ListeFicheAvecFiltre_Adapter constructor
+		
+		reseauOutils = new Reseau_Outils(context);
+		photosOutils = new Photos_Outils(context);
+		fichesOutils = new Fiches_Outils(context);
+		
 		// End of user code
 		updateList();
 	}
 	
 	protected void updateList(){
 		// Start of user code protected ListeFicheAvecFiltre_Adapter updateList
-		// TODO find a way to query in a lazier way
 		
-		photosOutils = new Photos_Outils(context);
-		reseauOutils  = new Reseau_Outils(context);
+		// TODO : Bizarre que ce soit passé ainsi ....
+		int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);
 		
-		String ordreTri = prefs.getString(context.getString(R.string.pref_key_accueil_fiches_ordre), "Commun");
-		String orderByClause = "";
-		if (ordreTri.equals("Commun")) orderByClause = " ORDER BY Fiche.textePourRechercheRapide";
-		if (ordreTri.equals("Scientifique")) orderByClause = " ORDER BY Fiche.nomScientifique";
+		this.filteredFicheIdList = fichesOutils.getListeIdFichesFiltrees(context, _contextDB, filteredZoneGeoId, filtreGroupe);
 		
-		
-		
-		String filtreEtat = prefs.getString(context.getString(R.string.pref_key_accueil_etat_fiches_affiche), "toutes");
-		String whereSuffixClauseWHERE = "";
-		String whereSuffixClauseAND = "";
-		//Fiches Publiées + En cours de Rédaction
-		if (filtreEtat.equals("pr")) {
-			whereSuffixClauseWHERE = " WHERE Fiche.etatFiche <> 5";
-			whereSuffixClauseAND = " AND Fiche.etatFiche <> 5";
-		}
-		//Fiches Publiées seulement
-		if (filtreEtat.equals("p")) {
-			whereSuffixClauseWHERE = " WHERE Fiche.etatFiche = 4";
-			whereSuffixClauseAND = " AND Fiche.etatFiche = 4";
-		}
-		
-		try{
-			
-			if(filteredZoneGeoId == -1){
-				Log.d(LOG_TAG,  "_contextDB.ficheDao.queryForAll() - début "+ _contextDB.ficheDao.countOf());
-				//this.ficheList = _contextDB.ficheDao.queryForAll();
-				this.ficheIdList = new ArrayList<Integer>((int) _contextDB.ficheDao.countOf());
-				
-				
-				// récupère les id seulement des fiches
-				GenericRawResults<String[]> rawResults =
-						_contextDB.ficheDao.queryRaw("SELECT _id FROM fiche"+whereSuffixClauseWHERE+orderByClause);
-				for (String[] resultColumns : rawResults) {
-				    String iDString = resultColumns[0];
-				    this.ficheIdList.add(Integer.parseInt(iDString));
-				}
-				
-				Log.d(LOG_TAG,  "_contextDB.ficheDao.queryForAll() - fin");
-			}
-			else{
-				final String queryFichesForZone = "SELECT Fiche_id FROM fiches_ZonesGeographiques , Fiche WHERE ZoneGeographique_id="+filteredZoneGeoId+whereSuffixClauseAND+" AND fiches_ZonesGeographiques.Fiche_id = Fiche._id"+orderByClause;
-				Log.d(LOG_TAG,  "queryFichesForZone - début - "+queryFichesForZone);
-				GenericRawResults<String[]> rawResults =
-						_contextDB.ficheDao.queryRaw(queryFichesForZone);
-				this.ficheIdList = new ArrayList<Integer>();
-				for (String[] resultColumns : rawResults) {
-				    String iDString = resultColumns[0];
-				    this.ficheIdList.add(Integer.parseInt(iDString));
-				}
-				Log.d(LOG_TAG,  "queryFichesForZone - fin");
-			}
-			
-			// si filtre espèce actif, récupérer la liste des fiches pour les groupes accepté, puis faire un diff avec le filtre précédent
-			if(prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1) != 1){
-				// récupère la liste des groupes acceptés
-				Groupe searchedGroupe = _contextDB.groupeDao.queryForId(prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1));
-				//Log.d(LOG_TAG, "filter _contextDB="+_contextDB);
-				searchedGroupe.setContextDB(_contextDB);
-				acceptedGroupeId = new ArrayList<Integer>();
-				for (Groupe groupe : Groupes_Outils.getAllSubGroupesForGroupe(searchedGroupe)) {
-					acceptedGroupeId.add(groupe.getId());
-				}
-				StrBuilder queryIdForGroupes = new StrBuilder("SELECT _id FROM fiche WHERE groupe_id IN (");
-				queryIdForGroupes.appendWithSeparators(acceptedGroupeId, ", ");
-				queryIdForGroupes.append(")"+whereSuffixClauseAND+orderByClause+";");
-				Log.d(LOG_TAG,  "queryIdForGroupes = "+queryIdForGroupes);
-				GenericRawResults<String[]> rawResults =
-						_contextDB.ficheDao.queryRaw(queryIdForGroupes.toString());
-				Set<Integer> ficheIdForGroupeList = new HashSet<Integer>();
-				for (String[] resultColumns : rawResults) {
-				    String iDString = resultColumns[0];
-				    ficheIdForGroupeList.add(Integer.parseInt(iDString));
-				}
-				// conserve uniquement les id des fiches qui sont dans les 2 filtres
-				List<Integer> groupFilteredFicheIdList = new ArrayList<Integer>();
-				for(Integer i : this.ficheIdList){
-					if(ficheIdForGroupeList.contains(i)) groupFilteredFicheIdList.add(i);
-				}
-				// remplace la liste par celle filtrée pour les groupes aussi
-				this.ficheIdList = groupFilteredFicheIdList;
-			}
-			this.filteredFicheIdList = this.ficheIdList;
-			
-			
-		} catch (java.sql.SQLException e) {
-			Log.e(LOG_TAG, e.getMessage(), e);
-		}
 		// End of user code
 	}
 
