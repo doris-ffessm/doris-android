@@ -45,9 +45,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import android.content.Context;
 import android.util.Log;
-
 import fr.ffessm.doris.android.BuildConfig;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 
@@ -135,4 +136,12 @@ public class Groupes_Outils {
 		}
 		return subGroupes;
 	}
+	
+	public static int getTailleGroupeFiltre(Context context, DorisDBHelper contextDB, int filteredZoneGeoId, int filteredGroupeId){
+		
+		Fiches_Outils fichesOutils = new Fiches_Outils(context);
+		
+		return fichesOutils.getListeIdFichesFiltrees(context, contextDB, filteredZoneGeoId, filteredGroupeId).size();
+	}
+	
 }
