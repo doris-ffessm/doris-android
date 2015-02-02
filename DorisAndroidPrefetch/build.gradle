@@ -3,16 +3,12 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 	compile project(':DorisAndroidCommon')
 }
-
-
 sourceSets {
     main.java.srcDirs = ['src']
     main.resources.srcDirs = ['src']
     test.java.srcDirs = ['tests/java']
     test.resources.srcDirs = ['tests/resources']
 }
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 // * INIT : L'ensemble des fiches est re-téléchargé pour créer la base
 // * html_ref est sans intérêt pour ce mode, en revanche à l'issu du traitement

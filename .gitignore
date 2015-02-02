@@ -2,3 +2,5 @@
 /gen
 .settings
 /.gradle/
+/local.properties
+/.idea/
