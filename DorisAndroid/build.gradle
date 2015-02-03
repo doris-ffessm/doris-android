@@ -1,15 +1,38 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile project(':android-support-v7-appcompat')
+    // a terme on devrait remplacer cela vers des ref dans les repo maven correspondants
+    compile fileTree(dir: 'libs',
+            include: '*.jar',
+            exclude: 'DorisAndroidCommon.jar, ormlite-core*, commons-lang3*')
+    // dependances maven
+    compile 'com.j256.ormlite:ormlite-core:4.47'
+    compile 'com.j256.ormlite:ormlite-android:4.47'
+    compile 'org.apache.commons:commons-lang3:3.1'
+
+    // dependances Android
+    compile 'com.android.support:appcompat-v7:19.1.0'
+    compile 'com.android.support:support-v4:19.1.0'    
+    // NOTE la version 21+ ne fonctionne pas bien, à revoir ...
+    //compile 'com.android.support:appcompat-v7:21.0.3'
+    //compile project(':android-support-v7-appcompat')
+
+    // dependances inter-projets
     compile project(':GenandroidLib')
-	compile project(':DorisAndroidCommon')
+    compile project(':DorisAndroidCommon')
+}
+
+repositories {
+    mavenCentral()
 }
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 21
     buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        minSdkVersion 10
+    }
 
     sourceSets {
         main {

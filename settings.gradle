@@ -1,5 +1,5 @@
 include ':DorisAndroidCommon'
-include ':android-support-v7-appcompat'
+//include ':android-support-v7-appcompat'
 include ':GenandroidLib'
 include ':DorisAndroidPrefetch'
 include ':DorisAndroid'
