@@ -12,7 +12,7 @@
 	<item android:id="@+id/detailsparticipant_elementview_action_preference"
 	      android:icon="@android:drawable/ic_menu_preferences"
 	      android:title="@string/preference_menu_title"
-	      android:showAsAction="never"   />
+        dorisandroid:showAsAction="never"   />
 </menu>
 
 

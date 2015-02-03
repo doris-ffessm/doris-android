@@ -4,11 +4,11 @@
 	<item android:id="@+id/listeficheavecfiltres_classlistview_popupfiltre_action_filtreEspece"
 	      android:icon="?attr/ic_app_filter_settings"
 	      android:title="@string/listeficheavecfiltre_popup_filtreEspece_sans"
-	      android:showAsAction="never" />
+          dorisandroid:showAsAction="never" />
 	<item android:id="@+id/listeficheavecfiltres_classlistview_popupfiltre_action_filtreGeographique"
 	      android:icon="?attr/ic_app_filter_settings"
 	      android:title="@string/listeficheavecfiltre_popup_filtreGeographique_sans"
-	      android:showAsAction="never" />
+          dorisandroid:showAsAction="never" />
 
 </menu>
 

@@ -7,17 +7,14 @@
 	<item android:id="@+id/accueil_customview_action_participant"
 	      android:icon="?attr/ic_action_participants"
 	      android:title="@string/accueil_liste_participants_text"
-          android:showAsAction="ifRoom"
     	  dorisandroid:showAsAction="ifRoom" />
 	<item android:id="@+id/accueil_customview_action_glossaire"
 	      android:icon="?attr/ic_action_glossaire"
 	      android:title="@string/accueil_glossaire_text"
-          android:showAsAction="ifRoom"
     	  dorisandroid:showAsAction="ifRoom" />
 	<item android:id="@+id/accueil_customview_action_bibliographie"
 	      android:icon="?attr/ic_action_bibliographie"
 	      android:title="@string/accueil_bibliographie_text"
-		  android:showAsAction="ifRoom"
     	  dorisandroid:showAsAction="ifRoom" />
 	<item android:id="@+id/accueil_customview_action_telecharge_photofiches"
 	      android:icon="@android:drawable/ic_menu_set_as"
@@ -36,7 +33,7 @@
 	<item android:id="@+id/accueil_customview_action_preference"
 	      android:icon="@android:drawable/ic_menu_preferences"
 	      android:title="@string/preference_menu_title"
-	      android:showAsAction="never"  />
+          dorisandroid:showAsAction="never"  />
 </menu>
 
 
