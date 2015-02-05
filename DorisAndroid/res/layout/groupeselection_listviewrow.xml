@@ -29,9 +29,8 @@
 		<LinearLayout 
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    android:layout_toLeftOf="@+id/groupeselection_btnHasChildGroup"
 		    android:orientation="vertical" >
-	
+
 		<!-- End of user code
 			-->
 			<TextView
@@ -41,32 +40,43 @@
 		        android:textAppearance="?android:attr/textAppearanceMedium"
 			    android:textColor="?android:attr/textColorPrimary" >
 		    </TextView>
-		    <TextView
-		        android:id="@+id/groupeselection_listviewrow_details"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:paddingLeft="4dip"
-		        android:textAppearance="?android:attr/textAppearanceSmall"
-   				android:textColor="?android:attr/textColorSecondary" >
-		    </TextView>
+		    
+						
+		    <LinearLayout 
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="horizontal" >
+		    
+				<ImageView
+			        android:id="@+id/groupeselection_ivChildGroup"
+			        android:contentDescription="Groupe contient des sous groupes"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:adjustViewBounds="true"
+			        android:layout_toLeftOf="@+id/groupeselection_btnSelect"
+			        android:layout_alignTop="@+id/groupeselection_btnSelect"
+			        android:layout_alignBottom="@+id/groupeselection_btnSelect"
+			        android:maxHeight="32dip"
+			        android:layout_marginLeft="4dip"
+			        android:layout_marginRight="4dip"
+			        android:layout_marginTop="4dip"
+			        android:src="?attr/ic_action_arbre_phylogenetique" >
+		    	</ImageView>
+		    	
+			    <TextView
+			        android:id="@+id/groupeselection_listviewrow_details"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:paddingLeft="4dip"
+			        android:textAppearance="?android:attr/textAppearanceSmall"
+	   				android:textColor="?android:attr/textColorSecondary" >
+			    </TextView>
+		    </LinearLayout>
+			    
 		</LinearLayout>
 		<!-- Start of user code protected groupeselection_listviewrow linearlayout additions
 			-->
-		<ImageView
-	        android:id="@+id/groupeselection_btnHasChildGroup"
-	        android:contentDescription="Groupe contient des sous groupes"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:adjustViewBounds="true"
-	        android:layout_toLeftOf="@+id/groupeselection_btnSelect"
-	        android:layout_alignTop="@+id/groupeselection_btnSelect"
-	        android:layout_alignBottom="@+id/groupeselection_btnSelect"
-	        android:maxHeight="32dip"
-	        android:layout_marginLeft="4dip"
-	        android:layout_marginRight="4dip"
-	        android:layout_marginTop="4dip"
-	        android:src="?attr/ic_action_arbre_phylogenetique" >
-    	</ImageView>
+
 		<ImageButton
 		    android:id="@+id/groupeselection_btnSelect"
 		    android:layout_width="wrap_content"

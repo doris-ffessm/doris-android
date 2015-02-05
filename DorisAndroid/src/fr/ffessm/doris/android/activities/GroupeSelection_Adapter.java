@@ -231,13 +231,13 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
         
         
         // ajout de l'image "expand" si contient des sous groupes
-        ImageView ivHasChildGroup = (ImageView) convertView.findViewById(R.id.groupeselection_btnHasChildGroup);
+        ImageView ivChildGroup = (ImageView) convertView.findViewById(R.id.groupeselection_ivChildGroup);
         
         if(entry.getGroupesFils().size() > 0){
-        	ivHasChildGroup.setVisibility(View.VISIBLE);
+        	ivChildGroup.setVisibility(View.VISIBLE);
         }
         else {
-        	ivHasChildGroup.setVisibility(View.GONE);
+        	ivChildGroup.setVisibility(View.GONE);
         }
 		// End of user code
 
