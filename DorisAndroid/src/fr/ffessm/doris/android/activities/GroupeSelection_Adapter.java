@@ -95,7 +95,6 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	// niveau de profondeur utilisé pour le listGroup par rapport au Groupe 
     public Groupe currentRootGroupe;
     
-    
     /** custom constructor
      * 
      * @param context
@@ -134,8 +133,10 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		        	groupe.setContextDB(_contextDB);
 				}
 			}
+			
 			if(currentRootGroupe == null)
 				currentRootGroupe = Groupes_Outils.getroot(groupeList);
+
 			buildTreeForRoot(currentRootGroupe);
 			
 		} catch (java.sql.SQLException e) {
@@ -192,7 +193,14 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		//	additional code
         
         ImageView ivIcon = (ImageView) convertView.findViewById(R.id.groupeselection_listviewrow_icon);
-        ivIcon.setBackgroundResource( ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_background) );
+        
+        Log.d(LOG_TAG,"currentRootGroupe : "+currentRootGroupe.getId()+" - "+currentRootGroupe.getNomGroupe());
+        if (currentRootGroupe.getId() != 1) {
+        	ivIcon.setBackgroundResource( ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_background) );
+        } else {
+        	ivIcon.setBackgroundResource(0);
+        }
+        
         if(entry.getCleURLImage() != null && !entry.getCleURLImage().isEmpty()){
         	//Picasso.with(context).load(Constants.getSiteUrl()+entry.getCleURLImage()).placeholder(R.drawable.app_ic_launcher).into(ivIcon);
          	int identifierIconeGroupe = context.getResources().getIdentifier(entry.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw",  context.getPackageName());
@@ -206,11 +214,12 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
         	ivIcon.setImageResource(R.drawable.app_ic_launcher);
         }
         
-        ImageButton selectbutton = (ImageButton) convertView
-                .findViewById(R.id.groupeselection_btnSelect);
-        selectbutton.setFocusable(false);
-        selectbutton.setClickable(true);
-        selectbutton.setOnClickListener(new View.OnClickListener() {
+     // Bouton Liste des Fiches
+        ImageButton selectButton1 = (ImageButton) convertView
+                .findViewById(R.id.groupeselection_btn1Select);
+        selectButton1.setFocusable(false);
+        selectButton1.setClickable(true);
+        selectButton1.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -229,7 +238,29 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			}
 		});
         
-        
+        // Bouton Liste des Fiches par Images
+        ImageButton selectButton2 = (ImageButton) convertView
+                .findViewById(R.id.groupeselection_btn2Select);
+        selectButton2.setFocusable(false);
+        selectButton2.setClickable(true);
+        selectButton2.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(context, "Filtre espèces : "+entry.getNomGroupe(), Toast.LENGTH_SHORT).show();
+				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId());
+		        ed.commit();
+		        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onClick() - depuisAccueil : " + depuisAccueil);
+		        if (!depuisAccueil) {
+		            ((GroupeSelection_ClassListViewActivity)context).finish();
+		        } else {
+		        	Intent toListeFiche_View = new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class);
+		        	toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		        	context.getApplicationContext().startActivity(toListeFiche_View);
+		        }
+			}
+		});
         // ajout de l'image "expand" si contient des sous groupes
         ImageView ivChildGroup = (ImageView) convertView.findViewById(R.id.groupeselection_ivChildGroup);
         

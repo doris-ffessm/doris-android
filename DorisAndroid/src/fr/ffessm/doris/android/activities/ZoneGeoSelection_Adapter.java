@@ -163,7 +163,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 			}
 		});
         
-        ImageButton imgBtnB = (ImageButton) convertView.findViewById(R.id.zonegeoselection_selectBtn_h);
+        ImageButton imgBtnB = (ImageButton) convertView.findViewById(R.id.zonegeoselection_selectBtn_b);
         imgBtnB.setFocusable(false);
         imgBtnB.setClickable(true);
         imgBtnB.setOnClickListener(new View.OnClickListener() {

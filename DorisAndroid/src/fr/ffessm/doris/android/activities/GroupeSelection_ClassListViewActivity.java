@@ -135,8 +135,8 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
-			//Start of user code onItemClick additions GroupeSelection_ClassListViewActivity
-		showToast("Groupe : "+position + " - "+ index);
+		//Start of user code onItemClick additions GroupeSelection_ClassListViewActivity
+		//showToast("Groupe : "+position + " - "+ index);
 		
 		GroupeSelection_Adapter groupeSelection_adapter = (GroupeSelection_Adapter)arg0.getAdapter();
 		
