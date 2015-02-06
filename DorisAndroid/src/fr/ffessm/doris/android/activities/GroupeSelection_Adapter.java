@@ -194,7 +194,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
         
         ImageView ivIcon = (ImageView) convertView.findViewById(R.id.groupeselection_listviewrow_icon);
         
-        Log.d(LOG_TAG,"currentRootGroupe : "+currentRootGroupe.getId()+" - "+currentRootGroupe.getNomGroupe());
+        //Log.d(LOG_TAG,"currentRootGroupe : "+currentRootGroupe.getId()+" - "+currentRootGroupe.getNomGroupe());
         if (currentRootGroupe.getId() != 1) {
         	ivIcon.setBackgroundResource( ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_background) );
         } else {
@@ -268,7 +268,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
         	ivChildGroup.setVisibility(View.VISIBLE);
         }
         else {
-        	ivChildGroup.setVisibility(View.GONE);
+        	ivChildGroup.setVisibility(View.INVISIBLE);
         }
 		// End of user code
 

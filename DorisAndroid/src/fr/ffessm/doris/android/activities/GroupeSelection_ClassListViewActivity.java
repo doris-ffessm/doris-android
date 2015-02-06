@@ -44,9 +44,9 @@ package fr.ffessm.doris.android.activities;
 
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
@@ -80,6 +80,8 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	//Start of user code constants GroupeSelection_ClassListViewActivity
 	boolean depuisAccueil = false;
 	final Context context = this;
+	
+	private String accueil_liste_ou_arbre_pardefaut;
 	//End of user code
 	
     GroupeSelection_Adapter adapter;
@@ -96,7 +98,11 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 		ListView list = (ListView) findViewById(R.id.groupeselection_listview);
         list.setClickable(false);
 		//Start of user code onCreate GroupeSelection_ClassListViewActivity adapter creation
+        
+        Param_Outils paramOutils = new Param_Outils(context);
+        
         depuisAccueil = getIntent().getExtras().getBoolean("GroupeSelection_depuisAccueil", false);
+        accueil_liste_ou_arbre_pardefaut = paramOutils.getParamString(R.string.pref_key_accueil_liste_ou_arbre_pardefaut, "liste");
         
         adapter = new GroupeSelection_Adapter(this, getHelper().getDorisDBHelper(), depuisAccueil);		
 		//End of user code
@@ -136,6 +142,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 		//Start of user code onItemClick additions GroupeSelection_ClassListViewActivity
+		Log.d(LOG_TAG, "onItemClick() - Début");     
 		//showToast("Groupe : "+position + " - "+ index);
 		
 		GroupeSelection_Adapter groupeSelection_adapter = (GroupeSelection_Adapter)arg0.getAdapter();
@@ -161,10 +168,19 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 			ed.putInt(this.getString(R.string.pref_key_filtre_groupe), clickedGroupe.getId());
 	        ed.commit();
 	        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onItemClick() - depuisAccueil : " + depuisAccueil);
+	        // Si avait été ouvert depuis une fiche alors on ferme pour retourner sur la fiche
+	        // GMo le 06/02/15 : je ne vois pas bien comment cela est possible finalement ...
+	        // TODO : A mieux commenter qd j'aurais du temps
 	        if (!depuisAccueil) {
 	        	((GroupeSelection_ClassListViewActivity)this).finish();
 	        } else {
-	        	startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
+	        	
+	        	if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
+        			startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
+	        	} else {
+		    	   startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
+	        	}
+        		
 	        }
 		}
 	
@@ -239,20 +255,8 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	}
 
 	// Start of user code protectedGroupeSelection_ClassListViewActivity
-	public void onClickCurrentGroup(View view){
-		showToast( "Filtre espèces : "+adapter.currentRootGroupe.getNomGroupe());
-		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
-		ed.putInt(getString(R.string.pref_key_filtre_groupe), adapter.currentRootGroupe.getId());
-        ed.commit();
-		if (!depuisAccueil) {
-            finish();
-        } else {
-        	Intent toListeFiche_View = new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class);
-        	toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        	this.getApplicationContext().startActivity(toListeFiche_View);
-        }
-    }
 	
+ 	
 	
 	/* *********************************************************************
      * Capture des évènements sur le Clavier Physique de l'appareil
