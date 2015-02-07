@@ -144,6 +144,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     Collection<String> insertedPhotosFiche = new ArrayList<String>();
     boolean askedBgDownload = false;
     
+    String accueil_liste_ou_arbre_pardefaut;
+    
 // End of user code
 	
 	/** Called when the activity is first created. */
@@ -180,6 +182,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 		
 		};
 		
+		// Liste Fiches, Arbre ou Liste Images
+		accueil_liste_ou_arbre_pardefaut = paramOutils.getParamString(R.string.pref_key_accueil_liste_ou_arbre_pardefaut, "liste");
+		 
 		// info de debug de Picasso
 		if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)){
 			Picasso.with(this).setDebugging(BuildConfig.DEBUG);
@@ -602,7 +607,13 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 					SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 					ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupe.getId());
 			        ed.commit();
-			        startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+			        
+		        	if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
+		        		startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
+		        	} else {
+		        		startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+		        	}
+		        	
 				}
 			});
         	icone2.setVisibility(View.GONE);
@@ -619,7 +630,13 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 					SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 					ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupePere.getId());
 			        ed.commit();
-			        startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+			        
+		        	if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
+		        		startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
+		        	} else {
+		        		startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+		        	}
+		        	
 				}
 			});
         	
@@ -634,7 +651,13 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 					SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 					ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupe.getId());
 			        ed.commit();
-			        startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+			        
+		        	if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
+		        		startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
+		        	} else {
+		        		startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+		        	}
+		        	
 				}
 			});
         }

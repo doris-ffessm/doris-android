@@ -313,20 +313,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			imageZone = fichesOutils.getZoneIconeId(zoneGeo.getZoneGeoKind());
 			
 			MultiProgressBar progressBarZone = new MultiProgressBar(this, zoneGeo.getNom(), imageZone, false);
- 		    updateProgressBarZone(zoneGeo, progressBarZone);
-
- 		   /* progressBarZone.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-					ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zoneGeoId);
-			        ed.commit();
-					startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
-				}
-			}); */
+			updateProgressBarZone(zoneGeo, progressBarZone);
  		    
- 		   final ZoneGeographique fZoneGeo = zoneGeo;
- 		   progressBarZone.setOnClickListener(new View.OnClickListener() {
+			final ZoneGeographique fZoneGeo = zoneGeo;
+			progressBarZone.setOnClickListener(new View.OnClickListener() {
  				@Override
  				public void onClick(View v) {
  					if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setOnClickListener() - zoneGeoId : "+fZoneGeo.getId());
