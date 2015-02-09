@@ -294,6 +294,9 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 				//searchPopupButtonManager.onClickFilterBtn(menuItemView);
 				showPopup();
 	            return true;
+			case R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist:
+				startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
+				return true;
 	        case R.id.listeficheavecfiltre_action_aide:
 	        	AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
 				aide.affichageMessageHTML(context.getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");

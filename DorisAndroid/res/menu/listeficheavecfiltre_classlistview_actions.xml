@@ -8,13 +8,19 @@
           dorisandroid:actionViewClass="android.support.v7.widget.SearchView"/>
 	<!--Start of user code customView_menu for ListeFicheAvecFiltre
 	-->
+	<!-- freely adapt here the desired layout for yourmenu -->
 	<item android:id="@+id/listeficheavecfiltre_classlistview_action_filterpopup"
           android:icon="?attr/ic_app_filter_settings"
           android:title="@string/listeficheavecfiltre_classlistview_action_filterpopup_title"
           dorisandroid:showAsAction="ifRoom"
           android:orderInCategory="2" />
-	<!-- freely adapt here the desired layout for yourmenu -->
-
+	
+	<item android:id="@+id/listeficheavecfiltre_classlistview_action_textlist2imagelist"
+          android:icon="?attr/ic_action_liste_images"
+          android:title="@string/listeficheavecfiltre_classlistview_action_textlist2imagelist_title"
+          dorisandroid:showAsAction="ifRoom"
+          android:orderInCategory="3" />
+	
 	<item android:id="@+id/listeficheavecfiltre_action_aide"
 	      android:icon="@android:drawable/ic_menu_help"
 	      android:title="@string/aide_menu"

@@ -272,6 +272,11 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 	    
 		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu ListeFicheAvecFiltre_ClassListViewActivity
+    	// changement du titre (on aurai aussi pu simplement changer le menu ?)
+    	MenuItem switchListMode = (MenuItem) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist);
+    	switchListMode.setTitle(R.string.listeficheavecfiltre_classlistview_action_imagelist2textlist_title);
+    	switchListMode.setIcon(R.drawable.ic_action_liste_fiches);
+    	
     	searchButtonMenuItem = (MenuItem ) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
     	updateFilterInActionBar();
     	//searchPopupButtonManager = new SearchPopupButtonManager(this);
@@ -298,6 +303,10 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 				//searchPopupButtonManager.onClickFilterBtn(menuItemView);
 				showPopup();
 	            return true;
+
+			case R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist:
+				startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
+				return true;
 	        case R.id.listeficheavecfiltre_action_aide:
 	        	AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
 				aide.affichageMessageHTML(context.getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
