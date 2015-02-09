@@ -295,7 +295,9 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 				showPopup();
 	            return true;
 			case R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist:
-				startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
+				Intent i = new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class);
+				i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(i);
 				return true;
 	        case R.id.listeficheavecfiltre_action_aide:
 	        	AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
