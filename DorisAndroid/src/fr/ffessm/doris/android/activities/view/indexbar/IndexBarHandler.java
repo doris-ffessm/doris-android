@@ -106,7 +106,7 @@ public class IndexBarHandler extends Handler {
 			ListView alphabets_listview=indexbar.getAlphabetListView();
 			/*Populating the Alphabet List*/			
 			ArrayList<String> alphabets_list=new ArrayList<String>();
-			String alphabet_array[]    =	indexbar.getResources().getStringArray(R.array.alphabtes_array);
+			String alphabet_array[]    =	indexbar.getResources().getStringArray(R.array.alphabet_array);
 			for(int i=0; i<27 ; i++){
 				alphabets_list.add(alphabet_array[i]);
 			}

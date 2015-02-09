@@ -64,7 +64,7 @@ public class AlphabetListviewAdapter extends ArrayAdapter<String> {
 			
 			height_of_row=height_of_row-reduce_height_by_pixels;
 			textview.setHeight(height_of_row);
-			Log.d(TAG,"Since there are 1 or 2 characters to be missed, the height of each row is reduced by " +reduce_height_by_pixels+ "  pixel(s)");
+			// TODO :Log.d(TAG,"Since there are 1 or 2 characters to be missed, the height of each row is reduced by " +reduce_height_by_pixels+ "  pixel(s)");
 		}
 		
 		textview.setText(character);

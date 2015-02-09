@@ -289,7 +289,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 		number_of_alphabets=alphabetToIndex.size();		//Number of enteries in the map is equal to number of letters that would necessarily display on the right.
 		
 		/*Now I am making an entry of those alphabets which are not there in the Map*/
-		String alphabets[]=getResources().getStringArray(R.array.alphabtes_array);
+		String alphabets[]=getResources().getStringArray(R.array.alphabet_array);
 		int index=-1;
 		
 		for(String alpha1: alphabets){

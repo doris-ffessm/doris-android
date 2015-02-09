@@ -165,7 +165,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);
 		
 		this.filteredFicheIdList = fichesOutils.getListeIdFichesFiltrees(context, _contextDB, filteredZoneGeoId, filtreGroupe);
-		
+		this.ficheIdList = fichesOutils.getListeIdFiches();
 		// End of user code
 	}
 
@@ -398,7 +398,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		else{
 			// large list
 			// use binarysearch if large list
-			String alphabet_list[]= context.getResources().getStringArray(R.array.alphabtes_array);
+			String alphabet_list[]= context.getResources().getStringArray(R.array.alphabet_array);
 			int startSearchPos = 0;
 			for (int i = 0; i < alphabet_list.length; i++) {
 				int foundPosition = binarySearch(alphabet_list[i].charAt(0), startSearchPos, base_list_length-1);

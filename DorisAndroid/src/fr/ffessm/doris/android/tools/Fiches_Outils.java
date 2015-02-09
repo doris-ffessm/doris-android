@@ -77,6 +77,9 @@ public class Fiches_Outils {
 	private Param_Outils paramOutils;
 	private OrmLiteDBHelper ormLiteDBHelper;
 	
+	private List<Integer> ficheIdList;
+	private List<Integer> filteredFicheIdList;
+	
 	public Fiches_Outils(Context context) {
 		
 		Fiches_Outils.context = context;
@@ -84,6 +87,8 @@ public class Fiches_Outils {
 		
 		ormLiteDBHelper = new OrmLiteDBHelper(context);
 		
+		ficheIdList = new ArrayList<Integer>();
+    	filteredFicheIdList = new ArrayList<Integer>();
 	}
 	
 	public enum MajListeFichesType {
@@ -114,13 +119,18 @@ public class Fiches_Outils {
     	return nbFiches;
     }
     
-    
+    public List<Integer> getListeIdFiches() {
+		return ficheIdList;
+	}
+	public List<Integer> getListeIdFichesFiltrees() {
+		return filteredFicheIdList;
+	}
     public List<Integer> getListeIdFichesFiltrees(Context context, DorisDBHelper contextDB, int filteredZoneGeoId, int filteredGroupeId) {
     	
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
-    	List<Integer> ficheIdList = new ArrayList<Integer>();
-    	List<Integer> filteredFicheIdList = new ArrayList<Integer>();
+    	ficheIdList.clear();
+    	filteredFicheIdList.clear();
     	ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
     	
 		String ordreTri = prefs.getString(context.getString(R.string.pref_key_accueil_fiches_ordre), "Commun");

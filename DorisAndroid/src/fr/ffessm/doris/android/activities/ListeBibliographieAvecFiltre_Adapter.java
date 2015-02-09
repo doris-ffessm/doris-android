@@ -281,7 +281,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
 		else{
 			// large list
 			// use binarysearch if large list
-			String alphabet_list[]= context.getResources().getStringArray(R.array.alphabtes_array);
+			String alphabet_list[]= context.getResources().getStringArray(R.array.alphabet_array);
 			int startSearchPos = 0;
 			for (int i = 0; i < alphabet_list.length; i++) {
 				int foundPosition = binarySearch(alphabet_list[i].charAt(0), startSearchPos, base_list_length-1);

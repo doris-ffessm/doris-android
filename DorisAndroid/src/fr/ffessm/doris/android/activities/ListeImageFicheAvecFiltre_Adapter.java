@@ -172,7 +172,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 		int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);
 				
 		this.filteredFicheIdList = fichesOutils.getListeIdFichesFiltrees(context, _contextDB, filteredZoneGeoId, filtreGroupe);
-		
+		this.ficheIdList = fichesOutils.getListeIdFiches();
 		// End of user code
 	}
 
@@ -244,7 +244,6 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 				//photoView.setOnClickListener(Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - getView"));
 				photoView.setPadding(0, 0, 2, 0);
 				photoGallery.addView(photoView);
-				pos++;
 				
 				photoGallery.setClickable(true);
 				View.OnClickListener ficheLauncher = new View.OnClickListener()
@@ -280,6 +279,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 			
 				photoView.setOnLongClickListener(photoLauncher);
 				
+				pos++;
 			}
 			
 		}
@@ -358,7 +358,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 		else{
 			// large list
 			// use binarysearch if large list
-			String alphabet_list[]= context.getResources().getStringArray(R.array.alphabtes_array);
+			String alphabet_list[]= context.getResources().getStringArray(R.array.alphabet_array);
 			int startSearchPos = 0;
 			for (int i = 0; i < alphabet_list.length; i++) {
 				int foundPosition = binarySearch(alphabet_list[i].charAt(0), startSearchPos, base_list_length-1);
