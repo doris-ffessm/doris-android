@@ -192,13 +192,13 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		// Start of user code protected additional GroupeSelection_Adapter getView code
 		//	additional code
         
-        ImageView ivIcon = (ImageView) convertView.findViewById(R.id.groupeselection_listviewrow_icon);
+        ImageView ivIconGroup = (ImageView) convertView.findViewById(R.id.groupeselection_listviewrow_icon);
         
         //Log.d(LOG_TAG,"currentRootGroupe : "+currentRootGroupe.getId()+" - "+currentRootGroupe.getNomGroupe());
         if (currentRootGroupe.getId() != 1) {
-        	ivIcon.setBackgroundResource( ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_background) );
+        	ivIconGroup.setBackgroundResource( ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_background) );
         } else {
-        	ivIcon.setBackgroundResource(0);
+        	ivIconGroup.setBackgroundResource(0);
         }
         
         if(entry.getCleURLImage() != null && !entry.getCleURLImage().isEmpty()){
@@ -207,11 +207,11 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
         	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getView() - identifierIconeGroupe : "+identifierIconeGroupe); 
         	
         	Bitmap bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(identifierIconeGroupe));
-        	ivIcon.setImageBitmap(bitmap);
+        	ivIconGroup.setImageBitmap(bitmap);
         }
         else{
         	// remet image de base
-        	ivIcon.setImageResource(R.drawable.app_ic_launcher);
+        	ivIconGroup.setImageResource(R.drawable.app_ic_launcher);
         }
         
      // Bouton Liste des Fiches
