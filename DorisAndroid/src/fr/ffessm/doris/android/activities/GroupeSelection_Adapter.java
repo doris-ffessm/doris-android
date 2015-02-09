@@ -264,11 +264,11 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
         // ajout de l'image "expand" si contient des sous groupes
         ImageView ivChildGroup = (ImageView) convertView.findViewById(R.id.groupeselection_ivChildGroup);
         
-        
-        Log.d(LOG_TAG,"Nb Sous-Groupes : "+entry.getGroupesFils().size());
-        int currentZoneFilterId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), -1);
-        Log.d(LOG_TAG,"Nb Fiches du Groupe : "
-        		+ Groupes_Outils.getTailleGroupeFiltre(context, _contextDB, currentZoneFilterId, currentRootGroupe.getId() ));
+        //TODO : test Nb groupes fils et nb fiches résultant (Attention lent)
+        //Log.d(LOG_TAG,"Nb Sous-Groupes : "+entry.getGroupesFils().size());
+        //int currentZoneFilterId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), -1);
+        //Log.d(LOG_TAG,"Nb Fiches du Groupe : "
+        //		+ Groupes_Outils.getTailleGroupeFiltre(context, _contextDB, currentZoneFilterId, currentRootGroupe.getId() ));
         
         
         
