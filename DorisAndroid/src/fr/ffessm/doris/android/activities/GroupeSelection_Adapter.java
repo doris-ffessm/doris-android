@@ -55,6 +55,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -299,14 +300,18 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
     	if(currentRootGroupe.getId() == 1){
     		
 			// ajout du nouveau bouton standard
-    		ImageButton backToParentButton = new ImageButton(context);
+			ImageButton backToParentButton = new ImageButton(context);
 			navigationLayout.addView(backToParentButton);
 			
 			backToParentButton.setImageResource( ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_arbre_phylogenetique) );
 			backToParentButton.setBackgroundResource(R.drawable.button_background);
-
+			backToParentButton.setScaleType(ScaleType.FIT_CENTER);
+			backToParentButton.setPadding(0, 8, 0, 8);
+			
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
+
 			backToParentButton.setLayoutParams(layoutParams);
+
 			
 		} else {
 			// ajout du nouveau bouton
@@ -321,6 +326,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
 			layoutParams.leftMargin =2;
 			layoutParams.rightMargin = 2;
+			
 			backToParentButton.setBackgroundResource(R.drawable.button_background);
 			backToParentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 			backToParentButton.setPadding(5, 0, 5, 0);
@@ -340,6 +346,8 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			
 			backToParentButton.setImageResource( ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_arbre_phylogenetique) );
 			backToParentButton.setBackgroundResource(R.drawable.button_selected_background);
+			backToParentButton.setScaleType(ScaleType.FIT_CENTER);
+			backToParentButton.setPadding(0, 8, 0, 8);
 			
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
 			backToParentButton.setLayoutParams(layoutParams);
@@ -365,7 +373,8 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
 			layoutParams.leftMargin =2;
 			layoutParams.rightMargin = 2;
-
+			//layoutParams.height = 28;
+			
 			backToParentButton.setBackgroundResource(R.drawable.button_selected_background);
 			backToParentButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
 
