@@ -3,7 +3,7 @@
 	<string name="listeficheavecfiltre_classlistview_titre">Fiches</string>
 	<string name="listeficheavecfiltre_classlistview_debut_soustitre_avecfiltre">Uniquement les </string>
 	<string name="listeficheavecfiltre_classlistview_no_result">Aucune fiche ne correspond à votre recherche.</string>
-	<string name="listeficheavecfiltre_classlistview_action_textlist2imagelist_title">Vue liste d\'images</string>
-	<string name="listeficheavecfiltre_classlistview_action_imagelist2textlist_title">Vue liste classique</string>
+	<string name="listeficheavecfiltre_classlistview_action_textlist2imagelist_title">Vue liste d\'Images</string>
+	<string name="listeficheavecfiltre_classlistview_action_imagelist2textlist_title">Vue liste de Fiches</string>
 	
 </resources>
