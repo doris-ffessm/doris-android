@@ -167,8 +167,11 @@ public class PrefetchZonesGeographiques {
 
 							for (FicheLight ficheLight : listFicheFromHTML) {
 								Fiche fichesDeLaBase = outilsBase.queryFicheByNumeroFiche(ficheLight.getNumeroFiche());
-								fichesDeLaBase.setContextDB(dbContext);
-								fichesDeLaBase.addZoneGeographique(zoneGeographique);
+								
+								if (fichesDeLaBase != null) {
+									fichesDeLaBase.setContextDB(dbContext);
+									fichesDeLaBase.addZoneGeographique(zoneGeographique);
+								}
 							}
 							
 							return null;
