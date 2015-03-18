@@ -53,7 +53,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
-
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -94,6 +93,14 @@ public class PrefetchTools {
     	InputStream flux = null;
         FileOutputStream fichierUrl = null;
 
+        // TODO : TENTATIVE DE RALLENTISSEMENT POUR VOIR SI SERVEUR SUPPORTE
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        
         try
         {
             URL url = new URL(inUrl);
@@ -179,52 +186,6 @@ public class PrefetchTools {
 						objBuilder.append(strLine.trim());
 						objBuilder.append("\n");
 					}
-				}
-				objBufferReader.close();
-					
-				//log.debug("getFichierTxtFromDisk()- objBuffer.length : "+objBuilder.toString().length());
-		    	//log.debug("getFichierTxtFromDisk()- Fin");
-		    	return (objBuilder.toString());
-			    	
-
-			} catch (IOException e) {
-
-				e.printStackTrace();
-			}
-		} catch (FileNotFoundException e) {
-
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		log.error("Erreur lors de la lecture du fichier : " + inFichier);
-     	//log.debug("getFichierTxtFromDisk()- Fin");
-		return null;
-	}
-	
-	
-	public String getFichierTxtFromDisk_ASupprimer(File inFichier) {
-    	//log.debug("getFichierTxtFromDisk()- Début");
-    	//log.debug("getFichierTxtFromDisk()- Fichier : " + inFichier);
-		try {
-
-			//Top d'après JavaDoc : BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-			//InputStreamReader objReader = new InputStreamReader(objFile, "iso-8859-1");
-			//BufferedReader objBufferReader = new BufferedReader(objReader);
-			BufferedReader objBufferReader = new BufferedReader(
-					new InputStreamReader(
-							new FileInputStream(inFichier), "iso-8859-1"));
-			
-			//log.debug("getFichierTxtFromDisk()- 020");
-			
-			StringBuilder objBuilder = new StringBuilder();
-			
-			try {
-				//log.debug("getFichierTxtFromDisk()- 030");
-				String strLine;
-				while ((strLine = objBufferReader.readLine()) != null) {
-					objBuilder.append(strLine.trim());
-					objBuilder.append("\n");
 				}
 				objBufferReader.close();
 					
