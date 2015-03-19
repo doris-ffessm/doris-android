@@ -87,7 +87,7 @@ public class PrefetchTools {
 	
     public boolean getFichierFromUrl(String inUrl, String inFichierRetour) {
     	//log.debug("getFichierUrl()- Début");
-    	//log.debug("getFichierUrl()- url : " + inUrl);
+    	log.debug("getFichierUrl()- url : " + inUrl);
     	//log.debug("getFichierUrl()- Fichier à Retourner : " + inFichierRetour);
     	
     	InputStream flux = null;
@@ -102,8 +102,10 @@ public class PrefetchTools {
 		}
         
             int nbTentative = 0; 
-            while (nbTentative < 5) {
+            while (nbTentative <= 5) {
             	nbTentative++;
+            	
+            	log.debug("getFichierUrl()- tentative : " + nbTentative);
             	
                 try
                 {
