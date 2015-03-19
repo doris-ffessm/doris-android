@@ -162,8 +162,7 @@ public class PrefetchGroupes {
 							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalContenuGroupe), FileHtmlKind.GROUPE);
 						} else {
 							log.error("Une erreur est survenue lors du téléchargement du groupe : "+groupe.getNumeroGroupe()+"-"+groupe.getNumeroSousGroupe());
-							// TODO : Désactivé pour voir si erreur systématique après n (20) téléchargements
-							//System.exit(1);
+							System.exit(1);
 						}
 						
 					} else {

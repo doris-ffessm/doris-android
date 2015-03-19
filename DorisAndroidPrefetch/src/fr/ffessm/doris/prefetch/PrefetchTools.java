@@ -93,9 +93,9 @@ public class PrefetchTools {
     	InputStream flux = null;
         FileOutputStream fichierUrl = null;
 
-        // TODO : TENTATIVE DE RALLENTISSEMENT POUR VOIR SI SERVEUR SUPPORTE
+        // TODO : TENTATIVE DE RALLENTISSEMENT EXAGERE POUR VOIR SI SERVEUR SUPPORTE
 		try {
-			Thread.sleep(500);
+			Thread.sleep(1000);
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
