@@ -101,14 +101,85 @@ public class PrefetchTools {
 			e1.printStackTrace();
 		}
         
+            int nbTentative = 0; 
+            while (nbTentative < 5) {
+            	nbTentative++;
+            	
+                try
+                {
+                    URL url = new URL(inUrl);
+                    URLConnection connection = url.openConnection();
+	 
+		            int fileLength = connection.getContentLength();
+		
+		            if (fileLength == -1)
+		            {
+		                log.error("URL Invalide : " + inUrl);
+		                //return false;
+		            }
+	
+		            flux = connection.getInputStream();
+		            fichierUrl = new FileOutputStream(inFichierRetour);
+		            byte[] buffer = new byte[1024];
+		            int read;
+		
+		            while ((read = flux.read(buffer)) > 0)
+		            	fichierUrl.write(buffer, 0, read);
+		            fichierUrl.flush();
+		        }
+		        catch (IOException e)
+		        {
+		            e.printStackTrace();
+		            log.error("Erreur lors du téléchargement du fichier : " + inUrl);
+		            //return false;
+		        }
+		        finally
+		        {
+		            try
+		            {  	
+		            	if(fichierUrl!=null) fichierUrl.close();            	
+		            	if(flux!=null)  flux.close();
+		            	
+		            	nbTentative = 99;
+		            	
+		            	return true;
+		            }
+		            catch (IOException e)
+		            {
+		                e.printStackTrace();
+		                log.error("Erreur lors de l'écriture du fichier : " + inFichierRetour);
+		                //return false;
+		            }
+		        }
+	        
+        } // fin while
+        
+    	//log.debug("getFichierUrl()- Fin");
+    	return false;
+    }
+
+    // Conservée le temps de mettre au point une version ré-essayant plusieurs fois le téléchargement qd souci
+    public boolean getFichierFromUrl(String inUrl, String inFichierRetour, int PROCEDURE_A_SUPPRIMER) {
+    	//log.debug("getFichierUrl()- Début");
+    	//log.debug("getFichierUrl()- url : " + inUrl);
+    	//log.debug("getFichierUrl()- Fichier à Retourner : " + inFichierRetour);
+    	
+    	InputStream flux = null;
+        FileOutputStream fichierUrl = null;
+
+        // TODO : TENTATIVE DE RALLENTISSEMENT EXAGERE POUR VOIR SI SERVEUR SUPPORTE
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        
         try
         {
             URL url = new URL(inUrl);
             URLConnection connection = url.openConnection();
-            
-            //TODO : TENTATIVE de se déguiser
-            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
-
+ 
             int fileLength = connection.getContentLength();
 
             if (fileLength == -1)
@@ -150,8 +221,6 @@ public class PrefetchTools {
     	//log.debug("getFichierUrl()- Fin");
     	return true;
     }
-
-
 	
 	public String getFichierTxtFromDisk(File inFichier, FileHtmlKind fileKind) {
     	//log.debug("getFichierTxtFromDisk()- Début");
