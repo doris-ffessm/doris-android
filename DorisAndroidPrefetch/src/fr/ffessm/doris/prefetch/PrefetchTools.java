@@ -51,6 +51,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.zip.ZipEntry;
@@ -99,11 +100,14 @@ public class PrefetchTools {
         	nbTentative++;
         	
         	log.debug("getFichierUrl()- tentative : " + nbTentative);
+
+            URL url = null;
+        	HttpURLConnection connection = null;
         	
             try
             {
-                URL url = new URL(inUrl);
-                URLConnection connection = url.openConnection();
+            	url = new URL(inUrl);
+                connection = (HttpURLConnection)url.openConnection();
  
 	            int fileLength = connection.getContentLength();
 	
@@ -132,12 +136,15 @@ public class PrefetchTools {
 	        }
 	        
             // TODO : TENTATIVE DE RALLENTISSEMENT EXAGERE POUR VOIR SI SERVEUR SUPPORTE
-    		try {
-    			Thread.sleep(1000);
-    		} catch (InterruptedException e1) {
-    			// TODO Auto-generated catch block
-    			e1.printStackTrace();
-    		}
+            if (nbTentative <= 99) {
+	    		try {
+	    			connection.disconnect();
+	    			Thread.sleep(5000);
+	    		} catch (InterruptedException e1) {
+	    			// TODO Auto-generated catch block
+	    			e1.printStackTrace();
+	    		}
+            }
         } // fin while
         
         try
