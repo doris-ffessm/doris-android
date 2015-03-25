@@ -96,7 +96,7 @@ public class PrefetchTools {
 
         
         int nbTentative = 0; 
-        while (nbTentative <= 5) {
+        while (nbTentative < 10 ) {
         	nbTentative++;
         	
         	log.debug("getFichierUrl()- tentative : " + nbTentative);
@@ -135,10 +135,12 @@ public class PrefetchTools {
 	            //return false;
 	        }
 	        
+            // Déconnection systématique pour être certain d'ouvrir ensuite une nouvelle connection
+            connection.disconnect();
+            
             // TODO : TENTATIVE DE RALLENTISSEMENT EXAGERE POUR VOIR SI SERVEUR SUPPORTE
-            if (nbTentative <= 99) {
+            if (nbTentative < 99) {
 	    		try {
-	    			connection.disconnect();
 	    			Thread.sleep(5000);
 	    		} catch (InterruptedException e1) {
 	    			// TODO Auto-generated catch block
@@ -160,6 +162,14 @@ public class PrefetchTools {
             log.error("Erreur lors de l'écriture du fichier : " + inFichierRetour);
             //return false;
         }
+        
+        // TODO : Tant qu'il y a un souci sur le serveur, on ne télécharge pas plus d'une page par seconde
+        try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
         
     	//log.debug("getFichierUrl()- Fin");
     	return false;
