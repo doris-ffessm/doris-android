@@ -751,10 +751,28 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    					ImageLocation.APP_INTERNAL.ordinal() )]+"\n");
 	    	
 	    	Disque_Outils disqueOutils = new Disque_Outils(getContext());
-	    	sb.append("Disque Interne - Place Dispo. : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().first)+"\n");
+	    	sb.append("Espace Interne - Espace Total : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().second)+"\n");
+	    	sb.append("Espace Interne - Place Dispo. : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().first)+"\n");
+	    	sb.append("Espace Interne - Path : "+DiskEnvironment.getInternalStorage().getFile().getAbsolutePath()+"\n");
+	    	
+	    	sb.append("Carte SD Interne - Dispo. ( *.isEmulated() ) : "+DiskEnvironment.getPrimaryExternalStorage().isEmulated()+"\n");
+	    	if( !DiskEnvironment.getPrimaryExternalStorage().isEmulated() ){
+	    		try {
+			    	sb.append("Carte SD Interne - Espace Total : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().second)+"\n");
+		    		sb.append("Carte SD Interne - Place Dispo. : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().first)+"\n");
+		    		sb.append("Carte SD Interne - Path : "+DiskEnvironment.getPrimaryExternalStorage().getFile().getAbsolutePath()+"\n");
+	    		} catch (Exception e) {
+	    			Log.e(LOG_TAG, e.getMessage(), e);
+	    		}
+	    		
+	    	}
+	    	
+	    	sb.append("Carte Externe - Dispo. ( *Available() ) : "+DiskEnvironment.isSecondaryExternalStorageAvailable()+"\n");
 	    	if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
 		    	try {
-					sb.append("Disque Externe - Place Dispo. : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().first)+"\n");
+					sb.append("Carte Externe - Espace Total : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().second)+"\n");
+					sb.append("Carte Externe - Place Dispo. : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().first)+"\n");
+					sb.append("Carte Externe - Path : "+DiskEnvironment.getSecondaryExternalStorage().getFile().getAbsolutePath()+"\n");
 				} catch (NoSecondaryStorageException e) {
 					Log.e(LOG_TAG, e.getMessage(), e);
 				}
