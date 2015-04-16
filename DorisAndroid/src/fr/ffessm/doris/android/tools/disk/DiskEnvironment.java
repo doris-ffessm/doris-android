@@ -513,68 +513,98 @@ public class DiskEnvironment {
 		mDeviceList = new ArrayList<DeviceDiv>(10);
 		mPrimary = new DeviceExternal();
 		
-		// vold.fstab lesen; TODO bei Misserfolg eine andere Methode
-		if (!scanVold("vold.fstab")) scanVold("vold.conf");
-		
-	    // zeigen /mnt/sdcard und /data auf denselben Speicher?
-	    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 	    	 mExternalEmulated = Environment.isExternalStorageEmulated();
 	    } else {
 		     // vor Honeycom gab es den unified memory noch nicht
 		     mExternalEmulated = false;
 	    }
 		
-	    // search path to the second SD card; been implemented only method 1
-	    // Method 1: just the first entry in vold.fstab, possibly a mnt / / sdcard double-adjusted
-	    // Method 2: the first with "sd", if not available the first with "ext"
-	    // Method 3: the first available
-		if (mDeviceList.size()==0) {
-			mSecondary = null;
-			// TODO Geräte mit interner SD und Android 2 wie Nexus S
-			// if (nexus) mPrimary.setRemovable(false);
-		} else {
-			mSecondary = mDeviceList.get(0);
-			if (mSecondary.getName().contains("usb")) {
-				// z.B. HTC One X+
-				mSecondary = null;
-			} else {
-				// jau, SD gefunden
-				mSecondary.setName("SD-Card");
-				// Hack
-				if (mPrimary.isRemovable()) Log.w(LOG_TAG, "isExternStorageRemovable overwrite (secondary sd found) auf false");
-				mPrimary.setRemovable(false);
-			}
-		}
+		// trying to find physically external secondary device (ie. not an emulated one)
+		//Method A. based on /procs/mounts
 		
-		// if not valid, try the alternat method to find the mount point
-		if(mSecondary != null && !mSecondary.isAvailable()){
-			// check with alternate method
-			Log.d(LOG_TAG, "rescanDevices() - mSecondary not available trying alternate method");
-			
-			
-			
-			List<StorageVolume> listStorages = StorageHelper.getStorages(false);
-			for(StorageVolume storage : listStorages){
-				Log.d(LOG_TAG, "rescanDevices() - StorageVolume "+storage.toString());
-				if(storage.isRemovable() && !storage.isEmulated()){
-				    try {
-					SimpleStringSplitter sp = new SimpleStringSplitter(' ');
-				     sp.setString(storage.fileSystem+" "+storage.file.getCanonicalPath());
-						
+		List<StorageVolume> listStorages = StorageHelper.getStorages(false);
+		for(StorageVolume storage : listStorages){
+			Log.d(LOG_TAG, "rescanDevices() - StorageVolume "+storage.toString());
+			if(storage.isRemovable() && !storage.isEmulated() && (storage.getType()!= StorageVolume.Type.USB)){
+				
+			    try {
+				SimpleStringSplitter sp = new SimpleStringSplitter(' ');
+			     sp.setString(storage.fileSystem+" "+storage.file.getCanonicalPath());
 					
-						 Log.d(LOG_TAG, "rescanDevices() - trying new storage "+storage.fileSystem+" "+storage.file.getCanonicalPath()+" "+storage.device);
-						 
-						 DeviceDiv d = new DeviceDiv(sp);
-						 mSecondary = d;
-						 
-						 
-						 
-				    } catch (IOException e) {
-						Log.e(LOG_TAG, e.getMessage(), e);
-					}
+				
+					 Log.d(LOG_TAG, "rescanDevices() - trying new storage "+storage.fileSystem+" "+storage.file.getCanonicalPath()+" "+storage.device);
+					 
+					 DeviceDiv d = new DeviceDiv(sp);
+					 mSecondary = d;
+					 // got one 
+					 break;
+					 
+			    } catch (IOException e) {
+					Log.e(LOG_TAG, e.getMessage(), e);
 				}
 			}
 		}
+		
+		
+		if(mSecondary == null){
+			// Method B. based on vold.fstab lesen; TODO bei Misserfolg eine andere Methode
+			if (!scanVold("vold.fstab")) scanVold("vold.conf");
+			
+		   
+			
+		    // search path to the second SD card; been implemented only method 1
+		    // Method 1: just the first entry in vold.fstab, possibly a mnt / / sdcard double-adjusted
+		    // Method 2: the first with "sd", if not available the first with "ext"
+		    // Method 3: the first available
+			if (mDeviceList.size()==0) {
+				mSecondary = null;
+				// TODO Geräte mit interner SD und Android 2 wie Nexus S
+				// if (nexus) mPrimary.setRemovable(false);
+			} else {
+				mSecondary = mDeviceList.get(0);
+				if (mSecondary.getName().contains("usb")) {
+					// z.B. HTC One X+
+					mSecondary = null;
+				} else {
+					// jau, SD gefunden
+					mSecondary.setName("SD-Card");
+					// Hack
+					if (mPrimary.isRemovable()) Log.w(LOG_TAG, "isExternStorageRemovable overwrite (secondary sd found) auf false");
+					mPrimary.setRemovable(false);
+				}
+			
+			}
+		}
+//		// if not valid, try the alternative method to find the mount point
+//		if(mSecondary != null && !mSecondary.isAvailable()){
+//			// check with alternate method
+//			Log.d(LOG_TAG, "rescanDevices() - mSecondary not available trying alternate method");
+//			
+//			
+//			
+//			List<StorageVolume> listStorages = StorageHelper.getStorages(false);
+//			for(StorageVolume storage : listStorages){
+//				Log.d(LOG_TAG, "rescanDevices() - StorageVolume "+storage.toString());
+//				if(storage.isRemovable() && !storage.isEmulated()){
+//				    try {
+//					SimpleStringSplitter sp = new SimpleStringSplitter(' ');
+//				     sp.setString(storage.fileSystem+" "+storage.file.getCanonicalPath());
+//						
+//					
+//						 Log.d(LOG_TAG, "rescanDevices() - trying new storage "+storage.fileSystem+" "+storage.file.getCanonicalPath()+" "+storage.device);
+//						 
+//						 DeviceDiv d = new DeviceDiv(sp);
+//						 mSecondary = d;
+//						 
+//						 
+//						 
+//				    } catch (IOException e) {
+//						Log.e(LOG_TAG, e.getMessage(), e);
+//					}
+//				}
+//			}
+//		}
 		
 	}
 	

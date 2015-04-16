@@ -102,6 +102,8 @@ import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
+import fr.ffessm.doris.android.tools.disk.StorageHelper;
+import fr.ffessm.doris.android.tools.disk.StorageHelper.StorageVolume;
 
 //End of user code
 public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
@@ -780,6 +782,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    	
 	    	sb.append("déplacement en cours : "+
 	    			paramOutils.getParamBoolean(R.string.pref_key_deplace_photo_encours, false)+"\n");
+	    	
+	    	sb.append("List StorageVolume:\n");
+	    	for( StorageVolume st : StorageHelper.getStorages(true)){
+	    		sb.append("  "+ st.toString()+"\n");
+	    	}
 	    	
 	    	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());
 	    	
