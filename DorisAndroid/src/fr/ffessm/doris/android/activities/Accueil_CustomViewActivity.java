@@ -54,18 +54,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 
+import java.io.File;
 //Start of user code additional imports Accueil_CustomViewActivity
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask.Status;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -100,7 +105,7 @@ import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
-import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
+import fr.ffessm.doris.android.tools.disk.DiskEnvironmentHelper;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 import fr.ffessm.doris.android.tools.disk.StorageHelper;
 import fr.ffessm.doris.android.tools.disk.StorageHelper.StorageVolume;
@@ -640,6 +645,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
     /** refresh screen from data 
      */
+
     public void refreshScreenData() {
     	//Start of user code action when refreshing the screen Accueil_CustomViewActivity
     	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
@@ -753,28 +759,28 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    					ImageLocation.APP_INTERNAL.ordinal() )]+"\n");
 	    	
 	    	Disque_Outils disqueOutils = new Disque_Outils(getContext());
-	    	sb.append("Espace Interne - Espace Total : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().second)+"\n");
-	    	sb.append("Espace Interne - Place Dispo. : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getInternalStorage().getSize().first)+"\n");
-	    	sb.append("Espace Interne - Path : "+DiskEnvironment.getInternalStorage().getFile().getAbsolutePath()+"\n");
+	    	sb.append("Espace Interne - Espace Total : "+disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getInternalStorage().getSize().second)+"\n");
+	    	sb.append("Espace Interne - Place Dispo. : "+disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getInternalStorage().getSize().first)+"\n");
+	    	sb.append("Espace Interne - Path : "+DiskEnvironmentHelper.getInternalStorage().getMountPointFile().getAbsolutePath()+"\n");
 	    	
-	    	sb.append("Carte SD Interne - Dispo. ( *.isEmulated() ) : "+DiskEnvironment.getPrimaryExternalStorage().isEmulated()+"\n");
-	    	if( !DiskEnvironment.getPrimaryExternalStorage().isEmulated() ){
+	    	sb.append("Carte SD Interne - Dispo. ( *.isEmulated() ) : "+DiskEnvironmentHelper.getPrimaryExternalStorage().isEmulated()+"\n");
+	    	if( !DiskEnvironmentHelper.getPrimaryExternalStorage().isEmulated() ){
 	    		try {
-			    	sb.append("Carte SD Interne - Espace Total : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().second)+"\n");
-		    		sb.append("Carte SD Interne - Place Dispo. : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getPrimaryExternalStorage().getSize().first)+"\n");
-		    		sb.append("Carte SD Interne - Path : "+DiskEnvironment.getPrimaryExternalStorage().getFile().getAbsolutePath()+"\n");
+			    	sb.append("Carte SD Interne - Espace Total : "+disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getPrimaryExternalStorage().getSize().second)+"\n");
+		    		sb.append("Carte SD Interne - Place Dispo. : "+disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getPrimaryExternalStorage().getSize().first)+"\n");
+		    		sb.append("Carte SD Interne - Path : "+DiskEnvironmentHelper.getPrimaryExternalStorage().getMountPointFile().getAbsolutePath()+"\n");
 	    		} catch (Exception e) {
 	    			Log.e(LOG_TAG, e.getMessage(), e);
 	    		}
 	    		
 	    	}
 	    	
-	    	sb.append("Carte Externe - Dispo. ( *Available() ) : "+DiskEnvironment.isSecondaryExternalStorageAvailable()+"\n");
-	    	if(DiskEnvironment.isSecondaryExternalStorageAvailable()){
+	    	sb.append("Carte Externe - Dispo. ( *Available() ) : "+DiskEnvironmentHelper.isSecondaryExternalStorageAvailable(this)+"\n");
+	    	if(DiskEnvironmentHelper.isSecondaryExternalStorageAvailable(this)){
 		    	try {
-					sb.append("Carte Externe - Espace Total : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().second)+"\n");
-					sb.append("Carte Externe - Place Dispo. : "+disqueOutils.getHumanDiskUsage(DiskEnvironment.getSecondaryExternalStorage().getSize().first)+"\n");
-					sb.append("Carte Externe - Path : "+DiskEnvironment.getSecondaryExternalStorage().getFile().getAbsolutePath()+"\n");
+					sb.append("Carte Externe - Espace Total : "+disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getSecondaryExternalStorage(this).getSize().second)+"\n");
+					sb.append("Carte Externe - Place Dispo. : "+disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getSecondaryExternalStorage(this).getSize().first)+"\n");
+					sb.append("Carte Externe - Path : "+DiskEnvironmentHelper.getSecondaryExternalStorage(this).getMountPointFile().getAbsolutePath()+"\n");
 				} catch (NoSecondaryStorageException e) {
 					Log.e(LOG_TAG, e.getMessage(), e);
 				}
@@ -788,6 +794,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    		sb.append("  "+ st.toString()+"\n");
 	    	}
 	    	
+	    	debugTest(sb);
+	    	//Context.getExternalFilesDirs();
+	    	//Context.getExternalStorageDirectory();
+	    	
 	    	((TextView) findViewById(R.id.accueil_debug_text)).setText(sb.toString());
 	    	
 	    	
@@ -800,6 +810,33 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	//End of user code
 	}
 
+    @SuppressLint("NewApi")
+    private void debugTest(StringBuilder sb){
+    	sb.append("test:\n");
+    	sb.append("  Environment.getExternalStoragePublicDirectory(\"DORISAndroid\")="+ Environment.getExternalStoragePublicDirectory("DORISAndroid").getAbsolutePath()+"\n");
+    	sb.append("  Environment.getExternalStoragePublicDirectory(\"\")="+ Environment.getExternalStoragePublicDirectory("").getAbsolutePath()+"\n");
+    	sb.append("test Context.getExternalFilesDirs(\"\"):\n");
+    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+	    	for( File st :this.getExternalFilesDirs("")){
+	    		sb.append("  "+ st.getAbsolutePath().toString()+"\n");
+	    	}
+    	}
+    	sb.append("test Context.getExternalFilesDirs(\"DORISAndroid\"):\n");
+    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+	    	for( File st :this.getExternalFilesDirs("DORISAndroid")){
+	    		sb.append("  "+ st.getAbsolutePath().toString()+"\n");
+	    	}
+    	}
+    	
+    	ContextCompat.getExternalFilesDirs(this, "");
+    	sb.append("test ContextCompat.getExternalFilesDirs(\"/\"):\n");
+    	for( File st :ContextCompat.getExternalFilesDirs(this, "")){
+    		sb.append("  "+ st.getAbsolutePath().toString()+"\n");
+    	}
+    	//Context.getExternalFilesDirs();
+    	//Context.getExternalStorageDirectory();
+    }
+    
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();

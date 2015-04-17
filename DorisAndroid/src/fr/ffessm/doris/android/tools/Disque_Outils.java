@@ -48,7 +48,7 @@ import android.content.Context;
 import android.text.format.DateUtils;
 import android.util.Log;
 import fr.ffessm.doris.android.tools.disk.Device;
-import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
+import fr.ffessm.doris.android.tools.disk.DiskEnvironmentHelper;
 
 public class Disque_Outils {
 	private static final String LOG_TAG = Disque_Outils.class.getSimpleName();
@@ -78,9 +78,9 @@ public class Disque_Outils {
 	}
 	
     public void refresh(){
-    	isPrimaryExternalStorageExist = !DiskEnvironment.getPrimaryExternalStorage().isEmulated();
+    	isPrimaryExternalStorageExist = !DiskEnvironmentHelper.getPrimaryExternalStorage().isEmulated();
     	
-    	isSecondaryExternalStorageExist = DiskEnvironment.isSecondaryExternalStorageAvailable();
+    	isSecondaryExternalStorageExist = DiskEnvironmentHelper.isSecondaryExternalStorageAvailable(context);
     }
     
 	public String getHumanDiskUsage(long inSize){

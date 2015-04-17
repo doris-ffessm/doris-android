@@ -16,7 +16,7 @@ import fr.ffessm.doris.android.tools.Disque_Outils.ImageLocation;
 import fr.ffessm.doris.android.tools.LimitTimer;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
-import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
+import fr.ffessm.doris.android.tools.disk.DiskEnvironmentHelper;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 import android.app.IntentService;
 import android.content.Context;
@@ -335,10 +335,10 @@ public class GestionPhotoDiskService extends IntentService {
     protected void clearFolder(String source, String subFolderToMove){
     	File sourceFolder;
     	if(source.equals(ImageLocation.PRIMARY.name())){
-    		sourceFolder = DiskEnvironment.getPrimaryExternalStorage().getFilesDir(this, subFolderToMove);
+    		sourceFolder = DiskEnvironmentHelper.getPrimaryExternalStorage().getFilesDir(this, subFolderToMove);
     	}else if(source.equals(ImageLocation.SECONDARY.name())){
     		try {
-    			sourceFolder = DiskEnvironment.getSecondaryExternalStorage().getFilesDir(this, subFolderToMove);
+    			sourceFolder = DiskEnvironmentHelper.getSecondaryExternalStorage(this).getFilesDir(this, subFolderToMove);
 			} catch (NoSecondaryStorageException e) {
 				return;
 			}

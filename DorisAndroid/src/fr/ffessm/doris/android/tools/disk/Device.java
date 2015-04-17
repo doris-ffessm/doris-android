@@ -23,25 +23,28 @@ import android.os.Environment;
  * 
  */
 public abstract class Device  {
-	protected Size mSize;
-	protected String mMountPoint;
 	
-	// Zugriff auf interne Felder -------------------------------------------------------------------
-	public final File getFile() { return new File(mMountPoint); }
-	public final Size getSize() { return mSize; }
-	public final String getMountPoint() { return mMountPoint; }
+	
+	/**
+	 * @return the File on the mount point
+	 */
+	public abstract File getMountPointFile();
+	
+	/**
+	 * @return Size of the device
+	 */
+	public abstract Size getSize();
+	/**
+	 * @return the location of the mount point. This may be not precise on some case
+	 */
+	public abstract String getMountPoint();
 	public abstract String getName();
 	public abstract boolean isRemovable();
 	public abstract boolean isEmulated();
 	public abstract boolean isAvailable();
 	public abstract boolean isWriteable();
 
-	/**
-	 * sollte die Verfügbarkeit des Devices erneuern; wird vom BroadcastReceiver
-	 * von Environment2 aufgerufen.
-	 * @since 1.3
-	 */
-	protected void updateState() {}
+	//protected void updateState() {}
 	
 	
 	/**
@@ -89,18 +92,14 @@ public abstract class Device  {
 	
 	/**
 	 * Helper method for emulating the getXXXDir methods of {@ link Context}, 
-	 * Hilfsmethode zum Emulieren der getXXXDir-Methoden von {@link Context},
-	 * die einerseits nicht für API7 vorhanden sind, andererseits nicht für die 
-	 * gemounteten USB- und Secondary-Medien. Wird also von Methoden in
-	 * den Erben {@link DeviceDiv} und {@link DeviceIntern} genutzt.
-	 * 
+	 * but that is based on the mount point location. this is mainly used in situation where the native method isn't supported
 	 * @ Param ctx the Context (for {@ link Context # getPackageName ()})
 	 * @ Param s a string describing the pathname within the app-path
 	 * @ Return a file with the desired subdirectory; if it doesn't exist, the directory is created
 	 */
 	protected File getFilesDirLow(Context ctx, String s) {
 		if (s!=null && !s.startsWith("/")) s = "/" + s;
-		File f = new File(getMountPoint() + DiskEnvironment.PATH_PREFIX + ctx.getPackageName() + s);
+		File f = new File(getMountPoint() + DiskEnvironmentHelper.PATH_PREFIX + ctx.getPackageName() + s);
 		if (!f.isDirectory() && isWriteable()) 
 			f.mkdirs(); 
 		return f;

@@ -26,15 +26,12 @@ import android.os.Environment;
  *
  */
 class DeviceIntern extends Device {
-	/**
-	 * liest Parameter aus {@link Environment#getDataDirectory() }, also
-	 * i.Allg. /data
-	 * @return this für Verkettungen wie {@code return new Device().initFromDataDirectory() } 
-	 */
+	
+	private String mMountPoint;
+	
 	DeviceIntern() {
 		File f = Environment.getDataDirectory();
 		mMountPoint = f.getAbsolutePath();
-		mSize = Size.getSpace(f);
 	}
 
 	@Override
@@ -74,6 +71,21 @@ class DeviceIntern extends Device {
 	@Override
 	public boolean isEmulated() {
 		return false;
+	}
+
+	@Override
+	public File getMountPointFile() {
+		return new File(getMountPoint()); 
+	}
+
+	@Override
+	public Size getSize() {
+		return Size.getSpace(getMountPointFile());
+	}
+
+	@Override
+	public String getMountPoint() {
+		return mMountPoint;
 	}
 
 }

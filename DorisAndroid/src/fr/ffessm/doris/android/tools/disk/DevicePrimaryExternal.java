@@ -25,10 +25,12 @@ import android.os.Environment;
  * @version 1.2 - API7 wird unterstützt
  *
  */
-class DeviceExternal extends Device {
+class DevicePrimaryExternal extends Device {
 	private boolean mRemovable;
 	private boolean mEmulated = false;
-	private String mState;
+	//private String mState;
+	
+	private String mMountPoint;
 	
 	/**
 	 * liest Parameter aus {@link Environment#getExternalStorageDirectory()},
@@ -40,7 +42,7 @@ class DeviceExternal extends Device {
 	 * @return this für Verkettungen wie {@code return new Device().initFromExternalStorageDirectory() } 
 	 */
 	@SuppressLint("NewApi") 
-	DeviceExternal() {
+	DevicePrimaryExternal() {
 		File f = Environment.getExternalStorageDirectory();
 		mMountPoint = f.getAbsolutePath();
 
@@ -48,26 +50,18 @@ class DeviceExternal extends Device {
     		setRemovable(Environment.isExternalStorageRemovable()); // Gingerbread weiß es genau
 		}
 		else {
-			setRemovable(true); // Default ist, dass eine SD-Karte rausgenommen werden kann
+			setRemovable(true); // default is removable 
 		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			mEmulated = Environment.isExternalStorageEmulated();
 		} else {
-			// utilise le nom du point d emontage pour avoir une idee s'il est emule ou pas
+			// utilise le nom du point de montage pour avoir une idee s'il est emule ou pas
 			mEmulated = Textes_Outils.containsIgnoreCase(mMountPoint, "emulated");
 		}
-		updateState();
 	}
 
 	
-	@Override
-	protected void updateState() {
-		mState = Environment.getExternalStorageState();
-		if (isAvailable()) {
-			File f = new File(mMountPoint);
-			mSize = Size.getSpace(f);
-		}
-	}
+	
 	
 	
 	@Override
@@ -85,11 +79,13 @@ class DeviceExternal extends Device {
 
 	@Override
 	public boolean isAvailable() {
+		String mState = Environment.getExternalStorageState();
 		return (Environment.MEDIA_MOUNTED.equals(mState) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(mState));
 	}
 
 	@Override
 	public boolean isWriteable() {
+		String mState = Environment.getExternalStorageState();
 		return Environment.MEDIA_MOUNTED.equals(mState);
 	}
 
@@ -131,7 +127,23 @@ class DeviceExternal extends Device {
 
 	
 	@Override
-	public String getState() { return mState; }
+	public String getState() { return Environment.getExternalStorageState(); }
+
+
+	@Override
+	public File getMountPointFile() {
+		return new File(getMountPoint()); 
+	}
+
+	@Override
+	public Size getSize() {
+		return Size.getSpace(getMountPointFile());
+	}
+
+	@Override
+	public String getMountPoint() {
+		return mMountPoint;
+	}
 
 }
 

@@ -64,7 +64,7 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.android.tools.Disque_Outils.ImageLocation;
-import fr.ffessm.doris.android.tools.disk.DiskEnvironment;
+import fr.ffessm.doris.android.tools.disk.DiskEnvironmentHelper;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 
 public class Photos_Outils {
@@ -156,10 +156,10 @@ public class Photos_Outils {
 		//Log.d(LOG_TAG, "getFolderFromPreferedLocation("+ requestedSubFolder+") sur : "+baseImageLocation);
 		switch(baseImageLocation){
 		case PRIMARY:
-			return DiskEnvironment.getPrimaryExternalStorage().getFilesDir(context, requestedSubFolder);
+			return DiskEnvironmentHelper.getPrimaryExternalStorage().getFilesDir(context, requestedSubFolder);
 		case SECONDARY:
 			try {
-				return DiskEnvironment.getSecondaryExternalFilesDir(context, requestedSubFolder);
+				return DiskEnvironmentHelper.getSecondaryExternalStorage(context).getFilesDir(context, requestedSubFolder);
 				//return DiskEnvironment.getSecondaryExternalStorage().getFilesDir(context, requestedSubFolder);
 			} catch (NoSecondaryStorageException e) {
 				return context.getDir( requestedSubFolder , Context.MODE_PRIVATE);
