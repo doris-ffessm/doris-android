@@ -76,9 +76,9 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	private static final String LOG_TAG = App_Outils.class.getCanonicalName();
 	final Context context = this;
 	
-	private final Param_Outils paramOutils = new Param_Outils(context);
-	private final Photos_Outils photosOutils = new Photos_Outils(context);
-	private final Disque_Outils disqueOutils = new Disque_Outils(context);
+	private Param_Outils paramOutils;
+	private Photos_Outils photosOutils;
+	private Disque_Outils disqueOutils;
     
 	long volumeTotalNecessaire = 0;
 	//End of user code
@@ -130,7 +130,7 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         }
 
         // Affichage Estimation des Volumes pris par Choix des qualités de photos
-        photosOutils.initNbPhotosParFiche();
+        getPhotosOutils().initNbPhotosParFiche();
 
         setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_france,
         		ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE);
@@ -145,14 +145,14 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         
         final Preference btnQualiteImagesZonesKey = (Preference)getPreferenceManager().findPreference("button_qualite_images_zones_key");
         btnQualiteImagesZonesKey.setSummary(
-    		context.getString(R.string.mode_precharg_photo_region_summary)+disqueOutils.getHumanDiskUsage(volumeTotalNecessaire)
+    		context.getString(R.string.mode_precharg_photo_region_summary)+getDisqueOutils().getHumanDiskUsage(volumeTotalNecessaire)
     		);
         
         final Preference btnAutresImagesKey = (Preference)getPreferenceManager().findPreference(
         		context.getString(R.string.pref_key_mode_precharg_photo_autres));
         btnAutresImagesKey.setSummary(
     		context.getString(R.string.mode_precharg_photo_autres_summary)
-    			.replace("@size", disqueOutils.getHumanDiskUsage(photosOutils.getEstimVolPhotosAutres()) )
+    			.replace("@size", getDisqueOutils().getHumanDiskUsage(getPhotosOutils().getEstimVolPhotosAutres()) )
     		);
 
 		//End of user code
@@ -204,11 +204,11 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	    CharSequence[] entryValues = lp.getEntryValues();
 	    
 	    for (int i = 0; i < entries.length; i++) {
-	    	long volumeNecessaire = photosOutils.getEstimVolPhotosParZone(
+	    	long volumeNecessaire = getPhotosOutils().getEstimVolPhotosParZone(
 					Photos_Outils.PrecharMode.valueOf(entryValues[i].toString()),
 					zoneGeoKind
 					); 
-	    	entries[i] = entries[i].toString().replace("@size", disqueOutils.getHumanDiskUsage(volumeNecessaire) );
+	    	entries[i] = entries[i].toString().replace("@size", getDisqueOutils().getHumanDiskUsage(volumeNecessaire) );
 	    	
 	    	if ( entryValues[i].toString().equals(lp.getValue()) ) {
 	    		summary = entries[i];
@@ -222,6 +222,19 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
 	    lp.setSummary(summary);
     }
 
+    private Photos_Outils getPhotosOutils(){ 
+    	if(photosOutils == null) photosOutils = new Photos_Outils(context);
+    	return photosOutils;
+    }
+    
+	private Param_Outils getParamOutils(){ 
+		if(paramOutils == null) paramOutils = new Param_Outils(context);
+    	return paramOutils;
+	}
+	private Disque_Outils getDisqueOutils() { 
+		if(disqueOutils == null) disqueOutils = new Disque_Outils(context);
+    	return disqueOutils;
+	}
     
 	//End of user code
 }

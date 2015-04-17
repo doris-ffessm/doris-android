@@ -125,10 +125,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	 
 	boolean isOnCreate = true;
 	
-	Fiches_Outils fichesOutils = new Fiches_Outils(getContext());
-	App_Outils outils = new App_Outils(getContext());
-	Param_Outils paramOutils = new Param_Outils(getContext());
-	Reseau_Outils reseauOutils = new Reseau_Outils(getContext());
+	Fiches_Outils fichesOutils;
+	App_Outils outils;
+	Param_Outils paramOutils;
+	Reseau_Outils reseauOutils;
 	
 	protected SparseArray< MultiProgressBar> progressBarZones = new SparseArray< MultiProgressBar>(); 
 	
@@ -175,12 +175,12 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         };
 
         // Affichage Icônes Fédé.
-        if (!mustShowLogoFede || !paramOutils.getParamBoolean(R.string.pref_key_accueil_aff_iconesfede, true)){
+        if (!mustShowLogoFede || !getParamOutils().getParamBoolean(R.string.pref_key_accueil_aff_iconesfede, true)){
         	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
         }
         
         // Affichage Debug
-        if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)){
+        if (getParamOutils().getParamBoolean(R.string.pref_key_affichage_debug, false)){
         	if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Affichage Debug");
         	((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
         	((ScrollView) findViewById(R.id.accueil_debug)).setVisibility(View.VISIBLE);
@@ -192,11 +192,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         // TODO : GMo : ne marche plus ??? Bizarre
         //Lors du 1er démarrage de l'application dans la version actuelle,
         //on affiche la boite d'A Propos
-        String VersionAffichageAPropos = paramOutils.getParamString(R.string.pref_key_a_propos_version, "");
+        String VersionAffichageAPropos = getParamOutils().getParamString(R.string.pref_key_a_propos_version, "");
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - VersionAffichageAPropos : "+VersionAffichageAPropos);
     	
         //Récupération du numéro de Version de DORIS
-        String appVersionName = outils.getAppVersion();
+        String appVersionName = getOutils().getAppVersion();
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - appVersionName : "+appVersionName);
 
         if (!VersionAffichageAPropos.equals(appVersionName)) {
@@ -204,7 +204,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
 			aPropos.aProposAff();
         	
-			paramOutils.setParamString(R.string.pref_key_a_propos_version, appVersionName);
+			getParamOutils().setParamString(R.string.pref_key_a_propos_version, appVersionName);
         }
         
         if(DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null
@@ -217,9 +217,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         else{
 	        // pas de tache précédente en cours
         	// démarre ou pas un téléchargement de photos au démarrage	
-        	Reseau_Outils.ConnectionType connectionType = reseauOutils.getConnectionType();
+        	Reseau_Outils.ConnectionType connectionType = getReseauOutils().getConnectionType();
         	Log.d(LOG_TAG, "onCreate() - connectionType : "+connectionType);
-        	boolean wifiOnly = paramOutils.getParamBoolean(R.string.pref_key_mode_precharg_wifi_only, true);
+        	boolean wifiOnly = getParamOutils().getParamBoolean(R.string.pref_key_mode_precharg_wifi_only, true);
         	Log.d(LOG_TAG, "onCreate() - wifiOnly : "+wifiOnly);
         	if ( connectionType == Reseau_Outils.ConnectionType.WIFI 
 	        		|| (! wifiOnly && connectionType == Reseau_Outils.ConnectionType.GSM)){
@@ -323,18 +323,18 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         }
         
         // Icône illustrant la Zone
-        int imageZone = fichesOutils.getZoneIconeId(zone.getZoneGeoKind());
+        int imageZone = getFichesOutils().getZoneIconeId(zone.getZoneGeoKind());
         
         ImageView ivIcone = (ImageView)viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
         ivIcone.setImageResource(imageZone);   
-        int iconeZine = Integer.valueOf(paramOutils.getParamString(R.string.pref_key_accueil_icon_size, "64"));
+        int iconeZine = Integer.valueOf(getParamOutils().getParamString(R.string.pref_key_accueil_icon_size, "64"));
 	    ivIcone.setMaxHeight(iconeZine);
 	    ivIcone.setMaxWidth(iconeZine);
 	    
 	    
 	    // Quelle est l'action principale : par défaut ouverture de la liste des fiches de la Zone
 	    // sinon ouverture de l'arbre phylogénétique
-	    final String accueil_liste_ou_arbre_pardefaut = paramOutils.getParamString(R.string.pref_key_accueil_liste_ou_arbre_pardefaut, "liste");
+	    final String accueil_liste_ou_arbre_pardefaut = getParamOutils().getParamString(R.string.pref_key_accueil_liste_ou_arbre_pardefaut, "liste");
         //Log.d(LOG_TAG, "accueil_liste_ou_arbre_pardefaut : "+accueil_liste_ou_arbre_pardefaut);
 	    
 	    
@@ -544,7 +544,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		   boolean affichageBarrePhotoPrinc;
 		   boolean affichageBarrePhoto;
 		   String summaryTexte = "";
-		   int nbFichesZoneGeo = fichesOutils.getNbFichesZoneGeo(inZoneGeo.getZoneGeoKind());
+		   int nbFichesZoneGeo = getFichesOutils().getNbFichesZoneGeo(inZoneGeo.getZoneGeoKind());
 		   int avancementPhotoPrinc =0;
 		   int avancementPhoto =0;
 		   		    
@@ -640,6 +640,24 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         }
     }
 
+	
+	private Param_Outils getParamOutils(){ 
+		if(paramOutils == null) paramOutils = new Param_Outils(getContext());
+    	return paramOutils;
+	}
+	private App_Outils getOutils() { 
+		if(outils == null) outils = new App_Outils(getContext());
+    	return outils;
+	}
+	private Fiches_Outils getFichesOutils() { 
+		if(fichesOutils == null) fichesOutils = new Fiches_Outils(getContext());
+    	return fichesOutils;
+	}
+	private Reseau_Outils getReseauOutils() { 
+		if(reseauOutils == null) reseauOutils = new Reseau_Outils(getContext());
+    	return reseauOutils;
+	}
+	
 	@SuppressLint("NewApi")
     private void debugTest(StringBuilder sb){
 		
@@ -655,7 +673,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
     	
     	sb.append("prefered_disque : "+
-    			ImageLocation.values()[paramOutils.getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
+    			ImageLocation.values()[getParamOutils().getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
     					ImageLocation.APP_INTERNAL.ordinal() )]+"\n");
     	
     	Disque_Outils disqueOutils = new Disque_Outils(getContext());
@@ -687,7 +705,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	}
     	
     	sb.append("déplacement en cours : "+
-    			paramOutils.getParamBoolean(R.string.pref_key_deplace_photo_encours, false)+"\n");
+    			getParamOutils().getParamBoolean(R.string.pref_key_deplace_photo_encours, false)+"\n");
     	
     	sb.append("List StorageVolume:\n");
     	for( StorageVolume st : StorageHelper.getStorages(true)){
@@ -739,7 +757,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	*/
     	// recherche précédente
     	//ImageView ivIcone = (ImageView) findViewById(R.id.accueil_recherche_precedente_icone);
-        int iconeZine = Integer.valueOf(paramOutils.getParamString(R.string.pref_key_accueil_icon_size, "64"));
+        int iconeZine = Integer.valueOf(getParamOutils().getParamString(R.string.pref_key_accueil_icon_size, "64"));
         ((ImageView) findViewById(R.id.accueil_recherche_precedente_icone)).setMaxHeight(iconeZine);
         
         
@@ -780,7 +798,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    	llContainerLayout =  (LinearLayout) findViewById(R.id.accueil_progress_layout);
 	    	
 	    	// Avancement et Affichage toutes Zones
-	    	int imageZone = fichesOutils.getZoneIconeId(zoneToutesZones.getZoneGeoKind());
+	    	int imageZone = getFichesOutils().getZoneIconeId(zoneToutesZones.getZoneGeoKind());
 	    	
 	    	MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this,zoneToutesZones.getNom(), imageZone, false);
 	    	updateProgressBarZone(zoneToutesZones, progressBarZoneGenerale);
@@ -814,8 +832,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     	// Debbug
     	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Debbug : "+paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)); 
-    	if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)){
+    	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Debbug : "+getParamOutils().getParamBoolean(R.string.pref_key_affichage_debug, false)); 
+    	if (getParamOutils().getParamBoolean(R.string.pref_key_affichage_debug, false)){
 	    	StringBuilder sb = new StringBuilder();
 	    	sb.append("- - Debbug - -\n");
 	    	

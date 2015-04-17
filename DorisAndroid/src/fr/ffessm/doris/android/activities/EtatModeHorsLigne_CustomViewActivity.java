@@ -117,10 +117,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	private static final String LOG_TAG = EtatModeHorsLigne_CustomViewActivity.class.getCanonicalName();
 	Handler mHandler;
 	
-	Photos_Outils photosOutils = new Photos_Outils(getContext());
-	Param_Outils paramOutils = new Param_Outils(getContext());
-	Disque_Outils disqueOutils = new Disque_Outils( getContext() );
-	Fiches_Outils fichesOutils = new Fiches_Outils(getContext());
+	Photos_Outils photosOutils;
+	Param_Outils paramOutils;
+	Disque_Outils disqueOutils;
+	Fiches_Outils fichesOutils;
 	
 	protected SparseArray<MultiProgressBar> progressBarZones = new SparseArray<MultiProgressBar>(); 
 	protected MultiProgressBar progressBarZoneGenerale;
@@ -170,6 +170,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
 		ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.etatmodehorsligne_customview);
 		ActionBar actionBar = getSupportActionBar();
@@ -262,7 +263,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	zoneToutesZones.setId(-1);
     	zoneToutesZones.setNom(getContext().getString(R.string.avancement_touteszones_titre));
     	
-    	int imageZone = fichesOutils.getZoneIconeId(zoneToutesZones.getZoneGeoKind());
+    	int imageZone = getFichesOutils().getZoneIconeId(zoneToutesZones.getZoneGeoKind());
     	
     	progressBarZoneGenerale = new MultiProgressBar(this,zoneToutesZones.getNom(),imageZone,true);
     	updateProgressBarZone(zoneToutesZones, progressBarZoneGenerale);
@@ -310,7 +311,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	// Avancement par Zone
  			
 		for (ZoneGeographique zoneGeo : listeZoneGeo) {
-			imageZone = fichesOutils.getZoneIconeId(zoneGeo.getZoneGeoKind());
+			imageZone = getFichesOutils().getZoneIconeId(zoneGeo.getZoneGeoKind());
 			
 			MultiProgressBar progressBarZone = new MultiProgressBar(this, zoneGeo.getNom(), imageZone, false);
 			updateProgressBarZone(zoneGeo, progressBarZone);
@@ -326,19 +327,19 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
  					
  					switch(fZoneGeo.getZoneGeoKind()){
  					case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
- 						param = paramOutils.getStringNameParam(R.string.pref_key_mode_precharg_photo_region_france);
+ 						param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_france);
  						break;
  					case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE :
- 						param = paramOutils.getStringNameParam(R.string.pref_key_mode_precharg_photo_region_eaudouce);
+ 						param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_eaudouce);
  						break;
  					case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
- 						param = paramOutils.getStringNameParam(R.string.pref_key_mode_precharg_photo_region_indopac);
+ 						param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_indopac);
  						break;
  					case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
- 						param = paramOutils.getStringNameParam(R.string.pref_key_mode_precharg_photo_region_caraibes);
+ 						param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_caraibes);
  						break;
  					case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
- 						param = paramOutils.getStringNameParam(R.string.pref_key_mode_precharg_photo_region_atlantno);
+ 						param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_atlantno);
  						break;
  					default :
  						param = null;
@@ -532,11 +533,11 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	boolean affichageBarrePhotoPrinc;
     	boolean affichageBarrePhoto;
     	String summaryTexte = "";
-    	int nbFichesZoneGeo = fichesOutils.getNbFichesZoneGeo(inZoneGeo.getZoneGeoKind());
+    	int nbFichesZoneGeo = getFichesOutils().getNbFichesZoneGeo(inZoneGeo.getZoneGeoKind());
     	int avancementPhotoPrinc =0;
     	int avancementPhoto =0;
 	   	   
-    	Photos_Outils.PrecharMode precharModeZoneGeo = photosOutils.getPrecharModeZoneGeo(inZoneGeo.getZoneGeoKind());
+    	Photos_Outils.PrecharMode precharModeZoneGeo = getPhotosOutils().getPrecharModeZoneGeo(inZoneGeo.getZoneGeoKind());
 	   
     	if ( precharModeZoneGeo == Photos_Outils.PrecharMode.P0 ) {
 	
@@ -547,10 +548,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
 		   
     	} else {
-		   int nbPhotosPrincATelecharger = photosOutils.getAPrecharQteZoneGeo(inZoneGeo.getZoneGeoKind(), true);
-		   int nbPhotosATelecharger = photosOutils.getAPrecharQteZoneGeo(inZoneGeo.getZoneGeoKind(), false);
-		   int nbPhotosPrincDejaLa = photosOutils.getDejaLaQteZoneGeo(inZoneGeo.getZoneGeoKind(), true);
-		   int nbPhotosDejaLa = photosOutils.getDejaLaQteZoneGeo(inZoneGeo.getZoneGeoKind(), false);
+		   int nbPhotosPrincATelecharger = getPhotosOutils().getAPrecharQteZoneGeo(inZoneGeo.getZoneGeoKind(), true);
+		   int nbPhotosATelecharger = getPhotosOutils().getAPrecharQteZoneGeo(inZoneGeo.getZoneGeoKind(), false);
+		   int nbPhotosPrincDejaLa = getPhotosOutils().getDejaLaQteZoneGeo(inZoneGeo.getZoneGeoKind(), true);
+		   int nbPhotosDejaLa = getPhotosOutils().getDejaLaQteZoneGeo(inZoneGeo.getZoneGeoKind(), false);
 		   
 		   affichageBarrePhotoPrinc = true;
 		   affichageBarrePhoto = true;
@@ -628,14 +629,14 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	
 		etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_titre) ); 
 		
-		int sizeFolder = photosOutils.getImageCountInFolderInPreferedLocation(ImageType.VIGNETTE);
+		int sizeFolder = getPhotosOutils().getImageCountInFolderInPreferedLocation(ImageType.VIGNETTE);
 		if ( sizeFolder !=0 ) {
 			auMoins1DossierNonVide = true;
 			
 			etatDiskStringBuilder.append( "\n\t" );
 			etatDiskStringBuilder.append( sizeFolder );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_vignettes) );
-			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsageInPreferedLocation(ImageType.VIGNETTE) ) );
+			etatDiskStringBuilder.append( getDisqueOutils().getHumanDiskUsage( getPhotosOutils().getPhotoDiskUsageInPreferedLocation(ImageType.VIGNETTE) ) );
 			
 			btnGestionPhotosResetVig.setEnabled(true);
 		} else {
@@ -646,14 +647,14 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		
 		
 		
-		sizeFolder = photosOutils.getImageCountInFolderInPreferedLocation(ImageType.MED_RES);
+		sizeFolder = getPhotosOutils().getImageCountInFolderInPreferedLocation(ImageType.MED_RES);
 		if ( sizeFolder !=0 ) {
 			auMoins1DossierNonVide = true;
 			
 			etatDiskStringBuilder.append( "\n\t" );
 			etatDiskStringBuilder.append( sizeFolder );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_med_res) );
-			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsageInPreferedLocation(ImageType.MED_RES) ) );
+			etatDiskStringBuilder.append( getDisqueOutils().getHumanDiskUsage( getPhotosOutils().getPhotoDiskUsageInPreferedLocation(ImageType.MED_RES) ) );
 			
 			btnGestionPhotosResetMedRes.setEnabled(true);
 		} else {
@@ -661,14 +662,14 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		}
 		if (isMovingPhotos || isTelechPhotos) btnGestionPhotosResetMedRes.setEnabled(false);
 		
-		sizeFolder = photosOutils.getImageCountInFolderInPreferedLocation(ImageType.HI_RES);
+		sizeFolder = getPhotosOutils().getImageCountInFolderInPreferedLocation(ImageType.HI_RES);
 		if ( sizeFolder !=0 ) {
 			auMoins1DossierNonVide = true;
 			
 			etatDiskStringBuilder.append( "\n\t" );
 			etatDiskStringBuilder.append( sizeFolder );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_hi_res) );
-			etatDiskStringBuilder.append( disqueOutils.getHumanDiskUsage( photosOutils.getPhotoDiskUsageInPreferedLocation(ImageType.HI_RES) ) );
+			etatDiskStringBuilder.append( getDisqueOutils().getHumanDiskUsage( getPhotosOutils().getPhotoDiskUsageInPreferedLocation(ImageType.HI_RES) ) );
 			
 			btnGestionPhotosResetHiRes.setEnabled(true);
 		} else {
@@ -676,9 +677,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		}
 		if (isMovingPhotos || isTelechPhotos) btnGestionPhotosResetHiRes.setEnabled(false);
 		
-		sizeFolder = photosOutils.getImageCountInFolderInPreferedLocation(ImageType.PORTRAITS)
-				+ photosOutils.getImageCountInFolderInPreferedLocation(ImageType.ILLUSTRATION_BIBLIO)
-				+ photosOutils.getImageCountInFolderInPreferedLocation(ImageType.ILLUSTRATION_DEFINITION);
+		sizeFolder = getPhotosOutils().getImageCountInFolderInPreferedLocation(ImageType.PORTRAITS)
+				+ getPhotosOutils().getImageCountInFolderInPreferedLocation(ImageType.ILLUSTRATION_BIBLIO)
+				+ getPhotosOutils().getImageCountInFolderInPreferedLocation(ImageType.ILLUSTRATION_DEFINITION);
 		if ( sizeFolder !=0 ) {
 			auMoins1DossierNonVide = true;
 			
@@ -686,10 +687,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			etatDiskStringBuilder.append( sizeFolder );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_autres) );
 			etatDiskStringBuilder.append(
-					disqueOutils.getHumanDiskUsage(
-						photosOutils.getPhotoDiskUsageInPreferedLocation(ImageType.PORTRAITS)
-						+ photosOutils.getPhotoDiskUsageInPreferedLocation(ImageType.ILLUSTRATION_BIBLIO)
-						+ photosOutils.getPhotoDiskUsageInPreferedLocation(ImageType.ILLUSTRATION_DEFINITION)
+					getDisqueOutils().getHumanDiskUsage(
+						getPhotosOutils().getPhotoDiskUsageInPreferedLocation(ImageType.PORTRAITS)
+						+ getPhotosOutils().getPhotoDiskUsageInPreferedLocation(ImageType.ILLUSTRATION_BIBLIO)
+						+ getPhotosOutils().getPhotoDiskUsageInPreferedLocation(ImageType.ILLUSTRATION_DEFINITION)
 					) );
 			
 			btnGestionPhotosResetAutres.setEnabled(true);
@@ -699,7 +700,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		if (isMovingPhotos || isTelechPhotos) btnGestionPhotosResetAutres.setEnabled(false);
 		
 		
-		sizeFolder = photosOutils.getImageCountInCache();
+		sizeFolder = getPhotosOutils().getImageCountInCache();
 		if ( sizeFolder !=0 ) {
 			auMoins1DossierNonVide = true;
 			
@@ -743,10 +744,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     private void refreshUsedDisk() {
 		// Mise à jour de la place utilisée sur chaque disque
 		if(carteExterneDispo){
-			refreshUsedDisk(photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL), photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY), photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY));
+			refreshUsedDisk(getPhotosOutils().getPhotosDiskUsage(ImageLocation.APP_INTERNAL), getPhotosOutils().getPhotosDiskUsage(ImageLocation.PRIMARY), getPhotosOutils().getPhotosDiskUsage(ImageLocation.SECONDARY));
 		}
 		else{
-			refreshUsedDisk(photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL), photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY), 0);
+			refreshUsedDisk(getPhotosOutils().getPhotosDiskUsage(ImageLocation.APP_INTERNAL), getPhotosOutils().getPhotosDiskUsage(ImageLocation.PRIMARY), 0);
 		}   	
     }
     protected void refreshUsedDisk(long internalUsedSize, long primaryUsedSize, long secondaryUsedSize){
@@ -759,7 +760,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	 */
 		
 		etatDiskStringBuilder.append( "Espace de Stockage utilisé :\n\t" ); 
-		switch (photosOutils.getPreferedLocation()){
+		switch (getPhotosOutils().getPreferedLocation()){
 		case APP_INTERNAL:
 			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_internal_libelle) );
 			break;
@@ -782,9 +783,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Mémoire interne");
 		
 		etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_internal_libelle)+" :\n\t");
-		etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(internalUsedSize)+" / ");
-		etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getInternalStorage().getSize().first)+" / ");
-		etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getInternalStorage().getSize().second)+"\n");
+		etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(internalUsedSize)+" / ");
+		etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getInternalStorage().getSize().first)+" / ");
+		etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getInternalStorage().getSize().second)+"\n");
 		//etatDiskStringBuilder.append(DiskEnvironment.getInternalStorage().getFile().getAbsolutePath()+"\n");
 		//etatDiskStringBuilder.append("Donnée application="+this.getDir(Photos_Outils.MED_RES_FICHE_FOLDER, Context.MODE_PRIVATE)+"\n");
 		//etatDiskStringBuilder.append("'Hash' pour vérifier si Carte SD Interne != Stockage interne : "
@@ -795,9 +796,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Disque primaire (Carte SD Interne)");
 			
 			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_primary_libelle)+" :\n\t");
-			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(primaryUsedSize)+" / ");
-			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getPrimaryExternalStorage().getSize().first)+" / ");
-			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getPrimaryExternalStorage().getSize().second)+"\n");
+			etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(primaryUsedSize)+" / ");
+			etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getPrimaryExternalStorage().getSize().first)+" / ");
+			etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getPrimaryExternalStorage().getSize().second)+"\n");
 			//etatDiskStringBuilder.append(DiskEnvironment.getPrimaryExternalStorage().getFile().getAbsolutePath()+"\n");
 			//etatDiskStringBuilder.append("'Hash' pour vérifier si Carte SD Interne != Stockage interne : "
 			//		+DiskEnvironment.getPrimaryExternalStorage().getSize().first+"-"+DiskEnvironment.getPrimaryExternalStorage().getSize().second+"\n");
@@ -812,10 +813,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Carte SD externe (nommée amovible)");
 			
 			etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_secondary_libelle)+" :\n\t");
-			etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(secondaryUsedSize)+" / ");
+			etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(secondaryUsedSize)+" / ");
 			try {
-				etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getSecondaryExternalStorage(this).getSize().first)+" / ");
-				etatDiskStringBuilder.append(disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getSecondaryExternalStorage(this).getSize().second)+"\n");
+				etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getSecondaryExternalStorage(this).getSize().first)+" / ");
+				etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getSecondaryExternalStorage(this).getSize().second)+"\n");
 				//etatDiskStringBuilder.append(DiskEnvironment.getSecondaryExternalStorage().getFile().getAbsolutePath()+"\n");
 				
 			} catch (NoSecondaryStorageException e) {
@@ -840,18 +841,18 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     public void refreshGestionDisk() {
     	
     	// Déplacement arrêté en cours
-    	boolean deplaceEnCours = paramOutils.getParamBoolean(R.string.pref_key_deplace_photo_encours, false);
+    	boolean deplaceEnCours = getParamOutils().getParamBoolean(R.string.pref_key_deplace_photo_encours, false);
     	
     	// Processus de Déplacement en cours
     	
-		ImageLocation imageLocationCourante = photosOutils.getPreferedLocation();		
-		ImageLocation imageLocationPrecedente = photosOutils.getLocationPrecedente();	
+		ImageLocation imageLocationCourante = getPhotosOutils().getPreferedLocation();		
+		ImageLocation imageLocationPrecedente = getPhotosOutils().getLocationPrecedente();	
 
     	
     	// -- Mémoire Interne -- //
 		// Si ni la carte Interne, ni la Carte Externe ne sont présentes aucun mouvement n'est possible
-		if ( ( carteInterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 )
-			|| ( carteExterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY) != 0 ) ) {
+		if ( ( carteInterneDispo && getPhotosOutils().getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 )
+			|| ( carteExterneDispo && getPhotosOutils().getPhotosDiskUsage(ImageLocation.SECONDARY) != 0 ) ) {
 			
 			btnInternalDiskDepl.setEnabled(true);
 			btnInternalDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_internal_depl_btn_text_selected));
@@ -872,7 +873,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		}
 		if (isMovingPhotos || isTelechPhotos) btnInternalDiskDepl.setEnabled(false);
 		
-		if( photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0 ) {
+		if( getPhotosOutils().getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0 ) {
 			btnInternalDiskSupp.setEnabled(true);
 			btnInternalDiskSupp.setText(getString(R.string.etatmodehorsligne_diskselection_internal_supp_btn_text_selected));
 		} else {
@@ -888,8 +889,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			TableRow trGestionDiskPrimary = (TableRow) findViewById(R.id.etatmodehorsligne_gestion_disk_primary_row);
 			trGestionDiskPrimary.setVisibility(View.VISIBLE);
 			
-			if( ( photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0 )
-					|| ( carteExterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY) != 0 ) ){
+			if( ( getPhotosOutils().getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0 )
+					|| ( carteExterneDispo && getPhotosOutils().getPhotosDiskUsage(ImageLocation.SECONDARY) != 0 ) ){
 				btnPrimaryDiskDepl.setEnabled(true);
 				btnPrimaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_primary_depl_btn_text_selected));
 
@@ -907,7 +908,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			}
 			if (isMovingPhotos || isTelechPhotos) btnPrimaryDiskDepl.setEnabled(false);
 			
-			if( photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 ) {
+			if( getPhotosOutils().getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 ) {
 				btnPrimaryDiskSupp.setEnabled(true);
 				btnPrimaryDiskSupp.setText(getString(R.string.etatmodehorsligne_diskselection_primary_supp_btn_text_selected));
 			} else {
@@ -928,8 +929,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			
 			btnSecondaryDiskDepl.setText(getString(R.string.etatmodehorsligne_diskselection_secondary_depl_btn_text_selected));
 			
-			if ( ( photosOutils.getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0 )
-					|| ( carteInterneDispo && photosOutils.getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 ) ){
+			if ( ( getPhotosOutils().getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0 )
+					|| ( carteInterneDispo && getPhotosOutils().getPhotosDiskUsage(ImageLocation.PRIMARY) != 0 ) ){
 					btnSecondaryDiskDepl.setEnabled(true);
 					
 					// Si un déplacement vers le Carte Mémoire Externe a été arrêté avant sa fin et qu'aucun mouvement n'a repris
@@ -946,7 +947,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			if (isMovingPhotos || isTelechPhotos) btnSecondaryDiskDepl.setEnabled(false);
 			
 			btnSecondaryDiskSupp.setVisibility(View.VISIBLE);
-			if ( photosOutils.getPhotosDiskUsage(ImageLocation.SECONDARY) != 0 ) {
+			if ( getPhotosOutils().getPhotosDiskUsage(ImageLocation.SECONDARY) != 0 ) {
 				btnSecondaryDiskSupp.setEnabled(true);
 				btnSecondaryDiskSupp.setText(getString(R.string.etatmodehorsligne_diskselection_secondary_supp_btn_text_selected));
 			} else {
@@ -992,7 +993,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
 		
 		/*
-    	paramOutils.getParamBoolean(R.string.pref_key_deplace_photo_encours, false)
+    	getParamOutils().getParamBoolean(R.string.pref_key_deplace_photo_encours, false)
 		 */
 
 	}
@@ -1141,6 +1142,24 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	}
     }
 
+    private Photos_Outils getPhotosOutils(){ 
+    	if(photosOutils == null) photosOutils = new Photos_Outils(getContext());
+    	return photosOutils;
+    }
+    
+	private Param_Outils getParamOutils(){ 
+		if(paramOutils == null) paramOutils = new Param_Outils(getContext());
+    	return paramOutils;
+	}
+	private Disque_Outils getDisqueOutils() { 
+		if(disqueOutils == null) disqueOutils = new Disque_Outils(getContext());
+    	return disqueOutils;
+	}
+	private Fiches_Outils getFichesOutils() { 
+		if(fichesOutils == null) fichesOutils = new Fiches_Outils(getContext());
+    	return fichesOutils;
+	}
+    
 	//End of user code
 
     /** refresh screen from data 
@@ -1172,7 +1191,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	if (!isMovingPhotos) refreshProgressBarZone();
     	
     	// Mise à jour du nombres de fichiers par dossier
-		photosOutils.refreshImagesNbInFolder();
+		getPhotosOutils().refreshImagesNbInFolder();
 		
     	// Mise à jour des disques disponibles
     	refreshDiskDisponible();

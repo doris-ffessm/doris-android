@@ -93,7 +93,7 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
 	
 	final Context context = this;
 
-	Photos_Outils photosOutils = new Photos_Outils(context);
+	Photos_Outils photosOutils;
 	Reseau_Outils reseauOutils = new Reseau_Outils(context);
 	
 	protected int participantNumeroDoris;
@@ -162,9 +162,9 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
         ImageView trombineView = (ImageView) findViewById(R.id.detailsparticipant_elementview_icon);
         if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {	     
         	
-	        if(photosOutils.isAvailableInFolderPhoto(entry.getPhotoNom(), ImageType.PORTRAITS)){
+	        if(getPhotosOutils().isAvailableInFolderPhoto(entry.getPhotoNom(), ImageType.PORTRAITS)){
 	    		try {
-					Picasso.with(context).load(photosOutils.getPhotoFile(entry.getPhotoNom(), ImageType.PORTRAITS))
+					Picasso.with(context).load(getPhotosOutils().getPhotoFile(entry.getPhotoNom(), ImageType.PORTRAITS))
 						.fit()
 						.centerInside()
 						.into(trombineView);
@@ -256,6 +256,11 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
 			intent.setData(Uri.parse(url));
 			startActivity(intent);
 		}
+    }
+    
+    private Photos_Outils getPhotosOutils(){ 
+    	if(photosOutils == null) photosOutils = new Photos_Outils(this);
+    	return photosOutils;
     }
 	// End of user code
 

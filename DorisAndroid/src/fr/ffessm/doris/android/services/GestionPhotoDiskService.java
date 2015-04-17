@@ -68,9 +68,6 @@ public class GestionPhotoDiskService extends IntentService {
 	public GestionPhotoDiskService() {
 		super(GestionPhotoDiskService.class.getSimpleName());
 		
-		paramOutils = new Param_Outils(this);
-		disqueOutils = new Disque_Outils(this);
-		photosOutils = new Photos_Outils(this);
 	}
 
 	@Override
@@ -132,9 +129,9 @@ public class GestionPhotoDiskService extends IntentService {
     	if(action.equals(ACT_MOVE) || action.equals(ACT_DELETE_DISK)){
     		// Mise à jour du nombres de fichiers par dossier
     		// Obligatoire pour que le Max soit initialisé
-    		photosOutils.refreshImagesNbInFolder();
+    		getPhotosOutils().refreshImagesNbInFolder();
     		
-    		nbFilesToCopyOrDelete = photosOutils.getImageCountInAllFolders(ImageLocation.valueOf(source));
+    		nbFilesToCopyOrDelete = getPhotosOutils().getImageCountInAllFolders(ImageLocation.valueOf(source));
     		
 	    	Log.d(LOG_TAG, "onHandleIntent() - nbFilesToCopyOrDelete : "+nbFilesToCopyOrDelete);
 	    	mNotificationHelper.setMaxItemToProcess(""+nbFilesToCopyOrDelete);
@@ -176,13 +173,13 @@ public class GestionPhotoDiskService extends IntentService {
 	    	// Enregistrement du mouvement qui va être réalisé, afin de pouvoir le reprendre s'il était interrompu
 	    	// ATTENTION : si on est déjà en reprise, il ne faut pas écraser la valeur précédente évidement
 	    	// Une action reprise aurait été plus simple ici mais aurait nécessité + de boulot dans EtatModeHorsLigne
-	    	if ( (! paramOutils.getParamBoolean(R.string.pref_key_deplace_photo_encours, false) ) 
+	    	if ( (! getParamOutils().getParamBoolean(R.string.pref_key_deplace_photo_encours, false) ) 
 	    		|| ( destImageLocation.ordinal() 
-	    				!= paramOutils.getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
+	    				!= getParamOutils().getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
 	    						ImageLocation.APP_INTERNAL.ordinal() ) )
 				) {
-	    		photosOutils.setPreferedLocation(destImageLocation);
-	    		paramOutils.setParamBoolean(R.string.pref_key_deplace_photo_encours, true);
+	    		getPhotosOutils().setPreferedLocation(destImageLocation);
+	    		getParamOutils().setParamBoolean(R.string.pref_key_deplace_photo_encours, true);
 	    	}
 	    	
 	    	// déplacement vignettes
@@ -213,29 +210,29 @@ public class GestionPhotoDiskService extends IntentService {
     	if(action.equals(ACT_DELETE_FOLDER)){
 
            	if (source.equals(SRC_DOS_VIGNETTES)){
-           		disqueOutils.clearFolder(photosOutils.getImageFolderVignette(), 0);
+           		getDisqueOutils().clearFolder(getPhotosOutils().getImageFolderVignette(), 0);
            		
                	// On remet à jour les compteurs de téléchargement, ils seront recalculés lors des
                	// prochain téléchargement
                	reset_nbphotos_recues();
            		
            	} else if (source.equals(SRC_DOS_MEDRES)){
-           		disqueOutils.clearFolder(photosOutils.getImageFolderMedRes(), 0);
+           		getDisqueOutils().clearFolder(getPhotosOutils().getImageFolderMedRes(), 0);
            		
            		reset_nbphotos_recues();
            		
            	} else if (source.equals(SRC_DOS_HIRES)){
-           		disqueOutils.clearFolder(photosOutils.getImageFolderHiRes(), 0);
+           		getDisqueOutils().clearFolder(getPhotosOutils().getImageFolderHiRes(), 0);
            		
            		reset_nbphotos_recues();
            		
            	} else if (source.equals(SRC_DOS_AUTRES)){
-           		disqueOutils.clearFolder(photosOutils.getImageFolderPortraits(), 0);
-           		disqueOutils.clearFolder(photosOutils.getImageFolderGlossaire(), 0);
-           		disqueOutils.clearFolder(photosOutils.getImageFolderBiblio(), 0);
+           		getDisqueOutils().clearFolder(getPhotosOutils().getImageFolderPortraits(), 0);
+           		getDisqueOutils().clearFolder(getPhotosOutils().getImageFolderGlossaire(), 0);
+           		getDisqueOutils().clearFolder(getPhotosOutils().getImageFolderBiblio(), 0);
            		
            	} else if (source.equals(SRC_DOS_CACHE)){
-           		disqueOutils.clearFolder(this.getCacheDir(), 0);
+           		getDisqueOutils().clearFolder(this.getCacheDir(), 0);
            		
            	}
            	
@@ -251,11 +248,11 @@ public class GestionPhotoDiskService extends IntentService {
 		//Log.d(LOG_TAG, "moveFolderContent() - source : "+source );
 		//Log.d(LOG_TAG, "moveFolderContent() - destination : "+destination );
 		//Log.d(LOG_TAG, "moveFolderContent() - subFolderToMove : "+subFolderToMove );
-    	File sourceFolder = photosOutils.getFolderFromBaseLocation(
+    	File sourceFolder = getPhotosOutils().getFolderFromBaseLocation(
     			ImageLocation.valueOf(source), subFolderToMove
 			);
     	
-    	File destFolder = photosOutils.getFolderFromBaseLocation(
+    	File destFolder = getPhotosOutils().getFolderFromBaseLocation(
     			ImageLocation.valueOf(destination), subFolderToMove
 			);
     	
@@ -306,7 +303,7 @@ public class GestionPhotoDiskService extends IntentService {
 
 	        // On crée le dossier de destination si nécessaire
 	        //File directory = targetLocation.getParentFile();
-	    	File dossierDestination = photosOutils.getSousDossierPhoto(targetLocation, sourceLocation.getName());
+	    	File dossierDestination = getPhotosOutils().getSousDossierPhoto(targetLocation, sourceLocation.getName());
 	    	
 	    	if (dossierDestination != null && !dossierDestination.exists() && !dossierDestination.mkdirs()) {
 	            throw new IOException("Cannot create dir " + dossierDestination.getAbsolutePath());
@@ -393,31 +390,45 @@ public class GestionPhotoDiskService extends IntentService {
     
     public void reset_nbphotos_recues(){
     	
-    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
     			ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE, true), 0);
-    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
     			ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE, false), 0);
     	
-    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
     			ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE, true), 0);
-    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
     			ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE, false), 0);
     	
-    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
     			ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE, true), 0);
-    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
     			ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE, false), 0);
     	
-    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
     			ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES, true), 0);
-    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
     			ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES, false), 0);
     	
-    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
     			ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST, true), 0);       	
-    	paramOutils.setParamInt(photosOutils.getKeyDataRecuesZoneGeo(
+    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
     			ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST, false), 0); 
 
     }
+    
+    private Photos_Outils getPhotosOutils(){ 
+    	if(photosOutils == null) photosOutils = new Photos_Outils(this);
+    	return photosOutils;
+    }
+    
+	private Param_Outils getParamOutils(){ 
+		if(paramOutils == null) paramOutils = new Param_Outils(this);
+    	return paramOutils;
+	}
+	private Disque_Outils getDisqueOutils() { 
+		if(disqueOutils == null) disqueOutils = new Disque_Outils(this);
+    	return disqueOutils;
+	}
     
 }

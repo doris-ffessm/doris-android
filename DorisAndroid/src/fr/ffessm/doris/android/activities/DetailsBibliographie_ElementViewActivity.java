@@ -86,8 +86,8 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 	
 	final Context context = this;
 	
-	Photos_Outils photosOutils = new Photos_Outils(context);
-	Reseau_Outils reseauOutils = new Reseau_Outils(context);
+	Photos_Outils photosOutils;
+	Reseau_Outils reseauOutils;
 	
 // End of user code
 	
@@ -140,9 +140,9 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
         	String nomPhoto = entry.getCleURLIllustration().replace("gestionenligne/photos_biblio_moy/","");
         	nomPhoto = Constants.PREFIX_IMGDSK_BIBLIO+nomPhoto;
         	
-	        if(photosOutils.isAvailableInFolderPhoto(nomPhoto, ImageType.ILLUSTRATION_BIBLIO)){
+	        if(getPhotosOutils().isAvailableInFolderPhoto(nomPhoto, ImageType.ILLUSTRATION_BIBLIO)){
 	    		try {
-					Picasso.with(context).load(photosOutils.getPhotoFile(nomPhoto, ImageType.ILLUSTRATION_BIBLIO))
+					Picasso.with(context).load(getPhotosOutils().getPhotoFile(nomPhoto, ImageType.ILLUSTRATION_BIBLIO))
 						.fit()
 						.centerInside()
 						.into(biblioView);
@@ -152,7 +152,7 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 	    	else{
 	    		// pas préchargée en local pour l'instant, cherche sur internet
 	    		
-	    		if (reseauOutils.isTelechargementsModeConnectePossible()) {
+	    		if (getReseauOutils().isTelechargementsModeConnectePossible()) {
 	    			
 		    		//Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLIllustration() : "+Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+entry.getCleURLIllustration());
 		    		String urlPhoto = entry.getCleURLIllustration().replace("gestionenligne/photos_biblio_moy/", "");
@@ -229,6 +229,14 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 	}
 
 	// Start of user code protectedDetailsBibliographie_ElementViewActivity_additional_operations
+	private Photos_Outils getPhotosOutils(){ 
+    	if(photosOutils == null) photosOutils = new Photos_Outils(this);
+    	return photosOutils;
+    }
+	private Reseau_Outils getReseauOutils() { 
+		if(reseauOutils == null) reseauOutils = new Reseau_Outils(this);
+    	return reseauOutils;
+	}
 	// End of user code
 
 }
