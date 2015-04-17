@@ -105,7 +105,7 @@ class DeviceSecondaryExternal extends Device {
 	@TargetApi(Build.VERSION_CODES.FROYO)
 	@Override
 	public File getFilesDir(Context ctx, String s) { 
-		File[] possibleExtFilesDirs = ContextCompat.getExternalFilesDirs(ctx, "");
+		File[] possibleExtFilesDirs = ContextCompat.getExternalFilesDirs(ctx, s);
 		if(possibleExtFilesDirs.length>1){
 			return possibleExtFilesDirs[1];
 		}
