@@ -2,15 +2,13 @@ package fr.ffessm.doris.android.tools.disk;
 
 import java.io.File;
 
-import fr.ffessm.doris.android.tools.Textes_Outils;
-
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import fr.ffessm.doris.android.tools.Textes_Outils;
 
 
 class DeviceSecondaryExternal extends Device {
@@ -24,7 +22,7 @@ class DeviceSecondaryExternal extends Device {
 	private String mMountPoint;
 	
 	
-	@SuppressLint("NewApi") 
+	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 	DeviceSecondaryExternal(Context context) {
 		
 		File[] possibleExtFilesDirs = ContextCompat.getExternalFilesDirs(context, "");
@@ -36,13 +34,13 @@ class DeviceSecondaryExternal extends Device {
 			mMountPoint = mountPointFile.getAbsolutePath();
 	
 			// determine removable and emulated mode
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 	    		setRemovable(Environment.isExternalStorageRemovable(possibleExtFilesDirs[1])); // Gingerbread weiß es genau
 			}
 			else {
 				setRemovable(true); // Default ist, dass eine SD-Karte rausgenommen werden kann
 			}
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 				mEmulated = Environment.isExternalStorageEmulated(possibleExtFilesDirs[1]);
 			} else {
 				// utilise le nom du point d emontage pour avoir une idee s'il est emule ou pas
@@ -101,8 +99,7 @@ class DeviceSecondaryExternal extends Device {
 	@Override
 	public File getFilesDir(Context ctx) { return getFilesDir(ctx, null); }
 
-	
-	@TargetApi(Build.VERSION_CODES.FROYO)
+		
 	@Override
 	public File getFilesDir(Context ctx, String s) { 
 		File[] possibleExtFilesDirs = ContextCompat.getExternalFilesDirs(ctx, s);
@@ -113,7 +110,6 @@ class DeviceSecondaryExternal extends Device {
 	}
 
 	
-	@TargetApi(Build.VERSION_CODES.FROYO)
 	@Override
 	public File getCacheDir(Context ctx) { 
 		File[] possibleExtCacheDirs = ContextCompat.getExternalCacheDirs(ctx);
@@ -135,18 +131,23 @@ class DeviceSecondaryExternal extends Device {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
+	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 	@Override
 	public String getState() { 
 		File f = getMountPointFile();
-		if (mAvailable = f.isDirectory() && f.canRead()) { // ohne canRead() klappts z.B. beim Note2 nicht
-			//mSize = Size.getSpace(f); 
+		
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+			return Environment.getExternalStorageState(f);
+		}
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+			return Environment.getStorageState(f);
+		}
+		// older versions don't have a clean method, try to emulate
+		if (mAvailable = f.isDirectory() && f.canRead()) {  
 			mWriteable = f.canWrite();
-			// Korrektur, falls in /mnt/sdcard gemountet (z.B. Samsung)
-			//if (mMountPoint.startsWith(DiskEnvironment.mPrimary.mMountPoint) && mSize.equals(DiskEnvironment.mPrimary.mSize)) 
-			//	mAvailable = mWriteable = false;
 		} else 
 			mWriteable = false;
-		
 		if (mAvailable)
 			return mWriteable ? Environment.MEDIA_MOUNTED : Environment.MEDIA_MOUNTED_READ_ONLY;
 		else 
