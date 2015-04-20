@@ -11,16 +11,16 @@ import android.util.Log;
 import fr.ffessm.doris.android.tools.Textes_Outils;
 
 
-class DeviceSecondaryExternal extends Device {
+class DeviceSecondaryExternal extends Device  {
 	private static final String LOG_TAG = DeviceSecondaryExternal.class.getSimpleName();
-	private boolean mRemovable;
-	private boolean mEmulated = false;
+	
+	protected boolean mRemovable;
+	protected boolean mEmulated = false;
 	
 
-	private boolean mAvailable, mWriteable;
+	protected boolean mAvailable, mWriteable;
 	
-	private String mMountPoint;
-	
+	protected String mMountPoint;
 	
 	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 	DeviceSecondaryExternal(Context context) {
@@ -49,11 +49,6 @@ class DeviceSecondaryExternal extends Device {
 		}
 	}
 
-
-	public static boolean existSecondaryExternal(Context context){
-		File[] possibleExtFilesDirs = ContextCompat.getExternalFilesDirs(context, "");
-		return possibleExtFilesDirs.length>1;
-	}
 	
 	/**
 	 * returns the leading part of file1, truncated by any similar part in file2
