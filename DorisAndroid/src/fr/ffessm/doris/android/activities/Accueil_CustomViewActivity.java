@@ -731,7 +731,12 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	ContextCompat.getExternalFilesDirs(this, "");
     	sb.append("test ContextCompat.getExternalFilesDirs(\"/\"):\n");
     	for( File st :ContextCompat.getExternalFilesDirs(this, "")){
-    		sb.append("  "+ st.getAbsolutePath().toString()+"\n");
+    		
+    		if ( st != null) {
+    			
+    			sb.append("  "+ st.getAbsolutePath().toString()+"\n");
+    		
+    		}
     	}
     }
 	

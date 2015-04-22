@@ -65,6 +65,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
 //End of user code
+import fr.ffessm.doris.android.tools.ScreenTools;
 
 public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 	
@@ -140,6 +141,17 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 		labelSB.append(entry.getNom());
 		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
+                
+        if(ScreenTools.getScreenWidth(context) > 500){ // TODO devra probablement être adapté lorsque l'on aura des fragments
+            TextView tvDetails = (TextView) convertView.findViewById(R.id.zonegeoselection_listviewrow_details);
+            StringBuilder detailsSB = new StringBuilder();
+            detailsSB.append(entry.getDescription());
+            detailsSB.append(" ");
+            tvDetails.setText(detailsSB.toString());
+        } else {
+        	convertView.findViewById(R.id.zonegeoselection_listviewrow_details).setVisibility(View.GONE);
+        }
+        
         // End of user code
 
         // assign the entry to the row in order to ease GUI interactions
