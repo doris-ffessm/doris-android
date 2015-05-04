@@ -41,6 +41,9 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities.view;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
@@ -105,7 +108,7 @@ public class AffichageMessageHTML {
 	/* *********************************************************************
      * fonction permettant d'afficher des pages web locales comme l'Apropos par exemple
      ********************************************************************** */
-	public void affichageMessageHTML(String inTitre, String inTexte, String inURL) {
+	public void affichageMessageHTML(String inTitre, String inTexte, final String inURL) {
 		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Début");
 		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - inTitre : " + inTitre);
 		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - inTexte : " + inTexte);
@@ -128,8 +131,9 @@ public class AffichageMessageHTML {
     		text.setVisibility(View.GONE);
     	}
     	
-    	WebView pageWeb = (WebView) layout.findViewById(R.id.webView);
-    	pageWeb.setWebViewClient(new WebViewClient() {  
+    	final WebView pageWeb = (WebView) layout.findViewById(R.id.webView);
+    	pageWeb.setWebViewClient(new WebViewClient() { 
+    		 
     	    @Override  
     	    public boolean shouldOverrideUrlLoading(WebView inView, String inUrl)  
     	    {  
@@ -180,7 +184,18 @@ public class AffichageMessageHTML {
     	    }  
     	});  
     	
-    	pageWeb.loadUrl(inURL);
+    	if (inURL.contains("#")){
+	    	// workaround tha allows to jump to an anchor
+	    	Timer timer = new Timer();
+	    	timer.schedule(new TimerTask() {
+	    	    @Override
+	    	    public void run() {
+	    	    	pageWeb.loadUrl(inURL);
+	    	    }
+	    	}, 400);
+    	} else {
+    		pageWeb.loadUrl(inURL);
+    	}
     	alertDialog.setView(layout);
 
     	alertDialog.show();
