@@ -184,7 +184,7 @@ public class AffichageMessageHTML {
     	    }  
     	});  
     	
-    	if (inURL.contains("#")){
+    	/* if (inURL.contains("#")){
 	    	// workaround tha allows to jump to an anchor
 	    	Timer timer = new Timer();
 	    	timer.schedule(new TimerTask() {
@@ -193,9 +193,9 @@ public class AffichageMessageHTML {
 	    	    	pageWeb.loadUrl(inURL);
 	    	    }
 	    	}, 400);
-    	} else {
+    	} else { */
     		pageWeb.loadUrl(inURL);
-    	}
+    	//}
     	alertDialog.setView(layout);
 
     	alertDialog.show();
