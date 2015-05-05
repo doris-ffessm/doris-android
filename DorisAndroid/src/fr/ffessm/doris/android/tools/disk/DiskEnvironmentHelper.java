@@ -72,6 +72,10 @@ public class DiskEnvironmentHelper {
 				return getSecondaryExternalStorage(context).isAvailable();
 			} catch (NoSecondaryStorageException e) {
 				return false;
+			} catch (Exception e) {
+				// something wrong happenned, let's consider that this disk doesn't exist
+				Log.e(LOG_TAG, "pb dans la detection des disques:" + e.getMessage(), e);
+				return false;
 			}
 		} else {
 			return false;
