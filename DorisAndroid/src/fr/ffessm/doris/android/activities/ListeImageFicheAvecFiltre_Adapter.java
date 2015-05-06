@@ -66,6 +66,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -208,6 +209,9 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 		final Fiche entry = getFicheForId(filteredFicheIdList.get(position));
 		if(entry == null) return convertView;
 		
+		TextView tvDetails = (TextView) convertView.findViewById(R.id.listeimageavecfiltre_listviewrow_details);
+		tvDetails.setVisibility(View.GONE);
+		
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeimageficheavecfiltre_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
 		labelSB.append(entry.getNomCommunNeverEmpty());
@@ -221,7 +225,9 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
         
 		// Start of user code protected additional ListeFicheAvecFiltre_Adapter getView code
 		//	additional code
-		
+        HorizontalScrollView hsGallery = (HorizontalScrollView) convertView.findViewById(R.id.listeimageficheavecfiltre_elementview_gallery_horizontalScrollView);
+        hsGallery.setVisibility(View.VISIBLE);
+        
         String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
         int defaultIconSize = 48;
         try{
@@ -292,7 +298,8 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 	}
 
 	protected View getNoResultSubstitute(View convertView){
-		
+		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeimageficheavecfiltre_listviewrow_label);
+		tvLabel.setText(R.string.listeficheavecfiltre_classlistview_no_result);
 		// Start of user code protected additional ListeFicheAvecFiltre_Adapter getNoResultSubstitute code
 		try{
 			StringBuilder sbRechercheCourante = new StringBuilder();
@@ -314,6 +321,12 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 	        	sbRechercheCourante.append(context.getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec)+" "+currentZoneFilter.getNom().trim());
 	        }
 	        // TODO ajouter le filtre textuel courant qui lui aussi peut impliquer de ne retourner aucun résultats
+	        TextView tvDetails = (TextView) convertView.findViewById(R.id.listeimageavecfiltre_listviewrow_details);
+			tvDetails.setText( sbRechercheCourante.toString() );
+			tvDetails.setVisibility(View.VISIBLE);
+			
+			HorizontalScrollView hsGallery = (HorizontalScrollView) convertView.findViewById(R.id.listeimageficheavecfiltre_elementview_gallery_horizontalScrollView);
+			hsGallery.setVisibility(View.GONE);
 		} catch (SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
 		}

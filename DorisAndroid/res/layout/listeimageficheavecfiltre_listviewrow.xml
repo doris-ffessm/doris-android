@@ -22,7 +22,16 @@
 		    android:textColor="?android:attr/textColorPrimary" >
 	    </TextView>
 
-		
+	    <TextView
+	        android:id="@+id/listeimageavecfiltre_listviewrow_details"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="4dip"
+	        android:textAppearance="?android:attr/textAppearanceSmall"
+	        android:textColor="?android:attr/textColorSecondary"
+	        android:visibility="gone" >
+
+		</TextView>
 		<HorizontalScrollView
 		        android:id="@+id/listeimageficheavecfiltre_elementview_gallery_horizontalScrollView"
 		        android:layout_width="wrap_content"
