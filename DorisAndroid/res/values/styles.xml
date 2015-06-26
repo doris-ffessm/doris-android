@@ -27,6 +27,8 @@
     <style name="Theme.AppPureBlack" parent="Theme.AppCompat">
         <item name="android:windowContentOverlay">@null</item>
     	<item name="android:windowBackground">@drawable/app_background_pureblack</item>
+    	
+    	<item name="homeAsUpIndicator">@drawable/ic_home_up</item>
     </style>
     
     
@@ -48,6 +50,7 @@
     	<item name="attr/ic_app_filter_settings_actif">@drawable/ic_app_filter_settings_actif_light</item>
     	
     	<item name="attr/ic_action_background">@drawable/icon_background_light</item>
+    	    	
     </style>
     
     

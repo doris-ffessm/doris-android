@@ -260,12 +260,6 @@
             android:defaultValue="50"
             android:layout="@layout/preference_layout_preference"
             />
-        <CheckBoxPreference android:key="@string/pref_key_utilisation_btn_home"
-            android:title="Aff. Bouton Home ?"
-            android:summary="Permet d'afficher ou non le bouton Home posant des problèmes d'ergonomie à certains"  
-            android:defaultValue="true"
-            android:layout="@layout/preference_layout_preference"
-            />
         
         
      </PreferenceScreen>

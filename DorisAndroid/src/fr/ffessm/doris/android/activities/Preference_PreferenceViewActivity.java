@@ -179,9 +179,12 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     public boolean onOptionsItemSelected(MenuItem item) {
 
 		//Start of user code preference specific menu action
+    	
+    	/*
     	String message = ""+item.getItemId()+" - "+item.getGroupId()+" - "+item.toString();
     	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onOptionsItemSelected() - menu : "+message);  
     	Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    	*/
     	
         /* switch (item.getItemId()) {
             case 0:
