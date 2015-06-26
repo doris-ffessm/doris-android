@@ -264,11 +264,13 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
 		//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
+				/*
 	        	TaskStackBuilder.create(this)
 	                // Add all of this activity's parents to the back stack
 	                .addNextIntentWithParentStack(getSupportParentActivityIntent())
 	                // Navigate up to the closest parent
 	                .startActivities();
+                */
 	            return true;
 			default:
                 return super.onOptionsItemSelected(item);

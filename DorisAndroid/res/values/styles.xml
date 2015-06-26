@@ -19,6 +19,9 @@
     	<item name="attr/ic_app_filter_settings_actif">@drawable/ic_app_filter_settings_actif</item>
     	
     	<item name="attr/ic_action_background">@drawable/icon_background</item>
+    	
+    	<item name="homeAsUpIndicator">@drawable/ic_home_up</item>
+    	
     </style>
 
     <style name="Theme.AppPureBlack" parent="Theme.AppCompat">
@@ -56,8 +59,7 @@
 		<item name="android:textAppearance">@android:style/TextAppearance.Small</item>
 		
 	</style>
-	
-        
+    
     <!-- Ligne Horizontale utilisée dans les listes, entre les sections des fiches, etc. -->
 	<style name="Separateur">
 	    <item name="android:layout_width">match_parent</item>
