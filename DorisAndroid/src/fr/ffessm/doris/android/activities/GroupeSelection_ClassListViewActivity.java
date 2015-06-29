@@ -228,6 +228,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
             //End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
+				retourGroupeSuperieur();
 				/*
 	        	TaskStackBuilder.create(this)
 	                // Add all of this activity's parents to the back stack
@@ -285,26 +286,33 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 		switch(inKeyCode){
 		case KeyEvent.KEYCODE_BACK :
 			
-			Groupe groupeCourant = adapter.currentRootGroupe;
-			if(groupeCourant.getContextDB() == null){
-				Log.w(this.getClass().getSimpleName(),"workaround clickedGroupe.getContextDB() == null "+groupeCourant.getId());
-				groupeCourant.setContextDB(getHelper().getDorisDBHelper());
-			}
+			retourGroupeSuperieur();
 			
-			//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - groupeCourant.getGroupePere() : " + groupeCourant.getGroupePere());
-			
-			if (groupeCourant.getNomGroupe().equals("racine")) {
-				((GroupeSelection_ClassListViewActivity)this).finish();
-			} else {
-				adapter.currentRootGroupe = groupeCourant.getGroupePere();
-				adapter.updateList();
-				adapter.notifyDataSetChanged();
-			}
 			return true; 
 		}
 
 		return false;
     }
+	
+	
+	void retourGroupeSuperieur() {
+		Groupe groupeCourant = adapter.currentRootGroupe;
+		if(groupeCourant.getContextDB() == null){
+			Log.w(this.getClass().getSimpleName(),"workaround clickedGroupe.getContextDB() == null "+groupeCourant.getId());
+			groupeCourant.setContextDB(getHelper().getDorisDBHelper());
+		}
+		
+		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - groupeCourant.getGroupePere() : " + groupeCourant.getGroupePere());
+		
+		if (groupeCourant.getNomGroupe().equals("racine")) {
+			((GroupeSelection_ClassListViewActivity)this).finish();
+		} else {
+			adapter.currentRootGroupe = groupeCourant.getGroupePere();
+			adapter.updateList();
+			adapter.notifyDataSetChanged();
+		}
+	}
+	
 	
 	// End of user code
 

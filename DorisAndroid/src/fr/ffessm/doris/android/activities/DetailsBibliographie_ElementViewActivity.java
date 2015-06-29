@@ -202,6 +202,7 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
+				finish();
 				/*
 	        	TaskStackBuilder.create(this)
 	                // Add all of this activity's parents to the back stack
