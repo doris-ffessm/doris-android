@@ -46,9 +46,9 @@ import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
@@ -63,8 +63,10 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.support.v4.view.ViewPager;
+
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -195,14 +197,33 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 		    //End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				finish();
+				
+				Log.d(LOG_TAG, "onOptionsItemSelected() - home");
+				/* finish(); */
 				/*
 	        	TaskStackBuilder.create(this)
 	                // Add all of this activity's parents to the back stack
 	                .addNextIntentWithParentStack(getSupportParentActivityIntent())
 	                // Navigate up to the closest parent
 	                .startActivities();
-                */
+	            */
+				Intent upIntent = NavUtils.getParentActivityIntent(this);
+		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+		            // This activity is NOT part of this app's task, so create a new task
+		            // when navigating up, with a synthesized back stack.
+		            TaskStackBuilder.create(this)
+		                    // Add all of this activity's parents to the back stack
+		                    .addNextIntentWithParentStack(upIntent)
+		                    // Navigate up to the closest parent
+		                    .startActivities();
+		        } else {
+		            // This activity is part of this app's task, so simply
+		            // navigate up to the logical parent activity.
+		        	Bundle b = new Bundle();
+		            b.putInt("ficheId", ficheId);
+		            upIntent.putExtras(b);
+		            NavUtils.navigateUpTo(this, upIntent);
+		        }
 	            return true;
 			default:
                 return super.onOptionsItemSelected(item);
@@ -214,6 +235,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 	public Intent getSupportParentActivityIntent() {
 		//Start of user code getSupportParentActivityIntent ImagePleinEcran_CustomViewActivity
 		// navigates to the parent activity
+  			
 		Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
         Bundle b = new Bundle();
         b.putInt("ficheId", ficheId);

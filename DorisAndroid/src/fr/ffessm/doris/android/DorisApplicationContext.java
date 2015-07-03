@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.preference.PreferenceManager;
@@ -88,6 +89,14 @@ public class DorisApplicationContext {
 	public boolean isTelechPhotos = false;
 	public boolean isMovingPhotos = false;
 	public ZoneGeographiqueKind zoneTraitee = null;
+	
+	// Permet de piloter finement l'interface de retour (bouton HOME) (i.e. sans respecter forcément le manifest.xml)
+	// Accueil <-> Liste Fiches <-> Fiche
+	// Accueil <-> Liste Images Fiches <-> Fiche
+	// Accueil <-> Groupes <-> Liste Fiches <-> Fiche
+	// Accueil <-> Groupes <-> Liste Images Fiches <-> Fiche
+	public Intent retourDepuisListeIntent = null;
+	public Intent retourDepuisFicheIntent = null;
 	
 	/** listener that have registered for being notified of data changes */
 	private ArrayList<DataChangedListener>  dataChangeListeners = new ArrayList<DataChangedListener>();

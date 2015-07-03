@@ -47,18 +47,20 @@ import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+
 // Start of user code protectedDetailsFiche_ElementViewActivity_additional_import
 import fr.ffessm.doris.android.BuildConfig;
 import android.content.SharedPreferences;
@@ -189,6 +191,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 		if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)){
 			Picasso.with(this).setDebugging(BuildConfig.DEBUG);
 		}
+		
+		
+		Intent upIntent = NavUtils.getParentActivityIntent(this);
+        Log.d(LOG_TAG, "onCreate() - upIntent : "+upIntent.getComponent().toString());
+		
 		// End of user code
     }
     
@@ -469,14 +476,32 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				finish();
+				/* finish(); */
 				/*
 	        	TaskStackBuilder.create(this)
 	                // Add all of this activity's parents to the back stack
 	                .addNextIntentWithParentStack(getSupportParentActivityIntent())
 	                // Navigate up to the closest parent
 	                .startActivities();
-                */
+	            */
+				Intent upIntent = DorisApplicationContext.getInstance().retourDepuisFicheIntent;
+				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
+
+				if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
+		            // This activity is NOT part of this app's task, so create a new task
+		            // when navigating up, with a synthesized back stack.
+		            TaskStackBuilder.create(this)
+		                    // Add all of this activity's parents to the back stack
+		                    .addNextIntentWithParentStack(upIntent)
+		                    // Navigate up to the closest parent
+		                    .startActivities();
+		        } else {
+		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
+		            // This activity is part of this app's task, so simply
+		            // navigate up to the logical parent activity.
+		            NavUtils.navigateUpTo(this, upIntent);
+		        }
 	            return true;
 			default:
                 return super.onOptionsItemSelected(item);
@@ -487,6 +512,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	@Override
 	public Intent getSupportParentActivityIntent() {
 		//Start of user code getSupportParentActivityIntent DetailsFiche_ClassListViewActivity
+		Log.d(LOG_TAG, "getSupportParentActivityIntent()");
 		// navigates to the parent activity
 		return new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class);
 		//End of user code
@@ -494,6 +520,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	@Override
 	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
 		//Start of user code onCreateSupportNavigateUpTaskStack DetailsFiche_ClassListViewActivity
+		Log.d(LOG_TAG, "onCreateSupportNavigateUpTaskStack()");
 		super.onCreateSupportNavigateUpTaskStack(builder);
 		//End of user code
 	}

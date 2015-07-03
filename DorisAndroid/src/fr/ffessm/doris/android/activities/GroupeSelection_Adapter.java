@@ -42,11 +42,13 @@ termes.
 package fr.ffessm.doris.android.activities;
 import java.util.List;
 
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Groupe;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -232,6 +234,8 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		        if (!depuisAccueil) {
 		            ((GroupeSelection_ClassListViewActivity)context).finish();
 		        } else {
+		        	DorisApplicationContext.getInstance().retourDepuisListeIntent = ((Activity) context).getIntent();
+		        	
 		        	Intent toListeFiche_View = new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class);
 		        	toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		        	context.getApplicationContext().startActivity(toListeFiche_View);
@@ -256,6 +260,8 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		        if (!depuisAccueil) {
 		            ((GroupeSelection_ClassListViewActivity)context).finish();
 		        } else {
+		        	DorisApplicationContext.getInstance().retourDepuisListeIntent = ((Activity) context).getIntent();
+		        	
 		        	Intent toListeFiche_View = new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class);
 		        	toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		        	context.getApplicationContext().startActivity(toListeFiche_View);

@@ -47,29 +47,34 @@ import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+
 // Start of user code protectedDetailsBibliographie_ElementViewActivity_additional_import
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.widget.ImageView;
+
 import com.squareup.picasso.Picasso;
+
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
+
 import java.io.IOException;
 // End of user code
 
@@ -202,14 +207,28 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				finish();
+				/* finish(); */
 				/*
 	        	TaskStackBuilder.create(this)
 	                // Add all of this activity's parents to the back stack
 	                .addNextIntentWithParentStack(getSupportParentActivityIntent())
 	                // Navigate up to the closest parent
 	                .startActivities();
-                */
+	            */
+				Intent upIntent = NavUtils.getParentActivityIntent(this);
+		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+		            // This activity is NOT part of this app's task, so create a new task
+		            // when navigating up, with a synthesized back stack.
+		            TaskStackBuilder.create(this)
+		                    // Add all of this activity's parents to the back stack
+		                    .addNextIntentWithParentStack(upIntent)
+		                    // Navigate up to the closest parent
+		                    .startActivities();
+		        } else {
+		            // This activity is part of this app's task, so simply
+		            // navigate up to the logical parent activity.
+		            NavUtils.navigateUpTo(this, upIntent);
+		        }
 	            return true;
 			default:
                 return super.onOptionsItemSelected(item);

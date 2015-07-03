@@ -43,6 +43,7 @@ package fr.ffessm.doris.android.activities;
 
 
 import fr.ffessm.doris.android.datamodel.*;
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
@@ -63,6 +64,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 // Start of user code protectedGroupeSelection_ClassListViewActivity_additionalimports
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -113,6 +115,8 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
         list.setAdapter(adapter);
 
 		//Start of user code onCreate additions GroupeSelection_ClassListViewActivity
+        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() ");
+        
         // affiche ou cache le filtre espèce actuel (+ son bouton de suppression)
         RelativeLayout currentFilterInfoLayout = (RelativeLayout)findViewById(R.id.groupselection_listview_filtre_espece_courant_layout);
     	
@@ -138,8 +142,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 		//Start of user code onResume additions GroupeSelection_ClassListViewActivity
 		//End of user code
 	}
-
-
+	
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 		//Start of user code onItemClick additions GroupeSelection_ClassListViewActivity
 		Log.d(LOG_TAG, "onItemClick() - Début");     
@@ -175,12 +178,15 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	        	((GroupeSelection_ClassListViewActivity)this).finish();
 	        } else {
 	        	
+	        	Log.d(LOG_TAG, "onItemClick() - TESt GMO 01");
+	        	DorisApplicationContext.getInstance().retourDepuisListeIntent = getIntent();
+	        	
 	        	if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
-        			startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
+        			startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
 	        	} else {
 		    	   startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
 	        	}
-        		
+        			        	
 	        }
 		}
 	
@@ -258,7 +264,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	}
 
 	// Start of user code protectedGroupeSelection_ClassListViewActivity
-	public void onClickCurrentGroup(View view){
+	public void onClickCurrentGroupZZZZZ_A_EFFACER_PROBABLEMENT(View view){
 		showToast( "Filtre espèces : "+adapter.currentRootGroupe.getNomGroupe());
 		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
 		ed.putInt(getString(R.string.pref_key_filtre_groupe), adapter.currentRootGroupe.getId());

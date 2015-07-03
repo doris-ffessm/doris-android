@@ -236,6 +236,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         }
 
         DorisApplicationContext.getInstance().addDataChangeListeners(this);
+
+        DorisApplicationContext.getInstance().retourDepuisListeIntent = getIntent();
         
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Fin");
 		//End of user code
@@ -338,7 +340,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         //Log.d(LOG_TAG, "accueil_liste_ou_arbre_pardefaut : "+accueil_liste_ou_arbre_pardefaut);
 	    
 	    
-	    // Gestion Clic Principal sur la Zone (partout sauf le bouton secondaire (de droite)
+	    // Gestion Clic Principal sur la Zone (partout sauf 2 boutons "secondaires" (càd de droite)
         viewZone.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
