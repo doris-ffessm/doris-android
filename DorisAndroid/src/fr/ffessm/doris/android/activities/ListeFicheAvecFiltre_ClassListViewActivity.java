@@ -134,10 +134,9 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         mHandler = new IndexBarHandler(this);
 		//Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
         
-        
-        Intent upIntent = NavUtils.getParentActivityIntent(this);
-        Log.d(LOG_TAG, "onCreate() - upIntent : "+upIntent.getComponent().toString());
-        DorisApplicationContext.getInstance().retourDepuisFicheIntent = getIntent();
+        // Si on ouvre les fiches et que l'on circule dessus, un bouton HOME ramène sur cette liste
+        DorisApplicationContext.getInstance().retourNiveau2Intent = getIntent();
+        DorisApplicationContext.getInstance().retourNiveau3Intent = getIntent();
         
 		//End of user code
 	}
@@ -311,20 +310,11 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				/* finish(); */
-				/*
-	        	TaskStackBuilder.create(this)
-	                // Add all of this activity's parents to the back stack
-	                .addNextIntentWithParentStack(getSupportParentActivityIntent())
-	                // Navigate up to the closest parent
-	                .startActivities();
-	            */
-				Intent upIntent = DorisApplicationContext.getInstance().retourDepuisListeIntent;
+				Intent upIntent = DorisApplicationContext.getInstance().retourNiveau1Intent;
 				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
 				
 		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
-		        	
 		            // This activity is NOT part of this app's task, so create a new task
 		            // when navigating up, with a synthesized back stack.
 		            TaskStackBuilder.create(this)

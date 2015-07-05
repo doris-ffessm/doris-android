@@ -64,7 +64,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 // Start of user code protectedGroupeSelection_ClassListViewActivity_additionalimports
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -83,6 +82,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	boolean depuisAccueil = false;
 	final Context context = this;
 	
+	final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 	private String accueil_liste_ou_arbre_pardefaut;
 	//End of user code
 	
@@ -120,16 +120,23 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
         // affiche ou cache le filtre espèce actuel (+ son bouton de suppression)
         RelativeLayout currentFilterInfoLayout = (RelativeLayout)findViewById(R.id.groupselection_listview_filtre_espece_courant_layout);
     	
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        
         int filtreCourantId = prefs.getInt(this.getString(R.string.pref_key_filtre_groupe), 1);
-        Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
+                
         if(filtreCourantId==1){
         	currentFilterInfoLayout.setVisibility(View.GONE);
         }
         else{
+        	Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
+        	String filtreCourantChaine = prefs.getString(this.getString(R.string.pref_key_filtre_groupe_chaine), "");
+        	
         	TextView filtreCourantTV = (TextView)findViewById(R.id.groupselection_listview_filtre_espece_courant_textView);
         	currentFilterInfoLayout.setVisibility(View.VISIBLE);
         	filtreCourantTV.setText(getString(R.string.groupselection_listview_filtre_espece_courant_label)+groupeFiltreCourant.getNomGroupe());
+        	
+        	if (filtreCourantChaine != "") {
+        		//TODO : Parcourir chaîne des groupes ayant permis d'atteindre le filtre actuel
+        	}
         }
         
         actionBar.setTitle(R.string.groupselection_listview_title);
@@ -155,6 +162,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 			//Log.w(this.getClass().getSimpleName(),"workaround clickedGroupe.getContextDB() == null "+clickedGroupe.getId());
 			clickedGroupe.setContextDB(getHelper().getDorisDBHelper());
 		}
+		
 		if(clickedGroupe.getGroupesFils().size() > 0){	
 			for(Groupe g : clickedGroupe.getGroupesFils()){
 				if(g.getContextDB() == null){
@@ -167,19 +175,18 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 			groupeSelection_adapter.notifyDataSetChanged();
 		} else {
 			Toast.makeText(this, "Filtre espèces : "+clickedGroupe.getNomGroupe(), Toast.LENGTH_SHORT).show();
-			SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
-			ed.putInt(this.getString(R.string.pref_key_filtre_groupe), clickedGroupe.getId());
-	        ed.commit();
+
+			prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), clickedGroupe.getId());
+			prefs.edit().putString(this.getString(R.string.pref_key_filtre_groupe_chaine),
+					prefs.getString(this.getString(R.string.pref_key_filtre_groupe_chaine), "") + clickedGroupe.getId() + ";");
+			prefs.edit().commit();
 	        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onItemClick() - depuisAccueil : " + depuisAccueil);
-	        // Si avait été ouvert depuis une fiche alors on ferme pour retourner sur la fiche
-	        // GMo le 06/02/15 : je ne vois pas bien comment cela est possible finalement ...
-	        // TODO : A mieux commenter qd j'aurais du temps
+
 	        if (!depuisAccueil) {
 	        	((GroupeSelection_ClassListViewActivity)this).finish();
 	        } else {
 	        	
-	        	Log.d(LOG_TAG, "onItemClick() - TESt GMO 01");
-	        	DorisApplicationContext.getInstance().retourDepuisListeIntent = getIntent();
+	        	DorisApplicationContext.getInstance().retourNiveau2Intent = getIntent();
 	        	
 	        	if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
         			startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
@@ -197,9 +204,10 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 
 	public void onRemoveCurrentFilterClick(View view){
     	Toast.makeText(this, R.string.groupselection_filtre_supprime, Toast.LENGTH_SHORT).show();
-		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
-		ed.putInt(this.getString(R.string.pref_key_filtre_groupe), 1);
-        ed.commit();
+
+    	prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), 1);
+    	prefs.edit().putString(this.getString(R.string.pref_key_filtre_groupe_chaine), "");
+    	prefs.edit().commit();
 		finish();
     }
 	//End of user code
@@ -264,20 +272,6 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	}
 
 	// Start of user code protectedGroupeSelection_ClassListViewActivity
-	public void onClickCurrentGroupZZZZZ_A_EFFACER_PROBABLEMENT(View view){
-		showToast( "Filtre espèces : "+adapter.currentRootGroupe.getNomGroupe());
-		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
-		ed.putInt(getString(R.string.pref_key_filtre_groupe), adapter.currentRootGroupe.getId());
-        ed.commit();
-		if (!depuisAccueil) {
-            finish();
-        } else {
-        	Intent toListeFiche_View = new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class);
-        	toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        	this.getApplicationContext().startActivity(toListeFiche_View);
-        }
-    }
-
 
 	/* *********************************************************************
      * Capture des évènements sur le Clavier Physique de l'appareil

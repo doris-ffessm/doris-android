@@ -134,7 +134,9 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
         mHandler = new IndexBarHandler(this);
 		//Start of user code onCreate additions ListeImageFicheAvecFiltre_ClassListViewActivity
         
-        DorisApplicationContext.getInstance().retourDepuisFicheIntent = getIntent();
+        // Si on ouvre les fiches et que l'on circule dessus, un bouton HOME ramène sur cette liste
+        DorisApplicationContext.getInstance().retourNiveau2Intent = getIntent();
+        DorisApplicationContext.getInstance().retourNiveau3Intent = getIntent();
         
 		//End of user code
 	}
@@ -318,16 +320,11 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				/* finish(); */
-				/*
-	        	TaskStackBuilder.create(this)
-	                // Add all of this activity's parents to the back stack
-	                .addNextIntentWithParentStack(getSupportParentActivityIntent())
-	                // Navigate up to the closest parent
-	                .startActivities();
-	            */
-				Intent upIntent = NavUtils.getParentActivityIntent(this);
+				Intent upIntent = DorisApplicationContext.getInstance().retourNiveau1Intent;
+				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
+				
 		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
 		            // This activity is NOT part of this app's task, so create a new task
 		            // when navigating up, with a synthesized back stack.
 		            TaskStackBuilder.create(this)
@@ -336,12 +333,11 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 		                    // Navigate up to the closest parent
 		                    .startActivities();
 		        } else {
+		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
 		            // This activity is part of this app's task, so simply
 		            // navigate up to the logical parent activity.
 		            NavUtils.navigateUpTo(this, upIntent);
 		        }
-
-				
 	            return true;
 			default:
                 return super.onOptionsItemSelected(item);

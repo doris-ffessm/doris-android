@@ -237,7 +237,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         DorisApplicationContext.getInstance().addDataChangeListeners(this);
 
-        DorisApplicationContext.getInstance().retourDepuisListeIntent = getIntent();
+        // Initialisation par défaut : retour à l'accueil
+        DorisApplicationContext.getInstance().retourNiveau1Intent = getIntent();
+        DorisApplicationContext.getInstance().retourNiveau2Intent = getIntent();
+        DorisApplicationContext.getInstance().retourNiveau3Intent = getIntent();
         
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Fin");
 		//End of user code

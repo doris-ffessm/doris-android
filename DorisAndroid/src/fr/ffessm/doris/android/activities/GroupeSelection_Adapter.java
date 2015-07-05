@@ -227,14 +227,14 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			@Override
 			public void onClick(View v) {
 				Toast.makeText(context, "Filtre espèces : "+entry.getNomGroupe(), Toast.LENGTH_SHORT).show();
-				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId());
-		        ed.commit();
+
+				prefs.edit().putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId());
+				prefs.edit().commit();
 		        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onClick() - depuisAccueil : " + depuisAccueil);
 		        if (!depuisAccueil) {
 		            ((GroupeSelection_ClassListViewActivity)context).finish();
 		        } else {
-		        	DorisApplicationContext.getInstance().retourDepuisListeIntent = ((Activity) context).getIntent();
+		        	DorisApplicationContext.getInstance().retourNiveau2Intent = ((Activity) context).getIntent();
 		        	
 		        	Intent toListeFiche_View = new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class);
 		        	toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -253,14 +253,14 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			@Override
 			public void onClick(View v) {
 				Toast.makeText(context, "Filtre espèces : "+entry.getNomGroupe(), Toast.LENGTH_SHORT).show();
-				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId());
-		        ed.commit();
+
+				prefs.edit().putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId());
+				prefs.edit().commit();
 		        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onClick() - depuisAccueil : " + depuisAccueil);
 		        if (!depuisAccueil) {
 		            ((GroupeSelection_ClassListViewActivity)context).finish();
 		        } else {
-		        	DorisApplicationContext.getInstance().retourDepuisListeIntent = ((Activity) context).getIntent();
+		        	DorisApplicationContext.getInstance().retourNiveau2Intent = ((Activity) context).getIntent();
 		        	
 		        	Intent toListeFiche_View = new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class);
 		        	toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -360,6 +360,9 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			backToParentButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					prefs.edit().putString(context.getString(R.string.pref_key_filtre_groupe_chaine),"");
+					prefs.edit().commit();
+					
 					buildTreeForRoot(parent);
 				}
 			});
@@ -389,6 +392,9 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			backToParentButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					prefs.edit().putString(context.getString(R.string.pref_key_filtre_groupe_chaine),"");
+					prefs.edit().commit();
+					
 					buildTreeForRoot(parent);
 				}
 			});

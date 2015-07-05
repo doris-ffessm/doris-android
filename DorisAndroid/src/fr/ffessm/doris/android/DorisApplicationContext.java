@@ -90,13 +90,19 @@ public class DorisApplicationContext {
 	public boolean isMovingPhotos = false;
 	public ZoneGeographiqueKind zoneTraitee = null;
 	
-	// Permet de piloter finement l'interface de retour (bouton HOME) (i.e. sans respecter forcément le manifest.xml)
+	// Permet de piloter finement l'interface de retour (depuis le bouton HOME)
+	// (i.e. sans respecter forcément le manifest.xml)
 	// Accueil <-> Liste Fiches <-> Fiche
 	// Accueil <-> Liste Images Fiches <-> Fiche
 	// Accueil <-> Groupes <-> Liste Fiches <-> Fiche
 	// Accueil <-> Groupes <-> Liste Images Fiches <-> Fiche
-	public Intent retourDepuisListeIntent = null;
-	public Intent retourDepuisFicheIntent = null;
+	// ... <-> ... <-> Fiche <-> Définitions, Intervenants ...
+	// Depuis Listes et Groupes => Accueil ou Listes
+	public Intent retourNiveau1Intent = null;
+	// Depuis Fiches => Listes ou Groupes
+	public Intent retourNiveau2Intent = null;
+	// Depuis Intervenants, Définition etc. => Accueil, Listes ou Fiches
+	public Intent retourNiveau3Intent = null;
 	
 	/** listener that have registered for being notified of data changes */
 	private ArrayList<DataChangedListener>  dataChangeListeners = new ArrayList<DataChangedListener>();

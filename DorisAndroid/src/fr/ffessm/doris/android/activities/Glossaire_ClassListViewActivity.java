@@ -251,17 +251,9 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 	            return true;
 			//Start of user code additional menu action Glossaire_ClassListViewActivity
 
-		//End of user code
+            //End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				/* finish(); */
-				/*
-	        	TaskStackBuilder.create(this)
-	                // Add all of this activity's parents to the back stack
-	                .addNextIntentWithParentStack(getSupportParentActivityIntent())
-	                // Navigate up to the closest parent
-	                .startActivities();
-	            */
 				Intent upIntent = NavUtils.getParentActivityIntent(this);
 		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 		            // This activity is NOT part of this app's task, so create a new task

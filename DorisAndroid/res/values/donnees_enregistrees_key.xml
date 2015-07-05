@@ -3,6 +3,7 @@
 	<string name="pref_key_a_propos_version">data_a_propos_version</string>
 	
 	<string name="pref_key_filtre_groupe">pref_filtre_groupe</string>
+	<string name="pref_key_filtre_groupe_chaine">pref_filtre_groupe_chaine</string>
 	<string name="pref_key_filtre_zonegeo">pref_filtre_zone_geographique</string>
 	
 	<string name="pref_key_nbphotosprinc_atelecharger_france">data_nbphotosprinc_atelecharger_france</string>

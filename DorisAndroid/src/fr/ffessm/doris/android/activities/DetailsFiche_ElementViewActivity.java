@@ -163,9 +163,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         ficheId = getIntent().getExtras().getInt("ficheId");
         
 		// Start of user code protectedDetailsFiche_ElementViewActivity_onCreate
-        
-        
-        
+           
         ficheNumero = getIntent().getExtras().getInt("ficheNumero");
         // Defines a Handler object that's attached to the UI thread
 		mHandler = new Handler(Looper.getMainLooper()) {
@@ -193,8 +191,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 		}
 		
 		
-		Intent upIntent = NavUtils.getParentActivityIntent(this);
-        Log.d(LOG_TAG, "onCreate() - upIntent : "+upIntent.getComponent().toString());
+		// Si on va dans une interface au-dessous les fiches (intervenants, un bouton HOME ramène sur cette liste
+		DorisApplicationContext.getInstance().retourNiveau3Intent = getIntent();
 		
 		// End of user code
     }
@@ -476,15 +474,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				/* finish(); */
-				/*
-	        	TaskStackBuilder.create(this)
-	                // Add all of this activity's parents to the back stack
-	                .addNextIntentWithParentStack(getSupportParentActivityIntent())
-	                // Navigate up to the closest parent
-	                .startActivities();
-	            */
-				Intent upIntent = DorisApplicationContext.getInstance().retourDepuisFicheIntent;
+				Intent upIntent = DorisApplicationContext.getInstance().retourNiveau2Intent;
 				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
 
 				if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
