@@ -109,10 +109,14 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		this.context = context;
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		updateList();
-		
+
+		Log.d(LOG_TAG, "GroupeSelection_Adapter(C, D, b) - Début"); 
 		textesOutils = new Textes_Outils(context);
 		this.depuisAccueil = depuisAccueil;
+		
+		updateList();
+		
+		Log.d(LOG_TAG, "GroupeSelection_Adapter(C, D, b) - Fin"); 
 	}
 	// End of user code
 
@@ -122,12 +126,18 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
         // Start of user code protected GroupeSelection_Adapter constructor
+		Log.d(LOG_TAG, "GroupeSelection_Adapter(C, D) - Début"); 
+		
+		textesOutils = new Textes_Outils(context);
+		
 		// End of user code
 		updateList();
 	}
 	
 	protected void updateList(){
 		// Start of user code protected GroupeSelection_Adapter updateList
+		Log.d(LOG_TAG, "updateList() - Début"); 
+		
 		// TODO find a way to query in a lazier way
 		try{
 			if(groupeList == null){
@@ -137,14 +147,23 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 				}
 			}
 			
+			if(currentRootGroupe == null) {
+				int filtreCourantId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 0);
+				if (filtreCourantId!=0) currentRootGroupe = _contextDB.groupeDao.queryForId(filtreCourantId);
+			}
+			
 			if(currentRootGroupe == null)
 				currentRootGroupe = Groupes_Outils.getroot(groupeList);
 
+			
+			Log.d(LOG_TAG, "updateList() - currentRootGroupe : "+currentRootGroupe.getId()); 
 			buildTreeForRoot(currentRootGroupe);
 			
 		} catch (java.sql.SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
 		}
+		
+		Log.d(LOG_TAG, "updateList() - Fin"); 
 		// End of user code
 	}
 
@@ -228,13 +247,16 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			public void onClick(View v) {
 				Toast.makeText(context, "Filtre espèces : "+entry.getNomGroupe(), Toast.LENGTH_SHORT).show();
 
-				prefs.edit().putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId());
-				prefs.edit().commit();
+				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onClick() - Bouton Liste des Fiches - Groupe : " + entry.getId());
+				prefs.edit().putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId())
+					.commit();
+				
 		        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onClick() - depuisAccueil : " + depuisAccueil);
 		        if (!depuisAccueil) {
 		            ((GroupeSelection_ClassListViewActivity)context).finish();
 		        } else {
-		        	DorisApplicationContext.getInstance().retourNiveau2Intent = ((Activity) context).getIntent();
+		            DorisApplicationContext.getInstance().retourIntentNiveau += 1;
+		            DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = ((Activity) context).getIntent();
 		        	
 		        	Intent toListeFiche_View = new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class);
 		        	toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -254,13 +276,16 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			public void onClick(View v) {
 				Toast.makeText(context, "Filtre espèces : "+entry.getNomGroupe(), Toast.LENGTH_SHORT).show();
 
-				prefs.edit().putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId());
-				prefs.edit().commit();
+				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onClick() - Bouton Liste des Fiches par Images- Groupe : " + entry.getId());
+				prefs.edit().putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId())
+					.commit();
+				
 		        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onClick() - depuisAccueil : " + depuisAccueil);
 		        if (!depuisAccueil) {
 		            ((GroupeSelection_ClassListViewActivity)context).finish();
 		        } else {
-		        	DorisApplicationContext.getInstance().retourNiveau2Intent = ((Activity) context).getIntent();
+		            DorisApplicationContext.getInstance().retourIntentNiveau += 1;
+		            DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = ((Activity) context).getIntent();
 		        	
 		        	Intent toListeFiche_View = new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class);
 		        	toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -299,6 +324,9 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		
 	}
 	protected void refreshNavigation(){
+		Log.d(LOG_TAG, "refreshNavigation() - Début");
+		Log.d(LOG_TAG, "refreshNavigation() - currentRootGroupe.getId() : "+currentRootGroupe.getId());
+		
 		LinearLayout navigationLayout = (LinearLayout)((GroupeSelection_ClassListViewActivity)context).findViewById(R.id.groupselection_listview_navigation);
     	
     	navigationLayout.removeAllViews();
@@ -320,14 +348,24 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 
 			
 		} else {
+			Log.d(LOG_TAG, "refreshNavigation() - currentRootGroupe.getGroupePere() : "+currentRootGroupe.getGroupePere().getId());
+			
 			// ajout du nouveau bouton
 			Button backToParentButton = new Button(context);
 			navigationLayout.addView(backToParentButton);
 	    	
-	        backToParentButton.setText(
-        		textesOutils.raccourcir( currentRootGroupe.getNomGroupe().trim(), 
-	        		Integer.parseInt(context.getString(R.string.groupselection_listview_groupe_nbcarmax))
-	        		));
+			Log.d(LOG_TAG,"addBackToParentGroupButton currentRootGroupe.getId : "+currentRootGroupe.getId());
+			Log.d(LOG_TAG,"addBackToParentGroupButton currentRootGroupe.getNomGroupe : "+currentRootGroupe.getNomGroupe());
+			
+			// TODO : impossible de comprendre comment getNomGroupe peut renvoyer null alors que getId OK
+			if (currentRootGroupe.getNomGroupe() != null) {
+		        backToParentButton.setText(
+	        		textesOutils.raccourcir( currentRootGroupe.getNomGroupe().trim(), 
+		        		Integer.parseInt(context.getString(R.string.groupselection_listview_groupe_nbcarmax))
+		        		));
+			} else {
+				backToParentButton.setText("T1 - G. : "+currentRootGroupe.getId());
+			}
 
 	        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
 			layoutParams.leftMargin =2;
@@ -338,8 +376,12 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			backToParentButton.setPadding(5, 0, 5, 0);
 	    	
 		}
+    	
+    	Log.d(LOG_TAG, "refreshNavigation() - Fin");
 	}
 	protected void addBackToParentGroupButton(LinearLayout navigationLayout, final Groupe parent){
+		Log.d(LOG_TAG, "addBackToParentGroupButton() - Début");
+		
 		if(parent == null) return;
 		if(parent.getContextDB() == null) parent.setContextDB(_contextDB);
 		addBackToParentGroupButton(navigationLayout, parent.getGroupePere());
@@ -360,9 +402,6 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			backToParentButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					prefs.edit().putString(context.getString(R.string.pref_key_filtre_groupe_chaine),"");
-					prefs.edit().commit();
-					
 					buildTreeForRoot(parent);
 				}
 			});
@@ -371,14 +410,18 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			Button backToParentButton = new Button(context);
 			navigationLayout.addView(backToParentButton);
 			
-			//Log.w(LOG_TAG,"addBackToParentGroupButton parent="+parent);
-			//Log.d(LOG_TAG,"addBackToParentGroupButton parent.getNomGroupe="+parent.getNomGroupe());
+			Log.d(LOG_TAG,"addBackToParentGroupButton parent.getId : "+parent.getId());
+			Log.d(LOG_TAG,"addBackToParentGroupButton parent.getNomGroupe : "+parent.getNomGroupe());
 
-	        backToParentButton.setText(
-        		textesOutils.raccourcir( parent.getNomGroupe().trim(), 
-	        		Integer.parseInt(context.getString(R.string.groupselection_listview_groupe_nbcarmax))
-	        		));
-
+			// TODO : impossible de comprendre comment getNomGroupe peut renvoyer null alors que getId OK
+			if (parent.getNomGroupe() != null) {
+		        backToParentButton.setText(
+	        		textesOutils.raccourcir( parent.getNomGroupe().trim(), 
+		        		Integer.parseInt(context.getString(R.string.groupselection_listview_groupe_nbcarmax))
+		        		));
+			} else {
+				backToParentButton.setText("T2 - G. : "+parent.getId());
+			}
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
 			layoutParams.leftMargin =2;
 			layoutParams.rightMargin = 2;
@@ -392,15 +435,17 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			backToParentButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					prefs.edit().putString(context.getString(R.string.pref_key_filtre_groupe_chaine),"");
-					prefs.edit().commit();
-					
 					buildTreeForRoot(parent);
 				}
 			});
 		}
+		Log.d(LOG_TAG, "addBackToParentGroupButton() - Fin");
 	}
+	
+	
 	public void buildTreeForRoot(Groupe rootGroupe){
+		Log.d(LOG_TAG, "buildTreeForRoot() - Début");
+		
 		this.currentRootGroupe = rootGroupe;
 		
 		List<Groupe> nextLevelGroupes  = Groupes_Outils.getAllGroupesForNextLevel(this.groupeList, currentRootGroupe);
@@ -408,6 +453,8 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			this.filteredGroupeList  = nextLevelGroupes;
 		notifyDataSetChanged();
 		refreshNavigation();
+		
+		Log.d(LOG_TAG, "buildTreeForRoot() - Fin");
 	}
 
 	//End of user code

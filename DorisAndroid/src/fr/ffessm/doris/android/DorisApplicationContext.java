@@ -97,12 +97,8 @@ public class DorisApplicationContext {
 	// Accueil <-> Groupes <-> Liste Fiches <-> Fiche
 	// Accueil <-> Groupes <-> Liste Images Fiches <-> Fiche
 	// ... <-> ... <-> Fiche <-> Définitions, Intervenants ...
-	// Depuis Listes et Groupes => Accueil ou Listes
-	public Intent retourNiveau1Intent = null;
-	// Depuis Fiches => Listes ou Groupes
-	public Intent retourNiveau2Intent = null;
-	// Depuis Intervenants, Définition etc. => Accueil, Listes ou Fiches
-	public Intent retourNiveau3Intent = null;
+	public Intent[] retourIntent = new Intent[10];
+	public int retourIntentNiveau;
 	
 	/** listener that have registered for being notified of data changes */
 	private ArrayList<DataChangedListener>  dataChangeListeners = new ArrayList<DataChangedListener>();

@@ -82,7 +82,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	boolean depuisAccueil = false;
 	final Context context = this;
 	
-	final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+	private SharedPreferences prefs;
 	private String accueil_liste_ou_arbre_pardefaut;
 	//End of user code
 	
@@ -100,7 +100,9 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 		ListView list = (ListView) findViewById(R.id.groupeselection_listview);
         list.setClickable(false);
 		//Start of user code onCreate GroupeSelection_ClassListViewActivity adapter creation
+        Log.d(LOG_TAG, "onCreate() - Début"); 
         
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Param_Outils paramOutils = new Param_Outils(context);
         
         depuisAccueil = getIntent().getExtras().getBoolean("GroupeSelection_depuisAccueil", false);
@@ -122,24 +124,23 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
     	
         
         int filtreCourantId = prefs.getInt(this.getString(R.string.pref_key_filtre_groupe), 1);
-                
+        Log.d(LOG_TAG, "onCreate() - filtreCourantId : "+filtreCourantId); 
+        
         if(filtreCourantId==1){
         	currentFilterInfoLayout.setVisibility(View.GONE);
         }
         else{
         	Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
-        	String filtreCourantChaine = prefs.getString(this.getString(R.string.pref_key_filtre_groupe_chaine), "");
         	
         	TextView filtreCourantTV = (TextView)findViewById(R.id.groupselection_listview_filtre_espece_courant_textView);
         	currentFilterInfoLayout.setVisibility(View.VISIBLE);
         	filtreCourantTV.setText(getString(R.string.groupselection_listview_filtre_espece_courant_label)+groupeFiltreCourant.getNomGroupe());
-        	
-        	if (filtreCourantChaine != "") {
-        		//TODO : Parcourir chaîne des groupes ayant permis d'atteindre le filtre actuel
-        	}
+        	        	
         }
         
         actionBar.setTitle(R.string.groupselection_listview_title);
+        
+        Log.d(LOG_TAG, "onCreate() - Fin"); 
 		//End of user code
 	}
 	
@@ -147,6 +148,8 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	protected void onResume() {
 		super.onResume();
 		//Start of user code onResume additions GroupeSelection_ClassListViewActivity
+		Log.d(LOG_TAG, "onResume() - Début"); 
+		Log.d(LOG_TAG, "onResume() - Fin");  
 		//End of user code
 	}
 	
@@ -177,8 +180,6 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 			Toast.makeText(this, "Filtre espèces : "+clickedGroupe.getNomGroupe(), Toast.LENGTH_SHORT).show();
 
 			prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), clickedGroupe.getId());
-			prefs.edit().putString(this.getString(R.string.pref_key_filtre_groupe_chaine),
-					prefs.getString(this.getString(R.string.pref_key_filtre_groupe_chaine), "") + clickedGroupe.getId() + ";");
 			prefs.edit().commit();
 	        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onItemClick() - depuisAccueil : " + depuisAccueil);
 
@@ -186,7 +187,8 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	        	((GroupeSelection_ClassListViewActivity)this).finish();
 	        } else {
 	        	
-	        	DorisApplicationContext.getInstance().retourNiveau2Intent = getIntent();
+	            DorisApplicationContext.getInstance().retourIntentNiveau += 1;
+	            DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
 	        	
 	        	if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
         			startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
@@ -206,7 +208,6 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
     	Toast.makeText(this, R.string.groupselection_filtre_supprime, Toast.LENGTH_SHORT).show();
 
     	prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), 1);
-    	prefs.edit().putString(this.getString(R.string.pref_key_filtre_groupe_chaine), "");
     	prefs.edit().commit();
 		finish();
     }

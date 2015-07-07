@@ -200,22 +200,6 @@ C'est ce texte. */
 		//log.trace("descriptionDetailleeFromHtml() - Fin");
 	}
 
-	// Permet d'obtenir la lignée depuis la racine
-	public Groupe getGroupesLignee(s) {
-		try {
-			if(groupePere_mayNeedDBRefresh && _contextDB != null){
-				_contextDB.groupeDao.refresh(this.groupePere);
-				groupePere_mayNeedDBRefresh = false;
-			}
-		} catch (SQLException e) {
-			log.error(e.getMessage(),e);
-		}
-		if(_contextDB==null && this.groupePere == null){
-			log.warn("Groupe may not be properly refreshed from DB (_id="+_id+")");
-		}
-		return this.groupePere;
-	}
-	
 	
 	
 	// End of user code
@@ -300,11 +284,17 @@ C'est ce texte. */
 				groupePere_mayNeedDBRefresh = false;
 			}
 		} catch (SQLException e) {
+			log.error("erreur dans getGroupePere()");
 			log.error(e.getMessage(),e);
 		}
 		if(_contextDB==null && this.groupePere == null){
 			log.warn("Groupe may not be properly refreshed from DB (_id="+_id+")");
 		}
+		
+		log.warn("getGroupePere() - groupePere.id="+_id+")");
+		log.warn("getGroupePere() - groupePere.numeroGroupe="+numeroGroupe+")");
+		log.warn("getGroupePere() - groupePere.nomGroupe="+nomGroupe+")");
+		
 		return this.groupePere;
 	}
 	public void setGroupePere(Groupe groupePere) {

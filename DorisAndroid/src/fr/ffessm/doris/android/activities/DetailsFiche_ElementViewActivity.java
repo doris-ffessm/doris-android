@@ -189,11 +189,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 		if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)){
 			Picasso.with(this).setDebugging(BuildConfig.DEBUG);
 		}
-		
-		
-		// Si on va dans une interface au-dessous les fiches (intervenants, un bouton HOME ramène sur cette liste
-		DorisApplicationContext.getInstance().retourNiveau3Intent = getIntent();
-		
+				
 		// End of user code
     }
     
@@ -474,7 +470,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				Intent upIntent = DorisApplicationContext.getInstance().retourNiveau2Intent;
+
+				Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau];
+
 				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
 
 				if (NavUtils.shouldUpRecreateTask(this, upIntent)) {

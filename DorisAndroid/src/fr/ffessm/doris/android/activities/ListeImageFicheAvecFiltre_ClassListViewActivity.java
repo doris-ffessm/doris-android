@@ -134,9 +134,10 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
         mHandler = new IndexBarHandler(this);
 		//Start of user code onCreate additions ListeImageFicheAvecFiltre_ClassListViewActivity
         
-        // Si on ouvre les fiches et que l'on circule dessus, un bouton HOME ramène sur cette liste
-        DorisApplicationContext.getInstance().retourNiveau2Intent = getIntent();
-        DorisApplicationContext.getInstance().retourNiveau3Intent = getIntent();
+        // Retour Vers Liste des Fiches
+        DorisApplicationContext.getInstance().retourIntentNiveau += 1;
+        DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
+
         
 		//End of user code
 	}
@@ -320,7 +321,9 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				Intent upIntent = DorisApplicationContext.getInstance().retourNiveau1Intent;
+				DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
+				Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau];
+
 				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
 				
 		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {

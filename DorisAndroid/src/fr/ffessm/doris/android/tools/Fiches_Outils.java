@@ -155,6 +155,7 @@ public class Fiches_Outils {
 		
 		
 		try{
+			Log.d(LOG_TAG,  "filteredZoneGeoId -  "+filteredZoneGeoId);
 			
 			if(filteredZoneGeoId == -1){
 				Log.d(LOG_TAG,  "_contextDB.ficheDao.queryForAll() - début "+ contextDB.ficheDao.countOf());
@@ -192,6 +193,7 @@ public class Fiches_Outils {
 			
 		try{	
 			// si filtre espèce actif, récupérer la liste des fiches pour les groupes accepté, puis faire un diff avec le filtre précédent
+			Log.d(LOG_TAG,  "filteredGroupeId -  "+filteredGroupeId);
 			
 			if(filteredGroupeId != 1){
 				// récupère la liste des groupes acceptés

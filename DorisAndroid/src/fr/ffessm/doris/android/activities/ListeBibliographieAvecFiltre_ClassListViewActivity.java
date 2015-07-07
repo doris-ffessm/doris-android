@@ -254,7 +254,8 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				Intent upIntent = DorisApplicationContext.getInstance().retourNiveau3Intent;
+				// TODO : Intent upIntent = DorisApplicationContext.getInstance().retourNiveau3Intent;
+				Intent upIntent = null;
 				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
 				
 		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {

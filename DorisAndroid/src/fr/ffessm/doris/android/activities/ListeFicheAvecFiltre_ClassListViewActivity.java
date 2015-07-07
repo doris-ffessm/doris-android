@@ -134,9 +134,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         mHandler = new IndexBarHandler(this);
 		//Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
         
-        // Si on ouvre les fiches et que l'on circule dessus, un bouton HOME ramène sur cette liste
-        DorisApplicationContext.getInstance().retourNiveau2Intent = getIntent();
-        DorisApplicationContext.getInstance().retourNiveau3Intent = getIntent();
+        // Retour Vers Liste des Fiches
+        DorisApplicationContext.getInstance().retourIntentNiveau += 1;
+        DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
+		
         
 		//End of user code
 	}
@@ -150,6 +151,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 		// TODO peut être qu'il y a moyen de s'abonner aux changements de préférence et de ne le faire que dans ce cas ?
 		ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter(); 
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    	
     	if(!prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48").equals(iconSizeString)){
     		iconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
     		ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
@@ -310,7 +312,9 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				Intent upIntent = DorisApplicationContext.getInstance().retourNiveau1Intent;
+				DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
+				Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau];
+				
 				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
 				
 		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
