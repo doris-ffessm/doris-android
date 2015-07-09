@@ -132,13 +132,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
 		// add handler for indexBar
         mHandler = new IndexBarHandler(this);
-		//Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
-        
-        // Retour Vers Liste des Fiches
-        DorisApplicationContext.getInstance().retourIntentNiveau += 1;
-        DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
-		
-        
+
+        //Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
+  
+
 		//End of user code
 	}
 	
@@ -196,6 +193,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 		Log.d(LOG_TAG, "onItemClick "+view);
 		if(view instanceof LinearLayout && view.getId() == R.id.listeficheavecfiltre_listviewrow){
+			//Start of user code onItemClick additions ListeFicheAvecFiltre_ClassListViewActivity
+			setIntentPourRetour();
+			//End of user code
+			
 			// normal case on main item
 	        Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
 	        Bundle b = new Bundle();
@@ -312,9 +313,8 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
-				Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau];
 				
+				Intent upIntent = getIntentPrecedent();
 				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
 				
 		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
@@ -532,6 +532,17 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 			});
 		   
 	}
+	
+    public void setIntentPourRetour(){
+	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
+	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
+    }
+    public Intent getIntentPrecedent(){
+		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
+    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
+		return upIntent;
+    }
+    
 	// End of user code
 
 	

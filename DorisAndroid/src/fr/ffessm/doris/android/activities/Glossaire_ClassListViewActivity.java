@@ -47,6 +47,7 @@ import java.util.HashMap;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
 import fr.ffessm.doris.android.datamodel.*;
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
@@ -116,6 +117,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 		//Start of user code onCreate additions Glossaire_ClassListViewActivity
 
 	    actionBar.setSubtitle("Glossaire");
+	    
 		//End of user code
 	}
 	
@@ -160,6 +162,10 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 		Log.d(LOG_TAG, "onItemClick "+view);
 		if(view instanceof LinearLayout && view.getId() == R.id.glossaire_listviewrow){
+			//Start of user code onItemClick additions Glossaire_ClassListViewActivity
+			setIntentPourRetour();
+			//End of user code
+			
 			// normal case on main item
 	        Intent toDetailView = new Intent(this, DetailEntreeGlossaire_ElementViewActivity.class);
 	        Bundle b = new Bundle();
@@ -254,7 +260,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
             //End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				Intent upIntent = NavUtils.getParentActivityIntent(this);
+				Intent upIntent = getIntentPrecedent();
 		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 		            // This activity is NOT part of this app's task, so create a new task
 		            // when navigating up, with a synthesized back stack.
@@ -340,6 +346,17 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 	public void onClickFilterBtn(View view){
 		showToast("filter button pressed. \nPlease customize ;-)");
     }
+	
+    public void setIntentPourRetour(){
+	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
+	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
+    }
+    public Intent getIntentPrecedent(){
+		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
+    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
+		return upIntent;
+    }
+	
 	// End of user code
 
 	

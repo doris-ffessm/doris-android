@@ -58,7 +58,6 @@ import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.sitedoris.Constants;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -76,6 +75,7 @@ import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 
 public class Textes_Outils {
@@ -496,6 +496,9 @@ public class Textes_Outils {
 							}
 			                ormLiteDBHelper.close();
 			                
+			        	    // Retour Vers l'interface ayant lancée l'affichage de la définition
+			                setIntentPourRetour();
+			                
 			                if(idDefinition != 0){
 		                    	
 		                    	bundle.putInt("definitionGlossaireId", idDefinition );
@@ -569,6 +572,10 @@ public class Textes_Outils {
 	        		ClickableSpan clickableSpan = new ClickableSpan() {  
 			            @Override  
 			            public void onClick(View view) {  
+			            	
+			        	    // Retour Vers l'interface ayant lancée l'affichage du Participant
+			            	setIntentPourRetour();
+			            	
 			    	        Intent toDetailView = new Intent(context, DetailsParticipant_ElementViewActivity.class);
 			    	        
 			    	        Bundle b = new Bundle();
@@ -584,11 +591,14 @@ public class Textes_Outils {
 					richtext.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.detailsfiche_elementview_couleur_lienparticipant))), ts.positionDebut, ts.positionFin, 0);  
 	        	}
 	        }
-
 	        
 	        return richtext;
 	    }
 
     }
-	    
+	
+    public void setIntentPourRetour(){
+	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
+	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = ((Activity) context).getIntent();
+    }
 }

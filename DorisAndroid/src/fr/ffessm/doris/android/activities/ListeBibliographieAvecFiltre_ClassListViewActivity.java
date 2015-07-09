@@ -115,7 +115,8 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
 		// add handler for indexBar
         mHandler = new IndexBarHandler(this);
 		//Start of user code onCreate additions ListeBibliographieAvecFiltre_ClassListViewActivity
-		//End of user code
+		        
+        //End of user code
 	}
 	
 	@Override
@@ -160,6 +161,10 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 		Log.d(LOG_TAG, "onItemClick "+view);
 		if(view instanceof LinearLayout && view.getId() == R.id.listebibliographieavecfiltre_listviewrow){
+			//Start of user code onItemClick additions ListeBibliographieAvecFiltre_ClassListViewActivity
+			setIntentPourRetour();
+			//End of user code
+			
 			// normal case on main item
 	        Intent toDetailView = new Intent(this, DetailsBibliographie_ElementViewActivity.class);
 	        Bundle b = new Bundle();
@@ -254,11 +259,12 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				// TODO : Intent upIntent = DorisApplicationContext.getInstance().retourNiveau3Intent;
-				Intent upIntent = null;
+
+				Intent upIntent = getIntentPrecedent();
 				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
-				
-		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+
+				if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
 		            // This activity is NOT part of this app's task, so create a new task
 		            // when navigating up, with a synthesized back stack.
 		            TaskStackBuilder.create(this)
@@ -267,6 +273,7 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
 		                    // Navigate up to the closest parent
 		                    .startActivities();
 		        } else {
+		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
 		            // This activity is part of this app's task, so simply
 		            // navigate up to the logical parent activity.
 		            NavUtils.navigateUpTo(this, upIntent);
@@ -342,6 +349,16 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
 	// Start of user code protectedListeBibliographieAvecFiltre_ClassListViewActivity
 	public void onClickFilterBtn(View view){
 		showToast("filter button pressed. \nPlease customize ;-)");
+    }
+	
+    public void setIntentPourRetour(){
+	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
+	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
+    }
+    public Intent getIntentPrecedent(){
+		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
+    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
+		return upIntent;
     }
 	// End of user code
 

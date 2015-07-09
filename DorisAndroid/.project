@@ -3,6 +3,7 @@
 	<name>DorisAndroid</name>
 	<comment></comment>
 	<projects>
+		<project>DorisAndroidCommon</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

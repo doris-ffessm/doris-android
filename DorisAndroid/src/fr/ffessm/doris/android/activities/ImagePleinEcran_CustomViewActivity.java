@@ -43,6 +43,7 @@ package fr.ffessm.doris.android.activities;
 
 
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
@@ -197,17 +198,10 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 		    //End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				
 				Log.d(LOG_TAG, "onOptionsItemSelected() - home");
-				/* finish(); */
-				/*
-	        	TaskStackBuilder.create(this)
-	                // Add all of this activity's parents to the back stack
-	                .addNextIntentWithParentStack(getSupportParentActivityIntent())
-	                // Navigate up to the closest parent
-	                .startActivities();
-	            */
-				Intent upIntent = NavUtils.getParentActivityIntent(this);
+
+				Intent upIntent = getIntentPrecedent();
+				
 		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 		            // This activity is NOT part of this app's task, so create a new task
 		            // when navigating up, with a synthesized back stack.
@@ -249,4 +243,14 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 		super.onCreateSupportNavigateUpTaskStack(builder);
 		//End of user code
 	}
+	
+	// Start of user code protected ImagePleinEcran_CustomViewActivity_additional_operations
+    public Intent getIntentPrecedent(){
+		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
+    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
+		return upIntent;
+    }
+	
+	// End of user code
+	
 }

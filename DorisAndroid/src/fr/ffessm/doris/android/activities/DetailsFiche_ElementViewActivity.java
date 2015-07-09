@@ -455,6 +455,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         		unfoldAllDetails();
         		return true;
         	case R.id.detailsfiche_elementview_action_glossaire:
+        		setIntentPourRetour();
         		Intent toDefinitionlView = new Intent(context, Glossaire_ClassListViewActivity.class);
             	context.startActivity(toDefinitionlView);
             	return true;
@@ -470,11 +471,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-
-				Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau];
-
+				Intent upIntent = getIntentPrecedent();
 				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
-
+				
 				if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
 		            // This activity is NOT part of this app's task, so create a new task
@@ -866,7 +865,10 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         public void onClick(View v) {
         	Log.d(LOG_TAG, "onClick() - v : "+v.toString());
         	Log.d(LOG_TAG, "onClick() - _position : "+_position+" - _ficheID : "+_ficheID);
-            // on selecting grid view image
+            
+        	setIntentPourRetour();
+        	
+        	// on selecting grid view image
             // launch full screen activity
             Intent i = new Intent(_activity, ImagePleinEcran_CustomViewActivity.class);
             i.putExtra("position", _position);
@@ -876,7 +878,15 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
  
     }
     
-    
+    public void setIntentPourRetour(){
+	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
+	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
+    }
+    public Intent getIntentPrecedent(){
+		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
+    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
+		return upIntent;
+    }
     
     // End of user code
 

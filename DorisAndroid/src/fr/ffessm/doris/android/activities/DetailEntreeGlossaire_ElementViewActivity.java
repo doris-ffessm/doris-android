@@ -44,6 +44,7 @@ package fr.ffessm.doris.android.activities;
 
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
@@ -54,12 +55,14 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+
 
 // Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_additional_import
 import android.text.SpannableString;
@@ -167,16 +170,11 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				/* finish(); */
-				/*
-	        	TaskStackBuilder.create(this)
-	                // Add all of this activity's parents to the back stack
-	                .addNextIntentWithParentStack(getSupportParentActivityIntent())
-	                // Navigate up to the closest parent
-	                .startActivities();
-	            */
-				Intent upIntent = NavUtils.getParentActivityIntent(this);
+				Intent upIntent = getIntentPrecedent();
+				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
+				
 		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
 		            // This activity is NOT part of this app's task, so create a new task
 		            // when navigating up, with a synthesized back stack.
 		            TaskStackBuilder.create(this)
@@ -185,6 +183,7 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
 		                    // Navigate up to the closest parent
 		                    .startActivities();
 		        } else {
+		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
 		            // This activity is part of this app's task, so simply
 		            // navigate up to the logical parent activity.
 		            NavUtils.navigateUpTo(this, upIntent);
@@ -211,6 +210,12 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
 	}
 
 	// Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_additional_operations
+    public Intent getIntentPrecedent(){
+		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
+    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
+		return upIntent;
+    }
+	
 	// End of user code
 
 }

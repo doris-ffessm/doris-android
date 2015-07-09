@@ -133,12 +133,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 		// add handler for indexBar
         mHandler = new IndexBarHandler(this);
 		//Start of user code onCreate additions ListeImageFicheAvecFiltre_ClassListViewActivity
-        
-        // Retour Vers Liste des Fiches
-        DorisApplicationContext.getInstance().retourIntentNiveau += 1;
-        DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
-
-        
+                
 		//End of user code
 	}
 	
@@ -195,11 +190,12 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 		Log.d(LOG_TAG, "onItemClick "+view);
 		if(view instanceof LinearLayout && view.getId() == R.id.listeimageficheavecfiltre_listviewrow){
+			//Start of user code onItemClick additions ListeImageFicheAvecFiltre_ClassListViewActivity
+			setIntentPourRetour();
+			//End of user code
+			
 			// normal case on main item
-	        
-			Toast.makeText(this, "Test dans ListeImageFicheAvecFiltre_ClassListViewActivity", Toast.LENGTH_SHORT).show();
-			
-			
+	        			
 			Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
 	        Bundle b = new Bundle();
 	        b.putInt("ficheId", ((Fiche)view.getTag()).getId());
@@ -321,9 +317,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
-				Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau];
-
+				Intent upIntent = getIntentPrecedent();
 				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
 				
 		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
@@ -541,6 +535,17 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 			});
 		   
 	}
+	
+	
+    public void setIntentPourRetour(){
+	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
+	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
+    }
+    public Intent getIntentPrecedent(){
+		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
+    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
+		return upIntent;
+    }
 	// End of user code
 
 	
