@@ -148,15 +148,20 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			}
 			
 			if(currentRootGroupe == null) {
+				Log.d(LOG_TAG, "updateList() - currentRootGroupe = _contextDB.groupeDao.queryForId(filtreCourantId)");
 				int filtreCourantId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 0);
-				if (filtreCourantId!=0) currentRootGroupe = _contextDB.groupeDao.queryForId(filtreCourantId);
+				if (filtreCourantId!=0) {
+					currentRootGroupe = _contextDB.groupeDao.queryForId(filtreCourantId);
+				}
 			}
 			
-			if(currentRootGroupe == null)
+			if(currentRootGroupe == null) {
+				Log.d(LOG_TAG, "updateList() - currentRootGroupe = Groupes_Outils.getroot(groupeList)");
 				currentRootGroupe = Groupes_Outils.getroot(groupeList);
-
+			}
 			
-			Log.d(LOG_TAG, "updateList() - currentRootGroupe : "+currentRootGroupe.getId()); 
+			Log.d(LOG_TAG, "updateList() - currentRootGroupe : "+currentRootGroupe.getId());
+			Log.d(LOG_TAG, "updateList() - currentRootGroupe.getNomGroupe() : "+currentRootGroupe.getNomGroupe()); 
 			buildTreeForRoot(currentRootGroupe);
 			
 		} catch (java.sql.SQLException e) {
@@ -255,8 +260,8 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		        if (!depuisAccueil) {
 		            ((GroupeSelection_ClassListViewActivity)context).finish();
 		        } else {
-		            DorisApplicationContext.getInstance().retourIntentNiveau += 1;
-		            DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = ((Activity) context).getIntent();
+
+		        	setIntentPourRetour();
 		        	
 		        	Intent toListeFiche_View = new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class);
 		        	toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -284,8 +289,8 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		        if (!depuisAccueil) {
 		            ((GroupeSelection_ClassListViewActivity)context).finish();
 		        } else {
-		            DorisApplicationContext.getInstance().retourIntentNiveau += 1;
-		            DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = ((Activity) context).getIntent();
+
+		        	setIntentPourRetour();
 		        	
 		        	Intent toListeFiche_View = new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class);
 		        	toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -381,6 +386,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	}
 	protected void addBackToParentGroupButton(LinearLayout navigationLayout, final Groupe parent){
 		Log.d(LOG_TAG, "addBackToParentGroupButton() - Début");
+		Log.d(LOG_TAG, "addBackToParentGroupButton() - parent.getId() : "+parent.getId());
 		
 		if(parent == null) return;
 		if(parent.getContextDB() == null) parent.setContextDB(_contextDB);
@@ -445,17 +451,26 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	
 	public void buildTreeForRoot(Groupe rootGroupe){
 		Log.d(LOG_TAG, "buildTreeForRoot() - Début");
+		Log.d(LOG_TAG, "buildTreeForRoot() - rootGroupe : "+rootGroupe.getId());
 		
 		this.currentRootGroupe = rootGroupe;
 		
 		List<Groupe> nextLevelGroupes  = Groupes_Outils.getAllGroupesForNextLevel(this.groupeList, currentRootGroupe);
+		Log.d(LOG_TAG, "buildTreeForRoot() - nextLevelGroupes.size() : "+nextLevelGroupes.size());
+		
 		if(nextLevelGroupes.size() > 0)
 			this.filteredGroupeList  = nextLevelGroupes;
+		
+		
 		notifyDataSetChanged();
 		refreshNavigation();
 		
 		Log.d(LOG_TAG, "buildTreeForRoot() - Fin");
 	}
 
+    public void setIntentPourRetour(){
+	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
+	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = ((Activity) context).getIntent();
+    }
 	//End of user code
 }

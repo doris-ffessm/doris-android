@@ -50,6 +50,7 @@ import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
@@ -187,8 +188,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	        	((GroupeSelection_ClassListViewActivity)this).finish();
 	        } else {
 	        	
-	            DorisApplicationContext.getInstance().retourIntentNiveau += 1;
-	            DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
+	        	setIntentPourRetour();
 	        	
 	        	if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
         			startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
@@ -243,14 +243,29 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
             //End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				retourGroupeSuperieur();
-				/*
-	        	TaskStackBuilder.create(this)
-	                // Add all of this activity's parents to the back stack
-	                .addNextIntentWithParentStack(getSupportParentActivityIntent())
-	                // Navigate up to the closest parent
-	                .startActivities();
-                */
+				// Retour en Arrière et Si arrivée à la Racine retour à l'appli précédente
+				if ( retourGroupeSuperieur() ) {
+					Intent upIntent = getIntentPrecedent();
+					Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
+					
+			        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+			        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
+			            // This activity is NOT part of this app's task, so create a new task
+			            // when navigating up, with a synthesized back stack.
+			            TaskStackBuilder.create(this)
+			                    // Add all of this activity's parents to the back stack
+			                    .addNextIntentWithParentStack(upIntent)
+			                    // Navigate up to the closest parent
+			                    .startActivities();
+			        } else {
+			        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
+			            // This activity is part of this app's task, so simply
+			            // navigate up to the logical parent activity.
+			            NavUtils.navigateUpTo(this, upIntent);
+			        }
+				}
+				
+
 	            return true;
 			default:
                 return super.onOptionsItemSelected(item);
@@ -287,7 +302,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 		switch(inKeyCode){
 		case KeyEvent.KEYCODE_BACK :
 			
-			retourGroupeSuperieur();
+			if ( retourGroupeSuperieur() ) ((GroupeSelection_ClassListViewActivity)this).finish();
 			
 			return true; 
 		}
@@ -296,7 +311,9 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
     }
 	
 	
-	void retourGroupeSuperieur() {
+	public boolean retourGroupeSuperieur() {
+		// Retour true si on est à la racine et donc que l'on doit fermé et false sinon
+		
 		Groupe groupeCourant = adapter.currentRootGroupe;
 		if(groupeCourant.getContextDB() == null){
 			Log.w(this.getClass().getSimpleName(),"workaround clickedGroupe.getContextDB() == null "+groupeCourant.getId());
@@ -306,15 +323,27 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - groupeCourant.getGroupePere() : " + groupeCourant.getGroupePere());
 		
 		if (groupeCourant.getNomGroupe().equals("racine")) {
-			((GroupeSelection_ClassListViewActivity)this).finish();
+			
+			return true;
 		} else {
 			adapter.currentRootGroupe = groupeCourant.getGroupePere();
 			adapter.updateList();
 			adapter.notifyDataSetChanged();
+			
+			return false;
 		}
 	}
 	
-	
+    public void setIntentPourRetour(){
+	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
+	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
+    }
+    public Intent getIntentPrecedent(){
+		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
+    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
+		return upIntent;
+    }
+    
 	// End of user code
 
 	
