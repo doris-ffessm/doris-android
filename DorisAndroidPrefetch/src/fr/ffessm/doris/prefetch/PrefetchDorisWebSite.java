@@ -801,12 +801,12 @@ public class PrefetchDorisWebSite {
 	
 	
 	private void creationDossiersRef(ActionKind inAction) {
-		log.debug("creationDossiers() - Début");
+		log.debug("creationDossiersRef() - Début");
 		
-		log.debug("creationDossiers() - Action : " + inAction.toString());
+		log.debug("creationDossiersRef() - Action : " + inAction.toString());
 		
-		log.debug("creationDossiers() - Dossier racine : " + PrefetchConstants.DOSSIER_RACINE);
-		log.debug("creationDossiers() - Dossier html : " + PrefetchConstants.DOSSIER_HTML_REF);
+		log.debug("creationDossiersRef() - Dossier racine : " + PrefetchConstants.DOSSIER_RACINE);
+		log.debug("creationDossiersRef() - Dossier html : " + PrefetchConstants.DOSSIER_HTML_REF);
 		
 		//	Vérification que le dossier html Référence existe ( ./run/html_ref/ )
 		if( inAction == ActionKind.NODWNLD || inAction == ActionKind.UPDATE || inAction == ActionKind.CDDVD_MED
@@ -855,7 +855,7 @@ public class PrefetchDorisWebSite {
 		}
 	
 		
-		log.debug("checkDossiers() - Fin");
+		log.debug("creationDossiersRef() - Fin");
 	}
 
 }

@@ -436,14 +436,14 @@ public class SiteDoris {
 	
 
     public List<Participant> getListeParticipantsParInitialeFromHtml(String inCodePageHtml){
-    	//log.debug("getListeParticipantsParInitiale() - Début");
+    	log.debug("getListeParticipantsParInitiale() - Début");
     	Common_Outils commonOutils = new Common_Outils();
     	
     	List<Participant> listeParticipants = new ArrayList<Participant>(0);
     	
     	Source source=new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(inCodePageHtml), true ) );
     	source.fullSequentialParse();
-    	//log.debug("getListeParticipantsParInitiale()- source.length() : " + source.length());
+    	log.debug("getListeParticipantsParInitiale()- source.length() : " + source.length());
     	
     	/* Pour trouver les Participants
     	 *	Rechercher 1er TD Class = titre2
@@ -483,11 +483,11 @@ public class SiteDoris {
 			if ( elementTR.getDepth() == profondeurTRlignes ) {
 				numeroTR++;
 				
-				//log.info("getListeParticipantsParInitiale() - elementTR : "+numeroTR+" - "+elementTR.toString().substring(0, Math.min(100, elementTR.toString().length())));
+				log.info("getListeParticipantsParInitiale() - elementTR : "+numeroTR+" - "+elementTR.toString().substring(0, Math.min(100, elementTR.toString().length())));
 				
 				if (numeroTR % 4 == 1){
 					Element elementTDTitre2ParticipantNom = elementTR.getFirstElementByClass("titre2");
-					//log.info("getListeParticipantsParInitiale() - Nom Participant : "+elementTDTitre2ParticipantNom.getRenderer() );
+					log.info("getListeParticipantsParInitiale() - Nom Participant : "+elementTDTitre2ParticipantNom.getRenderer() );
 					participantNom = elementTDTitre2ParticipantNom.getRenderer().toString().trim();
 					
 					List<? extends Element> listeElementsTDTitre2ParticipantKind = elementTR.getAllElementsByClass("normal_gris_gras");
@@ -495,11 +495,11 @@ public class SiteDoris {
 
 						if ( elementTDTitre2.getFirstElement(HTMLElementName.IMG) != null ){
 							String kind = elementTDTitre2.getFirstElement(HTMLElementName.IMG).getAttributeValue("alt");
-							//log.info("getListeParticipantsParInitiale() - Participant Kind : "+ kind + " - " +Constants.getTypeParticipant(kind));
+							log.info("getListeParticipantsParInitiale() - Participant Kind : "+ kind + " - " +Constants.getTypeParticipant(kind));
 							//TODO : Il faudra mettre autre chose
 							participantKind += Constants.getTypeParticipant(kind).ordinal()+";";
 						} else {
-							//log.info("getListeParticipantsParInitiale() - Participant Provenance : "+elementTDTitre2.getRenderer().toString().trim() );
+							log.info("getListeParticipantsParInitiale() - Participant Provenance : "+elementTDTitre2.getRenderer().toString().trim() );
 							participantDescription = elementTDTitre2.getRenderer().toString().trim()+"<br/>";
 						}
 					}
@@ -507,32 +507,32 @@ public class SiteDoris {
 				
 				if (numeroTR % 4 == 3){
 					Element elementAlien_emailParticipantId = elementTR.getFirstElementByClass("lien_email");
-					//log.info("getListeParticipantsParInitiale() - id Participant : "+elementAlien_emailParticipantId.getAttributeValue("href") );
+					log.info("getListeParticipantsParInitiale() - id Participant : "+elementAlien_emailParticipantId.getAttributeValue("href") );
 					String href = ""+elementAlien_emailParticipantId.getAttributeValue("href");
 					participantId = href.substring(Math.min(href.length(), href.indexOf("=")+1 ) );
-					//log.info("getListeParticipantsParInitiale() - debug 1 : "+participantId+" - href : "+href+" - "+ href.indexOf("=") );
+					log.info("getListeParticipantsParInitiale() - debug 1 : "+participantId+" - href : "+href+" - "+ href.indexOf("=") );
 					if (href.indexOf("=")==-1){
 						Element elementAlien_fichecontactParticipantId = elementTR.getFirstElementByClass("lien_fichecontact");
 						href = ""+elementAlien_fichecontactParticipantId.getAttributeValue("href");
-						//log.info("getListeParticipantsParInitiale() - href : "+href+" - "+ href.indexOf("=") );
+						log.info("getListeParticipantsParInitiale() - href : "+href+" - "+ href.indexOf("=") );
 						
 						participantId = href.substring(Math.min(href.length(), href.indexOf("=")+1) );
-						//log.info("getListeParticipantsParInitiale() - debug 2 : "+participantId );
+						log.info("getListeParticipantsParInitiale() - debug 2 : "+participantId );
 
 					}
 					if (participantId.indexOf("&")!=-1){
 						participantId=participantId.substring(0, participantId.indexOf("&") );
 					}
-					//log.info("getListeParticipantsParInitiale() - id Participant : "+participantId);
+					log.info("getListeParticipantsParInitiale() - id Participant : "+participantId);
 					
 					List<? extends Element> listeElementsIMGParticipantPhoto = elementTR.getAllElements(HTMLElementName.IMG);
 					for (Element elementIMG : listeElementsIMGParticipantPhoto) {
 						if (elementIMG.getAttributeValue("width") != null && elementIMG.getAttributeValue("width").equals("150") ){
-							//log.info("getListeParticipantsParInitiale() - photo : "+elementIMG.getAttributeValue("src"));
+							log.info("getListeParticipantsParInitiale() - photo : "+elementIMG.getAttributeValue("src"));
 							if ( elementIMG.getAttributeValue("src").contains("gestionenligne/photos_vig") ){
 								participantUrlPhoto = elementIMG.getAttributeValue("src");
 								participantUrlPhoto = participantUrlPhoto.replace(" ", "%20");	// on s'assure d'avoir une url valide
-								//log.info("getListeParticipantsParInitiale() - participantUrlPhoto : "+participantUrlPhoto);
+								log.info("getListeParticipantsParInitiale() - participantUrlPhoto : "+participantUrlPhoto);
 							}
 						}
 					}
@@ -544,17 +544,17 @@ public class SiteDoris {
 						if (elementTD.getAttributeValue("height") != null && elementTD.getAttributeValue("height").equals("20") ) {
 							if (elementTD.getAttributeValue("class") != null && elementTD.getAttributeValue("class").equals("normal") ) {
 								numeroTD ++;
-								//log.info("getListeParticipantsParInitiale() - numeroTD : "+numeroTD+" - "+elementTD.getContent().toString());
+								log.info("getListeParticipantsParInitiale() - numeroTD : "+numeroTD+" - "+elementTD.getContent().toString());
 								if (numeroTD==1){
 									if (elementTD.getContent().toString().contains("images/18_probe.gif")) {
 										String siteWeb = elementTD.getFirstElement("src", Pattern.compile("images/18_probe\\.gif")).getParentElement().getRenderer().toString().trim();
-										//log.info("getListeParticipantsParInitiale() - Site Web : "+siteWeb);
+										log.info("getListeParticipantsParInitiale() - Site Web : "+siteWeb);
 										participantDescription += "Site Web : <a href=\""+siteWeb+"\">"+siteWeb+"</a><br/>";
 									}
 								} else if (numeroTD==2){
 									String description = elementTD.getRenderer().toString();
 									
-									//log.info("getListeParticipantsParInitiale() - Description : "+description);
+									log.info("getListeParticipantsParInitiale() - Description : "+description);
 									if (!description.isEmpty()) participantDescription += description+"<br/>";
 								}
 							}
@@ -565,8 +565,8 @@ public class SiteDoris {
 				if (numeroTR % 4 == 3){
 					participantDescription = commonOutils.nettoyageTextes(
 											commonOutils.remplacementBalises(participantDescription, true) );
-					//log.info("getListeParticipantsParInitiale() - participantKind : "+participantKind);
-					//log.info("getListeParticipantsParInitiale() - participantDescription : "+participantDescription);
+					log.info("getListeParticipantsParInitiale() - participantKind : "+participantKind);
+					log.info("getListeParticipantsParInitiale() - participantDescription : "+participantDescription);
 					
 					listeParticipants.add(new Participant( participantNom, Integer.valueOf(participantId), participantUrlPhoto, participantKind, participantDescription) );
 					participantNom = "";
@@ -578,13 +578,13 @@ public class SiteDoris {
 			}
     	} // Fin Pour Chaque TR
     	
-    	//log.debug("getListeParticipantsParInitiale() - listeParticipants : "+listeParticipants.size());
+    	log.debug("getListeParticipantsParInitiale() - listeParticipants : "+listeParticipants.size());
 		
     	source = null;
     	listeElementsTR = null;
     	
     	
-    	//log.debug("getListeParticipantsParInitiale() - Fin");
+    	log.debug("getListeParticipantsParInitiale() - Fin");
 		return listeParticipants;
     }
     
