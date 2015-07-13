@@ -138,35 +138,33 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		// Start of user code protected GroupeSelection_Adapter updateList
 		Log.d(LOG_TAG, "updateList() - Début"); 
 		
-		// TODO find a way to query in a lazier way
-		try{
-			if(groupeList == null){
-				this.groupeList = _contextDB.groupeDao.queryForAll();
-				for (Groupe groupe : groupeList) {
-		        	groupe.setContextDB(_contextDB);
-				}
-			}
-			
-			if(currentRootGroupe == null) {
-				Log.d(LOG_TAG, "updateList() - currentRootGroupe = _contextDB.groupeDao.queryForId(filtreCourantId)");
-				int filtreCourantId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 0);
-				if (filtreCourantId!=0) {
-					currentRootGroupe = _contextDB.groupeDao.queryForId(filtreCourantId);
-				}
-			}
-			
-			if(currentRootGroupe == null) {
-				Log.d(LOG_TAG, "updateList() - currentRootGroupe = Groupes_Outils.getroot(groupeList)");
-				currentRootGroupe = Groupes_Outils.getroot(groupeList);
-			}
-			
-			Log.d(LOG_TAG, "updateList() - currentRootGroupe : "+currentRootGroupe.getId());
-			Log.d(LOG_TAG, "updateList() - currentRootGroupe.getNomGroupe() : "+currentRootGroupe.getNomGroupe()); 
-			buildTreeForRoot(currentRootGroupe);
-			
-		} catch (java.sql.SQLException e) {
-			Log.e(LOG_TAG, e.getMessage(), e);
+
+		if(groupeList == null){
+			this.groupeList = Groupes_Outils.getAllGroupes(_contextDB);
 		}
+
+			
+		if(currentRootGroupe == null) {
+			Log.d(LOG_TAG, "updateList() - currentRootGroupe = _contextDB.groupeDao.queryForId(filtreCourantId)");
+			
+			// Si un Groupe avait déjà été sélectionné, on réaffiche son père : logique si l'on veut qu'il soit un choix possible
+			int filtreCourantId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 0);
+			Log.d(LOG_TAG, "updateList() - filtreCourantId : "+filtreCourantId); 
+			
+			if (filtreCourantId!=0) {
+				currentRootGroupe = Groupes_Outils.getGroupeFromId(groupeList, filtreCourantId).getGroupePere();
+			}
+		}
+		
+		if(currentRootGroupe == null) {
+			Log.d(LOG_TAG, "updateList() - currentRootGroupe = Groupes_Outils.getroot(groupeList)");
+			currentRootGroupe = Groupes_Outils.getRoot(groupeList);
+		}
+		
+		Log.d(LOG_TAG, "updateList() - currentRootGroupe : "+currentRootGroupe.getId());
+		Log.d(LOG_TAG, "updateList() - currentRootGroupe.getNomGroupe() : "+currentRootGroupe.getNomGroupe()); 
+		buildTreeForRoot(currentRootGroupe);
+			
 		
 		Log.d(LOG_TAG, "updateList() - Fin"); 
 		// End of user code
@@ -384,19 +382,26 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
     	
     	Log.d(LOG_TAG, "refreshNavigation() - Fin");
 	}
-	protected void addBackToParentGroupButton(LinearLayout navigationLayout, final Groupe parent){
+	protected void addBackToParentGroupButton(LinearLayout _navigationLayout, Groupe _parent){
 		Log.d(LOG_TAG, "addBackToParentGroupButton() - Début");
-		Log.d(LOG_TAG, "addBackToParentGroupButton() - parent.getId() : "+parent.getId());
+		if(_parent != null) Log.d(LOG_TAG, "addBackToParentGroupButton() - parent.getId() : "+_parent.getId());
+		else Log.d(LOG_TAG, "addBackToParentGroupButton() - parent == null");
 		
-		if(parent == null) return;
-		if(parent.getContextDB() == null) parent.setContextDB(_contextDB);
-		addBackToParentGroupButton(navigationLayout, parent.getGroupePere());
+		if(_parent == null) return;
+
+		if(groupeList == null){
+			this.groupeList = Groupes_Outils.getAllGroupes(_contextDB);
+		}
+		
+		final Groupe parent = Groupes_Outils.getGroupeFromId(groupeList, _parent.getId());
+		
+		addBackToParentGroupButton(_navigationLayout, parent.getGroupePere());
 		
 		
 		if(parent.getId() == 1){
 			// ajout du nouveau bouton standard
 			ImageButton backToParentButton = new ImageButton(context);
-			navigationLayout.addView(backToParentButton);
+			_navigationLayout.addView(backToParentButton);
 			
 			backToParentButton.setImageResource( ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_arbre_phylogenetique) );
 			backToParentButton.setBackgroundResource(R.drawable.button_selected_background);
@@ -408,13 +413,15 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			backToParentButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					Log.d(LOG_TAG,"addBackToParentGroupButton bouton 010");
+
 					buildTreeForRoot(parent);
 				}
 			});
 		} else {
 			// ajout du nouveau bouton
 			Button backToParentButton = new Button(context);
-			navigationLayout.addView(backToParentButton);
+			_navigationLayout.addView(backToParentButton);
 			
 			Log.d(LOG_TAG,"addBackToParentGroupButton parent.getId : "+parent.getId());
 			Log.d(LOG_TAG,"addBackToParentGroupButton parent.getNomGroupe : "+parent.getNomGroupe());
@@ -441,6 +448,10 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			backToParentButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					Log.d(LOG_TAG,"addBackToParentGroupButton bouton 020");
+					if(groupeList == null){
+						groupeList = Groupes_Outils.getAllGroupes(_contextDB);
+					}
 					buildTreeForRoot(parent);
 				}
 			});
@@ -452,10 +463,13 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	public void buildTreeForRoot(Groupe rootGroupe){
 		Log.d(LOG_TAG, "buildTreeForRoot() - Début");
 		Log.d(LOG_TAG, "buildTreeForRoot() - rootGroupe : "+rootGroupe.getId());
+		Log.d(LOG_TAG, "buildTreeForRoot() - groupeList.size() : "+groupeList.size());
+		Log.d(LOG_TAG, "buildTreeForRoot() - rootGroupe.getGroupesFils().size() : "+rootGroupe.getGroupesFils().size());
+		
 		
 		this.currentRootGroupe = rootGroupe;
 		
-		List<Groupe> nextLevelGroupes  = Groupes_Outils.getAllGroupesForNextLevel(this.groupeList, currentRootGroupe);
+		List<Groupe> nextLevelGroupes  = Groupes_Outils.getAllGroupesForNextLevel(groupeList, currentRootGroupe);
 		Log.d(LOG_TAG, "buildTreeForRoot() - nextLevelGroupes.size() : "+nextLevelGroupes.size());
 		
 		if(nextLevelGroupes.size() > 0)

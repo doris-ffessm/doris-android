@@ -41,6 +41,7 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.tools;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -56,7 +57,38 @@ public class Groupes_Outils {
 
 	public static final String LOG_TAG = Groupes_Outils.class.getSimpleName();
 	
-	public static Groupe getroot(List<Groupe> allGroupes){
+	public static List<Groupe> getAllGroupes(DorisDBHelper _contextDB){
+		
+		List<Groupe> groupeList;
+		
+		try {
+			groupeList = _contextDB.groupeDao.queryForAll();
+			for (Groupe groupe : groupeList) {
+	        	groupe.setContextDB(_contextDB);
+			}
+			return groupeList;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+
+	
+	public static Groupe getGroupeFromId(List<Groupe> allGroupes, int _id){
+		// trouve le groupe racine
+		Groupe groupeFromId = null;
+		for(Groupe groupe : allGroupes){
+			if(groupe.getId() == _id){
+				groupeFromId = groupe;
+				break;
+			}
+		}
+		return groupeFromId;
+	}
+	
+	public static Groupe getRoot(List<Groupe> allGroupes){
 		// trouve le groupe racine
 		Groupe rootGroupe = null;
 		for(Groupe groupe : allGroupes){
