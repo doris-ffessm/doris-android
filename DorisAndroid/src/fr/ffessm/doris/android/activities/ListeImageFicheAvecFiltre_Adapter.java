@@ -135,11 +135,12 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 	int filteredZoneGeoId = -1;
 	int filteredGroupeId = 1;
 
-	public ListeImageFicheAvecFiltre_Adapter(Context context, DorisDBHelper contextDB, int filteredZoneGeoId) {
+	public ListeImageFicheAvecFiltre_Adapter(Context context, DorisDBHelper contextDB, int filteredZoneGeoId, int filteredGroupeId) {
 		super();
 		this.context = context;
 		this._contextDB = contextDB;
 		this.filteredZoneGeoId = filteredZoneGeoId;
+		this.filteredGroupeId = filteredGroupeId;
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		reseauOutils = new Reseau_Outils(context);

@@ -118,7 +118,6 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
         list.setAdapter(adapter);
 
 		//Start of user code onCreate additions GroupeSelection_ClassListViewActivity
-        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() ");
         
         // affiche ou cache le filtre espèce actuel (+ son bouton de suppression)
         RelativeLayout currentFilterInfoLayout = (RelativeLayout)findViewById(R.id.groupselection_listview_filtre_espece_courant_layout);
@@ -156,8 +155,8 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
 		//Start of user code onItemClick additions GroupeSelection_ClassListViewActivity
-		Log.d(LOG_TAG, "onItemClick() - Début");     
-		//showToast("Groupe : "+position + " - "+ index);
+		Log.d(LOG_TAG, "onItemClick() - Début");
+		Log.d(LOG_TAG, "onItemClick() - Groupe : "+position + " - "+ index);
 		
 		GroupeSelection_Adapter groupeSelection_adapter = (GroupeSelection_Adapter)arg0.getAdapter();
 		
@@ -166,7 +165,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 			//Log.w(this.getClass().getSimpleName(),"workaround clickedGroupe.getContextDB() == null "+clickedGroupe.getId());
 			clickedGroupe.setContextDB(getHelper().getDorisDBHelper());
 		}
-		
+	
 		if(clickedGroupe.getGroupesFils().size() > 0){	
 			for(Groupe g : clickedGroupe.getGroupesFils()){
 				if(g.getContextDB() == null){
@@ -177,12 +176,11 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 			groupeSelection_adapter.currentRootGroupe = clickedGroupe;
 			groupeSelection_adapter.updateList();
 			groupeSelection_adapter.notifyDataSetChanged();
+			
 		} else {
 			Toast.makeText(this, "Filtre espèces : "+clickedGroupe.getNomGroupe(), Toast.LENGTH_SHORT).show();
-
-			prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), clickedGroupe.getId());
-			prefs.edit().commit();
-	        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onItemClick() - depuisAccueil : " + depuisAccueil);
+		
+			prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), clickedGroupe.getId()).commit();
 
 	        if (!depuisAccueil) {
 	        	((GroupeSelection_ClassListViewActivity)this).finish();
@@ -191,9 +189,9 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	        	setIntentPourRetour();
 	        	
 	        	if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
-        			startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
+	        		startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
 	        	} else {
-		    	   startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
+	        		startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
 	        	}
         			        	
 	        }
@@ -246,10 +244,8 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 				// Retour en Arrière et Si arrivée à la Racine retour à l'appli précédente
 				if ( retourGroupeSuperieur() ) {
 					Intent upIntent = getIntentPrecedent();
-					Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
 					
 			        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-			        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
 			            // This activity is NOT part of this app's task, so create a new task
 			            // when navigating up, with a synthesized back stack.
 			            TaskStackBuilder.create(this)
@@ -258,7 +254,6 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 			                    // Navigate up to the closest parent
 			                    .startActivities();
 			        } else {
-			        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
 			            // This activity is part of this app's task, so simply
 			            // navigate up to the logical parent activity.
 			            NavUtils.navigateUpTo(this, upIntent);

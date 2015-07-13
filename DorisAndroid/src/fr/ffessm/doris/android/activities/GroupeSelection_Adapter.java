@@ -110,13 +110,11 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-		Log.d(LOG_TAG, "GroupeSelection_Adapter(C, D, b) - Début"); 
 		textesOutils = new Textes_Outils(context);
 		this.depuisAccueil = depuisAccueil;
 		
 		updateList();
-		
-		Log.d(LOG_TAG, "GroupeSelection_Adapter(C, D, b) - Fin"); 
+
 	}
 	// End of user code
 
@@ -126,7 +124,6 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
         // Start of user code protected GroupeSelection_Adapter constructor
-		Log.d(LOG_TAG, "GroupeSelection_Adapter(C, D) - Début"); 
 		
 		textesOutils = new Textes_Outils(context);
 		
@@ -137,35 +134,26 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	protected void updateList(){
 		// Start of user code protected GroupeSelection_Adapter updateList
 		Log.d(LOG_TAG, "updateList() - Début"); 
-		
 
 		if(groupeList == null){
 			this.groupeList = Groupes_Outils.getAllGroupes(_contextDB);
 		}
-
 			
-		if(currentRootGroupe == null) {
-			Log.d(LOG_TAG, "updateList() - currentRootGroupe = _contextDB.groupeDao.queryForId(filtreCourantId)");
-			
+		if(currentRootGroupe == null) {			
 			// Si un Groupe avait déjà été sélectionné, on réaffiche son père : logique si l'on veut qu'il soit un choix possible
 			int filtreCourantId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 0);
-			Log.d(LOG_TAG, "updateList() - filtreCourantId : "+filtreCourantId); 
-			
+		
 			if (filtreCourantId!=0) {
 				currentRootGroupe = Groupes_Outils.getGroupeFromId(groupeList, filtreCourantId).getGroupePere();
 			}
 		}
 		
 		if(currentRootGroupe == null) {
-			Log.d(LOG_TAG, "updateList() - currentRootGroupe = Groupes_Outils.getroot(groupeList)");
 			currentRootGroupe = Groupes_Outils.getRoot(groupeList);
 		}
-		
-		Log.d(LOG_TAG, "updateList() - currentRootGroupe : "+currentRootGroupe.getId());
-		Log.d(LOG_TAG, "updateList() - currentRootGroupe.getNomGroupe() : "+currentRootGroupe.getNomGroupe()); 
+
 		buildTreeForRoot(currentRootGroupe);
-			
-		
+
 		Log.d(LOG_TAG, "updateList() - Fin"); 
 		// End of user code
 	}
@@ -249,8 +237,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			@Override
 			public void onClick(View v) {
 				Toast.makeText(context, "Filtre espèces : "+entry.getNomGroupe(), Toast.LENGTH_SHORT).show();
-
-				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onClick() - Bouton Liste des Fiches - Groupe : " + entry.getId());
+				
 				prefs.edit().putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId())
 					.commit();
 				
@@ -279,7 +266,6 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			public void onClick(View v) {
 				Toast.makeText(context, "Filtre espèces : "+entry.getNomGroupe(), Toast.LENGTH_SHORT).show();
 
-				if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onClick() - Bouton Liste des Fiches par Images- Groupe : " + entry.getId());
 				prefs.edit().putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId())
 					.commit();
 				
@@ -327,13 +313,12 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		
 	}
 	protected void refreshNavigation(){
-		Log.d(LOG_TAG, "refreshNavigation() - Début");
-		Log.d(LOG_TAG, "refreshNavigation() - currentRootGroupe.getId() : "+currentRootGroupe.getId());
-		
+
 		LinearLayout navigationLayout = (LinearLayout)((GroupeSelection_ClassListViewActivity)context).findViewById(R.id.groupselection_listview_navigation);
     	
     	navigationLayout.removeAllViews();
     	addBackToParentGroupButton(navigationLayout, currentRootGroupe.getGroupePere());
+    	
     	if(currentRootGroupe.getId() == 1){
     		
 			// ajout du nouveau bouton standard
@@ -351,24 +336,16 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 
 			
 		} else {
-			Log.d(LOG_TAG, "refreshNavigation() - currentRootGroupe.getGroupePere() : "+currentRootGroupe.getGroupePere().getId());
 			
 			// ajout du nouveau bouton
 			Button backToParentButton = new Button(context);
 			navigationLayout.addView(backToParentButton);
 	    	
-			Log.d(LOG_TAG,"addBackToParentGroupButton currentRootGroupe.getId : "+currentRootGroupe.getId());
-			Log.d(LOG_TAG,"addBackToParentGroupButton currentRootGroupe.getNomGroupe : "+currentRootGroupe.getNomGroupe());
-			
-			// TODO : impossible de comprendre comment getNomGroupe peut renvoyer null alors que getId OK
-			if (currentRootGroupe.getNomGroupe() != null) {
-		        backToParentButton.setText(
-	        		textesOutils.raccourcir( currentRootGroupe.getNomGroupe().trim(), 
-		        		Integer.parseInt(context.getString(R.string.groupselection_listview_groupe_nbcarmax))
-		        		));
-			} else {
-				backToParentButton.setText("T1 - G. : "+currentRootGroupe.getId());
-			}
+	        backToParentButton.setText(
+        		textesOutils.raccourcir( currentRootGroupe.getNomGroupe().trim(), 
+	        		Integer.parseInt(context.getString(R.string.groupselection_listview_groupe_nbcarmax))
+	        		));
+
 
 	        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
 			layoutParams.leftMargin =2;
@@ -384,8 +361,6 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	}
 	protected void addBackToParentGroupButton(LinearLayout _navigationLayout, Groupe _parent){
 		Log.d(LOG_TAG, "addBackToParentGroupButton() - Début");
-		if(_parent != null) Log.d(LOG_TAG, "addBackToParentGroupButton() - parent.getId() : "+_parent.getId());
-		else Log.d(LOG_TAG, "addBackToParentGroupButton() - parent == null");
 		
 		if(_parent == null) return;
 
@@ -396,7 +371,6 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		final Groupe parent = Groupes_Outils.getGroupeFromId(groupeList, _parent.getId());
 		
 		addBackToParentGroupButton(_navigationLayout, parent.getGroupePere());
-		
 		
 		if(parent.getId() == 1){
 			// ajout du nouveau bouton standard
@@ -413,8 +387,6 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			backToParentButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Log.d(LOG_TAG,"addBackToParentGroupButton bouton 010");
-
 					buildTreeForRoot(parent);
 				}
 			});
@@ -422,19 +394,12 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			// ajout du nouveau bouton
 			Button backToParentButton = new Button(context);
 			_navigationLayout.addView(backToParentButton);
-			
-			Log.d(LOG_TAG,"addBackToParentGroupButton parent.getId : "+parent.getId());
-			Log.d(LOG_TAG,"addBackToParentGroupButton parent.getNomGroupe : "+parent.getNomGroupe());
 
-			// TODO : impossible de comprendre comment getNomGroupe peut renvoyer null alors que getId OK
-			if (parent.getNomGroupe() != null) {
-		        backToParentButton.setText(
-	        		textesOutils.raccourcir( parent.getNomGroupe().trim(), 
-		        		Integer.parseInt(context.getString(R.string.groupselection_listview_groupe_nbcarmax))
-		        		));
-			} else {
-				backToParentButton.setText("T2 - G. : "+parent.getId());
-			}
+	        backToParentButton.setText(
+        		textesOutils.raccourcir( parent.getNomGroupe().trim(), 
+	        		Integer.parseInt(context.getString(R.string.groupselection_listview_groupe_nbcarmax))
+	        		));
+
 			LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
 			layoutParams.leftMargin =2;
 			layoutParams.rightMargin = 2;
@@ -448,7 +413,6 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			backToParentButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Log.d(LOG_TAG,"addBackToParentGroupButton bouton 020");
 					if(groupeList == null){
 						groupeList = Groupes_Outils.getAllGroupes(_contextDB);
 					}
@@ -463,18 +427,13 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	public void buildTreeForRoot(Groupe rootGroupe){
 		Log.d(LOG_TAG, "buildTreeForRoot() - Début");
 		Log.d(LOG_TAG, "buildTreeForRoot() - rootGroupe : "+rootGroupe.getId());
-		Log.d(LOG_TAG, "buildTreeForRoot() - groupeList.size() : "+groupeList.size());
-		Log.d(LOG_TAG, "buildTreeForRoot() - rootGroupe.getGroupesFils().size() : "+rootGroupe.getGroupesFils().size());
-		
 		
 		this.currentRootGroupe = rootGroupe;
 		
 		List<Groupe> nextLevelGroupes  = Groupes_Outils.getAllGroupesForNextLevel(groupeList, currentRootGroupe);
-		Log.d(LOG_TAG, "buildTreeForRoot() - nextLevelGroupes.size() : "+nextLevelGroupes.size());
 		
 		if(nextLevelGroupes.size() > 0)
 			this.filteredGroupeList  = nextLevelGroupes;
-		
 		
 		notifyDataSetChanged();
 		refreshNavigation();

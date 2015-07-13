@@ -117,6 +117,8 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 		ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
         list.setClickable(true);
 		//Start of user code onCreate ListeFicheAvecFiltre_ClassListViewActivity adapter creation
+        Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - onCreate");
+        
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper(), prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1));
 

@@ -117,8 +117,13 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 		ListView list = (ListView) findViewById(R.id.listeimageficheavecfiltre_listview);
         list.setClickable(true);
 		//Start of user code onCreate ListeImageFicheAvecFiltre_ClassListViewActivity adapter creation
+        Log.d(LOG_TAG, "ListeImageFicheAvecFiltre_ClassListViewActivity - onCreate");
+        
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        adapter = new ListeImageFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper(), prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1));
+        adapter = new ListeImageFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper(),
+        				prefs.getInt(getString(R.string.pref_key_filtre_zonegeo),-1),
+        				prefs.getInt(getString(R.string.pref_key_filtre_groupe),1)
+        		);
 
         //End of user code
 		// avoid opening the keyboard on view opening
