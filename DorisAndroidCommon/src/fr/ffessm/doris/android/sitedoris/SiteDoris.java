@@ -507,60 +507,79 @@ public class SiteDoris {
 				
 				if (numeroTR % 4 == 3){
 					Element elementAlien_emailParticipantId = elementTR.getFirstElementByClass("lien_email");
-					log.info("getListeParticipantsParInitiale() - id Participant : "+elementAlien_emailParticipantId.getAttributeValue("href") );
-					String href = ""+elementAlien_emailParticipantId.getAttributeValue("href");
-					participantId = href.substring(Math.min(href.length(), href.indexOf("=")+1 ) );
-					log.info("getListeParticipantsParInitiale() - debug 1 : "+participantId+" - href : "+href+" - "+ href.indexOf("=") );
-					if (href.indexOf("=")==-1){
-						Element elementAlien_fichecontactParticipantId = elementTR.getFirstElementByClass("lien_fichecontact");
-						href = ""+elementAlien_fichecontactParticipantId.getAttributeValue("href");
-						log.info("getListeParticipantsParInitiale() - href : "+href+" - "+ href.indexOf("=") );
-						
-						participantId = href.substring(Math.min(href.length(), href.indexOf("=")+1) );
-						log.info("getListeParticipantsParInitiale() - debug 2 : "+participantId );
-
-					}
-					if (participantId.indexOf("&")!=-1){
-						participantId=participantId.substring(0, participantId.indexOf("&") );
-					}
-					log.info("getListeParticipantsParInitiale() - id Participant : "+participantId);
 					
-					List<? extends Element> listeElementsIMGParticipantPhoto = elementTR.getAllElements(HTMLElementName.IMG);
-					for (Element elementIMG : listeElementsIMGParticipantPhoto) {
-						if (elementIMG.getAttributeValue("width") != null && elementIMG.getAttributeValue("width").equals("150") ){
-							log.info("getListeParticipantsParInitiale() - photo : "+elementIMG.getAttributeValue("src"));
-							if ( elementIMG.getAttributeValue("src").contains("gestionenligne/photos_vig") ){
-								participantUrlPhoto = elementIMG.getAttributeValue("src");
-								participantUrlPhoto = participantUrlPhoto.replace(" ", "%20");	// on s'assure d'avoir une url valide
-								log.info("getListeParticipantsParInitiale() - participantUrlPhoto : "+participantUrlPhoto);
-							}
+					// Le 14/07/15, il existe au moins un participant sans Id détectable
+					if (elementAlien_emailParticipantId != null) {
+						log.info("getListeParticipantsParInitiale() - id Participant : "+elementAlien_emailParticipantId.getAttributeValue("href") );
+						String href = ""+elementAlien_emailParticipantId.getAttributeValue("href");
+						participantId = href.substring(Math.min(href.length(), href.indexOf("=")+1 ) );
+						log.info("getListeParticipantsParInitiale() - debug 1 : "+participantId+" - href : "+href+" - "+ href.indexOf("=") );
+						if (href.indexOf("=")==-1){
+							Element elementAlien_fichecontactParticipantId = elementTR.getFirstElementByClass("lien_fichecontact");
+							href = ""+elementAlien_fichecontactParticipantId.getAttributeValue("href");
+							log.info("getListeParticipantsParInitiale() - href : "+href+" - "+ href.indexOf("=") );
+							
+							participantId = href.substring(Math.min(href.length(), href.indexOf("=")+1) );
+							log.info("getListeParticipantsParInitiale() - debug 2 : "+participantId );
+	
 						}
-					}
-					listeElementsIMGParticipantPhoto = null;
-					
-					List<? extends Element> listeElementsTD = elementTR.getAllElements(HTMLElementName.TD);
-					int numeroTD = 0;
-					for (Element elementTD : listeElementsTD) {
-						if (elementTD.getAttributeValue("height") != null && elementTD.getAttributeValue("height").equals("20") ) {
-							if (elementTD.getAttributeValue("class") != null && elementTD.getAttributeValue("class").equals("normal") ) {
-								numeroTD ++;
-								log.info("getListeParticipantsParInitiale() - numeroTD : "+numeroTD+" - "+elementTD.getContent().toString());
-								if (numeroTD==1){
-									if (elementTD.getContent().toString().contains("images/18_probe.gif")) {
-										String siteWeb = elementTD.getFirstElement("src", Pattern.compile("images/18_probe\\.gif")).getParentElement().getRenderer().toString().trim();
-										log.info("getListeParticipantsParInitiale() - Site Web : "+siteWeb);
-										participantDescription += "Site Web : <a href=\""+siteWeb+"\">"+siteWeb+"</a><br/>";
-									}
-								} else if (numeroTD==2){
-									String description = elementTD.getRenderer().toString();
-									
-									log.info("getListeParticipantsParInitiale() - Description : "+description);
-									if (!description.isEmpty()) participantDescription += description+"<br/>";
+						if (participantId.indexOf("&")!=-1){
+							participantId=participantId.substring(0, participantId.indexOf("&") );
+						}
+						log.info("getListeParticipantsParInitiale() - id Participant : "+participantId);
+						
+						List<? extends Element> listeElementsIMGParticipantPhoto = elementTR.getAllElements(HTMLElementName.IMG);
+						for (Element elementIMG : listeElementsIMGParticipantPhoto) {
+							if (elementIMG.getAttributeValue("width") != null && elementIMG.getAttributeValue("width").equals("150") ){
+								log.info("getListeParticipantsParInitiale() - photo : "+elementIMG.getAttributeValue("src"));
+								if ( elementIMG.getAttributeValue("src").contains("gestionenligne/photos_vig") ){
+									participantUrlPhoto = elementIMG.getAttributeValue("src");
+									participantUrlPhoto = participantUrlPhoto.replace(" ", "%20");	// on s'assure d'avoir une url valide
+									log.info("getListeParticipantsParInitiale() - participantUrlPhoto : "+participantUrlPhoto);
 								}
 							}
 						}
+						listeElementsIMGParticipantPhoto = null;
+						
+					} else {
+						
+						participantId = "";
+						participantUrlPhoto = "";
 					}
-					listeElementsTD = null;
+					
+					
+					
+					List<? extends Element> listeElementsTD = elementTR.getAllElements(HTMLElementName.TD);
+
+					// Le 14/07/15, il existe au moins un participant sans Id détectable
+					if (elementAlien_emailParticipantId != null) {
+					
+						int numeroTD = 0;
+						for (Element elementTD : listeElementsTD) {
+							if (elementTD.getAttributeValue("height") != null && elementTD.getAttributeValue("height").equals("20") ) {
+								if (elementTD.getAttributeValue("class") != null && elementTD.getAttributeValue("class").equals("normal") ) {
+									numeroTD ++;
+									log.info("getListeParticipantsParInitiale() - numeroTD : "+numeroTD+" - "+elementTD.getContent().toString());
+									if (numeroTD==1){
+										if (elementTD.getContent().toString().contains("images/18_probe.gif")) {
+											String siteWeb = elementTD.getFirstElement("src", Pattern.compile("images/18_probe\\.gif")).getParentElement().getRenderer().toString().trim();
+											log.info("getListeParticipantsParInitiale() - Site Web : "+siteWeb);
+											participantDescription += "Site Web : <a href=\""+siteWeb+"\">"+siteWeb+"</a><br/>";
+										}
+									} else if (numeroTD==2){
+										String description = elementTD.getRenderer().toString();
+										
+										log.info("getListeParticipantsParInitiale() - Description : "+description);
+										if (!description.isEmpty()) participantDescription += description+"<br/>";
+									}
+								}
+							}
+						}
+						listeElementsTD = null;
+						
+					} else {
+						participantDescription = "";
+					}
 				}
 				if (numeroTR % 4 == 3){
 					participantDescription = commonOutils.nettoyageTextes(
