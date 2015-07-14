@@ -543,8 +543,7 @@ public class SiteDoris {
 						
 					} else {
 						
-						participantId = "";
-						participantUrlPhoto = "";
+						participantId = "-1";
 					}
 					
 					
@@ -577,17 +576,20 @@ public class SiteDoris {
 						}
 						listeElementsTD = null;
 						
-					} else {
-						participantDescription = "";
 					}
 				}
 				if (numeroTR % 4 == 3){
-					participantDescription = commonOutils.nettoyageTextes(
-											commonOutils.remplacementBalises(participantDescription, true) );
-					log.info("getListeParticipantsParInitiale() - participantKind : "+participantKind);
-					log.info("getListeParticipantsParInitiale() - participantDescription : "+participantDescription);
 					
-					listeParticipants.add(new Participant( participantNom, Integer.valueOf(participantId), participantUrlPhoto, participantKind, participantDescription) );
+					// Le 14/07/15, il existe au moins un participant sans Id détectable
+					if (participantId != "-1") {
+						participantDescription = commonOutils.nettoyageTextes(
+												commonOutils.remplacementBalises(participantDescription, true) );
+						log.info("getListeParticipantsParInitiale() - participantKind : "+participantKind);
+						log.info("getListeParticipantsParInitiale() - participantDescription : "+participantDescription);
+						
+						listeParticipants.add(new Participant( participantNom, Integer.valueOf(participantId), participantUrlPhoto, participantKind, participantDescription) );
+					}
+					
 					participantNom = "";
 					participantId = "";
 					participantKind = "";
