@@ -284,6 +284,24 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 
 	// Start of user code protectedGroupeSelection_ClassListViewActivity
 
+	public void onClickCurrentGroup(View view){
+		showToast( "Filtre espèces : "+adapter.currentRootGroupe.getNomGroupe());
+		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
+		ed.putInt(getString(R.string.pref_key_filtre_groupe), adapter.currentRootGroupe.getId());
+        ed.commit();
+        
+        setIntentPourRetour();
+        
+		if (!depuisAccueil) {
+            finish();
+        } else {
+        	Intent toListeFiche_View = new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class);
+        	toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        	this.getApplicationContext().startActivity(toListeFiche_View);
+        }
+    }
+	
+	
 	/* *********************************************************************
      * Capture des évènements sur le Clavier Physique de l'appareil
      ********************************************************************** */
