@@ -5,14 +5,12 @@
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
 	<string name="accueil_customview_texte_text">"Base mise à jour le\u00A0: "</string>
-	<string name="accueil_customview_listefiches_btn_label">Toutes les fiches</string>
 	
 	<string name="accueil_recherche_precedente_label_text">Recherche précédente</string>
 	<string name="accueil_recherche_precedente_filtreEspece_sans">Toutes les espèces</string>
 	<string name="accueil_recherche_precedente_filtreGeographique_sans">Toutes les zones géographiques</string>
 	
 	<string name="accueil_recherche_guidee_label_text">Recherche par Image</string>
-	<string name="accueil_recherche_guidee_label_details">Recherche par Groupe Phylogénétique</string>
 	
 	<string name="accueil_liste_participants_text">Participants</string>
 	<string name="accueil_glossaire_text">Glossaire</string>

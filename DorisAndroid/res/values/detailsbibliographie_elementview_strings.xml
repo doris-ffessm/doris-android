@@ -9,12 +9,7 @@
 	<string name="detailsbibliographie_elementview_annee_label">"Année : "</string>
 	<string name="detailsbibliographie_elementview_details_label"></string>
 	<string name="detailsbibliographie_elementview_cleurlillustration_label"></string>
-	<string name="detailsbibliographie_elementview_numerodoris_hint_text"></string>
-	<string name="detailsbibliographie_elementview_titre_hint_text"></string>
-	<string name="detailsbibliographie_elementview_auteurs_hint_text"></string>
-	<string name="detailsbibliographie_elementview_annee_hint_text"></string>
-	<string name="detailsbibliographie_elementview_details_hint_text"></string>
-	<string name="detailsbibliographie_elementview_cleurlillustration_hint_text"></string>
+
 	<!-- End of user code
 	-->
 </resources>

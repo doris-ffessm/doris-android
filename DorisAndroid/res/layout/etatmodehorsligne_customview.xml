@@ -134,7 +134,6 @@
 		                android:layout_height="wrap_content"
 		                android:adjustViewBounds="true"
 		                android:background="@android:color/transparent"
-		                android:contentDescription="@string/detailsfiche_elementview_fold_unflod_section_hint_text"
 		                android:scaleType="centerInside"
 		                android:src="@drawable/app_expander_ic_minimized" />
 			 	    	            
@@ -283,7 +282,6 @@
 		                android:layout_height="wrap_content"
 		                android:adjustViewBounds="true"
 		                android:background="@android:color/transparent"
-		                android:contentDescription="@string/detailsfiche_elementview_fold_unflod_section_hint_text"
 		                android:scaleType="centerInside"
 		                android:src="@drawable/app_expander_ic_minimized" />
 	   	            

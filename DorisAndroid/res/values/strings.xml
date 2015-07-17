@@ -6,9 +6,7 @@
 	<string name="app_name">DORISAndroid</string>
 	<string name="ffessm">"Fédération Française d\'Études et de Sports Sous-Marins"</string>
 	<string name="ffessm_url">http://www.ffessm.fr</string>
-		
-    <string name="edit_menu">Edit</string>
-    
+	    
     <string name="btnOtherFiler_listeficheavecfiltre_listviewsearchrow_btn_label">Filtres</string>
     <string name="searchHint_listeficheavecfiltre_listviewsearchrow">Chercher\u00A0\u2026</string>
 	<string name="searchHint_listeficheavecfiltre_classlistview">Chercher fiche\u00A0\u2026</string>

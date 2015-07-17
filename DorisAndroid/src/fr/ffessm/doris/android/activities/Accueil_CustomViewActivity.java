@@ -512,7 +512,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		}
     }
 	public void onClickBtnIconeSiteWebFFESSM(View view){
-		String url = getString(R.string.ffessm_url);
+		String url = getString(R.string.accueil_customview_logo_doris_url);
 		if (!url.isEmpty()) {
 			Intent intent = new Intent(Intent.ACTION_VIEW);
 			intent.setData(Uri.parse(url));

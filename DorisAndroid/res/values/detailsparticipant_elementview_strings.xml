@@ -5,10 +5,7 @@
 	-->	
 	<string name="detailsparticipant_elementview_nom_label"></string>
 	<string name="detailsparticipant_elementview_numeroparticipant_label">N°</string>
-	<string name="detailsparticipant_elementview_nom_hint_text"></string>
-	<string name="detailsparticipant_elementview_numeroparticipant_hint_text"></string>
 	<string name="detailsparticipant_elementview_bio_textbutton">Bio complète</string>
-	
 	<string name="detailsparticipant_elementview_photographe_text">Photographe</string>
 	<string name="detailsparticipant_elementview_redacteur_text">Rédacteur</string>
 	<string name="detailsparticipant_elementview_verificateur_text">Vérificateur</string>
