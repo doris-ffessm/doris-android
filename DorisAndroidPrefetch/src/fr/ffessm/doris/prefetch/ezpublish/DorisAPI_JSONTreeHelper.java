@@ -23,79 +23,37 @@ public class DorisAPI_JSONTreeHelper {
 	public static boolean debug_SaveJSON = true;
 	public static String DEBUG_SAVE_JSON_BASE_PATH = "target/json";
 	public static String JSON_EXT = ".json";
+	
 
 
 	/** Global instance of the JSON factory. */
 	static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
-
-	public static JsonNode getSpeciesList(Credential credent) throws ClientProtocolException, IOException {
-		DefaultHttpClient client = new DefaultHttpClient();
-		HttpGet getCode = new HttpGet(DorisOAuth2ClientCredentials.SPECIES_NODE_URL + "/list");
-		getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
-
-		HttpResponse response = client.execute(getCode);
-		System.out.println(response.getStatusLine());
-		// BufferedReader rd2 = new BufferedReader(new
-		// InputStreamReader(response.getEntity().getContent()));
-		// String line2 = "";
-		// while ((line2 = rd2.readLine()) != null) {
-		// System.out.println(line2);
-		// }
-
-		// JsonParser parser = JSON_FACTORY.createJsonParser(new
-		// InputStreamReader(response.getEntity().getContent()));
-		// JsonToken to = parser.nextToken();
-		// while(to != null){
-		// System.out.println(parser.getCurrentName()+" "+parser.getText());
-		// if( parser.getCurrentName() != null &&
-		// parser.getCurrentName().equals("access_token")){
-		// access_token = parser.getText();
-		// }
-		// to = parser.nextToken();
-		// }
-		// byte[] mapData = Files.readAllBytes(Paths.get("data.txt"));
-		// Map<String,String> myMap = new HashMap<String, String>();
-		//
-		// ObjectMapper objectMapper = new ObjectMapper();
-		// myMap = objectMapper.readValue(mapData, HashMap.class);
-		// System.out.println("Map is: "+myMap);
-
-		/*
-		 * Map<String,String> myMap = new HashMap<String, String>();
-		 * 
-		 * ObjectMapper objectMapper = new ObjectMapper(); myMap =
-		 * objectMapper.readValue(new
-		 * InputStreamReader(response.getEntity().getContent()), HashMap.class);
-		 * 
-		 * System.out.println("Map is: "+myMap);
-		 */
-
-		// Gson gson = new Gson();
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		JsonNode rootNode = objectMapper.readTree(new InputStreamReader(response.getEntity().getContent()));
-		// pour debug
-		System.out.println(objectMapper.writeValueAsString(rootNode));
-		/*** read ***/
-		JsonNode childrenNodes = rootNode.path("childrenNodes");
-		for (Iterator<JsonNode> iterator = childrenNodes.elements(); iterator.hasNext();) {
-			JsonNode specyNodeInList = (JsonNode) iterator.next();
-			System.out.println(specyNodeInList.path("objectName").textValue());
-		}
-		return rootNode;
-	}
-
-	
-	
-	public static List<Integer> getSpeciesNodeIds(Credential credent, int limit) throws ClientProtocolException, IOException {
+	/**
+	 * Renvoie la liste des nodeId de toutes les fiches espèces
+	 * @param credent
+	 * @param speciesPerHttpRequest limite le nombre d'espèces requises à chaque requète http
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public static List<Integer> getSpeciesNodeIds(Credential credent, int speciesPerHttpRequest) throws ClientProtocolException, IOException {
 		List<Integer> result = new ArrayList<Integer>();
 		
 		DefaultHttpClient client = new DefaultHttpClient();
-		HttpGet getFirstPage = new HttpGet(DorisOAuth2ClientCredentials.SPECIES_NODE_URL + "/list/limit/"+limit);
-		getFirstPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
-
-		HttpResponse response = client.execute(getFirstPage);
+		String uri = DorisOAuth2ClientCredentials.SPECIES_NODE_URL + "/list/limit/"+speciesPerHttpRequest;
+		if(!DorisAPIConnexionHelper.use_http_header_for_token){
+			uri = uri+"?oauth_token="+credent.getAccessToken();
+		}
+		HttpGet getHttpPage = new HttpGet(uri);
+		if(DorisAPIConnexionHelper.use_http_header_for_token){
+			getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
+		}
+		if (debug) {
+			System.out.println(uri);
+			System.out.println(getHttpPage.getFirstHeader("Authorization"));
+		}
+		HttpResponse response = client.execute(getHttpPage);
 		System.out.println(response.getStatusLine());
 		
 
@@ -116,10 +74,10 @@ public class DorisAPI_JSONTreeHelper {
 			result.add(specieNodeInList.path("nodeId").asInt());
 		}
 		
-		int offset=limit;
+		int offset=speciesPerHttpRequest;
 		while(offset < childrenCount){
-			getSpeciesNodeIds(credent, offset, result, limit);
-			offset = offset+limit;
+			getSpeciesNodeIds(credent, offset, result, speciesPerHttpRequest);
+			offset = offset+speciesPerHttpRequest;
 		}
 
 		System.out.println("retrieved NodeIds count="+result.size());
@@ -127,11 +85,25 @@ public class DorisAPI_JSONTreeHelper {
 		return result;
 	}
 	
-	public static void getSpeciesNodeIds(Credential credent, int offset,  List<Integer> currentSpeciesIds, int limit) throws ClientProtocolException, IOException {
+	/**
+	 * Rempli la liste currentSpeciesIds avec les espèces à l'offset
+	 * @param credent
+	 * @param offset
+	 * @param currentSpeciesIds
+	 * @param speciesPerHttpRequest
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public static void getSpeciesNodeIds(Credential credent, int offset,  List<Integer> currentSpeciesIds, int speciesPerHttpRequest) throws ClientProtocolException, IOException {
 		DefaultHttpClient client = new DefaultHttpClient();
-		HttpGet getFirstPage = new HttpGet(DorisOAuth2ClientCredentials.SPECIES_NODE_URL + "/list/offset/"+offset+"/limit/"+limit);
-		getFirstPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
-
+		String uri =DorisOAuth2ClientCredentials.SPECIES_NODE_URL + "/list/offset/"+offset+"/limit/"+speciesPerHttpRequest;
+		if(!DorisAPIConnexionHelper.use_http_header_for_token){
+			uri = uri+"?oauth_token="+credent.getAccessToken();
+		}
+		HttpGet getFirstPage = new HttpGet(uri);
+		if(DorisAPIConnexionHelper.use_http_header_for_token){
+			getFirstPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
+		}
 		HttpResponse response = client.execute(getFirstPage);
 		System.out.println(response.getStatusLine());
 		

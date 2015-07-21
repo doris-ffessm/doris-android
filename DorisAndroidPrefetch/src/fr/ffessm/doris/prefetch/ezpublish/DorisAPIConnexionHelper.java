@@ -28,6 +28,8 @@ public class DorisAPIConnexionHelper {
 
 	public static boolean debug = true;
 	public static boolean debug_SaveJSON = true;
+	/** permet de basculer entre le mode http_header et paramètre pour passer le access_token dans la requète */
+	public static boolean use_http_header_for_token = false; 
 	public static String DEBUG_SAVE_JSON_BASE_PATH = "target";
 	public static String JSON_EXT = ".json";
 
@@ -63,9 +65,14 @@ public class DorisAPIConnexionHelper {
 	public static void printJSON(Credential credent, String url) throws ClientProtocolException, IOException{
 		System.out.println(url);
 		DefaultHttpClient client = new DefaultHttpClient();
+		String uri = url;
+		if(!use_http_header_for_token){
+			uri = uri+"?oauth_token="+credent.getAccessToken();
+		}
 		HttpGet getCode = new HttpGet(url);
-		getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
-	
+		if(use_http_header_for_token){
+			getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
+		}
 		HttpResponse response = client.execute(getCode);
 		//System.out.println(response.getStatusLine());
 		BufferedReader rd2 = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));

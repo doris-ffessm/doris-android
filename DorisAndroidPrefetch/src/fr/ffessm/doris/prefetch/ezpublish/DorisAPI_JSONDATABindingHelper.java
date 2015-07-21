@@ -31,51 +31,34 @@ public class DorisAPI_JSONDATABindingHelper {
 	static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
 
-	
-	
-//	public static void getSpeciesList_full_data_binding_version(Credential credent) throws ClientProtocolException, IOException {
-//		DefaultHttpClient client = new DefaultHttpClient();
-//		
-//		if (debug) {
-//			DorisAPIConnexionHelper.printJSON(credent, DorisOAuth2ClientCredentials.SPECIES_NODE_URL + "/list");
-//			if(debug_SaveJSON){
-//				DorisAPIConnexionHelper.saveJSONFile(credent, DorisOAuth2ClientCredentials.SPECIES_NODE_URL + "/list", DEBUG_SAVE_JSON_BASE_PATH+ File.separatorChar+"speciesList" +JSON_EXT);
-//			}
-//		}
-//		
-//		HttpGet getCode = new HttpGet(DorisOAuth2ClientCredentials.SPECIES_NODE_URL + "/list");
-//		getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
-//
-//		HttpResponse response = client.execute(getCode);
-//		System.out.println(response.getStatusLine());
-//
-//		ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
-//		SpeciesList_JSONData speciesListResponse = mapper.readValue(new InputStreamReader(response.getEntity().getContent()),
-//				SpeciesList_JSONData.class);
-//
-//		for (Specie_Metadata specie : speciesListResponse.getChildrenNodes()) {
-//			System.out.println("\t" + specie.getObjectName() + " nodeId=" + specie.getNodeId());
-//		}
-//
-//	}
-
-	
-
+	/**
+	 * récupère un Specie à partir de son NodeId
+	 * @param credent
+	 * @param specieNodeId
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
 	public static Specie getSpecieFromNodeId(Credential credent, int specieNodeId) throws ClientProtocolException,
 			IOException {
 
 		DefaultHttpClient client = new DefaultHttpClient();
-
+		String uri =DorisOAuth2ClientCredentials.SERVER_NODE_URL + specieNodeId;
+		
 		if (debug) {
-			DorisAPIConnexionHelper.printJSON(credent, DorisOAuth2ClientCredentials.SERVER_NODE_URL + specieNodeId);
+			DorisAPIConnexionHelper.printJSON(credent, uri);
 			if(debug_SaveJSON){
-				DorisAPIConnexionHelper.saveJSONFile(credent, DorisOAuth2ClientCredentials.SERVER_NODE_URL + specieNodeId, DEBUG_SAVE_JSON_BASE_PATH+ File.separatorChar+"specie_" + specieNodeId+JSON_EXT);
+				DorisAPIConnexionHelper.saveJSONFile(credent, uri, DEBUG_SAVE_JSON_BASE_PATH+ File.separatorChar+"specie_" + specieNodeId+JSON_EXT);
 			}
 		}
 
-		HttpGet getCode = new HttpGet(DorisOAuth2ClientCredentials.SERVER_NODE_URL + specieNodeId);
-		getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
-
+		if(!DorisAPIConnexionHelper.use_http_header_for_token){
+			uri = uri+"?oauth_token="+credent.getAccessToken();
+		}
+		HttpGet getCode = new HttpGet(uri);
+		if(DorisAPIConnexionHelper.use_http_header_for_token){
+			getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
+		}
 		HttpResponse response = client.execute(getCode);
 		System.out.println(response.getStatusLine());
 		ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
@@ -92,16 +75,21 @@ public class DorisAPI_JSONDATABindingHelper {
 	IOException {
 
 		DefaultHttpClient client = new DefaultHttpClient();
+		String uri =DorisOAuth2ClientCredentials.SERVER_NODE_URL + specieNodeId+"/fields";
 		
 		if (debug) {
-			DorisAPIConnexionHelper.printJSON(credent, DorisOAuth2ClientCredentials.SERVER_NODE_URL + specieNodeId+"/fields");
+			DorisAPIConnexionHelper.printJSON(credent, uri);
 			if(debug_SaveJSON){
-				DorisAPIConnexionHelper.saveJSONFile(credent, DorisOAuth2ClientCredentials.SERVER_NODE_URL + specieNodeId+"/fields", DEBUG_SAVE_JSON_BASE_PATH+ File.separatorChar+"specieFields_" + specieNodeId+JSON_EXT);
+				DorisAPIConnexionHelper.saveJSONFile(credent, uri, DEBUG_SAVE_JSON_BASE_PATH+ File.separatorChar+"specieFields_" + specieNodeId+JSON_EXT);
 			}
 		}
-		
-		HttpGet getCode = new HttpGet(DorisOAuth2ClientCredentials.SERVER_NODE_URL + specieNodeId+"/fields");
-		getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
+		if(!DorisAPIConnexionHelper.use_http_header_for_token){
+			uri = uri+"?oauth_token="+credent.getAccessToken();
+		}
+		HttpGet getCode = new HttpGet(uri);
+		if(DorisAPIConnexionHelper.use_http_header_for_token){
+			getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
+		}
 		
 		HttpResponse response = client.execute(getCode);
 		System.out.println(response.getStatusLine());
@@ -137,6 +125,9 @@ public class DorisAPI_JSONDATABindingHelper {
 
 		DefaultHttpClient client = new DefaultHttpClient();
 		
+		String uri =DorisOAuth2ClientCredentials.SERVER_OBJECT_URL + imageId;
+		
+		
 		if (debug) {
 			DorisAPIConnexionHelper.printJSON(credent, DorisOAuth2ClientCredentials.SERVER_OBJECT_URL + imageId);
 			if(debug_SaveJSON){
@@ -144,9 +135,13 @@ public class DorisAPI_JSONDATABindingHelper {
 			}
 		}
 		
-
-		HttpGet getCode = new HttpGet(DorisOAuth2ClientCredentials.SERVER_OBJECT_URL + imageId);
-		getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
+		if(!DorisAPIConnexionHelper.use_http_header_for_token){
+			uri = uri+"?oauth_token="+credent.getAccessToken();
+		}
+		HttpGet getCode = new HttpGet(uri);
+		if(DorisAPIConnexionHelper.use_http_header_for_token){
+			getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
+		}
 		
 		HttpResponse response = client.execute(getCode);
 		System.out.println(response.getStatusLine());

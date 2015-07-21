@@ -29,14 +29,14 @@ public class TestDorisDBRetrieval {
 					.authorizeViaWebPage(DorisOAuth2ClientCredentials.getUserId());
 			
 			// get species List
-//			DorisAPI_JSONTreeHelper.getSpeciesNodeIds(credent, 500);
+			DorisAPI_JSONTreeHelper.getSpeciesNodeIds(credent, 500);
 			// DorisAPI_JSONTreeHelper.getSpecieDorisReferenceIdFromNodeId(credent,19835); // ne fonctionne pas  
 //			DorisAPI_JSONTreeHelper.getSpeciesList(credent);
 //			DorisAPI_JSONDATABindingHelper.getSpeciesList_full_data_binding_version(credent);
 //			DorisAPI_JSONDATABindingHelper.getSpecieFromNodeId_full_data_binding_version(credent, 72613);
 //			DorisAPI_JSONDATABindingHelper.getSpecieFieldsFromNodeId_full_data_binding_version(credent, 72613);
 //			DorisAPI_JSONDATABindingHelper.getImageList(credent);
-			DorisAPI_JSONDATABindingHelper.getImageFromImageId(credent,19835);
+//			DorisAPI_JSONDATABindingHelper.getImageFromImageId(credent,19835);
 			
 			
 //			testSpeciesRetrieval(credent);
