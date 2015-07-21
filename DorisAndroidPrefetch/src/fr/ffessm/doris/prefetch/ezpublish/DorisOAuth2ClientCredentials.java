@@ -34,8 +34,10 @@ public class DorisOAuth2ClientCredentials {
   //public static final String DOMAIN = "http://localhost/test";
   public static final String DOMAIN = "localhost";
   
-  public static final String TOKEN_SERVER_URL = "http://doris.donatello.io/api/auth/oauth/token"; 
-  public static final String AUTHORIZATION_SERVER_URL = "http://doris.donatello.io/oauth/authorize"; 
+  public static final String DORIS_WEB_SERVER_HOST = "dorisprod.donatello.io";
+  
+  public static final String TOKEN_SERVER_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/auth/oauth/token"; 
+  public static final String AUTHORIZATION_SERVER_URL = "http://"+DORIS_WEB_SERVER_HOST+"/oauth/authorize"; 
   
   
   public static final String USER_ID = "dvojtise@gmail.com";  // � remplacer par l'utilisateur du server ?
@@ -45,10 +47,10 @@ public class DorisOAuth2ClientCredentials {
   }
   
 
-  public static final String SERVER_NODE_FIELD_BASE_URL = "http://doris.donatello.io/api/ezp/content/node/";
+  public static final String SERVER_NODE_FIELD_BASE_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezp/content/node/";
   
-  public static final String SERVER_NODE_URL = "http://doris.donatello.io/api/ezp/v1/content/node/";
-  public static final String SERVER_OBJECT_URL = "http://doris.donatello.io/api/ezx/v1/object/";
+  public static final String SERVER_NODE_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezp/v1/content/node/";
+  public static final String SERVER_OBJECT_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezx/v1/object/";
   public static final String SPECIES_NODE_URL = SERVER_NODE_URL+"66";
   public static final String IMAGES_NODE_URL = SERVER_NODE_URL+"19055";
 
