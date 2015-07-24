@@ -3,6 +3,7 @@ package fr.ffessm.doris.prefetch.ezpublish;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.http.HttpResponse;
@@ -119,6 +120,22 @@ public class DorisAPI_JSONDATABindingHelper {
 		// TODO finish
 		
 	}	
+	
+	public static List<Image> getImageListForSpecieNodeId(Credential credent, int specieNodeId) throws ClientProtocolException,
+	IOException {
+
+		DefaultHttpClient client = new DefaultHttpClient();
+		
+		if (debug) {
+			DorisAPIConnexionHelper.printJSON(credent, DorisOAuth2ClientCredentials.IMAGES_NODE_URL+"/list");
+			if(debug_SaveJSON){
+				DorisAPIConnexionHelper.saveJSONFile(credent, DorisOAuth2ClientCredentials.IMAGES_NODE_URL+"/list", DEBUG_SAVE_JSON_BASE_PATH+ File.separatorChar+"imageList"+JSON_EXT);
+			}
+		}
+		
+		// TODO finish
+		return null;
+	}
 	
 	public static Image getImageFromImageId(Credential credent, int imageId) throws ClientProtocolException,
 	IOException {
