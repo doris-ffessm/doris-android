@@ -30,7 +30,11 @@ public class DorisAPI_JSONDATABindingHelper {
 
 	/** Global instance of the JSON factory. */
 	static final JsonFactory JSON_FACTORY = new JacksonFactory();
-
+	public Credential credent;
+	
+	public DorisAPI_JSONDATABindingHelper(Credential credent){
+		this.credent = credent;
+	}
 
 	/**
 	 * récupère un Specie à partir de son NodeId
@@ -40,7 +44,7 @@ public class DorisAPI_JSONDATABindingHelper {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static Specie getSpecieFromNodeId(Credential credent, int specieNodeId) throws ClientProtocolException,
+	public Specie getSpecieFromNodeId(int specieNodeId) throws ClientProtocolException,
 			IOException {
 
 		DefaultHttpClient client = new DefaultHttpClient();
@@ -72,7 +76,7 @@ public class DorisAPI_JSONDATABindingHelper {
 		return specieResponse;
 	}
 	
-	public static SpecieFields getSpecieFieldsFromNodeId(Credential credent, int specieNodeId) throws ClientProtocolException,
+	public SpecieFields getSpecieFieldsFromNodeId(int specieNodeId) throws ClientProtocolException,
 	IOException {
 
 		DefaultHttpClient client = new DefaultHttpClient();
@@ -105,7 +109,7 @@ public class DorisAPI_JSONDATABindingHelper {
 	}
 	
 	
-	public static void getImageList(Credential credent) throws ClientProtocolException,
+	public void getImageList() throws ClientProtocolException,
 	IOException {
 
 		DefaultHttpClient client = new DefaultHttpClient();
@@ -121,7 +125,7 @@ public class DorisAPI_JSONDATABindingHelper {
 		
 	}	
 	
-	public static List<Image> getImageListForSpecieNodeId(Credential credent, int specieNodeId) throws ClientProtocolException,
+	public List<Image> getImageListForSpecieNodeId(int specieNodeId) throws ClientProtocolException,
 	IOException {
 
 		DefaultHttpClient client = new DefaultHttpClient();
@@ -137,7 +141,7 @@ public class DorisAPI_JSONDATABindingHelper {
 		return null;
 	}
 	
-	public static Image getImageFromImageId(Credential credent, int imageId) throws ClientProtocolException,
+	public Image getImageFromImageId(int imageId) throws ClientProtocolException,
 	IOException {
 
 		DefaultHttpClient client = new DefaultHttpClient();

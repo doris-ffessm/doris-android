@@ -19,12 +19,17 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 
 public class DorisAPI_JSONTreeHelper {
 
-	public static boolean debug = true;
-	public static boolean debug_SaveJSON = true;
+	public boolean debug = true;
+	public boolean debug_SaveJSON = true;
 	public static String DEBUG_SAVE_JSON_BASE_PATH = "target/json";
 	public static String JSON_EXT = ".json";
 	
 
+	public Credential credent;
+	
+	public DorisAPI_JSONTreeHelper( Credential credent){
+		this.credent = credent;
+	}
 
 	/** Global instance of the JSON factory. */
 	static final JsonFactory JSON_FACTORY = new JacksonFactory();
@@ -37,7 +42,7 @@ public class DorisAPI_JSONTreeHelper {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static List<Integer> getSpeciesNodeIds(Credential credent, int speciesPerHttpRequest) throws ClientProtocolException, IOException {
+	public List<Integer> getSpeciesNodeIds( int speciesPerHttpRequest) throws ClientProtocolException, IOException {
 		List<Integer> result = new ArrayList<Integer>();
 		
 		DefaultHttpClient client = new DefaultHttpClient();
@@ -76,7 +81,7 @@ public class DorisAPI_JSONTreeHelper {
 		
 		int offset=speciesPerHttpRequest;
 		while(offset < childrenCount){
-			getSpeciesNodeIds(credent, offset, result, speciesPerHttpRequest);
+			getSpeciesNodeIds( offset, result, speciesPerHttpRequest);
 			offset = offset+speciesPerHttpRequest;
 		}
 
@@ -87,14 +92,13 @@ public class DorisAPI_JSONTreeHelper {
 	
 	/**
 	 * Rempli la liste currentSpeciesIds avec les espèces à l'offset
-	 * @param credent
 	 * @param offset
 	 * @param currentSpeciesIds
 	 * @param speciesPerHttpRequest
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static void getSpeciesNodeIds(Credential credent, int offset,  List<Integer> currentSpeciesIds, int speciesPerHttpRequest) throws ClientProtocolException, IOException {
+	public void getSpeciesNodeIds(int offset,  List<Integer> currentSpeciesIds, int speciesPerHttpRequest) throws ClientProtocolException, IOException {
 		DefaultHttpClient client = new DefaultHttpClient();
 		String uri =DorisOAuth2ClientCredentials.SPECIES_NODE_URL + "/list/offset/"+offset+"/limit/"+speciesPerHttpRequest;
 		if(!DorisAPIConnexionHelper.use_http_header_for_token){
@@ -125,7 +129,7 @@ public class DorisAPI_JSONTreeHelper {
 	
 	
 	// ne fonctionne pas : renvoie un "Acc\u00e8s refus\u00e9. Vous n'avez pas le droit d'acc\u00e9der \u00e0 cette zone."
-	public static int getSpecieDorisReferenceIdFromNodeId(Credential credent, int specieNodeId) throws ClientProtocolException,
+	public int getSpecieDorisReferenceIdFromNodeId(int specieNodeId) throws ClientProtocolException,
 	IOException {
 
 		DefaultHttpClient client = new DefaultHttpClient();

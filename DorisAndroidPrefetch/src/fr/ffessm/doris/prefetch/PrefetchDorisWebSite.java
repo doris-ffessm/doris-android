@@ -353,6 +353,10 @@ public class PrefetchDorisWebSite {
 		log.debug("doMain() - Début upgrade images pour Doris V4");
 		
 		JsonToDB jsonToDB = new JsonToDB();
+		Credential credent = DorisAPIConnexionHelper
+				.authorizeViaWebPage(DorisOAuth2ClientCredentials.getUserId());
+		DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper(credent);
+		DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper(credent);
 		
 		
 		// copie ancienne base pour travailler dessus
@@ -376,12 +380,11 @@ public class PrefetchDorisWebSite {
 		try{
 			// remove all previous photos
 			TableUtils.clearTable(connectionSource, PhotoFiche.class);
-			Credential credent = DorisAPIConnexionHelper
-					.authorizeViaWebPage(DorisOAuth2ClientCredentials.getUserId());
+			
 		
 			// récupère tous les nodeIds des fiches connues de Doris V4
 			
-			List<Integer> nodeIds =DorisAPI_JSONTreeHelper.getSpeciesNodeIds(credent, 500);
+			List<Integer> nodeIds =dorisAPI_JSONTreeHelper.getSpeciesNodeIds(500);
 			
 			int count = 0;
 			for (Integer specieNodeId : nodeIds) {
@@ -392,7 +395,7 @@ public class PrefetchDorisWebSite {
 				}
 				
 				// récupère sur DorisV4 la fiche correspondante
-				SpecieFields specieFields = DorisAPI_JSONDATABindingHelper.getSpecieFieldsFromNodeId(credent, specieNodeId);
+				SpecieFields specieFields = dorisAPI_JSONDATABindingHelper.getSpecieFieldsFromNodeId(specieNodeId);
 				String specieDorisReferenceId = specieFields.getFields().getReference().getValue();
 				log.debug(" nodeId="+specieNodeId+", dorisId="+specieDorisReferenceId +", imagesNodeIds="+specieFields.getFields().getImages().getValue());
 				
@@ -404,7 +407,7 @@ public class PrefetchDorisWebSite {
 					try{
 						int imageId = Integer.parseInt(possibleImageId.replaceAll("&", ""));
 						// recupère les données associées à l'image
-						imageData.add(DorisAPI_JSONDATABindingHelper.getImageFromImageId(credent, imageId));	
+						imageData.add(dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId));	
 
 					} catch ( NumberFormatException nfe){
 						// ignore les entrées invalides

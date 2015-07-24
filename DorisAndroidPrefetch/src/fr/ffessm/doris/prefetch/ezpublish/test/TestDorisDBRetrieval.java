@@ -29,7 +29,7 @@ public class TestDorisDBRetrieval {
 					.authorizeViaWebPage(DorisOAuth2ClientCredentials.getUserId());
 			
 			// get species List
-			DorisAPI_JSONTreeHelper.getSpeciesNodeIds(credent, 500);
+			new DorisAPI_JSONTreeHelper(credent).getSpeciesNodeIds( 500);
 			// DorisAPI_JSONTreeHelper.getSpecieDorisReferenceIdFromNodeId(credent,19835); // ne fonctionne pas  
 //			DorisAPI_JSONTreeHelper.getSpeciesList(credent);
 //			DorisAPI_JSONDATABindingHelper.getSpeciesList_full_data_binding_version(credent);
@@ -53,13 +53,13 @@ public class TestDorisDBRetrieval {
 	public static void testSpeciesRetrieval(Credential credent) throws ClientProtocolException, IOException{
 		//List<Integer> speciesNodeIds =DorisAPI_JSONTreeHelper.getSpeciesNodeIds(credent, 500);
 		List<Integer> speciesNodeIds = new ArrayList<Integer>();
-		DorisAPI_JSONTreeHelper.getSpeciesNodeIds(credent, 0,speciesNodeIds, 500 );
+		new DorisAPI_JSONTreeHelper(credent).getSpeciesNodeIds( 0,speciesNodeIds, 500 );
 		int i = 0;
 		for (Integer specieNodeId : speciesNodeIds) {
 			if(i++ > 5){
 				break;
 			}
-			SpecieFields specieFields = DorisAPI_JSONDATABindingHelper.getSpecieFieldsFromNodeId(credent, specieNodeId);
+			SpecieFields specieFields = new DorisAPI_JSONDATABindingHelper(credent).getSpecieFieldsFromNodeId( specieNodeId);
 			String specieDorisReferenceId = specieFields.getFields().getReference().getValue();
 			System.out.println(" nodeId="+specieNodeId+", dorisId="+specieDorisReferenceId);
 		}
