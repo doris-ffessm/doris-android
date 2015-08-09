@@ -44,22 +44,38 @@ package fr.ffessm.doris.prefetch;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
 
+import com.google.api.client.auth.oauth2.Credential;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
+import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
 import fr.ffessm.doris.android.sitedoris.ErrorCollector;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPIConnexionHelper;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
+import fr.ffessm.doris.prefetch.ezpublish.DorisOAuth2ClientCredentials;
+import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.specie_fields.SpecieFields;
 
 public class PrefetchDorisWebSite {
 
@@ -79,6 +95,7 @@ public class PrefetchDorisWebSite {
 		CDDVD_HI,
 		TEST,
 		DB_TO_ANDROID,
+		DB_IMAGE_UPGRADE,
 		DWNLD_TO_REF,
 		ERASE_BUT_REF,
 		ERASE_ALL
@@ -120,6 +137,10 @@ public class PrefetchDorisWebSite {
 		} else if ( action == ActionKind.DB_TO_ANDROID ) {
 			
 			dbToAndroidAction();
+		
+		} else if ( action == ActionKind.DB_IMAGE_UPGRADE ) {
+			
+			dbImageV4UpgradeAction();
 			
 		} else if ( action == ActionKind.DWNLD_TO_REF ) {
 
@@ -327,6 +348,110 @@ public class PrefetchDorisWebSite {
 		log.debug("doMain() - Fin Déplacement Base");
 	}
 	
+	
+	private void dbImageV4UpgradeAction() throws Exception{
+		log.debug("doMain() - Début upgrade images pour Doris V4");
+		
+		JsonToDB jsonToDB = new JsonToDB();
+		Credential credent = DorisAPIConnexionHelper
+				.authorizeViaWebPage(DorisOAuth2ClientCredentials.getUserId());
+		DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper(credent);
+		DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper(credent);
+		
+		
+		// copie ancienne base pour travailler dessus
+		String dataBaseName = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.lastIndexOf(".") );
+		log.debug("dataBaseName : " + dataBaseName);
+		File fichierDB= new File(dataBaseName+".db");
+		if (fichierDB.exists()){
+			File fichierDBNew = new File(dataBaseName+"_for_V4.db");
+			FileUtils.copyFile(fichierDB, fichierDBNew);
+			
+		}
+		
+		// - - - Base de Données - - -
+		PrefetchDBTools prefetchDBTools = new PrefetchDBTools();
+		// create our data-source for the database
+		connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL.replaceAll("DorisAndroid.db", "DorisAndroid_for_V4.db"));
+		
+		// setup our database and DAOs
+		dbContext = prefetchDBTools.setupDatabase(connectionSource);
+			
+		try{
+			// remove all previous photos
+			TableUtils.clearTable(connectionSource, PhotoFiche.class);
+			
+		
+			// récupère tous les nodeIds des fiches connues de Doris V4
+			
+			List<Integer> nodeIds =dorisAPI_JSONTreeHelper.getSpeciesNodeIds(500);
+			
+			int count = 0;
+			for (Integer specieNodeId : nodeIds) {
+				count++;
+				if( count > nbMaxFichesATraiter ){
+					log.debug("doMain() - nbMaxFichesATraiter atteind");
+					break;
+				}
+				
+				// récupère sur DorisV4 la fiche correspondante
+				SpecieFields specieFields = dorisAPI_JSONDATABindingHelper.getSpecieFieldsFromNodeId(specieNodeId);
+				String specieDorisReferenceId = specieFields.getFields().getReference().getValue();
+				log.debug(" nodeId="+specieNodeId+", dorisId="+specieDorisReferenceId +", imagesNodeIds="+specieFields.getFields().getImages().getValue());
+				
+				
+				
+				List<Image> imageData = new ArrayList<Image>();
+				// itère sur les images trouvées pour cette fiche
+				for(String possibleImageId : specieFields.getFields().getImages().getValue().split("\\|")){
+					try{
+						int imageId = Integer.parseInt(possibleImageId.replaceAll("&", ""));
+						// recupère les données associées à l'image
+						imageData.add(dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId));	
+
+					} catch ( NumberFormatException nfe){
+						// ignore les entrées invalides
+					}
+				}
+				
+				final Fiche fiche = dbContext.ficheDao.queryForFirst(
+						dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", specieDorisReferenceId).prepare()
+					);
+				fiche.setContextDB(dbContext);
+				// recrée une entrée dans la base pour l'image
+				final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageData);
+				TransactionManager.callInTransaction(connectionSource,
+					new Callable<Void>() {
+						public Void call() throws Exception {
+							int count = 0;
+							for (PhotoFiche photoFiche : listePhotoFiche){
+								photoFiche.setFiche(fiche);
+								dbContext.photoFicheDao.create(photoFiche);
+								
+								if (count == 0) {
+									// met à jour l'image principale de la fiche
+									fiche.setPhotoPrincipale(photoFiche);
+									dbContext.ficheDao.update(fiche);
+								}
+								count++;
+							}
+							return null;
+					    }
+					});
+
+			}
+			
+		
+		} finally {
+			// destroy the data source which should close underlying connections
+			log.debug("doMain() - Fermeture Base");
+			if (connectionSource != null) {
+				connectionSource.close();
+			}
+		}
+				
+		log.debug("doMain() - Fin upgrade images pour Doris V4");
+	}
 	
 	private void downloadToRefAction() {
 		log.debug("doMain() - Début Déplacement Fichiers vers Ref");
@@ -575,6 +700,7 @@ public class PrefetchDorisWebSite {
 		System.out.println("  CDDVD_HI        	Comme UPDATE + Permet de télécharger les photos manquantes et de créer un dossier avec toutes les images disponibles dans lequel il est possible de naviguer sans connection internet (peut servir de sauvegarde du site)");
 		System.out.println("  TEST          	Pour les développeurs");
 		System.out.println("  DB_TO_ANDROID     Déplace la base du Prefetch vers DorisAndroid");
+		System.out.println("  DB_IMAGE_UPGRADE  remplace les images de la base courante par celles du nouveau site Doris V4");
 		System.out.println("  DWNLD_TO_REF      Déplace fichiers de html vers html_ref et ceux de images vers images_ref");
 		System.out.println("  ERASE_ALL         Efface tout le contenu de run");
 		System.out.println("  ERASE_BUT_REF     Efface le contenu de run sauf html_ref et images_ref");
