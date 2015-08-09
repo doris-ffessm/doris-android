@@ -317,7 +317,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 			case android.R.id.home:
 				
 				Intent upIntent = getIntentPrecedent();
-				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
+				//Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
 				
 		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");

@@ -97,7 +97,7 @@ public class DorisApplicationContext {
 	// Accueil <-> Groupes <-> Liste Fiches <-> Fiche
 	// Accueil <-> Groupes <-> Liste Images Fiches <-> Fiche
 	// ... <-> ... <-> Fiche <-> Définitions, Intervenants ...
-	public Intent[] retourIntent = new Intent[10];
+	public Intent[] retourIntent = new Intent[20];
 	public int retourIntentNiveau;
 	
 	/** listener that have registered for being notified of data changes */
