@@ -455,7 +455,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         		unfoldAllDetails();
         		return true;
         	case R.id.detailsfiche_elementview_action_glossaire:
-        		setIntentPourRetour();
+        		DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
         		Intent toDefinitionlView = new Intent(context, Glossaire_ClassListViewActivity.class);
             	context.startActivity(toDefinitionlView);
             	return true;
@@ -471,7 +471,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				Intent upIntent = getIntentPrecedent();
+				Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
 				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
 				
 				if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
@@ -536,7 +536,15 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	    return false;
     }
   
-
+	@Override
+	protected void onDestroy(){
+		Log.d(LOG_TAG, "onDestroy()");
+		
+		// Pour maintenir le tableau en retournant dans la case précédente
+		DorisApplicationContext.getInstance().getIntentPrecedent();
+		
+		super.onDestroy();
+	}
 	// -------------- handler (for indexBar)
     
     protected void addFoldableTextView(LinearLayout containerLayout, String titre, CharSequence texte){
@@ -866,7 +874,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         	Log.d(LOG_TAG, "onClick() - v : "+v.toString());
         	Log.d(LOG_TAG, "onClick() - _position : "+_position+" - _ficheID : "+_ficheID);
             
-        	setIntentPourRetour();
+        	DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
         	
         	// on selecting grid view image
             // launch full screen activity
@@ -878,15 +886,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
  
     }
     
-    public void setIntentPourRetour(){
-	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
-	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
-    }
-    public Intent getIntentPrecedent(){
-		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
-    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
-		return upIntent;
-    }
+
     
     // End of user code
 

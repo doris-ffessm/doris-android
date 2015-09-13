@@ -97,9 +97,22 @@ public class DorisApplicationContext {
 	// Accueil <-> Groupes <-> Liste Fiches <-> Fiche
 	// Accueil <-> Groupes <-> Liste Images Fiches <-> Fiche
 	// ... <-> ... <-> Fiche <-> Définitions, Intervenants ...
-	public Intent[] retourIntent = new Intent[20];
+	public Intent[] retourIntent = new Intent[5];
 	public int retourIntentNiveau;
-	
+    public void setIntentPourRetour(Intent currentIntent){
+    	Log.d(LOG_TAG, "setIntentPourRetour() - retourIntentNiveau : "+retourIntentNiveau);
+	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
+	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = currentIntent;
+	    Log.d(LOG_TAG, "setIntentPourRetour() - retourIntentNiveau : "+retourIntentNiveau);
+    }
+    public Intent getIntentPrecedent(){
+    	Log.d(LOG_TAG, "getIntentPrecedent() - retourIntentNiveau : "+retourIntentNiveau);
+		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
+    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
+    	Log.d(LOG_TAG, "getIntentPrecedent() - retourIntentNiveau : "+retourIntentNiveau);
+		return upIntent;
+    }
+    
 	/** listener that have registered for being notified of data changes */
 	private ArrayList<DataChangedListener>  dataChangeListeners = new ArrayList<DataChangedListener>();
 	
