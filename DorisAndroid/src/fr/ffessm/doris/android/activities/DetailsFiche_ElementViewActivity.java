@@ -536,15 +536,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	    return false;
     }
   
-	@Override
-	protected void onDestroy(){
-		Log.d(LOG_TAG, "onDestroy()");
-		
-		// Pour maintenir le tableau en retournant dans la case précédente
-		DorisApplicationContext.getInstance().getIntentPrecedent();
-		
-		super.onDestroy();
-	}
 	// -------------- handler (for indexBar)
     
     protected void addFoldableTextView(LinearLayout containerLayout, String titre, CharSequence texte){
