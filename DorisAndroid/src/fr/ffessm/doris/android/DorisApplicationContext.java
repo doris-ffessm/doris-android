@@ -105,8 +105,13 @@ public class DorisApplicationContext {
 	   
     	if(currentIntent.getComponent() !=
     			getInstance().retourIntent[getInstance().retourIntentNiveau].getComponent()) {
-	    	getInstance().retourIntentNiveau += 1;
-		    getInstance().retourIntent[getInstance().retourIntentNiveau] = currentIntent;
+    		
+    		// Ne devrait pas être utile mais évite les plantages
+        	if(getInstance().retourIntentNiveau < 19) {
+        		getInstance().retourIntentNiveau += 1;
+        	}
+        	
+	    	getInstance().retourIntent[getInstance().retourIntentNiveau] = currentIntent;
     	}
     	
 	    Log.d(LOG_TAG, "setIntentPourRetour() - retourIntentNiveau : "+retourIntentNiveau);
