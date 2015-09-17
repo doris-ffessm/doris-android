@@ -170,7 +170,7 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				Intent upIntent = getIntentPrecedent();
+				Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
 				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
 				
 		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
@@ -210,11 +210,7 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
 	}
 
 	// Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_additional_operations
-    public Intent getIntentPrecedent(){
-		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
-    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
-		return upIntent;
-    }
+
 	
 	// End of user code
 

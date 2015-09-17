@@ -100,15 +100,21 @@ public class DorisApplicationContext {
 	public Intent[] retourIntent = new Intent[5];
 	public int retourIntentNiveau;
     public void setIntentPourRetour(Intent currentIntent){
+    	Log.d(LOG_TAG, "setIntentPourRetour() - currentIntent.getComponent() : "+currentIntent.getComponent());
     	Log.d(LOG_TAG, "setIntentPourRetour() - retourIntentNiveau : "+retourIntentNiveau);
-	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
-	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = currentIntent;
+	   
+    	getInstance().retourIntentNiveau += 1;
+	    getInstance().retourIntent[getInstance().retourIntentNiveau] = currentIntent;
+	    
 	    Log.d(LOG_TAG, "setIntentPourRetour() - retourIntentNiveau : "+retourIntentNiveau);
     }
     public Intent getIntentPrecedent(){
     	Log.d(LOG_TAG, "getIntentPrecedent() - retourIntentNiveau : "+retourIntentNiveau);
-		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
-    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
+		
+    	Intent upIntent = getInstance().retourIntent[getInstance().retourIntentNiveau]; 
+    	getInstance().retourIntentNiveau -= 1;
+    	Log.d(LOG_TAG, "getIntentPrecedent() - currentIntent.getComponent() : "+upIntent.getComponent());
+    	
     	Log.d(LOG_TAG, "getIntentPrecedent() - retourIntentNiveau : "+retourIntentNiveau);
 		return upIntent;
     }

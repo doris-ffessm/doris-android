@@ -259,7 +259,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 						public void onClick(View v) {
 							Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - onClick");
 
-							setIntentPourRetour();
+							DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
 							
 							Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
 							toDetailView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -279,7 +279,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 					public boolean onLongClick(View v) {
 						Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - onLongClick");
 						
-						setIntentPourRetour();
+						DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
 						
 						Intent toImageView = new Intent(context, ImagePleinEcran_CustomViewActivity.class);
 						toImageView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -613,14 +613,5 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
    
     }
     
-    public void setIntentPourRetour(){
-	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
-	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = ((Activity) context).getIntent();
-    }
-    public Intent getIntentPrecedent(){
-		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
-    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
-		return upIntent;
-    }
     
 }
