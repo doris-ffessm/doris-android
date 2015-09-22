@@ -55,6 +55,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.util.LruCache;
@@ -216,7 +217,13 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 		
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeimageficheavecfiltre_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
-		labelSB.append(entry.getNomCommunNeverEmpty());
+        
+        if (entry.getNomCommunNeverEmpty() != "") {
+        	labelSB.append(entry.getNomCommunNeverEmpty());
+        } else {
+        	labelSB.append(entry.getNomScientifiqueTxt());
+        	tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.ITALIC);
+        }
 		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
         // End of user code
