@@ -76,6 +76,7 @@ import fr.ffessm.doris.prefetch.ezpublish.DorisOAuth2ClientCredentials;
 import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.specie_fields.SpecieFields;
+import fr.ffessm.doris.prefetch.ezpublish.test.TestDorisDBRetrieval;
 
 public class PrefetchDorisWebSite {
 
@@ -176,11 +177,9 @@ public class PrefetchDorisWebSite {
 		prefetchDBTools.databaseInitialisation(connectionSource);
 		outilsBase = new DataBase_Outils(dbContext);
 					
-		PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, ActionKind.INIT, nbMaxFichesATraiter);
-		if ( glossaire.prefetch() == -1 ) {
-			log.debug("doMain() - Erreur Glossaire" );
-			System.exit(1);
-		}
+		// - - - Test Prefetch JASON => DORIS 3.0
+		
+		TestDorisDBRetrieval.main(null);
 		
 		log.debug("doMain() - Fin TEST");
 	}
@@ -520,7 +519,7 @@ public class PrefetchDorisWebSite {
 		} else {
 			// Ne devrait jamais arriver
 			log.error("Le dossier run n'existe pas !");
-			System.exit(1);
+			System.exit(0);
 		}
 		
 		log.debug("doMain() - Fin Effacement Fichiers autres que Ref");
