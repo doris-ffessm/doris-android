@@ -547,7 +547,7 @@ public class PrefetchDorisWebSite {
 		} else {
 			// Ne devrait jamais arriver
 			log.error("Le dossier run n'existe pas !");
-			System.exit(1);
+			System.exit(0);
 		}
 		
 		log.debug("doMain() - Fin Effacement tous Dossiers");
