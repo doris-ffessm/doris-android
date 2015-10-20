@@ -40,7 +40,7 @@ public class DorisOAuth2ClientCredentials {
   public static final String AUTHORIZATION_SERVER_URL = "http://"+DORIS_WEB_SERVER_HOST+"/oauth/authorize"; 
   
   
-  public static final String USER_ID = "dvojtise@gmail.com";  // � remplacer par l'utilisateur du server ?
+  public static final String USER_ID = "dvojtise@gmail.com";  // à remplacer par l'utilisateur du server ?
   
   public static String getUserId(){
 	  return USER_ID;
@@ -51,7 +51,37 @@ public class DorisOAuth2ClientCredentials {
   
   public static final String SERVER_NODE_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezp/v1/content/node/";
   public static final String SERVER_OBJECT_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezx/v1/object/";
+  
+  // Les Espèces
   public static final String SPECIES_NODE_URL = SERVER_NODE_URL+"66";
+  
+  // Les Photos des Espèces
   public static final String IMAGES_NODE_URL = SERVER_NODE_URL+"19055";
 
+  // Bibliographie
+  public static final String BIBLIO_NODE_URL = SERVER_NODE_URL+"68";
+  
+  // Glossaire
+  public static final String GLOSSAIRE_NODE_URL = SERVER_NODE_URL+"69";
+  
+  // Zones Géographique
+  public static final String ZONES_NODE_URL = SERVER_NODE_URL+"70";
+ 
+  // Taxons
+  public static final String TAXONS_NODE_URL = SERVER_NODE_URL+"71";
+  
+  // Groupes
+  public static final String GROUPES_NODE_URL = SERVER_NODE_URL+"87";
+  
+  // Contributeurs
+  public static final String PARTICIPANTS_NODE_URL = SERVER_NODE_URL+"91";
+  
+  // Videos 64
+  // Aides 65
+  // Liens 67
+  // Commentaires 72
+  // Forum 75
+  // Actualités 86
+  // Types de lien 89
+  // Sur­groupes 119
 }

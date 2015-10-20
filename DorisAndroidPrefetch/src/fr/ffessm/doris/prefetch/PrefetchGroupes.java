@@ -244,6 +244,22 @@ public class PrefetchGroupes {
 			return -1;
 		}
 
-
 	}
+	
+	public int prefetchV4() {
+		// - - - Groupes - - -
+		// Récupération de la liste des groupes sur le site de DORIS
+		// En UPDATE et CDDVD on re-télécharge la liste
+		try {
+			
+			
+			return listeGroupes.size();
+		} catch ( Exception e) {
+			// une erreur est survenue
+			log.error("Une erreur est survenue dans PrefetchGroupes");
+			log.error(e);
+			return -1;
+		}
+	}
+	
 }

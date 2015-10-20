@@ -163,24 +163,31 @@ public class PrefetchDorisWebSite {
 	private void testAction() throws Exception{
 		log.debug("doMain() - Début TEST");
 		
-		// Vérification, Création, Sauvegarde des dossiers de travail
-		renommageDossiers(ActionKind.INIT);
-		creationDossiers(ActionKind.INIT);
-		creationDossiersRef(ActionKind.INIT);
-		
 		// - - - Base de Données - - -
 		PrefetchDBTools prefetchDBTools = new PrefetchDBTools();
+		
+		// create empty DB and initialize it for Android
 		prefetchDBTools.initializeSQLite(PrefetchConstants.DATABASE_URL);
+		
+		// create our data-source for the database
 		connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
+		
+		// setup our database and DAOs
 		dbContext = prefetchDBTools.setupDatabase(connectionSource);
+		
 		prefetchDBTools.databaseInitialisation(connectionSource);
+		
 		outilsBase = new DataBase_Outils(dbContext);
-					
-		PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, ActionKind.INIT, nbMaxFichesATraiter);
-		if ( glossaire.prefetch() == -1 ) {
-			log.debug("doMain() - Erreur Glossaire" );
-			System.exit(1);
-		}
+		
+		JsonToDB jsonToDB = new JsonToDB();
+		Credential credent = DorisAPIConnexionHelper
+				.authorizeViaWebPage(DorisOAuth2ClientCredentials.getUserId());
+		DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper(credent);
+		DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper(credent);
+
+		
+		PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, action, nbMaxFichesATraiter);
+		log.debug("doMain() - Test Groupes V4 : " + groupes.prefetchV4() );
 		
 		log.debug("doMain() - Fin TEST");
 	}
@@ -225,7 +232,7 @@ public class PrefetchDorisWebSite {
 			}
 
 			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_groupes_testsuites.xml");
-			log.debug("doMain() - debbug" );
+		
 			
 			// - - - Intervenants - - -
 			// On boucle sur les initiales des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
@@ -384,7 +391,7 @@ public class PrefetchDorisWebSite {
 		
 			// récupère tous les nodeIds des fiches connues de Doris V4
 			
-			List<Integer> nodeIds =dorisAPI_JSONTreeHelper.getSpeciesNodeIds(500);
+			List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getSpeciesNodeIds(500);
 			
 			int count = 0;
 			for (Integer specieNodeId : nodeIds) {
@@ -418,8 +425,10 @@ public class PrefetchDorisWebSite {
 						dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", specieDorisReferenceId).prepare()
 					);
 				fiche.setContextDB(dbContext);
+				
 				// recrée une entrée dans la base pour l'image
 				final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageData);
+				
 				TransactionManager.callInTransaction(connectionSource,
 					new Callable<Void>() {
 						public Void call() throws Exception {
@@ -553,6 +562,7 @@ public class PrefetchDorisWebSite {
 		
 		log.debug("doMain() - Fin Effacement tous Dossiers");
 	}
+	
 	/**
 	 * Vérification des arguments passés à l'application
 	 * 
