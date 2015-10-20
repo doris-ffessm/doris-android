@@ -76,6 +76,7 @@ import fr.ffessm.doris.prefetch.ezpublish.DorisOAuth2ClientCredentials;
 import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.specie_fields.SpecieFields;
+import fr.ffessm.doris.prefetch.ezpublish.test.TestDorisDBRetrieval;
 
 public class PrefetchDorisWebSite {
 
@@ -178,7 +179,7 @@ public class PrefetchDorisWebSite {
 		prefetchDBTools.databaseInitialisation(connectionSource);
 		
 		outilsBase = new DataBase_Outils(dbContext);
-		
+	
 		JsonToDB jsonToDB = new JsonToDB();
 		Credential credent = DorisAPIConnexionHelper
 				.authorizeViaWebPage(DorisOAuth2ClientCredentials.getUserId());
@@ -529,7 +530,7 @@ public class PrefetchDorisWebSite {
 		} else {
 			// Ne devrait jamais arriver
 			log.error("Le dossier run n'existe pas !");
-			System.exit(1);
+			System.exit(0);
 		}
 		
 		log.debug("doMain() - Fin Effacement Fichiers autres que Ref");
@@ -557,7 +558,7 @@ public class PrefetchDorisWebSite {
 		} else {
 			// Ne devrait jamais arriver
 			log.error("Le dossier run n'existe pas !");
-			System.exit(1);
+			System.exit(0);
 		}
 		
 		log.debug("doMain() - Fin Effacement tous Dossiers");
