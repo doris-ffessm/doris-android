@@ -59,6 +59,8 @@ import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
 
 
 public class PrefetchGlossaire {
@@ -249,4 +251,27 @@ public class PrefetchGlossaire {
 
 
 	}
+
+	public int prefetchV4(DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper, DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper) {
+		log.debug("prefetchV4()");
+		try {
+			List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getGlossaireNodeIds(20);
+			
+			log.debug("nodeIds.size() : "+nodeIds.size());
+			
+			for (Integer nodeId : nodeIds){
+				log.debug("nodeId : "+nodeId);
+				dorisAPI_JSONDATABindingHelper.getTermeFromTermeId(nodeId);
+			}
+			
+			
+			return nodeIds.size();
+		} catch ( Exception e) {
+			// une erreur est survenue
+			log.error("Une erreur est survenue dans PrefetchGlossaire");
+			log.error(e);
+			return -1;
+		}
+	}
+
 }

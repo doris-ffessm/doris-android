@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
@@ -16,6 +18,8 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
+import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
+import fr.ffessm.doris.prefetch.PrefetchGlossaire;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.specie.Specie;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.specie_fields.SpecieFields;
@@ -27,7 +31,8 @@ public class DorisAPI_JSONDATABindingHelper {
 	public static String DEBUG_SAVE_JSON_BASE_PATH = "target/json";
 	public static String JSON_EXT = ".json";
 
-
+	public static Log log = LogFactory.getLog(DorisAPI_JSONDATABindingHelper.class);
+	
 	/** Global instance of the JSON factory. */
 	static final JsonFactory JSON_FACTORY = new JacksonFactory();
 	public Credential credent;
@@ -175,5 +180,50 @@ public class DorisAPI_JSONDATABindingHelper {
 		
 	}	
 	
+	public DefinitionGlossaire getTermeFromTermeId(int termeId) throws ClientProtocolException,
+	IOException {
 
+		DefaultHttpClient client = new DefaultHttpClient();
+		
+		String uri =DorisOAuth2ClientCredentials.SERVER_OBJECT_URL + termeId;
+		
+		
+		if (debug) {
+			DorisAPIConnexionHelper.printJSON(credent, DorisOAuth2ClientCredentials.SERVER_OBJECT_URL + termeId);
+			if(debug_SaveJSON){
+				DorisAPIConnexionHelper.saveJSONFile(credent, DorisOAuth2ClientCredentials.SERVER_OBJECT_URL + termeId, DEBUG_SAVE_JSON_BASE_PATH+ File.separatorChar+"image_" + termeId+JSON_EXT);
+			}
+		}
+		
+		if(!DorisAPIConnexionHelper.use_http_header_for_token){
+			uri = uri+"?oauth_token="+credent.getAccessToken();
+		}
+		HttpGet getCode = new HttpGet(uri);
+		if(DorisAPIConnexionHelper.use_http_header_for_token){
+			getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
+		}
+		
+		HttpResponse response = client.execute(getCode);
+		System.out.println(response.getStatusLine());
+		ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
+		
+		log.debug("010");
+		
+		
+		Specie specieResponse = mapper.readValue(new InputStreamReader(response.getEntity().getContent()), Specie.class);
+		System.out.println("\t Specie: " + specieResponse.getMetadata().getObjectName());
+		log.debug("020");
+		
+		for (Entry<String, Object> entry : specieResponse.getLinks().entrySet()) {
+			log.debug("030");
+			System.out.println("\t\t" + entry.getKey() + "\t" + entry.getValue());
+	//		printJSON(credent, entry.getValue().toString());
+		}
+		
+		DefinitionGlossaire definition = new DefinitionGlossaire();
+		
+		return definition;
+		
+		
+	}	
 }

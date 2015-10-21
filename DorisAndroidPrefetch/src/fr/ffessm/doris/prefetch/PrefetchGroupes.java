@@ -60,6 +60,7 @@ import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
 
 
 public class PrefetchGroupes {
@@ -246,14 +247,15 @@ public class PrefetchGroupes {
 
 	}
 	
-	public int prefetchV4() {
+	public int prefetchV4(DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper) {
 		// - - - Groupes - - -
 		// Récupération de la liste des groupes sur le site de DORIS
 		// En UPDATE et CDDVD on re-télécharge la liste
+		log.debug("prefetchV4()");
 		try {
+			List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getGroupesNodeIds();
 			
-			
-			return listeGroupes.size();
+			return nodeIds.size();
 		} catch ( Exception e) {
 			// une erreur est survenue
 			log.error("Une erreur est survenue dans PrefetchGroupes");

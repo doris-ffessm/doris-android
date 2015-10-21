@@ -164,20 +164,24 @@ public class PrefetchDorisWebSite {
 	private void testAction() throws Exception{
 		log.debug("doMain() - Début TEST");
 		
+		// copie ancienne base pour travailler dessus
+		String dataBaseName = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.lastIndexOf(".") );
+		log.debug("dataBaseName : " + dataBaseName);
+		File fichierDB= new File(dataBaseName+".db");
+		if (fichierDB.exists()){
+			File fichierDBNew = new File(dataBaseName+"_for_V4.db");
+			FileUtils.copyFile(fichierDB, fichierDBNew);
+			
+		}
+		
 		// - - - Base de Données - - -
 		PrefetchDBTools prefetchDBTools = new PrefetchDBTools();
-		
-		// create empty DB and initialize it for Android
-		prefetchDBTools.initializeSQLite(PrefetchConstants.DATABASE_URL);
-		
 		// create our data-source for the database
-		connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
+		connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL.replaceAll("DorisAndroid.db", "DorisAndroid_for_V4.db"));
 		
 		// setup our database and DAOs
 		dbContext = prefetchDBTools.setupDatabase(connectionSource);
-		
-		prefetchDBTools.databaseInitialisation(connectionSource);
-		
+
 		outilsBase = new DataBase_Outils(dbContext);
 	
 		JsonToDB jsonToDB = new JsonToDB();
@@ -186,9 +190,9 @@ public class PrefetchDorisWebSite {
 		DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper(credent);
 		DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper(credent);
 
-		
-		PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, action, nbMaxFichesATraiter);
-		log.debug("doMain() - Test Groupes V4 : " + groupes.prefetchV4() );
+
+		PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, action, nbMaxFichesATraiter);
+		log.debug("doMain() - Test Groupes V4 : " + glossaire.prefetchV4(dorisAPI_JSONTreeHelper, dorisAPI_JSONDATABindingHelper) );
 		
 		log.debug("doMain() - Fin TEST");
 	}
@@ -391,7 +395,6 @@ public class PrefetchDorisWebSite {
 			
 		
 			// récupère tous les nodeIds des fiches connues de Doris V4
-			
 			List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getSpeciesNodeIds(500);
 			
 			int count = 0;

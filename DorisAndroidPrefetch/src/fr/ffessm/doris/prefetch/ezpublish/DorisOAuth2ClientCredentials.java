@@ -65,13 +65,17 @@ public class DorisOAuth2ClientCredentials {
   public static final String GLOSSAIRE_NODE_URL = SERVER_NODE_URL+"69";
   
   // Zones Géographique
+  //TODO : toujours aucun ????
   public static final String ZONES_NODE_URL = SERVER_NODE_URL+"70";
  
-  // Taxons
+  // Taxons - Valeurs : Embranchement / Sous-embranchement / Super-classe / Classe / Sous-classe / Super-ordre
+  //                    Ordre / Sous-ordre / Famille / Sous-famille
   public static final String TAXONS_NODE_URL = SERVER_NODE_URL+"71";
   
-  // Groupes
+  // Groupes 87
+  // TODO : toujours aucun ????
   public static final String GROUPES_NODE_URL = SERVER_NODE_URL+"87";
+  public static final String SURGROUPES_NODE_URL = SERVER_NODE_URL+"119";
   
   // Contributeurs
   public static final String PARTICIPANTS_NODE_URL = SERVER_NODE_URL+"91";
@@ -83,5 +87,4 @@ public class DorisOAuth2ClientCredentials {
   // Forum 75
   // Actualités 86
   // Types de lien 89
-  // Sur­groupes 119
 }
