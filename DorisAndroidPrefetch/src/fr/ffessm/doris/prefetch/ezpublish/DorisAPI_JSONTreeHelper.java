@@ -241,6 +241,7 @@ public class DorisAPI_JSONTreeHelper {
 		DefaultHttpClient client = new DefaultHttpClient();
 		
 		String uri = DorisOAuth2ClientCredentials.GLOSSAIRE_NODE_URL + "/list/limit/"+termesPerHttpRequest;
+		log.debug("uri : "+uri.toString());
 		
 		if(!DorisAPIConnexionHelper.use_http_header_for_token){
 			uri = uri+"?oauth_token="+credent.getAccessToken();
@@ -277,7 +278,7 @@ public class DorisAPI_JSONTreeHelper {
 			log.debug("noeud terme : "+objectMapper.writeValueAsString(glossaireNodeInList));
 			log.debug(glossaireNodeInList.path("objectName").textValue());
 			
-			result.add(glossaireNodeInList.path("nodeId").asInt());
+			result.add(glossaireNodeInList.path("objectId").asInt());
 		}
 		log.debug("nb Termes :"+result.size());
 

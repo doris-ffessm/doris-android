@@ -13,6 +13,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.json.JsonFactory;
@@ -20,6 +21,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.prefetch.PrefetchGlossaire;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.definition.Definition;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.specie.Specie;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.specie_fields.SpecieFields;
@@ -186,14 +188,7 @@ public class DorisAPI_JSONDATABindingHelper {
 		DefaultHttpClient client = new DefaultHttpClient();
 		
 		String uri =DorisOAuth2ClientCredentials.SERVER_OBJECT_URL + termeId;
-		
-		
-		if (debug) {
-			DorisAPIConnexionHelper.printJSON(credent, DorisOAuth2ClientCredentials.SERVER_OBJECT_URL + termeId);
-			if(debug_SaveJSON){
-				DorisAPIConnexionHelper.saveJSONFile(credent, DorisOAuth2ClientCredentials.SERVER_OBJECT_URL + termeId, DEBUG_SAVE_JSON_BASE_PATH+ File.separatorChar+"image_" + termeId+JSON_EXT);
-			}
-		}
+		log.debug("uri : "+uri.toString());
 		
 		if(!DorisAPIConnexionHelper.use_http_header_for_token){
 			uri = uri+"?oauth_token="+credent.getAccessToken();
@@ -204,24 +199,29 @@ public class DorisAPI_JSONDATABindingHelper {
 		}
 		
 		HttpResponse response = client.execute(getCode);
-		System.out.println(response.getStatusLine());
-		ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
+		log.debug("response.getStatusLine() : "+response.getStatusLine());
+		log.debug("response.toString() : "+response.toString());
+
 		
-		log.debug("010");
+		ObjectMapper objectMapper = new ObjectMapper();
+		InputStreamReader inputStreamReader = new InputStreamReader(response.getEntity().getContent());
+		
+		JsonNode rootNode = objectMapper.readTree(inputStreamReader);
+		log.debug("010 : "+objectMapper.writeValueAsString(rootNode));
+
+
+		Definition definitionResponse = objectMapper.readValue(inputStreamReader, Definition.class);
 		
 		
-		Specie specieResponse = mapper.readValue(new InputStreamReader(response.getEntity().getContent()), Specie.class);
-		System.out.println("\t Specie: " + specieResponse.getMetadata().getObjectName());
+		log.debug("015");
+		
+		System.out.println("\t Definition: " + definitionResponse.getDataMap().getDefinition());
+		
 		log.debug("020");
 		
-		for (Entry<String, Object> entry : specieResponse.getLinks().entrySet()) {
-			log.debug("030");
-			System.out.println("\t\t" + entry.getKey() + "\t" + entry.getValue());
-	//		printJSON(credent, entry.getValue().toString());
-		}
-		
+
 		DefinitionGlossaire definition = new DefinitionGlossaire();
-		
+
 		return definition;
 		
 		
