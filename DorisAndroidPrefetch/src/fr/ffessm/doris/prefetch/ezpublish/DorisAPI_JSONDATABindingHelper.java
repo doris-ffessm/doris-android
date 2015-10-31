@@ -13,6 +13,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.auth.oauth2.Credential;
@@ -20,7 +22,6 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
-import fr.ffessm.doris.prefetch.PrefetchGlossaire;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.definition.Definition;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.specie.Specie;
@@ -204,23 +205,30 @@ public class DorisAPI_JSONDATABindingHelper {
 
 		
 		ObjectMapper objectMapper = new ObjectMapper();
-		InputStreamReader inputStreamReader = new InputStreamReader(response.getEntity().getContent());
+		Definition definitionResponse = new Definition();
+		try {
+			definitionResponse = objectMapper.readValue(new InputStreamReader(response.getEntity().getContent()), Definition.class);
+		}
+		catch (JsonGenerationException e) {
+		    e.printStackTrace();
+		}
+		catch (  JsonMappingException e) {
+		    e.printStackTrace();
+		}
+		catch (  IOException e) {
+		    e.printStackTrace();
+		}
 		
-		JsonNode rootNode = objectMapper.readTree(inputStreamReader);
-		log.debug("010 : "+objectMapper.writeValueAsString(rootNode));
-
-
-		Definition definitionResponse = objectMapper.readValue(inputStreamReader, Definition.class);
-		
-		
-		log.debug("015");
-		
-		System.out.println("\t Definition: " + definitionResponse.getDataMap().getDefinition());
-		
-		log.debug("020");
-		
-
-		DefinitionGlossaire definition = new DefinitionGlossaire();
+		System.out.println("\t Référence : " + definitionResponse.getDataMap().getReference());
+		System.out.println("\t Titre : " + definitionResponse.getDataMap().getTitle());
+		System.out.println("\t Definition : " + definitionResponse.getDataMap().getDefinition());
+		System.out.println("\t Illustration : " + definitionResponse.getDataMap().getIllustrations());
+		DefinitionGlossaire definition = new DefinitionGlossaire(
+				Integer.parseInt(definitionResponse.getDataMap().getReference()),
+				definitionResponse.getDataMap().getTitle(),
+				definitionResponse.getDataMap().getDefinition(),
+				definitionResponse.getDataMap().getIllustrations()
+			);
 
 		return definition;
 		

@@ -259,9 +259,17 @@ public class PrefetchGlossaire {
 			
 			log.debug("nodeIds.size() : "+nodeIds.size());
 			
+			DefinitionGlossaire definition = new DefinitionGlossaire();
+			
 			for (Integer nodeId : nodeIds){
 				log.debug("nodeId : "+nodeId);
+				
 				dorisAPI_JSONDATABindingHelper.getTermeFromTermeId(nodeId);
+				
+				if (!dbContext.definitionGlossaireDao.idExists(definition.getId()))
+					dbContext.definitionGlossaireDao.create(definition);
+				
+				
 			}
 			
 			
