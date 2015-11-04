@@ -78,12 +78,13 @@ public class DorisOAuth2ClientCredentials {
   public static final String SURGROUPES_NODE_URL = SERVER_NODE_URL+"119";
   
   // Contributeurs
+  //TODO : toujours aucun ????
   public static final String PARTICIPANTS_NODE_URL = SERVER_NODE_URL+"91";
   
-  // Videos 64
-  // Aides 65
+  // Videos 64 - toujours aucune ????
+  // Aides 65 - Email envoyés par le site
   // Liens 67
-  // Commentaires 72
+  // Commentaires 72 - toujours aucun ????
   // Forum 75
   // Actualités 86
   // Types de lien 89
