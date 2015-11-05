@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
@@ -22,6 +23,9 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
+import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
+import fr.ffessm.doris.android.sitedoris.Common_Outils;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.bibliographie.Bibliographie;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.definition.Definition;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.specie.Specie;
@@ -186,20 +190,8 @@ public class DorisAPI_JSONDATABindingHelper {
 	public DefinitionGlossaire getTermeFromTermeId(int termeId) throws ClientProtocolException,
 	IOException {
 
-		DefaultHttpClient client = new DefaultHttpClient();
+		HttpResponse response = getHttpResponse(termeId);
 		
-		String uri =DorisOAuth2ClientCredentials.SERVER_OBJECT_URL + termeId;
-		log.debug("uri : "+uri.toString());
-		
-		if(!DorisAPIConnexionHelper.use_http_header_for_token){
-			uri = uri+"?oauth_token="+credent.getAccessToken();
-		}
-		HttpGet getCode = new HttpGet(uri);
-		if(DorisAPIConnexionHelper.use_http_header_for_token){
-			getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
-		}
-		
-		HttpResponse response = client.execute(getCode);
 		log.debug("response.getStatusLine() : "+response.getStatusLine());
 		log.debug("response.toString() : "+response.toString());
 
@@ -207,7 +199,10 @@ public class DorisAPI_JSONDATABindingHelper {
 		ObjectMapper objectMapper = new ObjectMapper();
 		Definition definitionResponse = new Definition();
 		try {
-			definitionResponse = objectMapper.readValue(new InputStreamReader(response.getEntity().getContent()), Definition.class);
+			definitionResponse = objectMapper.readValue(
+					new InputStreamReader(response.getEntity().getContent()), 
+					Definition.class
+				);
 		}
 		catch (JsonGenerationException e) {
 		    e.printStackTrace();
@@ -231,7 +226,73 @@ public class DorisAPI_JSONDATABindingHelper {
 			);
 
 		return definition;
+	}
+
+	public EntreeBibliographie getEntreeBibliographieFromEntreeBibliographieId(int entreeBibliographieId) throws ClientProtocolException,
+	IOException {
+
+		HttpResponse response = getHttpResponse(entreeBibliographieId);
 		
+		log.debug("response.getStatusLine() : "+response.getStatusLine());
+		log.debug("response.toString() : "+response.toString());
+
 		
-	}	
+		ObjectMapper objectMapper = new ObjectMapper();
+		Bibliographie bibliographie = new Bibliographie();
+		try {
+			bibliographie = objectMapper.readValue(new InputStreamReader(response.getEntity().getContent()), Bibliographie.class);
+		}
+		catch (JsonGenerationException e) {
+		    e.printStackTrace();
+		}
+		catch (  JsonMappingException e) {
+		    e.printStackTrace();
+		}
+		catch (  IOException e) {
+		    e.printStackTrace();
+		}
+		
+		System.out.println("\t Référence : " + bibliographie.getDataMap().getReference());
+		System.out.println("\t Titre : " + bibliographie.getDataMap().getTitle());
+		System.out.println("\t Couverture : " + bibliographie.getDataMap().getCover());
+		System.out.println("\t Année Publication : " + bibliographie.getDataMap().getPublicationYear());
+		
+		Common_Outils commonOutils = new Common_Outils();
+		EntreeBibliographie entreeBibliographie = new EntreeBibliographie(
+				Integer.parseInt(bibliographie.getDataMap().getReference()),
+				bibliographie.getDataMap().getTitle(),
+				bibliographie.getDataMap().getMainAuthor(),
+				bibliographie.getDataMap().getPublicationYear(),
+				bibliographie.getDataMap().getExtraInfo(),
+				bibliographie.getDataMap().getCover(),
+				(commonOutils.formatStringNormalizer(
+						bibliographie.getDataMap().getMainAuthor()
+						+" "
+						+bibliographie.getDataMap().getTitle())
+				).toLowerCase(Locale.FRENCH)
+			);
+
+		return entreeBibliographie;
+	}
+
+	
+	private HttpResponse getHttpResponse(int objectId) throws ClientProtocolException, IOException{
+		
+		DefaultHttpClient client = new DefaultHttpClient();
+		
+		String uri =DorisOAuth2ClientCredentials.SERVER_OBJECT_URL + objectId;
+		log.debug("uri : "+uri.toString());
+		
+		if(!DorisAPIConnexionHelper.use_http_header_for_token){
+			uri = uri+"?oauth_token="+credent.getAccessToken();
+		}
+		HttpGet getCode = new HttpGet(uri);
+		if(DorisAPIConnexionHelper.use_http_header_for_token){
+			getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
+		}
+		
+		HttpResponse httpResponse = client.execute(getCode);
+		return httpResponse;
+	}
+	
 }

@@ -175,57 +175,9 @@ public class DorisAPI_JSONTreeHelper {
 	public List<Integer> getGroupesNodeIds() throws ClientProtocolException, IOException {
 		log.debug("getGroupesNodeIds()");
 		
-		List<Integer> result = new ArrayList<Integer>();
-		
-		DefaultHttpClient client = new DefaultHttpClient();
-		
-		String uri = DorisOAuth2ClientCredentials.GROUPES_NODE_URL + "/list/limit/50";
-		
-		if(!DorisAPIConnexionHelper.use_http_header_for_token){
-			uri = uri+"?oauth_token="+credent.getAccessToken();
-		}
-		
-		HttpGet getHttpPage = new HttpGet(uri);
-		if(DorisAPIConnexionHelper.use_http_header_for_token){
-			getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
-		}
-		
-		if (debug) {
-			System.out.println(uri);
-			System.out.println(getHttpPage.getFirstHeader("Authorization"));
-		}
-		
-		HttpResponse response = client.execute(getHttpPage);
-		log.debug("response.getStatusLine() : "+response.getStatusLine());
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		JsonNode rootNode = objectMapper.readTree(new InputStreamReader(response.getEntity().getContent()));
-		log.debug("rootNode : "+objectMapper.writeValueAsString(rootNode));
-		
-		/*** read ***/
-		JsonNode metadata = rootNode.path("metadata");
-		
-		int childrenCount = metadata.get("childrenCount").asInt();
-		log.debug("nb Groupes :"+childrenCount);
-		
-		
-		JsonNode childrenNodes = rootNode.path("childrenNodes");
-		for (Iterator<JsonNode> iterator = childrenNodes.elements(); iterator.hasNext();) {
-			JsonNode specieNodeInList = (JsonNode) iterator.next();
-			System.out.println(specieNodeInList.path("objectName").textValue() + " "+specieNodeInList.path("nodeId"));
-			result.add(specieNodeInList.path("nodeId").asInt());
-		}
-		
-
-		System.out.println("retrieved NodeIds count="+result.size());
-		
-		return result;
+		return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.GROUPES_NODE_URL, 50);
 	}
 	
-	
-	
-	// Il faudra peut-être / probablement ensuite mutualiser dans une seule procédure avec paramètres toutes les récupération
-	// Mais je vais au bout d'une pour comprendre l'ensemble
 	/**
 	 * Renvoie la liste des Termes du Glossaire
 	 * @param
@@ -236,11 +188,37 @@ public class DorisAPI_JSONTreeHelper {
 	public List<Integer> getGlossaireNodeIds(int termesPerHttpRequest) throws ClientProtocolException, IOException {
 		log.debug("getGlossaireNodeIds()");
 		
+		return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.GLOSSAIRE_NODE_URL, termesPerHttpRequest);
+	}
+	
+	/**
+	 * Renvoie la liste des entrées Bibliographiques
+	 * @param
+	 * @return Les entrées Bibliographiques
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public List<Integer> getBibliographieNodeIds(int bibliographiePerHttpRequest) throws ClientProtocolException, IOException {
+		log.debug("getBibliographieNodeIds()");
+			
+		return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.BIBLIO_NODE_URL, bibliographiePerHttpRequest);
+	}
+
+	/**
+	 * Renvoie les id du NODE_URL passé en paramètre
+	 * @param
+	 * @return Les id du NODE_URL passé en paramètre
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public List<Integer> getNodeIdsFromNodeUrl(String NODE_URL, int nbLimitRequest) throws ClientProtocolException, IOException {
+		log.debug("getNodeIdsFromNodeUrl()");
+		
 		List<Integer> result = new ArrayList<Integer>();
 		
 		DefaultHttpClient client = new DefaultHttpClient();
 		
-		String uri = DorisOAuth2ClientCredentials.GLOSSAIRE_NODE_URL + "/list/limit/"+termesPerHttpRequest;
+		String uri = NODE_URL + "/list/limit/"+nbLimitRequest;
 		log.debug("uri : "+uri.toString());
 		
 		if(!DorisAPIConnexionHelper.use_http_header_for_token){
@@ -260,30 +238,30 @@ public class DorisAPI_JSONTreeHelper {
 		HttpResponse response = client.execute(getHttpPage);
 		log.debug("response.getStatusLine() : "+response.getStatusLine());
 
+
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode rootNode = objectMapper.readTree(new InputStreamReader(response.getEntity().getContent()));
-		log.debug("noeud Glossaire : "+objectMapper.writeValueAsString(rootNode));
-		
+		log.debug("noeud : "+objectMapper.writeValueAsString(rootNode));
+
 		/*** read ***/
 		JsonNode metadata = rootNode.path("metadata");
 		
 		int childrenCount = metadata.get("childrenCount").asInt();
-		log.debug("nb Termes :"+childrenCount);
+		log.debug("nb noeud :"+childrenCount);
 		
 		
 		JsonNode childrenNodes = rootNode.path("childrenNodes");
 		for (Iterator<JsonNode> iterator = childrenNodes.elements(); iterator.hasNext();) {
-			JsonNode glossaireNodeInList = (JsonNode) iterator.next();
+			JsonNode nodeInList = (JsonNode) iterator.next();
 			
-			log.debug("noeud terme : "+objectMapper.writeValueAsString(glossaireNodeInList));
-			log.debug(glossaireNodeInList.path("objectName").textValue());
+			log.debug("valeur noeud : "+objectMapper.writeValueAsString(nodeInList));
+			log.debug(nodeInList.path("objectName").textValue());
 			
-			result.add(glossaireNodeInList.path("objectId").asInt());
+			result.add(nodeInList.path("objectId").asInt());
 		}
-		log.debug("nb Termes :"+result.size());
-
-
-		
+		log.debug("nb noeud :"+result.size());
+	
 		return result;
 	}
+	
 }

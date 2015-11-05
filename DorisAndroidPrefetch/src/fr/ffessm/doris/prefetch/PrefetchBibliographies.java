@@ -53,6 +53,7 @@ import org.apache.commons.logging.LogFactory;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.support.ConnectionSource;
 
+import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.sitedoris.Constants;
@@ -60,6 +61,8 @@ import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.android.sitedoris.ErrorCollector;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
 
 
 public class PrefetchBibliographies {
@@ -231,7 +234,39 @@ public class PrefetchBibliographies {
 			log.error(e);
 			return -1;
 		}
-
-
 	}
+	
+	
+	public int prefetchV4(DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper, DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper) {
+		log.debug("prefetchV4()");
+		try {
+			List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getBibliographieNodeIds(20);
+			
+			log.debug("nodeIds.size() : "+nodeIds.size());
+			
+			EntreeBibliographie entreeBibliographie = new EntreeBibliographie();
+			
+			for (Integer nodeId : nodeIds){
+				log.debug("nodeId : "+nodeId);
+				
+				dorisAPI_JSONDATABindingHelper.getEntreeBibliographieFromEntreeBibliographieId(nodeId);
+				
+				if (!dbContext.entreeBibliographieDao.idExists(entreeBibliographie.getId()))
+				{
+					log.debug("création enregistrement");
+					dbContext.entreeBibliographieDao.create(entreeBibliographie);
+				}
+				
+			}
+			
+			
+			return nodeIds.size();
+		} catch ( Exception e) {
+			// une erreur est survenue
+			log.error("Une erreur est survenue dans PrefetchGlossaire");
+			log.error(e);
+			return -1;
+		}
+	}
+
 }

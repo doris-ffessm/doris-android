@@ -267,8 +267,10 @@ public class PrefetchGlossaire {
 				dorisAPI_JSONDATABindingHelper.getTermeFromTermeId(nodeId);
 				
 				if (!dbContext.definitionGlossaireDao.idExists(definition.getId()))
+				{
+					log.debug("création enregistrement");
 					dbContext.definitionGlossaireDao.create(definition);
-				
+				}
 				
 			}
 			

@@ -191,8 +191,15 @@ public class PrefetchDorisWebSite {
 		DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper(credent);
 
 
-		PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, action, nbMaxFichesATraiter);
-		log.debug("doMain() - Test Groupes V4 : " + glossaire.prefetchV4(dorisAPI_JSONTreeHelper, dorisAPI_JSONDATABindingHelper) );
+		//PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, action, nbMaxFichesATraiter);
+		//log.debug("doMain() - Test Groupes V4 : " + glossaire.prefetchV4(dorisAPI_JSONTreeHelper, dorisAPI_JSONDATABindingHelper) );
+		
+		PrefetchBibliographies bibliographique = new PrefetchBibliographies(dbContext, connectionSource, action, nbMaxFichesATraiter);
+		log.debug("doMain() - Test Groupes V4 : " + bibliographique.prefetchV4(dorisAPI_JSONTreeHelper, dorisAPI_JSONDATABindingHelper) );
+		
+		if (connectionSource != null) {
+			connectionSource.close();
+		}
 		
 		log.debug("doMain() - Fin TEST");
 	}
