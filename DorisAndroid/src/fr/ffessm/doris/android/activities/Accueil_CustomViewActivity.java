@@ -789,7 +789,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         }
         else{
         	ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
-        	sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec)+" "+currentZoneFilter.getNom().trim());
+        	if(currentZoneFilter != null) {
+        		sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec)+" "+currentZoneFilter.getNom().trim());
+        	} else {
+        		sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreGeographique_sans));
+        	}
         }
         
         // TODO rappeler le dernier text recherché

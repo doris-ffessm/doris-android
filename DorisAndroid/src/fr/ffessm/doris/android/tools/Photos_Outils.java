@@ -818,7 +818,11 @@ public class Photos_Outils {
 		ormLiteDBHelper.close();
 		
 		// On calcule le nombre de photos (hors principales) moyen par fiche
-		nbPhotosParFiche = ( nbPhotosTotal - nbFichesTotal ) / nbFichesTotal;
+		if (nbFichesTotal != 0) { 
+			nbPhotosParFiche = ( nbPhotosTotal - nbFichesTotal ) / nbFichesTotal;
+		} else {
+			nbPhotosParFiche = 0;
+		}
 		
 		for (ZoneGeographiqueKind zone : ZoneGeographiqueKind.values()){
 			//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "initNbPhotosParFiche() - zone : "+zone);
