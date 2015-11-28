@@ -186,7 +186,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         // Affichage zone géo
         createNavigationZonesGeoViews();
 
-        // TODO : GMo : ne marche plus ??? Bizarre
         //Lors du 1er démarrage de l'application dans la version actuelle,
         //on affiche la boite d'A Propos
         String VersionAffichageAPropos = getParamOutils().getParamString(R.string.pref_key_a_propos_version, "");
