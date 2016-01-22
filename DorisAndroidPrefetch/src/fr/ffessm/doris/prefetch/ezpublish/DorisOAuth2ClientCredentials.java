@@ -34,7 +34,7 @@ public class DorisOAuth2ClientCredentials {
   //public static final String DOMAIN = "http://localhost/test";
   public static final String DOMAIN = "localhost";
   
-  public static final String DORIS_WEB_SERVER_HOST = "dorisprod.donatello.io";
+  public static final String DORIS_WEB_SERVER_HOST = "doris.ffessm.fr";
   
   public static final String TOKEN_SERVER_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/auth/oauth/token"; 
   public static final String AUTHORIZATION_SERVER_URL = "http://"+DORIS_WEB_SERVER_HOST+"/oauth/authorize"; 
