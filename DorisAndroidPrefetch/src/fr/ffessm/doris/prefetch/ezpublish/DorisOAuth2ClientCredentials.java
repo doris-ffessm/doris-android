@@ -26,6 +26,10 @@ public class DorisOAuth2ClientCredentials {
   /** Value of the "API Secret". client_secret */
   public static final String API_SECRET = "d12e0548228dfe75de65848ff1e45411";
 
+  /** Probablement pas propre mais permet de ne pas avoir à se connecter */
+  public static final String API_SUFFIXE = "e97c7911452f87ba23440ab4af541e39a64ecaef";
+  
+  
   /** Port in the "Callback URL". */
   public static final int PORT = 8087;
 
@@ -34,7 +38,7 @@ public class DorisOAuth2ClientCredentials {
   //public static final String DOMAIN = "http://localhost/test";
   public static final String DOMAIN = "localhost";
   
-  public static final String DORIS_WEB_SERVER_HOST = "dorisprod.donatello.io";
+  public static final String DORIS_WEB_SERVER_HOST = "doris.ffessm.fr";
   
   public static final String TOKEN_SERVER_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/auth/oauth/token"; 
   public static final String AUTHORIZATION_SERVER_URL = "http://"+DORIS_WEB_SERVER_HOST+"/oauth/authorize"; 
@@ -46,11 +50,19 @@ public class DorisOAuth2ClientCredentials {
 	  return USER_ID;
   }
   
-
-  public static final String SERVER_NODE_FIELD_BASE_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezp/content/node/";
   
   public static final String SERVER_NODE_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezp/v1/content/node/";
+  public static final String SERVER_NODE_URL_SUFFIXE = "/fields";
   public static final String SERVER_OBJECT_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezx/v1/object/";
+  public static final String SERVER_NODE_FIELD_BASE_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezp/content/node/";
+  
+  
+  public static String getServerNodeUrlTousLesChamps(String nodeId){
+	  return SERVER_NODE_URL+nodeId+SERVER_NODE_URL_SUFFIXE;
+  }
+  
+  
+  // Les Espèces
   public static final String SPECIES_NODE_URL = SERVER_NODE_URL+"66";
   public static final String IMAGES_NODE_URL = SERVER_NODE_URL+"19055";
 

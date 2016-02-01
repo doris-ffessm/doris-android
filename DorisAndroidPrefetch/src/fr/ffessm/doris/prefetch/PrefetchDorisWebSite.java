@@ -74,6 +74,7 @@ import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisOAuth2ClientCredentials;
 import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.specie_fields.SpecieFields;
 
@@ -350,18 +351,22 @@ public class PrefetchDorisWebSite {
 	
 	
 	private void dbImageV4UpgradeAction() throws Exception{
-		log.debug("doMain() - Début upgrade images pour Doris V4");
+		log.debug("dbImageV4UpgradeAction() - Début upgrade images pour Doris V4");
 		
 		JsonToDB jsonToDB = new JsonToDB();
+		/*
 		Credential credent = DorisAPIConnexionHelper
 				.authorizeViaWebPage(DorisOAuth2ClientCredentials.getUserId());
+		
 		DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper(credent);
 		DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper(credent);
-		
+		*/
+		DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper();
+		DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper();
 		
 		// copie ancienne base pour travailler dessus
 		String dataBaseName = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.lastIndexOf(".") );
-		log.debug("dataBaseName : " + dataBaseName);
+		log.debug("dbImageV4UpgradeAction() - dataBaseName : " + dataBaseName);
 		File fichierDB= new File(dataBaseName+".db");
 		if (fichierDB.exists()){
 			File fichierDBNew = new File(dataBaseName+"_for_V4.db");
@@ -384,63 +389,84 @@ public class PrefetchDorisWebSite {
 		
 			// récupère tous les nodeIds des fiches connues de Doris V4
 			
-			List<Integer> nodeIds =dorisAPI_JSONTreeHelper.getSpeciesNodeIds(500);
-			
+			int nbFichesDORIS = 3700;
+			int nbFichesParRequetes = 50;
 			int count = 0;
-			for (Integer specieNodeId : nodeIds) {
-				count++;
-				if( count > nbMaxFichesATraiter ){
-					log.debug("doMain() - nbMaxFichesATraiter atteind");
-					break;
-				}
-				
-				// récupère sur DorisV4 la fiche correspondante
-				SpecieFields specieFields = dorisAPI_JSONDATABindingHelper.getSpecieFieldsFromNodeId(specieNodeId);
-				String specieDorisReferenceId = specieFields.getFields().getReference().getValue();
-				log.debug(" nodeId="+specieNodeId+", dorisId="+specieDorisReferenceId +", imagesNodeIds="+specieFields.getFields().getImages().getValue());
-				
-				
-				
-				List<Image> imageData = new ArrayList<Image>();
-				// itère sur les images trouvées pour cette fiche
-				for(String possibleImageId : specieFields.getFields().getImages().getValue().split("\\|")){
-					try{
-						int imageId = Integer.parseInt(possibleImageId.replaceAll("&", ""));
-						// recupère les données associées à l'image
-						imageData.add(dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId));	
-
-					} catch ( NumberFormatException nfe){
-						// ignore les entrées invalides
-					}
-				}
-				
-				final Fiche fiche = dbContext.ficheDao.queryForFirst(
-						dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", specieDorisReferenceId).prepare()
-					);
-				fiche.setContextDB(dbContext);
-				// recrée une entrée dans la base pour l'image
-				final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageData);
-				TransactionManager.callInTransaction(connectionSource,
-					new Callable<Void>() {
-						public Void call() throws Exception {
-							int count = 0;
-							for (PhotoFiche photoFiche : listePhotoFiche){
-								photoFiche.setFiche(fiche);
-								dbContext.photoFicheDao.create(photoFiche);
-								
-								if (count == 0) {
-									// met à jour l'image principale de la fiche
-									fiche.setPhotoPrincipale(photoFiche);
-									dbContext.ficheDao.update(fiche);
-								}
-								count++;
-							}
-							return null;
-					    }
-					});
-
-			}
 			
+			for(int i=0; i < (nbFichesDORIS / nbFichesParRequetes); i++){
+
+				List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getFichesNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
+			
+			
+				for (Integer especeNodeId : nodeIds) {
+					count++;
+					if( count > nbMaxFichesATraiter ){
+						log.debug("doMain() - nbMaxFichesATraiter atteind");
+						break;
+					}
+					 
+					// Référence de l'Espèce dans le message JSON 
+					Espece especeJSON = dorisAPI_JSONDATABindingHelper.getEspeceFieldsFromNodeId(especeNodeId);
+					String especeJSONReferenceId = especeJSON.getFields().getReference().getValue();
+					
+					log.debug(" nodeId="+especeNodeId+", dorisId="+especeJSONReferenceId +", imagesNodeIds="+especeJSON.getFields().getImages().getValue());
+									
+					List<Image> imageData = new ArrayList<Image>();
+					
+					
+					// itère sur les images trouvées pour cette fiche
+					for(String possibleImageId : especeJSON.getFields().getImages().getValue().split("\\|")){
+						try{
+							int imageId = Integer.parseInt(possibleImageId.replaceAll("&", ""));
+							// recupère les données associées à l'image
+							imageData.add(dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId));	
+	
+						} catch ( NumberFormatException nfe){
+							// ignore les entrées invalides
+						}
+					}
+					
+					log.debug(" ficheDao.queryBuilder() ="+dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", especeJSONReferenceId).getStatement() );
+					
+					final Fiche fiche = dbContext.ficheDao.queryForFirst(
+							dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", especeJSONReferenceId).prepare()
+						);
+					
+					if (fiche != null) {
+						
+						fiche.setContextDB(dbContext);
+					
+						// recrée une entrée dans la base pour l'image
+						final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageData);
+						TransactionManager.callInTransaction(connectionSource,
+							new Callable<Void>() {
+								public Void call() throws Exception {
+									int count = 0;
+									for (PhotoFiche photoFiche : listePhotoFiche){
+										
+										photoFiche.setFiche(fiche);
+										
+										dbContext.photoFicheDao.create(photoFiche);
+										
+										if (count == 0) {
+											// met à jour l'image principale de la fiche
+											fiche.setPhotoPrincipale(photoFiche);
+											dbContext.ficheDao.update(fiche);
+										}
+										count++;
+									}
+									return null;
+							    }
+							});
+					
+					} else {
+						
+						log.error("! ! ! Fiche non trouvée : "+especeJSONReferenceId+" ! ! ! !");
+						
+					}
+	
+				}
+			}
 		
 		} finally {
 			// destroy the data source which should close underlying connections

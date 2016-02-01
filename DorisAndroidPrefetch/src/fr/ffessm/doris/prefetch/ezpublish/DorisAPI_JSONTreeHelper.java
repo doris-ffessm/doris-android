@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
@@ -19,6 +21,9 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 
 public class DorisAPI_JSONTreeHelper {
 
+	// Initialisation de la Gestion des Log 
+	public static Log log = LogFactory.getLog(DorisAPI_JSONTreeHelper.class);
+		
 	public boolean debug = true;
 	public boolean debug_SaveJSON = true;
 	public static String DEBUG_SAVE_JSON_BASE_PATH = "target/json";
@@ -27,6 +32,9 @@ public class DorisAPI_JSONTreeHelper {
 
 	public Credential credent;
 	
+	public DorisAPI_JSONTreeHelper(){
+	}
+
 	public DorisAPI_JSONTreeHelper( Credential credent){
 		this.credent = credent;
 	}
@@ -155,5 +163,83 @@ public class DorisAPI_JSONTreeHelper {
 //		}
 		return 0;
 	}
+	
+	/**
+	 * Renvoie la liste des Fiches
+	 * @param
+	 * @returnLa liste des Fiches
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public List<Integer> getFichesNodeIds(int fichesPerHttpRequest, int offset) throws ClientProtocolException, IOException {
+		log.debug("getFichesNodeIds()");
+			
+		return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.SPECIES_NODE_URL, fichesPerHttpRequest, offset);
+	}
+	
+	
+	/**
+	 * Renvoie les id du NODE_URL passé en paramètre
+	 * @param
+	 * @return Les id du NODE_URL passé en paramètre
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public List<Integer> getNodeIdsFromNodeUrl(String NODE_URL, int nbLimitRequest, int offset) throws ClientProtocolException, IOException {
+		log.debug("getNodeIdsFromNodeUrl()");
+		
+		List<Integer> result = new ArrayList<Integer>();
+		
+		DefaultHttpClient client = new DefaultHttpClient();
+		
+		String uri = NODE_URL + "/list";
+		if (offset != 0) uri += "/offset/"+offset;
+		uri += "/limit/"+nbLimitRequest;
+		log.debug("uri : "+uri.toString());
+		
+		if(credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
+			uri = uri+"?oauth_token="+credent.getAccessToken();
+		} else {
+			uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
+		}
+		
+		HttpGet getHttpPage = new HttpGet(uri);
+		if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
+			getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
+		}
+		
+		if (debug) {
+			System.out.println(uri);
+			System.out.println(getHttpPage.getFirstHeader("Authorization"));
+		}
+		
+		HttpResponse response = client.execute(getHttpPage);
+		log.debug("response.getStatusLine() : "+response.getStatusLine());
+
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode rootNode = objectMapper.readTree(new InputStreamReader(response.getEntity().getContent()));
+		log.debug("noeud : "+objectMapper.writeValueAsString(rootNode));
+
+		/*** read ***/
+		JsonNode metadata = rootNode.path("metadata");
+		
+		int childrenCount = metadata.get("childrenCount").asInt();
+		log.debug("nb noeud :"+childrenCount);
+		
+		
+		JsonNode childrenNodes = rootNode.path("childrenNodes");
+		for (Iterator<JsonNode> iterator = childrenNodes.elements(); iterator.hasNext();) {
+			JsonNode nodeInList = (JsonNode) iterator.next();
+			
+			log.debug("valeur noeud : "+objectMapper.writeValueAsString(nodeInList));
+
+			result.add(nodeInList.path("nodeId").asInt());
+		}
+		log.debug("nb noeud :"+result.size());
+	
+		return result;
+	}
+	
 	
 }
