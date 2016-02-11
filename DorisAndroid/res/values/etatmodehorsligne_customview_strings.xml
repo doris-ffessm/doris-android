@@ -8,12 +8,12 @@
 	
 	<!-- Dossiers Stockage des Images par Type -->
 	<!-- Il est important qu'ils soient tous différents pour les calculs de leurs volumétries (estimation de la place disque qu'ils prennent)-->
-	<string name="folder_vignettes_fiches">vignettes_fiches</string>
-	<string name="folder_med_res_fiches">medium_res_images_fiches</string>
-	<string name="folder_hi_res_fiches">hi_res_images_fiches</string>
-	<string name="folder_portraits">portraits</string>
-	<string name="folder_illustration_definitions">illustrations</string>
-	<string name="folder_illustration_biblio">biblio</string>
+	<string name="folder_vignettes_fiches">v4/vignettes_fiches</string>
+	<string name="folder_med_res_fiches">v4/medium_res_images_fiches</string>
+	<string name="folder_hi_res_fiches">v4/hi_res_images_fiches</string>
+	<string name="folder_portraits">v4/portraits</string>
+	<string name="folder_illustration_definitions">v4/illustrations</string>
+	<string name="folder_illustration_biblio">v4/biblio</string>
 	
 	<!-- On sur-estime exprès un peu -->
 	<!-- 185 Mo / 23890 vignettes => 8 ko soit 8200 octets -->

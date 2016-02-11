@@ -86,8 +86,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView.BufferType;
 import android.widget.Toast;
-import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+
+
 
 import com.squareup.picasso.Picasso;
 
@@ -96,6 +96,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.FoldableClickListener;
 import fr.ffessm.doris.android.activities.view.FoldableClickListener.ImageButtonKind;
@@ -110,9 +111,11 @@ import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
+
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.Textes_Outils;
 // End of user code
@@ -135,6 +138,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	final Textes_Outils textesOutils = new Textes_Outils(context);
 	final Param_Outils paramOutils = new Param_Outils(context);
 	final Reseau_Outils reseauOutils = new Reseau_Outils(context);
+	final Photos_Outils photosOutils = new Photos_Outils(context);
 	
 	protected int ficheNumero;
 	
@@ -811,7 +815,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         imageView.setLayoutParams(new LayoutParams(200, 200));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         
-        Photos_Outils photosOutils = new Photos_Outils(this);
         if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURL(), ImageType.VIGNETTE)){
     		try {
 				Picasso.with(this).load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.VIGNETTE))
@@ -827,7 +830,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     		if (reseauOutils.isTelechargementsModeConnectePossible()) {
 
 	    		Picasso.with(this)
-	    			.load(Constants.VIGNETTE_BASE_URL+"/"+photoFiche.getCleURL())
+	    			.load(photosOutils.getImageUrl(photoFiche.getCleURL(), ImageType.VIGNETTE).replace(" ", "%20"))
 					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
 					.error(R.drawable.doris_icone_doris_large_pas_connecte)
 					.fit()

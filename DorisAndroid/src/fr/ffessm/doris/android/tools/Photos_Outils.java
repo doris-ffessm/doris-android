@@ -229,7 +229,7 @@ public class Photos_Outils {
 	 * URL de téléchargement des Images
 	 * 
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	public String getbaseUrl(ImageType inImageType) { 
+	/*public String getbaseUrl(ImageType inImageType) { 
 		switch (inImageType) {
 		case VIGNETTE:
 			return Constants.VIGNETTE_BASE_URL;
@@ -246,7 +246,28 @@ public class Photos_Outils {
 		default:
 			return "";
 		}
+	}*/
+	
+	public String getImageUrl(String inPhotoUrl, ImageType inImageType) { 
+		switch (inImageType) {
+		case VIGNETTE:
+			return Constants.IMAGE_BASE_URL+inPhotoUrl.replace(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE);
+		case MED_RES:
+			return Constants.IMAGE_BASE_URL+inPhotoUrl.replace(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.MOYENNE_BASE_URL_SUFFIXE);
+		case HI_RES:
+			return Constants.IMAGE_BASE_URL+inPhotoUrl;
+		case PORTRAITS:
+			return Constants.PORTRAIT_BASE_URL;
+		case ILLUSTRATION_DEFINITION :
+			return Constants.ILLUSTRATION_DEFINITION_BASE_URL;
+		case ILLUSTRATION_BIBLIO :
+			return Constants.ILLUSTRATION_BIBLIO_BASE_URL;
+		default:
+			return "";
+		}
 	}
+	
+	
 	
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	 * 
@@ -359,7 +380,8 @@ public class Photos_Outils {
 				URL urlHtml = null;
 				try {
 					urlHtml = new URL(
-							getbaseUrl(inImageType)+inPhotoUrl.replace(" ", "%20")
+							//getbaseUrl(inImageType)+inPhotoUrl.replace(" ", "%20")
+							getImageUrl(inPhotoUrl, inImageType).replace(" ", "%20")
 						);
 				} catch (MalformedURLException e ) {
 					Log.w(LOG_TAG, e.getMessage(), e);
