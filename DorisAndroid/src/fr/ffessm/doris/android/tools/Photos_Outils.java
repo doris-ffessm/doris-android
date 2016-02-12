@@ -275,17 +275,18 @@ public class Photos_Outils {
 	 * 
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	// Si on ne trouve pas le fichier dans le dossier, on regarde dans le sous-dossier
-	// se nommant comme la 1ère lettre du fichier (en FAT32 on peut avoir jusqu'à 65536
+	// se nommant comme la 1ère lettre du fichier (en FAT32 on peut en avoir jusqu'à 65536
 	// sauf que ce doit être de noms courts
 	// Réellement ça pète vers 18000
-	public File getSousDossierPhoto(File imageFolder, String inPhotoURL){
+	public File getSousDossierPhoto(File imageFolder, String inPhotoDisque){
 		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getSousDossierPhoto() - imageFolder : "+ imageFolder );
 		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getSousDossierPhoto() - inPhotoURL : "+ inPhotoURL );
 		
 		// Qd on télécharge, il y a un / devant les images des fiches mais pas pour les autres types d'images.
 		// De plus, on appelle parfois cette fonction après avoir déjà supprimer le /, donc ici on l'enlève
 		// qd il existe et on a toujours la même lettre
-		return new File (imageFolder.getPath()+"/"+inPhotoURL.replace("/", "").charAt(0));
+		
+		return new File (imageFolder.getPath()+"/"+inPhotoDisque.charAt(0));
 	}
 	
 	public boolean isAvailableInFolderPhoto(String inPhotoURL, ImageType inImageType){
@@ -355,7 +356,26 @@ public class Photos_Outils {
     private int count;
     
 	public void downloadPhotoFile(String photoUrl, ImageType imageType) throws IOException{
-		downloadPhotoFile(photoUrl, photoUrl, imageType);
+
+		switch (imageType) {
+		case VIGNETTE:
+		case MED_RES:
+		case HI_RES:
+			// Dans DORIS V4, les images des fiches sont dans des sous-dossiers se nomant presque comme l'image,
+			// il est enregistré dans la base (dans le champs cleUrl), on ne garde donc que le dernier mot ici
+			downloadPhotoFile(photoUrl,
+								photoUrl.substring(photoUrl.lastIndexOf('/') + 1),
+								imageType);
+		case PORTRAITS:
+		case ILLUSTRATION_DEFINITION :
+		case ILLUSTRATION_BIBLIO :
+			downloadPhotoFile(photoUrl,
+								photoUrl,
+								imageType);
+		default:
+		}
+		
+		
 	}
 	
 	public void downloadPhotoFile(String inPhotoUrl, String inPhotoDisque, ImageType inImageType) throws IOException{

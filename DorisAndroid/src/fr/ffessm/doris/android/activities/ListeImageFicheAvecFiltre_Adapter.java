@@ -595,14 +595,16 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
     		// pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
     		
     		if (reseauOutils.isTelechargementsModeConnectePossible()) {
-
-	    		Picasso.with(context)
-	    			.load(Constants.VIGNETTE_BASE_URL+"/"+photoFiche.getCleURL())
-					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
-					.error(R.drawable.doris_icone_doris_large_pas_connecte)
-					.fit()
-					.centerInside()
-	    			.into(imageView);
+    			try {
+		    		Picasso.with(context)
+		    			.load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.VIGNETTE))
+						.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
+						.error(R.drawable.doris_icone_doris_large_pas_connecte)
+						.fit()
+						.centerInside()
+		    			.into(imageView);
+    			} catch (IOException e) {
+    			}
     		} else {
     			imageView.setImageResource(R.drawable.doris_icone_doris_large_pas_connecte);
     		}
