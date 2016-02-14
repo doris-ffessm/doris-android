@@ -200,16 +200,19 @@ public class DorisAPI_JSONDATABindingHelper {
 			}
 		}
 		
-		if(!DorisAPIConnexionHelper.use_http_header_for_token){
+		if(credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
 			uri = uri+"?oauth_token="+credent.getAccessToken();
+		} else {
+			uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
 		}
 		HttpGet getCode = new HttpGet(uri);
-		if(DorisAPIConnexionHelper.use_http_header_for_token){
+		if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
 			getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
 		}
 		
 		HttpResponse response = client.execute(getCode);
-		System.out.println(response.getStatusLine());
+		System.out.println("\t response : " + response.getStatusLine());
+		
 		ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
 		Image imageResponse = mapper.readValue(new InputStreamReader(response.getEntity().getContent()), Image.class);
 		System.out.println("\t image path: " + imageResponse.getDataMap().getImage() );
