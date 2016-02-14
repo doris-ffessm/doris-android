@@ -381,10 +381,13 @@ public class PrefetchDorisWebSite {
 			
 		try{
 			// remove all previous photos
+			log.debug("doMain() - Remove all previous photos");
+			
 			TableUtils.clearTable(connectionSource, PhotoFiche.class);
 			
 		
 			// récupère tous les nodeIds des fiches connues de Doris V4
+			log.debug("doMain() - Récupère tous les nodeIds des fiches connues de Doris V4");
 			
 			int nbFichesDORIS = 3700;
 			int nbFichesParRequetes = 50;
@@ -399,7 +402,8 @@ public class PrefetchDorisWebSite {
 				for (Integer especeNodeId : nodeIds) {
 					count++;
 					if( count > nbMaxFichesATraiter ){
-						log.debug("doMain() - nbMaxFichesATraiter atteind");
+						log.debug("doMain() - nbMaxFichesATraiter atteint");
+						i=9999;
 						break;
 					}
 					 
@@ -416,7 +420,7 @@ public class PrefetchDorisWebSite {
 					for(String possibleImageId : especeJSON.getFields().getImages().getValue().split("\\|")){
 						try{
 							int imageId = Integer.parseInt(possibleImageId.replaceAll("&", ""));
-							// recupère les données associées à l'image
+							// récupère les données associées à l'image
 							imageData.add(dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId));	
 	
 						} catch ( NumberFormatException nfe){
