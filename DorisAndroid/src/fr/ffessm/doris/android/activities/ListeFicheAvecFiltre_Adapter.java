@@ -253,9 +253,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
     		
         	if(photosOutils.isAvailableInFolderPhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
         		try {
-        			Log.d(LOG_TAG, "from disk : "+photoPrincipale.getCleURL());
+        			Log.d(LOG_TAG, "from disk : "+photoPrincipale.getCleURLNomFichier());
 					Picasso.with(context)
-						.load(photosOutils.getPhotoFile(photoPrincipale.getCleURL(), ImageType.VIGNETTE))
+						.load(photosOutils.getPhotoFile(photoPrincipale.getCleURLNomFichier(), ImageType.VIGNETTE))
 						.resize(defaultIconSize, defaultIconSize)
 						.centerInside()
 						.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
@@ -270,14 +270,16 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         		if (reseauOutils.isTelechargementsModeConnectePossible()) {
 
 	        		//Log.d(LOG_TAG, "from internet : "+photoPrincipale.getCleURL());
-	        		
-	        		Picasso.with(context)
-	        			.load(Constants.VIGNETTE_BASE_URL+"/"+photoPrincipale.getCleURL())
-						.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
-						.resize(defaultIconSize, defaultIconSize)
-						.centerInside()
-						.error(R.drawable.doris_icone_doris_large_pas_connecte)
-	        			.into(ivIcon);
+        			try {
+		        		Picasso.with(context)
+		        			.load(photosOutils.getPhotoFile(photoPrincipale.getCleURL(), ImageType.VIGNETTE))
+							.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
+							.resize(defaultIconSize, defaultIconSize)
+							.centerInside()
+							.error(R.drawable.doris_icone_doris_large_pas_connecte)
+		        			.into(ivIcon);
+        			} catch (IOException e) {
+    				}
         		} else {
         			// remet l'icone de base
                 	ivIcon.setImageResource(R.drawable.app_ic_launcher);

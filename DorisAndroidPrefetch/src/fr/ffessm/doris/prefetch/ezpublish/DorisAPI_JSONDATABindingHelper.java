@@ -55,6 +55,7 @@ public class DorisAPI_JSONDATABindingHelper {
 	public Espece getEspeceFromNodeId(int especeNodeId) throws ClientProtocolException,
 			IOException {
 
+		/*
 		DefaultHttpClient client = new DefaultHttpClient();
 		String uri =DorisOAuth2ClientCredentials.SERVER_NODE_URL + especeNodeId;
 		
@@ -79,21 +80,31 @@ public class DorisAPI_JSONDATABindingHelper {
 		System.out.println("\t Espece : " + especeReponse.getMetadata().getObjectName());
 		for (Entry<String, Object> entry : especeReponse.getLinks().entrySet()) {
 			System.out.println("\t\t" + entry.getKey() + "\t" + entry.getValue());
-	//		printJSON(credent, entry.getValue().toString());
+			//		printJSON(credent, entry.getValue().toString());
 		}
-		return especeReponse;
+		
+		*/
+		return null;
 	}
 	
-	public EspeceFields getSpecieFieldsFromNodeId(int specieNodeId) throws ClientProtocolException,
-	IOException {
 
+	public Espece getEspeceFieldsFromNodeId(int especeNodeId) throws ClientProtocolException,
+	IOException {
+		log.debug("getSpecieFieldsFromNodeId - Début");
+		log.debug("getSpecieFieldsFromNodeId - specieNodeId : " + especeNodeId);
+		
 		DefaultHttpClient client = new DefaultHttpClient();
-		String uri =DorisOAuth2ClientCredentials.SERVER_NODE_URL + specieNodeId+"/fields";
+		String uri = DorisOAuth2ClientCredentials.getServerNodeUrlTousLesChamps( String.valueOf(especeNodeId) );
+		log.debug("getSpecieFieldsFromNodeId - uri : " + uri);
 		
 		if (credent != null && debug) {
 			DorisAPIConnexionHelper.printJSON(credent, uri);
 			if(debug_SaveJSON){
-				DorisAPIConnexionHelper.saveJSONFile(credent, uri, DEBUG_SAVE_JSON_BASE_PATH+ File.separatorChar+"specieFields_" + specieNodeId+JSON_EXT);
+				DorisAPIConnexionHelper.saveJSONFile(
+							credent,
+							uri,
+							DEBUG_SAVE_JSON_BASE_PATH + File.separatorChar+"specieFields_" + especeNodeId+JSON_EXT
+						);
 			}
 		}
 		
@@ -102,7 +113,9 @@ public class DorisAPI_JSONDATABindingHelper {
 		} else {
 			uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
 		}
-
+		
+		log.debug("getSpecieFieldsFromNodeId - uri & oauth_token : " + uri);
+		
 		HttpGet getHttpPage = new HttpGet(uri);
 		if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
 			getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
@@ -123,7 +136,7 @@ public class DorisAPI_JSONDATABindingHelper {
 		catch (JsonGenerationException e) {
 		    e.printStackTrace();
 		}
-		catch (JsonMappingException e) {
+		catch (  JsonMappingException e) {
 		    e.printStackTrace();
 		}
 		catch (  IOException e) {
@@ -139,7 +152,6 @@ public class DorisAPI_JSONDATABindingHelper {
 		
 		return espece;
 	}
-	
 	
 	public void getImageList() throws ClientProtocolException,
 	IOException {

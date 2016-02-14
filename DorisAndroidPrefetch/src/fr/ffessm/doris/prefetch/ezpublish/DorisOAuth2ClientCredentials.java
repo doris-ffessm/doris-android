@@ -50,12 +50,16 @@ public class DorisOAuth2ClientCredentials {
 	  return USER_ID;
   }
   
-
-  public static final String SERVER_NODE_FIELD_BASE_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezp/content/node/";
   
   public static final String SERVER_NODE_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezp/v1/content/node/";
   public static final String SERVER_NODE_URL_SUFFIXE = "/fields";
   public static final String SERVER_OBJECT_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezx/v1/object/";
+
+  public static final String SERVER_NODE_FIELD_BASE_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezp/content/node/";
+  
+  public static String getServerNodeUrlTousLesChamps(String nodeId){
+	  return SERVER_NODE_URL+nodeId+SERVER_NODE_URL_SUFFIXE;
+  }
   
   // Les Espèces
   public static final String SPECIES_NODE_URL = SERVER_NODE_URL+"66";

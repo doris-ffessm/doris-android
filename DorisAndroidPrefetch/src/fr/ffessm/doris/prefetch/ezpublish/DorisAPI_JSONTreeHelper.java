@@ -32,11 +32,11 @@ public class DorisAPI_JSONTreeHelper {
 
 	public Credential credent;
 	
+	public DorisAPI_JSONTreeHelper(){
+	}
+
 	public DorisAPI_JSONTreeHelper( Credential credent){
 		this.credent = credent;
-	}
-	
-	public DorisAPI_JSONTreeHelper(){
 	}
 	
 	/** Global instance of the JSON factory. */
@@ -164,7 +164,6 @@ public class DorisAPI_JSONTreeHelper {
 		return 0;
 	}
 	
-
 	/**
 	 * Renvoie la liste des Fiches
 	 * @param
@@ -177,6 +176,7 @@ public class DorisAPI_JSONTreeHelper {
 			
 		return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.SPECIES_NODE_URL, fichesPerHttpRequest, offset);
 	}
+	
 	
 	/**
 	 * Renvoie les id du NODE_URL passé en paramètre

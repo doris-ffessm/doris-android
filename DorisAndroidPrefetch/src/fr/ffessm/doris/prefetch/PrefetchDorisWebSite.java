@@ -57,7 +57,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
 
-import com.google.api.client.auth.oauth2.Credential;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.support.ConnectionSource;
@@ -69,14 +68,11 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
 import fr.ffessm.doris.android.sitedoris.ErrorCollector;
-import fr.ffessm.doris.prefetch.ezpublish.DorisAPIConnexionHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
-import fr.ffessm.doris.prefetch.ezpublish.DorisOAuth2ClientCredentials;
 import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
-import fr.ffessm.doris.prefetch.ezpublish.jsondata.specie_fields.Espece;
-import fr.ffessm.doris.prefetch.ezpublish.jsondata.specie_fields.SpecieFields;
 
 public class PrefetchDorisWebSite {
 
@@ -355,9 +351,15 @@ public class PrefetchDorisWebSite {
 		
 		JsonToDB jsonToDB = new JsonToDB();
 
+		/*
+		Credential credent = DorisAPIConnexionHelper
+				.authorizeViaWebPage(DorisOAuth2ClientCredentials.getUserId());
+		
+		DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper(credent);
+		DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper(credent);
+		*/
 		DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper();
 		DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper();
-		
 		
 		// copie ancienne base pour travailler dessus
 		String dataBaseName = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.lastIndexOf(".") );
@@ -386,31 +388,34 @@ public class PrefetchDorisWebSite {
 			
 			int nbFichesDORIS = 3700;
 			int nbFichesParRequetes = 50;
+
+			int count = 0;
 			
 			for(int i=0; i < (nbFichesDORIS / nbFichesParRequetes); i++){
-			
+
 				List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getFichesNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
-				
-				int count = 0;
+			
+			
 				for (Integer especeNodeId : nodeIds) {
 					count++;
 					if( count > nbMaxFichesATraiter ){
-						log.debug("dbImageV4UpgradeAction() - nbMaxFichesATraiter atteint");
+						log.debug("doMain() - nbMaxFichesATraiter atteind");
 						break;
 					}
-	
+					 
 					// Référence de l'Espèce dans le message JSON 
-					SpecieFields especeJSON = dorisAPI_JSONDATABindingHelper.getSpecieFieldsFromNodeId(especeNodeId);
+					Espece especeJSON = dorisAPI_JSONDATABindingHelper.getEspeceFieldsFromNodeId(especeNodeId);
 					String especeJSONReferenceId = especeJSON.getFields().getReference().getValue();
 					
 					log.debug(" nodeId="+especeNodeId+", dorisId="+especeJSONReferenceId +", imagesNodeIds="+especeJSON.getFields().getImages().getValue());
 									
 					List<Image> imageData = new ArrayList<Image>();
 					
+					
 					// itère sur les images trouvées pour cette fiche
-					for(String imageJSONId : especeJSON.getFields().getImages().getValue().split("\\|")){
+					for(String possibleImageId : especeJSON.getFields().getImages().getValue().split("\\|")){
 						try{
-							int imageId = Integer.parseInt(imageJSONId.replaceAll("&", ""));
+							int imageId = Integer.parseInt(possibleImageId.replaceAll("&", ""));
 							// recupère les données associées à l'image
 							imageData.add(dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId));	
 	
@@ -420,7 +425,6 @@ public class PrefetchDorisWebSite {
 					}
 					
 					log.debug(" ficheDao.queryBuilder() ="+dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", especeJSONReferenceId).getStatement() );
-					
 					
 					final Fiche fiche = dbContext.ficheDao.queryForFirst(
 							dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", especeJSONReferenceId).prepare()

@@ -16,16 +16,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-    "childrenNodes",
-    "metadata",
+
+    "fields",
     "requestedResponseGroups"
 })
 public class Espece {
 
-    @JsonProperty("childrenNodes")
-    private List<ChildNodes> childrenNodes = new ArrayList<ChildNodes>();
-    @JsonProperty("metadata")
-    private Metadata metadata;
+    @JsonProperty("fields")
+    private Fields fields;
     @JsonProperty("requestedResponseGroups")
     private List<String> requestedResponseGroups = new ArrayList<String>();
     @JsonIgnore
@@ -34,41 +32,21 @@ public class Espece {
     /**
      * 
      * @return
-     *     The childrenNodes
+     *     The fields
      */
-    @JsonProperty("childrenNodes")
-    public List<ChildNodes> getChildrenNodes() {
-        return childrenNodes;
+    @JsonProperty("fields")
+    public Fields getFields() {
+        return fields;
     }
 
     /**
      * 
-     * @param childrenNodes
-     *     The childrenNodes
+     * @param fields
+     *     The fields
      */
-    @JsonProperty("childrenNodes")
-    public void setChildrenNodes(List<ChildNodes> childrenNodes) {
-        this.childrenNodes = childrenNodes;
-    }
-
-    /**
-     * 
-     * @return
-     *     The metadata
-     */
-    @JsonProperty("metadata")
-    public Metadata getMetadata() {
-        return metadata;
-    }
-
-    /**
-     * 
-     * @param metadata
-     *     The metadata
-     */
-    @JsonProperty("metadata")
-    public void setMetadata(Metadata metadata) {
-        this.metadata = metadata;
+    @JsonProperty("fields")
+    public void setFields(Fields fields) {
+        this.fields = fields;
     }
 
     /**

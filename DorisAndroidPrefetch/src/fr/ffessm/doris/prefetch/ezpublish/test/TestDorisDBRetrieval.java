@@ -59,9 +59,12 @@ public class TestDorisDBRetrieval {
 			if(i++ > 5){
 				break;
 			}
+
 			/*SpecieFields specieFields = new DorisAPI_JSONDATABindingHelper(credent).getEspeceFieldsFromNodeId( specieNodeId);
+
 			String specieDorisReferenceId = specieFields.getFields().getReference().getValue();
 			System.out.println(" nodeId="+specieNodeId+", dorisId="+specieDorisReferenceId);
+
 			*/
 		}
 	}
