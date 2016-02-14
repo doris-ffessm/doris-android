@@ -66,7 +66,7 @@ public class DorisAPIConnexionHelper {
 		System.out.println(url);
 		DefaultHttpClient client = new DefaultHttpClient();
 		String uri = url;
-		if(!use_http_header_for_token){
+		if(credent != null && !use_http_header_for_token){
 			uri = uri+"?oauth_token="+credent.getAccessToken();
 		}
 		HttpGet getCode = new HttpGet(url);
@@ -86,8 +86,11 @@ public class DorisAPIConnexionHelper {
 	public static void saveJSONFile(Credential credent, String url, String filePath) throws ClientProtocolException, IOException {
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpGet getCode = new HttpGet(url);
-		getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
-	
+		
+		if (credent != null) {
+			getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
+		}
+		
 		HttpResponse response = client.execute(getCode);
 		
 		

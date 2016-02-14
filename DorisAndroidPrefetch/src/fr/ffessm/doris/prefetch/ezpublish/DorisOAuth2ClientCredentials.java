@@ -26,6 +26,10 @@ public class DorisOAuth2ClientCredentials {
   /** Value of the "API Secret". client_secret */
   public static final String API_SECRET = "d12e0548228dfe75de65848ff1e45411";
 
+  /** Probablement pas propre mais permet de ne pas avoir à se connecter */
+  public static final String API_SUFFIXE = "e97c7911452f87ba23440ab4af541e39a64ecaef";
+  
+  
   /** Port in the "Callback URL". */
   public static final int PORT = 8087;
 
@@ -50,8 +54,44 @@ public class DorisOAuth2ClientCredentials {
   public static final String SERVER_NODE_FIELD_BASE_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezp/content/node/";
   
   public static final String SERVER_NODE_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezp/v1/content/node/";
+  public static final String SERVER_NODE_URL_SUFFIXE = "/fields";
   public static final String SERVER_OBJECT_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezx/v1/object/";
+  
+  // Les Espèces
   public static final String SPECIES_NODE_URL = SERVER_NODE_URL+"66";
+  
+  // Les Photos des Espèces
   public static final String IMAGES_NODE_URL = SERVER_NODE_URL+"19055";
+
+  // Bibliographie
+  public static final String BIBLIO_NODE_URL = SERVER_NODE_URL+"68";
+  
+  // Glossaire
+  public static final String GLOSSAIRE_NODE_URL = SERVER_NODE_URL+"69";
+  
+  // Zones Géographique
+  //TODO : toujours aucun ????
+  public static final String ZONES_NODE_URL = SERVER_NODE_URL+"70";
+ 
+  // Taxons - Valeurs : Embranchement / Sous-embranchement / Super-classe / Classe / Sous-classe / Super-ordre
+  //                    Ordre / Sous-ordre / Famille / Sous-famille
+  public static final String TAXONS_NODE_URL = SERVER_NODE_URL+"71";
+  
+  // Groupes 87
+  // TODO : toujours aucun ????
+  public static final String GROUPES_NODE_URL = SERVER_NODE_URL+"87";
+  public static final String SURGROUPES_NODE_URL = SERVER_NODE_URL+"119";
+  
+  // Contributeurs
+  //TODO : toujours aucun ????
+  public static final String PARTICIPANTS_NODE_URL = SERVER_NODE_URL+"91";
+  
+  // Videos 64 - toujours aucune ????
+  // Aides 65 - Email envoyés par le site
+  // Liens 67
+  // Commentaires 72 - toujours aucun ????
+  // Forum 75
+  // Actualités 86
+  // Types de lien 89
 
 }
