@@ -153,22 +153,26 @@ public class Photos_Outils {
 	}
 	
 	public File getFolderFromBaseLocation(ImageLocation baseImageLocation, String requestedSubFolder) {
-		//Log.d(LOG_TAG, "getFolderFromPreferedLocation("+ requestedSubFolder+") sur : "+baseImageLocation);
+		Log.d(LOG_TAG, "getFolderFromPreferedLocation("+ requestedSubFolder+") sur : "+baseImageLocation);
+		
+		String[] dossiers = requestedSubFolder.split("/");
+		String dossierRacine = dossiers[0];
+		
 		switch(baseImageLocation){
 		case PRIMARY:
-			return DiskEnvironmentHelper.getPrimaryExternalStorage().getFilesDir(context, requestedSubFolder);
+			return DiskEnvironmentHelper.getPrimaryExternalStorage().getFilesDir(context, dossierRacine);
 		case SECONDARY:
 			try {
-				return DiskEnvironmentHelper.getSecondaryExternalStorage(context).getFilesDir(context, requestedSubFolder);
+				return DiskEnvironmentHelper.getSecondaryExternalStorage(context).getFilesDir(context, dossierRacine);
 				//return DiskEnvironment.getSecondaryExternalStorage().getFilesDir(context, requestedSubFolder);
 			} catch (NoSecondaryStorageException e) {
-				return context.getDir( requestedSubFolder , Context.MODE_PRIVATE);
+				return context.getDir( dossierRacine , Context.MODE_PRIVATE);
 			}
 		case APP_INTERNAL: 
 		default:
-			//Log.d(LOG_TAG, "getFolderFromPreferedLocation() : "+ context.getDir( "" , Context.MODE_PRIVATE));
-			//Log.d(LOG_TAG, "getFolderFromPreferedLocation() : "+ context.getDir( requestedSubFolder , Context.MODE_PRIVATE));
-			return context.getDir( requestedSubFolder , Context.MODE_PRIVATE);
+			Log.d(LOG_TAG, "getFolderFromPreferedLocation() : "+ context.getDir( "" , Context.MODE_PRIVATE));
+			Log.d(LOG_TAG, "getFolderFromPreferedLocation() : "+ context.getDir( dossierRacine , Context.MODE_PRIVATE));
+			return context.getDir( dossierRacine , Context.MODE_PRIVATE);
 		}
 	}
 
