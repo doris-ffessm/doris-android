@@ -582,9 +582,9 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
         imageView.setLayoutParams(new LayoutParams(200, 200));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         
-        if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURL(), ImageType.VIGNETTE)){
+        if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)){
     		try {
-				Picasso.with(context).load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.VIGNETTE))
+				Picasso.with(context).load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE))
 					.fit()
 					.centerInside()
 					.into(imageView);
@@ -595,16 +595,15 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
     		// pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
     		
     		if (reseauOutils.isTelechargementsModeConnectePossible()) {
-    			try {
-		    		Picasso.with(context)
-		    			.load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.VIGNETTE))
-						.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
-						.error(R.drawable.doris_icone_doris_large_pas_connecte)
-						.fit()
-						.centerInside()
-		    			.into(imageView);
-    			} catch (IOException e) {
-    			}
+	    		Picasso.with(context)
+	    			.load(Constants.IMAGE_BASE_URL
+        					+ photoFiche.getCleURL().replaceAll(
+        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
+					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
+					.error(R.drawable.doris_icone_doris_large_pas_connecte)
+					.fit()
+					.centerInside()
+	    			.into(imageView);
     		} else {
     			imageView.setImageResource(R.drawable.doris_icone_doris_large_pas_connecte);
     		}

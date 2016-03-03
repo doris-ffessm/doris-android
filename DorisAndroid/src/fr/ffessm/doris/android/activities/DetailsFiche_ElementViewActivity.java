@@ -815,9 +815,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         imageView.setLayoutParams(new LayoutParams(200, 200));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         
-        if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURL(), ImageType.VIGNETTE)){
+        if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)){
     		try {
-				Picasso.with(this).load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.VIGNETTE))
+				Picasso.with(this).load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE))
 					.fit()
 					.centerInside()
 					.into(imageView);
@@ -830,7 +830,9 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     		if (reseauOutils.isTelechargementsModeConnectePossible()) {
 
 	    		Picasso.with(this)
-	    			.load(photosOutils.getImageUrl(photoFiche.getCleURL(), ImageType.VIGNETTE).replace(" ", "%20"))
+	    			.load(Constants.IMAGE_BASE_URL
+        					+ photoFiche.getCleURL().replaceAll(
+        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
 					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
 					.error(R.drawable.doris_icone_doris_large_pas_connecte)
 					.fit()
