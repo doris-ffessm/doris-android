@@ -201,6 +201,11 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		final Fiche entry = getFicheForId(filteredFicheIdList.get(position));
 		if(entry == null) return convertView;
        
+		Log.d(LOG_TAG, "getView getId() ="+entry.getId());
+		Log.d(LOG_TAG, "getView getNomCommun() ="+entry.getNomCommun());
+		Log.d(LOG_TAG, "getView getPhotoPrincipale() ="+entry.getPhotoPrincipale());
+		Log.d(LOG_TAG, "getView getPhotoPrincipale().getCleURL() ="+entry.getPhotoPrincipale().getCleURL());
+		
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
@@ -230,6 +235,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
     	ivIcon.getLayoutParams().width = defaultIconSize;
     	
     	PhotoFiche photoPrincipale = entry.getPhotoPrincipale();
+    	Log.d(LOG_TAG, "getView photoPrincipale ="+photoPrincipale);
     	if(photoPrincipale == null){
 	    	//try {
 	    		Log.w(LOG_TAG, "bizarre photoprincipale="+photoPrincipale+" application d'un workaround temporaire");
@@ -244,12 +250,12 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				Log.e(LOG_TAG, e1.getMessage(),e1);
 			}*/
     	}
-        if(photoPrincipale != null){
+        if(photoPrincipale != null && photoPrincipale.getCleURL() != null){
 
         	photoPrincipale.setContextDB(_contextDB);
 
-    		//Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
-    		
+    		Log.d(LOG_TAG, "getView photoPrincipale.getCleURL()="+photoPrincipale.getCleURL());
+    		Log.d(LOG_TAG, "getView isAvailableInFolderPhoto(photoprincipale)="+photosOutils.isAvailableInFolderPhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE));
     		
         	if(photosOutils.isAvailableInFolderPhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
         		try {
@@ -268,18 +274,15 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         		// pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
         		
         		if (reseauOutils.isTelechargementsModeConnectePossible()) {
-
-	        		//Log.d(LOG_TAG, "from internet : "+photoPrincipale.getCleURL());
-        			try {
-		        		Picasso.with(context)
-		        			.load(photosOutils.getPhotoFile(photoPrincipale.getCleURL(), ImageType.VIGNETTE))
-							.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
-							.resize(defaultIconSize, defaultIconSize)
-							.centerInside()
-							.error(R.drawable.doris_icone_doris_large_pas_connecte)
-		        			.into(ivIcon);
-        			} catch (IOException e) {
-    				}
+	        		Picasso.with(context)
+	        			.load(Constants.IMAGE_BASE_URL
+	        					+ photoPrincipale.getCleURL().replaceAll(
+	        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
+						.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
+						.resize(defaultIconSize, defaultIconSize)
+						.centerInside()
+						.error(R.drawable.doris_icone_doris_large_pas_connecte)
+	        			.into(ivIcon);
         		} else {
         			// remet l'icone de base
                 	ivIcon.setImageResource(R.drawable.app_ic_launcher);
