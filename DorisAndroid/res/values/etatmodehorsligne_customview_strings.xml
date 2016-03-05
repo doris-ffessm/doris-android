@@ -15,6 +15,17 @@
 	<string name="folder_illustration_definitions">v4/illustrations</string>
 	<string name="folder_illustration_biblio">v4/biblio</string>
 	
+	<!-- TEMPORAIRE : Permet de ne pas retélécharger toutes les photos, mais de déplacer celles déjà présentes (avec l'ancien site) -->
+	<string name="folder_anc_vignettes_fiches">vignettes_fiches</string>
+	<string name="folder_anc_med_res_fiches">medium_res_images_fiches</string>
+	<string name="folder_anc_hi_res_fiches">hi_res_images_fiches</string>
+	<string name="folder_anc_portraits">portraits</string>
+	<string name="folder_anc_illustration_definitions">illustrations</string>
+	<string name="folder_anc_illustration_biblio">biblio</string>
+	
+	
+	
+	
 	<!-- On sur-estime exprès un peu -->
 	<!-- 185 Mo / 23890 vignettes => 8 ko soit 8200 octets -->
 	<string name="etatmodehorsligne_taillemoy_vignette">8500</string>

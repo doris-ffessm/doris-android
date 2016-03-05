@@ -230,7 +230,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         	defaultIconSize = Integer.parseInt(defaultIconSizeString);
         }catch(Exception e){}
         
-        ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_icon);
+        final ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_icon);
     	ivIcon.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
     	ivIcon.getLayoutParams().width = defaultIconSize;
     	
@@ -274,15 +274,43 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         		// pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
         		
         		if (reseauOutils.isTelechargementsModeConnectePossible()) {
-	        		Picasso.with(context)
-	        			.load(Constants.IMAGE_BASE_URL
+        			Log.d(LOG_TAG, "getView isTelechargementsModeConnectePossible() = true");
+        			
+        			final int defaultIconSizeFinal = defaultIconSize;
+        			final PhotoFiche photoPrincipaleFinal = photoPrincipale;
+        			
+        			// On commence par rechercher l'image la plus petite possible, si elle n'est pas dispo. on tente notre chance avec la taille juste au dessus
+    				Picasso.with(context)
+    					.load(Constants.IMAGE_BASE_URL + "/"
 	        					+ photoPrincipale.getCleURL().replaceAll(
-	        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
-						.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
-						.resize(defaultIconSize, defaultIconSize)
-						.centerInside()
-						.error(R.drawable.doris_icone_doris_large_pas_connecte)
-	        			.into(ivIcon);
+	        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE))
+    					.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
+	        			.resize(defaultIconSize, defaultIconSize)
+    					.centerInside()
+    					.into(ivIcon,
+    							new com.squareup.picasso.Callback() {
+		    				        @Override
+		    				        public void onSuccess() {
+		    				            //Success image already loaded into the view
+		    				        }
+
+	    				        @Override
+	    				        public void onError() {
+	    				            
+	    				        	
+	    			        		Picasso.with(context)
+	    		        			.load(Constants.IMAGE_BASE_URL + "/"
+	    		        					+ photoPrincipaleFinal.getCleURL().replaceAll(
+	    		        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
+	    							.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
+	    							.resize(defaultIconSizeFinal, defaultIconSizeFinal)
+	    							.centerInside()
+	    							.error(R.drawable.doris_icone_doris_large_pas_connecte)
+	    		        			.into(ivIcon);
+	    				        }
+    				        	
+    				        });
+        			
         		} else {
         			// remet l'icone de base
                 	ivIcon.setImageResource(R.drawable.app_ic_launcher);

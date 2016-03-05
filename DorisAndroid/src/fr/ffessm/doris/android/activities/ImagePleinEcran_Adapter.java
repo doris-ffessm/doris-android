@@ -169,7 +169,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 	    			ChainedLoadImageViewCallback chainedLoadImageViewCallback = new ChainedLoadImageViewCallback(
 	    					_activity,
 	    					imgDisplay, 
-	    					Constants.IMAGE_BASE_URL
+	    					Constants.IMAGE_BASE_URL + "/"
         						+ photoFiche.getCleURL().replaceAll(
         							Constants.IMAGE_BASE_URL_SUFFIXE, suffixe_photo),
 	    					largeur,
@@ -190,7 +190,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 	    			}
 	    			else{
 			    		Picasso.with(_activity)
-			    			.load(Constants.IMAGE_BASE_URL
+			    			.load(Constants.IMAGE_BASE_URL + "/"
 		        					+ photoFiche.getCleURL().replaceAll(
 		        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE)) // charge d'abord la vignette depuis internet (mais elle est probablement déjà dans le cache)
 							.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
