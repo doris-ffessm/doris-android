@@ -201,10 +201,10 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		final Fiche entry = getFicheForId(filteredFicheIdList.get(position));
 		if(entry == null) return convertView;
        
-		Log.d(LOG_TAG, "getView getId() ="+entry.getId());
-		Log.d(LOG_TAG, "getView getNomCommun() ="+entry.getNomCommun());
-		Log.d(LOG_TAG, "getView getPhotoPrincipale() ="+entry.getPhotoPrincipale());
-		Log.d(LOG_TAG, "getView getPhotoPrincipale().getCleURL() ="+entry.getPhotoPrincipale().getCleURL());
+		Log.d(LOG_TAG, "getView getId() = "+entry.getId());
+		Log.d(LOG_TAG, "getView getNomCommun() = "+entry.getNomCommun());
+		Log.d(LOG_TAG, "getView getPhotoPrincipale() = "+entry.getPhotoPrincipale());
+		Log.d(LOG_TAG, "getView getPhotoPrincipale().getCleURL() = "+entry.getPhotoPrincipale().getCleURL());
 		
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_label);
@@ -235,7 +235,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
     	ivIcon.getLayoutParams().width = defaultIconSize;
     	
     	PhotoFiche photoPrincipale = entry.getPhotoPrincipale();
-    	Log.d(LOG_TAG, "getView photoPrincipale ="+photoPrincipale);
+    	Log.d(LOG_TAG, "getView photoPrincipale = "+photoPrincipale);
+    	
     	if(photoPrincipale == null){
 	    	//try {
 	    		Log.w(LOG_TAG, "bizarre photoprincipale="+photoPrincipale+" application d'un workaround temporaire");
@@ -250,12 +251,15 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				Log.e(LOG_TAG, e1.getMessage(),e1);
 			}*/
     	}
-        if(photoPrincipale != null && photoPrincipale.getCleURL() != null){
+    	
+    	Log.d(LOG_TAG, "getView photoPrincipale.getCleURL() = " + photoPrincipale.getCleURL());
+    	
+        if(photoPrincipale != null & photoPrincipale.getCleURL() != null){
 
         	photoPrincipale.setContextDB(_contextDB);
 
-    		Log.d(LOG_TAG, "getView photoPrincipale.getCleURL()="+photoPrincipale.getCleURL());
-    		Log.d(LOG_TAG, "getView isAvailableInFolderPhoto(photoprincipale)="+photosOutils.isAvailableInFolderPhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE));
+    		
+    		Log.d(LOG_TAG, "getView isAvailableInFolderPhoto(photoprincipale) = " + photosOutils.isAvailableInFolderPhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE));
     		
         	if(photosOutils.isAvailableInFolderPhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
         		try {
