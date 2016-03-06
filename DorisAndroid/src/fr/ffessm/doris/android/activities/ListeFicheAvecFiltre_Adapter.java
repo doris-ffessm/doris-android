@@ -283,6 +283,11 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         			final int defaultIconSizeFinal = defaultIconSize;
         			final PhotoFiche photoPrincipaleFinal = photoPrincipale;
         			
+        			Log.d(LOG_TAG, "getView URL Vignette : "+
+        					Constants.IMAGE_BASE_URL + "/"
+        					+ photoPrincipale.getCleURL().replaceAll(
+        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE));
+        			
         			// On commence par rechercher l'image la plus petite possible, si elle n'est pas dispo. on tente notre chance avec la taille juste au dessus
     				Picasso.with(context)
     					.load(Constants.IMAGE_BASE_URL + "/"
@@ -300,7 +305,10 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
 	    				        @Override
 	    				        public void onError() {
-	    				            
+	    				        	Log.d(LOG_TAG, "getView URL Petite Image : "+
+	    		        					Constants.IMAGE_BASE_URL + "/"
+	    		        					+ photoPrincipaleFinal.getCleURL().replaceAll(
+	    		        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE));
 	    				        	
 	    			        		Picasso.with(context)
 	    		        			.load(Constants.IMAGE_BASE_URL + "/"
