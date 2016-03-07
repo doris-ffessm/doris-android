@@ -66,10 +66,10 @@ import com.j256.ormlite.dao.GenericRawResults;
 import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
 import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
-import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -78,6 +78,11 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 
 
 import fr.ffessm.doris.android.DorisApplicationContext;
+
+
+
+
+
 
 
 import java.sql.SQLException;

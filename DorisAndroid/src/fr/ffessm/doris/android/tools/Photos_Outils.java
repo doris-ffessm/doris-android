@@ -393,13 +393,38 @@ public class Photos_Outils {
 
 		switch (imageType) {
 		case VIGNETTE:
+			// On commence par essayer de télécharger l'image la plus petite, si pas dispo. on passe à la taille au dessus. 
+			if (! downloadPhotoFile( Constants.IMAGE_BASE_URL + "/"
+										+ photoUrl.replaceAll(
+												Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE),
+										photoUrl.substring(photoUrl.lastIndexOf('/') + 1),
+										imageType		
+									)
+						) {
+				
+				downloadPhotoFile( Constants.IMAGE_BASE_URL + "/"
+						+ photoUrl.replaceAll(
+								Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE),
+						photoUrl.substring(photoUrl.lastIndexOf('/') + 1),
+						imageType		
+					);
+			}
 		case MED_RES:
-		case HI_RES:
 			// Dans DORIS V4, les images des fiches sont dans des sous-dossiers se nommant presque comme l'image,
 			// il est enregistré dans la base (dans le champs cleUrl), on ne garde donc que le dernier mot ici
-			downloadPhotoFile(photoUrl,
-								photoUrl.substring(photoUrl.lastIndexOf('/') + 1),
-								imageType);
+			downloadPhotoFile( Constants.IMAGE_BASE_URL + "/"
+					+ photoUrl.replaceAll(
+							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.MOYENNE_BASE_URL_SUFFIXE),
+					photoUrl.substring(photoUrl.lastIndexOf('/') + 1),
+					imageType		
+				);
+		case HI_RES:
+			downloadPhotoFile( Constants.IMAGE_BASE_URL + "/"
+					+ photoUrl.replaceAll(
+							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.GRANDE_BASE_URL_SUFFIXE),
+					photoUrl.substring(photoUrl.lastIndexOf('/') + 1),
+					imageType		
+				);
 		case PORTRAITS:
 		case ILLUSTRATION_DEFINITION :
 		case ILLUSTRATION_BIBLIO :
@@ -412,7 +437,7 @@ public class Photos_Outils {
 		
 	}
     
-	public void downloadPhotoFile(String inPhotoUrl, String inPhotoDisque, ImageType inImageType) throws IOException{
+	public boolean downloadPhotoFile(String inPhotoUrl, String inPhotoDisque, ImageType inImageType) throws IOException{
 		Log.d(LOG_TAG, "downloadPhotoFile() -Début");
 		Log.d(LOG_TAG, "downloadPhotoFile() : "+inImageType+" - "+inPhotoUrl+" - "+inPhotoDisque );
 		if(!inPhotoUrl.isEmpty()){
@@ -423,6 +448,7 @@ public class Photos_Outils {
 					getImageFolderInPreferedLocation(inImageType),
 					inPhotoDisque
 				);
+			Log.d(LOG_TAG, "downloadPhotoFile() - imageFolder : "+imageFolder.getPath() );
 			
 	    	/* On crée les dossiers s'ils étaient inexistants */
 			if (!imageFolder.exists() && !imageFolder.mkdirs()) {
@@ -459,16 +485,19 @@ public class Photos_Outils {
 			        output.flush();
 			        output.close();
 			        input.close();
-					
+			        
+			        return true;
 				} else {
 					URL urlHtml = null;
 					try {
 						urlHtml = new URL(
 								//getbaseUrl(inImageType)+inPhotoUrl.replace(" ", "%20")
-								getImageUrl(inPhotoUrl, inImageType).replace(" ", "%20")
+								//getImageUrl(inPhotoUrl, inImageType).replace(" ", "%20")
+								inPhotoUrl.replace(" ", "%20")
 							);
 					} catch (MalformedURLException e ) {
 						Log.w(LOG_TAG, e.getMessage(), e);
+						return false;
 					}
 					try {
 						HttpURLConnection urlConnection = (HttpURLConnection) urlHtml.openConnection();
@@ -493,12 +522,19 @@ public class Photos_Outils {
 				        
 					} catch (IOException e) {
 						Log.w(LOG_TAG, e.getMessage(), e);
+						return false;
 					}
 				}
 			}
+			
+			
+		} else {
+			return false;
 		}
-		Log.d(LOG_TAG, "downloadPhotoFile() - Fin");
 		
+		
+		Log.d(LOG_TAG, "downloadPhotoFile() - Fin");
+		return true;
 	}
 
 	

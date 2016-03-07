@@ -426,7 +426,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
     					// Les vignettes des Photos Principales sont toujours téléchargées (si pas P0)
     					if ( !hsImagesVigAllreadyAvailable.contains(resultColumns[0]) ){
-    						photosOutils.downloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.VIGNETTE);
+    						photosOutils.downloadPhotoFile(resultColumns[0], Photos_Outils.ImageType.VIGNETTE);
     						//nbTelechargements++;
     					}
     					
