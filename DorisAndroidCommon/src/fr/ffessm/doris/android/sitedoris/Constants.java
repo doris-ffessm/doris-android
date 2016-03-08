@@ -50,13 +50,28 @@ public class Constants {
 	 */
 	public final static String SITE_RACINE_URL = "http://doris.ffessm.fr/";
     
-	public static final String IMAGE_BASE_URL = "http://doris.ffessm.fr/gestionenligne/";
-	public static final String PORTRAIT_BASE_URL = IMAGE_BASE_URL+ "photos_vig";
-	public static final String VIGNETTE_BASE_URL = IMAGE_BASE_URL+ "photos_fiche_vig";
-	public static final String MOYENNE_BASE_URL = IMAGE_BASE_URL+ "photos_fiche_moy";
-	public static final String GRANDE_BASE_URL = IMAGE_BASE_URL+ "photos";
-	public static final String ILLUSTRATION_DEFINITION_BASE_URL = IMAGE_BASE_URL+ "diaporamaglo";
-	public static final String ILLUSTRATION_BIBLIO_BASE_URL = IMAGE_BASE_URL+ "photos_biblio_moy";
+	//public static final String IMAGE_BASE_URL = "http://doris.ffessm.fr/var/doris/storage/images/images";
+	public static final String IMAGE_BASE_URL = "http://doris.ffessm.fr";
+	public static final String PORTRAIT_BASE_URL = IMAGE_BASE_URL+ "/photos_vig";
+
+	// La photo existe toujours au format blabla.jpg, puis d'autres formats sont générés suivant le besoin,
+	// nous utilisons de même ces différents formats
+	// Suffixe initial
+	public static final String IMAGE_BASE_URL_SUFFIXE = ".jpg";
+	// La plus petite dispo.
+	public static final String VIGNETTE_BASE_URL_SUFFIXE = "_small.jpg";
+	// Image Intermédiaire pouvant exister sans que la plus petite soit dispo.
+	public static final String PETITE_BASE_URL_SUFFIXE = "_specieHomeCard.jpg";
+	// Image de Taille Moyenne Fixée à 300
+	public static final String MOYENNE_BASE_URL_SUFFIXE = "_image300.jpg";
+	// Si 300 non dispo. on prend 600
+	public static final String MOYENNE2_BASE_URL_SUFFIXE = "_image600.jpg";
+	// Meilleure Qualitée (l'image Initiale)
+	public static final String GRANDE_BASE_URL_SUFFIXE = ".jpg";
+
+
+	public static final String ILLUSTRATION_DEFINITION_BASE_URL = IMAGE_BASE_URL+ "/diaporamaglo";
+	public static final String ILLUSTRATION_BIBLIO_BASE_URL = IMAGE_BASE_URL+ "/photos_biblio_moy";
 	
     private final static String LISTE_FICHES_ZONE_URL = "nom_scientifique.asp?numero_fichier=";
     
