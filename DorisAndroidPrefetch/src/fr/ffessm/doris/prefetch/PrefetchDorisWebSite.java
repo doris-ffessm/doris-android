@@ -57,7 +57,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
 
-import com.google.api.client.auth.oauth2.Credential;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.support.ConnectionSource;
@@ -69,14 +68,11 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
 import fr.ffessm.doris.android.sitedoris.ErrorCollector;
-import fr.ffessm.doris.prefetch.ezpublish.DorisAPIConnexionHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
-import fr.ffessm.doris.prefetch.ezpublish.DorisOAuth2ClientCredentials;
 import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
-import fr.ffessm.doris.prefetch.ezpublish.jsondata.specie_fields.SpecieFields;
-import fr.ffessm.doris.prefetch.ezpublish.test.TestDorisDBRetrieval;
 
 public class PrefetchDorisWebSite {
 
@@ -164,41 +160,23 @@ public class PrefetchDorisWebSite {
 	private void testAction() throws Exception{
 		log.debug("doMain() - Début TEST");
 		
-		// copie ancienne base pour travailler dessus
-		String dataBaseName = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.lastIndexOf(".") );
-		log.debug("dataBaseName : " + dataBaseName);
-		File fichierDB= new File(dataBaseName+".db");
-		if (fichierDB.exists()){
-			File fichierDBNew = new File(dataBaseName+"_for_V4.db");
-			FileUtils.copyFile(fichierDB, fichierDBNew);
-			
-		}
+		// Vérification, Création, Sauvegarde des dossiers de travail
+		renommageDossiers(ActionKind.INIT);
+		creationDossiers(ActionKind.INIT);
+		creationDossiersRef(ActionKind.INIT);
 		
 		// - - - Base de Données - - -
 		PrefetchDBTools prefetchDBTools = new PrefetchDBTools();
-		// create our data-source for the database
-		connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL.replaceAll("DorisAndroid.db", "DorisAndroid_for_V4.db"));
-		
-		// setup our database and DAOs
+		prefetchDBTools.initializeSQLite(PrefetchConstants.DATABASE_URL);
+		connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
 		dbContext = prefetchDBTools.setupDatabase(connectionSource);
-
+		prefetchDBTools.databaseInitialisation(connectionSource);
 		outilsBase = new DataBase_Outils(dbContext);
-	
-		JsonToDB jsonToDB = new JsonToDB();
-		Credential credent = DorisAPIConnexionHelper
-				.authorizeViaWebPage(DorisOAuth2ClientCredentials.getUserId());
-		DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper(credent);
-		DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper(credent);
 
-
-		//PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, action, nbMaxFichesATraiter);
-		//log.debug("doMain() - Test Groupes V4 : " + glossaire.prefetchV4(dorisAPI_JSONTreeHelper, dorisAPI_JSONDATABindingHelper) );
-		
-		PrefetchBibliographies bibliographique = new PrefetchBibliographies(dbContext, connectionSource, action, nbMaxFichesATraiter);
-		log.debug("doMain() - Test Groupes V4 : " + bibliographique.prefetchV4(dorisAPI_JSONTreeHelper, dorisAPI_JSONDATABindingHelper) );
-		
-		if (connectionSource != null) {
-			connectionSource.close();
+		PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, ActionKind.INIT, nbMaxFichesATraiter);
+		if ( glossaire.prefetch() == -1 ) {
+			log.debug("doMain() - Erreur Glossaire" );
+			System.exit(1);
 		}
 		
 		log.debug("doMain() - Fin TEST");
@@ -369,18 +347,22 @@ public class PrefetchDorisWebSite {
 	
 	
 	private void dbImageV4UpgradeAction() throws Exception{
-		log.debug("doMain() - Début upgrade images pour Doris V4");
+		log.debug("dbImageV4UpgradeAction() - Début upgrade images pour Doris V4");
 		
 		JsonToDB jsonToDB = new JsonToDB();
+
+		/*
 		Credential credent = DorisAPIConnexionHelper
 				.authorizeViaWebPage(DorisOAuth2ClientCredentials.getUserId());
 		DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper(credent);
 		DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper(credent);
-		
+		*/
+		DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper();
+		DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper();
 		
 		// copie ancienne base pour travailler dessus
 		String dataBaseName = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.lastIndexOf(".") );
-		log.debug("dataBaseName : " + dataBaseName);
+		log.debug("dbImageV4UpgradeAction() - dataBaseName : " + dataBaseName);
 		File fichierDB= new File(dataBaseName+".db");
 		if (fichierDB.exists()){
 			File fichierDBNew = new File(dataBaseName+"_for_V4.db");
@@ -402,65 +384,88 @@ public class PrefetchDorisWebSite {
 			
 		
 			// récupère tous les nodeIds des fiches connues de Doris V4
-			List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getSpeciesNodeIds(500);
-			
+			log.debug("doMain() - Récupère tous les nodeIds des fiches connues de Doris V4");
+
+			int nbFichesDORIS = 3700;
+			int nbFichesParRequetes = 50;
+
 			int count = 0;
-			for (Integer specieNodeId : nodeIds) {
-				count++;
-				if( count > nbMaxFichesATraiter ){
-					log.debug("doMain() - nbMaxFichesATraiter atteind");
-					break;
-				}
-				
-				// récupère sur DorisV4 la fiche correspondante
-				SpecieFields specieFields = dorisAPI_JSONDATABindingHelper.getSpecieFieldsFromNodeId(specieNodeId);
-				String specieDorisReferenceId = specieFields.getFields().getReference().getValue();
-				log.debug(" nodeId="+specieNodeId+", dorisId="+specieDorisReferenceId +", imagesNodeIds="+specieFields.getFields().getImages().getValue());
-				
-				
-				
-				List<Image> imageData = new ArrayList<Image>();
-				// itère sur les images trouvées pour cette fiche
-				for(String possibleImageId : specieFields.getFields().getImages().getValue().split("\\|")){
-					try{
-						int imageId = Integer.parseInt(possibleImageId.replaceAll("&", ""));
-						// recupère les données associées à l'image
-						imageData.add(dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId));	
 
-					} catch ( NumberFormatException nfe){
-						// ignore les entrées invalides
+			for(int i=0; i < (nbFichesDORIS / nbFichesParRequetes); i++){
+
+				List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getFichesNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
+
+
+				for (Integer especeNodeId : nodeIds) {
+					count++;
+					if( count > nbMaxFichesATraiter ){
+						log.debug("doMain() - nbMaxFichesATraiter atteint");
+						i=9999;
+						break;
 					}
-				}
-				
-				final Fiche fiche = dbContext.ficheDao.queryForFirst(
-						dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", specieDorisReferenceId).prepare()
-					);
-				fiche.setContextDB(dbContext);
-				
-				// recrée une entrée dans la base pour l'image
-				final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageData);
-				
-				TransactionManager.callInTransaction(connectionSource,
-					new Callable<Void>() {
-						public Void call() throws Exception {
-							int count = 0;
-							for (PhotoFiche photoFiche : listePhotoFiche){
-								photoFiche.setFiche(fiche);
-								dbContext.photoFicheDao.create(photoFiche);
-								
-								if (count == 0) {
-									// met à jour l'image principale de la fiche
-									fiche.setPhotoPrincipale(photoFiche);
-									dbContext.ficheDao.update(fiche);
-								}
-								count++;
-							}
-							return null;
-					    }
-					});
 
+					// Référence de l'Espèce dans le message JSON
+					Espece especeJSON = dorisAPI_JSONDATABindingHelper.getEspeceFieldsFromNodeId(especeNodeId);
+					String especeJSONReferenceId = especeJSON.getFields().getReference().getValue();
+
+					log.debug(" nodeId="+especeNodeId+", dorisId="+especeJSONReferenceId +", imagesNodeIds="+especeJSON.getFields().getImages().getValue());
+
+					List<Image> imageData = new ArrayList<Image>();
+
+
+					// itère sur les images trouvées pour cette fiche
+					for(String possibleImageId : especeJSON.getFields().getImages().getValue().split("\\|")){
+						try{
+							int imageId = Integer.parseInt(possibleImageId.replaceAll("&", ""));
+							// récupère les données associées à l'image
+							imageData.add(dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId));
+
+						} catch ( NumberFormatException nfe){
+							// ignore les entrées invalides
+						}
+					}
+
+					log.debug(" ficheDao.queryBuilder() ="+dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", especeJSONReferenceId).getStatement() );
+
+					final Fiche fiche = dbContext.ficheDao.queryForFirst(
+							dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", especeJSONReferenceId).prepare()
+						);
+
+					if (fiche != null) {
+
+						fiche.setContextDB(dbContext);
+
+						// recrée une entrée dans la base pour l'image
+						final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageData);
+						TransactionManager.callInTransaction(connectionSource,
+							new Callable<Void>() {
+								public Void call() throws Exception {
+									int count = 0;
+									for (PhotoFiche photoFiche : listePhotoFiche){
+
+										photoFiche.setFiche(fiche);
+
+										dbContext.photoFicheDao.create(photoFiche);
+
+										if (count == 0) {
+											// met à jour l'image principale de la fiche
+											fiche.setPhotoPrincipale(photoFiche);
+											dbContext.ficheDao.update(fiche);
+										}
+										count++;
+									}
+									return null;
+							    }
+							});
+
+					} else {
+
+						log.error("! ! ! Fiche non trouvée : "+especeJSONReferenceId+" ! ! ! !");
+
+					}
+
+				}
 			}
-			
 		
 		} finally {
 			// destroy the data source which should close underlying connections
@@ -540,7 +545,7 @@ public class PrefetchDorisWebSite {
 		} else {
 			// Ne devrait jamais arriver
 			log.error("Le dossier run n'existe pas !");
-			System.exit(0);
+			System.exit(1);
 		}
 		
 		log.debug("doMain() - Fin Effacement Fichiers autres que Ref");
@@ -568,7 +573,7 @@ public class PrefetchDorisWebSite {
 		} else {
 			// Ne devrait jamais arriver
 			log.error("Le dossier run n'existe pas !");
-			System.exit(0);
+			System.exit(1);
 		}
 		
 		log.debug("doMain() - Fin Effacement tous Dossiers");

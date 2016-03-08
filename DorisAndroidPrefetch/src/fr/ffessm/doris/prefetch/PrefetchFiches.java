@@ -356,6 +356,7 @@ public class PrefetchFiches {
 							});
 						
 						// Téléchargement Photos
+						/*
 						if ( action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
 
 							fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
@@ -396,7 +397,7 @@ public class PrefetchFiches {
 									}
 								}
 							}
-						}
+						}*/
 					}
 					
 				}

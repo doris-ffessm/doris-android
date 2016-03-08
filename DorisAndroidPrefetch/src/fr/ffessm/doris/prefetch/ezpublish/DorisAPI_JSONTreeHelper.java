@@ -19,8 +19,6 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
-import fr.ffessm.doris.prefetch.PrefetchGroupes;
-
 public class DorisAPI_JSONTreeHelper {
 
 	// Initialisation de la Gestion des Log 
@@ -34,6 +32,9 @@ public class DorisAPI_JSONTreeHelper {
 
 	public Credential credent;
 	
+	public DorisAPI_JSONTreeHelper(){
+	}
+
 	public DorisAPI_JSONTreeHelper( Credential credent){
 		this.credent = credent;
 	}
@@ -49,7 +50,7 @@ public class DorisAPI_JSONTreeHelper {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public List<Integer> getSpeciesNodeIds(int speciesPerHttpRequest) throws ClientProtocolException, IOException {
+	public List<Integer> getSpeciesNodeIds( int speciesPerHttpRequest) throws ClientProtocolException, IOException {
 		List<Integer> result = new ArrayList<Integer>();
 		
 		DefaultHttpClient client = new DefaultHttpClient();
@@ -101,7 +102,7 @@ public class DorisAPI_JSONTreeHelper {
 	 * Rempli la liste currentSpeciesIds avec les espèces à l'offset
 	 * @param offset
 	 * @param currentSpeciesIds
-	 * @param speciesPerHttpRequest limite le nombre d'espèces requises à chaque requète http
+	 * @param speciesPerHttpRequest
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
@@ -162,47 +163,20 @@ public class DorisAPI_JSONTreeHelper {
 //		}
 		return 0;
 	}
-	
-	
-	/* 1er TEST Guillaume : La liste des GROUPES et des SURGROUPES est toujours vide ... :-/ */
+
 	/**
-	 * Renvoie la liste des nodeId de l'ensemble des groupes
+	 * Renvoie la liste des Fiches
 	 * @param
-	 * @return la liste des nodeId de l'ensemble des groupes
+	 * @returnLa liste des Fiches
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public List<Integer> getGroupesNodeIds() throws ClientProtocolException, IOException {
-		log.debug("getGroupesNodeIds()");
-		
-		return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.GROUPES_NODE_URL, 50);
+	public List<Integer> getFichesNodeIds(int fichesPerHttpRequest, int offset) throws ClientProtocolException, IOException {
+		log.debug("getFichesNodeIds()");
+
+		return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.SPECIES_NODE_URL, fichesPerHttpRequest, offset);
 	}
 	
-	/**
-	 * Renvoie la liste des Termes du Glossaire
-	 * @param
-	 * @return Les Termes du Glossaire
-	 * @throws ClientProtocolException
-	 * @throws IOException
-	 */
-	public List<Integer> getGlossaireNodeIds(int termesPerHttpRequest) throws ClientProtocolException, IOException {
-		log.debug("getGlossaireNodeIds()");
-		
-		return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.GLOSSAIRE_NODE_URL, termesPerHttpRequest);
-	}
-	
-	/**
-	 * Renvoie la liste des entrées Bibliographiques
-	 * @param
-	 * @return Les entrées Bibliographiques
-	 * @throws ClientProtocolException
-	 * @throws IOException
-	 */
-	public List<Integer> getBibliographieNodeIds(int bibliographiePerHttpRequest) throws ClientProtocolException, IOException {
-		log.debug("getBibliographieNodeIds()");
-			
-		return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.BIBLIO_NODE_URL, bibliographiePerHttpRequest);
-	}
 
 	/**
 	 * Renvoie les id du NODE_URL passé en paramètre
@@ -211,22 +185,26 @@ public class DorisAPI_JSONTreeHelper {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public List<Integer> getNodeIdsFromNodeUrl(String NODE_URL, int nbLimitRequest) throws ClientProtocolException, IOException {
+	public List<Integer> getNodeIdsFromNodeUrl(String NODE_URL, int nbLimitRequest, int offset) throws ClientProtocolException, IOException {
 		log.debug("getNodeIdsFromNodeUrl()");
 		
 		List<Integer> result = new ArrayList<Integer>();
 		
 		DefaultHttpClient client = new DefaultHttpClient();
 		
-		String uri = NODE_URL + "/list/limit/"+nbLimitRequest;
+		String uri = NODE_URL + "/list";
+		if (offset != 0) uri += "/offset/"+offset;
+		uri += "/limit/"+nbLimitRequest;
 		log.debug("uri : "+uri.toString());
 		
-		if(!DorisAPIConnexionHelper.use_http_header_for_token){
+		if(credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
 			uri = uri+"?oauth_token="+credent.getAccessToken();
+		} else {
+			uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
 		}
 		
 		HttpGet getHttpPage = new HttpGet(uri);
-		if(DorisAPIConnexionHelper.use_http_header_for_token){
+		if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
 			getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
 		}
 		
@@ -255,9 +233,8 @@ public class DorisAPI_JSONTreeHelper {
 			JsonNode nodeInList = (JsonNode) iterator.next();
 			
 			log.debug("valeur noeud : "+objectMapper.writeValueAsString(nodeInList));
-			log.debug(nodeInList.path("objectName").textValue());
-			
-			result.add(nodeInList.path("objectId").asInt());
+
+			result.add(nodeInList.path("nodeId").asInt());
 		}
 		log.debug("nb noeud :"+result.size());
 	
