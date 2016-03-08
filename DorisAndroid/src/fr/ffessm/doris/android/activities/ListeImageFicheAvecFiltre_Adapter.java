@@ -585,13 +585,13 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
         layout.setLayoutParams(new LayoutParams(200, 200));
         layout.setGravity(Gravity.CENTER);
         
-        ImageView imageView = new ImageView(context);	        
+        final ImageView imageView = new ImageView(context);
         imageView.setLayoutParams(new LayoutParams(200, 200));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         
-        if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURL(), ImageType.VIGNETTE)){
+        if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)){
     		try {
-				Picasso.with(context).load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.VIGNETTE))
+				Picasso.with(context).load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE))
 					.fit()
 					.centerInside()
 					.into(imageView);
@@ -603,13 +603,37 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
     		
     		if (reseauOutils.isTelechargementsModeConnectePossible()) {
 
+	            final PhotoFiche photoFicheFinal = photoFiche;
+
 	    		Picasso.with(context)
-	    			.load(Constants.VIGNETTE_BASE_URL+"/"+photoFiche.getCleURL())
+	    			.load(Constants.IMAGE_BASE_URL + "/"
+        					+ photoFiche.getCleURL().replaceAll(
+							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
 					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
 					.error(R.drawable.doris_icone_doris_large_pas_connecte)
 					.fit()
 					.centerInside()
-	    			.into(imageView);
+	    			.into(imageView,
+							new com.squareup.picasso.Callback() {
+				        @Override
+				        public void onSuccess() {
+				            //Success image already loaded into the view
+				        }
+
+			        @Override
+			        public void onError() {
+		        		Picasso.with(context)
+	        			.load(Constants.IMAGE_BASE_URL + "/"
+	        					+ photoFicheFinal.getCleURL().replaceAll(
+	        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
+						.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
+						.fit()
+						.centerInside()
+						.error(R.drawable.doris_icone_doris_large_pas_connecte)
+	        			.into(imageView);
+			        }
+
+		        });
     		} else {
     			imageView.setImageResource(R.drawable.doris_icone_doris_large_pas_connecte);
     		}

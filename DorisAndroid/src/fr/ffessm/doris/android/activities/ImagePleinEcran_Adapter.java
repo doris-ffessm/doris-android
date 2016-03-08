@@ -127,10 +127,10 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         int largeur = ScreenTools.getScreenWidth(_activity);
         final PhotoFiche photoFiche = _PhotoFicheLists.get(position);
        
-        if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURL(), ImageType.HI_RES)){
+        if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.HI_RES)){
     		try {
 				Picasso.with(_activity)
-					.load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.HI_RES))
+					.load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), ImageType.HI_RES))
 					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
 					.resize(largeur, hauteur)
 					.centerInside()
@@ -139,10 +139,10 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 			}
     	}
     	else{
-    		if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURL(), ImageType.MED_RES)){
+    		if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.MED_RES)){
         		try {
     				Picasso.with(_activity)
-    					.load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.MED_RES))
+    					.load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), ImageType.MED_RES))
     					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
     					.into(imgDisplay);
     			} catch (IOException e) {
@@ -152,24 +152,35 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 				// pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
         		
         		if (reseauOutils.isTelechargementsModeConnectePossible()) {
-	    			String dossier_photo;
+
+	    			String suffixe_photo;
 	    			switch(Photos_Outils.ImageType.valueOf(paramOutils.getParamString(R.string.pref_key_mode_connecte_qualite_photo,""))){
 	    			case MED_RES :
-	    				dossier_photo = Constants.MOYENNE_BASE_URL;
+	    				suffixe_photo = Constants.MOYENNE_BASE_URL_SUFFIXE;
 	    				break;
 	    			case HI_RES :
-	    				dossier_photo = Constants.GRANDE_BASE_URL;
+	    				suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
 	    				break;
 	    			default:
-	    				dossier_photo = Constants.MOYENNE_BASE_URL;
+	    				suffixe_photo = Constants.MOYENNE_BASE_URL_SUFFIXE;
 	    			}
-	    			
-	    			ChainedLoadImageViewCallback chainedLoadImageViewCallback = new ChainedLoadImageViewCallback(_activity, imgDisplay, 
-	    					dossier_photo+"/"+photoFiche.getCleURL(),largeur, hauteur, false, btnHiResNotAvailable); // vrai chargement de l'image dans le callback
-	    			if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURL(), ImageType.VIGNETTE)){
+
+
+	    			ChainedLoadImageViewCallback chainedLoadImageViewCallback = new ChainedLoadImageViewCallback(
+	    					_activity,
+	    					imgDisplay,
+	    					Constants.IMAGE_BASE_URL + "/"
+        						+ photoFiche.getCleURL().replaceAll(
+        							Constants.IMAGE_BASE_URL_SUFFIXE, suffixe_photo),
+	    					largeur,
+	    					hauteur,
+	    					false,
+	    					btnHiResNotAvailable); // vrai chargement de l'image dans le callback
+
+	    			if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)){
 	    				try {
 							Picasso.with(_activity)
-								.load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.VIGNETTE)) // charge d'abord la vignette depuis le disque
+								.load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)) // charge d'abord la vignette depuis le disque
 								.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
 								.resize(largeur, hauteur)
 								.centerInside()
@@ -179,7 +190,9 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 	    			}
 	    			else{
 			    		Picasso.with(_activity)
-			    			.load(Constants.VIGNETTE_BASE_URL+"/"+photoFiche.getCleURL()) // charge d'abord la vignette depuis internet (mais elle est probablement déjà dans le cache)
+			    			.load(Constants.IMAGE_BASE_URL + "/"
+		        					+ photoFiche.getCleURL().replaceAll(
+		        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE)) // charge d'abord la vignette depuis internet (mais elle est probablement déjà dans le cache)
 							.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
 							.resize(largeur, hauteur)
 							.centerInside()
@@ -187,10 +200,10 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 	    			}
         		} else {
         			// Si interdiction de télécharger en mode connecté GSM
-        			if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURL(), ImageType.VIGNETTE)){
+        			if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)){
                 		try {
         					Picasso.with(_activity)
-        						.load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.VIGNETTE))
+        						.load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE))
         						.resize(largeur, hauteur)
         						.centerInside()
         						.placeholder(R.drawable.doris_icone_doris_large_pas_connecte)

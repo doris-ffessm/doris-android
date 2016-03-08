@@ -68,8 +68,8 @@ public class Disque_Outils {
 	
 	private Context context;
 	
-	private boolean isPrimaryExternalStorageExist;
-	private boolean isSecondaryExternalStorageExist;
+	private boolean isPrimaryExternalStorageExist = false;
+	private boolean isSecondaryExternalStorageExist = false;
 	
 	public Disque_Outils(Context context){
 		this.context = context;
@@ -80,7 +80,11 @@ public class Disque_Outils {
     public void refresh(){
     	isPrimaryExternalStorageExist = !DiskEnvironmentHelper.getPrimaryExternalStorage().isEmulated();
     	
-    	isSecondaryExternalStorageExist = DiskEnvironmentHelper.isSecondaryExternalStorageAvailable(context);
+    	try{
+    		isSecondaryExternalStorageExist = DiskEnvironmentHelper.isSecondaryExternalStorageAvailable(context);
+    	} catch (Exception e){
+    		Log.e(LOG_TAG, String.format("Problème avec isSecondaryExternalStorageExist : error %s", e.getMessage()));
+    	}
     }
     
 	public String getHumanDiskUsage(long inSize){
