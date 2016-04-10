@@ -12,7 +12,7 @@
         <CheckBoxPreference android:key="@string/pref_key_mode_connecte_wifi_only"
             android:title="@string/mode_connecte_wifi_only_prompt"
             android:summary="@string/mode_connecte_wifi_only_summary"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:layout="@layout/preference_layout_preference"
             />
          <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary

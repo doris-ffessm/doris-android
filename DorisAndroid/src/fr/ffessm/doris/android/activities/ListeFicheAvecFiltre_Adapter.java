@@ -251,10 +251,11 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
         	photoPrincipale.setContextDB(_contextDB);
 
-    		//Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
+    		Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
     		
     		
         	if(photosOutils.isAvailableInFolderPhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
+				Log.d(LOG_TAG, "getView Photo Disponible => utilisation");
         		try {
         			Log.d(LOG_TAG, "from disk : "+photoPrincipale.getCleURLNomFichier());
 					Picasso.with(context)
@@ -268,6 +269,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				}
         	}
         	else{
+				Log.d(LOG_TAG, "getView Photo non Disponible => téléchargement");
         		// pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
         		
         		if (reseauOutils.isTelechargementsModeConnectePossible()) {
@@ -317,6 +319,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
     				        });
 
         		} else {
+					Log.d(LOG_TAG, "getView isTelechargementsModeConnectePossible() = false");
         			// remet l'icone de base
                 	ivIcon.setImageResource(R.drawable.app_ic_launcher);
         		}
