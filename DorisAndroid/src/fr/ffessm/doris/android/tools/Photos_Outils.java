@@ -456,6 +456,7 @@ public class Photos_Outils {
 				);
 			
 	    	/* On crée les dossiers s'ils étaient inexistants */
+            Log.i(LOG_TAG, "downloadPhotoFile() - dossierDestination : "+ imageFolder );
 			if (!imageFolder.exists() && !imageFolder.mkdirs()) {
 	            throw new IOException("Cannot create dir " + imageFolder.getAbsolutePath());
 	        }
@@ -471,18 +472,14 @@ public class Photos_Outils {
 					);
 				File fichierImageAnc = new File(imageFolderAnc, inPhotoDisque);
 				Log.d(LOG_TAG, "downloadPhotoFile() - fichierImageAnc.getPath() : "+fichierImageAnc.getPath());
-				Log.d(LOG_TAG, "downloadPhotoFile() - fichierImageAnc.exists() : "+fichierImageAnc.getPath());
+				Log.d(LOG_TAG, "downloadPhotoFile() - fichierImageAnc.exists() : "+fichierImageAnc.exists());
 				if(fichierImageAnc.exists()){
 
 			    	Log.i(LOG_TAG, "downloadPhotoFile() - fichierImageAnc.AbsolutePath : "+ fichierImageAnc.getAbsolutePath() );
 			    	Log.i(LOG_TAG, "downloadPhotoFile() - fichierImageAnc.Name : "+ fichierImageAnc.getName() );
-			    	Log.i(LOG_TAG, "downloadPhotoFile() - dossierDestination : "+ imageFolder );
 
 			    	input = new FileInputStream(fichierImageAnc);
 			        output = new FileOutputStream(fichierImage);
-
-			        // Copy the bits from instream to outstream
-			        //byte[] buf = new byte[1024];
 
 			        while ((count = input.read(buffer)) > 0) {
 			        	output.write(buffer, 0, count);
@@ -504,6 +501,8 @@ public class Photos_Outils {
 						Log.w(LOG_TAG, e.getMessage(), e);
 						return false;
 					}
+
+                    Log.d(LOG_TAG, "downloadPhotoFile() - 050" );
 					try {
 						HttpURLConnection urlConnection = (HttpURLConnection) urlHtml.openConnection();
 				        urlConnection.setConnectTimeout(3000);
@@ -512,8 +511,10 @@ public class Photos_Outils {
 				        urlConnection.connect();
 
 			            // download the file
+                        Log.d(LOG_TAG, "downloadPhotoFile() - 052" );
 			            input = urlConnection.getInputStream();
-			            Log.d(LOG_TAG, "downloadPhotoFile() - fichierImage.getCanonicalPath() : "+fichierImage.getCanonicalPath() );
+                        Log.d(LOG_TAG, "downloadPhotoFile() - 053" );
+                        Log.d(LOG_TAG, "downloadPhotoFile() - fichierImage.getCanonicalPath() : "+fichierImage.getCanonicalPath() );
 			            output = new FileOutputStream(fichierImage);
 
 			            while ( ( count = input.read(buffer) ) != -1) {
@@ -526,6 +527,7 @@ public class Photos_Outils {
 			            input.close();
 
 					} catch (IOException e) {
+                        Log.d(LOG_TAG, "downloadPhotoFile() - 060" );
 						Log.w(LOG_TAG, e.getMessage(), e);
 						return false;
 					}

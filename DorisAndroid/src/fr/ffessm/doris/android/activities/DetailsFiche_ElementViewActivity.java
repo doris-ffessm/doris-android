@@ -817,7 +817,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         Photos_Outils photosOutils = new Photos_Outils(this);
         if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURL(), ImageType.VIGNETTE)){
     		try {
-				Picasso.with(this).load(photosOutils.getPhotoFile(photoFiche.getCleURL(), ImageType.VIGNETTE))
+				Picasso.with(this)
+                    .load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE))
 					.fit()
 					.centerInside()
 					.into(imageView);
