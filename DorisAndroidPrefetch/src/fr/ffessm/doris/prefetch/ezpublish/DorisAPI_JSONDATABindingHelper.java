@@ -46,8 +46,8 @@ public class DorisAPI_JSONDATABindingHelper {
 
 	/**
 	 * récupère un Specie à partir de son NodeId
-	 * @param credent
-	 * @param specieNodeId
+	 * @param
+	 * @param especeNodeId
 	 * @return
 	 * @throws ClientProtocolException
 	 * @throws IOException
@@ -57,7 +57,7 @@ public class DorisAPI_JSONDATABindingHelper {
 
 		/*
 		DefaultHttpClient client = new DefaultHttpClient();
-		String uri =DorisOAuth2ClientCredentials.SERVER_NODE_URL + specieNodeId;
+		String uri =DorisOAuth2ClientCredentials.SERVER_NODE_URL + especeNodeId;
 		
 		if (debug) {
 			DorisAPIConnexionHelper.printJSON(credent, uri);
@@ -76,13 +76,12 @@ public class DorisAPI_JSONDATABindingHelper {
 		HttpResponse response = client.execute(getCode);
 		System.out.println(response.getStatusLine());
 		ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
-		Specie specieResponse = mapper.readValue(new InputStreamReader(response.getEntity().getContent()), Specie.class);
-		System.out.println("\t Specie: " + specieResponse.getMetadata().getObjectName());
-		for (Entry<String, Object> entry : specieResponse.getLinks().entrySet()) {
+		Espece especeReponse = mapper.readValue(new InputStreamReader(response.getEntity().getContent()), Espece.class);
+		System.out.println("\t Espece : " + especeReponse.getMetadata().getObjectName());
+		for (Entry<String, Object> entry : especeReponse.getLinks().entrySet()) {
 			System.out.println("\t\t" + entry.getKey() + "\t" + entry.getValue());
-	//		printJSON(credent, entry.getValue().toString());
+			//		printJSON(credent, entry.getValue().toString());
 		}
-
 		*/
 		return null;
 	}
@@ -90,7 +89,9 @@ public class DorisAPI_JSONDATABindingHelper {
 
 	public Espece getEspeceFieldsFromNodeId(int especeNodeId) throws ClientProtocolException,
 	IOException {
-
+		log.debug("getSpecieFieldsFromNodeId - Début");
+		log.debug("getSpecieFieldsFromNodeId - specieNodeId : " + especeNodeId);
+		
 		DefaultHttpClient client = new DefaultHttpClient();
 		String uri = DorisOAuth2ClientCredentials.getServerNodeUrlTousLesChamps( String.valueOf(especeNodeId) );
 		log.debug("getSpecieFieldsFromNodeId - uri : " + uri);
@@ -140,7 +141,6 @@ public class DorisAPI_JSONDATABindingHelper {
 		catch (  IOException e) {
 		    e.printStackTrace();
 		}
-
 
 		System.out.println("\t Référence : " + espece.getFields().getReference().getValue() );
 		System.out.println("\t Espece : " + espece.getFields().getEspece().getValue() );
@@ -216,9 +216,7 @@ public class DorisAPI_JSONDATABindingHelper {
 		System.out.println("\t image path: " + imageResponse.getDataMap().getImage() );
 		
 		return imageResponse;
-		
-		
-	}	
+	}
 	
 
 }

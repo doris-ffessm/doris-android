@@ -29,7 +29,6 @@ public class DorisOAuth2ClientCredentials {
   /** Probablement pas propre mais permet de ne pas avoir à se connecter */
   public static final String API_SUFFIXE = "e97c7911452f87ba23440ab4af541e39a64ecaef";
 
-
   /** Port in the "Callback URL". */
   public static final int PORT = 8087;
 
@@ -50,7 +49,6 @@ public class DorisOAuth2ClientCredentials {
 	  return USER_ID;
   }
   
-
   public static final String SERVER_NODE_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezp/v1/content/node/";
   public static final String SERVER_NODE_URL_SUFFIXE = "/fields";
   public static final String SERVER_OBJECT_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezx/v1/object/";
@@ -97,4 +95,5 @@ public class DorisOAuth2ClientCredentials {
   // Forum 75
   // Actualités 86
   // Types de lien 89
+
 }

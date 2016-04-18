@@ -354,6 +354,7 @@ public class PrefetchDorisWebSite {
 		/*
 		Credential credent = DorisAPIConnexionHelper
 				.authorizeViaWebPage(DorisOAuth2ClientCredentials.getUserId());
+		
 		DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper(credent);
 		DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper(credent);
 		*/
@@ -380,6 +381,8 @@ public class PrefetchDorisWebSite {
 			
 		try{
 			// remove all previous photos
+			log.debug("doMain() - Remove all previous photos");
+			
 			TableUtils.clearTable(connectionSource, PhotoFiche.class);
 			
 		
@@ -394,8 +397,7 @@ public class PrefetchDorisWebSite {
 			for(int i=0; i < (nbFichesDORIS / nbFichesParRequetes); i++){
 
 				List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getFichesNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
-
-
+			
 				for (Integer especeNodeId : nodeIds) {
 					count++;
 					if( count > nbMaxFichesATraiter ){
@@ -404,37 +406,36 @@ public class PrefetchDorisWebSite {
 						break;
 					}
 
-					// Référence de l'Espèce dans le message JSON
+					// Référence de l'Espèce dans le message JSON 
 					Espece especeJSON = dorisAPI_JSONDATABindingHelper.getEspeceFieldsFromNodeId(especeNodeId);
 					String especeJSONReferenceId = especeJSON.getFields().getReference().getValue();
-
+					
 					log.debug(" nodeId="+especeNodeId+", dorisId="+especeJSONReferenceId +", imagesNodeIds="+especeJSON.getFields().getImages().getValue());
-
+									
 					List<Image> imageData = new ArrayList<Image>();
-
-
+					
 					// itère sur les images trouvées pour cette fiche
 					for(String possibleImageId : especeJSON.getFields().getImages().getValue().split("\\|")){
 						try{
 							int imageId = Integer.parseInt(possibleImageId.replaceAll("&", ""));
 							// récupère les données associées à l'image
 							imageData.add(dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId));
-
+	
 						} catch ( NumberFormatException nfe){
 							// ignore les entrées invalides
 						}
 					}
 
 					log.debug(" ficheDao.queryBuilder() ="+dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", especeJSONReferenceId).getStatement() );
-
+					
 					final Fiche fiche = dbContext.ficheDao.queryForFirst(
 							dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", especeJSONReferenceId).prepare()
 						);
-
+					
 					if (fiche != null) {
-
+						
 						fiche.setContextDB(dbContext);
-
+					
 						// recrée une entrée dans la base pour l'image
 						final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageData);
 						TransactionManager.callInTransaction(connectionSource,
@@ -444,9 +445,9 @@ public class PrefetchDorisWebSite {
 									for (PhotoFiche photoFiche : listePhotoFiche){
 
 										photoFiche.setFiche(fiche);
-
+										
 										dbContext.photoFicheDao.create(photoFiche);
-
+										
 										if (count == 0) {
 											// met à jour l'image principale de la fiche
 											fiche.setPhotoPrincipale(photoFiche);
@@ -459,9 +460,9 @@ public class PrefetchDorisWebSite {
 							});
 
 					} else {
-
+						
 						log.error("! ! ! Fiche non trouvée : "+especeJSONReferenceId+" ! ! ! !");
-
+						
 					}
 
 				}
@@ -582,7 +583,7 @@ public class PrefetchDorisWebSite {
 	/**
 	 * Vérification des arguments passés à l'application
 	 * 
-	 *  @param args
+	 *  @param inArgs
 	 */
 	private ActionKind checkArgs(String[] inArgs){
 			

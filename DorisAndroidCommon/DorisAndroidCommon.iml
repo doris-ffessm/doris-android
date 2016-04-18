@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <module external.linked.project.id=":DorisAndroidCommon" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$USER_HOME$/Dev/DORISAndroid" external.system.id="GRADLE" external.system.module.group="DORISAndroid" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+=======
+<module external.linked.project.id=":DorisAndroidCommon" external.linked.project.path="/media/hd/Dev/DORISAndroid/DorisAndroidCommon" external.root.project.path="$MODULE_DIR$/.." external.system.id="GRADLE" external.system.module.group="DORISAndroid" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+>>>>>>> 188bc31397ea754a109c6597a475e01d23eb62d3
   <component name="FacetManager">
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
@@ -8,12 +12,17 @@
     </facet>
     <facet type="java-gradle" name="Java-Gradle">
       <configuration>
+<<<<<<< HEAD
         <option name="BUILD_FOLDER_PATH" value="$MODULE_DIR$/build" />
+=======
+        <option name="BUILD_FOLDER_PATH" value="/media/hd/Dev/DORISAndroid/DorisAndroidCommon/build" />
+>>>>>>> 188bc31397ea754a109c6597a475e01d23eb62d3
         <option name="BUILDABLE" value="true" />
       </configuration>
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
+<<<<<<< HEAD
     <output url="file://$MODULE_DIR$/build/classes/main" />
     <output-test url="file://$MODULE_DIR$/build/classes/test" />
     <exclude-output />
@@ -23,10 +32,25 @@
       <sourceFolder url="file://$MODULE_DIR$/tests/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
+=======
+    <output url="file:///media/hd/Dev/DORISAndroid/DorisAndroidCommon/build/classes/main" />
+    <output-test url="file:///media/hd/Dev/DORISAndroid/DorisAndroidCommon/build/classes/test" />
+    <exclude-output />
+    <content url="file:///media/hd/Dev/DORISAndroid/DorisAndroidCommon">
+      <sourceFolder url="file:///media/hd/Dev/DORISAndroid/DorisAndroidCommon/src" isTestSource="false" />
+      <sourceFolder url="file:///media/hd/Dev/DORISAndroid/DorisAndroidCommon/tests/java" isTestSource="true" />
+      <sourceFolder url="file:///media/hd/Dev/DORISAndroid/DorisAndroidCommon/tests/resources" type="java-test-resource" />
+      <excludeFolder url="file:///media/hd/Dev/DORISAndroid/DorisAndroidCommon/.gradle" />
+      <excludeFolder url="file:///media/hd/Dev/DORISAndroid/DorisAndroidCommon/build" />
+>>>>>>> 188bc31397ea754a109c6597a475e01d23eb62d3
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="ormlite-core-4.47" level="project" />
+<<<<<<< HEAD
+=======
+    <orderEntry type="library" exported="" name="commons-lang3-3.1-sources" level="project" />
+>>>>>>> 188bc31397ea754a109c6597a475e01d23eb62d3
     <orderEntry type="library" exported="" name="jericho-html-3.1" level="project" />
     <orderEntry type="library" exported="" name="jericho-html-3.3" level="project" />
     <orderEntry type="library" exported="" name="commons-logging-api-1.1.1" level="project" />

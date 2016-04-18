@@ -53,7 +53,6 @@ public class Constants {
 	//public static final String IMAGE_BASE_URL = "http://doris.ffessm.fr/var/doris/storage/images/images";
 	public static final String IMAGE_BASE_URL = "http://doris.ffessm.fr";
 	public static final String PORTRAIT_BASE_URL = IMAGE_BASE_URL+ "/photos_vig";
-
 	// La photo existe toujours au format blabla.jpg, puis d'autres formats sont générés suivant le besoin,
 	// nous utilisons de même ces différents formats
 	// Suffixe initial
@@ -68,7 +67,6 @@ public class Constants {
 	public static final String MOYENNE2_BASE_URL_SUFFIXE = "_image600.jpg";
 	// Meilleure Qualitée (l'image Initiale)
 	public static final String GRANDE_BASE_URL_SUFFIXE = ".jpg";
-
 
 	public static final String ILLUSTRATION_DEFINITION_BASE_URL = IMAGE_BASE_URL+ "/diaporamaglo";
 	public static final String ILLUSTRATION_BIBLIO_BASE_URL = IMAGE_BASE_URL+ "/photos_biblio_moy";

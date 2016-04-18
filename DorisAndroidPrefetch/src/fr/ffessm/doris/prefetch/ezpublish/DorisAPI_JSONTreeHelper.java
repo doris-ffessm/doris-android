@@ -38,13 +38,13 @@ public class DorisAPI_JSONTreeHelper {
 	public DorisAPI_JSONTreeHelper( Credential credent){
 		this.credent = credent;
 	}
-
+	
 	/** Global instance of the JSON factory. */
 	static final JsonFactory JSON_FACTORY = new JacksonFactory();
 
 	/**
 	 * Renvoie la liste des nodeId de toutes les fiches espèces
-	 * @param credent
+	 * @param
 	 * @param speciesPerHttpRequest limite le nombre d'espèces requises à chaque requète http
 	 * @return
 	 * @throws ClientProtocolException
@@ -240,5 +240,5 @@ public class DorisAPI_JSONTreeHelper {
 	
 		return result;
 	}
-	
+
 }
