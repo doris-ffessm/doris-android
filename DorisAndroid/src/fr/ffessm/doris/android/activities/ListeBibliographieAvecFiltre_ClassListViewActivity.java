@@ -162,7 +162,7 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
 		Log.d(LOG_TAG, "onItemClick "+view);
 		if(view instanceof LinearLayout && view.getId() == R.id.listebibliographieavecfiltre_listviewrow){
 			//Start of user code onItemClick additions ListeBibliographieAvecFiltre_ClassListViewActivity
-			setIntentPourRetour();
+			DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
 			//End of user code
 			
 			// normal case on main item
@@ -260,7 +260,7 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
 
-				Intent upIntent = getIntentPrecedent();
+				Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
 				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
 
 				if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
@@ -351,15 +351,6 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
 		showToast("filter button pressed. \nPlease customize ;-)");
     }
 	
-    public void setIntentPourRetour(){
-	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
-	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
-    }
-    public Intent getIntentPrecedent(){
-		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
-    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
-		return upIntent;
-    }
 	// End of user code
 
 	

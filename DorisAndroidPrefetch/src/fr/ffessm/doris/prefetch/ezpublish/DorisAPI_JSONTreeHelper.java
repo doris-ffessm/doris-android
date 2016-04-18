@@ -44,7 +44,7 @@ public class DorisAPI_JSONTreeHelper {
 
 	/**
 	 * Renvoie la liste des nodeId de toutes les fiches espèces
-	 * @param credent
+	 * @param
 	 * @param speciesPerHttpRequest limite le nombre d'espèces requises à chaque requète http
 	 * @return
 	 * @throws ClientProtocolException
@@ -163,7 +163,7 @@ public class DorisAPI_JSONTreeHelper {
 //		}
 		return 0;
 	}
-	
+
 	/**
 	 * Renvoie la liste des Fiches
 	 * @param
@@ -173,11 +173,11 @@ public class DorisAPI_JSONTreeHelper {
 	 */
 	public List<Integer> getFichesNodeIds(int fichesPerHttpRequest, int offset) throws ClientProtocolException, IOException {
 		log.debug("getFichesNodeIds()");
-			
+
 		return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.SPECIES_NODE_URL, fichesPerHttpRequest, offset);
 	}
 	
-	
+
 	/**
 	 * Renvoie les id du NODE_URL passé en paramètre
 	 * @param
@@ -240,5 +240,5 @@ public class DorisAPI_JSONTreeHelper {
 	
 		return result;
 	}
-	
+
 }

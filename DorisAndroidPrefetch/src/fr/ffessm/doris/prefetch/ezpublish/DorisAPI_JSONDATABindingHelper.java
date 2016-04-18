@@ -46,8 +46,8 @@ public class DorisAPI_JSONDATABindingHelper {
 
 	/**
 	 * récupère un Specie à partir de son NodeId
-	 * @param credent
-	 * @param specieNodeId
+	 * @param
+	 * @param especeNodeId
 	 * @return
 	 * @throws ClientProtocolException
 	 * @throws IOException
@@ -82,7 +82,6 @@ public class DorisAPI_JSONDATABindingHelper {
 			System.out.println("\t\t" + entry.getKey() + "\t" + entry.getValue());
 			//		printJSON(credent, entry.getValue().toString());
 		}
-		
 		*/
 		return null;
 	}
@@ -107,15 +106,15 @@ public class DorisAPI_JSONDATABindingHelper {
 						);
 			}
 		}
-		
+
 		if(credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
 			uri = uri+"?oauth_token="+credent.getAccessToken();
 		} else {
 			uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
 		}
-		
+
 		log.debug("getSpecieFieldsFromNodeId - uri & oauth_token : " + uri);
-		
+
 		HttpGet getHttpPage = new HttpGet(uri);
 		if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
 			getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
@@ -123,10 +122,10 @@ public class DorisAPI_JSONDATABindingHelper {
 		
 		HttpResponse response = client.execute(getHttpPage);
 		log.debug("getSpecieFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
-		
+
 		ObjectMapper objectMapper = new ObjectMapper();
 		Espece espece = new Espece();
-		
+
 		try {
 			espece = objectMapper.readValue(
 					new InputStreamReader(response.getEntity().getContent()),
@@ -142,14 +141,13 @@ public class DorisAPI_JSONDATABindingHelper {
 		catch (  IOException e) {
 		    e.printStackTrace();
 		}
-		
-		
+
 		System.out.println("\t Référence : " + espece.getFields().getReference().getValue() );
 		System.out.println("\t Espece : " + espece.getFields().getEspece().getValue() );
 		System.out.println("\t Genre : " + espece.getFields().getGenre().getValue() );
 		System.out.println("\t Etat : " + espece.getFields().getState().getValue() );
 		System.out.println("\t Images : " + espece.getFields().getImages().getValue() );
-		
+
 		return espece;
 	}
 	
@@ -212,15 +210,13 @@ public class DorisAPI_JSONDATABindingHelper {
 		
 		HttpResponse response = client.execute(getCode);
 		System.out.println("\t response : " + response.getStatusLine());
-		
+
 		ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
 		Image imageResponse = mapper.readValue(new InputStreamReader(response.getEntity().getContent()), Image.class);
 		System.out.println("\t image path: " + imageResponse.getDataMap().getImage() );
 		
 		return imageResponse;
-		
-		
-	}	
+	}
 	
 
 }

@@ -211,7 +211,7 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
 
-				Intent upIntent = getIntentPrecedent();
+				Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
 				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
 
 				if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
@@ -259,13 +259,7 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 		if(reseauOutils == null) reseauOutils = new Reseau_Outils(this);
     	return reseauOutils;
 	}
-	
-    public Intent getIntentPrecedent(){
-		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
-    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
-		return upIntent;
-    }
-	
+		
 	// End of user code
 
 }

@@ -86,11 +86,11 @@ public class DorisAPIConnexionHelper {
 	public static void saveJSONFile(Credential credent, String url, String filePath) throws ClientProtocolException, IOException {
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpGet getCode = new HttpGet(url);
-		
+
 		if (credent != null) {
 			getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
 		}
-		
+
 		HttpResponse response = client.execute(getCode);
 		
 		

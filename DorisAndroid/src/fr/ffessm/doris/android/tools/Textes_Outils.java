@@ -497,7 +497,7 @@ public class Textes_Outils {
 			                ormLiteDBHelper.close();
 			                
 			        	    // Retour Vers l'interface ayant lancée l'affichage de la définition
-			                setIntentPourRetour();
+			                DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
 			                
 			                if(idDefinition != 0){
 		                    	
@@ -574,7 +574,7 @@ public class Textes_Outils {
 			            public void onClick(View view) {  
 			            	
 			        	    // Retour Vers l'interface ayant lancée l'affichage du Participant
-			            	setIntentPourRetour();
+			            	DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
 			            	
 			    	        Intent toDetailView = new Intent(context, DetailsParticipant_ElementViewActivity.class);
 			    	        
@@ -597,8 +597,4 @@ public class Textes_Outils {
 
     }
 	
-    public void setIntentPourRetour(){
-	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
-	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = ((Activity) context).getIntent();
-    }
 }

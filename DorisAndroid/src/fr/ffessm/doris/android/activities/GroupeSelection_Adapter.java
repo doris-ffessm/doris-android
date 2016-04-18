@@ -246,7 +246,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		            ((GroupeSelection_ClassListViewActivity)context).finish();
 		        } else {
 
-		        	setIntentPourRetour();
+		        	DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
 		        	
 		        	Intent toListeFiche_View = new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class);
 		        	toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -274,7 +274,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		            ((GroupeSelection_ClassListViewActivity)context).finish();
 		        } else {
 
-		        	setIntentPourRetour();
+		        	DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
 		        	
 		        	Intent toListeFiche_View = new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class);
 		        	toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -441,9 +441,5 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		Log.d(LOG_TAG, "buildTreeForRoot() - Fin");
 	}
 
-    public void setIntentPourRetour(){
-	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
-	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = ((Activity) context).getIntent();
-    }
 	//End of user code
 }

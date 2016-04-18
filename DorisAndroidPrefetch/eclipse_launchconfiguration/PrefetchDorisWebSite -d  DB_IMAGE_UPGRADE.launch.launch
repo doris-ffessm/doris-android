@@ -6,6 +6,9 @@
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
 </listAttribute>
+<mapAttribute key="org.eclipse.debug.core.environmentVariables">
+<mapEntry key="log4j.configuration" value="${workspace_loc:DorisAndroidPrefetch}/src/log4j.properties"/>
+</mapAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="fr.ffessm.doris.prefetch.PrefetchDorisWebSite"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-d  DB_IMAGE_UPGRADE"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="DorisAndroidPrefetch"/>

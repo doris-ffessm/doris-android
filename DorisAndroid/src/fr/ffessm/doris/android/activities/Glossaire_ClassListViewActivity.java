@@ -163,7 +163,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 		Log.d(LOG_TAG, "onItemClick "+view);
 		if(view instanceof LinearLayout && view.getId() == R.id.glossaire_listviewrow){
 			//Start of user code onItemClick additions Glossaire_ClassListViewActivity
-			setIntentPourRetour();
+			DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
 			//End of user code
 			
 			// normal case on main item
@@ -260,7 +260,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
             //End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				Intent upIntent = getIntentPrecedent();
+				Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
 		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 		            // This activity is NOT part of this app's task, so create a new task
 		            // when navigating up, with a synthesized back stack.
@@ -347,15 +347,6 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 		showToast("filter button pressed. \nPlease customize ;-)");
     }
 	
-    public void setIntentPourRetour(){
-	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
-	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
-    }
-    public Intent getIntentPrecedent(){
-		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
-    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
-		return upIntent;
-    }
 	
 	// End of user code
 

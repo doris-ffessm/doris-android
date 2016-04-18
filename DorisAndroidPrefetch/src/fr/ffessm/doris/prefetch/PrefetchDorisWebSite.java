@@ -172,7 +172,7 @@ public class PrefetchDorisWebSite {
 		dbContext = prefetchDBTools.setupDatabase(connectionSource);
 		prefetchDBTools.databaseInitialisation(connectionSource);
 		outilsBase = new DataBase_Outils(dbContext);
-					
+
 		PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, ActionKind.INIT, nbMaxFichesATraiter);
 		if ( glossaire.prefetch() == -1 ) {
 			log.debug("doMain() - Erreur Glossaire" );
@@ -222,7 +222,7 @@ public class PrefetchDorisWebSite {
 			}
 
 			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_groupes_testsuites.xml");
-			log.debug("doMain() - debbug" );
+		
 			
 			// - - - Intervenants - - -
 			// On boucle sur les initiales des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
@@ -388,16 +388,15 @@ public class PrefetchDorisWebSite {
 		
 			// récupère tous les nodeIds des fiches connues de Doris V4
 			log.debug("doMain() - Récupère tous les nodeIds des fiches connues de Doris V4");
-			
+
 			int nbFichesDORIS = 3700;
 			int nbFichesParRequetes = 50;
 
 			int count = 0;
-			
+
 			for(int i=0; i < (nbFichesDORIS / nbFichesParRequetes); i++){
 
 				List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getFichesNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
-			
 			
 				for (Integer especeNodeId : nodeIds) {
 					count++;
@@ -406,7 +405,7 @@ public class PrefetchDorisWebSite {
 						i=9999;
 						break;
 					}
-					 
+
 					// Référence de l'Espèce dans le message JSON 
 					Espece especeJSON = dorisAPI_JSONDATABindingHelper.getEspeceFieldsFromNodeId(especeNodeId);
 					String especeJSONReferenceId = especeJSON.getFields().getReference().getValue();
@@ -415,19 +414,18 @@ public class PrefetchDorisWebSite {
 									
 					List<Image> imageData = new ArrayList<Image>();
 					
-					
 					// itère sur les images trouvées pour cette fiche
 					for(String possibleImageId : especeJSON.getFields().getImages().getValue().split("\\|")){
 						try{
 							int imageId = Integer.parseInt(possibleImageId.replaceAll("&", ""));
 							// récupère les données associées à l'image
-							imageData.add(dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId));	
+							imageData.add(dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId));
 	
 						} catch ( NumberFormatException nfe){
 							// ignore les entrées invalides
 						}
 					}
-					
+
 					log.debug(" ficheDao.queryBuilder() ="+dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", especeJSONReferenceId).getStatement() );
 					
 					final Fiche fiche = dbContext.ficheDao.queryForFirst(
@@ -445,7 +443,7 @@ public class PrefetchDorisWebSite {
 								public Void call() throws Exception {
 									int count = 0;
 									for (PhotoFiche photoFiche : listePhotoFiche){
-										
+
 										photoFiche.setFiche(fiche);
 										
 										dbContext.photoFicheDao.create(photoFiche);
@@ -460,13 +458,13 @@ public class PrefetchDorisWebSite {
 									return null;
 							    }
 							});
-					
+
 					} else {
 						
 						log.error("! ! ! Fiche non trouvée : "+especeJSONReferenceId+" ! ! ! !");
 						
 					}
-	
+
 				}
 			}
 		
@@ -581,10 +579,11 @@ public class PrefetchDorisWebSite {
 		
 		log.debug("doMain() - Fin Effacement tous Dossiers");
 	}
+	
 	/**
 	 * Vérification des arguments passés à l'application
 	 * 
-	 *  @param args
+	 *  @param inArgs
 	 */
 	private ActionKind checkArgs(String[] inArgs){
 			

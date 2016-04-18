@@ -152,7 +152,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 				// pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
         		
         		if (reseauOutils.isTelechargementsModeConnectePossible()) {
-	    			
+
 	    			String suffixe_photo;
 	    			switch(Photos_Outils.ImageType.valueOf(paramOutils.getParamString(R.string.pref_key_mode_connecte_qualite_photo,""))){
 	    			case MED_RES :
@@ -164,11 +164,11 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 	    			default:
 	    				suffixe_photo = Constants.MOYENNE_BASE_URL_SUFFIXE;
 	    			}
-        			
-        			
+
+
 	    			ChainedLoadImageViewCallback chainedLoadImageViewCallback = new ChainedLoadImageViewCallback(
 	    					_activity,
-	    					imgDisplay, 
+	    					imgDisplay,
 	    					Constants.IMAGE_BASE_URL + "/"
         						+ photoFiche.getCleURL().replaceAll(
         							Constants.IMAGE_BASE_URL_SUFFIXE, suffixe_photo),
@@ -176,7 +176,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 	    					hauteur,
 	    					false,
 	    					btnHiResNotAvailable); // vrai chargement de l'image dans le callback
-	    			
+
 	    			if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)){
 	    				try {
 							Picasso.with(_activity)

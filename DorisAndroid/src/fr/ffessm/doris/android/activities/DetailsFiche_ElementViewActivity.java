@@ -459,7 +459,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         		unfoldAllDetails();
         		return true;
         	case R.id.detailsfiche_elementview_action_glossaire:
-        		setIntentPourRetour();
+        		DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
         		Intent toDefinitionlView = new Intent(context, Glossaire_ClassListViewActivity.class);
             	context.startActivity(toDefinitionlView);
             	return true;
@@ -475,7 +475,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			//End of user code
 			// Respond to the action bar's Up/Home button
 			case android.R.id.home:
-				Intent upIntent = getIntentPrecedent();
+				Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
 				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
 				
 				if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
@@ -540,7 +540,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	    return false;
     }
   
-
 	// -------------- handler (for indexBar)
     
     protected void addFoldableTextView(LinearLayout containerLayout, String titre, CharSequence texte){
@@ -815,9 +814,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         imageView.setLayoutParams(new LayoutParams(200, 200));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         
-        if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)){
+        Photos_Outils photosOutils = new Photos_Outils(this);
+        if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURL(), ImageType.VIGNETTE)){
     		try {
-				Picasso.with(this).load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE))
+				Picasso.with(this)
+                    .load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE))
 					.fit()
 					.centerInside()
 					.into(imageView);
@@ -893,7 +894,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         	Log.d(LOG_TAG, "onClick() - v : "+v.toString());
         	Log.d(LOG_TAG, "onClick() - _position : "+_position+" - _ficheID : "+_ficheID);
             
-        	setIntentPourRetour();
+        	DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
         	
         	// on selecting grid view image
             // launch full screen activity
@@ -905,15 +906,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
  
     }
     
-    public void setIntentPourRetour(){
-	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
-	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
-    }
-    public Intent getIntentPrecedent(){
-		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
-    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
-		return upIntent;
-    }
+
     
     // End of user code
 

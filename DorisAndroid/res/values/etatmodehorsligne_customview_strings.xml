@@ -4,29 +4,26 @@
 	<!-- Start of user code customView_strings etatmodehorsligne
 	-->
 	<!-- freely add here the desired resource String for your custom view -->
-	
-	
+
 	<!-- Dossiers Stockage des Images par Type -->
 	<!-- Il est important qu'ils soient tous différents pour les calculs de leurs volumétries (estimation de la place disque qu'ils prennent)-->
-	<string name="folder_vignettes_fiches">v4/vignettes_fiches</string>
-	<string name="folder_med_res_fiches">v4/medium_res_images_fiches</string>
-	<string name="folder_hi_res_fiches">v4/hi_res_images_fiches</string>
-	<string name="folder_portraits">v4/portraits</string>
-	<string name="folder_illustration_definitions">v4/illustrations</string>
-	<string name="folder_illustration_biblio">v4/biblio</string>
-	
-	<!-- TEMPORAIRE : Permet de ne pas retélécharger toutes les photos, mais de déplacer celles déjà présentes (avec l'ancien site) -->
-	<string name="folder_anc_vignettes_fiches">vignettes_fiches</string>
-	<string name="folder_anc_med_res_fiches">medium_res_images_fiches</string>
-	<string name="folder_anc_hi_res_fiches">hi_res_images_fiches</string>
-	<string name="folder_anc_portraits">portraits</string>
-	<string name="folder_anc_illustration_definitions">illustrations</string>
-	<string name="folder_anc_illustration_biblio">biblio</string>
-	
-	
-	
-	
-	<!-- On sur-estime exprès un peu -->
+	<string name="folder_vignettes_fiches">V4_vignettes_fiches</string>
+	<string name="folder_med_res_fiches">V4_medium_res_images_fiches</string>
+	<string name="folder_hi_res_fiches">V4_hi_res_images_fiches</string>
+	<string name="folder_portraits">V4_portraits</string>
+	<string name="folder_illustration_definitions">V4_illustrations</string>
+	<string name="folder_illustration_biblio">V4_biblio</string>
+
+    <!-- TEMPORAIRE : Permet de ne pas retélécharger toutes les photos, mais de déplacer celles déjà présentes (avec l'ancien site) -->
+    <string name="folder_anc_vignettes_fiches">vignettes_fiches</string>
+    <string name="folder_anc_med_res_fiches">medium_res_images_fiches</string>
+    <string name="folder_anc_hi_res_fiches">hi_res_images_fiches</string>
+    <string name="folder_anc_portraits">portraits</string>
+    <string name="folder_anc_illustration_definitions">illustrations</string>
+    <string name="folder_anc_illustration_biblio">biblio</string>
+
+
+    <!-- On sur-estime exprès un peu -->
 	<!-- 185 Mo / 23890 vignettes => 8 ko soit 8200 octets -->
 	<string name="etatmodehorsligne_taillemoy_vignette">8500</string>
 	<!-- 533 Mo / 22549 images => 24 ko soit 25500 octets -->

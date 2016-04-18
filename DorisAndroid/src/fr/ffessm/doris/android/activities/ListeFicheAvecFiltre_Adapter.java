@@ -201,11 +201,6 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		final Fiche entry = getFicheForId(filteredFicheIdList.get(position));
 		if(entry == null) return convertView;
        
-		Log.d(LOG_TAG, "getView getId() = "+entry.getId());
-		Log.d(LOG_TAG, "getView getNomCommun() = "+entry.getNomCommun());
-		Log.d(LOG_TAG, "getView getPhotoPrincipale() = "+entry.getPhotoPrincipale());
-		Log.d(LOG_TAG, "getView getPhotoPrincipale().getCleURL() = "+entry.getPhotoPrincipale().getCleURL());
-		
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
@@ -235,8 +230,6 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
     	ivIcon.getLayoutParams().width = defaultIconSize;
     	
     	PhotoFiche photoPrincipale = entry.getPhotoPrincipale();
-    	Log.d(LOG_TAG, "getView photoPrincipale = "+photoPrincipale);
-    	
     	if(photoPrincipale == null){
 	    	//try {
 	    		Log.w(LOG_TAG, "bizarre photoprincipale="+photoPrincipale+" application d'un workaround temporaire");
@@ -251,17 +244,18 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				Log.e(LOG_TAG, e1.getMessage(),e1);
 			}*/
     	}
-    	
-    	Log.d(LOG_TAG, "getView photoPrincipale.getCleURL() = " + photoPrincipale.getCleURL());
-    	
+
+    	//Log.d(LOG_TAG, "getView photoPrincipale.getCleURL() = " + photoPrincipale.getCleURL());
+
         if(photoPrincipale != null & photoPrincipale.getCleURL() != null){
 
         	photoPrincipale.setContextDB(_contextDB);
 
+    		Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
     		
-    		Log.d(LOG_TAG, "getView isAvailableInFolderPhoto(photoprincipale) = " + photosOutils.isAvailableInFolderPhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE));
     		
         	if(photosOutils.isAvailableInFolderPhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
+				Log.d(LOG_TAG, "getView Photo Disponible => utilisation");
         		try {
         			Log.d(LOG_TAG, "from disk : "+photoPrincipale.getCleURLNomFichier());
 					Picasso.with(context)
@@ -275,19 +269,20 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				}
         	}
         	else{
+				Log.d(LOG_TAG, "getView Photo non Disponible => téléchargement");
         		// pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
         		
         		if (reseauOutils.isTelechargementsModeConnectePossible()) {
         			Log.d(LOG_TAG, "getView isTelechargementsModeConnectePossible() = true");
-        			
+
         			final int defaultIconSizeFinal = defaultIconSize;
         			final PhotoFiche photoPrincipaleFinal = photoPrincipale;
-        			
+
         			Log.d(LOG_TAG, "getView URL Vignette : "+
         					Constants.IMAGE_BASE_URL + "/"
         					+ photoPrincipale.getCleURL().replaceAll(
         							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE));
-        			
+
         			// On commence par rechercher l'image la plus petite possible, si elle n'est pas dispo. on tente notre chance avec la taille juste au dessus
     				Picasso.with(context)
     					.load(Constants.IMAGE_BASE_URL + "/"
@@ -309,7 +304,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	    		        					Constants.IMAGE_BASE_URL + "/"
 	    		        					+ photoPrincipaleFinal.getCleURL().replaceAll(
 	    		        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE));
-	    				        	
+
 	    			        		Picasso.with(context)
 	    		        			.load(Constants.IMAGE_BASE_URL + "/"
 	    		        					+ photoPrincipaleFinal.getCleURL().replaceAll(
@@ -320,10 +315,11 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	    							.error(R.drawable.doris_icone_doris_large_pas_connecte)
 	    		        			.into(ivIcon);
 	    				        }
-    				        	
+
     				        });
-        			
+
         		} else {
+					Log.d(LOG_TAG, "getView isTelechargementsModeConnectePossible() = false");
         			// remet l'icone de base
                 	ivIcon.setImageResource(R.drawable.app_ic_launcher);
         		}
