@@ -11,7 +11,11 @@ public class JsonToDB {
 	public static String JSON_IMAGE_PREFIX = "var/doris/storage/images/images/";
 	
 	public PhotoFiche getPhotoFicheFromJSONImage(Image jsonImage){
-		PhotoFiche photoFiche = new PhotoFiche(jsonImage.getDataMap().getImage(),jsonImage.getDataMap().getTitle(), jsonImage.getDataMap().getLegend());
+		PhotoFiche photoFiche = new PhotoFiche(
+								jsonImage.getDataMap().getImage(),
+								jsonImage.getDataMap().getTitle(),
+								jsonImage.getDataMap().getLegend()
+							);
 		return photoFiche;
 	}
 	

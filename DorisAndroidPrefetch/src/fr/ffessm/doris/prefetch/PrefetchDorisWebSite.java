@@ -55,6 +55,7 @@ import java.util.concurrent.Callable;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
@@ -92,6 +93,7 @@ public class PrefetchDorisWebSite {
 		CDDVD_HI,
 		TEST,
 		DB_TO_ANDROID,
+		DB_V4_CREATION,
 		DB_IMAGE_UPGRADE,
 		DWNLD_TO_REF,
 		ERASE_BUT_REF,
@@ -111,6 +113,9 @@ public class PrefetchDorisWebSite {
 	}
 
 	private void doMain(String[] args) throws Exception {
+
+		BasicConfigurator.configure();
+
 		log.debug("doMain() - Début");
 		
 		// Vérification et lecture des arguments
@@ -138,7 +143,11 @@ public class PrefetchDorisWebSite {
 		} else if ( action == ActionKind.DB_IMAGE_UPGRADE ) {
 			
 			dbImageV4UpgradeAction();
-			
+
+		} else if ( action == ActionKind.DB_V4_CREATION ) {
+
+			dbV4CreationAction();
+
 		} else if ( action == ActionKind.DWNLD_TO_REF ) {
 
 			downloadToRefAction();
@@ -302,7 +311,8 @@ public class PrefetchDorisWebSite {
 			}
 		}
 	}
-	
+
+
 	private void dbToAndroidAction(){
 		log.debug("doMain() - Début Déplacement Base");
 		
@@ -344,8 +354,127 @@ public class PrefetchDorisWebSite {
 		
 		log.debug("doMain() - Fin Déplacement Base");
 	}
-	
-	
+
+
+	private void dbV4CreationAction()  throws Exception{
+
+		// enable collection of Doris web site errors in an juit xml file
+		ErrorCollector.getInstance().collectErrors = true;
+
+		// Vérification, Création, Sauvegarde des dossiers de travail
+		renommageDossiers(action);
+		creationDossiers(action);
+		creationDossiersRef(action);
+
+		// - - - Base de Données - - -
+		PrefetchDBTools prefetchDBTools = new PrefetchDBTools();
+
+		// create empty DB and initialize it for Android
+		prefetchDBTools.initializeSQLite(PrefetchConstants.DATABASE_URL);
+
+		// create our data-source for the database
+		connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
+
+		// setup our database and DAOs
+		dbContext = prefetchDBTools.setupDatabase(connectionSource);
+
+		prefetchDBTools.databaseInitialisation(connectionSource);
+
+		try {
+			// - - - Groupes - - -
+			// Récupération de la liste des groupes sur le site de DORIS
+
+			/*
+			PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, action, nbMaxFichesATraiter);
+			if ( groupes.prefetch() == -1 ) {
+				log.debug("doMain() - Erreur Groupes" );
+				System.exit(1);
+			}
+
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_groupes_testsuites.xml");
+			*/
+
+			// - - - Intervenants - - -
+			// On boucle sur les initiales des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
+			// On récupère la liste des intervenants dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
+			/*
+			PrefetchIntervenants intervenants = new PrefetchIntervenants(dbContext, connectionSource, action, nbMaxFichesATraiter);
+			if ( intervenants.prefetch() == -1 ) {
+				log.debug("doMain() - Erreur Intervenants" );
+				System.exit(1);
+			}
+
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_intervenants_testsuites.xml");
+			*/
+
+			// - - - Glossaire - - -
+			// On boucle sur les initiales des définitions (Cf site : doris.ffessm.fr/glossaire.asp?filtre=?)
+			// On récupère la liste des termes dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
+			/*
+			PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, action, nbMaxFichesATraiter);
+			if ( glossaire.prefetch() == -1 ) {
+				log.debug("doMain() - Erreur Glossaire" );
+				System.exit(1);
+			}
+
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_glossaire_testsuites.xml");
+			*/
+
+
+			// - - - Bibliographie - - -
+			// On boucle sur la page des Fiches tant que l'on trouve dans la page courante (n)
+			//biblio.asp?mapage=(n+1)&PageCourante=n
+			// On récupère les Bibliographies dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
+			/*
+			PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, action, nbMaxFichesATraiter);
+			if ( bibliographies.prefetch() == -1 ) {
+				log.debug("doMain() - Erreur Bibliographies" );
+				System.exit(1);
+			}
+
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_biblio_testsuites.xml");
+			*/
+
+			// - - - Liste des Fiches - - -
+			// Récupération de la liste des fiches sur le site de DORIS
+			// Elles sont récupérées dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
+			/*
+			PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, action, nbMaxFichesATraiter,
+					groupes.listeGroupes, intervenants.listeParticipants);
+			if ( listeFiches.prefetch() == -1 ) {
+				log.debug("doMain() - Erreur Liste des Fiches" );
+				System.exit(1);
+			}
+
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_fiches_testsuites.xml");
+			*/
+
+			// - - - Mise à jour des zones géographiques - - -
+			/*
+			PrefetchZonesGeographiques zonesGeographiques = new PrefetchZonesGeographiques(dbContext, connectionSource, action, nbMaxFichesATraiter);
+			if ( zonesGeographiques.prefetch() == -1 ) {
+				log.debug("doMain() - Erreur Mise à jour des zones géographiques" );
+				System.exit(1);
+			}
+
+			ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_zonesgeo_testsuites.xml");
+			*/
+
+			// - - - Enregistrement Date génération Base - - -
+			Date date = new Date();
+			SimpleDateFormat ft =  new SimpleDateFormat ("dd/MM/yyyy  HH:mm", Locale.US);
+			dbContext.dorisDB_metadataDao.create(new DorisDB_metadata(ft.format(date),""));
+
+
+		} finally {
+			// destroy the data source which should close underlying connections
+			log.debug("doMain() - Fermeture Base");
+			if (connectionSource != null) {
+				connectionSource.close();
+			}
+		}
+	}
+
 	private void dbImageV4UpgradeAction() throws Exception{
 		log.debug("dbImageV4UpgradeAction() - Début upgrade images pour Doris V4");
 		
@@ -614,8 +743,7 @@ public class PrefetchDorisWebSite {
 		    	logger.setLevel(Level.OFF);
 			}
 		}
-		
-		
+
 		// Si Aide ou Version alors affichage puis on termine
 		log.debug("checkArgs() - help ou version ? ");
 		for (String arg : inArgs) {
@@ -626,8 +754,7 @@ public class PrefetchDorisWebSite {
 				System.exit(0);
 			}
 		}
-		
-		
+
 		// Vérification que le dernier argument est une des actions prévues
 		ActionKind action = null;
 		log.debug("checkArgs() - argument action");
@@ -651,9 +778,7 @@ public class PrefetchDorisWebSite {
 			log.error("Action non prévue");
 			System.exit(1);
 		}
-		
-		
-		
+
 		// Paramètres autres :
 		//   - qui permet de limiter le nombre de fiches à traiter
 		//   - qui permet de Zipper le CD à l'issue de sa génération
@@ -693,13 +818,9 @@ public class PrefetchDorisWebSite {
 			}
 		}
 
-		
-
 		return action;
 
 	}
-	
-
 
 
 	/**
@@ -727,6 +848,7 @@ public class PrefetchDorisWebSite {
 		System.out.println("  CDDVD_HI        	Comme UPDATE + Permet de télécharger les photos manquantes et de créer un dossier avec toutes les images disponibles dans lequel il est possible de naviguer sans connection internet (peut servir de sauvegarde du site)");
 		System.out.println("  TEST          	Pour les développeurs");
 		System.out.println("  DB_TO_ANDROID     Déplace la base du Prefetch vers DorisAndroid");
+		System.out.println("  DB_V4_CREATION	crée la base à partir du nouveau site Doris V4");
 		System.out.println("  DB_IMAGE_UPGRADE  remplace les images de la base courante par celles du nouveau site Doris V4");
 		System.out.println("  DWNLD_TO_REF      Déplace fichiers de html vers html_ref et ceux de images vers images_ref");
 		System.out.println("  ERASE_ALL         Efface tout le contenu de run");
@@ -816,7 +938,7 @@ public class PrefetchDorisWebSite {
 			}
 			
 			// Le fichier de la base de données
-			if(inAction == ActionKind.INIT || inAction == ActionKind.UPDATE || inAction == ActionKind.NODWNLD
+			if(inAction == ActionKind.DB_V4_CREATION || inAction == ActionKind.INIT || inAction == ActionKind.UPDATE || inAction == ActionKind.NODWNLD
 					|| inAction == ActionKind.CDDVD_MED || inAction == ActionKind.CDDVD_HI ) {
 	
 				String dataBaseName = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.lastIndexOf(".") );
