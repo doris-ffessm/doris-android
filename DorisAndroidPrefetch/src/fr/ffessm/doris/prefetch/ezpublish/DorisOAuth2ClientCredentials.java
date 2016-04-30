@@ -28,8 +28,7 @@ public class DorisOAuth2ClientCredentials {
 
   /** Probablement pas propre mais permet de ne pas avoir à se connecter */
   public static final String API_SUFFIXE = "e97c7911452f87ba23440ab4af541e39a64ecaef";
-  
-  
+
   /** Port in the "Callback URL". */
   public static final int PORT = 8087;
 
@@ -44,23 +43,22 @@ public class DorisOAuth2ClientCredentials {
   public static final String AUTHORIZATION_SERVER_URL = "http://"+DORIS_WEB_SERVER_HOST+"/oauth/authorize"; 
   
   
-  public static final String USER_ID = "dvojtise@gmail.com";  // � remplacer par l'utilisateur du server ?
+  public static final String USER_ID = "dvojtise@gmail.com";  // à remplacer par l'utilisateur du server ?
   
   public static String getUserId(){
 	  return USER_ID;
   }
-  
   
   public static final String SERVER_NODE_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezp/v1/content/node/";
   public static final String SERVER_NODE_URL_SUFFIXE = "/fields";
   public static final String SERVER_OBJECT_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezx/v1/object/";
 
   public static final String SERVER_NODE_FIELD_BASE_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezp/content/node/";
-  
+
   public static String getServerNodeUrlTousLesChamps(String nodeId){
 	  return SERVER_NODE_URL+nodeId+SERVER_NODE_URL_SUFFIXE;
   }
-  
+
   // Les Espèces
   public static final String SPECIES_NODE_URL = SERVER_NODE_URL+"66";
   

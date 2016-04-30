@@ -200,7 +200,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 			case android.R.id.home:
 				Log.d(LOG_TAG, "onOptionsItemSelected() - home");
 
-				Intent upIntent = getIntentPrecedent();
+				Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
 				
 		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 		            // This activity is NOT part of this app's task, so create a new task
@@ -245,11 +245,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 	}
 	
 	// Start of user code protected ImagePleinEcran_CustomViewActivity_additional_operations
-    public Intent getIntentPrecedent(){
-		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
-    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
-		return upIntent;
-    }
+
 	
 	// End of user code
 	

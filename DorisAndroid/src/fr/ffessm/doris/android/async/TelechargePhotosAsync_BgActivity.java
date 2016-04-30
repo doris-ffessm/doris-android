@@ -408,7 +408,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 						"SELECT cleURL FROM fiches_ZonesGeographiques, fiche, photoFiche "
 						+ "WHERE ZoneGeographique_id = " + zoneId + " "
 						+ "AND  fiches_ZonesGeographiques.Fiche_id = fiche._id "
-						+ "AND photoFiche._id =  fiche.photoPrincipale_id " 
+						+ "AND photoFiche._id =  fiche.photoPrincipale_id "
 						+ "AND cleURL <> ''");
 						listePhotoPrinc = rawResults.getResults();
 		        		rawResults.close();
@@ -561,7 +561,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			    try{
 			    	//int nbTelechargements = 0;
 					for (String[] resultColumns : listePhotos) {
-						
+
 						// On télécharge toujours la vignette si en mode <> P0 ou P1
 						if ( !hsImagesVigAllreadyAvailable.contains(resultColumns[0]) ){
 							photosOutils.downloadPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.VIGNETTE);

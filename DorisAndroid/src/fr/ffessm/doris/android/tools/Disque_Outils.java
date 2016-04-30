@@ -84,7 +84,7 @@ public class Disque_Outils {
     		isSecondaryExternalStorageExist = DiskEnvironmentHelper.isSecondaryExternalStorageAvailable(context);
     	} catch (Exception e){
     		Log.e(LOG_TAG, String.format("Problème avec isSecondaryExternalStorageExist : error %s", e.getMessage()));
-    	}	
+    	}
     }
     
 	public String getHumanDiskUsage(long inSize){

@@ -186,7 +186,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	        	((GroupeSelection_ClassListViewActivity)this).finish();
 	        } else {
 	        	
-	        	setIntentPourRetour();
+	        	DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
 	        	
 	        	if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
 	        		startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
@@ -243,7 +243,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 			case android.R.id.home:
 				// Retour en Arrière et Si arrivée à la Racine retour à l'appli précédente
 				if ( retourGroupeSuperieur() ) {
-					Intent upIntent = getIntentPrecedent();
+					Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
 					
 			        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
 			            // This activity is NOT part of this app's task, so create a new task
@@ -290,7 +290,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 		ed.putInt(getString(R.string.pref_key_filtre_groupe), adapter.currentRootGroupe.getId());
         ed.commit();
         
-        setIntentPourRetour();
+        DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
         
 		if (!depuisAccueil) {
             finish();
@@ -347,15 +347,6 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 		}
 	}
 	
-    public void setIntentPourRetour(){
-	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
-	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
-    }
-    public Intent getIntentPrecedent(){
-		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
-    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
-		return upIntent;
-    }
     
 	// End of user code
 

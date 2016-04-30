@@ -55,6 +55,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.util.LruCache;
@@ -216,7 +217,13 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 		
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeimageficheavecfiltre_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
-		labelSB.append(entry.getNomCommunNeverEmpty());
+        
+        if (entry.getNomCommunNeverEmpty() != "") {
+        	labelSB.append(entry.getNomCommunNeverEmpty());
+        } else {
+        	labelSB.append(entry.getNomScientifiqueTxt());
+        	tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.ITALIC);
+        }
 		labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
         // End of user code
@@ -259,7 +266,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 						public void onClick(View v) {
 							Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - onClick");
 
-							setIntentPourRetour();
+							DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
 							
 							Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
 							toDetailView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -279,7 +286,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 					public boolean onLongClick(View v) {
 						Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - onLongClick");
 						
-						setIntentPourRetour();
+						DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
 						
 						Intent toImageView = new Intent(context, ImagePleinEcran_CustomViewActivity.class);
 						toImageView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -578,7 +585,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
         layout.setLayoutParams(new LayoutParams(200, 200));
         layout.setGravity(Gravity.CENTER);
         
-        final ImageView imageView = new ImageView(context);	        
+        final ImageView imageView = new ImageView(context);
         imageView.setLayoutParams(new LayoutParams(200, 200));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         
@@ -595,13 +602,13 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
     		// pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
     		
     		if (reseauOutils.isTelechargementsModeConnectePossible()) {
-    			
+
 	            final PhotoFiche photoFicheFinal = photoFiche;
 
 	    		Picasso.with(context)
 	    			.load(Constants.IMAGE_BASE_URL + "/"
         					+ photoFiche.getCleURL().replaceAll(
-        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
+							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
 					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
 					.error(R.drawable.doris_icone_doris_large_pas_connecte)
 					.fit()
@@ -625,7 +632,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 						.error(R.drawable.doris_icone_doris_large_pas_connecte)
 	        			.into(imageView);
 			        }
-		        	
+
 		        });
     		} else {
     			imageView.setImageResource(R.drawable.doris_icone_doris_large_pas_connecte);
@@ -637,14 +644,5 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
    
     }
     
-    public void setIntentPourRetour(){
-	    DorisApplicationContext.getInstance().retourIntentNiveau += 1;
-	    DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = ((Activity) context).getIntent();
-    }
-    public Intent getIntentPrecedent(){
-		Intent upIntent = DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau]; 
-    	DorisApplicationContext.getInstance().retourIntentNiveau -= 1;
-		return upIntent;
-    }
     
 }

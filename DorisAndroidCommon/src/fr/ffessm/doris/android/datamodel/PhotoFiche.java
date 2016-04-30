@@ -133,12 +133,12 @@ public class PhotoFiche {
 		this.description = description;
 		this.estPhotoPrincipale = estPhotoPrincipale;
 	}
-	
+
 	// Retourne seulement le nom du fichier, c'est à dire le dernier mot
 	public java.lang.String getCleURLNomFichier() {
 		return this.cleURL.substring(this.cleURL.lastIndexOf('/') + 1);
 	}
-	
+
 	// End of user code
 	
 	public PhotoFiche() {} // needed by ormlite

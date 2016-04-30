@@ -186,7 +186,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         // Affichage zone géo
         createNavigationZonesGeoViews();
 
-        // TODO : GMo : ne marche plus ??? Bizarre
         //Lors du 1er démarrage de l'application dans la version actuelle,
         //on affiche la boite d'A Propos
         String VersionAffichageAPropos = getParamOutils().getParamString(R.string.pref_key_a_propos_version, "");
@@ -789,7 +788,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         }
         else{
         	ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
-        	sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec)+" "+currentZoneFilter.getNom().trim());
+        	if(currentZoneFilter != null) {
+        		sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec)+" "+currentZoneFilter.getNom().trim());
+        	} else {
+        		sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreGeographique_sans));
+        	}
         }
         
         // TODO rappeler le dernier text recherché

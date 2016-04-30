@@ -142,8 +142,8 @@ public class Photos_Outils {
 			return null;
 		}
 	}
-	
-	
+
+
 	// Temporaire : on commence par regarder si le fichier ne serait pas de le dossier de la version précédente
 	// Si c'était le cas, on déplace l'image plutôt que de la télécharger
 	public File getImageFolderInPreferedLocationAnc(ImageType inImageType) {
@@ -167,8 +167,8 @@ public class Photos_Outils {
 			return null;
 		}
 	}
-	
-	
+
+
 	/**
 	 * Récupère le folder requis en utilisant les préférences utilisateur comme base
 	 * Attention renvoie le disque interne si le disque secondaire n'est pas disponible
@@ -183,11 +183,11 @@ public class Photos_Outils {
 	
 	public File getFolderFromBaseLocation(ImageLocation baseImageLocation, String requestedSubFolder) {
 		Log.d(LOG_TAG, "getFolderFromPreferedLocation("+ requestedSubFolder+") sur : "+baseImageLocation);
-		
+
 		String[] dossiers = requestedSubFolder.split("/");
 		String dossierRacine = dossiers[0];
 		Log.d(LOG_TAG, "getFolderFromPreferedLocation() - dossierRacine : "+ dossierRacine);
-		
+
 		switch(baseImageLocation){
 		case PRIMARY:
 			return DiskEnvironmentHelper.getPrimaryExternalStorage().getFilesDir(context, dossierRacine);
@@ -263,7 +263,7 @@ public class Photos_Outils {
 	 * URL de téléchargement des Images
 	 * 
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	/*public String getbaseUrl(ImageType inImageType) { 
+	/*public String getbaseUrl(ImageType inImageType) {
 		switch (inImageType) {
 		case VIGNETTE:
 			return Constants.VIGNETTE_BASE_URL;
@@ -281,8 +281,8 @@ public class Photos_Outils {
 			return "";
 		}
 	}*/
-	
-	public String getImageUrl(String inPhotoUrl, ImageType inImageType) { 
+
+	public String getImageUrl(String inPhotoUrl, ImageType inImageType) {
 		switch (inImageType) {
 		case VIGNETTE:
 			return Constants.IMAGE_BASE_URL+inPhotoUrl.replace(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE);
@@ -300,8 +300,8 @@ public class Photos_Outils {
 			return "";
 		}
 	}
-	
-	
+
+
 	
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 	 * 
@@ -309,7 +309,7 @@ public class Photos_Outils {
 	 * 
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	// Si on ne trouve pas le fichier dans le dossier, on regarde dans le sous-dossier
-	// se nommant comme la 1ère lettre du fichier (en FAT32 on peut en avoir jusqu'à 65536
+	// se nommant comme la 1ère lettre du fichier (en FAT32 on peut avoir jusqu'à 65536
 	// sauf que ce doit être de noms courts
 	// Réellement ça pète vers 18000
 	public File getSousDossierPhoto(File imageFolder, String inPhotoDisque){
@@ -319,16 +319,16 @@ public class Photos_Outils {
 		// Qd on télécharge, il y a un / devant les images des fiches mais pas pour les autres types d'images.
 		// De plus, on appelle parfois cette fonction après avoir déjà supprimer le /, donc ici on l'enlève
 		// qd il existe et on a toujours la même lettre
-		
+
 		return new File (imageFolder.getPath()+"/"+inPhotoDisque.charAt(0));
 	}
 	
 	public boolean isAvailableInFolderPhoto(String inPhotoURL, ImageType inImageType){
 		if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - inPhotoURL : "+ inPhotoURL );
-		
+
 		String photoNom = inPhotoURL.substring(inPhotoURL.lastIndexOf('/') + 1);
 		if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - photoNom : "+ photoNom );
-		
+
 		
 		File imageFolder = getImageFolderInPreferedLocation(inImageType);
 
@@ -348,7 +348,7 @@ public class Photos_Outils {
 			if (test.exists()
 				) return true;
 		}
-		if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - return false;");
+		//if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - return false;");
 		return false;
 	}
 	
@@ -395,20 +395,20 @@ public class Photos_Outils {
 
 		switch (imageType) {
 		case VIGNETTE:
-			// On commence par essayer de télécharger l'image la plus petite, si pas dispo. on passe à la taille au dessus. 
+			// On commence par essayer de télécharger l'image la plus petite, si pas dispo. on passe à la taille au dessus.
 			if (! downloadPhotoFile( Constants.IMAGE_BASE_URL + "/"
 										+ photoUrl.replaceAll(
 												Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE),
 										photoUrl.substring(photoUrl.lastIndexOf('/') + 1),
-										imageType		
+										imageType
 									)
 						) {
-				
+
 							downloadPhotoFile( Constants.IMAGE_BASE_URL + "/"
 									+ photoUrl.replaceAll(
 											Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE),
 									photoUrl.substring(photoUrl.lastIndexOf('/') + 1),
-									imageType		
+									imageType
 								);
 						}
 			break;
@@ -419,7 +419,7 @@ public class Photos_Outils {
 					+ photoUrl.replaceAll(
 							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.MOYENNE_BASE_URL_SUFFIXE),
 					photoUrl.substring(photoUrl.lastIndexOf('/') + 1),
-					imageType		
+					imageType
 				);
 			break;
 		case HI_RES:
@@ -427,7 +427,7 @@ public class Photos_Outils {
 					+ photoUrl.replaceAll(
 							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.GRANDE_BASE_URL_SUFFIXE),
 					photoUrl.substring(photoUrl.lastIndexOf('/') + 1),
-					imageType		
+					imageType
 				);
 			break;
 		case PORTRAITS:
@@ -439,10 +439,10 @@ public class Photos_Outils {
 			break;
 		default:
 		}
-		
-		
+
+
 	}
-    
+
 	public boolean downloadPhotoFile(String inPhotoUrl, String inPhotoDisque, ImageType inImageType) throws IOException{
 		Log.d(LOG_TAG, "downloadPhotoFile() -Début");
 		Log.d(LOG_TAG, "downloadPhotoFile() : "+inImageType+" - "+inPhotoUrl+" - "+inPhotoDisque );
@@ -454,16 +454,14 @@ public class Photos_Outils {
 					getImageFolderInPreferedLocation(inImageType),
 					inPhotoDisque
 				);
-			Log.d(LOG_TAG, "downloadPhotoFile() - imageFolder : "+imageFolder.getPath() );
 			
 	    	/* On crée les dossiers s'ils étaient inexistants */
-			Log.d(LOG_TAG, "downloadPhotoFile() - imageFolder.exists() : "+imageFolder.exists() );
+            Log.i(LOG_TAG, "downloadPhotoFile() - dossierDestination : "+ imageFolder );
 			if (!imageFolder.exists() && !imageFolder.mkdirs()) {
 	            throw new IOException("Cannot create dir " + imageFolder.getAbsolutePath());
 	        }
 			
 	    	File fichierImage = new File(imageFolder, inPhotoDisque);
-	    	Log.d(LOG_TAG, "downloadPhotoFile() - fichierImage.exists() : "+fichierImage.exists() );
 			if(!fichierImage.exists()){
 		    
 				// Temporaire : on commence par regarder si le fichier ne serait pas de le dossier de la versoin précédente
@@ -474,18 +472,14 @@ public class Photos_Outils {
 					);
 				File fichierImageAnc = new File(imageFolderAnc, inPhotoDisque);
 				Log.d(LOG_TAG, "downloadPhotoFile() - fichierImageAnc.getPath() : "+fichierImageAnc.getPath());
-				Log.d(LOG_TAG, "downloadPhotoFile() - fichierImageAnc.exists() : "+fichierImageAnc.getPath());
+				Log.d(LOG_TAG, "downloadPhotoFile() - fichierImageAnc.exists() : "+fichierImageAnc.exists());
 				if(fichierImageAnc.exists()){
-					
+
 			    	Log.i(LOG_TAG, "downloadPhotoFile() - fichierImageAnc.AbsolutePath : "+ fichierImageAnc.getAbsolutePath() );
 			    	Log.i(LOG_TAG, "downloadPhotoFile() - fichierImageAnc.Name : "+ fichierImageAnc.getName() );
-			    	Log.i(LOG_TAG, "downloadPhotoFile() - dossierDestination : "+ imageFolder );
-			    	
+
 			    	input = new FileInputStream(fichierImageAnc);
 			        output = new FileOutputStream(fichierImage);
-
-			        // Copy the bits from instream to outstream
-			        //byte[] buf = new byte[1024];
 
 			        while ((count = input.read(buffer)) > 0) {
 			        	output.write(buffer, 0, count);
@@ -493,7 +487,7 @@ public class Photos_Outils {
 			        output.flush();
 			        output.close();
 			        input.close();
-			        
+
 			        return true;
 				} else {
 					URL urlHtml = null;
@@ -507,40 +501,45 @@ public class Photos_Outils {
 						Log.w(LOG_TAG, e.getMessage(), e);
 						return false;
 					}
+
+                    Log.d(LOG_TAG, "downloadPhotoFile() - 050" );
 					try {
 						HttpURLConnection urlConnection = (HttpURLConnection) urlHtml.openConnection();
 				        urlConnection.setConnectTimeout(3000);
 				        urlConnection.setReadTimeout(10000);
-				        
+
 				        urlConnection.connect();
-			            
+
 			            // download the file
+                        Log.d(LOG_TAG, "downloadPhotoFile() - 052" );
 			            input = urlConnection.getInputStream();
-			            Log.d(LOG_TAG, "downloadPhotoFile() - fichierImage.getCanonicalPath() : "+fichierImage.getCanonicalPath() );
+                        Log.d(LOG_TAG, "downloadPhotoFile() - 053" );
+                        Log.d(LOG_TAG, "downloadPhotoFile() - fichierImage.getCanonicalPath() : "+fichierImage.getCanonicalPath() );
 			            output = new FileOutputStream(fichierImage);
-	
+
 			            while ( ( count = input.read(buffer) ) != -1) {
 			                output.write(buffer, 0, count);
 			            }
-	
+
 			            urlConnection.disconnect();
 			            output.flush();
 			            output.close();
 			            input.close();
-				        
+
 					} catch (IOException e) {
+                        Log.d(LOG_TAG, "downloadPhotoFile() - 060" );
 						Log.w(LOG_TAG, e.getMessage(), e);
 						return false;
 					}
 				}
 			}
-			
-			
+
+
 		} else {
 			return false;
 		}
-		
-		
+
+
 		Log.d(LOG_TAG, "downloadPhotoFile() - Fin");
 		return true;
 	}
@@ -969,7 +968,11 @@ public class Photos_Outils {
 		ormLiteDBHelper.close();
 		
 		// On calcule le nombre de photos (hors principales) moyen par fiche
-		nbPhotosParFiche = ( nbPhotosTotal - nbFichesTotal ) / nbFichesTotal;
+		if (nbFichesTotal != 0) { 
+			nbPhotosParFiche = ( nbPhotosTotal - nbFichesTotal ) / nbFichesTotal;
+		} else {
+			nbPhotosParFiche = 0;
+		}
 		
 		for (ZoneGeographiqueKind zone : ZoneGeographiqueKind.values()){
 			//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "initNbPhotosParFiche() - zone : "+zone);
