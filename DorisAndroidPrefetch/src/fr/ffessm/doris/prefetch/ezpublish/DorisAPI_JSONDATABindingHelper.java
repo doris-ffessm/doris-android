@@ -21,6 +21,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
 
 public class DorisAPI_JSONDATABindingHelper {
@@ -43,6 +44,154 @@ public class DorisAPI_JSONDATABindingHelper {
 	public DorisAPI_JSONDATABindingHelper(Credential credent){
 		this.credent = credent;
 	}
+
+    public Glossaire getTermeFieldsFromNodeId(int termeNodeId) throws ClientProtocolException,
+            IOException {
+        log.debug("getTermeFieldsFromNodeId - Début");
+        log.debug("getTermeFieldsFromNodeId - termeNodeId : " + termeNodeId);
+
+        HttpResponse response = getFieldsFromNodeId(termeNodeId);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Glossaire glossaire = new Glossaire();
+
+        try {
+            glossaire = objectMapper.readValue(
+                    new InputStreamReader(response.getEntity().getContent()),
+                    Glossaire.class
+            );
+        }
+        catch (JsonGenerationException e) {
+            e.printStackTrace();
+        }
+        catch (  JsonMappingException e) {
+            e.printStackTrace();
+        }
+        catch (  IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("\t Référence : " + glossaire.getFields().getReference().getValue() );
+        System.out.println("\t Espece : " + glossaire.getFields().getTitle().getValue() );
+        System.out.println("\t Genre : " + glossaire.getFields().getDefinition().getValue() );
+        System.out.println("\t Etat : " + glossaire.getFields().getReference().getValue() );
+
+        return glossaire;
+    }
+
+
+
+    public HttpResponse getFieldsFromNodeId(int nodeId) throws ClientProtocolException,
+            IOException {
+        log.debug("getFieldsFromNodeId - Début");
+        log.debug("getFieldsFromNodeId - nodeId : " + nodeId);
+
+        DefaultHttpClient client = new DefaultHttpClient();
+        String uri = DorisOAuth2ClientCredentials.getServerNodeUrlTousLesChamps( String.valueOf(nodeId) );
+        log.debug("getFieldsFromNodeId - uri : " + uri);
+
+        if (credent != null && debug) {
+            DorisAPIConnexionHelper.printJSON(credent, uri);
+            if(debug_SaveJSON){
+                DorisAPIConnexionHelper.saveJSONFile(
+                        credent,
+                        uri,
+                        DEBUG_SAVE_JSON_BASE_PATH + File.separatorChar+"specieFields_" + nodeId+JSON_EXT
+                );
+            }
+        }
+
+        if(credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
+            uri = uri+"?oauth_token="+credent.getAccessToken();
+        } else {
+            uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
+        }
+
+        log.debug("getFieldsFromNodeId - uri & oauth_token : " + uri);
+
+        HttpGet getHttpPage = new HttpGet(uri);
+        if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
+            getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
+        }
+
+        HttpResponse response = client.execute(getHttpPage);
+        log.debug("getFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
+
+        return response;
+    }
+
+
+    public Espece getEspeceFieldsFromNodeId(int especeNodeId) throws ClientProtocolException,
+            IOException {
+        log.debug("getSpecieFieldsFromNodeId - Début");
+        log.debug("getSpecieFieldsFromNodeId - specieNodeId : " + especeNodeId);
+
+        DefaultHttpClient client = new DefaultHttpClient();
+        String uri = DorisOAuth2ClientCredentials.getServerNodeUrlTousLesChamps( String.valueOf(especeNodeId) );
+        log.debug("getSpecieFieldsFromNodeId - uri : " + uri);
+
+        if (credent != null && debug) {
+            DorisAPIConnexionHelper.printJSON(credent, uri);
+            if(debug_SaveJSON){
+                DorisAPIConnexionHelper.saveJSONFile(
+                        credent,
+                        uri,
+                        DEBUG_SAVE_JSON_BASE_PATH + File.separatorChar+"specieFields_" + especeNodeId+JSON_EXT
+                );
+            }
+        }
+
+        if(credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
+            uri = uri+"?oauth_token="+credent.getAccessToken();
+        } else {
+            uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
+        }
+
+        log.debug("getSpecieFieldsFromNodeId - uri & oauth_token : " + uri);
+
+        HttpGet getHttpPage = new HttpGet(uri);
+        if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
+            getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
+        }
+
+        HttpResponse response = client.execute(getHttpPage);
+        log.debug("getSpecieFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Espece espece = new Espece();
+
+        try {
+            espece = objectMapper.readValue(
+                    new InputStreamReader(response.getEntity().getContent()),
+                    Espece.class
+            );
+        }
+        catch (JsonGenerationException e) {
+            e.printStackTrace();
+        }
+        catch (  JsonMappingException e) {
+            e.printStackTrace();
+        }
+        catch (  IOException e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println("\t Référence : " + espece.getFields().getReference().getValue() );
+        System.out.println("\t Espece : " + espece.getFields().getEspece().getValue() );
+        System.out.println("\t Genre : " + espece.getFields().getGenre().getValue() );
+        System.out.println("\t Etat : " + espece.getFields().getState().getValue() );
+        System.out.println("\t Images : " + espece.getFields().getImages().getValue() );
+
+        return espece;
+    }
+
+
+
+
+
+
+
 
 	/**
 	 * récupère un Specie à partir de son NodeId
@@ -88,71 +237,6 @@ public class DorisAPI_JSONDATABindingHelper {
 	}
 	
 
-	public Espece getEspeceFieldsFromNodeId(int especeNodeId) throws ClientProtocolException,
-	IOException {
-		log.debug("getSpecieFieldsFromNodeId - Début");
-		log.debug("getSpecieFieldsFromNodeId - specieNodeId : " + especeNodeId);
-		
-		DefaultHttpClient client = new DefaultHttpClient();
-		String uri = DorisOAuth2ClientCredentials.getServerNodeUrlTousLesChamps( String.valueOf(especeNodeId) );
-		log.debug("getSpecieFieldsFromNodeId - uri : " + uri);
-		
-		if (credent != null && debug) {
-			DorisAPIConnexionHelper.printJSON(credent, uri);
-			if(debug_SaveJSON){
-				DorisAPIConnexionHelper.saveJSONFile(
-							credent,
-							uri,
-							DEBUG_SAVE_JSON_BASE_PATH + File.separatorChar+"specieFields_" + especeNodeId+JSON_EXT
-						);
-			}
-		}
-		
-		if(credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
-			uri = uri+"?oauth_token="+credent.getAccessToken();
-		} else {
-			uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
-		}
-		
-		log.debug("getSpecieFieldsFromNodeId - uri & oauth_token : " + uri);
-		
-		HttpGet getHttpPage = new HttpGet(uri);
-		if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
-			getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
-		}
-		
-		HttpResponse response = client.execute(getHttpPage);
-		log.debug("getSpecieFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
-		
-		ObjectMapper objectMapper = new ObjectMapper();
-		Espece espece = new Espece();
-		
-		try {
-			espece = objectMapper.readValue(
-					new InputStreamReader(response.getEntity().getContent()),
-					Espece.class
-				);
-		}
-		catch (JsonGenerationException e) {
-		    e.printStackTrace();
-		}
-		catch (  JsonMappingException e) {
-		    e.printStackTrace();
-		}
-		catch (  IOException e) {
-		    e.printStackTrace();
-		}
-		
-		
-		System.out.println("\t Référence : " + espece.getFields().getReference().getValue() );
-		System.out.println("\t Espece : " + espece.getFields().getEspece().getValue() );
-		System.out.println("\t Genre : " + espece.getFields().getGenre().getValue() );
-		System.out.println("\t Etat : " + espece.getFields().getState().getValue() );
-		System.out.println("\t Images : " + espece.getFields().getImages().getValue() );
-		
-		return espece;
-	}
-	
 	public void getImageList() throws ClientProtocolException,
 	IOException {
 

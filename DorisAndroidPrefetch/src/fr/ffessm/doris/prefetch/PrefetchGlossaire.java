@@ -49,6 +49,7 @@ import java.util.concurrent.Callable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
 
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.support.ConnectionSource;
@@ -59,6 +60,10 @@ import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
+import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
 
 
 public class PrefetchGlossaire {
@@ -72,7 +77,8 @@ public class PrefetchGlossaire {
 	
 	private ActionKind action;
 	private int nbMaxFichesATraiter;
-	
+	private int nbFichesParRequetes;
+
 	DefinitionGlossaire definitionMaj = null;
 	
 	public PrefetchGlossaire(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter) {
@@ -81,9 +87,61 @@ public class PrefetchGlossaire {
 		this.action = action;
 		this.nbMaxFichesATraiter = nbMaxFichesATraiter;
 	}
-	
-	
-	
+
+    public PrefetchGlossaire(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter, int nbFichesParRequetes) {
+        this.dbContext = dbContext;
+        this.connectionSource = connectionSource;
+        this.action = action;
+        this.nbMaxFichesATraiter = nbMaxFichesATraiter;
+        this.nbFichesParRequetes = nbFichesParRequetes;
+    }
+
+    public int prefetchV4() throws Exception {
+        // - - - Glossaire - - -
+        JsonToDB jsonToDB = new JsonToDB();
+        DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper();
+        DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper();
+
+        // TODO : Il faudrait mettre un While ici
+        int nbFichesDORIS = 99;
+
+        int count = 0;
+
+
+        for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
+
+            List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getTermesNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
+
+
+            for (Integer termeNodeId : nodeIds) {
+                count++;
+                if (count > nbMaxFichesATraiter) {
+                    log.debug("doMain() - nbMaxFichesATraiter atteint");
+                    i = 9999;
+                    break;
+                }
+
+                // Référence de l'Espèce dans le message JSON
+                Glossaire glossaireJSON = dorisAPI_JSONDATABindingHelper.getTermeFieldsFromNodeId(termeNodeId.intValue());
+                final DefinitionGlossaire terme = jsonToDB.getDefinitionGlossaireFromJSONTerme(glossaireJSON);
+
+                TransactionManager.callInTransaction(connectionSource,
+                        new Callable<Void>() {
+                            public Void call() throws Exception {
+
+                                dbContext.definitionGlossaireDao.create(terme);
+
+                                return null;
+                            }
+                        });
+
+            }
+
+        }
+        return -1;
+    }
+
+
 	public int prefetch() {
 		// - - - Glossaire - - -
 		// On boucle sur les initiales des définitions (Cf site : doris.ffessm.fr/glossaire.asp?filtre=?)
@@ -249,4 +307,5 @@ public class PrefetchGlossaire {
 
 
 	}
+
 }
