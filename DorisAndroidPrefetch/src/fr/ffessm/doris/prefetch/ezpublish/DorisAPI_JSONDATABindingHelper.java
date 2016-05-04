@@ -23,6 +23,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.bibliographie.Bibliographie;
 
 public class DorisAPI_JSONDATABindingHelper {
 
@@ -79,6 +80,38 @@ public class DorisAPI_JSONDATABindingHelper {
         return glossaire;
     }
 
+    public Bibliographie getOeuvreFieldsFromNodeId(int termeNodeId) throws ClientProtocolException,
+            IOException {
+        log.debug("getTermeFieldsFromNodeId - Début");
+        log.debug("getTermeFieldsFromNodeId - termeNodeId : " + termeNodeId);
+
+        HttpResponse response = getFieldsFromNodeId(termeNodeId);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Bibliographie oeuvre = new Bibliographie();
+
+        try {
+            oeuvre = objectMapper.readValue(
+                    new InputStreamReader(response.getEntity().getContent()),
+                    Bibliographie.class
+            );
+        }
+        catch (JsonGenerationException e) {
+            e.printStackTrace();
+        }
+        catch (  JsonMappingException e) {
+            e.printStackTrace();
+        }
+        catch (  IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("\t Référence : " + oeuvre.getFields().getReference().getValue() );
+        System.out.println("\t Espece : " + oeuvre.getFields().getTitle().getValue() );
+        System.out.println("\t Etat : " + oeuvre.getFields().getReference().getValue() );
+
+        return oeuvre;
+    }
 
 
     public HttpResponse getFieldsFromNodeId(int nodeId) throws ClientProtocolException,

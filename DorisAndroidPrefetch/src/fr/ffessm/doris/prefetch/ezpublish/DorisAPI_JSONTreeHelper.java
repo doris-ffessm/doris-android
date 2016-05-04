@@ -69,6 +69,19 @@ public class DorisAPI_JSONTreeHelper {
         return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.GLOSSAIRE_NODE_URL, fichesPerHttpRequest, offset);
     }
 
+    /**
+     * Renvoie la liste des Oeuvres de la Bibliographie
+     * @param
+     * @returnLa liste des Oeuvres de la Bibliographie
+     * @throws ClientProtocolException
+     * @throws IOException
+     */
+    public List<Integer> getBibliographieNodeIds(int fichesPerHttpRequest, int offset) throws ClientProtocolException, IOException {
+        log.debug("getBibliographieNodeIds()");
+
+        return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.BIBLIO_NODE_URL, fichesPerHttpRequest, offset);
+    }
+    
 	/**
 	 * Renvoie les id du NODE_URL passé en paramètre
 	 * @param

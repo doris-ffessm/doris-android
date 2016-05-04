@@ -412,16 +412,15 @@ public class PrefetchDorisWebSite {
             */
 
             // - - - Bibliographie - - -
-            // On boucle sur la page des Fiches tant que l'on trouve dans la page courante (n)
-            //biblio.asp?mapage=(n+1)&PageCourante=n
-            // On récupère les Bibliographies dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
-            /*
-            PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, action, nbMaxFichesATraiter);
+			nbMaxFichesATraiter = 10;
+			nbFichesParRequetes = 50;
+            PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
             if ( bibliographies.prefetch() == -1 ) {
                 log.debug("doMain() - Erreur Bibliographies" );
                 System.exit(1);
             }
 
+			/*
             ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_biblio_testsuites.xml");
             */
 
