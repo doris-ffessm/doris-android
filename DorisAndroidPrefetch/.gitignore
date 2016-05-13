@@ -3,3 +3,5 @@
 /sauv
 /.gitignore
 /build
+/*.iml
+/*.gradle

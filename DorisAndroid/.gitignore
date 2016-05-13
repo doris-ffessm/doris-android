@@ -5,3 +5,5 @@
 /additionnal_libs
 /lint.xml
 /.gitignore
+/*.iml
+/*.gradle

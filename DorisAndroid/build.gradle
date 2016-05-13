@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
 
+tasks.withType(JavaCompile) {
+    sourceCompatibility = "1.7"
+    targetCompatibility = "1.7"
+}
+
 dependencies {
     // a terme on devrait remplacer cela vers des ref dans les repo maven correspondants
     compile fileTree(dir: 'libs',
