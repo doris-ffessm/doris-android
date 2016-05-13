@@ -5,10 +5,12 @@ import java.util.List;
 
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
+import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.bibliographie.Bibliographie;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.utilisateur.Utilisateur;
 
 public class JsonToDB {
 
@@ -31,6 +33,20 @@ public class JsonToDB {
 		
 		return listePhotosFiche;
 	}
+
+    /* * * * * * * * * * * *
+    Participants
+    * * * * * * * * * * * * */
+    public Participant getParticipantFromJSONTerme(Utilisateur jsonUtilisateur){
+        Participant utilisateur = new Participant(
+                        jsonUtilisateur.getFields().getFirstName().getValue() + " " + jsonUtilisateur.getFields().getLastName().getValue(),
+                        Integer.parseInt(jsonUtilisateur.getFields().getReference().getValue()),
+                        jsonUtilisateur.getFields().getImage().getValue(),
+                        jsonUtilisateur.getFields().getCorrectionMember().getValue(),
+                        jsonUtilisateur.getFields().getDescription().getValue()
+        );
+        return utilisateur;
+    }
 
     /* * * * * * * * * * * *
     Glossaire

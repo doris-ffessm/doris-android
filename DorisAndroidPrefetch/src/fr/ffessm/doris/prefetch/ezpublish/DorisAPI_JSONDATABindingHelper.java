@@ -24,6 +24,7 @@ import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.bibliographie.Bibliographie;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.utilisateur.Utilisateur;
 
 public class DorisAPI_JSONDATABindingHelper {
 
@@ -45,6 +46,40 @@ public class DorisAPI_JSONDATABindingHelper {
 	public DorisAPI_JSONDATABindingHelper(Credential credent){
 		this.credent = credent;
 	}
+
+    public Utilisateur getUtilisateurFieldsFromNodeId(int participantNodeId) throws ClientProtocolException,
+            IOException {
+        log.debug("getTermeFieldsFromNodeId - Début");
+        log.debug("getTermeFieldsFromNodeId - participantNodeId : " + participantNodeId);
+
+        HttpResponse response = getFieldsFromNodeId(participantNodeId);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Utilisateur utilisateur = new Utilisateur();
+
+        try {
+            utilisateur = objectMapper.readValue(
+                    new InputStreamReader(response.getEntity().getContent()),
+                    Utilisateur.class
+            );
+        }
+        catch (JsonGenerationException e) {
+            e.printStackTrace();
+        }
+        catch (  JsonMappingException e) {
+            e.printStackTrace();
+        }
+        catch (  IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("\t Référence : " + utilisateur.getFields().getReference().getValue() );
+        System.out.println("\t FirstName : " + utilisateur.getFields().getFirstName().getValue() );
+        System.out.println("\t LastName : " + utilisateur.getFields().getLastName().getValue() );
+        System.out.println("\t Description : " + utilisateur.getFields().getDescription().getValue() );
+
+        return utilisateur;
+    }
 
     public Glossaire getTermeFieldsFromNodeId(int termeNodeId) throws ClientProtocolException,
             IOException {
@@ -152,6 +187,13 @@ public class DorisAPI_JSONDATABindingHelper {
 
         return response;
     }
+
+
+
+
+
+
+
 
 
     public Espece getEspeceFieldsFromNodeId(int especeNodeId) throws ClientProtocolException,

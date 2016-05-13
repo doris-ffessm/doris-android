@@ -386,16 +386,16 @@ public class PrefetchDorisWebSite {
             }
             */
 
-            // - - - Intervenants - - -
-            // On boucle sur les initiales des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
-            // On récupère la liste des intervenants dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
-            /*
-            PrefetchIntervenants intervenants = new PrefetchIntervenants(dbContext, connectionSource, action, nbMaxFichesATraiter);
-            if ( intervenants.prefetch() == -1 ) {
+            // - - - Participants - - -
+            nbMaxFichesATraiter = 10;
+            nbFichesParRequetes = 50;
+            PrefetchIntervenants intervenants = new PrefetchIntervenants(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
+            if ( intervenants.prefetchV4() == -1 ) {
                 log.debug("doMain() - Erreur Intervenants" );
                 System.exit(1);
             }
 
+            /*
             ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_intervenants_testsuites.xml");
             */
 

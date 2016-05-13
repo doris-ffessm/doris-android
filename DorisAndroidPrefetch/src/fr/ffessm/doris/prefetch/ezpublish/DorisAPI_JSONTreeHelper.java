@@ -57,6 +57,19 @@ public class DorisAPI_JSONTreeHelper {
 	}
 
     /**
+     * Renvoie la liste des Intervenants
+     * @param
+     * @returnLa liste des Intervenants
+     * @throws ClientProtocolException
+     * @throws IOException
+     */
+    public List<Integer> getIntervenantsNodeIds(int fichesPerHttpRequest, int offset) throws ClientProtocolException, IOException {
+        log.debug("getIntervenantsNodeIds()");
+
+        return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.PARTICIPANTS_NODE_URL, fichesPerHttpRequest, offset);
+    }
+
+    /**
      * Renvoie la liste des Termes du Glossaire
      * @param
      * @returnLa liste des Termes du Glossaire

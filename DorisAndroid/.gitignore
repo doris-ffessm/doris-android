@@ -6,3 +6,4 @@
 /lint.xml
 /.gitignore
 *.iml
+*.gradle
