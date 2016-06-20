@@ -137,7 +137,7 @@ public class PrefetchGlossaire {
             }
 
         }
-        return -1;
+        return count;
     }
 
 

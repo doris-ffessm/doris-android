@@ -414,15 +414,38 @@ public class PrefetchDorisWebSite {
             // - - - Bibliographie - - -
 			nbMaxFichesATraiter = 10;
 			nbFichesParRequetes = 50;
+            /*
             PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
             if ( bibliographies.prefetch() == -1 ) {
                 log.debug("doMain() - Erreur Bibliographies" );
                 System.exit(1);
             }
+            */
 
 			/*
             ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_biblio_testsuites.xml");
             */
+
+            // - - - Mise à jour des zones géographiques - - -
+            /*
+             PrefetchZonesGeographiques zonesGeographiques = new PrefetchZonesGeographiques(dbContext, connectionSource, action, nbMaxFichesATraiter);
+            if ( zonesGeographiques.prefetch() == -1 ) {
+                log.debug("doMain() - Erreur Mise à jour des zones géographiques" );
+                System.exit(1);
+            }
+
+            ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_zonesgeo_testsuites.xml");
+            */
+
+            // - - - Mise à jour des zones géographiques - - -
+             PrefetchZonesGeographiques zonesGeographiques = new PrefetchZonesGeographiques(dbContext, connectionSource, action, nbMaxFichesATraiter);
+            if ( zonesGeographiques.prefetchV4() == -1 ) {
+                log.debug("doMain() - Erreur Mise à jour des zones géographiques" );
+                System.exit(1);
+            }
+
+            ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_zonesgeo_testsuites.xml");
+
 
             // - - - Liste des Fiches - - -
             // Récupération de la liste des fiches sur le site de DORIS
@@ -438,17 +461,6 @@ public class PrefetchDorisWebSite {
             ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_fiches_testsuites.xml");
             */
 
-
-            // - - - Mise à jour des zones géographiques - - -
-            /*
-             PrefetchZonesGeographiques zonesGeographiques = new PrefetchZonesGeographiques(dbContext, connectionSource, action, nbMaxFichesATraiter);
-            if ( zonesGeographiques.prefetch() == -1 ) {
-                log.debug("doMain() - Erreur Mise à jour des zones géographiques" );
-                System.exit(1);
-            }
-
-            ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_zonesgeo_testsuites.xml");
-            */
 
             // - - - Enregistrement Date génération Base - - -
             Date date = new Date();

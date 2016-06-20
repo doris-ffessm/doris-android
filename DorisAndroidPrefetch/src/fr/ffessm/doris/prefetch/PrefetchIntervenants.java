@@ -137,7 +137,7 @@ public class PrefetchIntervenants {
             }
 
         }
-        return -1;
+        return count;
     }
 
 

@@ -45,6 +45,8 @@ package fr.ffessm.doris.prefetch;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.logging.Log;
@@ -53,6 +55,7 @@ import org.apache.commons.logging.LogFactory;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.support.ConnectionSource;
 
+import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
@@ -63,6 +66,10 @@ import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
 import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
+import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
 
 
 public class PrefetchZonesGeographiques {
@@ -83,10 +90,52 @@ public class PrefetchZonesGeographiques {
 		this.action = action;
 		this.nbMaxFichesATraiter = nbMaxFichesATraiter;
 	}
-	
-	
-	
-	public int prefetch() {
+
+
+    public int prefetchV4() throws Exception {
+
+        log.debug("prefetchV4() - début");
+
+        // - - - Zones Géographiques - - -
+
+        // TOUT EN DUR "TEMPORAIREMENT" CAR JE N'ARRIVE PAS A RECUPERER CETTE LISTE avec JSON
+
+        /*
+        List<ZoneGeographique> listeZonesGeographiques = new ArrayList<ZoneGeographique>();
+        listeZonesGeographiques.add(ZoneGeographique(int id, java.lang.String nom, java.lang.String description));
+
+
+        final DefinitionGlossaire terme();
+ */
+
+        TransactionManager.callInTransaction(connectionSource,
+                new Callable<Void>() {
+                    public Void call() throws Exception {
+
+                        dbContext.zoneGeographiqueDao.create(
+                                new ZoneGeographique(1, "Faune et flore marines de France métropolitaine", "Méditerranée, Atlantique, Manche et mer du Nord" )
+                            );
+                        dbContext.zoneGeographiqueDao.create(
+                                new ZoneGeographique(2, "Faune et flore dulcicoles de France métropolitaine", "Fleuves, rivières, lacs et étangs, ..." )
+                        );
+                        dbContext.zoneGeographiqueDao.create(
+                                new ZoneGeographique(3, "Faune et flore subaquatiques de l'Indo-Pacifique", "La Réunion, Mayotte, Nouvelle-Calédonie, Polynésie et autres" )
+                        );
+                        dbContext.zoneGeographiqueDao.create(
+                                new ZoneGeographique(4, "Faune et flore subaquatiques des Caraïbes", "Guadeloupe, Martinique et autres" )
+                        );
+                        dbContext.zoneGeographiqueDao.create(
+                                new ZoneGeographique(5, "Faune et flore subaquatiques de l'Atlantique Nord-Ouest", "Côte est du Canada, embouchure du St Laurent, archipel de St Pierre-et-Miquelon" )
+                        );
+                        return null;
+                    }
+                });
+
+        return -1;
+    }
+
+
+    public int prefetch() {
 		// - - - Mise à jour des zones géographiques - - -
 		
 		try {
@@ -112,7 +161,7 @@ public class PrefetchZonesGeographiques {
 
 
 	}
-	
+
 	private void majZoneGeographique(ConnectionSource connectionSource, ZoneGeographiqueKind zoneKind){
 		//log.debug("majZoneGeographique() - Début");
 		
