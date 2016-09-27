@@ -82,6 +82,7 @@ public class PrefetchBibliographies {
 	public PrefetchBibliographies(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
+
 		this.action = action;
 		this.nbMaxFichesATraiter = nbMaxFichesATraiter;
 	}
@@ -89,6 +90,7 @@ public class PrefetchBibliographies {
 	public PrefetchBibliographies(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter, int nbFichesParRequetes) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
+
 		this.action = action;
 		this.nbMaxFichesATraiter = nbMaxFichesATraiter;
 		this.nbFichesParRequetes = nbFichesParRequetes;
@@ -137,8 +139,6 @@ public class PrefetchBibliographies {
 		}
 		return -1;
 	}
-
-
 
 
 	public int prefetch() {

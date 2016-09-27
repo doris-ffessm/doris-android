@@ -375,13 +375,15 @@ public class PrefetchDorisWebSite {
             // - - - Groupes - - -
             // Récupération de la liste des groupes sur le site de DORIS
             // En UPDATE et CDDVD on re-télécharge que la liste
-
-            /*
-            PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, action, nbMaxFichesATraiter);
-            if ( groupes.prefetch() == -1 ) {
-                log.debug("doMain() - Erreur Groupes" );
+            nbMaxFichesATraiter = 10;
+            nbFichesParRequetes = 50;
+            PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
+            if ( groupes.prefetchV4() == -1 ) {
+                log.debug("doMain() - Erreur Groupes");
                 System.exit(1);
-            ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_groupes_testsuites.xml");
+            }
+            /*
+                ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_groupes_testsuites.xml");
             log.debug("doMain() - debbug" );
             }
             */
@@ -414,27 +416,16 @@ public class PrefetchDorisWebSite {
             // - - - Bibliographie - - -
 			nbMaxFichesATraiter = 10;
 			nbFichesParRequetes = 50;
-            /*
+
             PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
-            if ( bibliographies.prefetch() == -1 ) {
+            if ( bibliographies.prefetchV4() == -1 ) {
                 log.debug("doMain() - Erreur Bibliographies" );
                 System.exit(1);
             }
-            */
+
 
 			/*
             ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_biblio_testsuites.xml");
-            */
-
-            // - - - Mise à jour des zones géographiques - - -
-            /*
-             PrefetchZonesGeographiques zonesGeographiques = new PrefetchZonesGeographiques(dbContext, connectionSource, action, nbMaxFichesATraiter);
-            if ( zonesGeographiques.prefetch() == -1 ) {
-                log.debug("doMain() - Erreur Mise à jour des zones géographiques" );
-                System.exit(1);
-            }
-
-            ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_zonesgeo_testsuites.xml");
             */
 
             // - - - Mise à jour des zones géographiques - - -

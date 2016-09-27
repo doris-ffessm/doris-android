@@ -78,25 +78,36 @@ public class PrefetchFiches {
 	
 	private ActionKind action;
 	private int nbMaxFichesATraiter;
-	
+    private int nbFichesParRequetes;
+
 	private List<Groupe> listeGroupes;
 	private List<Participant> listeParticipants;
 	
 	private Fiche ficheMaj;
 	private List<PhotoFiche> listePhotoFiche;
 	
-	public PrefetchFiches(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter,
-			List<Groupe> listeGroupes, List<Participant> listeParticipants) {
+	public PrefetchFiches(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter, List<Groupe> listeGroupes, List<Participant> listeParticipants) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
-		this.action = action;
+
+        this.action = action;
 		this.nbMaxFichesATraiter = nbMaxFichesATraiter;
-		
+
 		this.listeGroupes = listeGroupes;
 		this.listeParticipants = listeParticipants;
 	}
-	
-	
+
+    public PrefetchFiches(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter, int nbFichesParRequetes, List<Groupe> listeGroupes, List<Participant> listeParticipants) {
+        this.dbContext = dbContext;
+        this.connectionSource = connectionSource;
+
+        this.action = action;
+        this.nbMaxFichesATraiter = nbMaxFichesATraiter;
+        this.nbFichesParRequetes = nbFichesParRequetes;
+
+        this.listeGroupes = listeGroupes;
+        this.listeParticipants = listeParticipants;
+    }
 	
 	public int prefetch() {
 		// - - - Liste des Fiches - - -

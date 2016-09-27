@@ -200,7 +200,13 @@ public class ZoneGeographique {
 		super();
 		this.nom = nom;
 		this.description = description;
-	} 
+	}
+    public ZoneGeographique(int id, java.lang.String nom, java.lang.String description) {
+        super();
+        this._id = id;
+        this.nom = nom;
+        this.description = description;
+    }
 
 	public int getId() {
 		return _id;
