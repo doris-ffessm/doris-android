@@ -434,23 +434,20 @@ public class PrefetchDorisWebSite {
                 log.debug("doMain() - Erreur Mise à jour des zones géographiques" );
                 System.exit(1);
             }
-
+            /*
             ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_zonesgeo_testsuites.xml");
-
+            */
 
             // - - - Liste des Fiches - - -
-            // Récupération de la liste des fiches sur le site de DORIS
-            // Elles sont récupérées dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
-            /*
-            PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, action, nbMaxFichesATraiter,
-                    groupes.listeGroupes, intervenants.listeParticipants);
-            if ( listeFiches.prefetch() == -1 ) {
+            PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes,
+                                                                groupes.listeGroupes, intervenants.listeParticipants);
+            if ( listeFiches.prefetchV4() == -1 ) {
                 log.debug("doMain() - Erreur Liste des Fiches" );
                 System.exit(1);
             }
 
             ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_fiches_testsuites.xml");
-            */
+
 
 
             // - - - Enregistrement Date génération Base - - -

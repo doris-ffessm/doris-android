@@ -54,6 +54,7 @@ import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.support.ConnectionSource;
 
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
+import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.Participant;
@@ -65,6 +66,10 @@ import fr.ffessm.doris.android.sitedoris.FicheLight;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
+import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
 
 
 public class PrefetchFiches {
@@ -85,17 +90,17 @@ public class PrefetchFiches {
 	
 	private Fiche ficheMaj;
 	private List<PhotoFiche> listePhotoFiche;
-	
-	public PrefetchFiches(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter, List<Groupe> listeGroupes, List<Participant> listeParticipants) {
-		this.dbContext = dbContext;
-		this.connectionSource = connectionSource;
+
+    public PrefetchFiches(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter, List<Groupe> listeGroupes, List<Participant> listeParticipants) {
+        this.dbContext = dbContext;
+        this.connectionSource = connectionSource;
 
         this.action = action;
-		this.nbMaxFichesATraiter = nbMaxFichesATraiter;
+        this.nbMaxFichesATraiter = nbMaxFichesATraiter;
 
-		this.listeGroupes = listeGroupes;
-		this.listeParticipants = listeParticipants;
-	}
+        this.listeGroupes = listeGroupes;
+        this.listeParticipants = listeParticipants;
+    }
 
     public PrefetchFiches(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter, int nbFichesParRequetes, List<Groupe> listeGroupes, List<Participant> listeParticipants) {
         this.dbContext = dbContext;
@@ -108,7 +113,53 @@ public class PrefetchFiches {
         this.listeGroupes = listeGroupes;
         this.listeParticipants = listeParticipants;
     }
-	
+
+
+    public int prefetchV4() throws Exception {
+        // - - - Fiches  - - -
+        JsonToDB jsonToDB = new JsonToDB();
+        DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper();
+        DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper();
+
+        // TODO : Il faudrait mettre un While ici
+        int nbFichesDORIS = 99;
+
+        int count = 0;
+
+
+        for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
+
+            List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getFichesNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
+
+            for (Integer ficheNodeId : nodeIds) {
+                count++;
+                if (count > nbMaxFichesATraiter) {
+                    log.debug("doMain() - nbMaxFichesATraiter atteint");
+                    i = 9999;
+                    break;
+                }
+
+                // Référence de l'Espèce dans le message JSON
+                Espece especeJSON = dorisAPI_JSONDATABindingHelper.getEspeceFieldsFromNodeId(ficheNodeId.intValue());
+                final Fiche espece = jsonToDB.getFicheFromJSONTerme(especeJSON);
+
+                TransactionManager.callInTransaction(connectionSource,
+                        new Callable<Void>() {
+                            public Void call() throws Exception {
+
+                                dbContext.ficheDao.create(espece);
+
+                                return null;
+                            }
+                        });
+
+            }
+
+        }
+        return -1;
+    }
+
+
 	public int prefetch() {
 		// - - - Liste des Fiches - - -
 		// Récupération de la liste des fiches sur le site de DORIS

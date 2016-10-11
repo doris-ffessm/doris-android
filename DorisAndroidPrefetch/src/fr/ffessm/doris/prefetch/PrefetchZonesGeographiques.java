@@ -131,7 +131,7 @@ public class PrefetchZonesGeographiques {
                     }
                 });
 
-        return -1;
+        return 1;
     }
 
 

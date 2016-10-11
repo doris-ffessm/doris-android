@@ -137,7 +137,7 @@ public class PrefetchBibliographies {
 			}
 
 		}
-		return -1;
+		return 1;
 	}
 
 
