@@ -50,7 +50,7 @@ public class DorisAPI_JSONTreeHelper {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public List<Integer> getFichesNodeIds(int fichesPerHttpRequest, int offset) throws ClientProtocolException, IOException {
+	public List<ObjNameNodeId> getFichesNodeIds(int fichesPerHttpRequest, int offset) throws ClientProtocolException, IOException {
 		log.debug("getFichesNodeIds()");
 			
 		return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.SPECIES_NODE_URL, fichesPerHttpRequest, offset);
@@ -63,7 +63,7 @@ public class DorisAPI_JSONTreeHelper {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public List<Integer> getIntervenantsNodeIds(int fichesPerHttpRequest, int offset) throws ClientProtocolException, IOException {
+    public List<ObjNameNodeId> getIntervenantsNodeIds(int fichesPerHttpRequest, int offset) throws ClientProtocolException, IOException {
         log.debug("getIntervenantsNodeIds()");
 
         return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.PARTICIPANTS_NODE_URL, fichesPerHttpRequest, offset);
@@ -76,7 +76,7 @@ public class DorisAPI_JSONTreeHelper {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public List<Integer> getTermesNodeIds(int fichesPerHttpRequest, int offset) throws ClientProtocolException, IOException {
+    public List<ObjNameNodeId> getTermesNodeIds(int fichesPerHttpRequest, int offset) throws ClientProtocolException, IOException {
         log.debug("getTermesNodeIds()");
 
         return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.GLOSSAIRE_NODE_URL, fichesPerHttpRequest, offset);
@@ -89,7 +89,7 @@ public class DorisAPI_JSONTreeHelper {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public List<Integer> getBibliographieNodeIds(int fichesPerHttpRequest, int offset) throws ClientProtocolException, IOException {
+    public List<ObjNameNodeId> getBibliographieNodeIds(int fichesPerHttpRequest, int offset) throws ClientProtocolException, IOException {
         log.debug("getBibliographieNodeIds()");
 
         return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.BIBLIO_NODE_URL, fichesPerHttpRequest, offset);
@@ -102,11 +102,9 @@ public class DorisAPI_JSONTreeHelper {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public List<Integer> getNodeIdsFromNodeUrl(String NODE_URL, int nbLimitRequest, int offset) throws ClientProtocolException, IOException {
+	public List<ObjNameNodeId> getNodeIdsFromNodeUrl(String NODE_URL, int nbLimitRequest, int offset) throws ClientProtocolException, IOException {
 		log.debug("getNodeIdsFromNodeUrl()");
-		
-		List<Integer> result = new ArrayList<Integer>();
-		
+
 		DefaultHttpClient client = new DefaultHttpClient();
 		
 		String uri = NODE_URL + "/list";
@@ -143,15 +141,16 @@ public class DorisAPI_JSONTreeHelper {
 		
 		int childrenCount = metadata.get("childrenCount").asInt();
 		log.debug("nb noeud :"+childrenCount);
-		
-		
+
+        List<ObjNameNodeId> result = new ArrayList<ObjNameNodeId>();
+
 		JsonNode childrenNodes = rootNode.path("childrenNodes");
 		for (Iterator<JsonNode> iterator = childrenNodes.elements(); iterator.hasNext();) {
 			JsonNode nodeInList = (JsonNode) iterator.next();
 			
 			log.debug("valeur noeud : "+objectMapper.writeValueAsString(nodeInList));
 
-			result.add(nodeInList.path("nodeId").asInt());
+			result.add(new ObjNameNodeId(nodeInList.path("nodeId").asInt(),nodeInList.path("objectName").asText()));
 		}
 		log.debug("nb noeud :"+result.size());
 	

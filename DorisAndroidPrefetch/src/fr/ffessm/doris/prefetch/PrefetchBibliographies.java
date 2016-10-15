@@ -64,6 +64,7 @@ import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
 import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
+import fr.ffessm.doris.prefetch.ezpublish.ObjNameNodeId;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.bibliographie.Bibliographie;
 
 public class PrefetchBibliographies {
@@ -110,9 +111,9 @@ public class PrefetchBibliographies {
 
 		for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
 
-			List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getBibliographieNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
+			List<ObjNameNodeId> nodeIds = dorisAPI_JSONTreeHelper.getBibliographieNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
 
-			for (Integer oeuvreNodeId : nodeIds) {
+			for (ObjNameNodeId oeuvreNodeId : nodeIds) {
 				count++;
 				if (count > nbMaxFichesATraiter) {
 					log.debug("doMain() - nbMaxFichesATraiter atteint");
@@ -121,7 +122,7 @@ public class PrefetchBibliographies {
 				}
 
 				// Référence de l'Espèce dans le message JSON
-				Bibliographie biblioJSON = dorisAPI_JSONDATABindingHelper.getOeuvreFieldsFromNodeId(oeuvreNodeId.intValue());
+				Bibliographie biblioJSON = dorisAPI_JSONDATABindingHelper.getOeuvreFieldsFromNodeId(oeuvreNodeId.getNodeId().intValue());
 				final EntreeBibliographie oeuvre = jsonToDB.getEntreeBibliographieFromJSONTerme(biblioJSON);
 
 				TransactionManager.callInTransaction(connectionSource,

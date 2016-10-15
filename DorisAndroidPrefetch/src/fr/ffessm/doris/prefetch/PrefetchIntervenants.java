@@ -63,6 +63,7 @@ import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
 import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
+import fr.ffessm.doris.prefetch.ezpublish.ObjNameNodeId;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.utilisateur.Utilisateur;
 
 public class PrefetchIntervenants {
@@ -109,10 +110,10 @@ public class PrefetchIntervenants {
 
         for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
 
-            List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getIntervenantsNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
+            List<ObjNameNodeId> nodeIds = dorisAPI_JSONTreeHelper.getIntervenantsNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
 
 
-            for (Integer intervenantNodeId : nodeIds) {
+            for (ObjNameNodeId intervenantNodeId : nodeIds) {
                 count++;
                 if (count > nbMaxFichesATraiter) {
                     log.debug("doMain() - nbMaxFichesATraiter atteint");
@@ -121,7 +122,7 @@ public class PrefetchIntervenants {
                 }
 
                 // Référence de l'intervenant dans le message JSON
-                Utilisateur utilisateurJSON = dorisAPI_JSONDATABindingHelper.getUtilisateurFieldsFromNodeId(intervenantNodeId.intValue());
+                Utilisateur utilisateurJSON = dorisAPI_JSONDATABindingHelper.getUtilisateurFieldsFromNodeId(intervenantNodeId.getNodeId().intValue());
                 final Participant intervenant = jsonToDB.getParticipantFromJSONTerme(utilisateurJSON);
 
                 TransactionManager.callInTransaction(connectionSource,

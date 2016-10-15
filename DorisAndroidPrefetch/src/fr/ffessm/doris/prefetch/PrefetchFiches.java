@@ -69,6 +69,7 @@ import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
 import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
+import fr.ffessm.doris.prefetch.ezpublish.ObjNameNodeId;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
 
 
@@ -129,9 +130,9 @@ public class PrefetchFiches {
 
         for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
 
-            List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getFichesNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
+            List<ObjNameNodeId> nodesIds = dorisAPI_JSONTreeHelper.getFichesNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
 
-            for (Integer ficheNodeId : nodeIds) {
+            for (ObjNameNodeId ficheNodeId : nodesIds) {
                 count++;
                 if (count > nbMaxFichesATraiter) {
                     log.debug("doMain() - nbMaxFichesATraiter atteint");
@@ -140,8 +141,8 @@ public class PrefetchFiches {
                 }
 
                 // Référence de l'Espèce dans le message JSON
-                Espece especeJSON = dorisAPI_JSONDATABindingHelper.getEspeceFieldsFromNodeId(ficheNodeId.intValue());
-                final Fiche espece = jsonToDB.getFicheFromJSONTerme(especeJSON);
+                Espece especeJSON = dorisAPI_JSONDATABindingHelper.getEspeceFieldsFromNodeId(ficheNodeId.getNodeId().intValue());
+                final Fiche espece = jsonToDB.getFicheFromJSONEspece(ficheNodeId, especeJSON);
 
                 TransactionManager.callInTransaction(connectionSource,
                         new Callable<Void>() {

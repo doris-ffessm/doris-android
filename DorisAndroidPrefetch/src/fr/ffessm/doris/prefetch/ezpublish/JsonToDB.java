@@ -84,10 +84,13 @@ public class JsonToDB {
     /* * * * * * * * * * * *
     Fiche
     * * * * * * * * * * * * */
-    public Fiche getFicheFromJSONTerme(Espece jsonEspece){
+    public Fiche getFicheFromJSONEspece(ObjNameNodeId ficheNodeId, Espece jsonEspece){
+
+        //
+
 
         Fiche fiche = new Fiche(
-                jsonEspece.getFields().getNomCommunInter().getValue(),
+                ficheNodeId.getObjectName(),
                 jsonEspece.getFields().getNomCommunFr().getValue(),
                 Integer.parseInt(jsonEspece.getFields().getReference().getValue()),
                 1,

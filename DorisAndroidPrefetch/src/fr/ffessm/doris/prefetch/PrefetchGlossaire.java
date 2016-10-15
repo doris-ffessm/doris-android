@@ -62,6 +62,7 @@ import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
 import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
+import fr.ffessm.doris.prefetch.ezpublish.ObjNameNodeId;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
 
 
@@ -109,10 +110,10 @@ public class PrefetchGlossaire {
 
         for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
 
-            List<Integer> nodeIds = dorisAPI_JSONTreeHelper.getTermesNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
+            List<ObjNameNodeId> nodeIds = dorisAPI_JSONTreeHelper.getTermesNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
 
 
-            for (Integer termeNodeId : nodeIds) {
+            for (ObjNameNodeId termeNodeId : nodeIds) {
                 count++;
                 if (count > nbMaxFichesATraiter) {
                     log.debug("doMain() - nbMaxFichesATraiter atteint");
@@ -121,7 +122,7 @@ public class PrefetchGlossaire {
                 }
 
                 // Référence de l'Espèce dans le message JSON
-                Glossaire glossaireJSON = dorisAPI_JSONDATABindingHelper.getTermeFieldsFromNodeId(termeNodeId.intValue());
+                Glossaire glossaireJSON = dorisAPI_JSONDATABindingHelper.getTermeFieldsFromNodeId(termeNodeId.getNodeId().intValue());
                 final DefinitionGlossaire terme = jsonToDB.getDefinitionGlossaireFromJSONTerme(glossaireJSON);
 
                 TransactionManager.callInTransaction(connectionSource,
