@@ -165,7 +165,7 @@ public class DorisApplicationContext {
 	
 	
 	/**
-	 * Gère les valeur par défaut en fonction du type d'appareil sur lequel l'application est installée.
+	 * Gère les valeurs par défaut en fonction du type d'appareil sur lequel l'application est installée.
 	 * Une fois exécuté, le valeur sont stockée et ne sont plus modifiées par ce traitement afin de conserver les choix utilisateur.
 	 * @param context
 	 */

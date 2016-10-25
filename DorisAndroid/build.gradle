@@ -82,5 +82,9 @@ android {
         // will be marked as failed, and Jenkins won't analyse the Lint output
         abortOnError false
     }
-		
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
 }
