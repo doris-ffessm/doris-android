@@ -8,6 +8,7 @@ import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.bibliographie.Bibliographie;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
@@ -84,6 +85,44 @@ public class JsonToDB {
     /* * * * * * * * * * * *
     Fiche
     * * * * * * * * * * * * */
+    public  List<SectionFiche> getSectionsFicheFromJSONEspece(Espece jsonEspece){
+
+        List<SectionFiche> sectionsFiche = new ArrayList<SectionFiche>();
+
+        sectionsFiche.add(new SectionFiche(100,jsonEspece.getFields().getOthersNomCommunFr().getValue(),jsonEspece.getFields().getOthersNomCommunFr().getValue()));
+
+
+        /*Fiche fiche = new Fiche(
+                ficheNodeId.getObjectName(),
+                jsonEspece.getFields().getNomCommunFr().getValue(),
+                Integer.parseInt(jsonEspece.getFields().getReference().getValue()),
+                1,
+                jsonEspece.getFields().getPublicationDate().getValue(),
+                jsonEspece.getFields().getChantierDate().getValue(),
+                "",
+                "",
+                ""
+        );
+*/
+        /* Reste : \\java.lang.String numerofichesLiees,
+                java.lang.String textePourRechercheRapide,
+                java.lang.String pictogrammes
+                */
+
+
+
+        /*
+        SectionFiche contenu = new SectionFiche(100+positionSectionDansFiche, dernierTitreSection, texte);
+							contenu.setFiche(this);
+							_contextDB.sectionFicheDao.create(contenu);
+
+         */
+        return sectionsFiche;
+    }
+
+    /* * * * * * * * * * * *
+    Sections Fiche
+    * * * * * * * * * * * * */
     public Fiche getFicheFromJSONEspece(ObjNameNodeId ficheNodeId, Espece jsonEspece){
 
         //
@@ -105,7 +144,15 @@ public class JsonToDB {
                 java.lang.String textePourRechercheRapide,
                 java.lang.String pictogrammes
                 */
+
+
+
+        /*
+        SectionFiche contenu = new SectionFiche(100+positionSectionDansFiche, dernierTitreSection, texte);
+							contenu.setFiche(this);
+							_contextDB.sectionFicheDao.create(contenu);
+
+         */
         return fiche;
     }
-
 }

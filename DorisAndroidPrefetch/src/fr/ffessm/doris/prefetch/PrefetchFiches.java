@@ -59,6 +59,7 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.android.sitedoris.ErrorCollector;
@@ -135,7 +136,7 @@ public class PrefetchFiches {
             for (ObjNameNodeId ficheNodeId : nodesIds) {
                 count++;
                 if (count > nbMaxFichesATraiter) {
-                    log.debug("doMain() - nbMaxFichesATraiter atteint");
+                    log.debug("prefetchV4() - nbMaxFichesATraiter atteint");
                     i = 9999;
                     break;
                 }
@@ -153,6 +154,33 @@ public class PrefetchFiches {
                                 return null;
                             }
                         });
+
+                /* Héritée de la manière dont étaient stockées les données dans le Version 3 du Site,
+                On enregistre les différentes sections de la fiche dans l'ordre d'affichage de manière + "générique" que la verson 4 ne le fait
+                 */
+                List<SectionFiche> sectionsFiche = jsonToDB.getSectionsFicheFromJSONEspece(especeJSON);
+                for (SectionFiche sectionFiche : sectionsFiche) {
+                    final SectionFiche sectionFiche_final = sectionFiche;
+
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
+
+                                    dbContext.sectionFicheDao.create(sectionFiche_final);
+
+                                    return null;
+                                }
+                            });
+
+                }
+                 /*
+        SectionFiche contenu = new SectionFiche(100+positionSectionDansFiche, dernierTitreSection, texte);
+							contenu.setFiche(this);
+							_contextDB.sectionFicheDao.create(contenu);
+
+         */
+
+
 
             }
 
