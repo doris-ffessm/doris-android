@@ -57,6 +57,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
 
+import com.google.api.client.auth.oauth2.Credential;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.support.ConnectionSource;
@@ -70,6 +71,8 @@ import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
 import fr.ffessm.doris.android.sitedoris.ErrorCollector;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPIConnexionHelper;
+import fr.ffessm.doris.prefetch.ezpublish.DorisOAuth2ClientCredentials;
 import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
 import fr.ffessm.doris.prefetch.ezpublish.ObjNameNodeId;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
@@ -96,6 +99,7 @@ public class PrefetchDorisWebSite {
 		TEST,
 		DB_TO_ANDROID,
         V4_TO_ANDROID,
+        TEST_CONNECTION_V4,
 		DB_IMAGE_UPGRADE,
 		DWNLD_TO_REF,
 		ERASE_BUT_REF,
@@ -143,6 +147,10 @@ public class PrefetchDorisWebSite {
 
             dbV4ToAndroidAction();
 
+        } else if ( action == ActionKind.TEST_CONNECTION_V4 ) {
+
+            testConnection();
+
         } else if ( action == ActionKind.DB_IMAGE_UPGRADE ) {
 
             dbImageV4UpgradeAction();
@@ -188,6 +196,22 @@ public class PrefetchDorisWebSite {
 		
 		log.debug("doMain() - Fin TEST");
 	}
+
+    private void testConnection() throws Exception {
+        log.debug("testConnection() - Début");
+
+        Credential credent = DorisAPIConnexionHelper.authorizeViaWebPage(DorisOAuth2ClientCredentials.getUserId());
+
+        DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper(credent);
+        DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper(credent);
+
+        log.debug("testConnection() - credent : " + credent.toString());
+        log.debug("testConnection() - credent : " + credent.getAccessToken().toString());
+
+        log.debug("testConnection() - Fin");
+    }
+
+
 
 	private void cdDVDAction()  throws Exception{
 		

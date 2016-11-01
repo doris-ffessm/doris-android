@@ -27,7 +27,8 @@ public class DorisOAuth2ClientCredentials {
   public static final String API_SECRET = "d12e0548228dfe75de65848ff1e45411";
 
   /** Probablement pas propre mais permet de ne pas avoir à se connecter */
-  public static final String API_SUFFIXE = "e97c7911452f87ba23440ab4af541e39a64ecaef";
+  //public static final String API_SUFFIXE = "e97c7911452f87ba23440ab4af541e39a64ecaef";
+  public static final String API_SUFFIXE = "adcde8792660f8a32ebe399966225d6965a50d89";
 
   /** Port in the "Callback URL". */
   public static final int PORT = 8087;
