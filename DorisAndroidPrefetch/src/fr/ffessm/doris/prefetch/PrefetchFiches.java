@@ -160,6 +160,8 @@ public class PrefetchFiches {
                  */
                 List<SectionFiche> sectionsFiche = jsonToDB.getSectionsFicheFromJSONEspece(especeJSON);
                 for (SectionFiche sectionFiche : sectionsFiche) {
+
+                    sectionFiche.setFiche(espece);
                     final SectionFiche sectionFiche_final = sectionFiche;
 
                     TransactionManager.callInTransaction(connectionSource,

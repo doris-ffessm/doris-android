@@ -89,7 +89,59 @@ public class JsonToDB {
 
         List<SectionFiche> sectionsFiche = new ArrayList<SectionFiche>();
 
-        sectionsFiche.add(new SectionFiche(100,jsonEspece.getFields().getOthersNomCommunFr().getValue(),jsonEspece.getFields().getOthersNomCommunFr().getValue()));
+        // SectionFiche(int numOrdre, java.lang.String titre, java.lang.String texte)
+
+        // Autres Dénominations
+        String autresDenomination = "";
+        if (jsonEspece.getFields().getOthersNomCommunFr().getValue() != "") { autresDenomination += jsonEspece.getFields().getOthersNomCommunFr().getValue(); }
+        if (jsonEspece.getFields().getNomCommunInter().getValue() != "") { autresDenomination += jsonEspece.getFields().getNomCommunInter().getValue(); }
+
+        if (autresDenomination != "") {sectionsFiche.add(new SectionFiche(100,"Autres dénominations",autresDenomination)); }
+
+        // Groupe Phylogénétique
+
+
+
+        // Critères de reconnaissance
+        if (jsonEspece.getFields().getBiotop().getValue() != "") {sectionsFiche.add(new SectionFiche(110,"Critères de reconnaissance",jsonEspece.getFields().getBiotop().getValue())); }
+
+        // Distribution
+
+
+        // Biotope
+        if (jsonEspece.getFields().getBiotop().getValue() != "") {sectionsFiche.add(new SectionFiche(120,"Biotope",jsonEspece.getFields().getBiotop().getValue())); }
+
+        // Description
+        if (jsonEspece.getFields().getDescription().getValue() != "") {sectionsFiche.add(new SectionFiche(130,"Description",jsonEspece.getFields().getDescription().getValue())); }
+
+        // Espèces Ressemblantes
+
+        // Zone Doris
+
+        // Crédits
+        if (jsonEspece.getFields().getDescription().getValue() != "") {sectionsFiche.add(new SectionFiche(190,"Crédits",jsonEspece.getFields().getDescription().getValue())); }
+
+        // Origine du Nom Français
+        if (jsonEspece.getFields().getFrenchNameOrigin().getValue() != "") {sectionsFiche.add(new SectionFiche(300,"Origine du nom français",jsonEspece.getFields().getFrenchNameOrigin().getValue())); }
+
+        // Origine du Nom Scientifique
+        if (jsonEspece.getFields().getScientificNameOrigin().getValue() != "") {sectionsFiche.add(new SectionFiche(310,"Origine du nom scientifique",jsonEspece.getFields().getScientificNameOrigin().getValue())); }
+
+        // Alimentation
+        if (jsonEspece.getFields().getAlimentation().getValue() != "") {sectionsFiche.add(new SectionFiche(320,"Alimentation",jsonEspece.getFields().getAlimentation().getValue())); }
+
+
+        // Reproduction - Multiplication
+        if (jsonEspece.getFields().getReproduction().getValue() != "") {sectionsFiche.add(new SectionFiche(330,"Reproduction - Multiplication",jsonEspece.getFields().getReproduction().getValue())); }
+
+
+        // Informations Complémentaires
+        if (jsonEspece.getFields().getComplementaryInfos().getValue() != "") {sectionsFiche.add(new SectionFiche(340,"Informations complémentaires",jsonEspece.getFields().getComplementaryInfos().getValue())); }
+
+        // Références Bibliographiques
+        if (jsonEspece.getFields().getBiblioRef().getValue() != "") {sectionsFiche.add(new SectionFiche(350,"Références bibliographiques",jsonEspece.getFields().getBiblioRef().getValue())); }
+        if (jsonEspece.getFields().getOthersBiblioRef().getValue() != "") {sectionsFiche.add(new SectionFiche(355,"",jsonEspece.getFields().getOthersBiblioRef().getValue())); }
+
 
 
         /*Fiche fiche = new Fiche(
@@ -126,7 +178,8 @@ public class JsonToDB {
     public Fiche getFicheFromJSONEspece(ObjNameNodeId ficheNodeId, Espece jsonEspece){
 
         //
-
+        String pictogrammes = "";
+        if (jsonEspece.getFields().getDanger().getValue() == "1") pictogrammes += "1;";
 
         Fiche fiche = new Fiche(
                 ficheNodeId.getObjectName(),
