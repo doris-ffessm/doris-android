@@ -53,6 +53,7 @@ import org.apache.commons.logging.LogFactory;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.support.ConnectionSource;
 
+import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -179,8 +180,29 @@ public class PrefetchFiches {
         SectionFiche contenu = new SectionFiche(100+positionSectionDansFiche, dernierTitreSection, texte);
 							contenu.setFiche(this);
 							_contextDB.sectionFicheDao.create(contenu);
+            */
 
-         */
+
+            /* Héritée de la manière dont étaient stockées les données dans le Version 3 du Site,
+                On enregistre les dénominations de la fiche dans une table dédiée
+            */
+                List<AutreDenomination> autresDenominations = jsonToDB.getAutresDenominationFicheFromJSONEspece(especeJSON);
+                for (AutreDenomination autreDenomination : autresDenominations) {
+
+                    autreDenomination.setFiche(espece);
+                    final AutreDenomination autreDenomination_final = autreDenomination;
+
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
+
+                                    dbContext.autreDenominationDao.create(autreDenomination_final);
+
+                                    return null;
+                                }
+                            });
+
+                }
 
 
 

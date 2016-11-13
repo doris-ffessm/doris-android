@@ -3,6 +3,7 @@ package fr.ffessm.doris.prefetch.ezpublish;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -83,20 +84,58 @@ public class JsonToDB {
     }
 
     /* * * * * * * * * * * *
-    Fiche
+    Fiches
+    * * * * * * * * * * * * */
+    public Fiche getFicheFromJSONEspece(ObjNameNodeId ficheNodeId, Espece jsonEspece){
+
+        //
+        String pictogrammes = "";
+        if (jsonEspece.getFields().getReglementation().getValue() == "1") pictogrammes += "0;";
+        if (jsonEspece.getFields().getDanger().getValue() == "1") pictogrammes += "1;";
+
+        Fiche fiche = new Fiche(
+                "{{i}}"+ficheNodeId.getObjectName()+"{{/i}}"+" "+jsonEspece.getFields().getDiscoverer().getValue(),
+                jsonEspece.getFields().getNomCommunFr().getValue(),
+                Integer.parseInt(jsonEspece.getFields().getReference().getValue()),
+                1,
+                jsonEspece.getFields().getPublicationDate().getValue(),
+                jsonEspece.getFields().getChantierDate().getValue(),
+                "",
+                "",
+                pictogrammes
+        );
+
+        /* Fiche(
+            java.lang.String nomScientifique,
+            java.lang.String nomCommun,
+            int numeroFiche,
+            int etatFiche,
+            java.lang.String dateCreation,
+            java.lang.String dateModification,
+            java.lang.String numerofichesLiees,
+            java.lang.String textePourRechercheRapide,
+            java.lang.String pictogrammes)
+                */
+
+
+
+        /*
+        SectionFiche contenu = new SectionFiche(100+positionSectionDansFiche, dernierTitreSection, texte);
+							contenu.setFiche(this);
+							_contextDB.sectionFicheDao.create(contenu);
+
+         */
+        return fiche;
+    }
+
+    /* * * * * * * * * * * *
+        Sections Fiche
     * * * * * * * * * * * * */
     public  List<SectionFiche> getSectionsFicheFromJSONEspece(Espece jsonEspece){
 
         List<SectionFiche> sectionsFiche = new ArrayList<SectionFiche>();
 
         // SectionFiche(int numOrdre, java.lang.String titre, java.lang.String texte)
-
-        // Autres Dénominations
-        String autresDenomination = "";
-        if (jsonEspece.getFields().getOthersNomCommunFr().getValue() != "") { autresDenomination += jsonEspece.getFields().getOthersNomCommunFr().getValue(); }
-        if (jsonEspece.getFields().getNomCommunInter().getValue() != "") { autresDenomination += jsonEspece.getFields().getNomCommunInter().getValue(); }
-
-        if (autresDenomination != "") {sectionsFiche.add(new SectionFiche(100,"Autres dénominations",autresDenomination)); }
 
         // Groupe Phylogénétique
 
@@ -175,48 +214,20 @@ public class JsonToDB {
         return sectionsFiche;
     }
 
+
     /* * * * * * * * * * * *
-    Sections Fiche
+       Autres dénominations Fiche
     * * * * * * * * * * * * */
-    public Fiche getFicheFromJSONEspece(ObjNameNodeId ficheNodeId, Espece jsonEspece){
+    public  List<AutreDenomination> getAutresDenominationFicheFromJSONEspece(Espece jsonEspece){
 
-        //
-        String pictogrammes = "";
-        if (jsonEspece.getFields().getReglementation().getValue() == "1") pictogrammes += "0;";
-        if (jsonEspece.getFields().getDanger().getValue() == "1") pictogrammes += "1;";
+        List<AutreDenomination> autresDenominations = new ArrayList<AutreDenomination>();
 
-        Fiche fiche = new Fiche(
-                "{{i}}"+ficheNodeId.getObjectName()+"{{/i}}"+" "+jsonEspece.getFields().getDiscoverer().getValue(),
-                jsonEspece.getFields().getNomCommunFr().getValue(),
-                Integer.parseInt(jsonEspece.getFields().getReference().getValue()),
-                1,
-                jsonEspece.getFields().getPublicationDate().getValue(),
-                jsonEspece.getFields().getChantierDate().getValue(),
-                "",
-                "",
-                pictogrammes
-        );
+        // SectionFiche(int numOrdre, java.lang.String titre, java.lang.String texte)
 
-        /* Fiche(
-            java.lang.String nomScientifique,
-            java.lang.String nomCommun,
-            int numeroFiche,
-            int etatFiche,
-            java.lang.String dateCreation,
-            java.lang.String dateModification,
-            java.lang.String numerofichesLiees,
-            java.lang.String textePourRechercheRapide,
-            java.lang.String pictogrammes)
-                */
+        if (jsonEspece.getFields().getOthersNomCommunFr().getValue() != "") { autresDenominations.add(new AutreDenomination(jsonEspece.getFields().getOthersNomCommunFr().getValue(), "FR")); }
+        if (jsonEspece.getFields().getNomCommunInter().getValue() != "") { autresDenominations.add(new AutreDenomination(jsonEspece.getFields().getNomCommunInter().getValue(), "")); }
 
-
-
-        /*
-        SectionFiche contenu = new SectionFiche(100+positionSectionDansFiche, dernierTitreSection, texte);
-							contenu.setFiche(this);
-							_contextDB.sectionFicheDao.create(contenu);
-
-         */
-        return fiche;
+        return autresDenominations;
     }
+
 }
