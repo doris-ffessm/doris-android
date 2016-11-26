@@ -1,9 +1,14 @@
 package fr.ffessm.doris.prefetch.ezpublish;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
+import fr.ffessm.doris.android.datamodel.Classification;
+import fr.ffessm.doris.android.datamodel.ClassificationFiche;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -20,6 +25,7 @@ public class JsonToDB {
 
 	public static String JSON_IMAGE_PREFIX = "var/doris/storage/images/images/";
 
+    public static Log log = LogFactory.getLog(DorisAPI_JSONDATABindingHelper.class);
     /* * * * * * * * * * * *
         Photos des Espèces
      * * * * * * * * * * * * */
@@ -38,6 +44,7 @@ public class JsonToDB {
 		return listePhotosFiche;
 	}
 
+
     /* * * * * * * * * * * *
     Participants
     * * * * * * * * * * * * */
@@ -52,6 +59,7 @@ public class JsonToDB {
         return utilisateur;
     }
 
+
     /* * * * * * * * * * * *
     Glossaire
     * * * * * * * * * * * * */
@@ -64,6 +72,7 @@ public class JsonToDB {
                 );
         return terme;
     }
+
 
     /* * * * * * * * * * * *
     Bibliographie
@@ -82,6 +91,7 @@ public class JsonToDB {
         );
         return oeuvre;
     }
+
 
     /* * * * * * * * * * * *
     Fiches
@@ -105,28 +115,9 @@ public class JsonToDB {
                 pictogrammes
         );
 
-        /* Fiche(
-            java.lang.String nomScientifique,
-            java.lang.String nomCommun,
-            int numeroFiche,
-            int etatFiche,
-            java.lang.String dateCreation,
-            java.lang.String dateModification,
-            java.lang.String numerofichesLiees,
-            java.lang.String textePourRechercheRapide,
-            java.lang.String pictogrammes)
-                */
-
-
-
-        /*
-        SectionFiche contenu = new SectionFiche(100+positionSectionDansFiche, dernierTitreSection, texte);
-							contenu.setFiche(this);
-							_contextDB.sectionFicheDao.create(contenu);
-
-         */
         return fiche;
     }
+
 
     /* * * * * * * * * * * *
         Sections Fiche
@@ -134,12 +125,6 @@ public class JsonToDB {
     public  List<SectionFiche> getSectionsFicheFromJSONEspece(Espece jsonEspece){
 
         List<SectionFiche> sectionsFiche = new ArrayList<SectionFiche>();
-
-        // SectionFiche(int numOrdre, java.lang.String titre, java.lang.String texte)
-
-        // Groupe Phylogénétique
-
-
 
         // Critères de reconnaissance
         if (jsonEspece.getFields().getCleIdentification().getValue() != "") {sectionsFiche.add(new SectionFiche(110,"Critères de reconnaissance",jsonEspece.getFields().getCleIdentification().getValue())); }
@@ -186,31 +171,6 @@ public class JsonToDB {
 
 
 
-        /*Fiche fiche = new Fiche(
-                ficheNodeId.getObjectName(),
-                jsonEspece.getFields().getNomCommunFr().getValue(),
-                Integer.parseInt(jsonEspece.getFields().getReference().getValue()),
-                1,
-                jsonEspece.getFields().getPublicationDate().getValue(),
-                jsonEspece.getFields().getChantierDate().getValue(),
-                "",
-                "",
-                ""
-        );
-*/
-        /* Reste : \\java.lang.String numerofichesLiees,
-                java.lang.String textePourRechercheRapide,
-                java.lang.String pictogrammes
-                */
-
-
-
-        /*
-        SectionFiche contenu = new SectionFiche(100+positionSectionDansFiche, dernierTitreSection, texte);
-							contenu.setFiche(this);
-							_contextDB.sectionFicheDao.create(contenu);
-
-         */
         return sectionsFiche;
     }
 
@@ -230,4 +190,111 @@ public class JsonToDB {
         return autresDenominations;
     }
 
+
+    /* * * * * * * * * * * *
+        Classification Fiche
+    * * * * * * * * * * * * */
+    public  List<ClassificationFiche> getClassificationFicheFromJSONEspece(Espece jsonEspece){
+        log.debug("getClassificationFicheFromJSONEspece - Début");
+
+        List<ClassificationFiche> classificationFiche = new ArrayList<ClassificationFiche>();
+
+        log.debug("getClassificationFicheFromJSONEspece - getGroup() : " + jsonEspece.getFields().getGroup().getValue());
+        if (jsonEspece.getFields().getGroup().getValue() != null) {
+            Classification test_groupe = new Classification(Integer.parseInt(jsonEspece.getFields().getGroup().getValue() ), "group", "", "", "");
+            ClassificationFiche test_classificationFiche = new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getGroup().getValue()), "group", "", "", ""), 1);
+            log.debug("getClassificationFicheFromJSONEspece - getGroup() : " + test_groupe.getId() );
+            log.debug("getClassificationFicheFromJSONEspece - test_classificationFiche() : " + test_classificationFiche.getClassification() );
+                classificationFiche.add(
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getGroup().getValue()), "group", "", "", ""), 1)
+                );
+        }
+
+        log.debug("getClassificationFicheFromJSONEspece - getEmbranchementTaxon() : " + jsonEspece.getFields().getEmbranchementTaxon().getValue());
+        if (jsonEspece.getFields().getEmbranchementTaxon().getValue() != null) {
+                classificationFiche.add(
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getEmbranchementTaxon().getValue().toString()), "embranchement_taxon", "", "", ""), 2)
+            );
+        }
+
+        log.debug("getClassificationFicheFromJSONEspece - getSousEmbranchementTaxon() : " + jsonEspece.getFields().getSousEmbranchementTaxon().getValue());
+        if (jsonEspece.getFields().getSousEmbranchementTaxon().getValue() != null) {
+            classificationFiche.add(
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousEmbranchementTaxon().getValue().toString()), "sous_embranchement_taxon", "", "", ""), 1)
+            );
+        }
+
+        log.debug("getClassificationFicheFromJSONEspece - getSuperClasseTaxon() : " + jsonEspece.getFields().getSuperClasseTaxon().getValue());
+        if (jsonEspece.getFields().getSuperClasseTaxon().getValue() != null) {
+            classificationFiche.add(
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSuperClasseTaxon().getValue().toString()), "super_classe_taxon", "", "", ""), 1)
+            );
+        }
+
+        log.debug("getClassificationFicheFromJSONEspece - getClasseTaxon() : " + jsonEspece.getFields().getClasseTaxon().getValue());
+        if (jsonEspece.getFields().getClasseTaxon().getValue() != null) {
+            classificationFiche.add(
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getClasseTaxon().getValue().toString()), "classe_taxon", "", "", ""), 1)
+            );
+        }
+
+        log.debug("getClassificationFicheFromJSONEspece - getSousClasseTaxon() : " + jsonEspece.getFields().getSousClasseTaxon().getValue());
+        if (jsonEspece.getFields().getSousClasseTaxon().getValue() != null) {
+            classificationFiche.add(
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousClasseTaxon().getValue().toString()), "sous_classe_taxon", "", "", ""), 1)
+            );
+        }
+
+        log.debug("getClassificationFicheFromJSONEspece - getSuperOrdreTaxon() : " + jsonEspece.getFields().getSuperOrdreTaxon().getValue());
+        if (jsonEspece.getFields().getSuperOrdreTaxon().getValue() != null) {
+            classificationFiche.add(
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSuperOrdreTaxon().getValue().toString()), "super_ordre_taxon", "", "", ""), 1)
+            );
+        }
+
+        log.debug("getClassificationFicheFromJSONEspece - getOrdreTaxon() : " + jsonEspece.getFields().getOrdreTaxon().getValue());
+        if (jsonEspece.getFields().getOrdreTaxon().getValue() != null) {
+            classificationFiche.add(
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getOrdreTaxon().getValue().toString()), "ordre_taxon", "", "", ""), 1)
+            );
+        }
+
+        log.debug("getClassificationFicheFromJSONEspece - getSousOrdreTaxon() : " + jsonEspece.getFields().getSousOrdreTaxon().getValue());
+        if (jsonEspece.getFields().getSousOrdreTaxon().getValue() != null) {
+            classificationFiche.add(
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousOrdreTaxon().getValue().toString()), "sous_ordre_taxon", "", "", ""), 1)
+            );
+        }
+
+        log.debug("getClassificationFicheFromJSONEspece - getFamilleTaxon() : " + jsonEspece.getFields().getFamilleTaxon().getValue());
+        if (jsonEspece.getFields().getFamilleTaxon().getValue() != null) {
+            classificationFiche.add(
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getFamilleTaxon().getValue().toString()), "famille_taxon", "", "", ""), 1)
+            );
+        }
+
+        log.debug("getClassificationFicheFromJSONEspece - getSousFamilleTaxon() : " + jsonEspece.getFields().getSousFamilleTaxon().getValue());
+        if (jsonEspece.getFields().getSousFamilleTaxon().getValue() != null) {
+            classificationFiche.add(
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousFamilleTaxon().getValue().toString()), "sous_famille_taxon", "", "", ""), 1)
+            );
+        }
+
+/*
+                 group":{"type":"ezobjectrelation","identifier":"group","value":"48883","id":947887,"classattribute_id":479}," +
+                ""embranchement_taxon":{"type":"ezobjectrelation","identifier":"embranchement_taxon","value":"1081"," ""id":947888,"classattribute_id":480},
+                "sous_embranchement_taxon":{"type":"ezobjectrelation","identifier":"sous_embranchement_taxon","""value":null,"id":947889,"classattribute_id":481}," +
+                ""super_classe_taxon":{"type":"ezobjectrelation","identifier":"super_classe_taxon","value":null,"id":947890,"classattribute_id":482}," +
+                ""classe_taxon":{"type":"ezobjectrelation","identifier":"classe_taxon","value":"1177","id":947891,"classattribute_id":483}," +
+                ""sous_classe_taxon":{"type":"ezobjectrelation","identifier":"sous_classe_taxon","value":"1225","id":947892,"classattribute_id":484},
+                "super_ordre_taxon":{"type":"ezobjectrelation","identifier":"super_ordre_taxon","value":null,"id":947893,"classattribute_id":485}," +
+                ""ordre_taxon":{"type":"ezobjectrelation","identifier":"ordre_taxon","value":"1226","id":947894,"classattribute_id":486},
+                "sous_ordre_taxon":{"type":"ezobjectrelation","identifier":"sous_ordre_taxon","value":"1561","id":947895,"classattribute_id":487}," +
+                ""famille_taxon":{"type":"ezobjectrelation","identifier":"famille_taxon","value":"1563","id":947896,"classattribute_id":488}," +
+                ""sous_famille_taxon":{"type":"ezobjectrelation","identifier":"sous_famille_taxon","value":null,"id":947897,"classattribute_id":489}," +
+                ""genre":{"type":"ezstring","identifier":"genre","value":"Eunicella","id":947899,"classattribute_id":546},"espece":{"type":"ezstring"," +
+                ""identifier":"espece","value":"verrucosa","id":947900,"classattribute_id":538}
+*/
+        return classificationFiche;
+    }
 }

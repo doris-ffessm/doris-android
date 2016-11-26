@@ -43,8 +43,11 @@ termes.
 package fr.ffessm.doris.prefetch;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.logging.Log;
@@ -54,6 +57,7 @@ import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.support.ConnectionSource;
 
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
+import fr.ffessm.doris.android.datamodel.ClassificationFiche;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -61,6 +65,7 @@ import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
+import fr.ffessm.doris.android.datamodel.Classification;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.android.sitedoris.ErrorCollector;
@@ -90,7 +95,10 @@ public class PrefetchFiches {
 
 	private List<Groupe> listeGroupes;
 	private List<Participant> listeParticipants;
-	
+
+
+    private HashMap<Integer, Classification> listeClassification = new HashMap<>();
+
 	private Fiche ficheMaj;
 	private List<PhotoFiche> listePhotoFiche;
 
@@ -129,6 +137,7 @@ public class PrefetchFiches {
 
         int count = 0;
 
+        /* On va mettre la */
 
         for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
 
@@ -176,8 +185,8 @@ public class PrefetchFiches {
                             });
 
                 }
-                 /*
-        SectionFiche contenu = new SectionFiche(100+positionSectionDansFiche, dernierTitreSection, texte);
+             /*
+                SectionFiche contenu = new SectionFiche(100+positionSectionDansFiche, dernierTitreSection, texte);
 							contenu.setFiche(this);
 							_contextDB.sectionFicheDao.create(contenu);
             */
@@ -203,6 +212,47 @@ public class PrefetchFiches {
                             });
 
                 }
+
+
+                /* Ajout à la liste des Classifications si pas encore dans la liste
+                 */
+                List<ClassificationFiche> classificationFiche = jsonToDB.getClassificationFicheFromJSONEspece(especeJSON);
+                for (ClassificationFiche classification : classificationFiche) {
+
+                    if ( listeClassification.get(classification.getId()) == null ) {
+                        listeClassification.put(classification.getId(),classification.getClassification());
+                    }
+
+                    final ClassificationFiche classification_final = classification;
+
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
+
+                                    dbContext.classificationFicheDao.create(classification_final);
+
+                                    return null;
+                                }
+                            });
+                }
+
+
+                for(Map.Entry<Integer, Classification> classification : listeClassification.entrySet()) {
+
+                    final int cle_final = classification.getKey();
+                    final Classification classification_final = classification.getValue();
+
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
+
+                                    dbContext.classificationDao.create(classification_final);
+
+                                    return null;
+                                }
+                            });
+                }
+
 
 
 

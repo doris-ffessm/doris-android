@@ -463,6 +463,20 @@ public class PrefetchDorisWebSite {
             ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_zonesgeo_testsuites.xml");
             */
 
+
+            // - - - Classification - - -
+            nbMaxFichesATraiter = 10;
+            nbFichesParRequetes = 50;
+            PrefetchClassification classification = new PrefetchClassification(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
+            if ( classification.prefetchV4() == -1 ) {
+                log.debug("doMain() - Erreur Classification" );
+                System.exit(1);
+            }
+            /*
+            ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_glossaire_testsuites.xml");
+            */
+
+
             // - - - Liste des Fiches - - -
             PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes,
                                                                 groupes.listeGroupes, intervenants.listeParticipants);

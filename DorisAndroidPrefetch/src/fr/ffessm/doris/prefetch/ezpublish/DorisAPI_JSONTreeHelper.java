@@ -94,7 +94,21 @@ public class DorisAPI_JSONTreeHelper {
 
         return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.BIBLIO_NODE_URL, fichesPerHttpRequest, offset);
     }
-    
+
+
+    /**
+     * Renvoie la Classification
+     * @param
+     * @returnLa Classification
+     * @throws ClientProtocolException
+     * @throws IOException
+     */
+    public List<ObjNameNodeId> getClassificationNodeIds(int fichesPerHttpRequest, int offset) throws ClientProtocolException, IOException {
+        log.debug("getClassificationNodeIds()");
+
+        return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.TAXONS_NODE_URL, fichesPerHttpRequest, offset);
+    }
+
 	/**
 	 * Renvoie les id du NODE_URL passé en paramètre
 	 * @param
@@ -156,10 +170,6 @@ public class DorisAPI_JSONTreeHelper {
 	
 		return result;
 	}
-
-
-
-
 
 
 

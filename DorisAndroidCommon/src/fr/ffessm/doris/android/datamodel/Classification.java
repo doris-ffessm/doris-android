@@ -120,7 +120,16 @@ C'est lui qui permet d'identifier la Classification */
 	protected ForeignCollection<ClassificationFiche> classificationFiche;
 
 	// Start of user code Classification additional user properties
-	// End of user code
+    public Classification(int _id, java.lang.String niveau, java.lang.String termeScientifique, java.lang.String termeFrancais, java.lang.String descriptif) {
+        super();
+        this._id = _id;
+        this.niveau = niveau;
+        this.termeScientifique = termeScientifique;
+        this.termeFrancais = termeFrancais;
+        this.descriptif = descriptif;
+    }
+
+    // End of user code
 	
 	public Classification() {} // needed by ormlite
 	public Classification(java.lang.String niveau, java.lang.String termeScientifique, java.lang.String termeFrancais, java.lang.String descriptif) {

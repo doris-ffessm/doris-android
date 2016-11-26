@@ -20,6 +20,7 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
+import fr.ffessm.doris.android.datamodel.Classification;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
@@ -213,13 +214,38 @@ public class DorisAPI_JSONDATABindingHelper {
         return espece;
     }
 
+    public Classification getClassificationFieldsFromObjectId(int classificationObjectId) throws ClientProtocolException,
+            IOException {
+        log.debug("getClassificationFieldsFromObjectId - Début");
+        log.debug("getClassificationFieldsFromObjectId - classificationObjectId : " + classificationObjectId);
 
+        HttpResponse response = getFieldsFromObjectId(classificationObjectId);
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        Classification classification = new Classification();
 
+        try {
+            classification = objectMapper.readValue(
+                    new InputStreamReader(response.getEntity().getContent()),
+                    Classification.class
+            );
+        }
+        catch (JsonGenerationException e) {
+            e.printStackTrace();
+        }
+        catch (  JsonMappingException e) {
+            e.printStackTrace();
+        }
+        catch (  IOException e) {
+            e.printStackTrace();
+        }
 
+        System.out.println("\t Id : " + classification.getId() );
+        System.out.println("\t Terme Francais : " + classification.getTermeFrancais() );
+        System.out.println("\t Terme Scientifique : " + classification.getTermeScientifique() );
 
-
-
+        return classification;
+    }
 
 
 
@@ -263,6 +289,44 @@ public class DorisAPI_JSONDATABindingHelper {
     }
 
 
+    public HttpResponse getFieldsFromObjectId(int objectId) throws ClientProtocolException,
+            IOException {
+        log.debug("getFieldsFromObjectId - Début");
+        log.debug("getFieldsFromObjectId - objectId : " + objectId);
+
+        DefaultHttpClient client = new DefaultHttpClient();
+        String uri = DorisOAuth2ClientCredentials.getServerObjectUrlTousLesChamps( String.valueOf(objectId) );
+        log.debug("getFieldsFromObjectId - uri : " + uri);
+
+        if (credent != null && debug) {
+            DorisAPIConnexionHelper.printJSON(credent, uri);
+            if(debug_SaveJSON){
+                DorisAPIConnexionHelper.saveJSONFile(
+                        credent,
+                        uri,
+                        DEBUG_SAVE_JSON_BASE_PATH + File.separatorChar+"specieFields_" + objectId+JSON_EXT
+                );
+            }
+        }
+
+        if(credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
+            uri = uri+"?oauth_token="+credent.getAccessToken();
+        } else {
+            uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
+        }
+
+        log.debug("getFieldsFromObjectId - uri & oauth_token : " + uri);
+
+        HttpGet getHttpPage = new HttpGet(uri);
+        if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
+            getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
+        }
+
+        HttpResponse response = client.execute(getHttpPage);
+        log.debug("getFieldsFromObjectId - response.getStatusLine() : "+response.getStatusLine());
+
+        return response;
+    }
 
 
 
@@ -271,7 +335,13 @@ public class DorisAPI_JSONDATABindingHelper {
 
 
 
-	/**
+
+
+
+
+
+
+    /**
 	 * récupère un Specie à partir de son NodeId
 	 * @param credent
 	 * @param specieNodeId
