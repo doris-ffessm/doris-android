@@ -20,7 +20,7 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
-import fr.ffessm.doris.android.datamodel.Classification;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
@@ -220,9 +220,13 @@ public class DorisAPI_JSONDATABindingHelper {
         log.debug("getClassificationFieldsFromObjectId - classificationObjectId : " + classificationObjectId);
 
         HttpResponse response = getFieldsFromObjectId(classificationObjectId);
+        log.debug("getClassificationFieldsFromObjectId - 010");
 
         ObjectMapper objectMapper = new ObjectMapper();
+        log.debug("getClassificationFieldsFromObjectId - 020");
+
         Classification classification = new Classification();
+        log.debug("getClassificationFieldsFromObjectId - 030");
 
         try {
             classification = objectMapper.readValue(
@@ -231,18 +235,21 @@ public class DorisAPI_JSONDATABindingHelper {
             );
         }
         catch (JsonGenerationException e) {
+            log.debug("getClassificationFieldsFromObjectId - 110");
             e.printStackTrace();
         }
         catch (  JsonMappingException e) {
+            log.debug("getClassificationFieldsFromObjectId - 120");
             e.printStackTrace();
         }
         catch (  IOException e) {
+            log.debug("getClassificationFieldsFromObjectId - 130");
             e.printStackTrace();
         }
 
-        System.out.println("\t Id : " + classification.getId() );
-        System.out.println("\t Terme Francais : " + classification.getTermeFrancais() );
-        System.out.println("\t Terme Scientifique : " + classification.getTermeScientifique() );
+        System.out.println("\t Id : " + classification.getDataMap().getNameLatin() );
+        System.out.println("\t Terme Francais : " + classification.getDataMap().getNameFrench());
+        System.out.println("\t Terme Scientifique : " + classification.getDataMap().getDescription() );
 
         return classification;
     }
@@ -327,16 +334,6 @@ public class DorisAPI_JSONDATABindingHelper {
 
         return response;
     }
-
-
-
-
-
-
-
-
-
-
 
 
 

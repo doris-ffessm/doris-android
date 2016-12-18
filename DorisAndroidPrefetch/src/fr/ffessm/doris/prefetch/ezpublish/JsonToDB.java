@@ -25,7 +25,7 @@ public class JsonToDB {
 
 	public static String JSON_IMAGE_PREFIX = "var/doris/storage/images/images/";
 
-    public static Log log = LogFactory.getLog(DorisAPI_JSONDATABindingHelper.class);
+    public static Log log = LogFactory.getLog(JsonToDB.class);
     /* * * * * * * * * * * *
         Photos des Espèces
      * * * * * * * * * * * * */
@@ -199,15 +199,18 @@ public class JsonToDB {
 
         List<ClassificationFiche> classificationFiche = new ArrayList<ClassificationFiche>();
 
-        log.debug("getClassificationFicheFromJSONEspece - getGroup() : " + jsonEspece.getFields().getGroup().getValue());
+        log.debug("getClassificationFicheFromJSONEspece - getGroup().getValue() : " + jsonEspece.getFields().getGroup().getValue());
+
+
         if (jsonEspece.getFields().getGroup().getValue() != null) {
             Classification test_groupe = new Classification(Integer.parseInt(jsonEspece.getFields().getGroup().getValue() ), "group", "", "", "");
+
             ClassificationFiche test_classificationFiche = new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getGroup().getValue()), "group", "", "", ""), 1);
             log.debug("getClassificationFicheFromJSONEspece - getGroup() : " + test_groupe.getId() );
             log.debug("getClassificationFicheFromJSONEspece - test_classificationFiche() : " + test_classificationFiche.getClassification() );
-                classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getGroup().getValue()), "group", "", "", ""), 1)
-                );
+            classificationFiche.add(
+                new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getGroup().getValue()), "group", "", "", ""), 1)
+            );
         }
 
         log.debug("getClassificationFicheFromJSONEspece - getEmbranchementTaxon() : " + jsonEspece.getFields().getEmbranchementTaxon().getValue());
@@ -295,6 +298,9 @@ public class JsonToDB {
                 ""genre":{"type":"ezstring","identifier":"genre","value":"Eunicella","id":947899,"classattribute_id":546},"espece":{"type":"ezstring"," +
                 ""identifier":"espece","value":"verrucosa","id":947900,"classattribute_id":538}
 */
+
+        log.debug("getClassificationFicheFromJSONEspece - classificationFiche().getId() : " + classificationFiche.get(0).getClassification().getId());
+        log.debug("getClassificationFicheFromJSONEspece - classificationFiche().getTermeFrancais() : " + classificationFiche.get(0).getClassification().getTermeFrancais());
         return classificationFiche;
     }
 }
