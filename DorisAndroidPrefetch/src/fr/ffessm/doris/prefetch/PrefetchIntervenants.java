@@ -98,6 +98,8 @@ public class PrefetchIntervenants {
 
 
     public int prefetchV4() throws Exception {
+        log.debug("prefetchV4() - début");
+
         // - - - Intervenant - - -
         JsonToDB jsonToDB = new JsonToDB();
         DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper();
@@ -138,6 +140,8 @@ public class PrefetchIntervenants {
             }
 
         }
+
+        log.debug("prefetchV4() - fin");
         return count;
     }
 

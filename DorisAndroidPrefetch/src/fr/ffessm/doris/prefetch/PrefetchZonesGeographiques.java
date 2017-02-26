@@ -93,7 +93,6 @@ public class PrefetchZonesGeographiques {
 
 
     public int prefetchV4() throws Exception {
-
         log.debug("prefetchV4() - début");
 
         // - - - Zones Géographiques - - -
@@ -131,6 +130,8 @@ public class PrefetchZonesGeographiques {
                     }
                 });
 
+
+        log.debug("prefetchV4() - fin");
         return 1;
     }
 

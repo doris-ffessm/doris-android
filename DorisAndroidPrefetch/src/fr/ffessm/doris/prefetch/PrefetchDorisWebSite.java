@@ -463,6 +463,16 @@ public class PrefetchDorisWebSite {
             ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_zonesgeo_testsuites.xml");
             */
 
+            // - - - Liste des Fiches - - -
+            PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes,
+                                                                groupes.listeGroupes, intervenants.listeParticipants);
+            if ( listeFiches.prefetchV4() == -1 ) {
+                log.debug("doMain() - Erreur Liste des Fiches" );
+                System.exit(1);
+            }
+            /*
+            ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_fiches_testsuites.xml");
+            */
 
             // - - - Classification - - -
             nbMaxFichesATraiter = 10;
@@ -475,19 +485,6 @@ public class PrefetchDorisWebSite {
             /*
             ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_glossaire_testsuites.xml");
             */
-
-
-            // - - - Liste des Fiches - - -
-            PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes,
-                                                                groupes.listeGroupes, intervenants.listeParticipants);
-            if ( listeFiches.prefetchV4() == -1 ) {
-                log.debug("doMain() - Erreur Liste des Fiches" );
-                System.exit(1);
-            }
-
-            ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_fiches_testsuites.xml");
-
-
 
             // - - - Enregistrement Date génération Base - - -
             Date date = new Date();
@@ -530,7 +527,6 @@ public class PrefetchDorisWebSite {
 		if (fichierDB.exists()){
 			File fichierDBNew = new File(dataBaseName+"_for_V4.db");
 			FileUtils.copyFile(fichierDB, fichierDBNew);
-			
 		}
 		
 		// - - - Base de Données - - -

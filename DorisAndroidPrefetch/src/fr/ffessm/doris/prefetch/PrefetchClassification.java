@@ -53,6 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import fr.ffessm.doris.android.datamodel.ClassificationFiche;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.sitedoris.Constants;
@@ -63,6 +64,7 @@ import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
 import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
 import fr.ffessm.doris.prefetch.ezpublish.ObjNameNodeId;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
 
 
@@ -97,6 +99,8 @@ public class PrefetchClassification {
     }
 
     public int prefetchV4() throws Exception {
+        log.debug("prefetchV4() - début");
+
         // - - - Classification - - -
         JsonToDB jsonToDB = new JsonToDB();
         DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper();
@@ -107,37 +111,36 @@ public class PrefetchClassification {
 
         int count = 0;
 
+        List<ClassificationFiche> classificationsListe = dbContext.classificationFicheDao.queryBuilder().distinct().selectColumns("classification_id").query();
 
-        for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
-
-            List<ObjNameNodeId> nodeIds = dorisAPI_JSONTreeHelper.getTermesNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
-
-
-            for (ObjNameNodeId termeNodeId : nodeIds) {
-                count++;
-                if (count > nbMaxFichesATraiter) {
-                    log.debug("doMain() - nbMaxFichesATraiter atteint");
-                    i = 9999;
-                    break;
-                }
-
-                // Référence de l'Espèce dans le message JSON
-                Glossaire glossaireJSON = dorisAPI_JSONDATABindingHelper.getTermeFieldsFromNodeId(termeNodeId.getNodeId().intValue());
-                final DefinitionGlossaire terme = jsonToDB.getDefinitionGlossaireFromJSONTerme(glossaireJSON);
-
-                TransactionManager.callInTransaction(connectionSource,
-                        new Callable<Void>() {
-                            public Void call() throws Exception {
-
-                                dbContext.definitionGlossaireDao.create(terme);
-
-                                return null;
-                            }
-                        });
-
+        for (ClassificationFiche classificationFiche : classificationsListe) {
+            count++;
+            if (count > nbMaxFichesATraiter) {
+                log.debug("doMain() - nbMaxFichesATraiter atteint");
+                count = 9999;
+                break;
             }
 
+            log.debug("prefetchV4() - Classification :"+classificationFiche.getClassification().getId());
+
+            // Référence de l'Espèce dans le message JSON
+            Classification classificationJSON = dorisAPI_JSONDATABindingHelper.getClassificationFieldsFromObjectId(classificationFiche.getClassification().getId());
+            final fr.ffessm.doris.android.datamodel.Classification classification = jsonToDB.getClassificationFromJSONClassification(classificationJSON);
+
+            TransactionManager.callInTransaction(connectionSource,
+                    new Callable<Void>() {
+                        public Void call() throws Exception {
+
+                            dbContext.classificationDao.create(classification);
+
+                            return null;
+                        }
+                    });
+
         }
+
+
+        log.debug("prefetchV4() - fin");
         return count;
     }
 

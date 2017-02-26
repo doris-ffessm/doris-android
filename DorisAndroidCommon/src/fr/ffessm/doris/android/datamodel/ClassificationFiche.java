@@ -107,13 +107,19 @@ public class ClassificationFiche {
 
 	// Start of user code ClassificationFiche additional user properties
 	
-	public ClassificationFiche(Classification classification, int numOrdre) {
+	public ClassificationFiche(Fiche fiche, Classification classification, int numOrdre) {
 		super();
+		this.fiche = fiche;
 		this.classification = classification;
 		this.numOrdre = numOrdre;
-	} 
-	
-	// End of user code
+	}
+
+    public ClassificationFiche(Classification classification, int numOrdre) {
+        super();
+        this.classification = classification;
+        this.numOrdre = numOrdre;
+    }
+    // End of user code
 	
 	public ClassificationFiche() {} // needed by ormlite
 	public ClassificationFiche(int numOrdre) {

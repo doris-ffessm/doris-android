@@ -127,6 +127,8 @@ public class PrefetchFiches {
 
 
     public int prefetchV4() throws Exception {
+        log.debug("prefetchV4() - début");
+
         // - - - Fiches  - - -
         JsonToDB jsonToDB = new JsonToDB();
         DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper();
@@ -153,8 +155,9 @@ public class PrefetchFiches {
 
                 // Référence de l'Espèce dans le message JSON
                 Espece especeJSON = dorisAPI_JSONDATABindingHelper.getEspeceFieldsFromNodeId(ficheNodeId.getNodeId().intValue());
-                final Fiche espece = jsonToDB.getFicheFromJSONEspece(ficheNodeId, especeJSON);
+                log.debug("prefetchV4() - especeJSON : " + especeJSON.getFields().getNomCommunFr().getValue());
 
+                final Fiche espece = jsonToDB.getFicheFromJSONEspece(ficheNodeId, especeJSON);
                 TransactionManager.callInTransaction(connectionSource,
                         new Callable<Void>() {
                             public Void call() throws Exception {
@@ -168,6 +171,7 @@ public class PrefetchFiches {
                 /* Héritée de la manière dont étaient stockées les données dans le Version 3 du Site,
                 On enregistre les différentes sections de la fiche dans l'ordre d'affichage de manière + "générique" que la verson 4 ne le fait
                  */
+                log.debug("prefetchV4() - 'Sections' de la fiche");
                 List<SectionFiche> sectionsFiche = jsonToDB.getSectionsFicheFromJSONEspece(especeJSON);
                 for (SectionFiche sectionFiche : sectionsFiche) {
 
@@ -195,6 +199,7 @@ public class PrefetchFiches {
             /* Héritée de la manière dont étaient stockées les données dans le Version 3 du Site,
                 On enregistre les dénominations de la fiche dans une table dédiée
             */
+                log.debug("prefetchV4() - Autres dénominations");
                 List<AutreDenomination> autresDenominations = jsonToDB.getAutresDenominationFicheFromJSONEspece(especeJSON);
                 for (AutreDenomination autreDenomination : autresDenominations) {
 
@@ -214,16 +219,25 @@ public class PrefetchFiches {
                 }
 
 
-                /* Ajout à la liste des Classifications si pas encore dans la liste
+                /* Ajout aux Classifications si pas encore dans la liste
                  */
-                List<ClassificationFiche> classificationFiche = jsonToDB.getClassificationFicheFromJSONEspece(especeJSON);
-                for (ClassificationFiche classification : classificationFiche) {
+                log.debug("prefetchV4() - Classification de la fiche");
+                List<ClassificationFiche> classificationsFiche = jsonToDB.getClassificationFicheFromJSONEspece(especeJSON);
 
-                    if ( listeClassification.get(classification.getId()) == null ) {
-                        listeClassification.put(classification.getId(),classification.getClassification());
+                for (ClassificationFiche classificationFiche : classificationsFiche) {
+                    log.debug("prefetchV4() - classification : " + classificationFiche.getClassification());
+                    log.debug("prefetchV4() - classification.getId() : " + classificationFiche.getClassification().getId());
+
+                    classificationFiche.setFiche(espece);
+                    /*Finalement on ne le fera pas là, mais on fera un select distinct dans la table classificationFiche
+                    log.debug("prefetchV4() - listeClassification.get(classificationFiche.getClassification().getId()) : " + listeClassification.get(classificationFiche.getClassification().getId()));
+                    if ( listeClassification.get(classificationFiche.getClassification().getId()) == null ) {
+                        listeClassification.put(classificationFiche.getClassification().getId(),classificationFiche.getClassification());
                     }
+                    */
 
-                    final ClassificationFiche classification_final = classification;
+                    // Enregistrement de la Classification de la Fiche
+                    final ClassificationFiche classification_final = classificationFiche;
 
                     TransactionManager.callInTransaction(connectionSource,
                             new Callable<Void>() {
@@ -236,30 +250,36 @@ public class PrefetchFiches {
                             });
                 }
 
-
-                for(Map.Entry<Integer, Classification> classification : listeClassification.entrySet()) {
-
-                    final int cle_final = classification.getKey();
-                    final Classification classification_final = classification.getValue();
-
-                    TransactionManager.callInTransaction(connectionSource,
-                            new Callable<Void>() {
-                                public Void call() throws Exception {
-
-                                    dbContext.classificationDao.create(classification_final);
-
-                                    return null;
-                                }
-                            });
-                }
-
-
-
-
             }
 
         }
-        return -1;
+
+        /* Finalement on ne le fera pas là, mais on fera un select distinct dans la table classificationFiche
+
+
+        log.debug("prefetchV4() - Les niveaux de la Classification");
+        for(Map.Entry<Integer, Classification> mpClassification : listeClassification.entrySet()) {
+
+            final int cle_final = mpClassification.getKey();
+            log.debug("prefetchV4() - classification_final.getKey() : " + cle_final);
+
+            final Classification classification_final = mpClassification.getValue();
+            log.debug("prefetchV4() - classification_final : " + classification_final);
+            log.debug("prefetchV4() - classification_final : " + classification_final.getId() + " - " + classification_final.);
+
+            TransactionManager.callInTransaction(connectionSource,
+                    new Callable<Void>() {
+                        public Void call() throws Exception {
+
+                            dbContext.classificationDao.create(classification_final);
+
+                            return null;
+                        }
+                    });
+        }
+    */
+        log.debug("prefetchV4() - fin");
+        return 1;
     }
 
 

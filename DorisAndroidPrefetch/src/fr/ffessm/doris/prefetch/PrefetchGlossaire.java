@@ -97,6 +97,8 @@ public class PrefetchGlossaire {
     }
 
     public int prefetchV4() throws Exception {
+        log.debug("prefetchV4() - début");
+
         // - - - Glossaire - - -
         JsonToDB jsonToDB = new JsonToDB();
         DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper();
@@ -138,6 +140,8 @@ public class PrefetchGlossaire {
             }
 
         }
+
+        log.debug("prefetchV4() - fin");
         return count;
     }
 

@@ -98,7 +98,9 @@ public class PrefetchBibliographies {
 	}
 
 	public int prefetchV4() throws Exception {
-		// - - - Bibliographie  - - -
+        log.debug("prefetchV4() - début");
+
+        // - - - Bibliographie  - - -
 		JsonToDB jsonToDB = new JsonToDB();
 		DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper();
 		DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper();
@@ -138,6 +140,7 @@ public class PrefetchBibliographies {
 			}
 
 		}
+        log.debug("prefetchV4() - fin");
 		return 1;
 	}
 

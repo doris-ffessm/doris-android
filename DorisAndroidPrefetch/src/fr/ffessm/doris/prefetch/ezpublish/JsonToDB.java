@@ -21,6 +21,7 @@ import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.utilisateur.Utilisateur;
 
+
 public class JsonToDB {
 
 	public static String JSON_IMAGE_PREFIX = "var/doris/storage/images/images/";
@@ -197,17 +198,11 @@ public class JsonToDB {
     public  List<ClassificationFiche> getClassificationFicheFromJSONEspece(Espece jsonEspece){
         log.debug("getClassificationFicheFromJSONEspece - Début");
 
+        Fiche fiche = new Fiche();
         List<ClassificationFiche> classificationFiche = new ArrayList<ClassificationFiche>();
 
         log.debug("getClassificationFicheFromJSONEspece - getGroup().getValue() : " + jsonEspece.getFields().getGroup().getValue());
-
-
         if (jsonEspece.getFields().getGroup().getValue() != null) {
-            Classification test_groupe = new Classification(Integer.parseInt(jsonEspece.getFields().getGroup().getValue() ), "group", "", "", "");
-
-            ClassificationFiche test_classificationFiche = new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getGroup().getValue()), "group", "", "", ""), 1);
-            log.debug("getClassificationFicheFromJSONEspece - getGroup() : " + test_groupe.getId() );
-            log.debug("getClassificationFicheFromJSONEspece - test_classificationFiche() : " + test_classificationFiche.getClassification() );
             classificationFiche.add(
                 new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getGroup().getValue()), "group", "", "", ""), 1)
             );
@@ -223,63 +218,63 @@ public class JsonToDB {
         log.debug("getClassificationFicheFromJSONEspece - getSousEmbranchementTaxon() : " + jsonEspece.getFields().getSousEmbranchementTaxon().getValue());
         if (jsonEspece.getFields().getSousEmbranchementTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousEmbranchementTaxon().getValue().toString()), "sous_embranchement_taxon", "", "", ""), 1)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousEmbranchementTaxon().getValue().toString()), "sous_embranchement_taxon", "", "", ""), 3)
             );
         }
 
         log.debug("getClassificationFicheFromJSONEspece - getSuperClasseTaxon() : " + jsonEspece.getFields().getSuperClasseTaxon().getValue());
         if (jsonEspece.getFields().getSuperClasseTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSuperClasseTaxon().getValue().toString()), "super_classe_taxon", "", "", ""), 1)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSuperClasseTaxon().getValue().toString()), "super_classe_taxon", "", "", ""), 4)
             );
         }
 
         log.debug("getClassificationFicheFromJSONEspece - getClasseTaxon() : " + jsonEspece.getFields().getClasseTaxon().getValue());
         if (jsonEspece.getFields().getClasseTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getClasseTaxon().getValue().toString()), "classe_taxon", "", "", ""), 1)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getClasseTaxon().getValue().toString()), "classe_taxon", "", "", ""), 5)
             );
         }
 
         log.debug("getClassificationFicheFromJSONEspece - getSousClasseTaxon() : " + jsonEspece.getFields().getSousClasseTaxon().getValue());
         if (jsonEspece.getFields().getSousClasseTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousClasseTaxon().getValue().toString()), "sous_classe_taxon", "", "", ""), 1)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousClasseTaxon().getValue().toString()), "sous_classe_taxon", "", "", ""), 6)
             );
         }
 
         log.debug("getClassificationFicheFromJSONEspece - getSuperOrdreTaxon() : " + jsonEspece.getFields().getSuperOrdreTaxon().getValue());
         if (jsonEspece.getFields().getSuperOrdreTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSuperOrdreTaxon().getValue().toString()), "super_ordre_taxon", "", "", ""), 1)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSuperOrdreTaxon().getValue().toString()), "super_ordre_taxon", "", "", ""), 7)
             );
         }
 
         log.debug("getClassificationFicheFromJSONEspece - getOrdreTaxon() : " + jsonEspece.getFields().getOrdreTaxon().getValue());
         if (jsonEspece.getFields().getOrdreTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getOrdreTaxon().getValue().toString()), "ordre_taxon", "", "", ""), 1)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getOrdreTaxon().getValue().toString()), "ordre_taxon", "", "", ""), 8)
             );
         }
 
         log.debug("getClassificationFicheFromJSONEspece - getSousOrdreTaxon() : " + jsonEspece.getFields().getSousOrdreTaxon().getValue());
         if (jsonEspece.getFields().getSousOrdreTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousOrdreTaxon().getValue().toString()), "sous_ordre_taxon", "", "", ""), 1)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousOrdreTaxon().getValue().toString()), "sous_ordre_taxon", "", "", ""), 9)
             );
         }
 
         log.debug("getClassificationFicheFromJSONEspece - getFamilleTaxon() : " + jsonEspece.getFields().getFamilleTaxon().getValue());
         if (jsonEspece.getFields().getFamilleTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getFamilleTaxon().getValue().toString()), "famille_taxon", "", "", ""), 1)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getFamilleTaxon().getValue().toString()), "famille_taxon", "", "", ""), 10)
             );
         }
 
         log.debug("getClassificationFicheFromJSONEspece - getSousFamilleTaxon() : " + jsonEspece.getFields().getSousFamilleTaxon().getValue());
         if (jsonEspece.getFields().getSousFamilleTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousFamilleTaxon().getValue().toString()), "sous_famille_taxon", "", "", ""), 1)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousFamilleTaxon().getValue().toString()), "sous_famille_taxon", "", "", ""), 11)
             );
         }
 
@@ -303,4 +298,20 @@ public class JsonToDB {
         log.debug("getClassificationFicheFromJSONEspece - classificationFiche().getTermeFrancais() : " + classificationFiche.get(0).getClassification().getTermeFrancais());
         return classificationFiche;
     }
+
+
+    /* * * * * * * * * * * *
+    Classification
+    * * * * * * * * * * * * */
+    public Classification getClassificationFromJSONClassification(fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification jsonClassification){
+        Classification classification = new Classification (
+                jsonClassification.getClassIdentifier(),
+                jsonClassification.getDataMap().getNameFrench(),
+                jsonClassification.getDataMap().getNameLatin(),
+                jsonClassification.getDataMap().getDescription()
+        );
+        return classification;
+    }
+
+
 }

@@ -95,6 +95,7 @@ public class PrefetchGroupes {
     }
 
     public int prefetchV4() {
+        log.debug("prefetchV4() - début");
 
         List<Groupe> listeGroupes = new ArrayList<Groupe>();
 
@@ -284,6 +285,7 @@ public class PrefetchGroupes {
             return -1;
         }
 
+        log.debug("prefetchV4() - fin");
         return 1;
     }
 

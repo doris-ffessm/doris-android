@@ -169,7 +169,7 @@ public class DorisAPI_JSONDATABindingHelper {
             }
         }
 
-        if(credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
+        if (credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
             uri = uri+"?oauth_token="+credent.getAccessToken();
         } else {
             uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
@@ -223,10 +223,7 @@ public class DorisAPI_JSONDATABindingHelper {
         log.debug("getClassificationFieldsFromObjectId - 010");
 
         ObjectMapper objectMapper = new ObjectMapper();
-        log.debug("getClassificationFieldsFromObjectId - 020");
-
         Classification classification = new Classification();
-        log.debug("getClassificationFieldsFromObjectId - 030");
 
         try {
             classification = objectMapper.readValue(
@@ -247,9 +244,9 @@ public class DorisAPI_JSONDATABindingHelper {
             e.printStackTrace();
         }
 
-        System.out.println("\t Id : " + classification.getDataMap().getNameLatin() );
-        System.out.println("\t Terme Francais : " + classification.getDataMap().getNameFrench());
-        System.out.println("\t Terme Scientifique : " + classification.getDataMap().getDescription() );
+        System.out.println("\t Nom Latin : " + classification.getDataMap().getNameLatin() );
+        System.out.println("\t Nom Francais : " + classification.getDataMap().getNameFrench());
+        System.out.println("\t Description : " + classification.getDataMap().getDescription() );
 
         return classification;
     }
