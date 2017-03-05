@@ -120,14 +120,29 @@ C'est lui qui permet d'identifier la Classification */
 	protected ForeignCollection<ClassificationFiche> classificationFiche;
 
 	// Start of user code Classification additional user properties
-    public Classification(int _id, java.lang.String niveau, java.lang.String termeScientifique, java.lang.String termeFrancais, java.lang.String descriptif) {
+
+    /** Référence Doris de la Classification  */
+    /** TEST GM : SQLite = SQLite **/
+    @DatabaseField
+    protected int numeroDoris;
+
+    public Classification(int numeroDoris, java.lang.String niveau, java.lang.String termeScientifique, java.lang.String termeFrancais, java.lang.String descriptif) {
         super();
-        this._id = _id;
+        this.numeroDoris = numeroDoris;
         this.niveau = niveau;
         this.termeScientifique = termeScientifique;
         this.termeFrancais = termeFrancais;
         this.descriptif = descriptif;
     }
+
+    public int getNumeroDoris() {
+        return this.numeroDoris;
+    }
+    public void setNumeroDoris(int numeroDoris) {
+        this.numeroDoris = numeroDoris;
+    }
+
+
 
     // End of user code
 	

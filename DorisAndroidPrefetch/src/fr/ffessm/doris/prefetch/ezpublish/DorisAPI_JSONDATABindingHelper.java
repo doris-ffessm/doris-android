@@ -220,38 +220,32 @@ public class DorisAPI_JSONDATABindingHelper {
         log.debug("getClassificationFieldsFromObjectId - classificationObjectId : " + classificationObjectId);
 
         HttpResponse response = getFieldsFromObjectId(classificationObjectId);
-        log.debug("getClassificationFieldsFromObjectId - 010");
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Classification classification = new Classification();
+        Classification classificationJSON = new Classification();
 
         try {
-            classification = objectMapper.readValue(
+            classificationJSON = objectMapper.readValue(
                     new InputStreamReader(response.getEntity().getContent()),
                     Classification.class
             );
         }
         catch (JsonGenerationException e) {
-            log.debug("getClassificationFieldsFromObjectId - 110");
             e.printStackTrace();
         }
         catch (  JsonMappingException e) {
-            log.debug("getClassificationFieldsFromObjectId - 120");
             e.printStackTrace();
         }
         catch (  IOException e) {
-            log.debug("getClassificationFieldsFromObjectId - 130");
             e.printStackTrace();
         }
 
-        System.out.println("\t Nom Latin : " + classification.getDataMap().getNameLatin() );
-        System.out.println("\t Nom Francais : " + classification.getDataMap().getNameFrench());
-        System.out.println("\t Description : " + classification.getDataMap().getDescription() );
+        System.out.println("\t Nom Latin : " + classificationJSON.getDataMap().getNameLatin() );
+        System.out.println("\t Nom Francais : " + classificationJSON.getDataMap().getNameFrench());
+        System.out.println("\t Description : " + classificationJSON.getDataMap().getDescription() );
 
-        return classification;
+        return classificationJSON;
     }
-
-
 
     public HttpResponse getFieldsFromNodeId(int nodeId) throws ClientProtocolException,
             IOException {
@@ -291,7 +285,6 @@ public class DorisAPI_JSONDATABindingHelper {
 
         return response;
     }
-
 
     public HttpResponse getFieldsFromObjectId(int objectId) throws ClientProtocolException,
             IOException {

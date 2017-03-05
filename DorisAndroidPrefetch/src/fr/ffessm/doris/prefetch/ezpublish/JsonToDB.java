@@ -278,23 +278,7 @@ public class JsonToDB {
             );
         }
 
-/*
-                 group":{"type":"ezobjectrelation","identifier":"group","value":"48883","id":947887,"classattribute_id":479}," +
-                ""embranchement_taxon":{"type":"ezobjectrelation","identifier":"embranchement_taxon","value":"1081"," ""id":947888,"classattribute_id":480},
-                "sous_embranchement_taxon":{"type":"ezobjectrelation","identifier":"sous_embranchement_taxon","""value":null,"id":947889,"classattribute_id":481}," +
-                ""super_classe_taxon":{"type":"ezobjectrelation","identifier":"super_classe_taxon","value":null,"id":947890,"classattribute_id":482}," +
-                ""classe_taxon":{"type":"ezobjectrelation","identifier":"classe_taxon","value":"1177","id":947891,"classattribute_id":483}," +
-                ""sous_classe_taxon":{"type":"ezobjectrelation","identifier":"sous_classe_taxon","value":"1225","id":947892,"classattribute_id":484},
-                "super_ordre_taxon":{"type":"ezobjectrelation","identifier":"super_ordre_taxon","value":null,"id":947893,"classattribute_id":485}," +
-                ""ordre_taxon":{"type":"ezobjectrelation","identifier":"ordre_taxon","value":"1226","id":947894,"classattribute_id":486},
-                "sous_ordre_taxon":{"type":"ezobjectrelation","identifier":"sous_ordre_taxon","value":"1561","id":947895,"classattribute_id":487}," +
-                ""famille_taxon":{"type":"ezobjectrelation","identifier":"famille_taxon","value":"1563","id":947896,"classattribute_id":488}," +
-                ""sous_famille_taxon":{"type":"ezobjectrelation","identifier":"sous_famille_taxon","value":null,"id":947897,"classattribute_id":489}," +
-                ""genre":{"type":"ezstring","identifier":"genre","value":"Eunicella","id":947899,"classattribute_id":546},"espece":{"type":"ezstring"," +
-                ""identifier":"espece","value":"verrucosa","id":947900,"classattribute_id":538}
-*/
-
-        log.debug("getClassificationFicheFromJSONEspece - classificationFiche().getId() : " + classificationFiche.get(0).getClassification().getId());
+        log.debug("getClassificationFicheFromJSONEspece - classificationFiche().getNumeroDoris() : " + classificationFiche.get(0).getClassification().getNumeroDoris());
         log.debug("getClassificationFicheFromJSONEspece - classificationFiche().getTermeFrancais() : " + classificationFiche.get(0).getClassification().getTermeFrancais());
         return classificationFiche;
     }
@@ -303,9 +287,10 @@ public class JsonToDB {
     /* * * * * * * * * * * *
     Classification
     * * * * * * * * * * * * */
-    public Classification getClassificationFromJSONClassification(fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification jsonClassification){
+    public Classification getClassificationFromJSONClassification(int jsonObjectId, String classificationNiveau, fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification jsonClassification){
         Classification classification = new Classification (
-                jsonClassification.getClassIdentifier(),
+                jsonObjectId,
+                classificationNiveau,
                 jsonClassification.getDataMap().getNameFrench(),
                 jsonClassification.getDataMap().getNameLatin(),
                 jsonClassification.getDataMap().getDescription()
