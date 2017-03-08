@@ -94,6 +94,8 @@ public class PrefetchGroupes {
         this.nbFichesParRequetes = nbFichesParRequetes;
     }
 
+    /* TODO : Ici en Durs mais devraient être récupérés avec la Classification */
+
     public int prefetchV4() {
         log.debug("prefetchV4() - début");
 

@@ -475,6 +475,8 @@ public class PrefetchDorisWebSite {
             */
 
             // - - - Classification - - -
+            /* Fait au fur et à mesure du traitement des fiches */
+            /*
             nbMaxFichesATraiter = 10;
             nbFichesParRequetes = 50;
             PrefetchClassification classification = new PrefetchClassification(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
@@ -482,6 +484,7 @@ public class PrefetchDorisWebSite {
                 log.debug("doMain() - Erreur Classification" );
                 System.exit(1);
             }
+            */
             /*
             ErrorCollector.getInstance().dumpErrorsAsJUnitFile(PrefetchConstants.DOSSIER_TESTS + "/dorisSite_glossaire_testsuites.xml");
             */

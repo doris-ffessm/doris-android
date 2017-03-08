@@ -15,6 +15,7 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
+import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.bibliographie.Bibliographie;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
@@ -27,6 +28,10 @@ public class JsonToDB {
 	public static String JSON_IMAGE_PREFIX = "var/doris/storage/images/images/";
 
     public static Log log = LogFactory.getLog(JsonToDB.class);
+
+    private static Common_Outils commonOutils = new Common_Outils();
+
+
     /* * * * * * * * * * * *
         Photos des Espèces
      * * * * * * * * * * * * */
@@ -49,16 +54,27 @@ public class JsonToDB {
     /* * * * * * * * * * * *
     Participants
     * * * * * * * * * * * * */
-    public Participant getParticipantFromJSONTerme(Utilisateur jsonUtilisateur){
+    public Participant getParticipantFromJSONUtil(Utilisateur jsonUtilisateur){
+        log.debug("getParticipantFromJSONUtil - Début");
+        log.debug("getParticipantFromJSONUtil : " + jsonUtilisateur.getFields().getFirstName().getValue());
+        log.debug("getParticipantFromJSONUtil : " + jsonUtilisateur.getFields().getDescription().getValue());
+        log.debug("getParticipantFromJSONUtil : " + commonOutils.remplacementBalises(jsonUtilisateur.getFields().getDescription().getValue(), true));
+
         Participant utilisateur = new Participant(
                         jsonUtilisateur.getFields().getFirstName().getValue() + " " + jsonUtilisateur.getFields().getLastName().getValue(),
                         Integer.parseInt(jsonUtilisateur.getFields().getReference().getValue()),
                         jsonUtilisateur.getFields().getImage().getValue(),
                         jsonUtilisateur.getFields().getCorrectionMember().getValue(),
-                        jsonUtilisateur.getFields().getDescription().getValue()
+                        commonOutils.remplacementBalises(
+                                commonOutils.nettoyageBalises(
+                                    jsonUtilisateur.getFields().getDescription().getValue()
+                                )
+                            , true)
         );
+
         return utilisateur;
     }
+
 
 
     /* * * * * * * * * * * *
@@ -68,7 +84,11 @@ public class JsonToDB {
         DefinitionGlossaire terme = new DefinitionGlossaire(
                 Integer.parseInt(jsonTerme.getFields().getReference().getValue()),
                 jsonTerme.getFields().getTitle().getValue(),
-                jsonTerme.getFields().getDefinition().getValue(),
+                commonOutils.remplacementBalises(
+                        commonOutils.nettoyageBalises(
+                                jsonTerme.getFields().getDefinition().getValue()
+                        )
+                    , true),
                 jsonTerme.getFields().getIllustrations().getValue()
                 );
         return terme;
@@ -86,7 +106,11 @@ public class JsonToDB {
                 jsonOeuvre.getFields().getTitle().getValue(),
                 jsonOeuvre.getFields().getMainAuthor().getValue()+','+jsonOeuvre.getFields().getExtraAuthors().getValue(),
                 jsonOeuvre.getFields().getPublicationYear().getValue(),
-                jsonOeuvre.getFields().getExtraInfo().getValue(),
+                commonOutils.remplacementBalises(
+                        commonOutils.nettoyageBalises(
+                                jsonOeuvre.getFields().getExtraInfo().getValue()
+                        )
+                        , true),
                 jsonOeuvre.getFields().getCover().getValue(),
                 ""
         );
@@ -293,7 +317,11 @@ public class JsonToDB {
                 classificationNiveau,
                 jsonClassification.getDataMap().getNameFrench(),
                 jsonClassification.getDataMap().getNameLatin(),
-                jsonClassification.getDataMap().getDescription()
+                commonOutils.remplacementBalises(
+                        commonOutils.nettoyageBalises(
+                                jsonClassification.getDataMap().getDescription()
+                        )
+                        , true)
         );
         return classification;
     }

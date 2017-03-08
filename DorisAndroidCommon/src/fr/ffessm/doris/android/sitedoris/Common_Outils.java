@@ -73,6 +73,13 @@ public class Common_Outils {
 		texte = StringUtils.replace(texte, "<b>", "<strong>");
 		texte = StringUtils.replace(texte, "</b>", "</strong>");
 
+        texte = StringUtils.replace(texte, "&agrave;", "à");
+        texte = StringUtils.replace(texte, "&eacute;", "é");
+        texte = StringUtils.replace(texte, "&egrave;", "è");
+        texte = StringUtils.replace(texte, "&oelig;", "œ");
+        texte = StringUtils.replace(texte, "&rsquo;", "'");
+
+
 		//log.debug("nettoyageBalises() - 010");
 		
 		// Il faut nettoyer cette balise originale ...
@@ -113,18 +120,22 @@ public class Common_Outils {
 		// Je retire donc ici les paires de " qui sont à l'intérieure d'une autre paire de "
 		// et qui ne contiennent pas de = ? < >
 		texte = texte.replaceAll("(href=\"[^\"]*)\"([^\"=?<>]*)\"([^\"]*\")", "$1$2$3");
-		
+
 		//log.debug("nettoyageBalises() - 050");
-		
+
 		//Il arrive très souvent qu'une balise ouverte soit aussitôt refermée
 		// ce doit sans doute être dû à l'interface de saisie ou des outils utilisés en amont
 		// Toujours est-il que ça peut gêner ensuite, que ça fait perdre du temps et de la place
 		texte = texte.replaceAll("<strong></strong>|</strong><strong>|<em></em>|</em><em>|<i></i>|</i><i>", "");
 
 		texte = texte.replaceAll("<a href=\"http://[^>]*></a>", "");
-			
+
+        // On vire target=... des liens
+        texte = StringUtils.replace(texte, "<a target=\"_blank\" href=", "<a href=");
+
+
 		//log.debug("nettoyageBalises() - 060");
-		
+
 		// Suppression des textes masqués en étant écrit en blanc sur fond blanc
 		// <span style="color: #ffffff;">Vidéoris</span>
 		texte = texte.replaceAll("<span style=\"color: #ffffff;\">[^<>]*</span>", "");
@@ -151,12 +162,23 @@ public class Common_Outils {
 			//Italique
 			texte = texte.replaceAll("<em>|<i>", "{{i}}");
 			texte = texte.replaceAll("</em>|</i>", "{{/i}}");
-
 			//Souligné
 			texte = texte.replaceAll("<span style=\"text-decoration: underline;\">([^<>]*)</span>","{{s}}$1{{/s}}");
-			//Sauts de ligne
+            //Exposant
+            //TODO : On pourrait garder les exposants mais ne sachant pas encore faire, ils sont supprimés
+            texte = texte.replaceAll("<sup>([^<>]*)</sup>","$1");
+            //Souligné
+            //TODO : On pourrait garder les souligés mais ne sachant pas encore faire, ils sont supprimés
+            texte = texte.replaceAll("<u>([^<>]*)</u>","$1");
+
+            //Sauts de ligne
 			texte = StringUtils.replace(texte, "<br/>", "{{n/}}");
-			
+
+            // Remplacement de l'enchainement entre 2 paragraphe par un Saut de ligne
+            texte = StringUtils.replace(texte, "</p><p>", "{{n/}}");
+            texte = StringUtils.replace(texte, "<p>", "");
+            texte = StringUtils.replace(texte, "</p>", "");
+
 			//Lien vers autres fiches
 			texte = texte.replaceAll("<[^<]*fiche_numero=([0-9]*)\"[^>]*>([^<]*)</a>", "{{F:$1}}$2{{/F}}");
 			
@@ -164,8 +186,11 @@ public class Common_Outils {
 			texte = texte.replaceAll("([ >\\}'\\(])([^ >\\}'\\(]*)\\*", "$1{{D:$2}}$2{{/D}}");
 			//Image du Glossaire (elles sont dans le texte) - <img src="gestionenligne/diaporamaglo/16.jpg     ">
 			texte = texte.replaceAll("<img src=\"gestionenligne/diaporamaglo/([^\" >]*)[ ]*\">", "{{E:$1/}}");
-			
-			
+
+            //TODO : Permettre de faire des liens vers des Participants à DORIS
+            // Pour l'instant, on vire le lien
+            texte = texte.replaceAll("<a href=\"../contact_fiche.asp[^>]*>([^<]*)</a>", "$1");
+
 			//Lien vers site extérieur : oiseaux.net, fishbase.org, etc ...
 			texte = texte.replaceAll("<a href=\"http://([^\"]*)\"[^>]*>([^<]*)</a>", "{{A:$1}}$2{{/A}}");
 			
@@ -178,7 +203,7 @@ public class Common_Outils {
 			// ça ne semble arriver que pour ce cas, i.e. pas pour les termes du glossaire, l'italique etc..
 			texte = StringUtils.replace(texte, "{{/g}}{{/F}}", "{{/F}}{{/g}}");
 			texte = texte.replaceAll("\\{\\{F:([0-9]*)\\}\\}\\{\\{g\\}\\}", "{{g}}{{F:$1}}");
-			
+
 		} else {
 			texte = texte.replaceAll("<strong>|</strong>|<em>|</em>|<i>|</i>|<br/>", "");
 		}

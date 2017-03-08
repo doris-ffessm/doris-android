@@ -98,6 +98,8 @@ public class PrefetchClassification {
         this.nbFichesParRequetes = nbFichesParRequetes;
     }
 
+    /* Inutile Finalement car réalisé au fur et à mesure du traitement des fiches */
+    /* TODO : A SUPPRIMER LORS DU NETTOYAGE */
     public int prefetchV4() throws Exception {
         log.debug("prefetchV4() - début");
 
@@ -123,15 +125,17 @@ public class PrefetchClassification {
 
             log.debug("prefetchV4() - Classification :"+classificationFiche.getClassification().getId());
 
-            // Référence de l'Espèce dans le message JSON
+            // Récupération Classification sur le Site DORIS
             Classification classificationJSON = dorisAPI_JSONDATABindingHelper.getClassificationFieldsFromObjectId(classificationFiche.getClassification().getId());
-            final fr.ffessm.doris.android.datamodel.Classification classification = jsonToDB.getClassificationFromJSONClassification(classificationJSON);
 
+            final fr.ffessm.doris.android.datamodel.Classification classificationFinal = jsonToDB.getClassificationFromJSONClassification(
+                    classificationFiche.getClassification().getId(),classificationFiche.getClassification().getNiveau(), classificationJSON);
+            log.debug("prefetchV4() - Classification :"+classificationFinal.getId());
             TransactionManager.callInTransaction(connectionSource,
                     new Callable<Void>() {
                         public Void call() throws Exception {
 
-                            dbContext.classificationDao.create(classification);
+                            dbContext.classificationDao.create(classificationFinal);
 
                             return null;
                         }

@@ -222,23 +222,43 @@ public class PrefetchFiches {
                 /* Ajout aux Classifications si pas encore dans la liste
                  */
                 log.debug("prefetchV4() - Classification de la fiche");
+                /* Initialement on a sur la fiche que le niveau et la référence de la Classification */
                 List<ClassificationFiche> classificationsFiche = jsonToDB.getClassificationFicheFromJSONEspece(especeJSON);
 
                 for (ClassificationFiche classificationFiche : classificationsFiche) {
                     log.debug("prefetchV4() - classification : " + classificationFiche.getClassification());
-                    log.debug("prefetchV4() - classification.getId() : " + classificationFiche.getClassification().getId());
+                    log.debug("prefetchV4() - classification.getNiveau() : " + classificationFiche.getClassification().getNiveau());
+                    log.debug("prefetchV4() - classification.getNumeroDoris() : " + classificationFiche.getClassification().getNumeroDoris());
 
-                    classificationFiche.setFiche(espece);
-                    /*Finalement on ne le fera pas là, mais on fera un select distinct dans la table classificationFiche
-                    log.debug("prefetchV4() - listeClassification.get(classificationFiche.getClassification().getId()) : " + listeClassification.get(classificationFiche.getClassification().getId()));
-                    if ( listeClassification.get(classificationFiche.getClassification().getId()) == null ) {
-                        listeClassification.put(classificationFiche.getClassification().getId(),classificationFiche.getClassification());
+                    /* Si on ne trouve pas la Classification dans la Base on l'ajoute, sinon on l'utilise */
+                    Classification classification = dbContext.classificationDao.queryForFirst(
+                            dbContext.classificationDao.queryBuilder().where().eq("numeroDoris", classificationFiche.getClassification().getNumeroDoris()).prepare()
+                    );
+                    if (classification == null) {
+                        log.debug("prefetchV4() - classification par encore dans la base");
+
+                        fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification classificationJSON = dorisAPI_JSONDATABindingHelper.getClassificationFieldsFromObjectId(classificationFiche.getClassification().getNumeroDoris());
+                        classification = jsonToDB.getClassificationFromJSONClassification(
+                                classificationFiche.getClassification().getNumeroDoris(), classificationFiche.getClassification().getNiveau(), classificationJSON);
+
+                        final Classification classificationFinal = classification;
+                        TransactionManager.callInTransaction(connectionSource,
+                                new Callable<Void>() {
+                                    public Void call() throws Exception {
+
+                                        dbContext.classificationDao.create(classificationFinal);
+
+                                        return null;
+                                    }
+                                });
                     }
-                    */
+
+                    log.debug("prefetchV4() - classification : " + classification.getNumeroDoris() + " - " + classification.getTermeFrancais());
+                    /* on a ici la Classification que l'on va associer à la Fiche */
+
+                    final ClassificationFiche classification_final = new ClassificationFiche(espece, classification, classificationFiche.getNumOrdre());
 
                     // Enregistrement de la Classification de la Fiche
-                    final ClassificationFiche classification_final = classificationFiche;
-
                     TransactionManager.callInTransaction(connectionSource,
                             new Callable<Void>() {
                                 public Void call() throws Exception {
@@ -254,30 +274,6 @@ public class PrefetchFiches {
 
         }
 
-        /* Finalement on ne le fera pas là, mais on fera un select distinct dans la table classificationFiche
-
-
-        log.debug("prefetchV4() - Les niveaux de la Classification");
-        for(Map.Entry<Integer, Classification> mpClassification : listeClassification.entrySet()) {
-
-            final int cle_final = mpClassification.getKey();
-            log.debug("prefetchV4() - classification_final.getKey() : " + cle_final);
-
-            final Classification classification_final = mpClassification.getValue();
-            log.debug("prefetchV4() - classification_final : " + classification_final);
-            log.debug("prefetchV4() - classification_final : " + classification_final.getId() + " - " + classification_final.);
-
-            TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-
-                            dbContext.classificationDao.create(classification_final);
-
-                            return null;
-                        }
-                    });
-        }
-    */
         log.debug("prefetchV4() - fin");
         return 1;
     }
