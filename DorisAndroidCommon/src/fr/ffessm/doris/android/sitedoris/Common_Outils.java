@@ -262,10 +262,7 @@ public class Common_Outils {
 		return texteNettoye;
 	}
     
- 
 
-
-    
     /* *********************************************************************
      * Permet d'enlever les accents, cédilles et autres
      *  ********************************************************************* */

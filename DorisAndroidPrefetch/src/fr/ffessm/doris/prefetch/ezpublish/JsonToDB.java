@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.Classification;
@@ -112,7 +113,11 @@ public class JsonToDB {
                         )
                         , true),
                 jsonOeuvre.getFields().getCover().getValue(),
-                ""
+                (commonOutils.formatStringNormalizer(
+                        jsonOeuvre.getFields().getMainAuthor().getValue()+','+jsonOeuvre.getFields().getExtraAuthors().getValue()
+                                + " "
+                                + jsonOeuvre.getFields().getTitle().getValue())
+                ).toLowerCase(Locale.FRENCH)
         );
         return oeuvre;
     }
@@ -281,8 +286,24 @@ public class JsonToDB {
 
         // SectionFiche(int numOrdre, java.lang.String titre, java.lang.String texte)
 
-        if (jsonEspece.getFields().getOthersNomCommunFr().getValue() != "") { autresDenominations.add(new AutreDenomination(jsonEspece.getFields().getOthersNomCommunFr().getValue(), "FR")); }
-        if (jsonEspece.getFields().getNomCommunInter().getValue() != "") { autresDenominations.add(new AutreDenomination(jsonEspece.getFields().getNomCommunInter().getValue(), "")); }
+        if (jsonEspece.getFields().getOthersNomCommunFr().getValue() != "") {
+            autresDenominations.add(new AutreDenomination(
+                    commonOutils.remplacementBalises(
+                            commonOutils.nettoyageBalises(
+                                    jsonEspece.getFields().getOthersNomCommunFr().getValue()
+                            )
+                            , true),
+                    "FR"));
+        }
+        if (jsonEspece.getFields().getNomCommunInter().getValue() != "") {
+            autresDenominations.add(new AutreDenomination(
+                    commonOutils.remplacementBalises(
+                            commonOutils.nettoyageBalises(
+                                    jsonEspece.getFields().getNomCommunInter().getValue()
+                            )
+                            , true),
+                    ""));
+        }
 
         return autresDenominations;
     }
