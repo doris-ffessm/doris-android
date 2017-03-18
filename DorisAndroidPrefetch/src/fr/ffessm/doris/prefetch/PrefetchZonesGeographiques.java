@@ -82,13 +82,11 @@ public class PrefetchZonesGeographiques {
 	private ConnectionSource connectionSource = null;
 		
 	private ActionKind action;
-	private int nbMaxFichesATraiter;
-	
+
 	public PrefetchZonesGeographiques(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
 		this.action = action;
-		this.nbMaxFichesATraiter = nbMaxFichesATraiter;
 	}
 
 

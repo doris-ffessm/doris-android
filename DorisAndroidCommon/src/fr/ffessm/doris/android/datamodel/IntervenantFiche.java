@@ -111,10 +111,15 @@ public class IntervenantFiche {
 		super();
 		this.participant = participant;
 		this.roleIntervenant = roleIntervenant;
-	} 
-	
-	
-	// End of user code
+	}
+
+    public IntervenantFiche(Fiche fiche, Participant participant, int roleIntervenant) {
+        super();
+        this.fiche = fiche;
+        this.participant = participant;
+        this.roleIntervenant = roleIntervenant;
+    }
+    // End of user code
 	
 	public IntervenantFiche() {} // needed by ormlite
 	public IntervenantFiche(int roleIntervenant) {

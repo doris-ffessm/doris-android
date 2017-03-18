@@ -106,7 +106,7 @@ public class PrefetchIntervenants {
         DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper();
 
         // TODO : Il faudrait mettre un While ici
-        int nbFichesDORIS = 99;
+        int nbFichesDORIS = nbMaxFichesATraiter;
 
         int count = 0;
 
