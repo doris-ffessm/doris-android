@@ -15,19 +15,25 @@ public class ObjNameNodeId {
 
 
     private Integer nodeId;
+    private Integer objectId;
     private String objectName;
 
 	public ObjNameNodeId(Integer nodeId){
         this.nodeId = nodeId;
 	}
 
-    public ObjNameNodeId(Integer nodeId, String objectName){
+    public ObjNameNodeId(Integer nodeId, Integer objectId, String objectName){
         this.nodeId = nodeId;
+        this.objectId = objectId;
         this.objectName = objectName;
     }
 
     public Integer getNodeId(){
         return nodeId;
+    }
+
+    public Integer getObjectId(){
+        return objectId;
     }
 
     public String getObjectName(){

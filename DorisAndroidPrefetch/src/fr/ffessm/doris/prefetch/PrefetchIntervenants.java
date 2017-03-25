@@ -125,7 +125,7 @@ public class PrefetchIntervenants {
 
                 // Référence de l'intervenant dans le message JSON
                 Utilisateur utilisateurJSON = dorisAPI_JSONDATABindingHelper.getUtilisateurFieldsFromNodeId(intervenantNodeId.getNodeId().intValue());
-                final Participant intervenant = jsonToDB.getParticipantFromJSONUtil(utilisateurJSON);
+                final Participant intervenant = jsonToDB.getParticipantFromJSONUtil(intervenantNodeId.getObjectId().intValue(), utilisateurJSON);
 
                 TransactionManager.callInTransaction(connectionSource,
                         new Callable<Void>() {

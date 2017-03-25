@@ -288,7 +288,7 @@ public class PrefetchFiches {
                 /* * * * * * * * * * * *
                     Doridiens ayant participés à la rédaction de la fiche
                 * * * * * * * * * * * * */
-                log.debug("prefetchV4() - Doridiens ayant participés à la rédaction de la fiche");
+                log.debug("prefetchV4() - Doridiens ayant participés à la rédaction de la fiche :" + especeJSON.getFields().getVerificateurs().getValue());
 
                 for(String numeroVerificateur : especeJSON.getFields().getVerificateurs().getValue().split("-")){
                     try{

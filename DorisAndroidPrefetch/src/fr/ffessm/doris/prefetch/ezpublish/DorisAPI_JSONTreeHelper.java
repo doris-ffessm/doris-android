@@ -164,7 +164,7 @@ public class DorisAPI_JSONTreeHelper {
 			
 			log.debug("valeur noeud : "+objectMapper.writeValueAsString(nodeInList));
 
-			result.add(new ObjNameNodeId(nodeInList.path("nodeId").asInt(),nodeInList.path("objectName").asText()));
+			result.add(new ObjNameNodeId(nodeInList.path("nodeId").asInt(),nodeInList.path("objectId").asInt(),nodeInList.path("objectName").asText()));
 		}
 		log.debug("nb noeud :"+result.size());
 	

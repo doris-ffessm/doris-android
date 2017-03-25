@@ -414,7 +414,7 @@ public class PrefetchDorisWebSite {
             */
 
             // - - - Participants - - -
-            nbMaxFichesATraiter = 1200;
+            nbMaxFichesATraiter = 5000;
             nbFichesParRequetes = 50;
             PrefetchIntervenants intervenants = new PrefetchIntervenants(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
             if ( intervenants.prefetchV4() == -1 ) {
@@ -427,7 +427,7 @@ public class PrefetchDorisWebSite {
             */
 
             // - - - Glossaire - - -
-            nbMaxFichesATraiter = 200;
+            nbMaxFichesATraiter = 100;
             nbFichesParRequetes = 50;
             PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
             if ( glossaire.prefetchV4() == -1 ) {
@@ -464,6 +464,9 @@ public class PrefetchDorisWebSite {
             */
 
             // - - - Liste des Fiches - - -
+            nbMaxFichesATraiter = 100;
+            nbFichesParRequetes = 50;
+
             PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes,
                                                                 groupes.listeGroupes, intervenants.listeParticipants);
             if ( listeFiches.prefetchV4() == -1 ) {

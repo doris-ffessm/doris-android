@@ -156,7 +156,7 @@ public class DorisAPI_JSONDATABindingHelper {
 
         DefaultHttpClient client = new DefaultHttpClient();
         String uri = DorisOAuth2ClientCredentials.getServerNodeUrlTousLesChamps( String.valueOf(especeNodeId) );
-        log.debug("getSpecieFieldsFromNodeId - uri : " + uri);
+        //log.debug("getSpecieFieldsFromNodeId - uri : " + uri);
 
         if (credent != null && debug) {
             DorisAPIConnexionHelper.printJSON(credent, uri);
@@ -175,7 +175,7 @@ public class DorisAPI_JSONDATABindingHelper {
             uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
         }
 
-        log.debug("getSpecieFieldsFromNodeId - uri & oauth_token : " + uri);
+        //log.debug("getSpecieFieldsFromNodeId - uri & oauth_token : " + uri);
 
         HttpGet getHttpPage = new HttpGet(uri);
         if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
@@ -183,7 +183,7 @@ public class DorisAPI_JSONDATABindingHelper {
         }
 
         HttpResponse response = client.execute(getHttpPage);
-        log.debug("getSpecieFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
+        //log.debug("getSpecieFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
 
         ObjectMapper objectMapper = new ObjectMapper();
         Espece espece = new Espece();
@@ -240,17 +240,17 @@ public class DorisAPI_JSONDATABindingHelper {
             e.printStackTrace();
         }
 
-        System.out.println("\t Nom Latin : " + classificationJSON.getDataMap().getNameLatin() );
-        System.out.println("\t Nom Francais : " + classificationJSON.getDataMap().getNameFrench());
-        System.out.println("\t Description : " + classificationJSON.getDataMap().getDescription() );
+        //System.out.println("\t Nom Latin : " + classificationJSON.getDataMap().getNameLatin() );
+        //System.out.println("\t Nom Francais : " + classificationJSON.getDataMap().getNameFrench());
+        //System.out.println("\t Description : " + classificationJSON.getDataMap().getDescription() );
 
         return classificationJSON;
     }
 
     public HttpResponse getFieldsFromNodeId(int nodeId) throws ClientProtocolException,
             IOException {
-        log.debug("getFieldsFromNodeId - Début");
-        log.debug("getFieldsFromNodeId - nodeId : " + nodeId);
+        //log.debug("getFieldsFromNodeId - Début");
+        //log.debug("getFieldsFromNodeId - nodeId : " + nodeId);
 
         DefaultHttpClient client = new DefaultHttpClient();
         String uri = DorisOAuth2ClientCredentials.getServerNodeUrlTousLesChamps( String.valueOf(nodeId) );
@@ -273,7 +273,7 @@ public class DorisAPI_JSONDATABindingHelper {
             uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
         }
 
-        log.debug("getFieldsFromNodeId - uri & oauth_token : " + uri);
+        //log.debug("getFieldsFromNodeId - uri & oauth_token : " + uri);
 
         HttpGet getHttpPage = new HttpGet(uri);
         if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
@@ -281,19 +281,19 @@ public class DorisAPI_JSONDATABindingHelper {
         }
 
         HttpResponse response = client.execute(getHttpPage);
-        log.debug("getFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
+        //log.debug("getFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
 
         return response;
     }
 
     public HttpResponse getFieldsFromObjectId(int objectId) throws ClientProtocolException,
             IOException {
-        log.debug("getFieldsFromObjectId - Début");
-        log.debug("getFieldsFromObjectId - objectId : " + objectId);
+        //log.debug("getFieldsFromObjectId - Début");
+        //log.debug("getFieldsFromObjectId - objectId : " + objectId);
 
         DefaultHttpClient client = new DefaultHttpClient();
         String uri = DorisOAuth2ClientCredentials.getServerObjectUrlTousLesChamps( String.valueOf(objectId) );
-        log.debug("getFieldsFromObjectId - uri : " + uri);
+        //log.debug("getFieldsFromObjectId - uri : " + uri);
 
         if (credent != null && debug) {
             DorisAPIConnexionHelper.printJSON(credent, uri);
@@ -312,7 +312,7 @@ public class DorisAPI_JSONDATABindingHelper {
             uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
         }
 
-        log.debug("getFieldsFromObjectId - uri & oauth_token : " + uri);
+        //log.debug("getFieldsFromObjectId - uri & oauth_token : " + uri);
 
         HttpGet getHttpPage = new HttpGet(uri);
         if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
@@ -320,7 +320,7 @@ public class DorisAPI_JSONDATABindingHelper {
         }
 
         HttpResponse response = client.execute(getHttpPage);
-        log.debug("getFieldsFromObjectId - response.getStatusLine() : "+response.getStatusLine());
+        //log.debug("getFieldsFromObjectId - response.getStatusLine() : "+response.getStatusLine());
 
         return response;
     }

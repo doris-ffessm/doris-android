@@ -55,15 +55,17 @@ public class JsonToDB {
     /* * * * * * * * * * * *
     Participants
     * * * * * * * * * * * * */
-    public Participant getParticipantFromJSONUtil(Utilisateur jsonUtilisateur){
+    public Participant getParticipantFromJSONUtil(int intervenantNodeId, Utilisateur jsonUtilisateur){
         log.debug("getParticipantFromJSONUtil - Début");
-        log.debug("getParticipantFromJSONUtil : " + jsonUtilisateur.getFields().getFirstName().getValue());
-        log.debug("getParticipantFromJSONUtil : " + jsonUtilisateur.getFields().getDescription().getValue());
-        log.debug("getParticipantFromJSONUtil : " + commonOutils.remplacementBalises(jsonUtilisateur.getFields().getDescription().getValue(), true));
+        log.debug("getParticipantFromJSONUtil - intervenantNodeId : " + intervenantNodeId);
+        log.debug("getParticipantFromJSONUtil - getReference() : " + jsonUtilisateur.getFields().getReference().getValue());
+        log.debug("getParticipantFromJSONUtil - getFirstName() : " + jsonUtilisateur.getFields().getFirstName().getValue());
+        log.debug("getParticipantFromJSONUtil - getDescription() : " + jsonUtilisateur.getFields().getDescription().getValue());
+        log.debug("getParticipantFromJSONUtil - getDescription(). nettoyée : " + commonOutils.remplacementBalises(jsonUtilisateur.getFields().getDescription().getValue(), true));
 
         Participant utilisateur = new Participant(
                         jsonUtilisateur.getFields().getFirstName().getValue() + " " + jsonUtilisateur.getFields().getLastName().getValue(),
-                        Integer.parseInt(jsonUtilisateur.getFields().getReference().getValue()),
+                        intervenantNodeId,
                         jsonUtilisateur.getFields().getImage().getValue(),
                         jsonUtilisateur.getFields().getCorrectionMember().getValue(),
                         commonOutils.remplacementBalises(
