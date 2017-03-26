@@ -414,7 +414,7 @@ public class PrefetchDorisWebSite {
             */
 
             // - - - Participants - - -
-            nbMaxFichesATraiter = 5000;
+            nbMaxFichesATraiter = 100;
             nbFichesParRequetes = 50;
             PrefetchIntervenants intervenants = new PrefetchIntervenants(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
             if ( intervenants.prefetchV4() == -1 ) {

@@ -3,7 +3,11 @@ package fr.ffessm.doris.prefetch.ezpublish;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,7 +35,9 @@ public class JsonToDB {
     public static Log log = LogFactory.getLog(JsonToDB.class);
 
     private static Common_Outils commonOutils = new Common_Outils();
+    DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper();
 
+    private static DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     /* * * * * * * * * * * *
         Photos des Espèces
@@ -84,6 +90,26 @@ public class JsonToDB {
     Glossaire
     * * * * * * * * * * * * */
     public DefinitionGlossaire getDefinitionGlossaireFromJSONTerme(Glossaire jsonTerme){
+
+
+        //log.debug("getDefinitionGlossaireFromJSONTerme() - listeImages : "+jsonTerme.getFields().getIllustrations().getValue());
+        String listeImages = "";
+        for(String possibleImageId : jsonTerme.getFields().getIllustrations().getValue().split("\\&")){
+            if (! possibleImageId.isEmpty()) {
+                try {
+                    int imageId = Integer.parseInt(possibleImageId.split("\\|")[0]);
+                    //log.debug("getDefinitionGlossaireFromJSONTerme() - imageId : "+imageId);
+                    // récupère les données associées à l'image
+                    listeImages += dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId).getDataMap().getImage() + ";";
+
+
+                } catch (IOException io) {
+                    // ignore les entrées invalides
+                }
+            }
+        }
+        //log.debug("getDefinitionGlossaireFromJSONTerme() - listeImages : "+listeImages);
+
         DefinitionGlossaire terme = new DefinitionGlossaire(
                 Integer.parseInt(jsonTerme.getFields().getReference().getValue()),
                 jsonTerme.getFields().getTitle().getValue(),
@@ -92,7 +118,7 @@ public class JsonToDB {
                                 jsonTerme.getFields().getDefinition().getValue()
                         )
                     , true),
-                jsonTerme.getFields().getIllustrations().getValue()
+                listeImages
                 );
         return terme;
     }
@@ -130,18 +156,53 @@ public class JsonToDB {
     * * * * * * * * * * * * */
     public Fiche getFicheFromJSONEspece(ObjNameNodeId ficheNodeId, Espece jsonEspece){
 
-        //
+        // Statut de la Fiche
+        // Proposée ; Réservée ; Terminée ; Publiée ; A corriger
+        // On convertit à la sauce de la version précédente :
+        //4 : Fiche Publiée - 1, 2, 3 : En cours de Rédaction - 5 : Fiche Proposée
+        log.debug("getFicheFromJSONEspece() - statut : "+jsonEspece.getFields().getState().getValue());
+        int etatFiche;
+        switch (jsonEspece.getFields().getState().getValue()) {
+            case "Proposée" :  etatFiche = 5;
+                break;
+            case "Réservée" : etatFiche = 1;
+                break;
+            case "A corriger" : etatFiche = 2;
+                break;
+            case "Terminée" : etatFiche = 3;
+                break;
+            case "Publiée" : etatFiche = 4;
+                break;
+            default: etatFiche = 5;
+                break;
+        }
+        // Espèce Réglementée / Espèce "dangeureuse"
         String pictogrammes = "";
-        if (jsonEspece.getFields().getReglementation().getValue() == "1") pictogrammes += "0;";
+        //TODO : Vérifier fonctionnent et cohérence avec la section créée
+        log.debug("getFicheFromJSONEspece() - reglementation : "+jsonEspece.getFields().getReglementation().getValue());
+        if (jsonEspece.getFields().getReglementation().getValue().replaceAll("<[^>]*>","") != "") pictogrammes += "0;";
+
+        //TODO : Trouver un exemple pour vérifier
+        log.debug("getFicheFromJSONEspece() - danger : "+jsonEspece.getFields().getDanger().getValue());
         if (jsonEspece.getFields().getDanger().getValue() == "1") pictogrammes += "1;";
+
+        log.debug("getFicheFromJSONEspece() - pictogrammes : "+pictogrammes);
+
+        // Convertions des Dates
+        String datePublication = "";
+        if (jsonEspece.getFields().getPublicationDate().getValue() != "") datePublication = dateFormat.format(new Date((long) Integer.parseInt(jsonEspece.getFields().getPublicationDate().getValue()) * 1000) );
+
+        String dateChantier = "";
+        if (jsonEspece.getFields().getChantierDate().getValue() != "") dateChantier = dateFormat.format(new Date((long) Integer.parseInt(jsonEspece.getFields().getChantierDate().getValue()) * 1000) );
+
 
         Fiche fiche = new Fiche(
                 "{{i}}"+ficheNodeId.getObjectName()+"{{/i}}"+" "+jsonEspece.getFields().getDiscoverer().getValue(),
                 jsonEspece.getFields().getNomCommunFr().getValue(),
                 Integer.parseInt(jsonEspece.getFields().getReference().getValue()),
-                1,
-                jsonEspece.getFields().getPublicationDate().getValue(),
-                jsonEspece.getFields().getChantierDate().getValue(),
+                etatFiche,
+                datePublication,
+                dateChantier,
                 "",
                 "",
                 pictogrammes
@@ -263,9 +324,18 @@ public class JsonToDB {
                         , true)
         )); }
 
+        // Réglementation
+        if (jsonEspece.getFields().getReglementation().getValue() != "") {sectionsFiche.add(new SectionFiche(350,"Réglementation",
+                commonOutils.remplacementBalises(
+                        commonOutils.nettoyageBalises(
+                                jsonEspece.getFields().getReglementation().getValue()
+                        )
+                        , true)
+        )); }
+
         // Références Bibliographiques
         //if (jsonEspece.getFields().getBiblioRef().getValue() != "") {sectionsFiche.add(new SectionFiche(350,"Codes des Références bibliographiques",jsonEspece.getFields().getBiblioRef().getValue())); }
-        if (jsonEspece.getFields().getOthersBiblioRef().getValue() != "") {sectionsFiche.add(new SectionFiche(350,"Références bibliographiques",
+        if (jsonEspece.getFields().getOthersBiblioRef().getValue() != "") {sectionsFiche.add(new SectionFiche(360,"Références bibliographiques",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getOthersBiblioRef().getValue()

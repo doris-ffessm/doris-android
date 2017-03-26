@@ -140,11 +140,9 @@ public class PrefetchFiches {
         DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper();
 
         // TODO : Il faudrait mettre un While ici
-        int nbFichesDORIS = 99;
+        int nbFichesDORIS = nbMaxFichesATraiter;
 
         int count = 0;
-
-        /* On va mettre la */
 
         for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
 
@@ -166,61 +164,10 @@ public class PrefetchFiches {
                 String textePourRechercheRapide = espece.getNomCommun() + " " +
                         espece.getNomScientifique().replaceAll("\\{\\{[^\\{]*\\}\\}", "").replaceAll("\\([^\\(]*\\)", "");
 
-                /* Héritée de la manière dont étaient stockées les données dans le Version 3 du Site,
-                On enregistre les différentes sections de la fiche dans l'ordre d'affichage de manière + "générique" que la verson 4 ne le fait
-                 */
-                log.debug("prefetchV4() - 'Sections' de la fiche");
-                List<SectionFiche> sectionsFiche = jsonToDB.getSectionsFicheFromJSONEspece(especeJSON);
-                for (SectionFiche sectionFiche : sectionsFiche) {
-
-                    sectionFiche.setFiche(espece);
-                    final SectionFiche sectionFiche_final = sectionFiche;
-
-                    TransactionManager.callInTransaction(connectionSource,
-                            new Callable<Void>() {
-                                public Void call() throws Exception {
-
-                                    dbContext.sectionFicheDao.create(sectionFiche_final);
-
-                                    return null;
-                                }
-                            });
-
-                }
-             /*
-                SectionFiche contenu = new SectionFiche(100+positionSectionDansFiche, dernierTitreSection, texte);
-							contenu.setFiche(this);
-							_contextDB.sectionFicheDao.create(contenu);
-            */
-
-
-            /* Héritée de la manière dont étaient stockées les données dans le Version 3 du Site,
-                On enregistre les dénominations de la fiche dans une table dédiée
-            */
-                log.debug("prefetchV4() - Autres dénominations");
-                List<AutreDenomination> autresDenominations = jsonToDB.getAutresDenominationFicheFromJSONEspece(especeJSON);
-                for (AutreDenomination autreDenomination : autresDenominations) {
-                    textePourRechercheRapide += " " + autreDenomination.getDenomination().replaceAll("\\([^\\(]*\\)", "");
-
-                    autreDenomination.setFiche(espece);
-                    final AutreDenomination autreDenomination_final = autreDenomination;
-
-                    TransactionManager.callInTransaction(connectionSource,
-                            new Callable<Void>() {
-                                public Void call() throws Exception {
-
-                                    dbContext.autreDenominationDao.create(autreDenomination_final);
-
-                                    return null;
-                                }
-                            });
-
-                }
-
                 // Préparation Texte pour recherche rapide
                 espece.setTextePourRechercheRapide(
-                    (commonOutils.formatStringNormalizer(textePourRechercheRapide)
-                    ).toLowerCase(Locale.FRENCH)
+                        (commonOutils.formatStringNormalizer(textePourRechercheRapide)
+                        ).toLowerCase(Locale.FRENCH)
                 );
 
                 // Enregistrement dans la Base
@@ -233,6 +180,56 @@ public class PrefetchFiches {
                                 return null;
                             }
                         });
+
+
+                /* Héritée de la manière dont étaient stockées les données dans le Version 3 du Site,
+                On enregistre les différentes sections de la fiche dans l'ordre d'affichage de manière + "générique" que la verson 4 ne le fait
+                 */
+                log.debug("prefetchV4() - 'Sections' de la fiche");
+                List<SectionFiche> sectionsFiche = jsonToDB.getSectionsFicheFromJSONEspece(especeJSON);
+                for (SectionFiche sectionFiche : sectionsFiche) {
+
+                    sectionFiche.setFiche(espece);
+                    final SectionFiche sectionFiche_final = sectionFiche;
+                    log.debug("prefetchV4() - sectionFiche_final.getFiche() : "+sectionFiche_final.getFiche().getNumeroFiche());
+
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
+
+                                    dbContext.sectionFicheDao.create(sectionFiche_final);
+
+                                    return null;
+                                }
+                            });
+
+                }
+
+            /* Héritée de la manière dont étaient stockées les données dans le Version 3 du Site,
+                On enregistre les dénominations de la fiche dans une table dédiée
+            */
+                log.debug("prefetchV4() - Autres dénominations");
+                List<AutreDenomination> autresDenominations = jsonToDB.getAutresDenominationFicheFromJSONEspece(especeJSON);
+                for (AutreDenomination autreDenomination : autresDenominations) {
+                    //log.debug("prefetchV4() - autreDenomination : "+autreDenomination.getDenomination());
+                    if (! autreDenomination.getDenomination().contentEquals("<html />")) {
+                        textePourRechercheRapide += " " + autreDenomination.getDenomination().replaceAll("\\([^\\(]*\\)", "");
+
+                        autreDenomination.setFiche(espece);
+                        final AutreDenomination autreDenomination_final = autreDenomination;
+
+                        TransactionManager.callInTransaction(connectionSource,
+                                new Callable<Void>() {
+                                    public Void call() throws Exception {
+
+                                        dbContext.autreDenominationDao.create(autreDenomination_final);
+
+                                        return null;
+                                    }
+                                });
+                    }
+                }
+
 
                 /* Ajout aux Classifications si pas encore dans la liste
                  */

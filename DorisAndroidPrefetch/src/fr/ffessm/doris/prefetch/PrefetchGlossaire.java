@@ -123,7 +123,6 @@ public class PrefetchGlossaire {
                     break;
                 }
 
-                // Référence de l'Espèce dans le message JSON
                 Glossaire glossaireJSON = dorisAPI_JSONDATABindingHelper.getTermeFieldsFromNodeId(termeNodeId.getNodeId().intValue());
                 final DefinitionGlossaire terme = jsonToDB.getDefinitionGlossaireFromJSONTerme(glossaireJSON);
 

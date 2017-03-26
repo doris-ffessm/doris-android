@@ -175,7 +175,7 @@ public class DorisAPI_JSONDATABindingHelper {
             uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
         }
 
-        //log.debug("getSpecieFieldsFromNodeId - uri & oauth_token : " + uri);
+        log.debug("getSpecieFieldsFromNodeId - uri & oauth_token : " + uri);
 
         HttpGet getHttpPage = new HttpGet(uri);
         if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){

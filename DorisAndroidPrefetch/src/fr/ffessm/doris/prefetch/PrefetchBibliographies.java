@@ -110,7 +110,6 @@ public class PrefetchBibliographies {
 
 		int count = 0;
 
-
 		for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
 
 			List<ObjNameNodeId> nodeIds = dorisAPI_JSONTreeHelper.getBibliographieNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
