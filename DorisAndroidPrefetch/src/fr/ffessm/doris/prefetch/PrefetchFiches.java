@@ -81,6 +81,7 @@ import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
 import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
 import fr.ffessm.doris.prefetch.ezpublish.ObjNameNodeId;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
 
 
 public class PrefetchFiches {
@@ -363,6 +364,52 @@ public class PrefetchFiches {
                         // ignore les entrées invalides
                     }
                 }
+
+                /* * * * * * * * * * * *
+                    Photos
+                * * * * * * * * * * * * */
+                log.debug("prefetchV4() - imagesNodeIds = "+especeJSON.getFields().getImages().getValue());
+
+                List<Image> imageDataJSON = new ArrayList<Image>();
+
+                // itère sur les images trouvées pour cette fiche
+                for(String possibleImageId : especeJSON.getFields().getImages().getValue().split("&")){
+                    try{
+                        int imageId = Integer.parseInt(possibleImageId.split("\\|")[0]);
+
+                        log.debug("prefetchV4() - imageId = "+possibleImageId.split("\\|")[0]);
+
+                        // récupère les données associées à l'image
+                        imageDataJSON.add(dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId));
+
+                    } catch ( NumberFormatException nfe){
+                        // ignore les entrées invalides
+                    }
+                }
+
+                // recrée une entrée dans la base pour l'image
+                final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageDataJSON);
+                TransactionManager.callInTransaction(connectionSource,
+                        new Callable<Void>() {
+                            public Void call() throws Exception {
+                                int count = 0;
+                                for (PhotoFiche photoFiche : listePhotoFiche){
+
+                                    photoFiche.setFiche(espece);
+
+                                    dbContext.photoFicheDao.create(photoFiche);
+
+                                    if (count == 0) {
+                                        // met à jour l'image principale de la fiche
+                                        espece.setPhotoPrincipale(photoFiche);
+                                        dbContext.ficheDao.update(espece);
+                                    }
+                                    count++;
+                                }
+                                return null;
+                            }
+                        });
+
             }
 
         }

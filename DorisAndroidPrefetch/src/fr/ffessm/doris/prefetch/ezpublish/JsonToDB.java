@@ -43,14 +43,26 @@ public class JsonToDB {
         Photos des Espèces
      * * * * * * * * * * * * */
     public PhotoFiche getPhotoFicheFromJSONImage(Image jsonImage){
-        PhotoFiche photoFiche = new PhotoFiche(jsonImage.getDataMap().getImage(),jsonImage.getDataMap().getTitle(), jsonImage.getDataMap().getLegend());
+        PhotoFiche photoFiche = new PhotoFiche(
+                                    jsonImage.getDataMap().getImage(),
+                                    commonOutils.remplacementBalises(
+                                            commonOutils.nettoyageBalises(
+                                                    jsonImage.getDataMap().getTitle()
+                                            )
+                                            , true),
+                                    commonOutils.remplacementBalises(
+                                        commonOutils.nettoyageBalises(
+                                                jsonImage.getDataMap().getLegend()
+                                        )
+                                        , true)
+                );
         return photoFiche;
     }
 
-    public List<PhotoFiche> getListePhotosFicheFromJsonImages(List<Image> jsonImages) {
+    public List<PhotoFiche> getListePhotosFicheFromJsonImages(List<Image> jsonImagesJSON) {
 		
 		List<PhotoFiche> listePhotosFiche = new ArrayList<PhotoFiche>(0);
-		for (Image jsonImage : jsonImages) {
+		for (Image jsonImage : jsonImagesJSON) {
 			listePhotosFiche.add(getPhotoFicheFromJSONImage(jsonImage));
 		}
 		

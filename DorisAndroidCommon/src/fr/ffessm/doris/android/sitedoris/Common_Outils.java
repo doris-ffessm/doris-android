@@ -81,11 +81,16 @@ public class Common_Outils {
 
 
 		//log.debug("nettoyageBalises() - 010");
-		
+        texte = StringUtils.replace(texte, "<html/>", "");
+        texte = StringUtils.replace(texte, "<html />", "");
+
 		// Il faut nettoyer cette balise originale ...
 		// <strong style="font-size: 11px;">
 		texte = texte.replaceAll("<strong [^>]*>", "<strong>");
-		
+
+        // Des copier / coller depuis word .... ppffff ....
+        texte = texte.replaceAll("<!-- [^>]*-->", "");
+
 		//log.debug("nettoyageBalises() - 020");
 		
 		// Tous les sauts de ligne de la même façon + gain de place en hauteur pour l'interface Android
@@ -181,7 +186,8 @@ public class Common_Outils {
 
 			//Lien vers autres fiches
 			texte = texte.replaceAll("<[^<]*fiche_numero=([0-9]*)\"[^>]*>([^<]*)</a>", "{{F:$1}}$2{{/F}}");
-			
+			texte = texte.replaceAll("<[^<]*specie/([0-9]*)[^>]*>([^<]*)</a>", "{{F:$1}}$2{{/F}}");
+
 			//Lien vers termes du glossaire
 			texte = texte.replaceAll("([ >\\}'\\(])([^ >\\}'\\(]*)\\*", "$1{{D:$2}}$2{{/D}}");
 			//Image du Glossaire (elles sont dans le texte) - <img src="gestionenligne/diaporamaglo/16.jpg     ">

@@ -437,9 +437,7 @@ public class DorisAPI_JSONDATABindingHelper {
 		System.out.println("\t image path: " + imageResponse.getDataMap().getImage() );
 		
 		return imageResponse;
-		
-		
-	}	
+	}
 	
 
 }
