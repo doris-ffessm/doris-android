@@ -400,7 +400,7 @@ public class PrefetchDorisWebSite {
             // - - - Groupes - - -
             // Récupération de la liste des groupes sur le site de DORIS
             // En UPDATE et CDDVD on re-télécharge que la liste
-            nbMaxFichesATraiter = 10;
+            nbMaxFichesATraiter = 2000;
             nbFichesParRequetes = 50;
             PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
             if ( groupes.prefetchV4() == -1 ) {
@@ -414,7 +414,7 @@ public class PrefetchDorisWebSite {
             */
 
             // - - - Participants - - -
-            nbMaxFichesATraiter = 100;
+            nbMaxFichesATraiter = 2000;
             nbFichesParRequetes = 50;
             PrefetchIntervenants intervenants = new PrefetchIntervenants(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
             if ( intervenants.prefetchV4() == -1 ) {
@@ -427,7 +427,7 @@ public class PrefetchDorisWebSite {
             */
 
             // - - - Glossaire - - -
-            nbMaxFichesATraiter = 100;
+            nbMaxFichesATraiter = 2000;
             nbFichesParRequetes = 50;
             PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
             if ( glossaire.prefetchV4() == -1 ) {
@@ -439,7 +439,7 @@ public class PrefetchDorisWebSite {
             */
 
             // - - - Bibliographie - - -
-			nbMaxFichesATraiter = 200;
+			nbMaxFichesATraiter = 2000;
 			nbFichesParRequetes = 50;
 
             PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
@@ -464,7 +464,7 @@ public class PrefetchDorisWebSite {
             */
 
             // - - - Liste des Fiches - - -
-            nbMaxFichesATraiter = 100;
+            nbMaxFichesATraiter = 6000;
             nbFichesParRequetes = 50;
 
             PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes,

@@ -74,12 +74,12 @@ public class JsonToDB {
     Participants
     * * * * * * * * * * * * */
     public Participant getParticipantFromJSONUtil(int intervenantNodeId, Utilisateur jsonUtilisateur){
-        log.debug("getParticipantFromJSONUtil - Début");
-        log.debug("getParticipantFromJSONUtil - intervenantNodeId : " + intervenantNodeId);
-        log.debug("getParticipantFromJSONUtil - getReference() : " + jsonUtilisateur.getFields().getReference().getValue());
-        log.debug("getParticipantFromJSONUtil - getFirstName() : " + jsonUtilisateur.getFields().getFirstName().getValue());
-        log.debug("getParticipantFromJSONUtil - getDescription() : " + jsonUtilisateur.getFields().getDescription().getValue());
-        log.debug("getParticipantFromJSONUtil - getDescription(). nettoyée : " + commonOutils.remplacementBalises(jsonUtilisateur.getFields().getDescription().getValue(), true));
+        //log.debug("getParticipantFromJSONUtil - Début");
+        //log.debug("getParticipantFromJSONUtil - intervenantNodeId : " + intervenantNodeId);
+        //log.debug("getParticipantFromJSONUtil - getReference() : " + jsonUtilisateur.getFields().getReference().getValue());
+        //log.debug("getParticipantFromJSONUtil - getFirstName() : " + jsonUtilisateur.getFields().getFirstName().getValue());
+        //log.debug("getParticipantFromJSONUtil - getDescription() : " + jsonUtilisateur.getFields().getDescription().getValue());
+        //log.debug("getParticipantFromJSONUtil - getDescription(). nettoyée : " + commonOutils.remplacementBalises(jsonUtilisateur.getFields().getDescription().getValue(), true));
 
         Participant utilisateur = new Participant(
                         jsonUtilisateur.getFields().getFirstName().getValue() + " " + jsonUtilisateur.getFields().getLastName().getValue(),
@@ -191,14 +191,14 @@ public class JsonToDB {
         // Espèce Réglementée / Espèce "dangeureuse"
         String pictogrammes = "";
         //TODO : Vérifier fonctionnent et cohérence avec la section créée
-        log.debug("getFicheFromJSONEspece() - reglementation : "+jsonEspece.getFields().getReglementation().getValue());
+        //log.debug("getFicheFromJSONEspece() - reglementation : "+jsonEspece.getFields().getReglementation().getValue());
         if (jsonEspece.getFields().getReglementation().getValue().replaceAll("<[^>]*>","") != "") pictogrammes += "0;";
 
         //TODO : Trouver un exemple pour vérifier
-        log.debug("getFicheFromJSONEspece() - danger : "+jsonEspece.getFields().getDanger().getValue());
+        //log.debug("getFicheFromJSONEspece() - danger : "+jsonEspece.getFields().getDanger().getValue());
         if (jsonEspece.getFields().getDanger().getValue() == "1") pictogrammes += "1;";
 
-        log.debug("getFicheFromJSONEspece() - pictogrammes : "+pictogrammes);
+        //log.debug("getFicheFromJSONEspece() - pictogrammes : "+pictogrammes);
 
         // Convertions des Dates
         String datePublication = "";
@@ -397,90 +397,90 @@ public class JsonToDB {
         Classification Fiche
     * * * * * * * * * * * * */
     public  List<ClassificationFiche> getClassificationFicheFromJSONEspece(Espece jsonEspece){
-        log.debug("getClassificationFicheFromJSONEspece - Début");
+        //log.debug("getClassificationFicheFromJSONEspece - Début");
 
         Fiche fiche = new Fiche();
         List<ClassificationFiche> classificationFiche = new ArrayList<ClassificationFiche>();
 
-        log.debug("getClassificationFicheFromJSONEspece - getGroup().getValue() : " + jsonEspece.getFields().getGroup().getValue());
+        //log.debug("getClassificationFicheFromJSONEspece - getGroup().getValue() : " + jsonEspece.getFields().getGroup().getValue());
         if (jsonEspece.getFields().getGroup().getValue() != null) {
             classificationFiche.add(
                 new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getGroup().getValue()), "group", "", "", ""), 1)
             );
         }
 
-        log.debug("getClassificationFicheFromJSONEspece - getEmbranchementTaxon() : " + jsonEspece.getFields().getEmbranchementTaxon().getValue());
+        //log.debug("getClassificationFicheFromJSONEspece - getEmbranchementTaxon() : " + jsonEspece.getFields().getEmbranchementTaxon().getValue());
         if (jsonEspece.getFields().getEmbranchementTaxon().getValue() != null) {
                 classificationFiche.add(
                     new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getEmbranchementTaxon().getValue().toString()), "embranchement_taxon", "", "", ""), 2)
             );
         }
 
-        log.debug("getClassificationFicheFromJSONEspece - getSousEmbranchementTaxon() : " + jsonEspece.getFields().getSousEmbranchementTaxon().getValue());
+        //log.debug("getClassificationFicheFromJSONEspece - getSousEmbranchementTaxon() : " + jsonEspece.getFields().getSousEmbranchementTaxon().getValue());
         if (jsonEspece.getFields().getSousEmbranchementTaxon().getValue() != null) {
             classificationFiche.add(
                     new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousEmbranchementTaxon().getValue().toString()), "sous_embranchement_taxon", "", "", ""), 3)
             );
         }
 
-        log.debug("getClassificationFicheFromJSONEspece - getSuperClasseTaxon() : " + jsonEspece.getFields().getSuperClasseTaxon().getValue());
+        //log.debug("getClassificationFicheFromJSONEspece - getSuperClasseTaxon() : " + jsonEspece.getFields().getSuperClasseTaxon().getValue());
         if (jsonEspece.getFields().getSuperClasseTaxon().getValue() != null) {
             classificationFiche.add(
                     new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSuperClasseTaxon().getValue().toString()), "super_classe_taxon", "", "", ""), 4)
             );
         }
 
-        log.debug("getClassificationFicheFromJSONEspece - getClasseTaxon() : " + jsonEspece.getFields().getClasseTaxon().getValue());
+        //log.debug("getClassificationFicheFromJSONEspece - getClasseTaxon() : " + jsonEspece.getFields().getClasseTaxon().getValue());
         if (jsonEspece.getFields().getClasseTaxon().getValue() != null) {
             classificationFiche.add(
                     new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getClasseTaxon().getValue().toString()), "classe_taxon", "", "", ""), 5)
             );
         }
 
-        log.debug("getClassificationFicheFromJSONEspece - getSousClasseTaxon() : " + jsonEspece.getFields().getSousClasseTaxon().getValue());
+        //log.debug("getClassificationFicheFromJSONEspece - getSousClasseTaxon() : " + jsonEspece.getFields().getSousClasseTaxon().getValue());
         if (jsonEspece.getFields().getSousClasseTaxon().getValue() != null) {
             classificationFiche.add(
                     new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousClasseTaxon().getValue().toString()), "sous_classe_taxon", "", "", ""), 6)
             );
         }
 
-        log.debug("getClassificationFicheFromJSONEspece - getSuperOrdreTaxon() : " + jsonEspece.getFields().getSuperOrdreTaxon().getValue());
+        //log.debug("getClassificationFicheFromJSONEspece - getSuperOrdreTaxon() : " + jsonEspece.getFields().getSuperOrdreTaxon().getValue());
         if (jsonEspece.getFields().getSuperOrdreTaxon().getValue() != null) {
             classificationFiche.add(
                     new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSuperOrdreTaxon().getValue().toString()), "super_ordre_taxon", "", "", ""), 7)
             );
         }
 
-        log.debug("getClassificationFicheFromJSONEspece - getOrdreTaxon() : " + jsonEspece.getFields().getOrdreTaxon().getValue());
+        //log.debug("getClassificationFicheFromJSONEspece - getOrdreTaxon() : " + jsonEspece.getFields().getOrdreTaxon().getValue());
         if (jsonEspece.getFields().getOrdreTaxon().getValue() != null) {
             classificationFiche.add(
                     new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getOrdreTaxon().getValue().toString()), "ordre_taxon", "", "", ""), 8)
             );
         }
 
-        log.debug("getClassificationFicheFromJSONEspece - getSousOrdreTaxon() : " + jsonEspece.getFields().getSousOrdreTaxon().getValue());
+        //log.debug("getClassificationFicheFromJSONEspece - getSousOrdreTaxon() : " + jsonEspece.getFields().getSousOrdreTaxon().getValue());
         if (jsonEspece.getFields().getSousOrdreTaxon().getValue() != null) {
             classificationFiche.add(
                     new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousOrdreTaxon().getValue().toString()), "sous_ordre_taxon", "", "", ""), 9)
             );
         }
 
-        log.debug("getClassificationFicheFromJSONEspece - getFamilleTaxon() : " + jsonEspece.getFields().getFamilleTaxon().getValue());
+        //log.debug("getClassificationFicheFromJSONEspece - getFamilleTaxon() : " + jsonEspece.getFields().getFamilleTaxon().getValue());
         if (jsonEspece.getFields().getFamilleTaxon().getValue() != null) {
             classificationFiche.add(
                     new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getFamilleTaxon().getValue().toString()), "famille_taxon", "", "", ""), 10)
             );
         }
 
-        log.debug("getClassificationFicheFromJSONEspece - getSousFamilleTaxon() : " + jsonEspece.getFields().getSousFamilleTaxon().getValue());
+        //log.debug("getClassificationFicheFromJSONEspece - getSousFamilleTaxon() : " + jsonEspece.getFields().getSousFamilleTaxon().getValue());
         if (jsonEspece.getFields().getSousFamilleTaxon().getValue() != null) {
             classificationFiche.add(
                     new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousFamilleTaxon().getValue().toString()), "sous_famille_taxon", "", "", ""), 11)
             );
         }
 
-        log.debug("getClassificationFicheFromJSONEspece - classificationFiche().getNumeroDoris() : " + classificationFiche.get(0).getClassification().getNumeroDoris());
-        log.debug("getClassificationFicheFromJSONEspece - classificationFiche().getTermeFrancais() : " + classificationFiche.get(0).getClassification().getTermeFrancais());
+        //log.debug("getClassificationFicheFromJSONEspece - classificationFiche().getNumeroDoris() : " + classificationFiche.get(0).getClassification().getNumeroDoris());
+        //log.debug("getClassificationFicheFromJSONEspece - classificationFiche().getTermeFrancais() : " + classificationFiche.get(0).getClassification().getTermeFrancais());
         return classificationFiche;
     }
 

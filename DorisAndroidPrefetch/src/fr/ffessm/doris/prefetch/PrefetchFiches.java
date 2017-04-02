@@ -43,6 +43,7 @@ termes.
 package fr.ffessm.doris.prefetch;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -68,6 +69,8 @@ import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.datamodel.Classification;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
+import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
@@ -159,7 +162,7 @@ public class PrefetchFiches {
 
                 // Référence de l'Espèce dans le message JSON
                 Espece especeJSON = dorisAPI_JSONDATABindingHelper.getEspeceFieldsFromNodeId(ficheNodeId.getNodeId().intValue());
-                log.debug("prefetchV4() - especeJSON : " + especeJSON.getFields().getNomCommunFr().getValue());
+                //log.debug("prefetchV4() - especeJSON : " + especeJSON.getFields().getNomCommunFr().getValue());
 
                 Fiche espece = jsonToDB.getFicheFromJSONEspece(ficheNodeId, especeJSON);
                 String textePourRechercheRapide = espece.getNomCommun() + " " +
@@ -186,7 +189,7 @@ public class PrefetchFiches {
                 /* Héritée de la manière dont étaient stockées les données dans le Version 3 du Site,
                 On enregistre les différentes sections de la fiche dans l'ordre d'affichage de manière + "générique" que la verson 4 ne le fait
                  */
-                log.debug("prefetchV4() - 'Sections' de la fiche");
+                //log.debug("prefetchV4() - 'Sections' de la fiche");
                 List<SectionFiche> sectionsFiche = jsonToDB.getSectionsFicheFromJSONEspece(especeJSON);
                 for (SectionFiche sectionFiche : sectionsFiche) {
 
@@ -209,7 +212,7 @@ public class PrefetchFiches {
             /* Héritée de la manière dont étaient stockées les données dans le Version 3 du Site,
                 On enregistre les dénominations de la fiche dans une table dédiée
             */
-                log.debug("prefetchV4() - Autres dénominations");
+                //log.debug("prefetchV4() - Autres dénominations");
                 List<AutreDenomination> autresDenominations = jsonToDB.getAutresDenominationFicheFromJSONEspece(especeJSON);
                 for (AutreDenomination autreDenomination : autresDenominations) {
                     //log.debug("prefetchV4() - autreDenomination : "+autreDenomination.getDenomination());
@@ -234,39 +237,43 @@ public class PrefetchFiches {
 
                 /* Ajout aux Classifications si pas encore dans la liste
                  */
-                log.debug("prefetchV4() - Classification de la fiche");
+                //log.debug("prefetchV4() - Classification de la fiche");
                 /* Initialement on a sur la fiche que le niveau et la référence de la Classification */
                 List<ClassificationFiche> classificationsFiche = jsonToDB.getClassificationFicheFromJSONEspece(especeJSON);
 
                 for (ClassificationFiche classificationFiche : classificationsFiche) {
-                    log.debug("prefetchV4() - classification : " + classificationFiche.getClassification());
-                    log.debug("prefetchV4() - classification.getNiveau() : " + classificationFiche.getClassification().getNiveau());
-                    log.debug("prefetchV4() - classification.getNumeroDoris() : " + classificationFiche.getClassification().getNumeroDoris());
+                    //log.debug("prefetchV4() - classification : " + classificationFiche.getClassification());
+                    //log.debug("prefetchV4() - classification.getNiveau() : " + classificationFiche.getClassification().getNiveau());
+                    //log.debug("prefetchV4() - classification.getNumeroDoris() : " + classificationFiche.getClassification().getNumeroDoris());
 
                     /* Si on ne trouve pas la Classification dans la Base on l'ajoute, sinon on l'utilise */
                     Classification classification = dbContext.classificationDao.queryForFirst(
                             dbContext.classificationDao.queryBuilder().where().eq("numeroDoris", classificationFiche.getClassification().getNumeroDoris()).prepare()
                     );
                     if (classification == null) {
-                        log.debug("prefetchV4() - classification par encore dans la base");
+                        //log.debug("prefetchV4() - classification par encore dans la base");
 
                         fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification classificationJSON = dorisAPI_JSONDATABindingHelper.getClassificationFieldsFromObjectId(classificationFiche.getClassification().getNumeroDoris());
-                        classification = jsonToDB.getClassificationFromJSONClassification(
-                                classificationFiche.getClassification().getNumeroDoris(), classificationFiche.getClassification().getNiveau(), classificationJSON);
 
-                        final Classification classificationFinal = classification;
-                        TransactionManager.callInTransaction(connectionSource,
-                                new Callable<Void>() {
-                                    public Void call() throws Exception {
+                        //TODO : Pourquoi parfois null ?
+                        if (classification != null) {
+                            classification = jsonToDB.getClassificationFromJSONClassification(
+                                    classificationFiche.getClassification().getNumeroDoris(), classificationFiche.getClassification().getNiveau(), classificationJSON);
 
-                                        dbContext.classificationDao.create(classificationFinal);
+                            final Classification classificationFinal = classification;
+                            TransactionManager.callInTransaction(connectionSource,
+                                    new Callable<Void>() {
+                                        public Void call() throws Exception {
 
-                                        return null;
-                                    }
-                                });
+                                            dbContext.classificationDao.create(classificationFinal);
+
+                                            return null;
+                                        }
+                                    });
+                        }
                     }
 
-                    log.debug("prefetchV4() - classification : " + classification.getNumeroDoris() + " - " + classification.getTermeFrancais());
+                    //log.debug("prefetchV4() - classification : " + classification.getNumeroDoris() + " - " + classification.getTermeFrancais());
                     /* on a ici la Classification que l'on va associer à la Fiche */
 
                     final ClassificationFiche classification_final = new ClassificationFiche(espece, classification, classificationFiche.getNumOrdre());
@@ -286,7 +293,7 @@ public class PrefetchFiches {
                 /* * * * * * * * * * * *
                     Doridiens ayant participés à la rédaction de la fiche
                 * * * * * * * * * * * * */
-                log.debug("prefetchV4() - Doridiens ayant participés à la rédaction de la fiche :" + especeJSON.getFields().getVerificateurs().getValue());
+                //log.debug("prefetchV4() - Doridiens ayant participés à la rédaction de la fiche :" + especeJSON.getFields().getVerificateurs().getValue());
 
                 for(String numeroVerificateur : especeJSON.getFields().getVerificateurs().getValue().split("-")){
                     try{
@@ -368,7 +375,7 @@ public class PrefetchFiches {
                 /* * * * * * * * * * * *
                     Photos
                 * * * * * * * * * * * * */
-                log.debug("prefetchV4() - imagesNodeIds = "+especeJSON.getFields().getImages().getValue());
+                //log.debug("prefetchV4() - imagesNodeIds = "+especeJSON.getFields().getImages().getValue());
 
                 List<Image> imageDataJSON = new ArrayList<Image>();
 
@@ -377,7 +384,7 @@ public class PrefetchFiches {
                     try{
                         int imageId = Integer.parseInt(possibleImageId.split("\\|")[0]);
 
-                        log.debug("prefetchV4() - imageId = "+possibleImageId.split("\\|")[0]);
+                        //log.debug("prefetchV4() - imageId = "+possibleImageId.split("\\|")[0]);
 
                         // récupère les données associées à l'image
                         imageDataJSON.add(dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId));
@@ -390,25 +397,81 @@ public class PrefetchFiches {
                 // recrée une entrée dans la base pour l'image
                 final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageDataJSON);
                 TransactionManager.callInTransaction(connectionSource,
-                        new Callable<Void>() {
-                            public Void call() throws Exception {
-                                int count = 0;
-                                for (PhotoFiche photoFiche : listePhotoFiche){
+                    new Callable<Void>() {
+                        public Void call() throws Exception {
+                            int count = 0;
+                            for (PhotoFiche photoFiche : listePhotoFiche){
 
-                                    photoFiche.setFiche(espece);
+                                photoFiche.setFiche(espece);
 
-                                    dbContext.photoFicheDao.create(photoFiche);
+                                dbContext.photoFicheDao.create(photoFiche);
 
-                                    if (count == 0) {
-                                        // met à jour l'image principale de la fiche
-                                        espece.setPhotoPrincipale(photoFiche);
-                                        dbContext.ficheDao.update(espece);
-                                    }
-                                    count++;
+                                if (count == 0) {
+                                    // met à jour l'image principale de la fiche
+                                    espece.setPhotoPrincipale(photoFiche);
+                                    dbContext.ficheDao.update(espece);
                                 }
-                                return null;
+                                count++;
                             }
-                        });
+                            return null;
+                        }
+                    });
+
+                /* * * * * * * * * * * *
+                    Zones Géographiques
+                * * * * * * * * * * * * */
+                //log.debug("prefetchV4() - Zone Géo. : "+especeJSON.getFields().getZoneGeo().getValue());
+
+                ZoneGeographique zoneGeographique = new ZoneGeographique();
+                for(String zoneGeoRefId : especeJSON.getFields().getZoneGeo().getValue().split("-")){
+
+                    try{
+                        switch (Integer.parseInt(zoneGeoRefId)) {
+                            // 71726 - ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE
+                            case 71726:
+                                zoneGeographique.setId(1);
+                                break;
+                            // On ignore pour l'instant
+                            // 239910 - Méditérannée Française
+                            // 239991 - Façade Atlantique Française
+                            case 239910:
+                            case 239991:
+                                break;
+                            // 71728 - ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE
+                            case 71728:
+                                zoneGeographique.setId(2);
+                                break;
+                            // 71730 - ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE
+                            case 71730:
+                                zoneGeographique.setId(3);
+                                break;
+                            // 71731 - ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES
+                            case 71731:
+                                zoneGeographique.setId(4);
+                                break;
+                            // 135595 - ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST
+                            case 135595:
+                                zoneGeographique.setId(5);
+                                break;
+                            default:
+                                log.debug("prefetchV4() - Zone Géo. Inconnue : http://doris.ffessm.fr/api/ezx/v1/object/"+zoneGeoRefId);
+                                System.exit(1);
+                        }
+
+                        ZoneGeographique zoneGeographique_final = zoneGeographique;
+                        TransactionManager.callInTransaction(connectionSource,
+                                new Callable<Void>() {
+                                    public Void call() throws Exception {
+                                        dbContext.fiches_ZonesGeographiquesDao.create(new Fiches_ZonesGeographiques(zoneGeographique_final, espece_final));
+                                        return null;
+                                    }
+                                });
+
+                    } catch ( NumberFormatException nfe){
+                        // ignore les entrées invalides
+                    }
+                }
+
 
             }
 

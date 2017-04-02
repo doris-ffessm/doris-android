@@ -141,10 +141,12 @@ public class Common_Outils {
 
 		//log.debug("nettoyageBalises() - 060");
 
-		// Suppression des textes masqués en étant écrit en blanc sur fond blanc
+		// Suppression des textes masqués en étant écrit en blanc sur fond blanc (si, si il y a eu ...)
 		// <span style="color: #ffffff;">Vidéoris</span>
 		texte = texte.replaceAll("<span style=\"color: #ffffff;\">[^<>]*</span>", "");
-		
+
+        // Suppression Balises de coloration "non significatives"
+        texte = texte.replaceAll("<span style=\"color: #......;\">([^<>]*)</span>", "$1");
 		
 		texte = StringUtils.replace(texte, "bgcolor=\"#ffffff\" onMouseOver=\"this.bgColor='#F3F3F3';\" onMouseOut=\"this.bgColor='#ffffff';\"", "" );
 		texte = StringUtils.replace(texte, "color=\"#999999\"", "");
