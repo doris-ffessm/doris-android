@@ -488,8 +488,25 @@ public class JsonToDB {
     /* * * * * * * * * * * *
     Classification
     * * * * * * * * * * * * */
+    public Classification getClassificationFromJSONClassification(int jsonObjectId, String classificationNiveau, fr.ffessm.doris.prefetch.ezpublish.jsondata.groupe.Groupe jsonGroupe){
+
+        Classification classification = new Classification(
+                jsonObjectId,
+                classificationNiveau,
+                "",
+                jsonGroupe.getDataMap().getTitle(),
+                commonOutils.remplacementBalises(
+                        commonOutils.nettoyageBalises(
+                                jsonGroupe.getDataMap().getDescription()
+                        )
+                        , true)
+        );
+        return classification;
+    }
+
     public Classification getClassificationFromJSONClassification(int jsonObjectId, String classificationNiveau, fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification jsonClassification){
-        Classification classification = new Classification (
+
+        Classification classification = new Classification(
                 jsonObjectId,
                 classificationNiveau,
                 jsonClassification.getDataMap().getNameFrench(),
@@ -502,6 +519,5 @@ public class JsonToDB {
         );
         return classification;
     }
-
 
 }

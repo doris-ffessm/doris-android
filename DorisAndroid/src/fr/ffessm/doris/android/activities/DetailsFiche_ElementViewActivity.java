@@ -725,8 +725,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         	classificationFiche.setContextDB(getHelper().getDorisDBHelper());
      	
         	Classification classification = classificationFiche.getClassification();
-			classification.setContextDB(getHelper().getDorisDBHelper());
 			Log.d(LOG_TAG, "addFoldableArbrePhylogenetiqueView() - classification : "+classification.getNiveau()+" : "+classification.getTermeScientifique());
+            classification.setContextDB(getHelper().getDorisDBHelper());
 
 	    	View convertArbreView = inflater.inflate(R.layout.details_tableau_phylogenetique_detail, null);
 	    	

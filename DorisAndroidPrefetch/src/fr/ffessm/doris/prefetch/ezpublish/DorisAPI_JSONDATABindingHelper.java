@@ -23,6 +23,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.groupe.Groupe;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.bibliographie.Bibliographie;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.utilisateur.Utilisateur;
@@ -232,12 +233,15 @@ public class DorisAPI_JSONDATABindingHelper {
         }
         catch (JsonGenerationException e) {
             e.printStackTrace();
+            return null;
         }
         catch (  JsonMappingException e) {
             e.printStackTrace();
+            return null;
         }
         catch (  IOException e) {
             e.printStackTrace();
+            return null;
         }
 
         //System.out.println("\t Nom Latin : " + classificationJSON.getDataMap().getNameLatin() );
@@ -245,6 +249,43 @@ public class DorisAPI_JSONDATABindingHelper {
         //System.out.println("\t Description : " + classificationJSON.getDataMap().getDescription() );
 
         return classificationJSON;
+    }
+
+
+    public Groupe getGroupeFieldsFromObjectId(int groupeObjectId) throws ClientProtocolException,
+            IOException {
+        log.debug("getGroupeFieldsFromObjectId - Début");
+        log.debug("getGroupeFieldsFromObjectId - groupeObjectId : " + groupeObjectId);
+
+        HttpResponse response = getFieldsFromObjectId(groupeObjectId);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Groupe groupeJSON = new Groupe();
+
+        try {
+            groupeJSON = objectMapper.readValue(
+                    new InputStreamReader(response.getEntity().getContent()),
+                    Groupe.class
+            );
+        }
+        catch (JsonGenerationException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (  JsonMappingException e) {
+            e.printStackTrace();
+            return null;
+        }
+        catch (  IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        //System.out.println("\t Nom Latin : " + classificationJSON.getDataMap().getNameLatin() );
+        //System.out.println("\t Nom Francais : " + classificationJSON.getDataMap().getNameFrench());
+        //System.out.println("\t Description : " + classificationJSON.getDataMap().getDescription() );
+
+        return groupeJSON;
     }
 
     public HttpResponse getFieldsFromNodeId(int nodeId) throws ClientProtocolException,
@@ -410,15 +451,7 @@ public class DorisAPI_JSONDATABindingHelper {
 		DefaultHttpClient client = new DefaultHttpClient();
 		
 		String uri =DorisOAuth2ClientCredentials.SERVER_OBJECT_URL + imageId;
-		
-		
-		if (debug) {
-			DorisAPIConnexionHelper.printJSON(credent, DorisOAuth2ClientCredentials.SERVER_OBJECT_URL + imageId);
-			if(debug_SaveJSON){
-				DorisAPIConnexionHelper.saveJSONFile(credent, DorisOAuth2ClientCredentials.SERVER_OBJECT_URL + imageId, DEBUG_SAVE_JSON_BASE_PATH+ File.separatorChar+"image_" + imageId+JSON_EXT);
-			}
-		}
-		
+
 		if(credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
 			uri = uri+"?oauth_token="+credent.getAccessToken();
 		} else {

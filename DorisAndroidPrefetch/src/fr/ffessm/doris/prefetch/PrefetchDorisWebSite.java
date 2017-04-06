@@ -56,6 +56,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Level;
+import org.apache.log4j.BasicConfigurator;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
@@ -114,6 +115,8 @@ public class PrefetchDorisWebSite {
 	public static void main(String[] args) throws Exception {
 		
 		// turn our static method into an instance of Main
+        BasicConfigurator.configure();
+
 		new PrefetchDorisWebSite().doMain(args);
 		
 	}
@@ -378,6 +381,9 @@ public class PrefetchDorisWebSite {
     private void dbV4ToAndroidAction() throws Exception{
         log.debug("dbV4ToAndroidAction() - Début Création de la Base pour Doris V4");
 
+        boolean testDev = false;
+        int testQte = 50;
+
         // Vérification, Création, Sauvegarde des dossiers de travail
         renommageDossiers(action);
         creationDossiers(action);
@@ -401,6 +407,7 @@ public class PrefetchDorisWebSite {
             // Récupération de la liste des groupes sur le site de DORIS
             // En UPDATE et CDDVD on re-télécharge que la liste
             nbMaxFichesATraiter = 2000;
+            if (testDev) nbMaxFichesATraiter = 100;
             nbFichesParRequetes = 50;
             PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
             if ( groupes.prefetchV4() == -1 ) {
@@ -415,6 +422,7 @@ public class PrefetchDorisWebSite {
 
             // - - - Participants - - -
             nbMaxFichesATraiter = 2000;
+            if (testDev) nbMaxFichesATraiter = testQte;
             nbFichesParRequetes = 50;
             PrefetchIntervenants intervenants = new PrefetchIntervenants(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
             if ( intervenants.prefetchV4() == -1 ) {
@@ -428,6 +436,7 @@ public class PrefetchDorisWebSite {
 
             // - - - Glossaire - - -
             nbMaxFichesATraiter = 2000;
+            if (testDev) nbMaxFichesATraiter = testQte;
             nbFichesParRequetes = 50;
             PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
             if ( glossaire.prefetchV4() == -1 ) {
@@ -440,6 +449,7 @@ public class PrefetchDorisWebSite {
 
             // - - - Bibliographie - - -
 			nbMaxFichesATraiter = 2000;
+            if (testDev) nbMaxFichesATraiter = testQte;
 			nbFichesParRequetes = 50;
 
             PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
@@ -465,6 +475,7 @@ public class PrefetchDorisWebSite {
 
             // - - - Liste des Fiches - - -
             nbMaxFichesATraiter = 6000;
+            if (testDev) nbMaxFichesATraiter = testQte;
             nbFichesParRequetes = 50;
 
             PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes,
