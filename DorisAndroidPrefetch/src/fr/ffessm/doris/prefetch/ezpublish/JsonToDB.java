@@ -232,7 +232,7 @@ public class JsonToDB {
         List<SectionFiche> sectionsFiche = new ArrayList<SectionFiche>();
 
         // Critères de reconnaissance
-        if (jsonEspece.getFields().getCleIdentification().getValue() != "") {sectionsFiche.add(new SectionFiche(110,"Critères de reconnaissance",
+        if (jsonEspece.getFields().getCleIdentification().getValue() != "") {sectionsFiche.add(new SectionFiche(10,"Critères de reconnaissance",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getCleIdentification().getValue()
@@ -244,7 +244,7 @@ public class JsonToDB {
 
 
         // Biotope
-        if (jsonEspece.getFields().getBiotop().getValue() != "") {sectionsFiche.add(new SectionFiche(120,"Biotope",
+        if (jsonEspece.getFields().getBiotop().getValue() != "") {sectionsFiche.add(new SectionFiche(20,"Biotope",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getBiotop().getValue()
@@ -253,7 +253,7 @@ public class JsonToDB {
         )); }
 
         // Description
-        if (jsonEspece.getFields().getDescription().getValue() != "") {sectionsFiche.add(new SectionFiche(130,"Description",
+        if (jsonEspece.getFields().getDescription().getValue() != "") {sectionsFiche.add(new SectionFiche(30,"Description",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getDescription().getValue()
@@ -262,7 +262,7 @@ public class JsonToDB {
         )); }
 
         // Espèces Ressemblantes
-        if (jsonEspece.getFields().getLookLikes().getValue() != "") {sectionsFiche.add(new SectionFiche(130,"Description",
+        if (jsonEspece.getFields().getLookLikes().getValue() != "") {sectionsFiche.add(new SectionFiche(40,"Description",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getLookLikes().getValue()
@@ -271,23 +271,18 @@ public class JsonToDB {
         )); }
 
         // Autres noms scientifiques parfois utilisés, mais non valides
-        if (jsonEspece.getFields().getOthersNameScientific().getValue() != "") {sectionsFiche.add(new SectionFiche(130,"Autres noms scientifiques parfois utilisés, mais non valides",
+        if (jsonEspece.getFields().getOthersNameScientific().getValue() != "") {sectionsFiche.add(new SectionFiche(50,"Autres noms scientifiques parfois utilisés, mais non valides",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getOthersNameScientific().getValue()
                         )
                         , true)
         )); }
+
         // Zone Doris
 
         // Crédits
-        if (jsonEspece.getFields().getDescription().getValue() != "") {sectionsFiche.add(new SectionFiche(190,"Crédits",
-                commonOutils.remplacementBalises(
-                        commonOutils.nettoyageBalises(
-                                jsonEspece.getFields().getDescription().getValue()
-                        )
-                        , true)
-        )); }
+
 
         // Origine du Nom Français
         if (jsonEspece.getFields().getFrenchNameOrigin().getValue() != "") {sectionsFiche.add(new SectionFiche(300,"Origine du nom français",
