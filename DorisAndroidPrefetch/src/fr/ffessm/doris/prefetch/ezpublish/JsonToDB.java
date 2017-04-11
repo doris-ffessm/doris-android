@@ -262,7 +262,7 @@ public class JsonToDB {
         )); }
 
         // Espèces Ressemblantes
-        if (jsonEspece.getFields().getLookLikes().getValue() != "") {sectionsFiche.add(new SectionFiche(40,"Description",
+        if (jsonEspece.getFields().getLookLikes().getValue() != "") {sectionsFiche.add(new SectionFiche(40,"Espèces Ressemblantes",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getLookLikes().getValue()
@@ -400,77 +400,91 @@ public class JsonToDB {
         //log.debug("getClassificationFicheFromJSONEspece - getGroup().getValue() : " + jsonEspece.getFields().getGroup().getValue());
         if (jsonEspece.getFields().getGroup().getValue() != null) {
             classificationFiche.add(
-                new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getGroup().getValue()), "group", "", "", ""), 1)
+                new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getGroup().getValue()), "{{g}}Groupe{{/g}}", "", "", ""), 1)
             );
         }
 
         //log.debug("getClassificationFicheFromJSONEspece - getEmbranchementTaxon() : " + jsonEspece.getFields().getEmbranchementTaxon().getValue());
         if (jsonEspece.getFields().getEmbranchementTaxon().getValue() != null) {
                 classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getEmbranchementTaxon().getValue().toString()), "embranchement_taxon", "", "", ""), 2)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getEmbranchementTaxon().getValue().toString()), "{{g}}Embranchement{{/g}}", "", "", ""), 2)
             );
         }
 
         //log.debug("getClassificationFicheFromJSONEspece - getSousEmbranchementTaxon() : " + jsonEspece.getFields().getSousEmbranchementTaxon().getValue());
         if (jsonEspece.getFields().getSousEmbranchementTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousEmbranchementTaxon().getValue().toString()), "sous_embranchement_taxon", "", "", ""), 3)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousEmbranchementTaxon().getValue().toString()), "{{g}}Sous-embranchement{{/g}}", "", "", ""), 3)
             );
         }
 
         //log.debug("getClassificationFicheFromJSONEspece - getSuperClasseTaxon() : " + jsonEspece.getFields().getSuperClasseTaxon().getValue());
         if (jsonEspece.getFields().getSuperClasseTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSuperClasseTaxon().getValue().toString()), "super_classe_taxon", "", "", ""), 4)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSuperClasseTaxon().getValue().toString()), "{{g}}Super-classe{{/g}}", "", "", ""), 4)
             );
         }
 
         //log.debug("getClassificationFicheFromJSONEspece - getClasseTaxon() : " + jsonEspece.getFields().getClasseTaxon().getValue());
         if (jsonEspece.getFields().getClasseTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getClasseTaxon().getValue().toString()), "classe_taxon", "", "", ""), 5)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getClasseTaxon().getValue().toString()), "{{g}}Classe{{/g}}", "", "", ""), 5)
             );
         }
 
         //log.debug("getClassificationFicheFromJSONEspece - getSousClasseTaxon() : " + jsonEspece.getFields().getSousClasseTaxon().getValue());
         if (jsonEspece.getFields().getSousClasseTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousClasseTaxon().getValue().toString()), "sous_classe_taxon", "", "", ""), 6)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousClasseTaxon().getValue().toString()), "{{g}}Sous-classe{{/g}}", "", "", ""), 6)
             );
         }
 
         //log.debug("getClassificationFicheFromJSONEspece - getSuperOrdreTaxon() : " + jsonEspece.getFields().getSuperOrdreTaxon().getValue());
         if (jsonEspece.getFields().getSuperOrdreTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSuperOrdreTaxon().getValue().toString()), "super_ordre_taxon", "", "", ""), 7)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSuperOrdreTaxon().getValue().toString()), "{{g}}Super-ordre{{/g}}", "", "", ""), 7)
             );
         }
 
         //log.debug("getClassificationFicheFromJSONEspece - getOrdreTaxon() : " + jsonEspece.getFields().getOrdreTaxon().getValue());
         if (jsonEspece.getFields().getOrdreTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getOrdreTaxon().getValue().toString()), "ordre_taxon", "", "", ""), 8)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getOrdreTaxon().getValue().toString()), "{{g}}Ordre{{/g}}", "", "", ""), 8)
             );
         }
 
         //log.debug("getClassificationFicheFromJSONEspece - getSousOrdreTaxon() : " + jsonEspece.getFields().getSousOrdreTaxon().getValue());
         if (jsonEspece.getFields().getSousOrdreTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousOrdreTaxon().getValue().toString()), "sous_ordre_taxon", "", "", ""), 9)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousOrdreTaxon().getValue().toString()), "{{g}}Sous-ordre{{/g}}", "", "", ""), 9)
             );
         }
 
         //log.debug("getClassificationFicheFromJSONEspece - getFamilleTaxon() : " + jsonEspece.getFields().getFamilleTaxon().getValue());
         if (jsonEspece.getFields().getFamilleTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getFamilleTaxon().getValue().toString()), "famille_taxon", "", "", ""), 10)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getFamilleTaxon().getValue().toString()), "{{g}}Famille{{/g}}", "", "", ""), 10)
             );
         }
 
         //log.debug("getClassificationFicheFromJSONEspece - getSousFamilleTaxon() : " + jsonEspece.getFields().getSousFamilleTaxon().getValue());
         if (jsonEspece.getFields().getSousFamilleTaxon().getValue() != null) {
             classificationFiche.add(
-                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousFamilleTaxon().getValue().toString()), "sous_famille_taxon", "", "", ""), 11)
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getSousFamilleTaxon().getValue().toString()), "{{g}}Sous-Famille{{/g}}", "", "", ""), 11)
+            );
+        }
+
+        //log.debug("getClassificationFicheFromJSONEspece - getGenre() : " + jsonEspece.getFields().getGenre().getValue());
+        if (jsonEspece.getFields().getGenre().getValue() != null) {
+            classificationFiche.add(
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getGenre().getValue().toString()), "{{g}}Genre{{/g}}", "", "", ""), 11)
+            );
+        }
+
+        //log.debug("getClassificationFicheFromJSONEspece - getEspece() : " + jsonEspece.getFields().getEspece().getValue());
+        if (jsonEspece.getFields().getEspece().getValue() != null) {
+            classificationFiche.add(
+                    new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getEspece().getValue().toString()), "{{g}}Espèce{{/g}}", "", "", ""), 11)
             );
         }
 
@@ -504,8 +518,8 @@ public class JsonToDB {
         Classification classification = new Classification(
                 jsonObjectId,
                 classificationNiveau,
-                jsonClassification.getDataMap().getNameFrench(),
                 jsonClassification.getDataMap().getNameLatin(),
+                jsonClassification.getDataMap().getNameFrench(),
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonClassification.getDataMap().getDescription()
