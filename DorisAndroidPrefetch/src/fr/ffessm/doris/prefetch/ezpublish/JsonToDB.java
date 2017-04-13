@@ -475,18 +475,20 @@ public class JsonToDB {
         }
 
         //log.debug("getClassificationFicheFromJSONEspece - getGenre() : " + jsonEspece.getFields().getGenre().getValue());
-        if (jsonEspece.getFields().getGenre().getValue() != null) {
+        /* if (jsonEspece.getFields().getGenre().getValue() != null) {
             classificationFiche.add(
                     new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getGenre().getValue().toString()), "{{g}}Genre{{/g}}", "", "", ""), 11)
             );
         }
+        */
 
         //log.debug("getClassificationFicheFromJSONEspece - getEspece() : " + jsonEspece.getFields().getEspece().getValue());
-        if (jsonEspece.getFields().getEspece().getValue() != null) {
+        /*if (jsonEspece.getFields().getEspece().getValue() != null) {
             classificationFiche.add(
                     new ClassificationFiche(new Classification(Integer.parseInt(jsonEspece.getFields().getEspece().getValue().toString()), "{{g}}Espèce{{/g}}", "", "", ""), 11)
             );
         }
+        */
 
         //log.debug("getClassificationFicheFromJSONEspece - classificationFiche().getNumeroDoris() : " + classificationFiche.get(0).getClassification().getNumeroDoris());
         //log.debug("getClassificationFicheFromJSONEspece - classificationFiche().getTermeFrancais() : " + classificationFiche.get(0).getClassification().getTermeFrancais());

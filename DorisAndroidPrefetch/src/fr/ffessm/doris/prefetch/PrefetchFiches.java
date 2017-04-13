@@ -234,6 +234,70 @@ public class PrefetchFiches {
                     }
                 }
 
+                /* Ajout Genre et Espèce aux Classification                  */
+                //log.debug("prefetchV4() - Ajout Genre et Espèce aux Classification");
+                Classification classificationGenre = dbContext.classificationDao.queryForFirst(
+                        dbContext.classificationDao.queryBuilder().where().eq("niveau","{{g}}Genre{{/g}}").and().eq("termeScientifique","{{i}}"+especeJSON.getFields().getGenre().getValue()+"{{/i}})").prepare()
+                );
+                if (classificationGenre == null) {
+                    classificationGenre = new Classification(0, "{{g}}Genre{{/g}}", "{{i}}"+especeJSON.getFields().getGenre().getValue()+"{{/i}}", "", "");
+                    final Classification classificationGenreFinal = classificationGenre;
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
+
+                                    dbContext.classificationDao.create(classificationGenreFinal);
+
+                                    return null;
+                                }
+                            });
+                }
+                if (classificationGenre != null) {
+                    final ClassificationFiche classification_final = new ClassificationFiche(espece, classificationGenre, 0);
+
+                    // Enregistrement de la Classification de la Fiche
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
+
+                                    dbContext.classificationFicheDao.create(classification_final);
+
+                                    return null;
+                                }
+                            });
+                }
+
+                Classification classificationEspece = dbContext.classificationDao.queryForFirst(
+                        dbContext.classificationDao.queryBuilder().where().eq("niveau","{{g}}Espece{{/g}}").and().eq("termeScientifique","{{i}}"+especeJSON.getFields().getEspece().getValue()+"{{/i}})").prepare()
+                );
+                if (classificationEspece == null) {
+                    classificationEspece = new Classification(0, "{{g}}Espece{{/g}}", "{{i}}"+especeJSON.getFields().getEspece().getValue()+"{{/i}}", "", "");
+                    final Classification classificationEspeceFinal = classificationEspece;
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
+
+                                    dbContext.classificationDao.create(classificationEspeceFinal);
+
+                                    return null;
+                                }
+                            });
+                }
+                if (classificationEspece != null) {
+                    final ClassificationFiche classification_final = new ClassificationFiche(espece, classificationEspece, 0);
+
+                    // Enregistrement de la Classification de la Fiche
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
+
+                                    dbContext.classificationFicheDao.create(classification_final);
+
+                                    return null;
+                                }
+                            });
+                }
+
 
                 /* Ajout aux Classifications si pas encore dans la liste
                  */
@@ -254,7 +318,7 @@ public class PrefetchFiches {
                         //log.debug("prefetchV4() - classification par encore dans la base");
 
                         // le Groupe est un cas particulier avec son propre format json
-                        if (classificationFiche.getClassification().getNiveau().equals("group") ) {
+                        if (classificationFiche.getClassification().getNiveau().equals("group") || classificationFiche.getClassification().getNiveau().equals("{{g}}Groupe{{/g}}")) {
 
                             fr.ffessm.doris.prefetch.ezpublish.jsondata.groupe.Groupe groupeJSON = dorisAPI_JSONDATABindingHelper.getGroupeFieldsFromObjectId(classificationFiche.getClassification().getNumeroDoris());
 
