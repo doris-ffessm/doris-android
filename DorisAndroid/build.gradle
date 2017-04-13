@@ -28,7 +28,7 @@ repositories {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '23.0.3'
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         minSdkVersion 10
@@ -58,7 +58,15 @@ android {
         release.setRoot('build-types/release')
     }
 	
-	File signFile = file('/builds/keystore/sign.properties')
+	File signFile = file('/builds/keystore/sign.properties') // used by Jenkins
+    if (!signFile.exists()) {
+        // may be used by developers owning the appropriate keystore
+        println 'trying $HOME/.ssh/doris-android_sign.properties'
+        signFile = file(System.properties['user.home']+'/.ssh/doris-android_sign.properties')
+        if (signFile.exists()) {
+            println 'found doris-android_sign.properties!'
+        }
+    }
 	if (signFile.exists()) {
 		println 'found sign.properties!'
 		Properties p = new Properties()
@@ -74,7 +82,8 @@ android {
 		buildTypes.release.signingConfig signingConfigs.releaseConfig
 	}
 	else{
-		println 'sign.properties not found'
+
+		println 'sign.properties not found (neither in /builds/keystore/sign.properties nor in $HOME/.ssh/doris-android_sign.properties)'
 	}
 
     lintOptions {
