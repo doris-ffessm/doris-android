@@ -253,7 +253,7 @@ public class PrefetchFiches {
                             });
                 }
                 if (classificationGenre != null) {
-                    final ClassificationFiche classification_final = new ClassificationFiche(espece, classificationGenre, 0);
+                    final ClassificationFiche classification_final = new ClassificationFiche(espece, classificationGenre, 20);
 
                     // Enregistrement de la Classification de la Fiche
                     TransactionManager.callInTransaction(connectionSource,
@@ -284,7 +284,7 @@ public class PrefetchFiches {
                             });
                 }
                 if (classificationEspece != null) {
-                    final ClassificationFiche classification_final = new ClassificationFiche(espece, classificationEspece, 0);
+                    final ClassificationFiche classification_final = new ClassificationFiche(espece, classificationEspece, 21);
 
                     // Enregistrement de la Classification de la Fiche
                     TransactionManager.callInTransaction(connectionSource,
