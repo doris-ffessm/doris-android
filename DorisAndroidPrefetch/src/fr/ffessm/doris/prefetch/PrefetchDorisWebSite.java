@@ -113,9 +113,6 @@ public class PrefetchDorisWebSite {
 	PrefetchDBTools prefetchDBTools = null;
 	
 	public static void main(String[] args) throws Exception {
-		
-		// turn our static method into an instance of Main
-        BasicConfigurator.configure();
 
 		new PrefetchDorisWebSite().doMain(args);
 		
@@ -383,6 +380,9 @@ public class PrefetchDorisWebSite {
 
         boolean testDev = false;
         int testQte = 50;
+
+        // turn our static method into an instance of Main
+        if (testDev = true) BasicConfigurator.configure();
 
         // Vérification, Création, Sauvegarde des dossiers de travail
         renommageDossiers(action);

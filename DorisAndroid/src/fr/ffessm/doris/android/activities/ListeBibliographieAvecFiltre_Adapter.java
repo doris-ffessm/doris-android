@@ -188,13 +188,14 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
         
 		// Start of user code protected additional ListeBibliographieAvecFiltre_Adapter getView code
 		//	additional code
-        ImageView imageView = (ImageView) convertView.findViewById(R.id.listebibliographieavecfiltre_listviewrow_icon);
+        final ImageView imageView = (ImageView) convertView.findViewById(R.id.listebibliographieavecfiltre_listviewrow_icon);
         String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
         int defaultIconSize = 48;
         try{
         	defaultIconSize = Integer.parseInt(defaultIconSizeString);
         }catch(Exception e){}
-        
+        final int defaultIconSizeFinal = defaultIconSize;
+
     	imageView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
     	imageView.getLayoutParams().width = defaultIconSize;
     	
@@ -216,16 +217,53 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
 	    		
 	    		if (reseauOutils.isTelechargementsModeConnectePossible()) {
 	    			
-		    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLIllustration() : "+Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+entry.getCleURLIllustration());
-		    		String urlPhoto = entry.getCleURLIllustration().replace("gestionenligne/photos_biblio_moy/", "");
-		    		urlPhoto= Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+urlPhoto;
+		    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLIllustration() : "+Constants.IMAGE_BASE_URL + "/" + entry.getCleURLIllustration().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE));
+
 		    		Picasso.with(context)
-		    			.load(urlPhoto)
+		    			.load(Constants.IMAGE_BASE_URL + "/" + entry.getCleURLIllustration().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE))
 						.placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par défaut pour commencer
 						.error(R.drawable.app_bibliographie_doris_non_connecte)
 						.resize(defaultIconSize, defaultIconSize)
 						.centerInside()
-		    			.into(imageView);
+                        .into(imageView,
+                            new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    //Success image already loaded into the view
+                                }
+
+                                @Override
+                                public void onError() {
+
+                                    Picasso.with(context)
+                                            .load(Constants.IMAGE_BASE_URL + "/" + entry.getCleURLIllustration().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
+                                            .placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par defaut pour commencer
+                                            .resize(defaultIconSizeFinal, defaultIconSizeFinal)
+                                            .centerInside()
+                                            .error(R.drawable.app_bibliographie_doris_non_connecte)
+                                            .into(imageView,
+                                                    new com.squareup.picasso.Callback() {
+                                                        @Override
+                                                        public void onSuccess() {
+                                                            //Success image already loaded into the view
+                                                        }
+
+                                                        @Override
+                                                        public void onError() {
+
+                                                            Picasso.with(context)
+                                                                    .load(Constants.IMAGE_BASE_URL + "/" + entry.getCleURLIllustration())
+                                                                    .placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par defaut pour commencer
+                                                                    .resize(defaultIconSizeFinal, defaultIconSizeFinal)
+                                                                    .centerInside()
+                                                                    .error(R.drawable.app_bibliographie_doris_non_connecte)
+                                                                    .into(imageView);
+                                                        }
+
+                                                    });
+                                }
+
+                            });
 	    		} else {
 	    			imageView.setImageResource(R.drawable.app_bibliographie_doris_non_connecte);
 	    		}

@@ -176,18 +176,18 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
         
 		// Start of user code protected additional ListeParticipantAvecFiltre_Adapter getView code
 		//	additional code
-        ImageView trombineView = (ImageView) convertView.findViewById(R.id.listeparticipantavecfiltre_listviewrow_icon);
+        final ImageView trombineView = (ImageView) convertView.findViewById(R.id.listeparticipantavecfiltre_listviewrow_icon);
         String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
         int defaultIconSize = 48;
         try{
         	defaultIconSize = Integer.parseInt(defaultIconSizeString);
         }catch(Exception e){}
+        final int defaultIconSizeFinal = defaultIconSize;
+
         trombineView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
         trombineView.getLayoutParams().width = defaultIconSize;
         
         if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {
-        	
-            
 
 	        if(photosOutils.isAvailableInFolderPhoto(entry.getPhotoNom(), ImageType.PORTRAITS)){
 	    		try {
@@ -203,15 +203,38 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 	    		
 	    		if (reseauOutils.isTelechargementsModeConnectePossible()) {
 
-		    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLPhotoParticipant() : "+Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom());
-		    		String urlPhoto= Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom();
+		    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLPhotoParticipant() : "+entry.getPhotoNom());
+                    Log.d(LOG_TAG, "getView URL Vignette Image : "+
+                            entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE));
+
 		    		Picasso.with(context)
-		    			.load(urlPhoto.replace(" ", "%20"))
+		    			.load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE))
 						.placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
-						.error(R.drawable.app_ic_participant_pas_connecte)
 						.resize(defaultIconSize, defaultIconSize)
 						.centerInside()
-		    			.into(trombineView);
+		    			.into(trombineView,
+                            new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    //Success image already loaded into the view
+                                }
+
+                                @Override
+                                public void onError() {
+	    				        	Log.d(LOG_TAG, "getView URL Petite Image : "+
+                                            entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE));
+
+                                    Picasso.with(context)
+                                            .load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
+                                            .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
+                                            .resize(defaultIconSizeFinal, defaultIconSizeFinal)
+                                            .centerInside()
+                                            .error(R.drawable.doris_icone_doris_large_pas_connecte)
+                                            .into(trombineView);
+                                }
+
+                            });
+
 	    		} else {
 	    			
 	    			trombineView.setImageResource(R.drawable.app_ic_participant_pas_connecte);

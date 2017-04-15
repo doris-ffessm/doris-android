@@ -51,7 +51,9 @@ import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
@@ -93,7 +95,7 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 // Start of user code protectedDetailsBibliographie_ElementViewActivity_additional_attributes
 	
 	final Context context = this;
-	
+
 	Photos_Outils photosOutils;
 	Reseau_Outils reseauOutils;
 	
@@ -110,7 +112,7 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 	    actionBar.setDisplayHomeAsUpEnabled(true);
 
         entreeBibliographieId = getIntent().getExtras().getInt("entreeBibliographieId");
-        
+
 		// Start of user code protectedDetailsBibliographie_ElementViewActivity_onCreate
 		// End of user code
     }
@@ -126,7 +128,7 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
     	// get our dao
     	RuntimeExceptionDao<EntreeBibliographie, Integer> entriesDao = getHelper().getEntreeBibliographieDao();
 		// Start of user code protectedDetailsBibliographie_ElementViewActivity.refreshScreenData
-    	EntreeBibliographie entry = entriesDao.queryForId(entreeBibliographieId);
+    	final EntreeBibliographie entry = entriesDao.queryForId(entreeBibliographieId);
     	entry.setContextDB(getHelper().getDorisDBHelper());
 
 		((TextView) findViewById(R.id.detailsbibliographie_elementview_numerodoris)).setText(((Integer)entry.getNumeroDoris()).toString());					
@@ -143,7 +145,8 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 		contenuUrl.setText(richtext);
 		contenuUrl.setMovementMethod(LinkMovementMethod.getInstance());
 		
-        ImageView biblioView = (ImageView) findViewById(R.id.detailsbibliographie_elementview_icon);
+        final ImageView biblioView = (ImageView) findViewById(R.id.detailsbibliographie_elementview_icon);
+
         if ( !entry.getCleURLIllustration().isEmpty() ) {
         	String nomPhoto = entry.getCleURLIllustration().replace("gestionenligne/photos_biblio_moy/","");
         	nomPhoto = Constants.PREFIX_IMGDSK_BIBLIO+nomPhoto;
@@ -163,15 +166,33 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 	    		if (getReseauOutils().isTelechargementsModeConnectePossible()) {
 	    			
 		    		//Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLIllustration() : "+Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+entry.getCleURLIllustration());
-		    		String urlPhoto = entry.getCleURLIllustration().replace("gestionenligne/photos_biblio_moy/", "");
-		    		urlPhoto= Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+urlPhoto;
+
 		    		Picasso.with(context)
-		    			.load(urlPhoto)
+		    			.load(Constants.IMAGE_BASE_URL+"/"+entry.getCleURLIllustration().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
 						.placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par défaut pour commencer
 						.error(R.drawable.app_bibliographie_doris_non_connecte)
-						.fit()
-						.centerInside()
-		    			.into(biblioView);
+                        .fit()
+                        .centerInside()
+                        .into(biblioView,
+                            new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    //Success image already loaded into the view
+                                }
+
+                                @Override
+                                public void onError() {
+
+                                    Picasso.with(context)
+                                            .load(Constants.IMAGE_BASE_URL + "/" + entry.getCleURLIllustration())
+                                            .placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par defaut pour commencer
+                                            .fit()
+                                            .centerInside()
+                                            .error(R.drawable.app_bibliographie_doris_non_connecte)
+                                            .into(biblioView);
+                                }
+
+                            });
 	    		} else {
 	    			biblioView.setImageResource(R.drawable.app_bibliographie_doris_non_connecte);
 	    		}
