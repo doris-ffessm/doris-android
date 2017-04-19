@@ -147,7 +147,8 @@ public class Common_Outils {
 
         // Suppression Balises de coloration "non significatives"
         texte = texte.replaceAll("<span style=\"color: #......;\">([^<>]*)</span>", "$1");
-		
+        texte = texte.replaceAll("<i[^>]*>", "<i>");
+
 		texte = StringUtils.replace(texte, "bgcolor=\"#ffffff\" onMouseOver=\"this.bgColor='#F3F3F3';\" onMouseOut=\"this.bgColor='#ffffff';\"", "" );
 		texte = StringUtils.replace(texte, "color=\"#999999\"", "");
 		//log.debug("nettoyageBalises() - 090");

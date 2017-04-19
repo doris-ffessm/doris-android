@@ -382,7 +382,7 @@ public class PrefetchDorisWebSite {
         int testQte = 50;
 
         // turn our static method into an instance of Main
-        if (testDev = true) BasicConfigurator.configure();
+        if (testDev == true) BasicConfigurator.configure();
 
         // Vérification, Création, Sauvegarde des dossiers de travail
         renommageDossiers(action);
@@ -406,6 +406,7 @@ public class PrefetchDorisWebSite {
             // - - - Groupes - - -
             // Récupération de la liste des groupes sur le site de DORIS
             // En UPDATE et CDDVD on re-télécharge que la liste
+            log.debug("dbV4ToAndroidAction() - - - Groupes - - -");
             nbMaxFichesATraiter = 2000;
             if (testDev) nbMaxFichesATraiter = 100;
             nbFichesParRequetes = 50;
@@ -421,6 +422,7 @@ public class PrefetchDorisWebSite {
             */
 
             // - - - Participants - - -
+            log.debug("dbV4ToAndroidAction() - - - Participants - - -");
             nbMaxFichesATraiter = 2000;
             if (testDev) nbMaxFichesATraiter = testQte;
             nbFichesParRequetes = 50;
@@ -435,6 +437,7 @@ public class PrefetchDorisWebSite {
             */
 
             // - - - Glossaire - - -
+            log.debug("dbV4ToAndroidAction() - - - Glossaire - - -");
             nbMaxFichesATraiter = 2000;
             if (testDev) nbMaxFichesATraiter = testQte;
             nbFichesParRequetes = 50;
@@ -448,6 +451,7 @@ public class PrefetchDorisWebSite {
             */
 
             // - - - Bibliographie - - -
+            log.debug("dbV4ToAndroidAction() - - - Bibliographie - - -");
 			nbMaxFichesATraiter = 2000;
             if (testDev) nbMaxFichesATraiter = testQte;
 			nbFichesParRequetes = 50;
@@ -464,7 +468,8 @@ public class PrefetchDorisWebSite {
             */
 
             // - - - Mise à jour des zones géographiques - - -
-             PrefetchZonesGeographiques zonesGeographiques = new PrefetchZonesGeographiques(dbContext, connectionSource, action, nbMaxFichesATraiter);
+            log.debug("dbV4ToAndroidAction() - - - Mise à jour des zones géographiques - - -");
+            PrefetchZonesGeographiques zonesGeographiques = new PrefetchZonesGeographiques(dbContext, connectionSource, action, nbMaxFichesATraiter);
             if ( zonesGeographiques.prefetchV4() == -1 ) {
                 log.debug("doMain() - Erreur Mise à jour des zones géographiques" );
                 System.exit(1);
@@ -474,6 +479,7 @@ public class PrefetchDorisWebSite {
             */
 
             // - - - Liste des Fiches - - -
+            log.debug("dbV4ToAndroidAction() - - - Liste des Fiches - - -");
             nbMaxFichesATraiter = 6000;
             if (testDev) nbMaxFichesATraiter = testQte;
             nbFichesParRequetes = 50;
@@ -504,6 +510,7 @@ public class PrefetchDorisWebSite {
             */
 
             // - - - Enregistrement Date génération Base - - -
+            log.debug("dbV4ToAndroidAction() - - - Enregistrement Date génération Base - - -");
             Date date = new Date();
             SimpleDateFormat ft =  new SimpleDateFormat ("dd/MM/yyyy  HH:mm", Locale.US);
             dbContext.dorisDB_metadataDao.create(new DorisDB_metadata(ft.format(date),""));
