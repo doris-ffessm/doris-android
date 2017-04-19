@@ -174,6 +174,14 @@ public class PrefetchFiches {
                         ).toLowerCase(Locale.FRENCH)
                 );
 
+                // Groupe
+                if (especeJSON.getFields().getGroup().getValue() != null) {
+                    Groupe groupeDoris = dbContext.groupeDao.queryForFirst(
+                            dbContext.groupeDao.queryBuilder().where().eq("numeroGroupe", especeJSON.getFields().getGroup().getValue()).prepare()
+                    );
+                    espece.setGroupe(groupeDoris);
+                }
+
                 // Enregistrement dans la Base
                 final Fiche espece_final = espece;
                 TransactionManager.callInTransaction(connectionSource,
@@ -234,6 +242,7 @@ public class PrefetchFiches {
                     }
                 }
 
+
                 /* Ajout aux Classifications si pas encore dans la liste
                  */
                 //log.debug("prefetchV4() - Classification de la fiche");
@@ -252,52 +261,26 @@ public class PrefetchFiches {
                     if (classification == null) {
                         //log.debug("prefetchV4() - classification par encore dans la base");
 
-                        // le Groupe est un cas particulier avec son propre format json
-                        if (classificationFiche.getClassification().getNiveau().equals("group") || classificationFiche.getClassification().getNiveau().equals("{{g}}Groupe{{/g}}")) {
+                        fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification classificationJSON = dorisAPI_JSONDATABindingHelper.getClassificationFieldsFromObjectId(classificationFiche.getClassification().getNumeroDoris());
 
-                            fr.ffessm.doris.prefetch.ezpublish.jsondata.groupe.Groupe groupeJSON = dorisAPI_JSONDATABindingHelper.getGroupeFieldsFromObjectId(classificationFiche.getClassification().getNumeroDoris());
+                        // Parfois on n'arrive pas à la récupérer
+                        if (classificationJSON != null) {
+                            classification = jsonToDB.getClassificationFromJSONClassification(
+                                    classificationFiche.getClassification().getNumeroDoris(), classificationFiche.getClassification().getNiveau(), classificationJSON);
 
-                            // Parfois on n'arrive pas à la récupérer
-                            if (groupeJSON != null) {
-                                classification = jsonToDB.getClassificationFromJSONClassification(
-                                        classificationFiche.getClassification().getNumeroDoris(), classificationFiche.getClassification().getNiveau(), groupeJSON);
+                            final Classification classificationFinal = classification;
+                            TransactionManager.callInTransaction(connectionSource,
+                                    new Callable<Void>() {
+                                        public Void call() throws Exception {
 
-                                final Classification classificationFinal = classification;
-                                TransactionManager.callInTransaction(connectionSource,
-                                        new Callable<Void>() {
-                                            public Void call() throws Exception {
+                                            dbContext.classificationDao.create(classificationFinal);
 
-                                                dbContext.classificationDao.create(classificationFinal);
+                                            return null;
+                                        }
+                                    });
 
-                                                return null;
-                                            }
-                                        });
-
-                            }
-
-                        } else {
-                        // les autres niveaux ont tous le même format
-
-                            fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification classificationJSON = dorisAPI_JSONDATABindingHelper.getClassificationFieldsFromObjectId(classificationFiche.getClassification().getNumeroDoris());
-
-                            // Parfois on n'arrive pas à la récupérer
-                            if (classificationJSON != null) {
-                                classification = jsonToDB.getClassificationFromJSONClassification(
-                                        classificationFiche.getClassification().getNumeroDoris(), classificationFiche.getClassification().getNiveau(), classificationJSON);
-
-                                final Classification classificationFinal = classification;
-                                TransactionManager.callInTransaction(connectionSource,
-                                        new Callable<Void>() {
-                                            public Void call() throws Exception {
-
-                                                dbContext.classificationDao.create(classificationFinal);
-
-                                                return null;
-                                            }
-                                        });
-
-                            }
                         }
+
                     }
 
                     //log.debug("prefetchV4() - classification : " + classification.getNumeroDoris() + " - " + classification.getTermeFrancais());

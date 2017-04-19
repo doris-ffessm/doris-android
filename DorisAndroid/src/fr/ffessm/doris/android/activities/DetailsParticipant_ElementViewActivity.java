@@ -137,7 +137,7 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
 
 		((TextView) findViewById(R.id.detailsparticipant_elementview_nom)).setText(entry.getNom());
 		participantNumeroDoris = entry.getNumeroParticipant();
-		((TextView) findViewById(R.id.detailsparticipant_elementview_numeroparticipant)).setText(((Integer)participantNumeroDoris).toString());					
+		//((TextView) findViewById(R.id.detailsparticipant_elementview_numeroparticipant)).setText(((Integer)participantNumeroDoris).toString());
 		
 		if (entry.getFonctions().contains(Constants.ParticipantKind.PHOTOGRAPHE.ordinal()+";")){
 			((ImageView) findViewById(R.id.detailsparticipant_picto_photographe)).setVisibility(View.VISIBLE);
