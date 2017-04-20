@@ -271,7 +271,20 @@ public class Common_Outils {
 				.replaceAll(" ;", "\u00A0;")
 				.replaceAll(" !", "\u00A0!")
 				.replaceAll(" \\?", "\u00A0?");
-		
+
+        // Remplacement &...; par les caractères alpha.
+        texteNettoye = StringUtils.replace(texteNettoye, "&agrave;", "à");
+        texteNettoye = StringUtils.replace(texteNettoye, "&eacute;", "é");
+        texteNettoye = StringUtils.replace(texteNettoye, "&ccedil;", "ç");
+        texteNettoye = StringUtils.replace(texteNettoye, "&Eacute;", "É");
+        texteNettoye = StringUtils.replace(texteNettoye, "&egrave;", "è");
+        texteNettoye = StringUtils.replace(texteNettoye, "&ecirc;", "ê");
+        texteNettoye = StringUtils.replace(texteNettoye, "&euml;", "ë");
+        texteNettoye = StringUtils.replace(texteNettoye, "&icirc;", "î");
+        texteNettoye = StringUtils.replace(texteNettoye, "&ugrave;", "à");
+        texteNettoye = StringUtils.replace(texteNettoye, "&nbsp;", " ");
+
+
 		texteNettoye = texteNettoye.trim();
 		//log.debug("nettoyageTextes() - texteNettoye : " + texteNettoye);
 		
