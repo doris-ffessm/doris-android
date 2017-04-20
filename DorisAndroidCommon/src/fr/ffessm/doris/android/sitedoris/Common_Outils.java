@@ -131,12 +131,13 @@ public class Common_Outils {
 		//Il arrive très souvent qu'une balise ouverte soit aussitôt refermée
 		// ce doit sans doute être dû à l'interface de saisie ou des outils utilisés en amont
 		// Toujours est-il que ça peut gêner ensuite, que ça fait perdre du temps et de la place
-		texte = texte.replaceAll("<strong></strong>|</strong><strong>|<em></em>|</em><em>|<i></i>|</i><i>", "");
+		texte = texte.replaceAll("<strong></strong>|</strong><strong>|<em></em>|</em><em>|<i></i>|</i><i>|<span></span>", "");
 
 		texte = texte.replaceAll("<a href=\"http://[^>]*></a>", "");
 
         // On vire target=... des liens
         texte = StringUtils.replace(texte, "<a target=\"_blank\" href=", "<a href=");
+        texte = StringUtils.replace(texte, " target=\"_blank\">", ">");
 
 
 		//log.debug("nettoyageBalises() - 060");
@@ -146,7 +147,8 @@ public class Common_Outils {
 		texte = texte.replaceAll("<span style=\"color: #ffffff;\">[^<>]*</span>", "");
 
         // Suppression Balises de coloration "non significatives"
-        texte = texte.replaceAll("<span style=\"color: #......;\">([^<>]*)</span>", "$1");
+        texte = texte.replaceAll("<span style=\"color:[^>]*>([^<>]*)</span>", "$1");
+        texte = texte.replaceAll("<span class=[^>]*>([^<>]*)</span>", "$1");
         texte = texte.replaceAll("<i[^>]*>", "<i>");
 
 		texte = StringUtils.replace(texte, "bgcolor=\"#ffffff\" onMouseOver=\"this.bgColor='#F3F3F3';\" onMouseOut=\"this.bgColor='#ffffff';\"", "" );
@@ -157,8 +159,7 @@ public class Common_Outils {
     	//log.debug("nettoyageBalises() - Fin");
 		return texte;
 	}
-    
-    
+
     public String remplacementBalises(String texte, boolean avecMiseEnForme) {
     	//log.debug("remplacementBalises() - Début");
     	//log.debug("remplacementBalises() - texteANettoye : " + texte);
@@ -192,7 +193,11 @@ public class Common_Outils {
 			texte = texte.replaceAll("<[^<]*specie/([0-9]*)[^>]*>([^<]*)</a>", "{{F:$1}}$2{{/F}}");
 
 			//Lien vers termes du glossaire
-			texte = texte.replaceAll("([ >\\}'\\(])([^ >\\}'\\(]*)\\*", "$1{{D:$2}}$2{{/D}}");
+			//Mot suffixé par *
+            texte = texte.replaceAll("([ >\\}'\\(])([^ >\\}'\\(]*)\\*", "$1{{D:$2}}$2{{/D}}");
+            // en V4,
+            texte = texte.replaceAll("<a href=\"Glossaire/([^\"]*)\"[^>]*>([^<]*)</a>", "{{D:$1}}$2{{/D}}");
+
 			//Image du Glossaire (elles sont dans le texte) - <img src="gestionenligne/diaporamaglo/16.jpg     ">
 			texte = texte.replaceAll("<img src=\"gestionenligne/diaporamaglo/([^\" >]*)[ ]*\">", "{{E:$1/}}");
 
@@ -202,7 +207,10 @@ public class Common_Outils {
 
 			//Lien vers site extérieur : oiseaux.net, fishbase.org, etc ...
 			texte = texte.replaceAll("<a href=\"http://([^\"]*)\"[^>]*>([^<]*)</a>", "{{A:$1}}$2{{/A}}");
-			
+
+            // Pour les derniers liens qui trainent, on fait un lien vers le site de DORIS
+            texte = texte.replaceAll("<a href=\"([^\"]*)\"[^>]*>([^<]*)</a>", "{{A:http://doris.ffessm.fr/$1}}$2{{/A}}");
+
 			// Après cela on nettoie un peu et met en ordre
 			// Mieux vaut le faire dans le prefetch qd on a le temps qu'à la présentation
 			texte = texte.replaceAll("\\{\\{/i\\}\\}\\{\\{i\\}\\}|\\{\\{/g\\}\\}\\{\\{g\\}\\}","");

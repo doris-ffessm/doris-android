@@ -45,16 +45,12 @@ public class JsonToDB {
     public PhotoFiche getPhotoFicheFromJSONImage(Image jsonImage){
         PhotoFiche photoFiche = new PhotoFiche(
                                     jsonImage.getDataMap().getImage(),
-                                    commonOutils.remplacementBalises(
-                                            commonOutils.nettoyageBalises(
-                                                    jsonImage.getDataMap().getTitle()
-                                            )
-                                            , true),
-                                    commonOutils.remplacementBalises(
-                                        commonOutils.nettoyageBalises(
-                                                jsonImage.getDataMap().getLegend()
+                                    commonOutils.nettoyageTextes(
+                                            jsonImage.getDataMap().getTitle().trim()
+                                        ),
+                                    commonOutils.nettoyageTextes(
+                                            jsonImage.getDataMap().getLegend().trim()
                                         )
-                                        , true)
                 );
         return photoFiche;
     }
@@ -125,11 +121,13 @@ public class JsonToDB {
 
         DefinitionGlossaire terme = new DefinitionGlossaire(
                 Integer.parseInt(jsonTerme.getFields().getReference().getValue()),
-                jsonTerme.getFields().getTitle().getValue(),
+                commonOutils.nettoyageTextes(
+                        jsonTerme.getFields().getTitle().getValue()
+                    ).trim(),
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonTerme.getFields().getDefinition().getValue()
-                        )
+                        ).trim()
                     , true),
                 listeImages
                 );

@@ -247,7 +247,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
     	//Log.d(LOG_TAG, "getView photoPrincipale.getCleURL() = " + photoPrincipale.getCleURL());
 
-        if(photoPrincipale != null & photoPrincipale.getCleURL() != null){
+        if(photoPrincipale != null && photoPrincipale.getCleURL() != null){
 
         	photoPrincipale.setContextDB(_contextDB);
 

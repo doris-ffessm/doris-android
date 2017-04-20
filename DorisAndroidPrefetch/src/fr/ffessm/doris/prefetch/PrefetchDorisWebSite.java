@@ -382,7 +382,7 @@ public class PrefetchDorisWebSite {
         int testQte = 50;
 
         // turn our static method into an instance of Main
-        if (testDev == true) BasicConfigurator.configure();
+        if (testDev == false) BasicConfigurator.configure();
 
         // Vérification, Création, Sauvegarde des dossiers de travail
         renommageDossiers(action);
