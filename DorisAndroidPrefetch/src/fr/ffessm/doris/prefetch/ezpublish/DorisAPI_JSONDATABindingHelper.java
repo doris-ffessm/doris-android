@@ -51,8 +51,8 @@ public class DorisAPI_JSONDATABindingHelper {
 
     public Utilisateur getUtilisateurFieldsFromNodeId(int participantNodeId) throws ClientProtocolException,
             IOException {
-        log.debug("getTermeFieldsFromNodeId - Début");
-        log.debug("getTermeFieldsFromNodeId - participantNodeId : " + participantNodeId);
+        log.debug("getUtilisateurFieldsFromNodeId - Début");
+        log.debug("getUtilisateurFieldsFromNodeId - participantNodeId : " + participantNodeId);
 
         HttpResponse response = getFieldsFromNodeId(participantNodeId);
 
@@ -290,8 +290,8 @@ public class DorisAPI_JSONDATABindingHelper {
 
     public HttpResponse getFieldsFromNodeId(int nodeId) throws ClientProtocolException,
             IOException {
-        //log.debug("getFieldsFromNodeId - Début");
-        //log.debug("getFieldsFromNodeId - nodeId : " + nodeId);
+        log.debug("getFieldsFromNodeId - Début");
+        log.debug("getFieldsFromNodeId - nodeId : " + nodeId);
 
         DefaultHttpClient client = new DefaultHttpClient();
         String uri = DorisOAuth2ClientCredentials.getServerNodeUrlTousLesChamps( String.valueOf(nodeId) );
@@ -322,7 +322,7 @@ public class DorisAPI_JSONDATABindingHelper {
         }
 
         HttpResponse response = client.execute(getHttpPage);
-        //log.debug("getFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
+        log.debug("getFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
 
         return response;
     }

@@ -280,7 +280,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 		StringBuffer sbDebugText = new StringBuffer();
 		
 		Collection<PhotoFiche> photosFiche = entry.getPhotosFiche(); 
-		if(photosFiche!=null && isOnCreate){
+		if(photosFiche != null && isOnCreate){
 			//sbDebugText.append("\nnbPhoto="+photosFiche.size()+"\n");
 			
 			photoGallery = (LinearLayout)findViewById(R.id.detailsfiche_elementview_photogallery);

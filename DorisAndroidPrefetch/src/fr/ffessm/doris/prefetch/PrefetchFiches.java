@@ -452,7 +452,7 @@ public class PrefetchFiches {
                 * * * * * * * * * * * * */
                 //log.debug("prefetchV4() - imagesNodeIds = "+especeJSON.getFields().getImages().getValue());
 
-                List<Image> imageDataJSON = new ArrayList<Image>();
+                List<Image> imageJSONListe = new ArrayList<Image>();
 
                 // itère sur les images trouvées pour cette fiche
                 for(String possibleImageId : especeJSON.getFields().getImages().getValue().split("&")){
@@ -462,7 +462,12 @@ public class PrefetchFiches {
                         //log.debug("prefetchV4() - imageId = "+possibleImageId.split("\\|")[0]);
 
                         // récupère les données associées à l'image
-                        imageDataJSON.add(dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId));
+                        Image imageJSON = dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId);
+
+                        //TODO : Traiter le cas des Videos un jour
+                        if (imageJSON.getClassIdentifier().equals("image")) {
+                            imageJSONListe.add(imageJSON);
+                        }
 
                     } catch ( NumberFormatException nfe){
                         // ignore les entrées invalides
@@ -470,7 +475,7 @@ public class PrefetchFiches {
                 }
 
                 // recrée une entrée dans la base pour l'image
-                final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageDataJSON);
+                final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageJSONListe);
                 TransactionManager.callInTransaction(connectionSource,
                     new Callable<Void>() {
                         public Void call() throws Exception {

@@ -382,7 +382,7 @@ public class PrefetchDorisWebSite {
         int testQte = 50;
 
         // turn our static method into an instance of Main
-        if (testDev == false) BasicConfigurator.configure();
+        if (testDev == true) BasicConfigurator.configure();
 
         // Vérification, Création, Sauvegarde des dossiers de travail
         renommageDossiers(action);
@@ -424,7 +424,7 @@ public class PrefetchDorisWebSite {
             // - - - Participants - - -
             log.debug("dbV4ToAndroidAction() - - - Participants - - -");
             nbMaxFichesATraiter = 2000;
-            if (testDev) nbMaxFichesATraiter = testQte;
+            if (testDev) nbMaxFichesATraiter = 200;
             nbFichesParRequetes = 50;
             PrefetchIntervenants intervenants = new PrefetchIntervenants(dbContext, connectionSource, action, nbMaxFichesATraiter, nbFichesParRequetes);
             if ( intervenants.prefetchV4() == -1 ) {
