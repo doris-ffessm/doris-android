@@ -465,7 +465,7 @@ public class PrefetchFiches {
                         Image imageJSON = dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId);
 
                         //TODO : Traiter le cas des Videos un jour
-                        if (imageJSON.getClassIdentifier().equals("image")) {
+                        if (imageJSON != null && imageJSON.getClassIdentifier().equals("image")) {
                             imageJSONListe.add(imageJSON);
                         }
 

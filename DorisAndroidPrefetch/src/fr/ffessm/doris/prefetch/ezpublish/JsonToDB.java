@@ -109,9 +109,8 @@ public class JsonToDB {
                     int imageId = Integer.parseInt(possibleImageId.split("\\|")[0]);
                     //log.debug("getDefinitionGlossaireFromJSONTerme() - imageId : "+imageId);
                     // récupère les données associées à l'image
-                    listeImages += dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId).getDataMap().getImage() + ";";
-
-
+                    String image = dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId).getDataMap().getImage();
+                    if (image != null) listeImages += image + ";";
                 } catch (IOException io) {
                     // ignore les entrées invalides
                 }

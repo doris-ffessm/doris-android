@@ -464,7 +464,11 @@ public class DorisAPI_JSONDATABindingHelper {
 		
 		HttpResponse response = client.execute(getCode);
 		System.out.println("\t response : " + response.getStatusLine());
-		
+
+        if ( response.getStatusLine().getStatusCode() != 200 )  {
+            return null;
+        }
+
 		ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
 		Image imageResponse = mapper.readValue(new InputStreamReader(response.getEntity().getContent()), Image.class);
 		System.out.println("\t image path: " + imageResponse.getDataMap().getImage() );

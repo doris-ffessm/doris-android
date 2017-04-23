@@ -378,7 +378,7 @@ public class PrefetchDorisWebSite {
     private void dbV4ToAndroidAction() throws Exception{
         log.debug("dbV4ToAndroidAction() - Début Création de la Base pour Doris V4");
 
-        boolean testDev = false;
+        boolean testDev = true;
         int testQte = 50;
 
         // turn our static method into an instance of Main
@@ -603,7 +603,8 @@ public class PrefetchDorisWebSite {
 						try{
 							int imageId = Integer.parseInt(possibleImageId.replaceAll("&", ""));
 							// récupère les données associées à l'image
-							imageData.add(dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId));	
+                            Image image = dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId);
+							if (image != null) imageData.add(image);
 	
 						} catch ( NumberFormatException nfe){
 							// ignore les entrées invalides
