@@ -378,7 +378,7 @@ public class PrefetchDorisWebSite {
     private void dbV4ToAndroidAction() throws Exception{
         log.debug("dbV4ToAndroidAction() - Début Création de la Base pour Doris V4");
 
-        boolean testDev = true;
+        boolean testDev = false;
         int testQte = 50;
 
         // turn our static method into an instance of Main
