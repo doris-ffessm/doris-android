@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -42,9 +42,9 @@ termes.
 
 package fr.ffessm.doris.prefetch;
 
-import java.io.File;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.logging.Log;
@@ -53,376 +53,472 @@ import org.apache.commons.logging.LogFactory;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.support.ConnectionSource;
 
+import fr.ffessm.doris.android.datamodel.AutreDenomination;
+import fr.ffessm.doris.android.datamodel.ClassificationFiche;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
+import fr.ffessm.doris.android.datamodel.IntervenantFiche;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.datamodel.SectionFiche;
+import fr.ffessm.doris.android.datamodel.Classification;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
+import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
+import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
-import fr.ffessm.doris.android.sitedoris.ErrorCollector;
-import fr.ffessm.doris.android.sitedoris.FicheLight;
-import fr.ffessm.doris.android.sitedoris.SiteDoris;
-import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
-import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
-
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
+import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
+import fr.ffessm.doris.prefetch.ezpublish.ObjNameNodeId;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
 
 public class PrefetchFiches {
 
-
 	// Initialisation de la Gestion des Log 
 	public static Log log = LogFactory.getLog(PrefetchFiches.class);
-	
+
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
-	
-	private ActionKind action;
+
+    private static Common_Outils commonOutils = new Common_Outils();
+
 	private int nbMaxFichesATraiter;
-	
-	private List<Groupe> listeGroupes;
-	private List<Participant> listeParticipants;
-	
-	private Fiche ficheMaj;
-	private List<PhotoFiche> listePhotoFiche;
-	
-	public PrefetchFiches(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter,
-			List<Groupe> listeGroupes, List<Participant> listeParticipants) {
-		this.dbContext = dbContext;
-		this.connectionSource = connectionSource;
-		this.action = action;
-		this.nbMaxFichesATraiter = nbMaxFichesATraiter;
-		
-		this.listeGroupes = listeGroupes;
-		this.listeParticipants = listeParticipants;
-	}
-	
-	
-	
-	public int prefetch() {
-		// - - - Liste des Fiches - - -
-		// Récupération de la liste des fiches sur le site de DORIS
-		// Elles sont récupérées dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
-		
-		PrefetchTools prefetchTools = new PrefetchTools();
-		SiteDoris siteDoris = new SiteDoris();
-		
-		String contenuFichierHtml = null;
-		
-		try {
-			
-			String listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeFiches.html";
-			log.info("Récup. Liste Fiches Doris : " + listeFichesFichier);
-			
-			if ( action != ActionKind.NODWNLD ){
-				String listeToutesFiches = Constants.getListeFichesUrl(Constants.getNumZoneForUrl(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES)); 
-				if (prefetchTools.getFichierFromUrl(listeToutesFiches, listeFichesFichier)) {
-					contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier), FileHtmlKind.LISTE_FICHES);
-				} else {
-					log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-					System.exit(1);
-				}
-			} else {
-				// NODWNLD
-				listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches.html";
-				if (new File(listeFichesFichier).exists()) {
-					contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier), FileHtmlKind.LISTE_FICHES);
-				} else {
-					log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-					System.exit(0);
-				}
-			}
-			
-			HashSet<FicheLight> listeFichesSite = siteDoris.getListeFichesFromHtml(contenuFichierHtml);
-			log.info("Nb Fiches sur le site : "+listeFichesSite.size());
-	
-			// Récupération de la liste des fiches dans le dossier de référence
-			// Si NODWNLD la liste sera utilisée pour faire le traitement
-			// Si UPDATED ou CDDVD, elle permettra de déduire les fiches à télécharger de nouveau : les fiches ayant changées de statut
-			HashSet<FicheLight> listFichesFromRef = new HashSet<FicheLight>(0);
-			if ( action != ActionKind.INIT ){
-				listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches.html";
-				if (new File(listeFichesFichier).exists()) {
-					listFichesFromRef = siteDoris.getListeFichesFromHtml( prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier), FileHtmlKind.LISTE_FICHES) );
-				} else {
-					// Si en Mode NODWLD alors le fichier doit être dispo.
-					if (action == ActionKind.NODWNLD) {
-						log.error("Une erreur est survenue lors de la récupération de la liste des fiches");
-						System.exit(1);
-					} else {
-						// Sinon Liste Ref = Liste du Site puisque non dispo
-						listFichesFromRef = listeFichesSite;
-					}
-				}
-			}
-			
-			log.info("Nb Fiches dans le dossier de référence : "+listFichesFromRef.size());
-			
-			// Création de l'entête des fiches
-			final HashSet<FicheLight> listeFichesTravail;
-			if ( action != ActionKind.NODWNLD ) {
-				listeFichesTravail = (HashSet<FicheLight>) listeFichesSite.clone();
-			} else {
-				listeFichesTravail = (HashSet<FicheLight>) listFichesFromRef.clone();
-			}
-			listeFichesSite = null;
-			
-			TransactionManager.callInTransaction(connectionSource,
-				new Callable<Void>() {
-					public Void call() throws Exception {
-						for (FicheLight ficheLight : listeFichesTravail){
-							dbContext.ficheDao.create(new Fiche(ficheLight));
-						}
-						return null;
-				    }
-				});
+    private int nbFichesParRequetes;
 
-			
-			// - - - Fiche - - -
-			// Pour chaque fiche, on télécharge la page (si nécessaire) puis on la traite
+    public PrefetchFiches(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter, int nbFichesParRequetes) {
+        this.dbContext = dbContext;
+        this.connectionSource = connectionSource;
 
-			log.info("Mise à jours de "+listeFichesTravail.size()+" fiches.");
-			HashSet<FicheLight> listFichesModif = null;
-			if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI) {
-				listFichesModif = siteDoris.getListeFichesUpdated(listFichesFromRef, listeFichesTravail);
-			}
-			listFichesFromRef = null;
-			
-			int nbFichesTraitees = 0;
-			String urlFiche =  "";
-			String fichierSiteFicheUrl = "";
-			String fichierRefFicheUrl = "";
-			File fichierSiteFiche = null;
-			File fichierRefFiche = null;
-			
-			Fiche fiche = null;
-			
-			String urlListePhotos = "";
-			String fichierSiteListePhotosUrl = "";
-			String fichierRefListePhotosUrl = "";
-			File fichierSiteListePhotos = null;
-			File fichierRefListePhotos = null;
-			String contenuFichierHtmlListePhotos = null;
-			
-			String fichierImageRacine = "";
-			String fichierImageRefRacine = "";
+        this.nbMaxFichesATraiter = nbMaxFichesATraiter;
+        this.nbFichesParRequetes = nbFichesParRequetes;
+    }
 
-			for (FicheLight ficheLight : listeFichesTravail) {
-				if (  nbFichesTraitees <= nbMaxFichesATraiter ) {
-					log.debug("doMain() - Traitement Fiche : "+ficheLight.getNomCommun());
-					
-					String errorGroup = "fiches.fiche_"+ficheLight.getNumeroFiche();
-					ErrorCollector.getInstance().addGroup(errorGroup);
-					
-					urlFiche =  Constants.getFicheFromIdUrl( ficheLight.getNumeroFiche() );
-					fichierSiteFicheUrl = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/fiche-"+ficheLight.getNumeroFiche()+".html";
-					fichierRefFicheUrl = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/fiche-"+ficheLight.getNumeroFiche()+".html";
-					fichierSiteFiche = new File(fichierSiteFicheUrl);
-					fichierRefFiche = new File(fichierRefFicheUrl);
-					
-					if ( action == ActionKind.INIT ) {
-						if (prefetchTools.getFichierFromUrl(urlFiche, fichierSiteFicheUrl)) {
-							nbFichesTraitees += 1;
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche, FileHtmlKind.FICHE);
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
-							ErrorCollector.getInstance().addError(errorGroup, "fiche introuvable", "Une erreur est survenue lors de la récupération de la fiche (getFichierFromUrl) depuis l'url :" +urlFiche+ " , "+ficheLight.getNomCommun()+ " , fiche id="+ficheLight.getNumeroFiche());
-							// Solution de contournement désespérée 
-							urlFiche = Constants.getFicheFromNomCommunUrl(ficheLight.getNomCommun());
-							log.error("=> Tentative sur : "+urlFiche);
-							if (prefetchTools.getFichierFromUrl(urlFiche, fichierSiteFicheUrl)) {
-								nbFichesTraitees += 1;
-								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche, FileHtmlKind.FICHE);
-							} else {
-								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
-								ErrorCollector.getInstance().addError(errorGroup, "fiche VRAIMENT introuvable", "Une erreur est survenue lors de la récupération de la fiche (getFichierFromUrl) depuis l'url :" +urlFiche+ " , "+ficheLight.getNomCommun()+ " , fiche id="+ficheLight.getNumeroFiche());
-								
-								continue;
-							}
-						}
-					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
-	
-						if ( fichierRefFiche.exists() && !listFichesModif.contains(ficheLight)) {
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierRefFiche, FileHtmlKind.FICHE);
-							nbFichesTraitees += 1;
-						} else {
-							if (prefetchTools.getFichierFromUrl(urlFiche, fichierSiteFicheUrl)) {
-								nbFichesTraitees += 1;
-								contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche, FileHtmlKind.FICHE);
-							} else {
-								log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
-								ErrorCollector.getInstance().addError(errorGroup, "fiche introuvable", "Une erreur est survenue lors de la récupération de la fiche (getFichierFromUrl) depuis l'url :" +urlFiche+ " , "+ficheLight.getNomCommun()+ " , fiche id="+ficheLight.getNumeroFiche());
-								// Solution de contournement désespérée 
-								urlFiche = Constants.getFicheFromNomCommunUrl(ficheLight.getNomCommun());
-								log.error("=> Tentative sur : "+urlFiche);
-								if (prefetchTools.getFichierFromUrl(urlFiche, fichierSiteFicheUrl)) {
-									nbFichesTraitees += 1;
-									contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierSiteFiche, FileHtmlKind.FICHE);
-								} else {
-									log.error("Une erreur est survenue lors de la récupération de la fiche : "+urlFiche);
-									ErrorCollector.getInstance().addError(errorGroup, "fiche VRAIMENT introuvable", "Une erreur est survenue lors de la récupération de la fiche (getFichierFromUrl) depuis l'url :" +urlFiche+ " , "+ficheLight.getNomCommun()+ " , fiche id="+ficheLight.getNumeroFiche());
-									continue;
-								}
-							}
-						}
-					} else if ( action == ActionKind.NODWNLD ) {
-						if (fichierRefFiche.exists()) {
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(fichierRefFiche, FileHtmlKind.FICHE);
-							nbFichesTraitees += 1;
-						} else {
-							log.error("La récupération de la fiche sur le disque : "+fichierRefFicheUrl+" a échoué.");
-						}
-					}
+    public int prefetchV4() throws Exception {
+        log.debug("prefetchV4() - début");
 
-					fiche = dbContext.ficheDao.queryForFirst(
-							dbContext.ficheDao.queryBuilder().where().eq("numeroFiche", ficheLight.getNumeroFiche()).prepare()
-						);
-					fiche.setContextDB(dbContext);
-					fiche.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
-					ficheMaj = fiche;
-					TransactionManager.callInTransaction(connectionSource,
-							new Callable<Void>() {
-								public Void call() throws Exception {
-									dbContext.ficheDao.update(ficheMaj);
-									return null;
-							    }
-							});
-					
-					// mise à jour des champs inverse
-					//dbContext.ficheDao.refresh(fiche);
-					
-					log.info("doMain() - Info Fiche {");
-					log.info("doMain() -      - ref : "+fiche.getNumeroFiche());
-					log.info("doMain() -      - nom : "+fiche.getNomCommunNeverEmpty());
-					log.info("doMain() -      - etat : "+fiche.getEtatFiche());
-					log.info("doMain() - }");
-					
-					urlListePhotos = "http://doris.ffessm.fr/fiche_photo_liste_apercu.asp?fiche_numero="+fiche.getNumeroFiche();
-					fichierSiteListePhotosUrl = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
-					fichierRefListePhotosUrl = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/fiche-"+fiche.getNumeroFiche()+"_listePhotos.html";
-					fichierSiteListePhotos = new File(fichierSiteListePhotosUrl);
-					fichierRefListePhotos = new File(fichierRefListePhotosUrl);
-					
-					contenuFichierHtmlListePhotos = null;
-					
-					if ( action == ActionKind.INIT ) {
-						if (prefetchTools.getFichierFromUrl(urlListePhotos, fichierSiteListePhotosUrl)) {
-							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierSiteListePhotos, FileHtmlKind.FICHE);
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
-							ErrorCollector.getInstance().addError(errorGroup, "liste photo introuvable" ,"Une erreur est survenue lors de la récupération de la liste de photo pour la fiche "+fiche.getNumeroFiche()+" - "+fiche.getNomCommunNeverEmpty()+" url de la liste: " +urlListePhotos);
-							continue;
-						}
-					} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
-						if (fichierRefListePhotos.exists() && !listFichesModif.contains(fiche)) {
-							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierRefListePhotos, FileHtmlKind.FICHE);
-						} else {
-							if (prefetchTools.getFichierFromUrl(urlListePhotos, fichierSiteListePhotosUrl)) {
-								contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierSiteListePhotos, FileHtmlKind.FICHE);
-							
-							} else {
-								log.warn("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
-								continue;
-							}
-						}
-					} else if ( action == ActionKind.NODWNLD ){
-						if (fichierRefListePhotos.exists()) {
-							contenuFichierHtmlListePhotos = prefetchTools.getFichierTxtFromDisk(fichierRefListePhotos, FileHtmlKind.FICHE);
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la liste de photo pour la fiche : "+urlListePhotos);
-							
-						}
-					}
-					
-					if(contenuFichierHtmlListePhotos != null) {
-						
-						listePhotoFiche = siteDoris.getListePhotosFicheFromHtml(fiche, contenuFichierHtmlListePhotos);
-						
-						// Maj Base de données
-						ficheMaj = fiche;
-						TransactionManager.callInTransaction(connectionSource,
-							new Callable<Void>() {
-								public Void call() throws Exception {
-									for (PhotoFiche photoFiche : listePhotoFiche){
-										photoFiche.setFiche(ficheMaj);
-										dbContext.photoFicheDao.create(photoFiche);
-										
-										if (photoFiche.estPhotoPrincipale) {
-											ficheMaj.setPhotoPrincipale(photoFiche);
-											dbContext.ficheDao.update(ficheMaj);
-										}
-									}
-									return null;
-							    }
-							});
-						
-						// Téléchargement Photos
-						/*
-						if ( action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
+        // - - - Fiches  - - -
+        JsonToDB jsonToDB = new JsonToDB();
+        DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper();
+        DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper();
 
-							fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
-							fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
+        // TODO : Il faudrait mettre un While ici
+        int nbFichesDORIS = nbMaxFichesATraiter;
 
-							for (PhotoFiche photoFiche : listePhotoFiche){
+        int count = 0;
 
-								if ( !photoFiche.getCleURL().isEmpty() ) {
-									// Vignettes
-									if( ! prefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+photoFiche.getCleURL().replace(" ", "_") ) ){
-										if (prefetchTools.getFichierFromUrl(Constants.VIGNETTE_BASE_URL+"/"+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+photoFiche.getCleURL().replace(" ", "_"))) {
-										} else {
-											log.warn("Erreur sur une image 'Photos Vig' ; fiche : "+ficheLight.getNumeroFiche()+"-"+ficheLight.getNomCommun()+" ; url image : "+photoFiche.getCleURL());
+        for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
 
-											ErrorCollector.getInstance().addError(errorGroup, "Erreur sur une image 'Photos Vig' ; fiche : "+ficheLight.getNumeroFiche()+"-"+ficheLight.getNomCommun()+" ; url image : "+photoFiche.getCleURL());
-											//System.exit(1);
-										}
-									}
-									// Qualité Intermédiaire
-									if( ! prefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_MED_RES+"/"+photoFiche.getCleURL().replace(" ", "_") ) ){
-										if (prefetchTools.getFichierFromUrl(Constants.MOYENNE_BASE_URL+"/"+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_MED_RES+"/"+photoFiche.getCleURL().replace(" ", "_"))) {
-										} else {
-											log.warn("Erreur sur une image 'Photos Moy' ; fiche : "+ficheLight.getNumeroFiche()+"-"+ficheLight.getNomCommun()+" ; url image : "+photoFiche.getCleURL());
-											ErrorCollector.getInstance().addError(errorGroup, "Erreur sur une image 'Photos Moy' ; fiche : "+ficheLight.getNumeroFiche()+"-"+ficheLight.getNomCommun()+" ; url image : "+photoFiche.getCleURL());
-											//System.exit(1);
-										}
-									}
-									// Haute Qualité seulement si "DVD"
-									if ( action == ActionKind.CDDVD_HI ) {
-										if( ! prefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_HI_RES+"/"+photoFiche.getCleURL().replace(" ", "_") ) ){
-											if (prefetchTools.getFichierFromUrl(Constants.GRANDE_BASE_URL+"/"+photoFiche.getCleURL().replace(" ", "%20"), fichierImageRacine+PrefetchConstants.SOUSDOSSIER_HI_RES+"/"+photoFiche.getCleURL().replace(" ", "_"))) {
-											} else {
-												log.warn("Erreur sur une image 'Photos' ; fiche : "+ficheLight.getNumeroFiche()+"-"+ficheLight.getNomCommun()+" ; url image : "+photoFiche.getCleURL());
-												ErrorCollector.getInstance().addError(errorGroup, "Erreur sur une image 'Photos' ; fiche : "+ficheLight.getNumeroFiche()+"-"+ficheLight.getNomCommun()+" ; url image : "+photoFiche.getCleURL());
-												//System.exit(1);
-											}
-										}
-									}
-								}
-							}
-						}*/
-					}
-					
-				}
-				else {
-					log.info("Nombre max de fiches à traiter atteint.");
-					break; // ignore les fiches suivantes
-				}
-				
-				if ( nbFichesTraitees != 0 && (nbFichesTraitees % 500) == 0) {
-					log.info("fiche traitées = "+nbFichesTraitees+", pause de 1s...");
-					Thread.sleep(1000);
-				}
-			}
-			
-			
-			
-			return listeFichesTravail.size();
-			
-		} catch ( Exception e) {
-			// une erreur est survenue
-			log.error("Une erreur est survenue dans PrefetchFiches");
-			log.error(e);
-			return -1;
-		}
+            List<ObjNameNodeId> nodesIds = dorisAPI_JSONTreeHelper.getFichesNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
+
+            for (ObjNameNodeId ficheNodeId : nodesIds) {
+                count++;
+                if (count > nbMaxFichesATraiter) {
+                    log.debug("prefetchV4() - nbMaxFichesATraiter atteint");
+                    i = 9999;
+                    break;
+                }
+
+                // Référence de l'Espèce dans le message JSON
+                Espece especeJSON = dorisAPI_JSONDATABindingHelper.getEspeceFieldsFromNodeId(ficheNodeId.getNodeId().intValue());
+                //log.debug("prefetchV4() - especeJSON : " + especeJSON.getFields().getNomCommunFr().getValue());
+
+                Fiche espece = jsonToDB.getFicheFromJSONEspece(ficheNodeId, especeJSON);
+                String textePourRechercheRapide = espece.getNomCommun() + " " +
+                        espece.getNomScientifique().replaceAll("\\{\\{[^\\{]*\\}\\}", "").replaceAll("\\([^\\(]*\\)", "");
+
+                // Préparation Texte pour recherche rapide
+                espece.setTextePourRechercheRapide(
+                        (commonOutils.formatStringNormalizer(textePourRechercheRapide)
+                        ).toLowerCase(Locale.FRENCH)
+                );
+
+                // Groupe
+                if (especeJSON.getFields().getGroup().getValue() != null) {
+                    Groupe groupeDoris = dbContext.groupeDao.queryForFirst(
+                            dbContext.groupeDao.queryBuilder().where().eq("numeroGroupe", especeJSON.getFields().getGroup().getValue()).prepare()
+                    );
+                    espece.setGroupe(groupeDoris);
+                }
+
+                // Enregistrement dans la Base
+                final Fiche espece_final = espece;
+                TransactionManager.callInTransaction(connectionSource,
+                        new Callable<Void>() {
+                            public Void call() throws Exception {
+
+                                dbContext.ficheDao.create(espece_final);
+                                return null;
+                            }
+                        });
 
 
-	}
+                /* Héritée de la manière dont étaient stockées les données dans le Version 3 du Site,
+                On enregistre les différentes sections de la fiche dans l'ordre d'affichage de manière + "générique" que la verson 4 ne le fait
+                 */
+                //log.debug("prefetchV4() - 'Sections' de la fiche");
+                List<SectionFiche> sectionsFiche = jsonToDB.getSectionsFicheFromJSONEspece(especeJSON);
+                for (SectionFiche sectionFiche : sectionsFiche) {
+
+                    sectionFiche.setFiche(espece);
+                    final SectionFiche sectionFiche_final = sectionFiche;
+                    log.debug("prefetchV4() - sectionFiche_final.getFiche() : "+sectionFiche_final.getFiche().getNumeroFiche());
+
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
+
+                                    dbContext.sectionFicheDao.create(sectionFiche_final);
+
+                                    return null;
+                                }
+                            });
+
+                }
+
+            /* Héritée de la manière dont étaient stockées les données dans le Version 3 du Site,
+                On enregistre les dénominations de la fiche dans une table dédiée
+            */
+                //log.debug("prefetchV4() - Autres dénominations");
+                List<AutreDenomination> autresDenominations = jsonToDB.getAutresDenominationFicheFromJSONEspece(especeJSON);
+                for (AutreDenomination autreDenomination : autresDenominations) {
+                    //log.debug("prefetchV4() - autreDenomination : "+autreDenomination.getDenomination());
+                    if (! autreDenomination.getDenomination().contentEquals("<html />")) {
+                        textePourRechercheRapide += " " + autreDenomination.getDenomination().replaceAll("\\([^\\(]*\\)", "");
+
+                        autreDenomination.setFiche(espece);
+                        final AutreDenomination autreDenomination_final = autreDenomination;
+
+                        TransactionManager.callInTransaction(connectionSource,
+                                new Callable<Void>() {
+                                    public Void call() throws Exception {
+
+                                        dbContext.autreDenominationDao.create(autreDenomination_final);
+
+                                        return null;
+                                    }
+                                });
+                    }
+                }
+
+
+                /* Ajout aux Classifications si pas encore dans la liste
+                 */
+                //log.debug("prefetchV4() - Classification de la fiche");
+                /* Initialement on a sur la fiche que le niveau et la référence de la Classification */
+                List<ClassificationFiche> classificationsFiche = jsonToDB.getClassificationFicheFromJSONEspece(especeJSON);
+
+                for (ClassificationFiche classificationFiche : classificationsFiche) {
+                    //log.debug("prefetchV4() - classification : " + classificationFiche.getClassification());
+                    //log.debug("prefetchV4() - classification.getNiveau() : " + classificationFiche.getClassification().getNiveau());
+                    //log.debug("prefetchV4() - classification.getNumeroDoris() : " + classificationFiche.getClassification().getNumeroDoris());
+
+                    /* Si on ne trouve pas la Classification dans la Base on l'ajoute, sinon on l'utilise */
+                    Classification classification = dbContext.classificationDao.queryForFirst(
+                            dbContext.classificationDao.queryBuilder().where().eq("numeroDoris", classificationFiche.getClassification().getNumeroDoris()).prepare()
+                    );
+                    if (classification == null) {
+                        //log.debug("prefetchV4() - classification par encore dans la base");
+
+                        fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification classificationJSON = dorisAPI_JSONDATABindingHelper.getClassificationFieldsFromObjectId(classificationFiche.getClassification().getNumeroDoris());
+
+                        // Parfois on n'arrive pas à la récupérer
+                        if (classificationJSON != null) {
+                            classification = jsonToDB.getClassificationFromJSONClassification(
+                                    classificationFiche.getClassification().getNumeroDoris(), classificationFiche.getClassification().getNiveau(), classificationJSON);
+
+                            final Classification classificationFinal = classification;
+                            TransactionManager.callInTransaction(connectionSource,
+                                    new Callable<Void>() {
+                                        public Void call() throws Exception {
+
+                                            dbContext.classificationDao.create(classificationFinal);
+
+                                            return null;
+                                        }
+                                    });
+
+                        }
+
+                    }
+
+                    //log.debug("prefetchV4() - classification : " + classification.getNumeroDoris() + " - " + classification.getTermeFrancais());
+                    /* on a ici la Classification que l'on va associer à la Fiche */
+                    if (classification != null) {
+                        final ClassificationFiche classification_final = new ClassificationFiche(espece, classification, classificationFiche.getNumOrdre());
+
+                        // Enregistrement de la Classification de la Fiche
+                        TransactionManager.callInTransaction(connectionSource,
+                                new Callable<Void>() {
+                                    public Void call() throws Exception {
+
+                                        dbContext.classificationFicheDao.create(classification_final);
+
+                                        return null;
+                                    }
+                                });
+                    }
+                }
+
+                /* Ajout Genre et Espèce aux Classification                  */
+                //log.debug("prefetchV4() - Ajout Genre et Espèce aux Classification");
+                Classification classificationGenre = dbContext.classificationDao.queryForFirst(
+                        dbContext.classificationDao.queryBuilder().where().eq("niveau","{{g}}Genre{{/g}}").and().eq("termeScientifique","{{i}}"+especeJSON.getFields().getGenre().getValue()+"{{/i}})").prepare()
+                );
+                if (classificationGenre == null) {
+                    classificationGenre = new Classification(0, "{{g}}Genre{{/g}}", "{{i}}"+especeJSON.getFields().getGenre().getValue()+"{{/i}}", "", "");
+                    final Classification classificationGenreFinal = classificationGenre;
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
+
+                                    dbContext.classificationDao.create(classificationGenreFinal);
+
+                                    return null;
+                                }
+                            });
+                }
+                if (classificationGenre != null) {
+                    final ClassificationFiche classification_final = new ClassificationFiche(espece, classificationGenre, 20);
+
+                    // Enregistrement de la Classification de la Fiche
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
+
+                                    dbContext.classificationFicheDao.create(classification_final);
+
+                                    return null;
+                                }
+                            });
+                }
+
+                Classification classificationEspece = dbContext.classificationDao.queryForFirst(
+                        dbContext.classificationDao.queryBuilder().where().eq("niveau","{{g}}Espece{{/g}}").and().eq("termeScientifique","{{i}}"+especeJSON.getFields().getEspece().getValue()+"{{/i}})").prepare()
+                );
+                if (classificationEspece == null) {
+                    classificationEspece = new Classification(0, "{{g}}Espece{{/g}}", "{{i}}"+especeJSON.getFields().getEspece().getValue()+"{{/i}}", "", "");
+                    final Classification classificationEspeceFinal = classificationEspece;
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
+
+                                    dbContext.classificationDao.create(classificationEspeceFinal);
+
+                                    return null;
+                                }
+                            });
+                }
+                if (classificationEspece != null) {
+                    final ClassificationFiche classification_final = new ClassificationFiche(espece, classificationEspece, 21);
+
+                    // Enregistrement de la Classification de la Fiche
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
+
+                                    dbContext.classificationFicheDao.create(classification_final);
+
+                                    return null;
+                                }
+                            });
+                }
+
+                /* * * * * * * * * * * *
+                    Doridiens ayant participés à la rédaction de la fiche
+                * * * * * * * * * * * * */
+                //log.debug("prefetchV4() - Doridiens ayant participés à la rédaction de la fiche :" + especeJSON.getFields().getVerificateurs().getValue());
+
+                for(String numeroVerificateur : especeJSON.getFields().getVerificateurs().getValue().split("-")){
+                    try{
+                        if (numeroVerificateur != null && numeroVerificateur != "") {
+                            final Participant doridien = dbContext.participantDao.queryForFirst(
+                                    dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroVerificateur).prepare()
+                            );
+
+                            TransactionManager.callInTransaction(connectionSource,
+                                    new Callable<Void>() {
+                                        public Void call() throws Exception {
+                                            dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.VERIFICATEUR.ordinal()));
+                                            return null;
+                                        }
+                                    });
+                        }
+                    } catch ( NumberFormatException nfe){
+                        // ignore les entrées invalides
+                    }
+                }
+                for(String numeroContributeur : especeJSON.getFields().getContributors().getValue().split("-")){
+                    try{
+                        if (numeroContributeur != null && numeroContributeur != "") {
+                            final Participant doridien = dbContext.participantDao.queryForFirst(
+                                    dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroContributeur).prepare()
+                            );
+
+                            TransactionManager.callInTransaction(connectionSource,
+                                    new Callable<Void>() {
+                                        public Void call() throws Exception {
+                                            dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.REDACTEUR.ordinal()));
+                                            return null;
+                                        }
+                                    });
+                        }
+                    } catch ( NumberFormatException nfe){
+                        // ignore les entrées invalides
+                    }
+                }
+                for(String numeroCorrecteur : especeJSON.getFields().getCorrecteurs().getValue().split("-")){
+                    try{
+                        if (numeroCorrecteur != null && numeroCorrecteur != "") {
+                            final Participant doridien = dbContext.participantDao.queryForFirst(
+                                    dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroCorrecteur).prepare()
+                            );
+
+                            TransactionManager.callInTransaction(connectionSource,
+                                    new Callable<Void>() {
+                                        public Void call() throws Exception {
+                                            dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.CORRECTEUR.ordinal()));
+                                            return null;
+                                        }
+                                    });
+                        }
+                    } catch ( NumberFormatException nfe){
+                        // ignore les entrées invalides
+                    }
+                }
+                for(String numeroDoridien : especeJSON.getFields().getDoridiens().getValue().split("-")){
+                    try{
+                        if (numeroDoridien != null && numeroDoridien != "") {
+                            final Participant doridien = dbContext.participantDao.queryForFirst(
+                                    dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroDoridien).prepare()
+                            );
+
+                            TransactionManager.callInTransaction(connectionSource,
+                                    new Callable<Void>() {
+                                        public Void call() throws Exception {
+                                            dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.RESPONSABLE_REGIONAL.ordinal()));
+                                            return null;
+                                        }
+                                    });
+                        }
+                    } catch ( NumberFormatException nfe){
+                        // ignore les entrées invalides
+                    }
+                }
+
+                /* * * * * * * * * * * *
+                    Photos
+                * * * * * * * * * * * * */
+                //log.debug("prefetchV4() - imagesNodeIds = "+especeJSON.getFields().getImages().getValue());
+
+                List<Image> imageJSONListe = new ArrayList<Image>();
+
+                // itère sur les images trouvées pour cette fiche
+                for(String possibleImageId : especeJSON.getFields().getImages().getValue().split("&")){
+                    try{
+                        int imageId = Integer.parseInt(possibleImageId.split("\\|")[0]);
+
+                        //log.debug("prefetchV4() - imageId = "+possibleImageId.split("\\|")[0]);
+
+                        // récupère les données associées à l'image
+                        Image imageJSON = dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId);
+
+                        //TODO : Traiter le cas des Videos un jour
+                        if (imageJSON != null && imageJSON.getClassIdentifier().equals("image")) {
+                            imageJSONListe.add(imageJSON);
+                        }
+
+                    } catch ( NumberFormatException nfe){
+                        // ignore les entrées invalides
+                    }
+                }
+
+                // recrée une entrée dans la base pour l'image
+                final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageJSONListe);
+                TransactionManager.callInTransaction(connectionSource,
+                    new Callable<Void>() {
+                        public Void call() throws Exception {
+                            int count = 0;
+                            for (PhotoFiche photoFiche : listePhotoFiche){
+
+                                photoFiche.setFiche(espece);
+
+                                dbContext.photoFicheDao.create(photoFiche);
+
+                                if (count == 0) {
+                                    // met à jour l'image principale de la fiche
+                                    espece.setPhotoPrincipale(photoFiche);
+                                    dbContext.ficheDao.update(espece);
+                                }
+                                count++;
+                            }
+                            return null;
+                        }
+                    });
+
+                /* * * * * * * * * * * *
+                    Zones Géographiques
+                * * * * * * * * * * * * */
+                //log.debug("prefetchV4() - Zone Géo. : "+especeJSON.getFields().getZoneGeo().getValue());
+
+                ZoneGeographique zoneGeographique = new ZoneGeographique();
+                for(String zoneGeoRefId : especeJSON.getFields().getZoneGeo().getValue().split("-")){
+
+                    try{
+                        switch (Integer.parseInt(zoneGeoRefId)) {
+                            // 71726 - ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE
+                            case 71726:
+                                zoneGeographique.setId(1);
+                                break;
+                            // On ignore pour l'instant
+                            // 239910 - Méditérannée Française
+                            // 239991 - Façade Atlantique Française
+                            case 239910:
+                            case 239991:
+                                break;
+                            // 71728 - ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE
+                            case 71728:
+                                zoneGeographique.setId(2);
+                                break;
+                            // 71730 - ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE
+                            case 71730:
+                                zoneGeographique.setId(3);
+                                break;
+                            // 71731 - ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES
+                            case 71731:
+                                zoneGeographique.setId(4);
+                                break;
+                            // 135595 - ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST
+                            case 135595:
+                                zoneGeographique.setId(5);
+                                break;
+                            default:
+                                log.debug("prefetchV4() - Zone Géo. Inconnue : http://doris.ffessm.fr/api/ezx/v1/object/"+zoneGeoRefId);
+                                System.exit(1);
+                        }
+
+                        ZoneGeographique zoneGeographique_final = zoneGeographique;
+                        TransactionManager.callInTransaction(connectionSource,
+                                new Callable<Void>() {
+                                    public Void call() throws Exception {
+                                        dbContext.fiches_ZonesGeographiquesDao.create(new Fiches_ZonesGeographiques(zoneGeographique_final, espece_final));
+                                        return null;
+                                    }
+                                });
+
+                    } catch ( NumberFormatException nfe){
+                        // ignore les entrées invalides
+                    }
+                }
+
+
+            }
+
+        }
+
+        log.debug("prefetchV4() - fin");
+        return 1;
+    }
+
 }

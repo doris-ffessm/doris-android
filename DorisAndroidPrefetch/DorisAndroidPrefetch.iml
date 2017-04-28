@@ -13,7 +13,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/build/classes/main" />
     <output-test url="file://$MODULE_DIR$/build/classes/test" />
     <exclude-output />
@@ -55,11 +55,8 @@
     <orderEntry type="library" exported="" name="jackson-databind-2.2.3" level="project" />
     <orderEntry type="library" exported="" name="guava-jdk5-13.0" level="project" />
     <orderEntry type="library" exported="" name="ormlite-core-4.47" level="project" />
-    <orderEntry type="library" exported="" name="jericho-html-3.1" level="project" />
     <orderEntry type="library" exported="" name="jericho-html-3.3" level="project" />
-    <orderEntry type="library" exported="" name="commons-logging-api-1.1.1" level="project" />
     <orderEntry type="library" exported="" name="jericho-html-3.4-dev" level="project" />
-    <orderEntry type="library" exported="" name="commons-lang3-3.1" level="project" />
     <orderEntry type="library" exported="" name="kxml2-2.3.0" level="project" />
   </component>
 </module>

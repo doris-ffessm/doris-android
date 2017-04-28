@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -59,6 +59,11 @@ import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
 import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
+import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
+import fr.ffessm.doris.prefetch.ezpublish.ObjNameNodeId;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
 
 
 public class PrefetchGlossaire {
@@ -70,183 +75,70 @@ public class PrefetchGlossaire {
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
 	
-	private ActionKind action;
 	private int nbMaxFichesATraiter;
-	
-	DefinitionGlossaire definitionMaj = null;
-	
-	public PrefetchGlossaire(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter) {
+	private int nbFichesParRequetes;
+
+	public PrefetchGlossaire(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
-		this.action = action;
+
 		this.nbMaxFichesATraiter = nbMaxFichesATraiter;
 	}
-	
-	
-	
-	public int prefetch() {
-		// - - - Glossaire - - -
-		// On boucle sur les initiales des définitions (Cf site : doris.ffessm.fr/glossaire.asp?filtre=?)
-		// On récupère la liste des termes dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
-		
-		PrefetchTools prefetchTools = new PrefetchTools();
-		SiteDoris siteDoris = new SiteDoris();
-		
-		String listeFiltres;
-		String contenuFichierHtml = null;
-		
-		try {
-						
-			if (nbMaxFichesATraiter == PrefetchConstants.nbMaxFichesTraiteesDef){
-				listeFiltres="abcdefghijklmnopqrstuvwxyz";
-			} else {
-				listeFiltres="ab";
-			}
-			
-			for (char initiale : listeFiltres.toCharArray()){
-				log.debug("doMain() - Recup Page de définitions pour la lettre : "+initiale);
-				
-				int numero = 1;
-				boolean continuer;
-				do {
-					
-					if ( action != ActionKind.NODWNLD ){
-						String listeDefinitionsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeDefinitions-"+initiale+"-"+numero+".html";
-						log.info("Récup. Liste des Définitions : " + listeDefinitionsFichier);
-						
-						if (prefetchTools.getFichierFromUrl(Constants.getListeDefinitionsUrl(""+initiale,""+numero ), listeDefinitionsFichier)) {
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeDefinitionsFichier), FileHtmlKind.LISTE_TERMES);
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale+"-"+numero);
-							System.exit(1);
-						}
-					} else {
-						// NODWNLD
-						String listeDefinitionsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeDefinitions-"+initiale+"-"+numero+".html";
-						log.info("Récup. Liste des Définitions : " + listeDefinitionsFichier);
-						
-						if (new File(listeDefinitionsFichier).exists()) {
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeDefinitionsFichier), FileHtmlKind.LISTE_TERMES);
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la liste des Définitions : "+initiale+"-"+numero);
-							System.exit(1);
-						}
-					}
-					
-					continuer = siteDoris.getContinuerListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
-					
-					final List<DefinitionGlossaire> listeDefinitionsFromHTML = siteDoris.getListeDefinitionsParInitialeFromHtml(contenuFichierHtml);
-					log.info("Creation de "+listeDefinitionsFromHTML.size()+" définitions pour la lettre : "+initiale);
-					TransactionManager.callInTransaction(connectionSource,
-						new Callable<Void>() {
-							public Void call() throws Exception {
-								for (DefinitionGlossaire definition : listeDefinitionsFromHTML){
-									if (!dbContext.definitionGlossaireDao.idExists(definition.getId()))
-										dbContext.definitionGlossaireDao.create(definition);
-								}
-								return null;
-						    }
-						});
-					
-					numero ++;
-				} while (continuer && numero < 10);
-			} 
-			
-			List<DefinitionGlossaire> listeDefinitions = new ArrayList<DefinitionGlossaire>(0);
-			listeDefinitions.addAll(dbContext.definitionGlossaireDao.queryForAll());
-			log.debug("doMain() - listeDefinitions.size : "+listeDefinitions.size());
-			
-			// Pour chaque Définitions, on télécharge la page (si nécessaire) puis on la traite
-			int nbDefinitionTelechargees = 0;
-			for (DefinitionGlossaire definition : listeDefinitions) {
-				log.debug("doMain() - Traitement Définition : "+definition.getNumeroDoris());
-				
-				String urlDefinition =  Constants.getDefinitionUrl( ""+definition.getNumeroDoris() );
-				String fichierLocalDefinition = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/definition-"+definition.getNumeroDoris()+".html";
-				String fichierRefDefinition = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/definition-"+definition.getNumeroDoris()+".html";
-				if ( action == ActionKind.INIT ) {
-					if (prefetchTools.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
-						nbDefinitionTelechargees += 1;
-						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalDefinition), FileHtmlKind.TERME);
-					} else {
-						log.error("Une erreur est survenue lors de la récupération de la définition : "+urlDefinition);
-						continue;
-					}
-				} else if ( action == ActionKind.UPDATE || action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
-					if ( ! new File(fichierRefDefinition).exists() ) {
-						if (prefetchTools.getFichierFromUrl(urlDefinition, fichierLocalDefinition)) {
-							nbDefinitionTelechargees += 1;
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierLocalDefinition), FileHtmlKind.TERME);
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la définition : "+urlDefinition);
-							continue;
-						}
-					} else {
-						if (new File(fichierRefDefinition).exists()) {
-							contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierRefDefinition), FileHtmlKind.TERME);
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la définition sur le disque : "+fichierRefDefinition+" a échoué.");
-						}
-					}
-				} else if ( action == ActionKind.NODWNLD ) {
-					if (new File(fichierRefDefinition).exists()) {
-						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(fichierRefDefinition), FileHtmlKind.TERME);
-					} else {
-						log.error("Une erreur est survenue lors de la récupération de la définition sur le disque : "+fichierRefDefinition+" a échoué.");
-					}
-				}
-				
-				definition.setContextDB(dbContext);
-				definition.getDefinitionsFromHtml(contenuFichierHtml);
-				definitionMaj = definition;
-				TransactionManager.callInTransaction(connectionSource,
-					new Callable<Void>() {
-						public Void call() throws Exception {
-							dbContext.definitionGlossaireDao.update(definitionMaj);
-							return null;
-					    }
-					});
-				
-				
-				if ( nbDefinitionTelechargees !=0 && (nbDefinitionTelechargees % 50) == 0) {
-					log.info("Définitions traitées = "+nbDefinitionTelechargees+", pause de 1s...");
-					Thread.sleep(1000);
-				}
-				
-				//Si des photos dans la définition, il faut les télécharger dans le cas CDDVD
-				if (action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI){
-					
-					String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
-					String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
-					
-					List<String> listeImagesDefinition = definition.getListeImagesDefinition();
-					
-					if (listeImagesDefinition != null) {
-						for (String image : listeImagesDefinition) {
-				    			
-							// On stocke la photo dans les Vignettes
-							if( ! prefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_DEFINITION+image ) ){
-								if (prefetchTools.getFichierFromUrl(Constants.ILLUSTRATION_DEFINITION_BASE_URL+"/"+image,
-										fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+Constants.PREFIX_IMGDSK_DEFINITION+image)) {
-								} else {
-									log.error("Une erreur est survenue lors de la récupération d'une photo de la définition de : "+definition.getTerme());
-									//System.exit(1);
-								}
-							}
-						}
-					}
-				}
-			}
-					
-			return listeDefinitions.size();
-			
-		} catch ( Exception e) {
-			// une erreur est survenue
-			log.error("Une erreur est survenue dans PrefetchGlossaire");
-			log.error(e);
-			return -1;
-		}
+
+    public PrefetchGlossaire(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter, int nbFichesParRequetes) {
+        this.dbContext = dbContext;
+        this.connectionSource = connectionSource;
+
+        this.nbMaxFichesATraiter = nbMaxFichesATraiter;
+        this.nbFichesParRequetes = nbFichesParRequetes;
+    }
+
+    public int prefetchV4() throws Exception {
+        log.debug("prefetchV4() - début");
+
+        // - - - Glossaire - - -
+        JsonToDB jsonToDB = new JsonToDB();
+        DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper();
+        DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper();
+
+        // TODO : Il faudrait mettre un While ici
+        int nbFichesDORIS = nbMaxFichesATraiter;
+
+        int count = 0;
 
 
-	}
+        for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
+
+            List<ObjNameNodeId> nodeIds = dorisAPI_JSONTreeHelper.getTermesNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
+
+
+            for (ObjNameNodeId termeNodeId : nodeIds) {
+                count++;
+                if (count > nbMaxFichesATraiter) {
+                    log.debug("doMain() - nbMaxFichesATraiter atteint");
+                    i = 9999;
+                    break;
+                }
+
+                Glossaire glossaireJSON = dorisAPI_JSONDATABindingHelper.getTermeFieldsFromNodeId(termeNodeId.getNodeId().intValue());
+                final DefinitionGlossaire terme = jsonToDB.getDefinitionGlossaireFromJSONTerme(glossaireJSON);
+
+                TransactionManager.callInTransaction(connectionSource,
+                        new Callable<Void>() {
+                            public Void call() throws Exception {
+
+                                dbContext.definitionGlossaireDao.create(terme);
+
+                                return null;
+                            }
+                        });
+
+            }
+
+        }
+
+        log.debug("prefetchV4() - fin");
+        return count;
+    }
+
 }

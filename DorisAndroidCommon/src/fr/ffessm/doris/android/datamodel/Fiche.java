@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -295,7 +295,7 @@ public class Fiche {
 			
 			List<? extends Attribute> listeAttributs=elementTable.getAttributes();
 			for (Attribute attribut : listeAttributs) {
-				if (attribut.getName().toLowerCase(Locale.FRENCH).equals("width") &  attribut.getValue().equals("820")) {
+				if (attribut.getName().toLowerCase(Locale.FRENCH).equals("width") &&  attribut.getValue().equals("820")) {
 					//log.debug("ciblePage() - Table Trouvée : " + attribut.getName() + " = " +  attribut.getValue());
 					tableResultats = elementTable;
 					break;

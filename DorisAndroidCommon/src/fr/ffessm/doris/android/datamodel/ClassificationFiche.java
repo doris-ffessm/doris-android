@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -107,13 +107,19 @@ public class ClassificationFiche {
 
 	// Start of user code ClassificationFiche additional user properties
 	
-	public ClassificationFiche(Classification classification, int numOrdre) {
+	public ClassificationFiche(Fiche fiche, Classification classification, int numOrdre) {
 		super();
+		this.fiche = fiche;
 		this.classification = classification;
 		this.numOrdre = numOrdre;
-	} 
-	
-	// End of user code
+	}
+
+    public ClassificationFiche(Classification classification, int numOrdre) {
+        super();
+        this.classification = classification;
+        this.numOrdre = numOrdre;
+    }
+    // End of user code
 	
 	public ClassificationFiche() {} // needed by ormlite
 	public ClassificationFiche(int numOrdre) {

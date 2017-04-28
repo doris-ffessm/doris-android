@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -52,7 +52,7 @@ public class Constants {
     
 	//public static final String IMAGE_BASE_URL = "http://doris.ffessm.fr/var/doris/storage/images/images";
 	public static final String IMAGE_BASE_URL = "http://doris.ffessm.fr";
-	public static final String PORTRAIT_BASE_URL = IMAGE_BASE_URL+ "/photos_vig";
+	public static final String PORTRAIT_BASE_URL = IMAGE_BASE_URL;
 	// La photo existe toujours au format blabla.jpg, puis d'autres formats sont générés suivant le besoin,
 	// nous utilisons de même ces différents formats
 	// Suffixe initial

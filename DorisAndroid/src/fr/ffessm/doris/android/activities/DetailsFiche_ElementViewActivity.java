@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -280,7 +280,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 		StringBuffer sbDebugText = new StringBuffer();
 		
 		Collection<PhotoFiche> photosFiche = entry.getPhotosFiche(); 
-		if(photosFiche!=null && isOnCreate){
+		if(photosFiche != null && isOnCreate){
 			//sbDebugText.append("\nnbPhoto="+photosFiche.size()+"\n");
 			
 			photoGallery = (LinearLayout)findViewById(R.id.detailsfiche_elementview_photogallery);
@@ -725,8 +725,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         	classificationFiche.setContextDB(getHelper().getDorisDBHelper());
      	
         	Classification classification = classificationFiche.getClassification();
-			classification.setContextDB(getHelper().getDorisDBHelper());
 			Log.d(LOG_TAG, "addFoldableArbrePhylogenetiqueView() - classification : "+classification.getNiveau()+" : "+classification.getTermeScientifique());
+            classification.setContextDB(getHelper().getDorisDBHelper());
 
 	    	View convertArbreView = inflater.inflate(R.layout.details_tableau_phylogenetique_detail, null);
 	    	

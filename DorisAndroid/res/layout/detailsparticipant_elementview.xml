@@ -58,6 +58,7 @@
                 android:textColor="?android:attr/textColorPrimary"
                 android:text="Nom"/>
 
+        <!--
 		    <LinearLayout
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
@@ -86,7 +87,9 @@
 		            android:textAppearance="?android:attr/textAppearanceSmall"
 		            android:textColor="?android:attr/textColorSecondaryInverse" />
 		    </LinearLayout>
+        -->
 
+        <!--
 		    <TextView
 		        android:id="@+id/detailsparticipant_elementview_numeroparticipant_label"
 		        android:layout_width="wrap_content"
@@ -108,7 +111,7 @@
 		        android:text="999"
 		        android:textAppearance="?android:attr/textAppearanceSmall"
 		        android:textColor="?android:attr/textColorSecondary" />
-		    
+		    -->
 		</RelativeLayout>
 		
 		<View style="@style/Separateur"/>

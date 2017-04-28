@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -111,10 +111,15 @@ public class IntervenantFiche {
 		super();
 		this.participant = participant;
 		this.roleIntervenant = roleIntervenant;
-	} 
-	
-	
-	// End of user code
+	}
+
+    public IntervenantFiche(Fiche fiche, Participant participant, int roleIntervenant) {
+        super();
+        this.fiche = fiche;
+        this.participant = participant;
+        this.roleIntervenant = roleIntervenant;
+    }
+    // End of user code
 	
 	public IntervenantFiche() {} // needed by ormlite
 	public IntervenantFiche(int roleIntervenant) {

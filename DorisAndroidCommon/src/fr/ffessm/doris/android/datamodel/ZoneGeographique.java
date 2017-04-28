@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -200,7 +200,13 @@ public class ZoneGeographique {
 		super();
 		this.nom = nom;
 		this.description = description;
-	} 
+	}
+    public ZoneGeographique(int id, java.lang.String nom, java.lang.String description) {
+        super();
+        this._id = id;
+        this.nom = nom;
+        this.description = description;
+    }
 
 	public int getId() {
 		return _id;

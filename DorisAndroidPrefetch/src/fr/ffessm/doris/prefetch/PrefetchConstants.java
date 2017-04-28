@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -52,27 +52,12 @@ public class PrefetchConstants {
 	// Dossiers liés au fonctionnement de l'appli prefetch
 	public final static String DOSSIER_RACINE = "./run";
 	public final static String DOSSIER_DATABASE = "./run/database";
-	public final static String DOSSIER_RES_HTML = "./res/html";
-	public final static String DOSSIER_RES_IMAGES = "./res/images";
 	public final static String DOSSIER_TESTS = "./test_results";
-	
-	// Ces dossiers seront renommés qd nécessaire
-	public final static String DOSSIER_HTML = "html";
-	public final static String DOSSIER_HTML_REF = "html_ref";
-	public final static String DOSSIER_IMAGES = "images";
-	public final static String DOSSIER_IMAGES_REF = "images_ref";
-	public final static String SOUSDOSSIER_ICONES = "icones";
-	public final static String SOUSDOSSIER_VIGNETTES = "vignettes_fiches";
-	public final static String SOUSDOSSIER_MED_RES = "medium_res_images_fiches";
-	public final static String SOUSDOSSIER_HI_RES = "hi_res_images_fiches";
-	
-	public final static String DOSSIER_CDDVD_MED = "cd";
-	public final static String DOSSIER_CDDVD_HI = "dvd";
-	
+
 	// Nombre maximum de fiches/groupes/etc traités (--max=K permet de changer cette valeur)
 	// Si nbMaxFichesTraitees != nbMaxFichesTraiteesDef alors on limite aussi le nombre de groupes
 	// de termes du glossaire, de participants, etc.
 	public static int nbMaxFichesTraiteesDef = 9999;
-	
-	
+
+
 }

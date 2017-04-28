@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -113,9 +113,13 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 		// Start of user code protected Glossaire_Adapter updateList
 		// TODO find a way to query in a lazier way
 		try{
-			this.definitionGlossaireList = _contextDB.definitionGlossaireDao.queryForAll();
-			// Ne sera pas trié correctement à cause des accents, il aurait fallu un champ tri
-			//this.definitionGlossaireList = _contextDB.definitionGlossaireDao.query(_contextDB.definitionGlossaireDao.queryBuilder().orderBy("terme", true).prepare());
+            // En V3, la table était chargée dans l'ordre alphabétique, pas en V4
+            // On revient donc au tri par la 1ère lettre même si quelques définitions ne seront pas bien triées É pas avec les E
+
+			//this.definitionGlossaireList = _contextDB.definitionGlossaireDao.queryForAll();
+
+			// ANNULÉE EN V4 : Ne sera pas trié correctement à cause des accents, il aurait fallu un champ tri
+			this.definitionGlossaireList = _contextDB.definitionGlossaireDao.query(_contextDB.definitionGlossaireDao.queryBuilder().orderBy("terme", true).prepare());
 			this.filteredDefinitionGlossaireList = this.definitionGlossaireList;
 			
 			textesOutils = new Textes_Outils(context);

@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -73,12 +73,24 @@ public class Common_Outils {
 		texte = StringUtils.replace(texte, "<b>", "<strong>");
 		texte = StringUtils.replace(texte, "</b>", "</strong>");
 
+        texte = StringUtils.replace(texte, "&agrave;", "à");
+        texte = StringUtils.replace(texte, "&eacute;", "é");
+        texte = StringUtils.replace(texte, "&egrave;", "è");
+        texte = StringUtils.replace(texte, "&oelig;", "œ");
+        texte = StringUtils.replace(texte, "&rsquo;", "'");
+
+
 		//log.debug("nettoyageBalises() - 010");
-		
+        texte = StringUtils.replace(texte, "<html/>", "");
+        texte = StringUtils.replace(texte, "<html />", "");
+
 		// Il faut nettoyer cette balise originale ...
 		// <strong style="font-size: 11px;">
 		texte = texte.replaceAll("<strong [^>]*>", "<strong>");
-		
+
+        // Des copier / coller depuis word .... ppffff ....
+        texte = texte.replaceAll("<!-- [^>]*-->", "");
+
 		//log.debug("nettoyageBalises() - 020");
 		
 		// Tous les sauts de ligne de la même façon + gain de place en hauteur pour l'interface Android
@@ -113,23 +125,32 @@ public class Common_Outils {
 		// Je retire donc ici les paires de " qui sont à l'intérieure d'une autre paire de "
 		// et qui ne contiennent pas de = ? < >
 		texte = texte.replaceAll("(href=\"[^\"]*)\"([^\"=?<>]*)\"([^\"]*\")", "$1$2$3");
-		
+
 		//log.debug("nettoyageBalises() - 050");
-		
+
 		//Il arrive très souvent qu'une balise ouverte soit aussitôt refermée
 		// ce doit sans doute être dû à l'interface de saisie ou des outils utilisés en amont
 		// Toujours est-il que ça peut gêner ensuite, que ça fait perdre du temps et de la place
-		texte = texte.replaceAll("<strong></strong>|</strong><strong>|<em></em>|</em><em>|<i></i>|</i><i>", "");
+		texte = texte.replaceAll("<strong></strong>|</strong><strong>|<em></em>|</em><em>|<i></i>|</i><i>|<span></span>", "");
 
 		texte = texte.replaceAll("<a href=\"http://[^>]*></a>", "");
-			
+
+        // On vire target=... des liens
+        texte = StringUtils.replace(texte, "<a target=\"_blank\" href=", "<a href=");
+        texte = StringUtils.replace(texte, " target=\"_blank\">", ">");
+
+
 		//log.debug("nettoyageBalises() - 060");
-		
-		// Suppression des textes masqués en étant écrit en blanc sur fond blanc
+
+		// Suppression des textes masqués en étant écrit en blanc sur fond blanc (si, si il y a eu ...)
 		// <span style="color: #ffffff;">Vidéoris</span>
 		texte = texte.replaceAll("<span style=\"color: #ffffff;\">[^<>]*</span>", "");
-		
-		
+
+        // Suppression Balises de coloration "non significatives"
+        texte = texte.replaceAll("<span style=\"color:[^>]*>([^<>]*)</span>", "$1");
+        texte = texte.replaceAll("<span class=[^>]*>([^<>]*)</span>", "$1");
+        texte = texte.replaceAll("<i[^>]*>", "<i>");
+
 		texte = StringUtils.replace(texte, "bgcolor=\"#ffffff\" onMouseOver=\"this.bgColor='#F3F3F3';\" onMouseOut=\"this.bgColor='#ffffff';\"", "" );
 		texte = StringUtils.replace(texte, "color=\"#999999\"", "");
 		//log.debug("nettoyageBalises() - 090");
@@ -138,8 +159,7 @@ public class Common_Outils {
     	//log.debug("nettoyageBalises() - Fin");
 		return texte;
 	}
-    
-    
+
     public String remplacementBalises(String texte, boolean avecMiseEnForme) {
     	//log.debug("remplacementBalises() - Début");
     	//log.debug("remplacementBalises() - texteANettoye : " + texte);
@@ -151,24 +171,46 @@ public class Common_Outils {
 			//Italique
 			texte = texte.replaceAll("<em>|<i>", "{{i}}");
 			texte = texte.replaceAll("</em>|</i>", "{{/i}}");
-
 			//Souligné
 			texte = texte.replaceAll("<span style=\"text-decoration: underline;\">([^<>]*)</span>","{{s}}$1{{/s}}");
-			//Sauts de ligne
+            //Exposant
+            //TODO : On pourrait garder les exposants mais ne sachant pas encore faire, ils sont supprimés
+            texte = texte.replaceAll("<sup>([^<>]*)</sup>","$1");
+            //Souligné
+            //TODO : On pourrait garder les souligés mais ne sachant pas encore faire, ils sont supprimés
+            texte = texte.replaceAll("<u>([^<>]*)</u>","$1");
+
+            //Sauts de ligne
 			texte = StringUtils.replace(texte, "<br/>", "{{n/}}");
-			
+
+            // Remplacement de l'enchainement entre 2 paragraphe par un Saut de ligne
+            texte = StringUtils.replace(texte, "</p><p>", "{{n/}}");
+            texte = StringUtils.replace(texte, "<p>", "");
+            texte = StringUtils.replace(texte, "</p>", "");
+
 			//Lien vers autres fiches
 			texte = texte.replaceAll("<[^<]*fiche_numero=([0-9]*)\"[^>]*>([^<]*)</a>", "{{F:$1}}$2{{/F}}");
-			
+			texte = texte.replaceAll("<[^<]*specie/([0-9]*)[^>]*>([^<]*)</a>", "{{F:$1}}$2{{/F}}");
+
 			//Lien vers termes du glossaire
-			texte = texte.replaceAll("([ >\\}'\\(])([^ >\\}'\\(]*)\\*", "$1{{D:$2}}$2{{/D}}");
+			//Mot suffixé par *
+            texte = texte.replaceAll("([ >\\}'\\(])([^ >\\}'\\(]*)\\*", "$1{{D:$2}}$2{{/D}}");
+            // en V4,
+            texte = texte.replaceAll("<a href=\"Glossaire/([^\"]*)\"[^>]*>([^<]*)</a>", "{{D:$1}}$2{{/D}}");
+
 			//Image du Glossaire (elles sont dans le texte) - <img src="gestionenligne/diaporamaglo/16.jpg     ">
 			texte = texte.replaceAll("<img src=\"gestionenligne/diaporamaglo/([^\" >]*)[ ]*\">", "{{E:$1/}}");
-			
-			
+
+            //TODO : Permettre de faire des liens vers des Participants à DORIS
+            // Pour l'instant, on vire le lien
+            texte = texte.replaceAll("<a href=\"../contact_fiche.asp[^>]*>([^<]*)</a>", "$1");
+
 			//Lien vers site extérieur : oiseaux.net, fishbase.org, etc ...
 			texte = texte.replaceAll("<a href=\"http://([^\"]*)\"[^>]*>([^<]*)</a>", "{{A:$1}}$2{{/A}}");
-			
+
+            // Pour les derniers liens qui trainent, on fait un lien vers le site de DORIS
+            texte = texte.replaceAll("<a href=\"([^\"]*)\"[^>]*>([^<]*)</a>", "{{A:http://doris.ffessm.fr/$1}}$2{{/A}}");
+
 			// Après cela on nettoie un peu et met en ordre
 			// Mieux vaut le faire dans le prefetch qd on a le temps qu'à la présentation
 			texte = texte.replaceAll("\\{\\{/i\\}\\}\\{\\{i\\}\\}|\\{\\{/g\\}\\}\\{\\{g\\}\\}","");
@@ -178,7 +220,7 @@ public class Common_Outils {
 			// ça ne semble arriver que pour ce cas, i.e. pas pour les termes du glossaire, l'italique etc..
 			texte = StringUtils.replace(texte, "{{/g}}{{/F}}", "{{/F}}{{/g}}");
 			texte = texte.replaceAll("\\{\\{F:([0-9]*)\\}\\}\\{\\{g\\}\\}", "{{g}}{{F:$1}}");
-			
+
 		} else {
 			texte = texte.replaceAll("<strong>|</strong>|<em>|</em>|<i>|</i>|<br/>", "");
 		}
@@ -229,7 +271,20 @@ public class Common_Outils {
 				.replaceAll(" ;", "\u00A0;")
 				.replaceAll(" !", "\u00A0!")
 				.replaceAll(" \\?", "\u00A0?");
-		
+
+        // Remplacement &...; par les caractères alpha.
+        texteNettoye = StringUtils.replace(texteNettoye, "&agrave;", "à");
+        texteNettoye = StringUtils.replace(texteNettoye, "&eacute;", "é");
+        texteNettoye = StringUtils.replace(texteNettoye, "&ccedil;", "ç");
+        texteNettoye = StringUtils.replace(texteNettoye, "&Eacute;", "É");
+        texteNettoye = StringUtils.replace(texteNettoye, "&egrave;", "è");
+        texteNettoye = StringUtils.replace(texteNettoye, "&ecirc;", "ê");
+        texteNettoye = StringUtils.replace(texteNettoye, "&euml;", "ë");
+        texteNettoye = StringUtils.replace(texteNettoye, "&icirc;", "î");
+        texteNettoye = StringUtils.replace(texteNettoye, "&ugrave;", "à");
+        texteNettoye = StringUtils.replace(texteNettoye, "&nbsp;", " ");
+
+
 		texteNettoye = texteNettoye.trim();
 		//log.debug("nettoyageTextes() - texteNettoye : " + texteNettoye);
 		
@@ -237,10 +292,7 @@ public class Common_Outils {
 		return texteNettoye;
 	}
     
- 
 
-
-    
     /* *********************************************************************
      * Permet d'enlever les accents, cédilles et autres
      *  ********************************************************************* */

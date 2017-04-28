@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -900,12 +900,15 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 				
 	            return true;
         	case R.id.accueil_customview_action_maj_listesfiches:
+
+                Toast.makeText(this, "MaJ désactivée dans la version béta", Toast.LENGTH_LONG).show();
+                /*
         		VerifieMAJFiches_BgActivity verifieMAJFiches_BgActivity = DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity;		    	
 				if(verifieMAJFiches_BgActivity == null || verifieMAJFiches_BgActivity.getStatus() != Status.RUNNING) {
 	        		DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity =
-	        			(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext()/*,
-						this.getHelper()*/).execute(""+Fiches_Outils.TypeLancement_kind.MANUEL);
+	        			(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext()).execute(""+Fiches_Outils.TypeLancement_kind.MANUEL);
 				}
+                */
         		// TODO : refreshScreenData();
             	return true;
 	        case R.id.accueil_customview_action_a_propos:

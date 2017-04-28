@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -137,7 +137,7 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
 
 		((TextView) findViewById(R.id.detailsparticipant_elementview_nom)).setText(entry.getNom());
 		participantNumeroDoris = entry.getNumeroParticipant();
-		((TextView) findViewById(R.id.detailsparticipant_elementview_numeroparticipant)).setText(((Integer)participantNumeroDoris).toString());					
+		//((TextView) findViewById(R.id.detailsparticipant_elementview_numeroparticipant)).setText(((Integer)participantNumeroDoris).toString());
 		
 		if (entry.getFonctions().contains(Constants.ParticipantKind.PHOTOGRAPHE.ordinal()+";")){
 			((ImageView) findViewById(R.id.detailsparticipant_picto_photographe)).setVisibility(View.VISIBLE);

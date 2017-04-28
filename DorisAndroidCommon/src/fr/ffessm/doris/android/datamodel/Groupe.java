@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -159,9 +159,21 @@ C'est ce texte. */
 		this.descriptionGroupe = descriptionGroupe;
 		this.cleURLImage = cleURLImage;
 		this.nomImage = nomImage;
-	} 
-	
-	public String getImageNameOnDisk(){
+	}
+
+    public Groupe(int numeroGroupe, int numeroSousGroupe, java.lang.String nomGroupe, java.lang.String descriptionGroupe, java.lang.String cleURLImage, java.lang.String nomImage, java.lang.String descriptionDetailleeGroupe, Groupe groupePere) {
+        super();
+        this.numeroGroupe = numeroGroupe;
+        this.numeroSousGroupe = numeroSousGroupe;
+        this.nomGroupe = nomGroupe;
+        this.descriptionGroupe = descriptionGroupe;
+        this.cleURLImage = cleURLImage;
+        this.nomImage = nomImage;
+        this.descriptionDetailleeGroupe = descriptionDetailleeGroupe;
+        this.groupePere = groupePere;
+    }
+
+    public String getImageNameOnDisk(){
 		//log.warn("getImageNameOnDisk() - groupe : "+_id+" - "+numeroGroupe+" - "+numeroSousGroupe);
 		//log.warn("getImageNameOnDisk() - cleURLImage : "+cleURLImage);
 		return cleURLImage.replace("gestionenligne/", "")

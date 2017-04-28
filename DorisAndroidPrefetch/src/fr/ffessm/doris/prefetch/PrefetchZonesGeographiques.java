@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -42,9 +42,6 @@ termes.
 
 package fr.ffessm.doris.prefetch;
 
-import java.io.File;
-import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.logging.Log;
@@ -54,15 +51,7 @@ import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.support.ConnectionSource;
 
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
-import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
-import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
-import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
-import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
-import fr.ffessm.doris.android.sitedoris.FicheLight;
-import fr.ffessm.doris.android.sitedoris.SiteDoris;
-import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 
 
 public class PrefetchZonesGeographiques {
@@ -73,115 +62,53 @@ public class PrefetchZonesGeographiques {
 	
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
-		
-	private ActionKind action;
-	private int nbMaxFichesATraiter;
-	
-	public PrefetchZonesGeographiques(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter) {
+
+	public PrefetchZonesGeographiques(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
-		this.action = action;
-		this.nbMaxFichesATraiter = nbMaxFichesATraiter;
 	}
-	
-	
-	
-	public int prefetch() {
-		// - - - Mise à jour des zones géographiques - - -
-		
-		try {
-			// zone France Métropolitaine Marines
-			majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE);
-			// zone France Métropolitaine Eau douce
-			majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE);
-			// zone indo pacifique
-			majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE);
-			// zone Caraïbes
-			majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES);
-			// zone atlantique nordOuest
-			majZoneGeographique(connectionSource, ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST);
-			
-			return 5;
-			
-		} catch ( Exception e) {
-			// une erreur est survenue
-			log.error("Une erreur est survenue dans PrefetchZonesGeographiques");
-			log.error(e);
-			return -1;
-		}
+
+    public int prefetchV4() throws Exception {
+        log.debug("prefetchV4() - début");
+
+        // - - - Zones Géographiques - - -
+
+        // TOUT EN DUR "TEMPORAIREMENT" CAR JE N'ARRIVE PAS A RECUPERER CETTE LISTE avec JSON
+
+        /*
+        List<ZoneGeographique> listeZonesGeographiques = new ArrayList<ZoneGeographique>();
+        listeZonesGeographiques.add(ZoneGeographique(int id, java.lang.String nom, java.lang.String description));
 
 
-	}
-	
-	private void majZoneGeographique(ConnectionSource connectionSource, ZoneGeographiqueKind zoneKind){
-		//log.debug("majZoneGeographique() - Début");
-		
-		PrefetchTools prefetchTools = new PrefetchTools();
-		SiteDoris siteDoris = new SiteDoris();
-		
-		String listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeFiches-"+(zoneKind.ordinal()+1)+".html";
-		log.debug("Récup. Liste Fiches Doris Zone : " + listeFichesFichier);
-		//List<Fiche> listeFiches = new ArrayList<Fiche>(0);
-		String contenuFichierHtml = "";
-		if ( action != ActionKind.NODWNLD){
-			if (prefetchTools.getFichierFromUrl(Constants.getListeFichesUrl(Constants.getNumZoneForUrl(zoneKind)) , listeFichesFichier)) {
-				contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier), FileHtmlKind.LISTE_FICHES);
-				
-			} else {
-				log.error("Une erreur est survenue lors de la récupération de la liste des fiches de la zone ");
-				return;
-			}
-		} else {
-			// NODWNLD
-			listeFichesFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeFiches-"+(zoneKind.ordinal()+1)+".html";
-			if (new File(listeFichesFichier).exists()) {
-				contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeFichesFichier), FileHtmlKind.LISTE_FICHES);
-			} else {
-				log.error("Une erreur est survenue lors de la récupération de la liste des fiches de la zone ");
-				return;
-			}
-		}
-		
-		final ZoneGeographique zoneGeographique = new ZoneGeographique(Constants.getTitreZoneGeographique(zoneKind), 
-																 Constants.getTexteZoneGeographique(zoneKind));
-		try {
-			TransactionManager.callInTransaction(connectionSource,
-				new Callable<Void>() {
-					public Void call() throws Exception {
-						dbContext.zoneGeographiqueDao.create(zoneGeographique);
-						return null;
-				    }
-				});
-		} catch (SQLException e) {
-			log.error("impossible de créer la zone dans la base", e);
-		}
-		
-		final HashSet<FicheLight> listFicheFromHTML = siteDoris.getListeFichesFromHtml(contenuFichierHtml);
-		log.info("Création des "+listFicheFromHTML.size()+" associations pour la Zone : " + listeFichesFichier);
-		
-		final DataBase_Outils outilsBase = new DataBase_Outils(dbContext);
-		try {
-			TransactionManager.callInTransaction(connectionSource,
-					new Callable<Void>() {
-						public Void call() throws Exception { 
+        final DefinitionGlossaire terme();
+ */
 
-							for (FicheLight ficheLight : listFicheFromHTML) {
-								Fiche fichesDeLaBase = outilsBase.queryFicheByNumeroFiche(ficheLight.getNumeroFiche());
-								
-								if (fichesDeLaBase != null) {
-									fichesDeLaBase.setContextDB(dbContext);
-									fichesDeLaBase.addZoneGeographique(zoneGeographique);
-								}
-							}
-							
-							return null;
-					    }
-					});
+        TransactionManager.callInTransaction(connectionSource,
+                new Callable<Void>() {
+                    public Void call() throws Exception {
 
-		} catch (SQLException e) {
-			log.error("impossible d'associer Fiches et Zone Géographique", e);
-		}
-		//log.debug("majZoneGeographique() - Fin");
-	}
-	
+                        dbContext.zoneGeographiqueDao.create(
+                                new ZoneGeographique(1, "Faune et flore marines de France métropolitaine", "Méditerranée, Atlantique, Manche et mer du Nord" )
+                            );
+                        dbContext.zoneGeographiqueDao.create(
+                                new ZoneGeographique(2, "Faune et flore dulcicoles de France métropolitaine", "Fleuves, rivières, lacs et étangs, ..." )
+                        );
+                        dbContext.zoneGeographiqueDao.create(
+                                new ZoneGeographique(3, "Faune et flore subaquatiques de l'Indo-Pacifique", "La Réunion, Mayotte, Nouvelle-Calédonie, Polynésie et autres" )
+                        );
+                        dbContext.zoneGeographiqueDao.create(
+                                new ZoneGeographique(4, "Faune et flore subaquatiques des Caraïbes", "Guadeloupe, Martinique et autres" )
+                        );
+                        dbContext.zoneGeographiqueDao.create(
+                                new ZoneGeographique(5, "Faune et flore subaquatiques de l'Atlantique Nord-Ouest", "Côte est du Canada, embouchure du St Laurent, archipel de St Pierre-et-Miquelon" )
+                        );
+                        return null;
+                    }
+                });
+
+
+        log.debug("prefetchV4() - fin");
+        return 1;
+    }
+
 }

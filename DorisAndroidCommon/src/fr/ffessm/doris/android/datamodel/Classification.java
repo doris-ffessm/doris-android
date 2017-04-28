@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -120,7 +120,31 @@ C'est lui qui permet d'identifier la Classification */
 	protected ForeignCollection<ClassificationFiche> classificationFiche;
 
 	// Start of user code Classification additional user properties
-	// End of user code
+
+    /** Référence Doris de la Classification  */
+    /** TEST GM : SQLite = SQLite **/
+    @DatabaseField
+    protected int numeroDoris;
+
+    public Classification(int numeroDoris, java.lang.String niveau, java.lang.String termeScientifique, java.lang.String termeFrancais, java.lang.String descriptif) {
+        super();
+        this.numeroDoris = numeroDoris;
+        this.niveau = niveau;
+        this.termeScientifique = termeScientifique;
+        this.termeFrancais = termeFrancais;
+        this.descriptif = descriptif;
+    }
+
+    public int getNumeroDoris() {
+        return this.numeroDoris;
+    }
+    public void setNumeroDoris(int numeroDoris) {
+        this.numeroDoris = numeroDoris;
+    }
+
+
+
+    // End of user code
 	
 	public Classification() {} // needed by ormlite
 	public Classification(java.lang.String niveau, java.lang.String termeScientifique, java.lang.String termeFrancais, java.lang.String descriptif) {
