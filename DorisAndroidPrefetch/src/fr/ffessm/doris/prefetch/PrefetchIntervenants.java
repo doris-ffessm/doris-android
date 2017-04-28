@@ -1,7 +1,7 @@
 /* *********************************************************************
  * Licence CeCILL-B
  * *********************************************************************
- * Copyright (c) 2012-2015 - FFESSM
+ * Copyright (c) 2012-2017 - FFESSM
  * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
  *           Didier Vojtisek <dvojtise@gmail.com>
  * *********************************************************************
@@ -42,8 +42,6 @@ termes.
 
 package fr.ffessm.doris.prefetch;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -55,14 +53,9 @@ import com.j256.ormlite.support.ConnectionSource;
 
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
-import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.sitedoris.Constants.FileHtmlKind;
-import fr.ffessm.doris.android.sitedoris.ErrorCollector;
-import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
 import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
-import fr.ffessm.doris.prefetch.PrefetchDorisWebSite.ActionKind;
 import fr.ffessm.doris.prefetch.ezpublish.ObjNameNodeId;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.utilisateur.Utilisateur;
 
@@ -75,27 +68,23 @@ public class PrefetchIntervenants {
 	private DorisDBHelper dbContext = null;
 	private ConnectionSource connectionSource = null;
 	
-	private ActionKind action;
 	private int nbMaxFichesATraiter;
     private int nbFichesParRequetes;
-	
-	public List<Participant> listeParticipants = new ArrayList<Participant>(0);
-	
-	public PrefetchIntervenants(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter) {
+
+	public PrefetchIntervenants(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter) {
 		this.dbContext = dbContext;
 		this.connectionSource = connectionSource;
-		this.action = action;
+
 		this.nbMaxFichesATraiter = nbMaxFichesATraiter;
 	}
 
-    public PrefetchIntervenants(DorisDBHelper dbContext, ConnectionSource connectionSource, ActionKind action, int nbMaxFichesATraiter, int nbFichesParRequetes) {
+    public PrefetchIntervenants(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter, int nbFichesParRequetes) {
         this.dbContext = dbContext;
         this.connectionSource = connectionSource;
-        this.action = action;
+
         this.nbMaxFichesATraiter = nbMaxFichesATraiter;
         this.nbFichesParRequetes = nbFichesParRequetes;
     }
-
 
     public int prefetchV4() throws Exception {
         log.debug("prefetchV4() - début");
@@ -144,140 +133,5 @@ public class PrefetchIntervenants {
         log.debug("prefetchV4() - fin");
         return count;
     }
-
-
-    public int prefetch() {
-		// - - - Intervenants - - -
-		// On boucle sur les initiales des gens (Cf site : doris.ffessm.fr/contacts.asp?filtre=?)
-		// On récupère la liste des intervenants dans tous les cas sauf NODOWNLOAD, i.e. : INIT, UPDATE, CDDVD
-		
-		PrefetchTools prefetchTools = new PrefetchTools();
-		SiteDoris siteDoris = new SiteDoris();
-		
-		String listeFiltres;
-		String contenuFichierHtml = null;
-		
-		try {
-			
-	
-			if (nbMaxFichesATraiter == PrefetchConstants.nbMaxFichesTraiteesDef){
-				listeFiltres="abcdefghijklmnopqrstuvwxyz";
-			} else {
-				listeFiltres="ab";
-			}
-
-			String errorGroup = "intervenants.intervenants";
-			ErrorCollector.getInstance().addGroup(errorGroup);
-			
-			for (char initiale : listeFiltres.toCharArray()){
-				log.debug("doMain() - Recup Participants : "+initiale);
-				
-				
-				String listeParticipantsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/listeParticipants-"+initiale+".html";
-				log.info("Récup. Liste des Participants : " + listeParticipantsFichier);
-				
-				if (action != ActionKind.NODWNLD){
-					if (prefetchTools.getFichierFromUrl(Constants.getListeParticipantsUrl(""+initiale), listeParticipantsFichier)) {
-						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeParticipantsFichier), FileHtmlKind.LISTE_PARTICIPANTS);
-					} else {
-						log.error("Une erreur est survenue lors de la récupération de la liste des Participants : "+initiale);
-						System.exit(1);
-					}
-				} else {
-					// NODWNLD
-					listeParticipantsFichier = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/listeParticipants-"+initiale+".html";
-					if (new File(listeParticipantsFichier).exists()) {
-						contenuFichierHtml = prefetchTools.getFichierTxtFromDisk(new File(listeParticipantsFichier), FileHtmlKind.LISTE_PARTICIPANTS);
-					} else {
-						log.error("Une erreur est survenue lors de la récupération de la liste des Participants : "+initiale);
-						System.exit(1);
-					}
-				}
-				
-				final List<Participant> listeParticipantsFromHTML = siteDoris.getListeParticipantsParInitialeFromHtml(contenuFichierHtml);
-				log.info("Creation de "+listeParticipantsFromHTML.size()+" participants pour la lettre : "+initiale);
-				TransactionManager.callInTransaction(connectionSource,
-					new Callable<Void>() {
-						public Void call() throws Exception {
-							for (Participant participant : listeParticipantsFromHTML){
-								if (!dbContext.participantDao.idExists(participant.getId()))
-									dbContext.participantDao.create(participant);
-							}
-							return null;
-					    }
-					});
-			}	
-			
-			
-			listeParticipants.addAll(dbContext.participantDao.queryForAll());
-			log.debug("doMain() - listeParticipants.size : "+listeParticipants.size());
-			
-			// Pas la peine de récupérer la page de chacun des intervenants
-			// Toutes les infos sont déjà dans les listes ci dessus 
-			// mais pour CDDVD ça fait plus propre
-			if ( action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
-				String pageIntervenantRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML + "/";
-				String pageIntervenantRacineRef = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_HTML_REF + "/";
-				
-				for (Participant participant : listeParticipants){
-					
-					if( ! prefetchTools.isFileExistingPath( pageIntervenantRacineRef+"participant-"+participant.getNumeroParticipant()+".html") ){
-						if ( prefetchTools.getFichierFromUrl( Constants.getParticipantUrl(participant.getNumeroParticipant()),
-								pageIntervenantRacine+"participant-"+participant.getNumeroParticipant()+".html") ) {
-						} else {
-							log.error("Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom());
-							ErrorCollector.getInstance().addError(errorGroup, "page photo participant introuvable", "Une erreur est survenue lors de la récupération de la page contenant la photo du participant : "+participant.getNom()+" , "+Constants.getParticipantUrl(participant.getNumeroParticipant()));
-							//System.exit(1);
-						}
-					}
-						
-				}
-			}
-			
-			// Téléchargement Photos Participants
-			if ( action == ActionKind.CDDVD_MED || action == ActionKind.CDDVD_HI ) {
-				String fichierImageRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES + "/";
-				String fichierImageRefRacine = PrefetchConstants.DOSSIER_RACINE + "/" + PrefetchConstants.DOSSIER_IMAGES_REF + "/";
-	
-				for (Participant participant : listeParticipants){
-	
-					if ( !participant.getCleURLPhotoParticipant().isEmpty() ) {
-						
-						// On stocke la photo dans les Vignettes
-						if( ! prefetchTools.isFileExistingPath( fichierImageRefRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_") ) ){
-							//String photoURL = URLEncoder.encode(participant.getCleURLPhotoParticipant(),"UTF-8");
-							String photoURL = participant.getCleURLPhotoParticipant();
-							photoURL = photoURL.replace(" ", "%20");
-							photoURL = photoURL.replace("é", "%E9").replace("è", "%E8");
-							photoURL = photoURL.replace("É", "%C9").replace("È", "%C8");
-							log.debug("doMain() - photoURL : "+photoURL);
-							
-							if (prefetchTools.getFichierFromUrl(Constants.SITE_RACINE_URL+photoURL,
-									fichierImageRacine+PrefetchConstants.SOUSDOSSIER_VIGNETTES+"/"+participant.getPhotoNom().replace(" ", "_"))) {
-							} else {
-								log.error("Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom());
-								ErrorCollector.getInstance().addError(errorGroup, "image photo participant introuvable", "Une erreur est survenue lors de la récupération de la photo du participant : "+participant.getNom()+" , "+Constants.SITE_RACINE_URL+photoURL);
-								//System.exit(1);
-							}
-						}
-					}
-				}
-			}
-			
-			return listeParticipants.size();
-			
-		} catch ( Exception e) {
-			// une erreur est survenue
-			log.error(e);
-			return -1;
-		}
-
-
-	}
-
-
-
-
-
 
 }

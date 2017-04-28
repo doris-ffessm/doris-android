@@ -251,7 +251,6 @@ public class DorisAPI_JSONDATABindingHelper {
         return classificationJSON;
     }
 
-
     public Groupe getGroupeFieldsFromObjectId(int groupeObjectId) throws ClientProtocolException,
             IOException {
         log.debug("getGroupeFieldsFromObjectId - Début");
@@ -366,85 +365,6 @@ public class DorisAPI_JSONDATABindingHelper {
         return response;
     }
 
-
-
-
-    /**
-	 * récupère un Specie à partir de son NodeId
-	 * @param credent
-	 * @param specieNodeId
-	 * @return
-	 * @throws ClientProtocolException
-	 * @throws IOException
-	 */
-	public Espece getEspeceFromNodeId(int especeNodeId) throws ClientProtocolException,
-			IOException {
-
-		/*
-		DefaultHttpClient client = new DefaultHttpClient();
-		String uri =DorisOAuth2ClientCredentials.SERVER_NODE_URL + especeNodeId;
-		
-		if (debug) {
-			DorisAPIConnexionHelper.printJSON(credent, uri);
-			if(debug_SaveJSON){
-				DorisAPIConnexionHelper.saveJSONFile(credent, uri, DEBUG_SAVE_JSON_BASE_PATH+ File.separatorChar+"specie_" + especeNodeId+JSON_EXT);
-			}
-		}
-
-		if(!DorisAPIConnexionHelper.use_http_header_for_token){
-			uri = uri+"?oauth_token="+credent.getAccessToken();
-		}
-		HttpGet getCode = new HttpGet(uri);
-		if(DorisAPIConnexionHelper.use_http_header_for_token){
-			getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
-		}
-		HttpResponse response = client.execute(getCode);
-		System.out.println(response.getStatusLine());
-		ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
-		Espece especeReponse = mapper.readValue(new InputStreamReader(response.getEntity().getContent()), Espece.class);
-		System.out.println("\t Espece : " + especeReponse.getMetadata().getObjectName());
-		for (Entry<String, Object> entry : especeReponse.getLinks().entrySet()) {
-			System.out.println("\t\t" + entry.getKey() + "\t" + entry.getValue());
-			//		printJSON(credent, entry.getValue().toString());
-		}
-		
-		*/
-		return null;
-	}
-	
-
-	public void getImageList() throws ClientProtocolException,
-	IOException {
-
-		DefaultHttpClient client = new DefaultHttpClient();
-		
-		if (debug) {
-			DorisAPIConnexionHelper.printJSON(credent, DorisOAuth2ClientCredentials.IMAGES_NODE_URL+"/list");
-			if(debug_SaveJSON){
-				DorisAPIConnexionHelper.saveJSONFile(credent, DorisOAuth2ClientCredentials.IMAGES_NODE_URL+"/list", DEBUG_SAVE_JSON_BASE_PATH+ File.separatorChar+"imageList"+JSON_EXT);
-			}
-		}
-		
-		// TODO finish
-		
-	}	
-	
-	public List<Image> getImageListForSpecieNodeId(int specieNodeId) throws ClientProtocolException,
-	IOException {
-
-		DefaultHttpClient client = new DefaultHttpClient();
-		
-		if (debug) {
-			DorisAPIConnexionHelper.printJSON(credent, DorisOAuth2ClientCredentials.IMAGES_NODE_URL+"/list");
-			if(debug_SaveJSON){
-				DorisAPIConnexionHelper.saveJSONFile(credent, DorisOAuth2ClientCredentials.IMAGES_NODE_URL+"/list", DEBUG_SAVE_JSON_BASE_PATH+ File.separatorChar+"imageList"+JSON_EXT);
-			}
-		}
-		
-		// TODO finish
-		return null;
-	}
-	
 	public Image getImageFromImageId(int imageId) throws ClientProtocolException,
 	IOException {
 
@@ -475,6 +395,5 @@ public class DorisAPI_JSONDATABindingHelper {
 		
 		return imageResponse;
 	}
-	
 
 }
