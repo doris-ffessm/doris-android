@@ -38,6 +38,7 @@
 			
 	<!-- ids Debug -->
 	<string name="pref_key_affichage_debug">affichage_debug</string>
+	<string name="pref_key_affichage_tous_contenus">affichage_tous_contenus</string>
 	<string name="pref_key_sync_max_card_number">sync_max_card_number</string>
 	<string name="pref_key_limit_download">limit_download</string>
 	<string name="pref_key_debug_maj_base_prochain_demarrage">debug_maj_base_prochain_demarrage</string>

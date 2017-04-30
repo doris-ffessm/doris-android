@@ -286,11 +286,16 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			photoGallery = (LinearLayout)findViewById(R.id.detailsfiche_elementview_photogallery);
 			int pos = 0;
 			for (PhotoFiche photoFiche : photosFiche) {
-				View photoView = insertPhoto(photoFiche);
-				photoView.setOnClickListener(new OnImageClickListener(this.ficheId,pos,this));
-				photoView.setPadding(0, 0, 2, 0);
-				photoGallery.addView(photoView);
-				pos++;
+
+                // Si la fiche n'est pas publiée, on n'affiche que la 1ère image, mais il existe une option dans les préférences Debug et Autres permettant de tout afficher
+                 if (pos == 0 || entry.getEtatFiche() == 4 || paramOutils.getParamBoolean(R.string.pref_key_affichage_tous_contenus, false) ) {
+                     View photoView = insertPhoto(photoFiche);
+                     photoView.setOnClickListener(new OnImageClickListener(this.ficheId, pos, this));
+                     photoView.setPadding(0, 0, 2, 0);
+                     photoGallery.addView(photoView);
+                     pos++;
+                 }
+
 			}
 			
 		}
@@ -322,7 +327,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			}
 			
 			// 1ère partie des sections issues de la fiche
-			if(entry.getContenu() != null){
+            // Si la fiche n'est pas publiée, on masque par défaut, mais il existe une option dans les préférences Debug et Autres permettant de tout afficher
+			if ( entry.getContenu() != null && (entry.getEtatFiche() == 4 || paramOutils.getParamBoolean(R.string.pref_key_affichage_tous_contenus, false) ) ){
 				for (SectionFiche sectionFiche : entry.getContenu()) {
 					if (sectionFiche.getNumOrdre() < 100) {
 						//Log.d(LOG_TAG, "refreshScreenData() - titre : "+sectionFiche.getTitre());
@@ -389,7 +395,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 
 				
 			// 2ème partie des sections issues de la fiche
-			if(entry.getContenu() != null){
+            // Si la fiche n'est pas publiée, on masque par défaut, mais il existe une option dans les préférences Debug et Autres permettant de tout afficher
+            if ( entry.getContenu() != null && (entry.getEtatFiche() == 4 || paramOutils.getParamBoolean(R.string.pref_key_affichage_tous_contenus, false) ) ){
 				
 				for (SectionFiche sectionFiche : entry.getContenu()) {
 					if (sectionFiche.getNumOrdre() > 100) {
@@ -403,7 +410,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			
 
 			// Arbre Phylogénique
-			if (entry.getClassification() != null ){
+            // Si la fiche n'est pas publiée, on masque par défaut, mais il existe une option dans les préférences Debug et Autres permettant de tout afficher
+			if (entry.getClassification() != null  && (entry.getEtatFiche() == 4 || paramOutils.getParamBoolean(R.string.pref_key_affichage_tous_contenus, false) ) ){
 				Collection<ClassificationFiche> classificationFicheCollect = entry.getClassification();
 	
 				if(classificationFicheCollect.size() != 0){

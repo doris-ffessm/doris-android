@@ -62,7 +62,6 @@ import fr.ffessm.doris.prefetch.ezpublish.jsondata.bibliographie.Bibliographie;
 
 public class PrefetchBibliographies {
 
-
 	// Initialisation de la Gestion des Log 
 	public static Log log = LogFactory.getLog(PrefetchBibliographies.class);
 	

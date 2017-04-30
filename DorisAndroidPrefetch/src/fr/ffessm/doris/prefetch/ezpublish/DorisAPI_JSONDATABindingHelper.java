@@ -110,9 +110,8 @@ public class DorisAPI_JSONDATABindingHelper {
         }
 
         System.out.println("\t Référence : " + glossaire.getFields().getReference().getValue() );
-        System.out.println("\t Espece : " + glossaire.getFields().getTitle().getValue() );
-        System.out.println("\t Genre : " + glossaire.getFields().getDefinition().getValue() );
-        System.out.println("\t Etat : " + glossaire.getFields().getReference().getValue() );
+        System.out.println("\t Titre : " + glossaire.getFields().getTitle().getValue() );
+        System.out.println("\t Définition : " + glossaire.getFields().getDefinition().getValue() );
 
         return glossaire;
     }
@@ -144,8 +143,7 @@ public class DorisAPI_JSONDATABindingHelper {
         }
 
         System.out.println("\t Référence : " + oeuvre.getFields().getReference().getValue() );
-        System.out.println("\t Espece : " + oeuvre.getFields().getTitle().getValue() );
-        System.out.println("\t Etat : " + oeuvre.getFields().getReference().getValue() );
+        System.out.println("\t Titre : " + oeuvre.getFields().getTitle().getValue() );
 
         return oeuvre;
     }

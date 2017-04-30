@@ -51,7 +51,6 @@ import org.apache.commons.logging.LogFactory;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 
-
 public class DataBase_Outils {
 
 	// Initialisation de la Gestion des Log
@@ -79,7 +78,5 @@ public class DataBase_Outils {
 		}
 		return null;
 	}
-  
-    
-    
+
 }

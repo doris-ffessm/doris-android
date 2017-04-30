@@ -28,7 +28,6 @@ public class DorisAPI_JSONTreeHelper {
 	public boolean debug_SaveJSON = true;
 	public static String DEBUG_SAVE_JSON_BASE_PATH = "target/json";
 	public static String JSON_EXT = ".json";
-	
 
 	public Credential credent;
 	
@@ -41,7 +40,6 @@ public class DorisAPI_JSONTreeHelper {
 	
 	/** Global instance of the JSON factory. */
 	static final JsonFactory JSON_FACTORY = new JacksonFactory();
-
 
 	/**
 	 * Renvoie la liste des Fiches
@@ -94,7 +92,6 @@ public class DorisAPI_JSONTreeHelper {
 
         return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.BIBLIO_NODE_URL, fichesPerHttpRequest, offset);
     }
-
 
     /**
      * Renvoie la Classification
@@ -170,8 +167,6 @@ public class DorisAPI_JSONTreeHelper {
 	
 		return result;
 	}
-
-
 
     /**
      * Renvoie la liste des nodeId de toutes les fiches espèces
@@ -266,7 +261,6 @@ public class DorisAPI_JSONTreeHelper {
         }
     }
 
-
     // ne fonctionne pas : renvoie un "Acc\u00e8s refus\u00e9. Vous n'avez pas le droit d'acc\u00e9der \u00e0 cette zone."
     public int getSpecieDorisReferenceIdFromNodeId(int specieNodeId) throws ClientProtocolException,
             IOException {
@@ -294,8 +288,5 @@ public class DorisAPI_JSONTreeHelper {
 //		}
         return 0;
     }
-
-
-
 
 }

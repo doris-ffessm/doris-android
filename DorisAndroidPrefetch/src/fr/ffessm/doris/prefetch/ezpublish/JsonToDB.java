@@ -207,7 +207,8 @@ public class JsonToDB {
 
 
         Fiche fiche = new Fiche(
-                "{{i}}"+ficheNodeId.getObjectName()+"{{/i}}"+" "+jsonEspece.getFields().getDiscoverer().getValue(),
+                "{{i}}"+ficheNodeId.getObjectName()+"{{/i}}"+" "+
+                        commonOutils.remplacementBalises( commonOutils.nettoyageBalises( jsonEspece.getFields().getDiscoverer().getValue() ), true ),
                 jsonEspece.getFields().getNomCommunFr().getValue(),
                 Integer.parseInt(jsonEspece.getFields().getReference().getValue()),
                 etatFiche,

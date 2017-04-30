@@ -138,7 +138,6 @@ public class Constants {
     private final static String PICTO_ESPECE_REGLEMENTEE_LIB = "Espèce réglementée";
 	private final static String PICTO_ESPECE_DANGEREUSE_LIB = "Espèce dangereuse";
 
-	
     public enum FileHtmlKind {
     	LISTE_FICHES,
     	FICHE,
@@ -153,8 +152,7 @@ public class Constants {
     	LISTE_PARTICIPANTS,
     	AUTRE
     }
-    
-	
+
 	/*
 	 * Accession aux Constantes
 	 */
@@ -200,7 +198,6 @@ public class Constants {
      	return SITE_RACINE_URL + BIBLIOGRAPHIE_RACINE_URL + inId;
     }
 
-    
     public static int getNumZoneForUrl(ZoneGeographiqueKind zoneKing) {
     	switch (zoneKing) {
 		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
@@ -233,7 +230,6 @@ public class Constants {
     	return listeGroupeUrl;
     }
 
-    
 	/*
 	 * Gestion Zones Géographiques
 	 */
@@ -387,4 +383,5 @@ public class Constants {
  	
 		return null;
     }
+
 }

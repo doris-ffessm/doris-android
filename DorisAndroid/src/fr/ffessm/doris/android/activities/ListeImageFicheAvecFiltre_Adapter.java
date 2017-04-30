@@ -251,56 +251,65 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 			LinearLayout photoGallery = (LinearLayout) convertView.findViewById(R.id.listeimageficheavecfiltre_elementview_photogallery);
 			photoGallery.removeAllViews();
 
-			
 			int pos = 0;
 			for (PhotoFiche photoFiche : photosFiche) {
-				View photoView = insertPhoto(photoFiche);
-				//photoView.setOnClickListener(new OnImageClickListener(entry.getId(),pos,this));
-				//photoView.setOnClickListener(Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - getView"));
-				photoView.setPadding(0, 0, 2, 0);
-				photoGallery.addView(photoView);
-				
-				photoGallery.setClickable(true);
-				View.OnClickListener ficheLauncher = new View.OnClickListener()
-					{ @Override
-						public void onClick(View v) {
-							Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - onClick");
 
-							DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
-							
-							Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
-							toDetailView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							Bundle b = new Bundle();
-					        b.putInt("ficheId", entry.getId());
-							toDetailView.putExtras(b);
-							context.getApplicationContext().startActivity(toDetailView);
-						};
-					};
-				
-				photoView.setOnClickListener(ficheLauncher);
+                // Si la fiche n'est pas publiée, on n'affiche que la 1ère image, mais il existe une option dans les préférences Debug et Autres permettant de tout afficher
+                if (pos == 0 || entry.getEtatFiche() == 4 || prefs.getBoolean(context.getString(R.string.pref_key_affichage_tous_contenus), false) ) {
 
-				
-				final int posImageCourante = pos; 
-				View.OnLongClickListener photoLauncher = new View.OnLongClickListener()
-				{ @Override
-					public boolean onLongClick(View v) {
-						Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - onLongClick");
-						
-						DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
-						
-						Intent toImageView = new Intent(context, ImagePleinEcran_CustomViewActivity.class);
-						toImageView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						toImageView.putExtra("position", posImageCourante);
-						toImageView.putExtra("ficheId", entry.getId());
-						context.startActivity(toImageView);
-			            
-						return true;
-					};
-				};
-			
-				photoView.setOnLongClickListener(photoLauncher);
-				
-				pos++;
+                    View photoView = insertPhoto(photoFiche);
+                    //photoView.setOnClickListener(new OnImageClickListener(entry.getId(),pos,this));
+                    //photoView.setOnClickListener(Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - getView"));
+                    photoView.setPadding(0, 0, 2, 0);
+                    photoGallery.addView(photoView);
+
+                    photoGallery.setClickable(true);
+                    View.OnClickListener ficheLauncher = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Log.d(LOG_TAG, "ListeImageFicheAvecFiltre_Adapter - onClick");
+
+                            DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
+
+                            Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
+                            toDetailView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            Bundle b = new Bundle();
+                            b.putInt("ficheId", entry.getId());
+                            toDetailView.putExtras(b);
+                            context.getApplicationContext().startActivity(toDetailView);
+                        }
+
+                        ;
+                    };
+
+                    photoView.setOnClickListener(ficheLauncher);
+
+
+                    final int posImageCourante = pos;
+                    View.OnLongClickListener photoLauncher = new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            Log.d(LOG_TAG, "ListeImageFicheAvecFiltre_Adapter - onLongClick");
+
+                            DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
+
+                            Intent toImageView = new Intent(context, ImagePleinEcran_CustomViewActivity.class);
+                            toImageView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            toImageView.putExtra("position", posImageCourante);
+                            toImageView.putExtra("ficheId", entry.getId());
+                            context.startActivity(toImageView);
+
+                            return true;
+                        }
+
+                        ;
+                    };
+
+                    photoView.setOnLongClickListener(photoLauncher);
+
+                    pos++;
+                }
+
 			}
 			
 		}

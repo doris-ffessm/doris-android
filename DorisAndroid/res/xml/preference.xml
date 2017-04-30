@@ -236,6 +236,14 @@
             android:defaultValue="false"
             android:layout="@layout/preference_layout_preference"
             />
+        <!-- Permet d'afficher / surtout masquer par défaut le contenu des fiches en cours de travail,
+                contenu n'apparaissant pas sur le site ! -->
+        <CheckBoxPreference android:key="affichage_tous_contenus"
+            android:title="Montrer tous les contenus"
+            android:summary="Utile pour les développeurs"
+            android:defaultValue="false"
+            android:layout="@layout/preference_layout_preference"
+            />
         <EditTextPreference android:key="@string/pref_key_sync_max_card_number" 
         	android:title="@string/sync_max_card_number_prompt" 
         	android:summary="@string/sync_max_card_number_summary" 

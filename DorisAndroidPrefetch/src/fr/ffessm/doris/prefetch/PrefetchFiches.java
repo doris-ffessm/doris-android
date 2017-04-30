@@ -131,7 +131,7 @@ public class PrefetchFiches {
                 // Préparation Texte pour recherche rapide
                 espece.setTextePourRechercheRapide(
                         (commonOutils.formatStringNormalizer(textePourRechercheRapide)
-                        ).toLowerCase(Locale.FRENCH)
+                        ).toLowerCase(Locale.FRENCH).trim()+"-"+ficheNodeId.getNodeId().intValue()+"-"+especeJSON.getFields().getZoneGeo().getValue()
                 );
 
                 // Groupe
@@ -476,6 +476,7 @@ public class PrefetchFiches {
                             // 239991 - Façade Atlantique Française
                             case 239910:
                             case 239991:
+                                zoneGeographique.setId(-1);
                                 break;
                             // 71728 - ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE
                             case 71728:
@@ -498,15 +499,16 @@ public class PrefetchFiches {
                                 System.exit(1);
                         }
 
-                        ZoneGeographique zoneGeographique_final = zoneGeographique;
-                        TransactionManager.callInTransaction(connectionSource,
-                                new Callable<Void>() {
-                                    public Void call() throws Exception {
-                                        dbContext.fiches_ZonesGeographiquesDao.create(new Fiches_ZonesGeographiques(zoneGeographique_final, espece_final));
-                                        return null;
-                                    }
-                                });
-
+                        if (zoneGeographique.getId() >= 0) {
+                            ZoneGeographique zoneGeographique_final = zoneGeographique;
+                            TransactionManager.callInTransaction(connectionSource,
+                                    new Callable<Void>() {
+                                        public Void call() throws Exception {
+                                            dbContext.fiches_ZonesGeographiquesDao.create(new Fiches_ZonesGeographiques(zoneGeographique_final, espece_final));
+                                            return null;
+                                        }
+                                    });
+                        }
                     } catch ( NumberFormatException nfe){
                         // ignore les entrées invalides
                     }
