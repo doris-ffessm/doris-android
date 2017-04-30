@@ -436,20 +436,21 @@ public class PrefetchFiches {
 
                 // recrée une entrée dans la base pour l'image
                 final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageJSONListe);
+                final Fiche especeFinal = espece;
                 TransactionManager.callInTransaction(connectionSource,
                     new Callable<Void>() {
                         public Void call() throws Exception {
                             int count = 0;
                             for (PhotoFiche photoFiche : listePhotoFiche){
 
-                                photoFiche.setFiche(espece);
+                                photoFiche.setFiche(especeFinal);
 
                                 dbContext.photoFicheDao.create(photoFiche);
 
                                 if (count == 0) {
                                     // met à jour l'image principale de la fiche
-                                    espece.setPhotoPrincipale(photoFiche);
-                                    dbContext.ficheDao.update(espece);
+                                    especeFinal.setPhotoPrincipale(photoFiche);
+                                    dbContext.ficheDao.update(especeFinal);
                                 }
                                 count++;
                             }
@@ -500,7 +501,7 @@ public class PrefetchFiches {
                         }
 
                         if (zoneGeographique.getId() >= 0) {
-                            ZoneGeographique zoneGeographique_final = zoneGeographique;
+                            final ZoneGeographique zoneGeographique_final = zoneGeographique;
                             TransactionManager.callInTransaction(connectionSource,
                                     new Callable<Void>() {
                                         public Void call() throws Exception {
