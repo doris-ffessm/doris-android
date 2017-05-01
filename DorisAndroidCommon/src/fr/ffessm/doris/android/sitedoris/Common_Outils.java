@@ -128,11 +128,7 @@ public class Common_Outils {
 
 		//log.debug("nettoyageBalises() - 050");
 
-		//Il arrive très souvent qu'une balise ouverte soit aussitôt refermée
-		// ce doit sans doute être dû à l'interface de saisie ou des outils utilisés en amont
-		// Toujours est-il que ça peut gêner ensuite, que ça fait perdre du temps et de la place
-		texte = texte.replaceAll("<strong></strong>|</strong><strong>|<em></em>|</em><em>|<i></i>|</i><i>|<span></span>", "");
-
+        // On enlève lien non cliquable
 		texte = texte.replaceAll("<a href=\"http://[^>]*></a>", "");
 
         // On vire target=... des liens
@@ -146,15 +142,25 @@ public class Common_Outils {
 		// <span style="color: #ffffff;">Vidéoris</span>
 		texte = texte.replaceAll("<span style=\"color: #ffffff;\">[^<>]*</span>", "");
 
-        // Suppression Balises de coloration "non significatives"
-        texte = texte.replaceAll("<span style=\"color:[^>]*>([^<>]*)</span>", "$1");
-        texte = texte.replaceAll("<span class=[^>]*>([^<>]*)</span>", "$1");
+        // Suppression Balises de coloration "non significatives" en 2 temps car la balise span peut contenir un span
+        // et la récurrence n'est pas gérée par les expressions régulières
+        // Ici on remplace les balises span d'ouverture, après le remplacement des balises par {{*}} on enlève tous les span restant
+        texte = texte.replaceAll("<span style=\"color:[^>]*>", "<span>");
+        texte = texte.replaceAll("<span class=[^>]*>", "<span>");
         texte = texte.replaceAll("<i[^>]*>", "<i>");
+        texte = texte.replaceAll("<em[^>]*>", "<em>");
 
 		texte = StringUtils.replace(texte, "bgcolor=\"#ffffff\" onMouseOver=\"this.bgColor='#F3F3F3';\" onMouseOut=\"this.bgColor='#ffffff';\"", "" );
 		texte = StringUtils.replace(texte, "color=\"#999999\"", "");
 		//log.debug("nettoyageBalises() - 090");
-		
+
+
+        //Il arrive très souvent qu'une balise ouverte soit aussitôt refermée
+        // ce doit sans doute être dû à l'interface de saisie ou des outils utilisés en amont
+        // Toujours est-il que ça peut gêner ensuite, que ça fait perdre du temps et de la place
+        texte = texte.replaceAll("<strong></strong>|</strong><strong>|<em></em>|</em><em>|<i></i>|</i><i>|<span></span>", "");
+        texte = texte.replaceAll("<p></p>", "");
+
 		//log.debug("nettoyageBalises() - texte : " + texte);
     	//log.debug("nettoyageBalises() - Fin");
 		return texte;
@@ -169,7 +175,7 @@ public class Common_Outils {
 			texte = StringUtils.replace(texte, "<strong>", "{{g}}");
 			texte = StringUtils.replace(texte, "</strong>", "{{/g}}");
 			//Italique
-			texte = texte.replaceAll("<em>|<i>", "{{i}}");
+			texte = texte.replaceAll("<em[^<]*>|<i[^<]*>", "{{i}}");
 			texte = texte.replaceAll("</em>|</i>", "{{/i}}");
 			//Souligné
 			texte = texte.replaceAll("<span style=\"text-decoration: underline;\">([^<>]*)</span>","{{s}}$1{{/s}}");
@@ -221,8 +227,22 @@ public class Common_Outils {
 			texte = StringUtils.replace(texte, "{{/g}}{{/F}}", "{{/F}}{{/g}}");
 			texte = texte.replaceAll("\\{\\{F:([0-9]*)\\}\\}\\{\\{g\\}\\}", "{{g}}{{F:$1}}");
 
+            // Les listes à Puces et Ordonnées sont représentées par des -
+            //   Les nouvelles lignes => Saut de Ligne puis la puce
+            texte = StringUtils.replace(texte, "<li>", "{{n/}}  - ");
+            //   Un saut de ligne après la dernière ligne (au cas où)
+            texte = texte.replaceAll("</ul>|</ol>", "{{n/}}");
+            //   Suppression de toutes autres balises
+            texte = texte.replaceAll("<ul[^<]*>|<ol[^<]*>|</li>", "");
+
+            // Suppression Balises de coloration "non significatives" en 2 temps car la balise span peut contenir un span
+            // et la récurrence n'est pas gérée par les expressions régulières
+            // Avant on a remplacé les balises span d'ouverture, ici (après le remplacement des balises par {{*}}) on enlève tous les span restant
+            texte = texte.replaceAll("<span[^>]*>", "");
+            texte = StringUtils.replace(texte, "</span>", "");
+
 		} else {
-			texte = texte.replaceAll("<strong>|</strong>|<em>|</em>|<i>|</i>|<br/>", "");
+			texte = texte.replaceAll("<strong>|</strong>|<em>|</em>|<i>|</i>|<br/>|<span>|</span>", "");
 		}
 		
 		//log.debug("remplacementBalises() - texteNettoye : " + texteNettoye);

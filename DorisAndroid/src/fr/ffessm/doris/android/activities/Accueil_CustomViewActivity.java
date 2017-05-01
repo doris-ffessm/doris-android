@@ -899,18 +899,21 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 				}
 				
 	            return true;
-        	case R.id.accueil_customview_action_maj_listesfiches:
+            /* TODO: Déasctivé jusqu'à ce que cela soit au point */
+            /*
+            case R.id.accueil_customview_action_maj_listesfiches:
 
                 Toast.makeText(this, "MaJ désactivée dans la version béta", Toast.LENGTH_LONG).show();
-                /*
+
         		VerifieMAJFiches_BgActivity verifieMAJFiches_BgActivity = DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity;		    	
 				if(verifieMAJFiches_BgActivity == null || verifieMAJFiches_BgActivity.getStatus() != Status.RUNNING) {
 	        		DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity =
 	        			(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext()).execute(""+Fiches_Outils.TypeLancement_kind.MANUEL);
 				}
-                */
+
         		// TODO : refreshScreenData();
             	return true;
+            */
 	        case R.id.accueil_customview_action_a_propos:
 	        	AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
 				aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label)+getContext().getString(R.string.app_name), aPropos.aProposAff(),	"file:///android_res/raw/apropos.html");

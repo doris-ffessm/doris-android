@@ -37,7 +37,7 @@
 	<!-- 18.6 Mo / 686 images => 28 ko soit 28500 octets -->
 	<string name="etatmodehorsligne_taillemoy_illus_biblio">30000</string>
 	
-	<string name="etatmodehorsligne_titre_text">État du Mode Hors Ligne</string>
+	<string name="etatmodehorsligne_titre_text">Gestion du Mode Hors Ligne</string>
 	<string name="etatmodehorsligne_description_text">"DORISAndroid peut fonctionner sans internet. Pour cela vous devez avoir téléchargé les fiches et images à l'avance. Pour économiser votre forfait faites le en Wifi."</string>
 	<string name="etatmodehorsligne_description_text_2">Ajustez vos paramètres en fonction de vos besoins et de votre espace disque disponible.</string>
 	

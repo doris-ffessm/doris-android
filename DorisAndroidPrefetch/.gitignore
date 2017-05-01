@@ -1,7 +1,6 @@
 /bin
 /run
 /sauv
-/.gitignore
 /build
-/*.iml
-/*.gradle
+*.iml
+*.gradle
