@@ -229,7 +229,7 @@ public class Common_Outils {
 
             // Les listes à Puces et Ordonnées sont représentées par des -
             //   Les nouvelles lignes => Saut de Ligne puis la puce
-            texte = StringUtils.replace(texte, "<li>", "{{n/}}  - ");
+            texte = StringUtils.replace(texte, "<li>", "{{n/}}  -");
             //   Un saut de ligne après la dernière ligne (au cas où)
             texte = texte.replaceAll("</ul>|</ol>", "{{n/}}");
             //   Suppression de toutes autres balises

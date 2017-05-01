@@ -126,9 +126,23 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
 		
 		TextView definition = (TextView) findViewById(R.id.detailentreeglossaire_elementview_definition);
 		Textes_Outils textesOutils = new Textes_Outils(context);
-		definition.setText(textesOutils.textToSpannableStringDoris(entry.getDefinition()));
+
+        CharSequence definitionTexte = entry.getDefinition();
+        for(String cleURLIllustration : entry.getCleURLIllustration().split(";")) {
+            if (cleURLIllustration != null && cleURLIllustration != "") {
+                String[] illustration = cleURLIllustration.split("\\|");
+
+                definitionTexte = definitionTexte + "{{n/}}" + "{{E:"+illustration[0]+"/}}";
+                if ( !illustration[1].equals("") ) {
+                    definitionTexte = definitionTexte + "{{n/}}" + illustration[1];
+                }
+            }
+        }
+
+		definition.setText(textesOutils.textToSpannableStringDoris( definitionTexte ));
 		definition.setMovementMethod(LinkMovementMethod.getInstance());
-		
+
+        // Lien vers la Définition sur le site
 		String urlString = Constants.getDefinitionUrl( ""+entry.getNumeroDoris() ); 
 		SpannableString richtext = new SpannableString(urlString);
 		richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);

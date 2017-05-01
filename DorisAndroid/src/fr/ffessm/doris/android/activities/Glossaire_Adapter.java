@@ -198,7 +198,11 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
         
         if ( !entry.getCleURLIllustration().isEmpty() ) {
         	String[] listePhotos = entry.getCleURLIllustration().split(";");
-        	String nom1erePhoto = Constants.PREFIX_IMGDSK_DEFINITION + listePhotos[0];
+            String photoUrl = listePhotos[0].split("|")[0];
+            String photoDescription = listePhotos[0].split("|")[1];
+            Log.i(LOG_TAG, "getView() - photo : " + photoUrl + "-" + photoDescription);
+
+        	String nom1erePhoto = photoUrl.split("/")[photoUrl.split("/").length - 1];
         	Log.i(LOG_TAG, "getView() - nomPhoto1erePhoto : " +nom1erePhoto);
         	
         	Photos_Outils photosOutils = new Photos_Outils(context);
