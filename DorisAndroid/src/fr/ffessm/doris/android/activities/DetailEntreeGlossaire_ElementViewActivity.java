@@ -132,8 +132,13 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
             if (cleURLIllustration != null && cleURLIllustration != "") {
                 String[] illustration = cleURLIllustration.split("\\|");
 
+                Log.d(LOG_TAG, "refreshScreenData() - illustration : " + illustration.length);
+                Log.d(LOG_TAG, "refreshScreenData() - illustration : " + illustration);
+                Log.d(LOG_TAG, "refreshScreenData() - illustration[0] : " + illustration[0]);
+                if (illustration.length > 1) Log.d(LOG_TAG, "refreshScreenData() - illustration[1] : " + illustration[1]);
+
                 definitionTexte = definitionTexte + "{{n/}}" + "{{E:"+illustration[0]+"/}}";
-                if ( !illustration[1].equals("") ) {
+                if (illustration.length > 1 && !illustration[1].equals("") ) {
                     definitionTexte = definitionTexte + "{{n/}}" + illustration[1];
                 }
             }
