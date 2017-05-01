@@ -56,6 +56,10 @@ public class DorisAPI_JSONDATABindingHelper {
 
         HttpResponse response = getFieldsFromNodeId(participantNodeId);
 
+        if ( response == null )  {
+            return null;
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
         Utilisateur utilisateur = new Utilisateur();
 
@@ -90,6 +94,10 @@ public class DorisAPI_JSONDATABindingHelper {
 
         HttpResponse response = getFieldsFromNodeId(termeNodeId);
 
+        if ( response == null )  {
+            return null;
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
         Glossaire glossaire = new Glossaire();
 
@@ -122,6 +130,10 @@ public class DorisAPI_JSONDATABindingHelper {
         log.debug("getTermeFieldsFromNodeId - termeNodeId : " + termeNodeId);
 
         HttpResponse response = getFieldsFromNodeId(termeNodeId);
+
+        if ( response == null )  {
+            return null;
+        }
 
         ObjectMapper objectMapper = new ObjectMapper();
         Bibliographie oeuvre = new Bibliographie();
@@ -184,6 +196,10 @@ public class DorisAPI_JSONDATABindingHelper {
         HttpResponse response = client.execute(getHttpPage);
         //log.debug("getSpecieFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
 
+        if ( response.getStatusLine().getStatusCode() != 200 )  {
+            return null;
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
         Espece espece = new Espece();
 
@@ -220,6 +236,10 @@ public class DorisAPI_JSONDATABindingHelper {
 
         HttpResponse response = getFieldsFromObjectId(classificationObjectId);
 
+        if ( response == null )  {
+            return null;
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
         Classification classificationJSON = new Classification();
 
@@ -255,6 +275,10 @@ public class DorisAPI_JSONDATABindingHelper {
         log.debug("getGroupeFieldsFromObjectId - groupeObjectId : " + groupeObjectId);
 
         HttpResponse response = getFieldsFromObjectId(groupeObjectId);
+
+        if ( response == null )  {
+            return null;
+        }
 
         ObjectMapper objectMapper = new ObjectMapper();
         Groupe groupeJSON = new Groupe();
@@ -321,6 +345,10 @@ public class DorisAPI_JSONDATABindingHelper {
         HttpResponse response = client.execute(getHttpPage);
         log.debug("getFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
 
+        if ( response.getStatusLine().getStatusCode() != 200 )  {
+            return null;
+        }
+
         return response;
     }
 
@@ -359,6 +387,10 @@ public class DorisAPI_JSONDATABindingHelper {
 
         HttpResponse response = client.execute(getHttpPage);
         //log.debug("getFieldsFromObjectId - response.getStatusLine() : "+response.getStatusLine());
+
+        if ( response.getStatusLine().getStatusCode() != 200 )  {
+            return null;
+        }
 
         return response;
     }

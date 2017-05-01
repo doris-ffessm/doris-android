@@ -124,129 +124,164 @@ public class PrefetchFiches {
                 Espece especeJSON = dorisAPI_JSONDATABindingHelper.getEspeceFieldsFromNodeId(ficheNodeId.getNodeId().intValue());
                 //log.debug("prefetchV4() - especeJSON : " + especeJSON.getFields().getNomCommunFr().getValue());
 
-                Fiche espece = jsonToDB.getFicheFromJSONEspece(ficheNodeId, especeJSON);
-                String textePourRechercheRapide = espece.getNomCommun() + " " +
-                        espece.getNomScientifique().replaceAll("\\{\\{[^\\{]*\\}\\}", "").replaceAll("\\([^\\(]*\\)", "");
+                if (especeJSON != null) {
+                    Fiche espece = jsonToDB.getFicheFromJSONEspece(ficheNodeId, especeJSON);
+                    String textePourRechercheRapide = espece.getNomCommun() + " " +
+                            espece.getNomScientifique().replaceAll("\\{\\{[^\\{]*\\}\\}", "").replaceAll("\\([^\\(]*\\)", "");
 
-                // Préparation Texte pour recherche rapide
-                espece.setTextePourRechercheRapide(
-                        (commonOutils.formatStringNormalizer(textePourRechercheRapide)
-                        ).toLowerCase(Locale.FRENCH).trim()+"-"+ficheNodeId.getNodeId().intValue()+"-"+especeJSON.getFields().getZoneGeo().getValue()
-                );
-
-                // Groupe
-                if (especeJSON.getFields().getGroup().getValue() != null) {
-                    Groupe groupeDoris = dbContext.groupeDao.queryForFirst(
-                            dbContext.groupeDao.queryBuilder().where().eq("numeroGroupe", especeJSON.getFields().getGroup().getValue()).prepare()
+                    // Préparation Texte pour recherche rapide
+                    espece.setTextePourRechercheRapide(
+                            (commonOutils.formatStringNormalizer(textePourRechercheRapide)
+                            ).toLowerCase(Locale.FRENCH).trim() + "-" + ficheNodeId.getNodeId().intValue() + "-" + especeJSON.getFields().getZoneGeo().getValue()
                     );
-                    espece.setGroupe(groupeDoris);
-                }
 
-                // Enregistrement dans la Base
-                final Fiche espece_final = espece;
-                TransactionManager.callInTransaction(connectionSource,
-                        new Callable<Void>() {
-                            public Void call() throws Exception {
+                    // Groupe
+                    if (especeJSON.getFields().getGroup().getValue() != null) {
+                        Groupe groupeDoris = dbContext.groupeDao.queryForFirst(
+                                dbContext.groupeDao.queryBuilder().where().eq("numeroGroupe", especeJSON.getFields().getGroup().getValue()).prepare()
+                        );
+                        espece.setGroupe(groupeDoris);
+                    }
 
-                                dbContext.ficheDao.create(espece_final);
-                                return null;
-                            }
-                        });
-
-
-                /* Héritée de la manière dont étaient stockées les données dans le Version 3 du Site,
-                On enregistre les différentes sections de la fiche dans l'ordre d'affichage de manière + "générique" que la verson 4 ne le fait
-                 */
-                //log.debug("prefetchV4() - 'Sections' de la fiche");
-                List<SectionFiche> sectionsFiche = jsonToDB.getSectionsFicheFromJSONEspece(especeJSON);
-                for (SectionFiche sectionFiche : sectionsFiche) {
-
-                    sectionFiche.setFiche(espece);
-                    final SectionFiche sectionFiche_final = sectionFiche;
-                    log.debug("prefetchV4() - sectionFiche_final.getFiche() : "+sectionFiche_final.getFiche().getNumeroFiche());
-
+                    // Enregistrement dans la Base
+                    final Fiche espece_final = espece;
                     TransactionManager.callInTransaction(connectionSource,
                             new Callable<Void>() {
                                 public Void call() throws Exception {
 
-                                    dbContext.sectionFicheDao.create(sectionFiche_final);
-
+                                    dbContext.ficheDao.create(espece_final);
                                     return null;
                                 }
                             });
 
-                }
 
-            /* Héritée de la manière dont étaient stockées les données dans le Version 3 du Site,
-                On enregistre les dénominations de la fiche dans une table dédiée
-            */
-                //log.debug("prefetchV4() - Autres dénominations");
-                List<AutreDenomination> autresDenominations = jsonToDB.getAutresDenominationFicheFromJSONEspece(especeJSON);
-                for (AutreDenomination autreDenomination : autresDenominations) {
-                    //log.debug("prefetchV4() - autreDenomination : "+autreDenomination.getDenomination());
-                    if (! autreDenomination.getDenomination().contentEquals("<html />")) {
-                        textePourRechercheRapide += " " + autreDenomination.getDenomination().replaceAll("\\([^\\(]*\\)", "");
+                    /* Héritée de la manière dont étaient stockées les données dans le Version 3 du Site,
+                    On enregistre les différentes sections de la fiche dans l'ordre d'affichage de manière + "générique" que la verson 4 ne le fait
+                     */
+                    //log.debug("prefetchV4() - 'Sections' de la fiche");
+                    List<SectionFiche> sectionsFiche = jsonToDB.getSectionsFicheFromJSONEspece(especeJSON);
+                    for (SectionFiche sectionFiche : sectionsFiche) {
 
-                        autreDenomination.setFiche(espece);
-                        final AutreDenomination autreDenomination_final = autreDenomination;
+                        sectionFiche.setFiche(espece);
+                        final SectionFiche sectionFiche_final = sectionFiche;
+                        log.debug("prefetchV4() - sectionFiche_final.getFiche() : " + sectionFiche_final.getFiche().getNumeroFiche());
 
                         TransactionManager.callInTransaction(connectionSource,
                                 new Callable<Void>() {
                                     public Void call() throws Exception {
 
-                                        dbContext.autreDenominationDao.create(autreDenomination_final);
+                                        dbContext.sectionFicheDao.create(sectionFiche_final);
+
+                                        return null;
+                                    }
+                                });
+
+                    }
+
+                /* Héritée de la manière dont étaient stockées les données dans le Version 3 du Site,
+                    On enregistre les dénominations de la fiche dans une table dédiée
+                */
+                    //log.debug("prefetchV4() - Autres dénominations");
+                    List<AutreDenomination> autresDenominations = jsonToDB.getAutresDenominationFicheFromJSONEspece(especeJSON);
+                    for (AutreDenomination autreDenomination : autresDenominations) {
+                        //log.debug("prefetchV4() - autreDenomination : "+autreDenomination.getDenomination());
+                        if (!autreDenomination.getDenomination().contentEquals("<html />")) {
+                            textePourRechercheRapide += " " + autreDenomination.getDenomination().replaceAll("\\([^\\(]*\\)", "");
+
+                            autreDenomination.setFiche(espece);
+                            final AutreDenomination autreDenomination_final = autreDenomination;
+
+                            TransactionManager.callInTransaction(connectionSource,
+                                    new Callable<Void>() {
+                                        public Void call() throws Exception {
+
+                                            dbContext.autreDenominationDao.create(autreDenomination_final);
+
+                                            return null;
+                                        }
+                                    });
+                        }
+                    }
+
+
+                    /* Ajout aux Classifications si pas encore dans la liste
+                     */
+                    //log.debug("prefetchV4() - Classification de la fiche");
+                    /* Initialement on a sur la fiche que le niveau et la référence de la Classification */
+                    List<ClassificationFiche> classificationsFiche = jsonToDB.getClassificationFicheFromJSONEspece(especeJSON);
+
+                    for (ClassificationFiche classificationFiche : classificationsFiche) {
+                        //log.debug("prefetchV4() - classification : " + classificationFiche.getClassification());
+                        //log.debug("prefetchV4() - classification.getNiveau() : " + classificationFiche.getClassification().getNiveau());
+                        //log.debug("prefetchV4() - classification.getNumeroDoris() : " + classificationFiche.getClassification().getNumeroDoris());
+
+                        /* Si on ne trouve pas la Classification dans la Base on l'ajoute, sinon on l'utilise */
+                        Classification classification = dbContext.classificationDao.queryForFirst(
+                                dbContext.classificationDao.queryBuilder().where().eq("numeroDoris", classificationFiche.getClassification().getNumeroDoris()).prepare()
+                        );
+                        if (classification == null) {
+                            //log.debug("prefetchV4() - classification par encore dans la base");
+
+                            fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification classificationJSON = dorisAPI_JSONDATABindingHelper.getClassificationFieldsFromObjectId(classificationFiche.getClassification().getNumeroDoris());
+
+                            // Parfois on n'arrive pas à la récupérer
+                            if (classificationJSON != null) {
+                                classification = jsonToDB.getClassificationFromJSONClassification(
+                                        classificationFiche.getClassification().getNumeroDoris(), classificationFiche.getClassification().getNiveau(), classificationJSON);
+
+                                final Classification classificationFinal = classification;
+                                TransactionManager.callInTransaction(connectionSource,
+                                        new Callable<Void>() {
+                                            public Void call() throws Exception {
+
+                                                dbContext.classificationDao.create(classificationFinal);
+
+                                                return null;
+                                            }
+                                        });
+
+                            }
+
+                        }
+
+                        //log.debug("prefetchV4() - classification : " + classification.getNumeroDoris() + " - " + classification.getTermeFrancais());
+                        /* on a ici la Classification que l'on va associer à la Fiche */
+                        if (classification != null) {
+                            final ClassificationFiche classification_final = new ClassificationFiche(espece, classification, classificationFiche.getNumOrdre());
+
+                            // Enregistrement de la Classification de la Fiche
+                            TransactionManager.callInTransaction(connectionSource,
+                                    new Callable<Void>() {
+                                        public Void call() throws Exception {
+
+                                            dbContext.classificationFicheDao.create(classification_final);
+
+                                            return null;
+                                        }
+                                    });
+                        }
+                    }
+
+                    /* Ajout Genre et Espèce aux Classification                  */
+                    //log.debug("prefetchV4() - Ajout Genre et Espèce aux Classification");
+                    Classification classificationGenre = dbContext.classificationDao.queryForFirst(
+                            dbContext.classificationDao.queryBuilder().where().eq("niveau", "{{g}}Genre{{/g}}").and().eq("termeScientifique", "{{i}}" + especeJSON.getFields().getGenre().getValue() + "{{/i}})").prepare()
+                    );
+                    if (classificationGenre == null) {
+                        classificationGenre = new Classification(0, "{{g}}Genre{{/g}}", "{{i}}" + especeJSON.getFields().getGenre().getValue() + "{{/i}}", "", "");
+                        final Classification classificationGenreFinal = classificationGenre;
+                        TransactionManager.callInTransaction(connectionSource,
+                                new Callable<Void>() {
+                                    public Void call() throws Exception {
+
+                                        dbContext.classificationDao.create(classificationGenreFinal);
 
                                         return null;
                                     }
                                 });
                     }
-                }
-
-
-                /* Ajout aux Classifications si pas encore dans la liste
-                 */
-                //log.debug("prefetchV4() - Classification de la fiche");
-                /* Initialement on a sur la fiche que le niveau et la référence de la Classification */
-                List<ClassificationFiche> classificationsFiche = jsonToDB.getClassificationFicheFromJSONEspece(especeJSON);
-
-                for (ClassificationFiche classificationFiche : classificationsFiche) {
-                    //log.debug("prefetchV4() - classification : " + classificationFiche.getClassification());
-                    //log.debug("prefetchV4() - classification.getNiveau() : " + classificationFiche.getClassification().getNiveau());
-                    //log.debug("prefetchV4() - classification.getNumeroDoris() : " + classificationFiche.getClassification().getNumeroDoris());
-
-                    /* Si on ne trouve pas la Classification dans la Base on l'ajoute, sinon on l'utilise */
-                    Classification classification = dbContext.classificationDao.queryForFirst(
-                            dbContext.classificationDao.queryBuilder().where().eq("numeroDoris", classificationFiche.getClassification().getNumeroDoris()).prepare()
-                    );
-                    if (classification == null) {
-                        //log.debug("prefetchV4() - classification par encore dans la base");
-
-                        fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification classificationJSON = dorisAPI_JSONDATABindingHelper.getClassificationFieldsFromObjectId(classificationFiche.getClassification().getNumeroDoris());
-
-                        // Parfois on n'arrive pas à la récupérer
-                        if (classificationJSON != null) {
-                            classification = jsonToDB.getClassificationFromJSONClassification(
-                                    classificationFiche.getClassification().getNumeroDoris(), classificationFiche.getClassification().getNiveau(), classificationJSON);
-
-                            final Classification classificationFinal = classification;
-                            TransactionManager.callInTransaction(connectionSource,
-                                    new Callable<Void>() {
-                                        public Void call() throws Exception {
-
-                                            dbContext.classificationDao.create(classificationFinal);
-
-                                            return null;
-                                        }
-                                    });
-
-                        }
-
-                    }
-
-                    //log.debug("prefetchV4() - classification : " + classification.getNumeroDoris() + " - " + classification.getTermeFrancais());
-                    /* on a ici la Classification que l'on va associer à la Fiche */
-                    if (classification != null) {
-                        final ClassificationFiche classification_final = new ClassificationFiche(espece, classification, classificationFiche.getNumOrdre());
+                    if (classificationGenre != null) {
+                        final ClassificationFiche classification_final = new ClassificationFiche(espece, classificationGenre, 20);
 
                         // Enregistrement de la Classification de la Fiche
                         TransactionManager.callInTransaction(connectionSource,
@@ -259,263 +294,229 @@ public class PrefetchFiches {
                                     }
                                 });
                     }
-                }
 
-                /* Ajout Genre et Espèce aux Classification                  */
-                //log.debug("prefetchV4() - Ajout Genre et Espèce aux Classification");
-                Classification classificationGenre = dbContext.classificationDao.queryForFirst(
-                        dbContext.classificationDao.queryBuilder().where().eq("niveau","{{g}}Genre{{/g}}").and().eq("termeScientifique","{{i}}"+especeJSON.getFields().getGenre().getValue()+"{{/i}})").prepare()
-                );
-                if (classificationGenre == null) {
-                    classificationGenre = new Classification(0, "{{g}}Genre{{/g}}", "{{i}}"+especeJSON.getFields().getGenre().getValue()+"{{/i}}", "", "");
-                    final Classification classificationGenreFinal = classificationGenre;
-                    TransactionManager.callInTransaction(connectionSource,
-                            new Callable<Void>() {
-                                public Void call() throws Exception {
+                    Classification classificationEspece = dbContext.classificationDao.queryForFirst(
+                            dbContext.classificationDao.queryBuilder().where().eq("niveau", "{{g}}Espece{{/g}}").and().eq("termeScientifique", "{{i}}" + especeJSON.getFields().getEspece().getValue() + "{{/i}})").prepare()
+                    );
+                    if (classificationEspece == null) {
+                        classificationEspece = new Classification(0, "{{g}}Espece{{/g}}", "{{i}}" + especeJSON.getFields().getEspece().getValue() + "{{/i}}", "", "");
+                        final Classification classificationEspeceFinal = classificationEspece;
+                        TransactionManager.callInTransaction(connectionSource,
+                                new Callable<Void>() {
+                                    public Void call() throws Exception {
 
-                                    dbContext.classificationDao.create(classificationGenreFinal);
+                                        dbContext.classificationDao.create(classificationEspeceFinal);
 
-                                    return null;
-                                }
-                            });
-                }
-                if (classificationGenre != null) {
-                    final ClassificationFiche classification_final = new ClassificationFiche(espece, classificationGenre, 20);
-
-                    // Enregistrement de la Classification de la Fiche
-                    TransactionManager.callInTransaction(connectionSource,
-                            new Callable<Void>() {
-                                public Void call() throws Exception {
-
-                                    dbContext.classificationFicheDao.create(classification_final);
-
-                                    return null;
-                                }
-                            });
-                }
-
-                Classification classificationEspece = dbContext.classificationDao.queryForFirst(
-                        dbContext.classificationDao.queryBuilder().where().eq("niveau","{{g}}Espece{{/g}}").and().eq("termeScientifique","{{i}}"+especeJSON.getFields().getEspece().getValue()+"{{/i}})").prepare()
-                );
-                if (classificationEspece == null) {
-                    classificationEspece = new Classification(0, "{{g}}Espece{{/g}}", "{{i}}"+especeJSON.getFields().getEspece().getValue()+"{{/i}}", "", "");
-                    final Classification classificationEspeceFinal = classificationEspece;
-                    TransactionManager.callInTransaction(connectionSource,
-                            new Callable<Void>() {
-                                public Void call() throws Exception {
-
-                                    dbContext.classificationDao.create(classificationEspeceFinal);
-
-                                    return null;
-                                }
-                            });
-                }
-                if (classificationEspece != null) {
-                    final ClassificationFiche classification_final = new ClassificationFiche(espece, classificationEspece, 21);
-
-                    // Enregistrement de la Classification de la Fiche
-                    TransactionManager.callInTransaction(connectionSource,
-                            new Callable<Void>() {
-                                public Void call() throws Exception {
-
-                                    dbContext.classificationFicheDao.create(classification_final);
-
-                                    return null;
-                                }
-                            });
-                }
-
-                /* * * * * * * * * * * *
-                    Doridiens ayant participés à la rédaction de la fiche
-                * * * * * * * * * * * * */
-                //log.debug("prefetchV4() - Doridiens ayant participés à la rédaction de la fiche :" + especeJSON.getFields().getVerificateurs().getValue());
-
-                for(String numeroVerificateur : especeJSON.getFields().getVerificateurs().getValue().split("-")){
-                    try{
-                        if (numeroVerificateur != null && numeroVerificateur != "") {
-                            final Participant doridien = dbContext.participantDao.queryForFirst(
-                                    dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroVerificateur).prepare()
-                            );
-
-                            TransactionManager.callInTransaction(connectionSource,
-                                    new Callable<Void>() {
-                                        public Void call() throws Exception {
-                                            dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.VERIFICATEUR.ordinal()));
-                                            return null;
-                                        }
-                                    });
-                        }
-                    } catch ( NumberFormatException nfe){
-                        // ignore les entrées invalides
+                                        return null;
+                                    }
+                                });
                     }
-                }
-                for(String numeroContributeur : especeJSON.getFields().getContributors().getValue().split("-")){
-                    try{
-                        if (numeroContributeur != null && numeroContributeur != "") {
-                            final Participant doridien = dbContext.participantDao.queryForFirst(
-                                    dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroContributeur).prepare()
-                            );
+                    if (classificationEspece != null) {
+                        final ClassificationFiche classification_final = new ClassificationFiche(espece, classificationEspece, 21);
 
-                            TransactionManager.callInTransaction(connectionSource,
-                                    new Callable<Void>() {
-                                        public Void call() throws Exception {
-                                            dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.REDACTEUR.ordinal()));
-                                            return null;
-                                        }
-                                    });
-                        }
-                    } catch ( NumberFormatException nfe){
-                        // ignore les entrées invalides
+                        // Enregistrement de la Classification de la Fiche
+                        TransactionManager.callInTransaction(connectionSource,
+                                new Callable<Void>() {
+                                    public Void call() throws Exception {
+
+                                        dbContext.classificationFicheDao.create(classification_final);
+
+                                        return null;
+                                    }
+                                });
                     }
-                }
-                for(String numeroCorrecteur : especeJSON.getFields().getCorrecteurs().getValue().split("-")){
-                    try{
-                        if (numeroCorrecteur != null && numeroCorrecteur != "") {
-                            final Participant doridien = dbContext.participantDao.queryForFirst(
-                                    dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroCorrecteur).prepare()
-                            );
 
-                            TransactionManager.callInTransaction(connectionSource,
-                                    new Callable<Void>() {
-                                        public Void call() throws Exception {
-                                            dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.CORRECTEUR.ordinal()));
-                                            return null;
-                                        }
-                                    });
-                        }
-                    } catch ( NumberFormatException nfe){
-                        // ignore les entrées invalides
-                    }
-                }
-                for(String numeroDoridien : especeJSON.getFields().getDoridiens().getValue().split("-")){
-                    try{
-                        if (numeroDoridien != null && numeroDoridien != "") {
-                            final Participant doridien = dbContext.participantDao.queryForFirst(
-                                    dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroDoridien).prepare()
-                            );
+                    /* * * * * * * * * * * *
+                        Doridiens ayant participés à la rédaction de la fiche
+                    * * * * * * * * * * * * */
+                    //log.debug("prefetchV4() - Doridiens ayant participés à la rédaction de la fiche :" + especeJSON.getFields().getVerificateurs().getValue());
 
-                            TransactionManager.callInTransaction(connectionSource,
-                                    new Callable<Void>() {
-                                        public Void call() throws Exception {
-                                            dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.RESPONSABLE_REGIONAL.ordinal()));
-                                            return null;
-                                        }
-                                    });
-                        }
-                    } catch ( NumberFormatException nfe){
-                        // ignore les entrées invalides
-                    }
-                }
+                    for (String numeroVerificateur : especeJSON.getFields().getVerificateurs().getValue().split("-")) {
+                        try {
+                            if (numeroVerificateur != null && numeroVerificateur != "") {
+                                final Participant doridien = dbContext.participantDao.queryForFirst(
+                                        dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroVerificateur).prepare()
+                                );
 
-                /* * * * * * * * * * * *
-                    Photos
-                * * * * * * * * * * * * */
-                //log.debug("prefetchV4() - imagesNodeIds = "+especeJSON.getFields().getImages().getValue());
-
-                List<Image> imageJSONListe = new ArrayList<Image>();
-
-                // itère sur les images trouvées pour cette fiche
-                for(String possibleImageId : especeJSON.getFields().getImages().getValue().split("&")){
-                    try{
-                        int imageId = Integer.parseInt(possibleImageId.split("\\|")[0]);
-
-                        //log.debug("prefetchV4() - imageId = "+possibleImageId.split("\\|")[0]);
-
-                        // récupère les données associées à l'image
-                        Image imageJSON = dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId);
-
-                        //TODO : Traiter le cas des Videos un jour
-                        if (imageJSON != null && imageJSON.getClassIdentifier().equals("image")) {
-                            imageJSONListe.add(imageJSON);
-                        }
-
-                    } catch ( NumberFormatException nfe){
-                        // ignore les entrées invalides
-                    }
-                }
-
-                // recrée une entrée dans la base pour l'image
-                final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageJSONListe);
-                final Fiche especeFinal = espece;
-                TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-                            int count = 0;
-                            for (PhotoFiche photoFiche : listePhotoFiche){
-
-                                photoFiche.setFiche(especeFinal);
-
-                                dbContext.photoFicheDao.create(photoFiche);
-
-                                if (count == 0) {
-                                    // met à jour l'image principale de la fiche
-                                    especeFinal.setPhotoPrincipale(photoFiche);
-                                    dbContext.ficheDao.update(especeFinal);
-                                }
-                                count++;
+                                TransactionManager.callInTransaction(connectionSource,
+                                        new Callable<Void>() {
+                                            public Void call() throws Exception {
+                                                dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.VERIFICATEUR.ordinal()));
+                                                return null;
+                                            }
+                                        });
                             }
-                            return null;
+                        } catch (NumberFormatException nfe) {
+                            // ignore les entrées invalides
                         }
-                    });
-
-                /* * * * * * * * * * * *
-                    Zones Géographiques
-                * * * * * * * * * * * * */
-                //log.debug("prefetchV4() - Zone Géo. : "+especeJSON.getFields().getZoneGeo().getValue());
-
-                ZoneGeographique zoneGeographique = new ZoneGeographique();
-                for(String zoneGeoRefId : especeJSON.getFields().getZoneGeo().getValue().split("-")){
-
-                    try{
-                        switch (Integer.parseInt(zoneGeoRefId)) {
-                            // 71726 - ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE
-                            case 71726:
-                                zoneGeographique.setId(1);
-                                break;
-                            // On ignore pour l'instant
-                            // 239910 - Méditérannée Française
-                            // 239991 - Façade Atlantique Française
-                            case 239910:
-                            case 239991:
-                                zoneGeographique.setId(-1);
-                                break;
-                            // 71728 - ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE
-                            case 71728:
-                                zoneGeographique.setId(2);
-                                break;
-                            // 71730 - ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE
-                            case 71730:
-                                zoneGeographique.setId(3);
-                                break;
-                            // 71731 - ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES
-                            case 71731:
-                                zoneGeographique.setId(4);
-                                break;
-                            // 135595 - ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST
-                            case 135595:
-                                zoneGeographique.setId(5);
-                                break;
-                            default:
-                                log.debug("prefetchV4() - Zone Géo. Inconnue : http://doris.ffessm.fr/api/ezx/v1/object/"+zoneGeoRefId);
-                                System.exit(1);
-                        }
-
-                        if (zoneGeographique.getId() >= 0) {
-                            final ZoneGeographique zoneGeographique_final = zoneGeographique;
-                            TransactionManager.callInTransaction(connectionSource,
-                                    new Callable<Void>() {
-                                        public Void call() throws Exception {
-                                            dbContext.fiches_ZonesGeographiquesDao.create(new Fiches_ZonesGeographiques(zoneGeographique_final, espece_final));
-                                            return null;
-                                        }
-                                    });
-                        }
-                    } catch ( NumberFormatException nfe){
-                        // ignore les entrées invalides
                     }
+                    for (String numeroContributeur : especeJSON.getFields().getContributors().getValue().split("-")) {
+                        try {
+                            if (numeroContributeur != null && numeroContributeur != "") {
+                                final Participant doridien = dbContext.participantDao.queryForFirst(
+                                        dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroContributeur).prepare()
+                                );
+
+                                TransactionManager.callInTransaction(connectionSource,
+                                        new Callable<Void>() {
+                                            public Void call() throws Exception {
+                                                dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.REDACTEUR.ordinal()));
+                                                return null;
+                                            }
+                                        });
+                            }
+                        } catch (NumberFormatException nfe) {
+                            // ignore les entrées invalides
+                        }
+                    }
+                    for (String numeroCorrecteur : especeJSON.getFields().getCorrecteurs().getValue().split("-")) {
+                        try {
+                            if (numeroCorrecteur != null && numeroCorrecteur != "") {
+                                final Participant doridien = dbContext.participantDao.queryForFirst(
+                                        dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroCorrecteur).prepare()
+                                );
+
+                                TransactionManager.callInTransaction(connectionSource,
+                                        new Callable<Void>() {
+                                            public Void call() throws Exception {
+                                                dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.CORRECTEUR.ordinal()));
+                                                return null;
+                                            }
+                                        });
+                            }
+                        } catch (NumberFormatException nfe) {
+                            // ignore les entrées invalides
+                        }
+                    }
+                    for (String numeroDoridien : especeJSON.getFields().getDoridiens().getValue().split("-")) {
+                        try {
+                            if (numeroDoridien != null && numeroDoridien != "") {
+                                final Participant doridien = dbContext.participantDao.queryForFirst(
+                                        dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroDoridien).prepare()
+                                );
+
+                                TransactionManager.callInTransaction(connectionSource,
+                                        new Callable<Void>() {
+                                            public Void call() throws Exception {
+                                                dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.RESPONSABLE_REGIONAL.ordinal()));
+                                                return null;
+                                            }
+                                        });
+                            }
+                        } catch (NumberFormatException nfe) {
+                            // ignore les entrées invalides
+                        }
+                    }
+
+                    /* * * * * * * * * * * *
+                        Photos
+                    * * * * * * * * * * * * */
+                    //log.debug("prefetchV4() - imagesNodeIds = "+especeJSON.getFields().getImages().getValue());
+
+                    List<Image> imageJSONListe = new ArrayList<Image>();
+
+                    // itère sur les images trouvées pour cette fiche
+                    for (String possibleImageId : especeJSON.getFields().getImages().getValue().split("&")) {
+                        try {
+                            int imageId = Integer.parseInt(possibleImageId.split("\\|")[0]);
+
+                            //log.debug("prefetchV4() - imageId = "+possibleImageId.split("\\|")[0]);
+
+                            // récupère les données associées à l'image
+                            Image imageJSON = dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId);
+
+                            //TODO : Traiter le cas des Videos un jour
+                            if (imageJSON != null && imageJSON.getClassIdentifier().equals("image")) {
+                                imageJSONListe.add(imageJSON);
+                            }
+
+                        } catch (NumberFormatException nfe) {
+                            // ignore les entrées invalides
+                        }
+                    }
+
+                    // recrée une entrée dans la base pour l'image
+                    final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageJSONListe);
+                    final Fiche especeFinal = espece;
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
+                                    int count = 0;
+                                    for (PhotoFiche photoFiche : listePhotoFiche) {
+
+                                        photoFiche.setFiche(especeFinal);
+
+                                        dbContext.photoFicheDao.create(photoFiche);
+
+                                        if (count == 0) {
+                                            // met à jour l'image principale de la fiche
+                                            especeFinal.setPhotoPrincipale(photoFiche);
+                                            dbContext.ficheDao.update(especeFinal);
+                                        }
+                                        count++;
+                                    }
+                                    return null;
+                                }
+                            });
+
+                    /* * * * * * * * * * * *
+                        Zones Géographiques
+                    * * * * * * * * * * * * */
+                    //log.debug("prefetchV4() - Zone Géo. : "+especeJSON.getFields().getZoneGeo().getValue());
+
+                    ZoneGeographique zoneGeographique = new ZoneGeographique();
+                    for (String zoneGeoRefId : especeJSON.getFields().getZoneGeo().getValue().split("-")) {
+
+                        try {
+                            switch (Integer.parseInt(zoneGeoRefId)) {
+                                // 71726 - ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE
+                                case 71726:
+                                    zoneGeographique.setId(1);
+                                    break;
+                                // On ignore pour l'instant
+                                // 239910 - Méditérannée Française
+                                // 239991 - Façade Atlantique Française
+                                case 239910:
+                                case 239991:
+                                    zoneGeographique.setId(-1);
+                                    break;
+                                // 71728 - ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE
+                                case 71728:
+                                    zoneGeographique.setId(2);
+                                    break;
+                                // 71730 - ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE
+                                case 71730:
+                                    zoneGeographique.setId(3);
+                                    break;
+                                // 71731 - ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES
+                                case 71731:
+                                    zoneGeographique.setId(4);
+                                    break;
+                                // 135595 - ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST
+                                case 135595:
+                                    zoneGeographique.setId(5);
+                                    break;
+                                default:
+                                    log.debug("prefetchV4() - Zone Géo. Inconnue : http://doris.ffessm.fr/api/ezx/v1/object/" + zoneGeoRefId);
+                                    System.exit(1);
+                            }
+
+                            if (zoneGeographique.getId() >= 0) {
+                                final ZoneGeographique zoneGeographique_final = zoneGeographique;
+                                TransactionManager.callInTransaction(connectionSource,
+                                        new Callable<Void>() {
+                                            public Void call() throws Exception {
+                                                dbContext.fiches_ZonesGeographiquesDao.create(new Fiches_ZonesGeographiques(zoneGeographique_final, espece_final));
+                                                return null;
+                                            }
+                                        });
+                            }
+                        } catch (NumberFormatException nfe) {
+                            // ignore les entrées invalides
+                        }
+                    }
+
                 }
-
-
             }
 
         }

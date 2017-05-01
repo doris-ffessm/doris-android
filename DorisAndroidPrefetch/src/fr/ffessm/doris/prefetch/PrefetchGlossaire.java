@@ -121,18 +121,19 @@ public class PrefetchGlossaire {
                 }
 
                 Glossaire glossaireJSON = dorisAPI_JSONDATABindingHelper.getTermeFieldsFromNodeId(termeNodeId.getNodeId().intValue());
-                final DefinitionGlossaire terme = jsonToDB.getDefinitionGlossaireFromJSONTerme(glossaireJSON);
 
-                TransactionManager.callInTransaction(connectionSource,
-                        new Callable<Void>() {
-                            public Void call() throws Exception {
+                if (glossaireJSON != null) {
+                    final DefinitionGlossaire terme = jsonToDB.getDefinitionGlossaireFromJSONTerme(glossaireJSON);
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
 
-                                dbContext.definitionGlossaireDao.create(terme);
+                                    dbContext.definitionGlossaireDao.create(terme);
 
-                                return null;
-                            }
-                        });
-
+                                    return null;
+                                }
+                            });
+                }
             }
 
         }

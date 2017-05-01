@@ -106,18 +106,18 @@ public class PrefetchBibliographies {
 
 				// Référence de l'Espèce dans le message JSON
 				Bibliographie biblioJSON = dorisAPI_JSONDATABindingHelper.getOeuvreFieldsFromNodeId(oeuvreNodeId.getNodeId().intValue());
-				final EntreeBibliographie oeuvre = jsonToDB.getEntreeBibliographieFromJSONTerme(biblioJSON);
+				if (biblioJSON != null) {
+                    final EntreeBibliographie oeuvre = jsonToDB.getEntreeBibliographieFromJSONTerme(biblioJSON);
+                    TransactionManager.callInTransaction(connectionSource,
+                            new Callable<Void>() {
+                                public Void call() throws Exception {
 
-				TransactionManager.callInTransaction(connectionSource,
-						new Callable<Void>() {
-							public Void call() throws Exception {
+                                    dbContext.entreeBibliographieDao.create(oeuvre);
 
-								dbContext.entreeBibliographieDao.create(oeuvre);
-
-								return null;
-							}
-						});
-
+                                    return null;
+                                }
+                            });
+                }
 			}
 
 		}
