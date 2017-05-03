@@ -88,8 +88,8 @@ public class Common_Outils {
 		// <strong style="font-size: 11px;">
 		texte = texte.replaceAll("<strong [^>]*>", "<strong>");
 
-        // Des copier / coller depuis word .... ppffff ....
-        texte = texte.replaceAll("<!-- [^>]*-->", "");
+        // Des commentaires de toutes sortes, surtout liés à des copier / coller depuis word .... ppffff ....
+        texte = texte.replaceAll("<!--[^>]*-->", "");
 
 		//log.debug("nettoyageBalises() - 020");
 		
@@ -161,9 +161,12 @@ public class Common_Outils {
         texte = texte.replaceAll("<strong></strong>|</strong><strong>|<em></em>|</em><em>|<i></i>|</i><i>|<span></span>", "");
         texte = texte.replaceAll("<p></p>", "");
 
+        // Cas particulier ...
+        texte = StringUtils.replace(texte, "<!m>", "");
+
 		//log.debug("nettoyageBalises() - texte : " + texte);
     	//log.debug("nettoyageBalises() - Fin");
-		return texte;
+		return texte.trim();
 	}
 
     public String remplacementBalises(String texte, boolean avecMiseEnForme) {
@@ -212,7 +215,7 @@ public class Common_Outils {
             texte = texte.replaceAll("<a href=\"../contact_fiche.asp[^>]*>([^<]*)</a>", "$1");
 
 			//Lien vers site extérieur : oiseaux.net, fishbase.org, etc ...
-			texte = texte.replaceAll("<a href=\"http://([^\"]*)\"[^>]*>([^<]*)</a>", "{{A:$1}}$2{{/A}}");
+			texte = texte.replaceAll("<a[^>]*href=\"http://([^\"]*)\"[^>]*>([^<]*)</a>", "{{A:$1}}$2{{/A}}");
 
             // Pour les derniers liens qui trainent, on fait un lien vers le site de DORIS
             texte = texte.replaceAll("<a href=\"([^\"]*)\"[^>]*>([^<]*)</a>", "{{A:http://doris.ffessm.fr/$1}}$2{{/A}}");
@@ -247,7 +250,7 @@ public class Common_Outils {
 		
 		//log.debug("remplacementBalises() - texteNettoye : " + texteNettoye);
     	//log.info("remplacementBalises() - Fin");
-		return texte;
+		return texte.trim();
 	}
     
     public String nettoyageTextes(String texteANettoye) {
@@ -294,6 +297,7 @@ public class Common_Outils {
 
         // Remplacement &...; par les caractères alpha.
         texteNettoye = StringUtils.replace(texteNettoye, "&agrave;", "à");
+        texteNettoye = StringUtils.replace(texteNettoye, "&Agrave;", "À");
         texteNettoye = StringUtils.replace(texteNettoye, "&eacute;", "é");
         texteNettoye = StringUtils.replace(texteNettoye, "&ccedil;", "ç");
         texteNettoye = StringUtils.replace(texteNettoye, "&Eacute;", "É");
@@ -301,8 +305,10 @@ public class Common_Outils {
         texteNettoye = StringUtils.replace(texteNettoye, "&ecirc;", "ê");
         texteNettoye = StringUtils.replace(texteNettoye, "&euml;", "ë");
         texteNettoye = StringUtils.replace(texteNettoye, "&icirc;", "î");
-        texteNettoye = StringUtils.replace(texteNettoye, "&ugrave;", "à");
+        texteNettoye = StringUtils.replace(texteNettoye, "&oelig;", "œ");
+        texteNettoye = StringUtils.replace(texteNettoye, "&ugrave;", "ù");
         texteNettoye = StringUtils.replace(texteNettoye, "&nbsp;", " ");
+        texteNettoye = StringUtils.replace(texteNettoye, "&deg;", "°");
 
 
 		texteNettoye = texteNettoye.trim();
