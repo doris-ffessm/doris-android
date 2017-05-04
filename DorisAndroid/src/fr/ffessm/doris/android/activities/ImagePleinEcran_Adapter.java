@@ -165,7 +165,6 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 	    				suffixe_photo = Constants.MOYENNE_BASE_URL_SUFFIXE;
 	    			}
 
-
 	    			ChainedLoadImageViewCallback chainedLoadImageViewCallback = new ChainedLoadImageViewCallback(
 	    					_activity,
 	    					imgDisplay,
