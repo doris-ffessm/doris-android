@@ -42,5 +42,6 @@
 	<string name="pref_key_prefered_disque_stockage_photo">data_disque_stockage_photo</string>
 	<string name="pref_key_prefered_disque_stockage_photo_precedent">data_disque_stockage_photo_prec</string>
 	<string name="pref_key_deplace_photo_encours">data_disque_stockage_deplace_en_cours</string>
-	
+
+    <string name="pref_key_jeux_jeu_courant">pref_jeux_jeu_courant</string>
 </resources>

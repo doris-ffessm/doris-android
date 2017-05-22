@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+<!--Start of user code elementView_layout for Jeux_before_scroll
+-->
+<!--End of user code
+-->
+    <ScrollView 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+	<!--Start of user code elementView_layout for Jeux
+-->
+
+		<RelativeLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:gravity="right"
+		    android:paddingBottom="3dp" >
+
+		    <ImageView
+		        android:id="@+id/jeux_customviewfragment_icon"
+		        android:layout_width="80dp"
+		        android:layout_height="80dp"
+		        android:layout_margin="2dp"
+		        android:contentDescription="Icône Element"
+		        android:maxHeight="48dip"
+		        android:maxWidth="48dip"
+		        android:src="@drawable/app_ic_launcher" >
+		    </ImageView>
+		    <TextView
+		        android:id="@+id/jeux_customviewfragment_titre"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:padding="3dip"
+		        android:layout_toRightOf="@+id/jeux_customviewfragment_icon"
+		        android:layout_alignTop="@+id/jeux_customviewfragment_icon"
+		        android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?android:attr/textColorPrimary"
+                android:text="JEUX"/>
+		</RelativeLayout>
+
+		<LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+		    <TextView
+		        android:id="@+id/jeux_customviewfragment_soustitre"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="2dp"
+		        android:layout_marginRight="2dp"
+		        android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="?android:attr/textColorPrimary"
+                android:text="Choix du Jeu"/>
+            <TextView
+                android:id="@+id/jeux_textefragment_description"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:padding="3dip"
+                android:text="Développement en cours => c'est sale ! (le Jeu 1 et 2 sont les mêmes entre autre)" />
+        </LinearLayout>
+<!--End of user code
+-->
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

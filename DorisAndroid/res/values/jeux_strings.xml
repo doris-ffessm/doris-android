@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resource Strings specific to accueil Custom View -->
+<resources>	
+	<!-- Start of user code customView_strings accueil
+	-->
+	<!-- freely add here the desired resource String for your custom view -->
+	<string name="jeux_menu">Jeux</string>
+	<string name="jeux_label">Jeux Label</string>
+
+    <string name="jeu_accueil_titre">Jeux</string>
+
+    <string-array name="jeux_shortname_array">
+        <item>Quel Groupe ?</item>
+        <item>Quelle Espèce ?</item>
+    </string-array>
+	<!-- End of user code
+	-->
+</resources>
