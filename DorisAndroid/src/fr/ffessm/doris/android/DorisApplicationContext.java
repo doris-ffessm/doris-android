@@ -58,6 +58,7 @@ import fr.ffessm.doris.android.async.VerifieMAJFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.android.tools.Param_Outils;
+import fr.ffessm.doris.android.tools.Jeu;
 
 
 /** Classe globale pour accéder aux informations générales de l'application */
@@ -321,5 +322,9 @@ public class DorisApplicationContext {
 		
 		//if (BuildConfig.DEBUG) Log.v(LOG_TAG, "ensureDefaultPreferencesInitialization() - Fin");
 	}
-	
+
+
+	// Gestion de l'interface des Jeux
+    public Jeu.JeuType jeuEncours;
+    public int jeuNiveauEncours;
 }

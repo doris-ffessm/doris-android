@@ -64,8 +64,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask.Status;
-import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -122,7 +120,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getSimpleName();
 	Handler mHandler;
 	LinearLayout llContainerLayout;
-	 
+
 	boolean isOnCreate = true;
 	
 	Fiches_Outils fichesOutils;
@@ -146,7 +144,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         setContentView(R.layout.accueil_customview);
         //Start of user code onCreate Accueil_CustomViewActivity
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Début");
-        
+
 	/*	// si pas de fiche alors il faut initialiser la base à partir du prefetched_DB
 		RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
     	if(ficheDao.countOf() == 0){
@@ -862,14 +860,20 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	//End of user code
 	}
 
-    
-    
+
+
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.accueil_customview_actions, menu);
 		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu Accueil_CustomViewActivity
+
+        // TODO : Enlever qd développements Jeux terminés
+        if (! getParamOutils().getParamBoolean(R.string.pref_key_affichage_debug, false)) {
+            MenuItem menuJeux = menu.findItem(R.id.accueil_customview_action_jeux);
+            menuJeux.setVisible(false);
+        }
 
 		//End of user code
         return super.onCreateOptionsMenu(menu);
@@ -927,6 +931,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	        case R.id.accueil_customview_action_bibliographie:
 	        	startActivity(new Intent(this, ListeBibliographieAvecFiltre_ClassListViewActivity.class));
 	        	return true;
+            case R.id.accueil_customview_action_jeux:
+                startActivity(new Intent(this, Jeux_CustomViewActivity.class));
+                return true;
 	        case R.id.accueil_customview_action_aide:
 	        	AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
 				aide.affichageMessageHTML(getContext().getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");

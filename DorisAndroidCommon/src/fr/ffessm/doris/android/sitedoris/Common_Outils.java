@@ -64,21 +64,30 @@ public class Common_Outils {
     	//log.debug("nettoyageBalises() - Début");
     	//log.debug("nettoyageBalises() - texteANettoye : " + texteANettoye);
 
-    	//log.debug("nettoyageBalises() - 005");
-    	
-		//TODO : je me demande bien pourquoi j'ai fait cela : GMo 04/01/2014
-		texte = StringUtils.replace(texte, "&nbsp;", " ");
-		
 		// On convertit <b> en <strong> les 2 sont confondus sur le site
 		texte = StringUtils.replace(texte, "<b>", "<strong>");
 		texte = StringUtils.replace(texte, "</b>", "</strong>");
 
         texte = StringUtils.replace(texte, "&agrave;", "à");
+        texte = StringUtils.replace(texte, "&Agrave;", "À");
+        texte = StringUtils.replace(texte, "&ccedil;", "ç");
         texte = StringUtils.replace(texte, "&eacute;", "é");
+        texte = StringUtils.replace(texte, "&Eacute;", "É");
         texte = StringUtils.replace(texte, "&egrave;", "è");
+        texte = StringUtils.replace(texte, "&ecirc;", "ê");
+        texte = StringUtils.replace(texte, "&euml;", "ë");
+        texte = StringUtils.replace(texte, "&icirc;", "î");
+        texte = StringUtils.replace(texte, "&Icirc;", "Î");
+        texte = StringUtils.replace(texte, "&iuml;", "ï");
+        texte = StringUtils.replace(texte, "&ocirc;", "ô");
         texte = StringUtils.replace(texte, "&oelig;", "œ");
-        texte = StringUtils.replace(texte, "&rsquo;", "'");
-
+        texte = StringUtils.replace(texte, "&ugrave;", "ù");
+        texte = StringUtils.replace(texte, "&ucirc;", "û");
+        texte = StringUtils.replace(texte, "&nbsp;", " ");
+        texte = StringUtils.replace(texte, "&deg;", "°");
+        texte = StringUtils.replace(texte, "&acute;", "'");
+        texte = StringUtils.replace(texte, "&quot;", "'");
+        texte = StringUtils.replace(texte, "&amp;", "'");
 
 		//log.debug("nettoyageBalises() - 010");
         texte = StringUtils.replace(texte, "<html/>", "");
@@ -298,17 +307,24 @@ public class Common_Outils {
         // Remplacement &...; par les caractères alpha.
         texteNettoye = StringUtils.replace(texteNettoye, "&agrave;", "à");
         texteNettoye = StringUtils.replace(texteNettoye, "&Agrave;", "À");
-        texteNettoye = StringUtils.replace(texteNettoye, "&eacute;", "é");
         texteNettoye = StringUtils.replace(texteNettoye, "&ccedil;", "ç");
+        texteNettoye = StringUtils.replace(texteNettoye, "&eacute;", "é");
         texteNettoye = StringUtils.replace(texteNettoye, "&Eacute;", "É");
         texteNettoye = StringUtils.replace(texteNettoye, "&egrave;", "è");
         texteNettoye = StringUtils.replace(texteNettoye, "&ecirc;", "ê");
         texteNettoye = StringUtils.replace(texteNettoye, "&euml;", "ë");
         texteNettoye = StringUtils.replace(texteNettoye, "&icirc;", "î");
+        texteNettoye = StringUtils.replace(texteNettoye, "&Icirc;", "Î");
+        texteNettoye = StringUtils.replace(texteNettoye, "&iuml;", "ï");
+        texteNettoye = StringUtils.replace(texteNettoye, "&ocirc;", "ô");
         texteNettoye = StringUtils.replace(texteNettoye, "&oelig;", "œ");
         texteNettoye = StringUtils.replace(texteNettoye, "&ugrave;", "ù");
+        texteNettoye = StringUtils.replace(texteNettoye, "&ucirc;", "û");
         texteNettoye = StringUtils.replace(texteNettoye, "&nbsp;", " ");
         texteNettoye = StringUtils.replace(texteNettoye, "&deg;", "°");
+        texteNettoye = StringUtils.replace(texteNettoye, "&acute;", "'");
+        texteNettoye = StringUtils.replace(texteNettoye, "&quot;", "'");
+        texteNettoye = StringUtils.replace(texteNettoye, "&amp;", "&");
 
 
 		texteNettoye = texteNettoye.trim();
