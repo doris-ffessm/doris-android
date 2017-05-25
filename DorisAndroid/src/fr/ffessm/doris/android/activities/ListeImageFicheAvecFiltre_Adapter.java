@@ -617,7 +617,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 	    		Picasso.with(context)
 	    			.load(Constants.IMAGE_BASE_URL + "/"
         					+ photoFiche.getCleURL().replaceAll(
-							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
+							Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.VIGNETTE_BASE_URL_SUFFIXE))
 					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
 					.error(R.drawable.doris_icone_doris_large_pas_connecte)
 					.fit()
@@ -633,12 +633,30 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
                                 Picasso.with(context)
                                 .load(Constants.IMAGE_BASE_URL + "/"
                                         + photoFicheFinal.getCleURL().replaceAll(
-                                                Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
-                                .placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
+                                                Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.PETITE_BASE_URL_SUFFIXE))
+                                .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
                                 .fit()
                                 .centerInside()
-                                .error(R.drawable.doris_icone_doris_large_pas_connecte)
-                                .into(imageView);
+                                .into(imageView, new com.squareup.picasso.Callback() {
+                                        @Override
+                                        public void onSuccess() {
+                                            //Success image already loaded into the view
+                                        }
+
+                                        @Override
+                                        public void onError() {
+                                            Picasso.with(context)
+                                                    .load(Constants.IMAGE_BASE_URL + "/"
+                                                            + photoFicheFinal.getCleURL().replaceAll(
+                                                            Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.PETITE2_BASE_URL_SUFFIXE))
+                                                    .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
+                                                    .fit()
+                                                    .centerInside()
+                                                    .error(R.drawable.doris_icone_doris_large_pas_connecte)
+                                                    .into(imageView);
+                                        }
+                                    }
+                                );
                             }
                         }
                     );

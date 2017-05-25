@@ -95,7 +95,7 @@ public class DiskEnvironmentHelper {
 	private static boolean existSecondaryExternalLegacy(Context context){
 		List<StorageVolume> listStorages = StorageHelper.getStorages(false);
 		for(StorageVolume storage : listStorages){
-			Log.d(LOG_TAG, "existSecondaryExternalLegacy() - StorageVolume "+storage.toString());
+			//Log.d(LOG_TAG, "existSecondaryExternalLegacy() - StorageVolume "+storage.toString());
 			if(storage.isRemovable() && !storage.isEmulated() && (storage.getType()!= StorageVolume.Type.USB)){
 				// ignore if this is the primary sdCard
 				try {
@@ -113,14 +113,14 @@ public class DiskEnvironmentHelper {
 	private static DeviceSecondaryExternalLegacy createSecondaryExternalLegacy(){
 		List<StorageVolume> listStorages = StorageHelper.getStorages(false);
 		for(StorageVolume storage : listStorages){
-			Log.d(LOG_TAG, "createSecondaryExternalLegacy() - StorageVolume "+storage.toString());
+			//Log.d(LOG_TAG, "createSecondaryExternalLegacy() - StorageVolume "+storage.toString());
 			if(storage.isRemovable() && !storage.isEmulated() && (storage.getType()!= StorageVolume.Type.USB)){				
 			    try {
 			    	if(!storage.file.getCanonicalPath().equals(getPrimaryExternalStorage().getMountPoint())){
 			    		SimpleStringSplitter sp = new SimpleStringSplitter(' ');
 			    		sp.setString(storage.fileSystem+" "+storage.file.getCanonicalPath());
 									
-			    		Log.d(LOG_TAG, "createSecondaryExternalLegacy() - trying new storage "+storage.fileSystem+" "+storage.file.getCanonicalPath()+" "+storage.device);
+			    		//Log.d(LOG_TAG, "createSecondaryExternalLegacy() - trying new storage "+storage.fileSystem+" "+storage.file.getCanonicalPath()+" "+storage.device);
 					 
 			    		return new DeviceSecondaryExternalLegacy(sp);
 			    	}

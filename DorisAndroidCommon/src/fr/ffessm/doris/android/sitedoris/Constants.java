@@ -61,6 +61,8 @@ public class Constants {
 	public static final String VIGNETTE_BASE_URL_SUFFIXE = "_small.jpg";
 	// Image Intermédiaire pouvant exister sans que la plus petite soit dispo.
 	public static final String PETITE_BASE_URL_SUFFIXE = "_specieHomeCard.jpg";
+    // Parfois il faut prendre la "forum"
+	public static final String PETITE2_BASE_URL_SUFFIXE = "_forumHomeCard.jpg";
 	// Image de Taille Moyenne Fixée à 300
 	public static final String MOYENNE_BASE_URL_SUFFIXE = "_image300.jpg";
 	// Si 300 non dispo. on prend 600

@@ -27,7 +27,7 @@ public class CustomListView extends ListView{
 	protected void onLayout(boolean changed, int left, int top, int right, int bottom)	{
 		
 		super.onLayout(changed, left, top, right, bottom);
-		Log.d(TAG, "(onLayout) Dimensions of Listview :left = " + left + " right="+right+" top="+top+" ,Height = " + bottom +" changed="+changed);
+		//Log.d(TAG, "(onLayout) Dimensions of Listview :left = " + left + " right="+right+" top="+top+" ,Height = " + bottom +" changed="+changed);
 		
 		/*Since this callback is called multiple times, we need to prevent its execution for multiple times.*/
 		if(changed==true){

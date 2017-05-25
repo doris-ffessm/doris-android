@@ -251,13 +251,12 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
         	photoPrincipale.setContextDB(_contextDB);
 
-    		Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
-    		
-    		
+    		//Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
+
         	if(photosOutils.isAvailableInFolderPhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
-				Log.d(LOG_TAG, "getView Photo Disponible => utilisation");
+				//Log.d(LOG_TAG, "getView Photo Disponible => utilisation");
         		try {
-        			Log.d(LOG_TAG, "from disk : "+photoPrincipale.getCleURLNomFichier());
+        			//Log.d(LOG_TAG, "from disk : "+photoPrincipale.getCleURLNomFichier());
 					Picasso.with(context)
 						.load(photosOutils.getPhotoFile(photoPrincipale.getCleURLNomFichier(), ImageType.VIGNETTE))
 						.resize(defaultIconSize, defaultIconSize)
@@ -269,26 +268,20 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 				}
         	}
         	else{
-				Log.d(LOG_TAG, "getView Photo non Disponible => téléchargement");
+				//Log.d(LOG_TAG, "getView Photo non Disponible => téléchargement");
         		// pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
         		
         		if (reseauOutils.isTelechargementsModeConnectePossible()) {
-        			Log.d(LOG_TAG, "getView isTelechargementsModeConnectePossible() = true");
+        			//Log.d(LOG_TAG, "getView isTelechargementsModeConnectePossible() = true");
 
         			final int defaultIconSizeFinal = defaultIconSize;
         			final PhotoFiche photoPrincipaleFinal = photoPrincipale;
-
-        			/* Log.d(LOG_TAG, "getView URL Vignette : "+
-        					Constants.IMAGE_BASE_URL + "/"
-        					+ photoPrincipale.getCleURL().replaceAll(
-        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE));
-                    */
 
         			// On commence par rechercher l'image la plus petite possible, si elle n'est pas dispo. on tente notre chance avec la taille juste au dessus
     				Picasso.with(context)
     					.load(Constants.IMAGE_BASE_URL + "/"
 	        					+ photoPrincipale.getCleURL().replaceAll(
-	        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE))
+	        							Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.VIGNETTE_BASE_URL_SUFFIXE))
     					.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
 	        			.resize(defaultIconSize, defaultIconSize)
     					.centerInside()
@@ -301,27 +294,40 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
 	    				        @Override
 	    				        public void onError() {
-	    				        	/* Log.d(LOG_TAG, "getView URL Petite Image : "+
-	    		        					Constants.IMAGE_BASE_URL + "/"
-	    		        					+ photoPrincipaleFinal.getCleURL().replaceAll(
-	    		        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE));
-                                    */
-
 	    			        		Picasso.with(context)
 	    		        			.load(Constants.IMAGE_BASE_URL + "/"
 	    		        					+ photoPrincipaleFinal.getCleURL().replaceAll(
-	    		        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
+	    		        							Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.PETITE_BASE_URL_SUFFIXE))
 	    							.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
 	    							.resize(defaultIconSizeFinal, defaultIconSizeFinal)
 	    							.centerInside()
-	    							.error(R.drawable.doris_icone_doris_large_pas_connecte)
-	    		        			.into(ivIcon);
+	    		        			.into(ivIcon,
+                                            new com.squareup.picasso.Callback() {
+                                                @Override
+                                                public void onSuccess() {
+                                                    //Success image already loaded into the view
+                                                }
+
+                                                @Override
+                                                public void onError() {
+                                                    Picasso.with(context)
+                                                            .load(Constants.IMAGE_BASE_URL + "/"
+                                                                    + photoPrincipaleFinal.getCleURL().replaceAll(
+                                                                    Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.PETITE2_BASE_URL_SUFFIXE))
+                                                            .placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
+                                                            .resize(defaultIconSizeFinal, defaultIconSizeFinal)
+                                                            .centerInside()
+                                                            .error(R.drawable.doris_icone_doris_large_pas_connecte)
+                                                            .into(ivIcon);
+                                                }
+
+                                            });
 	    				        }
 
     				        });
 
         		} else {
-					Log.d(LOG_TAG, "getView isTelechargementsModeConnectePossible() = false");
+					//Log.d(LOG_TAG, "getView isTelechargementsModeConnectePossible() = false");
         			// remet l'icone de base
                 	ivIcon.setImageResource(R.drawable.app_ic_launcher);
         		}
@@ -331,8 +337,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         	// remet l'icone de base
         	ivIcon.setImageResource(R.drawable.app_ic_launcher);
         }
-       
-        
+
         TextView btnEtatFiche = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow__btnEtatFiche);
         switch(entry.getEtatFiche()){
         case 1: case 2 : case 3 :
@@ -420,7 +425,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
 	public HashMap<Character, Integer> getUsedAlphabetHashMap(){
 		HashMap<Character, Integer> alphabetToIndex = new HashMap<Character, Integer>();
-		Log.d(LOG_TAG,"getUsedAlphabetHashMap - début");
+		//Log.d(LOG_TAG,"getUsedAlphabetHashMap - début");
 		int base_list_length=filteredFicheIdList.size();
 		if(base_list_length < 100 ){
 			// the base has been filtered so return the element from the filtered one

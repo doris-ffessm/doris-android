@@ -150,7 +150,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         	}
     		else{
 				// pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
-        		
+        		// TODO: Attention parfois il faudrait prendre l'image moyenne 2, la 1ère n'étant pas dispo.
         		if (reseauOutils.isTelechargementsModeConnectePossible()) {
 
 	    			String suffixe_photo;
@@ -170,7 +170,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 	    					imgDisplay,
 	    					Constants.IMAGE_BASE_URL + "/"
         						+ photoFiche.getCleURL().replaceAll(
-        							Constants.IMAGE_BASE_URL_SUFFIXE, suffixe_photo),
+        							Constants.IMAGE_BASE_URL_SUFFIXE+"$", suffixe_photo),
 	    					largeur,
 	    					hauteur,
 	    					false,
@@ -191,7 +191,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 			    		Picasso.with(_activity)
 			    			.load(Constants.IMAGE_BASE_URL + "/"
 		        					+ photoFiche.getCleURL().replaceAll(
-		        							Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE)) // charge d'abord la vignette depuis internet (mais elle est probablement déjà dans le cache)
+		        							Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.PETITE_BASE_URL_SUFFIXE)) // charge d'abord la vignette depuis internet (mais elle est probablement déjà dans le cache)
 							.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
 							.resize(largeur, hauteur)
 							.centerInside()

@@ -75,7 +75,7 @@ public class IndexBarHandler extends Handler {
 	
 	public void handleMessage(Message msg) {
 		if (msg.what == 1) {
-			Log.d(TAG,"IndexBarHandler called. Custom Listview is created. Now initializing Alphabet IndexBar Scroller Listview.");
+			//Log.d(TAG,"IndexBarHandler called. Custom Listview is created. Now initializing Alphabet IndexBar Scroller Listview.");
 			/*Before creating the Index Bar Listview we need to determine the number of alphabets 
 			 * to be shown in this listview.
 			 */
@@ -93,10 +93,10 @@ public class IndexBarHandler extends Handler {
 			}
 			else
 				return;
-			Log.d(TAG,"Height of List= "+height_of_listview+"    height of one row="+height_of_alphabet_row);
+			//Log.d(TAG,"Height of List= "+height_of_listview+"    height of one row="+height_of_alphabet_row);
 			number_of_characters_shown=height_of_listview/height_of_alphabet_row; 				//Number of Characters to be shown
 			number_of_characters_omit=27-number_of_characters_shown;							//Number of Characters to be omited	
-			Log.d(TAG,"Number of Characters="+number_of_characters_shown+"  omits="+number_of_characters_omit);
+			//Log.d(TAG,"Number of Characters="+number_of_characters_shown+"  omits="+number_of_characters_omit);
 			
 			
 			//Alphabets listview is populated
@@ -122,7 +122,7 @@ public class IndexBarHandler extends Handler {
 	private void prepareArray(ArrayList<String> alphabets_list) {
 		
 		height_of_one_dot=convertDipToPx(9, indexbar.getBaseContext());
-		Log.d(TAG,"Height of one dot i.e. 9dp= "+height_of_one_dot+" px");  //9dp=13px
+		//Log.d(TAG,"Height of one dot i.e. 9dp= "+height_of_one_dot+" px");  //9dp=13px
 		
 				
 		if(number_of_characters_omit==1 || number_of_characters_omit==2 ){
@@ -197,7 +197,7 @@ public class IndexBarHandler extends Handler {
 			int total_height_dots=height_of_one_dot*4;					
 			float num_eliminate=(float)total_height_dots/height_of_alphabet_row;
 			int eliminate=(int)Math.round(num_eliminate+0.5f );
-			Log.d(TAG,"For 4 dots, eliminate= "+eliminate+" rows"+"  (num_eliminate="+num_eliminate+")");
+			//Log.d(TAG,"For 4 dots, eliminate= "+eliminate+" rows"+"  (num_eliminate="+num_eliminate+")");
 			
 			if(eliminate==0)	//there would be atleast one omitance. If there is any error, it is explicitly done.
 				eliminate=1;

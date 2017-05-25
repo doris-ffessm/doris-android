@@ -47,11 +47,12 @@ import com.squareup.picasso.Picasso;
 import fr.ffessm.doris.android.R;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 public class ChainedLoadImageViewCallback implements Callback{
-	
+
 	ImageView targetImageView;
 	Context context; 
 	String imageUrl;
@@ -72,31 +73,32 @@ public class ChainedLoadImageViewCallback implements Callback{
 
 	@Override
 	public void onError() {
-		if(imageNotAvailable != null){
-			imageNotAvailable.setVisibility(View.VISIBLE);
-		}
-		
+
+       if(imageNotAvailable != null){
+            imageNotAvailable.setVisibility(View.VISIBLE);
+        }
+
 	}
 
 	@Override
 	public void onSuccess() {
-		// Call the second image using the first as placeholder		
+		// Call the second image using the first as placeholder
 		if (replaceImageOnError) {
 			Picasso.with(context)
-			.load(imageUrl)
-			.placeholder(targetImageView.getDrawable())  
-			.resize(width, height)
-			.centerInside()
-			.error(R.drawable.doris_icone_doris_large_pas_connecte)
-			.into(targetImageView, new InternalCallback());
+                .load(imageUrl)
+                .placeholder(targetImageView.getDrawable())
+                .resize(width, height)
+                .centerInside()
+                .error(R.drawable.doris_icone_doris_large_pas_connecte)
+                .into(targetImageView, new InternalCallback());
 		}
 		else {
 			Picasso.with(context)
-			.load(imageUrl)
-			.placeholder(targetImageView.getDrawable())  
-			.resize(width, height)
-			.centerInside()
-			.into(targetImageView, new InternalCallback());
+                .load(imageUrl)
+                .placeholder(targetImageView.getDrawable())
+                .resize(width, height)
+                .centerInside()
+                .into(targetImageView, new InternalCallback());
 		}
 	}
 	
