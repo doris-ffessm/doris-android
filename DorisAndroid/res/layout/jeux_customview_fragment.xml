@@ -26,14 +26,15 @@
 		    android:paddingBottom="3dp" >
 
 		    <ImageView
-		        android:id="@+id/jeux_customviewfragment_icon"
-		        android:layout_width="80dp"
-		        android:layout_height="80dp"
-		        android:layout_margin="2dp"
-		        android:contentDescription="Icône Element"
-		        android:maxHeight="48dip"
-		        android:maxWidth="48dip"
-		        android:src="@drawable/app_ic_launcher" >
+                android:id="@+id/jeux_customviewfragment_icon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:contentDescription="Icône Element"
+                android:maxHeight="64dip"
+                android:maxWidth="64dip"
+                android:src="@drawable/app_ic_launcher"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="2dp">
 		    </ImageView>
 		    <TextView
 		        android:id="@+id/jeux_customviewfragment_titre"

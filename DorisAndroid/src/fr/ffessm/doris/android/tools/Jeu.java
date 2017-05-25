@@ -168,13 +168,16 @@ public class Jeu {
         int borne[] = {0,99};
 
         if (niveau == Niveau.FACILE){
+            borne[0] = 0;
             borne[1] = 2;
         }
         if (niveau == Niveau.INTERMEDIAIRE){
-            borne[1] = 5;
+            borne[0] = 1;
+            borne[1] = 6;
         }
         if (niveau == Niveau.DIFFICILE){
             borne[0] = 3;
+            borne[1] = 20;
         }
 
         return borne;

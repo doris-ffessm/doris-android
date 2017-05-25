@@ -57,9 +57,11 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.ClassificationFiche;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.fragments.JeuxQuestion_CustomViewFragment;
 import fr.ffessm.doris.android.fragments.JeuxReponses_ClassListViewFragment;
 import fr.ffessm.doris.android.tools.Jeu;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
 import static android.R.id.message;
 
@@ -166,8 +168,12 @@ public class Jeux_CustomViewActivity extends FragmentActivity
             error.printStackTrace();
         }
 
+        Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : "+fiche.getNomCommun());
+        PhotoFiche photoFiche = fiche.getPhotosFiche().iterator().next();
+        Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : "+photoFiche.getCleURL());
         if (questionFrag != null) {
             questionFrag.setSousTitre(fiche.getNomCommun());
+            questionFrag.setIcone(photoFiche.getCleURL(), ImageType.VIGNETTE);
         }
         if (reponsesFrag != null) {
             reponsesFrag.createListeReponsesViews(niveauSelectionne, fiche);
@@ -211,8 +217,12 @@ public class Jeux_CustomViewActivity extends FragmentActivity
                 error.printStackTrace();
             }
 
+            Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : "+fiche.getNomCommun());
+            PhotoFiche photoFiche = fiche.getPhotosFiche().iterator().next();
+            Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : "+photoFiche.getCleURL());
             if (questionFrag != null) {
                 questionFrag.setSousTitre(fiche.getNomCommun());
+                questionFrag.setIcone(photoFiche.getCleURL(), ImageType.VIGNETTE);
             }
             if (reponsesFrag != null) {
                 reponsesFrag.createListeReponsesViews(niveauSelectionne, fiche);

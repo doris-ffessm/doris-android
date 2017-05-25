@@ -53,6 +53,7 @@ import android.widget.TextView;
 
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.datamodel.Fiche;
 
 public class JeuxInformation_CustomViewFragment extends Fragment
 {
@@ -120,5 +121,8 @@ public class JeuxInformation_CustomViewFragment extends Fragment
         titreTV.setText(titre);
     }
 
-
+    public void updateIcone(Fiche fiche) {
+        ImageView ivIcone = (ImageView) getActivity().findViewById(R.id.jeux_customviewfragment_icon);
+        //ivIcone.setImageResource();
+    }
 }

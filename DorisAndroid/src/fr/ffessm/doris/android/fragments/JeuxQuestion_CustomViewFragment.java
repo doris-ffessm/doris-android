@@ -51,9 +51,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Jeu;
+import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+import fr.ffessm.doris.android.tools.Reseau_Outils;
 
 public class JeuxQuestion_CustomViewFragment extends Fragment
 {
@@ -69,6 +78,9 @@ public class JeuxQuestion_CustomViewFragment extends Fragment
     private TextView jeu_soustitre;
     private TextView jeu_description;
 
+    Photos_Outils photosOutils;
+    Reseau_Outils reseauOutils;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateView() - Début");
@@ -79,6 +91,8 @@ public class JeuxQuestion_CustomViewFragment extends Fragment
         jeu_titre = (TextView) view.findViewById(R.id.jeux_customviewfragment_titre);
         jeu_soustitre = (TextView) view.findViewById(R.id.jeux_customviewfragment_soustitre);
         jeu_description = (TextView) view.findViewById(R.id.jeux_textefragment_description);
+
+        reseauOutils = new Reseau_Outils(getActivity());
 
         if (savedInstanceState != null) {
 
@@ -122,6 +136,47 @@ public class JeuxQuestion_CustomViewFragment extends Fragment
     public void setIcone(int idIcone) {
         jeu_icone.setImageResource(idIcone);
     }
+    public void setIcone(String imageURL, ImageType imageType) {
+        Log.d(LOG_TAG, "setIcone() - Début");
+        Log.d(LOG_TAG, "setIcone() - imageURL : "+imageURL);
+        Log.d(LOG_TAG, "setIcone() - imageType : "+imageType);
+
+        if (getPhotosOutils().isAvailableInFolderPhoto(imageURL, imageType)) {
+
+            String photoNom = imageURL.substring(imageURL.lastIndexOf('/') + 1);
+            if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - photoNom : "+ photoNom );
+
+            try {
+                Picasso.with(getActivity()).load(getPhotosOutils().getPhotoFile(photoNom, imageType))
+                        .fit()
+                        .centerInside()
+                        .into(jeu_icone);
+            } catch (IOException e) {
+                Log.d(LOG_TAG, "setIcone() - IOException : "+e);
+            }
+        } else {
+            // pas préchargée en local pour l'instant, cherche sur internet
+            Log.d(LOG_TAG, "setIcone() -  pas préchargée en local pour l'instant, cherche sur internet");
+            if (reseauOutils.isTelechargementsModeConnectePossible()) {
+                String urlPhoto = Constants.IMAGE_BASE_URL + "/" + imageURL;
+                Log.d(LOG_TAG, "setIcone() - urlPhoto : "+urlPhoto);
+                Picasso.with(getActivity())
+                        .load(urlPhoto.replace(" ", "%20"))
+                        .placeholder(R.drawable.doris_logo_site_doris)  // utilisation de l'image par defaut pour commencer
+                        .error(R.drawable.doris_icone_doris_large_pas_connecte)
+                        .fit()
+                        .centerInside()
+                        .into(jeu_icone);
+            } else {
+                jeu_icone.setImageResource(R.drawable.doris_icone_doris_large_pas_connecte);
+            }
+        }
+        Log.d(LOG_TAG, "setIcone() - Fin");
+    }
+
+
+
+
     public void setTitre(String titre) {
         jeu_titre.setText(titre);
     }
@@ -138,4 +193,8 @@ public class JeuxQuestion_CustomViewFragment extends Fragment
         return (String) jeu_description.getText();
     }
 
+    private Photos_Outils getPhotosOutils(){
+        if(photosOutils == null) photosOutils = new Photos_Outils(getActivity());
+        return photosOutils;
+    }
 }

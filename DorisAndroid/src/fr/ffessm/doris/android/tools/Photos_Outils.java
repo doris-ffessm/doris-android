@@ -352,17 +352,21 @@ public class Photos_Outils {
 		return false;
 	}
 	
-	public File getPhotoFile(String inPhotoURL, ImageType inImageType) throws IOException{
-		if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getPhotoFile() - photoURL : "+ inPhotoURL );
+	public File getPhotoFile(String photoNom, ImageType inImageType) throws IOException{
+		if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getPhotoFile() - photoURL : "+ photoNom );
 		
 		File imageFolder = getImageFolderInPreferedLocation(inImageType);
 		
-		File fichierImage = new File(imageFolder, inPhotoURL);
+		File fichierImage = new File(imageFolder, photoNom);
+        if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getPhotoFile() - fichierImage.exists() : "+fichierImage.exists());
 		if (fichierImage.exists()) return fichierImage;
-		
-		fichierImage = new File( getSousDossierPhoto(imageFolder, inPhotoURL) ,inPhotoURL);
+
+        if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getPhotoFile() - getSousDossierPhoto(...) : "+getSousDossierPhoto(imageFolder, photoNom));
+		fichierImage = new File( getSousDossierPhoto(imageFolder, photoNom) ,photoNom);
+        if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getPhotoFile() - fichierImage.exists() : "+fichierImage.exists());
 		if (fichierImage.exists()) return fichierImage;
-		
+
+        if (BuildConfig.DEBUG) Log.i(LOG_TAG, "getPhotoFile() - return null");
 		return null;
 	}
 
