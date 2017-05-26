@@ -870,7 +870,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		//Start of user code additional onCreateOptionsMenu Accueil_CustomViewActivity
 
         // TODO : Enlever qd développements Jeux terminés
-        if (! getParamOutils().getParamBoolean(R.string.pref_key_affichage_debug, false)) {
+        if (! getParamOutils().getParamBoolean(R.string.pref_key_affichage_debug, false) && ! getParamOutils().getParamBoolean(R.string.pref_key_jeux_actifs, false) ) {
             MenuItem menuJeux = menu.findItem(R.id.accueil_customview_action_jeux);
             menuJeux.setVisible(false);
         }

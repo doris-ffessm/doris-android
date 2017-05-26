@@ -218,6 +218,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	    inflater.inflate(R.menu.groupeselection_classlistview_actions, menu);
 		// add additional programmatic options in the menu
 		//Start of user code additional onCreateOptionsMenu GroupeSelection_ClassListViewActivity
+        Log.d(LOG_TAG, "onCreateOptionsMenu() - Début");
 
 		//End of user code
         return super.onCreateOptionsMenu(menu);

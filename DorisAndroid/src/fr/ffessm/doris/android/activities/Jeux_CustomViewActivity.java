@@ -41,11 +41,19 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
-
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -54,13 +62,16 @@ import java.sql.SQLException;
 
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.datamodel.ClassificationFiche;
+import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.fragments.JeuxQuestion_CustomViewFragment;
 import fr.ffessm.doris.android.fragments.JeuxReponses_ClassListViewFragment;
 import fr.ffessm.doris.android.tools.Jeu;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
 import static android.R.id.message;
@@ -68,22 +79,22 @@ import static android.R.id.message;
 public class Jeux_CustomViewActivity extends FragmentActivity
         implements JeuxReponses_ClassListViewFragment.JeuSelectionneListener,
                     JeuxReponses_ClassListViewFragment.NiveauSelectionneListener,
-                    JeuxReponses_ClassListViewFragment.ReponseSelectionneeListener
-{
+                    JeuxReponses_ClassListViewFragment.ReponseSelectionneeListener {
 
 	private static final String LOG_TAG = Jeux_CustomViewActivity.class.getCanonicalName();
 
     private JeuxQuestion_CustomViewFragment questionFrag;
     private JeuxReponses_ClassListViewFragment reponsesFrag;
 
-    private Jeu.JeuType jeuSelectionne;
-    private Jeu.Niveau niveauSelectionne;
+    Param_Outils paramOutils;
 
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreate() - Début");
         super.onCreate(savedInstanceState);
+
+        getParamOutils().setParamBoolean(R.string.pref_key_jeux_actifs, true);
 
         Log.d(LOG_TAG, "onCreate() - 010");
         setContentView(R.layout.jeux_customview);
@@ -99,22 +110,133 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         reponsesFrag = (JeuxReponses_ClassListViewFragment)
                 getSupportFragmentManager().findFragmentById(R.id.jeux_activity_fragment_reponses);
 
+        DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.ACCUEIL;
+
         Log.d(LOG_TAG, "onCreate() - Fin");
     }
 
-    public void onJeuSelectionne(Jeu.JeuType jeuId) {
+    @Override
+    protected void onResume() {
+        Log.d(LOG_TAG, "onResume() - Début");
+        super.onResume();
+
+        questionFrag = (JeuxQuestion_CustomViewFragment)
+                getSupportFragmentManager().findFragmentById(R.id.jeux_activity_fragment_principal);
+        reponsesFrag = (JeuxReponses_ClassListViewFragment)
+                getSupportFragmentManager().findFragmentById(R.id.jeux_activity_fragment_reponses);
+
+        Log.d(LOG_TAG, "onResume() - jeuStatut : " + DorisApplicationContext.getInstance().jeuStatut.name());
+
+        if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.ACCUEIL) {
+            reponsesFrag.createListeJeuxViews();
+        }
+
+        if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_NIVEAU) {
+            reponsesFrag.createListeNiveauxViews(DorisApplicationContext.getInstance().jeuSelectionne);
+        }
+
+        if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.JEU) {
+            onNiveauSelectionne(DorisApplicationContext.getInstance().jeuNiveauSelectionne);
+        }
+
+
+        Log.d(LOG_TAG, "onResume() - Fin");
+    }
+
+    @Override
+    protected void onDestroy(){
+        Log.d(LOG_TAG, "onDestroy() - Début");
+        super.onDestroy();
+        Log.d(LOG_TAG, "onDestroy() - Fin");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(LOG_TAG, "onCreateOptionsMenu() - Début");
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.jeux_elementview_actions, menu);
+
+
+
+        Log.d(LOG_TAG, "onCreateOptionsMenu() - Fin");
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(LOG_TAG, "onOptionsItemSelected() - Début");
+
+        // behavior of option menu
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                Log.d(LOG_TAG, "onOptionsItemSelected() - home");
+
+                if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.ACCUEIL) {
+                    ((Jeux_CustomViewActivity)this).finish();
+                    return true;
+                }
+
+                if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_NIVEAU) {
+                    reponsesFrag.createListeJeuxViews();
+                    DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.ACCUEIL;
+                    return true;
+                }
+
+                // Forcément en mode jeu => on revient au choix du Niveau
+                reponsesFrag.createListeNiveauxViews(DorisApplicationContext.getInstance().jeuSelectionne);
+                DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_NIVEAU;
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int inKeyCode, KeyEvent inEvent)
+    {
+        Log.d(LOG_TAG, "onKeyDown() - Début");
+        Log.d(LOG_TAG, "onKeyDown() - inEvent : " + inEvent);
+
+        switch(inKeyCode){
+            case KeyEvent.KEYCODE_BACK :
+                Log.d(LOG_TAG, "onKeyDown() - jeuStatut : " + DorisApplicationContext.getInstance().jeuStatut.name());
+
+                if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.ACCUEIL) {
+                    ((Jeux_CustomViewActivity)this).finish();
+                    return true;
+                }
+
+                if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_NIVEAU) {
+                    reponsesFrag.createListeJeuxViews();
+                    DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.ACCUEIL;
+                    return true;
+                }
+
+                // Forcément en mode jeu => on revient au choix du Niveau
+                reponsesFrag.createListeNiveauxViews(DorisApplicationContext.getInstance().jeuSelectionne);
+                DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_NIVEAU;
+
+                return true;
+        }
+
+        return false;
+    }
+
+    public void onJeuSelectionne(Jeu.JeuRef jeuSelectionne) {
         Log.d(LOG_TAG, "onJeuSelectionne() - Début");
 
-        Toast.makeText(this, "Jeu : "+jeuId.name(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Jeu : "+jeuSelectionne.name(), Toast.LENGTH_LONG).show();
 
-        DorisApplicationContext.getInstance().jeuEncours = jeuId;
-        jeuSelectionne = jeuId;
+        DorisApplicationContext.getInstance().jeuSelectionne = jeuSelectionne;
 
         if (questionFrag != null) {
             // If article frag is available, we're in two-pane layout...
 
             // Call a method in the ArticleFragment to update its content
-            questionFrag.setTitre(jeuId.name());
+            String jeux_libelle[] = getResources().getStringArray(R.array.jeux_titre_array);
+            questionFrag.setTitre(jeux_libelle[jeuSelectionne.ordinal()]);
 
         } else {
             // If the frag is not available, we're in the one-pane layout and must swap frags...
@@ -125,23 +247,23 @@ public class Jeux_CustomViewActivity extends FragmentActivity
             // If article frag is available, we're in two-pane layout...
 
             // Call a method in the ArticleFragment to update its content
-            reponsesFrag.createListeNiveauxViews(jeuId);
+            reponsesFrag.createListeNiveauxViews(jeuSelectionne);
 
         } else {
             // If the frag is not available, we're in the one-pane layout and must swap frags...
             // Create fragment and give it an argument for the selected article
         }
 
-
+        DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_NIVEAU;
         Log.d(LOG_TAG, "onJeuSelectionne() - Fin");
     }
 
-    public void onNiveauSelectionne(Jeu.JeuType jeuId, Jeu.Niveau niveau) {
+    public void onNiveauSelectionne(Jeu.Niveau niveau) {
         Log.d(LOG_TAG, "onNiveauSelectionne() - Début");
 
         Toast.makeText(this, "Niveau : "+niveau.name(), Toast.LENGTH_LONG).show();
 
-        niveauSelectionne = niveau;
+        DorisApplicationContext.getInstance().jeuNiveauSelectionne = niveau;
 
         if (questionFrag != null) {
             // If article frag is available, we're in two-pane layout...
@@ -176,9 +298,10 @@ public class Jeux_CustomViewActivity extends FragmentActivity
             questionFrag.setIcone(photoFiche.getCleURL(), ImageType.VIGNETTE);
         }
         if (reponsesFrag != null) {
-            reponsesFrag.createListeReponsesViews(niveauSelectionne, fiche);
+            reponsesFrag.createListeReponsesViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, fiche);
         }
 
+        DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.JEU;
         Log.d(LOG_TAG, "onNiveauSelectionne() - Fin");
     }
 
@@ -225,7 +348,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
                 questionFrag.setIcone(photoFiche.getCleURL(), ImageType.VIGNETTE);
             }
             if (reponsesFrag != null) {
-                reponsesFrag.createListeReponsesViews(niveauSelectionne, fiche);
+                reponsesFrag.createListeReponsesViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, fiche);
             }
 
         }
@@ -233,5 +356,8 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         Log.d(LOG_TAG, "onReponseSelectionnee() - Fin");
     }
 
-
+    private Param_Outils getParamOutils(){
+        if(paramOutils == null) paramOutils = new Param_Outils(this);
+        return paramOutils;
+    }
 }

@@ -57,14 +57,15 @@ import fr.ffessm.doris.android.fragments.JeuxReponses_ClassListViewFragment;
 public class Jeu {
 	private static final String LOG_TAG = Jeu.class.getCanonicalName();
 
-    public enum JeuType { ACCUEIL, JEU_1, JEU_2 }
+    public enum Statut { ACCUEIL, CHOIX_NIVEAU, JEU }
+    public enum JeuRef { JEU_1, JEU_2 }
     public enum Niveau { FACILE, INTERMEDIAIRE, DIFFICILE }
     public int NBREPONSESPROPOSEES = 3;
 
     private Context context;
     private Activity activity;
 
-    private JeuType jeu_id;
+    private JeuRef jeuRef;
     private Niveau niveau;
 
 	public Jeu(Context context){
@@ -74,19 +75,19 @@ public class Jeu {
         this.context = context;
         this.activity = activity;
 	}
-    public Jeu(Context context, Activity activity, JeuType id) {
+    public Jeu(Context context, Activity activity, JeuRef jeuRef) {
         this.context = context;
         this.activity = activity;
-        this.jeu_id = id;
+        this.jeuRef = jeuRef;
     }
 
-	public Jeu(JeuType id){
-        this.jeu_id = id;
+	public Jeu(JeuRef id){
+        this.jeuRef = id;
 	}
 
-    public JeuType getId() {return jeu_id;}
-    public void setId(JeuType jeu_id){
-        this.jeu_id = jeu_id;
+    public JeuRef getId() {return jeuRef;}
+    public void setId(JeuRef jeu_id){
+        this.jeuRef = jeu_id;
     }
 
     public Niveau getNiveau() {return niveau;}
@@ -97,18 +98,20 @@ public class Jeu {
     public View getJeuView(final JeuxReponses_ClassListViewFragment.JeuSelectionneListener jeuSelectionneCallback){
         Log.d(LOG_TAG, "getJeuView() - Début");
 
+        String jeux_libelle[] = context.getResources().getStringArray(R.array.jeux_titre_array);
+
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewReponse = inflater.inflate(R.layout.jeux_listviewrow, null);
 
         TextView tvLabel = (TextView) viewReponse.findViewById(R.id.jeux_listviewrow_label);
-        tvLabel.setText(jeu_id.name());
+        tvLabel.setText(jeux_libelle[jeuRef.ordinal()]);
 
         viewReponse.setOnClickListener(new View.OnClickListener() {
-            final JeuType id_final = jeu_id;
+            final JeuRef jeuRef_final = jeuRef;
             @Override
             public void onClick(View v) {
                 if(jeuSelectionneCallback != null)
-                    jeuSelectionneCallback.onJeuSelectionne(id_final);
+                    jeuSelectionneCallback.onJeuSelectionne(jeuRef_final);
             }
         });
 
@@ -119,20 +122,21 @@ public class Jeu {
     public View getNiveauView(final JeuxReponses_ClassListViewFragment.NiveauSelectionneListener niveauSelectionneCallback, final Niveau niveau){
         Log.d(LOG_TAG, "getNiveauView() - Début");
 
+        String niveau_libelle[] = context.getResources().getStringArray(R.array.jeux_niveau_array);
+
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewReponse = inflater.inflate(R.layout.jeux_listviewrow, null);
 
         TextView tvLabel = (TextView) viewReponse.findViewById(R.id.jeux_listviewrow_label);
-        tvLabel.setText(niveau.name());
+        tvLabel.setText(niveau_libelle[niveau.ordinal()]);
 
         viewReponse.setOnClickListener(new View.OnClickListener() {
-            final JeuType id_final = jeu_id;
             @Override
             public void onClick(View v) {
                 Log.d(LOG_TAG, "getNiveauView() - onClick()");
 
                 if(niveauSelectionneCallback != null)
-                    niveauSelectionneCallback.onNiveauSelectionne(id_final, niveau);
+                    niveauSelectionneCallback.onNiveauSelectionne(niveau);
             }
         });
 
@@ -164,7 +168,7 @@ public class Jeu {
         return viewReponse;
     }
 
-    public int[] getBornesClassification(JeuType id, Niveau niveau){
+    public int[] getBornesClassification(JeuRef id, Niveau niveau){
         int borne[] = {0,99};
 
         if (niveau == Niveau.FACILE){

@@ -84,7 +84,7 @@ public class JeuxInformation_CustomViewFragment extends Fragment
 
         Log.d(LOG_TAG, "onCreateView() - containerId : "+this.getId());
         Log.d(LOG_TAG, "onCreateView() - containerTag : "+this.getTag());
-        Log.d(LOG_TAG, "onCreateView() - jeuEncours : "+DorisApplicationContext.getInstance().jeuEncours);
+        Log.d(LOG_TAG, "onCreateView() - jeuEncours : "+DorisApplicationContext.getInstance().jeuStatut);
 
         Log.d(LOG_TAG, "onCreateView() - Fin");
         return view;
@@ -98,9 +98,9 @@ public class JeuxInformation_CustomViewFragment extends Fragment
         jeu_titre.setText("Test 010");
         Log.d(LOG_TAG, "onStart() - containerId : "+this.getId());
         Log.d(LOG_TAG, "onStart() - containerTag : "+this.getTag());
-        Log.d(LOG_TAG, "onStart() - jeuEncours : "+DorisApplicationContext.getInstance().jeuEncours);
+        Log.d(LOG_TAG, "onStart() - jeuEncours : "+DorisApplicationContext.getInstance().jeuStatut);
 
-        updateTitre(DorisApplicationContext.getInstance().jeuEncours.toString());
+        updateTitre(DorisApplicationContext.getInstance().jeuStatut.toString());
 
         Log.d(LOG_TAG, "onStart() - Fin");
     }

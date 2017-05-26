@@ -325,6 +325,7 @@ public class DorisApplicationContext {
 
 
 	// Gestion de l'interface des Jeux
-    public Jeu.JeuType jeuEncours;
-    public int jeuNiveauEncours;
+    public Jeu.Statut jeuStatut;
+    public Jeu.JeuRef jeuSelectionne;
+    public Jeu.Niveau jeuNiveauSelectionne;
 }

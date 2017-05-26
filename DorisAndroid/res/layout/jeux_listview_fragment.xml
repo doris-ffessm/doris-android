@@ -31,17 +31,19 @@
                     android:adjustViewBounds="true"
                     android:contentDescription="ICONE LISTE"
                     android:maxHeight="64dip"
-                    android:src="@drawable/doris_icone_doris_large" >
+                    android:src="@drawable/ic_action_jeux_question" >
 
                 </ImageView>
 
                 <TextView
                     android:id="@+id/jeu_reponses_titre_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="2dip"
                     android:text="Choisissez un jeu"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="?android:attr/textColorPrimary" >
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:gravity="center_vertical|left">
 
                 </TextView>
 

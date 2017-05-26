@@ -24,7 +24,7 @@
         android:tag="jeux_activity_fragment_reponses"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="2">
     </fragment>
 
 </LinearLayout>

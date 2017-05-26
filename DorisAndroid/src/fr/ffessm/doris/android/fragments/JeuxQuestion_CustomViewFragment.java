@@ -42,14 +42,20 @@ termes.
 package fr.ffessm.doris.android.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -58,20 +64,20 @@ import java.io.IOException;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.DetailEntreeGlossaire_ElementViewActivity;
+import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Jeu;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 
-public class JeuxQuestion_CustomViewFragment extends Fragment
+public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemClickListener
 {
 
 	private static final String LOG_TAG = JeuxQuestion_CustomViewFragment.class.getCanonicalName();
 
     final static String ARG_JEUX = "jeux";
-
-    private Jeu[] jeux;
 
     private ImageView jeu_icone;
     private TextView jeu_titre;
@@ -116,9 +122,7 @@ public class JeuxQuestion_CustomViewFragment extends Fragment
         Log.d(LOG_TAG, "onStart() - containerId : "+this.getId());
         Log.d(LOG_TAG, "onStart() - containerTag : "+this.getTag());
 
-        DorisApplicationContext.getInstance().jeuEncours = Jeu.JeuType.ACCUEIL;
-
-        setTitre(DorisApplicationContext.getInstance().jeuEncours.toString());
+        setTitre(DorisApplicationContext.getInstance().jeuStatut.toString());
 
         Log.d(LOG_TAG, "onStart() - Fin");
     }
@@ -132,6 +136,14 @@ public class JeuxQuestion_CustomViewFragment extends Fragment
 
         Log.d(LOG_TAG, "onSaveInstanceState() - Fin");
     }
+
+
+    public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
+        Log.d(LOG_TAG, "onItemClick "+view);
+
+    }
+
+
 
     public void setIcone(int idIcone) {
         jeu_icone.setImageResource(idIcone);

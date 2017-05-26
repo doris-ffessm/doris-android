@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Resource Strings specific to accueil Custom View -->
-<resources>	
-	<!-- Start of user code customView_strings accueil
-	-->
-	<!-- freely add here the desired resource String for your custom view -->
+<resources>
 	<string name="jeux_menu">Jeux</string>
 	<string name="jeux_label">Jeux Label</string>
 
-    <string name="jeu_accueil_titre">Jeux</string>
+    <string name="jeu_titre_accueil">Jeux</string>
+    <string name="jeu_soustitre_accueil">Choix du Jeu</string>
+    <string name="jeu_description_accueil">Développement en cours => c\'est sale ! (le Jeu 1 et 2 sont les mêmes entre autre)</string>
 
-    <string-array name="jeux_shortname_array">
+    <string name="jeu_soustitre_niveau">Choix du Niveau</string>
+    <string name="jeu_description_niveau">Niveau de départ, il croit ensuite en fonction de votre réussite.</string>
+
+    <string name="jeu_message_reussite">Bonne réponse</string>
+    <string name="jeu_message_mauvaise_reponse">Erreur</string>
+
+    <string-array name="jeux_titre_array">
         <item>Quel Groupe ?</item>
-        <item>Quelle Espèce ?</item>
+        <item>Quelle Espèce ? (non dév.)</item>
     </string-array>
-	<!-- End of user code
-	-->
+
+    <string-array name="jeux_niveau_array">
+        <item>Facile</item>
+        <item>Intermédiaire</item>
+        <item>Difficile</item>
+    </string-array>
+
 </resources>

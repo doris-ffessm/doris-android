@@ -85,12 +85,12 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
 
     public interface JeuSelectionneListener {
         /** Called by HeadlinesFragment when a list item is selected */
-        public void onJeuSelectionne(Jeu.JeuType position);
+        public void onJeuSelectionne(Jeu.JeuRef jeuSelectionne);
     }
 
     public interface NiveauSelectionneListener {
         /** Called by HeadlinesFragment when a list item is selected */
-        public void onNiveauSelectionne(Jeu.JeuType position, Jeu.Niveau niveau);
+        public void onNiveauSelectionne(Jeu.Niveau niveau);
     }
 
     public interface ReponseSelectionneeListener {
@@ -101,6 +101,7 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        Log.d(LOG_TAG, "onAttach() - Début");
 
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception.
@@ -122,6 +123,8 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
             throw new ClassCastException(activity.toString()
                     + " must implement ReponseSelectionneeListener");
         }
+
+        Log.d(LOG_TAG, "onAttach() - Fin");
     }
 
     @Override
@@ -140,15 +143,19 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
 
         Log.d(LOG_TAG, "onStart() - containerId : "+this.getId());
         Log.d(LOG_TAG, "onStart() - containerTag : "+this.getTag());
-        Log.d(LOG_TAG, "onStart() - jeuEncours : "+ DorisApplicationContext.getInstance().jeuEncours);
+        Log.d(LOG_TAG, "onStart() - jeuEncours : "+ DorisApplicationContext.getInstance().jeuStatut);
 
         llContainerLayout =  (LinearLayout) getActivity().findViewById(R.id.jeu_reponses_liste_layout);
         tvTitreLabel =  (TextView) getActivity().findViewById(R.id.jeu_reponses_titre_label);
 
-        if (DorisApplicationContext.getInstance().jeuEncours == Jeu.JeuType.ACCUEIL) {
+        jeu1 = new Jeu((Context) getActivity(), getActivity(), Jeu.JeuRef.JEU_1);
+        jeu2 = new Jeu((Context) getActivity(), getActivity(), Jeu.JeuRef.JEU_2);
+        if (DorisApplicationContext.getInstance().jeuSelectionne == Jeu.JeuRef.JEU_1) jeu = jeu1;
+        if (DorisApplicationContext.getInstance().jeuSelectionne == Jeu.JeuRef.JEU_2) jeu = jeu2;
+
+        if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.ACCUEIL) {
             createListeJeuxViews();
         }
-
 
         Log.d(LOG_TAG, "onStart() - Fin");
     }
@@ -158,8 +165,6 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
         Log.d(LOG_TAG, "onSaveInstanceState() - Début");
         super.onSaveInstanceState(outState);
 
-        //outState.putInt(ARG_PETRI_ETAT, 0);
-
         Log.d(LOG_TAG, "onSaveInstanceState() - Fin");
     }
 
@@ -167,21 +172,20 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
     public void createListeJeuxViews(){
         Log.d(LOG_TAG, "createListeJeuxViews() - Début");
 
-        jeu1 = new Jeu((Context) getActivity(), getActivity(), Jeu.JeuType.JEU_1);
-        llContainerLayout.addView(jeu1.getJeuView(jeuSelectionneCallback));
+        viderListeReponsesViews();
 
-        jeu2 = new Jeu((Context) getActivity(), getActivity(), Jeu.JeuType.JEU_2);
+        llContainerLayout.addView(jeu1.getJeuView(jeuSelectionneCallback));
         llContainerLayout.addView(jeu2.getJeuView(jeuSelectionneCallback));
 
         Log.d(LOG_TAG, "createListeJeuxViews() - Fin");
     }
 
     /* Création de la liste des Niveaux */
-    public void createListeNiveauxViews(Jeu.JeuType jeuId){
+    public void createListeNiveauxViews(Jeu.JeuRef jeuId){
         Log.d(LOG_TAG, "createListeNiveauxViews() - Début");
 
-        if (jeuId == Jeu.JeuType.JEU_1) jeu = jeu1;
-        if (jeuId == Jeu.JeuType.JEU_2) jeu = jeu2;
+        if (jeuId == Jeu.JeuRef.JEU_1) jeu = jeu1;
+        if (jeuId == Jeu.JeuRef.JEU_2) jeu = jeu2;
 
         viderListeReponsesViews();
 
