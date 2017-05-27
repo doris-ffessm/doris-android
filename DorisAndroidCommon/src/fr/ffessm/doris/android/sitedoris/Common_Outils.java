@@ -68,26 +68,8 @@ public class Common_Outils {
 		texte = StringUtils.replace(texte, "<b>", "<strong>");
 		texte = StringUtils.replace(texte, "</b>", "</strong>");
 
-        texte = StringUtils.replace(texte, "&agrave;", "à");
-        texte = StringUtils.replace(texte, "&Agrave;", "À");
-        texte = StringUtils.replace(texte, "&ccedil;", "ç");
-        texte = StringUtils.replace(texte, "&eacute;", "é");
-        texte = StringUtils.replace(texte, "&Eacute;", "É");
-        texte = StringUtils.replace(texte, "&egrave;", "è");
-        texte = StringUtils.replace(texte, "&ecirc;", "ê");
-        texte = StringUtils.replace(texte, "&euml;", "ë");
-        texte = StringUtils.replace(texte, "&icirc;", "î");
-        texte = StringUtils.replace(texte, "&Icirc;", "Î");
-        texte = StringUtils.replace(texte, "&iuml;", "ï");
-        texte = StringUtils.replace(texte, "&ocirc;", "ô");
-        texte = StringUtils.replace(texte, "&oelig;", "œ");
-        texte = StringUtils.replace(texte, "&ugrave;", "ù");
-        texte = StringUtils.replace(texte, "&ucirc;", "û");
-        texte = StringUtils.replace(texte, "&nbsp;", " ");
-        texte = StringUtils.replace(texte, "&deg;", "°");
-        texte = StringUtils.replace(texte, "&acute;", "'");
-        texte = StringUtils.replace(texte, "&quot;", "'");
-        texte = StringUtils.replace(texte, "&amp;", "'");
+        // remplace les &****; par les caractères correspondant
+        texte = codeHtml2Text(texte);
 
 		//log.debug("nettoyageBalises() - 010");
         texte = StringUtils.replace(texte, "<html/>", "");
@@ -305,27 +287,7 @@ public class Common_Outils {
 				.replaceAll(" \\?", "\u00A0?");
 
         // Remplacement &...; par les caractères alpha.
-        texteNettoye = StringUtils.replace(texteNettoye, "&agrave;", "à");
-        texteNettoye = StringUtils.replace(texteNettoye, "&Agrave;", "À");
-        texteNettoye = StringUtils.replace(texteNettoye, "&ccedil;", "ç");
-        texteNettoye = StringUtils.replace(texteNettoye, "&eacute;", "é");
-        texteNettoye = StringUtils.replace(texteNettoye, "&Eacute;", "É");
-        texteNettoye = StringUtils.replace(texteNettoye, "&egrave;", "è");
-        texteNettoye = StringUtils.replace(texteNettoye, "&ecirc;", "ê");
-        texteNettoye = StringUtils.replace(texteNettoye, "&euml;", "ë");
-        texteNettoye = StringUtils.replace(texteNettoye, "&icirc;", "î");
-        texteNettoye = StringUtils.replace(texteNettoye, "&Icirc;", "Î");
-        texteNettoye = StringUtils.replace(texteNettoye, "&iuml;", "ï");
-        texteNettoye = StringUtils.replace(texteNettoye, "&ocirc;", "ô");
-        texteNettoye = StringUtils.replace(texteNettoye, "&oelig;", "œ");
-        texteNettoye = StringUtils.replace(texteNettoye, "&ugrave;", "ù");
-        texteNettoye = StringUtils.replace(texteNettoye, "&ucirc;", "û");
-        texteNettoye = StringUtils.replace(texteNettoye, "&nbsp;", " ");
-        texteNettoye = StringUtils.replace(texteNettoye, "&deg;", "°");
-        texteNettoye = StringUtils.replace(texteNettoye, "&acute;", "'");
-        texteNettoye = StringUtils.replace(texteNettoye, "&quot;", "'");
-        texteNettoye = StringUtils.replace(texteNettoye, "&amp;", "&");
-
+        texteNettoye = codeHtml2Text(texteNettoye);
 
 		texteNettoye = texteNettoye.trim();
 		//log.debug("nettoyageTextes() - texteNettoye : " + texteNettoye);
@@ -405,5 +367,50 @@ public class Common_Outils {
 	 
 	    return charsDataNormalized;
 	}
-	
+
+    public String codeHtml2Text(String texte) {
+
+        texte = StringUtils.replace(texte, "&agrave;", "à");
+        texte = StringUtils.replace(texte, "&Agrave;", "À");
+        texte = StringUtils.replace(texte, "&acirc;", "â");
+        texte = StringUtils.replace(texte, "&Acirc;", "Â");
+        texte = StringUtils.replace(texte, "&ccedil;", "ç");
+        texte = StringUtils.replace(texte, "&Ccedil;", "Ç");
+        texte = StringUtils.replace(texte, "&eacute;", "é");
+        texte = StringUtils.replace(texte, "&Eacute;", "É");
+        texte = StringUtils.replace(texte, "&egrave;", "è");
+        texte = StringUtils.replace(texte, "&Egrave;", "È");
+        texte = StringUtils.replace(texte, "&ecirc;", "ê");
+        texte = StringUtils.replace(texte, "&euml;", "ë");
+        texte = StringUtils.replace(texte, "&Euml;", "Ë");
+        texte = StringUtils.replace(texte, "&icirc;", "î");
+        texte = StringUtils.replace(texte, "&Icirc;", "Î");
+        texte = StringUtils.replace(texte, "&iuml;", "ï");
+        texte = StringUtils.replace(texte, "&Iuml;", "Ï");
+        texte = StringUtils.replace(texte, "&ocirc;", "ô");
+        texte = StringUtils.replace(texte, "&Ocirc;", "Ô");
+        texte = StringUtils.replace(texte, "&ouml;", "ö");
+        texte = StringUtils.replace(texte, "&Ouml;", "Ö");
+        texte = StringUtils.replace(texte, "&oelig;", "œ");
+        texte = StringUtils.replace(texte, "&OElig;", "Œ");
+        texte = StringUtils.replace(texte, "&ugrave;", "ù");
+        texte = StringUtils.replace(texte, "&Ugrave;", "Ù");
+        texte = StringUtils.replace(texte, "&ucirc;", "û");
+        texte = StringUtils.replace(texte, "&Ucirc;", "Û");
+        texte = StringUtils.replace(texte, "&uuml;", "ü");
+        texte = StringUtils.replace(texte, "&Uuml;", "Ü");
+        texte = StringUtils.replace(texte, "&nbsp;", " ");
+        texte = StringUtils.replace(texte, "&deg;", "°");
+        texte = StringUtils.replace(texte, "&acute;", "'");
+        texte = StringUtils.replace(texte, "&quot;", "'");
+        texte = StringUtils.replace(texte, "&rsquo;", "'");
+        texte = StringUtils.replace(texte, "&laquo;", "«");
+        texte = StringUtils.replace(texte, "&raquo;", "»");
+        texte = StringUtils.replace(texte, "&amp;", "&");
+        texte = StringUtils.replace(texte, "&hellip;", "…");
+
+        return texte;
+    }
+
+
 }
