@@ -74,6 +74,7 @@ import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
+import fr.ffessm.doris.android.tools.ScreenTools;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -185,7 +186,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
         final int defaultIconSizeFinal = defaultIconSize;
 
         trombineView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
-        trombineView.getLayoutParams().width = defaultIconSize;
+        trombineView.getLayoutParams().width = ScreenTools.dp2px(context, defaultIconSize);
         
         if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {
 

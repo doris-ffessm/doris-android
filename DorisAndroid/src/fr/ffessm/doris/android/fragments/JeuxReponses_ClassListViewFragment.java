@@ -244,13 +244,15 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
 
         try{
 
-            qbClassificationFiche.where().eq("numOrdre", classificationFicheSelonNiveau.getNumOrdre())
+            // On ne prend que les niveaux inférieurs (pour être certain d'en avoir au moins 3) ou égaux, en privilégiant les égaux
+            qbClassificationFiche =  ormLiteDBHelper.getClassificationFicheDao().queryBuilder();
+            qbClassificationFiche.where().le("numOrdre", classificationFicheSelonNiveau.getNumOrdre())
                     .and().ne("classification_id", classificationFicheSelonNiveau.getClassification().getId());
             qbClassificationFiche.groupBy("classification_id");
-            qbClassificationFiche.orderByRaw("RANDOM()");
-            Log.d(LOG_TAG, "createListeReponsesViews() - sql : "+qbClassificationFiche.prepareStatementString());
-
+            qbClassificationFiche.orderByRaw("numOrdre DESC, RANDOM()");
+            Log.d(LOG_TAG, "createListeReponsesViews() - sql2 : "+qbClassificationFiche.prepareStatementString());
             classificationFicheListeAleatoire = ormLiteDBHelper.getClassificationFicheDao().query(qbClassificationFiche.prepare());
+
         } catch (SQLException error) {
             error.printStackTrace();
         }
@@ -279,7 +281,7 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
                 try{
                     QueryBuilder<Classification, Integer> qbClassification =  ormLiteDBHelper.getClassificationDao().queryBuilder();
                     qbClassification.where().eq("_id", classificationFicheListeAleatoire.get(i).getClassification().getId());
-                    Log.d(LOG_TAG, "createListeReponsesViews() - sql : "+qbClassification.prepareStatementString());
+                    Log.d(LOG_TAG, "createListeReponsesViews() - sql3 : "+qbClassification.prepareStatementString());
 
                     Classification classificationAleatoire = ormLiteDBHelper.getClassificationDao().queryForFirst(qbClassification.prepare());
 

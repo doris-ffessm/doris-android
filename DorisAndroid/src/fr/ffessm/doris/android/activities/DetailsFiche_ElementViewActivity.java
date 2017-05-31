@@ -45,6 +45,7 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 import android.app.Activity;
@@ -815,13 +816,15 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     
     View insertPhoto(PhotoFiche photoFiche){
         //Log.d(LOG_TAG, "insertPhoto() - photoFiche : "+photoFiche.getCleURL());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int iconSize = Integer.parseInt(prefs.getString(context.getString(R.string.pref_key_fiche_icon_size), "128"));
 
     	LinearLayout layout = new LinearLayout(getApplicationContext());
-        layout.setLayoutParams(new LayoutParams(200, 200));
+        layout.setLayoutParams(new LayoutParams(ScreenTools.dp2px(context, iconSize), ScreenTools.dp2px(context, iconSize)));
         layout.setGravity(Gravity.CENTER);
         
         final ImageView imageView = new ImageView(getApplicationContext());	        
-        imageView.setLayoutParams(new LayoutParams(200, 200));
+        imageView.setLayoutParams(new LayoutParams(ScreenTools.dp2px(context, iconSize), ScreenTools.dp2px(context, iconSize)));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         
         Photos_Outils photosOutils = new Photos_Outils(this);
@@ -934,9 +937,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         }
  
     }
-    
 
-    
     // End of user code
 
 }

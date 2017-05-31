@@ -70,6 +70,7 @@ import android.view.ViewGroup.LayoutParams;
 import com.squareup.picasso.Picasso;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.Textes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import java.io.IOException;
@@ -192,7 +193,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
         }catch(Exception e){}
         
         imageView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
-        imageView.getLayoutParams().width = defaultIconSize;
+        imageView.getLayoutParams().width = ScreenTools.dp2px(context, defaultIconSize);
         
         //Log.i(LOG_TAG, "getView() - entry.getCleURLIllustration() : " +entry.getCleURLIllustration());	
         

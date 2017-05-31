@@ -1,70 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
-<!--Start of user code elementView_layout for Jeux_before_scroll
--->
-<!--End of user code
--->
-    <ScrollView 
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+              android:layout_width="fill_parent"
+              android:layout_height="match_parent"
+              android:orientation="horizontal">
 
-        <LinearLayout
+    <ImageView
+        android:id="@+id/jeux_customviewfragment_icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|left"
+        android:layout_marginTop="2dp"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:contentDescription="Icône Element"
+        android:src="@drawable/ic_action_jeux">
+    </ImageView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/jeux_customviewfragment_titre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/jeux_customviewfragment_icon"
+            android:layout_toRightOf="@+id/jeux_customviewfragment_icon"
+            android:padding="3dip"
+            android:text="@string/jeu_titre_accueil"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?android:attr/textColorSecondary"/>
+
+        <TextView
+            android:id="@+id/jeux_customviewfragment_soustitre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="2dp"
+            android:text="@string/jeu_soustitre_accueil"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?android:attr/textColorPrimary"/>
+
+        <TextView
+            android:id="@+id/jeux_textefragment_description"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="horizontal" >
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
 
-		    <ImageView
-                android:id="@+id/jeux_customviewfragment_icon"
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:contentDescription="Icône Element"
-                android:src="@drawable/ic_action_jeux"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="2dp"
-                android:layout_weight="1">
-		    </ImageView>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:layout_marginLeft="2dp"
-                android:layout_weight="2">
-                <TextView
-                    android:id="@+id/jeux_customviewfragment_titre"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="3dip"
-                    android:layout_toRightOf="@+id/jeux_customviewfragment_icon"
-                    android:layout_alignTop="@+id/jeux_customviewfragment_icon"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:text="@string/jeu_titre_accueil"/>
-
-                <TextView
-                    android:id="@+id/jeux_customviewfragment_soustitre"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginTop="2dp"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:text="@string/jeu_soustitre_accueil"/>
-                <TextView
-                    android:id="@+id/jeux_textefragment_description"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:padding="3dip"
-                    android:layout_marginTop="2dp"
-                    android:text="@string/jeu_description_accueil" />
-            </LinearLayout>
-<!--End of user code
--->
-        </LinearLayout>
-    </ScrollView>
+            android:padding="3dip"
+            android:text="@string/jeu_description_accueil"/>
+    </LinearLayout>
 
 </LinearLayout>

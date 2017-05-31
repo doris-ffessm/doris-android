@@ -54,6 +54,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.Param_Outils;
+import fr.ffessm.doris.android.tools.ScreenTools;
 
 public class MultiProgressBar extends LinearLayout {
 
@@ -101,10 +102,11 @@ public class MultiProgressBar extends LinearLayout {
 		
 		ivIcon.setImageResource(inIconResId);
 		Param_Outils paramOutils = new Param_Outils(context.getApplicationContext());
-		int iconeZine = Integer.valueOf(paramOutils.getParamString(
-				R.string.pref_key_accueil_icon_size, "64"));
+		int iconeZine = ScreenTools.dp2px(context, Integer.valueOf(paramOutils.getParamString(
+				R.string.pref_key_accueil_icon_size, "64")) );
 		ivIcon.setMaxHeight(iconeZine);
-		
+		ivIcon.setMaxWidth(iconeZine);
+
 		
 		if (inAffBtnFoldUnflodSection) {
 			image_maximize = R.drawable.app_expander_ic_maximized;

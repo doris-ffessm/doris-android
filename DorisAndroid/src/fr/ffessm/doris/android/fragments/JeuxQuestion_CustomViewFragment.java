@@ -174,7 +174,7 @@ public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemC
                 Log.d(LOG_TAG, "setIcone() - urlPhoto : "+urlPhoto);
                 Picasso.with(getActivity())
                         .load(urlPhoto.replace(" ", "%20"))
-                        .placeholder(R.drawable.doris_logo_site_doris)  // utilisation de l'image par defaut pour commencer
+                        .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
                         .error(R.drawable.doris_icone_doris_large_pas_connecte)
                         .fit()
                         .centerInside()

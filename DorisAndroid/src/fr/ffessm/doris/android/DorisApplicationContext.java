@@ -196,133 +196,88 @@ public class DorisApplicationContext {
 			}
 			ed.commit();
 		}
-		// TODO factoriser ce code qui semble plutôt redondant 
-		// Taille des icônes des listes
-		String iconSizeString = paramOutils.getParamString(R.string.pref_key_list_icon_size, "");
-		if(iconSizeString.equals("")){
-			SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-			// adapte la taille par défaut des icônes en fonction de la densité et la taille de l'écran 
-			switch(screenlayout_density)
-			{
-			case DisplayMetrics.DENSITY_LOW:
-				switch(screenlayout_size) {
-				case Configuration.SCREENLAYOUT_SIZE_XLARGE:
-			    	ed.putString(context.getString(R.string.pref_key_list_icon_size), "96");
-					break;
-			    case Configuration.SCREENLAYOUT_SIZE_LARGE:
-			    	ed.putString(context.getString(R.string.pref_key_list_icon_size), "64");
-					break;
-				default: 
-					ed.putString(context.getString(R.string.pref_key_list_icon_size), "48");
-				}
-			    break;
-			case DisplayMetrics.DENSITY_MEDIUM:
-				switch(screenlayout_size) {
-				case Configuration.SCREENLAYOUT_SIZE_XLARGE:
-			    	ed.putString(context.getString(R.string.pref_key_list_icon_size), "128");
-					break;
-			    case Configuration.SCREENLAYOUT_SIZE_LARGE:
-			    	ed.putString(context.getString(R.string.pref_key_list_icon_size), "96");
-					break;
-				default: 
-					ed.putString(context.getString(R.string.pref_key_list_icon_size), "64");
-				}
-			    break;
-			case DisplayMetrics.DENSITY_HIGH:
-				switch(screenlayout_size) {
-				case Configuration.SCREENLAYOUT_SIZE_XLARGE:
-			    	ed.putString(context.getString(R.string.pref_key_list_icon_size), "192");
-					break;
-			    case Configuration.SCREENLAYOUT_SIZE_LARGE:
-			    	ed.putString(context.getString(R.string.pref_key_list_icon_size), "128");
-					break;
-				default: 
-					ed.putString(context.getString(R.string.pref_key_list_icon_size), "96");
-				}
-			    break;
-			case DisplayMetrics.DENSITY_XHIGH:
-				switch(screenlayout_size) {
-				case Configuration.SCREENLAYOUT_SIZE_XLARGE:
-			    case Configuration.SCREENLAYOUT_SIZE_LARGE:
-			    	ed.putString(context.getString(R.string.pref_key_list_icon_size), "192");
-					break;
-				default: 
-					ed.putString(context.getString(R.string.pref_key_list_icon_size), "128");
-				}
-			    break;
-			case DisplayMetrics.DENSITY_XXHIGH:
-				ed.putString(context.getString(R.string.pref_key_list_icon_size), "192");
-			    break;
-			default:
-				ed.putString(context.getString(R.string.pref_key_list_icon_size), "64");
-			}
-			ed.commit();
-		}
-		// Taille des icônes des page accueil
+
+		// Taille des icônes de la page d'accueil
 		String acceuilIconSizeString = paramOutils.getParamString(R.string.pref_key_accueil_icon_size, "");
 		if(acceuilIconSizeString.equals("")){
 			SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-			// adapte la taille par défaut des icônes en fonction de la densité et la taille de l'écran 
-			switch(screenlayout_density)
-			{
-			case DisplayMetrics.DENSITY_LOW:
-				switch(screenlayout_size) {
-				case Configuration.SCREENLAYOUT_SIZE_XLARGE:
-			    	ed.putString(context.getString(R.string.pref_key_accueil_icon_size), "96");
-					break;
-			    case Configuration.SCREENLAYOUT_SIZE_LARGE:
-			    	ed.putString(context.getString(R.string.pref_key_accueil_icon_size), "64");
-					break;
-				default: 
-					ed.putString(context.getString(R.string.pref_key_accueil_icon_size), "48");
-				}
-			    break;
-			case DisplayMetrics.DENSITY_MEDIUM:
-				switch(screenlayout_size) {
-				case Configuration.SCREENLAYOUT_SIZE_XLARGE:
-			    	ed.putString(context.getString(R.string.pref_key_accueil_icon_size), "96");
-					break;
-			    case Configuration.SCREENLAYOUT_SIZE_LARGE:
-			    	ed.putString(context.getString(R.string.pref_key_accueil_icon_size), "64");
-					break;
-				default: 
-					ed.putString(context.getString(R.string.pref_key_accueil_icon_size), "48");
-				}
-			    break;
-			case DisplayMetrics.DENSITY_HIGH:
-				switch(screenlayout_size) {
-				case Configuration.SCREENLAYOUT_SIZE_XLARGE:
-			    	ed.putString(context.getString(R.string.pref_key_accueil_icon_size), "128");
-					break;
-			    case Configuration.SCREENLAYOUT_SIZE_LARGE:
-			    	ed.putString(context.getString(R.string.pref_key_accueil_icon_size), "96");
-					break;
-				default: 
-					ed.putString(context.getString(R.string.pref_key_accueil_icon_size), "64");
-				}
-			    break;
-			case DisplayMetrics.DENSITY_XHIGH:
-				switch(screenlayout_size) {
-				case Configuration.SCREENLAYOUT_SIZE_XLARGE:
-			    case Configuration.SCREENLAYOUT_SIZE_LARGE:
-			    	ed.putString(context.getString(R.string.pref_key_accueil_icon_size), "128");
-					break;
-				default: 
-					ed.putString(context.getString(R.string.pref_key_accueil_icon_size), "96");
-				}
-			    break;
-			case DisplayMetrics.DENSITY_XXHIGH:
-				ed.putString(context.getString(R.string.pref_key_accueil_icon_size), "128");
-			    break;
-			default:
-				ed.putString(context.getString(R.string.pref_key_accueil_icon_size), "64");
-			}
+
+            ed.putString(context.getString(R.string.pref_key_accueil_icon_size), ""+tailleIconeDef(context));
+
 			ed.commit();
 		}
-		
+
+        // Taille des icônes des listes
+        String listeIconSizeString = paramOutils.getParamString(R.string.pref_key_list_icon_size, "");
+        if(listeIconSizeString.equals("")){
+            SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+
+            ed.putString(context.getString(R.string.pref_key_list_icon_size), ""+tailleIconeDef(context));
+
+            ed.commit();
+        }
+
+        // Taille des icônes des fiche
+        String ficheIconSizeString = paramOutils.getParamString(R.string.pref_key_fiche_icon_size, "");
+        if(ficheIconSizeString.equals("")){
+            SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+
+            ed.putString(context.getString(R.string.pref_key_fiche_icon_size), ""+tailleIconeDef(context));
+
+            ed.commit();
+        }
 		//if (BuildConfig.DEBUG) Log.v(LOG_TAG, "ensureDefaultPreferencesInitialization() - Fin");
 	}
 
+	// Pas certain que ce soit la meilleure technique mais factorisation de celle utilisée jusque là
+    // TODO : voir si dp2px() pourrait permettre de se passer de cela
+    private int tailleIconeDef(Context context) {
+        int screenlayout_size = context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+        int screenlayout_density= context.getResources().getDisplayMetrics().densityDpi;
+
+        // adapte la taille par défaut des icônes en fonction de la densité et la taille de l'écran
+        switch (screenlayout_density) {
+            case DisplayMetrics.DENSITY_LOW:
+                switch (screenlayout_size) {
+                    case Configuration.SCREENLAYOUT_SIZE_XLARGE:
+                        return 96;
+                    case Configuration.SCREENLAYOUT_SIZE_LARGE:
+                        return 64;
+                    default:
+                        return 48;
+                }
+            case DisplayMetrics.DENSITY_MEDIUM:
+                switch (screenlayout_size) {
+                    case Configuration.SCREENLAYOUT_SIZE_XLARGE:
+                        return 96;
+                    case Configuration.SCREENLAYOUT_SIZE_LARGE:
+                        return 64;
+                    default:
+                        return 48;
+                }
+            case DisplayMetrics.DENSITY_HIGH:
+                switch (screenlayout_size) {
+                    case Configuration.SCREENLAYOUT_SIZE_XLARGE:
+                        return 128;
+                    case Configuration.SCREENLAYOUT_SIZE_LARGE:
+                        return 96;
+                    default:
+                        return 64;
+                }
+            case DisplayMetrics.DENSITY_XHIGH:
+                switch (screenlayout_size) {
+                    case Configuration.SCREENLAYOUT_SIZE_XLARGE:
+                    case Configuration.SCREENLAYOUT_SIZE_LARGE:
+                        return 128;
+                    default:
+                        return 96;
+                }
+            case DisplayMetrics.DENSITY_XXHIGH:
+                return 128;
+            default:
+                return 64;
+        }
+    }
 
 	// Gestion de l'interface des Jeux
     public Jeu.Statut jeuStatut;

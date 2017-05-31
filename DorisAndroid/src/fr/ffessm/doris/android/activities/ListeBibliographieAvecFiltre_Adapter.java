@@ -76,6 +76,7 @@ import java.util.Locale;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
+import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.Textes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
@@ -197,7 +198,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
         final int defaultIconSizeFinal = defaultIconSize;
 
     	imageView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
-    	imageView.getLayoutParams().width = defaultIconSize;
+    	imageView.getLayoutParams().width = ScreenTools.dp2px(context, defaultIconSize);
     	
         if ( !entry.getCleURLIllustration().isEmpty() ) {
         	String nomPhoto = entry.getCleURLIllustration().replace("gestionenligne/photos_biblio_moy/","");

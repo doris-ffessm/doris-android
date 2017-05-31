@@ -30,6 +30,7 @@
 	<string name="pref_key_accueil_etat_fiches_affiche">pref_accueil_etat_fiches_affiche</string>
 	<string name="pref_key_accueil_icon_size">pref_accueil_icon_size</string>
 	<string name="pref_key_list_icon_size">pref_list_icon_size</string>
+	<string name="pref_key_fiche_icon_size">pref_fiche_icon_size</string>
 	<string name="pref_key_accueil_aff_iconesfede">pref_accueil_aff_iconesfede</string>
 	<string name="pref_key_fiche_aff_details_pardefaut">pref_fiche_aff_details_pardefaut</string>
 	<string name="pref_key_imagepleinecran_aff_zoomcontrol">pref_key_imagepleinecran_aff_zoomcontrol</string>
@@ -194,6 +195,8 @@
     <string name="accueil_icon_size_default"></string>
     <string name="list_icon_size_prompt">Taille des icones dans les listes</string>
     <string name="list_icon_size_default"></string>
+    <string name="fiche_icon_size_prompt">Taille des icones des fiches</string>
+    <string name="fiche_icon_size_default"></string>
 	<string-array name="icon_size_values">
         <item>48</item>
         <item>64</item>
@@ -214,7 +217,7 @@
     </string-array>
     
 	<string name="pref_accueil_aff_iconesfede_prompt">Affichage Icônes Fédé.\u00A0?</string>
-	<string name="pref_accueil_aff_iconesfede_summary">"Permet de gagner de la place sur l'écran d'accueil"</string>
+	<string name="pref_accueil_aff_iconesfede_summary">"Masquer permet de gagner de la place sur l'écran d'accueil"</string>
 	
 	<string name="pref_fiche_aff_details_pardefaut_prompt">Fiche\u00A0: montrer détails\u00A0?</string>
 	<string name="pref_fiche_aff_details_pardefaut_summary">"Les détails de la fiche sont tous affichés par défaut"</string>

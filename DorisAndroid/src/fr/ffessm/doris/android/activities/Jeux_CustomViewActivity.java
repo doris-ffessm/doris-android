@@ -265,10 +265,17 @@ public class Jeux_CustomViewActivity extends FragmentActivity
 
         DorisApplicationContext.getInstance().jeuNiveauSelectionne = niveau;
 
+        String jeux_libelle[] = getResources().getStringArray(R.array.jeux_titre_array);
+        String jeux_niveau[] = getResources().getStringArray(R.array.jeux_niveau_array);
+
+
         if (questionFrag != null) {
             // If article frag is available, we're in two-pane layout...
 
-            questionFrag.setTitre(questionFrag.getTitre()+" ("+niveau.name()+")");
+            questionFrag.setTitre(
+                    jeux_libelle[DorisApplicationContext.getInstance().jeuSelectionne.ordinal()]
+                        +" ("+jeux_niveau[niveau.ordinal()]+")");
+            questionFrag.setSousTitre(getResources().getString(R.string.jeu_soustitre_niveau));
 
         } else {
             // If the frag is not available, we're in the one-pane layout and must swap frags...

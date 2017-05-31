@@ -328,7 +328,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         
         ImageView ivIcone = (ImageView)viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
         ivIcone.setImageResource(imageZone);   
-        int iconeZine = Integer.valueOf(getParamOutils().getParamString(R.string.pref_key_accueil_icon_size, "64"));
+        int iconeZine = ScreenTools.dp2px(context, Integer.valueOf(getParamOutils().getParamString(R.string.pref_key_accueil_icon_size, "64")) );
 	    ivIcone.setMaxHeight(iconeZine);
 	    ivIcone.setMaxWidth(iconeZine);
 	    
@@ -860,8 +860,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	//End of user code
 	}
 
-
-
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -878,8 +876,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		//End of user code
         return super.onCreateOptionsMenu(menu);
     }
-    
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	// behavior of option menu

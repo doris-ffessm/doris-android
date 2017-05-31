@@ -100,6 +100,7 @@ import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
+import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.Textes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
@@ -236,14 +237,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 		//	additional code
         HorizontalScrollView hsGallery = (HorizontalScrollView) convertView.findViewById(R.id.listeimageficheavecfiltre_elementview_gallery_horizontalScrollView);
         hsGallery.setVisibility(View.VISIBLE);
-        
-        String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
-        int defaultIconSize = 48;
-        try{
-        	defaultIconSize = Integer.parseInt(defaultIconSizeString);
-        }catch(Exception e){}
 
-    	
         Collection<PhotoFiche> photosFiche = entry.getPhotosFiche(); 
 		if(photosFiche!=null){
 			//sbDebugText.append("\nnbPhoto="+photosFiche.size()+"\n");
@@ -590,12 +584,15 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 	}
 	
     View insertPhoto(PhotoFiche photoFiche){
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        int iconSize = ScreenTools.dp2px(context, Integer.parseInt(prefs.getString(context.getString(R.string.pref_key_list_icon_size), "64")) );
+
     	LinearLayout layout = new LinearLayout(context);
-        layout.setLayoutParams(new LayoutParams(200, 200));
+        layout.setLayoutParams(new LayoutParams(iconSize, iconSize));
         layout.setGravity(Gravity.CENTER);
         
         final ImageView imageView = new ImageView(context);
-        imageView.setLayoutParams(new LayoutParams(200, 200));
+        imageView.setLayoutParams(new LayoutParams(iconSize, iconSize));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
         
         if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)){
@@ -669,6 +666,5 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
         return layout;
    
     }
-    
-    
+
 }

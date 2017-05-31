@@ -173,11 +173,11 @@ public class Jeu {
 
         if (niveau == Niveau.FACILE){
             borne[0] = 0;
-            borne[1] = 2;
+            borne[1] = 3;
         }
         if (niveau == Niveau.INTERMEDIAIRE){
-            borne[0] = 1;
-            borne[1] = 6;
+            borne[0] = 2;
+            borne[1] = 7;
         }
         if (niveau == Niveau.DIFFICILE){
             borne[0] = 3;

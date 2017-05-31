@@ -73,6 +73,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
+import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.Textes_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 //End of user code
@@ -206,7 +207,14 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		//	additional code
         
         ImageView ivIconGroup = (ImageView) convertView.findViewById(R.id.groupeselection_listviewrow_icon);
-        
+        String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
+        int defaultIconSize = 48;
+        try{
+            defaultIconSize = Integer.parseInt(defaultIconSizeString);
+        }catch(Exception e){}
+        ivIconGroup.getLayoutParams().height = ScreenTools.dp2px(context, defaultIconSize);
+        ivIconGroup.getLayoutParams().width = ScreenTools.dp2px(context, defaultIconSize);
+
         //Log.d(LOG_TAG,"currentRootGroupe : "+currentRootGroupe.getId()+" - "+currentRootGroupe.getNomGroupe());
         if (currentRootGroupe.getId() != 1) {
         	ivIconGroup.setBackgroundResource( ThemeUtil.attrToResId(((GroupeSelection_ClassListViewActivity)context), R.attr.ic_action_background) );

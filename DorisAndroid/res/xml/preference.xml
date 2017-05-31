@@ -12,7 +12,7 @@
         <CheckBoxPreference android:key="@string/pref_key_mode_connecte_wifi_only"
             android:title="@string/mode_connecte_wifi_only_prompt"
             android:summary="@string/mode_connecte_wifi_only_summary"
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:layout="@layout/preference_layout_preference"
             />
          <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
@@ -37,6 +37,7 @@
             android:defaultValue="true"
             android:layout="@layout/preference_layout_preference"
             />
+        <!--
         <PreferenceScreen
 	        android:key="button_maj_liste_fiches_zones_key"
 	        android:title="@string/maj_liste_fiches_region_prompt"
@@ -84,6 +85,7 @@
 				android:layout="@layout/preference_layout_preference"
 				/>
 		</PreferenceScreen>
+		-->
         <PreferenceScreen
 	        android:key="button_qualite_images_zones_key"
 	        android:title="@string/mode_precharg_photo_region_prompt"
@@ -201,6 +203,14 @@
         	android:defaultValue="@string/list_icon_size_default"
         	android:layout="@layout/preference_layout_preference"
         	/>
+        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+            android:key="@string/pref_key_fiche_icon_size"
+            android:title="@string/fiche_icon_size_prompt"
+            android:entryValues="@array/icon_size_values"
+            android:entries="@array/icon_size_lib"
+            android:defaultValue="@string/fiche_icon_size_default"
+            android:layout="@layout/preference_layout_preference"
+            />
 		<CheckBoxPreference
 		    android:key="@string/pref_key_accueil_aff_iconesfede"
 			android:title="@string/pref_accueil_aff_iconesfede_prompt"
@@ -212,7 +222,7 @@
 		    android:key="@string/pref_key_fiche_aff_details_pardefaut"
 			android:title="@string/pref_fiche_aff_details_pardefaut_prompt"
 			android:summary="@string/pref_fiche_aff_details_pardefaut_summary"
-			android:defaultValue="false"
+			android:defaultValue="true"
 			android:layout="@layout/preference_layout_preference"
 			/>
 		<CheckBoxPreference

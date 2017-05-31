@@ -92,6 +92,7 @@ import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
+import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.Textes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
@@ -227,7 +228,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         
         final ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_icon);
     	ivIcon.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
-    	ivIcon.getLayoutParams().width = defaultIconSize;
+    	ivIcon.getLayoutParams().width = ScreenTools.dp2px(context, defaultIconSize);
     	
     	PhotoFiche photoPrincipale = entry.getPhotoPrincipale();
     	if(photoPrincipale == null){
@@ -530,7 +531,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 			}
 		}
 	}
-	
+
 	//End of user code
 	protected boolean sortAfterFilter() {
 		return false;
