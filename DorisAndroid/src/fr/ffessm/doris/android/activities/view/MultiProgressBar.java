@@ -102,8 +102,8 @@ public class MultiProgressBar extends LinearLayout {
 		
 		ivIcon.setImageResource(inIconResId);
 		Param_Outils paramOutils = new Param_Outils(context.getApplicationContext());
-		int iconeZine = ScreenTools.dp2px(context, Integer.valueOf(paramOutils.getParamString(
-				R.string.pref_key_accueil_icon_size, "64")) );
+		int iconeZine = ScreenTools.dp2px(context, paramOutils.getParamInt(
+				R.string.pref_key_accueil_icone_taille, Integer.parseInt(context.getString(R.string.accueil_icone_taille_defaut)) ) );
 		ivIcon.setMaxHeight(iconeZine);
 		ivIcon.setMaxWidth(iconeZine);
 

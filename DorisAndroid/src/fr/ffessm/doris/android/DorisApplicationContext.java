@@ -103,7 +103,7 @@ public class DorisApplicationContext {
     public void setIntentPourRetour(Intent currentIntent){
     	Log.d(LOG_TAG, "setIntentPourRetour() - currentIntent.getComponent() : "+currentIntent.getComponent());
     	Log.d(LOG_TAG, "setIntentPourRetour() - retourIntentNiveau : "+retourIntentNiveau);
-	   
+
     	if(currentIntent.getComponent() !=
     			getInstance().retourIntent[getInstance().retourIntentNiveau].getComponent()) {
     		
@@ -163,121 +163,6 @@ public class DorisApplicationContext {
 			listener.dataHasChanged(message);
 		}
 	}
-	
-	
-	/**
-	 * Gère les valeurs par défaut en fonction du type d'appareil sur lequel l'application est installée.
-	 * Une fois exécuté, le valeur sont stockée et ne sont plus modifiées par ce traitement afin de conserver les choix utilisateur.
-	 * @param context
-	 */
-	public void ensureDefaultPreferencesInitialization(Context context){
-		//if (BuildConfig.DEBUG) Log.v(LOG_TAG, "ensureDefaultPreferencesInitialization() - Début");
-		
-		final Param_Outils paramOutils = new Param_Outils(context);
-		
-		int screenlayout_size = context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
-		int screenlayout_density= context.getResources().getDisplayMetrics().densityDpi;
-		//Log.d(LOG_TAG, "ensureDefaultPreferencesInitialization "+screenlayout_density+" "+screenlayout_size);
-		
-		// Taille par défaut des images téléchargées en mode on-line
-		String qualitePhotoSgtring = paramOutils.getParamString(R.string.pref_key_mode_connecte_qualite_photo,"");
-		if(qualitePhotoSgtring.equals("")){
-			SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-			// adapte la taille par défaut des images téléchargée (mode online) en fonction de la taille de l'écran et la densité 
-			if(screenlayout_size >= Configuration.SCREENLAYOUT_SIZE_LARGE || screenlayout_density>=DisplayMetrics.DENSITY_HIGH){
-				//Log.d(LOG_TAG, "ensureDefaultPreferencesInitialization HI_RES");
-		    	// LARGE ou XLARGE -> par défaut HI_RES
-				ed.putString(context.getString(R.string.pref_key_mode_connecte_qualite_photo), "HI_RES");
-			}
-			else{
-				//Log.d(LOG_TAG, "ensureDefaultPreferencesInitialization MED_RES");
-				// par défaut MED_RES
-				ed.putString(context.getString(R.string.pref_key_mode_connecte_qualite_photo), "MED_RES");				
-			}
-			ed.commit();
-		}
-
-		// Taille des icônes de la page d'accueil
-		String acceuilIconSizeString = paramOutils.getParamString(R.string.pref_key_accueil_icon_size, "");
-		if(acceuilIconSizeString.equals("")){
-			SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-
-            ed.putString(context.getString(R.string.pref_key_accueil_icon_size), ""+tailleIconeDef(context));
-
-			ed.commit();
-		}
-
-        // Taille des icônes des listes
-        String listeIconSizeString = paramOutils.getParamString(R.string.pref_key_list_icon_size, "");
-        if(listeIconSizeString.equals("")){
-            SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-
-            ed.putString(context.getString(R.string.pref_key_list_icon_size), ""+tailleIconeDef(context));
-
-            ed.commit();
-        }
-
-        // Taille des icônes des fiche
-        String ficheIconSizeString = paramOutils.getParamString(R.string.pref_key_fiche_icon_size, "");
-        if(ficheIconSizeString.equals("")){
-            SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-
-            ed.putString(context.getString(R.string.pref_key_fiche_icon_size), ""+tailleIconeDef(context));
-
-            ed.commit();
-        }
-		//if (BuildConfig.DEBUG) Log.v(LOG_TAG, "ensureDefaultPreferencesInitialization() - Fin");
-	}
-
-	// Pas certain que ce soit la meilleure technique mais factorisation de celle utilisée jusque là
-    // TODO : voir si dp2px() pourrait permettre de se passer de cela
-    private int tailleIconeDef(Context context) {
-        int screenlayout_size = context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
-        int screenlayout_density= context.getResources().getDisplayMetrics().densityDpi;
-
-        // adapte la taille par défaut des icônes en fonction de la densité et la taille de l'écran
-        switch (screenlayout_density) {
-            case DisplayMetrics.DENSITY_LOW:
-                switch (screenlayout_size) {
-                    case Configuration.SCREENLAYOUT_SIZE_XLARGE:
-                        return 96;
-                    case Configuration.SCREENLAYOUT_SIZE_LARGE:
-                        return 64;
-                    default:
-                        return 48;
-                }
-            case DisplayMetrics.DENSITY_MEDIUM:
-                switch (screenlayout_size) {
-                    case Configuration.SCREENLAYOUT_SIZE_XLARGE:
-                        return 96;
-                    case Configuration.SCREENLAYOUT_SIZE_LARGE:
-                        return 64;
-                    default:
-                        return 48;
-                }
-            case DisplayMetrics.DENSITY_HIGH:
-                switch (screenlayout_size) {
-                    case Configuration.SCREENLAYOUT_SIZE_XLARGE:
-                        return 128;
-                    case Configuration.SCREENLAYOUT_SIZE_LARGE:
-                        return 96;
-                    default:
-                        return 64;
-                }
-            case DisplayMetrics.DENSITY_XHIGH:
-                switch (screenlayout_size) {
-                    case Configuration.SCREENLAYOUT_SIZE_XLARGE:
-                    case Configuration.SCREENLAYOUT_SIZE_LARGE:
-                        return 128;
-                    default:
-                        return 96;
-                }
-            case DisplayMetrics.DENSITY_XXHIGH:
-                return 128;
-            default:
-                return 64;
-        }
-    }
 
 	// Gestion de l'interface des Jeux
     public Jeu.Statut jeuStatut;

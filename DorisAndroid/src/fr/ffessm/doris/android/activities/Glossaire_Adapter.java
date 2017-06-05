@@ -68,7 +68,8 @@ import android.widget.TextView;
 // additional imports
 import android.view.ViewGroup.LayoutParams;
 import com.squareup.picasso.Picasso;
-import fr.ffessm.doris.android.sitedoris.Constants;
+
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.Textes_Outils;
@@ -97,6 +98,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 	//Start of user code protected additional Glossaire_Adapter attributes
 	// additional attributes
 	
+	private Param_Outils paramOutils;
 	private Textes_Outils textesOutils;
 	//End of user code
 
@@ -106,6 +108,8 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
         // Start of user code protected Glossaire_Adapter constructor
+		paramOutils = new Param_Outils(context);
+		textesOutils = new Textes_Outils(context);
 		// End of user code
 		updateList();
 	}
@@ -123,7 +127,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 			this.definitionGlossaireList = _contextDB.definitionGlossaireDao.query(_contextDB.definitionGlossaireDao.queryBuilder().orderBy("terme", true).prepare());
 			this.filteredDefinitionGlossaireList = this.definitionGlossaireList;
 			
-			textesOutils = new Textes_Outils(context);
+
 		} catch (java.sql.SQLException e) {
 			Log.e(LOG_TAG, e.getMessage(), e);
 		}
@@ -186,12 +190,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
         
         // Affichage 1ère image de la définition qd disponible
         ImageView imageView = (ImageView) convertView.findViewById(R.id.glossaire_listviewrow_icon);
-        String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
-        int defaultIconSize = 48;
-        try{
-        	defaultIconSize = Integer.parseInt(defaultIconSizeString);
-        }catch(Exception e){}
-        
+		int defaultIconSize = paramOutils.getParamInt(R.string.pref_key_fiche_icone_taille, Integer.parseInt(context.getString(R.string.fiche_icone_taille_defaut)) );
         imageView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
         imageView.getLayoutParams().width = ScreenTools.dp2px(context, defaultIconSize);
         

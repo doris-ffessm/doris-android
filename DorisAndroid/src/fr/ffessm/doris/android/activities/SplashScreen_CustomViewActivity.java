@@ -44,7 +44,6 @@ package fr.ffessm.doris.android.activities;
 
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -67,7 +66,7 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import fr.ffessm.doris.android.DorisApplicationContext;
+
 import fr.ffessm.doris.android.datamodel.SQLiteDataBaseHelper;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 //End of user code
@@ -90,6 +89,9 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
         setContentView(R.layout.splashscreen_customview);
         //Start of user code onCreate SplashScreen_CustomViewActivity
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+		int derniereVersionExecutee = prefs.getInt(getString(R.string.pref_key_last_version_run), 0);
+
 		if(!SQLiteDataBaseHelper.checkDataBase()){
 			// la base n'existe pas
 			// on va la créer
@@ -98,7 +100,6 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 		}
 		else{
 			// la base existe, doit'on la mettre à jour ? (nouvelle version de l'application ?)
-			int derniereVersionExecutee = prefs.getInt(getString(R.string.pref_key_last_version_run), 0);
 			try {
 				// récupère les info sur la version actuelle
 				PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -121,7 +122,7 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 				
 			}
 		}
-		
+
 		try {
 			// récupère les info sur la version actuelle
 			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -138,11 +139,9 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 		// execute the database initialization in a thread
 		new AsyncInitialize(this).execute();
 		
-		// ensure that defaut preferences are set according to screen size
-		DorisApplicationContext.getInstance().ensureDefaultPreferencesInitialization(this);
 		//End of user code
     }
-    
+
     @Override
 	protected void onResume() {
 		super.onResume();

@@ -74,6 +74,7 @@ import java.util.Locale;
 
 
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
@@ -101,6 +102,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
 	SharedPreferences prefs;
 	//Start of user code protected additional ListeBibliographieAvecFiltre_Adapter attributes
 	// additional attributes
+	private Param_Outils paramOutils;
 	private Textes_Outils textesOutils;
 	private Photos_Outils photosOutils;
 	private Reseau_Outils reseauOutils;
@@ -112,7 +114,8 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
         // Start of user code protected ListeBibliographieAvecFiltre_Adapter constructor
-		
+
+		paramOutils = new Param_Outils(context);
 		photosOutils = new Photos_Outils(context);
 		textesOutils = new Textes_Outils(context);
 		reseauOutils = new Reseau_Outils(context);
@@ -190,11 +193,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
 		// Start of user code protected additional ListeBibliographieAvecFiltre_Adapter getView code
 		//	additional code
         final ImageView imageView = (ImageView) convertView.findViewById(R.id.listebibliographieavecfiltre_listviewrow_icon);
-        String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
-        int defaultIconSize = 48;
-        try{
-        	defaultIconSize = Integer.parseInt(defaultIconSizeString);
-        }catch(Exception e){}
+		int defaultIconSize = paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)) );
         final int defaultIconSizeFinal = defaultIconSize;
 
     	imageView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;

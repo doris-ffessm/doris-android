@@ -24,26 +24,26 @@
 	
 	<string name="pref_key_mode_precharg_photo_autres">mode_precharg_photo_autres</string>
 
-	<string name="pref_key_theme">pref_key_theme</string>
-	<string name="pref_key_accueil_liste_ou_arbre_pardefaut">pref_accueil_liste_ou_arbre_pardefaut</string>
-	<string name="pref_key_accueil_fiches_ordre">pref_accueil_fiches_ordre</string>
-	<string name="pref_key_accueil_etat_fiches_affiche">pref_accueil_etat_fiches_affiche</string>
-	<string name="pref_key_accueil_icon_size">pref_accueil_icon_size</string>
-	<string name="pref_key_list_icon_size">pref_list_icon_size</string>
-	<string name="pref_key_fiche_icon_size">pref_fiche_icon_size</string>
-	<string name="pref_key_accueil_aff_iconesfede">pref_accueil_aff_iconesfede</string>
-	<string name="pref_key_fiche_aff_details_pardefaut">pref_fiche_aff_details_pardefaut</string>
-	<string name="pref_key_imagepleinecran_aff_zoomcontrol">pref_key_imagepleinecran_aff_zoomcontrol</string>
+	<string name="pref_key_theme">aff_theme</string>
+	<string name="pref_key_accueil_liste_ou_arbre_pardefaut">aff_accueil_liste_ou_arbre_pardefaut</string>
+	<string name="pref_key_accueil_fiches_ordre">aff_accueil_fiches_ordre</string>
+	<string name="pref_key_accueil_etat_fiches_affiche">aff_accueil_etat_fiches_affiche</string>
+	<string name="pref_key_accueil_icone_taille">aff_accueil_icone_taille</string>
+	<string name="pref_key_list_icone_taille">aff_liste_icone_taille</string>
+	<string name="pref_key_fiche_icone_taille">aff_fiche_icone_taille</string>
+	<string name="pref_key_accueil_aff_iconesfede">aff_accueil_aff_iconesfede</string>
+	<string name="pref_key_fiche_aff_details_pardefaut">aff_fiche_aff_details_pardefaut</string>
+	<string name="pref_key_imagepleinecran_aff_zoomcontrol">aff_key_imagepleinecran_aff_zoomcontrol</string>
 	
 	<string name="pref_key_last_version_run">LAST_VERSION_RUN</string>
 			
 	<!-- ids Debug -->
-	<string name="pref_key_affichage_debug">affichage_debug</string>
-	<string name="pref_key_affichage_tous_contenus">affichage_tous_contenus</string>
-	<string name="pref_key_sync_max_card_number">sync_max_card_number</string>
-	<string name="pref_key_limit_download">limit_download</string>
+	<string name="pref_key_affichage_debug">debug_affichage</string>
+	<string name="pref_key_affichage_tous_contenus">debug_affichage_tous_contenus</string>
+	<string name="pref_key_sync_max_card_number">debug_sync_max_card_number</string>
+	<string name="pref_key_limit_download">debug_limit_download</string>
 	<string name="pref_key_debug_maj_base_prochain_demarrage">debug_maj_base_prochain_demarrage</string>
-	<string name="pref_key_asynch_tempo">key_asynch_analfiche_tempo</string>
+	<string name="pref_key_asynch_tempo">debug_asynch_fiche_tempo</string>
 	
     <!-- Options text -->
     <string name="preference_menu_title">Préférences</string>
@@ -55,7 +55,7 @@
 	<string name="mode_connecte_wifi_only_prompt">Téléch. photos en wifi uniquement\u00A0?</string>
 	<string name="mode_connecte_wifi_only_summary">Si coché, les images non préchargées ne s\'afficheront que lorsque votre appareil est connecté en WiFi.\nCela permet de limiter l\'utilisation du forfait data. </string>
     <string name="mode_connecte_qualite_photo_prompt">Qualité photos téléch.\u00A0?</string>
-    <string name="mode_connecte_qualite_photo_defaut"></string>
+    <string name="mode_connecte_qualite_photo_defaut">MED_RES</string>
     <string-array name="mode_connecte_qualite_photo_values">
         <item>MED_RES</item>
         <item>HI_RES</item>
@@ -191,29 +191,51 @@
         <item>Les fiches publiées</item>
     </string-array>
 	
-    <string name="accueil_icon_size_prompt">"Taille des icones de la page d'accueil"</string>
-    <string name="accueil_icon_size_default"></string>
-    <string name="list_icon_size_prompt">Taille des icones dans les listes</string>
-    <string name="list_icon_size_default"></string>
-    <string name="fiche_icon_size_prompt">Taille des icones des fiches</string>
-    <string name="fiche_icon_size_default"></string>
-	<string-array name="icon_size_values">
+    <string name="accueil_icone_taille_prompt">"Taille des icones de la page d'accueil"</string>
+    <string name="accueil_icone_taille_defaut">64</string>
+    <string-array name="accueil_icone_taille_valeurs">
+        <item>48</item>
+        <item>64</item>
+        <item>96</item>
+        <item>128</item>
+    </string-array>
+    <string-array name="accueil_icone_taille_lib">
+        <item>Petites</item>
+        <item>Défaut</item>
+        <item>Grandes</item>
+        <item>Très Grandes</item>
+    </string-array>
+    <string name="list_icone_taille_prompt">Taille des vignettes des listes</string>
+    <string name="list_icone_taille_defaut">96</string>
+    <string-array name="list_icone_taille_valeurs">
         <item>48</item>
         <item>64</item>
         <item>96</item>
         <item>128</item>
         <item>192</item>
-        <item>256</item>
-        <item>384</item>
     </string-array>
-	<string-array name="icon_size_lib">
-	    <item>48</item>
+    <string-array name="list_icone_taille_lib">
+        <item>Très Petites</item>
+        <item>Petites</item>
+        <item>Défaut</item>
+        <item>Grandes</item>
+        <item>Très Grandes</item>
+    </string-array>
+    <string name="fiche_icone_taille_prompt">Taille des vignettes des fiches</string>
+    <string name="fiche_icone_taille_defaut">128</string>
+	<string-array name="fiche_icone_taille_valeurs">
         <item>64</item>
         <item>96</item>
         <item>128</item>
         <item>192</item>
         <item>256</item>
-        <item>384</item>
+    </string-array>
+	<string-array name="fiche_icone_taille_lib">
+        <item>Très Petites</item>
+        <item>Petites</item>
+        <item>Défaut</item>
+        <item>Grandes</item>
+        <item>Très Grandes</item>
     </string-array>
     
 	<string name="pref_accueil_aff_iconesfede_prompt">Affichage Icônes Fédé.\u00A0?</string>

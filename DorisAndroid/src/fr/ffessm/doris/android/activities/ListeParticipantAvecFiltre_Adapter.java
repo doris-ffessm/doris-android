@@ -71,6 +71,7 @@ import android.view.ViewGroup.LayoutParams;
 import com.squareup.picasso.Picasso;
 
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
@@ -100,10 +101,11 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 	SharedPreferences prefs;
 	//Start of user code protected additional ListeParticipantAvecFiltre_Adapter attributes
 	// additional attributes
-	
-    Photos_Outils photosOutils;
-    Reseau_Outils reseauOutils;
-    
+
+	protected Param_Outils paramOutils;
+	protected Photos_Outils photosOutils;
+	protected Reseau_Outils reseauOutils;
+
 	//End of user code
 
 	public ListeParticipantAvecFiltre_Adapter(Context context, DorisDBHelper contextDB) {
@@ -112,8 +114,11 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
         // Start of user code protected ListeParticipantAvecFiltre_Adapter constructor
-	    photosOutils = new Photos_Outils(context);
-	    reseauOutils = new Reseau_Outils(context);
+
+		paramOutils = new Param_Outils(context);
+		reseauOutils = new Reseau_Outils(context);
+		photosOutils = new Photos_Outils(context);
+
 		// End of user code
 		updateList();
 	}
@@ -178,12 +183,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 		// Start of user code protected additional ListeParticipantAvecFiltre_Adapter getView code
 		//	additional code
         final ImageView trombineView = (ImageView) convertView.findViewById(R.id.listeparticipantavecfiltre_listviewrow_icon);
-        String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
-        int defaultIconSize = 48;
-        try{
-        	defaultIconSize = Integer.parseInt(defaultIconSizeString);
-        }catch(Exception e){}
-        final int defaultIconSizeFinal = defaultIconSize;
+		final int defaultIconSize = paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)) );
 
         trombineView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
         trombineView.getLayoutParams().width = ScreenTools.dp2px(context, defaultIconSize);
@@ -228,7 +228,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
                                     Picasso.with(context)
                                             .load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
                                             .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
-                                            .resize(defaultIconSizeFinal, defaultIconSizeFinal)
+                                            .resize(defaultIconSize, defaultIconSize)
                                             .centerInside()
                                             .error(R.drawable.doris_icone_doris_large_pas_connecte)
                                             .into(trombineView);

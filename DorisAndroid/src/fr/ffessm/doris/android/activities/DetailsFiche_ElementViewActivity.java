@@ -817,11 +817,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     View insertPhoto(PhotoFiche photoFiche){
         //Log.d(LOG_TAG, "insertPhoto() - photoFiche : "+photoFiche.getCleURL());
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        int iconSize = Integer.parseInt(prefs.getString(context.getString(R.string.pref_key_fiche_icon_size), "128"));
-
+        int iconSize = paramOutils.getParamInt(R.string.pref_key_fiche_icone_taille, Integer.parseInt(context.getString(R.string.fiche_icone_taille_defaut)) );
     	LinearLayout layout = new LinearLayout(getApplicationContext());
         layout.setLayoutParams(new LayoutParams(ScreenTools.dp2px(context, iconSize), ScreenTools.dp2px(context, iconSize)));
-        layout.setGravity(Gravity.CENTER);
+
+		layout.setGravity(Gravity.CENTER);
         
         final ImageView imageView = new ImageView(getApplicationContext());	        
         imageView.setLayoutParams(new LayoutParams(ScreenTools.dp2px(context, iconSize), ScreenTools.dp2px(context, iconSize)));

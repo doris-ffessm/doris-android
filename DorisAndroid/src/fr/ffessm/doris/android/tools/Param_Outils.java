@@ -45,6 +45,9 @@ package fr.ffessm.doris.android.tools;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
+
+import fr.ffessm.doris.android.R;
 
 public class Param_Outils {
 	private final String LOG_TAG = Param_Outils.class.getCanonicalName();
@@ -79,12 +82,27 @@ public class Param_Outils {
 		}
 	}
 	public int getParamInt(int inParam, int inValDef) {
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getParamInt() - param : " + inParam );
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getParamInt() - param : " + context.getString(inParam) );
-		return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(inParam), inValDef);
+		//Log.d(LOG_TAG, "getParamInt() - param : " + context.getString(inParam) );
+		//Log.d(LOG_TAG, "getParamInt() - valDef : " + inValDef );
+		try {
+			//Log.d(LOG_TAG, "getParamInt() - valeur Int : " + PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(inParam), inValDef) );
+			return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(inParam), inValDef);
+
+		} catch (Exception eInt) {
+			Log.e(LOG_TAG, eInt.getMessage(), eInt);
+
+			try {
+				//Log.d(LOG_TAG, "getParamInt() - valeur String: " + PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(inParam), "-") );
+				return Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(inParam), ""+inValDef) );
+
+			} catch (Exception eStr) {
+				Log.e(LOG_TAG, eStr.getMessage(), eStr);
+				return inValDef;
+			}
+
+		}
 	}
-	
-	
+
 	/* Enregistrement paramètres */
 	
 	public void setParamString(int inParam, String inVal) {

@@ -73,6 +73,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.Textes_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
@@ -95,8 +96,11 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 	SharedPreferences prefs;
 	//Start of user code protected additional GroupeSelection_Adapter attributes
 	boolean depuisAccueil = false;
+
+	private Param_Outils paramOutils;
 	private Textes_Outils textesOutils;
-	// niveau de profondeur utilisé pour le listGroup par rapport au Groupe 
+
+	// niveau de profondeur utilisé pour le listGroup par rapport au Groupe
     public Groupe currentRootGroupe;
     
     /** custom constructor
@@ -111,6 +115,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
+		paramOutils = new Param_Outils(context);
 		textesOutils = new Textes_Outils(context);
 		this.depuisAccueil = depuisAccueil;
 		
@@ -207,11 +212,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		//	additional code
         
         ImageView ivIconGroup = (ImageView) convertView.findViewById(R.id.groupeselection_listviewrow_icon);
-        String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
-        int defaultIconSize = 48;
-        try{
-            defaultIconSize = Integer.parseInt(defaultIconSizeString);
-        }catch(Exception e){}
+        int defaultIconSize = paramOutils.getParamInt(R.string.pref_key_accueil_icone_taille, Integer.parseInt(context.getString(R.string.accueil_icone_taille_defaut)) );
         ivIconGroup.getLayoutParams().height = ScreenTools.dp2px(context, defaultIconSize);
         ivIconGroup.getLayoutParams().width = ScreenTools.dp2px(context, defaultIconSize);
 

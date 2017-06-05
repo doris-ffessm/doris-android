@@ -49,6 +49,7 @@ import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 import android.app.SearchManager;
@@ -85,7 +86,10 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
 	private static final String LOG_TAG = ListeParticipantAvecFiltre_ClassListViewActivity.class.getSimpleName();
 
 	//Start of user code constants ListeParticipantAvecFiltre_ClassListViewActivity
-	String iconSizeString = "48";
+	int iconSize = R.string.list_icone_taille_defaut;
+
+	final Context context = this;
+	final Param_Outils paramOutils = new Param_Outils(context);
 	//End of user code
 	
     ListeParticipantAvecFiltre_Adapter adapter;
@@ -130,8 +134,8 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
 		super.onResume();
 		//Start of user code onResume additions ListeParticipantAvecFiltre_ClassListViewActivity
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-    	if(!prefs.getString(getString(R.string.pref_key_list_icon_size), "48").equals(iconSizeString)){
-    		iconSizeString = prefs.getString(getString(R.string.pref_key_list_icon_size), "48");
+    	if( paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(this.getString(R.string.list_icone_taille_defaut)) ) != iconSize ){
+    		iconSize = paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(this.getString(R.string.list_icone_taille_defaut)) );
     		ListView list = (ListView) findViewById(R.id.listeparticipantavecfiltre_listview);
     		list.invalidateViews();
     	}

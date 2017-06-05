@@ -191,11 +191,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 		});
         
         ImageView ivIcon = (ImageView) convertView.findViewById(R.id.zonegeoselection_listviewrow_icon);
-        String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_accueil_icon_size), "128");
-        int defaultIconSize = 128;
-        try{
-        	defaultIconSize = Integer.parseInt(defaultIconSizeString);
-        }catch(Exception e){}
+		int defaultIconSize = prefs.getInt(context.getString(R.string.pref_key_accueil_icone_taille), Integer.parseInt(context.getString(R.string.accueil_icone_taille_defaut)) );
     	ivIcon.setMaxHeight(defaultIconSize);
     	
         // TODO : pas très propre mais fonctionne => Modifier Outils ... vers entry.getIcone qd sera dispo

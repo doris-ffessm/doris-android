@@ -49,6 +49,7 @@ import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 import android.app.SearchManager;
@@ -95,9 +96,10 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 	
     MenuItem searchButtonMenuItem;
 
-	String iconSizeString = "48";
+	int iconSize = R.string.list_icone_taille_defaut;
 	
     final Context context = this;
+	final Param_Outils paramOutils = new Param_Outils(context);
 	//End of user code
 	
     ListeImageFicheAvecFiltre_Adapter adapter;
@@ -151,8 +153,8 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 		// TODO peut être qu'il y a moyen de s'abonner aux changements de préférence et de ne le faire que dans ce cas ?
 		ListeImageFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter(); 
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-    	if(!prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48").equals(iconSizeString)){
-    		iconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
+    	if( paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)) ) != iconSize ){
+    		iconSize = paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)) );
     		ListView list = (ListView) findViewById(R.id.listeimageficheavecfiltre_listview);
     		list.invalidateViews();
     	}

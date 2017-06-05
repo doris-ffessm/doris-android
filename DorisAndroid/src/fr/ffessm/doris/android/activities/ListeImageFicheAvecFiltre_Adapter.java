@@ -47,7 +47,6 @@ import java.util.List;
 
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.activities.DetailsFiche_ElementViewActivity.OnImageClickListener;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -64,7 +63,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -76,20 +74,13 @@ import android.widget.TextView;
 //Start of user code protected additional ListeFicheAvecFiltre_Adapter imports
 // additional imports
 
-import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Toast;
 
-import com.j256.ormlite.dao.GenericRawResults;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Locale;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.lang3.text.StrBuilder;
 
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
@@ -97,11 +88,10 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
-import fr.ffessm.doris.android.tools.Groupes_Outils;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
-import fr.ffessm.doris.android.tools.Textes_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
 //End of user code
@@ -128,6 +118,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 	// additional attributes
 
 	protected Groupe filtreGroupe;
+	protected Param_Outils paramOutils;
 	protected Reseau_Outils reseauOutils;
 	protected Photos_Outils photosOutils;
 	protected Fiches_Outils fichesOutils;
@@ -145,6 +136,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 		this.filteredGroupeId = filteredGroupeId;
 		
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		paramOutils = new Param_Outils(context);
 		reseauOutils = new Reseau_Outils(context);
 		photosOutils = new Photos_Outils(context);
 		fichesOutils = new Fiches_Outils(context);
@@ -161,7 +153,8 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 		this._contextDB = contextDB;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
         // Start of user code protected ListeImageFicheAvecFiltre_Adapter constructor
-		
+
+		paramOutils = new Param_Outils(context);
 		reseauOutils = new Reseau_Outils(context);
 		photosOutils = new Photos_Outils(context);
 		fichesOutils = new Fiches_Outils(context);
@@ -585,7 +578,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 	
     View insertPhoto(PhotoFiche photoFiche){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        int iconSize = ScreenTools.dp2px(context, Integer.parseInt(prefs.getString(context.getString(R.string.pref_key_list_icon_size), "64")) );
+        int iconSize = ScreenTools.dp2px(context, paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)) ));
 
     	LinearLayout layout = new LinearLayout(context);
         layout.setLayoutParams(new LayoutParams(iconSize, iconSize));

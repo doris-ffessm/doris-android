@@ -49,6 +49,7 @@ import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 import android.app.SearchManager;
@@ -95,9 +96,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	
     MenuItem searchButtonMenuItem;
 
-	String iconSizeString = "48";
+	int iconSize = R.string.list_icone_taille_defaut;
 	
     final Context context = this;
+	final Param_Outils paramOutils = new Param_Outils(context);
 	//End of user code
 	
     ListeFicheAvecFiltre_Adapter adapter;
@@ -136,7 +138,6 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         mHandler = new IndexBarHandler(this);
 
         //Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
-  
 
 		//End of user code
 	}
@@ -150,9 +151,15 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 		// TODO peut être qu'il y a moyen de s'abonner aux changements de préférence et de ne le faire que dans ce cas ?
 		ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter(); 
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-    	
-    	if(!prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48").equals(iconSizeString)){
-    		iconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
+
+		Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - pref_key_list_icone_taille : "+context.getString(R.string.pref_key_list_icone_taille));
+		Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - list_icone_taille_defaut : "+context.getString(R.string.list_icone_taille_defaut));
+		Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - list_icone_taille_defaut : "+Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)) );
+		Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - test : "+paramOutils.getParamInt(R.string.pref_key_list_icone_taille,
+																				Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)) ));
+
+    	if( paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)) ) != iconSize ){
+    		iconSize = paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)) );
     		ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
     		list.invalidateViews();
     	}
@@ -403,7 +410,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 	}
 
 	// Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity
-	
+
 	public void updateFilterInActionBar(){		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		ActionBar actionBar = getSupportActionBar();

@@ -188,27 +188,27 @@
         	android:layout="@layout/preference_layout_preference"
         	/>
 	    <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:key="@string/pref_key_accueil_icon_size" 
-        	android:title="@string/accueil_icon_size_prompt" 
-        	android:entryValues="@array/icon_size_values"
-        	android:entries="@array/icon_size_lib" 
-        	android:defaultValue="@string/list_icon_size_default"
+            android:key="@string/pref_key_accueil_icone_taille"
+        	android:title="@string/accueil_icone_taille_prompt"
+        	android:entryValues="@array/accueil_icone_taille_valeurs"
+        	android:entries="@array/accueil_icone_taille_lib"
+        	android:defaultValue="@string/accueil_icone_taille_defaut"
         	android:layout="@layout/preference_layout_preference"
         	/>
         <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:key="@string/pref_key_list_icon_size" 
-        	android:title="@string/list_icon_size_prompt" 
-        	android:entryValues="@array/icon_size_values"
-        	android:entries="@array/icon_size_lib" 
-        	android:defaultValue="@string/list_icon_size_default"
+            android:key="@string/pref_key_list_icone_taille"
+        	android:title="@string/list_icone_taille_prompt"
+        	android:entryValues="@array/list_icone_taille_valeurs"
+        	android:entries="@array/list_icone_taille_lib"
+        	android:defaultValue="@string/list_icone_taille_defaut"
         	android:layout="@layout/preference_layout_preference"
         	/>
         <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:key="@string/pref_key_fiche_icon_size"
-            android:title="@string/fiche_icon_size_prompt"
-            android:entryValues="@array/icon_size_values"
-            android:entries="@array/icon_size_lib"
-            android:defaultValue="@string/fiche_icon_size_default"
+            android:key="@string/pref_key_fiche_icone_taille"
+            android:title="@string/fiche_icone_taille_prompt"
+            android:entryValues="@array/fiche_icone_taille_valeurs"
+            android:entries="@array/fiche_icone_taille_lib"
+            android:defaultValue="@string/fiche_icone_taille_defaut"
             android:layout="@layout/preference_layout_preference"
             />
 		<CheckBoxPreference

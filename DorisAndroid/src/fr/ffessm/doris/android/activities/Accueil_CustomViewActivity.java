@@ -327,8 +327,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         int imageZone = getFichesOutils().getZoneIconeId(zone.getZoneGeoKind());
         
         ImageView ivIcone = (ImageView)viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
-        ivIcone.setImageResource(imageZone);   
-        int iconeZine = ScreenTools.dp2px(context, Integer.valueOf(getParamOutils().getParamString(R.string.pref_key_accueil_icon_size, "64")) );
+        ivIcone.setImageResource(imageZone);
+        int iconeZine = ScreenTools.dp2px(context, getParamOutils().getParamInt(R.string.pref_key_accueil_icone_taille,
+															Integer.parseInt(context.getString(R.string.accueil_icone_taille_defaut))
+														) );
 	    ivIcone.setMaxHeight(iconeZine);
 	    ivIcone.setMaxWidth(iconeZine);
 	    
@@ -763,7 +765,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	*/
     	// recherche précédente
     	//ImageView ivIcone = (ImageView) findViewById(R.id.accueil_recherche_precedente_icone);
-        int iconeZine = Integer.valueOf(getParamOutils().getParamString(R.string.pref_key_accueil_icon_size, "64"));
+        int iconeZine = getParamOutils().getParamInt(R.string.pref_key_accueil_icone_taille, Integer.parseInt(this.getString(R.string.accueil_icone_taille_defaut)) );
         ((ImageView) findViewById(R.id.accueil_recherche_precedente_icone)).setMaxHeight(iconeZine);
         
         

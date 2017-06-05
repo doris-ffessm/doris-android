@@ -31,7 +31,7 @@
                     android:adjustViewBounds="true"
                     android:contentDescription="ICONE LISTE"
                     android:maxHeight="64dip"
-                    android:src="@drawable/ic_action_jeux_question" >
+                    android:src="@drawable/ic_action_jeux_quel_espece" >
 
                 </ImageView>
 

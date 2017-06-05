@@ -72,16 +72,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Toast;
 
-import com.j256.ormlite.dao.GenericRawResults;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Locale;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.lang3.text.StrBuilder;
 
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
@@ -89,7 +84,7 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
-import fr.ffessm.doris.android.tools.Groupes_Outils;
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
@@ -120,6 +115,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	// additional attributes
 
 	protected Groupe filtreGroupe;
+	protected Param_Outils paramOutils;
 	protected Photos_Outils photosOutils;
 	protected Reseau_Outils reseauOutils;
 	protected Fiches_Outils fichesOutils;
@@ -136,6 +132,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		this.filteredZoneGeoId = filteredZoneGeoId;
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		
+		paramOutils = new Param_Outils(context);
 		reseauOutils = new Reseau_Outils(context);
 		photosOutils = new Photos_Outils(context);
 		fichesOutils = new Fiches_Outils(context);
@@ -151,6 +148,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
         // Start of user code protected ListeFicheAvecFiltre_Adapter constructor
 		
+		paramOutils = new Param_Outils(context);
 		reseauOutils = new Reseau_Outils(context);
 		photosOutils = new Photos_Outils(context);
 		fichesOutils = new Fiches_Outils(context);
@@ -219,13 +217,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
         TextView tvDetails = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_details);
         Textes_Outils textesOutils = new Textes_Outils(context);
         tvDetails.setText( textesOutils.textToSpannableStringDoris(entry.getNomScientifique().toString()) );
-		
-        String defaultIconSizeString = prefs.getString(context.getString(R.string.pref_key_list_icon_size), "48");
-        int defaultIconSize = 48;
-        try{
-        	defaultIconSize = Integer.parseInt(defaultIconSizeString);
-        }catch(Exception e){}
-        
+
+		int defaultIconSize = paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)) );
         final ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_icon);
     	ivIcon.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
     	ivIcon.getLayoutParams().width = ScreenTools.dp2px(context, defaultIconSize);
