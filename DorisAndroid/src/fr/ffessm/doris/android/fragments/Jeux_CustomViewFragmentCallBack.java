@@ -120,9 +120,4 @@ public class Jeux_CustomViewFragmentCallBack extends ListFragment
         ACCUEIL, SCORES, QUESTION
     }
 
-
-    public void updateTitre(String titre) {
-        TextView titreTV = (TextView) getActivity().findViewById(R.id.jeux_customviewfragment_titre);
-        titreTV.setText(titre);
-    }
 }

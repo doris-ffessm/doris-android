@@ -46,6 +46,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,11 +101,16 @@ public class Jeu {
 
         String jeux_libelle[] = context.getResources().getStringArray(R.array.jeux_titre_array);
 
+        String jeux_icone[] = context.getResources().getStringArray(R.array.jeux_titre_icone);
+
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewReponse = inflater.inflate(R.layout.jeux_listviewrow, null);
 
         TextView tvLabel = (TextView) viewReponse.findViewById(R.id.jeux_listviewrow_label);
         tvLabel.setText(jeux_libelle[jeuRef.ordinal()]);
+
+        ImageView ivIcone = (ImageView) viewReponse.findViewById(R.id.jeux_listviewrow_icon);
+        ivIcone.setImageResource(context.getResources().getIdentifier(jeux_icone[jeuRef.ordinal()],"drawable", context.getPackageName()));
 
         viewReponse.setOnClickListener(new View.OnClickListener() {
             final JeuRef jeuRef_final = jeuRef;

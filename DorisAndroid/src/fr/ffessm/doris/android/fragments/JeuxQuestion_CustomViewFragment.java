@@ -79,10 +79,8 @@ public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemC
 
     final static String ARG_JEUX = "jeux";
 
-    private ImageView jeu_icone;
-    private TextView jeu_titre;
-    private TextView jeu_soustitre;
-    private TextView jeu_description;
+    private ImageView jeu_question_image;
+    private TextView jeu_question_libelle;
 
     Photos_Outils photosOutils;
     Reseau_Outils reseauOutils;
@@ -93,10 +91,8 @@ public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemC
 
         View view = inflater.inflate(R.layout.jeux_customview_fragment, container, false);
 
-        jeu_icone = (ImageView) view.findViewById(R.id.jeux_customviewfragment_icon);
-        jeu_titre = (TextView) view.findViewById(R.id.jeux_customviewfragment_titre);
-        jeu_soustitre = (TextView) view.findViewById(R.id.jeux_customviewfragment_soustitre);
-        jeu_description = (TextView) view.findViewById(R.id.jeux_textefragment_description);
+        jeu_question_image = (ImageView) view.findViewById(R.id.jeux_customviewfragment_image);
+        jeu_question_libelle = (TextView) view.findViewById(R.id.jeux_customviewfragment_libelle);
 
         reseauOutils = new Reseau_Outils(getActivity());
 
@@ -118,11 +114,8 @@ public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemC
         Log.d(LOG_TAG, "onStart() - Début");
         super.onStart();
 
-        jeu_titre.setText("Test 010");
         Log.d(LOG_TAG, "onStart() - containerId : "+this.getId());
         Log.d(LOG_TAG, "onStart() - containerTag : "+this.getTag());
-
-        setTitre(DorisApplicationContext.getInstance().jeuStatut.toString());
 
         Log.d(LOG_TAG, "onStart() - Fin");
     }
@@ -131,8 +124,6 @@ public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemC
     public void onSaveInstanceState(Bundle outState) {
         Log.d(LOG_TAG, "onSaveInstanceState() - Début");
         super.onSaveInstanceState(outState);
-
-        //outState.putInt(ARG_PETRI_ETAT, 0);
 
         Log.d(LOG_TAG, "onSaveInstanceState() - Fin");
     }
@@ -143,15 +134,20 @@ public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemC
 
     }
 
-
-
-    public void setIcone(int idIcone) {
-        jeu_icone.setImageResource(idIcone);
+    public void setLibelle(String libelle) {
+        jeu_question_libelle.setText(libelle);
     }
-    public void setIcone(String imageURL, ImageType imageType) {
-        Log.d(LOG_TAG, "setIcone() - Début");
-        Log.d(LOG_TAG, "setIcone() - imageURL : "+imageURL);
-        Log.d(LOG_TAG, "setIcone() - imageType : "+imageType);
+    public String getLibelle() {
+        return (String) jeu_question_libelle.getText();
+    }
+
+    public void setImage(int imgId) {
+        jeu_question_image.setImageResource(imgId);
+    }
+    public void setImage(String imageURL, ImageType imageType) {
+        Log.d(LOG_TAG, "setImage() - Début");
+        Log.d(LOG_TAG, "setImage() - imageURL : "+imageURL);
+        Log.d(LOG_TAG, "setImage() - imageType : "+imageType);
 
         if (getPhotosOutils().isAvailableInFolderPhoto(imageURL, imageType)) {
 
@@ -162,47 +158,33 @@ public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemC
                 Picasso.with(getActivity()).load(getPhotosOutils().getPhotoFile(photoNom, imageType))
                         .fit()
                         .centerInside()
-                        .into(jeu_icone);
+                        .into(jeu_question_image);
             } catch (IOException e) {
-                Log.d(LOG_TAG, "setIcone() - IOException : "+e);
+                Log.d(LOG_TAG, "setImage() - IOException : "+e);
             }
         } else {
             // pas préchargée en local pour l'instant, cherche sur internet
-            Log.d(LOG_TAG, "setIcone() -  pas préchargée en local pour l'instant, cherche sur internet");
+            Log.d(LOG_TAG, "setImage() -  pas préchargée en local pour l'instant, cherche sur internet");
             if (reseauOutils.isTelechargementsModeConnectePossible()) {
                 String urlPhoto = Constants.IMAGE_BASE_URL + "/" + imageURL;
-                Log.d(LOG_TAG, "setIcone() - urlPhoto : "+urlPhoto);
+                Log.d(LOG_TAG, "setImage() - urlPhoto : "+urlPhoto);
                 Picasso.with(getActivity())
                         .load(urlPhoto.replace(" ", "%20"))
                         .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
                         .error(R.drawable.doris_icone_doris_large_pas_connecte)
                         .fit()
                         .centerInside()
-                        .into(jeu_icone);
+                        .into(jeu_question_image);
             } else {
-                jeu_icone.setImageResource(R.drawable.doris_icone_doris_large_pas_connecte);
+                jeu_question_image.setImageResource(R.drawable.doris_icone_doris_large_pas_connecte);
             }
         }
-        Log.d(LOG_TAG, "setIcone() - Fin");
+        Log.d(LOG_TAG, "setImage() - Fin");
     }
 
-
-
-
-    public void setTitre(String titre) {
-        jeu_titre.setText(titre);
-    }
-    public String getTitre() {
-        return (String) jeu_titre.getText();
-    }
-    public void setSousTitre(String soustitre) {
-        jeu_soustitre.setText(soustitre);
-    }
-    public void setDescription(String titre) {
-        jeu_description.setText(titre);
-    }
-    public String getDescription() {
-        return (String) jeu_description.getText();
+    public void reInitAffichage(){
+        setImage(R.drawable.ic_action_jeux);
+        setLibelle("");
     }
 
     private Photos_Outils getPhotosOutils(){

@@ -50,6 +50,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -81,7 +82,9 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
     Jeu jeu2;
 
     private LinearLayout llContainerLayout;
-    private TextView tvTitreLabel;
+    private TextView tvTitreTexte;
+    private ImageView ivTitreIcone;
+    private TextView tvTitreIconeLabel;
 
     public interface JeuSelectionneListener {
         /** Called by HeadlinesFragment when a list item is selected */
@@ -146,7 +149,9 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
         Log.d(LOG_TAG, "onStart() - jeuEncours : "+ DorisApplicationContext.getInstance().jeuStatut);
 
         llContainerLayout =  (LinearLayout) getActivity().findViewById(R.id.jeu_reponses_liste_layout);
-        tvTitreLabel =  (TextView) getActivity().findViewById(R.id.jeu_reponses_titre_label);
+        tvTitreTexte =  (TextView) getActivity().findViewById(R.id.jeu_reponses_titre_texte);
+        ivTitreIcone =  (ImageView) getActivity().findViewById(R.id.jeu_reponses_titre_icone);
+        tvTitreIconeLabel =  (TextView) getActivity().findViewById(R.id.jeu_reponses_titre_icone_label);
 
         jeu1 = new Jeu((Context) getActivity(), getActivity(), Jeu.JeuRef.JEU_1);
         jeu2 = new Jeu((Context) getActivity(), getActivity(), Jeu.JeuRef.JEU_2);
@@ -172,6 +177,11 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
     public void createListeJeuxViews(){
         Log.d(LOG_TAG, "createListeJeuxViews() - Début");
 
+        resetTvTitreIconeLabel();
+        
+        tvTitreTexte.setText(getString(R.string.jeu_question_choix_accueil));
+        //ivTitreIcone.setImageResource(R.drawable.ic_action_jeux);
+
         viderListeReponsesViews();
 
         llContainerLayout.addView(jeu1.getJeuView(jeuSelectionneCallback));
@@ -184,8 +194,15 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
     public void createListeNiveauxViews(Jeu.JeuRef jeuId){
         Log.d(LOG_TAG, "createListeNiveauxViews() - Début");
 
+        resetTvTitreIconeLabel();
+
         if (jeuId == Jeu.JeuRef.JEU_1) jeu = jeu1;
         if (jeuId == Jeu.JeuRef.JEU_2) jeu = jeu2;
+
+        String jeux_icone[] = getActivity().getResources().getStringArray(R.array.jeux_titre_icone);
+
+        tvTitreTexte.setText(getString(R.string.jeu_question_choix_niveau));
+        ivTitreIcone.setImageResource(getActivity().getResources().getIdentifier(jeux_icone[jeuId.ordinal()],"drawable", getActivity().getPackageName()));
 
         viderListeReponsesViews();
 
@@ -237,7 +254,7 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
         Log.d(LOG_TAG, "createListeReponsesViews() - classificationSelonNiveau : "+classificationSelonNiveau.getTermeFrancais());
         Log.d(LOG_TAG, "createListeReponsesViews() - classificationSelonNiveau : "+classificationSelonNiveau.getNiveau());
 
-        tvTitreLabel.setText(classificationSelonNiveau.getNiveau());
+        tvTitreTexte.setText("Quel(le) : "+classificationSelonNiveau.getNiveau().replaceAll("\\{\\{[^\\}]*\\}\\}",""));
 
         QueryBuilder<ClassificationFiche, Integer> qbClassificationFiche =  ormLiteDBHelper.getClassificationFicheDao().queryBuilder();
         List<ClassificationFiche> classificationFicheListeAleatoire = null;
@@ -274,7 +291,7 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
                                 reponseSelectionneeCallback,
                                 fiche,
                                 classificationFicheSelonNiveau.getClassification().getId(),
-                                reponseLibelle,
+                                reponseLibelle.replaceAll("\\{\\{[^\\}]*\\}\\}",""),
                                 "Icone 1"));
             } else {
 
@@ -293,7 +310,7 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
                                     reponseSelectionneeCallback,
                                     fiche,
                                     classificationAleatoire.getId(),
-                                    reponseLibelle,
+                                    reponseLibelle.replaceAll("\\{\\{[^\\}]*\\}\\}",""),
                                     "Icone 2"));
                 } catch (SQLException error) {
                     error.printStackTrace();
@@ -305,10 +322,18 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
         Log.d(LOG_TAG, "createListeReponsesViews() - Fin");
     }
 
-
     /* Création des Réponses */
     public void viderListeReponsesViews() {
         llContainerLayout.removeAllViews();
     }
 
+    /* MaJ Libellé de l'icone */
+    public void setTvTitreIconeLabel(String label){
+        tvTitreIconeLabel.setVisibility(View.VISIBLE);
+        tvTitreIconeLabel.setText(label);
+    }
+    public void resetTvTitreIconeLabel(){
+        tvTitreIconeLabel.setVisibility(View.GONE);
+        tvTitreIconeLabel.setText("");
+    }
 }

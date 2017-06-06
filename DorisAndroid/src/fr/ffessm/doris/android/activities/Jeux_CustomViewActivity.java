@@ -173,18 +173,23 @@ public class Jeux_CustomViewActivity extends FragmentActivity
                 Log.d(LOG_TAG, "onOptionsItemSelected() - home");
 
                 if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.ACCUEIL) {
+
                     ((Jeux_CustomViewActivity)this).finish();
                     return true;
                 }
 
                 if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_NIVEAU) {
+                    questionFrag.reInitAffichage();
                     reponsesFrag.createListeJeuxViews();
+
                     DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.ACCUEIL;
                     return true;
                 }
 
                 // Forcément en mode jeu => on revient au choix du Niveau
+                questionFrag.reInitAffichage();
                 reponsesFrag.createListeNiveauxViews(DorisApplicationContext.getInstance().jeuSelectionne);
+
                 DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_NIVEAU;
 
                 return true;
@@ -204,18 +209,23 @@ public class Jeux_CustomViewActivity extends FragmentActivity
                 Log.d(LOG_TAG, "onKeyDown() - jeuStatut : " + DorisApplicationContext.getInstance().jeuStatut.name());
 
                 if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.ACCUEIL) {
+
                     ((Jeux_CustomViewActivity)this).finish();
                     return true;
                 }
 
                 if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_NIVEAU) {
+                    questionFrag.reInitAffichage();
                     reponsesFrag.createListeJeuxViews();
+
                     DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.ACCUEIL;
                     return true;
                 }
 
                 // Forcément en mode jeu => on revient au choix du Niveau
+                questionFrag.reInitAffichage();
                 reponsesFrag.createListeNiveauxViews(DorisApplicationContext.getInstance().jeuSelectionne);
+
                 DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_NIVEAU;
 
                 return true;
@@ -235,8 +245,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
             // If article frag is available, we're in two-pane layout...
 
             // Call a method in the ArticleFragment to update its content
-            String jeux_libelle[] = getResources().getStringArray(R.array.jeux_titre_array);
-            questionFrag.setTitre(jeux_libelle[jeuSelectionne.ordinal()]);
+
 
         } else {
             // If the frag is not available, we're in the one-pane layout and must swap frags...
@@ -272,16 +281,20 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         if (questionFrag != null) {
             // If article frag is available, we're in two-pane layout...
 
-            questionFrag.setTitre(
-                    jeux_libelle[DorisApplicationContext.getInstance().jeuSelectionne.ordinal()]
-                        +" ("+jeux_niveau[niveau.ordinal()]+")");
-            questionFrag.setSousTitre(getResources().getString(R.string.jeu_soustitre_niveau));
 
         } else {
             // If the frag is not available, we're in the one-pane layout and must swap frags...
             // Create fragment and give it an argument for the selected article
         }
 
+        if (reponsesFrag != null) {
+            // If article frag is available, we're in two-pane layout...
+            reponsesFrag.setTvTitreIconeLabel(jeux_niveau[niveau.ordinal()].substring(0,1));
+
+        } else {
+            // If the frag is not available, we're in the one-pane layout and must swap frags...
+            // Create fragment and give it an argument for the selected article
+        }
 
         // LE JEU ! ! !
 
@@ -301,8 +314,8 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         PhotoFiche photoFiche = fiche.getPhotosFiche().iterator().next();
         Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : "+photoFiche.getCleURL());
         if (questionFrag != null) {
-            questionFrag.setSousTitre(fiche.getNomCommun());
-            questionFrag.setIcone(photoFiche.getCleURL(), ImageType.VIGNETTE);
+            questionFrag.setLibelle(fiche.getNomCommun());
+            questionFrag.setImage(photoFiche.getCleURL(), ImageType.VIGNETTE);
         }
         if (reponsesFrag != null) {
             reponsesFrag.createListeReponsesViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, fiche);
@@ -334,6 +347,9 @@ public class Jeux_CustomViewActivity extends FragmentActivity
 
         if (classificationFiche == null) {
             Toast.makeText(this, "Mauvaise Réponse", Toast.LENGTH_LONG).show();
+
+            reponsesFrag.onStart();
+
         } else {
             Toast.makeText(this, "Ok", Toast.LENGTH_LONG).show();
 
@@ -351,8 +367,8 @@ public class Jeux_CustomViewActivity extends FragmentActivity
             PhotoFiche photoFiche = fiche.getPhotosFiche().iterator().next();
             Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : "+photoFiche.getCleURL());
             if (questionFrag != null) {
-                questionFrag.setSousTitre(fiche.getNomCommun());
-                questionFrag.setIcone(photoFiche.getCleURL(), ImageType.VIGNETTE);
+                questionFrag.setLibelle(fiche.getNomCommun());
+                questionFrag.setImage(photoFiche.getCleURL(), ImageType.VIGNETTE);
             }
             if (reponsesFrag != null) {
                 reponsesFrag.createListeReponsesViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, fiche);
@@ -362,6 +378,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
 
         Log.d(LOG_TAG, "onReponseSelectionnee() - Fin");
     }
+
 
     private Param_Outils getParamOutils(){
         if(paramOutils == null) paramOutils = new Param_Outils(this);

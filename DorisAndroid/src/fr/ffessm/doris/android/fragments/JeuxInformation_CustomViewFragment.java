@@ -60,10 +60,8 @@ public class JeuxInformation_CustomViewFragment extends Fragment
 
 	private static final String LOG_TAG = JeuxInformation_CustomViewFragment.class.getCanonicalName();
 
-    private ImageView jeu_icone;
-    private TextView jeu_titre;
-    private TextView jeu_soustitre;
-    private TextView jeu_description;
+    private ImageView jeu_image;
+    private TextView jeu_libelle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,10 +69,8 @@ public class JeuxInformation_CustomViewFragment extends Fragment
 
         View view = inflater.inflate(R.layout.jeux_customview_fragment, container, false);
 
-        jeu_icone = (ImageView) view.findViewById(R.id.jeux_customviewfragment_icon);
-        jeu_titre = (TextView) view.findViewById(R.id.jeux_customviewfragment_titre);
-        jeu_soustitre = (TextView) view.findViewById(R.id.jeux_customviewfragment_soustitre);
-        jeu_description = (TextView) view.findViewById(R.id.jeux_textefragment_description);
+        jeu_image = (ImageView) view.findViewById(R.id.jeux_customviewfragment_image);
+        jeu_libelle = (TextView) view.findViewById(R.id.jeux_customviewfragment_libelle);
 
         if (savedInstanceState != null) {
 
@@ -95,12 +91,9 @@ public class JeuxInformation_CustomViewFragment extends Fragment
         Log.d(LOG_TAG, "onStart() - Début");
         super.onStart();
 
-        jeu_titre.setText("Test 010");
         Log.d(LOG_TAG, "onStart() - containerId : "+this.getId());
         Log.d(LOG_TAG, "onStart() - containerTag : "+this.getTag());
         Log.d(LOG_TAG, "onStart() - jeuEncours : "+DorisApplicationContext.getInstance().jeuStatut);
-
-        updateTitre(DorisApplicationContext.getInstance().jeuStatut.toString());
 
         Log.d(LOG_TAG, "onStart() - Fin");
     }
@@ -116,13 +109,4 @@ public class JeuxInformation_CustomViewFragment extends Fragment
     }
 
 
-    public void updateTitre(String titre) {
-        TextView titreTV = (TextView) getActivity().findViewById(R.id.jeux_customviewfragment_titre);
-        titreTV.setText(titre);
-    }
-
-    public void updateIcone(Fiche fiche) {
-        ImageView ivIcone = (ImageView) getActivity().findViewById(R.id.jeux_customviewfragment_icon);
-        //ivIcone.setImageResource();
-    }
 }
