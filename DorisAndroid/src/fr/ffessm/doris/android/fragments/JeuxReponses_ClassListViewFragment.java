@@ -178,7 +178,7 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
         Log.d(LOG_TAG, "createListeJeuxViews() - Début");
 
         resetTvTitreIconeLabel();
-        
+
         tvTitreTexte.setText(getString(R.string.jeu_question_choix_accueil));
         //ivTitreIcone.setImageResource(R.drawable.ic_action_jeux);
 
