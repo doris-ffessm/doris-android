@@ -44,6 +44,7 @@ package fr.ffessm.doris.android.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -85,6 +86,7 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
     private TextView tvTitreTexte;
     private ImageView ivTitreIcone;
     private TextView tvTitreIconeLabel;
+    private ImageView ivBtnSuivant;
 
     public interface JeuSelectionneListener {
         /** Called by HeadlinesFragment when a list item is selected */
@@ -152,6 +154,7 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
         tvTitreTexte =  (TextView) getActivity().findViewById(R.id.jeu_reponses_titre_texte);
         ivTitreIcone =  (ImageView) getActivity().findViewById(R.id.jeu_reponses_titre_icone);
         tvTitreIconeLabel =  (TextView) getActivity().findViewById(R.id.jeu_reponses_titre_icone_label);
+        ivBtnSuivant =  (ImageView) getActivity().findViewById(R.id.jeu_reponses_btn_suivant);
 
         jeu1 = new Jeu((Context) getActivity(), getActivity(), Jeu.JeuRef.JEU_1);
         jeu2 = new Jeu((Context) getActivity(), getActivity(), Jeu.JeuRef.JEU_2);
@@ -219,6 +222,8 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
         Log.d(LOG_TAG, "createListeReponsesViews() - niveau : "+niveau.name());
         Log.d(LOG_TAG, "createListeReponsesViews() - fiche : "+fiche.getNomCommun());
 
+        ivBtnSuivant.setVisibility(View.VISIBLE);
+        ivBtnSuivant.setColorFilter(0xff888888, PorterDuff.Mode.SRC_ATOP);
         viderListeReponsesViews();
 
         // bornes[0] : mini ; bornes[1] : maxi
@@ -335,5 +340,6 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
     public void resetTvTitreIconeLabel(){
         tvTitreIconeLabel.setVisibility(View.GONE);
         tvTitreIconeLabel.setText("");
+        ivBtnSuivant.setVisibility(View.GONE);
     }
 }
