@@ -160,13 +160,18 @@ public class Jeu {
         TextView tvLabel = (TextView) viewReponse.findViewById(R.id.jeux_listviewrow_label);
         tvLabel.setText(labelReponse);
 
+        ImageView ivIcone = (ImageView) viewReponse.findViewById(R.id.jeux_listviewrow_icon);
+        ivIcone.setImageResource(R.drawable.app_ic_launcher);
+
+        final ImageView ivIconeFinal = ivIcone;
+
         viewReponse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(LOG_TAG, "getNiveauView() - onClick()");
 
                 if(reponseSelectionneeCallback != null)
-                    reponseSelectionneeCallback.onReponseSelectionnee(ficheQuestion, idReponse);
+                    reponseSelectionneeCallback.onReponseSelectionnee(ficheQuestion, idReponse, ivIconeFinal);
             }
         });
 

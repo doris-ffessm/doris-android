@@ -54,6 +54,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.j256.ormlite.stmt.QueryBuilder;
 
@@ -66,7 +67,9 @@ import fr.ffessm.doris.android.datamodel.Classification;
 import fr.ffessm.doris.android.datamodel.ClassificationFiche;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.tools.Jeu;
+import fr.ffessm.doris.android.tools.Photos_Outils;
 
 import static java.lang.Math.random;
 
@@ -100,7 +103,7 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
 
     public interface ReponseSelectionneeListener {
         /** Called by HeadlinesFragment when a list item is selected */
-        public void onReponseSelectionnee(Fiche ficheQuestion, int id);
+        public void onReponseSelectionnee(Fiche ficheQuestion, int id, ImageView ivIcone);
     }
 
     @Override
@@ -223,7 +226,7 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
         Log.d(LOG_TAG, "createListeReponsesViews() - fiche : "+fiche.getNomCommun());
 
         ivBtnSuivant.setVisibility(View.VISIBLE);
-        ivBtnSuivant.setColorFilter(0xff888888, PorterDuff.Mode.SRC_ATOP);
+        ivBtnSuivant.setColorFilter(0xff222222, PorterDuff.Mode.SRC_ATOP);
         viderListeReponsesViews();
 
         // bornes[0] : mini ; bornes[1] : maxi
@@ -244,6 +247,17 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
             Log.d(LOG_TAG, "createListeReponsesViews() - sql : "+qbClassificationFiche.prepareStatementString());
 
             classificationFicheSelonNiveau = ormLiteDBHelper.getClassificationFicheDao().queryForFirst(qbClassificationFiche.prepare());
+
+            // Parfois on ne peut pas respecter les bornes, dans ce cas on pioche n'importe quel niveau
+            if (classificationFicheSelonNiveau == null) {
+                qbClassificationFiche =  ormLiteDBHelper.getClassificationFicheDao().queryBuilder();
+                qbClassificationFiche.where().eq("fiche_id", fiche.getId())
+                        .and().le("numOrdre",bornes[1]);
+                qbClassificationFiche.orderByRaw("RANDOM()");
+                Log.d(LOG_TAG, "createListeReponsesViews() - sql : "+qbClassificationFiche.prepareStatementString());
+
+                classificationFicheSelonNiveau = ormLiteDBHelper.getClassificationFicheDao().queryForFirst(qbClassificationFiche.prepare());
+            }
 
             QueryBuilder<Classification, Integer> qbClassification =  ormLiteDBHelper.getClassificationDao().queryBuilder();
             qbClassification.where().eq("_id", classificationFicheSelonNiveau.getClassification().getId());
@@ -327,7 +341,42 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
         Log.d(LOG_TAG, "createListeReponsesViews() - Fin");
     }
 
-    /* Création des Réponses */
+    /* Activation Bouton Suivant */
+    public void activationBoutonSuivant(){
+        ivBtnSuivant.setColorFilter(null);
+        ivBtnSuivant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG_TAG, "getNiveauView() - onClick()");
+
+                OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(getActivity());
+                Fiche fiche = null;
+                try{
+                    QueryBuilder<Fiche, Integer> qb =  ormLiteDBHelper.getFicheDao().queryBuilder();
+                    qb.where().eq("etatFiche","4");
+                    qb.orderByRaw("RANDOM()");
+                    fiche = ormLiteDBHelper.getFicheDao().queryForFirst(qb.prepare());
+                } catch (SQLException error) {
+                    error.printStackTrace();
+                }
+
+                Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : "+fiche.getNomCommun());
+                PhotoFiche photoFiche = fiche.getPhotosFiche().iterator().next();
+                Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : "+photoFiche.getCleURL());
+                /*
+                if (questionFrag != null) {
+
+                    questionFrag.setLibelle(fiche.getNomCommun());
+                    questionFrag.setImage(photoFiche.getCleURL(), Photos_Outils.ImageType.VIGNETTE);
+                }
+                 */
+                createListeReponsesViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, fiche);
+
+            }
+        });
+    }
+
+    /* Vidage de la Liste */
     public void viderListeReponsesViews() {
         llContainerLayout.removeAllViews();
     }

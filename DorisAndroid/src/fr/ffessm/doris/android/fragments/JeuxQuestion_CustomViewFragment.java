@@ -66,6 +66,7 @@ import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.DetailEntreeGlossaire_ElementViewActivity;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
+import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Jeu;
 import fr.ffessm.doris.android.tools.Photos_Outils;
@@ -84,6 +85,19 @@ public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemC
 
     Photos_Outils photosOutils;
     Reseau_Outils reseauOutils;
+
+    public interface JeuSelectionneListener {
+        /** Called by HeadlinesFragment when a list item is selected */
+        public void onJeuSelectionne(Jeu.JeuRef jeuSelectionne);
+    }
+    public interface NiveauSelectionneListener {
+        /** Called by HeadlinesFragment when a list item is selected */
+        public void onNiveauSelectionne(Jeu.Niveau niveau);
+    }
+    public interface MiseAjourFiche {
+        /** Called by HeadlinesFragment when a list item is selected */
+        public void onNiveauSelectionne(Fiche fiche);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

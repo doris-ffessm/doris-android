@@ -54,6 +54,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -325,7 +326,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         Log.d(LOG_TAG, "onNiveauSelectionne() - Fin");
     }
 
-    public void onReponseSelectionnee(Fiche ficheQuestion, int idReponse) {
+    public void onReponseSelectionnee(Fiche ficheQuestion, int idReponse, ImageView ivIcone) {
         Log.d(LOG_TAG, "onReponseSelectionnee() - Début");
         Log.d(LOG_TAG, "onReponseSelectionnee() - ficheQuestion : "+ficheQuestion.getNomCommun());
         Log.d(LOG_TAG, "onReponseSelectionnee() - idReponse : " + idReponse);
@@ -348,11 +349,15 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         if (classificationFiche == null) {
             Toast.makeText(this, "Mauvaise Réponse", Toast.LENGTH_LONG).show();
 
-            reponsesFrag.onStart();
+            ivIcone.setImageResource(R.drawable.ic_action_jeux_ko);
 
         } else {
             Toast.makeText(this, "Ok", Toast.LENGTH_LONG).show();
 
+            ivIcone.setImageResource(R.drawable.ic_action_jeux_ok);
+            reponsesFrag.activationBoutonSuivant();
+
+/*
             Fiche fiche = null;
             try{
                 QueryBuilder<Fiche, Integer> qb =  ormLiteDBHelper.getFicheDao().queryBuilder();
@@ -373,7 +378,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
             if (reponsesFrag != null) {
                 reponsesFrag.createListeReponsesViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, fiche);
             }
-
+*/
         }
 
         Log.d(LOG_TAG, "onReponseSelectionnee() - Fin");
