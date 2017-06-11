@@ -154,6 +154,7 @@ public class Common_Outils {
 
         // Cas particulier ...
         texte = StringUtils.replace(texte, "<!m>", "");
+        texte = StringUtils.replace(texte, "<!>", "");
 
 		//log.debug("nettoyageBalises() - texte : " + texte);
     	//log.debug("nettoyageBalises() - Fin");

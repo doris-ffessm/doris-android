@@ -47,6 +47,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -96,15 +97,15 @@ public class Jeu {
         this.niveau = niveau;
     }
 
-    public View getJeuView(final JeuxReponses_ClassListViewFragment.JeuSelectionneListener jeuSelectionneCallback){
+    public static View getJeuView(final JeuxReponses_ClassListViewFragment.JeuSelectionneListener jeuSelectionneCallback, final Context context, final JeuRef jeuRef){
         Log.d(LOG_TAG, "getJeuView() - Début");
 
         String jeux_libelle[] = context.getResources().getStringArray(R.array.jeux_titre_array);
 
         String jeux_icone[] = context.getResources().getStringArray(R.array.jeux_titre_icone);
 
-        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View viewReponse = inflater.inflate(R.layout.jeux_listviewrow, null);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View viewReponse = inflater.inflate(R.layout.jeux_reponseview_row, null);
 
         TextView tvLabel = (TextView) viewReponse.findViewById(R.id.jeux_listviewrow_label);
         tvLabel.setText(jeux_libelle[jeuRef.ordinal()]);
@@ -112,12 +113,14 @@ public class Jeu {
         ImageView ivIcone = (ImageView) viewReponse.findViewById(R.id.jeux_listviewrow_icon);
         ivIcone.setImageResource(context.getResources().getIdentifier(jeux_icone[jeuRef.ordinal()],"drawable", context.getPackageName()));
 
+        ImageView ivReponseInfoIcone = (ImageView) viewReponse.findViewById(R.id.jeux_listviewrow_reponseinfo_icon);
+        ivReponseInfoIcone.setVisibility(View.GONE);
+
         viewReponse.setOnClickListener(new View.OnClickListener() {
-            final JeuRef jeuRef_final = jeuRef;
             @Override
             public void onClick(View v) {
                 if(jeuSelectionneCallback != null)
-                    jeuSelectionneCallback.onJeuSelectionne(jeuRef_final);
+                    jeuSelectionneCallback.onJeuSelectionne(jeuRef);
             }
         });
 
@@ -125,16 +128,19 @@ public class Jeu {
         return viewReponse;
     }
 
-    public View getNiveauView(final JeuxReponses_ClassListViewFragment.NiveauSelectionneListener niveauSelectionneCallback, final Niveau niveau){
+    public static View getNiveauView(final JeuxReponses_ClassListViewFragment.NiveauSelectionneListener niveauSelectionneCallback, final Context context, final JeuRef jeuRef, final Niveau niveau){
         Log.d(LOG_TAG, "getNiveauView() - Début");
 
         String niveau_libelle[] = context.getResources().getStringArray(R.array.jeux_niveau_array);
 
-        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View viewReponse = inflater.inflate(R.layout.jeux_listviewrow, null);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View viewReponse = inflater.inflate(R.layout.jeux_reponseview_row, null);
 
         TextView tvLabel = (TextView) viewReponse.findViewById(R.id.jeux_listviewrow_label);
         tvLabel.setText(niveau_libelle[niveau.ordinal()]);
+
+        ImageView ivReponseInfoIcone = (ImageView) viewReponse.findViewById(R.id.jeux_listviewrow_reponseinfo_icon);
+        ivReponseInfoIcone.setVisibility(View.GONE);
 
         viewReponse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,7 +148,7 @@ public class Jeu {
                 Log.d(LOG_TAG, "getNiveauView() - onClick()");
 
                 if(niveauSelectionneCallback != null)
-                    niveauSelectionneCallback.onNiveauSelectionne(niveau);
+                    niveauSelectionneCallback.onNiveauSelectionne(jeuRef, niveau, false);
             }
         });
 
@@ -151,11 +157,11 @@ public class Jeu {
     }
 
     public View getReponseView(final JeuxReponses_ClassListViewFragment.ReponseSelectionneeListener reponseSelectionneeCallback, final Fiche ficheQuestion, final int idReponse,
-                               final String labelReponse, final String iconeReponse){
+                               final String labelReponse, final String iconeReponse, final String DetailReponse){
         Log.d(LOG_TAG, "getReponseView() - Début");
 
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View viewReponse = inflater.inflate(R.layout.jeux_listviewrow, null);
+        final View viewReponse = inflater.inflate(R.layout.jeux_reponseview_row, null);
 
         TextView tvLabel = (TextView) viewReponse.findViewById(R.id.jeux_listviewrow_label);
         tvLabel.setText(labelReponse);
@@ -165,13 +171,28 @@ public class Jeu {
 
         final ImageView ivIconeFinal = ivIcone;
 
-        viewReponse.setOnClickListener(new View.OnClickListener() {
+        LinearLayout llReponse = (LinearLayout) viewReponse.findViewById(R.id.jeux_listviewrow_click);
+        llReponse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(LOG_TAG, "getNiveauView() - onClick()");
+                Log.d(LOG_TAG, "getReponseView() - onClick()");
 
                 if(reponseSelectionneeCallback != null)
                     reponseSelectionneeCallback.onReponseSelectionnee(ficheQuestion, idReponse, ivIconeFinal);
+            }
+        });
+
+        ImageView ivReponseInfoIcon = (ImageView) viewReponse.findViewById(R.id.jeux_listviewrow_reponseinfo_icon);
+        ivReponseInfoIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG_TAG, "getReponseView() - detail.onClick()");
+
+                String descriptionReponse = DetailReponse;
+                if (DetailReponse == null || DetailReponse == "") descriptionReponse = "Pas de détails pour cette réponse";
+
+                TextView tvDetails = (TextView) viewReponse.findViewById(R.id.jeux_listviewrow_details);
+                tvDetails.setText(descriptionReponse);
             }
         });
 
@@ -179,7 +200,7 @@ public class Jeu {
         return viewReponse;
     }
 
-    public int[] getBornesClassification(JeuRef id, Niveau niveau){
+    public static int[] getBornesClassification(JeuRef id, Niveau niveau){
         int borne[] = {0,99};
 
         if (niveau == Niveau.FACILE){

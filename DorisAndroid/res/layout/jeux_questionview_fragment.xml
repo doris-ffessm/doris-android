@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="2dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/jeu_question_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:contentDescription="Element Image"
+            android:src="@drawable/ic_action_jeux">
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/jeu_question_image_icone"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/app_ic_launcher"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="21dp">
+        </ImageView>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/jeu_question_libelle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_weight="0.05"
+        android:gravity="center"
+        android:padding="3dip"
+        android:textAlignment="center"/>
+
+    <LinearLayout
+        android:id="@+id/jeu_question_titre_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dip"
+            android:paddingRight="4dip">
+
+            <ImageView
+                android:id="@+id/jeu_question_titre_icone"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginBottom="8dip"
+                android:layout_marginLeft="2dip"
+                android:layout_marginRight="2dip"
+                android:layout_marginTop="2dip"
+                android:adjustViewBounds="true"
+                android:contentDescription="ICONE LISTE"
+                android:maxHeight="64dip"
+                android:src="@drawable/app_ic_launcher">
+            </ImageView>
+
+            <TextView
+                android:id="@+id/jeu_question_titre_icone_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignTop="@+id/jeu_question_titre_icone"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/button_background"
+                android:padding="2dp"
+                android:textColor="?android:attr/textColorSecondary"
+                >
+            </TextView>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/jeu_question_titre_texte"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="2dip"
+            android:layout_weight="1"
+            android:gravity="center_vertical|left"
+            android:text="@string/jeu_question_choix_accueil"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?android:attr/textColorPrimary">
+        </TextView>
+
+        <ImageView
+            android:id="@+id/jeu_question_btn_suivant"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="8dip"
+            android:layout_marginLeft="2dip"
+            android:layout_marginRight="2dip"
+            android:layout_marginTop="2dip"
+            android:adjustViewBounds="true"
+            android:contentDescription="ICONE LISTE"
+            android:maxHeight="64dip"
+            android:src="@drawable/ic_action_suivant">
+        </ImageView>
+
+
+    </LinearLayout>
+</LinearLayout>

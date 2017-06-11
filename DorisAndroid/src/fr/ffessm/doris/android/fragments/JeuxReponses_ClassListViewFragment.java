@@ -54,7 +54,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.j256.ormlite.stmt.QueryBuilder;
 
@@ -69,7 +68,6 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.tools.Jeu;
-import fr.ffessm.doris.android.tools.Photos_Outils;
 
 import static java.lang.Math.random;
 
@@ -77,6 +75,7 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
 {
 
 	private static final String LOG_TAG = JeuxReponses_ClassListViewFragment.class.getCanonicalName();
+
     JeuSelectionneListener jeuSelectionneCallback;
     NiveauSelectionneListener niveauSelectionneCallback;
     ReponseSelectionneeListener reponseSelectionneeCallback;
@@ -86,10 +85,6 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
     Jeu jeu2;
 
     private LinearLayout llContainerLayout;
-    private TextView tvTitreTexte;
-    private ImageView ivTitreIcone;
-    private TextView tvTitreIconeLabel;
-    private ImageView ivBtnSuivant;
 
     public interface JeuSelectionneListener {
         /** Called by HeadlinesFragment when a list item is selected */
@@ -98,7 +93,7 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
 
     public interface NiveauSelectionneListener {
         /** Called by HeadlinesFragment when a list item is selected */
-        public void onNiveauSelectionne(Jeu.Niveau niveau);
+        public void onNiveauSelectionne(Jeu.JeuRef jeuSelectionne, Jeu.Niveau niveau, boolean onResume);
     }
 
     public interface ReponseSelectionneeListener {
@@ -138,7 +133,7 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateView() - Début");
-        View view = inflater.inflate(R.layout.jeux_listview_fragment, container, false);
+        View view = inflater.inflate(R.layout.jeux_reponsesview_fragment, container, false);
 
         Log.d(LOG_TAG, "onCreateView() - Fin");
         return view;
@@ -154,10 +149,6 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
         Log.d(LOG_TAG, "onStart() - jeuEncours : "+ DorisApplicationContext.getInstance().jeuStatut);
 
         llContainerLayout =  (LinearLayout) getActivity().findViewById(R.id.jeu_reponses_liste_layout);
-        tvTitreTexte =  (TextView) getActivity().findViewById(R.id.jeu_reponses_titre_texte);
-        ivTitreIcone =  (ImageView) getActivity().findViewById(R.id.jeu_reponses_titre_icone);
-        tvTitreIconeLabel =  (TextView) getActivity().findViewById(R.id.jeu_reponses_titre_icone_label);
-        ivBtnSuivant =  (ImageView) getActivity().findViewById(R.id.jeu_reponses_btn_suivant);
 
         jeu1 = new Jeu((Context) getActivity(), getActivity(), Jeu.JeuRef.JEU_1);
         jeu2 = new Jeu((Context) getActivity(), getActivity(), Jeu.JeuRef.JEU_2);
@@ -183,15 +174,10 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
     public void createListeJeuxViews(){
         Log.d(LOG_TAG, "createListeJeuxViews() - Début");
 
-        resetTvTitreIconeLabel();
-
-        tvTitreTexte.setText(getString(R.string.jeu_question_choix_accueil));
-        //ivTitreIcone.setImageResource(R.drawable.ic_action_jeux);
-
         viderListeReponsesViews();
 
-        llContainerLayout.addView(jeu1.getJeuView(jeuSelectionneCallback));
-        llContainerLayout.addView(jeu2.getJeuView(jeuSelectionneCallback));
+        llContainerLayout.addView(Jeu.getJeuView(jeuSelectionneCallback, (Context) getActivity(), Jeu.JeuRef.JEU_1));
+        llContainerLayout.addView(Jeu.getJeuView(jeuSelectionneCallback, (Context) getActivity(), Jeu.JeuRef.JEU_2));
 
         Log.d(LOG_TAG, "createListeJeuxViews() - Fin");
     }
@@ -200,180 +186,105 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
     public void createListeNiveauxViews(Jeu.JeuRef jeuId){
         Log.d(LOG_TAG, "createListeNiveauxViews() - Début");
 
-        resetTvTitreIconeLabel();
-
         if (jeuId == Jeu.JeuRef.JEU_1) jeu = jeu1;
         if (jeuId == Jeu.JeuRef.JEU_2) jeu = jeu2;
 
         String jeux_icone[] = getActivity().getResources().getStringArray(R.array.jeux_titre_icone);
 
-        tvTitreTexte.setText(getString(R.string.jeu_question_choix_niveau));
-        ivTitreIcone.setImageResource(getActivity().getResources().getIdentifier(jeux_icone[jeuId.ordinal()],"drawable", getActivity().getPackageName()));
-
         viderListeReponsesViews();
 
-        llContainerLayout.addView(jeu.getNiveauView(niveauSelectionneCallback, Jeu.Niveau.FACILE));
-        llContainerLayout.addView(jeu.getNiveauView(niveauSelectionneCallback, Jeu.Niveau.INTERMEDIAIRE));
-        llContainerLayout.addView(jeu.getNiveauView(niveauSelectionneCallback, Jeu.Niveau.DIFFICILE));
+        llContainerLayout.addView(jeu.getNiveauView(niveauSelectionneCallback, (Context) getActivity(), jeuId, Jeu.Niveau.FACILE));
+        llContainerLayout.addView(jeu.getNiveauView(niveauSelectionneCallback, (Context) getActivity(), jeuId, Jeu.Niveau.INTERMEDIAIRE));
+        llContainerLayout.addView(jeu.getNiveauView(niveauSelectionneCallback, (Context) getActivity(), jeuId, Jeu.Niveau.DIFFICILE));
 
         Log.d(LOG_TAG, "createListeNiveauxViews() - Fin");
     }
 
     /* Création de la liste des Réponses */
-    public void createListeReponsesViews(Jeu.Niveau niveau, Fiche fiche){
+    public void createListeReponsesViews(Jeu.Niveau niveau, Fiche fiche, ClassificationFiche classificationFiche, Classification classification, boolean onResume){
         Log.d(LOG_TAG, "createListeReponsesViews() - Début");
         Log.d(LOG_TAG, "createListeReponsesViews() - niveau : "+niveau.name());
         Log.d(LOG_TAG, "createListeReponsesViews() - fiche : "+fiche.getNomCommun());
+        Log.d(LOG_TAG, "createListeReponsesViews() - onResume : "+onResume);
+        Log.d(LOG_TAG, "createListeReponsesViews() - classification : "+classification.getTermeScientifique());
 
-        ivBtnSuivant.setVisibility(View.VISIBLE);
-        ivBtnSuivant.setColorFilter(0xff222222, PorterDuff.Mode.SRC_ATOP);
-        viderListeReponsesViews();
+        if (onResume == false) {
+            viderListeReponsesViews();
 
-        // bornes[0] : mini ; bornes[1] : maxi
-        int[] bornes = jeu.getBornesClassification(jeu.getId(), niveau);
-        Log.d(LOG_TAG, "createListeReponsesViews() - bornes : "+bornes[0]+" ; "+bornes[1]);
+            boolean reponsePlacee = false;
+            OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(getActivity());
 
-        boolean reponsePlacee = false;
-        OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(getActivity());
+            QueryBuilder<ClassificationFiche, Integer> qbClassificationFiche = ormLiteDBHelper.getClassificationFicheDao().queryBuilder();
+            List<ClassificationFiche> classificationFicheListeAleatoire = null;
 
-        ClassificationFiche classificationFicheSelonNiveau = null;
-        Classification classificationSelonNiveau = null;
-        try{
-            QueryBuilder<ClassificationFiche, Integer> qbClassificationFiche =  ormLiteDBHelper.getClassificationFicheDao().queryBuilder();
-            qbClassificationFiche.where().eq("fiche_id", fiche.getId())
-                    .and().ge("numOrdre",bornes[0])
-                    .and().le("numOrdre",bornes[1]);
-            qbClassificationFiche.orderByRaw("RANDOM()");
-            Log.d(LOG_TAG, "createListeReponsesViews() - sql : "+qbClassificationFiche.prepareStatementString());
+            try {
 
-            classificationFicheSelonNiveau = ormLiteDBHelper.getClassificationFicheDao().queryForFirst(qbClassificationFiche.prepare());
-
-            // Parfois on ne peut pas respecter les bornes, dans ce cas on pioche n'importe quel niveau
-            if (classificationFicheSelonNiveau == null) {
-                qbClassificationFiche =  ormLiteDBHelper.getClassificationFicheDao().queryBuilder();
-                qbClassificationFiche.where().eq("fiche_id", fiche.getId())
-                        .and().le("numOrdre",bornes[1]);
-                qbClassificationFiche.orderByRaw("RANDOM()");
-                Log.d(LOG_TAG, "createListeReponsesViews() - sql : "+qbClassificationFiche.prepareStatementString());
-
-                classificationFicheSelonNiveau = ormLiteDBHelper.getClassificationFicheDao().queryForFirst(qbClassificationFiche.prepare());
-            }
-
-            QueryBuilder<Classification, Integer> qbClassification =  ormLiteDBHelper.getClassificationDao().queryBuilder();
-            qbClassification.where().eq("_id", classificationFicheSelonNiveau.getClassification().getId());
-
-            classificationSelonNiveau = ormLiteDBHelper.getClassificationDao().queryForFirst(qbClassification.prepare());
+                // On ne prend que les niveaux inférieurs (pour être certain d'en avoir au moins 3) ou égaux, en privilégiant les égaux
+                qbClassificationFiche = ormLiteDBHelper.getClassificationFicheDao().queryBuilder();
+                qbClassificationFiche.where().le("numOrdre", classificationFiche.getNumOrdre())
+                        .and().ne("classification_id", classificationFiche.getClassification().getId());
+                qbClassificationFiche.groupBy("classification_id");
+                qbClassificationFiche.orderByRaw("numOrdre DESC, RANDOM()");
+                Log.d(LOG_TAG, "createListeReponsesViews() - sql2 : " + qbClassificationFiche.prepareStatementString());
+                classificationFicheListeAleatoire = ormLiteDBHelper.getClassificationFicheDao().query(qbClassificationFiche.prepare());
 
             } catch (SQLException error) {
-            error.printStackTrace();
-        }
-        Log.d(LOG_TAG, "createListeReponsesViews() - classificationFicheSelonNiveau : "+classificationFicheSelonNiveau.getNumOrdre());
-        Log.d(LOG_TAG, "createListeReponsesViews() - classificationFicheSelonNiveau : "+classificationFicheSelonNiveau.getClassification().toString());
-        Log.d(LOG_TAG, "createListeReponsesViews() - classificationFicheSelonNiveau : "+classificationFicheSelonNiveau.getClassification().getId());
-        Log.d(LOG_TAG, "createListeReponsesViews() - classificationSelonNiveau : "+classificationSelonNiveau.getTermeFrancais());
-        Log.d(LOG_TAG, "createListeReponsesViews() - classificationSelonNiveau : "+classificationSelonNiveau.getNiveau());
+                error.printStackTrace();
+            }
 
-        tvTitreTexte.setText("Quel(le) : "+classificationSelonNiveau.getNiveau().replaceAll("\\{\\{[^\\}]*\\}\\}",""));
+            for (int i = 1; i <= jeu.NBREPONSESPROPOSEES; i++) {
 
-        QueryBuilder<ClassificationFiche, Integer> qbClassificationFiche =  ormLiteDBHelper.getClassificationFicheDao().queryBuilder();
-        List<ClassificationFiche> classificationFicheListeAleatoire = null;
+                // LA BONNE REPONSE
+                if (reponsePlacee == false && ((jeu.NBREPONSESPROPOSEES * random()) < 1 || i == jeu.NBREPONSESPROPOSEES)) {
+                    reponsePlacee = true;
 
-        try{
+                    Log.d(LOG_TAG, "createListeReponsesViews() - Fr : " + classification.getTermeFrancais());
+                    Log.d(LOG_TAG, "createListeReponsesViews() - Sc : " + classification.getTermeScientifique());
 
-            // On ne prend que les niveaux inférieurs (pour être certain d'en avoir au moins 3) ou égaux, en privilégiant les égaux
-            qbClassificationFiche =  ormLiteDBHelper.getClassificationFicheDao().queryBuilder();
-            qbClassificationFiche.where().le("numOrdre", classificationFicheSelonNiveau.getNumOrdre())
-                    .and().ne("classification_id", classificationFicheSelonNiveau.getClassification().getId());
-            qbClassificationFiche.groupBy("classification_id");
-            qbClassificationFiche.orderByRaw("numOrdre DESC, RANDOM()");
-            Log.d(LOG_TAG, "createListeReponsesViews() - sql2 : "+qbClassificationFiche.prepareStatementString());
-            classificationFicheListeAleatoire = ormLiteDBHelper.getClassificationFicheDao().query(qbClassificationFiche.prepare());
+                    String reponseLibelle = classification.getTermeFrancais();
+                    if (reponseLibelle.equals(""))
+                        reponseLibelle = classification.getTermeScientifique();
 
-        } catch (SQLException error) {
-            error.printStackTrace();
-        }
-
-        for(int i=1  ; i<=jeu.NBREPONSESPROPOSEES  ;i++){
-            if ( reponsePlacee == false && ( (jeu.NBREPONSESPROPOSEES * random()) < 1 || i == jeu.NBREPONSESPROPOSEES )) {
-                reponsePlacee = true;
-
-                Log.d(LOG_TAG, "createListeReponsesViews() - Fr : "+classificationSelonNiveau.getTermeFrancais());
-                Log.d(LOG_TAG, "createListeReponsesViews() - Sc : "+classificationSelonNiveau.getTermeScientifique());
-
-                String reponseLibelle = classificationSelonNiveau.getTermeFrancais();
-                if (reponseLibelle.equals("")) reponseLibelle = classificationSelonNiveau.getTermeScientifique();
-
-                Log.d(LOG_TAG, "createListeReponsesViews() - lib : "+reponseLibelle);
-
-                llContainerLayout.addView(
-                        jeu.getReponseView(
-                                reponseSelectionneeCallback,
-                                fiche,
-                                classificationFicheSelonNiveau.getClassification().getId(),
-                                reponseLibelle.replaceAll("\\{\\{[^\\}]*\\}\\}",""),
-                                "Icone 1"));
-            } else {
-
-                try{
-                    QueryBuilder<Classification, Integer> qbClassification =  ormLiteDBHelper.getClassificationDao().queryBuilder();
-                    qbClassification.where().eq("_id", classificationFicheListeAleatoire.get(i).getClassification().getId());
-                    Log.d(LOG_TAG, "createListeReponsesViews() - sql3 : "+qbClassification.prepareStatementString());
-
-                    Classification classificationAleatoire = ormLiteDBHelper.getClassificationDao().queryForFirst(qbClassification.prepare());
-
-                    String reponseLibelle = classificationAleatoire.getTermeFrancais();
-                    if (reponseLibelle.equals("")) reponseLibelle = classificationAleatoire.getTermeScientifique();
+                    Log.d(LOG_TAG, "createListeReponsesViews() - lib : " + reponseLibelle);
 
                     llContainerLayout.addView(
                             jeu.getReponseView(
                                     reponseSelectionneeCallback,
                                     fiche,
-                                    classificationAleatoire.getId(),
-                                    reponseLibelle.replaceAll("\\{\\{[^\\}]*\\}\\}",""),
-                                    "Icone 2"));
-                } catch (SQLException error) {
-                    error.printStackTrace();
-                }
-            }
+                                    classificationFiche.getClassification().getId(),
+                                    reponseLibelle.replaceAll("\\{\\{[^\\}]*\\}\\}", ""),
+                                    "Icone 1",
+                                    classification.getDescriptif()));
+                } else {
 
+                    try {
+                        QueryBuilder<Classification, Integer> qbClassification = ormLiteDBHelper.getClassificationDao().queryBuilder();
+                        qbClassification.where().eq("_id", classificationFicheListeAleatoire.get(i).getClassification().getId());
+                        Log.d(LOG_TAG, "createListeReponsesViews() - sql3 : " + qbClassification.prepareStatementString());
+
+                        Classification classificationAleatoire = ormLiteDBHelper.getClassificationDao().queryForFirst(qbClassification.prepare());
+
+                        String reponseLibelle = classificationAleatoire.getTermeFrancais();
+                        if (reponseLibelle.equals(""))
+                            reponseLibelle = classificationAleatoire.getTermeScientifique();
+
+                        llContainerLayout.addView(
+                                jeu.getReponseView(
+                                        reponseSelectionneeCallback,
+                                        fiche,
+                                        classificationAleatoire.getId(),
+                                        reponseLibelle.replaceAll("\\{\\{[^\\}]*\\}\\}", ""),
+                                        "Icone 2",
+                                        classificationAleatoire.getDescriptif()));
+                    } catch (SQLException error) {
+                        error.printStackTrace();
+                    }
+                }
+
+            }
         }
 
         Log.d(LOG_TAG, "createListeReponsesViews() - Fin");
-    }
-
-    /* Activation Bouton Suivant */
-    public void activationBoutonSuivant(){
-        ivBtnSuivant.setColorFilter(null);
-        ivBtnSuivant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(LOG_TAG, "getNiveauView() - onClick()");
-
-                OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(getActivity());
-                Fiche fiche = null;
-                try{
-                    QueryBuilder<Fiche, Integer> qb =  ormLiteDBHelper.getFicheDao().queryBuilder();
-                    qb.where().eq("etatFiche","4");
-                    qb.orderByRaw("RANDOM()");
-                    fiche = ormLiteDBHelper.getFicheDao().queryForFirst(qb.prepare());
-                } catch (SQLException error) {
-                    error.printStackTrace();
-                }
-
-                Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : "+fiche.getNomCommun());
-                PhotoFiche photoFiche = fiche.getPhotosFiche().iterator().next();
-                Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : "+photoFiche.getCleURL());
-                /*
-                if (questionFrag != null) {
-
-                    questionFrag.setLibelle(fiche.getNomCommun());
-                    questionFrag.setImage(photoFiche.getCleURL(), Photos_Outils.ImageType.VIGNETTE);
-                }
-                 */
-                createListeReponsesViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, fiche);
-
-            }
-        });
     }
 
     /* Vidage de la Liste */
@@ -381,14 +292,4 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
         llContainerLayout.removeAllViews();
     }
 
-    /* MaJ Libellé de l'icone */
-    public void setTvTitreIconeLabel(String label){
-        tvTitreIconeLabel.setVisibility(View.VISIBLE);
-        tvTitreIconeLabel.setText(label);
-    }
-    public void resetTvTitreIconeLabel(){
-        tvTitreIconeLabel.setVisibility(View.GONE);
-        tvTitreIconeLabel.setText("");
-        ivBtnSuivant.setVisibility(View.GONE);
-    }
 }

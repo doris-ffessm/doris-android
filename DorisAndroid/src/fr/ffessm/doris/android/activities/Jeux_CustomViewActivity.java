@@ -41,14 +41,8 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -63,9 +57,8 @@ import java.sql.SQLException;
 
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
+import fr.ffessm.doris.android.datamodel.Classification;
 import fr.ffessm.doris.android.datamodel.ClassificationFiche;
-import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
@@ -75,12 +68,11 @@ import fr.ffessm.doris.android.tools.Jeu;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
-import static android.R.id.message;
-
 public class Jeux_CustomViewActivity extends FragmentActivity
         implements JeuxReponses_ClassListViewFragment.JeuSelectionneListener,
                     JeuxReponses_ClassListViewFragment.NiveauSelectionneListener,
-                    JeuxReponses_ClassListViewFragment.ReponseSelectionneeListener {
+                    JeuxReponses_ClassListViewFragment.ReponseSelectionneeListener,
+                    JeuxQuestion_CustomViewFragment.BoutonSuivantListener {
 
 	private static final String LOG_TAG = Jeux_CustomViewActivity.class.getCanonicalName();
 
@@ -98,7 +90,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         getParamOutils().setParamBoolean(R.string.pref_key_jeux_actifs, true);
 
         Log.d(LOG_TAG, "onCreate() - 010");
-        setContentView(R.layout.jeux_customview);
+        setContentView(R.layout.jeux_view);
 
         // Si l'application avait déjà été lancée, on ne recrée pas (cas des rotations)
         if (savedInstanceState != null) {
@@ -106,8 +98,10 @@ public class Jeux_CustomViewActivity extends FragmentActivity
             return;
         }
 
+        Log.d(LOG_TAG, "onCreate() - questionFrag");
         questionFrag = (JeuxQuestion_CustomViewFragment)
-                getSupportFragmentManager().findFragmentById(R.id.jeux_activity_fragment_principal);
+                getSupportFragmentManager().findFragmentById(R.id.jeux_activity_fragment_question);
+        Log.d(LOG_TAG, "onCreate() - reponsesFrag");
         reponsesFrag = (JeuxReponses_ClassListViewFragment)
                 getSupportFragmentManager().findFragmentById(R.id.jeux_activity_fragment_reponses);
 
@@ -122,13 +116,14 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         super.onResume();
 
         questionFrag = (JeuxQuestion_CustomViewFragment)
-                getSupportFragmentManager().findFragmentById(R.id.jeux_activity_fragment_principal);
+                getSupportFragmentManager().findFragmentById(R.id.jeux_activity_fragment_question);
         reponsesFrag = (JeuxReponses_ClassListViewFragment)
                 getSupportFragmentManager().findFragmentById(R.id.jeux_activity_fragment_reponses);
 
         Log.d(LOG_TAG, "onResume() - jeuStatut : " + DorisApplicationContext.getInstance().jeuStatut.name());
 
         if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.ACCUEIL) {
+            questionFrag.createListeJeuxViews();
             reponsesFrag.createListeJeuxViews();
         }
 
@@ -137,7 +132,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         }
 
         if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.JEU) {
-            onNiveauSelectionne(DorisApplicationContext.getInstance().jeuNiveauSelectionne);
+            onNiveauSelectionne(DorisApplicationContext.getInstance().jeuSelectionne, DorisApplicationContext.getInstance().jeuNiveauSelectionne, true);
         }
 
 
@@ -180,7 +175,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
                 }
 
                 if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_NIVEAU) {
-                    questionFrag.reInitAffichage();
+                    questionFrag.createListeJeuxViews();
                     reponsesFrag.createListeJeuxViews();
 
                     DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.ACCUEIL;
@@ -188,7 +183,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
                 }
 
                 // Forcément en mode jeu => on revient au choix du Niveau
-                questionFrag.reInitAffichage();
+                questionFrag.createListeNiveauxViews(DorisApplicationContext.getInstance().jeuSelectionne);
                 reponsesFrag.createListeNiveauxViews(DorisApplicationContext.getInstance().jeuSelectionne);
 
                 DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_NIVEAU;
@@ -216,7 +211,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
                 }
 
                 if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_NIVEAU) {
-                    questionFrag.reInitAffichage();
+                    questionFrag.createListeJeuxViews();
                     reponsesFrag.createListeJeuxViews();
 
                     DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.ACCUEIL;
@@ -224,7 +219,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
                 }
 
                 // Forcément en mode jeu => on revient au choix du Niveau
-                questionFrag.reInitAffichage();
+                questionFrag.createListeNiveauxViews(DorisApplicationContext.getInstance().jeuSelectionne);
                 reponsesFrag.createListeNiveauxViews(DorisApplicationContext.getInstance().jeuSelectionne);
 
                 DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_NIVEAU;
@@ -246,7 +241,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
             // If article frag is available, we're in two-pane layout...
 
             // Call a method in the ArticleFragment to update its content
-
+            questionFrag.createListeNiveauxViews(jeuSelectionne);
 
         } else {
             // If the frag is not available, we're in the one-pane layout and must swap frags...
@@ -268,7 +263,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         Log.d(LOG_TAG, "onJeuSelectionne() - Fin");
     }
 
-    public void onNiveauSelectionne(Jeu.Niveau niveau) {
+    public void onNiveauSelectionne(Jeu.JeuRef jeuSelectionne, Jeu.Niveau niveau, boolean onResume) {
         Log.d(LOG_TAG, "onNiveauSelectionne() - Début");
 
         Toast.makeText(this, "Niveau : "+niveau.name(), Toast.LENGTH_LONG).show();
@@ -290,7 +285,6 @@ public class Jeux_CustomViewActivity extends FragmentActivity
 
         if (reponsesFrag != null) {
             // If article frag is available, we're in two-pane layout...
-            reponsesFrag.setTvTitreIconeLabel(jeux_niveau[niveau.ordinal()].substring(0,1));
 
         } else {
             // If the frag is not available, we're in the one-pane layout and must swap frags...
@@ -300,26 +294,39 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         // LE JEU ! ! !
 
         // Pour commencer Toujours le même jeu et crado
-        OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(this);
-        Fiche fiche = null;
-        try{
-            QueryBuilder<Fiche, Integer> qb =  ormLiteDBHelper.getFicheDao().queryBuilder();
-            qb.where().eq("etatFiche","4");
-            qb.orderByRaw("RANDOM()");
-            fiche = ormLiteDBHelper.getFicheDao().queryForFirst(qb.prepare());
-        } catch (SQLException error) {
-            error.printStackTrace();
+        Fiche ficheAleatoire = null;
+        ClassificationFiche classificationFicheAleatoire = null;
+        Classification classificationAleatoire = null;
+
+        if (onResume == false ) {
+
+            DorisApplicationContext.getInstance().reponseOK = false;
+
+            OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(this);
+            ficheAleatoire = ficheAleatoire(ormLiteDBHelper);
+
+            classificationFicheAleatoire = classificationFicheAleatoire(ormLiteDBHelper, ficheAleatoire);
+            classificationAleatoire = classification(ormLiteDBHelper, classificationFicheAleatoire);
+
+        } else {
+
+            ficheAleatoire = DorisApplicationContext.getInstance().jeuFicheEnCours;
+            classificationFicheAleatoire = DorisApplicationContext.getInstance().jeuClassificationFicheEnCours;
+            classificationAleatoire = DorisApplicationContext.getInstance().jeuClassificationEnCours;
+
         }
 
-        Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : "+fiche.getNomCommun());
-        PhotoFiche photoFiche = fiche.getPhotosFiche().iterator().next();
-        Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : "+photoFiche.getCleURL());
         if (questionFrag != null) {
-            questionFrag.setLibelle(fiche.getNomCommun());
-            questionFrag.setImage(photoFiche.getCleURL(), ImageType.VIGNETTE);
+            PhotoFiche photoFiche = ficheAleatoire.getPhotosFiche().iterator().next();
+            Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : " + photoFiche.getCleURL());
+
+            questionFrag.setTvTitreIconeLabel(jeux_niveau[niveau.ordinal()].substring(0,1));
+            questionFrag.createListeReponsesViews(niveau, ficheAleatoire, classificationAleatoire);
+            questionFrag.setQuestionLibelle(ficheAleatoire.getNomCommun());
+            questionFrag.setQuestionImage(photoFiche.getCleURL(), ImageType.VIGNETTE);
         }
         if (reponsesFrag != null) {
-            reponsesFrag.createListeReponsesViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, fiche);
+            reponsesFrag.createListeReponsesViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, ficheAleatoire, classificationFicheAleatoire, classificationAleatoire, onResume);
         }
 
         DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.JEU;
@@ -355,35 +362,124 @@ public class Jeux_CustomViewActivity extends FragmentActivity
             Toast.makeText(this, "Ok", Toast.LENGTH_LONG).show();
 
             ivIcone.setImageResource(R.drawable.ic_action_jeux_ok);
-            reponsesFrag.activationBoutonSuivant();
 
-/*
-            Fiche fiche = null;
-            try{
-                QueryBuilder<Fiche, Integer> qb =  ormLiteDBHelper.getFicheDao().queryBuilder();
-                qb.where().eq("etatFiche","4");
-                qb.orderByRaw("RANDOM()");
-                fiche = ormLiteDBHelper.getFicheDao().queryForFirst(qb.prepare());
-            } catch (SQLException error) {
-                error.printStackTrace();
-            }
+            DorisApplicationContext.getInstance().reponseOK = true;
 
-            Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : "+fiche.getNomCommun());
-            PhotoFiche photoFiche = fiche.getPhotosFiche().iterator().next();
-            Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : "+photoFiche.getCleURL());
-            if (questionFrag != null) {
-                questionFrag.setLibelle(fiche.getNomCommun());
-                questionFrag.setImage(photoFiche.getCleURL(), ImageType.VIGNETTE);
-            }
-            if (reponsesFrag != null) {
-                reponsesFrag.createListeReponsesViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, fiche);
-            }
-*/
+            questionFrag.activationBoutonSuivant(DorisApplicationContext.getInstance().jeuSelectionne, DorisApplicationContext.getInstance().jeuNiveauSelectionne);
+
         }
 
         Log.d(LOG_TAG, "onReponseSelectionnee() - Fin");
     }
 
+    public void onBoutonSuivant() {
+        Log.d(LOG_TAG, "onBoutonSuivant() - Début");
+
+        DorisApplicationContext.getInstance().reponseOK = false;
+
+        OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(this);
+
+        Fiche ficheAleatoire = ficheAleatoire(ormLiteDBHelper);
+        PhotoFiche photoFiche = ficheAleatoire.getPhotosFiche().iterator().next();
+        Log.d(LOG_TAG, "onBoutonSuivant() - fiche.getNomCommun : "+photoFiche.getCleURL());
+
+        ClassificationFiche classificationFicheAleatoire = classificationFicheAleatoire(ormLiteDBHelper, ficheAleatoire);
+        Classification classificationAleatoire = classification(ormLiteDBHelper, classificationFicheAleatoire);
+
+        if (questionFrag != null) {
+            questionFrag.createListeReponsesViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, ficheAleatoire, classificationAleatoire);
+            questionFrag.setQuestionLibelle(ficheAleatoire.getNomCommun());
+            questionFrag.setQuestionImage(photoFiche.getCleURL(), ImageType.VIGNETTE);
+        }
+        if (reponsesFrag != null) {
+            reponsesFrag.createListeReponsesViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, ficheAleatoire, classificationFicheAleatoire, classificationAleatoire, false);
+        }
+
+        Log.d(LOG_TAG, "onBoutonSuivant() - Fin");
+    }
+
+    public Fiche ficheAleatoire(OrmLiteDBHelper ormLiteDBHelper) {
+        Fiche fiche = null;
+
+        try{
+            QueryBuilder<Fiche, Integer> qb =  ormLiteDBHelper.getFicheDao().queryBuilder();
+            qb.where().eq("etatFiche","4");
+            qb.orderByRaw("RANDOM()");
+            fiche = ormLiteDBHelper.getFicheDao().queryForFirst(qb.prepare());
+
+        } catch (SQLException error) {
+            error.printStackTrace();
+        }
+
+        Log.d(LOG_TAG, "ficheAleatoire() - fiche.getNomCommun : "+fiche.getNomCommun());
+
+        DorisApplicationContext.getInstance().jeuFicheEnCours = fiche;
+
+        return fiche;
+    }
+
+    public ClassificationFiche classificationFicheAleatoire(OrmLiteDBHelper ormLiteDBHelper, Fiche fiche) {
+        // bornes[0] : mini ; bornes[1] : maxi
+        int[] bornes = Jeu.getBornesClassification(DorisApplicationContext.getInstance().jeuSelectionne, DorisApplicationContext.getInstance().jeuNiveauSelectionne);
+        Log.d(LOG_TAG, "createListeReponsesViews() - bornes : " + bornes[0] + " ; " + bornes[1]);
+
+        boolean reponsePlacee = false;
+
+        ClassificationFiche classificationFicheSelonNiveau = null;
+        Classification classificationSelonNiveau = null;
+        try {
+            QueryBuilder<ClassificationFiche, Integer> qbClassificationFiche = ormLiteDBHelper.getClassificationFicheDao().queryBuilder();
+            qbClassificationFiche.where().eq("fiche_id", fiche.getId())
+                    .and().ge("numOrdre", bornes[0])
+                    .and().le("numOrdre", bornes[1]);
+            qbClassificationFiche.orderByRaw("RANDOM()");
+            Log.d(LOG_TAG, "createListeReponsesViews() - sql : " + qbClassificationFiche.prepareStatementString());
+
+            classificationFicheSelonNiveau = ormLiteDBHelper.getClassificationFicheDao().queryForFirst(qbClassificationFiche.prepare());
+
+            // Parfois on ne peut pas respecter les bornes, dans ce cas on pioche n'importe quel niveau
+            if (classificationFicheSelonNiveau == null) {
+                qbClassificationFiche = ormLiteDBHelper.getClassificationFicheDao().queryBuilder();
+                qbClassificationFiche.where().eq("fiche_id", fiche.getId())
+                        .and().le("numOrdre", bornes[1]);
+                qbClassificationFiche.orderByRaw("RANDOM()");
+                Log.d(LOG_TAG, "createListeReponsesViews() - sql : " + qbClassificationFiche.prepareStatementString());
+
+                classificationFicheSelonNiveau = ormLiteDBHelper.getClassificationFicheDao().queryForFirst(qbClassificationFiche.prepare());
+            }
+
+        } catch (SQLException error) {
+            error.printStackTrace();
+        }
+        Log.d(LOG_TAG, "createListeReponsesViews() - classificationFicheSelonNiveau : " + classificationFicheSelonNiveau.getNumOrdre());
+        Log.d(LOG_TAG, "createListeReponsesViews() - classificationFicheSelonNiveau : " + classificationFicheSelonNiveau.getClassification().toString());
+        Log.d(LOG_TAG, "createListeReponsesViews() - classificationFicheSelonNiveau : " + classificationFicheSelonNiveau.getClassification().getId());
+
+        DorisApplicationContext.getInstance().jeuClassificationFicheEnCours = classificationFicheSelonNiveau;
+
+        return classificationFicheSelonNiveau;
+    }
+
+    public Classification classification(OrmLiteDBHelper ormLiteDBHelper, ClassificationFiche classificationFiche) {
+
+        Classification classification = null;
+
+        try {
+            QueryBuilder<Classification, Integer> qbClassification = ormLiteDBHelper.getClassificationDao().queryBuilder();
+            qbClassification.where().eq("_id", classificationFiche.getClassification().getId());
+
+            classification = ormLiteDBHelper.getClassificationDao().queryForFirst(qbClassification.prepare());
+
+        } catch (SQLException error) {
+            error.printStackTrace();
+        }
+        Log.d(LOG_TAG, "classification() - classification : " + classification.getTermeFrancais());
+        Log.d(LOG_TAG, "classification() - classification : " + classification.getNiveau());
+
+        DorisApplicationContext.getInstance().jeuClassificationEnCours = classification;
+
+        return classification;
+    }
 
     private Param_Outils getParamOutils(){
         if(paramOutils == null) paramOutils = new Param_Outils(this);

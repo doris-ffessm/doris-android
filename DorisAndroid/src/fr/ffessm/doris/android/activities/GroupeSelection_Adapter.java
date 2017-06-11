@@ -213,6 +213,9 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
         
         ImageView ivIconGroup = (ImageView) convertView.findViewById(R.id.groupeselection_listviewrow_icon);
         int defaultIconSize = paramOutils.getParamInt(R.string.pref_key_accueil_icone_taille, Integer.parseInt(context.getString(R.string.accueil_icone_taille_defaut)) );
+		// Les icones ne sont pas d'une qualité suffisante pour être affichées à la même taille que les icônes des zones
+		// On les diminue donc un peu
+		defaultIconSize = (int)(defaultIconSize * 0.5);
         ivIconGroup.getLayoutParams().height = ScreenTools.dp2px(context, defaultIconSize);
         ivIconGroup.getLayoutParams().width = ScreenTools.dp2px(context, defaultIconSize);
 

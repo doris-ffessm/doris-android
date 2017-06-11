@@ -15,7 +15,7 @@
         <fragment
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:name="fr.ffessm.doris.android.fragments.JeuxQuestion_CustomViewFragment"
-            android:id="@+id/jeux_activity_fragment_principal"
+            android:id="@+id/jeux_activity_fragment_question"
             android:tag="jeux_activity_fragment_principal"
             android:layout_width="match_parent"
             android:layout_height="0dp"

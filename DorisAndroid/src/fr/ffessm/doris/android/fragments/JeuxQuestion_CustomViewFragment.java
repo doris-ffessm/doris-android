@@ -42,7 +42,9 @@ termes.
 package fr.ffessm.doris.android.fragments;
 
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -51,27 +53,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Toast;
 
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.activities.DetailEntreeGlossaire_ElementViewActivity;
-import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
+import fr.ffessm.doris.android.activities.DetailsFiche_ElementViewActivity;
+import fr.ffessm.doris.android.datamodel.Classification;
+import fr.ffessm.doris.android.datamodel.ClassificationFiche;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Jeu;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
+
+import static java.lang.Math.random;
 
 public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemClickListener
 {
@@ -80,41 +88,53 @@ public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemC
 
     final static String ARG_JEUX = "jeux";
 
-    private ImageView jeu_question_image;
-    private TextView jeu_question_libelle;
+    BoutonSuivantListener boutonSuivantCallback;
 
-    Photos_Outils photosOutils;
-    Reseau_Outils reseauOutils;
+    private ImageView ivQuestionImage;
+    private TextView tvQuestionLibelle;
+    private TextView tvTitreTexte;
+    private ImageView ivTitreIcone;
+    private TextView tvTitreIconeLabel;
+    private ImageView ivBtnSuivant;
+    private ImageView ivBtnAffFiche;
 
-    public interface JeuSelectionneListener {
-        /** Called by HeadlinesFragment when a list item is selected */
-        public void onJeuSelectionne(Jeu.JeuRef jeuSelectionne);
+    private Photos_Outils photosOutils;
+    private Reseau_Outils reseauOutils;
+
+    public interface BoutonSuivantListener {
+        public void onBoutonSuivant();
     }
-    public interface NiveauSelectionneListener {
-        /** Called by HeadlinesFragment when a list item is selected */
-        public void onNiveauSelectionne(Jeu.Niveau niveau);
-    }
-    public interface MiseAjourFiche {
-        /** Called by HeadlinesFragment when a list item is selected */
-        public void onNiveauSelectionne(Fiche fiche);
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        Log.d(LOG_TAG, "onAttach() - Début");
+
+        try {
+            boutonSuivantCallback = (JeuxQuestion_CustomViewFragment.BoutonSuivantListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement BoutonSuivantListener");
+        }
+
+        Log.d(LOG_TAG, "onAttach() - Fin");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateView() - Début");
 
-        View view = inflater.inflate(R.layout.jeux_customview_fragment, container, false);
+        View view = inflater.inflate(R.layout.jeux_questionview_fragment, container, false);
 
-        jeu_question_image = (ImageView) view.findViewById(R.id.jeux_customviewfragment_image);
-        jeu_question_libelle = (TextView) view.findViewById(R.id.jeux_customviewfragment_libelle);
+        ivQuestionImage = (ImageView) view.findViewById(R.id.jeu_question_image);
+        tvQuestionLibelle = (TextView) view.findViewById(R.id.jeu_question_libelle);
+        tvTitreTexte =  (TextView) view.findViewById(R.id.jeu_question_titre_texte);
+        ivTitreIcone =  (ImageView) view.findViewById(R.id.jeu_question_titre_icone);
+        tvTitreIconeLabel =  (TextView) view.findViewById(R.id.jeu_question_titre_icone_label);
+        ivBtnSuivant =  (ImageView) view.findViewById(R.id.jeu_question_btn_suivant);
+        ivBtnAffFiche =  (ImageView) view.findViewById(R.id.jeu_question_image_icone);
 
         reseauOutils = new Reseau_Outils(getActivity());
-
-        if (savedInstanceState != null) {
-
-        } else {
-            Log.d(LOG_TAG, "onCreateView() - savedInstanceState == null");
-        }
 
         Log.d(LOG_TAG, "onCreateView() - containerId : "+this.getId());
         Log.d(LOG_TAG, "onCreateView() - containerTag : "+this.getTag());
@@ -142,23 +162,15 @@ public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemC
         Log.d(LOG_TAG, "onSaveInstanceState() - Fin");
     }
 
-
     public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
         Log.d(LOG_TAG, "onItemClick "+view);
 
     }
 
-    public void setLibelle(String libelle) {
-        jeu_question_libelle.setText(libelle);
+    public void setQuestionImage(int imgId) {
+        ivQuestionImage.setImageResource(imgId);
     }
-    public String getLibelle() {
-        return (String) jeu_question_libelle.getText();
-    }
-
-    public void setImage(int imgId) {
-        jeu_question_image.setImageResource(imgId);
-    }
-    public void setImage(String imageURL, ImageType imageType) {
+    public void setQuestionImage(String imageURL, ImageType imageType) {
         Log.d(LOG_TAG, "setImage() - Début");
         Log.d(LOG_TAG, "setImage() - imageURL : "+imageURL);
         Log.d(LOG_TAG, "setImage() - imageType : "+imageType);
@@ -172,7 +184,7 @@ public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemC
                 Picasso.with(getActivity()).load(getPhotosOutils().getPhotoFile(photoNom, imageType))
                         .fit()
                         .centerInside()
-                        .into(jeu_question_image);
+                        .into(ivQuestionImage);
             } catch (IOException e) {
                 Log.d(LOG_TAG, "setImage() - IOException : "+e);
             }
@@ -188,21 +200,143 @@ public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemC
                         .error(R.drawable.doris_icone_doris_large_pas_connecte)
                         .fit()
                         .centerInside()
-                        .into(jeu_question_image);
+                        .into(ivQuestionImage);
             } else {
-                jeu_question_image.setImageResource(R.drawable.doris_icone_doris_large_pas_connecte);
+                ivQuestionImage.setImageResource(R.drawable.doris_icone_doris_large_pas_connecte);
             }
         }
         Log.d(LOG_TAG, "setImage() - Fin");
     }
 
-    public void reInitAffichage(){
-        setImage(R.drawable.ic_action_jeux);
-        setLibelle("");
+    public void setQuestionLibelle(String libelle) {
+        tvQuestionLibelle.setText(libelle);
+    }
+
+    public void setTitreTexte(String titreTexte) {
+        tvTitreTexte.setText(titreTexte);
+    }
+
+    public void setTitreIcone(int imgId) {
+        ivTitreIcone.setImageResource(imgId);
+    }
+    public void setTitreIcone(Jeu.JeuRef jeuId) {
+        String jeux_icone[] = getActivity().getResources().getStringArray(R.array.jeux_titre_icone);
+        ivTitreIcone.setImageResource(getActivity().getResources().getIdentifier(jeux_icone[jeuId.ordinal()],"drawable", getActivity().getPackageName()));
+    }
+
+    public void setTitreIconeLabel(String iconeLabel) {
+        tvTitreIconeLabel.setText(iconeLabel);
+    }
+
+    /* * * * Fonctions du Jeu * * * */
+
+    /* Création de la liste des Jeux */
+    public void createListeJeuxViews(){
+        Log.d(LOG_TAG, "createListeJeuxViews() - Début");
+
+        setQuestionImage(R.drawable.ic_action_jeux);
+        setQuestionLibelle("");
+
+        setTitreTexte(getString(R.string.jeu_question_choix_accueil));
+        setTitreIcone(R.drawable.app_ic_launcher);
+        resetTvTitreIconeLabel();
+
+        ivBtnAffFiche.setVisibility(View.GONE);
+
+        Log.d(LOG_TAG, "createListeJeuxViews() - Fin");
+    }
+
+    /* Création de la liste des Niveaux */
+    public void createListeNiveauxViews(Jeu.JeuRef jeuId){
+        Log.d(LOG_TAG, "createListeNiveauxViews() - Début");
+
+        setQuestionImage(R.drawable.ic_action_jeux);
+        setQuestionLibelle("");
+
+        tvTitreTexte.setText(getString(R.string.jeu_question_choix_niveau));
+        setTitreIcone(jeuId);
+        resetTvTitreIconeLabel();
+
+        ivBtnAffFiche.setVisibility(View.GONE);
+
+        Log.d(LOG_TAG, "createListeNiveauxViews() - Fin");
+    }
+
+    /* Création de la liste des Réponses */
+    public void createListeReponsesViews(Jeu.Niveau niveau, Fiche fiche, Classification classification){
+        Log.d(LOG_TAG, "createListeReponsesViews() - Début");
+        Log.d(LOG_TAG, "createListeReponsesViews() - niveau : "+niveau.name());
+        Log.d(LOG_TAG, "createListeReponsesViews() - fiche : "+fiche.getNomCommun());
+
+        if (DorisApplicationContext.getInstance().reponseOK == false) {
+            desactivationBoutonSuivant();
+        }
+
+        tvTitreTexte.setText("Quel(le) : "+classification.getNiveau().replaceAll("\\{\\{[^\\}]*\\}\\}",""));
+
+        boutonAffichageFiche(fiche);
+
+        Log.d(LOG_TAG, "createListeReponsesViews() - Fin");
+    }
+
+
+    /* Activation Bouton Suivant */
+    public void activationBoutonSuivant(final Jeu.JeuRef jeuSelectionne, final Jeu.Niveau niveau){
+        ivBtnSuivant.setColorFilter(null);
+        ivBtnSuivant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG_TAG, "activationBoutonSuivant() - onClick()");
+
+                //createListeReponsesViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, fiche, classification);
+                if(boutonSuivantCallback != null)
+                    boutonSuivantCallback.onBoutonSuivant();
+
+            }
+        });
+        ivBtnSuivant.setClickable(true);
+    }
+    /* DésActivation Bouton Suivant */
+    public void desactivationBoutonSuivant(){
+        ivBtnSuivant.setVisibility(View.VISIBLE);
+        ivBtnSuivant.setColorFilter(0xff222222, PorterDuff.Mode.SRC_ATOP);
+
+        ivBtnSuivant.setClickable(false);
+    }
+
+    /* Activation Bouton Suivant */
+    public void boutonAffichageFiche(final Fiche fiche){
+        ivBtnAffFiche.setVisibility(View.VISIBLE);
+        ivBtnAffFiche.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG_TAG, "boutonAffichageFiche() - onClick()");
+
+                Intent toDetailView = new Intent(getActivity(), DetailsFiche_ElementViewActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("ficheNumero", fiche.getNumeroFiche());
+                bundle.putInt("ficheId", fiche.getId() );
+                toDetailView.putExtras(bundle);
+                getActivity().startActivity(toDetailView);
+            }
+        });
+        ivBtnSuivant.setClickable(true);
+    }
+
+    /* MaJ Libellé de l'icone */
+    public void setTvTitreIconeLabel(String label){
+        tvTitreIconeLabel.setVisibility(View.VISIBLE);
+        tvTitreIconeLabel.setText(label);
+    }
+    public void resetTvTitreIconeLabel(){
+        tvTitreIconeLabel.setVisibility(View.GONE);
+        tvTitreIconeLabel.setText("");
+        ivBtnSuivant.setVisibility(View.GONE);
     }
 
     private Photos_Outils getPhotosOutils(){
         if(photosOutils == null) photosOutils = new Photos_Outils(getActivity());
         return photosOutils;
     }
+
 }

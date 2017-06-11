@@ -53,7 +53,6 @@ import android.widget.TextView;
 
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.datamodel.Fiche;
 
 public class JeuxInformation_CustomViewFragment extends Fragment
 {
@@ -67,10 +66,10 @@ public class JeuxInformation_CustomViewFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreateView() - Début");
 
-        View view = inflater.inflate(R.layout.jeux_customview_fragment, container, false);
+        View view = inflater.inflate(R.layout.jeux_questionview_fragment, container, false);
 
-        jeu_image = (ImageView) view.findViewById(R.id.jeux_customviewfragment_image);
-        jeu_libelle = (TextView) view.findViewById(R.id.jeux_customviewfragment_libelle);
+        jeu_image = (ImageView) view.findViewById(R.id.jeu_question_image);
+        jeu_libelle = (TextView) view.findViewById(R.id.jeu_question_libelle);
 
         if (savedInstanceState != null) {
 

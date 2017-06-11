@@ -44,13 +44,8 @@ package fr.ffessm.doris.android.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import fr.ffessm.doris.android.R;
 
@@ -97,7 +92,7 @@ public class Jeux_ClassListViewFragmentCallBack extends ListFragment
 
         // When in two-pane layout, set the listview to highlight the selected list item
         // (We do this during onStart because at the point the listview is available.)
-        if (getFragmentManager().findFragmentById(R.id.jeux_activity_fragment_principal) != null) {
+        if (getFragmentManager().findFragmentById(R.id.jeux_activity_fragment_question) != null) {
             //getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         }
         Log.d(LOG_TAG, "onStart() - Fin");
