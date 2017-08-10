@@ -44,7 +44,6 @@ package fr.ffessm.doris.android.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -53,20 +52,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
 import java.util.List;
 
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.Classification;
 import fr.ffessm.doris.android.datamodel.ClassificationFiche;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.tools.Jeu;
 
 import static java.lang.Math.random;
@@ -77,18 +76,26 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
 	private static final String LOG_TAG = JeuxReponses_ClassListViewFragment.class.getCanonicalName();
 
     JeuSelectionneListener jeuSelectionneCallback;
+    ZoneGeographiqueSelectionneeListener zoneGeographiqueSelectionneeCallback;
     NiveauSelectionneListener niveauSelectionneCallback;
     ReponseSelectionneeListener reponseSelectionneeCallback;
 
-    Jeu jeu;
+    Jeu jeuEncours;
+
     Jeu jeu1;
     Jeu jeu2;
+    Jeu jeuClade;
 
     private LinearLayout llContainerLayout;
 
     public interface JeuSelectionneListener {
         /** Called by HeadlinesFragment when a list item is selected */
         public void onJeuSelectionne(Jeu.JeuRef jeuSelectionne);
+    }
+
+    public interface ZoneGeographiqueSelectionneeListener {
+        /** Called by HeadlinesFragment when a list item is selected */
+        public void onZoneGeographiqueSelectionnee(ZoneGeographique zone);
     }
 
     public interface NiveauSelectionneListener {
@@ -113,6 +120,12 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement JeuSelectionneListener");
+        }
+        try {
+            zoneGeographiqueSelectionneeCallback = (ZoneGeographiqueSelectionneeListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement ZoneGeographiqueSelectionneeListener");
         }
         try {
             niveauSelectionneCallback = (NiveauSelectionneListener) activity;
@@ -152,8 +165,11 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
 
         jeu1 = new Jeu((Context) getActivity(), getActivity(), Jeu.JeuRef.JEU_1);
         jeu2 = new Jeu((Context) getActivity(), getActivity(), Jeu.JeuRef.JEU_2);
-        if (DorisApplicationContext.getInstance().jeuSelectionne == Jeu.JeuRef.JEU_1) jeu = jeu1;
-        if (DorisApplicationContext.getInstance().jeuSelectionne == Jeu.JeuRef.JEU_2) jeu = jeu2;
+        jeuClade = new Jeu((Context) getActivity(), getActivity(), Jeu.JeuRef.JEU_CLADE);
+
+        if (DorisApplicationContext.getInstance().jeuSelectionne == Jeu.JeuRef.JEU_1) jeuEncours = jeu1;
+        if (DorisApplicationContext.getInstance().jeuSelectionne == Jeu.JeuRef.JEU_2) jeuEncours = jeu2;
+        if (DorisApplicationContext.getInstance().jeuSelectionne == Jeu.JeuRef.JEU_CLADE) jeuEncours = jeuClade;
 
         if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.ACCUEIL) {
             createListeJeuxViews();
@@ -178,24 +194,52 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
 
         llContainerLayout.addView(Jeu.getJeuView(jeuSelectionneCallback, (Context) getActivity(), Jeu.JeuRef.JEU_1));
         llContainerLayout.addView(Jeu.getJeuView(jeuSelectionneCallback, (Context) getActivity(), Jeu.JeuRef.JEU_2));
+        llContainerLayout.addView(Jeu.getJeuView(jeuSelectionneCallback, (Context) getActivity(), Jeu.JeuRef.JEU_CLADE));
 
         Log.d(LOG_TAG, "createListeJeuxViews() - Fin");
     }
 
-    /* Création de la liste des Niveaux */
-    public void createListeNiveauxViews(Jeu.JeuRef jeuId){
-        Log.d(LOG_TAG, "createListeNiveauxViews() - Début");
-
-        if (jeuId == Jeu.JeuRef.JEU_1) jeu = jeu1;
-        if (jeuId == Jeu.JeuRef.JEU_2) jeu = jeu2;
-
-        String jeux_icone[] = getActivity().getResources().getStringArray(R.array.jeux_titre_icone);
+    /* Création de la liste des Zones Géographiques */
+    public void createListeZonesGeographiquesViews(){
+        Log.d(LOG_TAG, "createListeZonesGeographiquesViews() - Début");
 
         viderListeReponsesViews();
 
-        llContainerLayout.addView(jeu.getNiveauView(niveauSelectionneCallback, (Context) getActivity(), jeuId, Jeu.Niveau.FACILE));
-        llContainerLayout.addView(jeu.getNiveauView(niveauSelectionneCallback, (Context) getActivity(), jeuId, Jeu.Niveau.INTERMEDIAIRE));
-        llContainerLayout.addView(jeu.getNiveauView(niveauSelectionneCallback, (Context) getActivity(), jeuId, Jeu.Niveau.DIFFICILE));
+        // Affichage lien vers "toutes Zones"
+        ZoneGeographique zoneToutesZones = new ZoneGeographique();
+        zoneToutesZones.setToutesZones();
+        Log.d(LOG_TAG, "createListeZonesGeographiquesViews() - zoneToutesZones : "+zoneToutesZones.getNom());
+
+        llContainerLayout.addView( Jeu.getZoneGeographiqueView(zoneGeographiqueSelectionneeCallback, (Context) getActivity(), zoneToutesZones) );
+
+        // Affichage lien vers les zones
+        OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(getActivity());
+
+        List<ZoneGeographique> listeZoneGeo = ormLiteDBHelper.getZoneGeographiqueDao().queryForAll();
+        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
+
+        for (ZoneGeographique zoneGeo : listeZoneGeo) {
+            llContainerLayout.addView( Jeu.getZoneGeographiqueView(zoneGeographiqueSelectionneeCallback, (Context) getActivity(), zoneGeo) );
+        }
+
+        Log.d(LOG_TAG, "createListeZonesGeographiquesViews() - Fin");
+    }
+
+    /* Création de la liste des Niveaux */
+    public void createListeNiveauxViews(){
+        Log.d(LOG_TAG, "createListeNiveauxViews() - Début");
+
+        Jeu.JeuRef jeuId = DorisApplicationContext.getInstance().jeuSelectionne;
+        if (jeuId == Jeu.JeuRef.JEU_CLADE) jeuEncours = jeuClade;
+        if (jeuId == Jeu.JeuRef.JEU_1) jeuEncours = jeu1;
+        if (jeuId == Jeu.JeuRef.JEU_2) jeuEncours = jeu2;
+
+
+        viderListeReponsesViews();
+
+        llContainerLayout.addView(jeuEncours.getNiveauView(niveauSelectionneCallback, (Context) getActivity(), jeuId, Jeu.Niveau.FACILE));
+        llContainerLayout.addView(jeuEncours.getNiveauView(niveauSelectionneCallback, (Context) getActivity(), jeuId, Jeu.Niveau.INTERMEDIAIRE));
+        llContainerLayout.addView(jeuEncours.getNiveauView(niveauSelectionneCallback, (Context) getActivity(), jeuId, Jeu.Niveau.DIFFICILE));
 
         Log.d(LOG_TAG, "createListeNiveauxViews() - Fin");
     }
@@ -214,7 +258,7 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
             boolean reponsePlacee = false;
             OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(getActivity());
 
-            QueryBuilder<ClassificationFiche, Integer> qbClassificationFiche = ormLiteDBHelper.getClassificationFicheDao().queryBuilder();
+            QueryBuilder<ClassificationFiche, Integer> qbClassificationFiche;
             List<ClassificationFiche> classificationFicheListeAleatoire = null;
 
             try {
@@ -232,10 +276,10 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
                 error.printStackTrace();
             }
 
-            for (int i = 1; i <= jeu.NBREPONSESPROPOSEES; i++) {
+            for (int i = 1; i <= jeuEncours.NBREPONSESPROPOSEES; i++) {
 
                 // LA BONNE REPONSE
-                if (reponsePlacee == false && ((jeu.NBREPONSESPROPOSEES * random()) < 1 || i == jeu.NBREPONSESPROPOSEES)) {
+                if (reponsePlacee == false && ((jeuEncours.NBREPONSESPROPOSEES * random()) < 1 || i == jeuEncours.NBREPONSESPROPOSEES)) {
                     reponsePlacee = true;
 
                     Log.d(LOG_TAG, "createListeReponsesViews() - Fr : " + classification.getTermeFrancais());
@@ -248,7 +292,7 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
                     Log.d(LOG_TAG, "createListeReponsesViews() - lib : " + reponseLibelle);
 
                     llContainerLayout.addView(
-                            jeu.getReponseView(
+                            jeuEncours.getReponseView(
                                     reponseSelectionneeCallback,
                                     fiche,
                                     classificationFiche.getClassification().getId(),
@@ -269,7 +313,7 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
                             reponseLibelle = classificationAleatoire.getTermeScientifique();
 
                         llContainerLayout.addView(
-                                jeu.getReponseView(
+                                jeuEncours.getReponseView(
                                         reponseSelectionneeCallback,
                                         fiche,
                                         classificationAleatoire.getId(),

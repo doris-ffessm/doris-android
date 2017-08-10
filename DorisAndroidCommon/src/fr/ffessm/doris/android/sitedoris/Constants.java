@@ -111,7 +111,9 @@ public class Constants {
     	FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST,
     	FAUNE_FLORE_TOUTES_ZONES
     }
-	
+
+	public final static String ZONE_GEOGRAPHIQUE_TOUTES_ZONES_DESCR = "Toutes Zones";
+
     public enum ParticipantKind {
     	REDACTEUR_PRINCIPAL,
     	REDACTEUR,
@@ -218,11 +220,11 @@ public class Constants {
 			return 99;
 		}
     } 
-    
+
     public static String getGroupesZoneUrl(int zone) {
     	return SITE_RACINE_URL + GROUPES_URL+zone;
     }
-    
+
     public static String getGroupeContenuUrl(int zone, int numeroGroupe, int numeroSousGroupe, int page) {
 		String listeGroupeUrl = SITE_RACINE_URL + GROUPE_CONTENU_URL
 			.replace("@zone", ""+zone).replace("@groupe", ""+numeroGroupe).replace("@page", ""+page);
@@ -255,7 +257,7 @@ public class Constants {
 			return null;
 		}
     }
-    
+
     public static String getTitreZoneGeographique(ZoneGeographiqueKind zoneKing) {
     	switch (zoneKing) {
 		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
@@ -274,7 +276,7 @@ public class Constants {
 			return "Faune et flore subaquatiques de toutes les zones DORIS";
 		}
     }
-    
+
     public static String getTexteZoneGeographique(ZoneGeographiqueKind zoneKing) {
     	switch (zoneKing) {
 		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
@@ -291,7 +293,7 @@ public class Constants {
 			return "Toutes les espèces de toutes les zones DORIS";
 		default:
 			return "Toutes les espèces de toutes les zones DORIS";
-		} 
+		}
     }
     
     public static String getTitreCourtZoneGeographique(ZoneGeographiqueKind zoneKing) {

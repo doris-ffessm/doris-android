@@ -41,6 +41,7 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.tools;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -232,9 +233,7 @@ public class Fiches_Outils {
 		
 		return filteredFicheIdList;
     }
-    
-    
-    
+
 	public MajListeFichesType getMajListeFichesTypeZoneGeo(ZoneGeographiqueKind inZoneGeo){
 		switch(inZoneGeo){
 		case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
@@ -251,8 +250,7 @@ public class Fiches_Outils {
 			return null;
 		}
 	}
-	
-	
+
 	public boolean isMajListeFichesTypeOnlyP0(){
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getPrecharMode() - Début" );
 		if ( MajListeFichesType.valueOf(paramOutils.getParamString(R.string.pref_key_maj_liste_fiches_region_france,"M1")) == MajListeFichesType.M0 
@@ -263,8 +261,7 @@ public class Fiches_Outils {
 			) return true;
 		return false;	
 	}
-	
-   
+
 	public Calendar getDerniereMajListeFichesTypeZoneGeo(ZoneGeographiqueKind inZoneGeo) {
 		String dernierMajDateCaract = "";
 		switch(inZoneGeo){
@@ -299,8 +296,7 @@ public class Fiches_Outils {
     	
     	return dernierMajDate;
 	}
-	
-	
+
 	public boolean setDateMajListeFichesTypeZoneGeo(ZoneGeographiqueKind inZoneGeo) {
 		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setDateMajListeFichesTypeZoneGeo() - Début" );
 		Calendar aujourdHui = Calendar.getInstance();
@@ -329,8 +325,7 @@ public class Fiches_Outils {
 		}
     	
 	}
-	
-	
+
 	public int getNbJoursDerMajListeFichesTypeZoneGeo(ZoneGeographiqueKind inZoneGeo) {
 		Calendar jourDerniereMaj = getDerniereMajListeFichesTypeZoneGeo(inZoneGeo);
 		Calendar aujourdHui = Calendar.getInstance();
@@ -364,7 +359,7 @@ public class Fiches_Outils {
         
     	return false;
     }
-	
+
 	public String getZoneIcone(ZoneGeographiqueKind inZoneGeo) {
 	   	switch (inZoneGeo) {
 	   	case FAUNE_FLORE_TOUTES_ZONES:
@@ -388,7 +383,15 @@ public class Fiches_Outils {
 		return context.getResources().getIdentifier(getZoneIcone(inZoneGeo), null, context.getPackageName());
 	}
 
-	
-	
-	
+	public Fiche getFicheForId(Integer ficheId){
+		try {
+			return ormLiteDBHelper.getDorisDBHelper().ficheDao.queryForId(ficheId);
+		} catch (SQLException e1) {
+			Log.e(LOG_TAG, "Cannot retreive fiche with _id = "+ficheId+" "+e1.getMessage(), e1);
+			return null;
+		}
+	}
+
+
+
 }

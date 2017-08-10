@@ -54,22 +54,29 @@ import android.widget.Toast;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.Classification;
 import fr.ffessm.doris.android.datamodel.ClassificationFiche;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.fragments.JeuxQuestion_CustomViewFragment;
 import fr.ffessm.doris.android.fragments.JeuxReponses_ClassListViewFragment;
+import fr.ffessm.doris.android.tools.Fiches_Outils;
+import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Jeu;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
 public class Jeux_CustomViewActivity extends FragmentActivity
         implements JeuxReponses_ClassListViewFragment.JeuSelectionneListener,
+                    JeuxReponses_ClassListViewFragment.ZoneGeographiqueSelectionneeListener,
                     JeuxReponses_ClassListViewFragment.NiveauSelectionneListener,
                     JeuxReponses_ClassListViewFragment.ReponseSelectionneeListener,
                     JeuxQuestion_CustomViewFragment.BoutonSuivantListener {
@@ -107,6 +114,36 @@ public class Jeux_CustomViewActivity extends FragmentActivity
 
         DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.ACCUEIL;
 
+
+        Log.d(LOG_TAG, "onCreate() - TEST TEST TEST TEST TEST TEST TEST TEST TEST");
+        OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(this);
+
+        List<Groupe> allGroupes = Groupes_Outils.getAllGroupes(ormLiteDBHelper.getDorisDBHelper());
+        Log.d(LOG_TAG, "onCreate() - allGroupessize() : "+allGroupes.size());
+
+        List<Groupe> groupesListe = Groupes_Outils.getAllGroupesEnfantsJusquAuNiveau(allGroupes, new ArrayList<Groupe>(), 3);
+        Log.d(LOG_TAG, "onCreate() - groupesListe() : "+groupesListe.size());
+
+        Groupe groupeJeu1 = groupesListe.get( (int) (Math.random() * (groupesListe.size() - 1) ) );
+        Log.d(LOG_TAG, "onCreate() - groupe 1 au hasard() : "+groupeJeu1.getNomGroupe());
+        Groupe groupeJeu2 = groupesListe.get( (int) (Math.random() * (groupesListe.size() - 1) ) );
+        Log.d(LOG_TAG, "onCreate() - groupe 2 au hasard() : "+groupeJeu2.getNomGroupe());
+
+        Fiches_Outils fichesOutils = new Fiches_Outils(this);
+        List<Integer> fichesListeId1 = fichesOutils.getListeIdFichesFiltrees(this, ormLiteDBHelper.getDorisDBHelper(), -1, groupeJeu1.getId());
+        Log.d(LOG_TAG, "onCreate() - fiche du groupe 1 au hasard() : "+fichesListeId1.size()
+                            + " - "
+                            + fichesOutils.getFicheForId(fichesListeId1.get( (int) (Math.random() * (fichesListeId1.size() - 1) ) )).getNomCommun()
+            );
+        List<Integer> fichesListeId2 = fichesOutils.getListeIdFichesFiltrees(this, ormLiteDBHelper.getDorisDBHelper(), -1, groupeJeu2.getId());
+        Log.d(LOG_TAG, "onCreate() - fiche du groupe 2 au hasard() : "+fichesListeId2.size()
+                            + " - "
+                            + fichesOutils.getFicheForId(fichesListeId2.get( (int) (Math.random() * (fichesListeId2.size() - 1) ) )).getNomCommun()
+            );
+
+        Log.d(LOG_TAG, "onCreate() - TEST TEST TEST TEST TEST TEST TEST TEST TEST");
+
+
         Log.d(LOG_TAG, "onCreate() - Fin");
     }
 
@@ -128,7 +165,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         }
 
         if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_NIVEAU) {
-            reponsesFrag.createListeNiveauxViews(DorisApplicationContext.getInstance().jeuSelectionne);
+            reponsesFrag.createListeNiveauxViews();
         }
 
         if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.JEU) {
@@ -174,7 +211,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
                     return true;
                 }
 
-                if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_NIVEAU) {
+                if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_ZONE_GEO) {
                     questionFrag.createListeJeuxViews();
                     reponsesFrag.createListeJeuxViews();
 
@@ -182,9 +219,17 @@ public class Jeux_CustomViewActivity extends FragmentActivity
                     return true;
                 }
 
+                if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_NIVEAU) {
+                    questionFrag.createListeZonesGeographiquesViews();
+                    reponsesFrag.createListeZonesGeographiquesViews();
+
+                    DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_ZONE_GEO;
+                    return true;
+                }
+
                 // Forcément en mode jeu => on revient au choix du Niveau
-                questionFrag.createListeNiveauxViews(DorisApplicationContext.getInstance().jeuSelectionne);
-                reponsesFrag.createListeNiveauxViews(DorisApplicationContext.getInstance().jeuSelectionne);
+                questionFrag.createListeNiveauxViews();
+                reponsesFrag.createListeNiveauxViews();
 
                 DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_NIVEAU;
 
@@ -210,7 +255,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
                     return true;
                 }
 
-                if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_NIVEAU) {
+                if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_ZONE_GEO) {
                     questionFrag.createListeJeuxViews();
                     reponsesFrag.createListeJeuxViews();
 
@@ -218,9 +263,17 @@ public class Jeux_CustomViewActivity extends FragmentActivity
                     return true;
                 }
 
+                if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_NIVEAU) {
+                    questionFrag.createListeZonesGeographiquesViews();
+                    reponsesFrag.createListeZonesGeographiquesViews();
+
+                    DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_ZONE_GEO;
+                    return true;
+                }
+
                 // Forcément en mode jeu => on revient au choix du Niveau
-                questionFrag.createListeNiveauxViews(DorisApplicationContext.getInstance().jeuSelectionne);
-                reponsesFrag.createListeNiveauxViews(DorisApplicationContext.getInstance().jeuSelectionne);
+                questionFrag.createListeNiveauxViews();
+                reponsesFrag.createListeNiveauxViews();
 
                 DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_NIVEAU;
 
@@ -238,10 +291,8 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         DorisApplicationContext.getInstance().jeuSelectionne = jeuSelectionne;
 
         if (questionFrag != null) {
-            // If article frag is available, we're in two-pane layout...
-
-            // Call a method in the ArticleFragment to update its content
-            questionFrag.createListeNiveauxViews(jeuSelectionne);
+            // Si le Fragment Question Existe on le met à jour
+            questionFrag.createListeZonesGeographiquesViews();
 
         } else {
             // If the frag is not available, we're in the one-pane layout and must swap frags...
@@ -249,10 +300,40 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         }
 
         if (reponsesFrag != null) {
-            // If article frag is available, we're in two-pane layout...
+            // Si le Fragment Liste de Réponses Existe on le met à jour
+            //reponsesFrag.createListeNiveauxViews(jeuSelectionne);
+            reponsesFrag.createListeZonesGeographiquesViews();
 
-            // Call a method in the ArticleFragment to update its content
-            reponsesFrag.createListeNiveauxViews(jeuSelectionne);
+        } else {
+            // If the frag is not available, we're in the one-pane layout and must swap frags...
+            // Create fragment and give it an argument for the selected article
+        }
+
+        DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_ZONE_GEO;
+        Log.d(LOG_TAG, "onJeuSelectionne() - Fin");
+    }
+
+    public void onZoneGeographiqueSelectionnee(ZoneGeographique zone) {
+        Log.d(LOG_TAG, "onZoneGeographiqueSelectionnee() - Début");
+
+        Toast.makeText(this, "Zone : "+zone.getNom(), Toast.LENGTH_LONG).show();
+
+        DorisApplicationContext.getInstance().jeuZoneGeographiqueSelectionnee = zone;
+
+
+        if (questionFrag != null) {
+            // Si le Fragment Question Existe on le met à jour
+            questionFrag.createListeNiveauxViews();
+
+        } else {
+            // If the frag is not available, we're in the one-pane layout and must swap frags...
+            // Create fragment and give it an argument for the selected article
+        }
+
+        if (reponsesFrag != null) {
+            // Si le Fragment Liste de Réponses Existe on le met à jour
+            //reponsesFrag.createListeNiveauxViews(jeuSelectionne);
+            reponsesFrag.createListeNiveauxViews();
 
         } else {
             // If the frag is not available, we're in the one-pane layout and must swap frags...
@@ -260,7 +341,8 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         }
 
         DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_NIVEAU;
-        Log.d(LOG_TAG, "onJeuSelectionne() - Fin");
+
+        Log.d(LOG_TAG, "onZoneGeographiqueSelectionnee() - Fin");
     }
 
     public void onNiveauSelectionne(Jeu.JeuRef jeuSelectionne, Jeu.Niveau niveau, boolean onResume) {

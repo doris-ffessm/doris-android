@@ -246,15 +246,31 @@ public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemC
         Log.d(LOG_TAG, "createListeJeuxViews() - Fin");
     }
 
+    /* Création de la liste de Choix de la Zone Géographique */
+    public void createListeZonesGeographiquesViews(){
+        Log.d(LOG_TAG, "createListeZonesGeographiquesViews() - Début");
+
+        setQuestionImage(R.drawable.ic_action_jeux);
+        setQuestionLibelle("");
+
+        tvTitreTexte.setText(getString(R.string.jeu_question_choix_zone_geographique));
+        setTitreIcone(DorisApplicationContext.getInstance().jeuSelectionne);
+        resetTvTitreIconeLabel();
+
+        ivBtnAffFiche.setVisibility(View.GONE);
+
+        Log.d(LOG_TAG, "createListeZonesGeographiquesViews() - Fin");
+    }
+
     /* Création de la liste des Niveaux */
-    public void createListeNiveauxViews(Jeu.JeuRef jeuId){
+    public void createListeNiveauxViews(){
         Log.d(LOG_TAG, "createListeNiveauxViews() - Début");
 
         setQuestionImage(R.drawable.ic_action_jeux);
         setQuestionLibelle("");
 
         tvTitreTexte.setText(getString(R.string.jeu_question_choix_niveau));
-        setTitreIcone(jeuId);
+        setTitreIcone(DorisApplicationContext.getInstance().jeuSelectionne);
         resetTvTitreIconeLabel();
 
         ivBtnAffFiche.setVisibility(View.GONE);

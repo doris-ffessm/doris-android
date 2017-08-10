@@ -6,6 +6,8 @@
     <string name="jeu_question_choix_accueil">Choisissez un jeu</string>
     <string name="jeu_description_accueil"></string>
 
+    <string name="jeu_question_choix_zone_geographique">Choisissez une Zone Géographique</string>
+
     <string name="jeu_question_choix_niveau">Choisissez un niveau</string>
     <string name="jeu_description_niveau">Niveau de départ, il croit ensuite en fonction de votre réussite.</string>
 
@@ -15,10 +17,12 @@
     <string-array name="jeux_titre_array">
         <item>Quel Groupe ?</item>
         <item>Quelle Espèce ? (non dév.)</item>
+        <item>Quelle Clade ?</item>
     </string-array>
     <string-array name="jeux_titre_icone">
         <item>ic_action_jeux_quel_classification</item>
         <item>ic_action_jeux_quel_espece</item>
+        <item>ic_action_jeux_quel_classification</item>
     </string-array>
 
     <string-array name="jeux_niveau_array">

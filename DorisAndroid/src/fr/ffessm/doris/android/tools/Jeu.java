@@ -49,18 +49,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.fragments.JeuxReponses_ClassListViewFragment;
+import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 
 public class Jeu {
 	private static final String LOG_TAG = Jeu.class.getCanonicalName();
 
-    public enum Statut { ACCUEIL, CHOIX_NIVEAU, JEU }
-    public enum JeuRef { JEU_1, JEU_2 }
+    public enum Statut { ACCUEIL, CHOIX_ZONE_GEO, CHOIX_NIVEAU, JEU }
+    public enum JeuRef { JEU_1, JEU_2, JEU_CLADE  }
     public enum Niveau { FACILE, INTERMEDIAIRE, DIFFICILE }
     public int NBREPONSESPROPOSEES = 3;
 
@@ -69,6 +69,9 @@ public class Jeu {
 
     private JeuRef jeuRef;
     private Niveau niveau;
+    private ZoneGeographiqueKind zoneGeographique;
+
+    Fiches_Outils fichesOutils;
 
 	public Jeu(Context context){
 		this.context = context;
@@ -93,8 +96,13 @@ public class Jeu {
     }
 
     public Niveau getNiveau() {return niveau;}
-	public void setNiveau(Niveau niveau){
+    public void setNiveau(Niveau niveau){
         this.niveau = niveau;
+    }
+
+    public ZoneGeographiqueKind getZoneGeographique() {return zoneGeographique;}
+	public void setZoneGeographique(ZoneGeographiqueKind zoneGeographique){
+        this.zoneGeographique = zoneGeographique;
     }
 
     public static View getJeuView(final JeuxReponses_ClassListViewFragment.JeuSelectionneListener jeuSelectionneCallback, final Context context, final JeuRef jeuRef){
@@ -125,6 +133,36 @@ public class Jeu {
         });
 
         Log.d(LOG_TAG, "getJeuView() - Fin");
+        return viewReponse;
+    }
+
+    public static View getZoneGeographiqueView(final JeuxReponses_ClassListViewFragment.ZoneGeographiqueSelectionneeListener zoneGeographiqueSelectionneeCallback,
+                                               final Context context, final ZoneGeographique zoneGeographique){
+        Log.d(LOG_TAG, "getZoneGeographiqueView() - Début");
+        Log.d(LOG_TAG, "getZoneGeographiqueView() - zoneGeographique : "+zoneGeographique.getId()+" - "+zoneGeographique.getNom());
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View viewReponse = inflater.inflate(R.layout.jeux_reponseview_row, null);
+
+        TextView tvLabel = (TextView) viewReponse.findViewById(R.id.jeux_listviewrow_label);
+        tvLabel.setText( zoneGeographique.getNom() );
+
+        ImageView ivIcone = (ImageView) viewReponse.findViewById(R.id.jeux_listviewrow_icon);
+        Fiches_Outils fichesOutils = new Fiches_Outils(context);
+        ivIcone.setImageResource(context.getResources().getIdentifier(fichesOutils.getZoneIcone(zoneGeographique.getZoneGeoKind()),"drawable", context.getPackageName()));
+
+        ImageView ivReponseInfoIcone = (ImageView) viewReponse.findViewById(R.id.jeux_listviewrow_reponseinfo_icon);
+        ivReponseInfoIcone.setVisibility(View.GONE);
+
+        viewReponse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(zoneGeographiqueSelectionneeCallback != null)
+                    zoneGeographiqueSelectionneeCallback.onZoneGeographiqueSelectionnee(zoneGeographique);
+            }
+        });
+
+        Log.d(LOG_TAG, "getZoneGeographiqueView() - Fin");
         return viewReponse;
     }
 
@@ -189,7 +227,7 @@ public class Jeu {
                 Log.d(LOG_TAG, "getReponseView() - detail.onClick()");
 
                 String descriptionReponse = DetailReponse;
-                if (DetailReponse == null || DetailReponse == "") descriptionReponse = "Pas de détails pour cette réponse";
+                if (DetailReponse == null || DetailReponse.isEmpty()) descriptionReponse = "Pas de détails pour cette réponse";
 
                 TextView tvDetails = (TextView) viewReponse.findViewById(R.id.jeux_listviewrow_details);
                 tvDetails.setText(descriptionReponse);
@@ -219,4 +257,8 @@ public class Jeu {
         return borne;
     }
 
+    private Fiches_Outils getFichesOutils() {
+        if(fichesOutils == null) fichesOutils = new Fiches_Outils(context);
+        return fichesOutils;
+    }
 }

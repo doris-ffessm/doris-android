@@ -194,6 +194,8 @@ public class Common_Outils {
 			texte = texte.replaceAll("<[^<]*specie/([0-9]*)[^>]*>([^<]*)</a>", "{{F:$1}}$2{{/F}}");
 
 			//Lien vers termes du glossaire
+			//(*) remplacé par (#)
+			texte = StringUtils.replace(texte, "(*)", "(#)");
 			//Mot suffixé par *
             texte = texte.replaceAll("([ >\\}'\\(])([^ >\\}'\\(]*)\\*", "$1{{D:$2}}$2{{/D}}");
             // en V4,

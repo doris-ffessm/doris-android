@@ -289,9 +289,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	
     	// Affichage lien vers "toutes Zones"
     	ZoneGeographique zoneToutesZones = new ZoneGeographique();
-    	zoneToutesZones.setId(-1);
-    	zoneToutesZones.setNom(getContext().getString(R.string.accueil_customview_zonegeo_touteszones));
-        
+    	zoneToutesZones.setToutesZones();
+
         llContainerLayout.addView(createNavigationZoneView(zoneToutesZones));
     	
     	// affichage lien vers les zones 
@@ -328,11 +327,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         
         ImageView ivIcone = (ImageView)viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
         ivIcone.setImageResource(imageZone);
-        int iconeZine = ScreenTools.dp2px(context, getParamOutils().getParamInt(R.string.pref_key_accueil_icone_taille,
+        int iconeTaille = ScreenTools.dp2px(context, getParamOutils().getParamInt(R.string.pref_key_accueil_icone_taille,
 															Integer.parseInt(context.getString(R.string.accueil_icone_taille_defaut))
 														) );
-	    ivIcone.setMaxHeight(iconeZine);
-	    ivIcone.setMaxWidth(iconeZine);
+	    ivIcone.setMaxHeight(iconeTaille);
+	    ivIcone.setMaxWidth(iconeTaille);
 	    
 	    
 	    // Quelle est l'action principale : par défaut ouverture de la liste des fiches de la Zone

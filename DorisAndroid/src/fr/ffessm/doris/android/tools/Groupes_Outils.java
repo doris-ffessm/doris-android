@@ -75,9 +75,7 @@ public class Groupes_Outils {
 		
 	}
 
-	
 	public static Groupe getGroupeFromId(List<Groupe> allGroupes, int _id){
-		// trouve le groupe racine
 		Groupe groupeFromId = null;
 		for(Groupe groupe : allGroupes){
 			if(groupe.getId() == _id){
@@ -88,7 +86,7 @@ public class Groupes_Outils {
 		return groupeFromId;
 	}
 	
-	public static Groupe getRoot(List<Groupe> allGroupes){
+	public static Groupe getGroupeRoot(List<Groupe> allGroupes){
 		// trouve le groupe racine
 		Groupe rootGroupe = null;
 		for(Groupe groupe : allGroupes){
@@ -100,24 +98,42 @@ public class Groupes_Outils {
 		return rootGroupe;
 	}
 	
-	public static ArrayList<Groupe> getAllGroupesForLevel(ArrayList<Groupe> allGroupes, int listgroupLevel){
-		// trouve le groupe racine
-		Groupe rootGroupe = null;
-		for(Groupe groupe : allGroupes){
-			if(groupe.getNomGroupe().equals("racine")){
-				rootGroupe = groupe;
-				break;
+	public static ArrayList<Groupe> getAllGroupesEnfantsJusquAuNiveau(List<Groupe> allGroupes, ArrayList<Groupe> groupesListeIn, int niveauFeuilles){
+		if(BuildConfig.DEBUG) Log.d(LOG_TAG, "getAllGroupesEnfantsJusquAuNiveau - groupesListeIn.size() : "+groupesListeIn.size());
+		if(BuildConfig.DEBUG) Log.d(LOG_TAG, "getAllGroupesEnfantsJusquAuNiveau - niveauFeuilles : "+niveauFeuilles);
+
+		ArrayList<Groupe> groupesListeOut = new ArrayList<Groupe>();
+
+		// Trouve le groupe racine si aucun groupe passé
+		if (groupesListeIn.size() == 0) {
+			for (Groupe groupe : allGroupes) {
+				if (groupe.getNomGroupe().equals("racine")) {
+					groupesListeIn.add( groupe );
+					break;
+				}
 			}
 		}
-		ArrayList<Groupe> currentLevelGroupes = new ArrayList<Groupe>();
-		if(rootGroupe != null){
-		
-			currentLevelGroupes.add(rootGroupe);
-			for (int i = 0; i < listgroupLevel; i++) {
-				currentLevelGroupes = getAllGroupesForNextLevel(currentLevelGroupes);
+
+		// Recherche Groupes Enfants
+		for (Groupe groupeIn : groupesListeIn) {
+			if(BuildConfig.DEBUG) Log.d(LOG_TAG, "getAllGroupesEnfantsJusquAuNiveau - groupeIn : "+groupeIn.getNomGroupe());
+
+			Collection<Groupe> groupesFils= groupeIn.getGroupesFils();
+
+			// Si pas de fils alors on garde le père
+			if (!groupesFils.isEmpty()) {
+				groupesListeOut.addAll(groupesFils);
+			} else {
+				groupesListeOut.add(groupeIn);
 			}
 		}
-		return currentLevelGroupes;
+
+		//Tant que pas atteint le niveau demandé on continue pas récurrence
+		if (niveauFeuilles != 1) {
+			return getAllGroupesEnfantsJusquAuNiveau(allGroupes, groupesListeOut, niveauFeuilles - 1);
+		}
+
+		return groupesListeOut;
 	}
 	
 	public static ArrayList<Groupe> getAllGroupesForNextLevel(ArrayList<Groupe> currentLevelGroupes){
@@ -128,8 +144,7 @@ public class Groupes_Outils {
 		return nextLevelGroups;
 	}
 	
-	public static List<Groupe> getAllGroupesForNextLevel(
-			List<Groupe> rawGroupes, Groupe rootGroupe) {
+	public static List<Groupe> getAllGroupesForNextLevel(List<Groupe> rawGroupes, Groupe rootGroupe) {
 		ArrayList<Groupe> nextLevelGroups = new ArrayList<Groupe>();
 		nextLevelGroups.addAll(rootGroupe.getGroupesFils());
 		return nextLevelGroups;

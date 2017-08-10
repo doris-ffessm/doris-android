@@ -88,6 +88,8 @@ public class Disque_Outils {
     }
     
 	public String getHumanDiskUsage(long inSize){
+		Log.d(LOG_TAG, "getHumanDiskUsage() - inSize : "+inSize);
+
 		String sizeTexte = "";
 		// octet => ko
 		inSize = inSize/1024;
@@ -103,6 +105,7 @@ public class Disque_Outils {
         		sizeTexte = "" + (Math.round(sizeGo * 10.0) / 10.0) + "\u00A0Go";
         	}
         }
+		Log.d(LOG_TAG, "getHumanDiskUsage() - sizeTexte : "+sizeTexte);
     	return sizeTexte;
 	}
 

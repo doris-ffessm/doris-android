@@ -59,6 +59,7 @@ import fr.ffessm.doris.android.datamodel.Classification;
 import fr.ffessm.doris.android.datamodel.ClassificationFiche;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Jeu;
@@ -170,6 +171,7 @@ public class DorisApplicationContext {
 	// Gestion de l'interface des Jeux
     public Jeu.Statut jeuStatut;
     public Jeu.JeuRef jeuSelectionne;
+    public ZoneGeographique jeuZoneGeographiqueSelectionnee;
     public Jeu.Niveau jeuNiveauSelectionne;
 	// Enregistrées pour les resume()
     public Fiche jeuFicheEnCours;

@@ -155,7 +155,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 		}
 		
 		if(currentRootGroupe == null) {
-			currentRootGroupe = Groupes_Outils.getRoot(groupeList);
+			currentRootGroupe = Groupes_Outils.getGroupeRoot(groupeList);
 		}
 
 		buildTreeForRoot(currentRootGroupe);

@@ -671,7 +671,13 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			etatDiskStringBuilder.append( sizeFolder );
 			etatDiskStringBuilder.append( getContext().getString(R.string.etatmodehorsligne_foldersize_hi_res) );
 			etatDiskStringBuilder.append( getDisqueOutils().getHumanDiskUsage( getPhotosOutils().getPhotoDiskUsageInPreferedLocation(ImageType.HI_RES) ) );
-			
+
+			long test = getPhotosOutils().getPhotoDiskUsageInPreferedLocation(ImageType.HI_RES);
+			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshFolderSize() - getPhotosOutils().getPhotoDiskUsageInPreferedLocation(ImageType.HI_RES) : "
+														+  test);
+			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshFolderSize() - getDisqueOutils().getHumanDiskUsage(ImageType.HI_RES) : "
+					+ getDisqueOutils().getHumanDiskUsage(test) );
+
 			btnGestionPhotosResetHiRes.setEnabled(true);
 		} else {
 			btnGestionPhotosResetHiRes.setEnabled(false);

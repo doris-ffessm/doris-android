@@ -65,6 +65,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
 //End of user code
+import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 
 public class ZoneGeoSelection_Adapter extends BaseAdapter  {
@@ -84,6 +85,8 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 	SharedPreferences prefs;
 	//Start of user code protected additional ZoneGeoSelection_Adapter attributes
 	// additional attributes
+	Param_Outils paramOutils;
+
 	//End of user code
 
 	public ZoneGeoSelection_Adapter(Context context, DorisDBHelper contextDB) {
@@ -190,15 +193,24 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 			}
 		});
         
-        ImageView ivIcon = (ImageView) convertView.findViewById(R.id.zonegeoselection_listviewrow_icon);
-		int defaultIconSize = prefs.getInt(context.getString(R.string.pref_key_accueil_icone_taille), Integer.parseInt(context.getString(R.string.accueil_icone_taille_defaut)) );
-    	ivIcon.setMaxHeight(defaultIconSize);
-    	
+        ImageView ivIcone = (ImageView) convertView.findViewById(R.id.zonegeoselection_listviewrow_icon);
+
+		//Log.d(LOG_TAG, "getView() - R.string.pref_key_accueil_icone_taille : " + context.getString(R.string.pref_key_accueil_icone_taille) );
+		//Log.d(LOG_TAG, "getView() - R.string.accueil_icone_taille_defaut : " + context.getString(R.string.accueil_icone_taille_defaut) );
+		int defaultIconSize = getParamOutils().getParamInt(
+										R.string.pref_key_accueil_icone_taille,
+										Integer.parseInt(context.getString(R.string.accueil_icone_taille_defaut)) );
+		//Log.d(LOG_TAG, "getView() - defaultIconSize : " + defaultIconSize );
+
+		int iconeTaille = ScreenTools.dp2px(context, defaultIconSize);
+		ivIcone.setMaxHeight(iconeTaille);
+		ivIcone.setMaxWidth(iconeTaille);
+
         // TODO : pas très propre mais fonctionne => Modifier Outils ... vers entry.getIcone qd sera dispo
     	Fiches_Outils fichesOutils = new Fiches_Outils(context);
     	String uri = fichesOutils.getZoneIcone(entry.getZoneGeoKind()); 
     	int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
-    	ivIcon.setImageResource(imageResource);
+		ivIcone.setImageResource(imageResource);
     	
 		// End of user code
 
@@ -209,5 +221,9 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 	
 	//Start of user code protected additional ZoneGeoSelection_Adapter methods
 	// additional methods
+	private Param_Outils getParamOutils(){
+		if(paramOutils == null) paramOutils = new Param_Outils(context);
+		return paramOutils;
+	}
 	//End of user code
 }
