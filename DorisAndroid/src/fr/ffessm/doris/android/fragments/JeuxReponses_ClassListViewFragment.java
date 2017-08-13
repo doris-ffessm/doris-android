@@ -245,8 +245,9 @@ public class JeuxReponses_ClassListViewFragment extends Fragment
     }
 
     /* Création de la liste des Réponses */
-    public void createListeReponsesViews(Jeu.Niveau niveau, Fiche fiche, ClassificationFiche classificationFiche, Classification classification, boolean onResume){
+    public void createListeReponsesJeuCLADEViews(ZoneGeographique zoneGeographique, Jeu.Niveau niveau, Fiche fiche, ClassificationFiche classificationFiche, Classification classification, boolean onResume){
         Log.d(LOG_TAG, "createListeReponsesViews() - Début");
+        Log.d(LOG_TAG, "createListeReponsesViews() - zoneGeographique : "+zoneGeographique.getNom());
         Log.d(LOG_TAG, "createListeReponsesViews() - niveau : "+niveau.name());
         Log.d(LOG_TAG, "createListeReponsesViews() - fiche : "+fiche.getNomCommun());
         Log.d(LOG_TAG, "createListeReponsesViews() - onResume : "+onResume);

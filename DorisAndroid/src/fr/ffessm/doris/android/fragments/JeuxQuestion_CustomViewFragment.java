@@ -279,7 +279,7 @@ public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemC
     }
 
     /* Création de la liste des Réponses */
-    public void createListeReponsesViews(Jeu.Niveau niveau, Fiche fiche, Classification classification){
+    public void createListeReponsesJeuCLADEViews(Jeu.Niveau niveau, Fiche fiche, Classification classification){
         Log.d(LOG_TAG, "createListeReponsesViews() - Début");
         Log.d(LOG_TAG, "createListeReponsesViews() - niveau : "+niveau.name());
         Log.d(LOG_TAG, "createListeReponsesViews() - fiche : "+fiche.getNomCommun());
