@@ -103,7 +103,7 @@ public class DorisApplicationContext {
 	// Accueil <-> Groupes <-> Liste Images Fiches <-> Fiche
 	// ... <-> ... <-> Fiche <-> Définitions, Intervenants ...
 	public Intent[] retourIntent = new Intent[20];
-	public int retourIntentNiveau;
+	public int retourIntentNiveau = 0;
     public void setIntentPourRetour(Intent currentIntent){
     	Log.d(LOG_TAG, "setIntentPourRetour() - currentIntent.getComponent() : "+currentIntent.getComponent());
     	Log.d(LOG_TAG, "setIntentPourRetour() - retourIntentNiveau : "+retourIntentNiveau);
@@ -122,10 +122,10 @@ public class DorisApplicationContext {
 	    Log.d(LOG_TAG, "setIntentPourRetour() - retourIntentNiveau : "+retourIntentNiveau);
     }
     public Intent getIntentPrecedent(){
-    	Log.d(LOG_TAG, "getIntentPrecedent() - retourIntentNiveau : "+retourIntentNiveau);
+    	Log.d(LOG_TAG, "getIntentPrecedent() - retourIntentNiveau : "+getInstance().retourIntentNiveau);
 		
     	Intent upIntent = getInstance().retourIntent[getInstance().retourIntentNiveau]; 
-    	Log.d(LOG_TAG, "getIntentPrecedent() - currentIntent.getComponent() : "+upIntent.getComponent());
+    	//Log.d(LOG_TAG, "getIntentPrecedent() - currentIntent.getComponent() : "+upIntent.getComponent());
 
     	getInstance().retourIntentNiveau -= 1;
     	
@@ -137,7 +137,7 @@ public class DorisApplicationContext {
     	}
     	
     	
-    	Log.d(LOG_TAG, "getIntentPrecedent() - retourIntentNiveau : "+retourIntentNiveau);
+    	Log.d(LOG_TAG, "getIntentPrecedent() - retourIntentNiveau : "+getInstance().retourIntentNiveau);
 		return upIntent;
     }
     

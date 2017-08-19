@@ -51,6 +51,8 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.j256.ormlite.dao.CloseableIterator;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
@@ -66,8 +68,10 @@ import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
+import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 import fr.ffessm.doris.android.fragments.JeuxQuestion_CustomViewFragment;
 import fr.ffessm.doris.android.fragments.JeuxReponses_ClassListViewFragment;
+import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Jeu;
@@ -375,40 +379,53 @@ public class Jeux_CustomViewActivity extends FragmentActivity
 
         // LE JEU ! ! !
 
-        // Pour commencer Toujours le même jeu et crado
-        Fiche ficheAleatoire = null;
-        ClassificationFiche classificationFicheAleatoire = null;
-        Classification classificationAleatoire = null;
+        Fiche QstFicheAleatoire = null;
+        ClassificationFiche QstClassificationFicheAleatoire = null;
+        Classification QstClassificationAleatoire = null;
 
         if (onResume == false ) {
 
             DorisApplicationContext.getInstance().reponseOK = false;
 
             OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(this);
-            ficheAleatoire = ficheAleatoire(ormLiteDBHelper);
+            QstFicheAleatoire = ficheAleatoire(ormLiteDBHelper, DorisApplicationContext.getInstance().jeuZoneGeographiqueSelectionnee);
 
-            classificationFicheAleatoire = classificationFicheAleatoire(ormLiteDBHelper, ficheAleatoire);
-            classificationAleatoire = classification(ormLiteDBHelper, classificationFicheAleatoire);
+            if (jeuSelectionne == Jeu.JeuRef.JEU_CLADE) {
+                QstClassificationFicheAleatoire = classificationFicheAleatoire(ormLiteDBHelper, QstFicheAleatoire);
+                QstClassificationAleatoire = classification(ormLiteDBHelper, QstClassificationFicheAleatoire);
+            }
 
         } else {
 
-            ficheAleatoire = DorisApplicationContext.getInstance().jeuFicheEnCours;
-            classificationFicheAleatoire = DorisApplicationContext.getInstance().jeuClassificationFicheEnCours;
-            classificationAleatoire = DorisApplicationContext.getInstance().jeuClassificationEnCours;
+            QstFicheAleatoire = DorisApplicationContext.getInstance().jeuFicheEnCours;
 
+            if (jeuSelectionne == Jeu.JeuRef.JEU_CLADE) {
+                QstClassificationFicheAleatoire = DorisApplicationContext.getInstance().jeuClassificationFicheEnCours;
+                QstClassificationAleatoire = DorisApplicationContext.getInstance().jeuClassificationEnCours;
+            }
         }
 
         if (questionFrag != null) {
-            PhotoFiche photoFiche = ficheAleatoire.getPhotosFiche().iterator().next();
+            PhotoFiche photoFiche = QstFicheAleatoire.getPhotosFiche().iterator().next();
             Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : " + photoFiche.getCleURL());
 
             questionFrag.setTvTitreIconeLabel(jeux_niveau[niveau.ordinal()].substring(0,1));
-            questionFrag.createListeReponsesViews(niveau, ficheAleatoire, classificationAleatoire);
-            questionFrag.setQuestionLibelle(ficheAleatoire.getNomCommun());
-            questionFrag.setQuestionImage(photoFiche.getCleURL(), ImageType.VIGNETTE);
+
+            if (jeuSelectionne == Jeu.JeuRef.JEU_CLADE) {
+                questionFrag.createListeReponsesJeuCLADEViews(niveau, QstFicheAleatoire, QstClassificationAleatoire);
+                questionFrag.setQuestionLibelle(QstFicheAleatoire.getNomCommun());
+                questionFrag.setQuestionImage(photoFiche.getCleURL(), ImageType.VIGNETTE);
+            }
         }
         if (reponsesFrag != null) {
-            reponsesFrag.createListeReponsesViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, ficheAleatoire, classificationFicheAleatoire, classificationAleatoire, onResume);
+            if (jeuSelectionne == Jeu.JeuRef.JEU_CLADE)
+                reponsesFrag.createListeReponsesJeuCLADEViews(
+                                                    DorisApplicationContext.getInstance().jeuZoneGeographiqueSelectionnee,
+                                                    DorisApplicationContext.getInstance().jeuNiveauSelectionne,
+                                                    QstFicheAleatoire,
+                                                    QstClassificationFicheAleatoire,
+                                                    QstClassificationAleatoire,
+                                                    onResume);
         }
 
         DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.JEU;
@@ -461,36 +478,85 @@ public class Jeux_CustomViewActivity extends FragmentActivity
 
         OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(this);
 
-        Fiche ficheAleatoire = ficheAleatoire(ormLiteDBHelper);
-        PhotoFiche photoFiche = ficheAleatoire.getPhotosFiche().iterator().next();
+        Fiche QstFicheAleatoire = ficheAleatoire(ormLiteDBHelper, DorisApplicationContext.getInstance().jeuZoneGeographiqueSelectionnee);
+        ClassificationFiche QstClassificationFicheAleatoire = null;
+        Classification QstClassificationAleatoire = null;
+
+        PhotoFiche photoFiche = QstFicheAleatoire.getPhotosFiche().iterator().next();
         Log.d(LOG_TAG, "onBoutonSuivant() - fiche.getNomCommun : "+photoFiche.getCleURL());
 
-        ClassificationFiche classificationFicheAleatoire = classificationFicheAleatoire(ormLiteDBHelper, ficheAleatoire);
-        Classification classificationAleatoire = classification(ormLiteDBHelper, classificationFicheAleatoire);
+        if (DorisApplicationContext.getInstance().jeuSelectionne == Jeu.JeuRef.JEU_CLADE) {
+            QstClassificationFicheAleatoire = classificationFicheAleatoire(ormLiteDBHelper, QstFicheAleatoire);
+            QstClassificationAleatoire = classification(ormLiteDBHelper, QstClassificationFicheAleatoire);
+        }
 
         if (questionFrag != null) {
-            questionFrag.createListeReponsesViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, ficheAleatoire, classificationAleatoire);
-            questionFrag.setQuestionLibelle(ficheAleatoire.getNomCommun());
-            questionFrag.setQuestionImage(photoFiche.getCleURL(), ImageType.VIGNETTE);
+            if (DorisApplicationContext.getInstance().jeuSelectionne == Jeu.JeuRef.JEU_CLADE) {
+                questionFrag.createListeReponsesJeuCLADEViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, QstFicheAleatoire, QstClassificationAleatoire);
+                questionFrag.setQuestionLibelle(QstFicheAleatoire.getNomCommun());
+                questionFrag.setQuestionImage(photoFiche.getCleURL(), ImageType.VIGNETTE);
+            }
         }
         if (reponsesFrag != null) {
-            reponsesFrag.createListeReponsesViews(DorisApplicationContext.getInstance().jeuNiveauSelectionne, ficheAleatoire, classificationFicheAleatoire, classificationAleatoire, false);
+            if (DorisApplicationContext.getInstance().jeuSelectionne == Jeu.JeuRef.JEU_CLADE)
+                reponsesFrag.createListeReponsesJeuCLADEViews(
+                                                    DorisApplicationContext.getInstance().jeuZoneGeographiqueSelectionnee,
+                                                    DorisApplicationContext.getInstance().jeuNiveauSelectionne,
+                                                    QstFicheAleatoire,
+                                                    QstClassificationFicheAleatoire,
+                                                    QstClassificationAleatoire,
+                                                    false);
         }
 
         Log.d(LOG_TAG, "onBoutonSuivant() - Fin");
     }
 
-    public Fiche ficheAleatoire(OrmLiteDBHelper ormLiteDBHelper) {
+    public Fiche ficheAleatoire(OrmLiteDBHelper ormLiteDBHelper, ZoneGeographique zoneGeographique) {
+        Log.d(LOG_TAG, "ficheAleatoire() - zoneGeographique : "+zoneGeographique.getZoneGeoKind().name());
+
         Fiche fiche = null;
 
-        try{
-            QueryBuilder<Fiche, Integer> qb =  ormLiteDBHelper.getFicheDao().queryBuilder();
-            qb.where().eq("etatFiche","4");
-            qb.orderByRaw("RANDOM()");
-            fiche = ormLiteDBHelper.getFicheDao().queryForFirst(qb.prepare());
+        if (zoneGeographique.getZoneGeoKind() == Constants.ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES) {
+            try {
+                QueryBuilder<Fiche, Integer> qbFiche = ormLiteDBHelper.getFicheDao().queryBuilder();
+                qbFiche.where().eq("etatFiche", "4");
+                qbFiche.orderByRaw("RANDOM()");
+                fiche = ormLiteDBHelper.getFicheDao().queryForFirst(qbFiche.prepare());
 
-        } catch (SQLException error) {
-            error.printStackTrace();
+            } catch (SQLException error) {
+                error.printStackTrace();
+            }
+        } else {
+            try {
+                QueryBuilder<Fiches_ZonesGeographiques, Integer> qbFichesZonGeo = ormLiteDBHelper.getFiches_ZonesGeographiquesDao().queryBuilder();
+                qbFichesZonGeo.where().eq("ZoneGeographique_id", zoneGeographique.getId());
+                qbFichesZonGeo.orderByRaw("RANDOM()");
+
+                CloseableIterator<Fiches_ZonesGeographiques> listeFichesPourLaZone = ormLiteDBHelper.getFiches_ZonesGeographiquesDao().iterator(qbFichesZonGeo.prepare());
+
+                boolean ficheTrouvee = false;
+                while (ficheTrouvee == false && listeFichesPourLaZone.hasNext()) {
+                    Fiche ficheTestee = listeFichesPourLaZone.next().getFiche();
+
+                    QueryBuilder<Fiche, Integer> qbFiche = ormLiteDBHelper.getFicheDao().queryBuilder();
+                    qbFiche.where().eq("_id", ficheTestee.getId());
+                    ficheTestee = ormLiteDBHelper.getFicheDao().queryForFirst(qbFiche.prepare());
+
+                    /*
+                    Log.d(LOG_TAG, "ficheAleatoire() - ficheTestee.getId : "+ficheTestee.getId());
+                    Log.d(LOG_TAG, "ficheAleatoire() - ficheTestee.getNomCommun : "+ficheTestee.getNomCommun());
+                    Log.d(LOG_TAG, "ficheAleatoire() - ficheTestee.getEtatFiche : "+ficheTestee.getEtatFiche());
+                    */
+                    if (ficheTestee.getEtatFiche() == 4) {
+                        fiche = ficheTestee;
+                        ficheTrouvee = true;
+                    }
+                }
+
+            } catch (SQLException error) {
+                error.printStackTrace();
+            }
+
         }
 
         Log.d(LOG_TAG, "ficheAleatoire() - fiche.getNomCommun : "+fiche.getNomCommun());
