@@ -493,9 +493,9 @@ public class PrefetchDorisWebSite {
 			}
 			
 		} else {
-			// Ne devrait jamais arriver
+			// Ne devrait arriver que lors du 1er lancement sur la plateforme courante
 			log.error("Le dossier run n'existe pas !");
-			System.exit(1);
+			//System.exit(1);
 		}
 		
 		log.debug("doMain() - Fin Effacement tous Dossiers");
