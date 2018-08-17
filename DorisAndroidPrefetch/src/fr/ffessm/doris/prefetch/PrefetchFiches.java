@@ -87,7 +87,7 @@ public class PrefetchFiches {
 	private int nbMaxFichesATraiter;
     private int nbFichesParRequetes;
 
-    public static int pauseEntreRequetes = 1000;
+    public static int pauseEntreRequetes = 30000;
 
     public PrefetchFiches(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter, int nbFichesParRequetes) {
         this.dbContext = dbContext;
@@ -522,7 +522,10 @@ public class PrefetchFiches {
             }
 
             // fait une pause pour tenter d'éviter d'être banni par le site
-            if(pauseEntreRequetes != 0 ) Thread.sleep(pauseEntreRequetes);
+            if(pauseEntreRequetes != 0 ) {
+                log.debug("pause de "+pauseEntreRequetes+"ms...");
+                Thread.sleep(pauseEntreRequetes);
+            }
 
         }
 
