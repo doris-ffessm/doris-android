@@ -188,6 +188,7 @@ public class JsonToDB {
             case "Publiée" : etatFiche = 4;
                 break;
             default: etatFiche = 5;
+                log.error("Statut fiche non reconnu:  suspicion pb encodage ?");
                 break;
         }
         // Espèce Réglementée / Espèce "dangeureuse"
