@@ -1,6 +1,7 @@
 apply plugin: 'java'
 
 tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
     sourceCompatibility = "1.7"
     targetCompatibility = "1.7"
 }
