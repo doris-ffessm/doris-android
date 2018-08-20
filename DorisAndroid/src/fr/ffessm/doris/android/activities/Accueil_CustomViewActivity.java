@@ -498,9 +498,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			startActivity(intent);
 		}
     }
-	public void onClickBtnIconeJeSuisCharlie(View view){
-		showToast("Les développeurs DorisAndroid soutiennent le droit pour la liberté de penser...");
-    }
 	public void onClickBtnIconeSiteBio(View view){
 		String url = getString(R.string.accueil_customview_logo_bio_url);
 		if (!url.isEmpty()) {
