@@ -479,7 +479,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             	return true;
 	        case R.id.detailsfiche_elementview_action_aide:
 	        	AffichageMessageHTML aide = new AffichageMessageHTML(this, (Activity) this, getHelper());
-				aide.affichageMessageHTML(this.getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
+				aide.affichageMessageHTML(this.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
 				return true;
 			//End of user code
 			// Respond to the action bar's Up/Home button

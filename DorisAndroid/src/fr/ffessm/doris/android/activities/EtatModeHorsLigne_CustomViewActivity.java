@@ -1256,7 +1256,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 				return true;
 	        case R.id.etatmodehorsligne_customview_action_aide:
 	        	AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
-				aide.affichageMessageHTML(getContext().getString(R.string.aide_label), "", "file:///android_res/raw/aide.html#ParamHorsLigne");
+				aide.affichageMessageHTML(getContext().getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html#ParamHorsLigne");
 				return true;
 		//End of user code
 			// Respond to the action bar's Up/Home button

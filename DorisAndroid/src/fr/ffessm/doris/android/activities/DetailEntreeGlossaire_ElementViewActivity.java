@@ -183,7 +183,7 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
 			//Start of user code additional menu action DetailEntreeGlossaire_ElementViewActivity
 	        case R.id.detailentreeglossaire_elementview_action_aide:
 	        	AffichageMessageHTML aide = new AffichageMessageHTML(this, (Activity) this, getHelper());
-				aide.affichageMessageHTML(this.getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
+				aide.affichageMessageHTML(this.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
 				return true;
 				
 			//End of user code

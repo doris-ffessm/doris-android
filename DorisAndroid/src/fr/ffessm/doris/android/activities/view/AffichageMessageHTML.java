@@ -44,6 +44,8 @@ package fr.ffessm.doris.android.activities.view;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.widget.Button;
+import android.widget.ImageView;
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
@@ -115,7 +117,7 @@ public class AffichageMessageHTML {
 		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - inURL : " + inURL);
 
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-		AlertDialog alertDialog = alertDialogBuilder.create();
+		final AlertDialog alertDialog = alertDialogBuilder.create();
 		
     	LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
@@ -130,6 +132,14 @@ public class AffichageMessageHTML {
     	} else {
     		text.setVisibility(View.GONE);
     	}
+
+        ImageView closeBtn = (ImageView) layout.findViewById(R.id.btn_close);
+		closeBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+                alertDialog.dismiss();
+			}
+		});
     	
     	final WebView pageWeb = (WebView) layout.findViewById(R.id.webView);
     	pageWeb.setWebViewClient(new WebViewClient() { 

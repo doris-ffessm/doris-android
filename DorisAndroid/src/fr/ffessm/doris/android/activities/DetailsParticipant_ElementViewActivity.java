@@ -221,7 +221,7 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
 			//Start of user code additional menu action DetailsParticipant_ElementViewActivity
 			 case R.id.detailsparticipant_elementview_action_aide:
 			    	AffichageMessageHTML aide = new AffichageMessageHTML(this, (Activity) this, getHelper());
-					aide.affichageMessageHTML(this.getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
+					aide.affichageMessageHTML(this.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
 					return true;
 			//End of user code
 			// Respond to the action bar's Up/Home button

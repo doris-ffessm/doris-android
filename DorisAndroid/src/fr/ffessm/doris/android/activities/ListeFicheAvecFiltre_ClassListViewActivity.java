@@ -317,7 +317,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 				return true;
 	        case R.id.listeficheavecfiltre_action_aide:
 	        	AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
-				aide.affichageMessageHTML(context.getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
+				aide.affichageMessageHTML(context.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
 				return true;
 			//End of user code
 			// Respond to the action bar's Up/Home button

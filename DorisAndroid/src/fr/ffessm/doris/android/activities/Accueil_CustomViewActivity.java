@@ -931,7 +931,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                 return true;
 	        case R.id.accueil_customview_action_aide:
 	        	AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
-				aide.affichageMessageHTML(getContext().getString(R.string.aide_label), "", "file:///android_res/raw/aide.html");
+				aide.affichageMessageHTML(getContext().getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
 				return true;
 
 		//End of user code

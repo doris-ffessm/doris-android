@@ -550,7 +550,7 @@ public class Textes_Outils {
 				            public void onClick(View view) {
 				            	
 			    	        	AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, new OrmLiteDBHelper(context));
-			    				aide.affichageMessageHTML(context.getString(R.string.aide_label), "", "file:///android_res/raw/aide.html#ImagesIndisponibles");
+			    				aide.affichageMessageHTML(context.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html#ImagesIndisponibles");
 
 				            }  
 				        };

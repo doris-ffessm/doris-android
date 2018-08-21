@@ -6,14 +6,28 @@
     android:orientation="vertical"
     android:padding="5dp"
     android:theme="@android:style/Theme.NoTitleBar">
-
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Bandeau de Text au dessus de la page HTML"
-        android:textColor="?android:attr/textColorPrimary" />
-
+    <RelativeLayout
+            android:id="@+id/layout_apropos_top_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Bandeau de texte au dessus de la page HTML"
+            android:textColor="?android:attr/textColorPrimary" />
+        <ImageView
+            android:id="@+id/btn_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="Fermer"
+            android:onClick="onClickBtnFermer"
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
+    </RelativeLayout>
     <WebView
         android:id="@+id/webView"
         android:layout_width="match_parent"
