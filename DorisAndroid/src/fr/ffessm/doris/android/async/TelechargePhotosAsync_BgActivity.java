@@ -809,7 +809,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	    mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_notifText_imagesinitial) );
 		mNotificationHelper.setMaxItemToProcess(""+0);
 	
-		// Nombre de Photos de la Glossaire
+		// Nombre de Photos dans le Glossaire
 		List<String[]> countPhoto = new ArrayList<String[]>(2);
 		try{
 			rawResults =

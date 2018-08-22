@@ -69,10 +69,8 @@ import android.widget.TextView;
 import android.view.ViewGroup.LayoutParams;
 import com.squareup.picasso.Picasso;
 
-import fr.ffessm.doris.android.tools.Param_Outils;
-import fr.ffessm.doris.android.tools.Photos_Outils;
-import fr.ffessm.doris.android.tools.ScreenTools;
-import fr.ffessm.doris.android.tools.Textes_Outils;
+import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.tools.*;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import java.io.IOException;
 import java.util.Locale;
@@ -100,6 +98,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 	
 	private Param_Outils paramOutils;
 	private Textes_Outils textesOutils;
+	protected Reseau_Outils reseauOutils;
 	//End of user code
 
 	public Glossaire_Adapter(Context context, DorisDBHelper contextDB) {
@@ -110,6 +109,7 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
         // Start of user code protected Glossaire_Adapter constructor
 		paramOutils = new Param_Outils(context);
 		textesOutils = new Textes_Outils(context);
+		reseauOutils = new Reseau_Outils(context);
 		// End of user code
 		updateList();
 	}
@@ -194,12 +194,13 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
         imageView.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
         imageView.getLayoutParams().width = ScreenTools.dp2px(context, defaultIconSize);
         
-        //Log.i(LOG_TAG, "getView() - entry.getCleURLIllustration() : " +entry.getCleURLIllustration());	
+        Log.i(LOG_TAG, "getView() - entry.getCleURLIllustration() : " +entry.getCleURLIllustration());
         
         if ( !entry.getCleURLIllustration().isEmpty() ) {
         	String[] listePhotos = entry.getCleURLIllustration().split(";");
-            String photoUrl = listePhotos[0].split("|")[0];
-            String photoDescription = listePhotos[0].split("|")[1];
+			String[] url_et_description =listePhotos[0].split("\\|");
+            String photoUrl = url_et_description[0];
+            String photoDescription = url_et_description.length > 1 ? url_et_description[1] : "";
             Log.i(LOG_TAG, "getView() - photo : " + photoUrl + "-" + photoDescription);
 
         	String nom1erePhoto = photoUrl.split("/")[photoUrl.split("/").length - 1];
@@ -214,7 +215,17 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 						.into(imageView);
 				} catch (IOException e) {
 				}
-	    	}
+	    	} else {
+	        	// utilise la version en ligne si possible
+				if (reseauOutils.isTelechargementsModeConnectePossible()) {
+					Log.i(LOG_TAG, "getView() - tentative téléchargement : " +Constants.IMAGE_BASE_URL +"/"+ photoUrl);
+					Picasso.with(context).load(Constants.IMAGE_BASE_URL +"/"+ photoUrl)
+							.placeholder(R.drawable.app_glossaire_indisponible)
+							.resize(defaultIconSize, defaultIconSize)
+							.centerInside()
+							.into(imageView);
+				}
+			}
         }
         else{
         	// remet l'image par défaut (nécessaire à cause de recyclage des widgets)

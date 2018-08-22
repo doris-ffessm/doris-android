@@ -42,10 +42,15 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import com.squareup.picasso.Picasso;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 import android.app.Activity;
@@ -71,6 +76,8 @@ import android.text.style.URLSpan;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Textes_Outils;
+
+import java.io.IOException;
 // End of user code
 
 public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
@@ -84,6 +91,7 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
 
 // Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_additional_attributes
 	final Context context = this;
+    protected Reseau_Outils reseauOutils;
 	
 // End of user code
 	
@@ -100,6 +108,7 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
         definitionGlossaireId = getIntent().getExtras().getInt("definitionGlossaireId");
         
 		// Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_onCreate
+        reseauOutils = new Reseau_Outils(context);
 		// End of user code
     }
     
@@ -128,22 +137,6 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
 		Textes_Outils textesOutils = new Textes_Outils(context);
 
         CharSequence definitionTexte = entry.getDefinition();
-        for(String cleURLIllustration : entry.getCleURLIllustration().split(";")) {
-            if (cleURLIllustration != null && cleURLIllustration != "") {
-                String[] illustration = cleURLIllustration.split("\\|");
-
-                Log.d(LOG_TAG, "refreshScreenData() - illustration : " + illustration.length);
-                Log.d(LOG_TAG, "refreshScreenData() - illustration : " + illustration);
-                Log.d(LOG_TAG, "refreshScreenData() - illustration[0] : " + illustration[0]);
-                if (illustration.length > 1) Log.d(LOG_TAG, "refreshScreenData() - illustration[1] : " + illustration[1]);
-
-                definitionTexte = definitionTexte + "{{n/}}" + "{{E:"+illustration[0]+"/}}";
-                if (illustration.length > 1 && !illustration[1].equals("") ) {
-                    definitionTexte = definitionTexte + "{{n/}}" + illustration[1];
-                }
-            }
-        }
-
 		definition.setText(textesOutils.textToSpannableStringDoris( definitionTexte ));
 		definition.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -155,7 +148,66 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
 		contenuUrl.setText(richtext);
 		contenuUrl.setMovementMethod(LinkMovementMethod.getInstance());
 
+		Log.d(LOG_TAG, "refreshScreenData() - definition.getParent() : " + definition.getParent());
+		if(definition.getParent() instanceof LinearLayout) {
+			LinearLayout parentLayout = (LinearLayout) definition.getParent();
 
+			// ne fait rien s'il y a déjà des images car cela suppose un reload (par exemple navigue sur le lien puis reviens sur la page
+            if(parentLayout.getChildCount() <= 2 ) {
+
+
+                Photos_Outils photosOutils = new Photos_Outils(context);
+                for(String cleURLIllustration : entry.getCleURLIllustration().split(";")) {
+                    if (cleURLIllustration != null && cleURLIllustration != "") {
+                        String[] illustration = cleURLIllustration.split("\\|");
+
+                        //Log.d(LOG_TAG, "refreshScreenData() - illustration : " + illustration.length);
+                        //Log.d(LOG_TAG, "refreshScreenData() - illustration : " + illustration);
+                        //Log.d(LOG_TAG, "refreshScreenData() - illustration[0] : " + illustration[0]);
+                        if (illustration.length > 1) Log.d(LOG_TAG, "refreshScreenData() - illustration[1] : " + illustration[1]);
+
+                        definitionTexte = definitionTexte + "{{n/}}" + "{{E:"+illustration[0]+"/}}";
+                        if (illustration.length > 1 && !illustration[1].equals("") ) {
+                            definitionTexte = definitionTexte + "{{n/}}" + illustration[1];
+                        }
+                        String nomPhotoLocal = Constants.PREFIX_IMGDSK_DEFINITION + illustration[0];
+                        ImageView imageView = new ImageView(this);
+                        parentLayout.addView(imageView);
+                        if(photosOutils.isAvailableInFolderPhoto(nomPhotoLocal, Photos_Outils.ImageType.ILLUSTRATION_DEFINITION)){
+                            try {
+                                String path =  photosOutils.getPhotoFile(nomPhotoLocal, Photos_Outils.ImageType.ILLUSTRATION_DEFINITION).getAbsolutePath();
+                                // chargement avec picasso
+                                Picasso.with(context).load(path)
+                                        .placeholder(R.drawable.app_glossaire_indisponible)
+                                        //.centerInside()
+                                        .into(imageView);
+                            } catch (IOException e) {
+                                Log.e(LOG_TAG, "refreshScreenData() - cannot find file : " + nomPhotoLocal, e);
+                            }
+                        } else {
+                            // récupère image sur internet si possible
+                            // utilise la version en ligne si possible
+                            if (reseauOutils.isTelechargementsModeConnectePossible()) {
+                                //Log.i(LOG_TAG, "refreshScreenData() - tentative téléchargement : " +Constants.IMAGE_BASE_URL +"/"+ illustration[0]);
+                                Picasso.with(context).load(Constants.IMAGE_BASE_URL +"/"+ illustration[0])
+                                        .placeholder(R.drawable.app_glossaire_indisponible)
+                                        //.centerInside()
+                                        .into(imageView);
+                            } else {
+                                imageView.setImageResource(R.drawable.app_glossaire_indisponible);
+                            }
+                        }
+
+                        // ajout du texte de description de l'image
+                        if (illustration.length > 1 && !illustration[1].equals("") ) {
+                            TextView imgDescription = new TextView(this);
+                            imgDescription.setText(textesOutils.textToSpannableStringDoris( illustration[1] ));
+                            parentLayout.addView(imgDescription);
+                        }
+                    }
+                }
+            }
+		}
 		// End of user code
     	
 	}
