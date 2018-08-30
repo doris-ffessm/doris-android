@@ -87,11 +87,7 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.tools.Fiches_Outils;
-import fr.ffessm.doris.android.tools.Param_Outils;
-import fr.ffessm.doris.android.tools.Photos_Outils;
-import fr.ffessm.doris.android.tools.Reseau_Outils;
-import fr.ffessm.doris.android.tools.ScreenTools;
+import fr.ffessm.doris.android.tools.*;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
 //End of user code
@@ -122,11 +118,14 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 	protected Reseau_Outils reseauOutils;
 	protected Photos_Outils photosOutils;
 	protected Fiches_Outils fichesOutils;
+	protected Textes_Outils textesOutils;
 	
 	// vide signifie que l'on accepte tout
 	protected ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
 	int filteredZoneGeoId = -1;
 	int filteredGroupeId = 1;
+
+	protected Fiches_Outils.OrdreTri ordreTri = Fiches_Outils.OrdreTri.NOMCOMMUN;
 
 	public ListeImageFicheAvecFiltre_Adapter(Context context, DorisDBHelper contextDB, int filteredZoneGeoId, int filteredGroupeId) {
 		super();
@@ -140,6 +139,8 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 		reseauOutils = new Reseau_Outils(context);
 		photosOutils = new Photos_Outils(context);
 		fichesOutils = new Fiches_Outils(context);
+		textesOutils = new Textes_Outils(context);
+		ordreTri = fichesOutils.getOrdreTri(context);
 		
 		updateList();
 	} 
@@ -158,6 +159,8 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 		reseauOutils = new Reseau_Outils(context);
 		photosOutils = new Photos_Outils(context);
 		fichesOutils = new Fiches_Outils(context);
+		textesOutils = new Textes_Outils(context);
+		ordreTri = fichesOutils.getOrdreTri(context);
 		
 		// End of user code
 		updateList();
@@ -210,16 +213,22 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 		tvDetails.setVisibility(View.GONE);
 		
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeimageficheavecfiltre_listviewrow_label);
-        StringBuilder labelSB = new StringBuilder();
-        
-        if (entry.getNomCommunNeverEmpty() != "") {
-        	labelSB.append(entry.getNomCommunNeverEmpty());
-        } else {
-        	labelSB.append(entry.getNomScientifiqueTxt());
-        	tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.ITALIC);
-        }
-		labelSB.append(" ");
-        tvLabel.setText(labelSB.toString());
+		switch(ordreTri) {
+			case NOMSCIENTIFIQUE:
+				tvLabel.setText( textesOutils.textToSpannableStringDoris(entry.getNomScientifique()) );
+				tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.ITALIC);
+				break;
+			case NOMCOMMUN:
+			default:
+				String nc = entry.getNomCommunNeverEmpty();
+				if(!nc.isEmpty()){
+					tvLabel.setText(nc+" ");
+				} else {
+					tvLabel.setText( textesOutils.textToSpannableStringDoris(entry.getNomScientifique()) +" " );
+				}
+				break;
+		}
+
         // End of user code
 
         // assign the entry to the row in order to ease GUI interactions
@@ -398,8 +407,18 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 	
 	protected char getFirstCharForIndex(Fiche entry){
 		//Start of user code protected ListeFicheAvecFiltre_Adapter binarySearch custom
-		if(entry.getNomCommunNeverEmpty().length() == 0) return '#';
-    	return entry.getNomCommunNeverEmpty().charAt(0);
+		String nom;
+		switch(ordreTri) {
+			case NOMSCIENTIFIQUE:
+				nom = entry.getNomScientifique().replaceFirst("\\{\\{i\\}\\}", "");
+				break;
+			case NOMCOMMUN:
+			default:
+				nom = entry.getNomCommunNeverEmpty();
+				break;
+		}
+		if(nom.length() == 0) return '#';
+		return nom.charAt(0);
 	  	//End of user code
 	}
 

@@ -100,6 +100,8 @@ public class Fiches_Outils {
     	START,
     	MANUEL
     }
+
+    public enum OrdreTri {NOMCOMMUN, NOMSCIENTIFIQUE};
     
     public int getNbFichesZoneGeo(ZoneGeographiqueKind inZoneGeo) {
     	
@@ -392,6 +394,12 @@ public class Fiches_Outils {
 		}
 	}
 
+	public OrdreTri getOrdreTri(Context context){
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		String ordreTri = prefs.getString(context.getString(R.string.pref_key_accueil_fiches_ordre), "Commun");
+		if (ordreTri.equals("Commun")) return OrdreTri.NOMCOMMUN;
+		else return OrdreTri.NOMSCIENTIFIQUE;
+	}
 
 
 }

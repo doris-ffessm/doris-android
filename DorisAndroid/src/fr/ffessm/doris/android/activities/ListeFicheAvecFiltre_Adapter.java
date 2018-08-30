@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import android.graphics.Typeface;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
@@ -119,11 +120,15 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	protected Photos_Outils photosOutils;
 	protected Reseau_Outils reseauOutils;
 	protected Fiches_Outils fichesOutils;
+	protected Textes_Outils textesOutils;
 	
 	// vide signifie que l'on accepte tout
 	protected ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
 	int filteredZoneGeoId = -1;
 	int filteredGroupeId = 1;
+
+
+	protected Fiches_Outils.OrdreTri ordreTri = Fiches_Outils.OrdreTri.NOMCOMMUN;
 
 	public ListeFicheAvecFiltre_Adapter(Context context, DorisDBHelper contextDB, int filteredZoneGeoId) {
 		super();
@@ -136,7 +141,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		reseauOutils = new Reseau_Outils(context);
 		photosOutils = new Photos_Outils(context);
 		fichesOutils = new Fiches_Outils(context);
-		
+		textesOutils = new Textes_Outils(context);
+		ordreTri = fichesOutils.getOrdreTri(context);
 		updateList();
 	} 
 	//End of user code
@@ -152,7 +158,8 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		reseauOutils = new Reseau_Outils(context);
 		photosOutils = new Photos_Outils(context);
 		fichesOutils = new Fiches_Outils(context);
-		
+		textesOutils = new Textes_Outils(context);
+		ordreTri = fichesOutils.getOrdreTri(context);
 		// End of user code
 		updateList();
 	}
@@ -202,10 +209,15 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
        
 		// set data in the row 
 		TextView tvLabel = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_label);
-        StringBuilder labelSB = new StringBuilder();
-		labelSB.append(entry.getNomCommunNeverEmpty());
-		labelSB.append(" ");
-        tvLabel.setText(labelSB.toString());
+        switch(ordreTri) {
+			case NOMSCIENTIFIQUE:
+				tvLabel.setText( textesOutils.textToSpannableStringDoris(entry.getNomScientifique()) );
+				break;
+			case NOMCOMMUN:
+			default:
+				tvLabel.setText(entry.getNomCommunNeverEmpty()+" ");
+				break;
+		}
         // End of user code
 
         // assign the entry to the row in order to ease GUI interactions
@@ -215,8 +227,15 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		// Start of user code protected additional ListeFicheAvecFiltre_Adapter getView code
 		//	additional code
         TextView tvDetails = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_details);
-        Textes_Outils textesOutils = new Textes_Outils(context);
-        tvDetails.setText( textesOutils.textToSpannableStringDoris(entry.getNomScientifique().toString()) );
+		switch(ordreTri) {
+			case NOMSCIENTIFIQUE:
+				tvDetails.setText( entry.getNomCommunNeverEmpty() );
+				break;
+			case NOMCOMMUN:
+			default:
+				tvDetails.setText( textesOutils.textToSpannableStringDoris(entry.getNomScientifique()) );
+				break;
+		}
 
 		int defaultIconSize = paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)) );
         final ImageView ivIcon = (ImageView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_icon);
@@ -456,8 +475,18 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 	
 	protected char getFirstCharForIndex(Fiche entry){
 		//Start of user code protected ListeFicheAvecFiltre_Adapter binarySearch custom
-		if(entry.getNomCommunNeverEmpty().length() == 0) return '#';
-    	return entry.getNomCommunNeverEmpty().charAt(0);
+		String nom;
+		switch(ordreTri) {
+			case NOMSCIENTIFIQUE:
+				nom = entry.getNomScientifique().replaceFirst("\\{\\{i\\}\\}", "");;
+				break;
+			case NOMCOMMUN:
+			default:
+				nom = entry.getNomCommunNeverEmpty();
+				break;
+		}
+		if(nom.length() == 0) return '#';
+		return nom.charAt(0);
 	  	//End of user code
 	}
 
