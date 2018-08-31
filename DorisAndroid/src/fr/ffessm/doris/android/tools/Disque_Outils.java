@@ -87,21 +87,22 @@ public class Disque_Outils {
     	}
     }
     
-	public String getHumanDiskUsage(long inSize){
-		Log.d(LOG_TAG, "getHumanDiskUsage() - inSize : "+inSize);
+	public String getHumanDiskUsage(final long inSize){
+		//Log.d(LOG_TAG, "getHumanDiskUsage() - inSize : "+inSize);
 
 		String sizeTexte = "";
+		long remindingSize = inSize;
 		// octet => ko
-		inSize = inSize/1024;
+		remindingSize = remindingSize/1024;
         if ( inSize < 1024 ) {
-        	sizeTexte = "" + inSize + "\u00A0Ko";
+        	sizeTexte = "" + remindingSize + "\u00A0Ko";
         } else {
-        	inSize = inSize / 1024;
-        	if ( inSize < 1024 ) {
-        		sizeTexte = "" + inSize + "\u00A0Mo";
+			remindingSize = remindingSize / 1024;
+        	if ( remindingSize < 1024 ) {
+        		sizeTexte = "" + remindingSize + "\u00A0Mo";
         	} else {
         		//Pour les Go il faut un peu plus de précision que les entiers
-        		float sizeGo = (float)inSize / 1024;
+        		float sizeGo = (float)remindingSize / 1024;
         		sizeTexte = "" + (Math.round(sizeGo * 10.0) / 10.0) + "\u00A0Go";
         	}
         }

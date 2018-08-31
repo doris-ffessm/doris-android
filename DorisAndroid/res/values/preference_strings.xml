@@ -9,7 +9,9 @@
 	<string name="pref_key_mode_connecte_qualite_photo">mode_connecte_qualite_photo</string>
 
 	<string name="pref_key_mode_precharg_wifi_only">mode_precharg_wifi_only</string>
-	
+
+    <string name="pref_key_precharg_status">precharg_status</string>
+
 	<string name="pref_key_maj_liste_fiches_region_france">maj_liste_fiches_region_france</string>
 	<string name="pref_key_maj_liste_fiches_region_eaudouce">maj_liste_fiches_region_eaudouce</string>
 	<string name="pref_key_maj_liste_fiches_region_atlantno">maj_liste_fiches_region_atlantno</string>
@@ -21,7 +23,7 @@
 	<string name="pref_key_mode_precharg_photo_region_atlantno">mode_precharg_photo_region_atlantno</string>
 	<string name="pref_key_mode_precharg_photo_region_indopac">mode_precharg_photo_region_indopac</string>
 	<string name="pref_key_mode_precharg_photo_region_caraibes">mode_precharg_photo_region_caraibes</string>
-	
+
 	<string name="pref_key_mode_precharg_photo_autres">mode_precharg_photo_autres</string>
 
 	<string name="pref_key_theme">aff_theme</string>
@@ -94,7 +96,8 @@
         <item>Mise à jour chaque Semaine</item>
         <item>Mise à jour chaque Jour</item>
     </string-array>
-	
+
+
 	<string name="mode_precharg_photo_region_prompt">Qualité des Images par Zone</string>
 	<string name="mode_precharg_photo_region_summary">"Volume nécessaire estimé : "</string>
     <string name="mode_precharg_photo_region_defaut">P1</string>

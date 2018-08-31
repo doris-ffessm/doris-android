@@ -127,6 +127,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	App_Outils outils;
 	Param_Outils paramOutils;
 	Reseau_Outils reseauOutils;
+	Photos_Outils photosOutils;
 	
 	protected SparseArray< MultiProgressBar> progressBarZones = new SparseArray< MultiProgressBar>(); 
 	
@@ -535,100 +536,23 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	public Context getContext(){
 		return this;
 	}
-	
-	
+
 	protected void updateProgressBarZone(ZoneGeographique inZoneGeo, MultiProgressBar progressBarZone){
-		   //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "updateProgressBarZone() - Début");
-		   
-		   boolean affichageBarrePhotoPrinc;
-		   boolean affichageBarrePhoto;
-		   String summaryTexte = "";
-		   int nbFichesZoneGeo = getFichesOutils().getNbFichesZoneGeo(inZoneGeo.getZoneGeoKind());
-		   int avancementPhotoPrinc =0;
-		   int avancementPhoto =0;
-		   		    
-		   Photos_Outils photosOutils = new Photos_Outils(getContext());
-		   Photos_Outils.PrecharMode precharModeZoneGeo = photosOutils.getPrecharModeZoneGeo(inZoneGeo.getZoneGeoKind());
-		   
-		   if ( precharModeZoneGeo == Photos_Outils.PrecharMode.P0 ) {
+		// ajout au résumé de la date de la base
+		StringBuilder sbTexte = new StringBuilder();
+		sbTexte.append(getContext().getString(R.string.accueil_customview_texte_text));
 
-			   affichageBarrePhotoPrinc = false;
-			   affichageBarrePhoto = false;
-			   
-			   summaryTexte = getContext().getString(R.string.avancement_progressbar_aucune_summary);
-			   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
-			   
-		   } else {
-			   int nbPhotosPrincATelecharger = photosOutils.getAPrecharQteZoneGeo(inZoneGeo.getZoneGeoKind(), true);
-			   int nbPhotosATelecharger = photosOutils.getAPrecharQteZoneGeo(inZoneGeo.getZoneGeoKind(), false);
-			   int nbPhotosPrincDejaLa = photosOutils.getDejaLaQteZoneGeo(inZoneGeo.getZoneGeoKind(), true);
-			   int nbPhotosDejaLa = photosOutils.getDejaLaQteZoneGeo(inZoneGeo.getZoneGeoKind(), false);
-			   
-			   affichageBarrePhotoPrinc = true;
-			   affichageBarrePhoto = true;
-			   
-			   if ( nbPhotosPrincATelecharger== 0){
-				   summaryTexte = getContext().getString(R.string.avancement_progressbar_jamais_summary);
-				   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
-			   } else {
-				   
-				   if ( precharModeZoneGeo == Photos_Outils.PrecharMode.P1 ) {
-				   
-					   summaryTexte = getContext().getString(R.string.avancement_progressbar_P1_summary);
-					   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
-					   summaryTexte = summaryTexte.replace("@totalPh", ""+nbPhotosPrincATelecharger ) ;
-					   summaryTexte = summaryTexte.replace("@nbPh", ""+nbPhotosPrincDejaLa );
-					   
-					   avancementPhoto = 0;
-					   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
+		CloseableIterator<DorisDB_metadata> itDorisDB = getHelper().getDorisDB_metadataDao().iterator();
+		while (itDorisDB.hasNext()) {
+			sbTexte.append(itDorisDB.next().getDateBase());
+		}
+		sbTexte.append("\n");
+		sbTexte.append(getPhotosOutils().getCurrentPhotosDiskUsageShortSummary(this));
+		sbTexte.append("; ");
 
-					   affichageBarrePhoto = false;
-					   
-				   } else {
-					   summaryTexte = getContext().getString(R.string.avancement_progressbar_PX_summary1);
-					   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
-					   summaryTexte = summaryTexte.replace("@totalPh", ""+nbPhotosPrincATelecharger ) ;
-					   summaryTexte = summaryTexte.replace("@nbPh", ""+nbPhotosPrincDejaLa );
-					   
-					   if (nbPhotosATelecharger == 0) {
-						   summaryTexte += getContext().getString(R.string.avancement_progressbar_PX_jamais_summary2);
-						   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
-						   avancementPhoto = 0;
-						   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
-					   } else {
-						   summaryTexte += getContext().getString(R.string.avancement_progressbar_PX_summary2);
-						   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
-						   summaryTexte = summaryTexte.replace("@totalPh", ""+nbPhotosATelecharger ) ;
-						   summaryTexte = summaryTexte.replace("@nbPh", ""+nbPhotosDejaLa );
-						   
-						   avancementPhoto = 100 * nbPhotosDejaLa / nbPhotosATelecharger;
-						   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
-					   }
-				   }
-			   }
-
-		   }
-		   // TODO calculate download in progress
-		   boolean downloadInProgress = false;
-		   if(inZoneGeo.getId() == -1 && DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null){
-			   downloadInProgress = true;
-		   }
-		   
-		   // ajout au résumé de la date de la base
-		   StringBuilder sbTexte = new StringBuilder();
-		   sbTexte.append(getContext().getString(R.string.accueil_customview_texte_text));
-	    	
-		   CloseableIterator<DorisDB_metadata> itDorisDB = getHelper().getDorisDB_metadataDao().iterator();
-		   while (itDorisDB.hasNext()) {
-			   sbTexte.append(itDorisDB.next().getDateBase());
-		   }
-		   sbTexte.append("\n");
-		   sbTexte.append(summaryTexte);
-		   
-		   progressBarZone.update(sbTexte.toString(), affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto, downloadInProgress);
-		   // if (BuildConfig.DEBUG) Log.d(LOG_TAG, "updateProgressBarZone() - Après");
+		EtatModeHorsLigne_CustomViewActivity.updateProgressBarZone(this, inZoneGeo, progressBarZone, sbTexte.toString());
 	}
-	
+
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		Log.d(LOG_TAG, "Preference change detected for key ="+key);
         if (key.equals(R.string.pref_key_theme)) {
@@ -655,6 +579,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	private Reseau_Outils getReseauOutils() { 
 		if(reseauOutils == null) reseauOutils = new Reseau_Outils(getContext());
     	return reseauOutils;
+	}
+	private Photos_Outils getPhotosOutils(){
+		if(photosOutils == null) photosOutils = new Photos_Outils(getContext());
+		return photosOutils;
 	}
 	
 	@SuppressLint("NewApi")

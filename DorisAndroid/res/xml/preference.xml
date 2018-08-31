@@ -37,55 +37,10 @@
             android:defaultValue="true"
             android:layout="@layout/preference_layout_preference"
             />
-        <!--
-        <PreferenceScreen
-	        android:key="button_maj_liste_fiches_zones_key"
-	        android:title="@string/maj_liste_fiches_region_prompt"
-	        android:summary="@string/maj_liste_fiches_region_summary"
-	        android:persistent="false"
-	        android:layout="@layout/preference_layout_preferencescreen">
-	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:key="@string/pref_key_maj_liste_fiches_region_france"
-	            android:title="@string/maj_liste_fiches_region_france_prompt"
-				android:entryValues="@array/maj_liste_fiches_answers_values"
-				android:entries="@array/maj_liste_fiches_answers_lib"
-				android:defaultValue="@string/maj_liste_fiches_region_defaut"
-				android:layout="@layout/preference_layout_preference"
-				/>
-   	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:key="@string/pref_key_maj_liste_fiches_region_eaudouce"
-	            android:title="@string/maj_liste_fiches_region_eaudouce_prompt"
-				android:entryValues="@array/maj_liste_fiches_answers_values"
-				android:entries="@array/maj_liste_fiches_answers_lib"
-				android:defaultValue="@string/maj_liste_fiches_region_defaut"
-				android:layout="@layout/preference_layout_preference"
-				/>
-			<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:key="@string/pref_key_maj_liste_fiches_region_indopac"
-	            android:title="@string/maj_liste_fiches_region_indopac_prompt"
-				android:entryValues="@array/maj_liste_fiches_answers_values"
-				android:entries="@array/maj_liste_fiches_answers_lib"
-				android:defaultValue="@string/maj_liste_fiches_region_defaut"
-				android:layout="@layout/preference_layout_preference"
-				/>
-   	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:key="@string/pref_key_maj_liste_fiches_region_caraibes"
-	            android:title="@string/maj_liste_fiches_region_caraibes_prompt"
-				android:entryValues="@array/maj_liste_fiches_answers_values"
-				android:entries="@array/maj_liste_fiches_answers_lib"
-				android:defaultValue="@string/maj_liste_fiches_region_defaut"
-				android:layout="@layout/preference_layout_preference"
-				/>
-			<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:key="@string/pref_key_maj_liste_fiches_region_atlantno"
-	            android:title="@string/maj_liste_fiches_region_atlantno_prompt"
-				android:entryValues="@array/maj_liste_fiches_answers_values"
-				android:entries="@array/maj_liste_fiches_answers_lib"
-				android:defaultValue="@string/maj_liste_fiches_region_defaut"
-				android:layout="@layout/preference_layout_preference"
-				/>
-		</PreferenceScreen>
-		-->
+		<Preference android:title="Avancement précharg. et espace de stockage"
+			android:key="@string/pref_key_precharg_status"
+			android:summary="This is a cool button"
+			android:layout="@layout/preference_layout_preference"/>
         <PreferenceScreen
 	        android:key="button_qualite_images_zones_key"
 	        android:title="@string/mode_precharg_photo_region_prompt"

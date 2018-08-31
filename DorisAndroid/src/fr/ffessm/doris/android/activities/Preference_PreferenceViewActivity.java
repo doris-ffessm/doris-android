@@ -41,6 +41,7 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,6 +62,7 @@ import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.async.VerifieMAJFiche_BgActivity;
 import fr.ffessm.doris.android.async.VerifieMAJFiches_BgActivity;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
@@ -154,6 +156,25 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
     		context.getString(R.string.mode_precharg_photo_autres_summary)
     			.replace("@size", getDisqueOutils().getHumanDiskUsage(getPhotosOutils().getEstimVolPhotosAutres()) )
     		);
+
+        // link to EtatModeHorsLigne and compute summary
+		Preference button = findPreference(getString(R.string.pref_key_precharg_status));
+		ZoneGeographique zoneToutesZones = new ZoneGeographique();
+		zoneToutesZones.setId(-1);
+		zoneToutesZones.setNom(this.getString(R.string.avancement_touteszones_titre));
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(getPhotosOutils().getCurrentPhotosDiskUsageShortSummary(this));
+		sb.append("; ");
+
+		button.setSummary(EtatModeHorsLigne_CustomViewActivity.updateProgressBarZone(this,zoneToutesZones, null, sb.toString()));
+		button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				startActivity(new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
+				return true;
+			}
+		});
 
 		//End of user code
     }

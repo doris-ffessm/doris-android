@@ -69,6 +69,12 @@ import fr.ffessm.doris.android.tools.Disque_Outils.ImageLocation;
 import fr.ffessm.doris.android.tools.disk.DiskEnvironmentHelper;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 
+
+/**
+ * Attention certaines fonctions se basent sur imagesNbInFolder qui n'est calculé qu'une fois par défaut
+ * pour faire des estiomation de l'espace disque utilisé,
+ * si des téléchargements sont en cours, il faut éventueller relancer refreshImagesNbInFolder();
+ */
 public class Photos_Outils {
 	private static final String LOG_TAG = Photos_Outils.class.getCanonicalName();
 	
@@ -106,6 +112,9 @@ public class Photos_Outils {
 	
 	// [Disque] [ImageType]
 	public int imagesNbInFolder[][] = new int [3] [10];
+
+	// assure que les utilisations de  imagesNbInFolder soit initialisé au moins une fois via l'appel de refreshImagesNbInFolder()
+	private boolean imagesNbInFolderIsInitialized = false;
 	
 	// Constructeur
 	public Photos_Outils(Context context){
@@ -595,6 +604,7 @@ public class Photos_Outils {
 		return getImageCountInFolder(getPreferedLocation(), inImageType);
 	}
 	public int getImageCountInFolder(ImageLocation baseImageLocation, ImageType inImageType){
+	    if(!imagesNbInFolderIsInitialized) refreshImagesNbInFolder();
 		return imagesNbInFolder[baseImageLocation.ordinal()] [inImageType.ordinal()];
 	}	
 
@@ -610,7 +620,7 @@ public class Photos_Outils {
     	return getImageCountInAllFolders(getPreferedLocation());
 	}
 	public int getImageCountInAllFolders(ImageLocation baseImageLocation){
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "Photos_Outils() - getPhotosDiskUsage()");
+		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "Photos_Outils() - getImageCountInAllFolders()");
     	return getImageCountInFolder(baseImageLocation, ImageType.VIGNETTE)
     			+ getImageCountInFolder(baseImageLocation, ImageType.MED_RES)
     			+ getImageCountInFolder(baseImageLocation, ImageType.HI_RES)
@@ -623,7 +633,14 @@ public class Photos_Outils {
 	 * 
 	 * Taille des Dossiers (en Ko, Mo, etc.)
 	 * 
-	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */	
+	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    /**
+     * !!! se base ImagesNbInFolder sur pour une mesure plus précise en cas de téléchargement en cours il faut
+     * rappeler refreshImagesNbInFolder() ai été appelé au moins une fois !
+     *
+     * @return
+     */
 	public long getPhotosDiskUsageInPreferedLocation(){
     	return getPhotosDiskUsage(getPreferedLocation());
 	}
@@ -636,8 +653,26 @@ public class Photos_Outils {
     			+ getPhotoDiskUsage(baseImageLocation, ImageType.ILLUSTRATION_BIBLIO)
     			+ getPhotoDiskUsage(baseImageLocation, ImageType.ILLUSTRATION_DEFINITION);
 	}
-	
-	
+
+	public String getCurrentPhotosDiskUsageShortSummary(Context context){
+		StringBuilder sb = new StringBuilder();
+		switch (getPreferedLocation()){
+			case APP_INTERNAL:
+				sb.append(context.getString(R.string.etatmodehorsligne_diskselection_internal_libelle) );
+				break;
+			case PRIMARY:
+				sb.append(context.getString(R.string.etatmodehorsligne_diskselection_primary_libelle) );
+				break;
+			case SECONDARY:
+				sb.append(context.getString(R.string.etatmodehorsligne_diskselection_secondary_libelle) );
+				break;
+		}
+		sb.append("[~");
+		sb.append(new Disque_Outils(context).getHumanDiskUsage(getPhotosDiskUsageInPreferedLocation()));
+		sb.append("]");
+		return sb.toString();
+	}
+
 	public long getPhotoDiskUsageInPreferedLocation(ImageType inImageType) {
 		return getPhotoDiskUsage(getPreferedLocation(), inImageType);
 	}

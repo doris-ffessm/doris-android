@@ -267,7 +267,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	int imageZone = getFichesOutils().getZoneIconeId(zoneToutesZones.getZoneGeoKind());
     	
     	progressBarZoneGenerale = new MultiProgressBar(this,zoneToutesZones.getNom(),imageZone,true);
-    	updateProgressBarZone(zoneToutesZones, progressBarZoneGenerale);
+    	updateProgressBarZone(getContext(), zoneToutesZones, progressBarZoneGenerale, "");
     	progressBarZones.put(zoneToutesZones.getId(), progressBarZoneGenerale); 
     	
     	final Context context = this;
@@ -315,7 +315,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			imageZone = getFichesOutils().getZoneIconeId(zoneGeo.getZoneGeoKind());
 			
 			MultiProgressBar progressBarZone = new MultiProgressBar(this, zoneGeo.getNom(), imageZone, false);
-			updateProgressBarZone(zoneGeo, progressBarZone);
+			updateProgressBarZone(context, zoneGeo, progressBarZone,"");
  		    
 			final ZoneGeographique fZoneGeo = zoneGeo;
 			progressBarZone.setOnClickListener(new View.OnClickListener() {
@@ -507,7 +507,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		ZoneGeographique zoneToutesZones = new ZoneGeographique();
     	zoneToutesZones.setId(-1);
     	zoneToutesZones.setNom(getContext().getString(R.string.avancement_touteszones_titre));
-		updateProgressBarZone(zoneToutesZones, progressBarZones.get(zoneToutesZones.getId()));
+		updateProgressBarZone(this, zoneToutesZones, progressBarZones.get(zoneToutesZones.getId()), "");
 		
 		// Si on sait sur quelle zone on travaille alors on ne met à jour que la progress barre de cette zone
 		
@@ -515,7 +515,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 		if (DorisApplicationContext.getInstance().zoneTraitee == null
 			|| DorisApplicationContext.getInstance().zoneTraitee == ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES ) {
 			for (ZoneGeographique zoneGeo : listeZoneGeo) {
-				updateProgressBarZone(zoneGeo, progressBarZones.get(zoneGeo.getId()));
+				updateProgressBarZone(this, zoneGeo, progressBarZones.get(zoneGeo.getId()),"");
 			}
 		} else {
 			ZoneGeographique zoneGeo = new ZoneGeographique(DorisApplicationContext.getInstance().zoneTraitee);
@@ -523,48 +523,51 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			zoneGeo = this.getHelper().getZoneGeographiqueDao().queryForId(zoneGeo.getId());
 			//Log.d(LOG_TAG, "refreshScreenData() - zoneGeo : "+zoneGeo.getId()+" - "+zoneGeo.getNom());
 			
-			updateProgressBarZone(zoneGeo, progressBarZones.get(zoneGeo.getId()));
+			updateProgressBarZone(this, zoneGeo, progressBarZones.get(zoneGeo.getId()), "");
 		}
 		
 	}    
       
-    protected void updateProgressBarZone(ZoneGeographique inZoneGeo, MultiProgressBar progressBarZone){
+    public static String updateProgressBarZone(Context context, ZoneGeographique inZoneGeo, MultiProgressBar progressBarZone, String summaryPrefix){
     	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "updateProgressBarZone() - inZoneGeo : "+inZoneGeo.getId()+" - "+inZoneGeo.getZoneGeoKind());
-	   
+
+		Fiches_Outils fichesOutils = new Fiches_Outils(context);
+		Photos_Outils photosOutils = new Photos_Outils(context);
+
     	boolean affichageBarrePhotoPrinc;
     	boolean affichageBarrePhoto;
     	String summaryTexte = "";
-    	int nbFichesZoneGeo = getFichesOutils().getNbFichesZoneGeo(inZoneGeo.getZoneGeoKind());
+    	int nbFichesZoneGeo = fichesOutils.getNbFichesZoneGeo(inZoneGeo.getZoneGeoKind());
     	int avancementPhotoPrinc =0;
     	int avancementPhoto =0;
 	   	   
-    	Photos_Outils.PrecharMode precharModeZoneGeo = getPhotosOutils().getPrecharModeZoneGeo(inZoneGeo.getZoneGeoKind());
+    	Photos_Outils.PrecharMode precharModeZoneGeo = photosOutils.getPrecharModeZoneGeo(inZoneGeo.getZoneGeoKind());
 	   
     	if ( precharModeZoneGeo == Photos_Outils.PrecharMode.P0 ) {
 	
 		   affichageBarrePhotoPrinc = false;
 		   affichageBarrePhoto = false;
 		   
-		   summaryTexte = getContext().getString(R.string.avancement_progressbar_aucune_summary);
+		   summaryTexte = context.getString(R.string.avancement_progressbar_aucune_summary);
 		   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
 		   
     	} else {
-		   int nbPhotosPrincATelecharger = getPhotosOutils().getAPrecharQteZoneGeo(inZoneGeo.getZoneGeoKind(), true);
-		   int nbPhotosATelecharger = getPhotosOutils().getAPrecharQteZoneGeo(inZoneGeo.getZoneGeoKind(), false);
-		   int nbPhotosPrincDejaLa = getPhotosOutils().getDejaLaQteZoneGeo(inZoneGeo.getZoneGeoKind(), true);
-		   int nbPhotosDejaLa = getPhotosOutils().getDejaLaQteZoneGeo(inZoneGeo.getZoneGeoKind(), false);
+		   int nbPhotosPrincATelecharger = photosOutils.getAPrecharQteZoneGeo(inZoneGeo.getZoneGeoKind(), true);
+		   int nbPhotosATelecharger = photosOutils.getAPrecharQteZoneGeo(inZoneGeo.getZoneGeoKind(), false);
+		   int nbPhotosPrincDejaLa = photosOutils.getDejaLaQteZoneGeo(inZoneGeo.getZoneGeoKind(), true);
+		   int nbPhotosDejaLa = photosOutils.getDejaLaQteZoneGeo(inZoneGeo.getZoneGeoKind(), false);
 		   
 		   affichageBarrePhotoPrinc = true;
 		   affichageBarrePhoto = true;
 		   
 		   if ( nbPhotosPrincATelecharger== 0){
-			   summaryTexte = getContext().getString(R.string.avancement_progressbar_jamais_summary);
+			   summaryTexte = context.getString(R.string.avancement_progressbar_jamais_summary);
 			   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
 	   } else {
 		   
 		   if ( precharModeZoneGeo == Photos_Outils.PrecharMode.P1 ) {
 		   
-			   summaryTexte = getContext().getString(R.string.avancement_progressbar_P1_summary);
+			   summaryTexte = context.getString(R.string.avancement_progressbar_P1_summary);
 			   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
 			   summaryTexte = summaryTexte.replace("@totalPh", ""+nbPhotosPrincATelecharger ) ;
 			   summaryTexte = summaryTexte.replace("@nbPh", ""+nbPhotosPrincDejaLa );
@@ -575,18 +578,18 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 			   affichageBarrePhoto = false;
 			   
 		   } else {
-			   summaryTexte = getContext().getString(R.string.avancement_progressbar_PX_summary1);
+			   summaryTexte = context.getString(R.string.avancement_progressbar_PX_summary1);
 			   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
 			   summaryTexte = summaryTexte.replace("@totalPh", ""+nbPhotosPrincATelecharger ) ;
 			   summaryTexte = summaryTexte.replace("@nbPh", ""+nbPhotosPrincDejaLa );
 			   
 			   if (nbPhotosATelecharger == 0) {
-				   summaryTexte += getContext().getString(R.string.avancement_progressbar_PX_jamais_summary2);
+				   summaryTexte += context.getString(R.string.avancement_progressbar_PX_jamais_summary2);
 				   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
 				   avancementPhoto = 0;
 				   avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
 			   } else {
-				   summaryTexte += getContext().getString(R.string.avancement_progressbar_PX_summary2);
+				   summaryTexte += context.getString(R.string.avancement_progressbar_PX_summary2);
 				   summaryTexte = summaryTexte.replace("@nbF", ""+nbFichesZoneGeo );
 				   summaryTexte = summaryTexte.replace("@totalPh", ""+nbPhotosATelecharger ) ;
 				   summaryTexte = summaryTexte.replace("@nbPh", ""+nbPhotosDejaLa );
@@ -603,8 +606,11 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	   if(inZoneGeo.getId() == -1 && DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null){
 		   downloadInProgress = true;
 	   }
-	   
-	   progressBarZone.update(summaryTexte, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto, downloadInProgress);
+
+	   if(progressBarZone != null) {
+		   progressBarZone.update(summaryPrefix + summaryTexte, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto, downloadInProgress);
+	   }
+	   return summaryPrefix + summaryTexte;
 	}
     
     private void refreshDiskDisponible() {
@@ -745,8 +751,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
      * Note, cela a été séparé car normalement je voulais le mettre dans un asynctask, mais on ne peut en exécuter
      * qu'une à la fois, ce qui est bloqué si un téléchargement est en cours 
      * -> prévoir de migrer ces asynctask dans des Services
-     * @param internalUsedSize
-     * @param primaryUsedSize
      */
     private void refreshUsedDisk() {
 		// Mise à jour de la place utilisée sur chaque disque
