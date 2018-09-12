@@ -42,6 +42,8 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+import android.util.Log;
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
@@ -76,7 +78,7 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 {
 	
 	//Start of user code constants SplashScreen_CustomViewActivity
-
+	private static final String LOG_TAG = SplashScreen_CustomViewActivity.class.getSimpleName();
 	boolean isUpdate = false;
 	//End of user code
 
@@ -167,11 +169,14 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 
 		@Override
 		protected Void doInBackground(Void... voids) {
+            if (BuildConfig.DEBUG) Log.v(LOG_TAG, "AsyncInitialize.doInBackground() - début ");
 			// assure le chargement de la base de manière asynchrone
 			if(isUpdate){
 				// efface la base précédente si elle existe
 				SQLiteDataBaseHelper.removeOldDataBase();
 			}
+
+            if (BuildConfig.DEBUG) Log.v(LOG_TAG, "AsyncInitialize.doInBackground() - old db deleted ");
 			// The following initialize the DB from file
 			SQLiteDataBaseHelper myDbHelper = new SQLiteDataBaseHelper(this.context);
 			// myDbHelper = new DataBaseHelper(this);
@@ -184,7 +189,8 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 				throw new Error("Unable to create database");
 
 			}
-			
+
+            if (BuildConfig.DEBUG) Log.v(LOG_TAG, "AsyncInitialize.doInBackground() - new db created ");
 			// Création d'un fichier “.nomedia” à la racine des dossiers photos afin qu'elles ne soient pas
 			// indexées par le moteur d'Android. 
 			// Elles n'apparaissent ainsi pas dans "Photos", on gagne bcp en temps d'indexation et bcp de place
@@ -196,10 +202,10 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 	            try {
 					throw new IOException("Cannot create dir " + photosOutils.getFolderFromPreferedLocation("").getAbsolutePath());
 				} catch (IOException e) {
-					e.printStackTrace();
+					if (BuildConfig.DEBUG) Log.e(LOG_TAG, "AsyncInitialize.doInBackground() - IOException ", e);
 				}
 	        }
-			
+            if (BuildConfig.DEBUG) Log.v(LOG_TAG, "AsyncInitialize.doInBackground() - before creation of .media file ");
 			File nomediaFile = new File(folderPreferedLocation, ".nomedia");
 			if ( nomediaFile != null && !nomediaFile.exists() ) {
 				try {
@@ -207,10 +213,10 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 		            noMediaOutStream.write ( 0 );
 		            noMediaOutStream.close ( );
 				} catch (IOException e) {
-					e.printStackTrace();
+					if (BuildConfig.DEBUG) Log.e(LOG_TAG, "AsyncInitialize.doInBackground() - IOException ", e);
 				}
 	        }
-			
+            if (BuildConfig.DEBUG) Log.v(LOG_TAG, "AsyncInitialize.doInBackground() - fin ");
 			return null;
 		}
 
@@ -222,6 +228,12 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 					Accueil_CustomViewActivity.class);
 			startActivity(intent);
 
+			if (BuildConfig.DEBUG) Log.v(LOG_TAG, "AsyncInitialize.onPostExecute() - startActivity Accueil_CustomViewActivity ");
+            try {
+                Thread.sleep(500);
+            } catch (java.lang.InterruptedException ie) {
+                if (BuildConfig.DEBUG) Log.v(LOG_TAG, "AsyncInitialize.onPostExecute() - finish  SplashScreen_CustomViewActivity");
+            }
 			// close this activity
 			finish();
 		}
