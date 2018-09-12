@@ -460,7 +460,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 	public  void showPopup() {
 
 		View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
-		// peut être null si pas visible, ex dans actionbar overfloww si pas assez de place dans l'action bar 
+		// peut être null si pas visible, ex: dans actionbar overflow si pas assez de place dans l'action bar
 		RelativeLayout viewGroup = (RelativeLayout) findViewById(R.id.listeavecfiltre_filtrespopup);
 		LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View layout = layoutInflater.inflate(R.layout.listeficheavecfiltre_filtrespopup, viewGroup);
@@ -487,12 +487,12 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 		else{
 			Log.d(LOG_TAG, "menuitem pos not available, anchor to top of the listview");
 			//popup.showAsDropDown(findViewById(R.id.listeficheavecfiltre_listview),0,0);
-			View containerView = findViewById(R.id.listeficheavecfiltre_listview);
-			containerView.getLocationOnScreen(location);
+			View containerView = findViewById(R.id.listeimageficheavecfiltre_listview);
+            containerView.getLocationOnScreen(location);
 			Log.d(LOG_TAG, "menuitem pos ="+location[0]+" "+location[1]+ " ");
 			popup.showAtLocation(layout,Gravity.TOP|Gravity.RIGHT,0,location[1]);
 		}
-		// bouton filtre espèce 
+		// bouton filtre espèce
 		Button btnFiltreEspece = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         int filtreCourantId = prefs.getInt(this.getString(R.string.pref_key_filtre_groupe), 1);	        
