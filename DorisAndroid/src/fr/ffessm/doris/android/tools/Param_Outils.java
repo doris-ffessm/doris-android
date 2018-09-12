@@ -82,18 +82,17 @@ public class Param_Outils {
 		}
 	}
 	public int getParamInt(int inParam, int inValDef) {
-		Log.d(LOG_TAG, "getParamInt() - param : " + context.getString(inParam) );
-		Log.d(LOG_TAG, "getParamInt() - valDef : " + inValDef );
+		Log.d(LOG_TAG, "getParamInt() - param : " + context.getString(inParam) + " ; valDef : " + inValDef );
 		try {
-			Log.d(LOG_TAG, "getParamInt() - context.getString(inParam) : " + context.getString(inParam) );
-			Log.d(LOG_TAG, "getParamInt() - valeur Int : " + PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(inParam), inValDef) );
+	//		Log.d(LOG_TAG, "getParamInt() - context.getString(inParam) : " + context.getString(inParam) );
+	//		Log.d(LOG_TAG, "getParamInt() - valeur Int : " + PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(inParam), inValDef) );
 			return PreferenceManager.getDefaultSharedPreferences(context).getInt(context.getString(inParam), inValDef);
 
 		} catch (Exception eInt) {
-			Log.e(LOG_TAG, eInt.getMessage(), eInt);
+	//		Log.e(LOG_TAG, eInt.getMessage(), eInt);
 
 			try {
-				Log.d(LOG_TAG, "getParamInt() - valeur String: " + PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(inParam), "-") );
+	//			Log.d(LOG_TAG, "getParamInt() - valeur String: " + PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(inParam), "-") );
 				return Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(inParam), ""+inValDef) );
 
 			} catch (Exception eStr) {
