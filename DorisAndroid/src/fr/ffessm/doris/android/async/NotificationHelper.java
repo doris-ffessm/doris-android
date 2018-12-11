@@ -134,7 +134,7 @@ public class NotificationHelper {
 
     /**
      * Receives progress updates from the background task and updates the status bar notification appropriately
-     * @param percentageComplete
+     * @param nbItemsComplete
      */
     public void progressUpdate(int nbItemsComplete) {
         //build up the new status message
