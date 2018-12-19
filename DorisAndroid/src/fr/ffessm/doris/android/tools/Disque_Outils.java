@@ -115,32 +115,33 @@ public class Disque_Outils {
 		
 		int nbFiles = 0;
 		
-		//TODO : Crado mais "temporaire"
-		// c'est utile pour la phase transitoire
-		// Si on a beaucoup d'images dans le dossier c'est sans doute que les images sont téléchargées 
-		// à l'ancienne manière.
-		// Si on a moins de 62 (26 * 2 + 10) fichiers on peut supposer que ce sont des dossiers.
-		// De toutes les façons ça ira vite avec si peu de fichiers
+
 		try {
-			
+			//TODO : Crado mais "temporaire"
+			// c'est utile pour la phase transitoire
+			// Si on a beaucoup d'images dans le dossier c'est sans doute que les images sont téléchargées
+			// à l'ancienne manière.
+			// Si on a moins de 62 (26 * 2 + 10) fichiers on peut supposer que ce sont des dossiers.
+			// De toutes les façons ça ira vite avec si peu de fichiers
 			if (inFolder.list().length > 100) return (int) inFolder.list().length;
 		
-		} catch(Exception e) {
-        	Log.e(LOG_TAG, String.format("Le dossier n'existe pas : error %s", e.getMessage()));
-		}
+
 		
-		for (File child:inFolder.listFiles()) {
-			try {
-			
-				if (child.isDirectory()) {
-					if (child.exists()) nbFiles += child.list().length;
-	            } else {
-	            	nbFiles++;
-	            }
-				
-			} catch(Exception e) {
-	        	Log.e(LOG_TAG, String.format("Le dossier n'existe pas : error %s", e.getMessage()));
+			for (File child:inFolder.listFiles()) {
+				try {
+					if (child.isDirectory()) {
+						if (child.exists()) nbFiles += child.list().length;
+					} else {
+						nbFiles++;
+					}
+				} catch(Exception e) {
+					// on fait le catch ici aussi malgrè le catch parent,
+					// pour avoir le chiffre le plus précis possible
+					Log.e(LOG_TAG, String.format("Le dossier n'existe pas : error %s", e.getMessage()));
+				}
 			}
+		} catch(Exception e) {
+			Log.e(LOG_TAG, String.format("Le dossier n'existe pas : error %s", e.getMessage()));
 		}
 		
 		return nbFiles;
