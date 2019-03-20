@@ -7,8 +7,15 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-	compile project(':DorisAndroidCommon')
+	implementation fileTree(dir: 'libs', include: '*.jar')
+
+	// dependances maven
+	implementation 'org.apache.commons:commons-lang3:3.1'
+	implementation 'net.htmlparser.jericho:jericho-html:3.3'
+	implementation 'com.j256.ormlite:ormlite-core:4.47'
+
+	// dependances modules
+	implementation project(':DorisAndroidCommon')
 }
 /*sourceSets {
     main.java.srcDirs = ['src']

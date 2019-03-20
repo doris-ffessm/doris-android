@@ -9,12 +9,12 @@ tasks.withType(JavaCompile) {
 dependencies {
     // a terme on devrait remplacer cela vers des ref dans les repo maven correspondants
     implementation fileTree(dir: 'libs',
-            include: '*.jar',
-            exclude: 'DorisAndroidCommon.jar, ormlite-core*, commons-lang3*')
+            include: '*.jar')
     // dependances maven
     implementation 'com.j256.ormlite:ormlite-core:4.47'
     implementation 'com.j256.ormlite:ormlite-android:4.47'
     implementation 'org.apache.commons:commons-lang3:3.1'
+    implementation 'net.htmlparser.jericho:jericho-html:3.3'
 
     // dependances Android
     implementation 'com.android.support:appcompat-v7:26.1.0'
