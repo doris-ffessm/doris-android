@@ -3,8 +3,8 @@
 
     <style name="Theme.AppDorisAndroid" parent="Theme.AppCompat">
         
-        <item name="android:windowContentOverlay">@null</item>
-    	<item name="android:windowBackground">@drawable/app_background</item>
+       <!-- <item name="android:windowContentOverlay">@null</item> -->
+    	<!-- <item name="android:windowBackground">@drawable/app_background</item>-->
     	
 		<item name="ic_action_participants">@drawable/ic_action_participants</item>
     	<item name="ic_action_glossaire">@drawable/ic_action_glossaire</item>
