@@ -1,48 +1,52 @@
 apply plugin: 'com.android.application'
 
 tasks.withType(JavaCompile) {
-    sourceCompatibility = "1.7"
-    targetCompatibility = "1.7"
+    /*sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"*/
     options.encoding = 'UTF-8'
 }
 
 dependencies {
     // a terme on devrait remplacer cela vers des ref dans les repo maven correspondants
-    compile fileTree(dir: 'libs',
+    implementation fileTree(dir: 'libs',
             include: '*.jar',
             exclude: 'DorisAndroidCommon.jar, ormlite-core*, commons-lang3*')
     // dependances maven
-    compile 'com.j256.ormlite:ormlite-core:4.47'
-    compile 'com.j256.ormlite:ormlite-android:4.47'
-    compile 'org.apache.commons:commons-lang3:3.1'
+    implementation 'com.j256.ormlite:ormlite-core:4.47'
+    implementation 'com.j256.ormlite:ormlite-android:4.47'
+    implementation 'org.apache.commons:commons-lang3:3.1'
 
     // dependances Android
-    compile 'com.android.support:appcompat-v7:19.1.0'
-    compile 'com.android.support:support-v4:19.1.0'    
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:support-v4:26.1.0'
     // NOTE la version 21+ ne fonctionne pas bien, à revoir ...
     //compile 'com.android.support:appcompat-v7:21.0.3'
     //compile project(':android-support-v7-appcompat')
 
     // dependances inter-projets
-    compile project(':GenandroidLib')
-    compile project(':DorisAndroidCommon')
+    implementation project(':GenandroidLib')
+    implementation project(':DorisAndroidCommon')
 }
 
 repositories {
-    mavenCentral()
+    /* mavenCentral()
     maven {
         url "https://maven.google.com"
-    }
+    }*/
+    jcenter()
+    mavenCentral()
+    google()
 }
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '28.0.2'
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
-        minSdkVersion 10
+        minSdkVersion 15
+        targetSdkVersion 26
     }
-
+/*
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -66,7 +70,7 @@ android {
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
     }
-	
+*/
 	File signFile = file('/builds/keystore/sign.properties') // used by Jenkins
     if (!signFile.exists()) {
         // may be used by developers owning the appropriate keystore
@@ -101,8 +105,8 @@ android {
         abortOnError false
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
-    }
+   /* compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }*/
 }

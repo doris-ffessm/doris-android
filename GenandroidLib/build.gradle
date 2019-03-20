@@ -1,13 +1,13 @@
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar', exclude: 'ormlite*')
+    implementation fileTree(dir: 'libs', include: '*.jar', exclude: 'ormlite*')
     // dependances maven
-    compile 'com.j256.ormlite:ormlite-core:4.47'
-    compile 'com.j256.ormlite:ormlite-android:4.47'
+    implementation 'com.j256.ormlite:ormlite-core:4.47'
+    implementation 'com.j256.ormlite:ormlite-android:4.47'
     // dependances Android
-    compile 'com.android.support:appcompat-v7:19.1.0'
-    compile 'com.android.support:support-v4:19.1.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:support-v4:26.1.0'
     // NOTE la version 21+ ne fonctionne pas bien, à revoir ...
     //compile 'com.android.support:appcompat-v7:21.0.3'
     //compile project(':android-support-v7-appcompat')
@@ -21,9 +21,14 @@ repositories {
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '28.0.2'
+    buildToolsVersion '28.0.3'
 
-    sourceSets {
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 26
+    }
+
+  /*  sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
             java.srcDirs = ['src']
@@ -45,5 +50,5 @@ android {
         // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
-    }
+    }*/
 }

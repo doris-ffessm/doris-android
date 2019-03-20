@@ -2,20 +2,20 @@ apply plugin: 'java'
 
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
-    sourceCompatibility = "1.7"
-    targetCompatibility = "1.7"
+	/*sourceCompatibility JavaVersion.VERSION_1_8
+	targetCompatibility JavaVersion.VERSION_1_8*/
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 	compile project(':DorisAndroidCommon')
 }
-sourceSets {
+/*sourceSets {
     main.java.srcDirs = ['src']
     main.resources.srcDirs = ['src']
     test.java.srcDirs = ['tests/java']
     test.resources.srcDirs = ['tests/resources']
-}
+}*/
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 // * V4_TO_ANDROID : Crée la base à partir du nouveau site Doris V4

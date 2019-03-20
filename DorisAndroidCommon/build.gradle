@@ -1,19 +1,19 @@
 apply plugin: 'java'
 
 tasks.withType(JavaCompile) {
-    sourceCompatibility = "1.7"
-    targetCompatibility = "1.7"
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-
-    sourceCompatibility = 1.7
-    targetCompatibility = 1.7
+/*
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8*/
 }
-sourceSets {
+/* sourceSets {
     main.java.srcDirs = ['src']
     main.resources.srcDirs = ['src']
     test.java.srcDirs = ['tests/java']
     test.resources.srcDirs = ['tests/resources']
-}
+}*/

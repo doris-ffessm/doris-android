@@ -2,19 +2,20 @@
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
-    sourceCompatibility = "1.7"
-    targetCompatibility = "1.7"
+   /* sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"*/
 }
 
 buildscript {
     repositories {
         jcenter()
         mavenCentral()
-        maven {
+        /* maven {
             url "https://maven.google.com"
-        }
+        }*/
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'com.android.tools.build:gradle:3.3.2'
     }
 }
