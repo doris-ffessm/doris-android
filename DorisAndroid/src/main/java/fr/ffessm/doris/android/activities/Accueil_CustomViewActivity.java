@@ -141,7 +141,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		ThemeUtil.onActivityCreateSetTheme(this);
+		// ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.accueil_customview);
         //Start of user code onCreate Accueil_CustomViewActivity
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Début");

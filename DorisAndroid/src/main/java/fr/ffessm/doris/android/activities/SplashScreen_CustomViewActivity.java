@@ -86,7 +86,7 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		ThemeUtil.onActivityCreateSetTheme(this);
+		//ThemeUtil.onActivityCreateSetTheme(this);
 			PreferenceManager.setDefaultValues(this, R.xml.preference, false);
         setContentView(R.layout.splashscreen_customview);
         //Start of user code onCreate SplashScreen_CustomViewActivity
@@ -224,13 +224,18 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 		protected void onPostExecute(Void params) {
 			// dismiss your dialog
 			// démarrer la vrai activité accueil
+			try {
+				Thread.sleep(250);
+			} catch (java.lang.InterruptedException ie) {
+				if (BuildConfig.DEBUG) Log.v(LOG_TAG, "AsyncInitialize.onPostExecute() - finish  SplashScreen_CustomViewActivity");
+			}
 			Intent intent = new Intent(SplashScreen_CustomViewActivity.this,
 					Accueil_CustomViewActivity.class);
 			startActivity(intent);
 
 			if (BuildConfig.DEBUG) Log.v(LOG_TAG, "AsyncInitialize.onPostExecute() - startActivity Accueil_CustomViewActivity ");
             try {
-                Thread.sleep(500);
+                Thread.sleep(250);
             } catch (java.lang.InterruptedException ie) {
                 if (BuildConfig.DEBUG) Log.v(LOG_TAG, "AsyncInitialize.onPostExecute() - finish  SplashScreen_CustomViewActivity");
             }
