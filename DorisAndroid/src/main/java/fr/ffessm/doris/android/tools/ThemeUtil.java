@@ -74,6 +74,12 @@ public class ThemeUtil {
     		Log.d(LOG_TAG, theme);
     		activity.setTheme(R.style.Theme_AppDorisAndroid);
     	}
+
+	    else if(theme.equals("DorisAndroidLight")) {
+		    Log.d(LOG_TAG, "theme DorisAndroidLight ="+ theme);
+		    Log.d(LOG_TAG, theme);
+		    activity.setTheme(R.style.Theme_AppDorisAndroidLight);
+	    }
     	else if(theme.equals("PureBlack")) {
     		Log.d(LOG_TAG, "theme PureBlack ="+ theme);
     		Log.d(LOG_TAG, theme);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bitmap xmlns:android="http://schemas.android.com/apk/res/android" 
-    android:src="@drawable/app_background_dark_filigramme_doris"
+    android:src="@drawable/app_background_transparent_filigramme_doris"
     android:gravity="center">
 </bitmap>

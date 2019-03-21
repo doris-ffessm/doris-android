@@ -144,13 +144,15 @@
 	<string name="pref_theme_prompt">"Thème"</string>
 	<string name="pref_theme_default">DORISAndroid</string>
 	<string-array name="pref_theme_values">
-        <item>DORISAndroid</item>
+        <item>DorisAndroid</item>
+        <item>DorisAndroidLight</item>
         <item>PureBlack</item>
         <item>HoloLight</item>
         <item>Holo</item>
     </string-array>
 	<string-array name="pref_theme_lib">
-	    <item>DORISAndroid (défaut)</item>
+	    <item>DorisAndroid (sombre)(défaut)</item>
+        <item>DorisAndroid Light (clair)</item>
         <item>Noir intense</item>
         <item>Holo Light (clair)</item>
         <item>Holo (sombre)</item>
