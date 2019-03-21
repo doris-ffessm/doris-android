@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+	android:background="?attr/dorisAppBackground">
 <!--Start of user code elementView_layout for DetailsFiche_before_scroll
 -->
 	
@@ -17,7 +18,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-	<!--Start of user code elementView_layout for DetailsFiche -->
+	<!--Start of user code elementView_layout for DetailsFiche
+ -->
 			<HorizontalScrollView
 		        android:id="@+id/detailsfiche_elementview_gallery_horizontalScrollView"
 		        android:layout_width="wrap_content"

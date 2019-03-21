@@ -5,7 +5,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+	android:background="?attr/dorisAppBackground">
 	<Button
         android:id="@+id/btnSampleRechercheGuidee_utileoupas"
         android:layout_width="fill_parent"

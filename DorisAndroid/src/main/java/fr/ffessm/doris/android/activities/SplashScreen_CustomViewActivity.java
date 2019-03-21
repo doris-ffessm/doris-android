@@ -86,8 +86,8 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		//ThemeUtil.onActivityCreateSetTheme(this);
-			PreferenceManager.setDefaultValues(this, R.xml.preference, false);
+		ThemeUtil.onActivityCreateSetTheme(this);
+		PreferenceManager.setDefaultValues(this, R.xml.preference, false);
         setContentView(R.layout.splashscreen_customview);
         //Start of user code onCreate SplashScreen_CustomViewActivity
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

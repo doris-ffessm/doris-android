@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.AppDorisAndroid" parent="Theme.AppCompat">
+	<style name="Theme.AppDorisAndroid" parent="Theme.AppCompat">
         
-       <!-- <item name="android:windowContentOverlay">@null</item> -->
+		<!-- <item name="android:windowContentOverlay">@null</item> -->
     	<!-- <item name="android:windowBackground">@drawable/app_background</item>-->
-    	
+
+		<item name="dorisAppBackground">@drawable/app_background</item>
 		<item name="ic_action_participants">@drawable/ic_action_participants</item>
     	<item name="ic_action_glossaire">@drawable/ic_action_glossaire</item>
     	<item name="ic_action_bibliographie">@drawable/ic_action_bibliographie</item>
@@ -19,11 +20,12 @@
     	<item name="ic_app_filter_settings_actif">@drawable/ic_app_filter_settings_actif</item>
     	
     	<item name="ic_action_background">@drawable/icon_background</item>
-    </style>
+	</style>
 
     <style name="Theme.AppPureBlack" parent="Theme.AppCompat">
-        <item name="android:windowContentOverlay">@null</item>
-    	<item name="android:windowBackground">@drawable/app_background_pureblack</item>
+        <!--<item name="android:windowContentOverlay">@null</item>
+    	<item name="android:windowBackground">@drawable/app_background_pureblack</item>-->
+		<item name="dorisAppBackground">@drawable/app_background_pureblack</item>
     </style>
     
     
@@ -50,9 +52,9 @@
     
     <style name="Theme.AppDorisAndroidPreferences" parent="Theme.AppCompat">
         <item name="android:windowFullscreen">true</item>
-	    <item name="android:windowBackground">@drawable/app_background</item>
-	    <item name="android:background">#FF000000</item>
-		<item name="android:colorBackground">#FF000000</item>
+	    <!--<item name="android:windowBackground">@drawable/app_background</item>-->
+	   <!-- <item name="android:background">#FF000000</item>
+		<item name="android:colorBackground">#FF000000</item>-->
 		<item name="android:textAppearance">@android:style/TextAppearance.Small</item>
 		
 	</style>

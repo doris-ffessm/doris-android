@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+	android:background="?attr/dorisAppBackground" >
     <!-- Search row -->
     <LinearLayout
         android:id="@+id/listeficheavecfiltre_listviewsearchrow"
@@ -19,7 +20,8 @@
             android:layout_weight="0.67"
             android:hint="@string/searchHint_listeficheavecfiltre_listviewsearchrow"
             android:inputType="textVisiblePassword" />--> 
-	<!--	Start of user code protectedlisteficheavecfiltre_listviewsearchrow  -->
+	<!--	Start of user code protectedlisteficheavecfiltre_listviewsearchrow 
+ -->
 <!-- 
         <ImageButton
             android:id="@+id/btnOtherFilter_listeficheavecfiltre_listviewsearchrow"

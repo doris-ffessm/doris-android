@@ -2,8 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
-	<!--	Start of user code protectedgroupeselection_listviewheader  -->
+    android:orientation="vertical"
+	android:background="?attr/dorisAppBackground">
+	<!--	Start of user code protectedgroupeselection_listviewheader 
+ -->
 
 	<RelativeLayout
 	    android:layout_width="match_parent"
