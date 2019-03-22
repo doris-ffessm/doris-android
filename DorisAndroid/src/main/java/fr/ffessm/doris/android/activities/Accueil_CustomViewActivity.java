@@ -341,7 +341,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         //Log.d(LOG_TAG, "accueil_liste_ou_arbre_pardefaut : "+accueil_liste_ou_arbre_pardefaut);
 	    
 	    
-	    // Gestion Clic Principal sur la Zone (partout sauf 2 boutons "secondaires" (càd de droite)
+	    // Gestion Clic Principal sur la Zone (partout sauf 2 boutons "secondaires" (càd de droite))
         viewZone.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -361,19 +361,21 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			        b.putBoolean("GroupeSelection_depuisAccueil", true);
 			        toGroupeSelectionView.putExtras(b);
 			        
-			        showToast(getString(R.string.accueil_recherche_guidee_label_text)+" ; "
-			        	+Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
+			        showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()) + "; "+
+					        getString(R.string.accueil_recherche_guidee_arbre_toast_text));
 			        startActivity(toGroupeSelectionView);
 			        
 		       } else if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
 			        
-		    		showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
+		    		showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()) + " ; "  +
+						    getString(R.string.accueil_recherche_liste_images_toast_text));
 					startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
 
 			        
 		       } else {
 		    		// Par défaut, on ouvre la liste des fiches en cliquant sur la zone
-		    		showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
+		    		showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()) + " ; "   +
+						    getString(R.string.accueil_recherche_liste_fiches_toast_text));
 					startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
 		        }
 		        
@@ -427,10 +429,12 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			        b.putBoolean("GroupeSelection_depuisAccueil", true);
 			        toGroupeSelectionView.putExtras(b);
 			        
-			        showToast(getString(R.string.accueil_recherche_guidee_label_text)+"; "+Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
+			        showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()) + " ; "   +
+					        getString(R.string.accueil_recherche_guidee_arbre_toast_text));
 			        startActivity(toGroupeSelectionView);
 		        } else {
-		    		showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
+		    		showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()) + " ; "   +
+						    getString(R.string.accueil_recherche_liste_fiches_toast_text));
 					startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
 		        }
 	    		
@@ -456,11 +460,12 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 			        b.putBoolean("GroupeSelection_depuisAccueil", true);
 			        toGroupeSelectionView.putExtras(b);
 			        
-			        showToast(getString(R.string.accueil_recherche_guidee_label_text)+"; "
-			        	+Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
+			        showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()) + " ; "   +
+					        getString(R.string.accueil_recherche_guidee_arbre_toast_text));
 			        startActivity(toGroupeSelectionView);
 		        } else {
-		    		showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()));
+		    		showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()) + " ; "   +
+						    getString(R.string.accueil_recherche_liste_images_toast_text));
 					startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
 
 		        }
