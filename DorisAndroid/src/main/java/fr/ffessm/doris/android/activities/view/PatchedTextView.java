@@ -7,13 +7,14 @@ import fr.ffessm.doris.android.BuildConfig;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.TextView;
 
-public class PatchedTextView extends TextView {
+public class PatchedTextView extends AppCompatTextView {
 	private static class FixingResult {
 		public final boolean fixed;
 		public final List<Object> spansWithSpacesBefore;

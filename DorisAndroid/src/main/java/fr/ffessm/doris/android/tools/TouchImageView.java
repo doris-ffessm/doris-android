@@ -45,6 +45,7 @@ import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -53,7 +54,7 @@ import android.view.View;
 import android.widget.ImageView;
 import fr.ffessm.doris.android.BuildConfig;
 
-public class TouchImageView extends ImageView {
+public class TouchImageView extends AppCompatImageView {
 	private static final String LOG_TAG = TouchImageView.class.getCanonicalName();
 	
 	Matrix matrix;
