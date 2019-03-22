@@ -185,8 +185,8 @@ public class PrefetchDorisWebSite {
         DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper(credent);
         DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper(credent);
 
-        log.debug("testConnection() - credent : " + credent.toString());
-        log.debug("testConnection() - credent : " + credent.getAccessToken().toString());
+        log.info("testConnection() - credent : " + credent.toString());
+        log.info("testConnection() - accessToken : " + credent.getAccessToken().toString());
 
         log.debug("testConnection() - Fin");
     }

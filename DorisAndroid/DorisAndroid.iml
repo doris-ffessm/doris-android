@@ -166,7 +166,5 @@
     <orderEntry type="library" name="Gradle: com.android.support:support-media-compat:26.1.0@aar" level="project" />
     <orderEntry type="module" module-name="GenandroidLib" />
     <orderEntry type="module" module-name="DorisAndroidCommon" />
-    <orderEntry type="module" module-name="GenandroidLib" />
-    <orderEntry type="module" module-name="DorisAndroidCommon" />
   </component>
 </module>

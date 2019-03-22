@@ -135,3 +135,13 @@ task(copyDwnldToRef, dependsOn: 'classes', type: JavaExec) {
 	args '-v', 'DWNLD_TO_REF'
 }
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+// * récupération du token
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+task(testConnexion, dependsOn: 'classes', type: JavaExec) {
+	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
+	classpath = sourceSets.main.runtimeClasspath
+	args '-v', 'TEST_CONNECTION_V4'
+}
