@@ -57,7 +57,7 @@ public class PrefetchConstants {
 	// Nombre maximum de fiches/groupes/etc traités (--max=K permet de changer cette valeur)
 	// Si nbMaxFichesTraitees != nbMaxFichesTraiteesDef alors on limite aussi le nombre de groupes
 	// de termes du glossaire, de participants, etc.
-	public static int nbMaxFichesTraiteesDef = 9999;
+	public static int nbMaxFichesTraiteesDef = 100000;
 
 
 }

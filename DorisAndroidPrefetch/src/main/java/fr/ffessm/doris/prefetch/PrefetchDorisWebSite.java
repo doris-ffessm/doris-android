@@ -261,7 +261,7 @@ public class PrefetchDorisWebSite {
             // - - - Groupes - - -
             // Récupération de la liste des groupes sur le site de DORIS
             log.debug("dbV4ToAndroidAction() - - - Groupes - - -");
-            int nbMaxGroupesATraiter = 2000;
+            int nbMaxGroupesATraiter = 100000;
             if (nbMaxGroupesATraiter > nbMaxFichesATraiter ) nbMaxGroupesATraiter = nbMaxFichesATraiter;
             PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, nbMaxGroupesATraiter, nbFichesParRequetes);
             if ( groupes.prefetchV4() == -1 ) {
@@ -271,7 +271,7 @@ public class PrefetchDorisWebSite {
 
             // - - - Participants - - -
             log.debug("dbV4ToAndroidAction() - - - Participants - - -");
-            int nbMaxParticipantsATraiter = 2000;
+            int nbMaxParticipantsATraiter = 100000;
             if (nbMaxParticipantsATraiter > nbMaxFichesATraiter ) nbMaxParticipantsATraiter = nbMaxFichesATraiter;
             PrefetchIntervenants intervenants = new PrefetchIntervenants(dbContext, connectionSource, nbMaxParticipantsATraiter, nbFichesParRequetes);
             if ( intervenants.prefetchV4() == -1 ) {
@@ -281,7 +281,7 @@ public class PrefetchDorisWebSite {
 
             // - - - Glossaire - - -
             log.debug("dbV4ToAndroidAction() - - - Glossaire - - -");
-            int nbMaxTermesATraiter = 2000;
+            int nbMaxTermesATraiter = 100000;
             if (nbMaxTermesATraiter > nbMaxFichesATraiter ) nbMaxTermesATraiter = nbMaxFichesATraiter;
             PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, nbMaxTermesATraiter, nbFichesParRequetes);
             if ( glossaire.prefetchV4() == -1 ) {
@@ -291,7 +291,7 @@ public class PrefetchDorisWebSite {
 
             // - - - Bibliographie - - -
             log.debug("dbV4ToAndroidAction() - - - Bibliographie - - -");
-			int nbMaxTitresATraiter = 2000;
+			int nbMaxTitresATraiter = 100000;
             if (nbMaxTitresATraiter > nbMaxFichesATraiter ) nbMaxTitresATraiter = nbMaxFichesATraiter;
             PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, nbMaxTitresATraiter, nbFichesParRequetes);
             if ( bibliographies.prefetchV4() == -1 ) {
@@ -309,7 +309,7 @@ public class PrefetchDorisWebSite {
 
             // - - - Liste des Fiches - - -
             log.debug("dbV4ToAndroidAction() - - - Liste des Fiches - - -");
-            int nbMaxEspecesATraiter = 6000;
+            int nbMaxEspecesATraiter = 100000;
             if (nbMaxEspecesATraiter > nbMaxFichesATraiter ) nbMaxEspecesATraiter = nbMaxFichesATraiter;
             PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, nbMaxEspecesATraiter, nbFichesParRequetes);
             if ( listeFiches.prefetchV4() == -1 ) {
@@ -619,7 +619,7 @@ public class PrefetchDorisWebSite {
 		System.out.println("OPTIONS :");
 		System.out.println("  -M, --max=K		On limite le travail au K 1ères fiches (utile en dev.)");
 		System.out.println("  -h, --help        Afficher cette aide");
-		System.out.println("  -d, --debug       Messages detinés aux développeurs de cette application");
+		System.out.println("  -d, --debug       Messages destinés aux développeurs de cette application");
 		System.out.println("  -v, --verbose     Messages permettant de suivre l'avancé des traitements");
 		System.out.println("  -s, --silence     Aucune sortie, même pas les erreurs");
 		System.out.println("");
