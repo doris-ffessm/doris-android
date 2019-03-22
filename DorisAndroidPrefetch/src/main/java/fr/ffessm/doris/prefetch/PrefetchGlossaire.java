@@ -111,7 +111,10 @@ public class PrefetchGlossaire {
 
             List<ObjNameNodeId> nodeIds = dorisAPI_JSONTreeHelper.getTermesNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
 
-
+	        if(nodeIds.isEmpty()) {
+		        // il ne reste plus de fiche à traiter
+		        break;
+	        }
             for (ObjNameNodeId termeNodeId : nodeIds) {
                 count++;
                 if (count > nbMaxFichesATraiter) {

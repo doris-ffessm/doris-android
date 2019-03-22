@@ -95,7 +95,10 @@ public class PrefetchBibliographies {
 		for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
 
 			List<ObjNameNodeId> nodeIds = dorisAPI_JSONTreeHelper.getBibliographieNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
-
+			if(nodeIds.isEmpty()) {
+				// il ne reste plus de fiche à traiter
+				break;
+			}
 			for (ObjNameNodeId oeuvreNodeId : nodeIds) {
 				count++;
 				if (count > nbMaxFichesATraiter) {

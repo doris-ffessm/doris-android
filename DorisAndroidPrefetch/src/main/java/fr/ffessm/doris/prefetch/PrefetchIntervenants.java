@@ -71,7 +71,7 @@ public class PrefetchIntervenants {
 	private int nbMaxFichesATraiter;
     private int nbFichesParRequetes;
 
-	public static int pauseEntreRequetes = 10000;
+	public static int pauseEntreRequetes = 5000;
 
 	public PrefetchIntervenants(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter) {
 		this.dbContext = dbContext;
@@ -104,7 +104,10 @@ public class PrefetchIntervenants {
         for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
 
             List<ObjNameNodeId> nodeIds = dorisAPI_JSONTreeHelper.getIntervenantsNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
-
+	        if(nodeIds.isEmpty()) {
+		        // il ne reste plus de fiche à traiter
+		        break;
+	        }
 
             for (ObjNameNodeId intervenantNodeId : nodeIds) {
                 count++;

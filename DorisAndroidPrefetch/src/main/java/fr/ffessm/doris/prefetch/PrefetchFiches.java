@@ -113,7 +113,10 @@ public class PrefetchFiches {
         for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
 
             List<ObjNameNodeId> nodesIds = dorisAPI_JSONTreeHelper.getFichesNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
-
+			if(nodesIds.isEmpty()) {
+				// il ne reste plus de fiche à traiter
+				break;
+			}
             for (ObjNameNodeId ficheNodeId : nodesIds) {
                 count++;
                 if (count > nbMaxFichesATraiter) {
