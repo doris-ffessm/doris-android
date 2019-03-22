@@ -42,18 +42,23 @@ termes.
 package fr.ffessm.doris.android;
 
 import org.acra.ACRA;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
+import org.acra.annotation.AcraCore;
+import org.acra.annotation.AcraMailSender;
+import org.acra.annotation.AcraToast;
+import org.acra.data.StringFormat;
 
 import android.app.Application;
 import android.util.Log;
 
-@ReportsCrashes(
-	    formKey = "", // This is required for backward compatibility but not used
-	    mailTo = "doris4android@gmail.com",
-        mode = ReportingInteractionMode.TOAST,
-        resToastText = R.string.crash_toast_text
-	)
+@AcraCore(buildConfigClass = BuildConfig.class,
+		logcatArguments = { "-t", "100", "-v", "time"}
+)
+@AcraMailSender(mailTo = "doris4android@gmail.com",
+//@AcraMailSender(mailTo = "dvojtise@gmail.com",
+		resBody = R.string.crash_mail_body_text,
+		reportAsFile = true
+)
+@AcraToast(resText = R.string.crash_toast_text)
 public class DorisApplication extends Application {
 
 	private static final String LOG_TAG = DorisApplication.class.getSimpleName();
