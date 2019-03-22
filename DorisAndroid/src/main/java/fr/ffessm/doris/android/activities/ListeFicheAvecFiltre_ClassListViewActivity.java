@@ -264,12 +264,6 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 			
 			@Override
 			public boolean onQueryTextSubmit(String arg0) {
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-					// already done by normal
-				}
-				else{
-					ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
-				}
 				return false;
 			}
 			

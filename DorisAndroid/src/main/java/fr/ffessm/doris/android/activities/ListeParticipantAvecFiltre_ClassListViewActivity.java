@@ -237,12 +237,6 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
 			
 			@Override
 			public boolean onQueryTextSubmit(String arg0) {
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-					// already done by normal
-				}
-				else{
-					ListeParticipantAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
-				}
 				return false;
 			}
 			

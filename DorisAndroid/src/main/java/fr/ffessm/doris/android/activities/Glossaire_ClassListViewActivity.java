@@ -222,12 +222,6 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 			
 			@Override
 			public boolean onQueryTextSubmit(String arg0) {
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-					// already done by normal
-				}
-				else{
-					Glossaire_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
-				}
 				return false;
 			}
 			

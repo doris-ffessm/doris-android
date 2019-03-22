@@ -221,12 +221,6 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
 			
 			@Override
 			public boolean onQueryTextSubmit(String arg0) {
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-					// already done by normal
-				}
-				else{
-					ListeBibliographieAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
-				}
 				return false;
 			}
 			
