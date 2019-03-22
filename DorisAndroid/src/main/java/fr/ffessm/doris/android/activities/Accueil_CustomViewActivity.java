@@ -350,7 +350,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zone.getId());
 				// réinitialise le filtre espèce
 				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), 1);
-		        ed.commit();
+		        ed.apply();
 		        
 		       if (accueil_liste_ou_arbre_pardefaut.equals("arbre")){
 		        	// Si choix de l'utilisateur, on accède à l'arbre en cliquant sur la zone
@@ -420,7 +420,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zone.getId());
 				// réinitialise le filtre espèce
 				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), 1);
-		        ed.commit();	
+		        ed.apply();
 		        
 		        if (accueil_liste_ou_arbre_pardefaut.equals("liste")) {
 		        	//Permet de revenir à l'accueil après recherche par le groupe, si false on irait dans la liste en quittant
@@ -451,7 +451,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zone.getId());
 				// réinitialise le filtre espèce
 				ed.putInt(context.getString(R.string.pref_key_filtre_groupe), 1);
-		        ed.commit();	
+		        ed.apply();
 		        
 		        if (accueil_liste_ou_arbre_pardefaut.equals("photos")) {
 		        	//Permet de revenir à l'accueil après recherche par le groupe, si false on irait dans la liste en quittant

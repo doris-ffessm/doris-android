@@ -638,7 +638,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 				public void onClick(View v) {
 					SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 					ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupe.getId());
-			        ed.commit();
+			        ed.apply();
 			        
 		        	if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
 		        		startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
@@ -661,7 +661,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 				public void onClick(View v) {
 					SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 					ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupePere.getId());
-			        ed.commit();
+			        ed.apply();
 			        
 		        	if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
 		        		startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
@@ -682,7 +682,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 				public void onClick(View v) {
 					SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 					ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupe.getId());
-			        ed.commit();
+			        ed.apply();
 			        
 		        	if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
 		        		startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));

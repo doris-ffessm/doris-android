@@ -184,7 +184,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 		} else {
 			Toast.makeText(this, "Filtre espèces : "+clickedGroupe.getNomGroupe(), Toast.LENGTH_SHORT).show();
 		
-			prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), clickedGroupe.getId()).commit();
+			prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), clickedGroupe.getId()).apply();
 
 	        if (!depuisAccueil) {
 	        	((GroupeSelection_ClassListViewActivity)this).finish();
@@ -210,7 +210,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
     	Toast.makeText(this, R.string.groupselection_filtre_supprime, Toast.LENGTH_SHORT).show();
 
     	prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), 1);
-    	prefs.edit().commit();
+    	prefs.edit().apply();
 		finish();
     }
 	//End of user code
@@ -293,7 +293,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 		showToast( "Filtre espèces : "+adapter.currentRootGroupe.getNomGroupe());
 		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
 		ed.putInt(getString(R.string.pref_key_filtre_groupe), adapter.currentRootGroupe.getId());
-        ed.commit();
+        ed.apply();
         
         DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
         

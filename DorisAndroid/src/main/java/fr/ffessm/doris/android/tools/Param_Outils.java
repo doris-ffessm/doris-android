@@ -111,26 +111,26 @@ public class Param_Outils {
 	    //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setParamString() - param : " + context.getString(inParam) );
 	    //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setParamString() - getStringKeyParam : " + Outils.getStringKeyParam(context,inParam) );
 	    prefEdit.putString(context.getString(inParam), inVal);
-		prefEdit.commit();
+		prefEdit.apply();
 	}
 	public void setParamInt(int inParam, int inVal) {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 	    SharedPreferences.Editor prefEdit = preferences.edit();  
 		prefEdit.putInt(context.getString(inParam), inVal);
-		prefEdit.commit();
+		prefEdit.apply();
 	}
 	public void setParamBoolean(int inParam, Boolean inVal) {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 	    SharedPreferences.Editor prefEdit = preferences.edit();  
 		prefEdit.putBoolean(context.getString(inParam), inVal);
-		prefEdit.commit();
+		prefEdit.apply();
 	}
 	
 	public void setParamLong(int inParam, long inVal) {
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 	    SharedPreferences.Editor prefEdit = preferences.edit();  
 		prefEdit.putLong(context.getString(inParam), inVal);
-		prefEdit.commit();
+		prefEdit.apply();
 	}	
 
     

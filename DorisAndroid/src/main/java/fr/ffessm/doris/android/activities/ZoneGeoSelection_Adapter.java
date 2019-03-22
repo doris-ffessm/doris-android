@@ -173,7 +173,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 				Toast.makeText(context, "Filtre zone géographique : "+entry.getNom(), Toast.LENGTH_SHORT).show();
 				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), entry.getId());
-		        ed.commit();
+		        ed.apply();
 				((ZoneGeoSelection_ClassListViewActivity) context).finish();
 			}
 		});
@@ -188,7 +188,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 				Toast.makeText(context, "Filtre zone géographique : "+entry.getNom(), Toast.LENGTH_SHORT).show();
 				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), entry.getId());
-		        ed.commit();
+		        ed.apply();
 				((ZoneGeoSelection_ClassListViewActivity) context).finish();
 			}
 		});

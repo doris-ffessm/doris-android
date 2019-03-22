@@ -142,7 +142,7 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteActionBarActi
     	Toast.makeText(this, R.string.zonegeoselection_filtre_supprime, Toast.LENGTH_SHORT).show();
 		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
 		ed.putInt(this.getString(R.string.pref_key_filtre_zonegeo), -1);
-        ed.commit();
+        ed.apply();
 		finish();
     }
 	//End of user code

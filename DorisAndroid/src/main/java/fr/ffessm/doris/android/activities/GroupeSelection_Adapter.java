@@ -251,7 +251,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 				Toast.makeText(context, "Filtre espèces : "+entry.getNomGroupe(), Toast.LENGTH_SHORT).show();
 				
 				prefs.edit().putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId())
-					.commit();
+					.apply();
 				
 		        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onClick() - depuisAccueil : " + depuisAccueil);
 		        if (!depuisAccueil) {
@@ -279,7 +279,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 				Toast.makeText(context, "Filtre espèces : "+entry.getNomGroupe(), Toast.LENGTH_SHORT).show();
 
 				prefs.edit().putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId())
-					.commit();
+					.apply();
 				
 		        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onClick() - depuisAccueil : " + depuisAccueil);
 		        if (!depuisAccueil) {

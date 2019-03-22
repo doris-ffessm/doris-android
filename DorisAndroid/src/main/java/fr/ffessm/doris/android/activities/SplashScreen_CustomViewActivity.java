@@ -117,7 +117,7 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 					
 					SharedPreferences.Editor ed = prefs.edit();
 					ed.putBoolean(getString(R.string.pref_key_debug_maj_base_prochain_demarrage), false);
-					ed.commit();
+					ed.apply();
 				}
 				
 			} catch (NameNotFoundException e) {
@@ -131,7 +131,7 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 			// sauve ces info dans les sharedPReferences
 			SharedPreferences.Editor ed = prefs.edit();
 			ed.putInt(getString(R.string.pref_key_last_version_run), pInfo.versionCode);
-			ed.commit();
+			ed.apply();
 			
 		} catch (NameNotFoundException e) {
 			

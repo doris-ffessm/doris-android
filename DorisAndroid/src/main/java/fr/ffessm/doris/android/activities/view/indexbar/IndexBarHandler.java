@@ -88,7 +88,7 @@ public class IndexBarHandler extends Handler {
 			if(view !=null && view instanceof TextView){
 				 TextView row=(TextView)view;
 				 height_of_alphabet_row=row.getHeight();			//Height of the row.
-				 indexbar.getSharedPreferences("AndroidIndexBar", Context.MODE_PRIVATE).edit().putInt("height", height_of_alphabet_row).commit();
+				 indexbar.getSharedPreferences("AndroidIndexBar", Context.MODE_PRIVATE).edit().putInt("height", height_of_alphabet_row).apply();
 				 view.setVisibility(View.GONE);
 			}
 			else
