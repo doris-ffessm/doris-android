@@ -86,7 +86,7 @@ public class PrefetchDorisWebSite {
 	
 	// Nombre maximum de fiches traitées (--max=K permet de changer cette valeur)
 	private int nbMaxFichesATraiter = PrefetchConstants.nbMaxFichesTraiteesDef;
-    private int nbFichesParRequetes = 50;
+    private int nbFichesParRequetes = 30;
 
 	private ActionKind action;
 

@@ -87,7 +87,7 @@ public class PrefetchFiches {
 	private int nbMaxFichesATraiter;
     private int nbFichesParRequetes;
 
-    public static int pauseEntreRequetes = 30000;
+    public static int pauseEntreRequetes = 45000;
 
     public PrefetchFiches(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter, int nbFichesParRequetes) {
         this.dbContext = dbContext;
