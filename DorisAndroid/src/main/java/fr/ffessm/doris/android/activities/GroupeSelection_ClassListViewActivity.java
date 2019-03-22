@@ -71,6 +71,9 @@ import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.acra.ACRA;
+
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.BuildConfig;
 // End of user code
@@ -107,6 +110,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
         Param_Outils paramOutils = new Param_Outils(context);
         
         depuisAccueil = getIntent().getExtras().getBoolean("GroupeSelection_depuisAccueil", false);
+		ACRA.getErrorReporter().putCustomData("depuisAccueil", ""+depuisAccueil);
         accueil_liste_ou_arbre_pardefaut = paramOutils.getParamString(R.string.pref_key_accueil_liste_ou_arbre_pardefaut, "liste");
         
         adapter = new GroupeSelection_Adapter(this, getHelper().getDorisDBHelper(), depuisAccueil);		

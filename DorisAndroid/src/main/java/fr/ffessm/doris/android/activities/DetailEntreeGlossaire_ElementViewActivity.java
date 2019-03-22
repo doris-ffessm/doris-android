@@ -73,6 +73,9 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
+
+import org.acra.ACRA;
+
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Textes_Outils;
@@ -108,6 +111,8 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
         definitionGlossaireId = getIntent().getExtras().getInt("definitionGlossaireId");
         
 		// Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_onCreate
+
+	    ACRA.getErrorReporter().putCustomData("definitionGlossaireId", ""+definitionGlossaireId);
         reseauOutils = new Reseau_Outils(context);
 		// End of user code
     }

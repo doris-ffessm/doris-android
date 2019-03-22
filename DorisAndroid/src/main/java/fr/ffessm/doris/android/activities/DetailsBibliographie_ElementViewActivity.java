@@ -74,6 +74,8 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import org.acra.ACRA;
+
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
@@ -114,6 +116,7 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
         entreeBibliographieId = getIntent().getExtras().getInt("entreeBibliographieId");
 
 		// Start of user code protectedDetailsBibliographie_ElementViewActivity_onCreate
+	    ACRA.getErrorReporter().putCustomData("entreeBibliographieId", ""+entreeBibliographieId);
 		// End of user code
     }
     

@@ -68,6 +68,8 @@ import android.support.v4.view.ViewPager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.squareup.picasso.Picasso;
 
+import org.acra.ACRA;
+
 import java.util.ArrayList;
 
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -104,8 +106,10 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
         Intent i = getIntent();
         // récupération de la position dans du click dans la vue précédente
 		int position = i.getIntExtra("position", 0);
+	    ACRA.getErrorReporter().putCustomData("position", ""+position);
 		// récupération info qui permettra de retrouver la liste des images à afficher
 		ficheId = i.getIntExtra("ficheId", 0);
+	    ACRA.getErrorReporter().putCustomData("ficheId", ""+ficheId);
 
 		
 		//TODO calcul de la liste d'images à partir de l'Id de la fiche  (pour plus tard, la même chose mais pour les photos principales d'un groupe ?) 

@@ -78,6 +78,8 @@ import android.widget.TextView.BufferType;
 
 import com.squareup.picasso.Picasso;
 
+import org.acra.ACRA;
+
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
@@ -117,6 +119,7 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
         participantId = getIntent().getExtras().getInt("participantId");
         
 		// Start of user code protectedDetailsParticipant_ElementViewActivity_onCreate
+	    ACRA.getErrorReporter().putCustomData("participantId", ""+participantId);
         Log.d(LOG_TAG, "onCreate() - participantId : "+participantId);
 		// End of user code
     }

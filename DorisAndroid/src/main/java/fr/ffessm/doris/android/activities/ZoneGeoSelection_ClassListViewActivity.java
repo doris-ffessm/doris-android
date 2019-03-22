@@ -114,7 +114,7 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteActionBarActi
 		
 		TextView currentFilterText = (TextView) findViewById(R.id.zonegeoselection_listview_filtre_courant);
 		int currentFilterId = pref.getInt(this.getString(R.string.pref_key_filtre_zonegeo), 0);
-		
+
 		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onResume() - currentFilterId : "+currentFilterId);
 
         if(currentFilterId == -1){

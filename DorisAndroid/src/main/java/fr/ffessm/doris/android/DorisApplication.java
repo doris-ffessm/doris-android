@@ -53,8 +53,8 @@ import android.util.Log;
 @AcraCore(buildConfigClass = BuildConfig.class,
 		logcatArguments = { "-t", "100", "-v", "time"}
 )
-@AcraMailSender(mailTo = "doris4android@gmail.com",
-//@AcraMailSender(mailTo = "dvojtise@gmail.com",
+//@AcraMailSender(mailTo = "doris4android@gmail.com",
+@AcraMailSender(mailTo = "dvojtise@gmail.com",
 		resBody = R.string.crash_mail_body_text,
 		reportAsFile = true
 )

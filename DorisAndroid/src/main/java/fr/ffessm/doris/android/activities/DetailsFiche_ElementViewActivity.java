@@ -92,6 +92,8 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import org.acra.ACRA;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -166,10 +168,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 	    actionBar.setDisplayHomeAsUpEnabled(true);
 
         ficheId = getIntent().getExtras().getInt("ficheId");
-        
 		// Start of user code protectedDetailsFiche_ElementViewActivity_onCreate
+	    ACRA.getErrorReporter().putCustomData("ficheId", ""+ficheId);
            
         ficheNumero = getIntent().getExtras().getInt("ficheNumero");
+	    ACRA.getErrorReporter().putCustomData("ficheNumero", ""+ficheNumero);
         // Defines a Handler object that's attached to the UI thread
 		mHandler = new Handler(Looper.getMainLooper()) {
 			/*
