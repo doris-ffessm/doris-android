@@ -154,11 +154,10 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
     //Start of user code additional code SplashScreen_CustomViewActivity
 
     private class AsyncInitialize extends AsyncTask<Void, Void, Void> {
-    	SplashScreen_CustomViewActivity context;
+
 
 		public AsyncInitialize(SplashScreen_CustomViewActivity splashScreen) {
 			super();
-			context = splashScreen;
 		}
 
 		@Override
@@ -175,10 +174,11 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 				// efface la base précédente si elle existe
 				SQLiteDataBaseHelper.removeOldDataBase();
 			}
+			SplashScreen_CustomViewActivity context = SplashScreen_CustomViewActivity.this;
 
             if (BuildConfig.DEBUG) Log.v(LOG_TAG, "AsyncInitialize.doInBackground() - old db deleted ");
 			// The following initialize the DB from file
-			SQLiteDataBaseHelper myDbHelper = new SQLiteDataBaseHelper(this.context);
+			SQLiteDataBaseHelper myDbHelper = new SQLiteDataBaseHelper(context);
 			// myDbHelper = new DataBaseHelper(this);
 
 			try {
@@ -195,7 +195,7 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 			// indexées par le moteur d'Android. 
 			// Elles n'apparaissent ainsi pas dans "Photos", on gagne bcp en temps d'indexation et bcp de place
 			// en thumbnails
-			Photos_Outils photosOutils = new Photos_Outils(this.context);
+			Photos_Outils photosOutils = new Photos_Outils(context);
 			
 			File folderPreferedLocation = photosOutils.getFolderFromPreferedLocation("");
 			if (folderPreferedLocation != null && !folderPreferedLocation.exists() && !folderPreferedLocation.mkdirs()) {
