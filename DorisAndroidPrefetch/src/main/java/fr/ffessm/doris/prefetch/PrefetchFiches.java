@@ -523,7 +523,7 @@ public class PrefetchFiches {
 
             // fait une pause pour tenter d'éviter d'être banni par le site
             if(pauseEntreRequetes != 0 ) {
-                log.debug("pause de "+pauseEntreRequetes+"ms... ("+i+"/"+nbFichesDORIS+")");
+                log.debug("pause de "+pauseEntreRequetes+"ms... ("+i*nbFichesParRequetes+"/"+nbFichesDORIS+")");
                 Thread.sleep(pauseEntreRequetes);
             }
 
