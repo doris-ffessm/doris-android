@@ -115,15 +115,10 @@ class DeviceSecondaryExternal extends Device  {
 	}
 
 	
-	@TargetApi(Build.VERSION_CODES.FROYO)
+
 	@Override
 	public File getPublicDirectory(String s) { 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) 
-			return Environment.getExternalStoragePublicDirectory(s); 
-		else {
-			if (s!=null && !s.startsWith("/")) s = "/" + s;
-			return new File(getMountPoint() + s);
-		}
+		return Environment.getExternalStoragePublicDirectory(s);
 	}
 	
 	@SuppressWarnings("deprecation")

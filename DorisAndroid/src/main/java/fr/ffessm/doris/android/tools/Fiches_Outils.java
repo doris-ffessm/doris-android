@@ -73,7 +73,7 @@ import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 public class Fiches_Outils {
 	private static final String LOG_TAG = Fiches_Outils.class.getCanonicalName();
 	
-	private static Context context;
+	private Context context;
 	
 	private Param_Outils paramOutils;
 	private OrmLiteDBHelper ormLiteDBHelper;
@@ -83,7 +83,7 @@ public class Fiches_Outils {
 	
 	public Fiches_Outils(Context context) {
 		
-		Fiches_Outils.context = context;
+		this.context = context;
 		paramOutils = new Param_Outils(context);
 		
 		ormLiteDBHelper = new OrmLiteDBHelper(context);

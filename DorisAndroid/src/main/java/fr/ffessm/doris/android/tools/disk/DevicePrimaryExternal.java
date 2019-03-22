@@ -46,18 +46,10 @@ class DevicePrimaryExternal extends Device {
 		File f = Environment.getExternalStorageDirectory();
 		mMountPoint = f.getAbsolutePath();
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-    		setRemovable(Environment.isExternalStorageRemovable()); // Gingerbread weiß es genau
-		}
-		else {
-			setRemovable(true); // default is removable 
-		}
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			mEmulated = Environment.isExternalStorageEmulated();
-		} else {
-			// utilise le nom du point de montage pour avoir une idee s'il est emule ou pas
-			mEmulated = Textes_Outils.containsIgnoreCase(mMountPoint, "emulated");
-		}
+		setRemovable(Environment.isExternalStorageRemovable()); // Gingerbread weiß es genau
+
+		mEmulated = Environment.isExternalStorageEmulated();
+
 	}
 
 	
@@ -97,32 +89,22 @@ class DevicePrimaryExternal extends Device {
 	@TargetApi(Build.VERSION_CODES.FROYO)
 	@Override
 	public File getFilesDir(Context ctx, String s) { 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) 
-			return ctx.getExternalFilesDir(s); 
-		else 
-			return getFilesDirLow(ctx, s);
+		return ctx.getExternalFilesDir(s);
 	}
 
 	
 	@TargetApi(Build.VERSION_CODES.FROYO)
 	@Override
 	public File getCacheDir(Context ctx) { 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) 
-			return ctx.getExternalCacheDir(); 
-		else 
-			return getFilesDirLow(ctx, "/cache");
+		return ctx.getExternalCacheDir();
 	}
 
 	
 	@TargetApi(Build.VERSION_CODES.FROYO)
 	@Override
 	public File getPublicDirectory(String s) { 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) 
-			return Environment.getExternalStoragePublicDirectory(s); 
-		else {
-			if (s!=null && !s.startsWith("/")) s = "/" + s;
-			return new File(getMountPoint() + s);
-		}
+		return Environment.getExternalStoragePublicDirectory(s);
+
 	}
 
 	

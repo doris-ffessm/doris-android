@@ -54,14 +54,8 @@ public class Size extends Pair<Long,Long> {
 	@SuppressLint("NewApi")
 	public static Size getSpace(File f) {
 		if (f!=null) try {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-				// Gingerbread hat Größe/freier Platz im File
-				return new Size(f.getUsableSpace(), f.getTotalSpace());
-			} else {
-				// vor Gingerbread muss der StatFs-Krams ran; wichtig ist die long-Wandlung
-				StatFs fs = new StatFs(f.getAbsolutePath());
-				return new Size((long)fs.getAvailableBlocks()*fs.getBlockSize(), (long)fs.getBlockCount()*fs.getBlockSize());
-			}
+			return new Size(f.getUsableSpace(), f.getTotalSpace());
+			
 		} catch (Exception e) { }
 		return new Size((long)0, (long)0);
 	}
