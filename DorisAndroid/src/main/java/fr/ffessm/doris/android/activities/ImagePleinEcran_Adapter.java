@@ -270,7 +270,8 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         		showDescription(photoFiche);
             }
         });
-        
+	    // On affiche la Description de l'image une première fois
+	    showDescription(photoFiche);
         ((ViewPager) container).addView(viewLayout);
   
         return viewLayout;
