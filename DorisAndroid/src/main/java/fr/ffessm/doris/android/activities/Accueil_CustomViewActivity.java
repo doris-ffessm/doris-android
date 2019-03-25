@@ -233,8 +233,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         DorisApplicationContext.getInstance().addDataChangeListeners(this);
 
         // Initialisation par défaut : retour à l'accueil
-        DorisApplicationContext.getInstance().retourIntentNiveau = 0;
-        DorisApplicationContext.getInstance().retourIntent[DorisApplicationContext.getInstance().retourIntentNiveau] = getIntent();
+        DorisApplicationContext.getInstance().resetIntentPrecedent(getIntent());
         
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Fin");
 		//End of user code
@@ -246,8 +245,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 		refreshScreenData();
 		//Start of user code onResume Accueil_CustomViewActivity
 		Log.d(LOG_TAG, "onResume()");
-		
-		DorisApplicationContext.getInstance().retourIntentNiveau = 0;
+
+	    DorisApplicationContext.getInstance().resetIntentPrecedent(getIntent());
 		
 		//End of user code
 	}

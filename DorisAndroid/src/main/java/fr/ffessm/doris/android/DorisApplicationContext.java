@@ -43,6 +43,7 @@ package fr.ffessm.doris.android;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import android.content.Context;
 import android.content.Intent;
@@ -102,44 +103,35 @@ public class DorisApplicationContext {
 	// Accueil <-> Groupes <-> Liste Fiches <-> Fiche
 	// Accueil <-> Groupes <-> Liste Images Fiches <-> Fiche
 	// ... <-> ... <-> Fiche <-> Définitions, Intervenants ...
-	public Intent[] retourIntent = new Intent[20];
-	public int retourIntentNiveau = 0;
+	protected Stack<Intent>  retourIntentStack = new Stack<Intent>();
+	protected Intent rootIntent;
     public void setIntentPourRetour(Intent currentIntent){
     	Log.d(LOG_TAG, "setIntentPourRetour() - currentIntent.getComponent() : "+currentIntent.getComponent());
-    	Log.d(LOG_TAG, "setIntentPourRetour() - retourIntentNiveau : "+retourIntentNiveau);
+	    if(retourIntentStack.isEmpty()){
+		    rootIntent = currentIntent;
+	    }
+	    if(retourIntentStack.isEmpty() || retourIntentStack.peek().getComponent() != currentIntent.getComponent()){
+		    retourIntentStack.push(currentIntent);
+		    Log.d(LOG_TAG, "setIntentPourRetour() - retourIntentNiveau : "+retourIntentStack.size());
+	    }
 
-    	if(currentIntent.getComponent() !=
-    			getInstance().retourIntent[getInstance().retourIntentNiveau].getComponent()) {
-    		
-    		// Ne devrait pas être utile mais évite les plantages
-        	if(getInstance().retourIntentNiveau < 19) {
-        		getInstance().retourIntentNiveau += 1;
-        	}
-        	
-	    	getInstance().retourIntent[getInstance().retourIntentNiveau] = currentIntent;
-    	}
-    	
-	    Log.d(LOG_TAG, "setIntentPourRetour() - retourIntentNiveau : "+retourIntentNiveau);
     }
     public Intent getIntentPrecedent(){
-    	Log.d(LOG_TAG, "getIntentPrecedent() - retourIntentNiveau : "+getInstance().retourIntentNiveau);
-		
-    	Intent upIntent = getInstance().retourIntent[getInstance().retourIntentNiveau]; 
-    	//Log.d(LOG_TAG, "getIntentPrecedent() - currentIntent.getComponent() : "+upIntent.getComponent());
+    	Log.d(LOG_TAG, "getIntentPrecedent() - retourIntentNiveau : "+retourIntentStack.size());
 
-    	getInstance().retourIntentNiveau -= 1;
-    	
-    	// Ne devrait pas être utile mais évite les plantages
-    	if(getInstance().retourIntentNiveau < 0) {
-    		Log.e(LOG_TAG, "setIntentPourRetour() - retourIntentNiveau = "+getInstance().retourIntentNiveau);
-
-    		getInstance().retourIntentNiveau = 0;
-    	}
-    	
-    	
-    	Log.d(LOG_TAG, "getIntentPrecedent() - retourIntentNiveau : "+getInstance().retourIntentNiveau);
-		return upIntent;
+	    if(retourIntentStack.isEmpty()){
+		    // oups !? retour à l'acceuil principal
+		    Log.w(LOG_TAG, "getIntentPrecedent() - empty stack -> return to root ");
+		    return rootIntent;
+	    } else {
+	    	return retourIntentStack.pop();
+	    }
     }
+	public void resetIntentPrecedent(Intent currentIntent){
+		rootIntent = currentIntent;
+		retourIntentStack.clear();
+		retourIntentStack.push(currentIntent);
+	}
     
 	/** listener that have registered for being notified of data changes */
 	private ArrayList<DataChangedListener>  dataChangeListeners = new ArrayList<DataChangedListener>();
