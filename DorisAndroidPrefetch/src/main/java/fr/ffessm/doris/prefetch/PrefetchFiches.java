@@ -87,7 +87,7 @@ public class PrefetchFiches {
 	private int nbMaxFichesATraiter;
     private int nbFichesParRequetes;
 
-    public static int pauseEntreRequetes = 45000;
+    public static int pauseEntreRequetes = 35000;
 
     public PrefetchFiches(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter, int nbFichesParRequetes) {
         this.dbContext = dbContext;
@@ -335,6 +335,24 @@ public class PrefetchFiches {
                         Doridiens ayant participés à la rédaction de la fiche
                     * * * * * * * * * * * * */
                     //log.debug("prefetchV4() - Doridiens ayant participés à la rédaction de la fiche :" + especeJSON.getFields().getVerificateurs().getValue());
+                    Object numeroAuteurPrincipal = especeJSON.getFields().getPrincipalWriter().getValue();
+                    if(numeroAuteurPrincipal != null && numeroAuteurPrincipal instanceof String && numeroAuteurPrincipal != ""){
+                        try {
+                            final Participant doridien = dbContext.participantDao.queryForFirst(
+                                    dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroAuteurPrincipal).prepare()
+                            );
+
+                            TransactionManager.callInTransaction(connectionSource,
+                                    new Callable<Void>() {
+                                        public Void call() throws Exception {
+                                            dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.REDACTEUR_PRINCIPAL.ordinal()));
+                                            return null;
+                                        }
+                                    });
+                        } catch (NumberFormatException nfe) {
+                            // ignore les entrées invalides
+                        }
+                    }
 
                     for (String numeroVerificateur : especeJSON.getFields().getVerificateurs().getValue().split("-")) {
                         try {
