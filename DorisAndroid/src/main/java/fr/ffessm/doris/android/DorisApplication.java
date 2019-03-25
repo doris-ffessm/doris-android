@@ -53,8 +53,7 @@ import android.util.Log;
 @AcraCore(buildConfigClass = BuildConfig.class,
 		logcatArguments = { "-t", "100", "-v", "time"}
 )
-//@AcraMailSender(mailTo = "doris4android@gmail.com",
-@AcraMailSender(mailTo = "dvojtise@gmail.com",
+@AcraMailSender(mailTo = "doris4android@gmail.com",
 		resBody = R.string.crash_mail_body_text,
 		reportAsFile = true
 )
@@ -71,23 +70,7 @@ public class DorisApplication extends Application {
         // The following line triggers the initialization of ACRA
         ACRA.init(this);
         
- 
-      /*  
-        // The following initialize the DB from file
-        SQLiteDataBaseHelper myDbHelper = new SQLiteDataBaseHelper(this);
-        //myDbHelper = new DataBaseHelper(this);
-         
-        try {
-         
-        	myDbHelper.createDataBase();
-         
-        } catch (IOException ioe) {
-         
-        	throw new Error("Unable to create database");
-         
-        }
-*/
-        
+
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Fin");
     }
 	
