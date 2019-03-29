@@ -49,6 +49,7 @@ import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
@@ -88,6 +89,8 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 	protected ImagePleinEcran_Adapter adapter;
 	protected ViewPager viewPager;
 	int ficheId;
+	private final Handler handler = new Handler();
+	private Runnable showDescriptionRunner;
 	//End of user code
 
 	/** Called when the activity is first created. */
@@ -132,7 +135,19 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
         
         // affiche l'image sélectionnée en premier
      	viewPager.setCurrentItem(position);
-     	
+	    triggerDescription(position);
+
+     	viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+	        public void onPageScrollStateChanged(int arg0) {
+	        }
+	        public void onPageScrolled(int arg0, float arg1, int arg2) {
+	        }
+	        public void onPageSelected(int currentPage) {
+		        //currentPage is the position that is currently displayed.
+		        triggerDescription(currentPage);
+	        }
+        });
+
      	// info de debug de Picasso
      	Param_Outils paramOutils = new Param_Outils(this.getApplicationContext());
      	if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)){
@@ -140,7 +155,23 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
      	}
 		//End of user code
     }
-    
+
+    private void triggerDescription(int position){
+	    if(showDescriptionRunner != null) {
+		    // annule les précédents post
+		    handler.removeCallbacks(showDescriptionRunner);
+	    }
+	    showDescriptionRunner = new Runnable() {
+		    @Override
+		    public void run() {
+			    //shows toast after 2000ms
+			    adapter.showDescription(position);
+		    }
+	    };
+
+	    handler.postDelayed(showDescriptionRunner, 2000);
+    }
+
     @Override
 	protected void onResume() {
 		super.onResume();

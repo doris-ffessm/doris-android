@@ -47,6 +47,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -82,6 +83,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     private Param_Outils paramOutils;
     private Photos_Outils photosOutils;
     private Reseau_Outils reseauOutils;
+
     
     // constructor
     public ImagePleinEcran_Adapter(ImagePleinEcran_CustomViewActivity activity,
@@ -126,7 +128,6 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         int hauteur = ScreenTools.getScreenHeight(_activity);
         int largeur = ScreenTools.getScreenWidth(_activity);
         final PhotoFiche photoFiche = _PhotoFicheLists.get(position);
-       
         if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.HI_RES)){
     		try {
 				Picasso.with(_activity)
@@ -270,14 +271,13 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         		showDescription(photoFiche);
             }
         });
-	    // On affiche la Description de l'image une première fois
-	    showDescription(photoFiche);
         ((ViewPager) container).addView(viewLayout);
   
         return viewLayout;
     }
-     
-    class PhotoClickListener implements View.OnClickListener{
+
+
+	class PhotoClickListener implements View.OnClickListener{
     	PhotoFiche photoFiche;
     	private long lastTouchTime = -1;
     	
@@ -313,16 +313,20 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         ((ViewPager) container).removeView((RelativeLayout) object);
   
     }
-    
+    public void showDescription(int position){
+	    //shows toast after 500ms
+	    final PhotoFiche photoFiche = _PhotoFicheLists.get(position );
+	    showDescription(photoFiche);
+    }
 	private void showDescription(PhotoFiche photoFiche) {
 		String titre = photoFiche.getTitre();
 		String description = photoFiche.getDescription();
 		String texteAff = description;
 		if (titre.length() > Integer.parseInt(paramOutils.getParamString(R.string.imagepleinecran_titre_longmax,"25")))
 			texteAff = titre + System.getProperty("line.separator") + description;
-		if (texteAff.isEmpty()) texteAff = "Image sans description";
-		
-		Toast.makeText(_activity, texteAff, Toast.LENGTH_LONG).show();
+		if (!texteAff.isEmpty()) {
+			Toast.makeText(_activity, texteAff, Toast.LENGTH_LONG).show();
+		}
     }
 
 }
