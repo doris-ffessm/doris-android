@@ -57,5 +57,11 @@
     <orderEntry type="library" exported="" name="Gradle: jsr305-1.3.9" level="project" />
     <orderEntry type="library" exported="" name="Gradle: google-api-client-1.20.0" level="project" />
     <orderEntry type="module" module-name="DorisAndroidCommon" exported="" />
+    <orderEntry type="module" module-name="DorisAndroidCommon" exported="" />
+    <orderEntry type="module" module-name="DorisAndroidCommon" exported="" />
+    <orderEntry type="module" module-name="DorisAndroidCommon" exported="" />
+    <orderEntry type="module" module-name="DorisAndroidCommon" exported="" />
+    <orderEntry type="module" module-name="DorisAndroidCommon" exported="" />
+    <orderEntry type="module" module-name="DorisAndroidCommon" exported="" />
   </component>
 </module>

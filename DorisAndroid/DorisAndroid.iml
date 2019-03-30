@@ -178,5 +178,7 @@
     <orderEntry type="module" module-name="DorisAndroidCommon" />
     <orderEntry type="module" module-name="GenandroidLib" />
     <orderEntry type="module" module-name="DorisAndroidCommon" />
+    <orderEntry type="module" module-name="GenandroidLib" />
+    <orderEntry type="module" module-name="DorisAndroidCommon" />
   </component>
 </module>

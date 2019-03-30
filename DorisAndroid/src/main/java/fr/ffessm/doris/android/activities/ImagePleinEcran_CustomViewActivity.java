@@ -156,21 +156,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 		//End of user code
     }
 
-    private void triggerDescription(int position){
-	    if(showDescriptionRunner != null) {
-		    // annule les précédents post
-		    handler.removeCallbacks(showDescriptionRunner);
-	    }
-	    showDescriptionRunner = new Runnable() {
-		    @Override
-		    public void run() {
-			    //shows toast after 2000ms
-			    adapter.showDescription(position);
-		    }
-	    };
 
-	    handler.postDelayed(showDescriptionRunner, 2000);
-    }
 
     @Override
 	protected void onResume() {
@@ -199,7 +185,23 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 
 
     }
-    	
+    
+	private void triggerDescription(int position){
+		if(showDescriptionRunner != null) {
+			// annule les précédents post
+			handler.removeCallbacks(showDescriptionRunner);
+		}
+		showDescriptionRunner = new Runnable() {
+			@Override
+			public void run() {
+				//shows toast after 2000ms
+				adapter.showDescription(position);
+			}
+		};
+
+		handler.postDelayed(showDescriptionRunner, 2000);
+	}
+
 	//End of user code
 
     /** refresh screen from data 
