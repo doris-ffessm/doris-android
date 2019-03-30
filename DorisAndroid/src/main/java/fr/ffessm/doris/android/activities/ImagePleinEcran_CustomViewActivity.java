@@ -48,6 +48,7 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NavUtils;
@@ -185,21 +186,24 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 
 
     }
-    
+
 	private void triggerDescription(int position){
 		if(showDescriptionRunner != null) {
 			// annule les précédents post
 			handler.removeCallbacks(showDescriptionRunner);
+			showDescriptionRunner = null;
 		}
-		showDescriptionRunner = new Runnable() {
-			@Override
-			public void run() {
-				//shows toast after 2000ms
-				adapter.showDescription(position);
-			}
-		};
+		if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			showDescriptionRunner = new Runnable() {
+				@Override
+				public void run() {
+					//shows toast after 2000ms
+					adapter.showDescription(position);
+				}
+			};
 
-		handler.postDelayed(showDescriptionRunner, 2000);
+			handler.postDelayed(showDescriptionRunner, 2000);
+		}
 	}
 
 	//End of user code
