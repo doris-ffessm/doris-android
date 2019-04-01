@@ -57,7 +57,7 @@
 	<string name="mode_connecte_wifi_only_prompt">Téléch. photos en wifi uniquement\u00A0?</string>
 	<string name="mode_connecte_wifi_only_summary">Si coché, les images non préchargées ne s\'afficheront que lorsque votre appareil est connecté en WiFi.\nCela permet de limiter l\'utilisation du forfait data. </string>
     <string name="mode_connecte_qualite_photo_prompt">Qualité photos téléch.\u00A0?</string>
-    <string name="mode_connecte_qualite_photo_defaut">MED_RES</string>
+    <string name="mode_connecte_qualite_photo_defaut">HI_RES</string>
     <string-array name="mode_connecte_qualite_photo_values">
         <item>MED_RES</item>
         <item>HI_RES</item>
