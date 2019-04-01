@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<!--Start of user code remove protected zone to rebuild all default values
+    <!--Start of user code remove protected zone to rebuild all default values
 		-->
-	<string name="app_name">DORISAndroid</string>
-	<string name="ffessm">"Fédération Française d\'Études et de Sports Sous-Marins"</string>
-	<string name="ffessm_url">http://www.ffessm.fr</string>
-	    
+    <string name="app_name">DORISAndroid</string>
+    <string name="ffessm">"Fédération Française d\'Études et de Sports Sous-Marins"</string>
+    <string name="ffessm_url">http://www.ffessm.fr</string>
+
     <string name="btnOtherFiler_listeficheavecfiltre_listviewsearchrow_btn_label">Filtres</string>
     <string name="searchHint_listeficheavecfiltre_listviewsearchrow">Chercher\u00A0\u2026</string>
-	<string name="searchHint_listeficheavecfiltre_classlistview">Chercher fiche\u00A0\u2026</string>
+    <string name="searchHint_listeficheavecfiltre_classlistview">Chercher fiche\u00A0\u2026</string>
 
     <string name="searchHint_listeparticipantavecfiltre_listviewsearchrow">Chercher\u00A0\u2026</string>
     <string name="searchHint_listeparticipantavecfiltre_classlistview">Chercher participant\u00A0\u2026</string>
-    
+
     <string name="searchHint_glossaire_classlistview">Chercher terme\u00A0\u2026</string>
-    
+
     <string name="searchHint_groupeselection_classlistview">Chercher\u00A0\u2026</string>
-    
-    
+
+
     <string name="searchHint_zonegeoselection_classlistview">Chercher\u00A0\u2026</string>
-    
+
     <string name="searchHint_listebibliographieavecfiltre_classlistview">Chercher\u00A0\u2026</string>
     <string name="searchHint_listebibliographieavecfiltre_listviewsearchrow">Chercher\u00A0\u2026</string>
-    
+
     <string name="btn_yes">Oui</string>
     <string name="btn_no">Non</string>
     <string name="btn_annul">Annuler</string>
-    
-	<!--End of user code
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <!--End of user code
 	  -->
 </resources>

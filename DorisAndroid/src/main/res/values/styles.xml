@@ -1,92 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<style name="Theme.AppDorisAndroid" parent="Theme.AppCompat">
-        
-		<!-- <item name="android:windowContentOverlay">@null</item> -->
-		<item name="android:windowBackground">@android:color/black</item>
-		<item name="dorisAppBackground">@drawable/app_background</item>
-		<item name="ic_action_participants">@drawable/ic_action_participants</item>
-    	<item name="ic_action_glossaire">@drawable/ic_action_glossaire</item>
-    	<item name="ic_action_bibliographie">@drawable/ic_action_bibliographie</item>
-    	<item name="ic_action_search">@drawable/ic_action_search</item>
-    	<item name="ic_action_arbre_phylogenetique">@drawable/ic_action_arbre_phylogenetique</item>
-    	<item name="ic_action_liste_fiches">@drawable/ic_action_liste_fiches</item>
-    	<item name="ic_action_liste_images">@drawable/ic_action_liste_images</item>
-		<item name="ic_app_more_informations">@drawable/ic_app_more_informations</item>
-    	
-    	<item name="ic_app_filter_settings">@drawable/ic_app_filter_settings</item>
-    	<item name="ic_app_filter_settings_actif">@drawable/ic_app_filter_settings_actif</item>
-    	
-    	<item name="ic_action_background">@drawable/icon_background</item>
-	</style>
-	<style name="Theme.AppDorisAndroidLight" parent="Theme.AppCompat.Light">
-		<item name="android:windowBackground">@android:color/background_light</item>
-		<item name="dorisAppBackground">@drawable/app_background_light</item>
-		<item name="ic_action_participants">@drawable/ic_action_participants_light</item>
-		<item name="ic_action_glossaire">@drawable/ic_action_glossaire_light</item>
-		<item name="ic_action_bibliographie">@drawable/ic_action_bibliographie_light</item>
-		<item name="ic_action_search">@drawable/ic_action_search_light</item>
-		<item name="ic_action_arbre_phylogenetique">@drawable/ic_action_arbre_phylogenetique_light</item>
-		<item name="ic_action_liste_fiches">@drawable/ic_action_liste_fiches_light</item>
-		<item name="ic_action_liste_images">@drawable/ic_action_liste_images_light</item>
-		<item name="ic_app_more_informations">@drawable/ic_app_more_informations_light</item>
+    <style name="Theme.AppDorisAndroid" parent="Theme.AppCompat">
 
-		<item name="ic_app_filter_settings">@drawable/ic_app_filter_settings_light</item>
-		<item name="ic_app_filter_settings_actif">@drawable/ic_app_filter_settings_actif_light</item>
+        <!-- <item name="android:windowContentOverlay">@null</item> -->
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="dorisAppBackground">@drawable/app_background</item>
+        <item name="ic_action_participants">@drawable/ic_action_participants</item>
+        <item name="ic_action_glossaire">@drawable/ic_action_glossaire</item>
+        <item name="ic_action_bibliographie">@drawable/ic_action_bibliographie</item>
+        <item name="ic_action_search">@drawable/ic_action_search</item>
+        <item name="ic_action_arbre_phylogenetique">@drawable/ic_action_arbre_phylogenetique</item>
+        <item name="ic_action_liste_fiches">@drawable/ic_action_liste_fiches</item>
+        <item name="ic_action_liste_images">@drawable/ic_action_liste_images</item>
+        <item name="ic_app_more_informations">@drawable/ic_app_more_informations</item>
 
-		<item name="ic_action_background">@drawable/icon_background_light</item>
-	</style>
+        <item name="ic_app_filter_settings">@drawable/ic_app_filter_settings</item>
+        <item name="ic_app_filter_settings_actif">@drawable/ic_app_filter_settings_actif</item>
+
+        <item name="ic_action_background">@drawable/icon_background</item>
+    </style>
+
+    <style name="Theme.AppDorisAndroidLight" parent="Theme.AppCompat.Light">
+        <item name="android:windowBackground">@android:color/background_light</item>
+        <item name="dorisAppBackground">@drawable/app_background_light</item>
+        <item name="ic_action_participants">@drawable/ic_action_participants_light</item>
+        <item name="ic_action_glossaire">@drawable/ic_action_glossaire_light</item>
+        <item name="ic_action_bibliographie">@drawable/ic_action_bibliographie_light</item>
+        <item name="ic_action_search">@drawable/ic_action_search_light</item>
+        <item name="ic_action_arbre_phylogenetique">@drawable/ic_action_arbre_phylogenetique_light
+        </item>
+        <item name="ic_action_liste_fiches">@drawable/ic_action_liste_fiches_light</item>
+        <item name="ic_action_liste_images">@drawable/ic_action_liste_images_light</item>
+        <item name="ic_app_more_informations">@drawable/ic_app_more_informations_light</item>
+
+        <item name="ic_app_filter_settings">@drawable/ic_app_filter_settings_light</item>
+        <item name="ic_app_filter_settings_actif">@drawable/ic_app_filter_settings_actif_light
+        </item>
+
+        <item name="ic_action_background">@drawable/icon_background_light</item>
+    </style>
 
     <style name="Theme.AppPureBlack" parent="Theme.AppCompat">
-		<item name="dorisAppBackground">@android:color/black</item>
+        <item name="dorisAppBackground">@android:color/black</item>
     </style>
-    
-    
+
+
     <style name="Theme.AppHolo" parent="Theme.AppCompat">
-		<item name="dorisAppBackground">@android:color/transparent</item>
+        <item name="dorisAppBackground">@android:color/transparent</item>
     </style>
-    
+
     <style name="Theme.AppHoloLight" parent="Theme.AppCompat.Light">
 
-		<item name="dorisAppBackground">@android:color/transparent</item>
+        <item name="dorisAppBackground">@android:color/transparent</item>
         <item name="ic_action_participants">@drawable/ic_action_participants_light</item>
-       	<item name="ic_action_glossaire">@drawable/ic_action_glossaire_light</item>
-    	<item name="ic_action_bibliographie">@drawable/ic_action_bibliographie_light</item>
-    	<item name="ic_action_search">@drawable/ic_action_search_light</item>
-    	<item name="ic_action_arbre_phylogenetique">@drawable/ic_action_arbre_phylogenetique_light</item>
-    	<item name="ic_action_liste_fiches">@drawable/ic_action_liste_fiches_light</item>
-    	<item name="ic_action_liste_images">@drawable/ic_action_liste_images_light</item>
-    	<item name="ic_app_more_informations">@drawable/ic_app_more_informations_light</item>
-    	
-    	<item name="ic_app_filter_settings">@drawable/ic_app_filter_settings_light</item>
-    	<item name="ic_app_filter_settings_actif">@drawable/ic_app_filter_settings_actif_light</item>
-    	
-    	<item name="ic_action_background">@drawable/icon_background_light</item>
+        <item name="ic_action_glossaire">@drawable/ic_action_glossaire_light</item>
+        <item name="ic_action_bibliographie">@drawable/ic_action_bibliographie_light</item>
+        <item name="ic_action_search">@drawable/ic_action_search_light</item>
+        <item name="ic_action_arbre_phylogenetique">@drawable/ic_action_arbre_phylogenetique_light
+        </item>
+        <item name="ic_action_liste_fiches">@drawable/ic_action_liste_fiches_light</item>
+        <item name="ic_action_liste_images">@drawable/ic_action_liste_images_light</item>
+        <item name="ic_app_more_informations">@drawable/ic_app_more_informations_light</item>
+
+        <item name="ic_app_filter_settings">@drawable/ic_app_filter_settings_light</item>
+        <item name="ic_app_filter_settings_actif">@drawable/ic_app_filter_settings_actif_light
+        </item>
+
+        <item name="ic_action_background">@drawable/icon_background_light</item>
     </style>
-    
-    
+
+
     <style name="Theme.AppDorisAndroidPreferences" parent="Theme.AppCompat">
         <item name="android:windowFullscreen">true</item>
-	    <!--<item name="android:windowBackground">@drawable/app_background</item>-->
-	   <!-- <item name="android:background">#FF000000</item>
+        <!--<item name="android:windowBackground">@drawable/app_background</item>-->
+        <!-- <item name="android:background">#FF000000</item>
 		<item name="android:colorBackground">#FF000000</item>-->
-		<item name="android:textAppearance">@android:style/TextAppearance.Small</item>
-		
-	</style>
-	
-        
+        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
+
+    </style>
+
+
     <!-- Ligne Horizontale utilisée dans les listes, entre les sections des fiches, etc. -->
-	<style name="Separateur">
-	    <item name="android:layout_width">match_parent</item>
-	    <item name="android:layout_height">1dp</item>
-	    <item name="android:background">?android:attr/listDivider</item>
-	</style>
-    
-	<!-- Les couleurs peuvent être écrit sous la forme : RED, YELLOW ou #FFFFFF -->
-	<string name="detailsfiche_elementview_couleur_gras"></string>
-	<string name="detailsfiche_elementview_couleur_lienfiche">#0168A1</string>
-	<string name="detailsfiche_elementview_couleur_liendefinition">#80AA00</string>
-	<string name="detailsfiche_elementview_couleur_lienparticipant">#EE4400</string>
+    <style name="Separateur">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+    <!-- Les couleurs peuvent être écrit sous la forme : RED, YELLOW ou #FFFFFF -->
+    <string name="detailsfiche_elementview_couleur_gras"></string>
+    <string name="detailsfiche_elementview_couleur_lienfiche">#0168A1</string>
+    <string name="detailsfiche_elementview_couleur_liendefinition">#80AA00</string>
+    <string name="detailsfiche_elementview_couleur_lienparticipant">#EE4400</string>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="android:Widget.Holo.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
 
 </resources>

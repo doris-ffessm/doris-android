@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="AppTheme">
-		<attr name="dorisAppBackground" format="reference|color"/>
-    	<attr name="ic_action_participants" format="reference" />
-    	<attr name="ic_action_glossaire" format="reference" />
-    	<attr name="ic_action_bibliographie" format="reference" />
-    	<attr name="ic_action_search" format="reference" />
-    	<attr name="ic_action_arbre_phylogenetique" format="reference" />
-    	<attr name="ic_action_liste_fiches" format="reference" />
-    	<attr name="ic_action_liste_images" format="reference" />
-    	<attr name="ic_app_more_informations" format="reference" />
-    	
-    	<attr name="ic_app_filter_settings" format="reference" />
-    	<attr name="ic_app_filter_settings_actif" format="reference" />
-    	
-    	<attr name="ic_action_background" format="reference" />
-   	</declare-styleable>
+        <attr name="dorisAppBackground" format="reference|color" />
+        <attr name="ic_action_participants" format="reference" />
+        <attr name="ic_action_glossaire" format="reference" />
+        <attr name="ic_action_bibliographie" format="reference" />
+        <attr name="ic_action_search" format="reference" />
+        <attr name="ic_action_arbre_phylogenetique" format="reference" />
+        <attr name="ic_action_liste_fiches" format="reference" />
+        <attr name="ic_action_liste_images" format="reference" />
+        <attr name="ic_app_more_informations" format="reference" />
+
+        <attr name="ic_app_filter_settings" format="reference" />
+        <attr name="ic_app_filter_settings_actif" format="reference" />
+
+        <attr name="ic_action_background" format="reference" />
+    </declare-styleable>
+
+    <!-- Declare custom theme attributes that allow changing which styles are
+         used for button bars depending on the API level.
+         ?android:attr/buttonBarStyle is new as of API 11 so this is
+         necessary to support previous API levels. -->
+    <declare-styleable name="ButtonBarContainerTheme">
+        <attr name="metaButtonBarStyle" format="reference" />
+        <attr name="metaButtonBarButtonStyle" format="reference" />
+    </declare-styleable>
 </resources>
