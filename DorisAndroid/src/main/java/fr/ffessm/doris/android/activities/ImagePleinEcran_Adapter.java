@@ -157,7 +157,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 	    			String suffixe_photo;
 	    			switch(Photos_Outils.ImageType.valueOf(paramOutils.getParamString(R.string.pref_key_mode_connecte_qualite_photo,""))){
 	    			case MED_RES :
-	    				suffixe_photo = Constants.MOYENNE_BASE_URL_SUFFIXE;
+	    				suffixe_photo = Constants.MOYENNE2_BASE_URL_SUFFIXE;
 	    				break;
 	    			case HI_RES :
 	    				suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
