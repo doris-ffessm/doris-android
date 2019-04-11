@@ -23,8 +23,8 @@
 	<string name="fold_all_sections_menu_option">Tout replier</string>
 	<string name="menu_option_maj_fiche">MaJ Fiche</string>
 	
-	<string name="ficheproposee_explications">Fiche propoposée. Très peu d\'informations sont disponibles.</string>
-	<string name="ficheredaction_explications">En cours de rédaction. Cette fiche est peut être incomplète.</string>
+	<string name="ficheproposee_explications">Fiche proposée. Très peu d\'informations disponibles pour le moment.</string>
+	<string name="ficheredaction_explications">En cours de rédaction. Cette fiche est peut être encore incomplète.</string>
 	
 	<string name="picto_espece_reglementee_label">Espèce Réglementée</string>
 	<string name="picto_espece_en_danger_label">Espèce Dangereuse</string>

@@ -7,7 +7,10 @@
 	<string name="a_propos_menu">À propos</string>
 	<string name="a_propos_label">""À propos\u00A0- "</string>
 	<string name="a_propos_txt">""Version\u00A0: "</string>
-	<string name="a_propos_base_date">"MàJ de la Base le\u00A0: "</string>
+	<string name="a_propos_base_date">"MàJ de la base le\u00A0: "</string>
+	<string name="a_propos_base_nb_fiches_publiees">" fiches complètes, "</string>
+	<string name="a_propos_base_nb_fiches_redaction">" en cours de rédaction et "</string>
+	<string name="a_propos_base_nb_fiches_proposées">" proposées"</string>
 		
 	<string name="aide_menu">Aide</string>
 	<string name="aide_label">Guide Utilisateur</string>

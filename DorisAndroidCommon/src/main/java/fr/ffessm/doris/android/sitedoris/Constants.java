@@ -142,6 +142,14 @@ public class Constants {
     private final static String PICTO_ESPECE_REGLEMENTEE_LIB = "Espèce réglementée";
 	private final static String PICTO_ESPECE_DANGEREUSE_LIB = "Espèce dangereuse";
 
+	public enum EtatFicheKind {
+		EN_COURS, //1
+		EN_COURS_2, //2
+		EN_COURS_3, //3
+		PUBLIEE, //4
+		PROPOSEE // 5
+	}
+
     public enum FileHtmlKind {
     	LISTE_FICHES,
     	FICHE,
@@ -219,7 +227,24 @@ public class Constants {
 		default:
 			return 99;
 		}
-    } 
+    }
+
+	public static int getNumEtatFiche(EtatFicheKind etatFicheKing) {
+		switch (etatFicheKing) {
+			case EN_COURS:
+				return 1;
+			case EN_COURS_2:
+				return 2;
+			case EN_COURS_3:
+				return 3;
+			case PUBLIEE:
+				return 4;
+			case PROPOSEE:
+				return 5;
+			default:
+				return 5;
+		}
+	}
 
     public static String getGroupesZoneUrl(int zone) {
     	return SITE_RACINE_URL + GROUPES_URL+zone;

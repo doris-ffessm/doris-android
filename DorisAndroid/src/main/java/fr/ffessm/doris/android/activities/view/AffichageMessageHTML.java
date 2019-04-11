@@ -57,8 +57,10 @@ import fr.ffessm.doris.android.activities.Preference_PreferenceViewActivity;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
+import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.App_Outils;
+import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
@@ -88,6 +90,7 @@ public class AffichageMessageHTML {
 	private final Param_Outils paramOutils;
 	private final Disque_Outils disqueOutils;
 	private final Photos_Outils photosOutils;
+	private final Fiches_Outils fichesOutils;
 	
 	public AffichageMessageHTML(Context context, Activity activity, OrmLiteDBHelper dbHelper) {
 		this.context = context;
@@ -97,6 +100,7 @@ public class AffichageMessageHTML {
 		paramOutils = new Param_Outils(context);
 		disqueOutils = new Disque_Outils(context);
 		photosOutils = new Photos_Outils(context);
+		fichesOutils = new Fiches_Outils(context);
 	}
 	
 	public AffichageMessageHTML(Context context) {
@@ -105,6 +109,7 @@ public class AffichageMessageHTML {
 		paramOutils = new Param_Outils(context);
 		disqueOutils = new Disque_Outils(context);
 		photosOutils = new Photos_Outils(context);
+		fichesOutils = new Fiches_Outils(context);
 	}
 
 	/* *********************************************************************
@@ -228,7 +233,14 @@ public class AffichageMessageHTML {
     		texte.append(System.getProperty("line.separator"));
     		texte.append(context.getString(R.string.a_propos_base_date) + it.next().getDateBase());
 		}
-			
+
+		texte.append("; ");
+    	int nbFichesPubliees = fichesOutils.getNbFichesPublished();
+		int nbFichesProposees = fichesOutils.getNbFichesProposed();
+		texte.append(nbFichesPubliees + context.getString(R.string.a_propos_base_nb_fiches_publiees));
+		texte.append(nbFichesProposees + context.getString(R.string.a_propos_base_nb_fiches_redaction) );
+		texte.append((fichesOutils.getNbFichesZoneGeo(Constants.ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES)-(nbFichesPubliees+nbFichesProposees))
+				+ context.getString(R.string.a_propos_base_nb_fiches_proposées) );
 		return texte.toString();
 	}
 }

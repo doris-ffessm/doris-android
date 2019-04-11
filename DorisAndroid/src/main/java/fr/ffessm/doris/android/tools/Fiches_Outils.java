@@ -121,6 +121,31 @@ public class Fiches_Outils {
     	ormLiteDBHelper.getFicheDao().clearObjectCache();
     	return nbFiches;
     }
+
+	public int getNbFichesPublished() {
+
+		int nbFiches = 0;
+
+		RuntimeExceptionDao<Fiche, Integer> entriesDao = ormLiteDBHelper.getFicheDao();
+		nbFiches = (int)entriesDao.queryForEq(
+					Fiche.XML_ATT_ETATFICHE,
+					Constants.getNumEtatFiche(Constants.EtatFicheKind.PUBLIEE) ).size();
+
+		ormLiteDBHelper.getFicheDao().clearObjectCache();
+		return nbFiches;
+	}
+	public int getNbFichesProposed() {
+
+		int nbFiches = 0;
+
+		RuntimeExceptionDao<Fiche, Integer> entriesDao = ormLiteDBHelper.getFicheDao();
+		nbFiches = (int)entriesDao.queryForEq(
+				Fiche.XML_ATT_ETATFICHE,
+				Constants.getNumEtatFiche(Constants.EtatFicheKind.PROPOSEE) ).size();
+
+		ormLiteDBHelper.getFicheDao().clearObjectCache();
+		return nbFiches;
+	}
     
     public List<Integer> getListeIdFiches() {
 		return ficheIdList;
