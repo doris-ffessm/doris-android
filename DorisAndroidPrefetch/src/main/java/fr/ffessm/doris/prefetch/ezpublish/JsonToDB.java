@@ -21,6 +21,8 @@ import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.sitedoris.Common_Outils;
+import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.sitedoris.SiteDoris;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.bibliographie.Bibliographie;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
@@ -52,8 +54,53 @@ public class JsonToDB {
                                             jsonImage.getDataMap().getLegend().trim()
                                         )
                 );
+        // récupère la liste des postfix pour les résolutions
+	    String vignettePostfixCode= "";
+        // test de disponibilité d'image vignette
+	    if(SiteDoris.existsFileAtURL(Constants.SITE_RACINE_URL +
+			    jsonImage.getDataMap().getImage().replace(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.ImagePostFixCode.IMAGE300.getPostFix()))){
+		    vignettePostfixCode = Constants.ImagePostFixCode.IMAGE300.getShortCode();
+	    } else if(SiteDoris.existsFileAtURL(Constants.SITE_RACINE_URL +
+			    jsonImage.getDataMap().getImage().replace(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.ImagePostFixCode.LARGE.getPostFix()))){
+		    vignettePostfixCode = Constants.ImagePostFixCode.LARGE.getShortCode();
+	    } else if(SiteDoris.existsFileAtURL(Constants.SITE_RACINE_URL +
+                jsonImage.getDataMap().getImage().replace(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.ImagePostFixCode.SpecieCard.getPostFix()))){
+            vignettePostfixCode = Constants.ImagePostFixCode.SpecieCard.getShortCode();
+        } else if(SiteDoris.existsFileAtURL(Constants.SITE_RACINE_URL +
+                jsonImage.getDataMap().getImage().replace(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.ImagePostFixCode.ForumCard.getPostFix()))){
+            vignettePostfixCode = Constants.ImagePostFixCode.ForumCard.getShortCode();
+        } else if(SiteDoris.existsFileAtURL(Constants.SITE_RACINE_URL +
+			    jsonImage.getDataMap().getImage().replace(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.ImagePostFixCode.MEDIUM.getPostFix()))){
+		    vignettePostfixCode = Constants.ImagePostFixCode.MEDIUM.getShortCode();
+	    } else if(SiteDoris.existsFileAtURL(Constants.SITE_RACINE_URL +
+			    jsonImage.getDataMap().getImage().replace(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.ImagePostFixCode.SMALL.getPostFix()))){
+		    vignettePostfixCode = Constants.ImagePostFixCode.SMALL.getShortCode();
+	    }
+
+        // test de disponibilité d'image medium
+	    String mediumPostfixCode= "";
+	    if(SiteDoris.existsFileAtURL(Constants.SITE_RACINE_URL +
+			    jsonImage.getDataMap().getImage().replace(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.ImagePostFixCode.IMAGE600.getPostFix()))){
+		    mediumPostfixCode = Constants.ImagePostFixCode.IMAGE600.getShortCode();
+	    } else if(SiteDoris.existsFileAtURL(Constants.SITE_RACINE_URL +
+			    jsonImage.getDataMap().getImage().replace(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.ImagePostFixCode.IMAGE1000.getPostFix()))){
+		    mediumPostfixCode = Constants.ImagePostFixCode.IMAGE1000.getShortCode();
+	    } else if(SiteDoris.existsFileAtURL(Constants.SITE_RACINE_URL +
+                jsonImage.getDataMap().getImage().replace(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.ImagePostFixCode.IMAGE1200.getPostFix()))){
+            mediumPostfixCode = Constants.ImagePostFixCode.IMAGE1200.getShortCode();
+        } else if(SiteDoris.existsFileAtURL(Constants.SITE_RACINE_URL +
+			    jsonImage.getDataMap().getImage().replace(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.ImagePostFixCode.SpecieCard.getPostFix()))){
+		    mediumPostfixCode = Constants.ImagePostFixCode.SpecieCard.getShortCode();
+	    } else if(SiteDoris.existsFileAtURL(Constants.SITE_RACINE_URL +
+			    jsonImage.getDataMap().getImage().replace(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.ImagePostFixCode.ForumCard.getPostFix()))){
+		    mediumPostfixCode = Constants.ImagePostFixCode.ForumCard.getShortCode();
+	    }
+
+	    photoFiche.setImgPostfixCodes(vignettePostfixCode+"&"+mediumPostfixCode);
         return photoFiche;
     }
+
+
 
     public List<PhotoFiche> getListePhotosFicheFromJsonImages(List<Image> jsonImagesJSON) {
 		

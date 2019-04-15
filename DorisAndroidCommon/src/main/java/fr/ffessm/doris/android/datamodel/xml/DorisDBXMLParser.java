@@ -176,6 +176,8 @@ public class DorisDBXMLParser {
 	public static final String DATAREF_AUTREDENOMINATION_fiche = "fiche";
 	public static final String DATAATT_PHOTOFICHE_cleURL = "cleURL";
 	public static final String DATAATT_PHOTOFICHE_CLEURL = "CLEURL";
+	public static final String DATAATT_PHOTOFICHE_imgPostfixCodes = "imgPostfixCodes";
+	public static final String DATAATT_PHOTOFICHE_IMGPOSTFIXCODES = "IMGPOSTFIXCODES";
 	public static final String DATAATT_PHOTOFICHE_imageVignette = "imageVignette";
 	public static final String DATAATT_PHOTOFICHE_IMAGEVIGNETTE = "IMAGEVIGNETTE";
 	public static final String DATAATT_PHOTOFICHE_imageMoyenne = "imageMoyenne";

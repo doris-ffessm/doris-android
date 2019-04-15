@@ -112,6 +112,38 @@ public class Constants {
     	FAUNE_FLORE_TOUTES_ZONES
     }
 
+
+
+	// trié de la pblus petite à la plus grande
+    public enum ImagePostFixCode {
+		SMALL("xs",     "_small.jpg"),     // _small.jpg  quand dispo, c'est très petit
+	    MEDIUM("ms",    "_medium.jpg"),     // _medium.jpg
+	    LARGE("ls",       "_large.jpg"),      // _large.jpg
+	    IMAGE300("03",    "_image300.jpg"),   // _image300.jpg    // vignette par défaut sinon large, medium, small, base
+	    ForumCard("fc",   "_forumHomeCard.jpg"),  // _forumHomeCard.jpg
+	    SpecieCard("sc",  "_specieHomeCard.jpg"),  // _specieHomeCard.jpg
+    	IMAGE600("06",    "_image600.jpg"),   // _image600.jpg    // Medium par défaut, sinon, image1000, Specie, Forum,  base
+	    IMAGE1000("10",   "_image1000.jpg"),  // _image1000.jpg
+	    IMAGE1200("12",   "_image1200.jpg"),  // _image1200.jpg
+	    REFERENCE("rf",   "_reference.jpg"),  // _reference.jpg
+	    BASE("",        ".jpg");       // .jpg
+
+
+		private String shortCode;
+		private String postFix;
+
+		private ImagePostFixCode (String shortcode, String postFix) {
+			this.shortCode = shortcode;
+			this.postFix = postFix;
+		}
+		public String getShortCode(){
+			return this.shortCode;
+		}
+		public String getPostFix(){
+			return this.postFix;
+		}
+    }
+
 	public final static String ZONE_GEOGRAPHIQUE_TOUTES_ZONES_DESCR = "Toutes Zones";
 
     public enum ParticipantKind {
@@ -412,5 +444,6 @@ public class Constants {
  	
 		return null;
     }
+
 
 }

@@ -167,6 +167,8 @@ public class PrefetchDorisWebSite {
 		prefetchDBTools.databaseInitialisation(connectionSource);
 		outilsBase = new DataBase_Outils(dbContext);
 
+
+
         /*
 		PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, ActionKind.INIT, nbMaxFichesATraiter);
 		if ( glossaire.prefetch() == -1 ) {
@@ -174,6 +176,17 @@ public class PrefetchDorisWebSite {
 			System.exit(1);
 		}
 		*/
+
+		// - - - Liste des Fiches - - -
+		log.debug("dbV4ToAndroidAction() - - - Liste des Fiches - - -");
+		int nbMaxEspecesATraiter = 100000;
+		if (nbMaxEspecesATraiter > nbMaxFichesATraiter ) nbMaxEspecesATraiter = nbMaxFichesATraiter;
+		PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, nbMaxEspecesATraiter, nbFichesParRequetes);
+		if ( listeFiches.prefetchV4() == -1 ) {
+			log.debug("doMain() - Erreur Liste des Fiches" );
+			System.exit(1);
+		}
+
 		log.debug("doMain() - Fin TEST");
 	}
 

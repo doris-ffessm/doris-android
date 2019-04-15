@@ -74,6 +74,7 @@ public class PhotoFiche {
 	public static final String XML_PHOTOFICHE = "PHOTOFICHE";
 	public static final String XML_ATT_ID = "id";
 	public static final String XML_ATT_CLEURL = "cleURL";
+	public static final String XML_ATT_IMGPOSTFIXCODES = "imgPostfixCodes";
 	public static final String XML_ATT_IMAGEVIGNETTE = "imageVignette";
 	public static final String XML_ATT_IMAGEMOYENNE = "imageMoyenne";
 	public static final String XML_ATT_IMAGEGRANDE = "imageGrande";
@@ -99,6 +100,10 @@ public class PhotoFiche {
 	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String cleURL;
+
+
+	@DatabaseField
+	protected java.lang.String imgPostfixCodes;
 
 	/** TEST GM : File = SQLite **/
 	protected java.io.File imageVignette;
@@ -169,6 +174,14 @@ public class PhotoFiche {
 	public void setCleURL(java.lang.String cleURL) {
 		this.cleURL = cleURL;
 	}
+
+	public java.lang.String getImgPostfixCodes() {
+		return this.imgPostfixCodes;
+	}
+	public void setImgPostfixCodes(java.lang.String imgPostfixCodes) {
+		this.imgPostfixCodes = imgPostfixCodes;
+	}
+
 	public java.io.File getImageVignette() {
 		// Start of user code placeholder for derived attribute imageVignette
 		// End of user code			
