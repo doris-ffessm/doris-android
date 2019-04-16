@@ -106,7 +106,7 @@ public class Reseau_Outils {
 		if ( wifiOnly ) {
 			return (getConnectionType() == Reseau_Outils.ConnectionType.WIFI);
 		} else {
-			return true;
+			return getConnectionType() != ConnectionType.AUCUNE;
 		}	
 		
 	}

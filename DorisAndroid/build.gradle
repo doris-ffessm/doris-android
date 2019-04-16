@@ -24,6 +24,7 @@ dependencies {
     // dependances Android
     implementation "com.android.support:appcompat-v7:$androidSupportVersion"
     implementation "com.android.support:support-v4:$androidSupportVersion"
+    implementation "com.squareup.picasso:picasso:2.5.2"
     // NOTE la version 21+ ne fonctionne pas bien, à revoir ...
     //compile 'com.android.support:appcompat-v7:21.0.3'
     //compile project(':android-support-v7-appcompat')

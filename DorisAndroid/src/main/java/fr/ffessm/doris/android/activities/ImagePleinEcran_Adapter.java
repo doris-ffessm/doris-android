@@ -60,6 +60,8 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.ZoomControls;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import fr.ffessm.doris.android.R;
@@ -71,6 +73,9 @@ import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
+
+import static fr.ffessm.doris.android.tools.Photos_Outils.ImageType.HI_RES;
+import static fr.ffessm.doris.android.tools.Photos_Outils.ImageType.MED_RES;
 
 public class ImagePleinEcran_Adapter extends PagerAdapter {
 
@@ -128,95 +133,137 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         int hauteur = ScreenTools.getScreenHeight(_activity);
         int largeur = ScreenTools.getScreenWidth(_activity);
         final PhotoFiche photoFiche = _PhotoFicheLists.get(position);
-        if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.HI_RES)){
-    		try {
-				Picasso.with(_activity)
-					.load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), ImageType.HI_RES))
-					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
-					.resize(largeur, hauteur)
-					.centerInside()
-					.into(imgDisplay);
-			} catch (IOException e) {
-			}
-    	}
-    	else{
-    		if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.MED_RES)){
-        		try {
-    				Picasso.with(_activity)
-    					.load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), ImageType.MED_RES))
-    					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
-    					.into(imgDisplay);
-    			} catch (IOException e) {
-    			}
-        	}
-    		else{
-				// pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
-        		// TODO: Attention parfois il faudrait prendre l'image moyenne 2, la 1ère n'étant pas dispo.
-        		if (reseauOutils.isTelechargementsModeConnectePossible()) {
 
-	    			String suffixe_photo;
-	    			switch(Photos_Outils.ImageType.valueOf(paramOutils.getParamString(R.string.pref_key_mode_connecte_qualite_photo,""))){
-	    			case MED_RES :
-	    				suffixe_photo = Constants.MOYENNE2_BASE_URL_SUFFIXE;
-	    				break;
-	    			case HI_RES :
-	    				suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
-	    				break;
-	    			default:
-	    				suffixe_photo = Constants.MOYENNE_BASE_URL_SUFFIXE;
-	    			}
+	    final ImageType bestLocallyAvailableRes;
+	    if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.HI_RES)){
+		    bestLocallyAvailableRes = ImageType.HI_RES;
+	    } else if (photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.MED_RES)){
+		    bestLocallyAvailableRes = ImageType.MED_RES;
+	    } else if (photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)){
+		    bestLocallyAvailableRes = ImageType.VIGNETTE;
+	    } else {
+		    bestLocallyAvailableRes = null;
+	    }
 
-	    			ChainedLoadImageViewCallback chainedLoadImageViewCallback = new ChainedLoadImageViewCallback(
-	    					_activity,
-	    					imgDisplay,
-	    					Constants.IMAGE_BASE_URL + "/"
-        						+ photoFiche.getCleURL().replaceAll(
-        							Constants.IMAGE_BASE_URL_SUFFIXE+"$", suffixe_photo),
-	    					largeur,
-	    					hauteur,
-	    					false,
-	    					btnHiResNotAvailable); // vrai chargement de l'image dans le callback
+	    ImageType requestedRes = Photos_Outils.ImageType.valueOf(paramOutils.getParamString(R.string.pref_key_mode_connecte_qualite_photo,""));
+	    String small_suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
+	    String med_suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
+	    String large_suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
+	    if(!photoFiche.getImgPostfixCodes().isEmpty() && photoFiche.getImgPostfixCodes().contains("&")){
+		    String[] imgPostfixCodes = photoFiche.getImgPostfixCodes().split("&");
+		    if(!imgPostfixCodes[0].isEmpty()){
+			    small_suffixe_photo = Constants.ImagePostFixCode.getEnumFromCode(imgPostfixCodes[0]).getPostFix();
+		    }
+		    if(!imgPostfixCodes[1].isEmpty()){
+			    med_suffixe_photo = Constants.ImagePostFixCode.getEnumFromCode(imgPostfixCodes[1]).getPostFix();
+		    }
+	    }
+	    String requested_suffixe_photo = large_suffixe_photo;
+	    if(Photos_Outils.ImageType.valueOf(paramOutils.getParamString(R.string.pref_key_mode_connecte_qualite_photo,"")).equals(MED_RES)){
+		    requested_suffixe_photo = med_suffixe_photo;
+	    }
+	    ChainedLoadImageViewCallback chainedLoadImageViewCallback = new ChainedLoadImageViewCallback(
+			    _activity,
+			    imgDisplay,
+			    Constants.IMAGE_BASE_URL + "/"
+					    + photoFiche.getCleURL().replaceAll(
+					    Constants.IMAGE_BASE_URL_SUFFIXE+"$", requested_suffixe_photo),
+			    largeur,
+			    hauteur,
+			    false,
+			    btnHiResNotAvailable); // vrai chargement de l'image dans le callback
 
-	    			if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)){
-	    				try {
-							Picasso.with(_activity)
-								.load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)) // charge d'abord la vignette depuis le disque
-								.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
-								.resize(largeur, hauteur)
-								.centerInside()
-								.into(imgDisplay,chainedLoadImageViewCallback);
-						} catch (IOException e) {
-						}
-	    			}
-	    			else{
-			    		Picasso.with(_activity)
-			    			.load(Constants.IMAGE_BASE_URL + "/"
-		        					+ photoFiche.getCleURL().replaceAll(
-		        							Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.PETITE_BASE_URL_SUFFIXE)) // charge d'abord la vignette depuis internet (mais elle est probablement déjà dans le cache)
-							.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
-							.resize(largeur, hauteur)
-							.centerInside()
-			    			.into(imgDisplay,chainedLoadImageViewCallback);
-	    			}
-        		} else {
-        			// Si interdiction de télécharger en mode connecté GSM
-        			if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)){
-                		try {
-        					Picasso.with(_activity)
-        						.load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE))
-        						.resize(largeur, hauteur)
-        						.centerInside()
-        						.placeholder(R.drawable.doris_icone_doris_large_pas_connecte)
-        						.into(imgDisplay);
-        				} catch (IOException e) {
-        				}
-                	} else {
-                		imgDisplay.setImageResource(R.drawable.doris_icone_doris_large_pas_connecte);
-                	}
-        		}
-    		}
-    	}
-         
+	    if(bestLocallyAvailableRes != null){
+	    	// on a une image en local, on commence par elle si pas déjà hires et on télécharge celle requise en ligne si autorisé
+		    if(bestLocallyAvailableRes.equals(HI_RES) || (bestLocallyAvailableRes.equals(MED_RES) && requestedRes.equals(MED_RES))){
+		    	// on a la bonne image en local
+			    try {
+				    Picasso.with(_activity)
+						    .load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes))
+						    .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
+						    .resize(largeur, hauteur)
+						    .centerInside()
+						    .into(imgDisplay);
+			    } catch (IOException e) {}
+		    } else {
+			    if (reseauOutils.isTelechargementsModeConnectePossible()) {
+				    try {
+					    Picasso.with(_activity)
+							    .load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes)) // charge d'abord la vignette depuis le disque
+							    .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
+							    .resize(largeur, hauteur)
+							    .centerInside()
+							    .into(imgDisplay,
+									    chainedLoadImageViewCallback);  // on enchaine avec la vrai image requise
+				    } catch (IOException e) {}
+			    } else {
+			    	// téléchargement non autorisé, cherche dans le cache picasso
+				    // si pas présent alors utilise la photo dispo et ajoute l'overlay
+				    Picasso.with(_activity)
+						    .load(Constants.IMAGE_BASE_URL + "/"
+								    + photoFiche.getCleURL().replaceAll(
+								    Constants.IMAGE_BASE_URL_SUFFIXE+"$", requested_suffixe_photo))
+						    .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+						    .placeholder(R.drawable.doris_icone_doris_large)
+						    .into(imgDisplay, new Callback() {
+							    @Override
+							    public void onSuccess() {}
+
+							    @Override
+							    public void onError() {
+								    try {
+								    Picasso.with(_activity)
+										    .load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes))
+										    .resize(largeur, hauteur)
+										    .centerInside()
+										    .placeholder(R.drawable.doris_icone_doris_large_pas_connecte)
+										    .into(imgDisplay);
+								    } catch (IOException e) {}
+								    btnHiResNotAvailable.setVisibility(View.VISIBLE);
+							    }
+						    });
+			    }
+		    }
+	    } else {
+	    	// pas de photo en local, télécharge en ligne si autorisé
+		    if (reseauOutils.isTelechargementsModeConnectePossible()) {
+
+				    Picasso.with(_activity)
+						    .load(Constants.IMAGE_BASE_URL + "/"
+								    + photoFiche.getCleURL().replaceAll(
+								    Constants.IMAGE_BASE_URL_SUFFIXE+"$", requested_suffixe_photo))
+						    .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
+						    .resize(largeur, hauteur)
+						    .centerInside()
+						    .into(imgDisplay, new Callback() {
+							    @Override
+							    public void onSuccess() { }
+							    @Override
+							    public void onError() {
+								    btnHiResNotAvailable.setVisibility(View.VISIBLE);
+							    }
+						    });
+
+		    } else {
+			    // téléchargement non autorisé
+			    Picasso.with(_activity)
+					    .load(Constants.IMAGE_BASE_URL + "/"
+							    + photoFiche.getCleURL().replaceAll(
+							    Constants.IMAGE_BASE_URL_SUFFIXE+"$", requested_suffixe_photo))
+					    .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+					    .placeholder(R.drawable.doris_icone_doris_large)
+					    .into(imgDisplay, new Callback() {
+						    @Override
+						    public void onSuccess() {}
+
+						    @Override
+						    public void onError() {
+							    btnHiResNotAvailable.setVisibility(View.VISIBLE);
+						    }
+					    });
+		    }
+	    }
+
         imgDisplay.setOnClickListener(new PhotoClickListener(photoFiche));
         
         // gestion des bouton de control de zoom
