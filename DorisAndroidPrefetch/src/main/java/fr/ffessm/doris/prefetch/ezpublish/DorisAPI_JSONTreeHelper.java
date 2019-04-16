@@ -135,8 +135,8 @@ public class DorisAPI_JSONTreeHelper {
 		}
 		
 		if (debug) {
-			System.out.println(uri);
-			System.out.println(getHttpPage.getFirstHeader("Authorization"));
+			log.info(uri);
+			log.info(getHttpPage.getFirstHeader("Authorization"));
 		}
 		
 		HttpResponse response = client.execute(getHttpPage);

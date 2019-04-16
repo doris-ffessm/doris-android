@@ -97,6 +97,7 @@ public class JsonToDB {
 	    }
 
 	    photoFiche.setImgPostfixCodes(vignettePostfixCode+"&"+mediumPostfixCode);
+        log.debug("getPhotoFicheFromJSONImage - ImgPostfixCodes="+photoFiche.getImgPostfixCodes());
         return photoFiche;
     }
 

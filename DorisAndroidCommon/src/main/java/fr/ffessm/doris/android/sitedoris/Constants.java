@@ -126,7 +126,7 @@ public class Constants {
 	    IMAGE1000("10",   "_image1000.jpg"),  // _image1000.jpg
 	    IMAGE1200("12",   "_image1200.jpg"),  // _image1200.jpg
 	    REFERENCE("rf",   "_reference.jpg"),  // _reference.jpg
-	    BASE("",        ".jpg");       // .jpg
+	    BASE("",          ".jpg");       // .jpg
 
 
 		private String shortCode;
@@ -141,6 +141,23 @@ public class Constants {
 		}
 		public String getPostFix(){
 			return this.postFix;
+		}
+
+		public static ImagePostFixCode getEnumFromCode(String code) {
+			switch (code){
+				case "xs" : return SMALL;
+				case "ms" : return MEDIUM;
+				case "ls" : return LARGE;
+				case "03" : return IMAGE300;
+				case "fc" : return ForumCard;
+				case "sc" : return SpecieCard;
+				case "06" : return IMAGE600;
+				case "10" : return IMAGE1000;
+				case "12" : return IMAGE1200;
+				case "rf" : return REFERENCE;
+				case ""   : return BASE;
+				default   : return BASE;
+			}
 		}
     }
 

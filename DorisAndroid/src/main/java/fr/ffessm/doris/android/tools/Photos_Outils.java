@@ -403,71 +403,80 @@ public class Photos_Outils {
 	InputStream input;
     OutputStream output;
     private int count;
-    
-	public void downloadPhotoFile(String photoUrl, ImageType imageType) throws IOException{
+
+	/**
+	 * Télécharge la photo en utuilisant les informations de  post fix si disponible et nécessaire
+	 * @param photoPath
+	 * @param imageType
+	 * @param imgPostfixCodesString
+	 * @throws IOException
+	 */
+	public void downloadPostFixedPhotoFile(String photoPath,  ImageType imageType, String imgPostfixCodesString) throws IOException{
         //if (BuildConfig.DEBUG) Log.i(LOG_TAG, "downloadPhotoFile() - imageType : "+imageType.name());
 
+		String[] imgPostfixCodes = imgPostfixCodesString.split("&");
 		switch (imageType) {
 		case VIGNETTE:
-			// On commence par essayer de télécharger l'image la plus petite, si pas dispo. on passe à la taille au dessus.
-			if (! downloadPhotoFile( Constants.IMAGE_BASE_URL + "/"
-										+ photoUrl.replaceAll(
-												Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.VIGNETTE_BASE_URL_SUFFIXE),
-										photoUrl.substring(photoUrl.lastIndexOf('/') + 1),
-										imageType
-									)
-						) {
-
-                            if (! downloadPhotoFile( Constants.IMAGE_BASE_URL + "/"
-                                    + photoUrl.replaceAll(
-                                            Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.PETITE_BASE_URL_SUFFIXE),
-                                    photoUrl.substring(photoUrl.lastIndexOf('/') + 1),
-                                    imageType )
-                                ) {
-                                    downloadPhotoFile( Constants.IMAGE_BASE_URL + "/"
-                                                    + photoUrl.replaceAll(
-                                            Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.PETITE2_BASE_URL_SUFFIXE),
-                                            photoUrl.substring(photoUrl.lastIndexOf('/') + 1),
-                                            imageType );
-                                 }
-						    }
+			if(imgPostfixCodes.length > 0 && imgPostfixCodes[0].length() > 0){
+				// on a un postfix code
+				String postfix = Constants.ImagePostFixCode.getEnumFromCode(imgPostfixCodes[0]).getPostFix();
+				downloadPhotoFile( Constants.IMAGE_BASE_URL + "/"
+								+ photoPath.replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE+"$", postfix),
+						photoPath.substring(photoPath.lastIndexOf('/') + 1),
+						imageType
+				);
+			} else {
+				// pas de code, on considère l'image principale comme vignette
+				// !! on ne la télécharge pas dans vignette mais dans HI_RES, sinon quand elle deviendra officielle on ne saura pas l'effacer
+				// on préfère que ce soit géré lors de l'usage
+				downloadPostFixedPhotoFile(photoPath, ImageType.HI_RES, "");
+			}
 			break;
 		case MED_RES:
 			// Dans DORIS V4, les images des fiches sont dans des sous-dossiers se nommant presque comme l'image,
 			// il est enregistré dans la base (dans le champs cleUrl), on ne garde donc que le dernier mot ici
-            if (! downloadPhotoFile( Constants.IMAGE_BASE_URL + "/"
-					+ photoUrl.replaceAll(
-							Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.MOYENNE_BASE_URL_SUFFIXE),
-					photoUrl.substring(photoUrl.lastIndexOf('/') + 1),
-					imageType)
-				) {
-                    downloadPhotoFile( Constants.IMAGE_BASE_URL + "/"
-                                + photoUrl.replaceAll(
-                        Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.MOYENNE2_BASE_URL_SUFFIXE),
-                        photoUrl.substring(photoUrl.lastIndexOf('/') + 1),
-                        imageType);
-
-                }
+			if(imgPostfixCodes.length > 1 && imgPostfixCodes[1].length() > 0){
+				// on a un postfix code
+				String postfix = Constants.ImagePostFixCode.getEnumFromCode(imgPostfixCodes[1]).getPostFix();
+				downloadPhotoFile( Constants.IMAGE_BASE_URL + "/"
+								+ photoPath.replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE+"$", postfix),
+						photoPath.substring(photoPath.lastIndexOf('/') + 1),
+						imageType
+				);
+			} else {
+				// pas de code, on considère l'image principale comme vignette
+				// !! on ne la télécharge pas dans vignette mais dans HI_RES, sinon quand elle deviendra officielle on ne saura pas l'effacer
+				// on préfère que ce soit géré lors de l'usage
+				downloadPostFixedPhotoFile(photoPath, ImageType.HI_RES, "");
+			}
 			break;
 		case HI_RES:
 			downloadPhotoFile( Constants.IMAGE_BASE_URL + "/"
-					+ photoUrl.replaceAll(
+					+ photoPath.replaceAll(
 							Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.GRANDE_BASE_URL_SUFFIXE),
-					photoUrl.substring(photoUrl.lastIndexOf('/') + 1),
+					photoPath.substring(photoPath.lastIndexOf('/') + 1),
 					imageType
 				);
 			break;
 		case PORTRAITS:
 		case ILLUSTRATION_DEFINITION :
 		case ILLUSTRATION_BIBLIO :
-			downloadPhotoFile(photoUrl,
-								photoUrl,
-								imageType);
+			downloadPhotoFile(photoPath,
+					photoPath,
+					imageType);
 			break;
 		default:
 		}
 	}
 
+	/**
+	 * Télécharge la photo à l'url indiquée (sans modification) et la copie dans l'emplacement
+	 * @param inPhotoUrl
+	 * @param inPhotoDisque
+	 * @param inImageType
+	 * @return
+	 * @throws IOException
+	 */
 	public boolean downloadPhotoFile(String inPhotoUrl, String inPhotoDisque, ImageType inImageType) throws IOException{
 		//Log.d(LOG_TAG, "downloadPhotoFile() : "+inImageType+" - "+inPhotoUrl+" - "+inPhotoDisque );
 		if(!inPhotoUrl.isEmpty()){
@@ -560,7 +569,7 @@ public class Photos_Outils {
 		}
 
 
-		Log.d(LOG_TAG, "downloadPhotoFile() - Fin");
+		Log.d(LOG_TAG, "downloadPhotoFile() - Fin "+inPhotoUrl);
 		return true;
 	}
 
