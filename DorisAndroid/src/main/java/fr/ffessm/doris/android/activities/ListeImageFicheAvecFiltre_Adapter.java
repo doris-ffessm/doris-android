@@ -76,6 +76,8 @@ import android.widget.TextView;
 
 import android.view.ViewGroup.LayoutParams;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -252,7 +254,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 
                 // Si la fiche n'est pas publiée, on n'affiche que la 1ère image, mais il existe une option dans les préférences Debug et Autres permettant de tout afficher
                 if (pos == 0 || entry.getEtatFiche() == 4 || prefs.getBoolean(context.getString(R.string.pref_key_affichage_tous_contenus), false) ) {
-
+					Log.d(LOG_TAG, "getView insertPhoto() "+entry.getNomCommun()+" photo: "+photoFiche.getCleURL());
                     View photoView = insertPhoto(photoFiche);
                     //photoView.setOnClickListener(new OnImageClickListener(entry.getId(),pos,this));
                     //photoView.setOnClickListener(Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - getView"));
@@ -606,72 +608,63 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
         final ImageView imageView = new ImageView(context);
         imageView.setLayoutParams(new LayoutParams(iconSize, iconSize));
         imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        
-        if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)){
-    		try {
-				Picasso.with(context).load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE))
-					.fit()
-					.centerInside()
-					.into(imageView);
-			} catch (IOException e) {
-			}
-    	}
-    	else{
-    		// pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
-    		
-    		if (reseauOutils.isTelechargementsModeConnectePossible()) {
 
-	            final PhotoFiche photoFicheFinal = photoFiche;
 
-	    		Picasso.with(context)
-	    			.load(Constants.IMAGE_BASE_URL + "/"
-        					+ photoFiche.getCleURL().replaceAll(
-							Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.VIGNETTE_BASE_URL_SUFFIXE))
-					.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
-					.error(R.drawable.doris_icone_doris_large_pas_connecte)
-					.fit()
-					.centerInside()
-	    			.into(imageView, new com.squareup.picasso.Callback() {
-                            @Override
-                            public void onSuccess() {
-                                //Success image already loaded into the view
-                            }
+	    final ImageType bestLocallyAvailableRes;
+	    if (photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)){ // utilise le format vignette en priorité, fallback sur les autres
+		    bestLocallyAvailableRes = ImageType.VIGNETTE;
+	    } else if (photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.MED_RES)){
+		    bestLocallyAvailableRes = ImageType.MED_RES;
+	    } else if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.HI_RES)){
+		    bestLocallyAvailableRes = ImageType.HI_RES;
+	    } else {
+		    bestLocallyAvailableRes = null;
+	    }
 
-                            @Override
-                            public void onError() {
-                                Picasso.with(context)
-                                .load(Constants.IMAGE_BASE_URL + "/"
-                                        + photoFicheFinal.getCleURL().replaceAll(
-                                                Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.PETITE_BASE_URL_SUFFIXE))
-                                .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
-                                .fit()
-                                .centerInside()
-                                .into(imageView, new com.squareup.picasso.Callback() {
-                                        @Override
-                                        public void onSuccess() {
-                                            //Success image already loaded into the view
-                                        }
 
-                                        @Override
-                                        public void onError() {
-                                            Picasso.with(context)
-                                                    .load(Constants.IMAGE_BASE_URL + "/"
-                                                            + photoFicheFinal.getCleURL().replaceAll(
-                                                            Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.PETITE2_BASE_URL_SUFFIXE))
-                                                    .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
-                                                    .fit()
-                                                    .centerInside()
-                                                    .error(R.drawable.doris_icone_doris_large_pas_connecte)
-                                                    .into(imageView);
-                                        }
-                                    }
-                                );
-                            }
-                        }
-                    );
-    		} else {
-    			imageView.setImageResource(R.drawable.doris_icone_doris_large_pas_connecte);
-    		}
+	    ImageType requestedRes = ImageType.VIGNETTE;
+	    String small_suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
+	    if(!photoFiche.getImgPostfixCodes().isEmpty() && photoFiche.getImgPostfixCodes().contains("&")){
+	    	// !! split -1 car https://stackoverflow.com/questions/14602062/java-string-split-removed-empty-values
+		    String[] imgPostfixCodes = photoFiche.getImgPostfixCodes().split("&",-1);
+		    if(!imgPostfixCodes[0].isEmpty()){
+			    small_suffixe_photo = Constants.ImagePostFixCode.getEnumFromCode(imgPostfixCodes[0]).getPostFix();
+		    }
+	    }
+	    String requested_suffixe_photo = small_suffixe_photo;
+
+	    if(bestLocallyAvailableRes != null) {
+		    // on a une image en local, on l'utilise
+		    try {
+			    Picasso.with(context).load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes))
+					    .fit()
+					    .centerInside()
+					    .into(imageView);
+		    } catch (IOException e) {}
+	    } else {
+		    // pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
+		    if (reseauOutils.isTelechargementsModeConnectePossible()) {
+			    Picasso.with(context)
+					    .load(Constants.IMAGE_BASE_URL + "/"
+							    + photoFiche.getCleURL().replaceAll(
+							    Constants.IMAGE_BASE_URL_SUFFIXE+"$", requested_suffixe_photo))
+					    .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
+					    .error(R.drawable.doris_icone_doris_large_pas_connecte)
+					    .fit()
+					    .centerInside()
+					    .into(imageView);
+		    } else {
+			    Picasso.with(context)
+					    .load(Constants.IMAGE_BASE_URL + "/"
+							    + photoFiche.getCleURL().replaceAll(
+							    Constants.IMAGE_BASE_URL_SUFFIXE+"$", requested_suffixe_photo))
+					    .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+					    .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
+					    .error(R.drawable.doris_icone_doris_large_pas_connecte)
+					    .fit()
+					    .centerInside()
+					    .into(imageView);
+		    }
     	}
         
         layout.addView(imageView);

@@ -145,12 +145,14 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 		    bestLocallyAvailableRes = null;
 	    }
 
+	    // calcul des postfix de nom si nécessaire
 	    ImageType requestedRes = Photos_Outils.ImageType.valueOf(paramOutils.getParamString(R.string.pref_key_mode_connecte_qualite_photo,""));
 	    String small_suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
 	    String med_suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
 	    String large_suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
 	    if(!photoFiche.getImgPostfixCodes().isEmpty() && photoFiche.getImgPostfixCodes().contains("&")){
-		    String[] imgPostfixCodes = photoFiche.getImgPostfixCodes().split("&");
+		    // !! split -1 car https://stackoverflow.com/questions/14602062/java-string-split-removed-empty-values
+		    String[] imgPostfixCodes = photoFiche.getImgPostfixCodes().split("&", -1);
 		    if(!imgPostfixCodes[0].isEmpty()){
 			    small_suffixe_photo = Constants.ImagePostFixCode.getEnumFromCode(imgPostfixCodes[0]).getPostFix();
 		    }
@@ -212,7 +214,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 							    @Override
 							    public void onError() {
 								    try {
-								    Picasso.with(_activity)
+								        Picasso.with(_activity)
 										    .load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes))
 										    .resize(largeur, hauteur)
 										    .centerInside()
@@ -246,6 +248,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 
 		    } else {
 			    // téléchargement non autorisé
+			    final String fallback_offline_suffixe_photo = small_suffixe_photo;
 			    Picasso.with(_activity)
 					    .load(Constants.IMAGE_BASE_URL + "/"
 							    + photoFiche.getCleURL().replaceAll(
@@ -258,7 +261,15 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 
 						    @Override
 						    public void onError() {
+							    // on tente de chercher le cache des vignettes avant de vraiment abandonner
 							    btnHiResNotAvailable.setVisibility(View.VISIBLE);
+							    Picasso.with(_activity)
+									    .load(Constants.IMAGE_BASE_URL + "/"
+											    + photoFiche.getCleURL().replaceAll(
+											    Constants.IMAGE_BASE_URL_SUFFIXE+"$", fallback_offline_suffixe_photo))
+									    .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+									    .placeholder(R.drawable.doris_icone_doris_large)
+									    .into(imgDisplay);
 						    }
 					    });
 		    }

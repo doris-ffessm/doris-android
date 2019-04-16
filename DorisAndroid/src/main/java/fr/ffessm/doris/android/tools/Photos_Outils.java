@@ -413,8 +413,8 @@ public class Photos_Outils {
 	 */
 	public void downloadPostFixedPhotoFile(String photoPath,  ImageType imageType, String imgPostfixCodesString) throws IOException{
         //if (BuildConfig.DEBUG) Log.i(LOG_TAG, "downloadPhotoFile() - imageType : "+imageType.name());
-
-		String[] imgPostfixCodes = imgPostfixCodesString.split("&");
+		// !! split -1 car https://stackoverflow.com/questions/14602062/java-string-split-removed-empty-values
+		String[] imgPostfixCodes = imgPostfixCodesString.split("&", -1);
 		switch (imageType) {
 		case VIGNETTE:
 			if(imgPostfixCodes.length > 0 && imgPostfixCodes[0].length() > 0){
