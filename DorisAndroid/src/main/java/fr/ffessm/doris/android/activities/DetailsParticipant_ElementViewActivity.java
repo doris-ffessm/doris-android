@@ -76,6 +76,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView.BufferType;
 
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.acra.ACRA;
@@ -181,19 +182,63 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
 	    	}
 	    	else{
 	    		// pas préchargée en local pour l'instant, cherche sur internet
-	    		
-	    		if (reseauOutils.isTelechargementsModeConnectePossible()) {
+		        String urlPhoto= Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom();
+
+		        com.squareup.picasso.Callback fallbackVignetteOffline = new com.squareup.picasso.Callback() {
+			        @Override
+			        public void onSuccess() {
+				        //Success image already loaded into the view
+			        }
+
+			        @Override
+			        public void onError() {
+				        Picasso.with(context)
+						        .load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE))
+						        .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+						        .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
+						        .fit()
+						        .centerInside()
+						        .into(trombineView,
+								        new com.squareup.picasso.Callback() {
+									        @Override
+									        public void onSuccess() {
+										        //Success image already loaded into the view
+									        }
+
+									        @Override
+									        public void onError() {
+										        Log.d(LOG_TAG, "getView URL Petite Image : "+
+												        entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE));
+
+										        Picasso.with(context)
+												        .load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
+												        .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+												        .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
+												        .fit()
+												        .centerInside()
+												        .error(R.drawable.app_ic_participant_pas_connecte)
+												        .into(trombineView);
+									        }
+
+								        });
+			        }
+		        };
+		        if (reseauOutils.isTelechargementsModeConnectePossible()) {
 		    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLPhotoParticipant() : "+Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom());
-		    		String urlPhoto= Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom();
 		    		Picasso.with(context)
 		    			.load(urlPhoto.replace(" ", "%20"))
 						.placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
-						.error(R.drawable.app_ic_participant_pas_connecte)
 						.fit()
 						.centerInside()
-		    			.into(trombineView);
+		    			.into(trombineView, fallbackVignetteOffline);
 	    		} else {
-	    			trombineView.setImageResource(R.drawable.app_ic_participant_pas_connecte);
+				    Picasso.with(context)
+						    .load(urlPhoto.replace(" ", "%20"))
+						    .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+						    .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
+						    .fit()
+						    .centerInside()
+						    .into(trombineView, fallbackVignetteOffline);
 	    		}
 	    	}
         }

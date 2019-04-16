@@ -68,6 +68,8 @@ import android.widget.TextView;
 // additional imports
 
 import android.view.ViewGroup.LayoutParams;
+
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import fr.ffessm.doris.android.sitedoris.Constants;
@@ -237,8 +239,36 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
                             });
 
 	    		} else {
-	    			
-	    			trombineView.setImageResource(R.drawable.app_ic_participant_pas_connecte);
+
+				    Picasso.with(context)
+						    .load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE))
+						    .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+						    .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
+						    .resize(defaultIconSize, defaultIconSize)
+						    .centerInside()
+						    .into(trombineView,
+								    new com.squareup.picasso.Callback() {
+									    @Override
+									    public void onSuccess() {
+										    //Success image already loaded into the view
+									    }
+
+									    @Override
+									    public void onError() {
+										    Log.d(LOG_TAG, "getView URL Petite Image : "+
+												    entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE));
+
+										    Picasso.with(context)
+												    .load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
+												    .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+												    .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
+												    .resize(defaultIconSize, defaultIconSize)
+												    .centerInside()
+												    .error(R.drawable.doris_icone_doris_large_pas_connecte)
+												    .into(trombineView);
+									    }
+
+								    });
 	    		}
 	    	}
         }

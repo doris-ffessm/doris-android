@@ -67,6 +67,8 @@ import android.widget.TextView;
 //Start of user code protected additional Glossaire_Adapter imports
 // additional imports
 import android.view.ViewGroup.LayoutParams;
+
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import fr.ffessm.doris.android.sitedoris.Constants;
@@ -220,6 +222,13 @@ public class Glossaire_Adapter extends BaseAdapter   implements Filterable{
 				if (reseauOutils.isTelechargementsModeConnectePossible()) {
 					Log.i(LOG_TAG, "getView() - tentative téléchargement : " +Constants.IMAGE_BASE_URL +"/"+ photoUrl);
 					Picasso.with(context).load(Constants.IMAGE_BASE_URL +"/"+ photoUrl)
+							.placeholder(R.drawable.app_glossaire_indisponible)
+							.resize(defaultIconSize, defaultIconSize)
+							.centerInside()
+							.into(imageView);
+				} else {
+					Picasso.with(context).load(Constants.IMAGE_BASE_URL +"/"+ photoUrl)
+							.networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
 							.placeholder(R.drawable.app_glossaire_indisponible)
 							.resize(defaultIconSize, defaultIconSize)
 							.centerInside()

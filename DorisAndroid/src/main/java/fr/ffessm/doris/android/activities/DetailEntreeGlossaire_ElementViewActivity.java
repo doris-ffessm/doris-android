@@ -44,6 +44,8 @@ package fr.ffessm.doris.android.activities;
 
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
@@ -199,7 +201,11 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
                                         //.centerInside()
                                         .into(imageView);
                             } else {
-                                imageView.setImageResource(R.drawable.app_glossaire_indisponible);
+	                            Picasso.with(context).load(Constants.IMAGE_BASE_URL +"/"+ illustration[0])
+			                            .placeholder(R.drawable.app_glossaire_indisponible)
+			                            .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+			                            //.centerInside()
+			                            .into(imageView);
                             }
                         }
 
