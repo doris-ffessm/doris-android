@@ -73,6 +73,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Toast;
 
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -266,85 +267,60 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 
     		//Log.d(LOG_TAG, "getView photoprincipale="+photoPrincipale.getCleURL());
 
-        	if(photosOutils.isAvailableInFolderPhoto(photoPrincipale.getCleURL(), ImageType.VIGNETTE)){
-				//Log.d(LOG_TAG, "getView Photo Disponible => utilisation");
-        		try {
-        			//Log.d(LOG_TAG, "from disk : "+photoPrincipale.getCleURLNomFichier());
-					Picasso.with(context)
-						.load(photosOutils.getPhotoFile(photoPrincipale.getCleURLNomFichier(), ImageType.VIGNETTE))
-						.resize(defaultIconSize, defaultIconSize)
-						.centerInside()
-						.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
-						.into(ivIcon);
-					
-				} catch (IOException e) {
-				}
-        	}
-        	else{
-				//Log.d(LOG_TAG, "getView Photo non Disponible => téléchargement");
-        		// pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
-        		
-        		if (reseauOutils.isTelechargementsModeConnectePossible()) {
-        			//Log.d(LOG_TAG, "getView isTelechargementsModeConnectePossible() = true");
 
-        			final int defaultIconSizeFinal = defaultIconSize;
-        			final PhotoFiche photoPrincipaleFinal = photoPrincipale;
-
-        			// On commence par rechercher l'image la plus petite possible, si elle n'est pas dispo. on tente notre chance avec la taille juste au dessus
-    				Picasso.with(context)
-    					.load(Constants.IMAGE_BASE_URL + "/"
-	        					+ photoPrincipale.getCleURL().replaceAll(
-	        							Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.VIGNETTE_BASE_URL_SUFFIXE))
-    					.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
-	        			.resize(defaultIconSize, defaultIconSize)
-    					.centerInside()
-    					.into(ivIcon,
-    							new com.squareup.picasso.Callback() {
-		    				        @Override
-		    				        public void onSuccess() {
-		    				            //Success image already loaded into the view
-		    				        }
-
-	    				        @Override
-	    				        public void onError() {
-	    			        		Picasso.with(context)
-	    		        			.load(Constants.IMAGE_BASE_URL + "/"
-	    		        					+ photoPrincipaleFinal.getCleURL().replaceAll(
-	    		        							Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.PETITE_BASE_URL_SUFFIXE))
-	    							.placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
-	    							.resize(defaultIconSizeFinal, defaultIconSizeFinal)
-	    							.centerInside()
-	    		        			.into(ivIcon,
-                                            new com.squareup.picasso.Callback() {
-                                                @Override
-                                                public void onSuccess() {
-                                                    //Success image already loaded into the view
-                                                }
-
-                                                @Override
-                                                public void onError() {
-                                                    Picasso.with(context)
-                                                            .load(Constants.IMAGE_BASE_URL + "/"
-                                                                    + photoPrincipaleFinal.getCleURL().replaceAll(
-                                                                    Constants.IMAGE_BASE_URL_SUFFIXE+"$", Constants.PETITE2_BASE_URL_SUFFIXE))
-                                                            .placeholder(R.drawable.app_ic_launcher)  // utilisation de l'image par defaut pour commencer
-                                                            .resize(defaultIconSizeFinal, defaultIconSizeFinal)
-                                                            .centerInside()
-                                                            .error(R.drawable.doris_icone_doris_large_pas_connecte)
-                                                            .into(ivIcon);
-                                                }
-
-                                            });
-	    				        }
-
-    				        });
-
-        		} else {
-					//Log.d(LOG_TAG, "getView isTelechargementsModeConnectePossible() = false");
-        			// remet l'icone de base
-                	ivIcon.setImageResource(R.drawable.app_ic_launcher);
-        		}
-        	}
+	        final ImageType bestLocallyAvailableRes;
+	        if (photosOutils.isAvailableInFolderPhoto(photoPrincipale.getCleURLNomFichier(), ImageType.VIGNETTE)){ // utilise le format vignette en priorité, fallback sur les autres
+		        bestLocallyAvailableRes = ImageType.VIGNETTE;
+	        } else if (photosOutils.isAvailableInFolderPhoto(photoPrincipale.getCleURLNomFichier(), ImageType.MED_RES)){
+		        bestLocallyAvailableRes = ImageType.MED_RES;
+	        } else if(photosOutils.isAvailableInFolderPhoto(photoPrincipale.getCleURLNomFichier(), ImageType.HI_RES)){
+		        bestLocallyAvailableRes = ImageType.HI_RES;
+	        } else {
+		        bestLocallyAvailableRes = null;
+	        }
+	        ImageType requestedRes = ImageType.VIGNETTE;
+	        String small_suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
+	        if(!photoPrincipale.getImgPostfixCodes().isEmpty() && photoPrincipale.getImgPostfixCodes().contains("&")){
+		        // !! split -1 car https://stackoverflow.com/questions/14602062/java-string-split-removed-empty-values
+		        String[] imgPostfixCodes = photoPrincipale.getImgPostfixCodes().split("&",-1);
+		        if(!imgPostfixCodes[0].isEmpty()){
+			        small_suffixe_photo = Constants.ImagePostFixCode.getEnumFromCode(imgPostfixCodes[0]).getPostFix();
+		        }
+	        }
+	        String requested_suffixe_photo = small_suffixe_photo;
+	        if(bestLocallyAvailableRes != null) {
+		        // on a une image en local, on l'utilise
+		        try {
+			        Picasso.with(context).load(photosOutils.getPhotoFile(photoPrincipale.getCleURLNomFichier(), bestLocallyAvailableRes))
+					        .fit()
+					        .centerInside()
+					        .into(ivIcon);
+		        } catch (IOException e) {}
+	        } else {
+		        // pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
+		        if (reseauOutils.isTelechargementsModeConnectePossible()) {
+			        Picasso.with(context)
+					        .load(Constants.IMAGE_BASE_URL + "/"
+							        + photoPrincipale.getCleURL().replaceAll(
+							        Constants.IMAGE_BASE_URL_SUFFIXE+"$", requested_suffixe_photo))
+					        .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
+					        .error(R.drawable.doris_icone_doris_large_pas_connecte)
+					        .fit()
+					        .centerInside()
+					        .into(ivIcon);
+		        } else {
+			        Picasso.with(context)
+					        .load(Constants.IMAGE_BASE_URL + "/"
+							        + photoPrincipale.getCleURL().replaceAll(
+							        Constants.IMAGE_BASE_URL_SUFFIXE+"$", requested_suffixe_photo))
+					        .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+					        .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
+					        .error(R.drawable.doris_icone_doris_large_pas_connecte)
+					        .fit()
+					        .centerInside()
+					        .into(ivIcon);
+		        }
+	        }
         }
         else{
         	// remet l'icone de base
