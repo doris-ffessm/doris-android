@@ -181,7 +181,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 		     */
 		    @Override
 		    public void handleMessage(Message inputMessage) {
-		    	
+				if(DetailsFiche_ElementViewActivity.this.isFinishing() || DetailsFiche_ElementViewActivity.this.isActivityDestroyed()) return;
 		    	if(inputMessage.obj != null ){
 		    		showToast((String) inputMessage.obj);
 		    	}

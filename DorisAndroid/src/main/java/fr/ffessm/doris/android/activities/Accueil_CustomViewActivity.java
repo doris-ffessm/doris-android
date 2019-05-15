@@ -162,7 +162,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
              */
             @Override
             public void handleMessage(Message inputMessage) {
-            	if(Accueil_CustomViewActivity.this.isFinishing()) return;
+            	if(Accueil_CustomViewActivity.this.isFinishing() || Accueil_CustomViewActivity.this.isActivityDestroyed()) return;
             	if(inputMessage.obj != null ){
             		showToast((String) inputMessage.obj);
             	}

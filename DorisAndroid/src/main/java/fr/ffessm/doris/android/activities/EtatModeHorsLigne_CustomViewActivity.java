@@ -207,7 +207,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
              */
             @Override
             public void handleMessage(Message inputMessage) {
-            	if(EtatModeHorsLigne_CustomViewActivity.this.isFinishing()) return;
+            	if(EtatModeHorsLigne_CustomViewActivity.this.isFinishing() || EtatModeHorsLigne_CustomViewActivity.this.isActivityDestroyed()) return;
             	if(inputMessage.obj != null ){
             		showToast((String) inputMessage.obj);
             	}

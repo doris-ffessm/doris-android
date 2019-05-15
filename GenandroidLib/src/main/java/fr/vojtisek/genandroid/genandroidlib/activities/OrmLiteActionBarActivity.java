@@ -60,6 +60,10 @@ public class OrmLiteActionBarActivity<H extends OrmLiteSqliteOpenHelper> extends
 		destroyed = true;
 	}
 
+	public boolean isActivityDestroyed(){
+		// we need an access to this because the isDestroy() exists only in api 17 and I don't want to have a if on  api version
+		return destroyed;
+	}
 	/**
 	 * This is called internally by the class to populate the helper object instance. This should not be called directly
 	 * by client code unless you know what you are doing. Use {@link #getHelper()} to get a helper instance. If you are
