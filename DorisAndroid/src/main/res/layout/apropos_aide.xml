@@ -17,7 +17,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Bandeau de texte au dessus de la page HTML"
-            android:textColor="?android:attr/textColorPrimary" />
+            android:textColor="?attr/defaultTextColor" />
         <ImageView
             android:id="@+id/btn_close"
             android:layout_width="wrap_content"
