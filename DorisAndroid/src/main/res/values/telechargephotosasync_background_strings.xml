@@ -23,7 +23,7 @@
 	<string name="bg_racineTicker_imagesglossaire">"Photo\u00A0: "</string>
 	
 	
-	<string name="bg_notifToast_arretTelecharg">Arrêt des téléchargements demandé</string>
+	<string name="bg_notifToast_arretTelecharg">Arrêt des téléchargements</string>
 	<!--End of user code
 	-->
 </resources>
