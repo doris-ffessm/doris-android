@@ -292,10 +292,14 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter   implements Filte
 		        // on a une image en local, on l'utilise
 		        try {
 			        Picasso.with(context).load(photosOutils.getPhotoFile(photoPrincipale.getCleURLNomFichier(), bestLocallyAvailableRes))
+							.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
+							.error(R.drawable.doris_icone_doris_large_pas_connecte)
 					        .fit()
 					        .centerInside()
 					        .into(ivIcon);
-		        } catch (IOException e) {}
+		        } catch (IOException e) {
+					Log.w(LOG_TAG, "pb loading "+photoPrincipale.getCleURLNomFichier() + " in quality "+bestLocallyAvailableRes.name());
+				}
 	        } else {
 		        // pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
 		        if (reseauOutils.isTelechargementsModeConnectePossible()) {

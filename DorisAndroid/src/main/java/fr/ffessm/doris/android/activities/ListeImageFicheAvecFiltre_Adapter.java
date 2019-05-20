@@ -637,7 +637,9 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter   implements 
 		    // on a une image en local, on l'utilise
 		    try {
 			    Picasso.with(context).load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes))
-					    .fit()
+						.placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
+						.error(R.drawable.doris_icone_doris_large_pas_connecte)
+						.fit()
 					    .centerInside()
 					    .into(imageView);
 		    } catch (IOException e) {}

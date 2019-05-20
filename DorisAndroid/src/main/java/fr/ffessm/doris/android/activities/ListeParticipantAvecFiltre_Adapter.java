@@ -195,9 +195,10 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter   implements
 	        if(photosOutils.isAvailableInFolderPhoto(entry.getPhotoNom(), ImageType.PORTRAITS)){
 	    		try {
 					Picasso.with(context).load(photosOutils.getPhotoFile(entry.getPhotoNom(), ImageType.PORTRAITS))
-						.resize(defaultIconSize, defaultIconSize)
-						.centerInside()
-						.into(trombineView);
+							.placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
+							.resize(defaultIconSize, defaultIconSize)
+							.centerInside()
+							.into(trombineView);
 				} catch (IOException e) {
 				}
 	    	}

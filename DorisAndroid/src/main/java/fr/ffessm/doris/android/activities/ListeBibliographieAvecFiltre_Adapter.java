@@ -208,9 +208,11 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter   implemen
 	        if(photosOutils.isAvailableInFolderPhoto(nomPhoto, ImageType.ILLUSTRATION_BIBLIO)){
 	    		try {
 					Picasso.with(context).load(photosOutils.getPhotoFile(nomPhoto, ImageType.ILLUSTRATION_BIBLIO))
-						.resize(defaultIconSize, defaultIconSize)
-						.centerInside()
-						.into(imageView);
+							.placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par défaut pour commencer
+							.resize(defaultIconSize, defaultIconSize)
+							.error(R.drawable.app_bibliographie_doris_non_connecte)
+							.centerInside()
+							.into(imageView);
 				} catch (IOException e) {
 				}
 	    	}
