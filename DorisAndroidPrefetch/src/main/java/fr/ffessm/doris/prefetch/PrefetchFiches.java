@@ -69,6 +69,7 @@ import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
+import fr.ffessm.doris.prefetch.ezpublish.DorisOAuth2ClientCredentials;
 import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
 import fr.ffessm.doris.prefetch.ezpublish.ObjNameNodeId;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
@@ -515,12 +516,16 @@ public class PrefetchFiches {
                                 case 71731:
                                     zoneGeographique.setId(4);
                                     break;
-                                // 135595 - ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST
+                                // 135595 - ZoneGeographiqueKind.FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES
                                 case 135595:
                                     zoneGeographique.setId(5);
                                     break;
+                                    // 1086247 -
+                                case 1086247:
+                                    zoneGeographique.setId(6);
+                                    break;
                                 default:
-                                    log.debug("prefetchV4() - Zone Géo. Inconnue : http://doris.ffessm.fr/api/ezx/v1/object/" + zoneGeoRefId);
+                                    log.error("prefetchV4() - Zone Géo. Inconnue : " + zoneGeoRefId + " dans fiche " + DorisOAuth2ClientCredentials.SPECIES_NODE_URL+ficheNodeId);
                                     System.exit(1);
                             }
 
