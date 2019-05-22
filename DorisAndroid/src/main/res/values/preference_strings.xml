@@ -137,6 +137,7 @@
 	<string name="icone_indopac">drawable/doris_icone_indo_pac</string>
 	<string name="icone_caraibes">drawable/doris_icone_caraibes</string>
 	<string name="icone_atlantno">drawable/doris_icone_atl_n_o</string>
+    <string name="icone_antarctique">drawable/doris_icone_antarctique</string>
 	
 	<string name="presentation_preference_category_title">Présentation</string>
 	<string name="presentation_preference_category_summary">Affich. par défaut, Taille icônes, etc.</string>

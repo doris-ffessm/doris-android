@@ -401,6 +401,8 @@ public class Fiches_Outils {
 			return context.getString(R.string.icone_caraibes);
 		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
 			return context.getString(R.string.icone_atlantno);
+		case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+			return context.getString(R.string.icone_antarctique);
 		default:
 			return "";
 		}
