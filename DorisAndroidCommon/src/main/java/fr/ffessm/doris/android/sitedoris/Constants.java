@@ -109,6 +109,7 @@ public class Constants {
     	FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE,
     	FAUNE_FLORE_SUBAQUATIQUES_CARAIBES,
     	FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST,
+		FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES,
     	FAUNE_FLORE_TOUTES_ZONES
     }
 
@@ -271,6 +272,8 @@ public class Constants {
 			return 4;
 		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
 			return 5;
+			case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+			return 6;
 		case FAUNE_FLORE_TOUTES_ZONES:
 			return 10;
 		default:
@@ -324,6 +327,8 @@ public class Constants {
 			return ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES;
 		case 5 :
 			return ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST;
+		case 6 :
+			return ZoneGeographiqueKind.FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES;
 			// Aurait du être -1 (10 est la clé pour url)
 		case 10 :
 			return ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES;
@@ -344,6 +349,8 @@ public class Constants {
 			return "Faune et flore subaquatiques des Caraïbes";
 		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
 			return "Faune et flore subaquatiques de l'Atlantique Nord-Ouest";
+			case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+			return "Faune et flore des terres antarctiques Françaises";
 		case FAUNE_FLORE_TOUTES_ZONES:
 			return "Faune et flore subaquatiques de toutes les zones DORIS";
 		default:
@@ -363,6 +370,8 @@ public class Constants {
 			return "Guadeloupe, Martinique et autres";
 		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
 			return "Côte est du Canada, embouchure du St Laurent, archipel de St Pierre-et-Miquelon";
+		case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+			return "Circumpolaire, mers et côtes australes, Crozet, Kerguelen, Terre Adélie)";
 		case FAUNE_FLORE_TOUTES_ZONES:
 			return "Toutes les espèces de toutes les zones DORIS";
 		default:
@@ -384,6 +393,8 @@ public class Constants {
 			return "Caraïbes";
 		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
 			return "Atlant. Nord-Ouest";
+		case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+			return "Antarctique";
 		case FAUNE_FLORE_TOUTES_ZONES:
 			return "Toutes Zones DORIS";
 		default:

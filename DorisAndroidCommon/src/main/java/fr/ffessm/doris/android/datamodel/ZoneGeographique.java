@@ -153,6 +153,9 @@ public class ZoneGeographique {
 		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
 			this._id = 5;
 			break;
+		case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+			this._id = 6;
+			break;
 		}
 	}
 
@@ -176,6 +179,8 @@ public class ZoneGeographique {
 			return ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES;
 		case 5:
 			return ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST;
+		case 6:
+			return ZoneGeographiqueKind.FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES;
 		default:
 			return null;
 		}
