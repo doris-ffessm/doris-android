@@ -139,7 +139,7 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteActionBarActi
 	//Start of user code additional  ZoneGeoSelection_ClassListViewActivity methods
 	
 	public void onRemoveCurrentFilterClick(View view){
-    	Toast.makeText(this, R.string.zonegeoselection_filtre_supprime, Toast.LENGTH_SHORT).show();
+    	showToast(R.string.zonegeoselection_filtre_supprime);
 		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
 		ed.putInt(this.getString(R.string.pref_key_filtre_zonegeo), -1);
         ed.apply();

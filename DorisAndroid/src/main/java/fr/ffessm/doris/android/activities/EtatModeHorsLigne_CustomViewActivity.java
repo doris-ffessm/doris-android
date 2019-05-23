@@ -275,7 +275,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     	progressBarZoneGenerale.pbProgressBar_running.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(context, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
+				showToast(R.string.bg_notifToast_arretTelecharg);
 				DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 				
 				ProgressBar pbRunningBarLayout =  (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);
@@ -1246,7 +1246,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 						(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext()/*, this.getHelper()*/).execute("");
 	
 				} else {
-					Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
+					showToast(R.string.bg_notifToast_arretTelecharg);
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 					
 					ProgressBar pbRunningBarLayout =  (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);

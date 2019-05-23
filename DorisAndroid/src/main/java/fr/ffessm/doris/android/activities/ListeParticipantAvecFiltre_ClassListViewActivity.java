@@ -201,7 +201,7 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
 			Integer newPosition=alphabetToIndex.get(selected_alpahbet.charAt(0));
 			Log.d(LOG_TAG, "Selected Alphabet is:"+selected_alpahbet+"   position is:"+newPosition);
 			if(	newPosition != null){	
-				Toast.makeText(this, selected_alpahbet, Toast.LENGTH_SHORT).show();
+				showToast(selected_alpahbet);
 				ListView listview=(ListView)findViewById(R.id.listeparticipantavecfiltre_listview);
 				listview.setSelection(newPosition);
 			}

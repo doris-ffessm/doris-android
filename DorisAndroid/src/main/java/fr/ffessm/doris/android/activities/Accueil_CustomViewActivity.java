@@ -749,7 +749,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 				@Override
 				public void onClick(View v) {
 					if(Accueil_CustomViewActivity.this.isFinishing() || Accueil_CustomViewActivity.this.isActivityDestroyed()) return;
-					Toast.makeText(context, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
+					showToast(R.string.bg_notifToast_arretTelecharg);
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 					
 					ProgressBar pbRunningBarLayout =  (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);
@@ -824,7 +824,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	
 				} else {
 					if(Accueil_CustomViewActivity.this.isFinishing() || Accueil_CustomViewActivity.this.isActivityDestroyed()) return true;
-					Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
+					showToast(R.string.bg_notifToast_arretTelecharg);
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 					
 					ProgressBar pbRunningBarLayout =  (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);

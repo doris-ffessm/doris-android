@@ -309,6 +309,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         btnHiResNotAvailable.setOnClickListener(new View.OnClickListener() {           
             @Override
             public void onClick(View v) {
+            	if(_activity.isActivityDestroyed() || _activity.isFinishing()) return;
             	Toast.makeText(_activity, _activity.getString(R.string.imagepleinecran_customview_btnHiResNotAvailable_message), Toast.LENGTH_LONG).show();
             }
         });
@@ -383,6 +384,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 		if (titre.length() > Integer.parseInt(paramOutils.getParamString(R.string.imagepleinecran_titre_longmax,"25")))
 			texteAff = titre + System.getProperty("line.separator") + description;
 		if (!texteAff.isEmpty()) {
+			if(_activity.isActivityDestroyed() || _activity.isFinishing()) return;
 			Toast.makeText(_activity, texteAff, Toast.LENGTH_LONG).show();
 		}
     }

@@ -222,7 +222,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 			Integer newPosition=alphabetToIndex.get(selected_alphabet.charAt(0));
 			Log.d(LOG_TAG, "Selected Alphabet is:"+selected_alphabet+"   position is:"+newPosition);
 			if(	newPosition != null){	
-				Toast.makeText(this, selected_alphabet, Toast.LENGTH_SHORT).show();
+				showToast(selected_alphabet);
 				ListView listview=(ListView)findViewById(R.id.listeimageficheavecfiltre_listview);
 				listview.setSelection(newPosition);
 			}

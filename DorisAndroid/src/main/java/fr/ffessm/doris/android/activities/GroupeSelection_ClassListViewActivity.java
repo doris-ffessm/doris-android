@@ -182,7 +182,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 			groupeSelection_adapter.notifyDataSetChanged();
 			
 		} else {
-			Toast.makeText(this, "Filtre espèces : "+clickedGroupe.getNomGroupe(), Toast.LENGTH_SHORT).show();
+			showToast( "Filtre espèces : "+clickedGroupe.getNomGroupe());
 		
 			prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), clickedGroupe.getId()).apply();
 
@@ -207,7 +207,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 	//Start of user code additional  GroupeSelection_ClassListViewActivity methods
 
 	public void onRemoveCurrentFilterClick(View view){
-    	Toast.makeText(this, R.string.groupselection_filtre_supprime, Toast.LENGTH_SHORT).show();
+    	showToast( R.string.groupselection_filtre_supprime);
 
     	prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), 1);
     	prefs.edit().apply();

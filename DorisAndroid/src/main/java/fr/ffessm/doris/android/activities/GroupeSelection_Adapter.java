@@ -248,6 +248,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			
 			@Override
 			public void onClick(View v) {
+				if(((GroupeSelection_ClassListViewActivity)context).isActivityDestroyed() || ((GroupeSelection_ClassListViewActivity)context).isFinishing()) return;
 				Toast.makeText(context, "Filtre espèces : "+entry.getNomGroupe(), Toast.LENGTH_SHORT).show();
 				
 				prefs.edit().putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId())
@@ -276,6 +277,7 @@ public class GroupeSelection_Adapter extends BaseAdapter  {
 			
 			@Override
 			public void onClick(View v) {
+				if(((GroupeSelection_ClassListViewActivity)context).isActivityDestroyed() || ((GroupeSelection_ClassListViewActivity)context).isFinishing()) return;
 				Toast.makeText(context, "Filtre espèces : "+entry.getNomGroupe(), Toast.LENGTH_SHORT).show();
 
 				prefs.edit().putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId())

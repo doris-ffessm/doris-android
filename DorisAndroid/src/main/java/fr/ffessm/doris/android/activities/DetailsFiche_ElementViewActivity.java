@@ -86,7 +86,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView.BufferType;
-import android.widget.Toast;
 
 
 import com.squareup.picasso.NetworkPolicy;
@@ -237,7 +236,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         	btnEtatFiche.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Toast.makeText(context, R.string.ficheredaction_explications, Toast.LENGTH_LONG).show();
+					showToast(R.string.ficheredaction_explications);
 				}
 			});
         	break;
@@ -247,7 +246,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         	btnEtatFiche.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Toast.makeText(context, R.string.ficheproposee_explications, Toast.LENGTH_LONG).show();
+					showToast(R.string.ficheproposee_explications);
 				}
 			});
         	break;
@@ -266,7 +265,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			picoEspeceReglementee.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Toast.makeText(context, R.string.picto_espece_reglementee_label, Toast.LENGTH_LONG).show();
+					showToast(R.string.picto_espece_reglementee_label);
 				}
 			});
 		}
@@ -275,7 +274,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 			picoEspeceDanger.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Toast.makeText(context, R.string.picto_espece_en_danger_label, Toast.LENGTH_LONG).show();
+					showToast(R.string.picto_espece_en_danger_label);
 				}
 			});
 		}

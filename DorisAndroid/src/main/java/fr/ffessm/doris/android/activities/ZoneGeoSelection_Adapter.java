@@ -170,6 +170,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 			
 			@Override
 			public void onClick(View v) {
+				if(((ZoneGeoSelection_ClassListViewActivity) context).isActivityDestroyed() || ((ZoneGeoSelection_ClassListViewActivity) context).isFinishing()) return;
 				Toast.makeText(context, "Filtre zone géographique : "+entry.getNom(), Toast.LENGTH_SHORT).show();
 				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), entry.getId());
@@ -185,6 +186,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter  {
 			
 			@Override
 			public void onClick(View v) {
+				if(((ZoneGeoSelection_ClassListViewActivity) context).isActivityDestroyed() || ((ZoneGeoSelection_ClassListViewActivity) context).isFinishing()) return;
 				Toast.makeText(context, "Filtre zone géographique : "+entry.getNom(), Toast.LENGTH_SHORT).show();
 				SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
 				ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), entry.getId());
