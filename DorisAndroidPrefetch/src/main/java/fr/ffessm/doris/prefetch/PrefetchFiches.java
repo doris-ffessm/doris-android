@@ -500,8 +500,12 @@ public class PrefetchFiches {
                                 // On ignore pour l'instant
                                 // 239910 - Méditérannée Française
                                 // 239991 - Façade Atlantique Française
+                                // 1087942 - ????
                                 case 239910:
                                 case 239991:
+                                case 1087942:
+                                    log.error("prefetchV4() - Zone Géo. non gérée : " + zoneGeoRefId + " dans fiche " + DorisOAuth2ClientCredentials.SPECIES_NODE_URL+ficheNodeId.getNodeId());
+
                                     zoneGeographique.setId(-1);
                                     break;
                                 // 71728 - ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE
