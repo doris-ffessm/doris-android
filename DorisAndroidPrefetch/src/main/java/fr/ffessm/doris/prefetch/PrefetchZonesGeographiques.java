@@ -102,6 +102,9 @@ public class PrefetchZonesGeographiques {
                         dbContext.zoneGeographiqueDao.create(
                                 new ZoneGeographique(5, "Faune et flore subaquatiques de l'Atlantique Nord-Ouest", "Côte est du Canada, embouchure du St Laurent, archipel de St Pierre-et-Miquelon" )
                         );
+                        dbContext.zoneGeographiqueDao.create(
+                                new ZoneGeographique(6, "Faune et flore des terres antarctiques Françaises", "Circumpolaire, mers et côtes australes, Crozet, Kerguelen, Terre Adélie" )
+                        );
                         return null;
                     }
                 });

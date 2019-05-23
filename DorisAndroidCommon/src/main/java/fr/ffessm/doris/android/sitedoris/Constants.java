@@ -371,7 +371,7 @@ public class Constants {
 		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
 			return "Côte est du Canada, embouchure du St Laurent, archipel de St Pierre-et-Miquelon";
 		case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
-			return "Circumpolaire, mers et côtes australes, Crozet, Kerguelen, Terre Adélie)";
+			return "Circumpolaire, mers et côtes australes, Crozet, Kerguelen, Terre Adélie";
 		case FAUNE_FLORE_TOUTES_ZONES:
 			return "Toutes les espèces de toutes les zones DORIS";
 		default:
