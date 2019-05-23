@@ -225,8 +225,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 			String selected_alphabet=alphabet.toString().trim();
 			Integer newPosition=alphabetToIndex.get(selected_alphabet.charAt(0));
 			Log.d(LOG_TAG, "Selected Alphabet is:"+selected_alphabet+"   position is:"+newPosition);
-			if(	newPosition != null){	
-				Toast.makeText(this, selected_alphabet, Toast.LENGTH_SHORT).show();
+			if(	newPosition != null){
+				if(!(ListeFicheAvecFiltre_ClassListViewActivity.this.isFinishing() || ListeFicheAvecFiltre_ClassListViewActivity.this.isActivityDestroyed())) {
+					Toast.makeText(this, selected_alphabet, Toast.LENGTH_SHORT).show();
+				}
 				ListView listview=(ListView)findViewById(R.id.listeficheavecfiltre_listview);
 				listview.setSelection(newPosition);
 			}

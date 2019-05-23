@@ -748,6 +748,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 	    	progressBarZoneGenerale.pbProgressBar_running.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					if(Accueil_CustomViewActivity.this.isFinishing() || Accueil_CustomViewActivity.this.isActivityDestroyed()) return;
 					Toast.makeText(context, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 					
@@ -822,6 +823,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 						(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext()/*, this.getHelper()*/).execute("");
 	
 				} else {
+					if(Accueil_CustomViewActivity.this.isFinishing() || Accueil_CustomViewActivity.this.isActivityDestroyed()) return true;
 					Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
 					DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 					
