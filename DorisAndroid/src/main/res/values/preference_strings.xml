@@ -16,12 +16,14 @@
 	<string name="pref_key_maj_liste_fiches_region_eaudouce">maj_liste_fiches_region_eaudouce</string>
 	<string name="pref_key_maj_liste_fiches_region_atlantno">maj_liste_fiches_region_atlantno</string>
 	<string name="pref_key_maj_liste_fiches_region_indopac">maj_liste_fiches_region_indopac</string>
+    <string name="pref_key_maj_liste_fiches_region_antarctique">maj_liste_fiches_region_antarctique</string>
 	<string name="pref_key_maj_liste_fiches_region_caraibes">maj_liste_fiches_region_caraibes</string>
 		
 	<string name="pref_key_mode_precharg_photo_region_france">mode_precharg_photo_region_france</string>
 	<string name="pref_key_mode_precharg_photo_region_eaudouce">mode_precharg_photo_region_eaudouce</string>
 	<string name="pref_key_mode_precharg_photo_region_atlantno">mode_precharg_photo_region_atlantno</string>
 	<string name="pref_key_mode_precharg_photo_region_indopac">mode_precharg_photo_region_indopac</string>
+    <string name="pref_key_mode_precharg_photo_region_antarctique">mode_precharg_photo_region_antarctique</string>
 	<string name="pref_key_mode_precharg_photo_region_caraibes">mode_precharg_photo_region_caraibes</string>
 
 	<string name="pref_key_mode_precharg_photo_autres">mode_precharg_photo_autres</string>
@@ -82,6 +84,7 @@
     <string name="maj_liste_fiches_region_eaudouce_prompt">- Eau douce\u00A0?</string>
     <string name="maj_liste_fiches_region_atlantno_prompt">- Atlantique Nord-Ouest\u00A0?</string>
     <string name="maj_liste_fiches_region_indopac_prompt">- Indo-Pacifique\u00A0?</string>
+    <string name="maj_liste_fiches_region_antarctique_prompt">- Antarctique\u00A0?</string>
     <string name="maj_liste_fiches_region_caraibes_prompt">- Caraïbes\u00A0?</string>
     
 	<string-array name="maj_liste_fiches_answers_values">
@@ -106,6 +109,7 @@
     <string name="mode_precharg_photo_region_eaudouce_prompt">- Eau douce\u00A0?</string>
     <string name="mode_precharg_photo_region_atlantno_prompt">- Atlantique Nord-Ouest\u00A0?</string>
     <string name="mode_precharg_photo_region_indopac_prompt">- Indo-Pacifique\u00A0?</string>
+    <string name="mode_precharg_photo_region_antarctique_prompt">- Antarctique\u00A0?</string>
     <string name="mode_precharg_photo_region_caraibes_prompt">- Caraïbes\u00A0?</string>
     <!-- <string name="mode_precharg_photo_favorite_prompt">- Fiches préférées ? (A FAIRE)</string> -->
   

@@ -744,6 +744,8 @@ public class Photos_Outils {
 			return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_eaudouce,"P1"));
 		case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
 			return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_indopac,"P1"));
+		case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+			return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_antarctique,"P1"));
 		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
 			return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_caraibes,"P1"));
 		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
@@ -774,6 +776,7 @@ public class Photos_Outils {
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_eaudouce, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_atlantno, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_indopac, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_antarctique, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_caraibes, 0 );
 				return nbAPrechar;
 			case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
@@ -782,6 +785,8 @@ public class Photos_Outils {
 				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_eaudouce, 0 );
 			case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_indopac, 0 );
+			case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_antarctique, 0 );
 			case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_caraibes, 0 );
 			case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
@@ -796,6 +801,7 @@ public class Photos_Outils {
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_eaudouce, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_atlantno, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_indopac, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_antarctique, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_caraibes, 0 );
 				return nbAPrechar;
 			case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
@@ -804,6 +810,8 @@ public class Photos_Outils {
 				return paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_eaudouce, 0 );
 			case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_indopac, 0 );
+			case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+				return paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_antarctique, 0 );
 			case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_caraibes, 0 );
 			case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
@@ -834,6 +842,7 @@ public class Photos_Outils {
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_eaudouce, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_atlantno, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_indopac, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_antarctique, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_caraibes, 0 );
 				return nbAPrechar;
 			case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
@@ -846,6 +855,8 @@ public class Photos_Outils {
 				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_caraibes, 0 );
 			case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_atlantno, 0 );
+				case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+					return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_antarctique, 0 );
 			default :
 				return 0;
 			}
@@ -856,6 +867,7 @@ public class Photos_Outils {
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_eaudouce, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_atlantno, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_indopac, 0 );
+				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_antarctique, 0 );
 				nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_caraibes, 0 );
 				return nbAPrechar;
 			case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE :
@@ -868,6 +880,8 @@ public class Photos_Outils {
 				return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_caraibes, 0 );
 			case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
 				return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_atlantno, 0 );
+				case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+				return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_antarctique, 0 );
 			default :
 				return 0;
 			}
@@ -897,6 +911,8 @@ public class Photos_Outils {
 				return R.string.pref_key_nbphotosprinc_atelecharger_caraibes;
 			case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
 				return R.string.pref_key_nbphotosprinc_atelecharger_atlantno;
+			case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+				return R.string.pref_key_nbphotosprinc_atelecharger_antarctique;
 			default :
 				return 0;
 			}
@@ -912,6 +928,8 @@ public class Photos_Outils {
 				return R.string.pref_key_nbphotos_atelecharger_caraibes;
 			case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
 				return R.string.pref_key_nbphotos_atelecharger_atlantno;
+			case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+				return R.string.pref_key_nbphotos_atelecharger_antarctique;
 			default :
 				return 0;
 			}
@@ -927,6 +945,8 @@ public class Photos_Outils {
 				return R.string.pref_key_nbphotosprinc_recues_eaudouce;
 			case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
 				return R.string.pref_key_nbphotosprinc_recues_indopac;
+			case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+				return R.string.pref_key_nbphotosprinc_recues_antarctique;
 			case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
 				return R.string.pref_key_nbphotosprinc_recues_caraibes;
 			case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
@@ -942,6 +962,8 @@ public class Photos_Outils {
 				return R.string.pref_key_nbphotos_recues_eaudouce;
 			case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
 				return R.string.pref_key_nbphotos_recues_indopac;
+			case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+				return R.string.pref_key_nbphotos_recues_antarctique;
 			case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
 				return R.string.pref_key_nbphotos_recues_caraibes;
 			case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST :
@@ -959,6 +981,7 @@ public class Photos_Outils {
 			&& PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_eaudouce,"P1")) == PrecharMode.P0
 			&& PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_atlantno,"P1")) == PrecharMode.P0
 			&& PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_indopac,"P1")) == PrecharMode.P0
+			&& PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_antarctique,"P1")) == PrecharMode.P0
 			&& PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_caraibes,"P1")) == PrecharMode.P0
 			) return true;
 		return false;	
@@ -975,6 +998,8 @@ public class Photos_Outils {
 				|| PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_atlantno,"P1")) == PrecharMode.P1 )
 			&& ( PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_indopac,"P1")) == PrecharMode.P0
 				|| PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_indopac,"P1")) == PrecharMode.P1 )
+			&& ( PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_antarctique,"P1")) == PrecharMode.P0
+				|| PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_antarctique,"P1")) == PrecharMode.P1 )
 			&& ( PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_caraibes,"P1")) == PrecharMode.P0
 				|| PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_caraibes,"P1")) == PrecharMode.P1 )
 			) return true;
