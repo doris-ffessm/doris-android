@@ -79,50 +79,50 @@ import static fr.ffessm.doris.android.tools.Photos_Outils.ImageType.MED_RES;
 
 public class ImagePleinEcran_Adapter extends PagerAdapter {
 
-	//private static final String LOG_TAG = ImagePleinEcran_Adapter.class.getCanonicalName();
-	
-	private ImagePleinEcran_CustomViewActivity _activity;
+    //private static final String LOG_TAG = ImagePleinEcran_Adapter.class.getCanonicalName();
+
+    private ImagePleinEcran_CustomViewActivity _activity;
     private ArrayList<PhotoFiche> _PhotoFicheLists;
     private LayoutInflater inflater;
- 
+
     private Param_Outils paramOutils;
     private Photos_Outils photosOutils;
     private Reseau_Outils reseauOutils;
 
-    
+
     // constructor
     public ImagePleinEcran_Adapter(ImagePleinEcran_CustomViewActivity activity,
-            ArrayList<PhotoFiche> photoFicheLists) {
+                                   ArrayList<PhotoFiche> photoFicheLists) {
         this._activity = activity;
         this._PhotoFicheLists = photoFicheLists;
-        
+
         paramOutils = new Param_Outils(activity);
         photosOutils = new Photos_Outils(activity);
         reseauOutils = new Reseau_Outils(activity);
     }
-	
-	@Override
-	public int getCount() {
-		return this._PhotoFicheLists.size();
-	}
+
+    @Override
+    public int getCount() {
+        return this._PhotoFicheLists.size();
+    }
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
         return view == ((RelativeLayout) object);
     }
-     
+
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-    	final fr.ffessm.doris.android.tools.TouchImageView imgDisplay;
-    	ImageView btnClose;
-    	ImageView btnHiResNotAvailable;
+        final fr.ffessm.doris.android.tools.TouchImageView imgDisplay;
+        ImageView btnClose;
+        ImageView btnHiResNotAvailable;
         Button imgTitre;
-        
+
         inflater = (LayoutInflater) _activity
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewLayout = inflater.inflate(R.layout.imagepleinecran_image, container,
                 false);
-  
+
         imgDisplay = (fr.ffessm.doris.android.tools.TouchImageView) viewLayout.findViewById(R.id.imagepleinecran_image_imgDisplay);
         btnClose = (ImageView) viewLayout.findViewById(R.id.imagepleinecran_image_btnClose);
         imgTitre = (Button) viewLayout.findViewById(R.id.imagepleinecran_image_titre);
@@ -134,259 +134,266 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         int largeur = ScreenTools.getScreenWidth(_activity);
         final PhotoFiche photoFiche = _PhotoFicheLists.get(position);
 
-	    final ImageType bestLocallyAvailableRes;
-	    if(photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.HI_RES)){
-		    bestLocallyAvailableRes = ImageType.HI_RES;
-	    } else if (photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.MED_RES)){
-		    bestLocallyAvailableRes = ImageType.MED_RES;
-	    } else if (photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)){
-		    bestLocallyAvailableRes = ImageType.VIGNETTE;
-	    } else {
-		    bestLocallyAvailableRes = null;
-	    }
+        final ImageType bestLocallyAvailableRes;
+        if (photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.HI_RES)) {
+            bestLocallyAvailableRes = ImageType.HI_RES;
+        } else if (photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.MED_RES)) {
+            bestLocallyAvailableRes = ImageType.MED_RES;
+        } else if (photosOutils.isAvailableInFolderPhoto(photoFiche.getCleURLNomFichier(), ImageType.VIGNETTE)) {
+            bestLocallyAvailableRes = ImageType.VIGNETTE;
+        } else {
+            bestLocallyAvailableRes = null;
+        }
 
-	    // calcul des postfix de nom si nécessaire
-	    ImageType requestedRes = Photos_Outils.ImageType.valueOf(paramOutils.getParamString(R.string.pref_key_mode_connecte_qualite_photo,""));
-	    String small_suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
-	    String med_suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
-	    String large_suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
-	    if(!photoFiche.getImgPostfixCodes().isEmpty() && photoFiche.getImgPostfixCodes().contains("&")){
-		    // !! split -1 car https://stackoverflow.com/questions/14602062/java-string-split-removed-empty-values
-		    String[] imgPostfixCodes = photoFiche.getImgPostfixCodes().split("&", -1);
-		    if(!imgPostfixCodes[0].isEmpty()){
-			    small_suffixe_photo = Constants.ImagePostFixCode.getEnumFromCode(imgPostfixCodes[0]).getPostFix();
-		    }
-		    if(!imgPostfixCodes[1].isEmpty()){
-			    med_suffixe_photo = Constants.ImagePostFixCode.getEnumFromCode(imgPostfixCodes[1]).getPostFix();
-		    }
-	    }
-	    String requested_suffixe_photo = large_suffixe_photo;
-	    if(Photos_Outils.ImageType.valueOf(paramOutils.getParamString(R.string.pref_key_mode_connecte_qualite_photo,"")).equals(MED_RES)){
-		    requested_suffixe_photo = med_suffixe_photo;
-	    }
-	    ChainedLoadImageViewCallback chainedLoadImageViewCallback = new ChainedLoadImageViewCallback(
-			    _activity,
-			    imgDisplay,
-			    Constants.IMAGE_BASE_URL + "/"
-					    + photoFiche.getCleURL().replaceAll(
-					    Constants.IMAGE_BASE_URL_SUFFIXE+"$", requested_suffixe_photo),
-			    largeur,
-			    hauteur,
-			    false,
-			    btnHiResNotAvailable); // vrai chargement de l'image dans le callback
+        // calcul des postfix de nom si nécessaire
+        ImageType requestedRes = Photos_Outils.ImageType.valueOf(paramOutils.getParamString(R.string.pref_key_mode_connecte_qualite_photo, ""));
+        String small_suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
+        String med_suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
+        String large_suffixe_photo = Constants.GRANDE_BASE_URL_SUFFIXE;
+        if (!photoFiche.getImgPostfixCodes().isEmpty() && photoFiche.getImgPostfixCodes().contains("&")) {
+            // !! split -1 car https://stackoverflow.com/questions/14602062/java-string-split-removed-empty-values
+            String[] imgPostfixCodes = photoFiche.getImgPostfixCodes().split("&", -1);
+            if (!imgPostfixCodes[0].isEmpty()) {
+                small_suffixe_photo = Constants.ImagePostFixCode.getEnumFromCode(imgPostfixCodes[0]).getPostFix();
+            }
+            if (!imgPostfixCodes[1].isEmpty()) {
+                med_suffixe_photo = Constants.ImagePostFixCode.getEnumFromCode(imgPostfixCodes[1]).getPostFix();
+            }
+        }
+        String requested_suffixe_photo = large_suffixe_photo;
+        if (Photos_Outils.ImageType.valueOf(paramOutils.getParamString(R.string.pref_key_mode_connecte_qualite_photo, "")).equals(MED_RES)) {
+            requested_suffixe_photo = med_suffixe_photo;
+        }
+        ChainedLoadImageViewCallback chainedLoadImageViewCallback = new ChainedLoadImageViewCallback(
+                _activity,
+                imgDisplay,
+                Constants.IMAGE_BASE_URL + "/"
+                        + photoFiche.getCleURL().replaceAll(
+                        Constants.IMAGE_BASE_URL_SUFFIXE + "$", requested_suffixe_photo),
+                largeur,
+                hauteur,
+                false,
+                btnHiResNotAvailable); // vrai chargement de l'image dans le callback
 
-	    if(bestLocallyAvailableRes != null){
-	    	// on a une image en local, on commence par elle si pas déjà hires et on télécharge celle requise en ligne si autorisé
-		    if(bestLocallyAvailableRes.equals(HI_RES) || (bestLocallyAvailableRes.equals(MED_RES) && requestedRes.equals(MED_RES))){
-		    	// on a la bonne image en local
-			    try {
-				    Picasso.with(_activity)
-						    .load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes))
-						    .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
-						    .resize(largeur, hauteur)
-						    .centerInside()
-						    .into(imgDisplay);
-			    } catch (IOException e) {}
-		    } else {
-			    if (reseauOutils.isTelechargementsModeConnectePossible()) {
-				    try {
-					    Picasso.with(_activity)
-							    .load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes)) // charge d'abord la vignette depuis le disque
-							    .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
-							    .resize(largeur, hauteur)
-							    .centerInside()
-							    .into(imgDisplay,
-									    chainedLoadImageViewCallback);  // on enchaine avec la vrai image requise
-				    } catch (IOException e) {}
-			    } else {
-			    	// téléchargement non autorisé, cherche dans le cache picasso
-				    // si pas présent alors utilise la photo dispo et ajoute l'overlay
-				    Picasso.with(_activity)
-						    .load(Constants.IMAGE_BASE_URL + "/"
-								    + photoFiche.getCleURL().replaceAll(
-								    Constants.IMAGE_BASE_URL_SUFFIXE+"$", requested_suffixe_photo))
-						    .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
-						    .placeholder(R.drawable.doris_icone_doris_large)
-						    .into(imgDisplay, new Callback() {
-							    @Override
-							    public void onSuccess() {}
+        if (bestLocallyAvailableRes != null) {
+            // on a une image en local, on commence par elle si pas déjà hires et on télécharge celle requise en ligne si autorisé
+            if (bestLocallyAvailableRes.equals(HI_RES) || (bestLocallyAvailableRes.equals(MED_RES) && requestedRes.equals(MED_RES))) {
+                // on a la bonne image en local
+                try {
+                    Picasso.with(_activity)
+                            .load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes))
+                            .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
+                            .resize(largeur, hauteur)
+                            .centerInside()
+                            .into(imgDisplay);
+                } catch (IOException e) {
+                }
+            } else {
+                if (reseauOutils.isTelechargementsModeConnectePossible()) {
+                    try {
+                        Picasso.with(_activity)
+                                .load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes)) // charge d'abord la vignette depuis le disque
+                                .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
+                                .resize(largeur, hauteur)
+                                .centerInside()
+                                .into(imgDisplay,
+                                        chainedLoadImageViewCallback);  // on enchaine avec la vrai image requise
+                    } catch (IOException e) {
+                    }
+                } else {
+                    // téléchargement non autorisé, cherche dans le cache picasso
+                    // si pas présent alors utilise la photo dispo et ajoute l'overlay
+                    Picasso.with(_activity)
+                            .load(Constants.IMAGE_BASE_URL + "/"
+                                    + photoFiche.getCleURL().replaceAll(
+                                    Constants.IMAGE_BASE_URL_SUFFIXE + "$", requested_suffixe_photo))
+                            .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+                            .placeholder(R.drawable.doris_icone_doris_large)
+                            .into(imgDisplay, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                }
 
-							    @Override
-							    public void onError() {
-								    try {
-								        Picasso.with(_activity)
-										    .load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes))
-										    .resize(largeur, hauteur)
-										    .centerInside()
-										    .placeholder(R.drawable.doris_icone_doris_large_pas_connecte)
-										    .into(imgDisplay);
-								    } catch (IOException e) {}
-								    btnHiResNotAvailable.setVisibility(View.VISIBLE);
-							    }
-						    });
-			    }
-		    }
-	    } else {
-	    	// pas de photo en local, télécharge en ligne si autorisé
-		    if (reseauOutils.isTelechargementsModeConnectePossible()) {
+                                @Override
+                                public void onError() {
+                                    try {
+                                        Picasso.with(_activity)
+                                                .load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes))
+                                                .resize(largeur, hauteur)
+                                                .centerInside()
+                                                .placeholder(R.drawable.doris_icone_doris_large_pas_connecte)
+                                                .into(imgDisplay);
+                                    } catch (IOException e) {
+                                    }
+                                    btnHiResNotAvailable.setVisibility(View.VISIBLE);
+                                }
+                            });
+                }
+            }
+        } else {
+            // pas de photo en local, télécharge en ligne si autorisé
+            if (reseauOutils.isTelechargementsModeConnectePossible()) {
 
-				    Picasso.with(_activity)
-						    .load(Constants.IMAGE_BASE_URL + "/"
-								    + photoFiche.getCleURL().replaceAll(
-								    Constants.IMAGE_BASE_URL_SUFFIXE+"$", requested_suffixe_photo))
-						    .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
-						    .resize(largeur, hauteur)
-						    .centerInside()
-						    .into(imgDisplay, new Callback() {
-							    @Override
-							    public void onSuccess() { }
-							    @Override
-							    public void onError() {
-								    btnHiResNotAvailable.setVisibility(View.VISIBLE);
-							    }
-						    });
+                Picasso.with(_activity)
+                        .load(Constants.IMAGE_BASE_URL + "/"
+                                + photoFiche.getCleURL().replaceAll(
+                                Constants.IMAGE_BASE_URL_SUFFIXE + "$", requested_suffixe_photo))
+                        .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
+                        .resize(largeur, hauteur)
+                        .centerInside()
+                        .into(imgDisplay, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                            }
 
-		    } else {
-			    // téléchargement non autorisé
-			    final String fallback_offline_suffixe_photo = small_suffixe_photo;
-			    Picasso.with(_activity)
-					    .load(Constants.IMAGE_BASE_URL + "/"
-							    + photoFiche.getCleURL().replaceAll(
-							    Constants.IMAGE_BASE_URL_SUFFIXE+"$", requested_suffixe_photo))
-					    .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
-					    .placeholder(R.drawable.doris_icone_doris_large)
-					    .into(imgDisplay, new Callback() {
-						    @Override
-						    public void onSuccess() {}
+                            @Override
+                            public void onError() {
+                                btnHiResNotAvailable.setVisibility(View.VISIBLE);
+                            }
+                        });
 
-						    @Override
-						    public void onError() {
-							    // on tente de chercher le cache des vignettes avant de vraiment abandonner
-							    btnHiResNotAvailable.setVisibility(View.VISIBLE);
-							    Picasso.with(_activity)
-									    .load(Constants.IMAGE_BASE_URL + "/"
-											    + photoFiche.getCleURL().replaceAll(
-											    Constants.IMAGE_BASE_URL_SUFFIXE+"$", fallback_offline_suffixe_photo))
-									    .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
-									    .placeholder(R.drawable.doris_icone_doris_large)
-									    .into(imgDisplay);
-						    }
-					    });
-		    }
-	    }
+            } else {
+                // téléchargement non autorisé
+                final String fallback_offline_suffixe_photo = small_suffixe_photo;
+                Picasso.with(_activity)
+                        .load(Constants.IMAGE_BASE_URL + "/"
+                                + photoFiche.getCleURL().replaceAll(
+                                Constants.IMAGE_BASE_URL_SUFFIXE + "$", requested_suffixe_photo))
+                        .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+                        .placeholder(R.drawable.doris_icone_doris_large)
+                        .into(imgDisplay, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                            }
+
+                            @Override
+                            public void onError() {
+                                // on tente de chercher le cache des vignettes avant de vraiment abandonner
+                                btnHiResNotAvailable.setVisibility(View.VISIBLE);
+                                Picasso.with(_activity)
+                                        .load(Constants.IMAGE_BASE_URL + "/"
+                                                + photoFiche.getCleURL().replaceAll(
+                                                Constants.IMAGE_BASE_URL_SUFFIXE + "$", fallback_offline_suffixe_photo))
+                                        .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+                                        .placeholder(R.drawable.doris_icone_doris_large)
+                                        .into(imgDisplay);
+                            }
+                        });
+            }
+        }
 
         imgDisplay.setOnClickListener(new PhotoClickListener(photoFiche));
-        
+
         // gestion des bouton de control de zoom
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(_activity);
-        if(prefs.getBoolean(_activity.getString(R.string.pref_key_imagepleinecran_aff_zoomcontrol), false)){
-	        ZoomControls zoomControls = (ZoomControls)viewLayout.findViewById(R.id.imagepleinecran_image_zoomControls);
-	        zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					imgDisplay.zoomIn();
-				}
-			});
-	        zoomControls.setOnZoomOutClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					imgDisplay.zoomOut();
-				}
-			});
-        }
-        else{
-        	ZoomControls zoomControls = (ZoomControls)viewLayout.findViewById(R.id.imagepleinecran_image_zoomControls);
- 	       	zoomControls.setVisibility(View.GONE);
+        if (prefs.getBoolean(_activity.getString(R.string.pref_key_imagepleinecran_aff_zoomcontrol), false)) {
+            ZoomControls zoomControls = (ZoomControls) viewLayout.findViewById(R.id.imagepleinecran_image_zoomControls);
+            zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    imgDisplay.zoomIn();
+                }
+            });
+            zoomControls.setOnZoomOutClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    imgDisplay.zoomOut();
+                }
+            });
+        } else {
+            ZoomControls zoomControls = (ZoomControls) viewLayout.findViewById(R.id.imagepleinecran_image_zoomControls);
+            zoomControls.setVisibility(View.GONE);
         }
         // close button click event
-        btnClose.setOnClickListener(new View.OnClickListener() {           
+        btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            	_activity.finish();
+                _activity.finish();
             }
         });
-        
-        btnHiResNotAvailable.setOnClickListener(new View.OnClickListener() {           
+
+        btnHiResNotAvailable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            	if(_activity.isActivityDestroyed() || _activity.isFinishing()) return;
-            	Toast.makeText(_activity, _activity.getString(R.string.imagepleinecran_customview_btnHiResNotAvailable_message), Toast.LENGTH_LONG).show();
+                if (_activity.isActivityDestroyed() || _activity.isFinishing()) return;
+                Toast.makeText(_activity, _activity.getString(R.string.imagepleinecran_customview_btnHiResNotAvailable_message), Toast.LENGTH_LONG).show();
             }
         });
-  
-        
-        
+
+
         // Affichage Titre & Description de l'image
         String titre = photoFiche.getTitre();
-        int longMax = Integer.parseInt(paramOutils.getParamString(R.string.imagepleinecran_titre_longmax,"25"));
+        int longMax = Integer.parseInt(paramOutils.getParamString(R.string.imagepleinecran_titre_longmax, "25"));
         // on termine par un espace insécable puis "..."
-        if (titre.length() > longMax) titre = titre.substring(0, longMax)+"\u00A0\u2026";
+        if (titre.length() > longMax) titre = titre.substring(0, longMax) + "\u00A0\u2026";
         if (titre.isEmpty()) titre = "Image sans titre";
         imgTitre.setText(titre);
-    	
-        imgTitre.setOnClickListener(new View.OnClickListener() {           
-        	@Override
+
+        imgTitre.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-        		showDescription(photoFiche);
+                showDescription(photoFiche);
             }
         });
         ((ViewPager) container).addView(viewLayout);
-  
+
         return viewLayout;
     }
 
 
-	class PhotoClickListener implements View.OnClickListener{
-    	PhotoFiche photoFiche;
-    	private long lastTouchTime = -1;
-    	
-    	public PhotoClickListener(PhotoFiche photoFiche){
-    		this.photoFiche = photoFiche;
-    	}
-    	
-    	@Override
-        public void onClick(View v) {
-    		long thisTime = System.currentTimeMillis();
-    		if (thisTime - lastTouchTime < 250) {
-    			// Double Click on affiche la Description de l'image
-    			
-    			// TODO :
-        		//String texteAff = "Double Click - j'aurais aimé zommer x2 (comme Google Photo)";
-        		//Toast.makeText(_activity, texteAff, Toast.LENGTH_LONG).show();
-        		
-        		lastTouchTime = -1;
-    		} else if (lastTouchTime != -1){
-    			// Double Click Lent on affiche la Description de l'image
-    			showDescription(photoFiche);
-    			
-    			lastTouchTime = -1;
-    		} else {
-    			lastTouchTime = thisTime;
-    		}
+    class PhotoClickListener implements View.OnClickListener {
+        PhotoFiche photoFiche;
+        private long lastTouchTime = -1;
+
+        public PhotoClickListener(PhotoFiche photoFiche) {
+            this.photoFiche = photoFiche;
         }
-    	
+
+        @Override
+        public void onClick(View v) {
+            long thisTime = System.currentTimeMillis();
+            if (thisTime - lastTouchTime < 250) {
+                // Double Click on affiche la Description de l'image
+
+                // TODO :
+                //String texteAff = "Double Click - j'aurais aimé zommer x2 (comme Google Photo)";
+                //Toast.makeText(_activity, texteAff, Toast.LENGTH_LONG).show();
+
+                lastTouchTime = -1;
+            } else if (lastTouchTime != -1) {
+                // Double Click Lent on affiche la Description de l'image
+                showDescription(photoFiche);
+
+                lastTouchTime = -1;
+            } else {
+                lastTouchTime = thisTime;
+            }
+        }
+
     }
-    
+
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         ((ViewPager) container).removeView((RelativeLayout) object);
-  
+
     }
-    public void showDescription(int position){
-	    //shows toast after 500ms
-	    final PhotoFiche photoFiche = _PhotoFicheLists.get(position );
-	    showDescription(photoFiche);
+
+    public void showDescription(int position) {
+        //shows toast after 500ms
+        final PhotoFiche photoFiche = _PhotoFicheLists.get(position);
+        showDescription(photoFiche);
     }
-	private void showDescription(PhotoFiche photoFiche) {
-		String titre = photoFiche.getTitre();
-		String description = photoFiche.getDescription();
-		String texteAff = description;
-		if (titre.length() > Integer.parseInt(paramOutils.getParamString(R.string.imagepleinecran_titre_longmax,"25")))
-			texteAff = titre + System.getProperty("line.separator") + description;
-		if (!texteAff.isEmpty()) {
-			if(_activity.isActivityDestroyed() || _activity.isFinishing()) return;
-			Toast.makeText(_activity, texteAff, Toast.LENGTH_LONG).show();
-		}
+
+    private void showDescription(PhotoFiche photoFiche) {
+        String titre = photoFiche.getTitre();
+        String description = photoFiche.getDescription();
+        String texteAff = description;
+        if (titre.length() > Integer.parseInt(paramOutils.getParamString(R.string.imagepleinecran_titre_longmax, "25")))
+            texteAff = titre + System.getProperty("line.separator") + description;
+        if (!texteAff.isEmpty()) {
+            if (_activity.isActivityDestroyed() || _activity.isFinishing()) return;
+            Toast.makeText(_activity, texteAff, Toast.LENGTH_LONG).show();
+        }
     }
 
 }

@@ -48,6 +48,7 @@ import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -67,8 +68,10 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import java.io.IOException;
 
 import android.net.Uri;
+
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.sitedoris.Constants;
+
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -92,243 +95,245 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
 // Start of user code protectedDetailsParticipant_ElementViewActivity_additional_implements
 // End of user code
 {
-	
-	protected int participantId;
-	
-	private static final String LOG_TAG = DetailsParticipant_ElementViewActivity.class.getCanonicalName();
+
+    protected int participantId;
+
+    private static final String LOG_TAG = DetailsParticipant_ElementViewActivity.class.getCanonicalName();
 
 // Start of user code protectedDetailsParticipant_ElementViewActivity_additional_attributes
-	
-	final Context context = this;
 
-	Photos_Outils photosOutils;
-	Reseau_Outils reseauOutils = new Reseau_Outils(context);
-	
-	protected int participantNumeroDoris;
+    final Context context = this;
+
+    Photos_Outils photosOutils;
+    Reseau_Outils reseauOutils = new Reseau_Outils(context);
+
+    protected int participantNumeroDoris;
 // End of user code
-	
-	/** Called when the activity is first created. */
+
+    /**
+     * Called when the activity is first created.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		ThemeUtil.onActivityCreateSetTheme(this);
+        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.detailsparticipant_elementview);
 
-		ActionBar actionBar = getSupportActionBar();
-	    actionBar.setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         participantId = getIntent().getExtras().getInt("participantId");
-        
-		// Start of user code protectedDetailsParticipant_ElementViewActivity_onCreate
-	    ACRA.getErrorReporter().putCustomData("participantId", ""+participantId);
-        Log.d(LOG_TAG, "onCreate() - participantId : "+participantId);
-		// End of user code
-    }
-    
-    @Override
-	protected void onResume() {
-		super.onResume();
-		refreshScreenData();
-	}
-    
-    
-    private void refreshScreenData() {
-    	// get our dao
-    	RuntimeExceptionDao<Participant, Integer> entriesDao = getHelper().getParticipantDao();
-		// Start of user code protectedDetailsParticipant_ElementViewActivity.refreshScreenData
-    	Participant entry = entriesDao.queryForId(participantId);
-    	entry.setContextDB(getHelper().getDorisDBHelper());
 
-		((TextView) findViewById(R.id.detailsparticipant_elementview_nom)).setText(entry.getNom());
-		participantNumeroDoris = entry.getNumeroParticipant();
-		//((TextView) findViewById(R.id.detailsparticipant_elementview_numeroparticipant)).setText(((Integer)participantNumeroDoris).toString());
-		
-		if (entry.getFonctions().contains(Constants.ParticipantKind.PHOTOGRAPHE.ordinal()+";")){
-			((ImageView) findViewById(R.id.detailsparticipant_picto_photographe)).setVisibility(View.VISIBLE);
-			((TextView) findViewById(R.id.detailsparticipant_texte_photographe)).setVisibility(View.VISIBLE);
-		}
-		if (entry.getFonctions().contains(Constants.ParticipantKind.REDACTEUR.ordinal()+";")){
-			((ImageView) findViewById(R.id.detailsparticipant_picto_redacteur)).setVisibility(View.VISIBLE);
-			((TextView) findViewById(R.id.detailsparticipant_texte_redacteur)).setVisibility(View.VISIBLE);
-		}
-		if (entry.getFonctions().contains(Constants.ParticipantKind.CORRECTEUR.ordinal()+";")){
-			((ImageView) findViewById(R.id.detailsparticipant_picto_correcteur)).setVisibility(View.VISIBLE);
-			((TextView) findViewById(R.id.detailsparticipant_texte_correcteur)).setVisibility(View.VISIBLE);
-		}
-		if (entry.getFonctions().contains(Constants.ParticipantKind.VERIFICATEUR.ordinal()+";")){
-			((ImageView) findViewById(R.id.detailsparticipant_picto_verificateur)).setVisibility(View.VISIBLE);
-			((TextView) findViewById(R.id.detailsparticipant_texte_verificateur)).setVisibility(View.VISIBLE);
-		}
-		
-		TextView texte_description = (TextView) findViewById(R.id.detailsparticipant_texte_description);
-		Textes_Outils textesOutils = new Textes_Outils(context);
-		SpannableString richtext = textesOutils.textToSpannableStringDoris(entry.getDescription());
+        // Start of user code protectedDetailsParticipant_ElementViewActivity_onCreate
+        ACRA.getErrorReporter().putCustomData("participantId", "" + participantId);
+        Log.d(LOG_TAG, "onCreate() - participantId : " + participantId);
+        // End of user code
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshScreenData();
+    }
+
+
+    private void refreshScreenData() {
+        // get our dao
+        RuntimeExceptionDao<Participant, Integer> entriesDao = getHelper().getParticipantDao();
+        // Start of user code protectedDetailsParticipant_ElementViewActivity.refreshScreenData
+        Participant entry = entriesDao.queryForId(participantId);
+        entry.setContextDB(getHelper().getDorisDBHelper());
+
+        ((TextView) findViewById(R.id.detailsparticipant_elementview_nom)).setText(entry.getNom());
+        participantNumeroDoris = entry.getNumeroParticipant();
+        //((TextView) findViewById(R.id.detailsparticipant_elementview_numeroparticipant)).setText(((Integer)participantNumeroDoris).toString());
+
+        if (entry.getFonctions().contains(Constants.ParticipantKind.PHOTOGRAPHE.ordinal() + ";")) {
+            ((ImageView) findViewById(R.id.detailsparticipant_picto_photographe)).setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.detailsparticipant_texte_photographe)).setVisibility(View.VISIBLE);
+        }
+        if (entry.getFonctions().contains(Constants.ParticipantKind.REDACTEUR.ordinal() + ";")) {
+            ((ImageView) findViewById(R.id.detailsparticipant_picto_redacteur)).setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.detailsparticipant_texte_redacteur)).setVisibility(View.VISIBLE);
+        }
+        if (entry.getFonctions().contains(Constants.ParticipantKind.CORRECTEUR.ordinal() + ";")) {
+            ((ImageView) findViewById(R.id.detailsparticipant_picto_correcteur)).setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.detailsparticipant_texte_correcteur)).setVisibility(View.VISIBLE);
+        }
+        if (entry.getFonctions().contains(Constants.ParticipantKind.VERIFICATEUR.ordinal() + ";")) {
+            ((ImageView) findViewById(R.id.detailsparticipant_picto_verificateur)).setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.detailsparticipant_texte_verificateur)).setVisibility(View.VISIBLE);
+        }
+
+        TextView texte_description = (TextView) findViewById(R.id.detailsparticipant_texte_description);
+        Textes_Outils textesOutils = new Textes_Outils(context);
+        SpannableString richtext = textesOutils.textToSpannableStringDoris(entry.getDescription());
         texte_description.setText(richtext, BufferType.SPANNABLE);
         // make our ClickableSpans and URLSpans work 
         texte_description.setMovementMethod(LinkMovementMethod.getInstance());
-        
-        
+
+
         ImageView trombineView = (ImageView) findViewById(R.id.detailsparticipant_elementview_icon);
-        if ( !entry.getCleURLPhotoParticipant().isEmpty() ) {	     
-        	
-	        if(getPhotosOutils().isAvailableInFolderPhoto(entry.getPhotoNom(), ImageType.PORTRAITS)){
-	    		try {
-					Picasso.with(context).load(getPhotosOutils().getPhotoFile(entry.getPhotoNom(), ImageType.PORTRAITS))
-						.fit()
-						.centerInside()
-						.into(trombineView);
-				} catch (IOException e) {
-				}
-	    	}
-	    	else{
-	    		// pas préchargée en local pour l'instant, cherche sur internet
-		        String urlPhoto= Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom();
+        if (!entry.getCleURLPhotoParticipant().isEmpty()) {
 
-		        com.squareup.picasso.Callback fallbackVignetteOffline = new com.squareup.picasso.Callback() {
-			        @Override
-			        public void onSuccess() {
-				        //Success image already loaded into the view
-			        }
+            if (getPhotosOutils().isAvailableInFolderPhoto(entry.getPhotoNom(), ImageType.PORTRAITS)) {
+                try {
+                    Picasso.with(context).load(getPhotosOutils().getPhotoFile(entry.getPhotoNom(), ImageType.PORTRAITS))
+                            .fit()
+                            .centerInside()
+                            .into(trombineView);
+                } catch (IOException e) {
+                }
+            } else {
+                // pas préchargée en local pour l'instant, cherche sur internet
+                String urlPhoto = Constants.PORTRAIT_BASE_URL + "/" + entry.getPhotoNom();
 
-			        @Override
-			        public void onError() {
-				        Picasso.with(context)
-						        .load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE))
-						        .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
-						        .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
-						        .fit()
-						        .centerInside()
-						        .into(trombineView,
-								        new com.squareup.picasso.Callback() {
-									        @Override
-									        public void onSuccess() {
-										        //Success image already loaded into the view
-									        }
+                com.squareup.picasso.Callback fallbackVignetteOffline = new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        //Success image already loaded into the view
+                    }
 
-									        @Override
-									        public void onError() {
-										        Log.d(LOG_TAG, "getView URL Petite Image : "+
-												        entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE));
+                    @Override
+                    public void onError() {
+                        Picasso.with(context)
+                                .load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE))
+                                .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+                                .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
+                                .fit()
+                                .centerInside()
+                                .into(trombineView,
+                                        new com.squareup.picasso.Callback() {
+                                            @Override
+                                            public void onSuccess() {
+                                                //Success image already loaded into the view
+                                            }
 
-										        Picasso.with(context)
-												        .load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
-												        .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
-												        .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
-												        .fit()
-												        .centerInside()
-												        .error(R.drawable.app_ic_participant_pas_connecte)
-												        .into(trombineView);
-									        }
+                                            @Override
+                                            public void onError() {
+                                                Log.d(LOG_TAG, "getView URL Petite Image : " +
+                                                        entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE));
 
-								        });
-			        }
-		        };
-		        if (reseauOutils.isTelechargementsModeConnectePossible()) {
-		    		Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLPhotoParticipant() : "+Constants.PORTRAIT_BASE_URL+"/"+entry.getPhotoNom());
-		    		Picasso.with(context)
-		    			.load(urlPhoto.replace(" ", "%20"))
-						.placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
-						.fit()
-						.centerInside()
-		    			.into(trombineView, fallbackVignetteOffline);
-	    		} else {
-				    Picasso.with(context)
-						    .load(urlPhoto.replace(" ", "%20"))
-						    .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
-						    .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
-						    .fit()
-						    .centerInside()
-						    .into(trombineView, fallbackVignetteOffline);
-	    		}
-	    	}
+                                                Picasso.with(context)
+                                                        .load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
+                                                        .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+                                                        .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
+                                                        .fit()
+                                                        .centerInside()
+                                                        .error(R.drawable.app_ic_participant_pas_connecte)
+                                                        .into(trombineView);
+                                            }
+
+                                        });
+                    }
+                };
+                if (reseauOutils.isTelechargementsModeConnectePossible()) {
+                    Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLPhotoParticipant() : " + Constants.PORTRAIT_BASE_URL + "/" + entry.getPhotoNom());
+                    Picasso.with(context)
+                            .load(urlPhoto.replace(" ", "%20"))
+                            .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
+                            .fit()
+                            .centerInside()
+                            .into(trombineView, fallbackVignetteOffline);
+                } else {
+                    Picasso.with(context)
+                            .load(urlPhoto.replace(" ", "%20"))
+                            .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+                            .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
+                            .fit()
+                            .centerInside()
+                            .into(trombineView, fallbackVignetteOffline);
+                }
+            }
         }
-		// End of user code
-    	
-	}
+        // End of user code
 
-	@Override
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		// add options in the menu
-		MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.detailsparticipant_elementview_actions, menu);
-		// add additional programmatic options in the menu
-		//Start of user code additional onCreateOptionsMenu DetailsParticipant_EditableElementViewActivity
-	   
-		//End of user code
+        // add options in the menu
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.detailsparticipant_elementview_actions, menu);
+        // add additional programmatic options in the menu
+        //Start of user code additional onCreateOptionsMenu DetailsParticipant_EditableElementViewActivity
+
+        //End of user code
         return super.onCreateOptionsMenu(menu);
     }
-    
-    
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-		// behavior of option menu
+        // behavior of option menu
         switch (item.getItemId()) {
-			case R.id.detailsparticipant_elementview_action_preference:
-	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-	            return true;
-			//Start of user code additional menu action DetailsParticipant_ElementViewActivity
-			 case R.id.detailsparticipant_elementview_action_aide:
-			    	AffichageMessageHTML aide = new AffichageMessageHTML(this, (Activity) this, getHelper());
-					aide.affichageMessageHTML(this.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
-					return true;
-			//End of user code
-			// Respond to the action bar's Up/Home button
-			case android.R.id.home:
-				Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
-				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
-				
-		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
-		            // This activity is NOT part of this app's task, so create a new task
-		            // when navigating up, with a synthesized back stack.
-		            TaskStackBuilder.create(this)
-		                    // Add all of this activity's parents to the back stack
-		                    .addNextIntentWithParentStack(upIntent)
-		                    // Navigate up to the closest parent
-		                    .startActivities();
-		        } else {
-		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
-		            // This activity is part of this app's task, so simply
-		            // navigate up to the logical parent activity.
-		            NavUtils.navigateUpTo(this, upIntent);
-		        }
-	            return true;
-			default:
+            case R.id.detailsparticipant_elementview_action_preference:
+                startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+                return true;
+            //Start of user code additional menu action DetailsParticipant_ElementViewActivity
+            case R.id.detailsparticipant_elementview_action_aide:
+                AffichageMessageHTML aide = new AffichageMessageHTML(this, (Activity) this, getHelper());
+                aide.affichageMessageHTML(this.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
+                return true;
+            //End of user code
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
+                Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : " + upIntent.getComponent().toString());
+
+                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                    Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
+                    // This activity is NOT part of this app's task, so create a new task
+                    // when navigating up, with a synthesized back stack.
+                    TaskStackBuilder.create(this)
+                            // Add all of this activity's parents to the back stack
+                            .addNextIntentWithParentStack(upIntent)
+                            // Navigate up to the closest parent
+                            .startActivities();
+                } else {
+                    Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
+                    // This activity is part of this app's task, so simply
+                    // navigate up to the logical parent activity.
+                    NavUtils.navigateUpTo(this, upIntent);
+                }
+                return true;
+            default:
                 return super.onOptionsItemSelected(item);
-        }    	
+        }
     }
 
-	//  ------------ dealing with Up button
-	@Override
-	public Intent getSupportParentActivityIntent() {
-		//Start of user code getSupportParentActivityIntent DetailsParticipant_ClassListViewActivity
-		// navigates to the parent activity
-		return new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class);
-		//End of user code
-	}
-	@Override
-	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-		//Start of user code onCreateSupportNavigateUpTaskStack DetailsParticipant_ClassListViewActivity
-		super.onCreateSupportNavigateUpTaskStack(builder);
-		//End of user code
-	}
+    //  ------------ dealing with Up button
+    @Override
+    public Intent getSupportParentActivityIntent() {
+        //Start of user code getSupportParentActivityIntent DetailsParticipant_ClassListViewActivity
+        // navigates to the parent activity
+        return new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class);
+        //End of user code
+    }
 
-	// Start of user code protectedDetailsParticipant_ElementViewActivity_additional_operations
-    
-    public void onClickBioComplete(View view){
-		String url = Constants.getParticipantUrl(participantNumeroDoris);
-		if (!url.isEmpty()) {
-			Intent intent = new Intent(Intent.ACTION_VIEW);
-			intent.setData(Uri.parse(url));
-			startActivity(intent);
-		}
+    @Override
+    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+        //Start of user code onCreateSupportNavigateUpTaskStack DetailsParticipant_ClassListViewActivity
+        super.onCreateSupportNavigateUpTaskStack(builder);
+        //End of user code
     }
-    
-    private Photos_Outils getPhotosOutils(){ 
-    	if(photosOutils == null) photosOutils = new Photos_Outils(this);
-    	return photosOutils;
+
+    // Start of user code protectedDetailsParticipant_ElementViewActivity_additional_operations
+
+    public void onClickBioComplete(View view) {
+        String url = Constants.getParticipantUrl(participantNumeroDoris);
+        if (!url.isEmpty()) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+        }
     }
-    
-	// End of user code
+
+    private Photos_Outils getPhotosOutils() {
+        if (photosOutils == null) photosOutils = new Photos_Outils(this);
+        return photosOutils;
+    }
+
+    // End of user code
 
 }

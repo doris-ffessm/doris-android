@@ -52,6 +52,7 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
+
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -81,70 +82,70 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 // End of user code
 
-public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener , ActivityWithIndexBar{
-	
-	private static final String LOG_TAG = ListeParticipantAvecFiltre_ClassListViewActivity.class.getSimpleName();
+public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener, ActivityWithIndexBar {
 
-	//Start of user code constants ListeParticipantAvecFiltre_ClassListViewActivity
-	int iconSize = R.string.list_icone_taille_defaut;
+    private static final String LOG_TAG = ListeParticipantAvecFiltre_ClassListViewActivity.class.getSimpleName();
 
-	final Context context = this;
-	final Param_Outils paramOutils = new Param_Outils(context);
-	//End of user code
-	
+    //Start of user code constants ListeParticipantAvecFiltre_ClassListViewActivity
+    int iconSize = R.string.list_icone_taille_defaut;
+
+    final Context context = this;
+    final Param_Outils paramOutils = new Param_Outils(context);
+    //End of user code
+
     ListeParticipantAvecFiltre_Adapter adapter;
 
-	Handler mHandler;
+    Handler mHandler;
     HashMap<Character, Integer> alphabetToIndex;
-	int number_of_alphabets=-1;
+    int number_of_alphabets = -1;
 
-	public void onCreate(Bundle bundle) {
-		super.onCreate(bundle);
-		ThemeUtil.onActivityCreateSetTheme(this);
-		setContentView(R.layout.listeparticipantavecfiltre_listview);
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        ThemeUtil.onActivityCreateSetTheme(this);
+        setContentView(R.layout.listeparticipantavecfiltre_listview);
 
-		ActionBar actionBar = getSupportActionBar();
-	    actionBar.setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
-		ListView list = (ListView) findViewById(R.id.listeparticipantavecfiltre_listview);
+        ListView list = (ListView) findViewById(R.id.listeparticipantavecfiltre_listview);
         list.setClickable(true);
-		//Start of user code onCreate ListeParticipantAvecFiltre_ClassListViewActivity adapter creation
-        adapter = new ListeParticipantAvecFiltre_Adapter(this, getHelper().getDorisDBHelper());	
-        
-		//End of user code
-		// avoid opening the keyboard on view opening
+        //Start of user code onCreate ListeParticipantAvecFiltre_ClassListViewActivity adapter creation
+        adapter = new ListeParticipantAvecFiltre_Adapter(this, getHelper().getDorisDBHelper());
+
+        //End of user code
+        // avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         list.setOnItemClickListener(this);
 
         list.setAdapter(adapter);
 
-		// Get the intent, verify the action and get the query
+        // Get the intent, verify the action and get the query
         handleIntent(getIntent());
 
-		// add handler for indexBar
+        // add handler for indexBar
         mHandler = new IndexBarHandler(this);
-		//Start of user code onCreate additions ListeParticipantAvecFiltre_ClassListViewActivity
-	    actionBar.setSubtitle("Participants");
-		    
-	    //End of user code
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		//Start of user code onResume additions ListeParticipantAvecFiltre_ClassListViewActivity
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-    	if( paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(this.getString(R.string.list_icone_taille_defaut)) ) != iconSize ){
-    		iconSize = paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(this.getString(R.string.list_icone_taille_defaut)) );
-    		ListView list = (ListView) findViewById(R.id.listeparticipantavecfiltre_listview);
-    		list.invalidateViews();
-    	}
-    	
-		//End of user code
-		populateIndexBarHashMap();
-	}
+        //Start of user code onCreate additions ListeParticipantAvecFiltre_ClassListViewActivity
+        actionBar.setSubtitle("Participants");
 
-	@Override
+        //End of user code
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Start of user code onResume additions ListeParticipantAvecFiltre_ClassListViewActivity
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(this.getString(R.string.list_icone_taille_defaut))) != iconSize) {
+            iconSize = paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(this.getString(R.string.list_icone_taille_defaut)));
+            ListView list = (ListView) findViewById(R.id.listeparticipantavecfiltre_listview);
+            list.invalidateViews();
+        }
+
+        //End of user code
+        populateIndexBarHashMap();
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
         // Because this activity has set launchMode="singleTop", the system calls this method
         // to deliver the intent if this activity is currently the foreground activity when
@@ -152,215 +153,215 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
         // a new instance of this activity, so the system delivers the search intent here)
         handleIntent(intent);
     }
-	
-	private void handleIntent(Intent intent) {
-		//Log.d(LOG_TAG,"Intent received");
+
+    private void handleIntent(Intent intent) {
+        //Log.d(LOG_TAG,"Intent received");
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-           // handles a click on a search suggestion; launches activity to show word
-           //  Intent wordIntent = new Intent(this, WordActivity.class);
-           // wordIntent.setData(intent.getData());
-           // startActivity(wordIntent);
+            // handles a click on a search suggestion; launches activity to show word
+            //  Intent wordIntent = new Intent(this, WordActivity.class);
+            // wordIntent.setData(intent.getData());
+            // startActivity(wordIntent);
         } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             // handles a search query
             String query = intent.getStringExtra(SearchManager.QUERY);
-    		Log.d(LOG_TAG,"ACTION_SEARCH Intent received for "+query);
+            Log.d(LOG_TAG, "ACTION_SEARCH Intent received for " + query);
             ListeParticipantAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(query);
         }
-    }	
-
-	@Override
-	public boolean onSearchRequested() {
-		Log.d(LOG_TAG,"onSearchRequested received");
-	    return super.onSearchRequested();
-	}
-
-	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
-		Log.d(LOG_TAG, "onItemClick "+view);
-		if(view instanceof LinearLayout && view.getId() == R.id.listeparticipantavecfiltre_listviewrow){
-			//Start of user code onItemClick additions ListeParticipantAvecFiltre_ClassListViewActivity
-			DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
-			//End of user code
-			
-			// normal case on main item
-	        Intent toDetailView = new Intent(this, DetailsParticipant_ElementViewActivity.class);
-	        Bundle b = new Bundle();
-	        b.putInt("participantId", ((Participant)view.getTag()).getId());
-			toDetailView.putExtras(b);
-	        startActivity(toDetailView);
-		}
-		else if(view instanceof TextView && view.getId() == R.id.indexbar_alphabet_row_textview){
-			// click on indexBar
-			TextView rowview=(TextView)view;
-			
-			CharSequence alpahbet=rowview.getText();
-			
-			if(alpahbet==null || alpahbet.equals(""))
-				return;
-			
-			String selected_alpahbet=alpahbet.toString().trim();
-			Integer newPosition=alphabetToIndex.get(selected_alpahbet.charAt(0));
-			Log.d(LOG_TAG, "Selected Alphabet is:"+selected_alpahbet+"   position is:"+newPosition);
-			if(	newPosition != null){	
-				showToast(selected_alpahbet);
-				ListView listview=(ListView)findViewById(R.id.listeparticipantavecfiltre_listview);
-				listview.setSelection(newPosition);
-			}
-		}
     }
 
-	//Start of user code additional  ListeParticipantAvecFiltre_ClassListViewActivity methods
-	@Override
-	protected void onDestroy(){
-		Log.d(LOG_TAG, "onDestroy()");
-	
-		//On vide le cache des infos de la Bibliographie
-		getHelper().getParticipantDao().clearObjectCache();
-		
-		
-		super.onDestroy();
-	}
-	//End of user code
+    @Override
+    public boolean onSearchRequested() {
+        Log.d(LOG_TAG, "onSearchRequested received");
+        return super.onSearchRequested();
+    }
 
-	@Override
+    public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
+        Log.d(LOG_TAG, "onItemClick " + view);
+        if (view instanceof LinearLayout && view.getId() == R.id.listeparticipantavecfiltre_listviewrow) {
+            //Start of user code onItemClick additions ListeParticipantAvecFiltre_ClassListViewActivity
+            DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
+            //End of user code
+
+            // normal case on main item
+            Intent toDetailView = new Intent(this, DetailsParticipant_ElementViewActivity.class);
+            Bundle b = new Bundle();
+            b.putInt("participantId", ((Participant) view.getTag()).getId());
+            toDetailView.putExtras(b);
+            startActivity(toDetailView);
+        } else if (view instanceof TextView && view.getId() == R.id.indexbar_alphabet_row_textview) {
+            // click on indexBar
+            TextView rowview = (TextView) view;
+
+            CharSequence alpahbet = rowview.getText();
+
+            if (alpahbet == null || alpahbet.equals(""))
+                return;
+
+            String selected_alpahbet = alpahbet.toString().trim();
+            Integer newPosition = alphabetToIndex.get(selected_alpahbet.charAt(0));
+            Log.d(LOG_TAG, "Selected Alphabet is:" + selected_alpahbet + "   position is:" + newPosition);
+            if (newPosition != null) {
+                showToast(selected_alpahbet);
+                ListView listview = (ListView) findViewById(R.id.listeparticipantavecfiltre_listview);
+                listview.setSelection(newPosition);
+            }
+        }
+    }
+
+    //Start of user code additional  ListeParticipantAvecFiltre_ClassListViewActivity methods
+    @Override
+    protected void onDestroy() {
+        Log.d(LOG_TAG, "onDestroy()");
+
+        //On vide le cache des infos de la Bibliographie
+        getHelper().getParticipantDao().clearObjectCache();
+
+
+        super.onDestroy();
+    }
+    //End of user code
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		// add options in the menu
-		MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.listeparticipantavecfiltre_classlistview_actions, menu);
-		// Associate searchable configuration with the SearchView
-		// deal with compat
-		MenuItem  menuItem = (MenuItem ) menu.findItem(R.id.listeparticipantavecfiltre_classlistview_action_search);
-		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-	    SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-		searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()));
-	    searchView.setIconifiedByDefault(false);
-    	searchView.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
-			
-			@Override
-			public boolean onQueryTextSubmit(String arg0) {
-				return false;
-			}
-			
-			@Override
-			public boolean onQueryTextChange(String arg0) {
-				// TODO must be careful if the request might be long
-				// action on text change
-				ListeParticipantAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
-				return false;
-			}
-		});
-	    
-		// add additional programmatic options in the menu
-		//Start of user code additional onCreateOptionsMenu ListeParticipantAvecFiltre_ClassListViewActivity
+        // add options in the menu
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.listeparticipantavecfiltre_classlistview_actions, menu);
+        // Associate searchable configuration with the SearchView
+        // deal with compat
+        MenuItem menuItem = (MenuItem) menu.findItem(R.id.listeparticipantavecfiltre_classlistview_action_search);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
-		//End of user code
+            @Override
+            public boolean onQueryTextSubmit(String arg0) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String arg0) {
+                // TODO must be careful if the request might be long
+                // action on text change
+                ListeParticipantAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
+                return false;
+            }
+        });
+
+        // add additional programmatic options in the menu
+        //Start of user code additional onCreateOptionsMenu ListeParticipantAvecFiltre_ClassListViewActivity
+
+        //End of user code
         return super.onCreateOptionsMenu(menu);
     }
-    
-    
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-		// behavior of option menu
+        // behavior of option menu
         switch (item.getItemId()) {
-			case R.id.listeparticipantavecfiltre_classlistview_action_preference:
-	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-	            return true;
-			//Start of user code additional menu action ListeParticipantAvecFiltre_ClassListViewActivity
+            case R.id.listeparticipantavecfiltre_classlistview_action_preference:
+                startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+                return true;
+            //Start of user code additional menu action ListeParticipantAvecFiltre_ClassListViewActivity
 
-		//End of user code
-			// Respond to the action bar's Up/Home button
-			case android.R.id.home:
-				Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
-				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
-				
-		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
-		            // This activity is NOT part of this app's task, so create a new task
-		            // when navigating up, with a synthesized back stack.
-		            TaskStackBuilder.create(this)
-		                    // Add all of this activity's parents to the back stack
-		                    .addNextIntentWithParentStack(upIntent)
-		                    // Navigate up to the closest parent
-		                    .startActivities();
-		        } else {
-		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
-		            // This activity is part of this app's task, so simply
-		            // navigate up to the logical parent activity.
-		            NavUtils.navigateUpTo(this, upIntent);
-		        }
-	            return true;
-			default:
+            //End of user code
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
+                Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : " + upIntent.getComponent().toString());
+
+                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                    Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
+                    // This activity is NOT part of this app's task, so create a new task
+                    // when navigating up, with a synthesized back stack.
+                    TaskStackBuilder.create(this)
+                            // Add all of this activity's parents to the back stack
+                            .addNextIntentWithParentStack(upIntent)
+                            // Navigate up to the closest parent
+                            .startActivities();
+                } else {
+                    Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
+                    // This activity is part of this app's task, so simply
+                    // navigate up to the logical parent activity.
+                    NavUtils.navigateUpTo(this, upIntent);
+                }
+                return true;
+            default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-	//  ------------ dealing with Up button
-	@Override
-	public Intent getSupportParentActivityIntent() {
-		//Start of user code getSupportParentActivityIntent ListeParticipantAvecFiltre_ClassListViewActivity
-		// navigates to the parent activity
-		return new Intent(this, Accueil_CustomViewActivity.class);
-		//End of user code
-	}
-	@Override
-	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-		//Start of user code onCreateSupportNavigateUpTaskStack ListeParticipantAvecFiltre_ClassListViewActivity
-		super.onCreateSupportNavigateUpTaskStack(builder);
-		//End of user code
-	}
-	// -------------- handler (for indexBar)
-	@Override
-	public Handler getHandler() {
-		return mHandler;
-	}
-	
-	public void populateIndexBarHashMap() {
-		alphabetToIndex= adapter.getUsedAlphabetHashMap();
-		number_of_alphabets=alphabetToIndex.size();		//Number of enteries in the map is equal to number of letters that would necessarily display on the right.
-		
-		/*Now I am making an entry of those alphabets which are not there in the Map*/
-		String alphabets[]=getResources().getStringArray(R.array.alphabet_array);
-		int index=-1;
-		
-		for(String alpha1: alphabets){
-			char alpha=alpha1.charAt(0);
-			index++;
-			
-			if(alphabetToIndex.containsKey(alpha))
-				continue;
-
-			/*Start searching the next character position. Example, here alpha is E. Since there is no entry for E, we need to find the position of next Character, F.*/
-			for(int i=index+1  ; i< 27 ;i++){		//start from next character to last character
-				char searchAlphabet=alphabets[i].charAt(0);   
-				
-				/*If we find the position of F character, then on click event on E should take the user to F*/	
-				if(  alphabetToIndex.containsKey(searchAlphabet)){
-					alphabetToIndex.put(alpha, alphabetToIndex.get(searchAlphabet));
-					break;
-				}
-				else
-					if(i==26) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
-						alphabetToIndex.put(alpha, adapter.filteredParticipantList.size()-1);
-					else
-						continue;
-					
-			}//
-		}//
-	}
-	
-	@Override
-	public ListView getAlphabetListView() {
-		return (ListView)findViewById(R.id.listeparticipantavecfiltre_listView_alphabets);
-	}
-	public View getAlphabetRowView(){
-		return findViewById(R.id.alphabet_row_layout);
-	}
-
-	// Start of user code protectedListeParticipantAvecFiltre_ClassListViewActivity
-	public void onClickFilterBtn(View view){
-		showToast("filter button pressed. \nPlease customize ;-)");
+    //  ------------ dealing with Up button
+    @Override
+    public Intent getSupportParentActivityIntent() {
+        //Start of user code getSupportParentActivityIntent ListeParticipantAvecFiltre_ClassListViewActivity
+        // navigates to the parent activity
+        return new Intent(this, Accueil_CustomViewActivity.class);
+        //End of user code
     }
-	
-	// End of user code
 
-	
+    @Override
+    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+        //Start of user code onCreateSupportNavigateUpTaskStack ListeParticipantAvecFiltre_ClassListViewActivity
+        super.onCreateSupportNavigateUpTaskStack(builder);
+        //End of user code
+    }
+
+    // -------------- handler (for indexBar)
+    @Override
+    public Handler getHandler() {
+        return mHandler;
+    }
+
+    public void populateIndexBarHashMap() {
+        alphabetToIndex = adapter.getUsedAlphabetHashMap();
+        number_of_alphabets = alphabetToIndex.size();        //Number of enteries in the map is equal to number of letters that would necessarily display on the right.
+
+        /*Now I am making an entry of those alphabets which are not there in the Map*/
+        String alphabets[] = getResources().getStringArray(R.array.alphabet_array);
+        int index = -1;
+
+        for (String alpha1 : alphabets) {
+            char alpha = alpha1.charAt(0);
+            index++;
+
+            if (alphabetToIndex.containsKey(alpha))
+                continue;
+
+            /*Start searching the next character position. Example, here alpha is E. Since there is no entry for E, we need to find the position of next Character, F.*/
+            for (int i = index + 1; i < 27; i++) {        //start from next character to last character
+                char searchAlphabet = alphabets[i].charAt(0);
+
+                /*If we find the position of F character, then on click event on E should take the user to F*/
+                if (alphabetToIndex.containsKey(searchAlphabet)) {
+                    alphabetToIndex.put(alpha, alphabetToIndex.get(searchAlphabet));
+                    break;
+                } else if (i == 26) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
+                    alphabetToIndex.put(alpha, adapter.filteredParticipantList.size() - 1);
+                else
+                    continue;
+
+            }//
+        }//
+    }
+
+    @Override
+    public ListView getAlphabetListView() {
+        return (ListView) findViewById(R.id.listeparticipantavecfiltre_listView_alphabets);
+    }
+
+    public View getAlphabetRowView() {
+        return findViewById(R.id.alphabet_row_layout);
+    }
+
+    // Start of user code protectedListeParticipantAvecFiltre_ClassListViewActivity
+    public void onClickFilterBtn(View view) {
+        showToast("filter button pressed. \nPlease customize ;-)");
+    }
+
+    // End of user code
+
+
 }

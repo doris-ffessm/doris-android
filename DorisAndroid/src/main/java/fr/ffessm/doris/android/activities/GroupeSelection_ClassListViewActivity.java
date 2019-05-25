@@ -48,6 +48,7 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -79,281 +80,281 @@ import fr.ffessm.doris.android.BuildConfig;
 // End of user code
 
 public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener {
-	
-	private static final String LOG_TAG = GroupeSelection_ClassListViewActivity.class.getSimpleName();
 
-	//Start of user code constants GroupeSelection_ClassListViewActivity
-	boolean depuisAccueil = false;
-	final Context context = this;
-	
-	private SharedPreferences prefs;
-	private String accueil_liste_ou_arbre_pardefaut;
-	//End of user code
-	
+    private static final String LOG_TAG = GroupeSelection_ClassListViewActivity.class.getSimpleName();
+
+    //Start of user code constants GroupeSelection_ClassListViewActivity
+    boolean depuisAccueil = false;
+    final Context context = this;
+
+    private SharedPreferences prefs;
+    private String accueil_liste_ou_arbre_pardefaut;
+    //End of user code
+
     GroupeSelection_Adapter adapter;
 
 
-	public void onCreate(Bundle bundle) {
-		super.onCreate(bundle);
-		ThemeUtil.onActivityCreateSetTheme(this);
-		setContentView(R.layout.groupeselection_listview);
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        ThemeUtil.onActivityCreateSetTheme(this);
+        setContentView(R.layout.groupeselection_listview);
 
-		ActionBar actionBar = getSupportActionBar();
-	    actionBar.setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
-		ListView list = (ListView) findViewById(R.id.groupeselection_listview);
+        ListView list = (ListView) findViewById(R.id.groupeselection_listview);
         list.setClickable(false);
-		//Start of user code onCreate GroupeSelection_ClassListViewActivity adapter creation
-        Log.d(LOG_TAG, "onCreate() - Début"); 
-        
+        //Start of user code onCreate GroupeSelection_ClassListViewActivity adapter creation
+        Log.d(LOG_TAG, "onCreate() - Début");
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Param_Outils paramOutils = new Param_Outils(context);
-        
+
         depuisAccueil = getIntent().getExtras().getBoolean("GroupeSelection_depuisAccueil", false);
-		ACRA.getErrorReporter().putCustomData("depuisAccueil", ""+depuisAccueil);
+        ACRA.getErrorReporter().putCustomData("depuisAccueil", "" + depuisAccueil);
         accueil_liste_ou_arbre_pardefaut = paramOutils.getParamString(R.string.pref_key_accueil_liste_ou_arbre_pardefaut, "liste");
-        
-        adapter = new GroupeSelection_Adapter(this, getHelper().getDorisDBHelper(), depuisAccueil);		
-		//End of user code
-		// avoid opening the keyboard on view opening
+
+        adapter = new GroupeSelection_Adapter(this, getHelper().getDorisDBHelper(), depuisAccueil);
+        //End of user code
+        // avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         list.setOnItemClickListener(this);
 
         list.setAdapter(adapter);
 
-		//Start of user code onCreate additions GroupeSelection_ClassListViewActivity
-        
+        //Start of user code onCreate additions GroupeSelection_ClassListViewActivity
+
         // affiche ou cache le filtre espèce actuel (+ son bouton de suppression)
-        RelativeLayout currentFilterInfoLayout = (RelativeLayout)findViewById(R.id.groupselection_listview_filtre_espece_courant_layout);
-    	
-        
+        RelativeLayout currentFilterInfoLayout = (RelativeLayout) findViewById(R.id.groupselection_listview_filtre_espece_courant_layout);
+
+
         int filtreCourantId = prefs.getInt(this.getString(R.string.pref_key_filtre_groupe), 1);
-        Log.d(LOG_TAG, "onCreate() - filtreCourantId : "+filtreCourantId); 
-        
-        if(filtreCourantId==1){
-        	currentFilterInfoLayout.setVisibility(View.GONE);
+        Log.d(LOG_TAG, "onCreate() - filtreCourantId : " + filtreCourantId);
+
+        if (filtreCourantId == 1) {
+            currentFilterInfoLayout.setVisibility(View.GONE);
+        } else {
+            Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
+
+            TextView filtreCourantTV = (TextView) findViewById(R.id.groupselection_listview_filtre_espece_courant_textView);
+            currentFilterInfoLayout.setVisibility(View.VISIBLE);
+            filtreCourantTV.setText(getString(R.string.groupselection_listview_filtre_espece_courant_label) + groupeFiltreCourant.getNomGroupe());
+
         }
-        else{
-        	Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
-        	
-        	TextView filtreCourantTV = (TextView)findViewById(R.id.groupselection_listview_filtre_espece_courant_textView);
-        	currentFilterInfoLayout.setVisibility(View.VISIBLE);
-        	filtreCourantTV.setText(getString(R.string.groupselection_listview_filtre_espece_courant_label)+groupeFiltreCourant.getNomGroupe());
-        	        	
-        }
-        
+
         actionBar.setTitle(R.string.groupselection_listview_title);
-        
-        Log.d(LOG_TAG, "onCreate() - Fin"); 
-		//End of user code
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		//Start of user code onResume additions GroupeSelection_ClassListViewActivity
-		Log.d(LOG_TAG, "onResume() - Début"); 
-		Log.d(LOG_TAG, "onResume() - Fin");  
-		//End of user code
-	}
-	
-	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
-		//Start of user code onItemClick additions GroupeSelection_ClassListViewActivity
-		Log.d(LOG_TAG, "onItemClick() - Début");
-		Log.d(LOG_TAG, "onItemClick() - Groupe : "+position + " - "+ index);
-		
-		GroupeSelection_Adapter groupeSelection_adapter = (GroupeSelection_Adapter)arg0.getAdapter();
-		
-		Groupe clickedGroupe = groupeSelection_adapter.getGroupeFromPosition(position);
-		if(clickedGroupe.getContextDB() == null){
-			//Log.w(this.getClass().getSimpleName(),"workaround clickedGroupe.getContextDB() == null "+clickedGroupe.getId());
-			clickedGroupe.setContextDB(getHelper().getDorisDBHelper());
-		}
-	
-		if(clickedGroupe.getGroupesFils().size() > 0){	
-			for(Groupe g : clickedGroupe.getGroupesFils()){
-				if(g.getContextDB() == null){
-					//Log.w(this.getClass().getSimpleName(),"workaround Groupe.fils.getContextDB() == null "+g.getId());
-					g.setContextDB(getHelper().getDorisDBHelper());
-				}
-			}
-			groupeSelection_adapter.currentRootGroupe = clickedGroupe;
-			groupeSelection_adapter.updateList();
-			groupeSelection_adapter.notifyDataSetChanged();
-			
-		} else {
-			showToast( "Filtre espèces : "+clickedGroupe.getNomGroupe());
-		
-			prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), clickedGroupe.getId()).apply();
 
-	        if (!depuisAccueil) {
-	        	((GroupeSelection_ClassListViewActivity)this).finish();
-	        } else {
-	        	
-	        	DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
-	        	
-	        	if(accueil_liste_ou_arbre_pardefaut.equals("photos")) {
-	        		startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
-	        	} else {
-	        		startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
-	        	}
-        			        	
-	        }
-		}
-	
-		//End of user code		
+        Log.d(LOG_TAG, "onCreate() - Fin");
+        //End of user code
     }
 
-	//Start of user code additional  GroupeSelection_ClassListViewActivity methods
-
-	public void onRemoveCurrentFilterClick(View view){
-    	showToast( R.string.groupselection_filtre_supprime);
-
-    	prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), 1);
-    	prefs.edit().apply();
-		finish();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Start of user code onResume additions GroupeSelection_ClassListViewActivity
+        Log.d(LOG_TAG, "onResume() - Début");
+        Log.d(LOG_TAG, "onResume() - Fin");
+        //End of user code
     }
-	//End of user code
 
-	@Override
+    public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
+        //Start of user code onItemClick additions GroupeSelection_ClassListViewActivity
+        Log.d(LOG_TAG, "onItemClick() - Début");
+        Log.d(LOG_TAG, "onItemClick() - Groupe : " + position + " - " + index);
+
+        GroupeSelection_Adapter groupeSelection_adapter = (GroupeSelection_Adapter) arg0.getAdapter();
+
+        Groupe clickedGroupe = groupeSelection_adapter.getGroupeFromPosition(position);
+        if (clickedGroupe.getContextDB() == null) {
+            //Log.w(this.getClass().getSimpleName(),"workaround clickedGroupe.getContextDB() == null "+clickedGroupe.getId());
+            clickedGroupe.setContextDB(getHelper().getDorisDBHelper());
+        }
+
+        if (clickedGroupe.getGroupesFils().size() > 0) {
+            for (Groupe g : clickedGroupe.getGroupesFils()) {
+                if (g.getContextDB() == null) {
+                    //Log.w(this.getClass().getSimpleName(),"workaround Groupe.fils.getContextDB() == null "+g.getId());
+                    g.setContextDB(getHelper().getDorisDBHelper());
+                }
+            }
+            groupeSelection_adapter.currentRootGroupe = clickedGroupe;
+            groupeSelection_adapter.updateList();
+            groupeSelection_adapter.notifyDataSetChanged();
+
+        } else {
+            showToast("Filtre espèces : " + clickedGroupe.getNomGroupe());
+
+            prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), clickedGroupe.getId()).apply();
+
+            if (!depuisAccueil) {
+                ((GroupeSelection_ClassListViewActivity) this).finish();
+            } else {
+
+                DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
+
+                if (accueil_liste_ou_arbre_pardefaut.equals("photos")) {
+                    startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
+                } else {
+                    startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
+                }
+
+            }
+        }
+
+        //End of user code
+    }
+
+    //Start of user code additional  GroupeSelection_ClassListViewActivity methods
+
+    public void onRemoveCurrentFilterClick(View view) {
+        showToast(R.string.groupselection_filtre_supprime);
+
+        prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), 1);
+        prefs.edit().apply();
+        finish();
+    }
+    //End of user code
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		// add options in the menu
-		MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.groupeselection_classlistview_actions, menu);
-		// add additional programmatic options in the menu
-		//Start of user code additional onCreateOptionsMenu GroupeSelection_ClassListViewActivity
+        // add options in the menu
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.groupeselection_classlistview_actions, menu);
+        // add additional programmatic options in the menu
+        //Start of user code additional onCreateOptionsMenu GroupeSelection_ClassListViewActivity
         Log.d(LOG_TAG, "onCreateOptionsMenu() - Début");
 
-		//End of user code
+        //End of user code
         return super.onCreateOptionsMenu(menu);
     }
-    
-    
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-		// behavior of option menu
+        // behavior of option menu
         switch (item.getItemId()) {
-			case R.id.groupeselection_classlistview_action_preference:
-	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-	            return true;
-			//Start of user code additional menu action GroupeSelection_ClassListViewActivity
+            case R.id.groupeselection_classlistview_action_preference:
+                startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+                return true;
+            //Start of user code additional menu action GroupeSelection_ClassListViewActivity
 
-	        case R.id.groupeselection_classlistview_action_aide:
-	        	AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
-				aide.affichageMessageHTML(context.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
-				return true;  
-	            
+            case R.id.groupeselection_classlistview_action_aide:
+                AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
+                aide.affichageMessageHTML(context.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
+                return true;
+
             //End of user code
-			// Respond to the action bar's Up/Home button
-			case android.R.id.home:
-				// Retour en Arrière et Si arrivée à la Racine retour à l'appli précédente
-				if ( retourGroupeSuperieur() ) {
-					Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
-					
-			        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-			            // This activity is NOT part of this app's task, so create a new task
-			            // when navigating up, with a synthesized back stack.
-			            TaskStackBuilder.create(this)
-			                    // Add all of this activity's parents to the back stack
-			                    .addNextIntentWithParentStack(upIntent)
-			                    // Navigate up to the closest parent
-			                    .startActivities();
-			        } else {
-			            // This activity is part of this app's task, so simply
-			            // navigate up to the logical parent activity.
-			            NavUtils.navigateUpTo(this, upIntent);
-			        }
-				}
-				
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                // Retour en Arrière et Si arrivée à la Racine retour à l'appli précédente
+                if (retourGroupeSuperieur()) {
+                    Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
 
-	            return true;
-			default:
+                    if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                        // This activity is NOT part of this app's task, so create a new task
+                        // when navigating up, with a synthesized back stack.
+                        TaskStackBuilder.create(this)
+                                // Add all of this activity's parents to the back stack
+                                .addNextIntentWithParentStack(upIntent)
+                                // Navigate up to the closest parent
+                                .startActivities();
+                    } else {
+                        // This activity is part of this app's task, so simply
+                        // navigate up to the logical parent activity.
+                        NavUtils.navigateUpTo(this, upIntent);
+                    }
+                }
+
+
+                return true;
+            default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-	//  ------------ dealing with Up button
-	@Override
-	public Intent getSupportParentActivityIntent() {
-		//Start of user code getSupportParentActivityIntent GroupeSelection_ClassListViewActivity
-		// navigates to the parent activity
-		return new Intent(this, Accueil_CustomViewActivity.class);
-		//End of user code
-	}
-	@Override
-	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-		//Start of user code onCreateSupportNavigateUpTaskStack GroupeSelection_ClassListViewActivity
-		super.onCreateSupportNavigateUpTaskStack(builder);
-		//End of user code
-	}
+    //  ------------ dealing with Up button
+    @Override
+    public Intent getSupportParentActivityIntent() {
+        //Start of user code getSupportParentActivityIntent GroupeSelection_ClassListViewActivity
+        // navigates to the parent activity
+        return new Intent(this, Accueil_CustomViewActivity.class);
+        //End of user code
+    }
 
-	// Start of user code protectedGroupeSelection_ClassListViewActivity
+    @Override
+    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+        //Start of user code onCreateSupportNavigateUpTaskStack GroupeSelection_ClassListViewActivity
+        super.onCreateSupportNavigateUpTaskStack(builder);
+        //End of user code
+    }
 
-	public void onClickCurrentGroup(View view){
-		showToast( "Filtre espèces : "+adapter.currentRootGroupe.getNomGroupe());
-		SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
-		ed.putInt(getString(R.string.pref_key_filtre_groupe), adapter.currentRootGroupe.getId());
+    // Start of user code protectedGroupeSelection_ClassListViewActivity
+
+    public void onClickCurrentGroup(View view) {
+        showToast("Filtre espèces : " + adapter.currentRootGroupe.getNomGroupe());
+        SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        ed.putInt(getString(R.string.pref_key_filtre_groupe), adapter.currentRootGroupe.getId());
         ed.apply();
-        
+
         DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
-        
-		if (!depuisAccueil) {
+
+        if (!depuisAccueil) {
             finish();
         } else {
-        	Intent toListeFiche_View = new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class);
-        	toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        	this.getApplicationContext().startActivity(toListeFiche_View);
+            Intent toListeFiche_View = new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class);
+            toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.getApplicationContext().startActivity(toListeFiche_View);
         }
     }
-	
-	
-	/* *********************************************************************
+
+
+    /* *********************************************************************
      * Capture des évènements sur le Clavier Physique de l'appareil
      ********************************************************************** */
-	@Override
-    public boolean onKeyDown(int inKeyCode, KeyEvent inEvent)
-    {
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - Début");     
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - inKeyCode : " + inKeyCode);
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - inEvent : " + inEvent);
-		
-		switch(inKeyCode){
-		case KeyEvent.KEYCODE_BACK :
-			
-			if ( retourGroupeSuperieur() ) ((GroupeSelection_ClassListViewActivity)this).finish();
-			
-			return true; 
-		}
+    @Override
+    public boolean onKeyDown(int inKeyCode, KeyEvent inEvent) {
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - Début");
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - inKeyCode : " + inKeyCode);
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - inEvent : " + inEvent);
 
-		return false;
+        switch (inKeyCode) {
+            case KeyEvent.KEYCODE_BACK:
+
+                if (retourGroupeSuperieur())
+                    ((GroupeSelection_ClassListViewActivity) this).finish();
+
+                return true;
+        }
+
+        return false;
     }
-	
-	
-	public boolean retourGroupeSuperieur() {
-		// Retour true si on est à la racine et donc que l'on doit fermé et false sinon
-		
-		Groupe groupeCourant = adapter.currentRootGroupe;
-		if(groupeCourant.getContextDB() == null){
-			Log.w(this.getClass().getSimpleName(),"workaround clickedGroupe.getContextDB() == null "+groupeCourant.getId());
-			groupeCourant.setContextDB(getHelper().getDorisDBHelper());
-		}
-		
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - groupeCourant.getGroupePere() : " + groupeCourant.getGroupePere());
-		
-		if (groupeCourant.getNomGroupe().equals("racine")) {
-			
-			return true;
-		} else {
-			adapter.currentRootGroupe = groupeCourant.getGroupePere();
-			adapter.updateList();
-			adapter.notifyDataSetChanged();
-			
-			return false;
-		}
-	}
-	
-    
-	// End of user code
 
-	
+
+    public boolean retourGroupeSuperieur() {
+        // Retour true si on est à la racine et donc que l'on doit fermé et false sinon
+
+        Groupe groupeCourant = adapter.currentRootGroupe;
+        if (groupeCourant.getContextDB() == null) {
+            Log.w(this.getClass().getSimpleName(), "workaround clickedGroupe.getContextDB() == null " + groupeCourant.getId());
+            groupeCourant.setContextDB(getHelper().getDorisDBHelper());
+        }
+
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - groupeCourant.getGroupePere() : " + groupeCourant.getGroupePere());
+
+        if (groupeCourant.getNomGroupe().equals("racine")) {
+
+            return true;
+        } else {
+            adapter.currentRootGroupe = groupeCourant.getGroupePere();
+            adapter.updateList();
+            adapter.notifyDataSetChanged();
+
+            return false;
+        }
+    }
+
+
+    // End of user code
+
+
 }

@@ -45,29 +45,31 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
+
 import fr.ffessm.doris.android.BuildConfig;
 
 public class App_Outils {
-	private static final String LOG_TAG = App_Outils.class.getCanonicalName();
-	
-	private Context context;
-	
-	public App_Outils(Context context){
-		this.context = context;
-	}
-	
-	public String getAppVersion() {
-		try	{
-        	PackageManager pm = context.getPackageManager();
-            PackageInfo pi = pm.getPackageInfo( context.getPackageName(), 0);
-            if (BuildConfig.DEBUG) Log.v(LOG_TAG, "getAppVersion() - appVersionName : "+pi.versionName);
+    private static final String LOG_TAG = App_Outils.class.getCanonicalName();
+
+    private Context context;
+
+    public App_Outils(Context context) {
+        this.context = context;
+    }
+
+    public String getAppVersion() {
+        try {
+            PackageManager pm = context.getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
+            if (BuildConfig.DEBUG)
+                Log.v(LOG_TAG, "getAppVersion() - appVersionName : " + pi.versionName);
             return pi.versionName;
-     	} catch(Exception e) {
-    		if (BuildConfig.DEBUG) Log.e(LOG_TAG, "getAppVersion() - erreur : ");
-    		e.printStackTrace();
-    		return "";
-    	}
-	}
-	
-    
+        } catch (Exception e) {
+            if (BuildConfig.DEBUG) Log.e(LOG_TAG, "getAppVersion() - erreur : ");
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+
 }

@@ -48,6 +48,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.util.Log;
+
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
@@ -55,140 +56,144 @@ import fr.ffessm.doris.android.datamodel.Groupe;
 
 public class Groupes_Outils {
 
-	public static final String LOG_TAG = Groupes_Outils.class.getSimpleName();
-	
-	public static List<Groupe> getAllGroupes(DorisDBHelper _contextDB){
-		
-		List<Groupe> groupeList;
-		
-		try {
-			groupeList = _contextDB.groupeDao.queryForAll();
-			for (Groupe groupe : groupeList) {
-	        	groupe.setContextDB(_contextDB);
-			}
-			return groupeList;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-		
-	}
+    public static final String LOG_TAG = Groupes_Outils.class.getSimpleName();
 
-	public static Groupe getGroupeFromId(List<Groupe> allGroupes, int _id){
-		Groupe groupeFromId = null;
-		for(Groupe groupe : allGroupes){
-			if(groupe.getId() == _id){
-				groupeFromId = groupe;
-				break;
-			}
-		}
-		return groupeFromId;
-	}
-	
-	public static Groupe getGroupeRoot(List<Groupe> allGroupes){
-		// trouve le groupe racine
-		Groupe rootGroupe = null;
-		for(Groupe groupe : allGroupes){
-			if(groupe.getNomGroupe().equals("racine")){
-				rootGroupe = groupe;
-				break;
-			}
-		}
-		return rootGroupe;
-	}
-	
-	public static ArrayList<Groupe> getAllGroupesEnfantsJusquAuNiveau(List<Groupe> allGroupes, ArrayList<Groupe> groupesListeIn, int niveauFeuilles){
-		if(BuildConfig.DEBUG) Log.d(LOG_TAG, "getAllGroupesEnfantsJusquAuNiveau - groupesListeIn.size() : "+groupesListeIn.size());
-		if(BuildConfig.DEBUG) Log.d(LOG_TAG, "getAllGroupesEnfantsJusquAuNiveau - niveauFeuilles : "+niveauFeuilles);
+    public static List<Groupe> getAllGroupes(DorisDBHelper _contextDB) {
 
-		ArrayList<Groupe> groupesListeOut = new ArrayList<Groupe>();
+        List<Groupe> groupeList;
 
-		// Trouve le groupe racine si aucun groupe passé
-		if (groupesListeIn.size() == 0) {
-			for (Groupe groupe : allGroupes) {
-				if (groupe.getNomGroupe().equals("racine")) {
-					groupesListeIn.add( groupe );
-					break;
-				}
-			}
-		}
+        try {
+            groupeList = _contextDB.groupeDao.queryForAll();
+            for (Groupe groupe : groupeList) {
+                groupe.setContextDB(_contextDB);
+            }
+            return groupeList;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
 
-		// Recherche Groupes Enfants
-		for (Groupe groupeIn : groupesListeIn) {
-			if(BuildConfig.DEBUG) Log.d(LOG_TAG, "getAllGroupesEnfantsJusquAuNiveau - groupeIn : "+groupeIn.getNomGroupe());
+    }
 
-			Collection<Groupe> groupesFils= groupeIn.getGroupesFils();
+    public static Groupe getGroupeFromId(List<Groupe> allGroupes, int _id) {
+        Groupe groupeFromId = null;
+        for (Groupe groupe : allGroupes) {
+            if (groupe.getId() == _id) {
+                groupeFromId = groupe;
+                break;
+            }
+        }
+        return groupeFromId;
+    }
 
-			// Si pas de fils alors on garde le père
-			if (!groupesFils.isEmpty()) {
-				groupesListeOut.addAll(groupesFils);
-			} else {
-				groupesListeOut.add(groupeIn);
-			}
-		}
+    public static Groupe getGroupeRoot(List<Groupe> allGroupes) {
+        // trouve le groupe racine
+        Groupe rootGroupe = null;
+        for (Groupe groupe : allGroupes) {
+            if (groupe.getNomGroupe().equals("racine")) {
+                rootGroupe = groupe;
+                break;
+            }
+        }
+        return rootGroupe;
+    }
 
-		//Tant que pas atteint le niveau demandé on continue pas récurrence
-		if (niveauFeuilles != 1) {
-			return getAllGroupesEnfantsJusquAuNiveau(allGroupes, groupesListeOut, niveauFeuilles - 1);
-		}
+    public static ArrayList<Groupe> getAllGroupesEnfantsJusquAuNiveau(List<Groupe> allGroupes, ArrayList<Groupe> groupesListeIn, int niveauFeuilles) {
+        if (BuildConfig.DEBUG)
+            Log.d(LOG_TAG, "getAllGroupesEnfantsJusquAuNiveau - groupesListeIn.size() : " + groupesListeIn.size());
+        if (BuildConfig.DEBUG)
+            Log.d(LOG_TAG, "getAllGroupesEnfantsJusquAuNiveau - niveauFeuilles : " + niveauFeuilles);
 
-		return groupesListeOut;
-	}
-	
-	public static ArrayList<Groupe> getAllGroupesForNextLevel(ArrayList<Groupe> currentLevelGroupes){
-		ArrayList<Groupe> nextLevelGroups = new ArrayList<Groupe>();
-		for (Groupe groupe : currentLevelGroupes) {
-			nextLevelGroups.addAll(groupe.getGroupesFils());
-		}
-		return nextLevelGroups;
-	}
-	
-	public static List<Groupe> getAllGroupesForNextLevel(List<Groupe> rawGroupes, Groupe rootGroupe) {
-		ArrayList<Groupe> nextLevelGroups = new ArrayList<Groupe>();
-		nextLevelGroups.addAll(rootGroupe.getGroupesFils());
-		return nextLevelGroups;
-	}
-	
-	public static boolean isFichePartOfGroupe(Fiche fiche, Groupe searchedGroupe){
-		boolean result = false;
-		Groupe groupeFiche = fiche.getGroupe();
-		if(groupeFiche == null){
-			Log.w(LOG_TAG, "PB pas de groupe pour la fiche isFichePartOfGroupe("+fiche.getNomCommunNeverEmpty()+" "+fiche.getId()+", "+searchedGroupe.getNomGroupe()+")");
-			return true;
-		}
-		groupeFiche.setContextDB(fiche.getContextDB());
-		if(groupeFiche.getId() == searchedGroupe.getId()) result= true;
-		else result= isGroupePartOfGroupe(groupeFiche, searchedGroupe);
-		if(BuildConfig.DEBUG) Log.d(LOG_TAG, "isFichePartOfGroupe("+fiche.getNomCommunNeverEmpty()+", "+searchedGroupe.getNomGroupe()+") ="+result);
-		return result;
-	}
-	
-	public static boolean isGroupePartOfGroupe(Groupe groupe, Groupe searchedGroupe){
-		Groupe groupeParent = groupe.getGroupePere();
-		if(groupeParent == null) return false;
-		groupeParent.setContextDB(groupe.getContextDB());
-		if(groupeParent.getId() == searchedGroupe.getId()) return true;
-		else return isGroupePartOfGroupe(groupeParent, searchedGroupe);
-	}
-	
-	public static ArrayList<Groupe> getAllSubGroupesForGroupe( Groupe groupe){
-		
-		ArrayList<Groupe> subGroupes = new ArrayList<Groupe>();
-		subGroupes.add(groupe);
-		Collection<Groupe> directSubGroupes = groupe.getGroupesFils();
-		for (Groupe subgroupe : directSubGroupes) {
-			subgroupe.setContextDB(groupe.getContextDB());
-			subGroupes.addAll(getAllSubGroupesForGroupe(subgroupe));
-		}
-		return subGroupes;
-	}
-	
-	public static int getTailleGroupeFiltre(Context context, DorisDBHelper contextDB, int filteredZoneGeoId, int filteredGroupeId){
-		
-		Fiches_Outils fichesOutils = new Fiches_Outils(context);
-		
-		return fichesOutils.getListeIdFichesFiltrees(context, contextDB, filteredZoneGeoId, filteredGroupeId).size();
-	}
-	
+        ArrayList<Groupe> groupesListeOut = new ArrayList<Groupe>();
+
+        // Trouve le groupe racine si aucun groupe passé
+        if (groupesListeIn.size() == 0) {
+            for (Groupe groupe : allGroupes) {
+                if (groupe.getNomGroupe().equals("racine")) {
+                    groupesListeIn.add(groupe);
+                    break;
+                }
+            }
+        }
+
+        // Recherche Groupes Enfants
+        for (Groupe groupeIn : groupesListeIn) {
+            if (BuildConfig.DEBUG)
+                Log.d(LOG_TAG, "getAllGroupesEnfantsJusquAuNiveau - groupeIn : " + groupeIn.getNomGroupe());
+
+            Collection<Groupe> groupesFils = groupeIn.getGroupesFils();
+
+            // Si pas de fils alors on garde le père
+            if (!groupesFils.isEmpty()) {
+                groupesListeOut.addAll(groupesFils);
+            } else {
+                groupesListeOut.add(groupeIn);
+            }
+        }
+
+        //Tant que pas atteint le niveau demandé on continue pas récurrence
+        if (niveauFeuilles != 1) {
+            return getAllGroupesEnfantsJusquAuNiveau(allGroupes, groupesListeOut, niveauFeuilles - 1);
+        }
+
+        return groupesListeOut;
+    }
+
+    public static ArrayList<Groupe> getAllGroupesForNextLevel(ArrayList<Groupe> currentLevelGroupes) {
+        ArrayList<Groupe> nextLevelGroups = new ArrayList<Groupe>();
+        for (Groupe groupe : currentLevelGroupes) {
+            nextLevelGroups.addAll(groupe.getGroupesFils());
+        }
+        return nextLevelGroups;
+    }
+
+    public static List<Groupe> getAllGroupesForNextLevel(List<Groupe> rawGroupes, Groupe rootGroupe) {
+        ArrayList<Groupe> nextLevelGroups = new ArrayList<Groupe>();
+        nextLevelGroups.addAll(rootGroupe.getGroupesFils());
+        return nextLevelGroups;
+    }
+
+    public static boolean isFichePartOfGroupe(Fiche fiche, Groupe searchedGroupe) {
+        boolean result = false;
+        Groupe groupeFiche = fiche.getGroupe();
+        if (groupeFiche == null) {
+            Log.w(LOG_TAG, "PB pas de groupe pour la fiche isFichePartOfGroupe(" + fiche.getNomCommunNeverEmpty() + " " + fiche.getId() + ", " + searchedGroupe.getNomGroupe() + ")");
+            return true;
+        }
+        groupeFiche.setContextDB(fiche.getContextDB());
+        if (groupeFiche.getId() == searchedGroupe.getId()) result = true;
+        else result = isGroupePartOfGroupe(groupeFiche, searchedGroupe);
+        if (BuildConfig.DEBUG)
+            Log.d(LOG_TAG, "isFichePartOfGroupe(" + fiche.getNomCommunNeverEmpty() + ", " + searchedGroupe.getNomGroupe() + ") =" + result);
+        return result;
+    }
+
+    public static boolean isGroupePartOfGroupe(Groupe groupe, Groupe searchedGroupe) {
+        Groupe groupeParent = groupe.getGroupePere();
+        if (groupeParent == null) return false;
+        groupeParent.setContextDB(groupe.getContextDB());
+        if (groupeParent.getId() == searchedGroupe.getId()) return true;
+        else return isGroupePartOfGroupe(groupeParent, searchedGroupe);
+    }
+
+    public static ArrayList<Groupe> getAllSubGroupesForGroupe(Groupe groupe) {
+
+        ArrayList<Groupe> subGroupes = new ArrayList<Groupe>();
+        subGroupes.add(groupe);
+        Collection<Groupe> directSubGroupes = groupe.getGroupesFils();
+        for (Groupe subgroupe : directSubGroupes) {
+            subgroupe.setContextDB(groupe.getContextDB());
+            subGroupes.addAll(getAllSubGroupesForGroupe(subgroupe));
+        }
+        return subGroupes;
+    }
+
+    public static int getTailleGroupeFiltre(Context context, DorisDBHelper contextDB, int filteredZoneGeoId, int filteredGroupeId) {
+
+        Fiches_Outils fichesOutils = new Fiches_Outils(context);
+
+        return fichesOutils.getListeIdFichesFiltrees(context, contextDB, filteredZoneGeoId, filteredGroupeId).size();
+    }
+
 }

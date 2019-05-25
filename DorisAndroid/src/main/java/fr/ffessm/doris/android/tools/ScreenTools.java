@@ -48,45 +48,46 @@ import android.view.WindowManager;
 
 public class ScreenTools {
 
-	/*
-	 * getting screen width
-	 */
-	public static int getScreenWidth(Context context) {
-		int columnWidth;
-		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-		Display display = wm.getDefaultDisplay();
+    /*
+     * getting screen width
+     */
+    public static int getScreenWidth(Context context) {
+        int columnWidth;
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
 
-		final Point point = new Point();
-		try {
-			display.getSize(point);
-		} catch (java.lang.NoSuchMethodError ignore) { // Older device
-			point.x = display.getWidth();
-			point.y = display.getHeight();
-		}
-		columnWidth = point.x;
-		return columnWidth;
-	}
-	/*
-	 * getting screen width
-	 */
-	public static int getScreenHeight(Context context) {
-		int columnHeight;
-		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-		Display display = wm.getDefaultDisplay();
+        final Point point = new Point();
+        try {
+            display.getSize(point);
+        } catch (java.lang.NoSuchMethodError ignore) { // Older device
+            point.x = display.getWidth();
+            point.y = display.getHeight();
+        }
+        columnWidth = point.x;
+        return columnWidth;
+    }
 
-		final Point point = new Point();
-		try {
-			display.getSize(point);
-		} catch (java.lang.NoSuchMethodError ignore) { // Older device
-			point.x = display.getWidth();
-			point.y = display.getHeight();
-		}
-		columnHeight = point.y;
-		return columnHeight;
-	}
+    /*
+     * getting screen width
+     */
+    public static int getScreenHeight(Context context) {
+        int columnHeight;
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+
+        final Point point = new Point();
+        try {
+            display.getSize(point);
+        } catch (java.lang.NoSuchMethodError ignore) { // Older device
+            point.x = display.getWidth();
+            point.y = display.getHeight();
+        }
+        columnHeight = point.y;
+        return columnHeight;
+    }
 
     public static int dp2px(Context context, int dpDim) {
-        return (int)((dpDim * context.getResources().getDisplayMetrics().density) + 0.5);
+        return (int) ((dpDim * context.getResources().getDisplayMetrics().density) + 0.5);
     }
 
 }

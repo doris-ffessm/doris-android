@@ -57,6 +57,7 @@ import android.preference.Preference;
 import android.preference.PreferenceScreen;
 import android.widget.Toast;
 import android.util.Log;
+
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
@@ -71,137 +72,139 @@ import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 
 //End of user code
 
-public class Preference_PreferenceViewActivity  extends android.preference.PreferenceActivity {
+public class Preference_PreferenceViewActivity extends android.preference.PreferenceActivity {
 
-	
-	//Start of user code Preference preference activity additional attributes
-	private static final String LOG_TAG = App_Outils.class.getCanonicalName();
-	final Context context = this;
-	
-	private Param_Outils paramOutils;
-	private Photos_Outils photosOutils;
-	private Disque_Outils disqueOutils;
-    
-	long volumeTotalNecessaire = 0;
-	//End of user code
 
-	/** Called when the activity is first created. */
+    //Start of user code Preference preference activity additional attributes
+    private static final String LOG_TAG = App_Outils.class.getCanonicalName();
+    final Context context = this;
+
+    private Param_Outils paramOutils;
+    private Photos_Outils photosOutils;
+    private Disque_Outils disqueOutils;
+
+    long volumeTotalNecessaire = 0;
+    //End of user code
+
+    /**
+     * Called when the activity is first created.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preference); 
-		//Start of user code Preference preference activity additional onCreate
-        
+        addPreferencesFromResource(R.xml.preference);
+        //Start of user code Preference preference activity additional onCreate
+
         // Si téléchargements en tâche de fond, il est arrêté
-        TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;		    	
-    	if(telechargePhotosFiches_BgActivity != null && telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING) {
-    		Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
-    		DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
-    	}
-    	
-    	VerifieMAJFiches_BgActivity verifieMAJFiches_BgAct = DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity;
-    	if(verifieMAJFiches_BgAct != null && verifieMAJFiches_BgAct.getStatus() == Status.RUNNING){ 
-    		Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
-    		DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity.cancel(true);
-    	}
-    	
-    	VerifieMAJFiche_BgActivity verifieMAJFiche_BgAct = DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity;
-    	if(verifieMAJFiche_BgAct != null && verifieMAJFiche_BgAct.getStatus() == Status.RUNNING){ 		
-    		Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
-    		DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity.cancel(true);
-    	}
-    	
+        TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;
+        if (telechargePhotosFiches_BgActivity != null && telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING) {
+            Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
+            DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
+        }
+
+        VerifieMAJFiches_BgActivity verifieMAJFiches_BgAct = DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity;
+        if (verifieMAJFiches_BgAct != null && verifieMAJFiches_BgAct.getStatus() == Status.RUNNING) {
+            Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
+            DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity.cancel(true);
+        }
+
+        VerifieMAJFiche_BgActivity verifieMAJFiche_BgAct = DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity;
+        if (verifieMAJFiche_BgAct != null && verifieMAJFiche_BgAct.getStatus() == Status.RUNNING) {
+            Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
+            DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity.cancel(true);
+        }
+
         /* Permet d'afficher directement une sous-partie des préférences
-        *  Utile depuis Aide ou EtatHorsLigne, etc.
-        */
+         *  Utile depuis Aide ou EtatHorsLigne, etc.
+         */
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-	        String typeParam = bundle.getString("type_parametre");
-	        String param = bundle.getString("parametre");
-	        
-	        if (typeParam != null) {
-	        	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - typeParam : "+typeParam);
-	        	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - param : "+param);
-	        	PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(typeParam);
-        		if (param != null) {
-		        	int pos = findPreference(param).getOrder();
-		        	//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - pos "+param+" : "+pos);
-		        	preferenceScreen.onItemClick( null, null, pos, 0 ); 
-        		}
-	        }
+            String typeParam = bundle.getString("type_parametre");
+            String param = bundle.getString("parametre");
+
+            if (typeParam != null) {
+                //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - typeParam : "+typeParam);
+                //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - param : "+param);
+                PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(typeParam);
+                if (param != null) {
+                    int pos = findPreference(param).getOrder();
+                    //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onCreate() - pos "+param+" : "+pos);
+                    preferenceScreen.onItemClick(null, null, pos, 0);
+                }
+            }
         }
 
         // Affichage Estimation des Volumes pris par Choix des qualités de photos
         getPhotosOutils().initNbPhotosParFiche();
 
         setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_france,
-        		ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE);
+                ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE);
         setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_eaudouce,
-        		ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE);
+                ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE);
         setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_indopac,
-        		ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE);
-		setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_antarctique,
-				ZoneGeographiqueKind.FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES);
+                ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE);
+        setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_antarctique,
+                ZoneGeographiqueKind.FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES);
         setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_caraibes,
-        		ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES);
+                ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES);
         setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_atlantno,
-        		ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST);
-        
-        final Preference btnQualiteImagesZonesKey = (Preference)getPreferenceManager().findPreference("button_qualite_images_zones_key");
+                ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST);
+
+        final Preference btnQualiteImagesZonesKey = (Preference) getPreferenceManager().findPreference("button_qualite_images_zones_key");
         btnQualiteImagesZonesKey.setSummary(
-    		context.getString(R.string.mode_precharg_photo_region_summary)+getDisqueOutils().getHumanDiskUsage(volumeTotalNecessaire)
-    		);
-        
-        final Preference btnAutresImagesKey = (Preference)getPreferenceManager().findPreference(
-        		context.getString(R.string.pref_key_mode_precharg_photo_autres));
+                context.getString(R.string.mode_precharg_photo_region_summary) + getDisqueOutils().getHumanDiskUsage(volumeTotalNecessaire)
+        );
+
+        final Preference btnAutresImagesKey = (Preference) getPreferenceManager().findPreference(
+                context.getString(R.string.pref_key_mode_precharg_photo_autres));
         btnAutresImagesKey.setSummary(
-    		context.getString(R.string.mode_precharg_photo_autres_summary)
-    			.replace("@size", getDisqueOutils().getHumanDiskUsage(getPhotosOutils().getEstimVolPhotosAutres()) )
-    		);
+                context.getString(R.string.mode_precharg_photo_autres_summary)
+                        .replace("@size", getDisqueOutils().getHumanDiskUsage(getPhotosOutils().getEstimVolPhotosAutres()))
+        );
 
         // link to EtatModeHorsLigne and compute summary
-		Preference button = findPreference(getString(R.string.pref_key_precharg_status));
-		ZoneGeographique zoneToutesZones = new ZoneGeographique();
-		zoneToutesZones.setId(-1);
-		zoneToutesZones.setNom(this.getString(R.string.avancement_touteszones_titre));
+        Preference button = findPreference(getString(R.string.pref_key_precharg_status));
+        ZoneGeographique zoneToutesZones = new ZoneGeographique();
+        zoneToutesZones.setId(-1);
+        zoneToutesZones.setNom(this.getString(R.string.avancement_touteszones_titre));
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(getPhotosOutils().getCurrentPhotosDiskUsageShortSummary(this));
-		sb.append("; ");
+        StringBuilder sb = new StringBuilder();
+        sb.append(getPhotosOutils().getCurrentPhotosDiskUsageShortSummary(this));
+        sb.append("; ");
 
-		button.setSummary(EtatModeHorsLigne_CustomViewActivity.updateProgressBarZone(this,zoneToutesZones, null, sb.toString()));
-		button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-			@Override
-			public boolean onPreferenceClick(Preference preference) {
-				startActivity(new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
-				return true;
-			}
-		});
+        button.setSummary(EtatModeHorsLigne_CustomViewActivity.updateProgressBarZone(this, zoneToutesZones, null, sb.toString()));
+        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                startActivity(new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
+                return true;
+            }
+        });
 
-		//End of user code
+        //End of user code
     }
 
     @Override
-	protected void onResume() {
-		super.onResume(); 
-		//Start of user code Preference preference activity additional onResume
-		//End of user code
+    protected void onResume() {
+        super.onResume();
+        //Start of user code Preference preference activity additional onResume
+        //End of user code
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		//Start of user code preference specific menu definition
+        //Start of user code preference specific menu definition
         // menu.add(Menu.NONE, 0, 0, "Back to main menu");
-    	
-   
-		//End of user code
+
+
+        //End of user code
         return super.onCreateOptionsMenu(menu);
     }
- 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-		//Start of user code preference specific menu action
+        //Start of user code preference specific menu action
     	
     	/*
     	String message = ""+item.getItemId()+" - "+item.getGroupId()+" - "+item.toString();
@@ -214,53 +217,54 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
                 startActivity(new Intent(this, AndroidDiveManagerMainActivity.class));
                 return true;
         } */
-		//End of user code
+        //End of user code
         return false;
     }
 
-	
-	//Start of user code Preference preference activity additional operations
+
+    //Start of user code Preference preference activity additional operations
 
     private void setLibelleModePrechargPhotoZone(int refPreference, ZoneGeographiqueKind zoneGeoKind) {
-    	CharSequence summary = "";
-    	
-	    ListPreference lp = (ListPreference)findPreference(context.getString(refPreference) );
-		
-	    CharSequence[] entries = lp.getEntries();
-	    CharSequence[] entryValues = lp.getEntryValues();
-	    
-	    for (int i = 0; i < entries.length; i++) {
-	    	long volumeNecessaire = getPhotosOutils().getEstimVolPhotosParZone(
-					Photos_Outils.PrecharMode.valueOf(entryValues[i].toString()),
-					zoneGeoKind
-					); 
-	    	entries[i] = entries[i].toString().replace("@size", getDisqueOutils().getHumanDiskUsage(volumeNecessaire) );
-	    	
-	    	if ( entryValues[i].toString().equals(lp.getValue()) ) {
-	    		summary = entries[i];
-	    		volumeTotalNecessaire += volumeNecessaire;
-	    	}
-	    	
-	    }
-	    
-	    lp.setEntries(entries);
-	    lp.setEntryValues(entryValues);
-	    lp.setSummary(summary);
+        CharSequence summary = "";
+
+        ListPreference lp = (ListPreference) findPreference(context.getString(refPreference));
+
+        CharSequence[] entries = lp.getEntries();
+        CharSequence[] entryValues = lp.getEntryValues();
+
+        for (int i = 0; i < entries.length; i++) {
+            long volumeNecessaire = getPhotosOutils().getEstimVolPhotosParZone(
+                    Photos_Outils.PrecharMode.valueOf(entryValues[i].toString()),
+                    zoneGeoKind
+            );
+            entries[i] = entries[i].toString().replace("@size", getDisqueOutils().getHumanDiskUsage(volumeNecessaire));
+
+            if (entryValues[i].toString().equals(lp.getValue())) {
+                summary = entries[i];
+                volumeTotalNecessaire += volumeNecessaire;
+            }
+
+        }
+
+        lp.setEntries(entries);
+        lp.setEntryValues(entryValues);
+        lp.setSummary(summary);
     }
 
-    private Photos_Outils getPhotosOutils(){ 
-    	if(photosOutils == null) photosOutils = new Photos_Outils(context);
-    	return photosOutils;
+    private Photos_Outils getPhotosOutils() {
+        if (photosOutils == null) photosOutils = new Photos_Outils(context);
+        return photosOutils;
     }
-    
-	private Param_Outils getParamOutils(){ 
-		if(paramOutils == null) paramOutils = new Param_Outils(context);
-    	return paramOutils;
-	}
-	private Disque_Outils getDisqueOutils() { 
-		if(disqueOutils == null) disqueOutils = new Disque_Outils(context);
-    	return disqueOutils;
-	}
-    
-	//End of user code
+
+    private Param_Outils getParamOutils() {
+        if (paramOutils == null) paramOutils = new Param_Outils(context);
+        return paramOutils;
+    }
+
+    private Disque_Outils getDisqueOutils() {
+        if (disqueOutils == null) disqueOutils = new Disque_Outils(context);
+        return disqueOutils;
+    }
+
+    //End of user code
 }

@@ -80,19 +80,21 @@ import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 
 public class Jeux_CustomViewActivity extends FragmentActivity
         implements JeuxReponses_ClassListViewFragment.JeuSelectionneListener,
-                    JeuxReponses_ClassListViewFragment.ZoneGeographiqueSelectionneeListener,
-                    JeuxReponses_ClassListViewFragment.NiveauSelectionneListener,
-                    JeuxReponses_ClassListViewFragment.ReponseSelectionneeListener,
-                    JeuxQuestion_CustomViewFragment.BoutonSuivantListener {
+        JeuxReponses_ClassListViewFragment.ZoneGeographiqueSelectionneeListener,
+        JeuxReponses_ClassListViewFragment.NiveauSelectionneListener,
+        JeuxReponses_ClassListViewFragment.ReponseSelectionneeListener,
+        JeuxQuestion_CustomViewFragment.BoutonSuivantListener {
 
-	private static final String LOG_TAG = Jeux_CustomViewActivity.class.getCanonicalName();
+    private static final String LOG_TAG = Jeux_CustomViewActivity.class.getCanonicalName();
 
     private JeuxQuestion_CustomViewFragment questionFrag;
     private JeuxReponses_ClassListViewFragment reponsesFrag;
 
     Param_Outils paramOutils;
 
-	/** Called when the activity is first created. */
+    /**
+     * Called when the activity is first created.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreate() - Début");
@@ -123,27 +125,27 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(this);
 
         List<Groupe> allGroupes = Groupes_Outils.getAllGroupes(ormLiteDBHelper.getDorisDBHelper());
-        Log.d(LOG_TAG, "onCreate() - allGroupessize() : "+allGroupes.size());
+        Log.d(LOG_TAG, "onCreate() - allGroupessize() : " + allGroupes.size());
 
         List<Groupe> groupesListe = Groupes_Outils.getAllGroupesEnfantsJusquAuNiveau(allGroupes, new ArrayList<Groupe>(), 3);
-        Log.d(LOG_TAG, "onCreate() - groupesListe() : "+groupesListe.size());
+        Log.d(LOG_TAG, "onCreate() - groupesListe() : " + groupesListe.size());
 
-        Groupe groupeJeu1 = groupesListe.get( (int) (Math.random() * (groupesListe.size() - 1) ) );
-        Log.d(LOG_TAG, "onCreate() - groupe 1 au hasard() : "+groupeJeu1.getNomGroupe());
-        Groupe groupeJeu2 = groupesListe.get( (int) (Math.random() * (groupesListe.size() - 1) ) );
-        Log.d(LOG_TAG, "onCreate() - groupe 2 au hasard() : "+groupeJeu2.getNomGroupe());
+        Groupe groupeJeu1 = groupesListe.get((int) (Math.random() * (groupesListe.size() - 1)));
+        Log.d(LOG_TAG, "onCreate() - groupe 1 au hasard() : " + groupeJeu1.getNomGroupe());
+        Groupe groupeJeu2 = groupesListe.get((int) (Math.random() * (groupesListe.size() - 1)));
+        Log.d(LOG_TAG, "onCreate() - groupe 2 au hasard() : " + groupeJeu2.getNomGroupe());
 
         Fiches_Outils fichesOutils = new Fiches_Outils(this);
         List<Integer> fichesListeId1 = fichesOutils.getListeIdFichesFiltrees(this, ormLiteDBHelper.getDorisDBHelper(), -1, groupeJeu1.getId());
-        Log.d(LOG_TAG, "onCreate() - fiche du groupe 1 au hasard() : "+fichesListeId1.size()
-                            + " - "
-                            + fichesOutils.getFicheForId(fichesListeId1.get( (int) (Math.random() * (fichesListeId1.size() - 1) ) )).getNomCommun()
-            );
+        Log.d(LOG_TAG, "onCreate() - fiche du groupe 1 au hasard() : " + fichesListeId1.size()
+                + " - "
+                + fichesOutils.getFicheForId(fichesListeId1.get((int) (Math.random() * (fichesListeId1.size() - 1)))).getNomCommun()
+        );
         List<Integer> fichesListeId2 = fichesOutils.getListeIdFichesFiltrees(this, ormLiteDBHelper.getDorisDBHelper(), -1, groupeJeu2.getId());
-        Log.d(LOG_TAG, "onCreate() - fiche du groupe 2 au hasard() : "+fichesListeId2.size()
-                            + " - "
-                            + fichesOutils.getFicheForId(fichesListeId2.get( (int) (Math.random() * (fichesListeId2.size() - 1) ) )).getNomCommun()
-            );
+        Log.d(LOG_TAG, "onCreate() - fiche du groupe 2 au hasard() : " + fichesListeId2.size()
+                + " - "
+                + fichesOutils.getFicheForId(fichesListeId2.get((int) (Math.random() * (fichesListeId2.size() - 1)))).getNomCommun()
+        );
 
         Log.d(LOG_TAG, "onCreate() - TEST TEST TEST TEST TEST TEST TEST TEST TEST");
 
@@ -181,7 +183,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         Log.d(LOG_TAG, "onDestroy() - Début");
         super.onDestroy();
         Log.d(LOG_TAG, "onDestroy() - Fin");
@@ -192,7 +194,6 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         Log.d(LOG_TAG, "onCreateOptionsMenu() - Début");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.jeux_elementview_actions, menu);
-
 
 
         Log.d(LOG_TAG, "onCreateOptionsMenu() - Fin");
@@ -211,7 +212,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
 
                 if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.ACCUEIL) {
 
-                    ((Jeux_CustomViewActivity)this).finish();
+                    ((Jeux_CustomViewActivity) this).finish();
                     return true;
                 }
 
@@ -244,18 +245,17 @@ public class Jeux_CustomViewActivity extends FragmentActivity
     }
 
     @Override
-    public boolean onKeyDown(int inKeyCode, KeyEvent inEvent)
-    {
+    public boolean onKeyDown(int inKeyCode, KeyEvent inEvent) {
         Log.d(LOG_TAG, "onKeyDown() - Début");
         Log.d(LOG_TAG, "onKeyDown() - inEvent : " + inEvent);
 
-        switch(inKeyCode){
-            case KeyEvent.KEYCODE_BACK :
+        switch (inKeyCode) {
+            case KeyEvent.KEYCODE_BACK:
                 Log.d(LOG_TAG, "onKeyDown() - jeuStatut : " + DorisApplicationContext.getInstance().jeuStatut.name());
 
                 if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.ACCUEIL) {
 
-                    ((Jeux_CustomViewActivity)this).finish();
+                    ((Jeux_CustomViewActivity) this).finish();
                     return true;
                 }
 
@@ -290,7 +290,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
     public void onJeuSelectionne(Jeu.JeuRef jeuSelectionne) {
         Log.d(LOG_TAG, "onJeuSelectionne() - Début");
 
-        Toast.makeText(this, "Jeu : "+jeuSelectionne.name(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Jeu : " + jeuSelectionne.name(), Toast.LENGTH_LONG).show();
 
         DorisApplicationContext.getInstance().jeuSelectionne = jeuSelectionne;
 
@@ -320,7 +320,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
     public void onZoneGeographiqueSelectionnee(ZoneGeographique zone) {
         Log.d(LOG_TAG, "onZoneGeographiqueSelectionnee() - Début");
 
-        Toast.makeText(this, "Zone : "+zone.getNom(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Zone : " + zone.getNom(), Toast.LENGTH_LONG).show();
 
         DorisApplicationContext.getInstance().jeuZoneGeographiqueSelectionnee = zone;
 
@@ -352,7 +352,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
     public void onNiveauSelectionne(Jeu.JeuRef jeuSelectionne, Jeu.Niveau niveau, boolean onResume) {
         Log.d(LOG_TAG, "onNiveauSelectionne() - Début");
 
-        Toast.makeText(this, "Niveau : "+niveau.name(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Niveau : " + niveau.name(), Toast.LENGTH_LONG).show();
 
         DorisApplicationContext.getInstance().jeuNiveauSelectionne = niveau;
 
@@ -383,7 +383,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         ClassificationFiche QstClassificationFicheAleatoire = null;
         Classification QstClassificationAleatoire = null;
 
-        if (onResume == false ) {
+        if (onResume == false) {
 
             DorisApplicationContext.getInstance().reponseOK = false;
 
@@ -409,7 +409,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
             PhotoFiche photoFiche = QstFicheAleatoire.getPhotosFiche().iterator().next();
             Log.d(LOG_TAG, "onNiveauSelectionne() - fiche.getNomCommun : " + photoFiche.getCleURL());
 
-            questionFrag.setTvTitreIconeLabel(jeux_niveau[niveau.ordinal()].substring(0,1));
+            questionFrag.setTvTitreIconeLabel(jeux_niveau[niveau.ordinal()].substring(0, 1));
 
             if (jeuSelectionne == Jeu.JeuRef.JEU_CLADE) {
                 questionFrag.createListeReponsesJeuCLADEViews(niveau, QstFicheAleatoire, QstClassificationAleatoire);
@@ -420,12 +420,12 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         if (reponsesFrag != null) {
             if (jeuSelectionne == Jeu.JeuRef.JEU_CLADE)
                 reponsesFrag.createListeReponsesJeuCLADEViews(
-                                                    DorisApplicationContext.getInstance().jeuZoneGeographiqueSelectionnee,
-                                                    DorisApplicationContext.getInstance().jeuNiveauSelectionne,
-                                                    QstFicheAleatoire,
-                                                    QstClassificationFicheAleatoire,
-                                                    QstClassificationAleatoire,
-                                                    onResume);
+                        DorisApplicationContext.getInstance().jeuZoneGeographiqueSelectionnee,
+                        DorisApplicationContext.getInstance().jeuNiveauSelectionne,
+                        QstFicheAleatoire,
+                        QstClassificationFicheAleatoire,
+                        QstClassificationAleatoire,
+                        onResume);
         }
 
         DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.JEU;
@@ -434,17 +434,17 @@ public class Jeux_CustomViewActivity extends FragmentActivity
 
     public void onReponseSelectionnee(Fiche ficheQuestion, int idReponse, ImageView ivIcone) {
         Log.d(LOG_TAG, "onReponseSelectionnee() - Début");
-        Log.d(LOG_TAG, "onReponseSelectionnee() - ficheQuestion : "+ficheQuestion.getNomCommun());
+        Log.d(LOG_TAG, "onReponseSelectionnee() - ficheQuestion : " + ficheQuestion.getNomCommun());
         Log.d(LOG_TAG, "onReponseSelectionnee() - idReponse : " + idReponse);
 
         OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(this);
         ClassificationFiche classificationFiche = null;
-        try{
-            QueryBuilder<ClassificationFiche, Integer> qbClassificationFiche =  ormLiteDBHelper.getClassificationFicheDao().queryBuilder();
+        try {
+            QueryBuilder<ClassificationFiche, Integer> qbClassificationFiche = ormLiteDBHelper.getClassificationFicheDao().queryBuilder();
             qbClassificationFiche.where().eq("fiche_id", ficheQuestion.getId())
-                                    .and().eq("classification_id", idReponse);
+                    .and().eq("classification_id", idReponse);
 
-            Log.d(LOG_TAG, "createListeReponsesViews() - sql : "+qbClassificationFiche.prepareStatementString());
+            Log.d(LOG_TAG, "createListeReponsesViews() - sql : " + qbClassificationFiche.prepareStatementString());
 
             classificationFiche = ormLiteDBHelper.getClassificationFicheDao().queryForFirst(qbClassificationFiche.prepare());
         } catch (SQLException error) {
@@ -483,7 +483,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         Classification QstClassificationAleatoire = null;
 
         PhotoFiche photoFiche = QstFicheAleatoire.getPhotosFiche().iterator().next();
-        Log.d(LOG_TAG, "onBoutonSuivant() - fiche.getNomCommun : "+photoFiche.getCleURL());
+        Log.d(LOG_TAG, "onBoutonSuivant() - fiche.getNomCommun : " + photoFiche.getCleURL());
 
         if (DorisApplicationContext.getInstance().jeuSelectionne == Jeu.JeuRef.JEU_CLADE) {
             QstClassificationFicheAleatoire = classificationFicheAleatoire(ormLiteDBHelper, QstFicheAleatoire);
@@ -500,19 +500,19 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         if (reponsesFrag != null) {
             if (DorisApplicationContext.getInstance().jeuSelectionne == Jeu.JeuRef.JEU_CLADE)
                 reponsesFrag.createListeReponsesJeuCLADEViews(
-                                                    DorisApplicationContext.getInstance().jeuZoneGeographiqueSelectionnee,
-                                                    DorisApplicationContext.getInstance().jeuNiveauSelectionne,
-                                                    QstFicheAleatoire,
-                                                    QstClassificationFicheAleatoire,
-                                                    QstClassificationAleatoire,
-                                                    false);
+                        DorisApplicationContext.getInstance().jeuZoneGeographiqueSelectionnee,
+                        DorisApplicationContext.getInstance().jeuNiveauSelectionne,
+                        QstFicheAleatoire,
+                        QstClassificationFicheAleatoire,
+                        QstClassificationAleatoire,
+                        false);
         }
 
         Log.d(LOG_TAG, "onBoutonSuivant() - Fin");
     }
 
     public Fiche ficheAleatoire(OrmLiteDBHelper ormLiteDBHelper, ZoneGeographique zoneGeographique) {
-        Log.d(LOG_TAG, "ficheAleatoire() - zoneGeographique : "+zoneGeographique.getZoneGeoKind().name());
+        Log.d(LOG_TAG, "ficheAleatoire() - zoneGeographique : " + zoneGeographique.getZoneGeoKind().name());
 
         Fiche fiche = null;
 
@@ -559,7 +559,7 @@ public class Jeux_CustomViewActivity extends FragmentActivity
 
         }
 
-        Log.d(LOG_TAG, "ficheAleatoire() - fiche.getNomCommun : "+fiche.getNomCommun());
+        Log.d(LOG_TAG, "ficheAleatoire() - fiche.getNomCommun : " + fiche.getNomCommun());
 
         DorisApplicationContext.getInstance().jeuFicheEnCours = fiche;
 
@@ -629,8 +629,8 @@ public class Jeux_CustomViewActivity extends FragmentActivity
         return classification;
     }
 
-    private Param_Outils getParamOutils(){
-        if(paramOutils == null) paramOutils = new Param_Outils(this);
+    private Param_Outils getParamOutils() {
+        if (paramOutils == null) paramOutils = new Param_Outils(this);
         return paramOutils;
     }
 }

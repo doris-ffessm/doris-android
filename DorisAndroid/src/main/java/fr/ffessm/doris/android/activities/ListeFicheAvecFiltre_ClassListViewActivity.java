@@ -52,6 +52,7 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
+
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -85,91 +86,92 @@ import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 // End of user code
 
-public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener , ActivityWithIndexBar{
-	
-	private static final String LOG_TAG = ListeFicheAvecFiltre_ClassListViewActivity.class.getSimpleName();
+public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener, ActivityWithIndexBar {
 
-	//Start of user code constants ListeFicheAvecFiltre_ClassListViewActivity
-	
+    private static final String LOG_TAG = ListeFicheAvecFiltre_ClassListViewActivity.class.getSimpleName();
+
+    //Start of user code constants ListeFicheAvecFiltre_ClassListViewActivity
+
     MenuItem searchButtonMenuItem;
 
-	int iconSize = R.string.list_icone_taille_defaut;
-	
+    int iconSize = R.string.list_icone_taille_defaut;
+
     final Context context = this;
-	final Param_Outils paramOutils = new Param_Outils(context);
-	//End of user code
-	
+    final Param_Outils paramOutils = new Param_Outils(context);
+    //End of user code
+
     ListeFicheAvecFiltre_Adapter adapter;
 
-	Handler mHandler;
+    Handler mHandler;
     HashMap<Character, Integer> alphabetToIndex;
-	int number_of_alphabets=-1;
+    int number_of_alphabets = -1;
 
-	public void onCreate(Bundle bundle) {
-		super.onCreate(bundle);
-		ThemeUtil.onActivityCreateSetTheme(this);
-		setContentView(R.layout.listeficheavecfiltre_listview);
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        ThemeUtil.onActivityCreateSetTheme(this);
+        setContentView(R.layout.listeficheavecfiltre_listview);
 
-		ActionBar actionBar = getSupportActionBar();
-	    actionBar.setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
-		ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
+        ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
         list.setClickable(true);
-		//Start of user code onCreate ListeFicheAvecFiltre_ClassListViewActivity adapter creation
+        //Start of user code onCreate ListeFicheAvecFiltre_ClassListViewActivity adapter creation
         Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - onCreate");
-        
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         adapter = new ListeFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper(), prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1));
 
         //End of user code
-		// avoid opening the keyboard on view opening
+        // avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         list.setOnItemClickListener(this);
 
         list.setAdapter(adapter);
 
-		// Get the intent, verify the actionstartActivity and get the query
+        // Get the intent, verify the actionstartActivity and get the query
         handleIntent(getIntent());
 
-		// add handler for indexBar
+        // add handler for indexBar
         mHandler = new IndexBarHandler(this);
 
         //Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
 
-		//End of user code
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		//Start of user code onResume additions ListeFicheAvecFiltre_ClassListViewActivity
-		Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - onResume");
-		// refresh on resume, the preferences and filter may have changed 
-		// TODO peut être qu'il y a moyen de s'abonner aux changements de préférence et de ne le faire que dans ce cas ?
-		ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter(); 
-    	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //End of user code
+    }
 
-		Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - pref_key_list_icone_taille : "+context.getString(R.string.pref_key_list_icone_taille));
-		Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - list_icone_taille_defaut : "+context.getString(R.string.list_icone_taille_defaut));
-		Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - list_icone_taille_defaut : "+Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)) );
-		Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - test : "+paramOutils.getParamInt(R.string.pref_key_list_icone_taille,
-																				Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)) ));
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Start of user code onResume additions ListeFicheAvecFiltre_ClassListViewActivity
+        Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - onResume");
+        // refresh on resume, the preferences and filter may have changed
+        // TODO peut être qu'il y a moyen de s'abonner aux changements de préférence et de ne le faire que dans ce cas ?
+        ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.refreshFilter();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-    	if( paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)) ) != iconSize ){
-    		iconSize = paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)) );
-    		ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
-    		list.invalidateViews();
-    	}
-    	updateFilterInActionBar();
+        Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - pref_key_list_icone_taille : " + context.getString(R.string.pref_key_list_icone_taille));
+        Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - list_icone_taille_defaut : " + context.getString(R.string.list_icone_taille_defaut));
+        Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - list_icone_taille_defaut : " + Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)));
+        Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - test : " + paramOutils.getParamInt(R.string.pref_key_list_icone_taille,
+                Integer.parseInt(context.getString(R.string.list_icone_taille_defaut))));
 
-		//End of user code
-		populateIndexBarHashMap();
-	}
+        if (paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut))) != iconSize) {
+            iconSize = paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)));
+            ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
+            list.invalidateViews();
+        }
+        updateFilterInActionBar();
 
-	@Override
+        //End of user code
+        populateIndexBarHashMap();
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
         // Because this activity has set launchMode="singleTop", the system calls this method
         // to deliver the intent if this activity is currently the foreground activity when
@@ -177,366 +179,360 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         // a new instance of this activity, so the system delivers the search intent here)
         handleIntent(intent);
     }
-	
-	private void handleIntent(Intent intent) {
-		Log.d(LOG_TAG,"handleIntent : "+intent.getAction());
+
+    private void handleIntent(Intent intent) {
+        Log.d(LOG_TAG, "handleIntent : " + intent.getAction());
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-           // handles a click on a search suggestion; launches activity to show word
-           //  Intent wordIntent = new Intent(this, WordActivity.class);
-           // wordIntent.setData(intent.getData());
-           // startActivity(wordIntent);
+            // handles a click on a search suggestion; launches activity to show word
+            //  Intent wordIntent = new Intent(this, WordActivity.class);
+            // wordIntent.setData(intent.getData());
+            // startActivity(wordIntent);
         } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             // handles a search query
             String query = intent.getStringExtra(SearchManager.QUERY);
-    		Log.d(LOG_TAG,"ACTION_SEARCH Intent received for "+query);
+            Log.d(LOG_TAG, "ACTION_SEARCH Intent received for " + query);
             ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(query);
         }
-    }	
-
-	@Override
-	public boolean onSearchRequested() {
-		Log.d(LOG_TAG,"onSearchRequested received");
-	    return super.onSearchRequested();
-	}
-
-	public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
-		Log.d(LOG_TAG, "onItemClick "+view);
-		if(view instanceof LinearLayout && view.getId() == R.id.listeficheavecfiltre_listviewrow){
-			//Start of user code onItemClick additions ListeFicheAvecFiltre_ClassListViewActivity
-			DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
-			//End of user code
-			
-			// normal case on main item
-	        Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
-	        Bundle b = new Bundle();
-	        b.putInt("ficheId", ((Fiche)view.getTag()).getId());
-			toDetailView.putExtras(b);
-	        startActivity(toDetailView);
-		}
-		else if(view instanceof TextView && view.getId() == R.id.indexbar_alphabet_row_textview){
-			// click on indexBar
-			TextView rowview=(TextView)view;
-			
-			CharSequence alphabet=rowview.getText();
-			
-			if(alphabet==null || alphabet.equals(""))
-				return;
-			
-			String selected_alphabet=alphabet.toString().trim();
-			Integer newPosition=alphabetToIndex.get(selected_alphabet.charAt(0));
-			Log.d(LOG_TAG, "Selected Alphabet is:"+selected_alphabet+"   position is:"+newPosition);
-			if(	newPosition != null){
-				showToast( selected_alphabet);
-				ListView listview=(ListView)findViewById(R.id.listeficheavecfiltre_listview);
-				listview.setSelection(newPosition);
-			}
-		}
     }
 
-	//Start of user code additional  ListeFicheAvecFiltre_ClassListViewActivity methods
-	@Override
-	protected void onDestroy(){
-		Log.d(LOG_TAG, "onDestroy()");
-	
-		//On vide le cache des infos liées aux fiches
-		getHelper().getFicheDao().clearObjectCache();
-		getHelper().getFiches_ZonesGeographiquesDao().clearObjectCache();
-		getHelper().getIntervenantFicheDao().clearObjectCache();
-		getHelper().getPhotoFicheDao().clearObjectCache();
-		
-		super.onDestroy();
-	}
-	//End of user code
+    @Override
+    public boolean onSearchRequested() {
+        Log.d(LOG_TAG, "onSearchRequested received");
+        return super.onSearchRequested();
+    }
 
-	@Override
+    public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
+        Log.d(LOG_TAG, "onItemClick " + view);
+        if (view instanceof LinearLayout && view.getId() == R.id.listeficheavecfiltre_listviewrow) {
+            //Start of user code onItemClick additions ListeFicheAvecFiltre_ClassListViewActivity
+            DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
+            //End of user code
+
+            // normal case on main item
+            Intent toDetailView = new Intent(this, DetailsFiche_ElementViewActivity.class);
+            Bundle b = new Bundle();
+            b.putInt("ficheId", ((Fiche) view.getTag()).getId());
+            toDetailView.putExtras(b);
+            startActivity(toDetailView);
+        } else if (view instanceof TextView && view.getId() == R.id.indexbar_alphabet_row_textview) {
+            // click on indexBar
+            TextView rowview = (TextView) view;
+
+            CharSequence alphabet = rowview.getText();
+
+            if (alphabet == null || alphabet.equals(""))
+                return;
+
+            String selected_alphabet = alphabet.toString().trim();
+            Integer newPosition = alphabetToIndex.get(selected_alphabet.charAt(0));
+            Log.d(LOG_TAG, "Selected Alphabet is:" + selected_alphabet + "   position is:" + newPosition);
+            if (newPosition != null) {
+                showToast(selected_alphabet);
+                ListView listview = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
+                listview.setSelection(newPosition);
+            }
+        }
+    }
+
+    //Start of user code additional  ListeFicheAvecFiltre_ClassListViewActivity methods
+    @Override
+    protected void onDestroy() {
+        Log.d(LOG_TAG, "onDestroy()");
+
+        //On vide le cache des infos liées aux fiches
+        getHelper().getFicheDao().clearObjectCache();
+        getHelper().getFiches_ZonesGeographiquesDao().clearObjectCache();
+        getHelper().getIntervenantFicheDao().clearObjectCache();
+        getHelper().getPhotoFicheDao().clearObjectCache();
+
+        super.onDestroy();
+    }
+    //End of user code
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		// add options in the menu
-		MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.listeficheavecfiltre_classlistview_actions, menu);
-		// Associate searchable configuration with the SearchView
-		// deal with compat
-		MenuItem  menuItem = (MenuItem ) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_search);
-		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-	    SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
-		searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()));
-	    searchView.setIconifiedByDefault(false);
-    	searchView.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
-			
-			@Override
-			public boolean onQueryTextSubmit(String arg0) {
-				return false;
-			}
-			
-			@Override
-			public boolean onQueryTextChange(String arg0) {
-				// TODO must be careful if the request might be long
-				// action on text change
-				ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
-				return false;
-			}
-		});
-	    
-		// add additional programmatic options in the menu
-		//Start of user code additional onCreateOptionsMenu ListeFicheAvecFiltre_ClassListViewActivity
-    	searchButtonMenuItem = (MenuItem ) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
-    	updateFilterInActionBar();
-    	//searchPopupButtonManager = new SearchPopupButtonManager(this);
-		//End of user code
+        // add options in the menu
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.listeficheavecfiltre_classlistview_actions, menu);
+        // Associate searchable configuration with the SearchView
+        // deal with compat
+        MenuItem menuItem = (MenuItem) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_search);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String arg0) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String arg0) {
+                // TODO must be careful if the request might be long
+                // action on text change
+                ListeFicheAvecFiltre_ClassListViewActivity.this.adapter.getFilter().filter(arg0);
+                return false;
+            }
+        });
+
+        // add additional programmatic options in the menu
+        //Start of user code additional onCreateOptionsMenu ListeFicheAvecFiltre_ClassListViewActivity
+        searchButtonMenuItem = (MenuItem) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
+        updateFilterInActionBar();
+        //searchPopupButtonManager = new SearchPopupButtonManager(this);
+        //End of user code
         return super.onCreateOptionsMenu(menu);
     }
-    
-    
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-		// behavior of option menu
+        // behavior of option menu
         switch (item.getItemId()) {
-			case R.id.listeficheavecfiltre_classlistview_action_preference:
-	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-	            return true;
-			//Start of user code additional menu action ListeFicheAvecFiltre_ClassListViewActivity
-			case R.id.listeficheavecfiltre_classlistview_action_filterpopup:
-				//showToast("searchPopupButtonManager.onClickFilterBtn(MenuItemCompat.getActionView(item))");
-			//	searchPopupButtonManager.onClickFilterBtn(MenuItemCompat.getActionView(item));
-				View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup); // SAME ID AS MENU ID
-				// crée le manager de popup
-		        //searchPopupButtonManager = new SearchPopupButtonManager(this);
-				//showFilterPopupMenu(menuItemView);
-				//searchPopupButtonManager.onClickFilterBtn(menuItemView);
-				showPopup();
-	            return true;
-			case R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist:
-				Intent i = new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class);
-				i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(i);
-				return true;
-	        case R.id.listeficheavecfiltre_action_aide:
-	        	AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
-				aide.affichageMessageHTML(context.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
-				return true;
-			//End of user code
-			// Respond to the action bar's Up/Home button
-			case android.R.id.home:
-				
-				Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
-				//Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
-				
-		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
-		            // This activity is NOT part of this app's task, so create a new task
-		            // when navigating up, with a synthesized back stack.
-		            TaskStackBuilder.create(this)
-		                    // Add all of this activity's parents to the back stack
-		                    .addNextIntentWithParentStack(upIntent)
-		                    // Navigate up to the closest parent
-		                    .startActivities();
-		        } else {
-		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
-		            // This activity is part of this app's task, so simply
-		            // navigate up to the logical parent activity.
-		            NavUtils.navigateUpTo(this, upIntent);
-		        }
-	            return true;
-			default:
+            case R.id.listeficheavecfiltre_classlistview_action_preference:
+                startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+                return true;
+            //Start of user code additional menu action ListeFicheAvecFiltre_ClassListViewActivity
+            case R.id.listeficheavecfiltre_classlistview_action_filterpopup:
+                //showToast("searchPopupButtonManager.onClickFilterBtn(MenuItemCompat.getActionView(item))");
+                //	searchPopupButtonManager.onClickFilterBtn(MenuItemCompat.getActionView(item));
+                View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup); // SAME ID AS MENU ID
+                // crée le manager de popup
+                //searchPopupButtonManager = new SearchPopupButtonManager(this);
+                //showFilterPopupMenu(menuItemView);
+                //searchPopupButtonManager.onClickFilterBtn(menuItemView);
+                showPopup();
+                return true;
+            case R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist:
+                Intent i = new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class);
+                i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                return true;
+            case R.id.listeficheavecfiltre_action_aide:
+                AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
+                aide.affichageMessageHTML(context.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
+                return true;
+            //End of user code
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+
+                Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
+                //Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
+
+                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                    Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
+                    // This activity is NOT part of this app's task, so create a new task
+                    // when navigating up, with a synthesized back stack.
+                    TaskStackBuilder.create(this)
+                            // Add all of this activity's parents to the back stack
+                            .addNextIntentWithParentStack(upIntent)
+                            // Navigate up to the closest parent
+                            .startActivities();
+                } else {
+                    Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
+                    // This activity is part of this app's task, so simply
+                    // navigate up to the logical parent activity.
+                    NavUtils.navigateUpTo(this, upIntent);
+                }
+                return true;
+            default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-	//  ------------ dealing with Up button
-	@Override
-	public Intent getSupportParentActivityIntent() {
-		//Start of user code getSupportParentActivityIntent ListeFicheAvecFiltre_ClassListViewActivity
-		// navigates to the parent activity
-		return new Intent(this, Accueil_CustomViewActivity.class);
-		//End of user code
-	}
-	@Override
-	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-		//Start of user code onCreateSupportNavigateUpTaskStack ListeFicheAvecFiltre_ClassListViewActivity
-		super.onCreateSupportNavigateUpTaskStack(builder);
-		//End of user code
-	}
-	// -------------- handler (for indexBar)
-	@Override
-	public Handler getHandler() {
-		return mHandler;
-	}
-	
-	public void populateIndexBarHashMap() {
-		alphabetToIndex= adapter.getUsedAlphabetHashMap();
-		number_of_alphabets=alphabetToIndex.size();		//Number of enteries in the map is equal to number of letters that would necessarily display on the right.
-		
-		/*Now I am making an entry of those alphabets which are not there in the Map*/
-		String alphabets[]=getResources().getStringArray(R.array.alphabet_array);
-		int index=-1;
-		
-		for(String alpha1: alphabets){
-			char alpha=alpha1.charAt(0);
-			index++;
-			
-			if(alphabetToIndex.containsKey(alpha))
-				continue;
+    //  ------------ dealing with Up button
+    @Override
+    public Intent getSupportParentActivityIntent() {
+        //Start of user code getSupportParentActivityIntent ListeFicheAvecFiltre_ClassListViewActivity
+        // navigates to the parent activity
+        return new Intent(this, Accueil_CustomViewActivity.class);
+        //End of user code
+    }
 
-			/*Start searching the next character position. Example, here alpha is E. Since there is no entry for E, we need to find the position of next Character, F.*/
-			for(int i=index+1  ; i< 27 ;i++){		//start from next character to last character
-				char searchAlphabet=alphabets[i].charAt(0);   
-				
-				/*If we find the position of F character, then on click event on E should take the user to F*/	
-				if(  alphabetToIndex.containsKey(searchAlphabet)){
-					alphabetToIndex.put(alpha, alphabetToIndex.get(searchAlphabet));
-					break;
-				}
-				else
-					if(i==26) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
-						alphabetToIndex.put(alpha, adapter.filteredFicheIdList.size()-1);
-					else
-						continue;
-					
-			}//
-		}//
-	}
-	
-	@Override
-	public ListView getAlphabetListView() {
-		return (ListView)findViewById(R.id.listeficheavecfiltre_listView_alphabets);
-	}
-	public View getAlphabetRowView(){
-		return findViewById(R.id.alphabet_row_layout);
-	}
+    @Override
+    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+        //Start of user code onCreateSupportNavigateUpTaskStack ListeFicheAvecFiltre_ClassListViewActivity
+        super.onCreateSupportNavigateUpTaskStack(builder);
+        //End of user code
+    }
 
-	// Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity
+    // -------------- handler (for indexBar)
+    @Override
+    public Handler getHandler() {
+        return mHandler;
+    }
 
-	public void updateFilterInActionBar(){		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		ActionBar actionBar = getSupportActionBar();
-		// mise à jour des titres
-		// Titre = zone
+    public void populateIndexBarHashMap() {
+        alphabetToIndex = adapter.getUsedAlphabetHashMap();
+        number_of_alphabets = alphabetToIndex.size();        //Number of enteries in the map is equal to number of letters that would necessarily display on the right.
+
+        /*Now I am making an entry of those alphabets which are not there in the Map*/
+        String alphabets[] = getResources().getStringArray(R.array.alphabet_array);
+        int index = -1;
+
+        for (String alpha1 : alphabets) {
+            char alpha = alpha1.charAt(0);
+            index++;
+
+            if (alphabetToIndex.containsKey(alpha))
+                continue;
+
+            /*Start searching the next character position. Example, here alpha is E. Since there is no entry for E, we need to find the position of next Character, F.*/
+            for (int i = index + 1; i < 27; i++) {        //start from next character to last character
+                char searchAlphabet = alphabets[i].charAt(0);
+
+                /*If we find the position of F character, then on click event on E should take the user to F*/
+                if (alphabetToIndex.containsKey(searchAlphabet)) {
+                    alphabetToIndex.put(alpha, alphabetToIndex.get(searchAlphabet));
+                    break;
+                } else if (i == 26) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
+                    alphabetToIndex.put(alpha, adapter.filteredFicheIdList.size() - 1);
+                else
+                    continue;
+
+            }//
+        }//
+    }
+
+    @Override
+    public ListView getAlphabetListView() {
+        return (ListView) findViewById(R.id.listeficheavecfiltre_listView_alphabets);
+    }
+
+    public View getAlphabetRowView() {
+        return findViewById(R.id.alphabet_row_layout);
+    }
+
+    // Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity
+
+    public void updateFilterInActionBar() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        ActionBar actionBar = getSupportActionBar();
+        // mise à jour des titres
+        // Titre = zone
         int currentZoneFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
-        if(currentZoneFilterId == -1 || currentZoneFilterId == 0){ // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
-        	//actionBar.setTitle(R.string.accueil_recherche_precedente_filtreGeographique_sans);
-        	String zonegeo_shortnames[]=getResources().getStringArray(R.array.zonegeo_shortname_array);
-        	actionBar.setTitle(zonegeo_shortnames[0]);
+        if (currentZoneFilterId == -1 || currentZoneFilterId == 0) { // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
+            //actionBar.setTitle(R.string.accueil_recherche_precedente_filtreGeographique_sans);
+            String zonegeo_shortnames[] = getResources().getStringArray(R.array.zonegeo_shortname_array);
+            actionBar.setTitle(zonegeo_shortnames[0]);
+        } else {
+            //ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
+            //actionBar.setTitle(currentZoneFilter.getNom().trim());
+            String zonegeo_shortnames[] = getResources().getStringArray(R.array.zonegeo_shortname_array);
+            actionBar.setTitle(zonegeo_shortnames[currentZoneFilterId]);
         }
-        else{
-        	//ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
-        	//actionBar.setTitle(currentZoneFilter.getNom().trim());
-        	String zonegeo_shortnames[]=getResources().getStringArray(R.array.zonegeo_shortname_array);
-        	actionBar.setTitle(zonegeo_shortnames[currentZoneFilterId]);
-        }
-        
+
         // sous titre = espèce 
-        int filtreCourantId = prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1);	        
-		if(filtreCourantId==1){
-			actionBar.setSubtitle(R.string.accueil_recherche_precedente_filtreEspece_sans);
+        int filtreCourantId = prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1);
+        if (filtreCourantId == 1) {
+            actionBar.setSubtitle(R.string.accueil_recherche_precedente_filtreEspece_sans);
+        } else {
+            Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
+            actionBar.setSubtitle(groupeFiltreCourant.getNomGroupe().trim());
+
         }
-		else {
-			Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
-			actionBar.setSubtitle(groupeFiltreCourant.getNomGroupe().trim());
-			
-		}
-		// mise à jour des actions
-		if((prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1) != 1) ||
-			   (prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1) != -1)){       
-			// mise à jour de l'image du bouton de filtre
-			if(searchButtonMenuItem!=null)
-	    	  searchButtonMenuItem.setIcon( ThemeUtil.attrToResId(((ListeFicheAvecFiltre_ClassListViewActivity)context), R.attr.ic_app_filter_settings_actif) );
-		}
-		else{
-			// pas de filtre actif
-			// remet l'imaged efiltre inactif
-	        //searchButton.setImageResource(R.drawable.filter_settings_32);
-			if(searchButtonMenuItem!=null)
-				searchButtonMenuItem.setIcon( ThemeUtil.attrToResId(((ListeFicheAvecFiltre_ClassListViewActivity)context), R.attr.ic_app_filter_settings) );
-	        
-		}
-	}
-	
-	public  void showPopup() {
+        // mise à jour des actions
+        if ((prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1) != 1) ||
+                (prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1) != -1)) {
+            // mise à jour de l'image du bouton de filtre
+            if (searchButtonMenuItem != null)
+                searchButtonMenuItem.setIcon(ThemeUtil.attrToResId(((ListeFicheAvecFiltre_ClassListViewActivity) context), R.attr.ic_app_filter_settings_actif));
+        } else {
+            // pas de filtre actif
+            // remet l'imaged efiltre inactif
+            //searchButton.setImageResource(R.drawable.filter_settings_32);
+            if (searchButtonMenuItem != null)
+                searchButtonMenuItem.setIcon(ThemeUtil.attrToResId(((ListeFicheAvecFiltre_ClassListViewActivity) context), R.attr.ic_app_filter_settings));
 
-		View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
-		// peut être null si pas visible, ex dans actionbar overfloww si pas assez de place dans l'action bar 
-		RelativeLayout viewGroup = (RelativeLayout) findViewById(R.id.listeavecfiltre_filtrespopup);
-		LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View layout = layoutInflater.inflate(R.layout.listeficheavecfiltre_filtrespopup, viewGroup);
-		
-		int popupWidth =  getResources().getDimensionPixelSize(R.dimen.listeficheavecfiltre_popup_width); 
-		int popupHeight = getResources().getDimensionPixelSize(R.dimen.listeficheavecfiltre_popup_height); 
-		//Log.d(LOG_TAG,"showPopup() - width="+popupWidth+", height="+popupHeight);
-		
-		final PopupWindow popup = new PopupWindow(layout);
-		popup.setWidth(popupWidth);
-		popup.setHeight(popupHeight);
-
-		//popup.setOutsideTouchable(true);
-		popup.setFocusable(true);
-
-		popup.setBackgroundDrawable(new BitmapDrawable());
-		int[]  location = new int[2];
-		if(menuItemView != null){
-			menuItemView.getLocationOnScreen(location);
-			Log.d(LOG_TAG, "menuitem pos ="+location[0]+" "+location[1]);
-
-			popup.showAsDropDown(menuItemView,0,0);
-		}
-		else{
-			Log.d(LOG_TAG, "menuitem pos not available, anchor to top of the listview");
-			//popup.showAsDropDown(findViewById(R.id.listeficheavecfiltre_listview),0,0);
-			View containerView = findViewById(R.id.listeficheavecfiltre_listview);
-			containerView.getLocationOnScreen(location);
-			Log.d(LOG_TAG, "menuitem pos ="+location[0]+" "+location[1]+ " ");
-			popup.showAtLocation(layout,Gravity.TOP|Gravity.RIGHT,0,location[1]);
-		}
-		// bouton filtre espèce 
-		Button btnFiltreEspece = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        int filtreCourantId = prefs.getInt(this.getString(R.string.pref_key_filtre_groupe), 1);	        
-		if(filtreCourantId==1){
-			btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_sans));
         }
-		else{
-			Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
-			btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec)+" "+groupeFiltreCourant.getNomGroupe().trim());
-		}
-		
-		btnFiltreEspece.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				popup.setFocusable(true);
-				popup.dismiss();
-				
-				//Permet de revenir à cette liste après choix du groupe, True on retournerait à l'accueil
-				Intent toGroupeSelectionView = new Intent(ListeFicheAvecFiltre_ClassListViewActivity.this, GroupeSelection_ClassListViewActivity.class);
-		        Bundle b = new Bundle();
-		        b.putBoolean("GroupeSelection_depuisAccueil", false);
-		        toGroupeSelectionView.putExtras(b);
-		        startActivity(toGroupeSelectionView);
-			  }
-			});
+    }
 
-		// bouton filtre zone géographique
-		Button btnZoneGeo = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_ZoneGeoButton);
-		int currentFilterId = prefs.getInt(ListeFicheAvecFiltre_ClassListViewActivity.this.getString(R.string.pref_key_filtre_zonegeo), -1);
-        if(currentFilterId == -1){
-        	btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_sans));
+    public void showPopup() {
+
+        View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
+        // peut être null si pas visible, ex dans actionbar overfloww si pas assez de place dans l'action bar
+        RelativeLayout viewGroup = (RelativeLayout) findViewById(R.id.listeavecfiltre_filtrespopup);
+        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = layoutInflater.inflate(R.layout.listeficheavecfiltre_filtrespopup, viewGroup);
+
+        int popupWidth = getResources().getDimensionPixelSize(R.dimen.listeficheavecfiltre_popup_width);
+        int popupHeight = getResources().getDimensionPixelSize(R.dimen.listeficheavecfiltre_popup_height);
+        //Log.d(LOG_TAG,"showPopup() - width="+popupWidth+", height="+popupHeight);
+
+        final PopupWindow popup = new PopupWindow(layout);
+        popup.setWidth(popupWidth);
+        popup.setHeight(popupHeight);
+
+        //popup.setOutsideTouchable(true);
+        popup.setFocusable(true);
+
+        popup.setBackgroundDrawable(new BitmapDrawable());
+        int[] location = new int[2];
+        if (menuItemView != null) {
+            menuItemView.getLocationOnScreen(location);
+            Log.d(LOG_TAG, "menuitem pos =" + location[0] + " " + location[1]);
+
+            popup.showAsDropDown(menuItemView, 0, 0);
+        } else {
+            Log.d(LOG_TAG, "menuitem pos not available, anchor to top of the listview");
+            //popup.showAsDropDown(findViewById(R.id.listeficheavecfiltre_listview),0,0);
+            View containerView = findViewById(R.id.listeficheavecfiltre_listview);
+            containerView.getLocationOnScreen(location);
+            Log.d(LOG_TAG, "menuitem pos =" + location[0] + " " + location[1] + " ");
+            popup.showAtLocation(layout, Gravity.TOP | Gravity.RIGHT, 0, location[1]);
         }
-        else{
-        	ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
-        	btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec)+" "+currentZoneFilter.getNom().trim());
+        // bouton filtre espèce
+        Button btnFiltreEspece = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int filtreCourantId = prefs.getInt(this.getString(R.string.pref_key_filtre_groupe), 1);
+        if (filtreCourantId == 1) {
+            btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_sans));
+        } else {
+            Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
+            btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec) + " " + groupeFiltreCourant.getNomGroupe().trim());
         }
-        
+
+        btnFiltreEspece.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popup.setFocusable(true);
+                popup.dismiss();
+
+                //Permet de revenir à cette liste après choix du groupe, True on retournerait à l'accueil
+                Intent toGroupeSelectionView = new Intent(ListeFicheAvecFiltre_ClassListViewActivity.this, GroupeSelection_ClassListViewActivity.class);
+                Bundle b = new Bundle();
+                b.putBoolean("GroupeSelection_depuisAccueil", false);
+                toGroupeSelectionView.putExtras(b);
+                startActivity(toGroupeSelectionView);
+            }
+        });
+
+        // bouton filtre zone géographique
+        Button btnZoneGeo = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_ZoneGeoButton);
+        int currentFilterId = prefs.getInt(ListeFicheAvecFiltre_ClassListViewActivity.this.getString(R.string.pref_key_filtre_zonegeo), -1);
+        if (currentFilterId == -1) {
+            btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_sans));
+        } else {
+            ZoneGeographique currentZoneFilter = getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
+            btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec) + " " + currentZoneFilter.getNom().trim());
+        }
+
         btnZoneGeo.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-			popup.setFocusable(true);
-			popup.dismiss();
+            @Override
+            public void onClick(View v) {
+                popup.setFocusable(true);
+                popup.dismiss();
 
-			//Toast.makeText(getApplicationContext(), "Zone géographique", Toast.LENGTH_LONG).show();
-			startActivity(new Intent(ListeFicheAvecFiltre_ClassListViewActivity.this, ZoneGeoSelection_ClassListViewActivity.class));
-			}
-			});
-		   
-	}
-	    
-	// End of user code
+                //Toast.makeText(getApplicationContext(), "Zone géographique", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(ListeFicheAvecFiltre_ClassListViewActivity.this, ZoneGeoSelection_ClassListViewActivity.class));
+            }
+        });
 
-	
+    }
+
+    // End of user code
+
+
 }

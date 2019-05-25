@@ -47,59 +47,53 @@ import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
 import fr.ffessm.doris.android.R;
 
 public class ThemeUtil {
-	
-	private static final String LOG_TAG = ThemeUtil.class.getSimpleName(); 
-	
-	/**
-	 * Changes the theme of the activity, the activity is restarted (must not be called in onCreate()) 
-	 * @param activity
-	 * @param theme
-	 */
-	public static void updateActivityTheme(Activity activity)
-	{
-		activity.finish();
-		activity.startActivity(new Intent(activity, activity.getClass()));
-	}
 
-	public static void onActivityCreateSetTheme(Activity activity)
-	{
-		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-    	
-    	String theme = prefs.getString(activity.getString(R.string.pref_key_theme), "DorisAndroid");
-    	if(theme.equals("DorisAndroid")){
-    		Log.d(LOG_TAG, theme);
-    		activity.setTheme(R.style.Theme_AppDorisAndroid);
-    	}
+    private static final String LOG_TAG = ThemeUtil.class.getSimpleName();
 
-	    else if(theme.equals("DorisAndroidLight")) {
-		    Log.d(LOG_TAG, "theme DorisAndroidLight ="+ theme);
-		    Log.d(LOG_TAG, theme);
-		    activity.setTheme(R.style.Theme_AppDorisAndroidLight);
-	    }
-    	else if(theme.equals("PureBlack")) {
-    		Log.d(LOG_TAG, "theme PureBlack ="+ theme);
-    		Log.d(LOG_TAG, theme);
-    		activity.setTheme(R.style.Theme_AppPureBlack);
-    	}
-    	else if(theme.equals("Holo")) {
-    		Log.d(LOG_TAG, "theme Holo ="+ theme);
-    		activity.setTheme(R.style.Theme_AppHolo);
-    	}
-    	else if(theme.equals("HoloLight")) {
-    		Log.d(LOG_TAG, "theme HoloLight ="+ theme);
-    		activity.setTheme(R.style.Theme_AppHoloLight);
-    	}
-	}
-	
-	// Permet d'obtenir id de l'image pour setImageResource (différente selon les thèmes)
-	public static int attrToResId(Activity activity, int attr) {
-		
-		TypedArray a = activity.getTheme().obtainStyledAttributes(new int[] { attr });
-		//Log.d(LOG_TAG, "attrToResId() - a.getResourceId(0, 0) ="+ a.getResourceId(0, 0));
-		return a.getResourceId(0, 0);
-	}
+    /**
+     * Changes the theme of the activity, the activity is restarted (must not be called in onCreate())
+     *
+     * @param activity activity to update theme
+     */
+    public static void updateActivityTheme(Activity activity) {
+        activity.finish();
+        activity.startActivity(new Intent(activity, activity.getClass()));
+    }
+
+    public static void onActivityCreateSetTheme(Activity activity) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+
+        String theme = prefs.getString(activity.getString(R.string.pref_key_theme), "DorisAndroid");
+        Log.d(LOG_TAG, "theme = " + theme);
+        switch (theme) {
+            case "DorisAndroid":
+                activity.setTheme(R.style.Theme_AppDorisAndroid);
+                break;
+            case "DorisAndroidLight":
+                activity.setTheme(R.style.Theme_AppDorisAndroidLight);
+                break;
+            case "PureBlack":
+                activity.setTheme(R.style.Theme_AppPureBlack);
+                break;
+            case "Holo":
+                activity.setTheme(R.style.Theme_AppHolo);
+                break;
+            case "HoloLight":
+                activity.setTheme(R.style.Theme_AppHoloLight);
+                break;
+        }
+    }
+
+    // Permet d'obtenir id de l'image pour setImageResource (différente selon les thèmes)
+    public static int attrToResId(Activity activity, int attr) {
+
+        TypedArray a = activity.getTheme().obtainStyledAttributes(new int[]{attr});
+        //Log.d(LOG_TAG, "attrToResId() - a.getResourceId(0, 0) ="+ a.getResourceId(0, 0));
+        return a.getResourceId(0, 0);
+    }
 }

@@ -47,6 +47,7 @@ import android.widget.LinearLayout;
 
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
+
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.DorisApplicationContext;
@@ -55,6 +56,7 @@ import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -89,100 +91,103 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
 // Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_additional_implements
 // End of user code
 {
-	
-	protected int definitionGlossaireId;
-	
-	private static final String LOG_TAG = DetailEntreeGlossaire_ElementViewActivity.class.getCanonicalName();
 
-// Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_additional_attributes
-	final Context context = this;
+    protected int definitionGlossaireId;
+
+    private static final String LOG_TAG = DetailEntreeGlossaire_ElementViewActivity.class.getCanonicalName();
+
+    // Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_additional_attributes
+    final Context context = this;
     protected Reseau_Outils reseauOutils;
-	
+
 // End of user code
-	
-	/** Called when the activity is first created. */
+
+    /**
+     * Called when the activity is first created.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		ThemeUtil.onActivityCreateSetTheme(this);
+        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.detailentreeglossaire_elementview);
 
-		ActionBar actionBar = getSupportActionBar();
-	    actionBar.setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         definitionGlossaireId = getIntent().getExtras().getInt("definitionGlossaireId");
-        
-		// Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_onCreate
 
-	    ACRA.getErrorReporter().putCustomData("definitionGlossaireId", ""+definitionGlossaireId);
+        // Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_onCreate
+
+        ACRA.getErrorReporter().putCustomData("definitionGlossaireId", "" + definitionGlossaireId);
         reseauOutils = new Reseau_Outils(context);
-		// End of user code
+        // End of user code
     }
-    
+
     @Override
-	protected void onResume() {
-		super.onResume();
-		refreshScreenData();
-	}
-    
-    
+    protected void onResume() {
+        super.onResume();
+        refreshScreenData();
+    }
+
+
     private void refreshScreenData() {
-    	// get our dao
-    	RuntimeExceptionDao<DefinitionGlossaire, Integer> entriesDao = getHelper().getDefinitionGlossaireDao();
-		// Start of user code protectedDetailEntreeGlossaire_ElementViewActivity.refreshScreenData
-    	DefinitionGlossaire entry = entriesDao.queryForId(definitionGlossaireId);
-    	
-    	//entry.setContextDB(getHelper().getDorisDBHelper());
+        // get our dao
+        RuntimeExceptionDao<DefinitionGlossaire, Integer> entriesDao = getHelper().getDefinitionGlossaireDao();
+        // Start of user code protectedDetailEntreeGlossaire_ElementViewActivity.refreshScreenData
+        DefinitionGlossaire entry = entriesDao.queryForId(definitionGlossaireId);
+
+        //entry.setContextDB(getHelper().getDorisDBHelper());
 /*
     	Log.d(LOG_TAG, "refreshScreenData() - id : " + ((Integer)entry.getNumeroDoris()).toString());
     	Log.d(LOG_TAG, "refreshScreenData() - terme : " + entry.getTerme());
-  */  	
-		((TextView) findViewById(R.id.detailentreeglossaire_elementview_numerodoris)).setText(((Integer)entry.getNumeroDoris()).toString());					
-		((TextView) findViewById(R.id.detailentreeglossaire_elementview_terme)).setText(entry.getTerme());
-		
-		TextView definition = (TextView) findViewById(R.id.detailentreeglossaire_elementview_definition);
-		Textes_Outils textesOutils = new Textes_Outils(context);
+  */
+        ((TextView) findViewById(R.id.detailentreeglossaire_elementview_numerodoris)).setText(((Integer) entry.getNumeroDoris()).toString());
+        ((TextView) findViewById(R.id.detailentreeglossaire_elementview_terme)).setText(entry.getTerme());
+
+        TextView definition = (TextView) findViewById(R.id.detailentreeglossaire_elementview_definition);
+        Textes_Outils textesOutils = new Textes_Outils(context);
 
         CharSequence definitionTexte = entry.getDefinition();
-		definition.setText(textesOutils.textToSpannableStringDoris( definitionTexte ));
-		definition.setMovementMethod(LinkMovementMethod.getInstance());
+        definition.setText(textesOutils.textToSpannableStringDoris(definitionTexte));
+        definition.setMovementMethod(LinkMovementMethod.getInstance());
 
         // Lien vers la Définition sur le site
-		String urlString = Constants.getDefinitionUrl( ""+entry.getNumeroDoris() ); 
-		SpannableString richtext = new SpannableString(urlString);
-		richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
-		TextView contenuUrl = (TextView) findViewById(R.id.detailentreeglossaire_elementview_liensite);
-		contenuUrl.setText(richtext);
-		contenuUrl.setMovementMethod(LinkMovementMethod.getInstance());
+        String urlString = Constants.getDefinitionUrl("" + entry.getNumeroDoris());
+        SpannableString richtext = new SpannableString(urlString);
+        richtext.setSpan(new URLSpan(urlString), 0, urlString.length(), 0);
+        TextView contenuUrl = (TextView) findViewById(R.id.detailentreeglossaire_elementview_liensite);
+        contenuUrl.setText(richtext);
+        contenuUrl.setMovementMethod(LinkMovementMethod.getInstance());
 
-		Log.d(LOG_TAG, "refreshScreenData() - definition.getParent() : " + definition.getParent());
-		if(definition.getParent() instanceof LinearLayout) {
-			LinearLayout parentLayout = (LinearLayout) definition.getParent();
+        Log.d(LOG_TAG, "refreshScreenData() - definition.getParent() : " + definition.getParent());
+        if (definition.getParent() instanceof LinearLayout) {
+            LinearLayout parentLayout = (LinearLayout) definition.getParent();
 
-			// ne fait rien s'il y a déjà des images car cela suppose un reload (par exemple navigue sur le lien puis reviens sur la page
-            if(parentLayout.getChildCount() <= 2 ) {
+            // ne fait rien s'il y a déjà des images car cela suppose un reload (par exemple navigue sur le lien puis reviens sur la page
+            if (parentLayout.getChildCount() <= 2) {
 
 
                 Photos_Outils photosOutils = new Photos_Outils(context);
-                for(String cleURLIllustration : entry.getCleURLIllustration().split(";")) {
+                for (String cleURLIllustration : entry.getCleURLIllustration().split(";")) {
                     if (cleURLIllustration != null && cleURLIllustration != "") {
                         String[] illustration = cleURLIllustration.split("\\|");
 
                         //Log.d(LOG_TAG, "refreshScreenData() - illustration : " + illustration.length);
                         //Log.d(LOG_TAG, "refreshScreenData() - illustration : " + illustration);
                         //Log.d(LOG_TAG, "refreshScreenData() - illustration[0] : " + illustration[0]);
-                        if (illustration.length > 1) Log.d(LOG_TAG, "refreshScreenData() - illustration[1] : " + illustration[1]);
+                        if (illustration.length > 1)
+                            Log.d(LOG_TAG, "refreshScreenData() - illustration[1] : " + illustration[1]);
 
-                        definitionTexte = definitionTexte + "{{n/}}" + "{{E:"+illustration[0]+"/}}";
-                        if (illustration.length > 1 && !illustration[1].equals("") ) {
+                        definitionTexte = definitionTexte + "{{n/}}" + "{{E:" + illustration[0] + "/}}";
+                        if (illustration.length > 1 && !illustration[1].equals("")) {
                             definitionTexte = definitionTexte + "{{n/}}" + illustration[1];
                         }
                         String nomPhotoLocal = Constants.PREFIX_IMGDSK_DEFINITION + illustration[0];
                         ImageView imageView = new ImageView(this);
                         parentLayout.addView(imageView);
-                        if(photosOutils.isAvailableInFolderPhoto(nomPhotoLocal, Photos_Outils.ImageType.ILLUSTRATION_DEFINITION)){
+                        if (photosOutils.isAvailableInFolderPhoto(nomPhotoLocal, Photos_Outils.ImageType.ILLUSTRATION_DEFINITION)) {
                             try {
-                                String path =  photosOutils.getPhotoFile(nomPhotoLocal, Photos_Outils.ImageType.ILLUSTRATION_DEFINITION).getAbsolutePath();
+                                String path = photosOutils.getPhotoFile(nomPhotoLocal, Photos_Outils.ImageType.ILLUSTRATION_DEFINITION).getAbsolutePath();
                                 // chargement avec picasso
                                 Picasso.with(context).load(path)
                                         .placeholder(R.drawable.app_glossaire_indisponible)
@@ -196,104 +201,105 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
                             // utilise la version en ligne si possible
                             if (reseauOutils.isTelechargementsModeConnectePossible()) {
                                 //Log.i(LOG_TAG, "refreshScreenData() - tentative téléchargement : " +Constants.IMAGE_BASE_URL +"/"+ illustration[0]);
-                                Picasso.with(context).load(Constants.IMAGE_BASE_URL +"/"+ illustration[0])
+                                Picasso.with(context).load(Constants.IMAGE_BASE_URL + "/" + illustration[0])
                                         .placeholder(R.drawable.app_glossaire_indisponible)
                                         //.centerInside()
                                         .into(imageView);
                             } else {
-	                            Picasso.with(context).load(Constants.IMAGE_BASE_URL +"/"+ illustration[0])
-			                            .placeholder(R.drawable.app_glossaire_indisponible)
-			                            .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
-			                            //.centerInside()
-			                            .into(imageView);
+                                Picasso.with(context).load(Constants.IMAGE_BASE_URL + "/" + illustration[0])
+                                        .placeholder(R.drawable.app_glossaire_indisponible)
+                                        .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
+                                        //.centerInside()
+                                        .into(imageView);
                             }
                         }
 
                         // ajout du texte de description de l'image
-                        if (illustration.length > 1 && !illustration[1].equals("") ) {
+                        if (illustration.length > 1 && !illustration[1].equals("")) {
                             TextView imgDescription = new TextView(this);
-                            imgDescription.setText(textesOutils.textToSpannableStringDoris( illustration[1] ));
+                            imgDescription.setText(textesOutils.textToSpannableStringDoris(illustration[1]));
                             parentLayout.addView(imgDescription);
                         }
                     }
                 }
             }
-		}
-		// End of user code
-    	
-	}
+        }
+        // End of user code
 
-	@Override
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		// add options in the menu
-		MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.detailentreeglossaire_elementview_actions, menu);
-		// add additional programmatic options in the menu
-		//Start of user code additional onCreateOptionsMenu DetailEntreeGlossaire_EditableElementViewActivity
+        // add options in the menu
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.detailentreeglossaire_elementview_actions, menu);
+        // add additional programmatic options in the menu
+        //Start of user code additional onCreateOptionsMenu DetailEntreeGlossaire_EditableElementViewActivity
 
-		//End of user code
+        //End of user code
         return super.onCreateOptionsMenu(menu);
     }
-    
-    
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-		// behavior of option menu
+        // behavior of option menu
         switch (item.getItemId()) {
-			case R.id.detailentreeglossaire_elementview_action_preference:
-	        	startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-	            return true;
-			//Start of user code additional menu action DetailEntreeGlossaire_ElementViewActivity
-	        case R.id.detailentreeglossaire_elementview_action_aide:
-	        	AffichageMessageHTML aide = new AffichageMessageHTML(this, (Activity) this, getHelper());
-				aide.affichageMessageHTML(this.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
-				return true;
-				
-			//End of user code
-			// Respond to the action bar's Up/Home button
-			case android.R.id.home:
-				Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
-				Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : "+upIntent.getComponent().toString());
-				
-		        if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
-		            // This activity is NOT part of this app's task, so create a new task
-		            // when navigating up, with a synthesized back stack.
-		            TaskStackBuilder.create(this)
-		                    // Add all of this activity's parents to the back stack
-		                    .addNextIntentWithParentStack(upIntent)
-		                    // Navigate up to the closest parent
-		                    .startActivities();
-		        } else {
-		        	Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
-		            // This activity is part of this app's task, so simply
-		            // navigate up to the logical parent activity.
-		            NavUtils.navigateUpTo(this, upIntent);
-		        }
-	            return true;
-			default:
+            case R.id.detailentreeglossaire_elementview_action_preference:
+                startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+                return true;
+            //Start of user code additional menu action DetailEntreeGlossaire_ElementViewActivity
+            case R.id.detailentreeglossaire_elementview_action_aide:
+                AffichageMessageHTML aide = new AffichageMessageHTML(this, (Activity) this, getHelper());
+                aide.affichageMessageHTML(this.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
+                return true;
+
+            //End of user code
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
+                Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : " + upIntent.getComponent().toString());
+
+                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                    Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
+                    // This activity is NOT part of this app's task, so create a new task
+                    // when navigating up, with a synthesized back stack.
+                    TaskStackBuilder.create(this)
+                            // Add all of this activity's parents to the back stack
+                            .addNextIntentWithParentStack(upIntent)
+                            // Navigate up to the closest parent
+                            .startActivities();
+                } else {
+                    Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
+                    // This activity is part of this app's task, so simply
+                    // navigate up to the logical parent activity.
+                    NavUtils.navigateUpTo(this, upIntent);
+                }
+                return true;
+            default:
                 return super.onOptionsItemSelected(item);
-        }    	
+        }
     }
 
-	//  ------------ dealing with Up button
-	@Override
-	public Intent getSupportParentActivityIntent() {
-		//Start of user code getSupportParentActivityIntent DetailEntreeGlossaire_ClassListViewActivity
-		// navigates to the parent activity
-		return new Intent(this, Glossaire_ClassListViewActivity.class);
-		//End of user code
-	}
-	@Override
-	public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-		//Start of user code onCreateSupportNavigateUpTaskStack DetailEntreeGlossaire_ClassListViewActivity
-		super.onCreateSupportNavigateUpTaskStack(builder);
-		//End of user code
-	}
+    //  ------------ dealing with Up button
+    @Override
+    public Intent getSupportParentActivityIntent() {
+        //Start of user code getSupportParentActivityIntent DetailEntreeGlossaire_ClassListViewActivity
+        // navigates to the parent activity
+        return new Intent(this, Glossaire_ClassListViewActivity.class);
+        //End of user code
+    }
 
-	// Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_additional_operations
+    @Override
+    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+        //Start of user code onCreateSupportNavigateUpTaskStack DetailEntreeGlossaire_ClassListViewActivity
+        super.onCreateSupportNavigateUpTaskStack(builder);
+        //End of user code
+    }
 
-	
-	// End of user code
+    // Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_additional_operations
+
+
+    // End of user code
 
 }
