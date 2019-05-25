@@ -170,7 +170,6 @@ public class DorisAPI_JSONTreeHelper {
 
     /**
      * Renvoie la liste des nodeId de toutes les fiches espèces
-     * @param credent
      * @param speciesPerHttpRequest limite le nombre d'espèces requises à chaque requète http
      * @return
      * @throws ClientProtocolException

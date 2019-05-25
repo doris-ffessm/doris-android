@@ -93,6 +93,10 @@ public class DorisOAuth2ClientCredentials {
     // Intervenants
     public static final String PARTICIPANTS_NODE_URL = SERVER_NODE_URL+"77";
 
+
+
+
+
     // Videos 64 - toujours aucune ????
     // Aides 65 - Email envoyés par le site
     // Liens 67

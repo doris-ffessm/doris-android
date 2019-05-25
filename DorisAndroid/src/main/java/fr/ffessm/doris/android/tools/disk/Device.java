@@ -8,15 +8,13 @@ import android.os.Environment;
 /**
  * Hilfsklasse zur Beschreibung eines Devices, womit MountPoints gemeint sind, also
  * unter anderem Partitionen des internen Gerätespeichers, aber auch SD-Karten oder
- * per USB ankoppelbare Geräte. Wird nur von {@link Environment2} benutzt und hat
+ * per USB ankoppelbare Geräte. Wird nur von  benutzt und hat
  * daher keine public constructors. Kann aber für manche Zwecke genutzt werden,
  * daher einige public methods.
  * 
  * Die konkrete Implementierung findet seit Version 1.2 in den Klassen 
- * {@link DeviceIntern} (/data), {@link DeviceExternal} (/mnt/sdcard) und
- * {@link DeviceDiv} (weitere SD-Karten, USB-Geräte) statt.
- * 
- * @see Environment2
+ * {@link DeviceIntern} (/data), .
+ *
  * @see Size
  * @author Jörg Wirtgen (jow@ct.de)
  * @version 1.3
