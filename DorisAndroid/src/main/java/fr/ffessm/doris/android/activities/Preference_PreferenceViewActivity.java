@@ -140,6 +140,8 @@ public class Preference_PreferenceViewActivity  extends android.preference.Prefe
         		ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE);
         setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_indopac,
         		ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE);
+		setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_antarctique,
+				ZoneGeographiqueKind.FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES);
         setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_caraibes,
         		ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES);
         setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_atlantno,

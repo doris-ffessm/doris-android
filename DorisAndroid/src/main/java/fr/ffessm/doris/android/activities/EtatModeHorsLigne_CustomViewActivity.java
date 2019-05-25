@@ -336,6 +336,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
  					case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE :
  						param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_indopac);
  						break;
+					case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+						param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_antarctique);
+						break;
  					case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES :
  						param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_caraibes);
  						break;
