@@ -189,7 +189,7 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
                             try {
                                 String path = photosOutils.getPhotoFile(nomPhotoLocal, Photos_Outils.ImageType.ILLUSTRATION_DEFINITION).getAbsolutePath();
                                 // chargement avec picasso
-                                Picasso.with(context).load(path)
+                                Picasso.get().load(path)
                                         .placeholder(R.drawable.app_glossaire_indisponible)
                                         //.centerInside()
                                         .into(imageView);
@@ -201,12 +201,12 @@ public class DetailEntreeGlossaire_ElementViewActivity extends OrmLiteActionBarA
                             // utilise la version en ligne si possible
                             if (reseauOutils.isTelechargementsModeConnectePossible()) {
                                 //Log.i(LOG_TAG, "refreshScreenData() - tentative téléchargement : " +Constants.IMAGE_BASE_URL +"/"+ illustration[0]);
-                                Picasso.with(context).load(Constants.IMAGE_BASE_URL + "/" + illustration[0])
+                                Picasso.get().load(Constants.IMAGE_BASE_URL + "/" + illustration[0])
                                         .placeholder(R.drawable.app_glossaire_indisponible)
                                         //.centerInside()
                                         .into(imageView);
                             } else {
-                                Picasso.with(context).load(Constants.IMAGE_BASE_URL + "/" + illustration[0])
+                                Picasso.get().load(Constants.IMAGE_BASE_URL + "/" + illustration[0])
                                         .placeholder(R.drawable.app_glossaire_indisponible)
                                         .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
                                         //.centerInside()

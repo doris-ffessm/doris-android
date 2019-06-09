@@ -72,7 +72,7 @@ public class ChainedLoadImageViewCallback implements Callback{
 	}
 
 	@Override
-	public void onError() {
+	public void onError(Exception e) {
 
        if(imageNotAvailable != null){
             imageNotAvailable.setVisibility(View.VISIBLE);
@@ -84,7 +84,7 @@ public class ChainedLoadImageViewCallback implements Callback{
 	public void onSuccess() {
 		// Call the second image using the first as placeholder
 		if (replaceImageOnError) {
-			Picasso.with(context)
+			Picasso.get()
                 .load(imageUrl)
                 .placeholder(targetImageView.getDrawable())
                 .resize(width, height)
@@ -93,7 +93,7 @@ public class ChainedLoadImageViewCallback implements Callback{
                 .into(targetImageView, new InternalCallback());
 		}
 		else {
-			Picasso.with(context)
+			Picasso.get()
                 .load(imageUrl)
                 .placeholder(targetImageView.getDrawable())
                 .resize(width, height)
@@ -106,7 +106,7 @@ public class ChainedLoadImageViewCallback implements Callback{
 	class InternalCallback implements Callback {
 
 		@Override
-		public void onError() {
+		public void onError(Exception e) {
 			if(imageNotAvailable != null){
 				imageNotAvailable.setVisibility(View.VISIBLE);
 			}

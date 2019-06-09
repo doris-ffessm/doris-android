@@ -635,7 +635,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
         if (bestLocallyAvailableRes != null) {
             // on a une image en local, on l'utilise
             try {
-                Picasso.with(context).load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes))
+                Picasso.get().load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes))
                         .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
                         .error(R.drawable.doris_icone_doris_large_pas_connecte)
                         .fit()
@@ -646,7 +646,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
         } else {
             // pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
             if (reseauOutils.isTelechargementsModeConnectePossible()) {
-                Picasso.with(context)
+                Picasso.get()
                         .load(Constants.IMAGE_BASE_URL + "/"
                                 + photoFiche.getCleURL().replaceAll(
                                 Constants.IMAGE_BASE_URL_SUFFIXE + "$", requested_suffixe_photo))
@@ -656,7 +656,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
                         .centerInside()
                         .into(imageView);
             } else {
-                Picasso.with(context)
+                Picasso.get()
                         .load(Constants.IMAGE_BASE_URL + "/"
                                 + photoFiche.getCleURL().replaceAll(
                                 Constants.IMAGE_BASE_URL_SUFFIXE + "$", requested_suffixe_photo))
