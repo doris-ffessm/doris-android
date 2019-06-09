@@ -293,7 +293,13 @@ public class JsonToDB {
         )); }
 
         // Distribution
-
+        if (jsonEspece.getFields().getDistributionResume().getValue() != "") {sectionsFiche.add(new SectionFiche(15,"Distribution",
+                commonOutils.remplacementBalises(
+                        commonOutils.nettoyageBalises(
+                                jsonEspece.getFields().getDistributionResume().getValue()
+                        )
+                        , true)
+        )); }
 
         // Biotope
         if (jsonEspece.getFields().getBiotop().getValue() != "") {sectionsFiche.add(new SectionFiche(20,"Biotope",
@@ -373,6 +379,15 @@ public class JsonToDB {
                         , true)
         )); }
 
+
+        // Divers biologie
+        if (jsonEspece.getFields().getBioDivers().getValue() != "") {sectionsFiche.add(new SectionFiche(335,"Divers biologie",
+                commonOutils.remplacementBalises(
+                        commonOutils.nettoyageBalises(
+                                jsonEspece.getFields().getBioDivers().getValue()
+                        )
+                        , true)
+        )); }
 
         // Informations Complémentaires
         if (jsonEspece.getFields().getComplementaryInfos().getValue() != "") {sectionsFiche.add(new SectionFiche(340,"Informations complémentaires",
