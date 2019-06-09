@@ -199,7 +199,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 
         // info de debug de Picasso
         if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)) {
-            Picasso.with(this).setDebugging(BuildConfig.DEBUG);
+            Picasso.get().setLoggingEnabled(BuildConfig.DEBUG);
         }
 
         // End of user code
@@ -865,7 +865,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         if (bestLocallyAvailableRes != null) {
             // on a une image en local, on l'utilise
             try {
-                Picasso.with(context).load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes))
+                Picasso.get().load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes))
                         .fit()
                         .centerInside()
                         .into(imageView);
@@ -874,7 +874,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         } else {
             // pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé
             if (reseauOutils.isTelechargementsModeConnectePossible()) {
-                Picasso.with(context)
+                Picasso.get()
                         .load(Constants.IMAGE_BASE_URL + "/"
                                 + photoFiche.getCleURL().replaceAll(
                                 Constants.IMAGE_BASE_URL_SUFFIXE + "$", requested_suffixe_photo))
@@ -884,7 +884,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
                         .centerInside()
                         .into(imageView);
             } else {
-                Picasso.with(context)
+                Picasso.get()
                         .load(Constants.IMAGE_BASE_URL + "/"
                                 + photoFiche.getCleURL().replaceAll(
                                 Constants.IMAGE_BASE_URL_SUFFIXE + "$", requested_suffixe_photo))

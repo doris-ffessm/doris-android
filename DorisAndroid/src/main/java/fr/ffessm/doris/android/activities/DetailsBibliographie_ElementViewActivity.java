@@ -160,7 +160,7 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 
             if (getPhotosOutils().isAvailableInFolderPhoto(nomPhoto, ImageType.ILLUSTRATION_BIBLIO)) {
                 try {
-                    Picasso.with(context).load(getPhotosOutils().getPhotoFile(nomPhoto, ImageType.ILLUSTRATION_BIBLIO))
+                    Picasso.get().load(getPhotosOutils().getPhotoFile(nomPhoto, ImageType.ILLUSTRATION_BIBLIO))
                             .fit()
                             .centerInside()
                             .into(biblioView);
@@ -173,7 +173,7 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 
                     //Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLIllustration() : "+Constants.ILLUSTRATION_BIBLIO_BASE_URL+"/"+entry.getCleURLIllustration());
 
-                    Picasso.with(context)
+                    Picasso.get()
                             .load(Constants.IMAGE_BASE_URL + "/" + entry.getCleURLIllustration().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
                             .placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par défaut pour commencer
                             .error(R.drawable.app_bibliographie_doris_non_connecte)
@@ -187,9 +187,9 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
                                         }
 
                                         @Override
-                                        public void onError() {
+                                        public void onError(Exception e) {
 
-                                            Picasso.with(context)
+                                            Picasso.get()
                                                     .load(Constants.IMAGE_BASE_URL + "/" + entry.getCleURLIllustration())
                                                     .placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par defaut pour commencer
                                                     .fit()
@@ -200,7 +200,7 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
 
                                     });
                 } else {
-                    Picasso.with(context)
+                    Picasso.get()
                             .load(Constants.IMAGE_BASE_URL + "/" + entry.getCleURLIllustration().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
                             .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
                             .placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par défaut pour commencer
@@ -215,9 +215,9 @@ public class DetailsBibliographie_ElementViewActivity extends OrmLiteActionBarAc
                                         }
 
                                         @Override
-                                        public void onError() {
+                                        public void onError(Exception e) {
 
-                                            Picasso.with(context)
+                                            Picasso.get()
                                                     .load(Constants.IMAGE_BASE_URL + "/" + entry.getCleURLIllustration())
                                                     .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
                                                     .placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par defaut pour commencer

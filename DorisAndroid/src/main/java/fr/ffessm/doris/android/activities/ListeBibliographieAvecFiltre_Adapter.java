@@ -209,7 +209,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter implements
 
             if (photosOutils.isAvailableInFolderPhoto(nomPhoto, ImageType.ILLUSTRATION_BIBLIO)) {
                 try {
-                    Picasso.with(context).load(photosOutils.getPhotoFile(nomPhoto, ImageType.ILLUSTRATION_BIBLIO))
+                    Picasso.get().load(photosOutils.getPhotoFile(nomPhoto, ImageType.ILLUSTRATION_BIBLIO))
                             .placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par défaut pour commencer
                             .resize(defaultIconSize, defaultIconSize)
                             .error(R.drawable.app_bibliographie_doris_non_connecte)
@@ -224,7 +224,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter implements
 
                     Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLIllustration() : " + Constants.IMAGE_BASE_URL + "/" + entry.getCleURLIllustration().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE));
 
-                    Picasso.with(context)
+                    Picasso.get()
                             .load(Constants.IMAGE_BASE_URL + "/" + entry.getCleURLIllustration().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE))
                             .placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par défaut pour commencer
                             .error(R.drawable.app_bibliographie_doris_non_connecte)
@@ -238,9 +238,9 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter implements
                                         }
 
                                         @Override
-                                        public void onError() {
+                                        public void onError(Exception e) {
 
-                                            Picasso.with(context)
+                                            Picasso.get()
                                                     .load(Constants.IMAGE_BASE_URL + "/" + entry.getCleURLIllustration().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
                                                     .placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par defaut pour commencer
                                                     .resize(defaultIconSizeFinal, defaultIconSizeFinal)
@@ -254,9 +254,9 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter implements
                                                                 }
 
                                                                 @Override
-                                                                public void onError() {
+                                                                public void onError(Exception e) {
 
-                                                                    Picasso.with(context)
+                                                                    Picasso.get()
                                                                             .load(Constants.IMAGE_BASE_URL + "/" + entry.getCleURLIllustration())
                                                                             .placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par defaut pour commencer
                                                                             .resize(defaultIconSizeFinal, defaultIconSizeFinal)
@@ -271,7 +271,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter implements
                                     });
                 } else {
                     // non connecté
-                    Picasso.with(context)
+                    Picasso.get()
                             .load(Constants.IMAGE_BASE_URL + "/" + entry.getCleURLIllustration().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE))
                             .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
                             .placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par défaut pour commencer
@@ -286,9 +286,9 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter implements
                                         }
 
                                         @Override
-                                        public void onError() {
+                                        public void onError(Exception e) {
 
-                                            Picasso.with(context)
+                                            Picasso.get()
                                                     .load(Constants.IMAGE_BASE_URL + "/" + entry.getCleURLIllustration().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
                                                     .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
                                                     .placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par defaut pour commencer
@@ -303,9 +303,9 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter implements
                                                                 }
 
                                                                 @Override
-                                                                public void onError() {
+                                                                public void onError(Exception e) {
 
-                                                                    Picasso.with(context)
+                                                                    Picasso.get()
                                                                             .load(Constants.IMAGE_BASE_URL + "/" + entry.getCleURLIllustration())
                                                                             .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
                                                                             .placeholder(R.drawable.app_bibliographie_doris)  // utilisation de l'image par defaut pour commencer

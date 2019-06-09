@@ -47,10 +47,12 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,6 +82,9 @@ import static fr.ffessm.doris.android.tools.Photos_Outils.ImageType.MED_RES;
 public class ImagePleinEcran_Adapter extends PagerAdapter {
 
     //private static final String LOG_TAG = ImagePleinEcran_Adapter.class.getCanonicalName();
+
+
+    private static final String LOG_TAG = ImagePleinEcran_Adapter.class.getSimpleName();
 
     private ImagePleinEcran_CustomViewActivity _activity;
     private ArrayList<PhotoFiche> _PhotoFicheLists;
@@ -180,7 +185,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
             if (bestLocallyAvailableRes.equals(HI_RES) || (bestLocallyAvailableRes.equals(MED_RES) && requestedRes.equals(MED_RES))) {
                 // on a la bonne image en local
                 try {
-                    Picasso.with(_activity)
+                    Picasso.get()
                             .load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes))
                             .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
                             .resize(largeur, hauteur)
@@ -191,7 +196,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
             } else {
                 if (reseauOutils.isTelechargementsModeConnectePossible()) {
                     try {
-                        Picasso.with(_activity)
+                        Picasso.get()
                                 .load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes)) // charge d'abord la vignette depuis le disque
                                 .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
                                 .resize(largeur, hauteur)
@@ -203,7 +208,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
                 } else {
                     // téléchargement non autorisé, cherche dans le cache picasso
                     // si pas présent alors utilise la photo dispo et ajoute l'overlay
-                    Picasso.with(_activity)
+                    Picasso.get()
                             .load(Constants.IMAGE_BASE_URL + "/"
                                     + photoFiche.getCleURL().replaceAll(
                                     Constants.IMAGE_BASE_URL_SUFFIXE + "$", requested_suffixe_photo))
@@ -215,9 +220,9 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
                                 }
 
                                 @Override
-                                public void onError() {
+                                public void onError(Exception e1) {
                                     try {
-                                        Picasso.with(_activity)
+                                        Picasso.get()
                                                 .load(photosOutils.getPhotoFile(photoFiche.getCleURLNomFichier(), bestLocallyAvailableRes))
                                                 .resize(largeur, hauteur)
                                                 .centerInside()
@@ -231,31 +236,37 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
                 }
             }
         } else {
+            final String  med_suffixe_photo2 = med_suffixe_photo;
             // pas de photo en local, télécharge en ligne si autorisé
             if (reseauOutils.isTelechargementsModeConnectePossible()) {
-
-                Picasso.with(_activity)
-                        .load(Constants.IMAGE_BASE_URL + "/"
-                                + photoFiche.getCleURL().replaceAll(
-                                Constants.IMAGE_BASE_URL_SUFFIXE + "$", requested_suffixe_photo))
+                String requestedImage = Constants.IMAGE_BASE_URL + "/"
+                        + photoFiche.getCleURL().replaceAll(
+                        Constants.IMAGE_BASE_URL_SUFFIXE + "$", requested_suffixe_photo);
+                Picasso picasso = Picasso.get();
+                picasso.setLoggingEnabled(true);
+                picasso
+                        .load(requestedImage)
                         .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par défaut pour commencer
                         .resize(largeur, hauteur)
                         .centerInside()
                         .into(imgDisplay, new Callback() {
                             @Override
                             public void onSuccess() {
+                                Log.d(LOG_TAG, "onSuccess: "+requestedImage);
                             }
 
                             @Override
-                            public void onError() {
+                            public void onError(Exception e) {
+                                Log.e(LOG_TAG, "onError: "+requestedImage);
                                 btnHiResNotAvailable.setVisibility(View.VISIBLE);
                             }
                         });
+                picasso.setLoggingEnabled(false);
 
             } else {
                 // téléchargement non autorisé
                 final String fallback_offline_suffixe_photo = small_suffixe_photo;
-                Picasso.with(_activity)
+                Picasso.get()
                         .load(Constants.IMAGE_BASE_URL + "/"
                                 + photoFiche.getCleURL().replaceAll(
                                 Constants.IMAGE_BASE_URL_SUFFIXE + "$", requested_suffixe_photo))
@@ -267,10 +278,10 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
                             }
 
                             @Override
-                            public void onError() {
+                            public void onError(Exception e) {
                                 // on tente de chercher le cache des vignettes avant de vraiment abandonner
                                 btnHiResNotAvailable.setVisibility(View.VISIBLE);
-                                Picasso.with(_activity)
+                                Picasso.get()
                                         .load(Constants.IMAGE_BASE_URL + "/"
                                                 + photoFiche.getCleURL().replaceAll(
                                                 Constants.IMAGE_BASE_URL_SUFFIXE + "$", fallback_offline_suffixe_photo))

@@ -181,7 +181,7 @@ public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemC
             if (BuildConfig.DEBUG) Log.i(LOG_TAG, "isAvailableInFolderPhoto() - photoNom : "+ photoNom );
 
             try {
-                Picasso.with(getActivity()).load(getPhotosOutils().getPhotoFile(photoNom, imageType))
+                Picasso.get().load(getPhotosOutils().getPhotoFile(photoNom, imageType))
                         .fit()
                         .centerInside()
                         .into(ivQuestionImage);
@@ -194,7 +194,7 @@ public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemC
             if (reseauOutils.isTelechargementsModeConnectePossible()) {
                 String urlPhoto = Constants.IMAGE_BASE_URL + "/" + imageURL;
                 Log.d(LOG_TAG, "setImage() - urlPhoto : "+urlPhoto);
-                Picasso.with(getActivity())
+                Picasso.get()
                         .load(urlPhoto.replace(" ", "%20"))
                         .placeholder(R.drawable.doris_icone_doris_large)  // utilisation de l'image par defaut pour commencer
                         .error(R.drawable.doris_icone_doris_large_pas_connecte)

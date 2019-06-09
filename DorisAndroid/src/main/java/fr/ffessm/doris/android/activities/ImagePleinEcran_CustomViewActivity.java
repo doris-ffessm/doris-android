@@ -233,7 +233,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
         // info de debug de Picasso
         Param_Outils paramOutils = new Param_Outils(this.getApplicationContext());
         if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)) {
-            Picasso.with(this).setDebugging(BuildConfig.DEBUG);
+            Picasso.get().setLoggingEnabled(BuildConfig.DEBUG);
         }
 
         // gestion du full screen

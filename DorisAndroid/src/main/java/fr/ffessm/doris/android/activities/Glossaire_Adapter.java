@@ -213,7 +213,7 @@ public class Glossaire_Adapter extends BaseAdapter implements Filterable {
             Photos_Outils photosOutils = new Photos_Outils(context);
             if (photosOutils.isAvailableInFolderPhoto(nom1erePhoto, ImageType.ILLUSTRATION_DEFINITION)) {
                 try {
-                    Picasso.with(context).load(photosOutils.getPhotoFile(nom1erePhoto, ImageType.ILLUSTRATION_DEFINITION))
+                    Picasso.get().load(photosOutils.getPhotoFile(nom1erePhoto, ImageType.ILLUSTRATION_DEFINITION))
                             .resize(defaultIconSize, defaultIconSize)
                             .centerInside()
                             .into(imageView);
@@ -223,13 +223,13 @@ public class Glossaire_Adapter extends BaseAdapter implements Filterable {
                 // utilise la version en ligne si possible
                 if (reseauOutils.isTelechargementsModeConnectePossible()) {
                     Log.i(LOG_TAG, "getView() - tentative téléchargement : " + Constants.IMAGE_BASE_URL + "/" + photoUrl);
-                    Picasso.with(context).load(Constants.IMAGE_BASE_URL + "/" + photoUrl)
+                    Picasso.get().load(Constants.IMAGE_BASE_URL + "/" + photoUrl)
                             .placeholder(R.drawable.app_glossaire_indisponible)
                             .resize(defaultIconSize, defaultIconSize)
                             .centerInside()
                             .into(imageView);
                 } else {
-                    Picasso.with(context).load(Constants.IMAGE_BASE_URL + "/" + photoUrl)
+                    Picasso.get().load(Constants.IMAGE_BASE_URL + "/" + photoUrl)
                             .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
                             .placeholder(R.drawable.app_glossaire_indisponible)
                             .resize(defaultIconSize, defaultIconSize)

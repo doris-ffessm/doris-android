@@ -178,7 +178,7 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
 
             if (getPhotosOutils().isAvailableInFolderPhoto(entry.getPhotoNom(), ImageType.PORTRAITS)) {
                 try {
-                    Picasso.with(context).load(getPhotosOutils().getPhotoFile(entry.getPhotoNom(), ImageType.PORTRAITS))
+                    Picasso.get().load(getPhotosOutils().getPhotoFile(entry.getPhotoNom(), ImageType.PORTRAITS))
                             .fit()
                             .centerInside()
                             .into(trombineView);
@@ -195,8 +195,8 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
                     }
 
                     @Override
-                    public void onError() {
-                        Picasso.with(context)
+                    public void onError(Exception e) {
+                        Picasso.get()
                                 .load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE))
                                 .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
                                 .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
@@ -210,11 +210,11 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
                                             }
 
                                             @Override
-                                            public void onError() {
+                                            public void onError(Exception e) {
                                                 Log.d(LOG_TAG, "getView URL Petite Image : " +
                                                         entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE));
 
-                                                Picasso.with(context)
+                                                Picasso.get()
                                                         .load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
                                                         .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
                                                         .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
@@ -229,14 +229,14 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
                 };
                 if (reseauOutils.isTelechargementsModeConnectePossible()) {
                     Log.d(LOG_TAG, "addFoldableView() - entry.getCleURLPhotoParticipant() : " + Constants.PORTRAIT_BASE_URL + "/" + entry.getPhotoNom());
-                    Picasso.with(context)
+                    Picasso.get()
                             .load(urlPhoto.replace(" ", "%20"))
                             .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
                             .fit()
                             .centerInside()
                             .into(trombineView, fallbackVignetteOffline);
                 } else {
-                    Picasso.with(context)
+                    Picasso.get()
                             .load(urlPhoto.replace(" ", "%20"))
                             .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
                             .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer

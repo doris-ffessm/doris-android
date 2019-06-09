@@ -342,14 +342,15 @@ public class PrefetchFiches {
                             final Participant doridien = dbContext.participantDao.queryForFirst(
                                     dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroAuteurPrincipal).prepare()
                             );
-
-                            TransactionManager.callInTransaction(connectionSource,
-                                    new Callable<Void>() {
-                                        public Void call() throws Exception {
-                                            dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.REDACTEUR_PRINCIPAL.ordinal()));
-                                            return null;
-                                        }
-                                    });
+                            if(doridien != null) {
+                                TransactionManager.callInTransaction(connectionSource,
+                                        new Callable<Void>() {
+                                            public Void call() throws Exception {
+                                                dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.REDACTEUR_PRINCIPAL.ordinal()));
+                                                return null;
+                                            }
+                                        });
+                            }
                         } catch (NumberFormatException nfe) {
                             // ignore les entrées invalides
                         }
@@ -361,14 +362,15 @@ public class PrefetchFiches {
                                 final Participant doridien = dbContext.participantDao.queryForFirst(
                                         dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroVerificateur).prepare()
                                 );
-
-                                TransactionManager.callInTransaction(connectionSource,
-                                        new Callable<Void>() {
-                                            public Void call() throws Exception {
-                                                dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.VERIFICATEUR.ordinal()));
-                                                return null;
-                                            }
-                                        });
+                                if(doridien != null) {
+                                    TransactionManager.callInTransaction(connectionSource,
+                                            new Callable<Void>() {
+                                                public Void call() throws Exception {
+                                                    dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.VERIFICATEUR.ordinal()));
+                                                    return null;
+                                                }
+                                            });
+                                }
                             }
                         } catch (NumberFormatException nfe) {
                             // ignore les entrées invalides
@@ -380,14 +382,15 @@ public class PrefetchFiches {
                                 final Participant doridien = dbContext.participantDao.queryForFirst(
                                         dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroContributeur).prepare()
                                 );
-
-                                TransactionManager.callInTransaction(connectionSource,
-                                        new Callable<Void>() {
-                                            public Void call() throws Exception {
-                                                dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.REDACTEUR.ordinal()));
-                                                return null;
-                                            }
-                                        });
+                                if(doridien != null) {
+                                    TransactionManager.callInTransaction(connectionSource,
+                                            new Callable<Void>() {
+                                                public Void call() throws Exception {
+                                                    dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.REDACTEUR.ordinal()));
+                                                    return null;
+                                                }
+                                            });
+                                }
                             }
                         } catch (NumberFormatException nfe) {
                             // ignore les entrées invalides
@@ -399,14 +402,15 @@ public class PrefetchFiches {
                                 final Participant doridien = dbContext.participantDao.queryForFirst(
                                         dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroCorrecteur).prepare()
                                 );
-
-                                TransactionManager.callInTransaction(connectionSource,
-                                        new Callable<Void>() {
-                                            public Void call() throws Exception {
-                                                dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.CORRECTEUR.ordinal()));
-                                                return null;
-                                            }
-                                        });
+                                if(doridien != null) {
+                                    TransactionManager.callInTransaction(connectionSource,
+                                            new Callable<Void>() {
+                                                public Void call() throws Exception {
+                                                    dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.CORRECTEUR.ordinal()));
+                                                    return null;
+                                                }
+                                            });
+                                }
                             }
                         } catch (NumberFormatException nfe) {
                             // ignore les entrées invalides
@@ -418,14 +422,15 @@ public class PrefetchFiches {
                                 final Participant doridien = dbContext.participantDao.queryForFirst(
                                         dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroDoridien).prepare()
                                 );
-
-                                TransactionManager.callInTransaction(connectionSource,
-                                        new Callable<Void>() {
-                                            public Void call() throws Exception {
-                                                dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.RESPONSABLE_REGIONAL.ordinal()));
-                                                return null;
-                                            }
-                                        });
+                                if(doridien != null) {
+                                    TransactionManager.callInTransaction(connectionSource,
+                                            new Callable<Void>() {
+                                                public Void call() throws Exception {
+                                                    dbContext.intervenantFicheDao.create(new IntervenantFiche(espece_final, doridien, Constants.ParticipantKind.RESPONSABLE_REGIONAL.ordinal()));
+                                                    return null;
+                                                }
+                                            });
+                                }
                             }
                         } catch (NumberFormatException nfe) {
                             // ignore les entrées invalides

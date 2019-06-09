@@ -195,7 +195,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter implements F
 
             if (photosOutils.isAvailableInFolderPhoto(entry.getPhotoNom(), ImageType.PORTRAITS)) {
                 try {
-                    Picasso.with(context).load(photosOutils.getPhotoFile(entry.getPhotoNom(), ImageType.PORTRAITS))
+                    Picasso.get().load(photosOutils.getPhotoFile(entry.getPhotoNom(), ImageType.PORTRAITS))
                             .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
                             .resize(defaultIconSize, defaultIconSize)
                             .centerInside()
@@ -211,7 +211,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter implements F
                     Log.d(LOG_TAG, "getView URL Vignette Image : " +
                             entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE));
 
-                    Picasso.with(context)
+                    Picasso.get()
                             .load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE))
                             .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
                             .resize(defaultIconSize, defaultIconSize)
@@ -224,11 +224,11 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter implements F
                                         }
 
                                         @Override
-                                        public void onError() {
+                                        public void onError(Exception e) {
                                             Log.d(LOG_TAG, "getView URL Petite Image : " +
                                                     entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE));
 
-                                            Picasso.with(context)
+                                            Picasso.get()
                                                     .load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
                                                     .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
                                                     .resize(defaultIconSize, defaultIconSize)
@@ -241,7 +241,7 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter implements F
 
                 } else {
 
-                    Picasso.with(context)
+                    Picasso.get()
                             .load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.VIGNETTE_BASE_URL_SUFFIXE))
                             .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
                             .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
@@ -255,11 +255,11 @@ public class ListeParticipantAvecFiltre_Adapter extends BaseAdapter implements F
                                         }
 
                                         @Override
-                                        public void onError() {
+                                        public void onError(Exception e) {
                                             Log.d(LOG_TAG, "getView URL Petite Image : " +
                                                     entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE));
 
-                                            Picasso.with(context)
+                                            Picasso.get()
                                                     .load(Constants.IMAGE_BASE_URL + "/" + entry.getPhotoNom().replaceAll(Constants.IMAGE_BASE_URL_SUFFIXE, Constants.PETITE_BASE_URL_SUFFIXE))
                                                     .networkPolicy(NetworkPolicy.OFFLINE) // interdit l'accés web
                                                     .placeholder(R.drawable.app_ic_participant)  // utilisation de l'image par defaut pour commencer
