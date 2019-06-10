@@ -380,6 +380,16 @@ public class JsonToDB {
         )); }
 
 
+        // Vie associée
+        if (jsonEspece.getFields().getAssociatedLife().getValue() != "") {sectionsFiche.add(new SectionFiche(333,"Vie associée",
+                commonOutils.remplacementBalises(
+                        commonOutils.nettoyageBalises(
+                                jsonEspece.getFields().getAssociatedLife().getValue()
+                        )
+                        , true)
+        )); }
+
+
         // Divers biologie
         if (jsonEspece.getFields().getBioDivers().getValue() != "") {sectionsFiche.add(new SectionFiche(335,"Divers biologie",
                 commonOutils.remplacementBalises(
