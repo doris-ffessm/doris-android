@@ -246,7 +246,7 @@ public class JsonToDB {
         if (jsonEspece.getFields().getReglementation().getValue().replaceAll("<[^>]*>","") != "") pictogrammes += "0;";
 
         //TODO : Trouver un exemple pour vérifier
-        //log.debug("getFicheFromJSONEspece() - danger : "+jsonEspece.getFields().getDanger().getValue());
+        log.debug("getFicheFromJSONEspece() - danger : "+jsonEspece.getFields().getDanger().getValue());
         if (jsonEspece.getFields().getDanger().getValue() == "1") pictogrammes += "1;";
 
         //log.debug("getFicheFromJSONEspece() - pictogrammes : "+pictogrammes);

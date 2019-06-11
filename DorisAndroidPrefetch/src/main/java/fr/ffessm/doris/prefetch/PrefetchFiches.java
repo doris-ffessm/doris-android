@@ -170,7 +170,7 @@ public class PrefetchFiches {
 
                         sectionFiche.setFiche(espece);
                         final SectionFiche sectionFiche_final = sectionFiche;
-                        log.debug("prefetchV4() - sectionFiche_final.getFiche() : " + sectionFiche_final.getFiche().getNumeroFiche());
+                        //log.debug("prefetchV4() - sectionFiche_final.getFiche() : " + sectionFiche_final.getFiche().getNumeroFiche());
 
                         TransactionManager.callInTransaction(connectionSource,
                                 new Callable<Void>() {
