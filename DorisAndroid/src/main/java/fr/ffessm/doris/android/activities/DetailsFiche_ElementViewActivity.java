@@ -494,6 +494,13 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
+                if(upIntent==null){
+                    // workaround bug https://gitlab.inria.fr/doris/doris-android/issues/134
+                    Intent i=new Intent(this, Accueil_CustomViewActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    DorisApplicationContext.getInstance().resetIntentPrecedent(i);
+                    upIntent = i;
+                }
                 Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : " + upIntent.getComponent().toString());
 
                 if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
