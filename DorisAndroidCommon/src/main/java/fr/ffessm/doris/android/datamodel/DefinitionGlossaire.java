@@ -96,7 +96,7 @@ public class DefinitionGlossaire {
 	 */
 	
 
-	/** numéro de la définition sur le site Doris */ 
+	/** numéro de la définition sur le site doris.ffessm.fr */
 	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected int numeroDoris;

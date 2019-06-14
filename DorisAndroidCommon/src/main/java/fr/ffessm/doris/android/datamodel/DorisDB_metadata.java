@@ -64,7 +64,7 @@ import fr.ffessm.doris.android.datamodel.associations.*;
 // End of user code
 
 /** 
-  * données complémentaires sur la base Doris 
+  * données complémentaires sur la base DORIS
   */ 
 @DatabaseTable(tableName = "dorisDB_metadata")
 public class DorisDB_metadata {

@@ -98,7 +98,7 @@ public class Participant {
 	@DatabaseField
 	protected java.lang.String nom;
 
-	/** identifiant du participant sur le site Doris */ 
+	/** identifiant du participant sur le site doris.ffessm.fr */
 	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected int numeroParticipant;

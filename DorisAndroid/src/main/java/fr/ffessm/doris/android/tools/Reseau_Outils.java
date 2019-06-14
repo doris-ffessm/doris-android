@@ -159,7 +159,7 @@ public class Reseau_Outils {
 
         try {
             InputStream inputStream = new BufferedInputStream(urlConnection.getInputStream());
-            //On vérifie que l'on est bien sur Doris (dans le cas ou l'on est re-dirigé vers Free, SFR, etc.
+            //On vérifie que l'on est bien sur doris.ffessm.fr (dans le cas ou l'on est re-dirigé vers Free, SFR, etc.
             if (!urlHtml.getHost().equals(urlConnection.getURL().getHost())) {
                 String text = "Problème vraisemblable de redirection";
                 Log.e(LOG_TAG, "getHtml() - " + text);

@@ -215,7 +215,7 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
 		// Start of user code VerifieMAJFiche onPostExecute
 
         if(verifieMAJFiches_BgActivity != null){
-        	verifieMAJFiches_BgActivity.dataHasChanged("Fiche mise à jour depuis le site Doris");
+        	verifieMAJFiches_BgActivity.dataHasChanged("Fiche mise à jour depuis le site doris.ffessm.fr");
         	//Toast.makeText(accueil_CustomViewActivity.getContext(), "Base initialisée avec les données prédéfinies", Toast.LENGTH_LONG).show();
         }
         

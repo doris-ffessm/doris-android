@@ -95,7 +95,7 @@ public class EntreeBibliographie {
 	 */
 	
 
-	/** numéro de l'entrée sur le site Doris */ 
+	/** numéro de l'entrée sur le site doris.ffessm.fr */
 	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected int numeroDoris;

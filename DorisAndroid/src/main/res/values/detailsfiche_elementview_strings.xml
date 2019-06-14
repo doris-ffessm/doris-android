@@ -16,8 +16,8 @@
 
 	<string name="detailsfiche_elementview_arbre_phylogenetique">Arbre phylogénétique</string>
 
-	<string name="detailsfiche_elementview_zonesgeo_label">Zones Doris</string>
-	<string name="detailsfiche_elementview_zonesgeo_aucune_label">"Aucune zone Doris n'est renseignée sur cette fiche"</string>
+	<string name="detailsfiche_elementview_zonesgeo_label">Zones DORIS</string>
+	<string name="detailsfiche_elementview_zonesgeo_aucune_label">"Aucune zone DORIS n'est renseignée sur cette fiche"</string>
 
 	<string name="unfold_all_sections_menu_option">Tout déplier</string>
 	<string name="fold_all_sections_menu_option">Tout replier</string>

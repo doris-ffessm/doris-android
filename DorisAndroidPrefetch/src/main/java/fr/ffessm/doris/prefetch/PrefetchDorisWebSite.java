@@ -247,7 +247,7 @@ public class PrefetchDorisWebSite {
 	}
 
     private void dbV4ToAndroidAction() throws Exception{
-        log.debug("dbV4ToAndroidAction() - Début Création de la Base pour Doris V4");
+        log.debug("dbV4ToAndroidAction() - Début Création de la Base pour doris.ffessm.fr V4");
 
         // turn our static method into an instance of Main
         //if (testDev == true) BasicConfigurator.configure();
@@ -347,11 +347,11 @@ public class PrefetchDorisWebSite {
 
 
 
-        log.debug("dbV4ToAndroidAction() - Fin Création de la Base pour Doris V4");
+        log.debug("dbV4ToAndroidAction() - Fin Création de la Base pour doris.ffessm.fr V4");
     }
 
     private void dbImageV4UpgradeAction() throws Exception{
-		log.debug("dbImageV4UpgradeAction() - Début upgrade images pour Doris V4");
+		log.debug("dbImageV4UpgradeAction() - Début upgrade images pour doris.ffessm.fr V4");
 		
 		JsonToDB jsonToDB = new JsonToDB();
 
@@ -389,8 +389,8 @@ public class PrefetchDorisWebSite {
 			TableUtils.clearTable(connectionSource, PhotoFiche.class);
 			
 		
-			// récupère tous les nodeIds des fiches connues de Doris V4
-			log.debug("doMain() - Récupère tous les nodeIds des fiches connues de Doris V4");
+			// récupère tous les nodeIds des fiches connues de doris.ffessm.fr V4
+			log.debug("doMain() - Récupère tous les nodeIds des fiches connues de doris.ffessm.fr V4");
 			
 			int nbFichesDORIS = 3700;
 			int nbFichesParRequetes = 50;
@@ -483,7 +483,7 @@ public class PrefetchDorisWebSite {
 			}
 		}
 				
-		log.debug("dbImageV4UpgradeAction() - Début upgrade images pour Doris V4");
+		log.debug("dbImageV4UpgradeAction() - Début upgrade images pour doris.ffessm.fr V4");
 	}
 
 	private void eraseAllAction() {
@@ -640,8 +640,8 @@ public class PrefetchDorisWebSite {
 		System.out.println("  INIT              Toutes les fiches sont retéléchargées sur doris.ffessm.fr et retraitées pour créer la base (images comprises)");
 		System.out.println("  TEST          	Pour les développeurs");
 		System.out.println("  DB_TO_ANDROID     Déplace la base du Prefetch vers DorisAndroid");
-        System.out.println("  V4_TO_ANDROID     Création de la base de données pour l'appli. Android à partir du site Doris V4");
-		System.out.println("  DB_IMAGE_UPGRADE  remplace les images de la base courante par celles du nouveau site Doris V4");
+        System.out.println("  V4_TO_ANDROID     Création de la base de données pour l'appli. Android à partir du site doris.ffessm.fr V4");
+		System.out.println("  DB_IMAGE_UPGRADE  remplace les images de la base courante par celles du nouveau site doris.ffessm.fr V4");
 		System.out.println("  ERASE_ALL         Efface tout le contenu de run");
 		log.debug("help() - Fin");
 	}

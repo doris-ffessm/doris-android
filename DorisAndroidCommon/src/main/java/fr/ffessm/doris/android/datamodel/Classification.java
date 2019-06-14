@@ -121,7 +121,7 @@ C'est lui qui permet d'identifier la Classification */
 
 	// Start of user code Classification additional user properties
 
-    /** Référence Doris de la Classification  */
+    /** Référence DORIS de la Classification  */
     /** TEST GM : SQLite = SQLite **/
     @DatabaseField
     protected int numeroDoris;

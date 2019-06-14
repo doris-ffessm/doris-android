@@ -25,7 +25,7 @@ dependencies {
 }*/
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-// * V4_TO_ANDROID : Crée la base à partir du nouveau site Doris V4
+// * V4_TO_ANDROID : Crée la base à partir du nouveau site doris.ffessm.fr V4
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 task(buildDorisDBV4, dependsOn: 'classes', type: JavaExec) {
