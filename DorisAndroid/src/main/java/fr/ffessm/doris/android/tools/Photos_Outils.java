@@ -701,7 +701,7 @@ public class Photos_Outils {
     public long getPhotoDiskUsage(ImageLocation baseImageLocation, ImageType inImageType) {
         //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "Photos_Outils() - getPhotoDiskUsage() - baseImageLocation : "+baseImageLocation.name());
         //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "Photos_Outils() - getPhotoDiskUsage() - inImageType : "+inImageType.name());
-        return getImageCountInFolder(baseImageLocation, inImageType) * getTailleMoyImageUnitaire(inImageType);
+        return (long)getImageCountInFolder(baseImageLocation, inImageType) * (long)getTailleMoyImageUnitaire(inImageType);
     }
 
 

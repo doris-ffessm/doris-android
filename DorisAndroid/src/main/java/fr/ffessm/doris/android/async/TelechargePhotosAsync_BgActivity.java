@@ -205,6 +205,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 	    	// zoneGeo : 3 - Faune et flore subaquatiques de l'Indo-Pacifique
 	    	// zoneGeo : 4 - Faune et flore subaquatiques des Caraïbes
 	    	// zoneGeo : 5 - Faune et flore subaquatiques de l'Atlantique Nord-Ouest
+	    	// zoneGeo : 6 - Faune et flore des Terres Antarctiques Françaises
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
 			nbPhotosFichesATelecharger(listeZoneGeo);
 			DorisApplicationContext.getInstance().notifyDataHasChanged(null);
