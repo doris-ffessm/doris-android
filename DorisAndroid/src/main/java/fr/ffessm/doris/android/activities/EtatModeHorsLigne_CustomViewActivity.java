@@ -559,8 +559,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
         Photos_Outils.PrecharMode precharModeZoneGeo = photosOutils.getPrecharModeZoneGeo(inZoneGeo.getZoneGeoKind());
 
+        // P0 : Aucune photo préchargée
         if (precharModeZoneGeo == Photos_Outils.PrecharMode.P0) {
-
             affichageBarrePhotoPrinc = false;
             affichageBarrePhoto = false;
 
@@ -579,10 +579,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
             if (nbPhotosPrincATelecharger == 0) {
                 summaryTexte = context.getString(R.string.avancement_progressbar_jamais_summary);
                 summaryTexte = summaryTexte.replace("@nbF", "" + nbFichesZoneGeo);
+
             } else {
-
+                // P1 : La photo principale en qualité vignette
                 if (precharModeZoneGeo == Photos_Outils.PrecharMode.P1) {
-
                     summaryTexte = context.getString(R.string.avancement_progressbar_P1_summary);
                     summaryTexte = summaryTexte.replace("@nbF", "" + nbFichesZoneGeo);
                     summaryTexte = summaryTexte.replace("@totalPh", "" + nbPhotosPrincATelecharger);
