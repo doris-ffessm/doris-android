@@ -87,43 +87,43 @@ import java.util.HashSet;
 // End of user code
 
 public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Integer>{
-	private static final String LOG_TAG = VerifieMAJFiches_BgActivity.class.getCanonicalName();
-	
-	
+    private static final String LOG_TAG = VerifieMAJFiches_BgActivity.class.getCanonicalName();
+
+
     private NotificationHelper mNotificationHelper;
-    private OrmLiteDBHelper dbHelper;    
+    private OrmLiteDBHelper dbHelper;
     private Context context;
-    
+
     // Start of user code additional attribute declarations VerifieMAJFiches_BgActivity
     private Fiches_Outils fichesOutils;
     private Reseau_Outils reseauOutils;
     //private Param_Outils paramOutils;
 
     Fiches_Outils.TypeLancement_kind typeLancement = Fiches_Outils.TypeLancement_kind.MANUEL;
-    
-	// End of user code
-    
-	/** constructor */
-    public VerifieMAJFiches_BgActivity(Context context){
-		this.dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
-		// use application wide helper
-        this.context = context.getApplicationContext();
-		// Start of user code additional attribute declarations VerifieMAJFiches_BgActivity constructor
-    	Log.d(LOG_TAG, "VerifieMAJFiches_BgActivity() - Début");
-    	
-		String initialTickerText = context.getString(R.string.bg_notifText_fichesInitial);
-		String notificationTitle = context.getString(R.string.bg_notifTitle_fichesInitial);
-        //TODO : compléter EtatModeHorsLigne_CustomViewActivity ?
-		mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
 
-		fichesOutils = new Fiches_Outils(context);
-	    reseauOutils = new Reseau_Outils(context);
-	   // paramOutils = new Param_Outils(context);
-	    
-	    Log.d(LOG_TAG, "VerifieMAJFiches_BgActivity() - Fin");
-	    
-		// End of user code
-        
+    // End of user code
+
+    /** constructor */
+    public VerifieMAJFiches_BgActivity(Context context){
+        this.dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
+        // use application wide helper
+        this.context = context.getApplicationContext();
+        // Start of user code additional attribute declarations VerifieMAJFiches_BgActivity constructor
+        Log.d(LOG_TAG, "VerifieMAJFiches_BgActivity() - Début");
+
+        String initialTickerText = context.getString(R.string.bg_notifText_fichesInitial);
+        String notificationTitle = context.getString(R.string.bg_notifTitle_fichesInitial);
+        //TODO : compléter EtatModeHorsLigne_CustomViewActivity ?
+        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
+
+        fichesOutils = new Fiches_Outils(context);
+        reseauOutils = new Reseau_Outils(context);
+        // paramOutils = new Param_Outils(context);
+
+        Log.d(LOG_TAG, "VerifieMAJFiches_BgActivity() - Fin");
+
+        // End of user code
+
     }
 
     protected void onPreExecute(){
@@ -133,222 +133,222 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
 
     @Override
     protected Integer doInBackground(String... arg0) {
-    	
 
-		// Start of user code initialization of the task VerifieMAJFiches_BgActivity
-		// do the initialization of the task here
-		// once done, you should indicates to the notificationHelper how many item will be processed
-		
-    	Log.d(LOG_TAG, "doInBackground() - Début");
-    	
-    	//mNotificationHelper.setMaxNbPages(maxNbPages.toString());
-        
-        
-        
-    	if (arg0.length > 0) typeLancement = Fiches_Outils.TypeLancement_kind.valueOf(arg0[0]);
-    	Log.d(LOG_TAG, "doInBackground() - typeLancement : "+typeLancement);
-    	
-    	// Téléchargement en tache de fond de toutes les photos de toutes les fiches correspondants aux critères de l'utilisateur
-    	if(reseauOutils.getConnectionType() == Reseau_Outils.ConnectionType.AUCUNE){
-        	Log.d(LOG_TAG, "doInBackground() - pas connexion internet : annulation du processus de Maj");
-        	return 0;
+
+        // Start of user code initialization of the task VerifieMAJFiches_BgActivity
+        // do the initialization of the task here
+        // once done, you should indicates to the notificationHelper how many item will be processed
+
+        Log.d(LOG_TAG, "doInBackground() - Début");
+
+        //mNotificationHelper.setMaxNbPages(maxNbPages.toString());
+
+
+
+        if (arg0.length > 0) typeLancement = Fiches_Outils.TypeLancement_kind.valueOf(arg0[0]);
+        Log.d(LOG_TAG, "doInBackground() - typeLancement : "+typeLancement);
+
+        // Téléchargement en tache de fond de toutes les photos de toutes les fiches correspondants aux critères de l'utilisateur
+        if(reseauOutils.getConnectionType() == Reseau_Outils.ConnectionType.AUCUNE){
+            Log.d(LOG_TAG, "doInBackground() - pas connexion internet : annulation du processus de Maj");
+            return 0;
         }
-    	
-    	if(fichesOutils.isMajListeFichesTypeOnlyP0()) {
-        	Log.d(LOG_TAG, "doInBackground() - aucune maj à faire : annulation du processus de Maj");
-        	return 0;
-    	}
-    	// End of user code
-    	
-    	// Start of user code main loop of task VerifieMAJFiches_BgActivity
-		// This is where we would do the actual job
 
-    	HashSet<FicheLight> listeFichesBase = new HashSet<FicheLight>(100);
-    	try{
-	    	// Récupération de la liste des Fiches de la Base
-    		mNotificationHelper.setContentTitle(context.getString(R.string.bg_notifTitle_fichesBase));
-    		mNotificationHelper.setRacineTickerText(context.getString(R.string.bg_notifText_fichesBase));
-	    	mNotificationHelper.setMaxItemToProcess("0");
-	    	publishProgress( 0 );
-	    	
-	    	listeFichesBase = new HashSet<FicheLight>((int) dbHelper.getDorisDBHelper().ficheDao.countOf());
-	    	GenericRawResults<String[]> rawResults =
-	    			dbHelper.getDorisDBHelper().ficheDao.queryRaw("SELECT _id, numeroFiche, etatFiche FROM fiche");
-			for (String[] resultColumns : rawResults) {
-			    //String _idString = resultColumns[0];
-			    //String numeroFicheString = resultColumns[1];
-			    //String etatFicheString = resultColumns[2];
-			    listeFichesBase.add(new FicheLight(
-			    		Integer.parseInt(resultColumns[1]),
-			    		Integer.parseInt(resultColumns[2])) );
-			}
-			//Log.d(LOG_TAG, "doInBackground() - Fiches de la Base : "+listeFichesBase.size() );
-    	} catch(java.sql.SQLException e) {
-			Log.e(LOG_TAG, e.getMessage(), e);
-    	}
-    	
-    	// Pour Chaque Zone, on télécharge la liste des fiches si nécessaire
-    	List<ZoneGeographique> listeZoneGeo;
-		listeZoneGeo = dbHelper.getZoneGeographiqueDao().queryForAll();
-    	// zoneGeo : 1 - Faune et flore marines de France métropolitaine
-    	// zoneGeo : 2 - Faune et flore dulcicoles de France métropolitaine
-    	// zoneGeo : 3 - Faune et flore subaquatiques de l'Indo-Pacifique
-    	// zoneGeo : 4 - Faune et flore subaquatiques des Caraïbes
-    	// zoneGeo : 5 - Faune et flore subaquatiques de l'Atlantique Nord-Ouest
-		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
-		
-		mNotificationHelper.setContentTitle(context.getString(R.string.bg_notifTitle_fichesZoneGeo));
-		mNotificationHelper.setRacineTickerText(context.getString(R.string.bg_notifText_fichesZoneGeo));
-		int avancementMax = listeZoneGeo.size();
-		mNotificationHelper.setMaxItemToProcess(""+avancementMax);
-    	int avancement = 0;
-		publishProgress(avancement);
-		
-		SiteDoris siteDoris = new SiteDoris();
-		
-		List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
-    	listeGroupes.addAll(dbHelper.getGroupeDao().queryForAll());
-		//Log.d(LOG_TAG, "doInBackground() - listeGroupes.size : "+listeGroupes.size());
-		
-    	List<Participant> listeParticipants = new ArrayList<Participant>(0);
-		listeParticipants.addAll(dbHelper.getParticipantDao().queryForAll());
-		//Log.d(LOG_TAG, "doInBackground() - listeParticipants.size : "+listeParticipants.size());
-		
-		for (ZoneGeographique zoneGeo : listeZoneGeo) {
-    		//if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
-    		avancement++;
-    		publishProgress(avancement);
-    		
-    		String contenuFichierHtml = "";
-    		
-    		if ( fichesOutils.isMajNecessaireZone(zoneGeo.getZoneGeoKind(),typeLancement) ) {
-	
-				// Récupération de la liste Fiches depuis le Site
-		    	String urlListeFiches =  Constants.getListeFichesUrl(zoneGeo.getId());
-		    	//Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlListeFiches);
-		    			 
-		    	try {
-		    		contenuFichierHtml = reseauOutils.getHtml(urlListeFiches, FileHtmlKind.LISTE_FICHES);
-				} catch (IOException e) {
-					Log.w(LOG_TAG, e.getMessage(), e);
-				}   
-		    	
-		    	//Log.d(LOG_TAG, "doInBackground() - 10");
-		    	
-		    	HashSet<FicheLight> listeFichesSite = siteDoris.getListeFichesFromHtml(contenuFichierHtml);
-		    	//Log.d(LOG_TAG, "doInBackground() - Fiches de la Base : "+listeFichesBase.size() );
-		    	//Log.d(LOG_TAG, "doInBackground() - Fiches du Site : "+listeFichesSite.size() );
-		    	
-		    	
-		    	// Analyse différences entre les 2 listes
-		    	
-		    	HashSet<FicheLight> listeFichesUpdated = siteDoris.getListeFichesUpdated(listeFichesBase, listeFichesSite);
-		    	//Log.d(LOG_TAG, "doInBackground() - Fiches Updated : "+listeFichesUpdated.size() );
-		    	listeFichesSite.clear();
-		    	
-		    	// Mises à jour fiches
-		    	if (listeFichesUpdated.size()!=0) {
+        if(fichesOutils.isMajListeFichesTypeOnlyP0()) {
+            Log.d(LOG_TAG, "doInBackground() - aucune maj à faire : annulation du processus de Maj");
+            return 0;
+        }
+        // End of user code
 
-		    		avancementMax = avancementMax + listeFichesUpdated.size();
-		    		mNotificationHelper.setMaxItemToProcess(""+avancementMax);
-		    		
-			    	for (FicheLight ficheLight : listeFichesUpdated){
-			    		//Log.d(LOG_TAG, "doInBackground() - fiche modifiée : "+ficheLight.getNumeroFiche());
-			    		
-			    		// Récupération Fiche du Site
-			        	String urlFiche =  Constants.getFicheFromIdUrl( ficheLight.getNumeroFiche() );
-			        	Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlFiche);
-			        	
-			        	try {
-			        		contenuFichierHtml = reseauOutils.getHtml(urlFiche, FileHtmlKind.FICHE);
-			    		} catch (IOException e) {
-			    			Log.w(LOG_TAG, e.getMessage(), e);
-			    		}   
-			        	
-			        	Fiche ficheDeLaBase =
-			        			(new DataBase_Outils(dbHelper.getDorisDBHelper()) ).queryFicheByNumeroFiche(
-			        					ficheLight.getNumeroFiche());
-			        	if (ficheDeLaBase == null){
-			        		ficheDeLaBase = new Fiche();
-			        	}
-			        	ficheDeLaBase.setContextDB(dbHelper.getDorisDBHelper());
-			        	ficheDeLaBase.setEtatFiche(ficheLight.getEtatFiche());
-						try {
-							ficheDeLaBase.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
-							//Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheDeLaBase.getNomCommun());
-		
-							dbHelper.getDorisDBHelper().ficheDao.update(
-									ficheDeLaBase
-								);
-		
-							
-						} catch (SQLException e) {
-							Log.w(LOG_TAG, e.getMessage(), e);
-						}
-						
-			    		avancement++;
-			    		publishProgress(avancement);
-						if(this.isCancelled()){
-							// annulation demandée, fini la tache dés que possible
-							break;
-						}		
-			    	}
-		    	}
-		    	
-		    	fichesOutils.setDateMajListeFichesTypeZoneGeo(zoneGeo.getZoneGeoKind());
-				if(this.isCancelled()){
-					// annulation demandée, fini la tache dés que possible
-					return avancement;
-				}		
-		    	
-    		}
-		}
-		
-		Log.d(LOG_TAG, "doInBackground() - Fin");
-		// End of user code
-        
-		// Start of user code end of task VerifieMAJFiches_BgActivity
-		// return the number of item processed
+        // Start of user code main loop of task VerifieMAJFiches_BgActivity
+        // This is where we would do the actual job
+
+        HashSet<FicheLight> listeFichesBase = new HashSet<FicheLight>(100);
+        try{
+            // Récupération de la liste des Fiches de la Base
+            mNotificationHelper.setContentTitle(context.getString(R.string.bg_notifTitle_fichesBase));
+            mNotificationHelper.setRacineTickerText(context.getString(R.string.bg_notifText_fichesBase));
+            mNotificationHelper.setMaxItemToProcess("0");
+            publishProgress( 0 );
+
+            listeFichesBase = new HashSet<FicheLight>((int) dbHelper.getDorisDBHelper().ficheDao.countOf());
+            GenericRawResults<String[]> rawResults =
+                    dbHelper.getDorisDBHelper().ficheDao.queryRaw("SELECT _id, numeroFiche, etatFiche FROM fiche");
+            for (String[] resultColumns : rawResults) {
+                //String _idString = resultColumns[0];
+                //String numeroFicheString = resultColumns[1];
+                //String etatFicheString = resultColumns[2];
+                listeFichesBase.add(new FicheLight(
+                        Integer.parseInt(resultColumns[1]),
+                        Integer.parseInt(resultColumns[2])) );
+            }
+            //Log.d(LOG_TAG, "doInBackground() - Fiches de la Base : "+listeFichesBase.size() );
+        } catch(java.sql.SQLException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+        }
+
+        // Pour Chaque Zone, on télécharge la liste des fiches si nécessaire
+        List<ZoneGeographique> listeZoneGeo;
+        listeZoneGeo = dbHelper.getZoneGeographiqueDao().queryForAll();
+        // zoneGeo : 1 - Faune et flore marines de France métropolitaine
+        // zoneGeo : 2 - Faune et flore dulcicoles de France métropolitaine
+        // zoneGeo : 3 - Faune et flore subaquatiques de l'Indo-Pacifique
+        // zoneGeo : 4 - Faune et flore subaquatiques des Caraïbes
+        // zoneGeo : 5 - Faune et flore subaquatiques de l'Atlantique Nord-Ouest
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : "+listeZoneGeo.size());
+
+        mNotificationHelper.setContentTitle(context.getString(R.string.bg_notifTitle_fichesZoneGeo));
+        mNotificationHelper.setRacineTickerText(context.getString(R.string.bg_notifText_fichesZoneGeo));
+        int avancementMax = listeZoneGeo.size();
+        mNotificationHelper.setMaxItemToProcess(""+avancementMax);
+        int avancement = 0;
+        publishProgress(avancement);
+
+        SiteDoris siteDoris = new SiteDoris();
+
+        List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
+        listeGroupes.addAll(dbHelper.getGroupeDao().queryForAll());
+        //Log.d(LOG_TAG, "doInBackground() - listeGroupes.size : "+listeGroupes.size());
+
+        List<Participant> listeParticipants = new ArrayList<Participant>(0);
+        listeParticipants.addAll(dbHelper.getParticipantDao().queryForAll());
+        //Log.d(LOG_TAG, "doInBackground() - listeParticipants.size : "+listeParticipants.size());
+
+        for (ZoneGeographique zoneGeo : listeZoneGeo) {
+            //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "doInBackground - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
+            avancement++;
+            publishProgress(avancement);
+
+            String contenuFichierHtml = "";
+
+            if ( fichesOutils.isMajNecessaireZone(zoneGeo.getZoneGeoKind(),typeLancement) ) {
+
+                // Récupération de la liste Fiches depuis le Site
+                String urlListeFiches =  Constants.getListeFichesUrl(zoneGeo.getId());
+                //Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlListeFiches);
+
+                try {
+                    contenuFichierHtml = reseauOutils.getHtml(urlListeFiches, FileHtmlKind.LISTE_FICHES);
+                } catch (IOException e) {
+                    Log.w(LOG_TAG, e.getMessage(), e);
+                }
+
+                //Log.d(LOG_TAG, "doInBackground() - 10");
+
+                HashSet<FicheLight> listeFichesSite = siteDoris.getListeFichesFromHtml(contenuFichierHtml);
+                //Log.d(LOG_TAG, "doInBackground() - Fiches de la Base : "+listeFichesBase.size() );
+                //Log.d(LOG_TAG, "doInBackground() - Fiches du Site : "+listeFichesSite.size() );
+
+
+                // Analyse différences entre les 2 listes
+
+                HashSet<FicheLight> listeFichesUpdated = siteDoris.getListeFichesUpdated(listeFichesBase, listeFichesSite);
+                //Log.d(LOG_TAG, "doInBackground() - Fiches Updated : "+listeFichesUpdated.size() );
+                listeFichesSite.clear();
+
+                // Mises à jour fiches
+                if (listeFichesUpdated.size()!=0) {
+
+                    avancementMax = avancementMax + listeFichesUpdated.size();
+                    mNotificationHelper.setMaxItemToProcess(""+avancementMax);
+
+                    for (FicheLight ficheLight : listeFichesUpdated){
+                        //Log.d(LOG_TAG, "doInBackground() - fiche modifiée : "+ficheLight.getNumeroFiche());
+
+                        // Récupération Fiche du Site
+                        String urlFiche =  Constants.getFicheFromIdUrl( ficheLight.getNumeroFiche() );
+                        Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlFiche);
+
+                        try {
+                            contenuFichierHtml = reseauOutils.getHtml(urlFiche, FileHtmlKind.FICHE);
+                        } catch (IOException e) {
+                            Log.w(LOG_TAG, e.getMessage(), e);
+                        }
+
+                        Fiche ficheDeLaBase =
+                                (new DataBase_Outils(dbHelper.getDorisDBHelper()) ).queryFicheByNumeroFiche(
+                                        ficheLight.getNumeroFiche());
+                        if (ficheDeLaBase == null){
+                            ficheDeLaBase = new Fiche();
+                        }
+                        ficheDeLaBase.setContextDB(dbHelper.getDorisDBHelper());
+                        ficheDeLaBase.setEtatFiche(ficheLight.getEtatFiche());
+                        try {
+                            ficheDeLaBase.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
+                            //Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheDeLaBase.getNomCommun());
+
+                            dbHelper.getDorisDBHelper().ficheDao.update(
+                                    ficheDeLaBase
+                            );
+
+
+                        } catch (SQLException e) {
+                            Log.w(LOG_TAG, e.getMessage(), e);
+                        }
+
+                        avancement++;
+                        publishProgress(avancement);
+                        if(this.isCancelled()){
+                            // annulation demandée, fini la tache dés que possible
+                            break;
+                        }
+                    }
+                }
+
+                fichesOutils.setDateMajListeFichesTypeZoneGeo(zoneGeo.getZoneGeoKind());
+                if(this.isCancelled()){
+                    // annulation demandée, fini la tache dés que possible
+                    return avancement;
+                }
+
+            }
+        }
+
+        Log.d(LOG_TAG, "doInBackground() - Fin");
+        // End of user code
+
+        // Start of user code end of task VerifieMAJFiches_BgActivity
+        // return the number of item processed
         return avancement;
-		// End of user code
+        // End of user code
     }
     protected void onProgressUpdate(Integer... progress) {
         //This method runs on the UI thread, it receives progress updates
         //from the background thread and publishes them to the status bar
         mNotificationHelper.progressUpdate(progress[0]);
     }
-	@Override
-	protected void onCancelled() {
-		super.onCancelled();
-		mNotificationHelper.completed();
-		// Start of user code VerifieMAJFiches onCancelled
-		// End of user code
-	}
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+        mNotificationHelper.completed();
+        // Start of user code VerifieMAJFiches onCancelled
+        // End of user code
+    }
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
-		// Start of user code VerifieMAJFiches onPostExecute
+        // Start of user code VerifieMAJFiches onPostExecute
         //Log.d(LOG_TAG, "onPostExecute() - Début");
-        
+
         if ( typeLancement == Fiches_Outils.TypeLancement_kind.START) {
-        	
-        	Log.d(LOG_TAG, "onCreate() - Lancement Telechargement Photos");
-	        
-        	DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity =
-        		(TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(
-    				context/*, dbHelper*/).execute("");
+
+            Log.d(LOG_TAG, "onCreate() - Lancement Telechargement Photos");
+
+            DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity =
+                    (TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(
+                            context/*, dbHelper*/).execute("");
         }
         //Log.d(LOG_TAG, "onPostExecute() - Fin");
-        
-		// End of user code
+
+        // End of user code
     }
 
     // Start of user code additional operations VerifieMAJFiches_BgActivity
-   
 
-    
 
-    
-	// End of user code
-	
+
+
+
+    // End of user code
+
 }

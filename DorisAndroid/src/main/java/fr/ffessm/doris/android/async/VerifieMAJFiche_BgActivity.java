@@ -76,32 +76,32 @@ import fr.ffessm.doris.android.DorisApplicationContext;
 // End of user code
 
 public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integer>{
-	private static final String LOG_TAG = VerifieMAJFiche_BgActivity.class.getCanonicalName();
-	
-	
+    private static final String LOG_TAG = VerifieMAJFiche_BgActivity.class.getCanonicalName();
+
+
     private NotificationHelper mNotificationHelper;
-    private OrmLiteDBHelper dbHelper;    
+    private OrmLiteDBHelper dbHelper;
     private Context context;
-    
+
     // Start of user code additional attribute declarations VerifieMAJFiche_BgActivity
     private Reseau_Outils reseauOutils;
-	// End of user code
-    
-	/** constructor */
+    // End of user code
+
+    /** constructor */
     public VerifieMAJFiche_BgActivity(Context context){
-		this.dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
-		// use application wide helper
+        this.dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
+        // use application wide helper
         this.context = context.getApplicationContext();
-		// Start of user code additional attribute declarations VerifieMAJFiche_BgActivity constructor
-    	reseauOutils = new Reseau_Outils(context);
-    	
-    	String initialTickerText = context.getString(R.string.bg_notifText_fichesInitial);
-		String notificationTitle = context.getString(R.string.bg_notifTitle_fichesInitial);
-        
-		mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
-		
+        // Start of user code additional attribute declarations VerifieMAJFiche_BgActivity constructor
+        reseauOutils = new Reseau_Outils(context);
+
+        String initialTickerText = context.getString(R.string.bg_notifText_fichesInitial);
+        String notificationTitle = context.getString(R.string.bg_notifTitle_fichesInitial);
+
+        mNotificationHelper = new NotificationHelper(context, initialTickerText, notificationTitle, new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
+
         // End of user code
-        
+
     }
 
     protected void onPreExecute(){
@@ -111,121 +111,121 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
 
     @Override
     protected Integer doInBackground(String... arg0) {
-    	
 
-		// Start of user code initialization of the task VerifieMAJFiche_BgActivity
-		// do the initializatio of the task here
-		// once done, you should indicates to the notificationHelper how many item will be processed
 
-    	int numeroFiche = Integer.valueOf(arg0[0]);
-    	
-    	mNotificationHelper.setMaxItemToProcess(""+1);
-    	publishProgress(1);
-		// End of user code
-    	
-    	// Start of user code main loop of task VerifieMAJFiche_BgActivity
-		// This is where we would do the actual job
+        // Start of user code initialization of the task VerifieMAJFiche_BgActivity
+        // do the initializatio of the task here
+        // once done, you should indicates to the notificationHelper how many item will be processed
 
-    	//Log.d(LOG_TAG, "doInBackground() - numeroFiche : "+numeroFiche);
-    	
-    	// Récupération Fiche de la Base
-    	Fiche ficheDeLaBase = (new DataBase_Outils(dbHelper.getDorisDBHelper())).queryFicheByNumeroFiche(numeroFiche);
-		ficheDeLaBase.setContextDB(dbHelper.getDorisDBHelper());
-		Log.d(LOG_TAG, "doInBackground() - Fiche de la Base : "+ficheDeLaBase.getEtatFiche()+" - "
-				+ ficheDeLaBase.getNomCommunNeverEmpty() + " - " + ficheDeLaBase.getDateCreation()
-				+ " - " + ficheDeLaBase.getDateModification());
-		
-		// Récupération Fiche du Site
-    	String urlFiche =  Constants.getFicheFromIdUrl( numeroFiche );
-    	//Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlFiche);
-    	
-    	String contenuFichierHtml = "";
-    	try {
-    		contenuFichierHtml = reseauOutils.getHtml(urlFiche, FileHtmlKind.FICHE);
-		} catch (IOException e) {
-			Log.w(LOG_TAG, e.getMessage(), e);
-		}   
-    	
-    	Fiche ficheSite = new Fiche();
-    	ficheSite.setContextDB(dbHelper.getDorisDBHelper());
-    	
-		ficheSite.getFicheEtatDateModifFromHtml(contenuFichierHtml);
-		//Log.d(LOG_TAG, "doInBackground() - Fiche du Site : "+ficheSite.getEtatFiche()+" - "
-		//		+ ficheSite.getDateModification());
-		
-		//Si le statut a changé ou que la date de mise à jour a évolué, on continue
-		if ( ficheSite.getEtatFiche() != ficheDeLaBase.getEtatFiche()
-			|| !ficheSite.getDateModification().equals(ficheDeLaBase.getDateModification()) ) {
+        int numeroFiche = Integer.valueOf(arg0[0]);
 
-	    	List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
-	    	listeGroupes.addAll(dbHelper.getGroupeDao().queryForAll());
-			//Log.d(LOG_TAG, "doInBackground() - listeGroupes.size : "+listeGroupes.size());
-			
-	    	List<Participant> listeParticipants = new ArrayList<Participant>(0);
-			listeParticipants.addAll(dbHelper.getParticipantDao().queryForAll());
-			//Log.d(LOG_TAG, "doInBackground() - listeParticipants.size : "+listeParticipants.size());
-			
-			try {
-				// Nécessaire pour que la mise à jour suivante fonctionne
-				// (système hérité du passé et surtout fonctionnant dans le prefetch => GMo : je garde)
-				ficheDeLaBase.setEtatFiche(ficheSite.getEtatFiche());
-				
-				dbHelper.getDorisDBHelper().ficheDao.update(
-						ficheDeLaBase
-					);
-				
-				// Mise à jour réelle de la Fiche
-				ficheDeLaBase.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
-				//Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheDeLaBase.getNomCommun());
+        mNotificationHelper.setMaxItemToProcess(""+1);
+        publishProgress(1);
+        // End of user code
 
-				dbHelper.getDorisDBHelper().ficheDao.update(
-						ficheDeLaBase
-					);
-	
-			} catch (SQLException e) {
-				Log.w(LOG_TAG, e.getMessage(), e);
-			}
-		
-		}
-    	
-	
+        // Start of user code main loop of task VerifieMAJFiche_BgActivity
+        // This is where we would do the actual job
 
-		// End of user code
-        
-		// Start of user code end of task VerifieMAJFiche_BgActivity
-		// return the number of item processed
+        //Log.d(LOG_TAG, "doInBackground() - numeroFiche : "+numeroFiche);
+
+        // Récupération Fiche de la Base
+        Fiche ficheDeLaBase = (new DataBase_Outils(dbHelper.getDorisDBHelper())).queryFicheByNumeroFiche(numeroFiche);
+        ficheDeLaBase.setContextDB(dbHelper.getDorisDBHelper());
+        Log.d(LOG_TAG, "doInBackground() - Fiche de la Base : "+ficheDeLaBase.getEtatFiche()+" - "
+                + ficheDeLaBase.getNomCommunNeverEmpty() + " - " + ficheDeLaBase.getDateCreation()
+                + " - " + ficheDeLaBase.getDateModification());
+
+        // Récupération Fiche du Site
+        String urlFiche =  Constants.getFicheFromIdUrl( numeroFiche );
+        //Log.d(LOG_TAG, "doInBackground() - urlFiche : "+urlFiche);
+
+        String contenuFichierHtml = "";
+        try {
+            contenuFichierHtml = reseauOutils.getHtml(urlFiche, FileHtmlKind.FICHE);
+        } catch (IOException e) {
+            Log.w(LOG_TAG, e.getMessage(), e);
+        }
+
+        Fiche ficheSite = new Fiche();
+        ficheSite.setContextDB(dbHelper.getDorisDBHelper());
+
+        ficheSite.getFicheEtatDateModifFromHtml(contenuFichierHtml);
+        //Log.d(LOG_TAG, "doInBackground() - Fiche du Site : "+ficheSite.getEtatFiche()+" - "
+        //		+ ficheSite.getDateModification());
+
+        //Si le statut a changé ou que la date de mise à jour a évolué, on continue
+        if ( ficheSite.getEtatFiche() != ficheDeLaBase.getEtatFiche()
+                || !ficheSite.getDateModification().equals(ficheDeLaBase.getDateModification()) ) {
+
+            List<Groupe> listeGroupes = new ArrayList<Groupe>(0);
+            listeGroupes.addAll(dbHelper.getGroupeDao().queryForAll());
+            //Log.d(LOG_TAG, "doInBackground() - listeGroupes.size : "+listeGroupes.size());
+
+            List<Participant> listeParticipants = new ArrayList<Participant>(0);
+            listeParticipants.addAll(dbHelper.getParticipantDao().queryForAll());
+            //Log.d(LOG_TAG, "doInBackground() - listeParticipants.size : "+listeParticipants.size());
+
+            try {
+                // Nécessaire pour que la mise à jour suivante fonctionne
+                // (système hérité du passé et surtout fonctionnant dans le prefetch => GMo : je garde)
+                ficheDeLaBase.setEtatFiche(ficheSite.getEtatFiche());
+
+                dbHelper.getDorisDBHelper().ficheDao.update(
+                        ficheDeLaBase
+                );
+
+                // Mise à jour réelle de la Fiche
+                ficheDeLaBase.getFicheFromHtml(contenuFichierHtml, listeGroupes, listeParticipants);
+                //Log.d(LOG_TAG, "doInBackground() - Fiche : "+ficheDeLaBase.getNomCommun());
+
+                dbHelper.getDorisDBHelper().ficheDao.update(
+                        ficheDeLaBase
+                );
+
+            } catch (SQLException e) {
+                Log.w(LOG_TAG, e.getMessage(), e);
+            }
+
+        }
+
+
+
+        // End of user code
+
+        // Start of user code end of task VerifieMAJFiche_BgActivity
+        // return the number of item processed
         return 1;
-		// End of user code
+        // End of user code
     }
     protected void onProgressUpdate(Integer... progress) {
         //This method runs on the UI thread, it receives progress updates
         //from the background thread and publishes them to the status bar
         mNotificationHelper.progressUpdate(progress[0]);
     }
-	@Override
-	protected void onCancelled() {
-		super.onCancelled();
-		mNotificationHelper.completed();
-		// Start of user code VerifieMAJFiche onCancelled
-		// End of user code
-	}
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+        mNotificationHelper.completed();
+        // Start of user code VerifieMAJFiche onCancelled
+        // End of user code
+    }
     protected void onPostExecute(Integer result)    {
         //The task is complete, tell the status bar about it
         mNotificationHelper.completed();
-		// Start of user code VerifieMAJFiche onPostExecute
+        // Start of user code VerifieMAJFiche onPostExecute
 
         if(verifieMAJFiches_BgActivity != null){
-        	verifieMAJFiches_BgActivity.dataHasChanged("Fiche mise à jour depuis le site doris.ffessm.fr");
-        	//Toast.makeText(accueil_CustomViewActivity.getContext(), "Base initialisée avec les données prédéfinies", Toast.LENGTH_LONG).show();
+            verifieMAJFiches_BgActivity.dataHasChanged("Fiche mise à jour depuis le site doris.ffessm.fr");
+            //Toast.makeText(accueil_CustomViewActivity.getContext(), "Base initialisée avec les données prédéfinies", Toast.LENGTH_LONG).show();
         }
-        
-		DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+
+        DorisApplicationContext.getInstance().notifyDataHasChanged(null);
 
         // End of user code
     }
 
     // Start of user code additional operations VerifieMAJFiche_BgActivity
     private DataChangedListener verifieMAJFiches_BgActivity = null;
-	// End of user code
-	
+    // End of user code
+
 }
