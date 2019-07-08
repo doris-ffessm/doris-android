@@ -43,19 +43,25 @@
 	
 	<string name="etatmodehorsligne_etat_base_titre_text">Fiches et textes</string>
 	<string name="etatmodehorsligne_etat_base_description_text">"Les textes des fiches correspondent à la base DORIS du\u00A0: "</string>
-	
+
+
 	<!-- Avancement Global et par Zone du Téléchargement des Photos -->
-	
+
 	<string name="etatmodehorsligne_avancement_titre_text">Téléchargement photos</string>
 		
-	<string name="avancement_titre">Avancement préchargement photos</string>
 	<string name="avancement_touteszones_titre">Avancement global préchargement photos</string>
-	<string name="avancement_progressbar_aucune_summary">"@nbF Fiches ; aucune photo ne doit être téléchargée pour cette zone"</string>
-	<string name="avancement_progressbar_jamais_summary">"@nbF Fiches ; le préchargement des photos n\'a jamais été lancé depuis la modification des paramètres."</string>
-	<string name="avancement_progressbar_P1_summary">"@nbF Fiches ; @nbPh sur @totalPh photos principales téléchargées"</string>
-	<string name="avancement_progressbar_PX_summary1">"@nbF Fiches ; @nbPh sur @totalPh photos principales"</string>
-	<string name="avancement_progressbar_PX_jamais_summary2">" et aucune autre photo téléchargée"</string>
-	<string name="avancement_progressbar_PX_summary2">" et @nbPh sur @totalPh autres photos téléchargées"</string>
+	<string name="avancement_touteszones_progressbar_P0_summary">"@nbF Fiches ; aucune photo ne doit être téléchargée"</string>
+	<string name="avancement_touteszones_progressbar_P1_summary">"@nbF Fiches ; @PropPh des photos principales téléchargées"</string>
+	<string name="avancement_touteszones_progressbar_PX_summary1">"@nbF Fiches ; @PropPh des photos principales"</string>
+	<string name="avancement_touteszones_progressbar_PX_summary2">" et @PropPh des autres photos téléchargées"</string>
+
+	<string name="avancement_zone_titre">Avancement préchargement photos</string>
+	<string name="avancement_zone_progressbar_P0_summary">"@nbF Fiches ; aucune photo ne doit être téléchargée pour cette zone"</string>
+	<string name="avancement_zone_progressbar_P1_summary">"@nbF Fiches ; @nbPh sur @totalPh photos principales téléchargées"</string>
+	<string name="avancement_zone_progressbar_PX_summary1">"@nbF Fiches ; @nbPh sur @totalPh photos principales"</string>
+	<string name="avancement_zone_progressbar_PX_jamais_summary2">" et aucune autre photo téléchargée"</string>
+	<string name="avancement_zone_progressbar_PX_summary2">" et @nbPh sur @totalPh autres photos téléchargées"</string>
+
 	<string name="avancement_progressbar_limite1">25</string>
 	<string name="avancement_progressbar_couleur1">RED</string>
 	<string name="avancement_progressbar_limite2">50</string>
