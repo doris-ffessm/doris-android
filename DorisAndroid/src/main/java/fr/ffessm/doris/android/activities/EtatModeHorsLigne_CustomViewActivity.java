@@ -551,11 +551,11 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         Photos_Outils photosOutils = new Photos_Outils(context);
 
         boolean affichageBarrePhotoPrinc;
-        boolean affichageBarrePhoto;
+        boolean affichageBarrePhotoAutres;
         String summaryTexte = "";
         int nbFichesZoneGeo = fichesOutils.getNbFichesZoneGeo(inZoneGeo.getZoneGeoKind());
         int avancementPhotoPrinc = 0;
-        int avancementPhoto = 0;
+        int avancementPhotoAutres = 0;
 
         int nbPhotosPrincATelecharger = photosOutils.getAPrecharQteZoneGeo(inZoneGeo.getZoneGeoKind(), true);
         if (BuildConfig.DEBUG) Log.d(LOG_TAG, "updateProgressBarZone() - nbPhotosPrincATelecharger : "+nbPhotosPrincATelecharger);
@@ -571,9 +571,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
             affichageBarrePhotoPrinc = true;
         }
         if (nbPhotosAutresATelecharger == 0) {
-            affichageBarrePhoto = false;
+            affichageBarrePhotoAutres = false;
         } else {
-            affichageBarrePhoto = true;
+            affichageBarrePhotoAutres = true;
         }
 
         // P0 : Aucune photo à précharger
@@ -583,7 +583,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
             summaryTexte = summaryTexte.replace("@nbF", "" + nbFichesZoneGeo);
         }
 
-        // Texte des Avancements Toutes Zones
+        // Texte de l'Avancement Global : Toutes Zones
         if (inZoneGeo.getZoneGeoKind() == ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES) {
 
             // P0 : Aucune photo à précharger
@@ -606,19 +606,18 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
             if (nbPhotosPrincATelecharger != 0 && nbPhotosAutresATelecharger != 0) {
 
                 avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
+                avancementPhotoAutres = 100 * nbPhotosAutresDejaLa / nbPhotosAutresATelecharger;
 
                 summaryTexte = context.getString(R.string.avancement_touteszones_progressbar_PX_summary1);
                 summaryTexte = summaryTexte.replace("@nbF", "" + nbFichesZoneGeo);
                 summaryTexte = summaryTexte.replace("@PropPh", "" + avancementPhotoPrinc);
 
-                avancementPhotoPrinc = 100 * nbPhotosAutresDejaLa / nbPhotosAutresATelecharger;
-
                 summaryTexte += context.getString(R.string.avancement_touteszones_progressbar_PX_summary2);
-                summaryTexte = summaryTexte.replace("@PropPh", "" + avancementPhotoPrinc);
+                summaryTexte = summaryTexte.replace("@PropPh", "" + avancementPhotoAutres);
             }
 
         } else {
-            // Texte des Avancements Zones DORIS
+            // Texte des Avancements par Zones DORIS
 
             // P0 : Aucune photo à précharger
             if (nbPhotosPrincATelecharger == 0) {
@@ -633,22 +632,24 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
                 summaryTexte = context.getString(R.string.avancement_zone_progressbar_P1_summary);
                 summaryTexte = summaryTexte.replace("@nbF", "" + nbFichesZoneGeo);
-                summaryTexte = summaryTexte.replace("@PropPh", "" + avancementPhotoPrinc);
+                summaryTexte = summaryTexte.replace("@nbPh", "" + nbPhotosPrincDejaLa);
+                summaryTexte = summaryTexte.replace("@totalPh", "" + nbPhotosPrincATelecharger);
             }
 
             // PX : La photo principale seule + autres photos
             if (nbPhotosPrincATelecharger != 0 && nbPhotosAutresATelecharger != 0) {
 
                 avancementPhotoPrinc = 100 * nbPhotosPrincDejaLa / nbPhotosPrincATelecharger;
+                avancementPhotoAutres = 100 * nbPhotosAutresDejaLa / nbPhotosAutresATelecharger;
 
                 summaryTexte = context.getString(R.string.avancement_zone_progressbar_PX_summary1);
                 summaryTexte = summaryTexte.replace("@nbF", "" + nbFichesZoneGeo);
-                summaryTexte = summaryTexte.replace("@PropPh", "" + avancementPhotoPrinc);
-
-                avancementPhotoPrinc = 100 * nbPhotosAutresDejaLa / nbPhotosAutresATelecharger;
+                summaryTexte = summaryTexte.replace("@nbPh", "" + nbPhotosPrincDejaLa);
+                summaryTexte = summaryTexte.replace("@totalPh", "" + nbPhotosPrincATelecharger);
 
                 summaryTexte += context.getString(R.string.avancement_zone_progressbar_PX_summary2);
-                summaryTexte = summaryTexte.replace("@PropPh", "" + avancementPhotoPrinc);
+                summaryTexte = summaryTexte.replace("@nbPh", "" + nbPhotosAutresDejaLa);
+                summaryTexte = summaryTexte.replace("@totalPh", "" + nbPhotosAutresATelecharger);
             }
 
         }
@@ -662,7 +663,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         }
 
         if (progressBarZone != null) {
-            progressBarZone.update(summaryPrefix + summaryTexte, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhoto, avancementPhoto, downloadInProgress);
+            progressBarZone.update(summaryPrefix + summaryTexte, affichageBarrePhotoPrinc, avancementPhotoPrinc, affichageBarrePhotoAutres, avancementPhotoAutres, downloadInProgress);
         }
         return summaryPrefix + summaryTexte;
     }

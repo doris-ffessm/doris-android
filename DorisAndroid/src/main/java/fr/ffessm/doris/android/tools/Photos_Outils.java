@@ -51,18 +51,25 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import android.content.Context;
 import android.util.Log;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.dao.DaoManager;
 
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.android.tools.Disque_Outils.ImageLocation;
@@ -109,6 +116,9 @@ public class Photos_Outils {
     private Fiches_Outils fichesOutils;
     private Param_Outils paramOutils;
     private Disque_Outils disqueOutils;
+
+    private OrmLiteDBHelper dbHelper;
+    private DorisDBHelper dorisDBHelper;
 
     // [Disque] [ImageType]
     public int imagesNbInFolder[][] = new int[3][10];
@@ -768,7 +778,7 @@ public class Photos_Outils {
     }
 
     /**
-     * récupère le nombre déclaré de photo à précharger
+     * récupère le nombre déclaré de photos à précharger
      * La déclaration est stockée dans les préférences
      * zone par zone, principale ou pas
      *
@@ -777,9 +787,9 @@ public class Photos_Outils {
      * @return
      */
     public int getAPrecharQteZoneGeo(ZoneGeographiqueKind inZoneGeo, Boolean inPrincipale) {
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inIdZoneGeo );
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - data_nbphotos_atelecharger_france : "+getParamInt(context, R.string.pref_key_nbphotos_atelecharger_france, 0) );
+        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
+        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inZoneGeo.name() );
+        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inPrincipale : "+inPrincipale );
 
         if (inPrincipale) {
             switch (inZoneGeo) {
@@ -832,6 +842,60 @@ public class Photos_Outils {
                     return 0;
             }
         }
+    }
+
+    /**
+     * Enregistre le nombre de photos à précharger
+     * La déclaration est stockée dans les préférences
+     * zone par zone, principale ou pas
+     *
+     * @param inZoneGeo zone geographique considérée
+     * @param inPrincipale concerne la photo principale ou n'importe quelle photo
+     * @return
+     */
+    public int setAPrecharQteParZoneGeo(ZoneGeographique inZoneGeo, Boolean inPrincipale) {
+        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
+        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inZoneGeo.getNom() );
+
+        dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
+        dorisDBHelper = dbHelper.getDorisDBHelper();
+
+        GenericRawResults<String[]> rawResults = null;
+        List<String[]> countPhoto = new ArrayList<String[]>(2);
+
+        if ( inPrincipale && getPrecharModeZoneGeo(inZoneGeo.getZoneGeoKind()) != Photos_Outils.PrecharMode.P0 ) {
+            try{
+                rawResults =
+                        dorisDBHelper.photoFicheDao.queryRaw("SELECT count(*) FROM fiches_ZonesGeographiques, fiche, photoFiche "
+                                + "WHERE ZoneGeographique_id = " + inZoneGeo.getId() + " "
+                                + "AND  fiches_ZonesGeographiques.Fiche_id = fiche._id "
+                                + "AND photoFiche._id =  fiche.photoPrincipale_id" );
+                countPhoto = rawResults.getResults();
+                rawResults.close();
+            } catch (java.sql.SQLException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+            }
+        }
+
+        if ( !inPrincipale && getPrecharModeZoneGeo(inZoneGeo.getZoneGeoKind()) != Photos_Outils.PrecharMode.P0
+                && getPrecharModeZoneGeo(inZoneGeo.getZoneGeoKind()) != Photos_Outils.PrecharMode.P1 ) {
+            try{
+                rawResults =
+                        dorisDBHelper.photoFicheDao.queryRaw("SELECT count(*) FROM fiches_ZonesGeographiques, photoFiche "
+                                + "WHERE ZoneGeographique_id = " + inZoneGeo.getId() + " "
+                                + "AND  fiches_ZonesGeographiques.Fiche_id = photoFiche.fiche_id ");
+                countPhoto = rawResults.getResults();
+                rawResults.close();
+            } catch (java.sql.SQLException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+            }
+        }
+
+        paramOutils.setParamInt(getKeyDataAPrecharZoneGeo(inZoneGeo.getZoneGeoKind(), inPrincipale), Integer.valueOf(countPhoto.get(0)[0]));
+
+        DaoManager.unregisterDao(dbHelper.getConnectionSource(), dorisDBHelper.photoFicheDao);
+
+        return Integer.valueOf(countPhoto.get(0)[0]);
     }
 
     /**
@@ -1116,7 +1180,6 @@ public class Photos_Outils {
         }
 
     }
-
 
     public long getEstimVolPhotosAutres() {
         long nbPhotos = 0;

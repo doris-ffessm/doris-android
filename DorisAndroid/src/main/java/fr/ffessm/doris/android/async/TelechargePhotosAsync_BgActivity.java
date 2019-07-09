@@ -324,6 +324,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
     	for (ZoneGeographique zoneGeo : listeZoneGeo) {
 
+			nbPhotosPrincATelechargerPourZone[zoneGeo.getId()] = photosOutils.setAPrecharQteParZoneGeo(zoneGeo, true);
+			nbPhotosATelechargerPourZone[zoneGeo.getId()] = photosOutils.setAPrecharQteParZoneGeo(zoneGeo, false);
+
+    		/*
     		GenericRawResults<String[]> rawResults = null;
 
     		List<String[]> countPhoto = new ArrayList<String[]>(2);
@@ -368,10 +372,10 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 				// annulation demandée, fini la tache dés que possible
 				break;
 			}
+			*/
     	}
 
-    	//DaoManager.clearCache();
-    	DaoManager.unregisterDao(dbHelper.getConnectionSource(), dorisDBHelper.photoFicheDao);
+    	//DaoManager.unregisterDao(dbHelper.getConnectionSource(), dorisDBHelper.photoFicheDao);
 
     }
 

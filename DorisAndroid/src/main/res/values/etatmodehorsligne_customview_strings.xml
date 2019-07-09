@@ -51,9 +51,9 @@
 		
 	<string name="avancement_touteszones_titre">Avancement global préchargement photos</string>
 	<string name="avancement_touteszones_progressbar_P0_summary">"@nbF Fiches ; aucune photo ne doit être téléchargée"</string>
-	<string name="avancement_touteszones_progressbar_P1_summary">"@nbF Fiches ; @PropPh des photos principales téléchargées"</string>
-	<string name="avancement_touteszones_progressbar_PX_summary1">"@nbF Fiches ; @PropPh des photos principales"</string>
-	<string name="avancement_touteszones_progressbar_PX_summary2">" et @PropPh des autres photos téléchargées"</string>
+	<string name="avancement_touteszones_progressbar_P1_summary">"@nbF Fiches ; @PropPh% des photos principales téléchargées"</string>
+	<string name="avancement_touteszones_progressbar_PX_summary1">"@nbF Fiches ; @PropPh% des photos principales"</string>
+	<string name="avancement_touteszones_progressbar_PX_summary2">" et @PropPh% des autres photos téléchargées"</string>
 
 	<string name="avancement_zone_titre">Avancement préchargement photos</string>
 	<string name="avancement_zone_progressbar_P0_summary">"@nbF Fiches ; aucune photo ne doit être téléchargée pour cette zone"</string>
