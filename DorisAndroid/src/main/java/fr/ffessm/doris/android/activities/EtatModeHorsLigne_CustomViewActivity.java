@@ -270,7 +270,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
 
     protected void createProgressBarZone() {
-
+        //Log.d(LOG_TAG, "createProgressBarZone()");
         LinearLayout llContainerLayout = (LinearLayout) findViewById(R.id.etatmodehorsligne_avancements_layout);
 
         // Avancement et Affichage toutes Zones
@@ -518,8 +518,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
 
     public void refreshProgressBarZone() {
-
         //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshProgressBarZone() - update progress bar : ");
+
         ZoneGeographique zoneToutesZones = new ZoneGeographique();
         zoneToutesZones.setId(-1);
         zoneToutesZones.setNom(getContext().getString(R.string.avancement_touteszones_titre));
@@ -545,7 +545,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     }
 
     public static String updateProgressBarZone(Context context, ZoneGeographique inZoneGeo, MultiProgressBar progressBarZone, String summaryPrefix) {
-        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "updateProgressBarZone() - inZoneGeo : "+inZoneGeo.getId()+" - "+inZoneGeo.getZoneGeoKind());
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "updateProgressBarZone() - inZoneGeo : "+inZoneGeo.getId()+" - "+inZoneGeo.getZoneGeoKind());
 
         Fiches_Outils fichesOutils = new Fiches_Outils(context);
         Photos_Outils photosOutils = new Photos_Outils(context);
@@ -1231,6 +1231,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
      */
     public void refreshScreenData() {
         //Start of user code action when refreshing the screen EtatModeHorsLigne_CustomViewActivity
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
 
         isMovingPhotos = DorisApplicationContext.getInstance().isMovingPhotos;
         isTelechPhotos = DorisApplicationContext.getInstance().isTelechPhotos;
@@ -1256,6 +1257,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         if (!isMovingPhotos) refreshProgressBarZone();
 
         // Mise à jour du nombres de fichiers par dossier
+        //Log.d(LOG_TAG, "getPhotosOutils() - Mise à jour du nombres de fichiers par dossier");
         getPhotosOutils().refreshImagesNbInFolder();
 
         // Mise à jour des disques disponibles

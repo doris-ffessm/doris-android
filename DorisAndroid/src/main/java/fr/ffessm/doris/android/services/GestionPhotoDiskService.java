@@ -129,6 +129,7 @@ public class GestionPhotoDiskService extends IntentService {
     	if(action.equals(ACT_MOVE) || action.equals(ACT_DELETE_DISK)){
     		// Mise à jour du nombres de fichiers par dossier
     		// Obligatoire pour que le Max soit initialisé
+			//Log.d(LOG_TAG, "onHandleIntent() - Mise à jour du nombres de fichiers par dossier");
     		getPhotosOutils().refreshImagesNbInFolder();
     		
     		nbFilesToCopyOrDelete = getPhotosOutils().getImageCountInAllFolders(ImageLocation.valueOf(source));

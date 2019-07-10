@@ -79,8 +79,8 @@ import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 
 /**
  * Attention certaines fonctions se basent sur imagesNbInFolder qui n'est calculé qu'une fois par défaut
- * pour faire des estiomation de l'espace disque utilisé,
- * si des téléchargements sont en cours, il faut éventueller relancer refreshImagesNbInFolder();
+ * pour faire des estimations de l'espace disque utilisé,
+ * si des téléchargements sont en cours, il faut éventuellement relancer refreshImagesNbInFolder();
  */
 public class Photos_Outils {
     private static final String LOG_TAG = Photos_Outils.class.getCanonicalName();
@@ -600,6 +600,7 @@ public class Photos_Outils {
      *
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
     public void refreshImagesNbInFolder() {
+        //Log.d(LOG_TAG, "refreshImagesNbInFolder() - Début");
 
         for (ImageLocation imageLocation : ImageLocation.values()) {
             // Pour chaque Type d'Images
@@ -625,6 +626,8 @@ public class Photos_Outils {
                         + imagesNbInFolder[imageLocation.ordinal()][imageType.ordinal()]);
             }
         }
+
+        imagesNbInFolderIsInitialized = true;
     }
 
 
@@ -633,6 +636,7 @@ public class Photos_Outils {
     }
 
     public int getImageCountInFolder(ImageLocation baseImageLocation, ImageType inImageType) {
+        //Log.d(LOG_TAG, "getImageCountInFolder() - Début");
         if (!imagesNbInFolderIsInitialized) refreshImagesNbInFolder();
         return imagesNbInFolder[baseImageLocation.ordinal()][inImageType.ordinal()];
     }
