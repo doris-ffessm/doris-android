@@ -292,6 +292,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         super.onDestroy();
     }
 
+
     /* Création de la liste des Zones (commencent par Toutes Zones) */
     protected void createNavigationZonesGeoViews() {
 
@@ -566,7 +567,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         }
         sbTexte.append("\n");
         sbTexte.append(getPhotosOutils().getCurrentPhotosDiskUsageShortSummary(this));
-        sbTexte.append("; ");
+        sbTexte.append(" ; ");
 
         EtatModeHorsLigne_CustomViewActivity.updateProgressBarZone(this, inZoneGeo, progressBarZone, sbTexte.toString());
     }
@@ -746,7 +747,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         //((ImageView) findViewById(R.id.accueil_recherche_guidee_icone)).setMaxHeight(iconeZine);
 
-        // Affichage de chaque Zones - Toutes Zones en 1er
+        // Affichage Gestion du Mode Hors Ligne (Avancement Global (Toutes Zones) sur Accueil
         //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - isOnCreate : "+isOnCreate);
         ZoneGeographique zoneToutesZones = new ZoneGeographique();
         zoneToutesZones.setId(-1);
@@ -754,10 +755,17 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         if (isOnCreate) {
             llContainerLayout = (LinearLayout) findViewById(R.id.accueil_progress_layout);
 
-            // Avancement et Affichage toutes Zones
-            int imageZone = getFichesOutils().getZoneIconeId(zoneToutesZones.getZoneGeoKind());
+            int imageZoneToutesZones = getFichesOutils().getZoneIconeId(zoneToutesZones.getZoneGeoKind());
 
-            MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this, zoneToutesZones.getNom(), imageZone, false);
+            // Maj Nb Photos à télécharger
+            List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
+            for (ZoneGeographique zoneGeo : listeZoneGeo) {
+                //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - zoneGeo : "+zoneGeo.getNom());
+                getPhotosOutils().setAPrecharQteParZoneGeo(zoneGeo, true);
+                getPhotosOutils().setAPrecharQteParZoneGeo(zoneGeo, false);
+            }
+
+            MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this, zoneToutesZones.getNom(), imageZoneToutesZones, false);
             updateProgressBarZone(zoneToutesZones, progressBarZoneGenerale);
             progressBarZones.put(zoneToutesZones.getId(), progressBarZoneGenerale);
 
