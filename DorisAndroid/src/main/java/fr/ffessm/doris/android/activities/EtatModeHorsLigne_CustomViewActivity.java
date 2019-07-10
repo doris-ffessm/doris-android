@@ -519,7 +519,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
     public void refreshProgressBarZone() {
 
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - update progress bar : ");
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshProgressBarZone() - update progress bar : ");
         ZoneGeographique zoneToutesZones = new ZoneGeographique();
         zoneToutesZones.setId(-1);
         zoneToutesZones.setNom(getContext().getString(R.string.avancement_touteszones_titre));
@@ -527,7 +527,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
         // Si on sait sur quelle zone on travaille alors on ne met à jour que la progress barre de cette zone
 
-        //Log.d(LOG_TAG, "refreshScreenData() - zoneTraitee : "+DorisApplicationContext.getInstance().zoneTraitee);
+        //Log.d(LOG_TAG, "refreshProgressBarZone() - zoneTraitee : "+DorisApplicationContext.getInstance().zoneTraitee);
         if (DorisApplicationContext.getInstance().zoneTraitee == null
                 || DorisApplicationContext.getInstance().zoneTraitee == ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES) {
             for (ZoneGeographique zoneGeo : listeZoneGeo) {
@@ -537,7 +537,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
             ZoneGeographique zoneGeo = new ZoneGeographique(DorisApplicationContext.getInstance().zoneTraitee);
             // Récupération Nom et Désignation dans la base
             zoneGeo = this.getHelper().getZoneGeographiqueDao().queryForId(zoneGeo.getId());
-            //Log.d(LOG_TAG, "refreshScreenData() - zoneGeo : "+zoneGeo.getId()+" - "+zoneGeo.getNom());
+            //Log.d(LOG_TAG, "refreshProgressBarZone() - zoneGeo : "+zoneGeo.getId()+" - "+zoneGeo.getNom());
 
             updateProgressBarZone(this, zoneGeo, progressBarZones.get(zoneGeo.getId()), "");
         }

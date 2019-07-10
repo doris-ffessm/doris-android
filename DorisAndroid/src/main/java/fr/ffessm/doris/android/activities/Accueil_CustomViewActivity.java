@@ -292,6 +292,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         super.onDestroy();
     }
 
+
     /* Création de la liste des Zones (commencent par Toutes Zones) */
     protected void createNavigationZonesGeoViews() {
 
@@ -754,7 +755,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         if (isOnCreate) {
             llContainerLayout = (LinearLayout) findViewById(R.id.accueil_progress_layout);
 
-            int imageZone = getFichesOutils().getZoneIconeId(zoneToutesZones.getZoneGeoKind());
+            int imageZoneToutesZones = getFichesOutils().getZoneIconeId(zoneToutesZones.getZoneGeoKind());
 
             // Maj Nb Photos à télécharger
             List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
@@ -764,7 +765,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                 getPhotosOutils().setAPrecharQteParZoneGeo(zoneGeo, false);
             }
 
-            MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this, zoneToutesZones.getNom(), imageZone, false);
+            MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this, zoneToutesZones.getNom(), imageZoneToutesZones, false);
             updateProgressBarZone(zoneToutesZones, progressBarZoneGenerale);
             progressBarZones.put(zoneToutesZones.getId(), progressBarZoneGenerale);
 

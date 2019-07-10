@@ -787,9 +787,9 @@ public class Photos_Outils {
      * @return
      */
     public int getAPrecharQteZoneGeo(ZoneGeographiqueKind inZoneGeo, Boolean inPrincipale) {
-        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
-        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inZoneGeo.name() );
-        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inPrincipale : "+inPrincipale );
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inZoneGeo.name() );
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inPrincipale : "+inPrincipale );
 
         if (inPrincipale) {
             switch (inZoneGeo) {
@@ -854,9 +854,9 @@ public class Photos_Outils {
      * @return
      */
     public int setAPrecharQteParZoneGeo(ZoneGeographique inZoneGeo, Boolean inPrincipale) {
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inZoneGeo.getNom() );
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inPrincipale : "+inPrincipale.toString() );
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setAPrecharQteZoneGeo() - Début" );
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setAPrecharQteZoneGeo() - inIdZoneGeo : "+inZoneGeo.getNom() );
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setAPrecharQteZoneGeo() - inPrincipale : "+inPrincipale.toString() );
 
         dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
         dorisDBHelper = dbHelper.getDorisDBHelper();
@@ -897,7 +897,7 @@ public class Photos_Outils {
             }
         }
 
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - nb Photos : "+nbrePhotos );
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "setAPrecharQteZoneGeo() - nb Photos : "+nbrePhotos );
         paramOutils.setParamInt(getKeyDataAPrecharZoneGeo(inZoneGeo.getZoneGeoKind(), inPrincipale), nbrePhotos);
 
         DaoManager.unregisterDao(dbHelper.getConnectionSource(), dorisDBHelper.photoFicheDao);
@@ -914,9 +914,9 @@ public class Photos_Outils {
      * @return
      */
     public int getDejaLaQteZoneGeo(ZoneGeographiqueKind inZoneGeo, Boolean inPrincipale) {
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inIdZoneGeo );
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - data_nbphotos_recues_france : "+getParamInt(context, R.string.pref_key_nbphotos_recues_france, 0) );
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getDejaLaQteZoneGeo() - Début" );
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getDejaLaQteZoneGeo() - inIdZoneGeo : "+inIdZoneGeo );
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getDejaLaQteZoneGeo() - data_nbphotos_recues_france : "+getParamInt(context, R.string.pref_key_nbphotos_recues_france, 0) );
 
         if (inPrincipale) {
             switch (inZoneGeo) {

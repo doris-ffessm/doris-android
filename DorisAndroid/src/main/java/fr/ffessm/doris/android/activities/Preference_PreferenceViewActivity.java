@@ -58,6 +58,12 @@ import android.preference.PreferenceScreen;
 import android.widget.Toast;
 import android.util.Log;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
+import java.util.List;
+
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
@@ -76,7 +82,7 @@ public class Preference_PreferenceViewActivity extends android.preference.Prefer
 
 
     //Start of user code Preference preference activity additional attributes
-    private static final String LOG_TAG = App_Outils.class.getCanonicalName();
+    private static final String LOG_TAG = Preference_PreferenceViewActivity.class.getCanonicalName();
     final Context context = this;
 
     private Param_Outils paramOutils;
@@ -223,6 +229,22 @@ public class Preference_PreferenceViewActivity extends android.preference.Prefer
 
 
     //Start of user code Preference preference activity additional operations
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Log.d(LOG_TAG, "onDestroy()");
+        Log.d(LOG_TAG, "onDestroy() - isFinishing() : " + isFinishing());
+
+        // Maj Nb Photos à télécharger
+        OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(this);
+        List<ZoneGeographique> listeZoneGeo = ormLiteDBHelper.getZoneGeographiqueDao().queryForAll();
+        for (ZoneGeographique zoneGeo : listeZoneGeo) {
+            getPhotosOutils().setAPrecharQteParZoneGeo(zoneGeo, true);
+            getPhotosOutils().setAPrecharQteParZoneGeo(zoneGeo, false);
+        }
+    }
 
     private void setLibelleModePrechargPhotoZone(int refPreference, ZoneGeographiqueKind zoneGeoKind) {
         CharSequence summary = "";
