@@ -327,56 +327,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			nbPhotosPrincATelechargerPourZone[zoneGeo.getId()] = photosOutils.setAPrecharQteParZoneGeo(zoneGeo, true);
 			nbPhotosATelechargerPourZone[zoneGeo.getId()] = photosOutils.setAPrecharQteParZoneGeo(zoneGeo, false);
 
-    		/*
-    		GenericRawResults<String[]> rawResults = null;
-
-    		List<String[]> countPhoto = new ArrayList<String[]>(2);
-
-    		int zoneId = zoneGeo.getId();
-
-    		nbPhotosPrincATelechargerPourZone[zoneId] = 0;
-    		nbPhotosATelechargerPourZone[zoneId] = 0;
-
-    		if ( photosOutils.getPrecharModeZoneGeo(zoneGeo.getZoneGeoKind()) != Photos_Outils.PrecharMode.P0 ) {
-        		try{
-					rawResults =
-						dorisDBHelper.photoFicheDao.queryRaw("SELECT count(*) FROM fiches_ZonesGeographiques, fiche, photoFiche "
-							+ "WHERE ZoneGeographique_id = " + zoneId + " "
-							+ "AND  fiches_ZonesGeographiques.Fiche_id = fiche._id "
-							+ "AND photoFiche._id =  fiche.photoPrincipale_id" );
-					countPhoto = rawResults.getResults();
-	        		rawResults.close();
-        		} catch (java.sql.SQLException e) {
-        			Log.e(LOG_TAG, e.getMessage(), e);
-        		}
-        		nbPhotosPrincATelechargerPourZone[zoneId] = Integer.valueOf(countPhoto.get(0)[0]);
-    		}
-    		paramOutils.setParamInt(photosOutils.getKeyDataAPrecharZoneGeo(zoneGeo.getZoneGeoKind(), true), nbPhotosPrincATelechargerPourZone[zoneId]);
-
-    		if ( photosOutils.getPrecharModeZoneGeo(zoneGeo.getZoneGeoKind()) != Photos_Outils.PrecharMode.P0
-    				&& photosOutils.getPrecharModeZoneGeo(zoneGeo.getZoneGeoKind()) != Photos_Outils.PrecharMode.P1 ) {
-        		try{
-					rawResults =
-						dorisDBHelper.photoFicheDao.queryRaw("SELECT count(*) FROM fiches_ZonesGeographiques, photoFiche "
-								+ "WHERE ZoneGeographique_id = " + zoneId + " "
-								+ "AND  fiches_ZonesGeographiques.Fiche_id = photoFiche.fiche_id ");
-					countPhoto = rawResults.getResults();
-	        		rawResults.close();
-        		} catch (java.sql.SQLException e) {
-        			Log.e(LOG_TAG, e.getMessage(), e);
-        		}
-        		nbPhotosATelechargerPourZone[zoneId] = Integer.valueOf(countPhoto.get(0)[0]);
-    		}
-    		paramOutils.setParamInt(photosOutils.getKeyDataAPrecharZoneGeo(zoneGeo.getZoneGeoKind(), false), nbPhotosATelechargerPourZone[zoneId]);
-			if(this.isCancelled()){
-				// annulation demandée, fini la tache dés que possible
-				break;
-			}
-			*/
     	}
-
-    	//DaoManager.unregisterDao(dbHelper.getConnectionSource(), dorisDBHelper.photoFicheDao);
-
     }
 
     public int telechargementPhotosPrincipalesFiches(List<ZoneGeographique> listeZoneGeo){

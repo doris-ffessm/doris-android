@@ -854,14 +854,16 @@ public class Photos_Outils {
      * @return
      */
     public int setAPrecharQteParZoneGeo(ZoneGeographique inZoneGeo, Boolean inPrincipale) {
-        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
-        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inZoneGeo.getNom() );
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - Début" );
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inIdZoneGeo : "+inZoneGeo.getNom() );
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - inPrincipale : "+inPrincipale.toString() );
 
         dbHelper = OpenHelperManager.getHelper(context.getApplicationContext(), OrmLiteDBHelper.class);
         dorisDBHelper = dbHelper.getDorisDBHelper();
 
         GenericRawResults<String[]> rawResults = null;
         List<String[]> countPhoto = new ArrayList<String[]>(2);
+        int nbrePhotos = 0;
 
         if ( inPrincipale && getPrecharModeZoneGeo(inZoneGeo.getZoneGeoKind()) != Photos_Outils.PrecharMode.P0 ) {
             try{
@@ -872,6 +874,8 @@ public class Photos_Outils {
                                 + "AND photoFiche._id =  fiche.photoPrincipale_id" );
                 countPhoto = rawResults.getResults();
                 rawResults.close();
+                nbrePhotos = Integer.valueOf(countPhoto.get(0)[0]);
+
             } catch (java.sql.SQLException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
             }
@@ -886,16 +890,19 @@ public class Photos_Outils {
                                 + "AND  fiches_ZonesGeographiques.Fiche_id = photoFiche.fiche_id ");
                 countPhoto = rawResults.getResults();
                 rawResults.close();
+                nbrePhotos = Integer.valueOf(countPhoto.get(0)[0]);
+
             } catch (java.sql.SQLException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
             }
         }
 
-        paramOutils.setParamInt(getKeyDataAPrecharZoneGeo(inZoneGeo.getZoneGeoKind(), inPrincipale), Integer.valueOf(countPhoto.get(0)[0]));
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getAPrecharQteZoneGeo() - nb Photos : "+nbrePhotos );
+        paramOutils.setParamInt(getKeyDataAPrecharZoneGeo(inZoneGeo.getZoneGeoKind(), inPrincipale), nbrePhotos);
 
         DaoManager.unregisterDao(dbHelper.getConnectionSource(), dorisDBHelper.photoFicheDao);
 
-        return Integer.valueOf(countPhoto.get(0)[0]);
+        return nbrePhotos;
     }
 
     /**
