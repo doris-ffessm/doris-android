@@ -241,6 +241,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         super.onResume();
         refreshScreenData();
         //Start of user code onResume EtatModeHorsLigne_CustomViewActivity
+        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onResume() - Fin");
         //End of user code
     }
     //Start of user code additional code EtatModeHorsLigne_CustomViewActivity

@@ -231,11 +231,9 @@ public class Preference_PreferenceViewActivity extends android.preference.Prefer
     //Start of user code Preference preference activity additional operations
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        Log.d(LOG_TAG, "onDestroy()");
-        Log.d(LOG_TAG, "onDestroy() - isFinishing() : " + isFinishing());
+    protected void onPause() {
+        super.onPause();
+        //Log.d(LOG_TAG, "onPause()");
 
         // Maj Nb Photos à télécharger
         OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(this);
