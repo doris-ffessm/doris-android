@@ -184,9 +184,11 @@ public class Common_Outils {
             //Sauts de ligne
 			texte = StringUtils.replace(texte, "<br/>", "{{n/}}");
 
-            // Remplacement de l'enchainement entre 2 paragraphe par un Saut de ligne
+            //Remplacement de l'enchainement entre 2 paragraphe par un Saut de ligne
             texte = StringUtils.replace(texte, "</p><p>", "{{n/}}");
             texte = StringUtils.replace(texte, "<p>", "");
+			//Suppression de <p abp="9999">
+            texte = texte.replaceAll("<p[^>]*>", "");
             texte = StringUtils.replace(texte, "</p>", "");
 
 			//Lien vers autres fiches
