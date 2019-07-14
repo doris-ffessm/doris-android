@@ -293,7 +293,7 @@ public class JsonToDB {
         )); }
 
         // Distribution
-        if (jsonEspece.getFields().getDistributionResume().getValue() != "") {sectionsFiche.add(new SectionFiche(15,"Distribution",
+        if (jsonEspece.getFields().getDistributionResume().getValue() != "") {sectionsFiche.add(new SectionFiche(20,"Distribution",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getDistributionResume().getValue()
@@ -302,7 +302,7 @@ public class JsonToDB {
         )); }
 
         // Biotope
-        if (jsonEspece.getFields().getBiotop().getValue() != "") {sectionsFiche.add(new SectionFiche(20,"Biotope",
+        if (jsonEspece.getFields().getBiotop().getValue() != "") {sectionsFiche.add(new SectionFiche(30,"Biotope",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getBiotop().getValue()
@@ -311,7 +311,7 @@ public class JsonToDB {
         )); }
 
         // Description
-        if (jsonEspece.getFields().getDescription().getValue() != "") {sectionsFiche.add(new SectionFiche(30,"Description",
+        if (jsonEspece.getFields().getDescription().getValue() != "") {sectionsFiche.add(new SectionFiche(40,"Description",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getDescription().getValue()
@@ -320,7 +320,7 @@ public class JsonToDB {
         )); }
 
         // Espèces Ressemblantes
-        if (jsonEspece.getFields().getLookLikes().getValue() != "") {sectionsFiche.add(new SectionFiche(40,"Espèces Ressemblantes",
+        if (jsonEspece.getFields().getLookLikes().getValue() != "") {sectionsFiche.add(new SectionFiche(50,"Espèces Ressemblantes",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getLookLikes().getValue()
@@ -328,40 +328,8 @@ public class JsonToDB {
                         , true)
         )); }
 
-        // Autres noms scientifiques parfois utilisés, mais non valides
-        if (jsonEspece.getFields().getOthersNameScientific().getValue() != "") {sectionsFiche.add(new SectionFiche(50,"Autres noms scientifiques parfois utilisés, mais non valides",
-                commonOutils.remplacementBalises(
-                        commonOutils.nettoyageBalises(
-                                jsonEspece.getFields().getOthersNameScientific().getValue()
-                        )
-                        , true)
-        )); }
-
-        // Zone Doris
-
-        // Crédits
-
-
-        // Origine du Nom Français
-        if (jsonEspece.getFields().getFrenchNameOrigin().getValue() != "") {sectionsFiche.add(new SectionFiche(300,"Origine du nom français",
-                commonOutils.remplacementBalises(
-                        commonOutils.nettoyageBalises(
-                                jsonEspece.getFields().getFrenchNameOrigin().getValue()
-                        )
-                        , true)
-        )); }
-
-        // Origine du Nom Scientifique
-        if (jsonEspece.getFields().getScientificNameOrigin().getValue() != "") {sectionsFiche.add(new SectionFiche(310,"Origine du nom scientifique",
-                commonOutils.remplacementBalises(
-                        commonOutils.nettoyageBalises(
-                                jsonEspece.getFields().getScientificNameOrigin().getValue()
-                        )
-                        , true)
-        )); }
-
         // Alimentation
-        if (jsonEspece.getFields().getAlimentation().getValue() != "") {sectionsFiche.add(new SectionFiche(320,"Alimentation",
+        if (jsonEspece.getFields().getAlimentation().getValue() != "") {sectionsFiche.add(new SectionFiche(110,"Alimentation",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getAlimentation().getValue()
@@ -371,7 +339,7 @@ public class JsonToDB {
 
 
         // Reproduction - Multiplication
-        if (jsonEspece.getFields().getReproduction().getValue() != "") {sectionsFiche.add(new SectionFiche(330,"Reproduction - Multiplication",
+        if (jsonEspece.getFields().getReproduction().getValue() != "") {sectionsFiche.add(new SectionFiche(120,"Reproduction - Multiplication",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getReproduction().getValue()
@@ -381,7 +349,7 @@ public class JsonToDB {
 
 
         // Vie associée
-        if (jsonEspece.getFields().getAssociatedLife().getValue() != "") {sectionsFiche.add(new SectionFiche(333,"Vie associée",
+        if (jsonEspece.getFields().getAssociatedLife().getValue() != "") {sectionsFiche.add(new SectionFiche(130,"Vie associée",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getAssociatedLife().getValue()
@@ -391,7 +359,7 @@ public class JsonToDB {
 
 
         // Divers biologie
-        if (jsonEspece.getFields().getBioDivers().getValue() != "") {sectionsFiche.add(new SectionFiche(335,"Divers biologie",
+        if (jsonEspece.getFields().getBioDivers().getValue() != "") {sectionsFiche.add(new SectionFiche(140,"Divers biologie",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getBioDivers().getValue()
@@ -400,7 +368,7 @@ public class JsonToDB {
         )); }
 
         // Informations Complémentaires
-        if (jsonEspece.getFields().getComplementaryInfos().getValue() != "") {sectionsFiche.add(new SectionFiche(340,"Informations complémentaires",
+        if (jsonEspece.getFields().getComplementaryInfos().getValue() != "") {sectionsFiche.add(new SectionFiche(150,"Informations complémentaires",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getComplementaryInfos().getValue()
@@ -409,7 +377,7 @@ public class JsonToDB {
         )); }
 
         // Réglementation
-        if (jsonEspece.getFields().getReglementation().getValue() != "") {sectionsFiche.add(new SectionFiche(350,"Réglementation",
+        if (jsonEspece.getFields().getReglementation().getValue() != "") {sectionsFiche.add(new SectionFiche(160,"Réglementation",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getReglementation().getValue()
@@ -417,9 +385,44 @@ public class JsonToDB {
                         , true)
         )); }
 
+        // Origine du Nom Français
+        if (jsonEspece.getFields().getFrenchNameOrigin().getValue() != "") {sectionsFiche.add(new SectionFiche(210,"Origine du nom français",
+                commonOutils.remplacementBalises(
+                        commonOutils.nettoyageBalises(
+                                jsonEspece.getFields().getFrenchNameOrigin().getValue()
+                        )
+                        , true)
+        )); }
+
+        // Origine du Nom Scientifique
+        if (jsonEspece.getFields().getScientificNameOrigin().getValue() != "") {sectionsFiche.add(new SectionFiche(220,"Origine du nom scientifique",
+                commonOutils.remplacementBalises(
+                        commonOutils.nettoyageBalises(
+                                jsonEspece.getFields().getScientificNameOrigin().getValue()
+                        )
+                        , true)
+        )); }
+
+        // Autres noms scientifiques parfois utilisés, mais non valides
+        if (jsonEspece.getFields().getOthersNameScientific().getValue() != "") {sectionsFiche.add(new SectionFiche(230,"Autres noms scientifiques parfois utilisés, mais non valides",
+                commonOutils.remplacementBalises(
+                        commonOutils.nettoyageBalises(
+                                jsonEspece.getFields().getOthersNameScientific().getValue()
+                        )
+                        , true)
+        )); }
+
+
+        // Zone Doris
+        // Lors de l'affichage des fiches, on ajoutera à "l'emplacement" 310 la ZOne Doris
+
+        // Crédits
+        // Idem en 320
+
+
         // Références Bibliographiques
         //if (jsonEspece.getFields().getBiblioRef().getValue() != "") {sectionsFiche.add(new SectionFiche(350,"Codes des Références bibliographiques",jsonEspece.getFields().getBiblioRef().getValue())); }
-        if (jsonEspece.getFields().getOthersBiblioRef().getValue() != "") {sectionsFiche.add(new SectionFiche(360,"Références bibliographiques",
+        if (jsonEspece.getFields().getOthersBiblioRef().getValue() != "") {sectionsFiche.add(new SectionFiche(410,"Références bibliographiques",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getOthersBiblioRef().getValue()

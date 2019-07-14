@@ -340,7 +340,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             // Si la fiche n'est pas publiée, on masque par défaut, mais il existe une option dans les préférences Debug et Autres permettant de tout afficher
             if (entry.getContenu() != null && (entry.getEtatFiche() == 4 || paramOutils.getParamBoolean(R.string.pref_key_affichage_tous_contenus, false))) {
                 for (SectionFiche sectionFiche : entry.getContenu()) {
-                    if (sectionFiche.getNumOrdre() < 100) {
+                    if (sectionFiche.getNumOrdre() < 300) {
                         //Log.d(LOG_TAG, "refreshScreenData() - titre : "+sectionFiche.getTitre());
                         //Log.d(LOG_TAG, "refreshScreenData() - texte : "+sectionFiche.getTexte());
 
@@ -349,7 +349,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
                 }
             } // Fin 1ère partie des Sections de la Fiche
 
-            // Zones Géographiques
+            // Zones Géographiques DORIS
             List<ZoneGeographique> zonesGeographiques = entry.getZonesGeographiques();
             if (zonesGeographiques != null) {
                 StringBuilder sbZonesGeographiques = new StringBuilder();
@@ -409,7 +409,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             if (entry.getContenu() != null && (entry.getEtatFiche() == 4 || paramOutils.getParamBoolean(R.string.pref_key_affichage_tous_contenus, false))) {
 
                 for (SectionFiche sectionFiche : entry.getContenu()) {
-                    if (sectionFiche.getNumOrdre() > 100) {
+                    if (sectionFiche.getNumOrdre() > 400) {
                         //Log.d(LOG_TAG, "refreshScreenData() - titre : "+sectionFiche.getTitre());
                         //Log.d(LOG_TAG, "refreshScreenData() - texte : "+sectionFiche.getTexte());
 
