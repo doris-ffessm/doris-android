@@ -84,13 +84,6 @@ public class Common_Outils {
 
 		//log.debug("nettoyageBalises() - 020");
 		
-		// Tous les sauts de ligne de la même façon + gain de place en hauteur pour l'interface Android
-		texte = texte.replaceAll("<br>|<br />", "<br/>");
-
-		texte = StringUtils.replace(texte, "<br/><br/>", "<br/>");
-		
-		//log.debug("nettoyageBalises() - 025");
-		
 		//Permet que la recherche des définitions fonctionne mieux ensuite
 		texte = StringUtils.replace(texte, "**", "##");
 		texte = StringUtils.replace(texte, "</strong>*", "*</strong>");
@@ -146,15 +139,30 @@ public class Common_Outils {
 		//log.debug("nettoyageBalises() - 090");
 
 
-        //Il arrive très souvent qu'une balise ouverte soit aussitôt refermée
+        // Il arrive très souvent qu'une balise ouverte soit aussitôt refermée
         // ce doit sans doute être dû à l'interface de saisie ou des outils utilisés en amont
         // Toujours est-il que ça peut gêner ensuite, que ça fait perdre du temps et de la place
         texte = texte.replaceAll("<strong></strong>|</strong><strong>|<em></em>|</em><em>|<i></i>|</i><i>|<span></span>", "");
         texte = texte.replaceAll("<p></p>", "");
+        texte = texte.replaceAll("<sub></sub>", "");
+
+		// Les tableaux ne sont pas représentés.
+		// Il faut commencer par supprimer tout ce qui est vide, donc on commence par les TD, puis les TR, TBODY et TABLE.
+		// Un saut de ligne est fait à la fin d'un TR.
+		texte = StringUtils.replace(texte, "<td></td>", "");
+		texte = StringUtils.replace(texte, "<tbody></tbody>", "");
+		texte = StringUtils.replace(texte, "<tr></tr>", "");
+		texte = StringUtils.replace(texte, "</tr>", "<br/>");
+		texte = texte.replaceAll("<table>|<tbody>|<tr>|<td>|</td>|</tbody>|</table>", "");
 
         // Cas particulier ...
         texte = StringUtils.replace(texte, "<!m>", "");
         texte = StringUtils.replace(texte, "<!>", "");
+
+		// Tous les sauts de ligne de la même façon + gain de place en hauteur pour l'interface Android
+		texte = texte.replaceAll("<br>|<br />", "<br/>");
+
+		texte = StringUtils.replace(texte, "<br/><br/>", "<br/>");
 
 		//log.debug("nettoyageBalises() - texte : " + texte);
     	//log.debug("nettoyageBalises() - Fin");
