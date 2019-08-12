@@ -30,7 +30,8 @@ public class DorisOAuth2ClientCredentials {
     //public static final String API_SUFFIXE = "e97c7911452f87ba23440ab4af541e39a64ecaef";
     // public static final String API_SUFFIXE = "adcde8792660f8a32ebe399966225d6965a50d89";
     //public static final String API_SUFFIXE = "9d00951e9946da1bf60ecbe6883712a28d5ae1ed";
-    public static final String API_SUFFIXE = "ca62da8df4a420b34b9e5acceb0c719ef6977093";
+    //public static final String API_SUFFIXE = "ca62da8df4a420b34b9e5acceb0c719ef6977093";
+    public static final String API_SUFFIXE = "d5c5af08aab6f777900a42e581aa0ab5bd053ee2";
 
     /** Port in the "Callback URL". */
     public static final int PORT = 8087;
@@ -42,8 +43,8 @@ public class DorisOAuth2ClientCredentials {
 
     public static final String DORIS_WEB_SERVER_HOST = "doris.ffessm.fr";
 
-    public static final String TOKEN_SERVER_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/auth/oauth/token";
-    public static final String AUTHORIZATION_SERVER_URL = "http://"+DORIS_WEB_SERVER_HOST+"/oauth/authorize";
+    public static final String TOKEN_SERVER_URL = "https://"+DORIS_WEB_SERVER_HOST+"/api/auth/oauth/token";
+    public static final String AUTHORIZATION_SERVER_URL = "https://"+DORIS_WEB_SERVER_HOST+"/oauth/authorize";
 
 
     public static final String USER_ID = "dvojtise@gmail.com";  // à remplacer par l'utilisateur du server ?
@@ -52,11 +53,11 @@ public class DorisOAuth2ClientCredentials {
       return USER_ID;
     }
 
-    public static final String SERVER_NODE_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezp/v1/content/node/";
+    public static final String SERVER_NODE_URL = "https://"+DORIS_WEB_SERVER_HOST+"/api/ezp/v1/content/node/";
     public static final String SERVER_NODE_URL_SUFFIXE = "/fields";
-    public static final String SERVER_OBJECT_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezx/v1/object/";
+    public static final String SERVER_OBJECT_URL = "https://"+DORIS_WEB_SERVER_HOST+"/api/ezx/v1/object/";
 
-    public static final String SERVER_NODE_FIELD_BASE_URL = "http://"+DORIS_WEB_SERVER_HOST+"/api/ezp/content/node/";
+    public static final String SERVER_NODE_FIELD_BASE_URL = "https://"+DORIS_WEB_SERVER_HOST+"/api/ezp/content/node/";
 
     public static String getServerNodeUrlTousLesChamps(String nodeId){
       return SERVER_NODE_URL+nodeId+SERVER_NODE_URL_SUFFIXE;

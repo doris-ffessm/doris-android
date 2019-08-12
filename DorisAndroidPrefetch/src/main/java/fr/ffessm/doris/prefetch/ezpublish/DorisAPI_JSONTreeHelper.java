@@ -140,7 +140,22 @@ public class DorisAPI_JSONTreeHelper {
 		}
 		
 		HttpResponse response = client.execute(getHttpPage);
-		log.debug("response.getStatusLine() : "+response.getStatusLine());
+		if(response.getStatusLine().getStatusCode() == 504){
+            log.warn("response.getStatusLine() : "+response.getStatusLine());
+            log.debug("sleep 5 minutes and retry");
+		    // sleep and retry
+            try {
+                Thread.sleep(5 * 60 * 1000);
+            } catch (java.lang.InterruptedException ie){
+                log.warn(ie);
+            }
+            response = client.execute(getHttpPage);
+        }
+		if(response.getStatusLine().getStatusCode() == 200) {
+            log.debug("response.getStatusLine() : " + response.getStatusLine());
+        } else {
+            log.error("response.getStatusLine() : " + response.getStatusLine());
+        }
 
 
 		ObjectMapper objectMapper = new ObjectMapper();
