@@ -94,12 +94,12 @@ public class Common_Outils {
 		
 		//L'adresse du site n'apporte rien et pose des problèmes qd on va recherche les liens
 		// vers les sites extérieurs
-		texte = StringUtils.replace(texte, "http://doris.ffessm.fr/", "");
+		texte = StringUtils.replace(texte, "(http|https)://doris.ffessm.fr/", "");
 		
 		//De même pour les site : www.ffessm.fr et www.security.fr qui sont sur toutes les pages
-		texte = StringUtils.replace(texte, "href=\"http://www.ffessm.fr\"", "");
-		texte = StringUtils.replace(texte, "href=\"http://biologie.ffessm.fr/\"", "");
-		texte = StringUtils.replace(texte, "href=\"http://www.security.fr/\"", "");
+		texte = StringUtils.replace(texte, "href=\"(http|https)://www.ffessm.fr\"", "");
+		texte = StringUtils.replace(texte, "href=\"(http|https)://biologie.ffessm.fr/\"", "");
+		texte = StringUtils.replace(texte, "href=\"(http|https)://www.security.fr/\"", "");
 		
 		//log.debug("nettoyageBalises() - 040");
 		
@@ -113,7 +113,7 @@ public class Common_Outils {
 		//log.debug("nettoyageBalises() - 050");
 
         // On enlève lien non cliquable
-		texte = texte.replaceAll("<a href=\"http://[^>]*></a>", "");
+		texte = texte.replaceAll("<a href=\"(http|https)://[^>]*></a>", "");
 
         // On vire target=... des liens
         texte = StringUtils.replace(texte, "<a target=\"_blank\" href=", "<a href=");

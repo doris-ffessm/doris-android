@@ -48,10 +48,10 @@ public class Constants {
 	/*
 	 * URL
 	 */
-	public final static String SITE_RACINE_URL = "http://doris.ffessm.fr/";
+	public final static String SITE_RACINE_URL = "https://doris.ffessm.fr/";
     
-	//public static final String IMAGE_BASE_URL = "http://doris.ffessm.fr/var/doris/storage/images/images";
-	public static final String IMAGE_BASE_URL = "http://doris.ffessm.fr";
+	//public static final String IMAGE_BASE_URL = "https://doris.ffessm.fr/var/doris/storage/images/images";
+	public static final String IMAGE_BASE_URL = "https://doris.ffessm.fr";
 	public static final String PORTRAIT_BASE_URL = IMAGE_BASE_URL;
 	// La photo existe toujours au format blabla.jpg, puis d'autres formats sont générés suivant le besoin,
 	// nous utilisons de même ces différents formats
