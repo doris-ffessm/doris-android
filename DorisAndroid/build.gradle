@@ -7,7 +7,7 @@ tasks.withType(JavaCompile) {
 }
 
 def acraVersion = '5.3.0'
-def androidSupportVersion = '26.1.0'
+def androidSupportVersion = '27.1.0'
 
 dependencies {
     // a terme on devrait remplacer cela vers des ref dans les repo maven correspondants
@@ -32,7 +32,7 @@ dependencies {
     // dependances inter-projets
     implementation project(':GenandroidLib')
     implementation project(':DorisAndroidCommon')
-    implementation 'com.android.support:support-v4:26.1.0'
+    implementation "com.android.support:support-v4:$androidSupportVersion"
 }
 
 repositories {
@@ -46,12 +46,12 @@ repositories {
 }
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion '28.0.3'
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 27
     }
 /*
     sourceSets {

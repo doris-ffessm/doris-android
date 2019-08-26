@@ -205,7 +205,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                 Log.v(LOG_TAG, "onCreate() - Affichage A Propos : " + appVersionName);
             AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
             //affiche les changements récents
-            aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label) + getContext().getString(R.string.app_name), aPropos.aProposAff(), "file:///android_res/raw/apropos.html#Changements");
+            aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label) + getContext().getString(R.string.app_name), aPropos.aProposAff(), "file:///android_res/raw/apropos.html#changements");
             getParamOutils().setParamString(R.string.pref_key_a_propos_version, appVersionName);
         }
 
