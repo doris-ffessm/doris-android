@@ -30,7 +30,7 @@
     <orderEntry type="library" exported="" name="Gradle: commons-lang3-3.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: jericho-html-3.3" level="project" />
     <orderEntry type="library" exported="" name="Gradle: ormlite-core-4.47" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: commons-logging-api-1.1.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: kxml2-2.3.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: commons-logging-api-1.1.1" level="project" />
   </component>
 </module>
