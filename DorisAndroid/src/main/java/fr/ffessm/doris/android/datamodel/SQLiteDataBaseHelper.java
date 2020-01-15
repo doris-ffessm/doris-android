@@ -12,8 +12,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class SQLiteDataBaseHelper extends SQLiteOpenHelper {
+
+    public static final String LOG_TAG = "SQLiteDataBaseHelper";
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
@@ -27,9 +30,7 @@ public class SQLiteDataBaseHelper extends SQLiteOpenHelper {
 
 	}
 
-	// The Android's default system path of your application database.
-	private static String DB_PATH = "/data/data/fr.ffessm.doris.android/databases/";
-
+	// data base name
 	private static String DB_NAME = "DorisAndroid.db";
 
 	private SQLiteDatabase myDataBase;
@@ -55,7 +56,7 @@ public class SQLiteDataBaseHelper extends SQLiteOpenHelper {
 	public void createDataBase() throws IOException {
 
 		boolean dbExist = checkDataBase();
-
+        getDBPath();
 		if (dbExist) {
 			// do nothing - database already exist
 		} else {
@@ -83,17 +84,30 @@ public class SQLiteDataBaseHelper extends SQLiteOpenHelper {
 	}
 
 	/**
+	 * GetPath as recommanded by android
+	 * this path may vary in multi-user scenarios
+	 * @return
+	 */
+	public String getDBPath(){
+
+	    // String dbpath = myContext.getFilesDir().getPath()+"/databases/";
+        String dbpath = myContext.getDatabasePath(DB_NAME).getAbsolutePath();
+        Log.i(SQLiteDataBaseHelper.class.getName(), "DBPath is "+dbpath);
+    	return dbpath;
+    }
+
+	/**
 	 * Check if the database already exist to avoid re-copying the file each
 	 * time you open the application.
 	 * 
 	 * @return true if it exists, false if it doesn't
 	 */
-	public static boolean checkDataBase() {
+	public boolean checkDataBase() {
 
 		SQLiteDatabase checkDB = null;
 
 		try {
-			String myPath = DB_PATH + DB_NAME;
+			String myPath = getDBPath();
 			checkDB = SQLiteDatabase.openDatabase(myPath, null,
 					SQLiteDatabase.OPEN_READONLY);
 
@@ -115,11 +129,11 @@ public class SQLiteDataBaseHelper extends SQLiteOpenHelper {
 	 * 
 	 * @return
 	 */
-	public static void removeOldDataBase() {
+	public void removeOldDataBase() {
 
 		//SQLiteDatabase checkDB = null;
 
-		String myPath = DB_PATH + DB_NAME;
+		String myPath = getDBPath();
 		File oldDB = new File(myPath);
 		if(oldDB.exists())
 			oldDB.delete();
@@ -136,7 +150,7 @@ public class SQLiteDataBaseHelper extends SQLiteOpenHelper {
 		InputStream myInput = myContext.getAssets().open(DB_NAME);
 
 		// Path to the just created empty db
-		String outFileName = DB_PATH + DB_NAME;
+		String outFileName = getDBPath();
 
 		// Open the empty db as the output stream
 		OutputStream myOutput = new FileOutputStream(outFileName);
@@ -158,7 +172,7 @@ public class SQLiteDataBaseHelper extends SQLiteOpenHelper {
 	public void openDataBase() {
 
 		// Open the database
-		String myPath = DB_PATH + DB_NAME;
+		String myPath = getDBPath();
 		myDataBase = SQLiteDatabase.openDatabase(myPath, null,
 				SQLiteDatabase.OPEN_READONLY);
 

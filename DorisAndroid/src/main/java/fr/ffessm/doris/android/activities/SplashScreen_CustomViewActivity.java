@@ -99,7 +99,8 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 
         int derniereVersionExecutee = prefs.getInt(getString(R.string.pref_key_last_version_run), 0);
 
-        if (!SQLiteDataBaseHelper.checkDataBase()) {
+        SQLiteDataBaseHelper myDbHelper = new SQLiteDataBaseHelper(getApplicationContext());
+        if (!myDbHelper.checkDataBase()) {
             // la base n'existe pas
             // on va la créer
             ((LinearLayout) findViewById(R.id.splashscreen_progressLayout)).setVisibility(View.VISIBLE);
@@ -174,24 +175,23 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
         protected Void doInBackground(Void... voids) {
             if (BuildConfig.DEBUG) Log.v(LOG_TAG, "AsyncInitialize.doInBackground() - début ");
             // assure le chargement de la base de manière asynchrone
+            SQLiteDataBaseHelper myDbHelper = new SQLiteDataBaseHelper(getApplicationContext());
             if (isUpdate) {
                 // efface la base précédente si elle existe
-                SQLiteDataBaseHelper.removeOldDataBase();
+                myDbHelper.removeOldDataBase();
             }
+
             SplashScreen_CustomViewActivity context = SplashScreen_CustomViewActivity.this;
 
             if (BuildConfig.DEBUG)
                 Log.v(LOG_TAG, "AsyncInitialize.doInBackground() - old db deleted ");
             // The following initialize the DB from file
-            SQLiteDataBaseHelper myDbHelper = new SQLiteDataBaseHelper(context);
-            // myDbHelper = new DataBaseHelper(this);
-
             try {
                 myDbHelper.createDataBase();
 
             } catch (IOException ioe) {
 
-                throw new Error("Unable to create database");
+                throw new Error("Unable to create database", ioe);
 
             }
 
