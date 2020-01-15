@@ -75,7 +75,7 @@ public class SQLiteDataBaseHelper extends SQLiteOpenHelper {
 
 			} catch (IOException e) {
 
-				throw new Error("Error copying database");
+				throw new Error("Error copying database", e);
 
 			}
 		}
