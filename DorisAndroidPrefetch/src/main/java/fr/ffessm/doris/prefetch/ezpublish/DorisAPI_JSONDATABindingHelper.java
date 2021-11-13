@@ -51,7 +51,6 @@ public class DorisAPI_JSONDATABindingHelper {
 
     public Utilisateur getUtilisateurFieldsFromNodeId(int participantNodeId) throws ClientProtocolException,
             IOException {
-        log.debug("getUtilisateurFieldsFromNodeId - Début");
         log.debug("getUtilisateurFieldsFromNodeId - participantNodeId : " + participantNodeId);
 
         HttpResponse response = getFieldsFromNodeId(participantNodeId);
@@ -89,7 +88,6 @@ public class DorisAPI_JSONDATABindingHelper {
 
     public Glossaire getTermeFieldsFromNodeId(int termeNodeId) throws ClientProtocolException,
             IOException {
-        log.debug("getTermeFieldsFromNodeId - Début");
         log.debug("getTermeFieldsFromNodeId - termeNodeId : " + termeNodeId);
 
         HttpResponse response = getFieldsFromNodeId(termeNodeId);
@@ -126,7 +124,6 @@ public class DorisAPI_JSONDATABindingHelper {
 
     public Bibliographie getOeuvreFieldsFromNodeId(int termeNodeId) throws ClientProtocolException,
             IOException {
-        log.debug("getTermeFieldsFromNodeId - Début");
         log.debug("getTermeFieldsFromNodeId - termeNodeId : " + termeNodeId);
 
         HttpResponse response = getFieldsFromNodeId(termeNodeId);
@@ -162,7 +159,6 @@ public class DorisAPI_JSONDATABindingHelper {
 
     public Espece getEspeceFieldsFromNodeId(int especeNodeId) throws ClientProtocolException,
             IOException {
-        log.debug("getSpecieFieldsFromNodeId - Début");
         log.debug("getSpecieFieldsFromNodeId - specieNodeId : " + especeNodeId);
 
         DefaultHttpClient client = new DefaultHttpClient();
@@ -231,7 +227,6 @@ public class DorisAPI_JSONDATABindingHelper {
 
     public Classification getClassificationFieldsFromObjectId(int classificationObjectId) throws ClientProtocolException,
             IOException {
-        log.debug("getClassificationFieldsFromObjectId - Début");
         log.debug("getClassificationFieldsFromObjectId - classificationObjectId : " + classificationObjectId);
 
         HttpResponse response = getFieldsFromObjectId(classificationObjectId);
@@ -271,7 +266,6 @@ public class DorisAPI_JSONDATABindingHelper {
 
     public Groupe getGroupeFieldsFromObjectId(int groupeObjectId) throws ClientProtocolException,
             IOException {
-        log.debug("getGroupeFieldsFromObjectId - Début");
         log.debug("getGroupeFieldsFromObjectId - groupeObjectId : " + groupeObjectId);
 
         HttpResponse response = getFieldsFromObjectId(groupeObjectId);
@@ -311,7 +305,6 @@ public class DorisAPI_JSONDATABindingHelper {
 
     public HttpResponse getFieldsFromNodeId(int nodeId) throws ClientProtocolException,
             IOException {
-        log.debug("getFieldsFromNodeId - Début");
         log.debug("getFieldsFromNodeId - nodeId : " + nodeId);
 
         DefaultHttpClient client = new DefaultHttpClient();
