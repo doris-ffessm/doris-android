@@ -156,6 +156,15 @@ public class ZoneGeographique {
 		case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
 			this._id = 6;
 			break;
+		case FAUNE_FLORE_MER_ROUGE:
+			this._id = 	7;
+			break;
+		case FAUNE_FLORE_MEDITERRANEE_FRANCAISE:
+			this._id = 	8;
+			break;
+		case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
+			this._id = 9;
+			break;
 		}
 	}
 
@@ -181,6 +190,12 @@ public class ZoneGeographique {
 			return ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST;
 		case 6:
 			return ZoneGeographiqueKind.FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES;
+		case 7:
+			return ZoneGeographiqueKind.FAUNE_FLORE_MER_ROUGE;
+		case 8:
+			return ZoneGeographiqueKind.FAUNE_FLORE_MEDITERRANEE_FRANCAISE;
+		case 9:
+				return ZoneGeographiqueKind.FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE;
 		default:
 			return null;
 		}

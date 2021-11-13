@@ -503,16 +503,14 @@ public class PrefetchFiches {
                                     zoneGeographique.setId(1);
                                     break;
                                 // On ignore pour l'instant
-                                // 239910 - Méditérannée Française
-                                // 239991 - Façade Atlantique Française
                                 // 1087942 - ????
-                                case 239910:
-                                case 239991:
-                                case 1087942:
-                                    log.error("prefetchV4() - Zone Géo. non gérée : " + zoneGeoRefId + " dans fiche " + DorisOAuth2ClientCredentials.SPECIES_NODE_URL+ficheNodeId.getNodeId());
+                                //case 239910:
+                                //case 239991:
+                                //case 1087942:
+                                //    log.error("prefetchV4() - Zone Géo. non gérée : " + zoneGeoRefId + " dans fiche " + DorisOAuth2ClientCredentials.SPECIES_NODE_URL+ficheNodeId.getNodeId());
 
-                                    zoneGeographique.setId(-1);
-                                    break;
+                                //    zoneGeographique.setId(-1);
+                                //    break;
                                 // 71728 - ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE
                                 case 71728:
                                     zoneGeographique.setId(2);
@@ -525,13 +523,26 @@ public class PrefetchFiches {
                                 case 71731:
                                     zoneGeographique.setId(4);
                                     break;
-                                // 135595 - ZoneGeographiqueKind.FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES
                                 case 135595:
+                                    // FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST
                                     zoneGeographique.setId(5);
                                     break;
                                     // 1086247 -
                                 case 1086247:
+                                    // FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES
                                     zoneGeographique.setId(6);
+                                    break;
+                                case 1790099:
+                                    // FAUNE_FLORE_MER_ROUGE
+                                    zoneGeographique.setId(7);
+                                    break;
+                                case 239910:
+                                    // FAUNE_FLORE_MEDITERRANEE_FRANCAISE
+                                    zoneGeographique.setId(8);
+                                    break;
+                                case 239991:
+                                    // FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE
+                                    zoneGeographique.setId(9);
                                     break;
                                 default:
                                     log.error("prefetchV4() - Zone Géo. Inconnue : " + zoneGeoRefId + " dans fiche " + DorisOAuth2ClientCredentials.SPECIES_NODE_URL+ficheNodeId);
