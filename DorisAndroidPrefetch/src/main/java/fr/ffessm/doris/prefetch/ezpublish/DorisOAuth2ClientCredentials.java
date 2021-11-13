@@ -32,8 +32,7 @@ public class DorisOAuth2ClientCredentials {
     //public static final String API_SUFFIXE = "9d00951e9946da1bf60ecbe6883712a28d5ae1ed";
     //public static final String API_SUFFIXE = "ca62da8df4a420b34b9e5acceb0c719ef6977093";
     //public static final String API_SUFFIXE = "d5c5af08aab6f777900a42e581aa0ab5bd053ee2";
-    public static final String API_SUFFIXE = "d81ca90502a3c02eb5dc290f003fd4950ee90e99";
-
+      public static final String API_SUFFIXE = "c977aaf12f519c53081d70edd3010b3961bbfcc4";
     /** Port in the "Callback URL". */
     public static final int PORT = 8087;
 
