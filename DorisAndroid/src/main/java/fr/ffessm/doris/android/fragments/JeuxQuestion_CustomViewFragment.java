@@ -46,7 +46,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,13 +56,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
@@ -78,8 +74,6 @@ import fr.ffessm.doris.android.tools.Jeu;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
-
-import static java.lang.Math.random;
 
 public class JeuxQuestion_CustomViewFragment extends Fragment implements OnItemClickListener
 {

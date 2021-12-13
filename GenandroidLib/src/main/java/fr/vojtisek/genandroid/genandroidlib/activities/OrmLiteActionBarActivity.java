@@ -8,7 +8,7 @@ import com.j256.ormlite.support.ConnectionSource;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
 
 public class OrmLiteActionBarActivity<H extends OrmLiteSqliteOpenHelper> extends AppCompatActivity {

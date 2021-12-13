@@ -42,16 +42,15 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.ActionBar;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
+import androidx.appcompat.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -61,13 +60,14 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 // Start of user code protectedZoneGeoSelection_ClassListViewActivity_additionalimports
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.TextView;
 
 import fr.ffessm.doris.android.BuildConfig;
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.tools.ScreenTools;
 // End of user code
 

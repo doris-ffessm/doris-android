@@ -4,11 +4,9 @@ import java.io.File;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 import android.os.Environment;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.text.TextUtils.SimpleStringSplitter;
-import android.util.Log;
 
 /**
  * Adaptation of the DeviceSecondaryExternal but that use some legacy mechanism 

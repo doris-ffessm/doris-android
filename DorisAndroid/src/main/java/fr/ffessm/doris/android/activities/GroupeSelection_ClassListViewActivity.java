@@ -42,8 +42,9 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.DorisApplicationContext;
+import fr.ffessm.doris.android.datamodel.Groupe;
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
@@ -51,9 +52,9 @@ import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.ActionBar;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
+import androidx.appcompat.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -63,7 +64,6 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 // Start of user code protectedGroupeSelection_ClassListViewActivity_additionalimports
 import android.app.Activity;
 import android.content.Context;
@@ -76,7 +76,6 @@ import android.widget.TextView;
 import org.acra.ACRA;
 
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
-import fr.ffessm.doris.android.BuildConfig;
 // End of user code
 
 public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener {

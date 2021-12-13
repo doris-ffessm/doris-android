@@ -518,7 +518,7 @@ public class PrefetchDorisWebSite {
     /**
 	 * Vérification des arguments passés à l'application
 	 * 
-	 *  @param args
+	 *  @param inArgs
 	 */
 	private ActionKind checkArgs(String[] inArgs){
 			

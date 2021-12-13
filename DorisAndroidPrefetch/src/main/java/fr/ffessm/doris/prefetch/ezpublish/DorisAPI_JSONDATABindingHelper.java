@@ -339,6 +339,7 @@ public class DorisAPI_JSONDATABindingHelper {
         log.debug("getFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
 
         if ( response.getStatusLine().getStatusCode() != 200 )  {
+            log.warn("getFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
             return null;
         }
 

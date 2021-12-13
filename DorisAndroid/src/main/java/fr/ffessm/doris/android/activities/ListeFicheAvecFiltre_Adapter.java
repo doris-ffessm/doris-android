@@ -45,8 +45,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import android.graphics.Typeface;
-
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
@@ -56,7 +54,7 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v4.util.LruCache;
+import androidx.collection.LruCache;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;

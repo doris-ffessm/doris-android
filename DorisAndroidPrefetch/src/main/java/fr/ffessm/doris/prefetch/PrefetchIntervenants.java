@@ -118,6 +118,13 @@ public class PrefetchIntervenants {
                 }
 
                 // Référence de l'intervenant dans le message JSON
+
+                // TODO  vérif si utilisateur existe dans la base actuelle
+
+                // TODO récupération de la date de dernière modification de la fiche
+                // seulement si n'existe pas ou plus récente alors mise à jour de la fiche
+
+
                 Utilisateur utilisateurJSON = dorisAPI_JSONDATABindingHelper.getUtilisateurFieldsFromNodeId(intervenantNodeId.getNodeId().intValue());
 
                 if (utilisateurJSON != null) {

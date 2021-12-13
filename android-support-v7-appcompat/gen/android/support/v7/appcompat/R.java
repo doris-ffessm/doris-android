@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package android.support.v7.appcompat;
+package androidx.appcompat.appcompat;
 
 public final class R {
     public static final class anim {
@@ -1697,7 +1697,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
             0x7f010000, 0x7f010001, 0x7f010002
         };
         /**
-          <p>This symbol is the offset where the {@link android.support.v7.appcompat.R.attr#windowActionBar}
+          <p>This symbol is the offset where the {@link androidx.appcompat.appcompat.R.attr#windowActionBar}
           attribute's value can be found in the {@link #ActionBarWindow} array.
 
 
@@ -1711,7 +1711,7 @@ containing a value of this type.
         */
         public static int ActionBarWindow_windowActionBar = 0;
         /**
-          <p>This symbol is the offset where the {@link android.support.v7.appcompat.R.attr#windowActionBarOverlay}
+          <p>This symbol is the offset where the {@link androidx.appcompat.appcompat.R.attr#windowActionBarOverlay}
           attribute's value can be found in the {@link #ActionBarWindow} array.
 
 
@@ -1725,7 +1725,7 @@ containing a value of this type.
         */
         public static int ActionBarWindow_windowActionBarOverlay = 1;
         /**
-          <p>This symbol is the offset where the {@link android.support.v7.appcompat.R.attr#windowSplitActionBar}
+          <p>This symbol is the offset where the {@link androidx.appcompat.appcompat.R.attr#windowSplitActionBar}
           attribute's value can be found in the {@link #ActionBarWindow} array.
 
 

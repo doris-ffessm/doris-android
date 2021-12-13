@@ -51,6 +51,7 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.tools.ScreenTools;
 
 import android.app.Activity;
 import android.content.Context;
@@ -59,7 +60,7 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.util.LruCache;
+import androidx.collection.LruCache;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -78,7 +79,6 @@ import android.widget.TextView;
 
 import android.view.ViewGroup.LayoutParams;
 
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -91,8 +91,12 @@ import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.tools.*;
+import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+import fr.ffessm.doris.android.tools.Param_Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Reseau_Outils;
+import fr.ffessm.doris.android.tools.Textes_Outils;
 
 //End of user code
 

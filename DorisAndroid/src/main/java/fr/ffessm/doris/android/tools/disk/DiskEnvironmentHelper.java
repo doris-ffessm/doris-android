@@ -1,22 +1,12 @@
 package fr.ffessm.doris.android.tools.disk;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Build;
-import android.os.Environment;
-import android.os.storage.StorageManager;
-import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
+
+import androidx.core.content.ContextCompat;
+
 import android.text.TextUtils.SimpleStringSplitter;
 import android.util.Log;
 import fr.ffessm.doris.android.DorisApplicationContext;

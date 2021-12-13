@@ -46,7 +46,8 @@ import java.util.HashMap;
 
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
-import fr.ffessm.doris.android.datamodel.*;
+import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
@@ -55,15 +56,14 @@ import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.LinearLayout;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.ActionBar;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.SearchView;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
+import androidx.appcompat.app.ActionBar;
+import androidx.core.view.MenuItemCompat;
+import androidx.appcompat.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -74,7 +74,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 // Start of user code protectedGlossaire_ClassListViewActivity_additionalimports
 // End of user code
 

@@ -42,7 +42,7 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -52,7 +52,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.CloseableIterator;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;

@@ -22,8 +22,8 @@ dependencies {
     implementation "ch.acra:acra-toast:$acraVersion"
 
     // dependances Android
-    implementation "com.android.support:appcompat-v7:$androidSupportVersion"
-    implementation "com.android.support:support-v4:$androidSupportVersion"
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "com.squareup.picasso:picasso:2.71828"
     // NOTE la version 21+ ne fonctionne pas bien, à revoir ...
     //compile 'com.android.support:appcompat-v7:21.0.3'
@@ -32,7 +32,7 @@ dependencies {
     // dependances inter-projets
     implementation project(':GenandroidLib')
     implementation project(':DorisAndroidCommon')
-    implementation "com.android.support:support-v4:$androidSupportVersion"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 }
 
 repositories {
@@ -40,18 +40,18 @@ repositories {
     maven {
         url "https://maven.google.com"
     }*/
-    jcenter()
+    //jcenter()
     mavenCentral()
     google()
 }
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 31
+    buildToolsVersion '30.0.2'
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 28
+        targetSdkVersion 31
     }
 /*
     sourceSets {
