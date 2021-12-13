@@ -117,9 +117,6 @@ public class Participant {
 	@DatabaseField
 	protected java.lang.String description;
 
-	/** date dernière modification de la fiche du participant */
-	@DatabaseField
-	protected int dateModified;
 
 	
 
