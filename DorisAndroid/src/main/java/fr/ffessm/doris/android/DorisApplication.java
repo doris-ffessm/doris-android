@@ -45,34 +45,46 @@ import org.acra.ACRA;
 import org.acra.annotation.AcraCore;
 import org.acra.annotation.AcraMailSender;
 import org.acra.annotation.AcraToast;
+import org.acra.config.CoreConfigurationBuilder;
+import org.acra.config.MailSenderConfigurationBuilder;
+import org.acra.config.ToastConfigurationBuilder;
 import org.acra.data.StringFormat;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
-@AcraCore(buildConfigClass = BuildConfig.class,
-		logcatArguments = { "-t", "200", "-v", "time"}
-)
-@AcraMailSender(mailTo = "doris4android@gmail.com",
-		resBody = R.string.crash_mail_body_text,
-		reportAsFile = true
-)
-@AcraToast(resText = R.string.crash_toast_text)
 public class DorisApplication extends Application {
 
 	private static final String LOG_TAG = DorisApplication.class.getSimpleName();
-	
+
 	@Override
     public void onCreate() {
         super.onCreate();
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Début");
-        
-        // The following line triggers the initialization of ACRA
-        ACRA.init(this);
-        
 
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Fin");
     }
-	
-	
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+
+        CoreConfigurationBuilder builder = new CoreConfigurationBuilder(this);
+        //core configuration:
+        builder
+                .withBuildConfigClass(BuildConfig.class)
+                .withLogcatArguments("-t", "200", "-v", "time")
+                .withReportFormat(StringFormat.JSON);
+        //each plugin you chose above can be configured with its builder like this:
+        builder.getPluginConfigurationBuilder(ToastConfigurationBuilder.class)
+                .withResText(R.string.crash_toast_text)
+                //make sure to enable all plugins you want to use:
+                .withEnabled(true);
+        builder.getPluginConfigurationBuilder(MailSenderConfigurationBuilder.class)
+                .withMailTo("doris4android@gmail.com")
+                .withResBody(R.string.crash_mail_body_text)
+                .withEnabled(true);
+        ACRA.init(this, builder);
+    }
 }
