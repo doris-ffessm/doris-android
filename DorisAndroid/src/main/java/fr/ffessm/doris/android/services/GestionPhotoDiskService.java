@@ -135,7 +135,7 @@ public class GestionPhotoDiskService extends IntentService {
     		nbFilesToCopyOrDelete = getPhotosOutils().getImageCountInAllFolders(ImageLocation.valueOf(source));
     		
 	    	Log.d(LOG_TAG, "onHandleIntent() - nbFilesToCopyOrDelete : "+nbFilesToCopyOrDelete);
-	    	mNotificationHelper.setMaxItemToProcess(""+nbFilesToCopyOrDelete);
+	    	mNotificationHelper.setMaxItemToProcess(nbFilesToCopyOrDelete);
     	}
 
 	

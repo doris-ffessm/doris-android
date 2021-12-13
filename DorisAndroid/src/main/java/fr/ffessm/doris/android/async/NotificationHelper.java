@@ -43,10 +43,13 @@ package fr.ffessm.doris.android.async;
 
 import fr.ffessm.doris.android.R;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+
 import androidx.core.app.NotificationCompat;
 
 public class NotificationHelper {
@@ -59,7 +62,9 @@ public class NotificationHelper {
     private PendingIntent mContentIntent;
     private CharSequence mContentTitle;
     
-    private String maxItemToProcess = "???";
+    private int maxItemToProcess = 0;
+
+    public static String CHANNEL_ID = "BackgroundActivityChannel";
 
 	// Start of user code notification helper additional attributes
 	/** Racine du texte qui apparaît dans la status bar */
@@ -79,7 +84,8 @@ public class NotificationHelper {
         this.resultIntent = resultIntent;
 		this.initialTickerText = initialTickerText;
 		this.notificationContentTitle = contentTitle;
-		
+		// TODO evaluate if we can create the channel in a better place
+		this.createNotificationChannel();
     }
 
     /**
@@ -98,7 +104,7 @@ public class NotificationHelper {
         //create the content which is shown in the notification pulldown
 		// Start of user code notification helper additional status message (createNotification)
         CharSequence contentText = "";
-        if ( !maxItemToProcess.equals("???") && !maxItemToProcess.equals("0") ) {
+        if ( maxItemToProcess!=0  ) {
         	contentText = "0 / "+maxItemToProcess; //Text of the notification in the pull down
         } else {
         	contentText = "";
@@ -116,21 +122,40 @@ public class NotificationHelper {
         //add the additional content and intent to the notification
        // mNotification.setLatestEventInfo(mContext, mContentTitle, contentText, mContentIntent);
 
-        mNotifyBuilder = new NotificationCompat.Builder(mContext)
+        mNotifyBuilder = new NotificationCompat.Builder(mContext, CHANNEL_ID)
 		.setWhen(System.currentTimeMillis())
 		.setTicker(initialTickerText)
 		.setSmallIcon(R.drawable.app_ic_launcher)
 		.setContentTitle(notificationContentTitle)
 		.setContentText(contentText)
+        .setPriority(NotificationCompat.PRIORITY_LOW)
 		.setContentIntent(mContentIntent);
         mNotification =mNotifyBuilder.build();
-        
+
         //make this notification appear in the 'Ongoing events' section
         mNotification.flags = Notification.FLAG_ONGOING_EVENT;
 
         //show the notification
-        mNotificationManager.notify(NOTIFICATION_ID, mNotification);
+        mNotificationManager.notify(NOTIFICATION_ID, mNotifyBuilder.build());
+
     }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = mContext.getString(R.string.background_notification_channel_name);
+            String description = mContext.getString(R.string.background_notification_channel_description);
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = mContext.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
 
     /**
      * Receives progress updates from the background task and updates the status bar notification appropriately
@@ -141,11 +166,13 @@ public class NotificationHelper {
 
 		// Start of user code notification helper additional status message (progressUpdate)
     	CharSequence contentText = "";
-        if ( !maxItemToProcess.equals("???") && !maxItemToProcess.equals("0") ) {
+        if ( maxItemToProcess != 0 ) {
         	contentText = racineTickerText + nbItemsComplete + " / " +maxItemToProcess;
+            mNotifyBuilder.setProgress(maxItemToProcess, nbItemsComplete, false);
         } else {
         	contentText = racineTickerText;
         }
+
 		// End of user code
         //publish it to the status bar
         //mNotification.setLatestEventInfo(mContext, mContentTitle, contentText, mContentIntent);
@@ -168,12 +195,14 @@ public class NotificationHelper {
         mNotificationManager.cancel(NOTIFICATION_ID);
     }
     
-    public String getMaxItemToProcess() {
+    public int getMaxItemToProcess() {
 		return maxItemToProcess;
 	}
 
-	public void setMaxItemToProcess(String maxItemToProcess) {
+	public void setMaxItemToProcess(int maxItemToProcess) {
 		this.maxItemToProcess = maxItemToProcess;
+        // Issue the initial notification with zero progress
+        mNotifyBuilder.setProgress(maxItemToProcess, 0, false);
 		progressUpdate(0);
 	}
 	

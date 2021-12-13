@@ -119,7 +119,7 @@ public class VerifieMAJFiche_BgActivity  extends AsyncTask<String,Integer, Integ
 
         int numeroFiche = Integer.valueOf(arg0[0]);
 
-        mNotificationHelper.setMaxItemToProcess(""+1);
+        mNotificationHelper.setMaxItemToProcess(1);
         publishProgress(1);
         // End of user code
 

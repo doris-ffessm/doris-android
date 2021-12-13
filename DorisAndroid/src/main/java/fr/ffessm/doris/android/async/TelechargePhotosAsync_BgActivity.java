@@ -217,7 +217,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			// Photos déjà sur l'appareil
 			mNotificationHelper.setContentTitle(context.getString(R.string.bg_notifTitle_imagesinitial));
 		    mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_notifText_rechercheImagesDispo) );
-			mNotificationHelper.setMaxItemToProcess(""+0);
+			mNotificationHelper.setMaxItemToProcess(0);
 
 	   		photosDejaTelechargees();
 
@@ -230,7 +230,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 			// Photos déjà sur l'appareil
 			mNotificationHelper.setContentTitle(context.getString(R.string.bg_notifTitle_imagesinitial));
 			mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_notifText_rechercheImagesDispo) );
-			mNotificationHelper.setMaxItemToProcess(""+0);
+			mNotificationHelper.setMaxItemToProcess(0);
 
 	   		photosDejaTelechargees();
 
@@ -320,7 +320,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     public void nbPhotosFichesATelecharger(List<ZoneGeographique> listeZoneGeo) {
         mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitle_imagesinitial));
         mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_notifText_imagesinitial) );
-		mNotificationHelper.setMaxItemToProcess(""+0);
+		mNotificationHelper.setMaxItemToProcess(0);
 
     	for (ZoneGeographique zoneGeo : listeZoneGeo) {
 
@@ -347,7 +347,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 		        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_imagesprinc)
 		        		+ Constants.getTitreCourtZoneGeographique(zoneGeo.getZoneGeoKind()));
 		        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_imagesprinc) );
-	    		mNotificationHelper.setMaxItemToProcess(""+nbPhotosPrincATelechargerPourZone[zoneId]);
+	    		mNotificationHelper.setMaxItemToProcess(nbPhotosPrincATelechargerPourZone[zoneId]);
     			publishProgress( 0 );
 
     			imageTypeImage = photosOutils.getImageQualityToDownload(true, zoneGeo.getZoneGeoKind());
@@ -465,7 +465,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
 	    mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitle_imagesinitial));
 	    mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_notifText_imagesinitial) );
-		mNotificationHelper.setMaxItemToProcess(""+0);
+		mNotificationHelper.setMaxItemToProcess(0);
 
 		for (ZoneGeographique zoneGeo : listeZoneGeo) {
 			if (BuildConfig.DEBUG) Log.d(LOG_TAG, "telechargementPhotosFiches - zoneGeo : "+zoneGeo.getId() + " - " + zoneGeo.getNom());
@@ -481,7 +481,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 		        mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_images)
 		        		+ Constants.getTitreCourtZoneGeographique(zoneGeo.getZoneGeoKind()) );
 		        mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_images) );
-	    		mNotificationHelper.setMaxItemToProcess(""+nbPhotosATelechargerPourZone[zoneId]);
+	    		mNotificationHelper.setMaxItemToProcess(nbPhotosATelechargerPourZone[zoneId]);
 	    		publishProgress( 0 );
 
 				imageTypeImage = photosOutils.getImageQualityToDownload(false, zoneGeo.getZoneGeoKind());
@@ -607,7 +607,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
 	    mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitle_imagesinitial));
 	    mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_notifText_imagesinitial) );
-		mNotificationHelper.setMaxItemToProcess(""+0);
+		mNotificationHelper.setMaxItemToProcess(0);
 
 		// Nombre de Photos d'intervenants
 		List<String[]> countPhoto = new ArrayList<String[]>(2);
@@ -625,7 +625,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
         mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_imagesparticipants));
         mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_imagesparticipants) );
-   		mNotificationHelper.setMaxItemToProcess(""+nbPhotosATelechargerPourParticipant);
+   		mNotificationHelper.setMaxItemToProcess(nbPhotosATelechargerPourParticipant);
    		publishProgress( 0 );
 
  		// récupère les url des photos
@@ -686,7 +686,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
 	    mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitle_imagesinitial));
 	    mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_notifText_imagesinitial) );
-		mNotificationHelper.setMaxItemToProcess(""+0);
+		mNotificationHelper.setMaxItemToProcess(0);
 
 		// Nombre de Photos de la Bibliographie
 		List<String[]> countPhoto = new ArrayList<String[]>(2);
@@ -704,7 +704,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
         mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_imagesbibliographie));
         mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_imagesbibliographie) );
-   		mNotificationHelper.setMaxItemToProcess(""+nbPhotosATelechargerPourBiblio);
+   		mNotificationHelper.setMaxItemToProcess(nbPhotosATelechargerPourBiblio);
    		publishProgress( 0 );
 
  		// récupère les url des photos
@@ -765,7 +765,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
 	    mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitle_imagesinitial));
 	    mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_notifText_imagesinitial) );
-		mNotificationHelper.setMaxItemToProcess(""+0);
+		mNotificationHelper.setMaxItemToProcess(0);
 
 		// Nombre de Photos dans le Glossaire
 		List<String[]> countPhoto = new ArrayList<String[]>(2);
@@ -783,7 +783,7 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
 
 	    mNotificationHelper.setContentTitle( context.getString(R.string.bg_notifTitre_imagesglossaire));
 	    mNotificationHelper.setRacineTickerText( context.getString(R.string.bg_racineTicker_imagesglossaire) );
-			mNotificationHelper.setMaxItemToProcess(""+nbPhotosATelechargerPourGlossaire);
+			mNotificationHelper.setMaxItemToProcess(nbPhotosATelechargerPourGlossaire);
 			publishProgress( 0 );
 
 			// récupère les url des photos

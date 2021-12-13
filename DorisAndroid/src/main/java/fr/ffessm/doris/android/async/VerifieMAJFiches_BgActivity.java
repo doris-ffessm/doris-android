@@ -168,7 +168,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
             // Récupération de la liste des Fiches de la Base
             mNotificationHelper.setContentTitle(context.getString(R.string.bg_notifTitle_fichesBase));
             mNotificationHelper.setRacineTickerText(context.getString(R.string.bg_notifText_fichesBase));
-            mNotificationHelper.setMaxItemToProcess("0");
+            mNotificationHelper.setMaxItemToProcess(0);
             publishProgress( 0 );
 
             listeFichesBase = new HashSet<FicheLight>((int) dbHelper.getDorisDBHelper().ficheDao.countOf());
@@ -200,7 +200,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
         mNotificationHelper.setContentTitle(context.getString(R.string.bg_notifTitle_fichesZoneGeo));
         mNotificationHelper.setRacineTickerText(context.getString(R.string.bg_notifText_fichesZoneGeo));
         int avancementMax = listeZoneGeo.size();
-        mNotificationHelper.setMaxItemToProcess(""+avancementMax);
+        mNotificationHelper.setMaxItemToProcess(avancementMax);
         int avancement = 0;
         publishProgress(avancement);
 
@@ -250,7 +250,7 @@ public class VerifieMAJFiches_BgActivity  extends AsyncTask<String,Integer, Inte
                 if (listeFichesUpdated.size()!=0) {
 
                     avancementMax = avancementMax + listeFichesUpdated.size();
-                    mNotificationHelper.setMaxItemToProcess(""+avancementMax);
+                    mNotificationHelper.setMaxItemToProcess(avancementMax);
 
                     for (FicheLight ficheLight : listeFichesUpdated){
                         //Log.d(LOG_TAG, "doInBackground() - fiche modifiée : "+ficheLight.getNumeroFiche());
