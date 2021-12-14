@@ -117,8 +117,9 @@ public class Participant {
 	@DatabaseField
 	protected java.lang.String description;
 
-
-	
+	/** last modification date */
+	@DatabaseField
+	protected int modificationDate;
 
 	@ForeignCollectionField(eager = false, foreignFieldName = "participant")
 	protected ForeignCollection<IntervenantFiche> intervenantFiches;
@@ -187,6 +188,13 @@ public class Participant {
 	}
 	public void setDescription(java.lang.String description) {
 		this.description = description;
+	}
+
+	public int getModificationDate() {
+		return this.modificationDate;
+	}
+	public void setModificationDate(int modificationDate) {
+		this.modificationDate = modificationDate;
 	}
 
 	public Collection<IntervenantFiche> getIntervenantFiches() {

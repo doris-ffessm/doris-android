@@ -17,15 +17,17 @@ public class ObjNameNodeId {
     private Integer nodeId;
     private Integer objectId;
     private String objectName;
+    private Integer modificationDate;
 
 	public ObjNameNodeId(Integer nodeId){
         this.nodeId = nodeId;
 	}
 
-    public ObjNameNodeId(Integer nodeId, Integer objectId, String objectName){
+    public ObjNameNodeId(Integer nodeId, Integer objectId, String objectName, Integer modificationDate){
         this.nodeId = nodeId;
         this.objectId = objectId;
         this.objectName = objectName;
+        this.modificationDate = modificationDate;
     }
 
     public Integer getNodeId(){
@@ -38,6 +40,10 @@ public class ObjNameNodeId {
 
     public String getObjectName(){
         return objectName;
+    }
+
+    public Integer getModificationDate(){
+        return modificationDate;
     }
 
 }

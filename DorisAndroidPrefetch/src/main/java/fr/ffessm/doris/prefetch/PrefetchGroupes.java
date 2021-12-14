@@ -79,7 +79,9 @@ public class PrefetchGroupes {
     /* TODO : Ici en Durs mais devraient être récupérés avec la Classification */
 
     public int prefetchV4() {
-        log.debug("prefetchV4() - début");
+        log.debug("PrefetchGroupes.prefetchV4() - début");
+
+        clearExistingGroups();
 
         List<Groupe> listeGroupes = new ArrayList<Groupe>();
 
@@ -259,8 +261,9 @@ public class PrefetchGroupes {
             TransactionManager.callInTransaction(connectionSource,
                     new Callable<Void>() {
                         public Void call() throws Exception {
+                            log.debug(String.format("Adding %d groups", listeGroupesFinal.size()));
                             for (Groupe groupe : listeGroupesFinal){
-                                dbContext.groupeDao.create(groupe);
+                                dbContext.groupeDao.createOrUpdate(groupe);
                             }
                             return null;
                         }
@@ -272,8 +275,29 @@ public class PrefetchGroupes {
             return -1;
         }
 
-        log.debug("prefetchV4() - fin");
+        log.debug("PrefetchGroupes.prefetchV4() - fin");
         return 1;
     }
+
+    protected void clearExistingGroups(){
+        try {
+            TransactionManager.callInTransaction(connectionSource,
+                    new Callable<Void>() {
+                        public Void call() throws Exception {
+                            List<Groupe> listGroupes = dbContext.groupeDao.queryForAll();
+                            if(!listGroupes.isEmpty()) {
+                                log.debug("Clearing existing groups");
+                                dbContext.groupeDao.delete(listGroupes);
+                            }
+                            return null;
+                        }
+                    });
+        } catch ( Exception e) {
+            // une erreur est survenue
+            log.error("Une erreur est survenue dans PrefetchGroupes");
+            log.error(e);
+        }
+    }
+
 
 }

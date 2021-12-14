@@ -46,6 +46,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -87,6 +88,8 @@ public class PrefetchDorisWebSite {
 	// Nombre maximum de fiches traitées (--max=K permet de changer cette valeur)
 	private int nbMaxFichesATraiter = PrefetchConstants.nbMaxFichesTraiteesDef;
     private int nbFichesParRequetes = 30;
+
+    private boolean copyBase = false;
 
 	private ActionKind action;
 
@@ -253,29 +256,44 @@ public class PrefetchDorisWebSite {
         //if (testDev == true) BasicConfigurator.configure();
 
         // Vérification, Création, Sauvegarde des dossiers de travail
-        renommageDossiers(action);
-        creationDossiers(action);
+		if(this.copyBase) {
+			renommageDossiers(action);
+		}
 
-        // - - - Base de Données - - -
-        PrefetchDBTools prefetchDBTools = new PrefetchDBTools();
+		creationDossiers(action);
 
-        // create empty DB and initialize it for Android
-        prefetchDBTools.initializeSQLite(PrefetchConstants.DATABASE_URL);
+		// - - - Base de Données - - -
+		PrefetchDBTools prefetchDBTools = new PrefetchDBTools();
+		String dataBaseFileName = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.lastIndexOf(".") );
+		File dbFile = new File(dataBaseFileName+".db");
+		if(dbFile.exists()) {
+			log.info("Open existing DB "+PrefetchConstants.DATABASE_URL);
+			// create our data-source for the database
+			connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
 
-        // create our data-source for the database
-        connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
+			// setup our database and DAOs
+			dbContext = prefetchDBTools.setupDatabase(connectionSource);
+		} else {
+			log.info("Create new DB "+PrefetchConstants.DATABASE_URL);
 
-        // setup our database and DAOs
-        dbContext = prefetchDBTools.setupDatabase(connectionSource);
+			// create empty DB and initialize it for Android
+			prefetchDBTools.initializeSQLite(PrefetchConstants.DATABASE_URL);
 
-        prefetchDBTools.databaseInitialisation(connectionSource);
+			// create our data-source for the database
+			connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
 
+			// setup our database and DAOs
+			dbContext = prefetchDBTools.setupDatabase(connectionSource);
+
+			prefetchDBTools.databaseInitialisation(connectionSource);
+		}
         try {
             // - - - Groupes - - -
             // Récupération de la liste des groupes sur le site de DORIS
-            log.debug("dbV4ToAndroidAction() - - - Groupes - - -");
+            log.info("dbV4ToAndroidAction() - - - Groupes - - -");
             int nbMaxGroupesATraiter = 100000;
             if (nbMaxGroupesATraiter > nbMaxFichesATraiter ) nbMaxGroupesATraiter = nbMaxFichesATraiter;
+
             PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, nbMaxGroupesATraiter, nbFichesParRequetes);
             if ( groupes.prefetchV4() == -1 ) {
                 log.debug("doMain() - Erreur Groupes");
@@ -283,7 +301,7 @@ public class PrefetchDorisWebSite {
             }
 
             // - - - Participants - - -
-            log.debug("dbV4ToAndroidAction() - - - Participants - - -");
+            log.info("dbV4ToAndroidAction() - - - Participants - - -");
             int nbMaxParticipantsATraiter = 100000;
             if (nbMaxParticipantsATraiter > nbMaxFichesATraiter ) nbMaxParticipantsATraiter = nbMaxFichesATraiter;
             PrefetchIntervenants intervenants = new PrefetchIntervenants(dbContext, connectionSource, nbMaxParticipantsATraiter, nbFichesParRequetes);
@@ -293,7 +311,7 @@ public class PrefetchDorisWebSite {
             }
 
             // - - - Glossaire - - -
-            log.debug("dbV4ToAndroidAction() - - - Glossaire - - -");
+            log.info("dbV4ToAndroidAction() - - - Glossaire - - -");
             int nbMaxTermesATraiter = 100000;
             if (nbMaxTermesATraiter > nbMaxFichesATraiter ) nbMaxTermesATraiter = nbMaxFichesATraiter;
             PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, nbMaxTermesATraiter, nbFichesParRequetes);
@@ -303,7 +321,7 @@ public class PrefetchDorisWebSite {
             }
 
             // - - - Bibliographie - - -
-            log.debug("dbV4ToAndroidAction() - - - Bibliographie - - -");
+            log.info("dbV4ToAndroidAction() - - - Bibliographie - - -");
 			int nbMaxTitresATraiter = 100000;
             if (nbMaxTitresATraiter > nbMaxFichesATraiter ) nbMaxTitresATraiter = nbMaxFichesATraiter;
             PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, nbMaxTitresATraiter, nbFichesParRequetes);
@@ -313,7 +331,7 @@ public class PrefetchDorisWebSite {
             }
 
             // - - - Mise à jour des zones géographiques - - -
-            log.debug("dbV4ToAndroidAction() - - - Mise à jour des zones géographiques - - -");
+            log.info("dbV4ToAndroidAction() - - - Mise à jour des zones géographiques - - -");
             PrefetchZonesGeographiques zonesGeographiques = new PrefetchZonesGeographiques(dbContext, connectionSource, nbMaxFichesATraiter);
             if ( zonesGeographiques.prefetchV4() == -1 ) {
                 log.debug("doMain() - Erreur Mise à jour des zones géographiques" );
@@ -321,7 +339,7 @@ public class PrefetchDorisWebSite {
             }
 
             // - - - Liste des Fiches - - -
-            log.debug("dbV4ToAndroidAction() - - - Liste des Fiches - - -");
+            log.info("dbV4ToAndroidAction() - - - Liste des Fiches - - -");
             int nbMaxEspecesATraiter = 100000;
             if (nbMaxEspecesATraiter > nbMaxFichesATraiter ) nbMaxEspecesATraiter = nbMaxFichesATraiter;
             PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, nbMaxEspecesATraiter, nbFichesParRequetes);
@@ -549,6 +567,11 @@ public class PrefetchDorisWebSite {
 		    	logger.setLevel(Level.OFF);
 			}
 		}
+
+		if(Arrays.stream(inArgs).anyMatch(a -> a.equals("--copyBase"))) {
+			log.debug("checkArgs() - arg : " + "--copyBase");
+			this.copyBase =  true;
+		}
 		
 		
 		// Si Aide ou Version alors affichage puis on termine
@@ -635,6 +658,7 @@ public class PrefetchDorisWebSite {
 		System.out.println("  -d, --debug       Messages destinés aux développeurs de cette application");
 		System.out.println("  -v, --verbose     Messages permettant de suivre l'avancé des traitements");
 		System.out.println("  -s, --silence     Aucune sortie, même pas les erreurs");
+		System.out.println("  --copyBase        save existing base and work on a fresh empty base");
 		System.out.println("");
 		System.out.println("ACTION :");
 		System.out.println("  INIT              Toutes les fiches sont retéléchargées sur doris.ffessm.fr et retraitées pour créer la base (images comprises)");
@@ -686,26 +710,26 @@ public class PrefetchDorisWebSite {
 
 	private void creationDossiers(ActionKind inAction) {
 		log.debug("creationDossiers() - Début");
-		
-		log.debug("creationDossiers() - Action : " + inAction.toString());
-		
-		log.debug("creationDossiers() - Dossier racine : " + PrefetchConstants.DOSSIER_RACINE);
-		log.debug("creationDossiers() - Dossier de la base : " + PrefetchConstants.DOSSIER_DATABASE);
-		log.debug("creationDossiers() - Fichier de la Base : " + PrefetchConstants.DATABASE_URL);
-				
+
 		// Si le dossier principal de travail ( ./run/ )  n'existe pas, on le crée
 		File dossierRacine = new File(PrefetchConstants.DOSSIER_RACINE);
 		if (dossierRacine.mkdirs()) {
 			log.info("Création du dossier : " + dossierRacine.getAbsolutePath());
+		} else {
+			log.debug("Dossier racine : " + PrefetchConstants.DOSSIER_RACINE);
 		}
 		// idem dossier de la Base ( ./run/database/ )
 		File dossierDB = new File(PrefetchConstants.DOSSIER_DATABASE);
 		if (dossierDB.mkdirs()) {
 			log.info("Création du dossier : " + dossierDB.getAbsolutePath());
+		} else {
+			log.debug("Dossier datbase : " + PrefetchConstants.DOSSIER_DATABASE);
 		}
 		File dossierTests = new File(PrefetchConstants.DOSSIER_TESTS);
 		if (dossierTests.mkdirs()) {
 			log.info("Création du dossier : " + dossierTests.getAbsolutePath());
+		} else {
+			log.debug("Fichier de la Base : " + PrefetchConstants.DATABASE_URL);
 		}
 
 	}

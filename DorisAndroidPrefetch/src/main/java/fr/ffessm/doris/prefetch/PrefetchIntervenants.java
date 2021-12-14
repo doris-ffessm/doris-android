@@ -89,7 +89,7 @@ public class PrefetchIntervenants {
     }
 
     public int prefetchV4() throws Exception {
-        log.debug("prefetchV4() - début");
+        log.debug("PrefetchIntervenants.prefetchV4() - début");
 
         // - - - Intervenant - - -
         JsonToDB jsonToDB = new JsonToDB();
@@ -119,37 +119,54 @@ public class PrefetchIntervenants {
 
                 // Référence de l'intervenant dans le message JSON
 
-                // TODO  vérif si utilisateur existe dans la base actuelle
+                // vérif si utilisateur existe dans la base actuelle
+                Participant participantQuery = new Participant();
+                participantQuery.setNumeroParticipant(intervenantNodeId.getObjectId());
+                List<Participant> exisitingParticipantsForNodeID = dbContext.participantDao.queryForMatching(participantQuery);
+                boolean mustRetrieveParticipant = false;
+                if (!exisitingParticipantsForNodeID.isEmpty()) {
+                    Participant existingParticpantDBEntry = exisitingParticipantsForNodeID.get(0);
+                    log.debug(String.format("User %d already in the db,  old modificationDate=%d, new modificationDate=%d", intervenantNodeId.getObjectId(), existingParticpantDBEntry.getModificationDate(), intervenantNodeId.getModificationDate()));
+                    if (existingParticpantDBEntry.getModificationDate() != intervenantNodeId.getModificationDate()) {
+                        log.debug(String.format("Modification date is different. Removing old entry"));
+                        TransactionManager.callInTransaction(connectionSource,
+                                new Callable<Void>() {
+                                    public Void call() throws Exception {
+                                        dbContext.participantDao.delete(existingParticpantDBEntry);
+                                        return null;
+                                    }
+                                });
 
-                // TODO récupération de la date de dernière modification de la fiche
-                // seulement si n'existe pas ou plus récente alors mise à jour de la fiche
+                        mustRetrieveParticipant = true;
+                    }
+                } else {
+                    log.debug(String.format("User %d NOT in the db, new modificationDate=%d", intervenantNodeId.getObjectId(), intervenantNodeId.getModificationDate()));
+                    mustRetrieveParticipant = true;
+                }
 
+                // seulement si n'existe pas ou plus récente alors récupération de la fiche
 
-                Utilisateur utilisateurJSON = dorisAPI_JSONDATABindingHelper.getUtilisateurFieldsFromNodeId(intervenantNodeId.getNodeId().intValue());
+                if (mustRetrieveParticipant) {
+                    Utilisateur utilisateurJSON = dorisAPI_JSONDATABindingHelper.getUtilisateurFieldsFromNodeId(intervenantNodeId.getNodeId().intValue());
 
-                if (utilisateurJSON != null) {
-                    final Participant intervenant = jsonToDB.getParticipantFromJSONUtil(intervenantNodeId.getObjectId().intValue(), utilisateurJSON);
-                    TransactionManager.callInTransaction(connectionSource,
-                            new Callable<Void>() {
-                                public Void call() throws Exception {
+                    if (utilisateurJSON != null) {
+                        final Participant intervenant = jsonToDB.getParticipantFromJSONUtil(intervenantNodeId.getObjectId().intValue(), utilisateurJSON);
+                        intervenant.setModificationDate(intervenantNodeId.getModificationDate());
+                        TransactionManager.callInTransaction(connectionSource,
+                                new Callable<Void>() {
+                                    public Void call() throws Exception {
 
-                                    dbContext.participantDao.create(intervenant);
+                                        dbContext.participantDao.create(intervenant);
 
-                                    return null;
-                                }
-                            });
+                                        return null;
+                                    }
+                                });
+                    }
                 }
             }
-
-	        // fait une pause pour tenter d'éviter d'être banni par le site
-	        if(pauseEntreRequetes != 0 ) {
-		   //     log.debug("pause de "+pauseEntreRequetes+"ms... ("+i*nbFichesParRequetes+"/"+nbFichesDORIS+")");
-		  //      Thread.sleep(pauseEntreRequetes);
-	        }
-
         }
 
-        log.debug("prefetchV4() - fin");
+        log.debug("PrefetchIntervenants.prefetchV4() - fin");
         return count;
     }
 

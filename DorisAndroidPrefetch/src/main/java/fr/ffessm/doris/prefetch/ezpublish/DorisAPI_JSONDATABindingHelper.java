@@ -51,7 +51,7 @@ public class DorisAPI_JSONDATABindingHelper {
 
     public Utilisateur getUtilisateurFieldsFromNodeId(int participantNodeId) throws ClientProtocolException,
             IOException {
-        log.debug("getUtilisateurFieldsFromNodeId - participantNodeId : " + participantNodeId);
+        log.debug(String.format("getUtilisateurFieldsFromNodeId(participantNodeId=%s)",participantNodeId));
 
         HttpResponse response = getFieldsFromNodeId(participantNodeId);
 
@@ -68,20 +68,17 @@ public class DorisAPI_JSONDATABindingHelper {
                     Utilisateur.class
             );
         }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        }
-        catch (  JsonMappingException e) {
-            e.printStackTrace();
-        }
-        catch (  IOException e) {
-            e.printStackTrace();
+        catch ( IOException e) {
+            log.error(e.getMessage(), e);
         }
 
-        System.out.println("\t Référence : " + utilisateur.getFields().getReference().getValue() );
-        System.out.println("\t FirstName : " + utilisateur.getFields().getFirstName().getValue() );
-        System.out.println("\t LastName : " + utilisateur.getFields().getLastName().getValue() );
-        System.out.println("\t Description : " + utilisateur.getFields().getDescription().getValue() );
+        log.debug(String.format("%d - %s - %s %s - %s",
+                participantNodeId,
+                utilisateur.getFields().getReference().getValue(),
+                utilisateur.getFields().getFirstName().getValue(),
+                utilisateur.getFields().getLastName().getValue(),
+                utilisateur.getFields().getDescription().getValue()
+        ));
 
         return utilisateur;
     }
