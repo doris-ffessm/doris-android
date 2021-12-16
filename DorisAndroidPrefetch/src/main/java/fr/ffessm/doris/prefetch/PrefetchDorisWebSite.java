@@ -42,6 +42,17 @@ termes.
 
 package fr.ffessm.doris.prefetch;
 
+import com.google.api.client.auth.oauth2.Credential;
+import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.misc.TransactionManager;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Level;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -52,28 +63,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Appender;
-import org.apache.log4j.Level;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.PropertyConfigurator;
-
-import com.google.api.client.auth.oauth2.Credential;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.misc.TransactionManager;
-import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
-
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPIConnexionHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
-import fr.ffessm.doris.prefetch.ezpublish.DorisAPIConnexionHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisOAuth2ClientCredentials;
 import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
 import fr.ffessm.doris.prefetch.ezpublish.ObjNameNodeId;
@@ -87,7 +84,7 @@ public class PrefetchDorisWebSite {
 	
 	// Nombre maximum de fiches traitées (--max=K permet de changer cette valeur)
 	private int nbMaxFichesATraiter = PrefetchConstants.nbMaxFichesTraiteesDef;
-    private int nbFichesParRequetes = 30;
+    private int nbFichesParRequetes = 10;
 
     private boolean copyBase = false;
 
@@ -97,7 +94,7 @@ public class PrefetchDorisWebSite {
 		INIT,
 		TEST,
 		DB_TO_ANDROID,
-        V4_TO_ANDROID,
+		WEB_TO_DB,
         TEST_CONNECTION_V4,
 		DB_IMAGE_UPGRADE,
 		ERASE_ALL
@@ -134,9 +131,9 @@ public class PrefetchDorisWebSite {
 			
 			dbToAndroidAction();
 
-		} else if ( action == ActionKind.V4_TO_ANDROID ) {
+		} else if ( action == ActionKind.WEB_TO_DB) {
 
-            dbV4ToAndroidAction();
+            webToDBAction();
 
         } else if ( action == ActionKind.TEST_CONNECTION_V4 ) {
 
@@ -185,7 +182,7 @@ public class PrefetchDorisWebSite {
 		int nbMaxEspecesATraiter = 100000;
 		if (nbMaxEspecesATraiter > nbMaxFichesATraiter ) nbMaxEspecesATraiter = nbMaxFichesATraiter;
 		PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, nbMaxEspecesATraiter, nbFichesParRequetes);
-		if ( listeFiches.prefetchV4() == -1 ) {
+		if ( listeFiches.prefetch() == -1 ) {
 			log.debug("doMain() - Erreur Liste des Fiches" );
 			System.exit(1);
 		}
@@ -249,8 +246,8 @@ public class PrefetchDorisWebSite {
 		log.debug("doMain() - Fin Déplacement Base");
 	}
 
-    private void dbV4ToAndroidAction() throws Exception{
-        log.debug("dbV4ToAndroidAction() - Début Création de la Base pour doris.ffessm.fr V4");
+    private void webToDBAction() throws Exception{
+        log.debug("webToDBAction() - Début Création/update de la base à partir de doris.ffessm.fr");
 
         // turn our static method into an instance of Main
         //if (testDev == true) BasicConfigurator.configure();
@@ -290,48 +287,48 @@ public class PrefetchDorisWebSite {
         try {
             // - - - Groupes - - -
             // Récupération de la liste des groupes sur le site de DORIS
-            log.info("dbV4ToAndroidAction() - - - Groupes - - -");
+            log.info("webToDBAction() - - - Groupes - - -");
             int nbMaxGroupesATraiter = 100000;
             if (nbMaxGroupesATraiter > nbMaxFichesATraiter ) nbMaxGroupesATraiter = nbMaxFichesATraiter;
 
             PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, nbMaxGroupesATraiter, nbFichesParRequetes);
             if ( groupes.prefetchV4() == -1 ) {
-                log.debug("doMain() - Erreur Groupes");
+                log.debug("Erreur Groupes");
                 System.exit(1);
             }
 
             // - - - Participants - - -
-            log.info("dbV4ToAndroidAction() - - - Participants - - -");
+            log.info("webToDBAction() - - - Participants - - -");
             int nbMaxParticipantsATraiter = 100000;
             if (nbMaxParticipantsATraiter > nbMaxFichesATraiter ) nbMaxParticipantsATraiter = nbMaxFichesATraiter;
             PrefetchIntervenants intervenants = new PrefetchIntervenants(dbContext, connectionSource, nbMaxParticipantsATraiter, nbFichesParRequetes);
-            if ( intervenants.prefetchV4() == -1 ) {
-                log.debug("doMain() - Erreur Intervenants" );
+            if ( intervenants.prefetch() == -1 ) {
+                log.debug("Erreur Intervenants" );
                 System.exit(1);
             }
 
             // - - - Glossaire - - -
-            log.info("dbV4ToAndroidAction() - - - Glossaire - - -");
+            log.info("webToDBAction() - - - Glossaire - - -");
             int nbMaxTermesATraiter = 100000;
             if (nbMaxTermesATraiter > nbMaxFichesATraiter ) nbMaxTermesATraiter = nbMaxFichesATraiter;
             PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, nbMaxTermesATraiter, nbFichesParRequetes);
-            if ( glossaire.prefetchV4() == -1 ) {
-                log.debug("doMain() - Erreur Glossaire" );
+            if ( glossaire.prefetch() == -1 ) {
+                log.debug("Erreur Glossaire" );
                 System.exit(1);
             }
 
             // - - - Bibliographie - - -
-            log.info("dbV4ToAndroidAction() - - - Bibliographie - - -");
+            log.info("webToDBAction() - - - Bibliographie - - -");
 			int nbMaxTitresATraiter = 100000;
             if (nbMaxTitresATraiter > nbMaxFichesATraiter ) nbMaxTitresATraiter = nbMaxFichesATraiter;
             PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, nbMaxTitresATraiter, nbFichesParRequetes);
-            if ( bibliographies.prefetchV4() == -1 ) {
-                log.debug("doMain() - Erreur Bibliographies" );
+            if ( bibliographies.prefetch() == -1 ) {
+                log.debug("Erreur Bibliographies" );
                 System.exit(1);
             }
 
             // - - - Mise à jour des zones géographiques - - -
-            log.info("dbV4ToAndroidAction() - - - Mise à jour des zones géographiques - - -");
+            log.info("webToDBAction() - - - Mise à jour des zones géographiques - - -");
             PrefetchZonesGeographiques zonesGeographiques = new PrefetchZonesGeographiques(dbContext, connectionSource, nbMaxFichesATraiter);
             if ( zonesGeographiques.prefetchV4() == -1 ) {
                 log.debug("doMain() - Erreur Mise à jour des zones géographiques" );
@@ -339,17 +336,17 @@ public class PrefetchDorisWebSite {
             }
 
             // - - - Liste des Fiches - - -
-            log.info("dbV4ToAndroidAction() - - - Liste des Fiches - - -");
+            log.info("webToDBAction() - - - Liste des Fiches - - -");
             int nbMaxEspecesATraiter = 100000;
             if (nbMaxEspecesATraiter > nbMaxFichesATraiter ) nbMaxEspecesATraiter = nbMaxFichesATraiter;
             PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, nbMaxEspecesATraiter, nbFichesParRequetes);
-            if ( listeFiches.prefetchV4() == -1 ) {
-                log.debug("doMain() - Erreur Liste des Fiches" );
+            if ( listeFiches.prefetch() == -1 ) {
+                log.debug("Erreur Liste des Fiches" );
                 System.exit(1);
             }
 
             // - - - Enregistrement Date génération Base - - -
-            log.debug("dbV4ToAndroidAction() - - - Enregistrement Date génération Base - - -");
+            log.debug(" - - - Enregistrement Date génération Base - - -");
             Date date = new Date();
             SimpleDateFormat ft =  new SimpleDateFormat ("dd/MM/yyyy  HH:mm", Locale.US);
             dbContext.dorisDB_metadataDao.create(new DorisDB_metadata(ft.format(date),""));
@@ -357,7 +354,7 @@ public class PrefetchDorisWebSite {
 
         } finally {
             // destroy the data source which should close underlying connections
-            log.debug("doMain() - Fermeture Base");
+            log.debug("Fermeture Base");
             if (connectionSource != null) {
                 connectionSource.close();
             }
@@ -365,7 +362,7 @@ public class PrefetchDorisWebSite {
 
 
 
-        log.debug("dbV4ToAndroidAction() - Fin Création de la Base pour doris.ffessm.fr V4");
+        log.debug("webToDBAction() - Fin ");
     }
 
     private void dbImageV4UpgradeAction() throws Exception{
@@ -664,7 +661,7 @@ public class PrefetchDorisWebSite {
 		System.out.println("  INIT              Toutes les fiches sont retéléchargées sur doris.ffessm.fr et retraitées pour créer la base (images comprises)");
 		System.out.println("  TEST          	Pour les développeurs");
 		System.out.println("  DB_TO_ANDROID     Déplace la base du Prefetch vers DorisAndroid");
-        System.out.println("  V4_TO_ANDROID     Création de la base de données pour l'appli. Android à partir du site doris.ffessm.fr V4");
+        System.out.println("  WEB_TO_DB         Création/update de la base de données pour l'appli. Android à partir du site doris.ffessm.fr");
 		System.out.println("  DB_IMAGE_UPGRADE  remplace les images de la base courante par celles du nouveau site doris.ffessm.fr V4");
 		System.out.println("  ERASE_ALL         Efface tout le contenu de run");
 		log.debug("help() - Fin");
@@ -689,7 +686,7 @@ public class PrefetchDorisWebSite {
 		if ( dossierRacine.exists() ) {
 
             // Le fichier de la base de données
-            if(inAction == ActionKind.INIT || inAction == ActionKind.V4_TO_ANDROID) {
+            if(inAction == ActionKind.INIT || inAction == ActionKind.WEB_TO_DB) {
 
                 String dataBaseName = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.lastIndexOf(".") );
                 log.debug("dataBaseName : " + dataBaseName);

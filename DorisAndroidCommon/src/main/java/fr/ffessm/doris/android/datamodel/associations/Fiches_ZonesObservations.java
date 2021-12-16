@@ -69,7 +69,7 @@ public class Fiches_ZonesObservations {
 	@DatabaseField(foreign = true, columnName = ZONEOBSERVATION_ID_FIELD_NAME)
 	ZoneObservation zoneObservation;
 
-	Fiches_ZonesObservations() {
+	public Fiches_ZonesObservations() {
 		// for ormlite
 	}
 

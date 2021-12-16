@@ -42,90 +42,49 @@ termes.
 
 package fr.ffessm.doris.prefetch;
 
-import java.util.List;
-import java.util.concurrent.Callable;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.j256.ormlite.misc.TransactionManager;
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
+
+import java.io.IOException;
+import java.util.List;
 
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
-
-import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
-import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
-import fr.ffessm.doris.prefetch.ezpublish.JsonToDB;
 import fr.ffessm.doris.prefetch.ezpublish.ObjNameNodeId;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.bibliographie.Bibliographie;
 
-public class PrefetchBibliographies {
+public class PrefetchBibliographies  extends AbstractNodePrefetch<EntreeBibliographie, Bibliographie, Dao<EntreeBibliographie, Integer>> {
 
-	// Initialisation de la Gestion des Log 
-	public static Log log = LogFactory.getLog(PrefetchBibliographies.class);
-	
-	private DorisDBHelper dbContext = null;
-	private ConnectionSource connectionSource = null;
-
-	private int nbMaxFichesATraiter;
-	private int nbFichesParRequetes;
+	public PrefetchBibliographies(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter) {
+		super(dbContext, connectionSource, nbMaxFichesATraiter);
+	}
 
 	public PrefetchBibliographies(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter, int nbFichesParRequetes) {
-		this.dbContext = dbContext;
-		this.connectionSource = connectionSource;
-
-		this.nbMaxFichesATraiter = nbMaxFichesATraiter;
-		this.nbFichesParRequetes = nbFichesParRequetes;
+		super(dbContext, connectionSource, nbMaxFichesATraiter, nbFichesParRequetes);
 	}
 
-	public int prefetchV4() throws Exception {
-        log.debug("prefetchV4() - début");
-
-        // - - - Bibliographie  - - -
-		JsonToDB jsonToDB = new JsonToDB();
-		DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper();
-		DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper();
-
-		// TODO : Il faudrait mettre un While ici
-		int nbFichesDORIS = nbMaxFichesATraiter;
-
-		int count = 0;
-
-		for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
-
-			List<ObjNameNodeId> nodeIds = dorisAPI_JSONTreeHelper.getBibliographieNodeIds(nbFichesParRequetes, nbFichesParRequetes * i);
-			if(nodeIds.isEmpty()) {
-				// il ne reste plus de fiche à traiter
-				break;
-			}
-			for (ObjNameNodeId oeuvreNodeId : nodeIds) {
-				count++;
-				if (count > nbMaxFichesATraiter) {
-					log.debug("doMain() - nbMaxFichesATraiter atteint");
-					i = 9999;
-					break;
-				}
-
-				// Référence de l'Espèce dans le message JSON
-				Bibliographie biblioJSON = dorisAPI_JSONDATABindingHelper.getOeuvreFieldsFromNodeId(oeuvreNodeId.getNodeId().intValue());
-				if (biblioJSON != null) {
-                    final EntreeBibliographie oeuvre = jsonToDB.getEntreeBibliographieFromJSONTerme(biblioJSON);
-                    TransactionManager.callInTransaction(connectionSource,
-                            new Callable<Void>() {
-                                public Void call() throws Exception {
-
-                                    dbContext.entreeBibliographieDao.create(oeuvre);
-
-                                    return null;
-                                }
-                            });
-                }
-			}
-
-		}
-        log.debug("prefetchV4() - fin");
-		return 1;
+	@Override
+	EntreeBibliographie getNewDBObjectInstance() {
+		return new EntreeBibliographie();
 	}
 
+	@Override
+	List<ObjNameNodeId> getNodeIdsFromWeb(int nbLimitRequest, int offset) throws IOException {
+		return dorisAPI_JSONTreeHelper.getBibliographieNodeIds(nbLimitRequest,offset);
+	}
+
+	@Override
+	Bibliographie getJsonObjectFromWeb(int id) throws IOException {
+		return dorisAPI_JSONDATABindingHelper.getOeuvreFieldsFromNodeId(id);
+	}
+
+	@Override
+	EntreeBibliographie getDBObjectFromJSONObject(ObjNameNodeId objNameNodeId, Bibliographie bibliographie) {
+		return jsonToDB.getEntreeBibliographieFromJSONTerme(bibliographie);
+	}
+
+	@Override
+	Dao<EntreeBibliographie, Integer> getDao() {
+		return dbContext.entreeBibliographieDao;
+	}
 }

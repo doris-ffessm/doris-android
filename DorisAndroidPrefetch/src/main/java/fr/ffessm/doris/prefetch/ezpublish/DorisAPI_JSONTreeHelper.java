@@ -136,7 +136,7 @@ public class DorisAPI_JSONTreeHelper {
 		
 		if (debug) {
 			log.debug(uri);
-			log.debug("Authorization header="+getHttpPage.getFirstHeader("Authorization"));
+			//log.debug("Authorization header="+getHttpPage.getFirstHeader("Authorization"));
 		}
 		
 		HttpResponse response = client.execute(getHttpPage);
@@ -151,10 +151,8 @@ public class DorisAPI_JSONTreeHelper {
             }
             response = client.execute(getHttpPage);
         }
-		if(response.getStatusLine().getStatusCode() == 200) {
-            log.debug("response.getStatusLine() : " + response.getStatusLine());
-        } else {
-            log.error("response.getStatusLine() : " + response.getStatusLine());
+		if(response.getStatusLine().getStatusCode() != 200) {
+            log.error(response.getStatusLine());
         }
 
 

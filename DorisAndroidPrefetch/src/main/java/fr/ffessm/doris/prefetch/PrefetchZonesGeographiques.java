@@ -87,31 +87,31 @@ public class PrefetchZonesGeographiques {
                 new Callable<Void>() {
                     public Void call() throws Exception {
 
-                        dbContext.zoneGeographiqueDao.create(
+                        dbContext.zoneGeographiqueDao.createOrUpdate(
                                 new ZoneGeographique(1, "Faune et flore marines de France métropolitaine", "Méditerranée, Atlantique, Manche et mer du Nord" )
                             );
-                        dbContext.zoneGeographiqueDao.create(
+                        dbContext.zoneGeographiqueDao.createOrUpdate(
                                 new ZoneGeographique(2, "Faune et flore dulcicoles de France métropolitaine", "Fleuves, rivières, lacs et étangs, ..." )
                         );
-                        dbContext.zoneGeographiqueDao.create(
+                        dbContext.zoneGeographiqueDao.createOrUpdate(
                                 new ZoneGeographique(3, "Faune et flore subaquatiques de l'Indo-Pacifique", "La Réunion, Mayotte, Nouvelle-Calédonie, Polynésie et autres" )
                         );
-                        dbContext.zoneGeographiqueDao.create(
+                        dbContext.zoneGeographiqueDao.createOrUpdate(
                                 new ZoneGeographique(4, "Faune et flore subaquatiques des Caraïbes", "Guadeloupe, Martinique et autres" )
                         );
-                        dbContext.zoneGeographiqueDao.create(
+                        dbContext.zoneGeographiqueDao.createOrUpdate(
                                 new ZoneGeographique(5, "Faune et flore subaquatiques de l'Atlantique Nord-Ouest", "Côte est du Canada, embouchure du St Laurent, archipel de St Pierre-et-Miquelon" )
                         );
-                        dbContext.zoneGeographiqueDao.create(
+                        dbContext.zoneGeographiqueDao.createOrUpdate(
                                 new ZoneGeographique(6, "Faune et flore des terres antarctiques françaises", "Circumpolaire, mers et côtes australes, Crozet, Kerguelen, Terre Adélie" )
                         );
-                        dbContext.zoneGeographiqueDao.create(
+                        dbContext.zoneGeographiqueDao.createOrUpdate(
                                 new ZoneGeographique(7, "Faune et flore de la Mer Rouge", "Mer Rouge" )
                         );
-                        dbContext.zoneGeographiqueDao.create(
+                        dbContext.zoneGeographiqueDao.createOrUpdate(
                                 new ZoneGeographique(8, "Faune et flore de la façade Méditérranéenne Française", "Méditerranée" )
                         );
-                        dbContext.zoneGeographiqueDao.create(
+                        dbContext.zoneGeographiqueDao.createOrUpdate(
                                 new ZoneGeographique(9, "Faune et flore de la façade Atlantique Française", "Atlantique Nord-Est, Manche et Mer du Nord françaises" )
                         );
                         return null;

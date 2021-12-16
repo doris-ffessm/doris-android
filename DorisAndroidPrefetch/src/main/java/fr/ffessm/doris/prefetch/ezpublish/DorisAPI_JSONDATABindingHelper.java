@@ -333,7 +333,7 @@ public class DorisAPI_JSONDATABindingHelper {
         }
 
         HttpResponse response = client.execute(getHttpPage);
-        log.debug("getFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
+        //log.debug("getFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
 
         if ( response.getStatusLine().getStatusCode() != 200 )  {
             log.warn("getFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
@@ -380,6 +380,7 @@ public class DorisAPI_JSONDATABindingHelper {
         //log.debug("getFieldsFromObjectId - response.getStatusLine() : "+response.getStatusLine());
 
         if ( response.getStatusLine().getStatusCode() != 200 )  {
+            log.warn(String.format("%s returned %s", uri, response.getStatusLine()));
             return null;
         }
 
@@ -404,15 +405,15 @@ public class DorisAPI_JSONDATABindingHelper {
 		}
 		
 		HttpResponse response = client.execute(getCode);
-		System.out.println("\t response : " + response.getStatusLine());
 
         if ( response.getStatusLine().getStatusCode() != 200 )  {
+            log.warn(String.format("%s returned %s", uri, response.getStatusLine()));
             return null;
         }
 
 		ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
 		Image imageResponse = mapper.readValue(new InputStreamReader(response.getEntity().getContent()), Image.class);
-		System.out.println("\t image path: " + imageResponse.getDataMap().getImage() );
+        log.debug(String.format("%s\n\timage path:%s", uri, imageResponse.getDataMap().getImage()));
 		
 		return imageResponse;
 	}

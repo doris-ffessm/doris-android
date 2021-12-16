@@ -87,9 +87,10 @@ public class Fiches_ZonesGeographiques {
 	public boolean _zoneGeographique_mayNeedDBRefresh = true;
 	public boolean _fiche_mayNeedDBRefresh = true;
 
-	Fiches_ZonesGeographiques() {
+	public Fiches_ZonesGeographiques() {
 		// for ormlite
 	}
+
 
 	public Fiches_ZonesGeographiques(ZoneGeographique zoneGeographique, Fiche fiche) {
 		this.zoneGeographique = zoneGeographique;
