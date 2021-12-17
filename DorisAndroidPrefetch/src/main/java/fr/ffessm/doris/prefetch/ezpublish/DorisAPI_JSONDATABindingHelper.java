@@ -1,10 +1,9 @@
 package fr.ffessm.doris.prefetch.ezpublish;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.List;
-import java.util.Map.Entry;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,20 +12,17 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import fr.ffessm.doris.prefetch.WebSiteNotAvailableException;
+import fr.ffessm.doris.prefetch.ezpublish.jsondata.bibliographie.Bibliographie;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.groupe.Groupe;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.image.Image;
-import fr.ffessm.doris.prefetch.ezpublish.jsondata.bibliographie.Bibliographie;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.utilisateur.Utilisateur;
 
 public class DorisAPI_JSONDATABindingHelper {
@@ -50,8 +46,7 @@ public class DorisAPI_JSONDATABindingHelper {
 		this.credent = credent;
 	}
 
-    public Utilisateur getUtilisateurFieldsFromNodeId(int participantNodeId) throws ClientProtocolException,
-            IOException, WebSiteNotAvailableException {
+    public Utilisateur getUtilisateurFieldsFromNodeId(int participantNodeId) throws IOException, WebSiteNotAvailableException {
         log.debug(String.format("getUtilisateurFieldsFromNodeId(participantNodeId=%s)",participantNodeId));
 
         HttpResponse response = getFieldsFromNodeId(participantNodeId);
@@ -61,17 +56,10 @@ public class DorisAPI_JSONDATABindingHelper {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Utilisateur utilisateur = new Utilisateur();
-
-        try {
-            utilisateur = objectMapper.readValue(
+        Utilisateur utilisateur = objectMapper.readValue(
                     new InputStreamReader(response.getEntity().getContent()),
                     Utilisateur.class
             );
-        }
-        catch ( IOException e) {
-            log.error(e.getMessage(), e);
-        }
 
         log.debug(String.format("%d - %s - %s %s - %s",
                 participantNodeId,
@@ -84,8 +72,7 @@ public class DorisAPI_JSONDATABindingHelper {
         return utilisateur;
     }
 
-    public Glossaire getTermeFieldsFromNodeId(int termeNodeId) throws ClientProtocolException,
-            IOException, WebSiteNotAvailableException {
+    public Glossaire getTermeFieldsFromNodeId(int termeNodeId) throws IOException, WebSiteNotAvailableException {
         log.debug("getTermeFieldsFromNodeId - termeNodeId : " + termeNodeId);
 
         HttpResponse response = getFieldsFromNodeId(termeNodeId);
@@ -95,23 +82,11 @@ public class DorisAPI_JSONDATABindingHelper {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Glossaire glossaire = new Glossaire();
-
-        try {
-            glossaire = objectMapper.readValue(
+        Glossaire glossaire = objectMapper.readValue(
                     new InputStreamReader(response.getEntity().getContent()),
                     Glossaire.class
             );
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        }
-        catch (  JsonMappingException e) {
-            e.printStackTrace();
-        }
-        catch (  IOException e) {
-            e.printStackTrace();
-        }
+
 
         System.out.println("\t Référence : " + glossaire.getFields().getReference().getValue() );
         System.out.println("\t Titre : " + glossaire.getFields().getTitle().getValue() );
@@ -120,8 +95,7 @@ public class DorisAPI_JSONDATABindingHelper {
         return glossaire;
     }
 
-    public Bibliographie getOeuvreFieldsFromNodeId(int termeNodeId) throws ClientProtocolException,
-            IOException, WebSiteNotAvailableException {
+    public Bibliographie getOeuvreFieldsFromNodeId(int termeNodeId) throws IOException, WebSiteNotAvailableException {
         log.debug("getTermeFieldsFromNodeId - termeNodeId : " + termeNodeId);
 
         HttpResponse response = getFieldsFromNodeId(termeNodeId);
@@ -131,23 +105,10 @@ public class DorisAPI_JSONDATABindingHelper {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Bibliographie oeuvre = new Bibliographie();
-
-        try {
-            oeuvre = objectMapper.readValue(
+        Bibliographie oeuvre = objectMapper.readValue(
                     new InputStreamReader(response.getEntity().getContent()),
                     Bibliographie.class
             );
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        }
-        catch (  JsonMappingException e) {
-            e.printStackTrace();
-        }
-        catch (  IOException e) {
-            e.printStackTrace();
-        }
 
         System.out.println("\t Référence : " + oeuvre.getFields().getReference().getValue() );
         System.out.println("\t Titre : " + oeuvre.getFields().getTitle().getValue() );
@@ -155,8 +116,7 @@ public class DorisAPI_JSONDATABindingHelper {
         return oeuvre;
     }
 
-    public Espece getEspeceFieldsFromNodeId(int especeNodeId) throws ClientProtocolException,
-            IOException, WebSiteNotAvailableException {
+    public Espece getEspeceFieldsFromNodeId(int especeNodeId) throws IOException, WebSiteNotAvailableException {
         log.debug("getSpecieFieldsFromNodeId - specieNodeId : " + especeNodeId);
 
         DefaultHttpClient client = new DefaultHttpClient();
@@ -195,24 +155,10 @@ public class DorisAPI_JSONDATABindingHelper {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Espece espece = new Espece();
-
-        try {
-            espece = objectMapper.readValue(
+        Espece espece = objectMapper.readValue(
                     new InputStreamReader(response.getEntity().getContent()),
                     Espece.class
             );
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-        }
-        catch (  JsonMappingException e) {
-            e.printStackTrace();
-        }
-        catch (  IOException e) {
-            e.printStackTrace();
-        }
-
 
         System.out.println("\t Référence : " + espece.getFields().getReference().getValue() );
         System.out.println("\t Espece : " + espece.getFields().getEspece().getValue() );
@@ -234,26 +180,10 @@ public class DorisAPI_JSONDATABindingHelper {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Classification classificationJSON = new Classification();
-
-        try {
-            classificationJSON = objectMapper.readValue(
+        Classification classificationJSON = objectMapper.readValue(
                     new InputStreamReader(response.getEntity().getContent()),
                     Classification.class
             );
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-            return null;
-        }
-        catch (  JsonMappingException e) {
-            e.printStackTrace();
-            return null;
-        }
-        catch (  IOException e) {
-            e.printStackTrace();
-            return null;
-        }
 
         //System.out.println("\t Nom Latin : " + classificationJSON.getDataMap().getNameLatin() );
         //System.out.println("\t Nom Francais : " + classificationJSON.getDataMap().getNameFrench());
@@ -262,8 +192,7 @@ public class DorisAPI_JSONDATABindingHelper {
         return classificationJSON;
     }
 
-    public Groupe getGroupeFieldsFromObjectId(int groupeObjectId) throws ClientProtocolException,
-            IOException, WebSiteNotAvailableException {
+    public Groupe getGroupeFieldsFromObjectId(int groupeObjectId) throws IOException, WebSiteNotAvailableException {
         log.debug("getGroupeFieldsFromObjectId - groupeObjectId : " + groupeObjectId);
 
         HttpResponse response = getFieldsFromObjectId(groupeObjectId);
@@ -273,26 +202,10 @@ public class DorisAPI_JSONDATABindingHelper {
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Groupe groupeJSON = new Groupe();
-
-        try {
-            groupeJSON = objectMapper.readValue(
+        Groupe groupeJSON = objectMapper.readValue(
                     new InputStreamReader(response.getEntity().getContent()),
                     Groupe.class
             );
-        }
-        catch (JsonGenerationException e) {
-            e.printStackTrace();
-            return null;
-        }
-        catch (  JsonMappingException e) {
-            e.printStackTrace();
-            return null;
-        }
-        catch (  IOException e) {
-            e.printStackTrace();
-            return null;
-        }
 
         //System.out.println("\t Nom Latin : " + classificationJSON.getDataMap().getNameLatin() );
         //System.out.println("\t Nom Francais : " + classificationJSON.getDataMap().getNameFrench());
@@ -301,8 +214,7 @@ public class DorisAPI_JSONDATABindingHelper {
         return groupeJSON;
     }
 
-    public HttpResponse getFieldsFromNodeId(int nodeId) throws ClientProtocolException,
-            IOException, WebSiteNotAvailableException {
+    public HttpResponse getFieldsFromNodeId(int nodeId) throws IOException, WebSiteNotAvailableException {
         log.debug("getFieldsFromNodeId - nodeId : " + nodeId);
 
         DefaultHttpClient client = new DefaultHttpClient();
