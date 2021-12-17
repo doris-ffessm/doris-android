@@ -91,7 +91,6 @@ public class PrefetchDorisWebSite {
 	private ActionKind action;
 
 	public enum ActionKind {
-		INIT,
 		TEST,
 		DB_TO_ANDROID,
 		WEB_TO_DB,
@@ -156,8 +155,8 @@ public class PrefetchDorisWebSite {
 		log.debug("doMain() - Début TEST");
 		
 		// Vérification, Création, Sauvegarde des dossiers de travail
-		renommageDossiers(ActionKind.INIT);
-		creationDossiers(ActionKind.INIT);
+		renommageDossiers(ActionKind.WEB_TO_DB);
+		creationDossiers(ActionKind.WEB_TO_DB);
 
 		// - - - Base de Données - - -
 		PrefetchDBTools prefetchDBTools = new PrefetchDBTools();
@@ -195,11 +194,8 @@ public class PrefetchDorisWebSite {
 
         Credential credent = DorisAPIConnexionHelper.authorizeViaWebPage(DorisOAuth2ClientCredentials.getUserId());
 
-        DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper(credent);
-        DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper(credent);
-
         log.info("testConnection() - credent : " + credent.toString());
-        log.info("testConnection() - accessToken : " + credent.getAccessToken().toString());
+        log.info("testConnection() - accessToken : " + credent.getAccessToken());
 
         log.debug("testConnection() - Fin");
     }
@@ -658,7 +654,6 @@ public class PrefetchDorisWebSite {
 		System.out.println("  --copyBase        save existing base and work on a fresh empty base");
 		System.out.println("");
 		System.out.println("ACTION :");
-		System.out.println("  INIT              Toutes les fiches sont retéléchargées sur doris.ffessm.fr et retraitées pour créer la base (images comprises)");
 		System.out.println("  TEST          	Pour les développeurs");
 		System.out.println("  DB_TO_ANDROID     Déplace la base du Prefetch vers DorisAndroid");
         System.out.println("  WEB_TO_DB         Création/update de la base de données pour l'appli. Android à partir du site doris.ffessm.fr");
@@ -686,7 +681,7 @@ public class PrefetchDorisWebSite {
 		if ( dossierRacine.exists() ) {
 
             // Le fichier de la base de données
-            if(inAction == ActionKind.INIT || inAction == ActionKind.WEB_TO_DB) {
+            if(inAction == ActionKind.WEB_TO_DB) {
 
                 String dataBaseName = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.lastIndexOf(".") );
                 log.debug("dataBaseName : " + dataBaseName);

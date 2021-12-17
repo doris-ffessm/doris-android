@@ -26,26 +26,15 @@ dependencies {
 }*/
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-// * V4_TO_ANDROID : Crée la base à partir du nouveau site doris.ffessm.fr V4
+// * WEB_TO_DB : Crée la base à partir du site doris.ffessm.fr
+// * par defaut fonctionne en incremental: supprimer le fichier run/database/dorisAndroid.db
+// * pour obtenir une base 100% fraiche
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 task(buildDorisDBV4, dependsOn: 'classes', type: JavaExec) {
 	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
-	args '-v',  'V4_TO_ANDROID'
-}
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-// * INIT : L'ensemble des fiches est re-téléchargé pour créer la base
-// * html_ref est sans intérêt pour ce mode, en revanche à l'issu du traitement
-// * le dossier html pourrait être renommé en html_ref pour éviter aux autres 
-// * modes de tout re-télécharger
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-
-task(buildDorisDB, dependsOn: 'classes', type: JavaExec) {
-	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
-	classpath = sourceSets.main.runtimeClasspath
-	args '-v',  'INIT'
+	args '-v',  'WEB_TO_DB'
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
