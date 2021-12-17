@@ -34,12 +34,12 @@ public class PrefetchGlossaire extends AbstractNodePrefetch<DefinitionGlossaire,
 
 
     @Override
-    Glossaire getJsonObjectFromWeb(int id) throws IOException {
+    Glossaire getJsonObjectFromWeb(int id) throws IOException, WebSiteNotAvailableException {
         return dorisAPI_JSONDATABindingHelper.getTermeFieldsFromNodeId(id);
     }
 
     @Override
-    DefinitionGlossaire getDBObjectFromJSONObject(ObjNameNodeId objNameNodeId, Glossaire glossaire) {
+    DefinitionGlossaire getDBObjectFromJSONObject(ObjNameNodeId objNameNodeId, Glossaire glossaire) throws WebSiteNotAvailableException {
         return jsonToDB.getDefinitionGlossaireFromJSONTerme(glossaire);
     }
 

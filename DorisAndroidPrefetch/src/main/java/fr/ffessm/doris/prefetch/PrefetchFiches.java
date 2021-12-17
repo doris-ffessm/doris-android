@@ -61,7 +61,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
 
 
     @Override
-    Espece getJsonObjectFromWeb(int id) throws IOException {
+    Espece getJsonObjectFromWeb(int id) throws IOException, WebSiteNotAvailableException {
         return dorisAPI_JSONDATABindingHelper.getEspeceFieldsFromNodeId(id);
     }
 
@@ -94,7 +94,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
     }
 
     @Override
-    protected void postNodeCreation(ObjNameNodeId objNameNodeId, Fiche ficheDB, Espece especeJSON) throws SQLException {
+    protected void postNodeCreation(ObjNameNodeId objNameNodeId, Fiche ficheDB, Espece especeJSON) throws SQLException, WebSiteNotAvailableException {
         super.postNodeCreation(objNameNodeId, ficheDB, especeJSON);
         // add/update data of the other tables related to the Fiche
 
@@ -248,7 +248,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
     /**
      *  Ajout aux Classifications si pas encore dans la liste
      */
-    protected void updateClassificationForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
+    protected void updateClassificationForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException, WebSiteNotAvailableException {
         /* Initialement on a sur la fiche que le niveau et la référence de la Classification */
         List<ClassificationFiche> classificationsFiche = jsonToDB.getClassificationFicheFromJSONEspece(especeJSON);
 
@@ -525,7 +525,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                     });
         }
     }
-    protected void updatePhotoForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
+    protected void updatePhotoForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException, WebSiteNotAvailableException {
 
         List<Image> imageJSONListe = new ArrayList<Image>();
 

@@ -206,12 +206,12 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
      */
     abstract List<ObjNameNodeId> getNodeIdsFromWeb(int nbLimitRequest, int offset) throws IOException;
 
-    abstract JSONObject getJsonObjectFromWeb(int id) throws IOException;
+    abstract JSONObject getJsonObjectFromWeb(int id) throws IOException, WebSiteNotAvailableException;
 
-    abstract DBObject getDBObjectFromJSONObject(ObjNameNodeId objNameNodeId, JSONObject jsonObject);
+    abstract DBObject getDBObjectFromJSONObject(ObjNameNodeId objNameNodeId, JSONObject jsonObject) throws WebSiteNotAvailableException;
 
     abstract DAO getDao();
 
-    protected void postNodeCreation(ObjNameNodeId objNameNodeId, DBObject dbObject, JSONObject jsonObject) throws SQLException {}
+    protected void postNodeCreation(ObjNameNodeId objNameNodeId, DBObject dbObject, JSONObject jsonObject) throws SQLException, WebSiteNotAvailableException {}
 
 }

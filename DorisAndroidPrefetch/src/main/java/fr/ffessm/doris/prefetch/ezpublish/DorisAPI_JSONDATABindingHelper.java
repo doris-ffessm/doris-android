@@ -20,6 +20,7 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
+import fr.ffessm.doris.prefetch.WebSiteNotAvailableException;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
@@ -50,7 +51,7 @@ public class DorisAPI_JSONDATABindingHelper {
 	}
 
     public Utilisateur getUtilisateurFieldsFromNodeId(int participantNodeId) throws ClientProtocolException,
-            IOException {
+            IOException, WebSiteNotAvailableException {
         log.debug(String.format("getUtilisateurFieldsFromNodeId(participantNodeId=%s)",participantNodeId));
 
         HttpResponse response = getFieldsFromNodeId(participantNodeId);
@@ -84,7 +85,7 @@ public class DorisAPI_JSONDATABindingHelper {
     }
 
     public Glossaire getTermeFieldsFromNodeId(int termeNodeId) throws ClientProtocolException,
-            IOException {
+            IOException, WebSiteNotAvailableException {
         log.debug("getTermeFieldsFromNodeId - termeNodeId : " + termeNodeId);
 
         HttpResponse response = getFieldsFromNodeId(termeNodeId);
@@ -120,7 +121,7 @@ public class DorisAPI_JSONDATABindingHelper {
     }
 
     public Bibliographie getOeuvreFieldsFromNodeId(int termeNodeId) throws ClientProtocolException,
-            IOException {
+            IOException, WebSiteNotAvailableException {
         log.debug("getTermeFieldsFromNodeId - termeNodeId : " + termeNodeId);
 
         HttpResponse response = getFieldsFromNodeId(termeNodeId);
@@ -155,7 +156,7 @@ public class DorisAPI_JSONDATABindingHelper {
     }
 
     public Espece getEspeceFieldsFromNodeId(int especeNodeId) throws ClientProtocolException,
-            IOException {
+            IOException, WebSiteNotAvailableException {
         log.debug("getSpecieFieldsFromNodeId - specieNodeId : " + especeNodeId);
 
         DefaultHttpClient client = new DefaultHttpClient();
@@ -190,7 +191,7 @@ public class DorisAPI_JSONDATABindingHelper {
         //log.debug("getSpecieFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
 
         if ( response.getStatusLine().getStatusCode() != 200 )  {
-            return null;
+            throw new WebSiteNotAvailableException(response.getStatusLine().toString(), uri, response.getStatusLine().getStatusCode());
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -222,8 +223,8 @@ public class DorisAPI_JSONDATABindingHelper {
         return espece;
     }
 
-    public Classification getClassificationFieldsFromObjectId(int classificationObjectId) throws ClientProtocolException,
-            IOException {
+    public Classification getClassificationFieldsFromObjectId(int classificationObjectId) throws IOException,
+            WebSiteNotAvailableException {
         log.debug("getClassificationFieldsFromObjectId - classificationObjectId : " + classificationObjectId);
 
         HttpResponse response = getFieldsFromObjectId(classificationObjectId);
@@ -262,7 +263,7 @@ public class DorisAPI_JSONDATABindingHelper {
     }
 
     public Groupe getGroupeFieldsFromObjectId(int groupeObjectId) throws ClientProtocolException,
-            IOException {
+            IOException, WebSiteNotAvailableException {
         log.debug("getGroupeFieldsFromObjectId - groupeObjectId : " + groupeObjectId);
 
         HttpResponse response = getFieldsFromObjectId(groupeObjectId);
@@ -301,7 +302,7 @@ public class DorisAPI_JSONDATABindingHelper {
     }
 
     public HttpResponse getFieldsFromNodeId(int nodeId) throws ClientProtocolException,
-            IOException {
+            IOException, WebSiteNotAvailableException {
         log.debug("getFieldsFromNodeId - nodeId : " + nodeId);
 
         DefaultHttpClient client = new DefaultHttpClient();
@@ -337,14 +338,14 @@ public class DorisAPI_JSONDATABindingHelper {
 
         if ( response.getStatusLine().getStatusCode() != 200 )  {
             log.warn("getFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
-            return null;
+            throw new WebSiteNotAvailableException(response.getStatusLine().toString(), uri, response.getStatusLine().getStatusCode());
         }
 
         return response;
     }
 
-    public HttpResponse getFieldsFromObjectId(int objectId) throws ClientProtocolException,
-            IOException {
+    public HttpResponse getFieldsFromObjectId(int objectId) throws IOException,
+            WebSiteNotAvailableException {
         //log.debug("getFieldsFromObjectId - Début");
         //log.debug("getFieldsFromObjectId - objectId : " + objectId);
 
@@ -381,14 +382,36 @@ public class DorisAPI_JSONDATABindingHelper {
 
         if ( response.getStatusLine().getStatusCode() != 200 )  {
             log.warn(String.format("%s returned %s", uri, response.getStatusLine()));
-            return null;
+            throw new WebSiteNotAvailableException(response.getStatusLine().toString(), uri, response.getStatusLine().getStatusCode());
         }
 
         return response;
     }
 
-	public Image getImageFromImageId(int imageId) throws ClientProtocolException,
-	IOException {
+    public Image getImageFromImageId(int imageId, int retry) throws IOException, WebSiteNotAvailableException {
+	    int nbTries = 0;
+        WebSiteNotAvailableException lastException = null;
+	    while(nbTries <= retry) {
+            try {
+                return getImageFromImageId(imageId);
+            } catch (WebSiteNotAvailableException e) {
+                lastException = e;
+                nbTries++;
+                if(nbTries <= retry) {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException interruptedException) {
+                        interruptedException.printStackTrace();
+                    }
+                }
+                log.warn(String.format("nbTries=%d ", nbTries));
+            }
+        }
+	    if(lastException != null) throw lastException;
+	    else return null;
+    }
+
+    public Image getImageFromImageId(int imageId) throws IOException, WebSiteNotAvailableException {
 
 		DefaultHttpClient client = new DefaultHttpClient();
 		
@@ -406,9 +429,9 @@ public class DorisAPI_JSONDATABindingHelper {
 		
 		HttpResponse response = client.execute(getCode);
 
-        if ( response.getStatusLine().getStatusCode() != 200 )  {
+		if ( response.getStatusLine().getStatusCode() != 200 )  {
             log.warn(String.format("%s returned %s", uri, response.getStatusLine()));
-            return null;
+            throw new WebSiteNotAvailableException(response.getStatusLine().toString(), uri, response.getStatusLine().getStatusCode());
         }
 
 		ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally

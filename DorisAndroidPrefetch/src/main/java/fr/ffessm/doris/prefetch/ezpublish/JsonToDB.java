@@ -23,6 +23,7 @@ import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.sitedoris.SiteDoris;
+import fr.ffessm.doris.prefetch.WebSiteNotAvailableException;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.bibliographie.Bibliographie;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.espece.Espece;
 import fr.ffessm.doris.prefetch.ezpublish.jsondata.glossaire.Glossaire;
@@ -146,7 +147,7 @@ public class JsonToDB {
     /* * * * * * * * * * * *
     Glossaire
     * * * * * * * * * * * * */
-    public DefinitionGlossaire getDefinitionGlossaireFromJSONTerme(Glossaire jsonTerme){
+    public DefinitionGlossaire getDefinitionGlossaireFromJSONTerme(Glossaire jsonTerme) throws WebSiteNotAvailableException {
 
 
         //log.debug("getDefinitionGlossaireFromJSONTerme() - listeImages : "+jsonTerme.getFields().getIllustrations().getValue());
@@ -157,9 +158,10 @@ public class JsonToDB {
                     int imageId = Integer.parseInt(possibleImageId.split("\\|")[0]);
                     //log.debug("getDefinitionGlossaireFromJSONTerme() - imageId : "+imageId);
                     // récupère les données associées à l'image
-                    String image = dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId).getDataMap().getImage();
-                    String imageDescription = dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId).getDataMap().getLegend();
-                    if (image != null) listeImages += image + "|" + commonOutils.remplacementBalises(
+                    Image image = dorisAPI_JSONDATABindingHelper.getImageFromImageId(imageId, 5);
+                    String imageName = image.getDataMap().getImage();
+                    String imageDescription = image.getDataMap().getLegend();
+                    if (image != null) listeImages += imageName + "|" + commonOutils.remplacementBalises(
                                 commonOutils.nettoyageBalises( imageDescription ).trim()
                             , true)
                         + ";";

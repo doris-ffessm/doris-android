@@ -74,7 +74,7 @@ public class PrefetchBibliographies  extends AbstractNodePrefetch<EntreeBibliogr
 	}
 
 	@Override
-	Bibliographie getJsonObjectFromWeb(int id) throws IOException {
+	Bibliographie getJsonObjectFromWeb(int id) throws IOException, WebSiteNotAvailableException {
 		return dorisAPI_JSONDATABindingHelper.getOeuvreFieldsFromNodeId(id);
 	}
 

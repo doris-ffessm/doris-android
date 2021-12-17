@@ -75,7 +75,7 @@ public class PrefetchIntervenants extends AbstractNodePrefetch<Participant, Util
 
 
     @Override
-    Utilisateur getJsonObjectFromWeb(int id) throws IOException {
+    Utilisateur getJsonObjectFromWeb(int id) throws IOException, WebSiteNotAvailableException {
         return dorisAPI_JSONDATABindingHelper.getUtilisateurFieldsFromNodeId(id);
     }
 
