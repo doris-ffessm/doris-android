@@ -98,22 +98,48 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         super.postNodeCreation(objNameNodeId, ficheDB, especeJSON);
         // add/update data of the other tables related to the Fiche
 
-        updateSectionFicheForFiche(ficheDB, especeJSON);
-        updateAutreDenominationForFiche(ficheDB, especeJSON);
-        updateClassificationForFiche(ficheDB, especeJSON);
-        updateGenreForFiche(ficheDB, especeJSON);
-        updateParticipantForFiche(ficheDB, especeJSON);
-        updatePhotoForFiche(ficheDB, especeJSON);
-        updateZoneGeographiqueForFiche(ficheDB, especeJSON);
+        try {
+            removeSectionFicheForFiche(ficheDB, especeJSON);
+            updateSectionFicheForFiche(ficheDB, especeJSON);
+            removeAutreDenominationForFiche(ficheDB, especeJSON);
+            updateAutreDenominationForFiche(ficheDB, especeJSON);
+            removeClassificationForFiche(ficheDB, especeJSON);
+            updateClassificationForFiche(ficheDB, especeJSON);
+            // TODO remove previous updateGenreForFiche ?
+            updateGenreForFiche(ficheDB, especeJSON);
+            removeParticipantForFiche(ficheDB,especeJSON);
+            updateParticipantForFiche(ficheDB, especeJSON);
+            removePhotoForFiche(ficheDB, especeJSON);
+            updatePhotoForFiche(ficheDB, especeJSON);
+            removeZoneGeographiqueForFiche(ficheDB, especeJSON);
+            updateZoneGeographiqueForFiche(ficheDB, especeJSON);
+        } catch (Exception e) {
+            // revert element that have been partially added if the Fiche isn't fully retrieved (web connection error)
+            TransactionManager.callInTransaction(connectionSource,
+                    new Callable<Void>() {
+                        public Void call() throws Exception {
+                            getDao().delete(ficheDB);
+                            return null;
+                        }
+                    });
+            removeSectionFicheForFiche(ficheDB, especeJSON);
+            removeAutreDenominationForFiche(ficheDB, especeJSON);
+            removeClassificationForFiche(ficheDB, especeJSON);
+            // TODO remove previous updateGenreForFiche ?
+            removeParticipantForFiche(ficheDB, especeJSON);
+            removePhotoForFiche(ficheDB, especeJSON);
+            removeZoneGeographiqueForFiche(ficheDB, especeJSON);
+            throw e;
+        }
     }
 
-    protected void updateSectionFicheForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
+    protected void removeSectionFicheForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         // remove previous SectionFiche if any
         SectionFiche sectionFicheQuery = new SectionFiche();
         sectionFicheQuery.setFiche(ficheDB);
         List<SectionFiche> previousRelatedSectionFiche = dbContext.sectionFicheDao.queryForMatching(sectionFicheQuery);
-        if(!previousRelatedSectionFiche.isEmpty()){
-            log.debug(String.format("delete %d previous SectionFiche related to this Fiche",previousRelatedSectionFiche.size()));
+        if (!previousRelatedSectionFiche.isEmpty()) {
+            log.debug(String.format("delete %d previous SectionFiche related to this Fiche", previousRelatedSectionFiche.size()));
 
             TransactionManager.callInTransaction(connectionSource,
                     new Callable<Void>() {
@@ -123,6 +149,8 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                         }
                     });
         }
+    }
+    protected void updateSectionFicheForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         // Create SectionFiche related to this Fiche
         List<SectionFiche> sectionsFiche = jsonToDB.getSectionsFicheFromJSONEspece(especeJSON);
         log.debug(String.format("add %d SectionFiche related to this Fiche", sectionsFiche.size()));
@@ -140,7 +168,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         }
     }
 
-    protected void updateAutreDenominationForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
+    protected void removeAutreDenominationForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         // remove previous SectionFiche if any
         AutreDenomination query = new AutreDenomination();
         query.setFiche(ficheDB);
@@ -155,6 +183,9 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                         }
                     });
         }
+    }
+
+    protected void updateAutreDenominationForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         // Create AutreDenomination related to this Fiche
         List<AutreDenomination> autresDenominations = jsonToDB.getAutresDenominationFicheFromJSONEspece(especeJSON);
         log.debug(String.format("add %d AutreDenomination related to this Fiche", autresDenominations.size()));
@@ -196,10 +227,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
     }
 
 
-    /**
-     *  Ajout aux Classifications si pas encore dans la liste
-     */
-    protected void updateClassificationForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
+    protected void removeClassificationForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         // remove previous ClassificationFiche if any
         ClassificationFiche query = new ClassificationFiche();
         query.setFiche(ficheDB);
@@ -214,11 +242,17 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                         }
                     });
         }
+    }
 
+
+    /**
+     *  Ajout aux Classifications si pas encore dans la liste
+     */
+    protected void updateClassificationForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         /* Initialement on a sur la fiche que le niveau et la référence de la Classification */
         List<ClassificationFiche> classificationsFiche = jsonToDB.getClassificationFicheFromJSONEspece(especeJSON);
 
-        log.debug(String.format("add %d ClassificationFiche related to this Fiche",previousRelatedToFiche.size()));
+        log.debug(String.format("add %d ClassificationFiche related to this Fiche",classificationsFiche.size()));
         for (ClassificationFiche classificationFiche : classificationsFiche) {
             //log.debug("prefetchV4() - classification : " + classificationFiche.getClassification());
             //log.debug("prefetchV4() - classification.getNiveau() : " + classificationFiche.getClassification().getNiveau());
@@ -343,10 +377,8 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         }
     }
 
-    /**
-     * Doridiens ayant participés à la rédaction de la fiche
-     */
-    protected void updateParticipantForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
+
+    protected void removeParticipantForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         log.debug("Doridiens ayant participés à la rédaction de la fiche");
 
 
@@ -364,7 +396,12 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                         }
                     });
         }
+    }
 
+    /**
+     * Doridiens ayant participés à la rédaction de la fiche
+     */
+    protected void updateParticipantForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         Object numeroAuteurPrincipal = especeJSON.getFields().getPrincipalWriter().getValue();
         if(numeroAuteurPrincipal != null && numeroAuteurPrincipal instanceof String && numeroAuteurPrincipal != ""){
             try {
@@ -471,7 +508,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
             }
         }
     }
-    protected void updatePhotoForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
+    protected void removePhotoForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
 
         // remove previous PhotoFiche if any
         PhotoFiche query = new PhotoFiche();
@@ -487,6 +524,8 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                         }
                     });
         }
+    }
+    protected void updatePhotoForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
 
         List<Image> imageJSONListe = new ArrayList<Image>();
 
@@ -534,7 +573,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                 });
 
     }
-    protected void updateZoneGeographiqueForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
+    protected void removeZoneGeographiqueForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         // remove previous PhotoFiche if any
         Fiches_ZonesGeographiques query = new Fiches_ZonesGeographiques();
         query.setFiche(ficheDB);
@@ -549,7 +588,8 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                         }
                     });
         }
-
+    }
+    protected void updateZoneGeographiqueForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
 
         ZoneGeographique zoneGeographique = new ZoneGeographique();
         log.debug(String.format("add %d Fiches_ZonesGeographiques related to this Fiche",especeJSON.getFields().getZoneGeo().getValue().split("-").length));
