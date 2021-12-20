@@ -129,6 +129,8 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
             removeParticipantForFiche(ficheDB, especeJSON);
             removePhotoForFiche(ficheDB, especeJSON);
             removeZoneGeographiqueForFiche(ficheDB, especeJSON);
+            String uri = DorisOAuth2ClientCredentials.getServerNodeUrlTousLesChamps( objNameNodeId.getNodeId().toString() );
+            log.debug("Faulty specie uri "+uri);
             throw e;
         }
     }

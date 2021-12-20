@@ -124,7 +124,7 @@ public class DorisAPI_JSONDATABindingHelper {
 
         DefaultHttpClient client = new DefaultHttpClient();
         String uri = DorisOAuth2ClientCredentials.getServerNodeUrlTousLesChamps( String.valueOf(especeNodeId) );
-        //log.debug("getSpecieFieldsFromNodeId - uri : " + uri);
+        log.debug("getSpecieFieldsFromNodeId - uri : " + uri);
 
         if (credent != null && debug) {
             DorisAPIConnexionHelper.printJSON(credent, uri);
