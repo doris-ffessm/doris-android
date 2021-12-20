@@ -62,8 +62,9 @@ public class DorisAPIHTTPHelper {
         if (response.getStatusLine().getStatusCode() != 200) {
             log.debug("full uri : " + uri);
             log.warn(String.format("%s : nbTries=%d", response.getStatusLine(), nbTries));
+            WebSiteNotAvailableException e = new WebSiteNotAvailableException(response.getStatusLine().toString(), uri, response.getStatusLine().getStatusCode());
             response.getEntity().consumeContent();
-            throw new WebSiteNotAvailableException(response.getStatusLine().toString(), uri, response.getStatusLine().getStatusCode());
+            throw e;
         }
 
 
