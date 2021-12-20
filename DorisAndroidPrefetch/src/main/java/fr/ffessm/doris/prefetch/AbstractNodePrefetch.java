@@ -204,7 +204,7 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
      * @return
      * @throws IOException
      */
-    abstract List<ObjNameNodeId> getNodeIdsFromWeb(int nbLimitRequest, int offset) throws IOException;
+    abstract List<ObjNameNodeId> getNodeIdsFromWeb(int nbLimitRequest, int offset) throws IOException, WebSiteNotAvailableException;
 
     abstract JSONObject getJsonObjectFromWeb(int id) throws IOException, WebSiteNotAvailableException;
 

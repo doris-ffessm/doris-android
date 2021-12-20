@@ -19,6 +19,8 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
+import fr.ffessm.doris.prefetch.WebSiteNotAvailableException;
+
 public class DorisAPI_JSONTreeHelper {
 
 	// Initialisation de la Gestion des Log 
@@ -30,12 +32,15 @@ public class DorisAPI_JSONTreeHelper {
 	public static String JSON_EXT = ".json";
 
 	public Credential credent;
+	protected DorisAPIHTTPHelper httpHelper;
 	
 	public DorisAPI_JSONTreeHelper(){
+		httpHelper = new DorisAPIHTTPHelper(null);
 	}
 
 	public DorisAPI_JSONTreeHelper( Credential credent){
 		this.credent = credent;
+		this.httpHelper = new DorisAPIHTTPHelper(credent);
 	}
 	
 	/** Global instance of the JSON factory. */
@@ -48,7 +53,7 @@ public class DorisAPI_JSONTreeHelper {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public List<ObjNameNodeId> getFichesNodeIds(int nbLimitRequest, int offset) throws ClientProtocolException, IOException {
+	public List<ObjNameNodeId> getFichesNodeIds(int nbLimitRequest, int offset) throws ClientProtocolException, IOException, WebSiteNotAvailableException {
         log.debug(String.format("getIntervenantsNodeIds(nbLimitRequest=%d, offset=%d)",  nbLimitRequest, offset ));
 			
 		return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.SPECIES_NODE_URL, nbLimitRequest, offset);
@@ -61,7 +66,7 @@ public class DorisAPI_JSONTreeHelper {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public List<ObjNameNodeId> getIntervenantsNodeIds(int nbLimitRequest, int offset) throws ClientProtocolException, IOException {
+    public List<ObjNameNodeId> getIntervenantsNodeIds(int nbLimitRequest, int offset) throws ClientProtocolException, IOException, WebSiteNotAvailableException {
         log.debug(String.format("getIntervenantsNodeIds(nbLimitRequest=%d, offset=%d)",  nbLimitRequest, offset ));
 
         return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.PARTICIPANTS_NODE_URL, nbLimitRequest, offset);
@@ -74,7 +79,7 @@ public class DorisAPI_JSONTreeHelper {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public List<ObjNameNodeId> getTermesNodeIds(int nbLimitRequest, int offset) throws ClientProtocolException, IOException {
+    public List<ObjNameNodeId> getTermesNodeIds(int nbLimitRequest, int offset) throws ClientProtocolException, IOException, WebSiteNotAvailableException {
         log.debug(String.format("getBibliographieNodeIds(nbLimitRequest=%d, offset=%d)",  nbLimitRequest, offset ));
 
         return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.GLOSSAIRE_NODE_URL, nbLimitRequest, offset);
@@ -87,7 +92,7 @@ public class DorisAPI_JSONTreeHelper {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public List<ObjNameNodeId> getBibliographieNodeIds(int nbLimitRequest, int offset) throws ClientProtocolException, IOException {
+    public List<ObjNameNodeId> getBibliographieNodeIds(int nbLimitRequest, int offset) throws ClientProtocolException, IOException, WebSiteNotAvailableException {
         log.debug(String.format("getBibliographieNodeIds(nbLimitRequest=%d, offset=%d)",  nbLimitRequest, offset ));
 
         return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.BIBLIO_NODE_URL, nbLimitRequest, offset);
@@ -100,7 +105,7 @@ public class DorisAPI_JSONTreeHelper {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public List<ObjNameNodeId> getClassificationNodeIds(int nbLimitRequest, int offset) throws ClientProtocolException, IOException {
+    public List<ObjNameNodeId> getClassificationNodeIds(int nbLimitRequest, int offset) throws ClientProtocolException, IOException, WebSiteNotAvailableException {
         log.debug(String.format("getClassificationNodeIds(nbLimitRequest=%d, offset=%d)",  nbLimitRequest, offset ));
 
         return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.TAXONS_NODE_URL, nbLimitRequest, offset);
@@ -113,7 +118,7 @@ public class DorisAPI_JSONTreeHelper {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public List<ObjNameNodeId> getNodeIdsFromNodeUrl(String nodeUrl, int nbLimitRequest, int offset) throws ClientProtocolException, IOException {
+	public List<ObjNameNodeId> getNodeIdsFromNodeUrl(String nodeUrl, int nbLimitRequest, int offset) throws ClientProtocolException, IOException, WebSiteNotAvailableException {
 		log.debug(String.format("getNodeIdsFromNodeUrl(nodeUrl=\"%s\", nbLimitRequest=%d, offset=%d)", nodeUrl, nbLimitRequest, offset ));
 
 		DefaultHttpClient client = new DefaultHttpClient();
@@ -122,38 +127,8 @@ public class DorisAPI_JSONTreeHelper {
 		if (offset != 0) uri += "/offset/"+offset;
 		uri += "/limit/"+nbLimitRequest;
 		log.debug("uri : "+uri.toString());
-		
-		if(credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
-			uri = uri+"?oauth_token="+credent.getAccessToken();
-		} else {
-			uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
-		}
-		
-		HttpGet getHttpPage = new HttpGet(uri);
-		if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
-			getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
-		}
-		
-		if (debug) {
-			log.debug(uri);
-			//log.debug("Authorization header="+getHttpPage.getFirstHeader("Authorization"));
-		}
-		
-		HttpResponse response = client.execute(getHttpPage);
-		if(response.getStatusLine().getStatusCode() == 504){
-            log.warn("response.getStatusLine() : "+response.getStatusLine());
-            log.debug("sleep 5 minutes and retry");
-		    // sleep and retry
-            try {
-                Thread.sleep(5 * 60 * 1000);
-            } catch (java.lang.InterruptedException ie){
-                log.warn(ie);
-            }
-            response = client.execute(getHttpPage);
-        }
-		if(response.getStatusLine().getStatusCode() != 200) {
-            log.error(response.getStatusLine());
-        }
+
+		HttpResponse response = httpHelper.getHttpResponse(uri);
 
 
 		ObjectMapper objectMapper = new ObjectMapper();

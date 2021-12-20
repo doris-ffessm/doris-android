@@ -55,7 +55,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
     }
 
     @Override
-    List<ObjNameNodeId> getNodeIdsFromWeb(int nbLimitRequest, int offset) throws IOException {
+    List<ObjNameNodeId> getNodeIdsFromWeb(int nbLimitRequest, int offset) throws IOException, WebSiteNotAvailableException {
         return dorisAPI_JSONTreeHelper.getFichesNodeIds(nbLimitRequest, offset);
     }
 

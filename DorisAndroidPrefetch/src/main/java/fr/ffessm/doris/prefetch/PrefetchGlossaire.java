@@ -28,7 +28,7 @@ public class PrefetchGlossaire extends AbstractNodePrefetch<DefinitionGlossaire,
     }
 
     @Override
-    List<ObjNameNodeId> getNodeIdsFromWeb(int nbLimitRequest, int offset) throws IOException {
+    List<ObjNameNodeId> getNodeIdsFromWeb(int nbLimitRequest, int offset) throws IOException, WebSiteNotAvailableException {
         return dorisAPI_JSONTreeHelper.getTermesNodeIds(nbLimitRequest,offset);
     }
 

@@ -37,13 +37,16 @@ public class DorisAPI_JSONDATABindingHelper {
 	/** Global instance of the JSON factory. */
 	static final JsonFactory JSON_FACTORY = new JacksonFactory();
 	public Credential credent;
+	protected DorisAPIHTTPHelper httpHelper;
 	
 	public DorisAPI_JSONDATABindingHelper(){
 		this.credent = null;
+        httpHelper = new DorisAPIHTTPHelper(null);
 	}
 
 	public DorisAPI_JSONDATABindingHelper(Credential credent){
 		this.credent = credent;
+        httpHelper = new DorisAPIHTTPHelper(credent);
 	}
 
     public Utilisateur getUtilisateurFieldsFromNodeId(int participantNodeId) throws IOException, WebSiteNotAvailableException {
@@ -134,25 +137,7 @@ public class DorisAPI_JSONDATABindingHelper {
             }
         }
 
-        if (credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
-            uri = uri+"?oauth_token="+credent.getAccessToken();
-        } else {
-            uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
-        }
-
-        log.debug("getSpecieFieldsFromNodeId - uri & oauth_token : " + uri);
-
-        HttpGet getHttpPage = new HttpGet(uri);
-        if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
-            getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
-        }
-
-        HttpResponse response = client.execute(getHttpPage);
-        //log.debug("getSpecieFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
-
-        if ( response.getStatusLine().getStatusCode() != 200 )  {
-            throw new WebSiteNotAvailableException(response.getStatusLine().toString(), uri, response.getStatusLine().getStatusCode());
-        }
+        HttpResponse response = httpHelper.getHttpResponse( uri);
 
         ObjectMapper objectMapper = new ObjectMapper();
         Espece espece = objectMapper.readValue(
@@ -215,12 +200,9 @@ public class DorisAPI_JSONDATABindingHelper {
     }
 
     public HttpResponse getFieldsFromNodeId(int nodeId) throws IOException, WebSiteNotAvailableException {
-        log.debug("getFieldsFromNodeId - nodeId : " + nodeId);
 
-        DefaultHttpClient client = new DefaultHttpClient();
         String uri = DorisOAuth2ClientCredentials.getServerNodeUrlTousLesChamps( String.valueOf(nodeId) );
         log.debug("getFieldsFromNodeId - uri : " + uri);
-
         if (credent != null && debug) {
             DorisAPIConnexionHelper.printJSON(credent, uri);
             if(debug_SaveJSON){
@@ -231,29 +213,7 @@ public class DorisAPI_JSONDATABindingHelper {
                 );
             }
         }
-
-        if(credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
-            uri = uri+"?oauth_token="+credent.getAccessToken();
-        } else {
-            uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
-        }
-
-        //log.debug("getFieldsFromNodeId - uri & oauth_token : " + uri);
-
-        HttpGet getHttpPage = new HttpGet(uri);
-        if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
-            getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
-        }
-
-        HttpResponse response = client.execute(getHttpPage);
-        //log.debug("getFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
-
-        if ( response.getStatusLine().getStatusCode() != 200 )  {
-            log.warn("getFieldsFromNodeId - response.getStatusLine() : "+response.getStatusLine());
-            throw new WebSiteNotAvailableException(response.getStatusLine().toString(), uri, response.getStatusLine().getStatusCode());
-        }
-
-        return response;
+        return httpHelper.getHttpResponse( uri);
     }
 
     public HttpResponse getFieldsFromObjectId(int objectId) throws IOException,
@@ -276,28 +236,7 @@ public class DorisAPI_JSONDATABindingHelper {
             }
         }
 
-        if(credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
-            uri = uri+"?oauth_token="+credent.getAccessToken();
-        } else {
-            uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
-        }
-
-        //log.debug("getFieldsFromObjectId - uri & oauth_token : " + uri);
-
-        HttpGet getHttpPage = new HttpGet(uri);
-        if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
-            getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
-        }
-
-        HttpResponse response = client.execute(getHttpPage);
-        //log.debug("getFieldsFromObjectId - response.getStatusLine() : "+response.getStatusLine());
-
-        if ( response.getStatusLine().getStatusCode() != 200 )  {
-            log.warn(String.format("%s returned %s", uri, response.getStatusLine()));
-            throw new WebSiteNotAvailableException(response.getStatusLine().toString(), uri, response.getStatusLine().getStatusCode());
-        }
-
-        return response;
+        return httpHelper.getHttpResponse( uri);
     }
 
     public Image getImageFromImageId(int imageId, int retry) throws IOException, WebSiteNotAvailableException {
@@ -329,22 +268,7 @@ public class DorisAPI_JSONDATABindingHelper {
 		
 		String uri =DorisOAuth2ClientCredentials.SERVER_OBJECT_URL + imageId;
 
-		if(credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
-			uri = uri+"?oauth_token="+credent.getAccessToken();
-		} else {
-			uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
-		}
-		HttpGet getCode = new HttpGet(uri);
-		if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
-			getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
-		}
-		
-		HttpResponse response = client.execute(getCode);
-
-		if ( response.getStatusLine().getStatusCode() != 200 )  {
-            log.warn(String.format("%s returned %s", uri, response.getStatusLine()));
-            throw new WebSiteNotAvailableException(response.getStatusLine().toString(), uri, response.getStatusLine().getStatusCode());
-        }
+        HttpResponse response = httpHelper.getHttpResponse( uri);
 
 		ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
 		Image imageResponse = mapper.readValue(new InputStreamReader(response.getEntity().getContent()), Image.class);
