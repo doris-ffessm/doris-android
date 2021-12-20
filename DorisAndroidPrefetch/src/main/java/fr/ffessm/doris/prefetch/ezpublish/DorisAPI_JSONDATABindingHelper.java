@@ -158,23 +158,29 @@ public class DorisAPI_JSONDATABindingHelper {
             WebSiteNotAvailableException {
         log.debug("getClassificationFieldsFromObjectId - classificationObjectId : " + classificationObjectId);
 
-        HttpResponse response = getFieldsFromObjectId(classificationObjectId);
+        try {
+            HttpResponse response = getFieldsFromObjectId(classificationObjectId);
 
-        if ( response == null )  {
-            return null;
-        }
+            if (response == null) {
+                return null;
+            }
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        Classification classificationJSON = objectMapper.readValue(
+            ObjectMapper objectMapper = new ObjectMapper();
+            Classification classificationJSON = objectMapper.readValue(
                     new InputStreamReader(response.getEntity().getContent()),
                     Classification.class
             );
 
+            return classificationJSON;
+        } catch (WebSiteNotAvailableException e) {
+            if(e.errorCode == 500) {
+                log.warn("Ignoring invalid classification data on the server", e);
+            } else throw e;
+        }
         //System.out.println("\t Nom Latin : " + classificationJSON.getDataMap().getNameLatin() );
         //System.out.println("\t Nom Francais : " + classificationJSON.getDataMap().getNameFrench());
         //System.out.println("\t Description : " + classificationJSON.getDataMap().getDescription() );
-
-        return classificationJSON;
+        return null;
     }
 
     public Groupe getGroupeFieldsFromObjectId(int groupeObjectId) throws IOException, WebSiteNotAvailableException {
