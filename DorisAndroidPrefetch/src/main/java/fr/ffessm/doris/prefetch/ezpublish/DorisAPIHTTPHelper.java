@@ -18,48 +18,54 @@ public class DorisAPIHTTPHelper {
     public static Log log = LogFactory.getLog(DorisAPIHTTPHelper.class);
     public Credential credent;
 
-    public DorisAPIHTTPHelper(Credential credent){
+    public DorisAPIHTTPHelper(Credential credent) {
         this.credent = credent;
     }
 
-    public  HttpResponse getHttpResponse(String uri) throws IOException, WebSiteNotAvailableException {
+    public HttpResponse getHttpResponse(String uri) throws IOException, WebSiteNotAvailableException {
 
 
-        if(credent != null && !DorisAPIConnexionHelper.use_http_header_for_token){
-            uri = uri+"?oauth_token="+credent.getAccessToken();
+        if (credent != null && !DorisAPIConnexionHelper.use_http_header_for_token) {
+            uri = uri + "?oauth_token=" + credent.getAccessToken();
         } else {
-            uri = uri+"?oauth_token="+DorisOAuth2ClientCredentials.API_SUFFIXE;
+            uri = uri + "?oauth_token=" + DorisOAuth2ClientCredentials.API_SUFFIXE;
         }
 
         DefaultHttpClient client = new DefaultHttpClient();
         HttpGet getHttpPage = new HttpGet(uri);
-        if(credent != null && DorisAPIConnexionHelper.use_http_header_for_token){
+        if (credent != null && DorisAPIConnexionHelper.use_http_header_for_token) {
             getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
         }
 
-        HttpResponse response = null;
+        HttpResponse response;
         int nbTries = 0;
         boolean shouldRetry = true;
         do {
             response = client.execute(getHttpPage);
-            if(response.getStatusLine().getStatusCode() == 503 && nbTries < 5) {
+            if (response.getStatusLine().getStatusCode() == 503 && nbTries < 5) {
+
                 nbTries++;
                 log.debug("full uri : " + uri);
-                log.warn(String.format("%s : Retrying after 10s",response.getStatusLine()));
+                response.getEntity().consumeContent();
+                log.warn(String.format("%s : Retrying after 10s", response.getStatusLine()));
                 try {
                     Thread.sleep(10000);
-                } catch (InterruptedException e) {log.error(e);}
+                } catch (InterruptedException e) {
+                    log.error(e);
+                }
             } else {
                 shouldRetry = false;
             }
 
-        } while (shouldRetry );
+        } while (shouldRetry);
 
-        if ( response.getStatusLine().getStatusCode() != 200 )  {
+        if (response.getStatusLine().getStatusCode() != 200) {
             log.debug("full uri : " + uri);
-            log.warn(String.format("%s : nbTries=%d",response.getStatusLine(),nbTries));
+            log.warn(String.format("%s : nbTries=%d", response.getStatusLine(), nbTries));
+            response.getEntity().consumeContent();
             throw new WebSiteNotAvailableException(response.getStatusLine().toString(), uri, response.getStatusLine().getStatusCode());
         }
+
 
         return response;
     }
