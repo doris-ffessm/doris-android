@@ -84,7 +84,7 @@ public class PrefetchDorisWebSite {
 	
 	// Nombre maximum de fiches traitées (--max=K permet de changer cette valeur)
 	private int nbMaxFichesATraiter = PrefetchConstants.nbMaxFichesTraiteesDef;
-    private int nbFichesParRequetes = 10;
+    private int nbFichesParRequetes = 50;
 
     private boolean copyBase = false;
 
@@ -428,7 +428,7 @@ public class PrefetchDorisWebSite {
 
                         log.debug(" nodeId=" + especeNodeId + ", dorisId=" + especeJSONReferenceId + ", imagesNodeIds=" + especeJSON.getFields().getImages().getValue());
 
-                        List<Image> imageData = new ArrayList<Image>();
+                        List<Image> imageData = new ArrayList<>();
 
 
                         // itère sur les images trouvées pour cette fiche
@@ -561,7 +561,7 @@ public class PrefetchDorisWebSite {
 			}
 		}
 
-		if(Arrays.stream(inArgs).anyMatch(a -> a.equals("--copyBase"))) {
+		if(Arrays.asList(inArgs).contains("--copyBase")) {
 			log.debug("checkArgs() - arg : " + "--copyBase");
 			this.copyBase =  true;
 		}
