@@ -224,7 +224,7 @@ public class JsonToDB {
         // Proposée ; Réservée ; Terminée ; Publiée ; A corriger
         // On convertit à la sauce de la version précédente :
         //4 : Fiche Publiée - 1, 2, 3 : En cours de Rédaction - 5 : Fiche Proposée
-        log.debug("getFicheFromJSONEspece() - statut : "+jsonEspece.getFields().getState().getValue());
+        //log.debug("getFicheFromJSONEspece() - statut : "+jsonEspece.getFields().getState().getValue());
         int etatFiche;
         switch (jsonEspece.getFields().getState().getValue()) {
             case "Proposée" :  etatFiche = 5;
@@ -245,7 +245,7 @@ public class JsonToDB {
         String pictogrammes = "";
         //TODO : Vérifier fonctionnent et cohérence avec la section créée
         //log.debug("getFicheFromJSONEspece() - reglementation : "+jsonEspece.getFields().getReglementation().getValue());
-        if (jsonEspece.getFields().getReglementation().getValue().replaceAll("<[^>]*>","") != "") pictogrammes += "0;";
+        if (!jsonEspece.getFields().getReglementation().getValue().replaceAll("<[^>]*>","").isEmpty()) pictogrammes += "0;";
 
         //TODO : Trouver un exemple pour vérifier
         //log.debug("getFicheFromJSONEspece() - danger : '"+jsonEspece.getFields().getDanger().getValue()+"'");
@@ -255,10 +255,10 @@ public class JsonToDB {
 
         // Convertions des Dates
         String datePublication = "";
-        if (jsonEspece.getFields().getPublicationDate().getValue() != "") datePublication = dateFormat.format(new Date((long) Integer.parseInt(jsonEspece.getFields().getPublicationDate().getValue()) * 1000) );
+        if (!jsonEspece.getFields().getPublicationDate().getValue().isEmpty()) datePublication = dateFormat.format(new Date((long) Integer.parseInt(jsonEspece.getFields().getPublicationDate().getValue()) * 1000) );
 
         String dateChantier = "";
-        if (jsonEspece.getFields().getChantierDate().getValue() != "") dateChantier = dateFormat.format(new Date((long) Integer.parseInt(jsonEspece.getFields().getChantierDate().getValue()) * 1000) );
+        if (!jsonEspece.getFields().getChantierDate().getValue().isEmpty()) dateChantier = dateFormat.format(new Date((long) Integer.parseInt(jsonEspece.getFields().getChantierDate().getValue()) * 1000) );
 
 
         Fiche fiche = new Fiche(
@@ -286,7 +286,7 @@ public class JsonToDB {
         List<SectionFiche> sectionsFiche = new ArrayList<SectionFiche>();
 
         // Critères de reconnaissance
-        if (jsonEspece.getFields().getCleIdentification().getValue() != "") {sectionsFiche.add(new SectionFiche(10,"Critères de reconnaissance",
+        if (!jsonEspece.getFields().getCleIdentification().getValue().isEmpty()) {sectionsFiche.add(new SectionFiche(10,"Critères de reconnaissance",
                 commonOutils.remplacementBalises(
                         commonOutils.nettoyageBalises(
                                 jsonEspece.getFields().getCleIdentification().getValue()

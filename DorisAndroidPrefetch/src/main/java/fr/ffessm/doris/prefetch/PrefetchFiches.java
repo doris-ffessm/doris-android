@@ -116,11 +116,9 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         } catch (Exception e) {
             // revert element that have been partially added if the Fiche isn't fully retrieved (web connection error)
             TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-                            getDao().delete(ficheDB);
-                            return null;
-                        }
+                    (Callable<Void>) () -> {
+                        getDao().delete(ficheDB);
+                        return null;
                     });
             removeSectionFicheForFiche(ficheDB, especeJSON);
             removeAutreDenominationForFiche(ficheDB, especeJSON);
@@ -144,11 +142,9 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
             log.debug(String.format("delete %d previous SectionFiche related to this Fiche", previousRelatedSectionFiche.size()));
 
             TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-                            dbContext.sectionFicheDao.delete(previousRelatedSectionFiche);
-                            return null;
-                        }
+                    (Callable<Void>) () -> {
+                        dbContext.sectionFicheDao.delete(previousRelatedSectionFiche);
+                        return null;
                     });
         }
     }
@@ -161,11 +157,9 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
             sectionFiche.setFiche(ficheDB);
             final SectionFiche sectionFiche_final = sectionFiche;
             TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-                            dbContext.sectionFicheDao.create(sectionFiche_final);
-                            return null;
-                        }
+                    (Callable<Void>) () -> {
+                        dbContext.sectionFicheDao.create(sectionFiche_final);
+                        return null;
                     });
         }
     }
@@ -178,11 +172,9 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         if(!previousRelatedToFiche.isEmpty()){
             log.debug(String.format("delete %d previous AutreDenomination related to this Fiche",previousRelatedToFiche.size()));
             TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-                            dbContext.autreDenominationDao.delete(previousRelatedToFiche);
-                            return null;
-                        }
+                    (Callable<Void>) () -> {
+                        dbContext.autreDenominationDao.delete(previousRelatedToFiche);
+                        return null;
                     });
         }
     }
@@ -201,13 +193,11 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                 final AutreDenomination autreDenomination_final = autreDenomination;
 
                 TransactionManager.callInTransaction(connectionSource,
-                        new Callable<Void>() {
-                            public Void call() throws Exception {
+                        (Callable<Void>) () -> {
 
-                                dbContext.autreDenominationDao.create(autreDenomination_final);
+                            dbContext.autreDenominationDao.create(autreDenomination_final);
 
-                                return null;
-                            }
+                            return null;
                         });
             }
         }
@@ -217,11 +207,9 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
             ficheQuery.setNumeroFiche(ficheDB.getNumeroFiche());
             ficheDB.setId(dbContext.ficheDao.queryForMatching(ficheQuery).get(0).getId());
             TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-                            dbContext.ficheDao.createOrUpdate(ficheDB);
-                            return null;
-                        }
+                    (Callable<Void>) () -> {
+                        dbContext.ficheDao.createOrUpdate(ficheDB);
+                        return null;
                     });
         } catch (Exception e) {
             log.warn(String.format("Failed to update Fiche %d with new textePourRechercheRapide", ficheDB.getNumeroFiche()), e);
@@ -237,11 +225,9 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         if(!previousRelatedToFiche.isEmpty()){
             log.debug(String.format("delete %d previous ClassificationFiche related to this Fiche",previousRelatedToFiche.size()));
             TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-                            dbContext.classificationFicheDao.delete(previousRelatedToFiche);
-                            return null;
-                        }
+                    (Callable<Void>) () -> {
+                        dbContext.classificationFicheDao.delete(previousRelatedToFiche);
+                        return null;
                     });
         }
     }
@@ -271,7 +257,8 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                 try {
                     classificationJSON = dorisAPI_JSONDATABindingHelper.getClassificationFieldsFromObjectId(classificationFiche.getClassification().getNumeroDoris());
                 } catch (IOException e) {
-                    log.warn(String.format("Failed to retrieve classification fields "), e);
+                    String uri = DorisOAuth2ClientCredentials.getServerObjectUrlTousLesChamps( String.valueOf(classificationFiche.getClassification().getNumeroDoris()) );
+                    log.warn(String.format("Failed to retrieve classification fields for %d %s", classificationFiche.getClassification().getNumeroDoris(), uri), e);
                 }
 
                 // Parfois on n'arrive pas à la récupérer
@@ -279,16 +266,14 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                     classification = jsonToDB.getClassificationFromJSONClassification(
                             classificationFiche.getClassification().getNumeroDoris(), classificationFiche.getClassification().getNiveau(), classificationJSON);
 
-                    log.debug(String.format("add new Classification %d %s related to one of the ClassificationFiche of this Fiche",
-                            classification.getNumeroDoris(),
-                            classification.getTermeFrancais()));
+                    //log.debug(String.format("add new Classification %d %s related to one of the ClassificationFiche of this Fiche",
+                    //        classification.getNumeroDoris(),
+                    //        classification.getTermeFrancais()));
                     final Classification classificationFinal = classification;
                     TransactionManager.callInTransaction(connectionSource,
-                            new Callable<Void>() {
-                                public Void call() throws Exception {
-                                    dbContext.classificationDao.create(classificationFinal);
-                                    return null;
-                                }
+                            (Callable<Void>) () -> {
+                                dbContext.classificationDao.create(classificationFinal);
+                                return null;
                             });
 
                 }
@@ -302,11 +287,9 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
 
                 // Enregistrement de la Classification de la Fiche
                 TransactionManager.callInTransaction(connectionSource,
-                        new Callable<Void>() {
-                            public Void call() throws Exception {
-                                dbContext.classificationFicheDao.create(classification_final);
-                                return null;
-                            }
+                        (Callable<Void>) () -> {
+                            dbContext.classificationFicheDao.create(classification_final);
+                            return null;
                         });
             }
         }
@@ -314,36 +297,31 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
 
     /* Ajout Genre et Espèce aux Classification                  */
     protected void updateGenreForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
-        log.debug("Ajout Genre et Espèce aux Classifications");
+        log.debug("Adding ClassificationFiche(s) about Genre/Espece");
+        int nbGenreEspece = 0;
         Classification classificationGenre = dbContext.classificationDao.queryForFirst(
                 dbContext.classificationDao.queryBuilder().where().eq("niveau", "{{g}}Genre{{/g}}").and().eq("termeScientifique", "{{i}}" + especeJSON.getFields().getGenre().getValue() + "{{/i}})").prepare()
         );
         if (classificationGenre == null) {
+            nbGenreEspece++;
             classificationGenre = new Classification(0, "{{g}}Genre{{/g}}", "{{i}}" + especeJSON.getFields().getGenre().getValue() + "{{/i}}", "", "");
             final Classification classificationGenreFinal = classificationGenre;
             TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-
-                            dbContext.classificationDao.create(classificationGenreFinal);
-
-                            return null;
-                        }
+                    (Callable<Void>) () -> {
+                        dbContext.classificationDao.create(classificationGenreFinal);
+                        return null;
                     });
         }
 
         if (classificationGenre != null) {
+            nbGenreEspece++;
             final ClassificationFiche classification_final = new ClassificationFiche(ficheDB, classificationGenre, 20);
 
             // Enregistrement de la Classification de la Fiche
             TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-
-                            dbContext.classificationFicheDao.create(classification_final);
-
-                            return null;
-                        }
+                    (Callable<Void>) () -> {
+                        dbContext.classificationFicheDao.create(classification_final);
+                        return null;
                     });
         }
 
@@ -351,51 +329,41 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                 dbContext.classificationDao.queryBuilder().where().eq("niveau", "{{g}}Espece{{/g}}").and().eq("termeScientifique", "{{i}}" + especeJSON.getFields().getEspece().getValue() + "{{/i}})").prepare()
         );
         if (classificationEspece == null) {
+            nbGenreEspece++;
             classificationEspece = new Classification(0, "{{g}}Espece{{/g}}", "{{i}}" + especeJSON.getFields().getEspece().getValue() + "{{/i}}", "", "");
             final Classification classificationEspeceFinal = classificationEspece;
             TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-
-                            dbContext.classificationDao.create(classificationEspeceFinal);
-
-                            return null;
-                        }
+                    (Callable<Void>) () -> {
+                        dbContext.classificationDao.create(classificationEspeceFinal);
+                        return null;
                     });
         }
         if (classificationEspece != null) {
+            nbGenreEspece++;
             final ClassificationFiche classification_final = new ClassificationFiche(ficheDB, classificationEspece, 21);
 
             // Enregistrement de la Classification de la Fiche
             TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-
-                            dbContext.classificationFicheDao.create(classification_final);
-
-                            return null;
-                        }
+                    (Callable<Void>) () -> {
+                        dbContext.classificationFicheDao.create(classification_final);
+                        return null;
                     });
         }
+        log.info(String.format("added %d ClassificationFiche(s) about Genre/Espece", nbGenreEspece));
     }
 
 
     protected void removeParticipantForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
-        log.debug("Doridiens ayant participés à la rédaction de la fiche");
-
-
         // remove previous IntervenantFiche if any
         IntervenantFiche query = new IntervenantFiche();
         query.setFiche(ficheDB);
         List<IntervenantFiche> previousRelatedToFiche = dbContext.intervenantFicheDao.queryForMatching(query);
         if(!previousRelatedToFiche.isEmpty()){
-            log.debug(String.format("delete %d previous IntervenantFiche related to this Fiche",previousRelatedToFiche.size()));
+            log.info(String.format("delete %d previous IntervenantFiche related to this Fiche",previousRelatedToFiche.size()));
             TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-                            dbContext.intervenantFicheDao.delete(previousRelatedToFiche);
-                            return null;
-                        }
+                    (Callable<Void>) () -> {
+                        dbContext.intervenantFicheDao.delete(previousRelatedToFiche);
+                        return null;
                     });
         }
     }
@@ -404,6 +372,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
      * Doridiens ayant participés à la rédaction de la fiche
      */
     protected void updateParticipantForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
+        int nbIntervenants = 0;
         Object numeroAuteurPrincipal = especeJSON.getFields().getPrincipalWriter().getValue();
         if(numeroAuteurPrincipal != null && numeroAuteurPrincipal instanceof String && numeroAuteurPrincipal != ""){
             try {
@@ -411,13 +380,12 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                         dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroAuteurPrincipal).prepare()
                 );
                 if(doridien != null) {
-                    log.debug(String.format("add IntervenantFiche %s as REDACTEUR_PRINCIPAL", doridien.getNom()));
+                    //log.debug(String.format("add IntervenantFiche %s as REDACTEUR_PRINCIPAL", doridien.getNom()));
+                    nbIntervenants++;
                     TransactionManager.callInTransaction(connectionSource,
-                            new Callable<Void>() {
-                                public Void call() throws Exception {
-                                    dbContext.intervenantFicheDao.create(new IntervenantFiche(ficheDB, doridien, Constants.ParticipantKind.REDACTEUR_PRINCIPAL.ordinal()));
-                                    return null;
-                                }
+                            (Callable<Void>) () -> {
+                                dbContext.intervenantFicheDao.create(new IntervenantFiche(ficheDB, doridien, Constants.ParticipantKind.REDACTEUR_PRINCIPAL.ordinal()));
+                                return null;
                             });
                 }
             } catch (NumberFormatException nfe) {
@@ -432,13 +400,12 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                             dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroVerificateur).prepare()
                     );
                     if(doridien != null) {
-                        log.debug(String.format("add IntervenantFiche %s as VERIFICATEUR", doridien.getNom()));
+                        //log.debug(String.format("add IntervenantFiche %s as VERIFICATEUR", doridien.getNom()));
+                        nbIntervenants++;
                         TransactionManager.callInTransaction(connectionSource,
-                                new Callable<Void>() {
-                                    public Void call() throws Exception {
-                                        dbContext.intervenantFicheDao.create(new IntervenantFiche(ficheDB, doridien, Constants.ParticipantKind.VERIFICATEUR.ordinal()));
-                                        return null;
-                                    }
+                                (Callable<Void>) () -> {
+                                    dbContext.intervenantFicheDao.create(new IntervenantFiche(ficheDB, doridien, Constants.ParticipantKind.VERIFICATEUR.ordinal()));
+                                    return null;
                                 });
                     }
                 }
@@ -453,13 +420,12 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                             dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroContributeur).prepare()
                     );
                     if(doridien != null) {
-                        log.debug(String.format("add IntervenantFiche %s as REDACTEUR", doridien.getNom()));
+                        //log.debug(String.format("add IntervenantFiche %s as REDACTEUR", doridien.getNom()));
+                        nbIntervenants++;
                         TransactionManager.callInTransaction(connectionSource,
-                                new Callable<Void>() {
-                                    public Void call() throws Exception {
-                                        dbContext.intervenantFicheDao.create(new IntervenantFiche(ficheDB, doridien, Constants.ParticipantKind.REDACTEUR.ordinal()));
-                                        return null;
-                                    }
+                                (Callable<Void>) () -> {
+                                    dbContext.intervenantFicheDao.create(new IntervenantFiche(ficheDB, doridien, Constants.ParticipantKind.REDACTEUR.ordinal()));
+                                    return null;
                                 });
                     }
                 }
@@ -474,13 +440,12 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                             dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroCorrecteur).prepare()
                     );
                     if(doridien != null) {
-                        log.debug(String.format("add IntervenantFiche %s as CORRECTEUR", doridien.getNom()));
+                        //log.debug(String.format("add IntervenantFiche %s as CORRECTEUR", doridien.getNom()));
+                        nbIntervenants++;
                         TransactionManager.callInTransaction(connectionSource,
-                                new Callable<Void>() {
-                                    public Void call() throws Exception {
-                                        dbContext.intervenantFicheDao.create(new IntervenantFiche(ficheDB, doridien, Constants.ParticipantKind.CORRECTEUR.ordinal()));
-                                        return null;
-                                    }
+                                (Callable<Void>) () -> {
+                                    dbContext.intervenantFicheDao.create(new IntervenantFiche(ficheDB, doridien, Constants.ParticipantKind.CORRECTEUR.ordinal()));
+                                    return null;
                                 });
                     }
                 }
@@ -495,13 +460,12 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                             dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroDoridien).prepare()
                     );
                     if(doridien != null) {
-                        log.debug(String.format("add IntervenantFiche %s as RESPONSABLE_REGIONAL", doridien.getNom()));
+                        //log.debug(String.format("add IntervenantFiche %s as RESPONSABLE_REGIONAL", doridien.getNom()));
+                        nbIntervenants++;
                         TransactionManager.callInTransaction(connectionSource,
-                                new Callable<Void>() {
-                                    public Void call() throws Exception {
-                                        dbContext.intervenantFicheDao.create(new IntervenantFiche(ficheDB, doridien, Constants.ParticipantKind.RESPONSABLE_REGIONAL.ordinal()));
-                                        return null;
-                                    }
+                                (Callable<Void>) () -> {
+                                    dbContext.intervenantFicheDao.create(new IntervenantFiche(ficheDB, doridien, Constants.ParticipantKind.RESPONSABLE_REGIONAL.ordinal()));
+                                    return null;
                                 });
                     }
                 }
@@ -509,6 +473,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                 // ignore les entrées invalides
             }
         }
+        log.info(String.format("Added %d intervenant(s) on this fiche",nbIntervenants));
     }
     protected void removePhotoForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
 
@@ -517,13 +482,11 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         query.setFiche(ficheDB);
         List<PhotoFiche> previousRelatedToFiche = dbContext.photoFicheDao.queryForMatching(query);
         if(!previousRelatedToFiche.isEmpty()){
-            log.debug(String.format("delete %d previous PhotoFiche related to this Fiche",previousRelatedToFiche.size()));
+            log.info(String.format("delete %d previous PhotoFiche related to this Fiche",previousRelatedToFiche.size()));
             TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-                            dbContext.photoFicheDao.delete(previousRelatedToFiche);
-                            return null;
-                        }
+                    (Callable<Void>) () -> {
+                        dbContext.photoFicheDao.delete(previousRelatedToFiche);
+                        return null;
                     });
         }
     }
@@ -552,26 +515,24 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         // recrée une entrée dans la base pour l'image
         final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageJSONListe);
         final Fiche especeFinal = ficheDB;
-        log.debug(String.format("add %d PhotoFiche related to this Fiche",listePhotoFiche.size()));
+        log.info(String.format("add %d PhotoFiche related to this Fiche",listePhotoFiche.size()));
         TransactionManager.callInTransaction(connectionSource,
-                new Callable<Void>() {
-                    public Void call() throws Exception {
-                        int count = 0;
-                        for (PhotoFiche photoFiche : listePhotoFiche) {
+                (Callable<Void>) () -> {
+                    int count = 0;
+                    for (PhotoFiche photoFiche : listePhotoFiche) {
 
-                            photoFiche.setFiche(especeFinal);
+                        photoFiche.setFiche(especeFinal);
 
-                            dbContext.photoFicheDao.create(photoFiche);
+                        dbContext.photoFicheDao.create(photoFiche);
 
-                            if (count == 0) {
-                                // met à jour l'image principale de la fiche
-                                especeFinal.setPhotoPrincipale(photoFiche);
-                                dbContext.ficheDao.update(especeFinal);
-                            }
-                            count++;
+                        if (count == 0) {
+                            // met à jour l'image principale de la fiche
+                            especeFinal.setPhotoPrincipale(photoFiche);
+                            dbContext.ficheDao.update(especeFinal);
                         }
-                        return null;
+                        count++;
                     }
+                    return null;
                 });
 
     }
@@ -581,20 +542,18 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         query.setFiche(ficheDB);
         List<Fiches_ZonesGeographiques> previousRelatedToFiche = dbContext.fiches_ZonesGeographiquesDao.queryForMatching(query);
         if(!previousRelatedToFiche.isEmpty()){
-            log.debug(String.format("delete %d previous Fiches_ZonesGeographiques related to this Fiche",previousRelatedToFiche.size()));
+            log.info(String.format("delete %d previous Fiches_ZonesGeographiques related to this Fiche",previousRelatedToFiche.size()));
             TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-                            dbContext.fiches_ZonesGeographiquesDao.delete(previousRelatedToFiche);
-                            return null;
-                        }
+                    (Callable<Void>) () -> {
+                        dbContext.fiches_ZonesGeographiquesDao.delete(previousRelatedToFiche);
+                        return null;
                     });
         }
     }
     protected void updateZoneGeographiqueForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
 
         ZoneGeographique zoneGeographique = new ZoneGeographique();
-        log.debug(String.format("add %d Fiches_ZonesGeographiques related to this Fiche",especeJSON.getFields().getZoneGeo().getValue().split("-").length));
+        log.info(String.format("add %d Fiches_ZonesGeographiques related to this Fiche",especeJSON.getFields().getZoneGeo().getValue().split("-").length));
         for (String zoneGeoRefId : especeJSON.getFields().getZoneGeo().getValue().split("-")) {
 
             try {
@@ -656,11 +615,9 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                 if (zoneGeographique.getId() >= 0) {
                     final ZoneGeographique zoneGeographique_final = zoneGeographique;
                     TransactionManager.callInTransaction(connectionSource,
-                            new Callable<Void>() {
-                                public Void call() throws Exception {
-                                    dbContext.fiches_ZonesGeographiquesDao.create(new Fiches_ZonesGeographiques(zoneGeographique_final, ficheDB));
-                                    return null;
-                                }
+                            (Callable<Void>) () -> {
+                                dbContext.fiches_ZonesGeographiquesDao.create(new Fiches_ZonesGeographiques(zoneGeographique_final, ficheDB));
+                                return null;
                             });
                 }
             } catch (NumberFormatException nfe) {
