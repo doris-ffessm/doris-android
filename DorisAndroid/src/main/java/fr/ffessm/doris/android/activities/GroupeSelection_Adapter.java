@@ -41,6 +41,8 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
+import static fr.ffessm.doris.android.R.string.pref_key_filtre_groupe;
+
 import java.util.List;
 
 import fr.ffessm.doris.android.DorisApplicationContext;
@@ -254,7 +256,7 @@ public class GroupeSelection_Adapter extends BaseAdapter {
                     return;
                 Toast.makeText(context, "Filtre espèces : " + entry.getNomGroupe(), Toast.LENGTH_SHORT).show();
 
-                prefs.edit().putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId())
+                prefs.edit().putInt(context.getString(pref_key_filtre_groupe), entry.getId())
                         .apply();
 
                 if (BuildConfig.DEBUG)
@@ -285,7 +287,7 @@ public class GroupeSelection_Adapter extends BaseAdapter {
                     return;
                 Toast.makeText(context, "Filtre espèces : " + entry.getNomGroupe(), Toast.LENGTH_SHORT).show();
 
-                prefs.edit().putInt(context.getString(R.string.pref_key_filtre_groupe), entry.getId())
+                prefs.edit().putInt(context.getString(pref_key_filtre_groupe), entry.getId())
                         .apply();
 
                 if (BuildConfig.DEBUG)

@@ -6,49 +6,65 @@
 	<string name="pref_key_filtre_zonegeo">pref_filtre_zone_geographique</string>
 	
 	<string name="pref_key_nbphotosprinc_atelecharger_france">data_nbphotosprinc_atelecharger_france</string>
+	<string name="pref_key_nbphotosprinc_atelecharger_mediter">data_nbphotosprinc_atelecharger_mediter</string>
 	<string name="pref_key_nbphotosprinc_atelecharger_eaudouce">data_nbphotosprinc_atelecharger_eaudouce</string>
 	<string name="pref_key_nbphotosprinc_atelecharger_atlantno">data_nbphotosprinc_atelecharger_atlantno</string>
 	<string name="pref_key_nbphotosprinc_atelecharger_antarctique">data_nbphotosprinc_atelecharger_antarctique</string>
 	<string name="pref_key_nbphotosprinc_atelecharger_indopac">data_nbphotosprinc_atelecharger_indopac</string>
+	<string name="pref_key_nbphotosprinc_atelecharger_merrouge">data_nbphotosprinc_atelecharger_merrouge</string>
 	<string name="pref_key_nbphotosprinc_atelecharger_caraibes">data_nbphotosprinc_atelecharger_caraibes</string>
 	<string name="pref_key_nbphotosprinc_atelecharger_favorite">data_nbphotosprinc_atelecharger_favorite</string>
+	<string name="pref_key_nbphotosprinc_atelecharger_atlantne">data_nbphotosprinc_atelecharger_atlantne</string>
 	
 	<string name="pref_key_nbphotos_atelecharger_france">data_nbphotos_atelecharger_france</string>
+	<string name="pref_key_nbphotos_atelecharger_mediter">data_nbphotos_atelecharger_mediter</string>
 	<string name="pref_key_nbphotos_atelecharger_eaudouce">data_nbphotos_atelecharger_eaudouce</string>
 	<string name="pref_key_nbphotos_atelecharger_atlantno">data_nbphotos_atelecharger_atlantno</string>
 	<string name="pref_key_nbphotos_atelecharger_antarctique">data_nbphotos_atelecharger_antarctique</string>
 	<string name="pref_key_nbphotos_atelecharger_indopac">data_nbphotos_atelecharger_indopac</string>
+	<string name="pref_key_nbphotos_atelecharger_merrouge">data_nbphotos_atelecharger_merrouge</string>
 	<string name="pref_key_nbphotos_atelecharger_caraibes">data_nbphotos_atelecharger_caraibes</string>
 	<string name="pref_key_nbphotos_atelecharger_favorite">data_nbphotos_atelecharger_favorite</string>
+	<string name="pref_key_nbphotos_atelecharger_atlantne">data_nbphotos_atelecharger_atlantne</string>
 	
 	<string name="pref_key_nbphotosprinc_recues_france">data_nbphotosprinc_recues_france</string>
+	<string name="pref_key_nbphotosprinc_recues_mediter">data_nbphotosprinc_recues_mediter</string>
 	<string name="pref_key_nbphotosprinc_recues_eaudouce">data_nbphotosprinc_recues_eaudouce</string>
 	<string name="pref_key_nbphotosprinc_recues_atlantno">data_nbphotosprinc_recues_atlantno</string>
 	<string name="pref_key_nbphotosprinc_recues_indopac">data_nbphotosprinc_recues_indopac</string>
+	<string name="pref_key_nbphotosprinc_recues_merrouge">data_nbphotosprinc_recues_merrouge</string>
 	<string name="pref_key_nbphotosprinc_recues_antarctique">data_nbphotosprinc_recues_antarctique</string>
 	<string name="pref_key_nbphotosprinc_recues_caraibes">data_nbphotosprinc_recues_caraibes</string>
 	<string name="pref_key_nbphotosprinc_recues_favorite">data_nbphotosprinc_recues_favorite</string>
+	<string name="pref_key_nbphotosprinc_recues_atlantne">data_nbphotosprinc_recues_atlantne</string>
 
 	<string name="pref_key_nbphotos_recues_france">data_nbphotos_recues_france</string>
+	<string name="pref_key_nbphotos_recues_mediter">data_nbphotos_recues_mediter</string>
 	<string name="pref_key_nbphotos_recues_eaudouce">data_nbphotos_recues_eaudouce</string>
 	<string name="pref_key_nbphotos_recues_atlantno">data_nbphotos_recues_atlantno</string>
 	<string name="pref_key_nbphotos_recues_indopac">data_nbphotos_recues_indopac</string>
+	<string name="pref_key_nbphotos_recues_merrouge">data_nbphotos_recues_merrouge</string>
 	<string name="pref_key_nbphotos_recues_antarctique">data_nbphotos_recues_antarctique</string>
 	<string name="pref_key_nbphotos_recues_caraibes">data_nbphotos_recues_caraibes</string>
+	<string name="pref_key_nbphotos_recues_atlantne">data_nbphotos_recues_atlantne</string>
+
 	<string name="pref_key_nbphotos_recues_favorite">data_nbphotos_recues_favorite</string>
 	
 	<string name="pref_key_datedermaj_fiches_france">data_datedermaj_fiches_france</string>
+	<string name="pref_key_datedermaj_fiches_mediter">data_datedermaj_fiches_mediter</string>
 	<string name="pref_key_datedermaj_fiches_eaudouce">data_datedermaj_fiches_eaudouce</string>
 	<string name="pref_key_datedermaj_fiches_atlantno">data_datedermaj_fiches_atlantno</string>
 	<string name="pref_key_datedermaj_fiches_indopac">data_datedermaj_fiches_indopac</string>
+	<string name="pref_key_datedermaj_fiches_merrouge">data_datedermaj_fiches_merrouge</string>
 	<string name="pref_key_datedermaj_fiches_antarctique">data_datedermaj_fiches_antarctique</string>
 	<string name="pref_key_datedermaj_fiches_caraibes">data_datedermaj_fiches_caraibes</string>
+	<string name="pref_key_datedermaj_fiches_atlantne">data_datedermaj_fiches_atlantne</string>
 	
 	<string name="pref_key_prefered_disque_stockage_photo">data_disque_stockage_photo</string>
 	<string name="pref_key_prefered_disque_stockage_photo_precedent">data_disque_stockage_photo_prec</string>
 	<string name="pref_key_deplace_photo_encours">data_disque_stockage_deplace_en_cours</string>
 
-    // Tant que les jeux sont en béta, pour les activer il faut se mettre en debeug puis les lancer une fois
+    // Tant que les jeux sont en béta, pour les activer il faut se mettre en debug puis les lancer une fois
     // Ensuite ils apparaissent même s'en être en béta
     <string name="pref_key_jeux_actifs">pref_key_jeux_actifs</string>
 </resources>

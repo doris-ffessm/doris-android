@@ -18,6 +18,9 @@
 	<string name="pref_key_maj_liste_fiches_region_indopac">maj_liste_fiches_region_indopac</string>
     <string name="pref_key_maj_liste_fiches_region_antarctique">maj_liste_fiches_region_antarctique</string>
 	<string name="pref_key_maj_liste_fiches_region_caraibes">maj_liste_fiches_region_caraibes</string>
+    <string name="pref_key_maj_liste_fiches_region_merrouge">maj_liste_fiches_region_merrouge</string>
+    <string name="pref_key_maj_liste_fiches_region_mediter">maj_liste_fiches_region_mediter</string>
+    <string name="pref_key_maj_liste_fiches_region_atlantne">maj_liste_fiches_region_atlantne</string>
 		
 	<string name="pref_key_mode_precharg_photo_region_france">mode_precharg_photo_region_france</string>
 	<string name="pref_key_mode_precharg_photo_region_eaudouce">mode_precharg_photo_region_eaudouce</string>
@@ -25,6 +28,9 @@
 	<string name="pref_key_mode_precharg_photo_region_indopac">mode_precharg_photo_region_indopac</string>
     <string name="pref_key_mode_precharg_photo_region_antarctique">mode_precharg_photo_region_antarctique</string>
 	<string name="pref_key_mode_precharg_photo_region_caraibes">mode_precharg_photo_region_caraibes</string>
+    <string name="pref_key_mode_precharg_photo_region_merrouge">mode_precharg_photo_region_merrouge</string>
+    <string name="pref_key_mode_precharg_photo_region_mediter">mode_precharg_photo_region_mediter</string>
+    <string name="pref_key_mode_precharg_photo_region_atlantne">mode_precharg_photo_region_atlantne</string>
 
 	<string name="pref_key_mode_precharg_photo_autres">mode_precharg_photo_autres</string>
 
@@ -86,6 +92,9 @@
     <string name="maj_liste_fiches_region_indopac_prompt">- Indo-Pacifique\u00A0?</string>
     <string name="maj_liste_fiches_region_antarctique_prompt">- Antarctique\u00A0?</string>
     <string name="maj_liste_fiches_region_caraibes_prompt">- Caraïbes\u00A0?</string>
+    <string name="maj_liste_fiches_region_merrouge_prompt">- Mer Rouge\u00A0?</string>
+    <string name="maj_liste_fiches_region_mediter_prompt">- Méditerranée\u00A0?</string>
+    <string name="maj_liste_fiches_region_atlantne_prompt">- Façade Atlantique Française\u00A0?</string>
     
 	<string-array name="maj_liste_fiches_answers_values">
         <item>M0</item>
@@ -111,6 +120,9 @@
     <string name="mode_precharg_photo_region_indopac_prompt">- Indo-Pacifique\u00A0?</string>
     <string name="mode_precharg_photo_region_antarctique_prompt">- Antarctique\u00A0?</string>
     <string name="mode_precharg_photo_region_caraibes_prompt">- Caraïbes\u00A0?</string>
+    <string name="mode_precharg_photo_region_merrouge_prompt">- Mer Rouge\u00A0?</string>
+    <string name="mode_precharg_photo_region_mediter_prompt">- Méditerranée\u00A0?</string>
+    <string name="mode_precharg_photo_region_atlantne_prompt">- Façade Atlantique Française\u00A0?</string>
     <!-- <string name="mode_precharg_photo_favorite_prompt">- Fiches préférées ? (A FAIRE)</string> -->
   
     <string name="mode_precharg_photo_autres_prompt">Précharg. Autres Photos\u00A0?</string>
@@ -142,6 +154,9 @@
 	<string name="icone_caraibes">drawable/doris_icone_caraibes</string>
 	<string name="icone_atlantno">drawable/doris_icone_atl_n_o</string>
     <string name="icone_antarctique">drawable/doris_icone_antarctique</string>
+    <string name="icone_merrouge">drawable/doris_icone_merrouge</string>
+    <string name="icone_mediter">drawable/doris_icone_mediter</string>
+    <string name="icone_atlantne">drawable/doris_icone_atl_n_e</string>
 	
 	<string name="presentation_preference_category_title">Présentation</string>
 	<string name="presentation_preference_category_summary">Affich. par défaut, Taille icônes, etc.</string>

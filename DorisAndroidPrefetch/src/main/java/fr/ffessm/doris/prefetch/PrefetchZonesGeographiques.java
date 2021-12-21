@@ -42,13 +42,13 @@ termes.
 
 package fr.ffessm.doris.prefetch;
 
-import java.util.concurrent.Callable;
+import com.j256.ormlite.misc.TransactionManager;
+import com.j256.ormlite.support.ConnectionSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.j256.ormlite.misc.TransactionManager;
-import com.j256.ormlite.support.ConnectionSource;
+import java.util.concurrent.Callable;
 
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
@@ -57,16 +57,16 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 public class PrefetchZonesGeographiques {
 
 
-	// Initialisation de la Gestion des Log 
-	public static Log log = LogFactory.getLog(PrefetchZonesGeographiques.class);
-	
-	private DorisDBHelper dbContext = null;
-	private ConnectionSource connectionSource = null;
+    // Initialisation de la Gestion des Log
+    public static Log log = LogFactory.getLog(PrefetchZonesGeographiques.class);
 
-	public PrefetchZonesGeographiques(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter) {
-		this.dbContext = dbContext;
-		this.connectionSource = connectionSource;
-	}
+    private DorisDBHelper dbContext = null;
+    private ConnectionSource connectionSource = null;
+
+    public PrefetchZonesGeographiques(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter) {
+        this.dbContext = dbContext;
+        this.connectionSource = connectionSource;
+    }
 
     public int prefetchV4() throws Exception {
         log.debug("prefetchV4() - début");
@@ -84,38 +84,35 @@ public class PrefetchZonesGeographiques {
  */
 
         TransactionManager.callInTransaction(connectionSource,
-                new Callable<Void>() {
-                    public Void call() throws Exception {
-
-                        dbContext.zoneGeographiqueDao.createOrUpdate(
-                                new ZoneGeographique(1, "Faune et flore marines de France métropolitaine", "Méditerranée, Atlantique, Manche et mer du Nord" )
-                            );
-                        dbContext.zoneGeographiqueDao.createOrUpdate(
-                                new ZoneGeographique(2, "Faune et flore dulcicoles de France métropolitaine", "Fleuves, rivières, lacs et étangs, ..." )
-                        );
-                        dbContext.zoneGeographiqueDao.createOrUpdate(
-                                new ZoneGeographique(3, "Faune et flore subaquatiques de l'Indo-Pacifique", "La Réunion, Mayotte, Nouvelle-Calédonie, Polynésie et autres" )
-                        );
-                        dbContext.zoneGeographiqueDao.createOrUpdate(
-                                new ZoneGeographique(4, "Faune et flore subaquatiques des Caraïbes", "Guadeloupe, Martinique et autres" )
-                        );
-                        dbContext.zoneGeographiqueDao.createOrUpdate(
-                                new ZoneGeographique(5, "Faune et flore subaquatiques de l'Atlantique Nord-Ouest", "Côte est du Canada, embouchure du St Laurent, archipel de St Pierre-et-Miquelon" )
-                        );
-                        dbContext.zoneGeographiqueDao.createOrUpdate(
-                                new ZoneGeographique(6, "Faune et flore des terres antarctiques françaises", "Circumpolaire, mers et côtes australes, Crozet, Kerguelen, Terre Adélie" )
-                        );
-                        dbContext.zoneGeographiqueDao.createOrUpdate(
-                                new ZoneGeographique(7, "Faune et flore de la Mer Rouge", "Mer Rouge" )
-                        );
-                        dbContext.zoneGeographiqueDao.createOrUpdate(
-                                new ZoneGeographique(8, "Faune et flore de la façade Méditérranéenne Française", "Méditerranée" )
-                        );
-                        dbContext.zoneGeographiqueDao.createOrUpdate(
-                                new ZoneGeographique(9, "Faune et flore de la façade Atlantique Française", "Atlantique Nord-Est, Manche et Mer du Nord françaises" )
-                        );
-                        return null;
-                    }
+                (Callable<Void>) () -> {
+                    dbContext.zoneGeographiqueDao.createOrUpdate(
+                            new ZoneGeographique(1, "Faune et flore marines de France métropolitaine", "Méditerranée, Atlantique, Manche et mer du Nord")
+                    );
+                    dbContext.zoneGeographiqueDao.createOrUpdate(
+                            new ZoneGeographique(2, "Faune et flore dulcicoles de France métropolitaine", "Fleuves, rivières, lacs et étangs, ...")
+                    );
+                    dbContext.zoneGeographiqueDao.createOrUpdate(
+                            new ZoneGeographique(3, "Faune et flore marines de l'Indo-Pacifique", "La Réunion, Mayotte, Nouvelle-Calédonie, Polynésie et autres")
+                    );
+                    dbContext.zoneGeographiqueDao.createOrUpdate(
+                            new ZoneGeographique(4, "Faune et flore marines des Caraïbes", "Guadeloupe, Martinique et autres")
+                    );
+                    dbContext.zoneGeographiqueDao.createOrUpdate(
+                            new ZoneGeographique(5, "Faune et flore marines de l'Atlantique Nord-Ouest", "Côte est du Canada, embouchure du St Laurent, archipel de St Pierre-et-Miquelon")
+                    );
+                    dbContext.zoneGeographiqueDao.createOrUpdate(
+                            new ZoneGeographique(6, "Faune et flore marines des terres antarctiques françaises", "Circumpolaire, mers et côtes australes, Crozet, Kerguelen, Terre Adélie")
+                    );
+                    dbContext.zoneGeographiqueDao.createOrUpdate(
+                            new ZoneGeographique(7, "Faune et flore marines de la Mer Rouge", "Mer Rouge")
+                    );
+                    dbContext.zoneGeographiqueDao.createOrUpdate(
+                            new ZoneGeographique(8, "Faune et flore marines de la façade Méditérranéenne Française", "Méditerranée")
+                    );
+                    dbContext.zoneGeographiqueDao.createOrUpdate(
+                            new ZoneGeographique(9, "Faune et flore marines de la façade Atlantique Française", "Atlantique Nord-Est, Manche et Mer du Nord françaises")
+                    );
+                    return null;
                 });
 
 
