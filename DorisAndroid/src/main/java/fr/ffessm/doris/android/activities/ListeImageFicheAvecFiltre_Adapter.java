@@ -51,6 +51,7 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 
 import android.app.Activity;
@@ -178,7 +179,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
         // Start of user code protected ListeImageFicheAvecFiltre_Adapter updateList
 
         // TODO : Bizarre que ce soit passé ainsi ....
-        int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);
+        int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(_contextDB).getId());
 
         this.filteredFicheIdList = fichesOutils.getListeIdFichesFiltrees(context, _contextDB, filteredZoneGeoId, filtreGroupe);
         this.ficheIdList = fichesOutils.getListeIdFiches();
@@ -331,8 +332,9 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
         // Start of user code protected additional ListeFicheAvecFiltre_Adapter getNoResultSubstitute code
         try {
             StringBuilder sbRechercheCourante = new StringBuilder();
-            int filtreCourantId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);
-            if (filtreCourantId == 1) {
+            int groupRootId = Groupes_Outils.getGroupeRoot(_contextDB).getId();
+            int filtreCourantId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), groupRootId);
+            if (filtreCourantId == groupRootId) {
                 sbRechercheCourante.append(context.getString(R.string.accueil_recherche_precedente_filtreEspece_sans));
             } else {
                 Groupe groupeFiltreCourant = _contextDB.groupeDao.queryForId(filtreCourantId);
@@ -478,7 +480,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
         int oldFilteredZoneGeoId = filteredZoneGeoId;
         filteredZoneGeoId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), -1);
         int oldFilteredGroupeId = filteredGroupeId;
-        filteredGroupeId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);
+        filteredGroupeId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(_contextDB).getId());
         if ((oldFilteredZoneGeoId != filteredZoneGeoId) | (oldFilteredGroupeId != filteredGroupeId)) {
             //need full query
             updateList();

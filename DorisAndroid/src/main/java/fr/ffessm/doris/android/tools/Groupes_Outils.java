@@ -71,7 +71,7 @@ public class Groupes_Outils {
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            return null;
+            return new ArrayList<>();
         }
 
     }
@@ -85,6 +85,10 @@ public class Groupes_Outils {
             }
         }
         return groupeFromId;
+    }
+
+    public static Groupe getGroupeRoot(DorisDBHelper contextDB) {
+        return getGroupeRoot(getAllGroupes(contextDB));
     }
 
     public static Groupe getGroupeRoot(List<Groupe> allGroupes) {

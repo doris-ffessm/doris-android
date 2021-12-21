@@ -152,9 +152,10 @@ public class GroupeSelection_Adapter extends BaseAdapter {
 
         if (currentRootGroupe == null) {
             // Si un Groupe avait déjà été sélectionné, on réaffiche son père : logique si l'on veut qu'il soit un choix possible
-            int filtreCourantId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 0);
+            int groupRootId = Groupes_Outils.getGroupeRoot(groupeList).getId();
+            int filtreCourantId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), groupRootId);
 
-            if (filtreCourantId != 0) {
+            if (filtreCourantId != groupRootId) {
                 currentRootGroupe = Groupes_Outils.getGroupeFromId(groupeList, filtreCourantId).getGroupePere();
             }
         }

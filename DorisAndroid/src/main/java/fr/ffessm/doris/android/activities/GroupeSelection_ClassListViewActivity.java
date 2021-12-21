@@ -46,6 +46,7 @@ import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
@@ -126,11 +127,11 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
         // affiche ou cache le filtre espèce actuel (+ son bouton de suppression)
         RelativeLayout currentFilterInfoLayout = (RelativeLayout) findViewById(R.id.groupselection_listview_filtre_espece_courant_layout);
 
-
-        int filtreCourantId = prefs.getInt(this.getString(R.string.pref_key_filtre_groupe), 1);
+        int groupRootId = Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId();
+        int filtreCourantId = prefs.getInt(this.getString(R.string.pref_key_filtre_groupe), groupRootId);
         Log.d(LOG_TAG, "onCreate() - filtreCourantId : " + filtreCourantId);
 
-        if (filtreCourantId == 1) {
+        if (filtreCourantId == groupRootId) {
             currentFilterInfoLayout.setVisibility(View.GONE);
         } else {
             Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
@@ -208,7 +209,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
     public void onRemoveCurrentFilterClick(View view) {
         showToast(R.string.groupselection_filtre_supprime);
 
-        prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), 1);
+        prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
         prefs.edit().apply();
         finish();
     }

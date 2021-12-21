@@ -86,6 +86,7 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Common_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
+import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
@@ -169,7 +170,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
         // Start of user code protected ListeFicheAvecFiltre_Adapter updateList
 
         // TODO : Bizarre que ce soit passé ainsi ....
-        int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);
+        int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(_contextDB).getId());
 
         this.filteredFicheIdList = fichesOutils.getListeIdFichesFiltrees(context, _contextDB, filteredZoneGeoId, filtreGroupe);
         this.ficheIdList = fichesOutils.getListeIdFiches();
@@ -375,8 +376,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
         // Start of user code protected additional ListeFicheAvecFiltre_Adapter getNoResultSubstitute code
         try {
             StringBuilder sbRechercheCourante = new StringBuilder();
-            int filtreCourantId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);
-            if (filtreCourantId == 1) {
+            int groupRootId = Groupes_Outils.getGroupeRoot(_contextDB).getId();
+            int filtreCourantId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), groupRootId);
+            if (filtreCourantId == groupRootId) {
                 sbRechercheCourante.append(context.getString(R.string.accueil_recherche_precedente_filtreEspece_sans));
             } else {
                 Groupe groupeFiltreCourant = _contextDB.groupeDao.queryForId(filtreCourantId);
@@ -440,10 +442,10 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
             // use binarysearch if large list
             String alphabet_list[] = context.getResources().getStringArray(R.array.alphabet_array);
             int startSearchPos = 0;
-            for (int i = 0; i < alphabet_list.length; i++) {
-                int foundPosition = binarySearch(alphabet_list[i].charAt(0), startSearchPos, base_list_length - 1);
+            for (String s : alphabet_list) {
+                int foundPosition = binarySearch(s.charAt(0), startSearchPos, base_list_length - 1);
                 if (foundPosition != -1) {
-                    alphabetToIndex.put(alphabet_list[i].charAt(0), foundPosition);
+                    alphabetToIndex.put(s.charAt(0), foundPosition);
                     startSearchPos = foundPosition; // mini optimisation, no need to look before for former chars
                 }
             }
@@ -520,7 +522,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
         int oldFilteredZoneGeoId = filteredZoneGeoId;
         filteredZoneGeoId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), -1);
         int oldFilteredGroupeId = filteredGroupeId;
-        filteredGroupeId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), 1);
+        filteredGroupeId = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(_contextDB).getId());
         if ((oldFilteredZoneGeoId != filteredZoneGeoId) | (oldFilteredGroupeId != filteredGroupeId)) {
             //need full query
             updateList();

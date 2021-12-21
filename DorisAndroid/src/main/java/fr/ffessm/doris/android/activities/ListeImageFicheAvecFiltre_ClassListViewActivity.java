@@ -52,6 +52,7 @@ import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
@@ -127,7 +128,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         adapter = new ListeImageFicheAvecFiltre_Adapter(this, getHelper().getDorisDBHelper(),
                 prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1),
-                prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1)
+                prefs.getInt(getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId())
         );
 
         //End of user code
@@ -426,9 +427,10 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
             actionBar.setTitle(zonegeo_shortnames[currentZoneFilterId]);
         }
 
-        // sous titre = espèce 
-        int filtreCourantId = prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1);
-        if (filtreCourantId == 1) {
+        // sous titre = espèce
+        int groupRootId = Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId();
+        int filtreCourantId = prefs.getInt(getString(R.string.pref_key_filtre_groupe), groupRootId);
+        if (filtreCourantId == groupRootId) {
             actionBar.setSubtitle(R.string.accueil_recherche_precedente_filtreEspece_sans);
         } else {
             Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
@@ -436,7 +438,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 
         }
         // mise à jour des actions
-        if ((prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1) != 1) ||
+        if ((prefs.getInt(getString(R.string.pref_key_filtre_groupe), groupRootId) != groupRootId) ||
                 (prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1) != -1)) {
             // mise à jour de l'image du bouton de filtre
             if (searchButtonMenuItem != null)

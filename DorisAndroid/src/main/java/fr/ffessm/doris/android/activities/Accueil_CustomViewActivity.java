@@ -44,6 +44,7 @@ package fr.ffessm.doris.android.activities;
 
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
@@ -358,7 +359,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                 // positionne la recherche pour cette zone
                 ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zone.getId());
                 // réinitialise le filtre espèce
-                ed.putInt(context.getString(R.string.pref_key_filtre_groupe), 1);
+                ed.putInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
                 ed.apply();
 
                 if (accueil_liste_ou_arbre_pardefaut.equals("arbre")) {
@@ -426,7 +427,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                 // positionne la recherche pour cette zone
                 ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zone.getId());
                 // réinitialise le filtre espèce
-                ed.putInt(context.getString(R.string.pref_key_filtre_groupe), 1);
+                ed.putInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
                 ed.apply();
 
                 if (accueil_liste_ou_arbre_pardefaut.equals("liste")) {
@@ -457,7 +458,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                 // positionne la recherche pour cette zone
                 ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zone.getId());
                 // réinitialise le filtre espèce
-                ed.putInt(context.getString(R.string.pref_key_filtre_groupe), 1);
+                ed.putInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
                 ed.apply();
 
                 if (accueil_liste_ou_arbre_pardefaut.equals("photos")) {
@@ -719,9 +720,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         StringBuilder sbRecherchePrecedente = new StringBuilder();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-
-        int filtreCourantId = prefs.getInt(getString(R.string.pref_key_filtre_groupe), 1);
-        if (filtreCourantId == 1) {
+        int groupRootId = Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId();
+        int filtreCourantId = prefs.getInt(getString(R.string.pref_key_filtre_groupe), groupRootId);
+        if (filtreCourantId == groupRootId) {
             sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreEspece_sans));
         } else {
             Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
