@@ -49,7 +49,7 @@ public class DorisAPI_JSONTreeHelper {
 	/**
 	 * Renvoie la liste des Fiches
 	 * @param
-	 * @returnLa liste des Fiches
+	 * @return La liste des Fiches
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
@@ -62,7 +62,7 @@ public class DorisAPI_JSONTreeHelper {
     /**
      * Renvoie la liste des Intervenants
      * @param
-     * @returnLa liste des Intervenants
+     * @return La liste des Intervenants
      * @throws ClientProtocolException
      * @throws IOException
      */
@@ -75,7 +75,7 @@ public class DorisAPI_JSONTreeHelper {
     /**
      * Renvoie la liste des Termes du Glossaire
      * @param
-     * @returnLa liste des Termes du Glossaire
+     * @return La liste des Termes du Glossaire
      * @throws ClientProtocolException
      * @throws IOException
      */
@@ -118,7 +118,7 @@ public class DorisAPI_JSONTreeHelper {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public List<ObjNameNodeId> getNodeIdsFromNodeUrl(String nodeUrl, int nbLimitRequest, int offset) throws ClientProtocolException, IOException, WebSiteNotAvailableException {
+	public List<ObjNameNodeId> getNodeIdsFromNodeUrl(String nodeUrl, int nbLimitRequest, int offset) throws IOException, WebSiteNotAvailableException {
 		log.debug(String.format("getNodeIdsFromNodeUrl(nodeUrl=\"%s\", nbLimitRequest=%d, offset=%d)", nodeUrl, nbLimitRequest, offset ));
 
 		DefaultHttpClient client = new DefaultHttpClient();
@@ -126,7 +126,7 @@ public class DorisAPI_JSONTreeHelper {
 		String uri = nodeUrl + "/list";
 		if (offset != 0) uri += "/offset/"+offset;
 		uri += "/limit/"+nbLimitRequest;
-		log.debug("uri : "+uri.toString());
+		log.debug("uri : "+uri);
 
 		HttpResponse response = httpHelper.getHttpResponse(uri);
 
@@ -135,23 +135,23 @@ public class DorisAPI_JSONTreeHelper {
 		JsonNode rootNode = objectMapper.readTree(new InputStreamReader(response.getEntity().getContent()));
 		log.debug("node : "+objectMapper.writeValueAsString(rootNode));
 
-		/*** read ***/
+		/* read */
 		JsonNode metadata = rootNode.path("metadata");
 		
 		int childrenCount = metadata.get("childrenCount").asInt();
 		log.debug("nb total nodes :"+childrenCount);
 
-        List<ObjNameNodeId> result = new ArrayList<ObjNameNodeId>();
+		List<ObjNameNodeId> result = new ArrayList<>();
 
 		JsonNode childrenNodes = rootNode.path("childrenNodes");
 		for (Iterator<JsonNode> iterator = childrenNodes.elements(); iterator.hasNext();) {
 			JsonNode nodeInList = (JsonNode) iterator.next();
 			
-			log.debug("node value : "+objectMapper.writeValueAsString(nodeInList));
+			//log.debug("node value : "+objectMapper.writeValueAsString(nodeInList));
 
 			result.add(new ObjNameNodeId(nodeInList.path("nodeId").asInt(),nodeInList.path("objectId").asInt(),nodeInList.path("objectName").asText(), nodeInList.path("dateModified").asInt()));
 		}
-		log.debug("nb retreived nodes :"+result.size());
+		log.debug("nb retrieved nodes :"+result.size());
 	
 		return result;
 	}
