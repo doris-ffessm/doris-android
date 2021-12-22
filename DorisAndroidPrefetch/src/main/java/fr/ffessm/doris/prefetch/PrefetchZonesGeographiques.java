@@ -86,31 +86,31 @@ public class PrefetchZonesGeographiques {
         TransactionManager.callInTransaction(connectionSource,
                 (Callable<Void>) () -> {
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(1, "Faune et flore marines de France métropolitaine", "Méditerranée, Atlantique, Manche et mer du Nord")
+                            new ZoneGeographique(1, "Espèces marines d'Europe (côtes françaises)'", "Méditerranée, Atlantique, Manche et mer du Nord")
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(2, "Faune et flore dulcicoles de France métropolitaine", "Fleuves, rivières, lacs et étangs, ...")
+                            new ZoneGeographique(2, "Espèces d'eau douce de France métropolitaine", "Fleuves, rivières, lacs, mares et étangs, ...")
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(3, "Faune et flore marines de l'Indo-Pacifique", "La Réunion, Mayotte, Nouvelle-Calédonie, Polynésie et autres")
+                            new ZoneGeographique(3, "Espèces marines et d'eau douce de l'Indo-Pacifique français", "La Réunion, Mayotte, Nouvelle-Calédonie, Polynésie et autres")
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(4, "Faune et flore marines des Caraïbes", "Guadeloupe, Martinique et autres")
+                            new ZoneGeographique(4, "Espèces marines et d'eau douce des Antilles françaises", "Guadeloupe, Martinique et autres")
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(5, "Faune et flore marines de l'Atlantique Nord-Ouest", "Côte est du Canada, embouchure du St Laurent, archipel de St Pierre-et-Miquelon")
+                            new ZoneGeographique(5, "Espèces marines et d'eau douce de l'Atlantique Nord-Ouest", "Côte est du Canada, embouchure du St Laurent, archipel de St Pierre-et-Miquelon")
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(6, "Faune et flore marines des terres antarctiques françaises", "Circumpolaire, mers et côtes australes, Crozet, Kerguelen, Terre Adélie")
+                            new ZoneGeographique(6, "Espèces des terres antarctiques françaises", "Circumpolaire, mers et côtes australes, Crozet, Kerguelen, Terre Adélie")
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(7, "Faune et flore marines de la Mer Rouge", "Mer Rouge")
+                            new ZoneGeographique(7, "Espèces de la Mer Rouge", "Mer Rouge")
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(8, "Faune et flore marines de la façade Méditérranéenne Française", "Méditerranée")
+                            new ZoneGeographique(8, "Espèces de la façade Méditérranéenne française", "Méditerranée")
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(9, "Faune et flore marines de la façade Atlantique Française", "Atlantique Nord-Est, Manche et Mer du Nord françaises")
+                            new ZoneGeographique(9, "Espèces de la façade Atlantique française", "Atlantique Nord-Est, Manche et Mer du Nord françaises")
                     );
                     return null;
                 });
