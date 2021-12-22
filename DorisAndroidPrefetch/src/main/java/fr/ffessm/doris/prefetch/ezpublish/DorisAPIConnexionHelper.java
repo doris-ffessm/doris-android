@@ -69,7 +69,8 @@ public class DorisAPIConnexionHelper {
 		if(credent != null && !use_http_header_for_token){
 			uri = uri+"?oauth_token="+credent.getAccessToken();
 		}
-		HttpGet getCode = new HttpGet(url);
+		HttpGet getCode = new HttpGet(uri);
+		getCode.addHeader("User-Agent","Doris-Android-prefecth");
 		if(use_http_header_for_token){
 			getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
 		}
@@ -83,10 +84,10 @@ public class DorisAPIConnexionHelper {
 	}
 	
 	
-	public static void saveJSONFile(Credential credent, String url, String filePath) throws ClientProtocolException, IOException {
+	public static void saveJSONFile(Credential credent, String url, String filePath) throws IOException {
 		DefaultHttpClient client = new DefaultHttpClient();
 		HttpGet getCode = new HttpGet(url);
-
+		getCode.addHeader("User-Agent","Doris-Android-prefecth");
 		if (credent != null) {
 			getCode.addHeader("Authorization", "OAuth " + credent.getAccessToken());
 		}

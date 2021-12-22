@@ -33,8 +33,11 @@ public class DorisAPIHTTPHelper {
 
         DefaultHttpClient client = new DefaultHttpClient();
         HttpGet getHttpPage = new HttpGet(uri);
+        getHttpPage.addHeader("User-Agent","Doris-Android-prefecth");
         if (credent != null && DorisAPIConnexionHelper.use_http_header_for_token) {
             getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
+        } else {
+            getHttpPage.addHeader("Authorization", "OAuth " + DorisOAuth2ClientCredentials.API_SUFFIXE);
         }
 
         HttpResponse response;
