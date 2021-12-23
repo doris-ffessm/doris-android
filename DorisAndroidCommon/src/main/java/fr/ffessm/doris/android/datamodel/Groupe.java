@@ -173,6 +173,14 @@ C'est ce texte. */
         this.groupePere = groupePere;
     }
 
+	public Groupe(int numeroGroupe, int numeroSousGroupe, java.lang.String nomGroupe, Groupe groupePere) {
+		super();
+		this.numeroGroupe = numeroGroupe;
+		this.numeroSousGroupe = numeroSousGroupe;
+		this.nomGroupe = nomGroupe;
+		this.groupePere = groupePere;
+	}
+
     public String getImageNameOnDisk(){
 		//log.warn("getImageNameOnDisk() - groupe : "+_id+" - "+numeroGroupe+" - "+numeroSousGroupe);
 		//log.warn("getImageNameOnDisk() - cleURLImage : "+cleURLImage);

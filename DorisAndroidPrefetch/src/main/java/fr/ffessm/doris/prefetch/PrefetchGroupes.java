@@ -101,13 +101,13 @@ public class PrefetchGroupes {
     /* TODO : Ici en Durs mais devraient être récupérés avec la Classification */
 
     public int prefetchV4() {
-        log.debug("PrefetchGroupes.prefetchV4() - début");
-
         //clearExistingGroups();
 
         List<Groupe> listeGroupes = new ArrayList<>();
         // check manuel du n° https://doris.ffessm.fr/api/ezx/v1/object/<numeroGroupe>?oauth_token=c977aaf12f519c53081d70edd3010b3961bbfcc4  sur le site
-        listeGroupes.add(new Groupe(0,0,"racine", null));
+        Groupe racine = new Groupe(0,0,"racine", null);
+        racine.setId(1);
+        listeGroupes.add(racine);
         listeGroupes.add(new Groupe(171365,0,"PROCARYOTES", getGroupeWithName(listeGroupes,"racine")));
         listeGroupes.add(new Groupe(48868,1000,"Procaryotes", getGroupeWithName(listeGroupes,"PROCARYOTES")));
         listeGroupes.add(new Groupe(136033,0,"VEGETAUX", getGroupeWithName(listeGroupes,"racine")));
@@ -170,11 +170,16 @@ public class PrefetchGroupes {
         listeGroupes.add(new Groupe(171380,0,"MOLLUSQUES",  getGroupeWithName(listeGroupes,"ANIMAUX")));
         listeGroupes.add(new Groupe(48895,28000,"Bivalves", getGroupeWithName(listeGroupes,"MOLLUSQUES")));
         listeGroupes.add(new Groupe(48896,29000,"Céphalopodes", getGroupeWithName(listeGroupes,"MOLLUSQUES")));
-        listeGroupes.add(new Groupe(48897,30000,"Gastéropodes Pulmonés", getGroupeWithName(listeGroupes,"MOLLUSQUES")));
+        //listeGroupes.add(new Groupe(48897,30000,"Gastéropodes Pulmonés", getGroupeWithName(listeGroupes,"MOLLUSQUES")));
         // TODO des changements ici
         listeGroupes.add(new Groupe(171439,0,"Gastéropodes Prosobranches pélagiques",getGroupeWithName(listeGroupes,"MOLLUSQUES")));
-        listeGroupes.add(new Groupe(48898,31000,"Gastéropodes Prosobranches", getGroupeWithName(listeGroupes,"MOLLUSQUES")));
-        listeGroupes.add(new Groupe(48952,31050,"Vermets", getGroupeWithName(listeGroupes,"Gastéropodes Prosobranches")));
+        listeGroupes.add(new Groupe(48898,31000,"Gastéropodes à coquille unique", getGroupeWithName(listeGroupes,"MOLLUSQUES")));
+        listeGroupes.add(new Groupe(811641,31050,"Coquille spiralée bien visible non recouverte par le manteau", getGroupeWithName(listeGroupes,"Gastéropodes à coquille unique")));
+        listeGroupes.add(new Groupe(811620,31050,"Coquille arrondie en forme de chapeau chinois ou aplatie", getGroupeWithName(listeGroupes,"Gastéropodes à coquille unique")));
+        listeGroupes.add(new Groupe(48952,31050,"Vermets", getGroupeWithName(listeGroupes,"Gastéropodes à coquille unique")));
+        listeGroupes.add(new Groupe(814159,31050,"Coquille lisse recouverte par le manteau", getGroupeWithName(listeGroupes,"Gastéropodes à coquille unique")));
+
+
         listeGroupes.add(new Groupe(48899,32000,"Gastéropodes Opisthobranches", getGroupeWithName(listeGroupes,"MOLLUSQUES")));
         listeGroupes.add(new Groupe(48939,32034,"Nudibranches Doridiens", getGroupeWithName(listeGroupes,"Gastéropodes Opisthobranches")));
         listeGroupes.add(new Groupe(48940,32035,"Nudibranches Eolidiens", getGroupeWithName(listeGroupes,"Gastéropodes Opisthobranches")));
@@ -295,12 +300,11 @@ public class PrefetchGroupes {
         listeGroupes.add(new Groupe(49014,53118,"Kamptozoaires ou Entoproctes",getGroupeWithName(listeGroupes,"Autres groupes mineurs")));
 
 
+        log.debug(String.format("Adding %d groups", listeGroupes.size()));
         // update groups in order to maintain _id and grap updated text
         for (Groupe g: listeGroupes     ) {
             try {
-                if(g.getNumeroGroupe() != 0) {
-                    this.updateGroupe(g);
-                }
+                this.updateGroupe(g);
             } catch (SQLException |IOException | WebSiteNotAvailableException e) {
                 log.error("Une erreur est survenue dans PrefetchGroupes", e);
                 return -1;
@@ -311,7 +315,6 @@ public class PrefetchGroupes {
             TransactionManager.callInTransaction(connectionSource,
                     new Callable<Void>() {
                         public Void call() throws Exception {
-                            log.debug(String.format("Adding %d groups", listeGroupes.size()));
                             for (Groupe groupe : listeGroupes){
                                 dbContext.groupeDao.createOrUpdate(groupe);
                             }
@@ -359,17 +362,20 @@ public class PrefetchGroupes {
         Groupe queryPattern = new Groupe();
         queryPattern.setNumeroGroupe(group.getNumeroGroupe());
         queryPattern.setNumeroSousGroupe(group.getNumeroSousGroupe());
+
         List<Groupe>  groupFound = dbContext.groupeDao.queryForMatching(queryPattern);
         if(!groupFound.isEmpty()){
             group.setId(groupFound.get(0).getId());
         }
-        fr.ffessm.doris.prefetch.ezpublish.jsondata.groupe.Groupe jsonGroup = dorisAPI_JSONDATABindingHelper.getGroupeFieldsFromObjectId(group.getNumeroGroupe());
-        group.setNomGroupe(jsonGroup.getDataMap().getTitle());
-        group.setDescriptionDetailleeGroupe(jsonGroup.getDataMap().getDescription());
-        group.setCleURLImage(jsonGroup.getDataMap().getImage());
+        if(group.getNumeroGroupe() != 0) {
+            fr.ffessm.doris.prefetch.ezpublish.jsondata.groupe.Groupe jsonGroup = dorisAPI_JSONDATABindingHelper.getGroupeFieldsFromObjectId(group.getNumeroGroupe());
+            group.setNomGroupe(jsonGroup.getDataMap().getTitle());
+            group.setDescriptionDetailleeGroupe(jsonGroup.getDataMap().getDescription());
+            group.setCleURLImage(jsonGroup.getDataMap().getImage());
 
-        // grab images in order to save them in the app
-        downloadGroupeImage(group);
+            // grab images in order to save them in the app
+            downloadGroupeImage(group);
+        }
     }
 
 
@@ -378,13 +384,16 @@ public class PrefetchGroupes {
             String uri = "https://" + DorisOAuth2ClientCredentials.DORIS_WEB_SERVER_HOST + "/" + group.getCleURLImage();
             HttpResponse response = httpHelper.getHttpResponse(uri);
             if (response.getStatusLine().getStatusCode() == 200) {
-                Path path = Paths.get(PrefetchConstants.DOSSIER_RACINE + "/" + group.getCleURLImage().replaceFirst("var/doris/storage/", ""));
+                // !! some folder may have a .
+                Path path = Paths.get(PrefetchConstants.DOSSIER_RACINE + "/images/images_groupe_"+group.getNumeroGroupe()+".png");
                 Files.createDirectories(path.getParent());
-                try (FileOutputStream out = new FileOutputStream(PrefetchConstants.DOSSIER_RACINE + "/" + group.getCleURLImage())) {
+                try (FileOutputStream out = new FileOutputStream(path.toString())) {
                     response.getEntity().writeTo(out);
                 }
-                group.setCleURLImage(group.getCleURLImage().replaceFirst("var/doris/storage/", ""));
+                group.setCleURLImage("gestionenligne/images_groupe_"+group.getNumeroGroupe()+".png");
             }
+        } else {
+            group.setCleURLImage("images/pucecarre.gif");
         }
     }
 
