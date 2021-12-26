@@ -18,7 +18,7 @@
 	<string name="accueil_glossaire_text">Glossaire</string>
 	<string name="accueil_bibliographie_text">Bibliographie</string>
 	
-	<string name="accueil_customview_zonegeo_touteszones">Toutes Zones</string>
+	<string name="accueil_customview_zonegeo_touteszones">Toutes les zones</string>
 	
 	<string name="accueil_customview_logo_fede_description">@string/ffessm</string>
 	<string name="accueil_customview_logo_fede_url">@string/ffessm_url</string>
