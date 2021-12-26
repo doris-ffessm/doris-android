@@ -325,7 +325,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         for (ZoneGeographique zoneGeo : listeZoneGeo) {
             // show all but previous zone (already displayed)
-            if(zoneGeo.getId() != currentZoneFilter.getId()) {
+            if(currentZoneFilter == null || zoneGeo.getId() != currentZoneFilter.getId()) {
                 llContainerLayout.addView(createNavigationZoneView(zoneGeo));
             }
         }
