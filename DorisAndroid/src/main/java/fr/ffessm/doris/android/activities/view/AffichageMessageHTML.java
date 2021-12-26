@@ -227,12 +227,14 @@ public class AffichageMessageHTML {
 		
 		texte.append(context.getString(R.string.a_propos_txt));
 		texte.append(outils.getAppVersion());
-		
+
+		String lastDateBase = "";
 		CloseableIterator<DorisDB_metadata> it = dbHelper.getDorisDB_metadataDao().iterator();
     	while (it.hasNext()) {
     		texte.append(System.getProperty("line.separator"));
-    		texte.append(context.getString(R.string.a_propos_base_date) + it.next().getDateBase());
+			lastDateBase = it.next().getDateBase();
 		}
+    	texte.append(context.getString(R.string.a_propos_base_date) + lastDateBase);
 
 		texte.append("; ");
     	int nbFichesPubliees = fichesOutils.getNbFichesPublished();
