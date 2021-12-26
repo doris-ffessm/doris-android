@@ -298,6 +298,21 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         LinearLayout llContainerLayout = (LinearLayout) findViewById(R.id.accueil_navigation_zones_layout);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        ZoneGeographique currentZoneFilter=null;
+        int currentZoneFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
+        if (currentZoneFilterId == -1 || currentZoneFilterId == 0) { // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
+            // pas de zone précdente
+        } else {
+            currentZoneFilter = getHelper().getZoneGeographiqueDao().queryForId(currentZoneFilterId);
+        }
+
+        // display previous zone first
+        if(currentZoneFilter != null){
+            llContainerLayout.addView(createNavigationZoneView(currentZoneFilter));
+        }
+
         // Affichage lien vers "toutes Zones"
         ZoneGeographique zoneToutesZones = new ZoneGeographique();
         zoneToutesZones.setToutesZones();
@@ -309,7 +324,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : " + listeZoneGeo.size());
 
         for (ZoneGeographique zoneGeo : listeZoneGeo) {
-            llContainerLayout.addView(createNavigationZoneView(zoneGeo));
+            // show all but previous zone (already displayed)
+            if(zoneGeo.getId() != currentZoneFilter.getId()) {
+                llContainerLayout.addView(createNavigationZoneView(zoneGeo));
+            }
         }
 
     }
