@@ -45,14 +45,14 @@ public class DorisAPIHTTPHelper {
         boolean shouldRetry = true;
         do {
             response = client.execute(getHttpPage);
-            if (response.getStatusLine().getStatusCode() == 503 && nbTries < 5) {
+            if (response.getStatusLine().getStatusCode() != 200 && nbTries < 5) {
 
                 nbTries++;
                 log.debug("full uri : " + uri);
                 response.getEntity().consumeContent();
-                log.warn(String.format("%s : Retrying after 10s", response.getStatusLine()));
+                log.warn(String.format("%s : Retrying after 20s", response.getStatusLine()));
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(20000);
                 } catch (InterruptedException e) {
                     log.error(e);
                 }
