@@ -79,7 +79,7 @@ public class Constants {
     public static final String PREFIX_IMGDSK_DEFINITION = "definition-";
     public static final String PREFIX_IMGDSK_BIBLIO = "biblio-";
     public static final String FICHE_NOMCOMMUN_VALUE_IF_EMPTY = "ã";
-    public final static String ZONE_GEOGRAPHIQUE_TOUTES_ZONES_DESCR = "Toutes Zones";
+    public final static String ZONE_GEOGRAPHIQUE_TOUTES_ZONES_DESCR = "Toutes les zones";
     private final static String LISTE_FICHES_ZONE_URL = "nom_scientifique.asp?numero_fichier=";
     private final static String GROUPES_URL = "groupes.asp?numero_fichier=";
     private final static String SOUSGROUPE_URL = "&sousgroupe_numero=";
