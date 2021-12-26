@@ -236,7 +236,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
     /**
      *  Ajout aux Classifications si pas encore dans la liste
      */
-    protected void updateClassificationForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException, WebSiteNotAvailableException {
+    protected void updateClassificationForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         /* Initialement on a sur la fiche que le niveau et la référence de la Classification */
         List<ClassificationFiche> classificationsFiche = jsonToDB.getClassificationFicheFromJSONEspece(especeJSON);
 
@@ -256,9 +256,12 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                 fr.ffessm.doris.prefetch.ezpublish.jsondata.classification.Classification classificationJSON = null;
                 try {
                     classificationJSON = dorisAPI_JSONDATABindingHelper.getClassificationFieldsFromObjectId(classificationFiche.getClassification().getNumeroDoris());
-                } catch (IOException e) {
+                } catch (IOException | WebSiteNotAvailableException e) {
                     String uri = DorisOAuth2ClientCredentials.getServerObjectUrlTousLesChamps( String.valueOf(classificationFiche.getClassification().getNumeroDoris()) );
-                    log.warn(String.format("Failed to retrieve classification fields for %d %s", classificationFiche.getClassification().getNumeroDoris(), uri), e);
+                    log.warn(String.format("Failed to retrieve classification fields %d %s \n\tfor fiche %d - %s",
+                            classificationFiche.getClassification().getNumeroDoris(), uri,
+                            ficheDB.getWebNodeId(),
+                            DorisOAuth2ClientCredentials.SPECIES_NODE_URL), e);
                 }
 
                 // Parfois on n'arrive pas à la récupérer
