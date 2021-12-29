@@ -204,10 +204,10 @@ public class PrefetchDorisWebSite {
 		log.debug("doMain() - Début Déplacement Base");
 
 		// Consiste au déplacement du fichier de la base du run vers assets
-		String dataBaseRunString = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1, PrefetchConstants.DATABASE_URL.length() );
+		String dataBaseRunString = PrefetchConstants.DATABASE_URL.substring(PrefetchConstants.DATABASE_URL.lastIndexOf(":")+1);
 		log.debug("dataBase : " + dataBaseRunString);
 
-		String dataBaseName = dataBaseRunString.substring(dataBaseRunString.lastIndexOf("/")+1, dataBaseRunString.length() );
+		String dataBaseName = dataBaseRunString.substring(dataBaseRunString.lastIndexOf("/")+1);
 		log.debug("dataBaseName : " + dataBaseName);
 
 		File dataBaseRunFile = new File(dataBaseRunString);
@@ -343,6 +343,11 @@ public class PrefetchDorisWebSite {
 
             // - - - Enregistrement Date génération Base - - -
             log.debug(" - - - Enregistrement Date génération Base - - -");
+            // delete old entries if any
+			List<DorisDB_metadata> metadataList = dbContext.dorisDB_metadataDao.queryForAll();
+			for (DorisDB_metadata metadata : metadataList ) {
+				dbContext.dorisDB_metadataDao.delete(metadata);
+			}
             Date date = new Date();
             SimpleDateFormat ft =  new SimpleDateFormat ("dd/MM/yyyy  HH:mm", Locale.US);
             dbContext.dorisDB_metadataDao.create(new DorisDB_metadata(ft.format(date),""));
@@ -457,25 +462,23 @@ public class PrefetchDorisWebSite {
                             // recrée une entrée dans la base pour l'image
                             final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageData);
                             TransactionManager.callInTransaction(connectionSource,
-                                    new Callable<Void>() {
-                                        public Void call() throws Exception {
-                                            int count = 0;
-                                            for (PhotoFiche photoFiche : listePhotoFiche) {
+									(Callable<Void>) () -> {
+										int count1 = 0;
+										for (PhotoFiche photoFiche : listePhotoFiche) {
 
-                                                photoFiche.setFiche(fiche);
+											photoFiche.setFiche(fiche);
 
-                                                dbContext.photoFicheDao.create(photoFiche);
+											dbContext.photoFicheDao.create(photoFiche);
 
-                                                if (count == 0) {
-                                                    // met à jour l'image principale de la fiche
-                                                    fiche.setPhotoPrincipale(photoFiche);
-                                                    dbContext.ficheDao.update(fiche);
-                                                }
-                                                count++;
-                                            }
-                                            return null;
-                                        }
-                                    });
+											if (count1 == 0) {
+												// met à jour l'image principale de la fiche
+												fiche.setPhotoPrincipale(photoFiche);
+												dbContext.ficheDao.update(fiche);
+											}
+											count1++;
+										}
+										return null;
+									});
 
                         } else {
 
@@ -612,7 +615,7 @@ public class PrefetchDorisWebSite {
 			// Permet de limiter le nombre de fiches à traiter (utile en Dev.)
 			if ( arg.startsWith("-M") || arg.startsWith("--max=")) {
 				log.debug("checkArgs() - arg : " + arg);
-				String nbFichesStr = null;
+				String nbFichesStr = "";
 				if ( arg.startsWith("-M")) {
 					nbFichesStr =  arg.substring(3);
 				}
