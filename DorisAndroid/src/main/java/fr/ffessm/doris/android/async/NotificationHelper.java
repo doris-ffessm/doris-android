@@ -125,7 +125,7 @@ public class NotificationHelper {
         mNotifyBuilder = new NotificationCompat.Builder(mContext, CHANNEL_ID)
 		.setWhen(System.currentTimeMillis())
 		.setTicker(initialTickerText)
-		.setSmallIcon(R.drawable.app_ic_launcher)
+		.setSmallIcon(R.drawable.app_ic_notification)
 		.setContentTitle(notificationContentTitle)
 		.setContentText(contentText)
         .setPriority(NotificationCompat.PRIORITY_LOW)
