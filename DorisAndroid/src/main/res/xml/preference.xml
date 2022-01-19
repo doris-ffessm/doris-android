@@ -54,11 +54,35 @@
 				android:defaultValue="@string/mode_precharg_photo_region_defaut"
 				android:layout="@layout/preference_layout_preference"
 				/>
+			<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+				android:key="@string/pref_key_mode_precharg_photo_region_atlantne"
+				android:title="@string/mode_precharg_photo_region_atlantne_prompt"
+				android:entryValues="@array/mode_precharg_photo_answers_values"
+				android:entries="@array/mode_precharg_photo_answers_lib"
+				android:defaultValue="@string/mode_precharg_photo_region_defaut"
+				android:layout="@layout/preference_layout_preference"
+				/>
+			<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+				android:key="@string/pref_key_mode_precharg_photo_region_mediter"
+				android:title="@string/mode_precharg_photo_region_mediter_prompt"
+				android:entryValues="@array/mode_precharg_photo_answers_values"
+				android:entries="@array/mode_precharg_photo_answers_lib"
+				android:defaultValue="@string/mode_precharg_photo_region_defaut"
+				android:layout="@layout/preference_layout_preference"
+				/>
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
    				android:key="@string/pref_key_mode_precharg_photo_region_eaudouce"
 	            android:title="@string/mode_precharg_photo_region_eaudouce_prompt"
 	            android:entryValues="@array/mode_precharg_photo_answers_values"
 	            android:entries="@array/mode_precharg_photo_answers_lib"
+				android:defaultValue="@string/mode_precharg_photo_region_defaut"
+				android:layout="@layout/preference_layout_preference"
+				/>
+			<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+				android:key="@string/pref_key_mode_precharg_photo_region_atlantno"
+				android:title="@string/mode_precharg_photo_region_atlantno_prompt"
+				android:entryValues="@array/mode_precharg_photo_answers_values"
+				android:entries="@array/mode_precharg_photo_answers_lib"
 				android:defaultValue="@string/mode_precharg_photo_region_defaut"
 				android:layout="@layout/preference_layout_preference"
 				/>
@@ -70,26 +94,26 @@
 				android:defaultValue="@string/mode_precharg_photo_region_defaut"
 				android:layout="@layout/preference_layout_preference"
 				/>
-	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:key="@string/pref_key_mode_precharg_photo_region_caraibes"
-	            android:title="@string/mode_precharg_photo_region_caraibes_prompt"
-	            android:entryValues="@array/mode_precharg_photo_answers_values"
-				android:entries="@array/mode_precharg_photo_answers_lib"
-				android:defaultValue="@string/mode_precharg_photo_region_defaut"
-				android:layout="@layout/preference_layout_preference"
-				/>
-   	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-   	            android:key="@string/pref_key_mode_precharg_photo_region_atlantno"
-	            android:title="@string/mode_precharg_photo_region_atlantno_prompt"
+			<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+				android:key="@string/pref_key_mode_precharg_photo_region_antarctique"
+				android:title="@string/mode_precharg_photo_region_antarctique_prompt"
 				android:entryValues="@array/mode_precharg_photo_answers_values"
 				android:entries="@array/mode_precharg_photo_answers_lib"
 				android:defaultValue="@string/mode_precharg_photo_region_defaut"
 				android:layout="@layout/preference_layout_preference"
 				/>
 			<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-				android:key="@string/pref_key_mode_precharg_photo_region_antarctique"
-				android:title="@string/mode_precharg_photo_region_antarctique_prompt"
+				android:key="@string/pref_key_mode_precharg_photo_region_merrouge"
+				android:title="@string/mode_precharg_photo_region_merrouge_prompt"
 				android:entryValues="@array/mode_precharg_photo_answers_values"
+				android:entries="@array/mode_precharg_photo_answers_lib"
+				android:defaultValue="@string/mode_precharg_photo_region_defaut"
+				android:layout="@layout/preference_layout_preference"
+				/>
+	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+	            android:key="@string/pref_key_mode_precharg_photo_region_caraibes"
+	            android:title="@string/mode_precharg_photo_region_caraibes_prompt"
+	            android:entryValues="@array/mode_precharg_photo_answers_values"
 				android:entries="@array/mode_precharg_photo_answers_lib"
 				android:defaultValue="@string/mode_precharg_photo_region_defaut"
 				android:layout="@layout/preference_layout_preference"

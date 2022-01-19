@@ -114,15 +114,15 @@
 	<string name="mode_precharg_photo_region_summary">"Volume nécessaire estimé : "</string>
     <string name="mode_precharg_photo_region_defaut">P1</string>
     
-    <string name="mode_precharg_photo_region_france_prompt">- France Métropolitaine\u00A0?</string>
-    <string name="mode_precharg_photo_region_eaudouce_prompt">- Eau douce\u00A0?</string>
-    <string name="mode_precharg_photo_region_atlantno_prompt">- Atlantique Nord-Ouest\u00A0?</string>
-    <string name="mode_precharg_photo_region_indopac_prompt">- Indo-Pacifique\u00A0?</string>
-    <string name="mode_precharg_photo_region_antarctique_prompt">- Antarctique\u00A0?</string>
-    <string name="mode_precharg_photo_region_caraibes_prompt">- Caraïbes\u00A0?</string>
-    <string name="mode_precharg_photo_region_merrouge_prompt">- Mer Rouge\u00A0?</string>
-    <string name="mode_precharg_photo_region_mediter_prompt">- Méditerranée\u00A0?</string>
-    <string name="mode_precharg_photo_region_atlantne_prompt">- Façade Atlantique Française\u00A0?</string>
+    <string name="mode_precharg_photo_region_france_prompt">France Métropolitaine\u00A0?</string>
+    <string name="mode_precharg_photo_region_eaudouce_prompt">Eau douce\u00A0?</string>
+    <string name="mode_precharg_photo_region_atlantno_prompt">Atlantique Nord-Ouest\u00A0?</string>
+    <string name="mode_precharg_photo_region_indopac_prompt">Indo-Pacifique\u00A0?</string>
+    <string name="mode_precharg_photo_region_antarctique_prompt">\u22B3 Antarctique\u00A0?</string>
+    <string name="mode_precharg_photo_region_caraibes_prompt">Caraïbes\u00A0?</string>
+    <string name="mode_precharg_photo_region_merrouge_prompt">\u22B3 Mer Rouge\u00A0?</string>
+    <string name="mode_precharg_photo_region_mediter_prompt">\u22B3 Méditerranée\u00A0?</string>
+    <string name="mode_precharg_photo_region_atlantne_prompt">\u22B3 Façade Atlantique Française\u00A0?</string>
     <!-- <string name="mode_precharg_photo_favorite_prompt">- Fiches préférées ? (A FAIRE)</string> -->
   
     <string name="mode_precharg_photo_autres_prompt">Précharg. Autres Photos\u00A0?</string>

@@ -145,16 +145,22 @@ public class Preference_PreferenceViewActivity extends android.preference.Prefer
 
         setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_france,
                 ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE);
+        setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_atlantne,
+                ZoneGeographiqueKind.FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE);
+        setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_mediter,
+                ZoneGeographiqueKind.FAUNE_FLORE_MEDITERRANEE_FRANCAISE);
         setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_eaudouce,
                 ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE);
+        setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_atlantno,
+                ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST);
         setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_indopac,
                 ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE);
         setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_antarctique,
                 ZoneGeographiqueKind.FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES);
+        setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_merrouge,
+                ZoneGeographiqueKind.FAUNE_FLORE_MER_ROUGE);
         setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_caraibes,
                 ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES);
-        setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_atlantno,
-                ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST);
 
         final Preference btnQualiteImagesZonesKey = (Preference) getPreferenceManager().findPreference("button_qualite_images_zones_key");
         btnQualiteImagesZonesKey.setSummary(
