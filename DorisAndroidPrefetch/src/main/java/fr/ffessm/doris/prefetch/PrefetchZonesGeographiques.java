@@ -48,6 +48,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
@@ -86,31 +87,31 @@ public class PrefetchZonesGeographiques {
         TransactionManager.callInTransaction(connectionSource,
                 (Callable<Void>) () -> {
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(1, "Espèces marines d'Europe (côtes françaises)'", "Méditerranée, Atlantique, Manche et mer du Nord")
+                            new ZoneGeographique(1, "Espèces marines d'Europe (côtes françaises)'", "Méditerranée, Atlantique, Manche et mer du Nord", 71726)
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(2, "Espèces d'eau douce de France métropolitaine", "Fleuves, rivières, lacs, mares et étangs, ...")
+                            new ZoneGeographique(2, "Espèces de la façade Atlantique française", "Atlantique Nord-Est, Manche et Mer du Nord françaises", 239991, dbContext.zoneGeographiqueDao.queryForId(1))
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(3, "Espèces marines et d'eau douce de l'Indo-Pacifique français", "La Réunion, Mayotte, Nouvelle-Calédonie, Polynésie et autres")
+                            new ZoneGeographique(3, "Espèces de la façade Méditérranéenne française", "Méditerranée", 239910, dbContext.zoneGeographiqueDao.queryForId(1))
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(4, "Espèces marines et d'eau douce des Antilles françaises", "Guadeloupe, Martinique et autres")
+                            new ZoneGeographique(4, "Espèces d'eau douce de France métropolitaine", "Fleuves, rivières, lacs, mares et étangs, ...", 71728)
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(5, "Espèces marines et d'eau douce de l'Atlantique Nord-Ouest", "Côte est du Canada, embouchure du St Laurent, archipel de St Pierre-et-Miquelon")
+                            new ZoneGeographique(5, "Espèces marines et d'eau douce de l'Atlantique Nord-Ouest", "Côte est du Canada, embouchure du St Laurent, archipel de St Pierre-et-Miquelon", 135595)
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(6, "Espèces des terres antarctiques françaises", "Circumpolaire, mers et côtes australes, Crozet, Kerguelen, Terre Adélie")
+                            new ZoneGeographique(6, "Espèces marines et d'eau douce de l'Indo-Pacifique français", "La Réunion, Mayotte, Nouvelle-Calédonie, Polynésie et autres", 71730)
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(7, "Espèces de la Mer Rouge", "Mer Rouge")
+                            new ZoneGeographique(7, "Espèces des terres antarctiques françaises", "Circumpolaire, mers et côtes australes, Crozet, Kerguelen, Terre Adélie", 1086247, dbContext.zoneGeographiqueDao.queryForId(6))
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(8, "Espèces de la façade Méditérranéenne française", "Méditerranée")
+                            new ZoneGeographique(8, "Espèces de la Mer Rouge", "Mer Rouge", 1790099, dbContext.zoneGeographiqueDao.queryForId(6))
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(9, "Espèces de la façade Atlantique française", "Atlantique Nord-Est, Manche et Mer du Nord françaises")
+                            new ZoneGeographique(9, "Espèces marines et d'eau douce des Antilles françaises", "Guadeloupe, Martinique et autres", 71731)
                     );
                     return null;
                 });

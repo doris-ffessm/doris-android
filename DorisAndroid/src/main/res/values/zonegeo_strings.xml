@@ -4,14 +4,14 @@
     <string-array name="zonegeo_shortname_array">
         <item>Toutes les zones</item>
         <item>France</item>
+        <item>Atl. Nord-Est</item>
+        <item>Méditerranée</item>
         <item>Eau douce</item>
-        <item>Indo-Pacifique</item>
-        <item>Caraïbes</item>
         <item>Atl. Nord-Ouest</item>
+        <item>Indo-Pacifique</item>
         <item>Antarctique</item>
         <item>Mer Rouge</item>
-        <item>Méditerranée</item>
-        <item>Atl. Nord-Est</item>
+        <item>Caraïbes</item>
     </string-array>
 
 </resources>

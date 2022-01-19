@@ -153,22 +153,23 @@ public class Constants {
         switch (zoneKing) {
             case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
                 return 1;
-            case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
+            case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
                 return 2;
-            case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
+            case FAUNE_FLORE_MEDITERRANEE_FRANCAISE:
                 return 3;
-            case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
+            case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
                 return 4;
             case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
                 return 5;
-            case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+            case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
                 return 6;
-            case FAUNE_FLORE_MER_ROUGE:
+            case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
                 return 7;
-            case FAUNE_FLORE_MEDITERRANEE_FRANCAISE:
+            case FAUNE_FLORE_MER_ROUGE:
                 return 8;
-            case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
+            case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
                 return 9;
+            // Aurait du être -1 (10 est la clé pour url) ?
             case FAUNE_FLORE_TOUTES_ZONES:
                 return 10;
             default:
@@ -224,13 +225,13 @@ public class Constants {
                 return ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST;
             case 6:
                 return ZoneGeographiqueKind.FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES;
-            // Aurait du être -1 (10 est la clé pour url)
             case 7:
                 return ZoneGeographiqueKind.FAUNE_FLORE_MER_ROUGE;
             case 8:
                 return ZoneGeographiqueKind.FAUNE_FLORE_MEDITERRANEE_FRANCAISE;
             case 9:
                 return ZoneGeographiqueKind.FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE;
+            // Aurait du être -1 (10 est la clé pour url)
             case 10:
                 return ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES;
             default:

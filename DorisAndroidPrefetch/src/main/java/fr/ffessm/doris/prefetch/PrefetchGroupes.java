@@ -100,6 +100,13 @@ public class PrefetchGroupes {
 
     /* TODO : Ici en Durs mais devraient être récupérés avec la Classification */
 
+    // note pour tenter de recalculer en auto
+    // groupes 87 et sur groupes 119
+    // https://doris.ffessm.fr/api/ezp/v1/content/node/87?oauth_token=c977aaf12f519c53081d70edd3010b3961bbfcc4
+    // https://doris.ffessm.fr/api/ezp/v1/content/node/119?oauth_token=c977aaf12f519c53081d70edd3010b3961bbfcc4
+
+
+
     public int prefetchV4() {
         //clearExistingGroups();
 
@@ -117,8 +124,9 @@ public class PrefetchGroupes {
         listeGroupes.add(new Groupe(48973,2073,"Thalles encroûtants", getGroupeWithName(listeGroupes,"Rhodophycées")));
         listeGroupes.add(new Groupe(48870,3000,"Chlorophycées", getGroupeWithName(listeGroupes,"Algues")));
         listeGroupes.add(new Groupe(48871,4000,"Phéophycées",getGroupeWithName(listeGroupes,"Algues")));
-        // TODO mousses
-        // TODO Fougères
+        listeGroupes.add(new Groupe(811394,4000,"Bryophytes",getGroupeWithName(listeGroupes,"VEGETAUX")));
+        listeGroupes.add(new Groupe(897451,4000,"Filicophytes",getGroupeWithName(listeGroupes,"VEGETAUX")));
+
         listeGroupes.add(new Groupe(136031,0,"Plantes à fleurs", getGroupeWithName(listeGroupes,"VEGETAUX")));
         listeGroupes.add(new Groupe(48872,5000,"Plantes subaquatiques", getGroupeWithName(listeGroupes,"Plantes à fleurs")));
         listeGroupes.add(new Groupe(48873,6000,"Plantes terrestres", getGroupeWithName(listeGroupes,"Plantes à fleurs")));
@@ -140,9 +148,14 @@ public class PrefetchGroupes {
         listeGroupes.add(new Groupe(48881,14000,"Scyphozoaires ou lucernaires", getGroupeWithName(listeGroupes,"CNIDAIRES")));
         listeGroupes.add(new Groupe(48950,14048,"Scyphozoaires", getGroupeWithName(listeGroupes,"Scyphozoaires ou lucernaires")));
         listeGroupes.add(new Groupe(48949,14047,"Staurozoaires", getGroupeWithName(listeGroupes,"Scyphozoaires ou lucernaires")));
-        // TODO Anémones de mer
-        // TODO Coraux durs
-        // TODO Antipathaires
+
+        listeGroupes.add(new Groupe(48886,14047,"Anémones au sens large", getGroupeWithName(listeGroupes,"CNIDAIRES")));
+        listeGroupes.add(new Groupe(48925,14047,"Anémones", getGroupeWithName(listeGroupes,"Anémones au sens large")));
+        listeGroupes.add(new Groupe(48924,14047,"Anémones encroutantes", getGroupeWithName(listeGroupes,"Anémones au sens large")));
+        listeGroupes.add(new Groupe(48926,14047,"Cérianthes", getGroupeWithName(listeGroupes,"Anémones au sens large")));
+        listeGroupes.add(new Groupe(48927,14047,"Corallimorphaires", getGroupeWithName(listeGroupes,"Anémones au sens large")));
+        listeGroupes.add(new Groupe(48887,15000,"Coraux dur",getGroupeWithName(listeGroupes,"CNIDAIRES")));
+        listeGroupes.add(new Groupe(48888,15000,"Antipathaires",getGroupeWithName(listeGroupes,"CNIDAIRES")));
         listeGroupes.add(new Groupe(48882,15000,"Alcyonides",getGroupeWithName(listeGroupes,"CNIDAIRES")));
         listeGroupes.add(new Groupe(48883,16000,"Gorgonaires", getGroupeWithName(listeGroupes,"CNIDAIRES")));
         listeGroupes.add(new Groupe(48884,17000,"Pennatulaires", getGroupeWithName(listeGroupes,"CNIDAIRES")));
@@ -153,8 +166,7 @@ public class PrefetchGroupes {
         listeGroupes.add(new Groupe(48926,19007,"Cérianthes", getGroupeWithName(listeGroupes,"Anémones de mer au sens large, cérianthes")));
         listeGroupes.add(new Groupe(48924,19005,"Anémones encroûtantes", getGroupeWithName(listeGroupes,"Anémones de mer au sens large, cérianthes")));
         listeGroupes.add(new Groupe(48927,19008,"Corallimorphaires", getGroupeWithName(listeGroupes,"Anémones de mer au sens large, cérianthes")));
-        listeGroupes.add(new Groupe(48887,20000,"Scléractiniaires", getGroupeWithName(listeGroupes,"CNIDAIRES")));
-        listeGroupes.add(new Groupe(48888,21000,"Antipathaires",getGroupeWithName(listeGroupes,"CNIDAIRES")));
+
 
         listeGroupes.add(new Groupe(171376,0,"CTENAIRES", getGroupeWithName(listeGroupes,"ANIMAUX")));
         listeGroupes.add(new Groupe(48889,22000,"Cténophores",getGroupeWithName(listeGroupes,"CTENAIRES")));

@@ -555,59 +555,14 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
     }
     protected void updateZoneGeographiqueForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
 
-        ZoneGeographique zoneGeographique = new ZoneGeographique();
+        ZoneGeographique zoneGeographique ;
         log.info(String.format("add %d Fiches_ZonesGeographiques related to this Fiche",especeJSON.getFields().getZoneGeo().getValue().split("-").length));
         for (String zoneGeoRefId : especeJSON.getFields().getZoneGeo().getValue().split("-")) {
 
             try {
-                switch (Integer.parseInt(zoneGeoRefId)) {
-                    // 71726 - ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE
-                    case 71726:
-                        zoneGeographique.setId(1);
-                        break;
-                    // On ignore pour l'instant
-                    // 1087942 - ????
-                    //case 239910:
-                    //case 239991:
-                    //case 1087942:
-                    //    log.error("prefetchV4() - Zone Géo. non gérée : " + zoneGeoRefId + " dans fiche " + DorisOAuth2ClientCredentials.SPECIES_NODE_URL+ficheNodeId.getNodeId());
-
-                    //    zoneGeographique.setId(-1);
-                    //    break;
-                    // 71728 - ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE
-                    case 71728:
-                        zoneGeographique.setId(2);
-                        break;
-                    // 71730 - ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE
-                    case 71730:
-                        zoneGeographique.setId(3);
-                        break;
-                    // 71731 - ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES
-                    case 71731:
-                        zoneGeographique.setId(4);
-                        break;
-                    case 135595:
-                        // FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST
-                        zoneGeographique.setId(5);
-                        break;
-                    // 1086247 -
-                    case 1086247:
-                        // FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES
-                        zoneGeographique.setId(6);
-                        break;
-                    case 1790099:
-                        // FAUNE_FLORE_MER_ROUGE
-                        zoneGeographique.setId(7);
-                        break;
-                    case 239910:
-                        // FAUNE_FLORE_MEDITERRANEE_FRANCAISE
-                        zoneGeographique.setId(8);
-                        break;
-                    case 239991:
-                        // FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE
-                        zoneGeographique.setId(9);
-                        break;
-                    default:
+                zoneGeographique = dbContext.zoneGeographiqueDao.queryForFirst(
+                    dbContext.zoneGeographiqueDao.queryBuilder().where().eq("idDoris", Integer.parseInt(zoneGeoRefId)).prepare());
+                if(zoneGeographique == null) {
                         log.error(String.format("Zone Géo. Inconnue %s  dans fiche %s/%d" ,
                                 zoneGeoRefId,
                                 DorisOAuth2ClientCredentials.SPECIES_NODE_URL,

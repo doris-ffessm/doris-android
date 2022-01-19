@@ -92,7 +92,7 @@ public class ZoneGeographique {
 	/**
 	 * object created from DB may need to be updated from the DB for being fully navigable
 	 */
-	
+	public boolean parentZoneGeographique_mayNeedDBRefresh = true;
 
 	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
@@ -101,7 +101,21 @@ public class ZoneGeographique {
 	/** TEST GM : SQLite = SQLite **/
 	@DatabaseField
 	protected java.lang.String description;
-	
+
+	/**
+	 *  id in the doris web site
+	 */
+	@DatabaseField
+	protected int idDoris;
+
+
+	/** Permet de créer ou lire l'arborescence */
+	@ForeignCollectionField(eager = false, foreignFieldName = "parentZoneGeographique")
+	protected ForeignCollection<ZoneGeographique> subZonesGeographiques;
+
+	@DatabaseField(foreign = true)
+	protected ZoneGeographique parentZoneGeographique;
+
 
 	// work in progress, find association 
 	// Association many to many Fiches_ZonesGeographiques
@@ -129,6 +143,28 @@ public class ZoneGeographique {
 	}
 	// end work in progress 	
 
+	public Collection<ZoneGeographique> getSubZonesGeographiques() {
+		return this.subZonesGeographiques;
+	}
+	public ZoneGeographique getParentZoneGeographique() {
+		try {
+			if(parentZoneGeographique_mayNeedDBRefresh && _contextDB != null){
+				_contextDB.zoneGeographiqueDao.refresh(this.parentZoneGeographique);
+				parentZoneGeographique_mayNeedDBRefresh = false;
+			}
+		} catch (SQLException e) {
+			log.error("erreur dans getParentZoneGeographique()");
+			log.error(e.getMessage(),e);
+		}
+		if(_contextDB==null && this.parentZoneGeographique == null){
+			log.warn("ZoneGeographique may not be properly refreshed from DB (_id="+_id+")");
+		}
+
+		return this.parentZoneGeographique;
+	}
+	public void setGroupePere(ZoneGeographique parentZoneGeographique) {
+		this.parentZoneGeographique = parentZoneGeographique;
+	}
 				
 
 	// Start of user code ZoneGeographique additional user properties
@@ -141,28 +177,28 @@ public class ZoneGeographique {
 	   	case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
 	   		this._id = 1;
 	   		break;
-		case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
+		case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
 			this._id = 2;
 			break;
-		case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
-			this._id = 3;
+		case FAUNE_FLORE_MEDITERRANEE_FRANCAISE:
+			this._id = 	3;
 			break;
-		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
+		case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
 			this._id = 4;
 			break;
 		case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
 			this._id = 5;
 			break;
-		case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+		case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
 			this._id = 6;
 			break;
-		case FAUNE_FLORE_MER_ROUGE:
-			this._id = 	7;
+		case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+			this._id = 7;
 			break;
-		case FAUNE_FLORE_MEDITERRANEE_FRANCAISE:
+		case FAUNE_FLORE_MER_ROUGE:
 			this._id = 	8;
 			break;
-		case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
+		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
 			this._id = 9;
 			break;
 		}
@@ -181,21 +217,21 @@ public class ZoneGeographique {
 	   	case 1:
     		return ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE;
 		case 2:
-			return ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE;
+			return ZoneGeographiqueKind.FAUNE_FLORE_MEDITERRANEE_FRANCAISE;
 		case 3:
-			return ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE;
+			return ZoneGeographiqueKind.FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE;
 		case 4:
-			return ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES;
+			return ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE;
 		case 5:
 			return ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST;
 		case 6:
-			return ZoneGeographiqueKind.FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES;
+			return ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE;
 		case 7:
-			return ZoneGeographiqueKind.FAUNE_FLORE_MER_ROUGE;
+			return ZoneGeographiqueKind.FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES;
 		case 8:
-			return ZoneGeographiqueKind.FAUNE_FLORE_MEDITERRANEE_FRANCAISE;
+			return ZoneGeographiqueKind.FAUNE_FLORE_MER_ROUGE;
 		case 9:
-				return ZoneGeographiqueKind.FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE;
+			return ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES;
 		default:
 			return null;
 		}
@@ -216,12 +252,21 @@ public class ZoneGeographique {
 		this.nom = nom;
 		this.description = description;
 	}
-    public ZoneGeographique(int id, java.lang.String nom, java.lang.String description) {
+    public ZoneGeographique(int id, java.lang.String nom, java.lang.String description, int idDoris) {
         super();
         this._id = id;
         this.nom = nom;
         this.description = description;
+		this.idDoris = idDoris;
     }
+	public ZoneGeographique(int id, java.lang.String nom, java.lang.String description, int idDoris, ZoneGeographique parentZoneGeographique) {
+		super();
+		this._id = id;
+		this.nom = nom;
+		this.description = description;
+		this.idDoris = idDoris;
+		this.parentZoneGeographique = parentZoneGeographique;
+	}
 
 	public int getId() {
 		return _id;
@@ -250,6 +295,12 @@ public class ZoneGeographique {
 		this.description = description;
 	}
 
+	public int getIdDoris() {
+		return this.idDoris;
+	}
+	public void setIdDoris(int idDoris) {
+		this.idDoris = idDoris;
+	}
 
 
 
