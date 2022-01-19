@@ -116,7 +116,7 @@ public class NotificationHelper {
         		mContext,
         		0,
         	    resultIntent,
-        	    PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_IMMUTABLE
         	);
 
         //add the additional content and intent to the notification
