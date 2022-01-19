@@ -57,6 +57,7 @@ import android.view.MenuItem;
 
 import java.io.File;
 //Start of user code additional imports Accueil_CustomViewActivity
+import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -130,6 +131,15 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     Param_Outils paramOutils;
     Reseau_Outils reseauOutils;
     Photos_Outils photosOutils;
+
+
+    // deal with zone folding/unfolding
+    public ImageButton btnFoldUnfoldZoneSection;
+    private LinearLayout llFoldUnfoldZoneSection;
+    private boolean isZoneFold = false;
+    private int image_maximize;
+    private int image_minimize;
+    protected List<View> allFoldableZoneView  = new ArrayList<View>();
 
     protected SparseArray<MultiProgressBar> progressBarZones = new SparseArray<MultiProgressBar>();
 
@@ -311,13 +321,48 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         // display previous zone first
         if(currentZoneFilter != null){
             llContainerLayout.addView(createNavigationZoneView(currentZoneFilter));
+        } else {
+            ZoneGeographique zoneToutesZones = new ZoneGeographique();
+            zoneToutesZones.setToutesZones();
+            llContainerLayout.addView(createNavigationZoneView(zoneToutesZones));
         }
+
+        // deal with fold/unfold
+        btnFoldUnfoldZoneSection = (ImageButton) findViewById(R.id.accueil_zone_fold_unflod_section_imageButton);
+        llFoldUnfoldZoneSection = (LinearLayout) findViewById(R.id.accueil_navigation_zones_layout);
+        image_maximize = R.drawable.app_expander_ic_maximized;
+        image_minimize = R.drawable.app_expander_ic_minimized;
+        isZoneFold = false;
+        btnFoldUnfoldZoneSection.setImageResource(image_maximize);
+        btnFoldUnfoldZoneSection.setVisibility(View.VISIBLE);
+
+        btnFoldUnfoldZoneSection.setOnClickListener(new ImageButton.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                isZoneFold = !isZoneFold;
+                if(isZoneFold) {
+                    btnFoldUnfoldZoneSection.setImageResource(image_minimize);
+                } else {
+                    btnFoldUnfoldZoneSection.setImageResource(image_maximize);
+                }
+                for (View foldableZone : allFoldableZoneView) {
+                    if(isZoneFold) {
+                        foldableZone.setVisibility(View.GONE);
+                    } else {
+                        foldableZone.setVisibility(View.VISIBLE);
+                    }
+               //     foldableProgressBarZones.fold_unfold();
+                }
+            }
+        });
 
         // Affichage lien vers "toutes Zones"
         ZoneGeographique zoneToutesZones = new ZoneGeographique();
         zoneToutesZones.setToutesZones();
-
-        llContainerLayout.addView(createNavigationZoneView(zoneToutesZones));
+        View allZonesView = createNavigationZoneView(zoneToutesZones);
+        allFoldableZoneView.add(allZonesView);
+        llContainerLayout.addView(allZonesView);
 
         // affichage lien vers les zones
         List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
@@ -326,7 +371,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         for (ZoneGeographique zoneGeo : listeZoneGeo) {
             // show all but previous zone (already displayed)
             if(currentZoneFilter == null || zoneGeo.getId() != currentZoneFilter.getId()) {
-                llContainerLayout.addView(createNavigationZoneView(zoneGeo));
+                View zoneView = createNavigationZoneView(zoneGeo);
+                allFoldableZoneView.add(zoneView);
+                llContainerLayout.addView(zoneView);
             }
         }
 
