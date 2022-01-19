@@ -390,32 +390,14 @@ public class GestionPhotoDiskService extends IntentService {
     
     
     public void reset_nbphotos_recues(){
-    	
-    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
-    			ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE, true), 0);
-    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
-    			ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE, false), 0);
-    	
-    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
-    			ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE, true), 0);
-    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
-    			ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE, false), 0);
-    	
-    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
-    			ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE, true), 0);
-    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
-    			ZoneGeographiqueKind.FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE, false), 0);
-    	
-    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
-    			ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES, true), 0);
-    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
-    			ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES, false), 0);
-    	
-    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
-    			ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST, true), 0);       	
-    	getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
-    			ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST, false), 0); 
-
+    	for(ZoneGeographiqueKind zoneGeographiqueKind : ZoneGeographiqueKind.values()) {
+    		if(zoneGeographiqueKind != ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES) {
+				getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
+						zoneGeographiqueKind, true), 0);
+				getParamOutils().setParamInt(getPhotosOutils().getKeyDataRecuesZoneGeo(
+						zoneGeographiqueKind, false), 0);
+			}
+		}
     }
     
     private Photos_Outils getPhotosOutils(){ 
