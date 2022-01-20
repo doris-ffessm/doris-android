@@ -73,7 +73,14 @@
 			
 				</RelativeLayout>
 			</LinearLayout>
+			<View style="@style/Separateur"/>
 
+			<LinearLayout
+				android:id="@+id/accueil_current_zone_layout"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical" >
+			</LinearLayout>
 			<View style="@style/Separateur"/>
 
             <LinearLayout
@@ -93,8 +100,7 @@
 						android:adjustViewBounds="true"
 						android:background="@android:color/transparent"
 						android:scaleType="centerInside"
-						android:src="@drawable/app_expander_ic_minimized"
-						android:visibility="invisible" />
+						android:src="@drawable/app_expander_ic_minimized" />
 					<TextView
 						android:id="@+id/accueil_zone_title"
 						android:layout_width="match_parent"

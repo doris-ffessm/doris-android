@@ -198,6 +198,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         }
 
         // Affichage zone géo
+        createCurrentZoneGeoViews();
         createNavigationZonesGeoViews();
 
         //Lors du 1er démarrage de l'application dans la version actuelle,
@@ -303,10 +304,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     }
 
 
-    /* Création de la liste des Zones (commencent par Toutes Zones) */
-    protected void createNavigationZonesGeoViews() {
-
-        LinearLayout llContainerLayout = (LinearLayout) findViewById(R.id.accueil_navigation_zones_layout);
+    protected void createCurrentZoneGeoViews() {
+        LinearLayout llContainerLayout = (LinearLayout) findViewById(R.id.accueil_current_zone_layout);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -326,15 +325,38 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             zoneToutesZones.setToutesZones();
             llContainerLayout.addView(createNavigationZoneView(zoneToutesZones));
         }
+    }
+
+    /**
+     * Création de la liste pliabel des Zones
+     */
+    protected void createNavigationZonesGeoViews() {
+
+        LinearLayout llContainerLayout = (LinearLayout) findViewById(R.id.accueil_navigation_zones_layout);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        ZoneGeographique currentZoneFilter=null;
+        int currentZoneFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
+        if (currentZoneFilterId == -1 || currentZoneFilterId == 0) { // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
+            // pas de zone précdente
+        } else {
+            currentZoneFilter = getHelper().getZoneGeographiqueDao().queryForId(currentZoneFilterId);
+        }
 
         // deal with fold/unfold
         btnFoldUnfoldZoneSection = (ImageButton) findViewById(R.id.accueil_zone_fold_unflod_section_imageButton);
         llFoldUnfoldZoneSection = (LinearLayout) findViewById(R.id.accueil_navigation_zones_layout);
         image_maximize = R.drawable.app_expander_ic_maximized;
         image_minimize = R.drawable.app_expander_ic_minimized;
-        isZoneFold = false;
+        isZoneFold = true;
         btnFoldUnfoldZoneSection.setImageResource(image_maximize);
         btnFoldUnfoldZoneSection.setVisibility(View.VISIBLE);
+        if(isZoneFold) {
+            btnFoldUnfoldZoneSection.setImageResource(image_minimize);
+        } else {
+            btnFoldUnfoldZoneSection.setImageResource(image_maximize);
+        }
 
         btnFoldUnfoldZoneSection.setOnClickListener(new ImageButton.OnClickListener() {
             @Override
@@ -358,13 +380,16 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         });
 
         // Affichage lien vers "toutes Zones"
-        ZoneGeographique zoneToutesZones = new ZoneGeographique();
-        zoneToutesZones.setToutesZones();
-        View allZonesView = createNavigationZoneView(zoneToutesZones);
-        allFoldableZoneView.add(allZonesView);
-        llContainerLayout.addView(allZonesView);
+        if(currentZoneFilter != null ) {
+            ZoneGeographique zoneToutesZones = new ZoneGeographique();
+            zoneToutesZones.setToutesZones();
+            View allZonesView = createNavigationZoneView(zoneToutesZones);
+            allFoldableZoneView.add(allZonesView);
+            llContainerLayout.addView(allZonesView);
+            allZonesView.setVisibility(View.GONE);
+        }
 
-        // affichage lien vers les zones
+        // affichage lien vers les zones sauf la zone courante déjà présentée dans createCurrentZoneGeoViews
         List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
         if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : " + listeZoneGeo.size());
 
@@ -374,6 +399,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                 View zoneView = createNavigationZoneView(zoneGeo);
                 allFoldableZoneView.add(zoneView);
                 llContainerLayout.addView(zoneView);
+                zoneView.setVisibility(View.GONE);
             }
         }
 
