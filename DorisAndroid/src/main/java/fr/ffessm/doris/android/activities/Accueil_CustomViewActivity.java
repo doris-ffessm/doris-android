@@ -358,26 +358,14 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             btnFoldUnfoldZoneSection.setImageResource(image_maximize);
         }
 
-        btnFoldUnfoldZoneSection.setOnClickListener(new ImageButton.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                isZoneFold = !isZoneFold;
-                if(isZoneFold) {
-                    btnFoldUnfoldZoneSection.setImageResource(image_minimize);
-                } else {
-                    btnFoldUnfoldZoneSection.setImageResource(image_maximize);
-                }
-                for (View foldableZone : allFoldableZoneView) {
-                    if(isZoneFold) {
-                        foldableZone.setVisibility(View.GONE);
-                    } else {
-                        foldableZone.setVisibility(View.VISIBLE);
-                    }
-               //     foldableProgressBarZones.fold_unfold();
-                }
-            }
+        // btnFoldUnfoldZoneSection // toute la section sert de lien pour plier/déplier
+        llFoldUnfoldZoneSection.setOnClickListener(v -> {
+            foldUnfoldZoneSection();
         });
+        btnFoldUnfoldZoneSection.setOnClickListener(v -> {
+            foldUnfoldZoneSection();
+        });
+
 
         // Affichage lien vers "toutes Zones"
         if(currentZoneFilter != null ) {
@@ -573,6 +561,24 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
 
         return viewZone;
+    }
+
+    private void foldUnfoldZoneSection() {
+        isZoneFold = !isZoneFold;
+        if(isZoneFold) {
+            btnFoldUnfoldZoneSection.setImageResource(image_minimize);
+            ((TextView)findViewById(R.id.accueil_zone_title)).setText(R.string.accueil_customview_show_other_zones);
+        } else {
+            btnFoldUnfoldZoneSection.setImageResource(image_maximize);
+            ((TextView)findViewById(R.id.accueil_zone_title)).setText(R.string.accueil_customview_hide_other_zones);
+        }
+        for (View foldableZone : allFoldableZoneView) {
+            if (isZoneFold) {
+                foldableZone.setVisibility(View.GONE);
+            } else {
+                foldableZone.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     /*public void onClickAfficherListe(View view){

@@ -19,7 +19,11 @@
 	<string name="accueil_bibliographie_text">Bibliographie</string>
 	
 	<string name="accueil_customview_zonegeo_touteszones">Toutes les zones</string>
-	
+
+	<string name="accueil_customview_show_other_zones">Montrer les autres zones</string>
+	<string name="accueil_customview_hide_other_zones">Masquer les autres zones</string>
+
+
 	<string name="accueil_customview_logo_fede_description">@string/ffessm</string>
 	<string name="accueil_customview_logo_fede_url">@string/ffessm_url</string>
 	<string name="accueil_customview_logo_doris_description">Logo DORIS Accueil</string>

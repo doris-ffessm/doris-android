@@ -111,7 +111,7 @@
 						android:fadingEdge="horizontal"
 						android:paddingLeft="4dp"
 						android:paddingRight="4dp"
-						android:text="Afficher/masquer les autres zones"
+						android:text="@string/accueil_customview_show_other_zones"
 						android:textAppearance="?android:attr/textAppearanceMedium"
 						tools:ignore="HardcodedText" />
 				</LinearLayout>
