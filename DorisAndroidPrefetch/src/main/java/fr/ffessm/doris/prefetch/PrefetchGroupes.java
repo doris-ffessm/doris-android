@@ -222,8 +222,8 @@ public class PrefetchGroupes {
         listeGroupes.add(new Groupe(171388,0,"ECHINODERMES", getGroupeWithName(listeGroupes,"ANIMAUX")));
         listeGroupes.add(new Groupe(48907,40000,"Astérides", getGroupeWithName(listeGroupes,"ECHINODERMES")));
         listeGroupes.add(new Groupe(48908,41000,"Échinides", getGroupeWithName(listeGroupes,"ECHINODERMES")));
-        listeGroupes.add(new Groupe(48947,41045,"Oursins réguliers", getGroupeWithName(listeGroupes,"Oursins réguliers")));
-        listeGroupes.add(new Groupe(48948,41046,"Oursins irréguliers", getGroupeWithName(listeGroupes,"Oursins réguliers")));
+        listeGroupes.add(new Groupe(48947,41045,"Oursins réguliers", getGroupeWithName(listeGroupes,"Échinides")));
+        listeGroupes.add(new Groupe(48948,41046,"Oursins irréguliers", getGroupeWithName(listeGroupes,"Échinides")));
         listeGroupes.add(new Groupe(48909,42000,"Crinoïdes", getGroupeWithName(listeGroupes,"ECHINODERMES")));
         listeGroupes.add(new Groupe(48910,43000,"Ophiurides", getGroupeWithName(listeGroupes,"ECHINODERMES")));
         listeGroupes.add(new Groupe(48911,44000,"Holothurides", getGroupeWithName(listeGroupes,"ECHINODERMES")));
