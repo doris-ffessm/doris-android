@@ -79,6 +79,7 @@ stages:          # List of stages for jobs, and their order of execution
 
 .show_cache_content: &show_cache_content
   - set +e
+  - pwd
   - ls -lsa run
   - ls -lsa run/database
   - ls -lsa .m2/repository/
@@ -86,6 +87,7 @@ stages:          # List of stages for jobs, and their order of execution
 
 collect-db-job:
   stage: prepare_data
+  resource_group: doris_web_site
   before_script:
     - *show_cache_content
   script:
@@ -102,6 +104,7 @@ build-job:
   before_script:
     - *install-android-sdk
     - *create-sign-info
+    - *show_cache_content
   script:
     - cp run/database DorisAndroid/src/main/asset
     - ./gradlew clean build lint

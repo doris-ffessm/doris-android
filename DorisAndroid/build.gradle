@@ -88,7 +88,7 @@ android {
         }
     }
     if (signFile.exists()) {
-        println 'found sign.properties!'
+        println 'found sign.properties! (' + signFile.toPath() +')'
         Properties p = new Properties()
         p.load(new FileInputStream(signFile))
         signingConfigs {
