@@ -78,9 +78,11 @@ stages:          # List of stages for jobs, and their order of execution
 
 
 .show_cache_content: &show_cache_content
+  - set +e
   - ls -lsa run
   - ls -lsa run/database
   - ls -lsa .m2/repository/
+  - set -e
 
 collect-db-job:
   stage: prepare_data
