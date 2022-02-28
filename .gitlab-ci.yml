@@ -67,15 +67,31 @@ stages:          # List of stages for jobs, and their order of execution
   # Not necessary, but just for surity
   - chmod +x ./gradlew
 
+.create_sign_info: &create-sign-info
+  - pwd
+  - mkdir -p /builds/keystore
+  - echo "$DORISANDROID_KEYSTORE" | base64 -d > /builds/keystore/doris_android.keystore
+  - echo "keyAlias=doris" > /builds/keystore/sign.properties
+  - echo "storePassword=$KEYSTORE_PASSWORD" >>  /builds/keystore/sign.properties
+  - echo "storeFile=/builds/keystore/doris_android.keystore" >> /builds/keystore/sign.properties
+  - echo "keyPassword=$KEY_PASSWORD" >> /builds/keystore/sign.properties
 
 
+.show_cache_content: &show_cache_content
+  - ls -lsa run
+  - ls -lsa run/database
+  - ls -lsa .m2/repository/
 
 collect-db-job:
   stage: prepare_data
+  before_script:
+    - *show_cache_content
   script:
     - echo "Get DB from doris web site"
     - ./gradlew buildDorisDBV4
+  allow_failure: true
   artifacts:
+    when: always
     paths:
       - run/
 
@@ -83,6 +99,7 @@ build-job:
   stage: build
   before_script:
     - *install-android-sdk
+    - *create-sign-info
   script:
     - cp run/database DorisAndroid/src/main/asset
     - ./gradlew clean build lint
