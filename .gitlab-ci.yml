@@ -1,6 +1,6 @@
 # 
 
-image: openjdk:8-jdk
+image: openjdk:11-jdk
 
 variables:
 
