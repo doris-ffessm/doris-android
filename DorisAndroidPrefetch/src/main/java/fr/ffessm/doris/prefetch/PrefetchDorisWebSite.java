@@ -285,7 +285,7 @@ public class PrefetchDorisWebSite {
             // Récupération de la liste des groupes sur le site de DORIS
             log.info("webToDBAction() - - - Groupes - - -");
             int nbMaxGroupesATraiter = 100000;
-            if (nbMaxGroupesATraiter > nbMaxFichesATraiter ) nbMaxGroupesATraiter = nbMaxFichesATraiter;
+            // if (nbMaxGroupesATraiter > nbMaxFichesATraiter ) nbMaxGroupesATraiter = nbMaxFichesATraiter;
 
             PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, nbMaxGroupesATraiter, nbFichesParRequetes);
             if ( groupes.prefetchV4() == -1 ) {
@@ -296,7 +296,7 @@ public class PrefetchDorisWebSite {
             // - - - Participants - - -
             log.info("webToDBAction() - - - Participants - - -");
             int nbMaxParticipantsATraiter = 100000;
-            if (nbMaxParticipantsATraiter > nbMaxFichesATraiter ) nbMaxParticipantsATraiter = nbMaxFichesATraiter;
+            // if (nbMaxParticipantsATraiter > nbMaxFichesATraiter ) nbMaxParticipantsATraiter = nbMaxFichesATraiter;
             PrefetchIntervenants intervenants = new PrefetchIntervenants(dbContext, connectionSource, nbMaxParticipantsATraiter, nbFichesParRequetes);
             if ( intervenants.prefetch() == -1 ) {
                 log.debug("Erreur Intervenants" );
@@ -306,7 +306,7 @@ public class PrefetchDorisWebSite {
             // - - - Glossaire - - -
             log.info("webToDBAction() - - - Glossaire - - -");
             int nbMaxTermesATraiter = 100000;
-            if (nbMaxTermesATraiter > nbMaxFichesATraiter ) nbMaxTermesATraiter = nbMaxFichesATraiter;
+            // if (nbMaxTermesATraiter > nbMaxFichesATraiter ) nbMaxTermesATraiter = nbMaxFichesATraiter;
             PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, nbMaxTermesATraiter, nbFichesParRequetes);
             if ( glossaire.prefetch() == -1 ) {
                 log.debug("Erreur Glossaire" );
@@ -316,7 +316,7 @@ public class PrefetchDorisWebSite {
             // - - - Bibliographie - - -
             log.info("webToDBAction() - - - Bibliographie - - -");
 			int nbMaxTitresATraiter = 100000;
-            if (nbMaxTitresATraiter > nbMaxFichesATraiter ) nbMaxTitresATraiter = nbMaxFichesATraiter;
+            // if (nbMaxTitresATraiter > nbMaxFichesATraiter ) nbMaxTitresATraiter = nbMaxFichesATraiter;
             PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, nbMaxTitresATraiter, nbFichesParRequetes);
             if ( bibliographies.prefetch() == -1 ) {
                 log.debug("Erreur Bibliographies" );
