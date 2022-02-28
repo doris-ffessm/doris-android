@@ -62,7 +62,7 @@ public class DorisAPI_JSONDATABindingHelper {
                     Utilisateur.class
             );
 
-        log.debug(String.format("%d - %s - %s %s - %s",
+        log.debug(String.format("%d - %s - %s %s - %.256s", // limit description (it may contain image binaries !)
                 participantNodeId,
                 utilisateur.getFields().getReference().getValue(),
                 utilisateur.getFields().getFirstName().getValue(),
