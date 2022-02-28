@@ -92,7 +92,7 @@ collect-db-job:
     - *show_cache_content
   script:
     - echo "Get DB from doris web site"
-    - ./gradlew buildDorisDBV4 -Dargs="--max=500"
+    - ./gradlew buildDorisDBV4 -Dargs="-M 500"
   allow_failure: true
   artifacts:
     when: always
