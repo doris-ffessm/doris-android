@@ -27,8 +27,16 @@ cache:
     paths:
       - run
 
+
+stages:          # List of stages for jobs, and their order of execution
+  - prepare_data
+  - build
+
 # Packages installation before running script
-before_script:
+#before_script:
+# Define some reusable functions
+.install-android-sdk: &install-android-sdk
+  # TODO transform into a docker image instead of download on every build
   - apt-get --quiet update --yes
   - apt-get --quiet install --yes wget tar unzip lib32stdc++6 lib32z1
 
@@ -61,11 +69,8 @@ before_script:
 
 
 
-stages:          # List of stages for jobs, and their order of execution
-  - prepare_data
-  - build
 
-collect-db-job:       # This job runs in the build stage, which runs first.
+collect-db-job:
   stage: prepare_data
   script:
     - echo "Get DB from doris web site"
@@ -74,9 +79,17 @@ collect-db-job:       # This job runs in the build stage, which runs first.
     paths:
       - run/
 
-build-job:       # This job runs in the build stage, which runs first.
+build-job:
   stage: build
+  before_script:
+    - *install-android-sdk
   script:
-    - echo "Compiling the code..."
-    - echo "Compile complete."
+    - cp run/database DorisAndroid/src/main/asset
+    - ./gradlew clean build lint
+  artifacts:
+    paths:
+      - DorisAndroid/build/outputs/apk/**/*.apk
+      - DorisAndroid/build/reports/
+    reports:
+      junit: DorisAndroid/build/reports/*.xml
 
