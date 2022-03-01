@@ -144,11 +144,9 @@ public class DorisAPI_JSONDATABindingHelper {
                     Espece.class
             );
 
-        System.out.println("\t Référence : " + espece.getFields().getReference().getValue() );
-        System.out.println("\t Espece : " + espece.getFields().getEspece().getValue() );
-        //System.out.println("\t Genre : " + espece.getFields().getGenre().getValue() );
-        //System.out.println("\t Etat : " + espece.getFields().getState().getValue() );
-        //System.out.println("\t Images : " + espece.getFields().getImages().getValue() );
+        log.debug(String.format("\n\tRéférence : %s\n\tEspèce : %s",
+                espece.getFields().getReference().getValue(),
+                espece.getFields().getEspece().getValue()));
 
         return espece;
     }

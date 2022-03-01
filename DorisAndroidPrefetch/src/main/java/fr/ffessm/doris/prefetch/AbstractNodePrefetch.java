@@ -98,9 +98,10 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
     public int prefetch() throws Exception {
         log.debug(String.format("AbstractNodePrefetch<%s>.prefetch() - begin", dbTypeName));
 
-        int nbFichesDORIS = nbMaxFichesATraiter;
+        int nbFichesDORIS = Math.min(nbMaxFichesATraiter, getNbNodeIdsFromWeb());
 
         int count = 0;
+        int newFicheDownloadCount = 0;
 
 
         for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
@@ -113,11 +114,6 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
 
             for (ObjNameNodeId objectNameNodeId : nodeIds) {
                 count++;
-                if (count > nbMaxFichesATraiter) {
-                    log.debug("doMain() - nbMaxFichesATraiter atteint");
-                    i = 9999;
-                    break;
-                }
 
                 log.info(String.format("Processing %s %d/%d",  dbTypeName, count, nbFichesDORIS));
 
@@ -163,6 +159,13 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
 
                 // seulement si n'existe pas ou plus récente alors récupération du noeud
                 if (mustRetrieveNode) {
+                    newFicheDownloadCount++;
+
+                    if (newFicheDownloadCount > nbMaxFichesATraiter) {
+                        log.debug("doMain() - nbMaxFichesATraiter atteint");
+                        i = 9999;
+                        break;
+                    }
                     JSONObject jsonObject = getJsonObjectFromWeb(objectNameNodeId.getNodeId().intValue());
 
                     if (jsonObject != null) {
@@ -209,6 +212,8 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
      * @throws IOException
      */
     abstract List<ObjNameNodeId> getNodeIdsFromWeb(int nbLimitRequest, int offset) throws IOException, WebSiteNotAvailableException;
+
+    abstract int getNbNodeIdsFromWeb() throws IOException, WebSiteNotAvailableException;
 
     abstract JSONObject getJsonObjectFromWeb(int id) throws IOException, WebSiteNotAvailableException;
 

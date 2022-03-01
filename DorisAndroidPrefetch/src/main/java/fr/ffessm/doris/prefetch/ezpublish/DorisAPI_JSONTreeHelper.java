@@ -57,6 +57,10 @@ public class DorisAPI_JSONTreeHelper {
 			
 		return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.SPECIES_NODE_URL, nbLimitRequest, offset);
 	}
+	public int getNbFichesNodeIds() throws ClientProtocolException, IOException, WebSiteNotAvailableException {
+
+		return getNbNodeIdsInNodeUrl(DorisOAuth2ClientCredentials.SPECIES_NODE_URL);
+	}
 
     /**
      * Renvoie la liste des Intervenants
@@ -71,6 +75,10 @@ public class DorisAPI_JSONTreeHelper {
         return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.PARTICIPANTS_NODE_URL, nbLimitRequest, offset);
     }
 
+	public int getNbIntervenantsNodeIds() throws ClientProtocolException, IOException, WebSiteNotAvailableException {
+
+		return getNbNodeIdsInNodeUrl(DorisOAuth2ClientCredentials.PARTICIPANTS_NODE_URL);
+	}
     /**
      * Renvoie la liste des Termes du Glossaire
      * @param
@@ -84,6 +92,10 @@ public class DorisAPI_JSONTreeHelper {
         return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.GLOSSAIRE_NODE_URL, nbLimitRequest, offset);
     }
 
+	public int getNbTermesNodeIds() throws ClientProtocolException, IOException, WebSiteNotAvailableException {
+
+		return getNbNodeIdsInNodeUrl(DorisOAuth2ClientCredentials.GLOSSAIRE_NODE_URL);
+	}
     /**
      * Renvoie la liste des Oeuvres de la Bibliographie
      * @param
@@ -97,6 +109,10 @@ public class DorisAPI_JSONTreeHelper {
         return getNodeIdsFromNodeUrl(DorisOAuth2ClientCredentials.BIBLIO_NODE_URL, nbLimitRequest, offset);
     }
 
+	public int getNbBibliographieNodeIds() throws ClientProtocolException, IOException, WebSiteNotAvailableException {
+
+		return getNbNodeIdsInNodeUrl(DorisOAuth2ClientCredentials.BIBLIO_NODE_URL);
+	}
     /**
      * Renvoie la Classification
      * @param
@@ -152,6 +168,26 @@ public class DorisAPI_JSONTreeHelper {
 		}
 		log.debug("nb retrieved nodes :"+result.size());
 	
+		return result;
+	}
+
+	public int getNbNodeIdsInNodeUrl(String nodeUrl) throws IOException, WebSiteNotAvailableException {
+		int result = 0;
+		DefaultHttpClient client = new DefaultHttpClient();
+
+		String uri = nodeUrl + "/childrenCount";
+		log.debug("uri : "+uri);
+
+		HttpResponse response = httpHelper.getHttpResponse(uri);
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode rootNode = objectMapper.readTree(new InputStreamReader(response.getEntity().getContent()));
+		//log.debug("node : "+objectMapper.writeValueAsString(rootNode));
+
+		/* read */
+		JsonNode metadata = rootNode.path("metadata");
+		 result = metadata.get("childrenCount").asInt();
+
 		return result;
 	}
 

@@ -72,7 +72,10 @@ public class PrefetchIntervenants extends AbstractNodePrefetch<Participant, Util
     List<ObjNameNodeId> getNodeIdsFromWeb(int nbLimitRequest, int offset) throws IOException, WebSiteNotAvailableException {
         return dorisAPI_JSONTreeHelper.getIntervenantsNodeIds(nbLimitRequest, offset);
     }
-
+    @Override
+    int getNbNodeIdsFromWeb() throws IOException, WebSiteNotAvailableException {
+        return dorisAPI_JSONTreeHelper.getNbIntervenantsNodeIds();
+    }
 
     @Override
     Utilisateur getJsonObjectFromWeb(int id) throws IOException, WebSiteNotAvailableException {

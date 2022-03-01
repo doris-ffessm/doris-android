@@ -72,7 +72,10 @@ public class PrefetchBibliographies  extends AbstractNodePrefetch<EntreeBibliogr
 	List<ObjNameNodeId> getNodeIdsFromWeb(int nbLimitRequest, int offset) throws IOException, WebSiteNotAvailableException {
 		return dorisAPI_JSONTreeHelper.getBibliographieNodeIds(nbLimitRequest,offset);
 	}
-
+	@Override
+	int getNbNodeIdsFromWeb() throws IOException, WebSiteNotAvailableException {
+		return dorisAPI_JSONTreeHelper.getNbBibliographieNodeIds();
+	}
 	@Override
 	Bibliographie getJsonObjectFromWeb(int id) throws IOException, WebSiteNotAvailableException {
 		return dorisAPI_JSONDATABindingHelper.getOeuvreFieldsFromNodeId(id);
