@@ -102,7 +102,9 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
 
         int count = 0;
 
+
         for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
+            log.info(String.format("Requesting %d %s out of %d", nbFichesParRequetes, dbTypeName, nbFichesDORIS));
             List<ObjNameNodeId> nodeIds = getNodeIdsFromWeb(nbFichesParRequetes, nbFichesParRequetes * i);
             if (nodeIds.isEmpty()) {
                 // il ne reste plus de fiche à traiter
@@ -116,6 +118,8 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
                     i = 9999;
                     break;
                 }
+
+                log.info(String.format("Processing %s %d/%d",  dbTypeName, count, nbFichesDORIS));
 
                 // Référence de l'intervenant dans le message JSON
 
