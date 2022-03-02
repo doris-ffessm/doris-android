@@ -113,9 +113,10 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
             }
 
             for (ObjNameNodeId objectNameNodeId : nodeIds) {
+                String processStatus = "Ignored";
                 count++;
 
-                log.info(String.format("Processing %s %d/%d",  dbTypeName, count, nbFichesDORIS));
+                log.debug(String.format("Processing %s %d/%d",  dbTypeName, count, nbFichesDORIS));
 
                 // Référence de l'intervenant dans le message JSON
 
@@ -133,6 +134,7 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
                                 objectNameNodeId.getObjectName(),
                                 objectNameNodeId.getObjectId(),
                                 existingDBEntry.getModificationDate()));
+                        processStatus = "UP-TO-DATE";
                     } else {
                         log.debug(String.format("Updating old entry - %s %s/%d exists in db with different modification dates(%d!=%d).",
                                 dbTypeName,
@@ -150,11 +152,13 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
                                 });*/
                         previousInternalDBId = existingDBEntry.getId();
                         mustRetrieveNode = true;
+                        processStatus = "UPDATED";
                     }
                 } else {
                     log.debug(String.format("%s %s/%d NOT in the db, modificationDate=%d",
                             dbTypeName, objectNameNodeId.getObjectName(), objectNameNodeId.getObjectId(), objectNameNodeId.getModificationDate()));
                     mustRetrieveNode = true;
+                    processStatus = "NEW";
                 }
 
                 // seulement si n'existe pas ou plus récente alors récupération du noeud
@@ -185,6 +189,7 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
                         postNodeCreation(objectNameNodeId, dbObject, jsonObject);
                     }
                 }
+                log.info(String.format("Processed %s %d/%d - %s",  dbTypeName, count, nbFichesDORIS, processStatus));
             }
         }
 
