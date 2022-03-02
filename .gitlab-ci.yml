@@ -25,7 +25,7 @@ cache:
       - .m2/repository/
   - key: "doris_db"
     paths:
-      - run
+      - DorisAndroidPrefetch/run
 
 
 stages:          # List of stages for jobs, and their order of execution
@@ -80,8 +80,8 @@ stages:          # List of stages for jobs, and their order of execution
 .show_cache_content: &show_cache_content
   - set +e
   - pwd
-  - ls -lsa run
-  - ls -lsa run/database
+  - ls -lsa DorisAndroidPrefetch/run
+  - ls -lsa DorisAndroidPrefetch/run/database
   - ls -lsa .m2/repository/
   - set -e
 
@@ -100,7 +100,7 @@ collect-db-job:
   artifacts:
     when: always
     paths:
-      - run/
+      - DorisAndroidPrefetch/run/
 
 build-job:
   stage: build
@@ -109,7 +109,7 @@ build-job:
     - *install-android-sdk
     - *create-sign-info
   script:
-    - cp run/database DorisAndroid/src/main/asset
+    - cp DorisAndroidPrefetch/run/database DorisAndroid/src/main/asset
     - ./gradlew clean build lint
   after_script:
     - *show_cache_content
