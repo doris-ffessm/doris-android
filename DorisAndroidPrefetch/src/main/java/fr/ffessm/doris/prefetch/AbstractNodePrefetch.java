@@ -104,7 +104,7 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
         int newFicheDownloadCount = 0;
 
 
-        for (int i = 0; i < (nbFichesDORIS / nbFichesParRequetes); i++) {
+        for (int i = 0; i <= (nbFichesDORIS / nbFichesParRequetes); i++) {
             log.info(String.format("Requesting %d %s out of %d", nbFichesParRequetes, dbTypeName, nbFichesDORIS));
             List<ObjNameNodeId> nodeIds = getNodeIdsFromWeb(nbFichesParRequetes, nbFichesParRequetes * i);
             if (nodeIds.isEmpty()) {
