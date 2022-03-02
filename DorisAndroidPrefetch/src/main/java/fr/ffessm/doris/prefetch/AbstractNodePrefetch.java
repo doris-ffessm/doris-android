@@ -116,7 +116,7 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
                 String processStatus = "Ignored";
                 count++;
 
-                log.debug(String.format("Processing %s %d/%d",  dbTypeName, count, nbFichesDORIS));
+                log.debug(String.format("Eval processing %s %d/%d",  dbTypeName, count, nbFichesDORIS));
 
                 // Référence de l'intervenant dans le message JSON
 
@@ -161,6 +161,7 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
                     processStatus = "NEW";
                 }
 
+                log.info(String.format("Processing %s %d/%d - %s",  dbTypeName, count, nbFichesDORIS, processStatus));
                 // seulement si n'existe pas ou plus récente alors récupération du noeud
                 if (mustRetrieveNode) {
                     newFicheDownloadCount++;
@@ -189,7 +190,6 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
                         postNodeCreation(objectNameNodeId, dbObject, jsonObject);
                     }
                 }
-                log.info(String.format("Processed %s %d/%d - %s",  dbTypeName, count, nbFichesDORIS, processStatus));
             }
         }
 
