@@ -90,9 +90,12 @@ collect-db-job:
   resource_group: doris_web_site
   before_script:
     - *show_cache_content
+    - cat /builds/keystore/sign.properties || true
   script:
     - echo "Get DB from doris web site"
-    - ./gradlew buildDorisDBV4
+    - ./gradlew buildDorisDBV4_limited
+  after_script:
+    - *show_cache_content
   allow_failure: true
   artifacts:
     when: always
@@ -102,12 +105,14 @@ collect-db-job:
 build-job:
   stage: build
   before_script:
+    - *show_cache_content
     - *install-android-sdk
     - *create-sign-info
-    - *show_cache_content
   script:
     - cp run/database DorisAndroid/src/main/asset
     - ./gradlew clean build lint
+  after_script:
+    - *show_cache_content
   artifacts:
     paths:
       - DorisAndroid/build/outputs/apk/**/*.apk

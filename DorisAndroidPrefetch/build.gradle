@@ -37,6 +37,12 @@ task(buildDorisDBV4, dependsOn: 'classes', type: JavaExec) {
 	args '-v',  'WEB_TO_DB'
 }
 
+task(buildDorisDBV4_limited, dependsOn: 'classes', type: JavaExec) {
+	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
+	classpath = sourceSets.main.runtimeClasspath
+	args '-v', '--max=500',  'WEB_TO_DB'
+}
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 // * UPDATE : Tout ce qui manque dans html_ref et images_ref est re-téléchargé.
 // * Cette génération de la base est suffisante pour un traitement quotidien.
