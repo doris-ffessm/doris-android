@@ -120,7 +120,7 @@ build-job:
     - *install-android-sdk
     - *create-sign-info
   script:
-    - cp DorisAndroidPrefetch/run/database DorisAndroid/src/main/asset
+    - cp  DorisAndroidPrefetch/run/database/*.db DorisAndroid/src/main/asset
     - ./gradlew clean build lint
   after_script:
     - *show_cache_content
