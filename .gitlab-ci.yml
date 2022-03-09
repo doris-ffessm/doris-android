@@ -25,6 +25,7 @@ cache:
       - android-home
   - key: gradle-cache-key
     paths:
+      - $HOME/.gradle
       - .gradle
   - key: "doris_db"
     paths:
