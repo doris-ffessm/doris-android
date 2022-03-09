@@ -25,7 +25,7 @@ cache:
       - android-home
   - key: gradle-cache-key
     paths:
-      - $HOME/.gradle
+      - $HOME/.gradle/wrapper/dists
       - .gradle
   - key: "doris_db"
     paths:
@@ -99,7 +99,7 @@ stages:          # List of stages for jobs, and their order of execution
 
 collect-db-job:
   stage: prepare_data
-  resource_group: doris_web_site
+  resource_group: doris_web_site_and_cache
   before_script:
     - *show_cache_content
     - cat /builds/keystore/sign.properties || true
@@ -116,6 +116,7 @@ collect-db-job:
 
 build-job:
   stage: build
+  resource_group: doris_web_site_and_cache
   before_script:
     - *show_cache_content
     - *install-android-sdk
