@@ -169,7 +169,7 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
                     if (newFicheDownloadCount > nbMaxFichesATraiter) {
                         log.info("nbMaxNewFichesATraiter " +newFicheDownloadCount+" reached");
                         if(newFicheDownloadCount < nbFichesDORIS) {
-                            log.warn(String.format("only %d %s out of %d have been fetched; Please run again in order to get more.", newFicheDownloadCount, dbTypeName, nbFichesDORIS));
+                            log.warn(String.format("only %d %s out of %d have been fetched; Please run again in order to get more.", i, dbTypeName, nbFichesDORIS));
                         }
                         i = nbFichesDORIS;
                         break;
