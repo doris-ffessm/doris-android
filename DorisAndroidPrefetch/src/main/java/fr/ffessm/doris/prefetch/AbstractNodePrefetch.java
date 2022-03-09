@@ -98,7 +98,7 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
     public int prefetch() throws Exception {
         log.debug(String.format("AbstractNodePrefetch<%s>.prefetch() - begin", dbTypeName));
 
-        int nbFichesDORIS = Math.min(nbMaxFichesATraiter, getNbNodeIdsFromWeb());
+        int nbFichesDORIS =  getNbNodeIdsFromWeb();
 
         int count = 0;
         int newFicheDownloadCount = 0;
@@ -167,8 +167,11 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
                     newFicheDownloadCount++;
 
                     if (newFicheDownloadCount > nbMaxFichesATraiter) {
-                        log.debug("doMain() - nbMaxFichesATraiter atteint");
-                        i = 9999;
+                        log.info("nbMaxNewFichesATraiter " +newFicheDownloadCount+" reached");
+                        if(newFicheDownloadCount < nbFichesDORIS) {
+                            log.warn(String.format("only %d %s out of %d have been fetched; Please run again in order to get more.", newFicheDownloadCount, dbTypeName, nbFichesDORIS));
+                        }
+                        i = nbFichesDORIS;
                         break;
                     }
                     JSONObject jsonObject = getJsonObjectFromWeb(objectNameNodeId.getNodeId().intValue());
