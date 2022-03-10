@@ -40,7 +40,7 @@ task(buildDorisDBV4, dependsOn: 'classes', type: JavaExec) {
 task(buildDorisDBV4_limited, dependsOn: 'classes', type: JavaExec) {
 	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
-	args '-v', '--max=500',  'WEB_TO_DB'
+	args '-v', '--max=2000',  'WEB_TO_DB'
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
