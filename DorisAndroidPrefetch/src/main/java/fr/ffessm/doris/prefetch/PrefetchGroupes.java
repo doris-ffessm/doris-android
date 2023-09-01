@@ -380,6 +380,7 @@ public class PrefetchGroupes {
             group.setId(groupFound.get(0).getId());
         }
         if(group.getNumeroGroupe() != 0) {
+            log.debug("updateGroupe "+group+ " "+ group.getNumeroGroupe());
             fr.ffessm.doris.prefetch.ezpublish.jsondata.groupe.Groupe jsonGroup = dorisAPI_JSONDATABindingHelper.getGroupeFieldsFromObjectId(group.getNumeroGroupe());
             group.setNomGroupe(jsonGroup.getDataMap().getTitle());
             group.setDescriptionDetailleeGroupe(jsonGroup.getDataMap().getDescription());

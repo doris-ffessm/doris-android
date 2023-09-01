@@ -48,7 +48,7 @@ public class DorisAPIHTTPHelper {
             if (response.getStatusLine().getStatusCode() != 200 && nbTries < 5) {
 
                 nbTries++;
-                log.debug("full uri : " + uri);
+                log.info("full uri : " + uri);
                 response.getEntity().consumeContent();
                 log.warn(String.format("%s : Retrying after 20s", response.getStatusLine()));
                 try {

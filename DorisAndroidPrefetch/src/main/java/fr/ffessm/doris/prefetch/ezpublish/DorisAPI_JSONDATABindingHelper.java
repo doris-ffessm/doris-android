@@ -220,11 +220,11 @@ public class DorisAPI_JSONDATABindingHelper {
     public HttpResponse getFieldsFromObjectId(int objectId) throws IOException,
             WebSiteNotAvailableException {
         //log.debug("getFieldsFromObjectId - Début");
-        //log.debug("getFieldsFromObjectId - objectId : " + objectId);
+        log.debug("getFieldsFromObjectId - objectId : " + objectId);
 
         DefaultHttpClient client = new DefaultHttpClient();
         String uri = DorisOAuth2ClientCredentials.getServerObjectUrlTousLesChamps( String.valueOf(objectId) );
-        //log.debug("getFieldsFromObjectId - uri : " + uri);
+        log.debug("getFieldsFromObjectId - uri : " + uri);
 
         if (credent != null && debug) {
             DorisAPIConnexionHelper.printJSON(credent, uri);
