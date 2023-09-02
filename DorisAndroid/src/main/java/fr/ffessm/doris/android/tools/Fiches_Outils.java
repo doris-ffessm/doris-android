@@ -413,6 +413,10 @@ public class Fiches_Outils {
                 return context.getString(R.string.icone_mediter);
             case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
                 return context.getString(R.string.icone_atlantne);
+            case FAUNE_FLORE_GUYANNE:
+                return context.getString(R.string.icone_guyanne);
+            case FAUNE_FLORE_HABITAT:
+                return context.getString(R.string.icone_habitat);
             default:
                 return "";
         }

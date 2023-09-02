@@ -99,6 +99,8 @@
     <string name="maj_liste_fiches_region_merrouge_prompt">- Mer Rouge\u00A0?</string>
     <string name="maj_liste_fiches_region_mediter_prompt">- Méditerranée\u00A0?</string>
     <string name="maj_liste_fiches_region_atlantne_prompt">- Façade Atlantique Française\u00A0?</string>
+    <string name="maj_liste_fiches_region_guyanne_prompt">- Guyanne\u00A0?</string>
+    <string name="maj_liste_fiches_region_habitat_prompt">- Habitats subaquatiques\u00A0?</string>
     
 	<string-array name="maj_liste_fiches_answers_values">
         <item>M0</item>
@@ -127,6 +129,8 @@
     <string name="mode_precharg_photo_region_merrouge_prompt">\u22B3 Mer Rouge\u00A0?</string>
     <string name="mode_precharg_photo_region_mediter_prompt">\u22B3 Méditerranée\u00A0?</string>
     <string name="mode_precharg_photo_region_atlantne_prompt">\u22B3 Façade Atlantique Française\u00A0?</string>
+    <string name="mode_precharg_photo_region_guyanne_prompt">\u22B3 Guyanne\u00A0?</string>
+    <string name="mode_precharg_photo_region_habitat_prompt">Habitats subaquatiques\u00A0?</string>
     <!-- <string name="mode_precharg_photo_favorite_prompt">- Fiches préférées ? (A FAIRE)</string> -->
   
     <string name="mode_precharg_photo_autres_prompt">Précharg. Autres Photos\u00A0?</string>
@@ -161,6 +165,8 @@
     <string name="icone_merrouge">drawable/doris_icone_merrouge</string>
     <string name="icone_mediter">drawable/doris_icone_mediter</string>
     <string name="icone_atlantne">drawable/doris_icone_atl_n_e</string>
+    <string name="icone_guyanne">drawable/doris_icone_guyanne</string>
+    <string name="icone_habitat">drawable/doris_icone_habitat</string>
 	
 	<string name="presentation_preference_category_title">Présentation</string>
 	<string name="presentation_preference_category_summary">Affich. par défaut, Taille icônes, etc.</string>
