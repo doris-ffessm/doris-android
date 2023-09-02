@@ -574,8 +574,8 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                                 ficheDB.getWebNodeId()));
                         log.error(String.format("fiche n° %d de %s %s" ,
                                 ficheDB.getNumeroFiche(),
-                                especeJSON.getFields().getEspece(),
-                                especeJSON.getFields().getNomCommunFr()
+                                especeJSON.getFields().getEspece().getValue(),
+                                especeJSON.getFields().getNomCommunFr().getValue()
                                 ));
 
                         System.exit(1);
