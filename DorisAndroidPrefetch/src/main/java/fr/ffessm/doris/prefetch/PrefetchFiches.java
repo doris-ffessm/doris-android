@@ -572,6 +572,12 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                                 zoneGeoRefId,
                                 DorisOAuth2ClientCredentials.SPECIES_NODE_URL,
                                 ficheDB.getWebNodeId()));
+                        log.error(String.format("fiche n° %d de %s %s" ,
+                                ficheDB.getNumeroFiche(),
+                                especeJSON.getFields().getEspece(),
+                                especeJSON.getFields().getNomCommunFr()
+                                ));
+
                         System.exit(1);
                 }
 
