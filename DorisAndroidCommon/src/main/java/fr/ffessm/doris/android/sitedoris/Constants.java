@@ -211,7 +211,7 @@ public class Constants {
      * Gestion Zones Géographiques
      */
     //TODO : A Effacer ?
-    public static ZoneGeographiqueKind getZoneGeographiqueFromId_AEFFACER(int zoneId) {
+  /*  public static ZoneGeographiqueKind getZoneGeographiqueFromId_AEFFACER(int zoneId) {
         switch (zoneId) {
             case 1:
                 return ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE;
@@ -237,8 +237,8 @@ public class Constants {
             default:
                 return null;
         }
-    }
-
+    }*/
+/*
     public static String getTitreZoneGeographique(ZoneGeographiqueKind zoneKing) {
         switch (zoneKing) {
             case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
@@ -280,15 +280,15 @@ public class Constants {
                 return "Toutes les espèces de toutes les zones DORIS";
         }
     }
-
+*/
     public static String getTitreCourtZoneGeographique(ZoneGeographiqueKind zoneKing) {
         if (zoneKing == null) return "Toutes Zones DORIS";
 
         switch (zoneKing) {
             case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
-                return "France - Espèces Marines";
+                return "Europe - Espèces Marines";
             case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
-                return "France - Espèces Dulcicoles";
+                return "Europe - Eau douce";
             case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
                 return "Indo-Pacifique";
             case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
@@ -297,6 +297,16 @@ public class Constants {
                 return "Atlant. Nord-Ouest";
             case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
                 return "Antarctique";
+            case FAUNE_FLORE_GUYANNE:
+                return "Guyanne";
+            case FAUNE_FLORE_HABITAT:
+                return "Habitat";
+            case FAUNE_FLORE_MER_ROUGE:
+                return "Mer Rouge";
+            case FAUNE_FLORE_MEDITERRANEE_FRANCAISE:
+                return "Méditerranée";
+            case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
+                return "Atlant. Française";
             case FAUNE_FLORE_TOUTES_ZONES:
                 return "Toutes Zones DORIS";
             default:
@@ -354,7 +364,6 @@ public class Constants {
     }
 
     public static ParticipantKind getTypeParticipant(String typeParticipant) {
-        typeParticipant.trim();
         if (typeParticipant.equalsIgnoreCase(REDACTEUR_PRINCIPAL_LIB))
             return ParticipantKind.REDACTEUR_PRINCIPAL;
         if (typeParticipant.equalsIgnoreCase(REDACTEUR_LIB)) return ParticipantKind.REDACTEUR;
@@ -372,7 +381,6 @@ public class Constants {
     }
 
     public static PictoKind getTypePicto(String pictoTag) {
-        pictoTag.trim();
         if (pictoTag.equalsIgnoreCase(PICTO_ESPECE_REGLEMENTEE_LIB))
             return PictoKind.PICTO_ESPECE_REGLEMENTEE;
         if (pictoTag.equalsIgnoreCase(PICTO_ESPECE_DANGEREUSE_LIB))
@@ -394,7 +402,9 @@ public class Constants {
         FAUNE_FLORE_TOUTES_ZONES,
         FAUNE_FLORE_MER_ROUGE,
         FAUNE_FLORE_MEDITERRANEE_FRANCAISE,
-        FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE
+        FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE,
+        FAUNE_FLORE_GUYANNE,
+        FAUNE_FLORE_HABITAT
     }
 
     // trié de la pblus petite à la plus grande
@@ -415,7 +425,7 @@ public class Constants {
         private String shortCode;
         private String postFix;
 
-        private ImagePostFixCode(String shortcode, String postFix) {
+        ImagePostFixCode(String shortcode, String postFix) {
             this.shortCode = shortcode;
             this.postFix = postFix;
         }

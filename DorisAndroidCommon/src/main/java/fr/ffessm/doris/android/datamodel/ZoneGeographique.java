@@ -126,7 +126,7 @@ public class ZoneGeographique {
 	  * Attention, returned list is readonly
       */
 	public List<Fiche> getFiches(){
-		List<Fiche> result = new ArrayList<Fiche>();
+		List<Fiche> result = new ArrayList<>();
 		
 		for (Fiches_ZonesGeographiques aFiches_ZonesGeographiques : fiches_ZonesGeographiques) {
 			if(_contextDB != null) aFiches_ZonesGeographiques.setContextDB(_contextDB);
@@ -201,6 +201,12 @@ public class ZoneGeographique {
 		case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
 			this._id = 9;
 			break;
+		case FAUNE_FLORE_GUYANNE:
+			this._id = 10;
+			break;
+		case FAUNE_FLORE_HABITAT:
+			this._id = 11;
+			break;
 		}
 	}
 
@@ -217,9 +223,9 @@ public class ZoneGeographique {
 	   	case 1:
     		return ZoneGeographiqueKind.FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE;
 		case 2:
-			return ZoneGeographiqueKind.FAUNE_FLORE_MEDITERRANEE_FRANCAISE;
-		case 3:
 			return ZoneGeographiqueKind.FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE;
+		case 3:
+			return ZoneGeographiqueKind.FAUNE_FLORE_MEDITERRANEE_FRANCAISE;
 		case 4:
 			return ZoneGeographiqueKind.FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE;
 		case 5:
@@ -232,17 +238,14 @@ public class ZoneGeographique {
 			return ZoneGeographiqueKind.FAUNE_FLORE_MER_ROUGE;
 		case 9:
 			return ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES;
+		case 10:
+			return ZoneGeographiqueKind.FAUNE_FLORE_GUYANNE;
+		case 11:
+			return ZoneGeographiqueKind.FAUNE_FLORE_HABITAT;
 		default:
 			return null;
 		}
 	}
-
-/*
-	public int getZoneIconeId(ZoneGeographiqueKind inZoneGeo) {
-		return context.getResources().getIdentifier(getZoneIcone(inZoneGeo), null, context.getPackageName());
-	}
-*/
-
 
 	// End of user code
 	

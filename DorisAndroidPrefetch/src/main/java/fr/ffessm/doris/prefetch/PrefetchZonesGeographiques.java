@@ -61,8 +61,8 @@ public class PrefetchZonesGeographiques {
     // Initialisation de la Gestion des Log
     public static Log log = LogFactory.getLog(PrefetchZonesGeographiques.class);
 
-    private DorisDBHelper dbContext = null;
-    private ConnectionSource connectionSource = null;
+    private DorisDBHelper dbContext;
+    private ConnectionSource connectionSource;
 
     public PrefetchZonesGeographiques(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter) {
         this.dbContext = dbContext;
@@ -87,7 +87,7 @@ public class PrefetchZonesGeographiques {
         TransactionManager.callInTransaction(connectionSource,
                 (Callable<Void>) () -> {
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(1, "Espèces marines d'Europe (côtes françaises)'", "Méditerranée, Atlantique, Manche et mer du Nord", 71726)
+                            new ZoneGeographique(1, "Espèces marines d'Europe (côtes françaises)", "Méditerranée, Atlantique, Manche et mer du Nord", 71726)
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
                             new ZoneGeographique(2, "Espèces de la façade Atlantique française", "Atlantique Nord-Est, Manche et Mer du Nord françaises", 239991, dbContext.zoneGeographiqueDao.queryForId(1))
@@ -96,7 +96,7 @@ public class PrefetchZonesGeographiques {
                             new ZoneGeographique(3, "Espèces de la façade Méditérranéenne française", "Méditerranée", 239910, dbContext.zoneGeographiqueDao.queryForId(1))
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
-                            new ZoneGeographique(4, "Espèces d'eau douce de France métropolitaine", "Fleuves, rivières, lacs, mares et étangs, ...", 71728)
+                            new ZoneGeographique(4, "Espèces d'eau douce d'Europe", "Fleuves, rivières, lacs, mares et étangs, ...", 71728)
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
                             new ZoneGeographique(5, "Espèces marines et d'eau douce de l'Atlantique Nord-Ouest", "Côte est du Canada, embouchure du St Laurent, archipel de St Pierre-et-Miquelon", 135595)
@@ -112,6 +112,12 @@ public class PrefetchZonesGeographiques {
                     );
                     dbContext.zoneGeographiqueDao.createOrUpdate(
                             new ZoneGeographique(9, "Espèces marines et d'eau douce des Antilles françaises", "Guadeloupe, Martinique et autres", 71731)
+                    );
+                    dbContext.zoneGeographiqueDao.createOrUpdate(
+                            new ZoneGeographique(10, "Espèces marines et d'eau douce de Guyanne française", "Guyanne", 2225263)
+                    );
+                    dbContext.zoneGeographiqueDao.createOrUpdate(
+                            new ZoneGeographique(11, "Habitats subaquatiques", "Herbiers, Fonds, Littoraux,...", 1090239)
                     );
                     return null;
                 });
