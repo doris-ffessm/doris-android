@@ -108,7 +108,7 @@ collect-db-job:
     - ./gradlew buildDorisDBV4_limited
   after_script:
     - *show_cache_content
-  allow_failure: true
+  allow_failure: false
   artifacts:
     when: always
     paths:
