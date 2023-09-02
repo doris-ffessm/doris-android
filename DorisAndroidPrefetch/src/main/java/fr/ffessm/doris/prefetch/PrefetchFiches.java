@@ -133,7 +133,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
             removePhotoForFiche(ficheDB, especeJSON);
             removeZoneGeographiqueForFiche(ficheDB, especeJSON);
             String uri = DorisOAuth2ClientCredentials.getServerNodeUrlTousLesChamps( objNameNodeId.getNodeId().toString() );
-            log.debug("Faulty specie uri "+uri);
+            log.error("Faulty specie uri "+uri+ " on fiche "+ficheDB.getNumeroFiche());
             throw e;
         }
     }
@@ -577,8 +577,13 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                                 especeJSON.getFields().getEspece().getValue(),
                                 especeJSON.getFields().getNomCommunFr().getValue()
                                 ));
-
-                        System.exit(1);
+                        log.error(especeJSON.toString());
+                        if(ficheDB.getEtatFiche() == 5 ) {
+                            log.warn("EtatFiche = 5 -> Ignore zone géographique");
+                            break;
+                        } else {
+                            System.exit(1);
+                        }
                 }
 
                 if (zoneGeographique.getId() >= 0) {
