@@ -782,6 +782,10 @@ public class Photos_Outils {
                 return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_mediter, "P1"));
             case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
                 return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_atlantne, "P1"));
+            case FAUNE_FLORE_GUYANNE:
+                return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_guyanne, "P1"));
+            case FAUNE_FLORE_HABITAT:
+                return PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_habitat, "P1"));
             default:
                 return null;
         }
@@ -824,12 +828,16 @@ public class Photos_Outils {
                     return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_caraibes, 0);
                 case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
                     return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_atlantno, 0);
-                case FAUNE_FLORE_MER_ROUGE:T:
+                case FAUNE_FLORE_MER_ROUGE:
                     return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_merrouge, 0);
-                case FAUNE_FLORE_MEDITERRANEE_FRANCAISE:T:
-                return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_mediter, 0);
-                case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:T:
-                return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_atlantne, 0);
+                case FAUNE_FLORE_MEDITERRANEE_FRANCAISE:
+                    return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_mediter, 0);
+                case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
+                    return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_atlantne, 0);
+                case FAUNE_FLORE_GUYANNE:
+                return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_guyanne, 0);
+                case FAUNE_FLORE_HABITAT:
+                return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_habitat, 0);
                 default:
                     return 0;
             }
@@ -862,6 +870,10 @@ public class Photos_Outils {
                     return paramOutils.getParamInt(R.string.pref_key_nbphotos_atelecharger_mediter, 0);
                 case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
                     return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_atlantne, 0);
+                case FAUNE_FLORE_GUYANNE:
+                    return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_guyanne, 0);
+                case FAUNE_FLORE_HABITAT:
+                    return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_atelecharger_habitat, 0);
                 default:
                     return 0;
             }
@@ -971,6 +983,10 @@ public class Photos_Outils {
                     return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_mediter, 0);
                 case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
                     return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_atlantne, 0);
+                case FAUNE_FLORE_GUYANNE:
+                    return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_guyanne, 0);
+                case FAUNE_FLORE_HABITAT:
+                    return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_habitat, 0);
                 default:
                     return 0;
             }
@@ -1003,6 +1019,10 @@ public class Photos_Outils {
                     return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_mediter, 0);
                 case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
                     return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_atlantne, 0);
+                case FAUNE_FLORE_GUYANNE:
+                    return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_guyanne, 0);
+                case FAUNE_FLORE_HABITAT:
+                    return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_habitat, 0);
                 default:
                     return 0;
             }
@@ -1040,6 +1060,10 @@ public class Photos_Outils {
                     return R.string.pref_key_nbphotosprinc_atelecharger_mediter;
                 case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
                     return R.string.pref_key_nbphotosprinc_atelecharger_atlantne;
+                case FAUNE_FLORE_GUYANNE:
+                    return R.string.pref_key_nbphotosprinc_atelecharger_guyanne;
+                case FAUNE_FLORE_HABITAT:
+                    return R.string.pref_key_nbphotosprinc_atelecharger_habitat;
                 default:
                     return 0;
             }
@@ -1063,6 +1087,10 @@ public class Photos_Outils {
                     return R.string.pref_key_nbphotos_atelecharger_mediter;
                 case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
                     return R.string.pref_key_nbphotosprinc_atelecharger_atlantne;
+                case FAUNE_FLORE_GUYANNE:
+                    return R.string.pref_key_nbphotosprinc_atelecharger_guyanne;
+                case FAUNE_FLORE_HABITAT:
+                    return R.string.pref_key_nbphotosprinc_atelecharger_habitat;
                 default:
                     return 0;
             }
@@ -1091,6 +1119,10 @@ public class Photos_Outils {
                     return R.string.pref_key_nbphotosprinc_recues_mediter;
                 case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
                     return R.string.pref_key_nbphotosprinc_recues_atlantne;
+                case FAUNE_FLORE_GUYANNE:
+                    return R.string.pref_key_nbphotosprinc_recues_guyanne;
+                case FAUNE_FLORE_HABITAT:
+                    return R.string.pref_key_nbphotosprinc_recues_habitat;
                 default:
                     return 0;
             }
@@ -1114,6 +1146,10 @@ public class Photos_Outils {
                     return R.string.pref_key_nbphotos_recues_mediter;
                 case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
                     return R.string.pref_key_nbphotos_recues_atlantne;
+                case FAUNE_FLORE_GUYANNE:
+                    return R.string.pref_key_nbphotos_recues_guyanne;
+                case FAUNE_FLORE_HABITAT:
+                    return R.string.pref_key_nbphotos_recues_habitat;
                 default:
                     return 0;
             }
@@ -1132,6 +1168,8 @@ public class Photos_Outils {
                 && PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_merrouge, "P1")) == PrecharMode.P0
                 && PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_mediter, "P1")) == PrecharMode.P0
                 && PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_atlantne, "P1")) == PrecharMode.P0
+                && PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_guyanne, "P1")) == PrecharMode.P0
+                && PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_habitat, "P1")) == PrecharMode.P0
         ) return true;
         return false;
     }
@@ -1155,6 +1193,10 @@ public class Photos_Outils {
                 || PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_merrouge, "P1")) == PrecharMode.P1)
                 && (PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_atlantne, "P1")) == PrecharMode.P0
                 || PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_atlantne, "P1")) == PrecharMode.P1)
+                && (PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_guyanne, "P1")) == PrecharMode.P0
+                || PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_guyanne, "P1")) == PrecharMode.P1)
+                && (PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_habitat, "P1")) == PrecharMode.P0
+                || PrecharMode.valueOf(paramOutils.getParamString(R.string.pref_key_mode_precharg_photo_region_habitat, "P1")) == PrecharMode.P1)
         ) return true;
         return false;
     }

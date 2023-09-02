@@ -15,7 +15,10 @@
 	<string name="pref_key_nbphotosprinc_atelecharger_caraibes">data_nbphotosprinc_atelecharger_caraibes</string>
 	<string name="pref_key_nbphotosprinc_atelecharger_favorite">data_nbphotosprinc_atelecharger_favorite</string>
 	<string name="pref_key_nbphotosprinc_atelecharger_atlantne">data_nbphotosprinc_atelecharger_atlantne</string>
-	
+	<string name="pref_key_nbphotosprinc_atelecharger_guyanne">data_nbphotosprinc_atelecharger_guyanne</string>
+	<string name="pref_key_nbphotosprinc_atelecharger_habitat">data_nbphotosprinc_atelecharger_habitat</string>
+
+
 	<string name="pref_key_nbphotos_atelecharger_france">data_nbphotos_atelecharger_france</string>
 	<string name="pref_key_nbphotos_atelecharger_mediter">data_nbphotos_atelecharger_mediter</string>
 	<string name="pref_key_nbphotos_atelecharger_eaudouce">data_nbphotos_atelecharger_eaudouce</string>
@@ -26,6 +29,8 @@
 	<string name="pref_key_nbphotos_atelecharger_caraibes">data_nbphotos_atelecharger_caraibes</string>
 	<string name="pref_key_nbphotos_atelecharger_favorite">data_nbphotos_atelecharger_favorite</string>
 	<string name="pref_key_nbphotos_atelecharger_atlantne">data_nbphotos_atelecharger_atlantne</string>
+	<string name="pref_key_nbphotos_atelecharger_guyanne">data_nbphotos_atelecharger_guyanne</string>
+	<string name="pref_key_nbphotos_atelecharger_habitat">data_nbphotos_atelecharger_habitat</string>
 	
 	<string name="pref_key_nbphotosprinc_recues_france">data_nbphotosprinc_recues_france</string>
 	<string name="pref_key_nbphotosprinc_recues_mediter">data_nbphotosprinc_recues_mediter</string>
@@ -37,6 +42,8 @@
 	<string name="pref_key_nbphotosprinc_recues_caraibes">data_nbphotosprinc_recues_caraibes</string>
 	<string name="pref_key_nbphotosprinc_recues_favorite">data_nbphotosprinc_recues_favorite</string>
 	<string name="pref_key_nbphotosprinc_recues_atlantne">data_nbphotosprinc_recues_atlantne</string>
+	<string name="pref_key_nbphotosprinc_recues_guyanne">data_nbphotosprinc_recues_guyanne</string>
+	<string name="pref_key_nbphotosprinc_recues_habitat">data_nbphotosprinc_recues_habitat</string>
 
 	<string name="pref_key_nbphotos_recues_france">data_nbphotos_recues_france</string>
 	<string name="pref_key_nbphotos_recues_mediter">data_nbphotos_recues_mediter</string>
@@ -47,6 +54,8 @@
 	<string name="pref_key_nbphotos_recues_antarctique">data_nbphotos_recues_antarctique</string>
 	<string name="pref_key_nbphotos_recues_caraibes">data_nbphotos_recues_caraibes</string>
 	<string name="pref_key_nbphotos_recues_atlantne">data_nbphotos_recues_atlantne</string>
+	<string name="pref_key_nbphotos_recues_guyanne">data_nbphotos_recues_guyanne</string>
+	<string name="pref_key_nbphotos_recues_habitat">data_nbphotos_recues_habitat</string>
 
 	<string name="pref_key_nbphotos_recues_favorite">data_nbphotos_recues_favorite</string>
 	
@@ -59,6 +68,8 @@
 	<string name="pref_key_datedermaj_fiches_antarctique">data_datedermaj_fiches_antarctique</string>
 	<string name="pref_key_datedermaj_fiches_caraibes">data_datedermaj_fiches_caraibes</string>
 	<string name="pref_key_datedermaj_fiches_atlantne">data_datedermaj_fiches_atlantne</string>
+	<string name="pref_key_datedermaj_fiches_guyanne">data_datedermaj_fiches_guyanne</string>
+	<string name="pref_key_datedermaj_fiches_habitat">data_datedermaj_fiches_habitat</string>
 	
 	<string name="pref_key_prefered_disque_stockage_photo">data_disque_stockage_photo</string>
 	<string name="pref_key_prefered_disque_stockage_photo_precedent">data_disque_stockage_photo_prec</string>

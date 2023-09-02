@@ -107,8 +107,8 @@ public class TelechargePhotosAsync_BgActivity  extends AsyncTask<String,Integer,
     private Photos_Outils photosOutils;
     private Reseau_Outils reseauOutils;
 
-    Integer nbPhotosPrincATelechargerPourZone[] = new Integer[10];
-	Integer nbPhotosATelechargerPourZone[] = new Integer[10];
+    Integer nbPhotosPrincATelechargerPourZone[] = new Integer[12];
+	Integer nbPhotosATelechargerPourZone[] = new Integer[12];
 	HashSet<String> hsImagesVigAllreadyAvailable;
 	HashSet<String> hsImagesMedResAllreadyAvailable;
 	HashSet<String> hsImagesHiResAllreadyAvailable;

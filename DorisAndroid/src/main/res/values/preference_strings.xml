@@ -21,6 +21,8 @@
     <string name="pref_key_maj_liste_fiches_region_merrouge">maj_liste_fiches_region_merrouge</string>
     <string name="pref_key_maj_liste_fiches_region_mediter">maj_liste_fiches_region_mediter</string>
     <string name="pref_key_maj_liste_fiches_region_atlantne">maj_liste_fiches_region_atlantne</string>
+    <string name="pref_key_maj_liste_fiches_region_guyanne">maj_liste_fiches_region_guyanne</string>
+    <string name="pref_key_maj_liste_fiches_region_habitat">maj_liste_fiches_region_habitat</string>
 		
 	<string name="pref_key_mode_precharg_photo_region_france">mode_precharg_photo_region_france</string>
 	<string name="pref_key_mode_precharg_photo_region_eaudouce">mode_precharg_photo_region_eaudouce</string>
@@ -31,6 +33,8 @@
     <string name="pref_key_mode_precharg_photo_region_merrouge">mode_precharg_photo_region_merrouge</string>
     <string name="pref_key_mode_precharg_photo_region_mediter">mode_precharg_photo_region_mediter</string>
     <string name="pref_key_mode_precharg_photo_region_atlantne">mode_precharg_photo_region_atlantne</string>
+    <string name="pref_key_mode_precharg_photo_region_guyanne">mode_precharg_photo_region_guyanne</string>
+    <string name="pref_key_mode_precharg_photo_region_habitat">mode_precharg_photo_region_habitat</string>
 
 	<string name="pref_key_mode_precharg_photo_autres">mode_precharg_photo_autres</string>
 
