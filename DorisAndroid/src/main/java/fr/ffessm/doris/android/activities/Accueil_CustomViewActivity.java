@@ -345,17 +345,19 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         }
 
         // deal with fold/unfold
-        btnFoldUnfoldZoneSection = (ImageButton) findViewById(R.id.accueil_zone_fold_unflod_section_imageButton);
+        btnFoldUnfoldZoneSection = (ImageButton) findViewById(R.id.accueil_zone_fold_unfold_section_imageButton);
         llFoldUnfoldZoneSection = (LinearLayout) findViewById(R.id.accueil_navigation_zones_layout);
-        image_maximize = R.drawable.app_expander_ic_maximized;
-        image_minimize = R.drawable.app_expander_ic_minimized;
+        image_maximize = R.drawable.ic_geo_zone_filter;
+        image_minimize = R.drawable.ic_geo_zone_filter;
         isZoneFold = true;
         btnFoldUnfoldZoneSection.setImageResource(image_maximize);
         btnFoldUnfoldZoneSection.setVisibility(View.VISIBLE);
         if(isZoneFold) {
             btnFoldUnfoldZoneSection.setImageResource(image_minimize);
+            btnFoldUnfoldZoneSection.setMaxWidth(96);
         } else {
             btnFoldUnfoldZoneSection.setImageResource(image_maximize);
+            btnFoldUnfoldZoneSection.setMaxWidth(96);
         }
 
         // btnFoldUnfoldZoneSection // toute la section sert de lien pour plier/déplier

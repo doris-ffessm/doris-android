@@ -94,7 +94,7 @@
 					android:layout_marginTop="2dp"
 					android:orientation="horizontal" >
 					<ImageButton
-						android:id="@+id/accueil_zone_fold_unflod_section_imageButton"
+						android:id="@+id/accueil_zone_fold_unfold_section_imageButton"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:adjustViewBounds="true"
