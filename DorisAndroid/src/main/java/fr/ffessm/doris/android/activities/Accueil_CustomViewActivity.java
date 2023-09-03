@@ -862,7 +862,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                 getPhotosOutils().setAPrecharQteParZoneGeo(zoneGeo, false);
             }
 
-            MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this, zoneToutesZones.getNom(), imageZoneToutesZones, false);
+            MultiProgressBar progressBarZoneGenerale = new MultiProgressBar(this, zoneToutesZones.getNom(),  R.drawable.ic_storage, false);
+            progressBarZoneGenerale.ivIcon.setMaxWidth(96);
             updateProgressBarZone(zoneToutesZones, progressBarZoneGenerale);
             progressBarZones.put(zoneToutesZones.getId(), progressBarZoneGenerale);
 
