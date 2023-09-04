@@ -18,6 +18,10 @@ public class DorisAPIHTTPHelper {
     public static Log log = LogFactory.getLog(DorisAPIHTTPHelper.class);
     public Credential credent;
 
+
+    /** used to count number of call in the prefetch application */
+    public static long nbHttpCall = 0;
+
     public DorisAPIHTTPHelper(Credential credent) {
         this.credent = credent;
     }
@@ -45,6 +49,7 @@ public class DorisAPIHTTPHelper {
         boolean shouldRetry = true;
         do {
             response = client.execute(getHttpPage);
+            nbHttpCall++;
             if (response.getStatusLine().getStatusCode() != 200 && nbTries < 5) {
 
                 nbTries++;
@@ -72,5 +77,9 @@ public class DorisAPIHTTPHelper {
 
 
         return response;
+    }
+
+    public  static long getNbHttpCall() {
+        return nbHttpCall;
     }
 }

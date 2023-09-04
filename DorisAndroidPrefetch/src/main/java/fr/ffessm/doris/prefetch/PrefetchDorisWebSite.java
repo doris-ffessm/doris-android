@@ -69,6 +69,7 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.sitedoris.DataBase_Outils;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPIConnexionHelper;
+import fr.ffessm.doris.prefetch.ezpublish.DorisAPIHTTPHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisOAuth2ClientCredentials;
@@ -147,7 +148,7 @@ public class PrefetchDorisWebSite {
 			eraseAllAction();
 		}
 
-
+		log.info("Nb Call to DorisAPIHTTPHelper: "+DorisAPIHTTPHelper.getNbHttpCall());
 		log.debug("doMain() - Fin");
 	}
 
@@ -532,7 +533,7 @@ public class PrefetchDorisWebSite {
     /**
 	 * Vérification des arguments passés à l'application
 	 * 
-	 *  @param inArgs
+	 *  @param inArgs arguments
 	 */
 	private ActionKind checkArgs(String[] inArgs){
 			
@@ -647,7 +648,7 @@ public class PrefetchDorisWebSite {
 		
 		System.out.println("Récupération de la base de fiches pour DorisAndroid");
 		System.out.println("Usage: java -jar PrefetchDorisWebSite.jar [OPTIONS] [ACTION]");
-		System.out.println("");
+		System.out.println();
 		System.out.println("OPTIONS :");
 		System.out.println("  -M, --max=K		On limite le travail au K 1ères fiches (utile en dev.)");
 		System.out.println("  -h, --help        Afficher cette aide");
@@ -655,7 +656,7 @@ public class PrefetchDorisWebSite {
 		System.out.println("  -v, --verbose     Messages permettant de suivre l'avancé des traitements");
 		System.out.println("  -s, --silence     Aucune sortie, même pas les erreurs");
 		System.out.println("  --copyBase        save existing base and work on a fresh empty base");
-		System.out.println("");
+		System.out.println();
 		System.out.println("ACTION :");
 		System.out.println("  TEST          	Pour les développeurs");
 		System.out.println("  DB_TO_ANDROID     Déplace la base du Prefetch vers DorisAndroid");
