@@ -26,7 +26,8 @@ cache:
   - key: gradle-cache-key
     paths:
       - $HOME/.gradle/wrapper/dists
-      - .gradle
+      - .gradle/wrapper
+      - .gradle/caches
   - key: "doris_db"
     paths:
       - DorisAndroidPrefetch/run
@@ -37,6 +38,10 @@ stages:          # List of stages for jobs, and their order of execution
   - build
   - publish
   - release
+
+# cf. https://stackoverflow.com/questions/33940384/gitlab-8-2-1-how-to-use-cache-in-gitlab-ci-yml/35478988#35478988
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
 
 
 # Packages installation before running script
