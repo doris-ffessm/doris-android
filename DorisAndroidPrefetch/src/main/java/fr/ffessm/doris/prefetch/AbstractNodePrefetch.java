@@ -73,8 +73,6 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
     private int nbMaxFichesATraiter;
     private int nbFichesParRequetes;
 
-    public static int pauseEntreRequetes = 1000;
-
     public String dbTypeName;
 
     public AbstractNodePrefetch(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter) {
