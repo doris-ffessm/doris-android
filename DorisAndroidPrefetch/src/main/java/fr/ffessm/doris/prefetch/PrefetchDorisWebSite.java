@@ -105,8 +105,12 @@ public class PrefetchDorisWebSite {
 	DataBase_Outils outilsBase = null;
 
 	public static void main(String[] args) throws Exception {
-
-		new PrefetchDorisWebSite().doMain(args);
+		try {
+			new PrefetchDorisWebSite().doMain(args);
+		} catch (Exception e) {
+			log.error( e.getMessage() , e);
+			System.exit(1);
+		}
 		
 	}
 
@@ -184,7 +188,7 @@ public class PrefetchDorisWebSite {
 		PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, nbMaxEspecesATraiter, nbFichesParRequetes);
 		if ( listeFiches.prefetch() == -1 ) {
 			log.debug("doMain() - Erreur Liste des Fiches" );
-			System.exit(1);
+			throw new RuntimeException("Erreur Liste des Fiches");
 		}
 
 		log.debug("doMain() - Fin TEST");
@@ -237,7 +241,7 @@ public class PrefetchDorisWebSite {
 			}
 		} else {
 			log.error("Le fichier de la Base n'existe pas ou plus dans le Prefetch");
-			System.exit(1);
+			throw new RuntimeException("Invalid base");
 		}
 
 		log.debug("doMain() - Fin Déplacement Base");
@@ -291,7 +295,7 @@ public class PrefetchDorisWebSite {
             PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, nbMaxGroupesATraiter, nbFichesParRequetes);
             if ( groupes.prefetchV4() == -1 ) {
                 log.debug("Erreur Groupes");
-                System.exit(1);
+				throw new RuntimeException("Error in PrefetchGroupes");
             }
 
             // - - - Participants - - -
@@ -300,8 +304,7 @@ public class PrefetchDorisWebSite {
             // if (nbMaxParticipantsATraiter > nbMaxFichesATraiter ) nbMaxParticipantsATraiter = nbMaxFichesATraiter;
             PrefetchIntervenants intervenants = new PrefetchIntervenants(dbContext, connectionSource, nbMaxParticipantsATraiter, nbFichesParRequetes);
             if ( intervenants.prefetch() == -1 ) {
-                log.debug("Erreur Intervenants" );
-                System.exit(1);
+				throw new RuntimeException("Error in PrefetchIntervenants");
             }
 
             // - - - Glossaire - - -
@@ -310,8 +313,7 @@ public class PrefetchDorisWebSite {
             // if (nbMaxTermesATraiter > nbMaxFichesATraiter ) nbMaxTermesATraiter = nbMaxFichesATraiter;
             PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, nbMaxTermesATraiter, nbFichesParRequetes);
             if ( glossaire.prefetch() == -1 ) {
-                log.debug("Erreur Glossaire" );
-                System.exit(1);
+				throw new RuntimeException("Error in Glossaire");
             }
 
             // - - - Bibliographie - - -
@@ -320,16 +322,14 @@ public class PrefetchDorisWebSite {
             // if (nbMaxTitresATraiter > nbMaxFichesATraiter ) nbMaxTitresATraiter = nbMaxFichesATraiter;
             PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, nbMaxTitresATraiter, nbFichesParRequetes);
             if ( bibliographies.prefetch() == -1 ) {
-                log.debug("Erreur Bibliographies" );
-                System.exit(1);
+				throw new RuntimeException("Error in PrefetchBibliographies");
             }
 
             // - - - Mise à jour des zones géographiques - - -
             log.info("webToDBAction() - - - Mise à jour des zones géographiques - - -");
             PrefetchZonesGeographiques zonesGeographiques = new PrefetchZonesGeographiques(dbContext, connectionSource, nbMaxFichesATraiter);
             if ( zonesGeographiques.prefetchV4() == -1 ) {
-                log.debug("doMain() - Erreur Mise à jour des zones géographiques" );
-                System.exit(1);
+				throw new RuntimeException("Error in PrefetchZonesGeographiques ");
             }
 
             // - - - Liste des Fiches - - -
@@ -338,8 +338,7 @@ public class PrefetchDorisWebSite {
             if (nbMaxEspecesATraiter > nbMaxFichesATraiter ) nbMaxEspecesATraiter = nbMaxFichesATraiter;
             PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, nbMaxEspecesATraiter, nbFichesParRequetes);
             if ( listeFiches.prefetch() == -1 ) {
-                log.debug("Erreur Liste des Fiches" );
-                System.exit(1);
+				throw new RuntimeException("Error in PrefetchFiches ");
             }
 
             // - - - Enregistrement Date génération Base - - -
@@ -695,8 +694,7 @@ public class PrefetchDorisWebSite {
                     if(fichierDB.renameTo(fichierDBNew)){
                         log.info("Sauvegarde du fichier de la base : " + fichierDB.getAbsolutePath());
                     }else{
-                        log.error("Echec renommage du fichier de la base en : " + fichierDBNew.getAbsolutePath());
-                        System.exit(1);
+						throw new RuntimeException("Echec renommage du fichier de la base en : " + fichierDBNew.getAbsolutePath());
                     }
                 }
             }

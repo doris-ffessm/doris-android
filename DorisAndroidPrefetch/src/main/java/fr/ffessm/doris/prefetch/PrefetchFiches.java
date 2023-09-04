@@ -588,7 +588,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                             log.warn("EtatFiche = 5 -> Ignore zone géographique");
                             break;
                         } else {
-                            System.exit(1);
+                            throw new RuntimeException("Invalid Zone in published Fiche");
                         }
                 }
 
