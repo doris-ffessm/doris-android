@@ -487,7 +487,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                 // ignore les entrées invalides
             }
         }
-        log.info(String.format("Added %d intervenant(s) on this fiche",nbIntervenants));
+        log.info(String.format("added %d intervenant(s) on this fiche",nbIntervenants));
     }
     protected void removePhotoForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
 
@@ -529,7 +529,6 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         // recrée une entrée dans la base pour l'image
         final List<PhotoFiche> listePhotoFiche = jsonToDB.getListePhotosFicheFromJsonImages(imageJSONListe);
         final Fiche especeFinal = ficheDB;
-        log.info(String.format("add %d PhotoFiche related to this Fiche",listePhotoFiche.size()));
         TransactionManager.callInTransaction(connectionSource,
                 (Callable<Void>) () -> {
                     int count = 0;
@@ -548,6 +547,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                     }
                     return null;
                 });
+        log.info(String.format("added %d PhotoFiche related to this Fiche",listePhotoFiche.size()));
 
     }
     protected void removeZoneGeographiqueForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
@@ -567,7 +567,6 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
     protected void updateZoneGeographiqueForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
 
         ZoneGeographique zoneGeographique ;
-        log.info(String.format("add %d Fiches_ZonesGeographiques related to this Fiche",especeJSON.getFields().getZoneGeo().getValue().split("-").length));
         for (String zoneGeoRefId : especeJSON.getFields().getZoneGeo().getValue().split("-")) {
 
             try {
@@ -604,6 +603,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                 // ignore les entrées invalides
             }
         }
+        log.info(String.format("added %d Fiches_ZonesGeographiques related to this Fiche",especeJSON.getFields().getZoneGeo().getValue().split("-").length));
     }
 
     @Override

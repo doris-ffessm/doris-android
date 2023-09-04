@@ -159,7 +159,11 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
                     processStatus = "NEW";
                 }
 
-                log.info(String.format("Processing %s %d/%d - %s",  dbTypeName, count, nbFichesDORIS, processStatus));
+                log.info(String.format("Processing %s %d/%d - %s - %s/%d",
+                        dbTypeName,
+                        count, nbFichesDORIS,
+                        processStatus,
+                        objectNameNodeId.getObjectName(), objectNameNodeId.getObjectId()));
                 // seulement si n'existe pas ou plus récente alors récupération du noeud
                 if (mustRetrieveNode) {
                     newFicheDownloadCount++;
