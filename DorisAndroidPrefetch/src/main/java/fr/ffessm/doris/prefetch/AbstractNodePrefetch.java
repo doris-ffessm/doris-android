@@ -67,8 +67,8 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
     // Initialisation de la Gestion des Log
     public static Log log = LogFactory.getLog(AbstractNodePrefetch.class);
 
-    protected DorisDBHelper dbContext = null;
-    protected ConnectionSource connectionSource = null;
+    protected DorisDBHelper dbContext;
+    protected ConnectionSource connectionSource;
 
     private int nbMaxFichesATraiter;
     private int nbFichesParRequetes;
