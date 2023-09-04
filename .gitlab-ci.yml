@@ -108,7 +108,7 @@ collect-db-job:
     - cat /builds/keystore/sign.properties || true
   script:
     - echo "Get DB from doris web site"
-    - ./gradlew buildDorisDBV4_limited
+    - ./gradlew buildDorisDBV4
   after_script:
     - *show_cache_content
   allow_failure: false
