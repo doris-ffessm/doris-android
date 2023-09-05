@@ -354,10 +354,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         btnFoldUnfoldZoneSection.setVisibility(View.VISIBLE);
         if(isZoneFold) {
             btnFoldUnfoldZoneSection.setImageResource(image_minimize);
-            btnFoldUnfoldZoneSection.setMaxWidth(96);
+            //btnFoldUnfoldZoneSection.setMaxWidth(96);
         } else {
             btnFoldUnfoldZoneSection.setImageResource(image_maximize);
-            btnFoldUnfoldZoneSection.setMaxWidth(96);
+            //btnFoldUnfoldZoneSection.setMaxWidth(96);
         }
 
         // btnFoldUnfoldZoneSection // toute la section sert de lien pour plier/déplier
