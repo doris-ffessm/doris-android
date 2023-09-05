@@ -116,9 +116,10 @@ public class PrefetchZonesGeographiques {
                     dbContext.zoneGeographiqueDao.createOrUpdate(
                             new ZoneGeographique(10, "Espèces marines et d'eau douce de Guyanne française", "Guyanne", 2225263, dbContext.zoneGeographiqueDao.queryForId(9))
                     );
+                  /* currrently empty, the web site organisation is quite different and doesn't show species but other kind of items
                     dbContext.zoneGeographiqueDao.createOrUpdate(
                             new ZoneGeographique(11, "Habitats subaquatiques", "Herbiers, Fonds, Littoraux,...", 1090239)
-                    );
+                    ); */
                     return null;
                 });
 
