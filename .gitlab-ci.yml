@@ -102,6 +102,7 @@ before_script:
   - pwd
   - ls -lsa DorisAndroidPrefetch/run
   - ls -lsa DorisAndroidPrefetch/run/database
+  - if [ -f DorisAndroidPrefetch/run/database/DorisAndroid.db ]; then sqlite3 DorisAndroid.db "SELECT * FROM dorisDB_metadata;" fi
   - ls -lsa .gradle
   - set -e
 
