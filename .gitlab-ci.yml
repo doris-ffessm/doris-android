@@ -99,6 +99,8 @@ before_script:
 
 .show_cache_content: &show_cache_content
   - set +e
+  - apt-get --quiet update --yes
+  - apt-get --quiet install --yes sqlite3
   - pwd
   - ls -lsa DorisAndroidPrefetch/run
   - ls -lsa DorisAndroidPrefetch/run/database
