@@ -106,7 +106,8 @@ before_script:
   - ls -lsa DorisAndroidPrefetch/run/database
   - |
     if [ -f DorisAndroidPrefetch/run/database/DorisAndroid.db ]; then
-      sqlite3 DorisAndroid.db "SELECT * FROM dorisDB_metadata;"
+      sqlite3 DorisAndroidPrefetch/run/database/DorisAndroid.db ".tables"
+      sqlite3 DorisAndroidPrefetch/run/database/DorisAndroid.db "SELECT * FROM dorisDB_metadata;"
     fi
   - ls -lsa .gradle
   - set -e
@@ -130,13 +131,16 @@ collect-db-job:
 
 build-job:
   stage: build
+  needs:
+    - collect-db-job
   resource_group: doris_web_site_and_cache
   before_script:
     - *show_cache_content
     - *install-android-sdk
     - *create-sign-info
   script:
-    - cp  DorisAndroidPrefetch/run/database/*.db DorisAndroid/src/main/asset
+    - cp  DorisAndroidPrefetch/run/database/*.db DorisAndroid/src/main/assets
+    - sqlite3 DorisAndroid/src/main/asset/DorisAndroid.db "SELECT * FROM dorisDB_metadata;"
     - ./gradlew clean build lint
   after_script:
     - *show_cache_content
