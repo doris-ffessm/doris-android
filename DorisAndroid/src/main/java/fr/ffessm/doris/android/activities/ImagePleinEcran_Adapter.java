@@ -45,7 +45,9 @@ package fr.ffessm.doris.android.activities;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import androidx.viewpager.widget.PagerAdapter;
@@ -341,7 +343,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         imgTitre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDescription(photoFiche);
+                showFullDescription(photoFiche);
             }
         });
         ((ViewPager) container).addView(viewLayout);
@@ -371,7 +373,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
                 lastTouchTime = -1;
             } else if (lastTouchTime != -1) {
                 // Double Click Lent on affiche la Description de l'image
-                showDescription(photoFiche);
+                showFullDescription(photoFiche);
 
                 lastTouchTime = -1;
             } else {
@@ -405,4 +407,23 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         }
     }
 
+    public void showFullDescription(int position) {
+        final PhotoFiche photoFiche = _PhotoFicheLists.get(position);
+        showFullDescription(photoFiche);
+    }
+    private void showFullDescription(PhotoFiche photoFiche) {
+        String titre = photoFiche.getTitre();
+        String description = photoFiche.getDescription();
+        String texteAff = titre + System.getProperty("line.separator") + description;
+        AlertDialog alertDialog = new AlertDialog.Builder(_activity).create();
+        //alertDialog.setTitle(photoFiche.getTitre());
+        alertDialog.setMessage(texteAff);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
 }
