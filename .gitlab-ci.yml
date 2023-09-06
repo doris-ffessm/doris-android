@@ -141,8 +141,15 @@ build-job:
     - *install-android-sdk
     - *create-sign-info
   script:
-    - cp  DorisAndroidPrefetch/run/database/*.db DorisAndroid/src/main/assets
-    - sqlite3 DorisAndroid/src/main/assets/DorisAndroid.db "SELECT * FROM dorisDB_metadata;"
+    - |
+      if [ -f DorisAndroidPrefetch/run/database/DorisAndroid.db ]; then
+        echo "use of the latest DB collected for the apk cp  DorisAndroidPrefetch/run/database/*.db DorisAndroid/src/main/assets"
+        cp  DorisAndroidPrefetch/run/database/*.db DorisAndroid/src/main/assets
+      else
+        echo "use DorisAndroid/src/main/assets/DorisAndroid.db stored in git"
+      fi
+      echo "DB version"
+      sqlite3 DorisAndroid/src/main/assets/DorisAndroid.db "SELECT * FROM dorisDB_metadata;"
     - ./gradlew clean build lint
   after_script:
     - *show_cache_content
