@@ -347,8 +347,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         // deal with fold/unfold
         btnFoldUnfoldZoneSection = (ImageButton) findViewById(R.id.accueil_zone_fold_unfold_section_imageButton);
         llFoldUnfoldZoneSection = (LinearLayout) findViewById(R.id.accueil_navigation_zones_layout);
-        image_maximize = R.drawable.ic_geo_zone_filter;
-        image_minimize = R.drawable.ic_geo_zone_filter;
+        image_maximize = R.drawable.ic_app_filter_geo_zone;
+        image_minimize = R.drawable.ic_app_filter_geo_zone;
         isZoneFold = true;
         btnFoldUnfoldZoneSection.setImageResource(image_maximize);
         btnFoldUnfoldZoneSection.setVisibility(View.VISIBLE);
