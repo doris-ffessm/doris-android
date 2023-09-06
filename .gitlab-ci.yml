@@ -116,6 +116,7 @@ collect-db-job:
   stage: prepare_data
   resource_group: doris_web_site_and_cache
   before_script:
+    - export GRADLE_USER_HOME=`pwd`/.gradle
     - *show_cache_content
     - cat /builds/keystore/sign.properties || true
   script:
@@ -135,6 +136,7 @@ build-job:
     - collect-db-job
   resource_group: doris_web_site_and_cache
   before_script:
+    - export GRADLE_USER_HOME=`pwd`/.gradle
     - *show_cache_content
     - *install-android-sdk
     - *create-sign-info
