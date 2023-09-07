@@ -143,8 +143,6 @@
     <classDetails mainAttributes="//@dataModel/@dataClasses.8/@dataAttributes.2" name="ContenuListeGroupeSelection" secondaryAttributes="//@dataModel/@dataClasses.8/@dataAttributes.3"/>
     <classDetails name="ContenuListeGlossaire"/>
     <classDetails mainAttributes="//@dataModel/@dataClasses.14/@dataAttributes.2" name="ContenuListeBibliographie" secondaryAttributes="//@dataModel/@dataClasses.14/@dataAttributes.1"/>
-    <backgroundActivities name="VerifieMAJFiches" documentation="Tache responsable de vérifier s'il existe une version plus récente des fiches déjà connues."/>
-    <backgroundActivities name="VerifieMAJFiche" documentation="Tache responsable de vérifier s'il existe une version plus récente des fiches déjà connues."/>
     <backgroundActivities name="TelechargePhotosAsync" documentation="Tache responsable du téléchargement des photo des fiches. &#xD;&#xA;Elle vérifie le nombre de photos et la précision requise pour chaque fiche."/>
   </presentationModel>
 </genandroid:AndroidProject>

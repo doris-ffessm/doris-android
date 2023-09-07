@@ -17,7 +17,6 @@ dependencies {
     implementation 'com.j256.ormlite:ormlite-core:4.47'
     implementation 'com.j256.ormlite:ormlite-android:4.47'
     implementation 'org.apache.commons:commons-lang3:3.1'
-    implementation 'net.htmlparser.jericho:jericho-html:3.3'
     implementation "ch.acra:acra-mail:$acraVersion"
     implementation "ch.acra:acra-toast:$acraVersion"
 

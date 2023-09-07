@@ -67,8 +67,6 @@ import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
-import fr.ffessm.doris.android.async.VerifieMAJFiche_BgActivity;
-import fr.ffessm.doris.android.async.VerifieMAJFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.App_Outils;
@@ -106,18 +104,6 @@ public class Preference_PreferenceViewActivity extends android.preference.Prefer
         if (telechargePhotosFiches_BgActivity != null && telechargePhotosFiches_BgActivity.getStatus() == Status.RUNNING) {
             Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
             DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
-        }
-
-        VerifieMAJFiches_BgActivity verifieMAJFiches_BgAct = DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity;
-        if (verifieMAJFiches_BgAct != null && verifieMAJFiches_BgAct.getStatus() == Status.RUNNING) {
-            Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
-            DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity.cancel(true);
-        }
-
-        VerifieMAJFiche_BgActivity verifieMAJFiche_BgAct = DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity;
-        if (verifieMAJFiche_BgAct != null && verifieMAJFiche_BgAct.getStatus() == Status.RUNNING) {
-            Toast.makeText(this, R.string.bg_notifToast_arretTelecharg, Toast.LENGTH_LONG).show();
-            DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity.cancel(true);
         }
 
         /* Permet d'afficher directement une sous-partie des préférences

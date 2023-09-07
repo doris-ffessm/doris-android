@@ -104,7 +104,6 @@ import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.FoldableClickListener;
 import fr.ffessm.doris.android.activities.view.FoldableClickListener.ImageButtonKind;
-import fr.ffessm.doris.android.async.VerifieMAJFiche_BgActivity;
 import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.Classification;
 import fr.ffessm.doris.android.datamodel.ClassificationFiche;
@@ -147,11 +146,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     protected int ficheNumero;
 
     boolean isOnCreate = true;
-    List<FoldableClickListener> allFoldableDetails = new ArrayList<FoldableClickListener>();
-    List<FoldableClickListener> allFoldableClassificationDescription = new ArrayList<FoldableClickListener>();
+    List<FoldableClickListener> allFoldableDetails = new ArrayList<>();
+    List<FoldableClickListener> allFoldableClassificationDescription = new ArrayList<>();
     Handler mHandler;
     LinearLayout photoGallery;
-    Collection<String> insertedPhotosFiche = new ArrayList<String>();
+    Collection<String> insertedPhotosFiche = new ArrayList<>();
     boolean askedBgDownload = false;
 
     String accueil_liste_ou_arbre_pardefaut;
@@ -480,11 +479,6 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
                 DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
                 Intent toDefinitionlView = new Intent(context, Glossaire_ClassListViewActivity.class);
                 context.startActivity(toDefinitionlView);
-                return true;
-            case R.id.detailsfiche_elementview_action_maj_fiche:
-                DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity =
-                        (VerifieMAJFiche_BgActivity) new VerifieMAJFiche_BgActivity(getApplicationContext()).execute("" + ficheNumero);
-                // TODO : refreshScreenData();
                 return true;
             case R.id.detailsfiche_elementview_action_aide:
                 AffichageMessageHTML aide = new AffichageMessageHTML(this, (Activity) this, getHelper());

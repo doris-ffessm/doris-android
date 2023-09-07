@@ -54,8 +54,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
-import fr.ffessm.doris.android.async.VerifieMAJFiche_BgActivity;
-import fr.ffessm.doris.android.async.VerifieMAJFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.Classification;
 import fr.ffessm.doris.android.datamodel.ClassificationFiche;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
@@ -89,9 +87,7 @@ public class DorisApplicationContext {
 	
 	// used to get a pointer on running background activities, usefull when on onCreate onDestroy in case of configuration changes like rotation
 	public TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = null;
-	public VerifieMAJFiche_BgActivity verifieMAJFiche_BgActivity = null;
-	public VerifieMAJFiches_BgActivity verifieMAJFiches_BgActivity = null;
-	
+
 	public boolean isTelechPhotos = false;
 	public boolean isMovingPhotos = false;
 	public ZoneGeographiqueKind zoneTraitee = null;
@@ -103,7 +99,7 @@ public class DorisApplicationContext {
 	// Accueil <-> Groupes <-> Liste Fiches <-> Fiche
 	// Accueil <-> Groupes <-> Liste Images Fiches <-> Fiche
 	// ... <-> ... <-> Fiche <-> Définitions, Intervenants ...
-	protected Stack<Intent>  retourIntentStack = new Stack<Intent>();
+	protected Stack<Intent>  retourIntentStack = new Stack<>();
 	protected Intent rootIntent;
     public void setIntentPourRetour(Intent currentIntent){
     	Log.d(LOG_TAG, "setIntentPourRetour() - currentIntent.getComponent() : "+currentIntent.getComponent());
@@ -134,11 +130,11 @@ public class DorisApplicationContext {
 	}
     
 	/** listener that have registered for being notified of data changes */
-	private ArrayList<DataChangedListener>  dataChangeListeners = new ArrayList<DataChangedListener>();
+	private ArrayList<DataChangedListener>  dataChangeListeners = new ArrayList<>();
 	
 	public List<DataChangedListener> getDataChangeListeners(){
 		synchronized(dataChangeListeners){
-			return new ArrayList<DataChangedListener>(dataChangeListeners);
+			return new ArrayList<>(dataChangeListeners);
 		}
 	}
 	public void addDataChangeListeners(DataChangedListener listener){

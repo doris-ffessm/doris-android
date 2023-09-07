@@ -91,8 +91,6 @@ import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.MultiProgressBar;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
-import fr.ffessm.doris.android.async.VerifieMAJFiche_BgActivity;
-import fr.ffessm.doris.android.async.VerifieMAJFiches_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.Groupe;
@@ -220,9 +218,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             getParamOutils().setParamString(R.string.pref_key_a_propos_version, appVersionName);
         }
 
-        if (DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null
-                || DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity != null
-                || DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity != null) {
+        if (DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity != null) {
             // une tache précédente est en cours, on se réabonne aux évènements
             // (on est probablement sur une rotation d'écran)
             Log.d(LOG_TAG, "onCreate() - une tache précédente est en cours, on se réabonne aux évènements");
@@ -236,14 +232,12 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             if (connectionType == Reseau_Outils.ConnectionType.WIFI
                     || (!wifiOnly && connectionType == Reseau_Outils.ConnectionType.GSM)) {
 
-                Log.d(LOG_TAG, "onCreate() - Lancement MaJ des fiche");
-                // On démarrage d'abord la MaJ des fiches,
-                // puis cette dernière enchaînera avec telechargePhotosFiches
+                // On démarrage d'abord la MaJ des photos,
+                Log.d(LOG_TAG, "onCreate() - Lancement Telechargement Photos");
 
-                DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity =
-                        (VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext()/*,
-						this.getHelper()*/).execute("" + Fiches_Outils.TypeLancement_kind.START);
-
+                DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity =
+                        (TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(
+                                getApplicationContext()).execute("");
             }
         }
 
@@ -286,18 +280,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         if (telechargePhotosAsync_BgAct != null && telechargePhotosAsync_BgAct.getStatus() == Status.RUNNING) {
             if (isFinishing())
                 Log.d(LOG_TAG, "onDestroy() - TelechargePhotosAsync.cancel(true) : " + telechargePhotosAsync_BgAct.cancel(true));
-        }
-
-        VerifieMAJFiches_BgActivity verifieMAJFiches_BgAct = DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity;
-        if (verifieMAJFiches_BgAct != null && verifieMAJFiches_BgAct.getStatus() == Status.RUNNING) {
-            if (isFinishing())
-                Log.d(LOG_TAG, "onDestroy() - VerifieMAJFiches.cancel(true) : " + verifieMAJFiches_BgAct.cancel(true));
-        }
-
-        VerifieMAJFiche_BgActivity verifieMAJFiche_BgAct = DorisApplicationContext.getInstance().verifieMAJFiche_BgActivity;
-        if (verifieMAJFiche_BgAct != null && verifieMAJFiche_BgAct.getStatus() == Status.RUNNING) {
-            if (isFinishing())
-                Log.d(LOG_TAG, "onDestroy() - VerifieMAJFiche.cancel(true) : " + verifieMAJFiche_BgAct.cancel(true));
         }
 
         super.onDestroy();
@@ -959,21 +941,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                 }
 
                 return true;
-            /* TODO: Déasctivé jusqu'à ce que cela soit au point */
-            /*
-            case R.id.accueil_customview_action_maj_listesfiches:
-
-                Toast.makeText(this, "MaJ désactivée dans la version béta", Toast.LENGTH_LONG).show();
-
-        		VerifieMAJFiches_BgActivity verifieMAJFiches_BgActivity = DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity;		    	
-				if(verifieMAJFiches_BgActivity == null || verifieMAJFiches_BgActivity.getStatus() != Status.RUNNING) {
-	        		DorisApplicationContext.getInstance().verifieMAJFiches_BgActivity =
-	        			(VerifieMAJFiches_BgActivity) new VerifieMAJFiches_BgActivity(getApplicationContext()).execute(""+Fiches_Outils.TypeLancement_kind.MANUEL);
-				}
-
-        		// TODO : refreshScreenData();
-            	return true;
-            */
             case R.id.accueil_customview_action_a_propos:
                 AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
                 aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label) + getContext().getString(R.string.app_name), aPropos.aProposAff(), "file:///android_res/raw/apropos.html");
