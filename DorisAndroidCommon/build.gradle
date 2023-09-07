@@ -9,9 +9,9 @@ dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
 
     // dependances maven
-    implementation 'org.apache.commons:commons-lang3:3.1'
-    implementation 'net.htmlparser.jericho:jericho-html:3.3'
-    implementation 'com.j256.ormlite:ormlite-core:4.47'
+    implementation 'org.apache.commons:commons-lang3:3.13.0'
+    //implementation 'net.htmlparser.jericho:jericho-html:3.3'
+    implementation 'com.j256.ormlite:ormlite-core:4.48'
 /*
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8*/

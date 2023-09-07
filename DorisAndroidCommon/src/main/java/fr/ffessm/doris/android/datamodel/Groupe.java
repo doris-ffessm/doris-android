@@ -50,22 +50,15 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Collection;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import fr.ffessm.doris.android.datamodel.associations.*;
-
 // Start of user code additional import for Groupe
-import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.Source;
 
 
-import fr.ffessm.doris.android.sitedoris.Common_Outils;
 // End of user code
 
 /** 
@@ -187,41 +180,7 @@ C'est ce texte. */
 		return cleURLImage.replace("gestionenligne/", "")
 			.replace("images/", "images_groupe/").replace("/","_");
 	}
-	
-	
-	
-	public void descriptionDetailleeFromHtml(String htmlGroupe){
-		//log.trace("descriptionDetailleeFromHtml() - Début");
-		
-		Common_Outils commonOutils = new Common_Outils();
-    	
-		// Dans les version suivante de Jericho le niveau de trace a changé
-    	//Config.LoggerProvider = LoggerProvider.DISABLED;
-		Source source = new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(htmlGroupe), true));
-		source.fullSequentialParse();
 
-		// Description du groupe
-		Element elementTDtitre2 = source.getFirstElementByClass("titre2");
-		if (numeroSousGroupe != 0) {
-			elementTDtitre2 = source.getNextElementByClass(elementTDtitre2.getEnd(), "titre2");
-		}
-		
-		
-		Element elementTRPere = elementTDtitre2.getParentElement().getParentElement();
-		Element elementTDTexte = elementTRPere.getFirstElementByClass("normal");
-		
-		//log.trace("descriptionDetailleeFromHtml() - Description Détaillée Groupe : "+elementTDTexte.toString());
-		
-		descriptionDetailleeGroupe = commonOutils.nettoyageTextes(
-										elementTDTexte.getRenderer().toString().trim());
-
-		source = null;
-		
-		//log.trace("descriptionDetailleeFromHtml() - Fin");
-	}
-
-	
-	
 	// End of user code
 	
 	public Groupe() {} // needed by ormlite

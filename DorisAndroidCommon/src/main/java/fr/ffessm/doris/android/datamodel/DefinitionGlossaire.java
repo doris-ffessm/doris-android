@@ -52,9 +52,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 // Start of user code additional import for DefinitionGlossaire
-import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.HTMLElementName;
-import net.htmlparser.jericho.Source;
 import fr.ffessm.doris.android.sitedoris.Common_Outils;
 // End of user code
 
@@ -109,67 +106,7 @@ public class DefinitionGlossaire extends AbstractWebNodeObject {
 
 	// Start of user code DefinitionGlossaire additional user properties
 
-    public void getDefinitionsFromHtml(String inCodePageHtml){
-    	//log.debug("getDefinitionsFromHtml() - Début");
-    	Common_Outils commonOutils = new Common_Outils();
-    	
-    	inCodePageHtml = commonOutils.nettoyageBalises(inCodePageHtml);
 
-    	inCodePageHtml = commonOutils.remplacementBalises(inCodePageHtml, true);
-    	
-    	
-    	Source source=new Source(inCodePageHtml);
-    	source.fullSequentialParse();
-    	//log.debug("getDefinitionsFromHtml()- source.length() : " + source.length());
-    	
-    	Element elementTDTitre2 = source.getFirstElementByClass("titre2");
-    	terme = commonOutils.nettoyageTextes( elementTDTitre2.getRenderer().toString().replace(":", "").trim() );
-    	log.debug("getDefinitionsFromHtml()- motDefini : " + terme);
-    	
-    	definition = elementTDTitre2.getParentElement().getParentElement().getFirstElementByClass("normal").getRenderer().toString();
-    	
-    	//log.debug("getDefinitionsFromHtml()- Définition : " + definition);
-    	
-    	// Traitement des définitions complexes telles que : Byssus
-    	List<Element> listeElementsTR = elementTDTitre2.getParentElement().getParentElement().getParentElement()
-    			.getParentElement().getParentElement().getChildElements();
-    	//log.debug("getDefinitionsFromHtml()- listeElementsTR : " + listeElementsTR.toString());
-    	int rangTR = 0;
-    	for (Element elementTR : listeElementsTR) {
-    		//log.debug("getDefinitionsFromHtml()- (element.getName() : " + element.getName());
-    		if (elementTR.getName() == HTMLElementName.TR){
-    			rangTR++;
-    			if (rangTR == 6){
-    				//log.debug("getDefinitionsFromHtml()- TR 6 : " + elementTR.getRenderer().toString());
-    				List<Element> listeTablesligne = elementTR.getAllElements(HTMLElementName.TABLE);
-					for (Element elementTable : listeTablesligne) {
-						//log.debug("getDefinitionsFromHtml()- getDepth : " + elementTable.getDepth());
-    					if ( elementTable.getDepth() == 14 ){
-    						List<Element> listeTRlignes = elementTable.getAllElements(HTMLElementName.TR);
-    						for (Element elementTRLigne : listeTRlignes) {
-    							//log.debug("getDefinitionsFromHtml()- elementLigne getDepth : " + elementTRLigne.getDepth());
-    							if ( elementTRLigne.getDepth() == 15 && !elementTRLigne.getRenderer().toString().trim().isEmpty()) {
-    								definition = definition+"{{n/}}"+elementTRLigne.getRenderer().toString().trim();
-    							}
-    						}
-    						
-    					}
-    				}
-    				
-    			}
-    		}
-    	}
-    	definition = commonOutils.nettoyageTextes(definition);
-    	log.debug("getDefinitionsFromHtml() - definition : " + definition);
-
-    	// permet de faire gagner du temps sur le téléphone
-		for (String imageDefinition : getListeImagesDefinition() ){
-			cleURLIllustration = cleURLIllustration + imageDefinition + ";";
-		}
-
-		source = null;
-    	//log.debug("getDefinitionsFromHtml() - Fin");
-    }
 	
 	
     public List<String> getListeImagesDefinition(){

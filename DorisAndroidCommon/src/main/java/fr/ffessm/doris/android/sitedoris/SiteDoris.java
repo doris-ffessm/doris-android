@@ -44,26 +44,16 @@ package fr.ffessm.doris.android.sitedoris;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.regex.Pattern;
 
-import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.HTMLElementName;
-import net.htmlparser.jericho.Source;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
-import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
-import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.Participant;
-import fr.ffessm.doris.android.datamodel.PhotoFiche;
 
 public class SiteDoris {
 
@@ -74,70 +64,7 @@ public class SiteDoris {
     public SiteDoris(){
     	
     }
-        
-	public HashSet<FicheLight> getListeFichesFromHtml(String inCodePageHtml) {
-    	//log.info("getListeFichesFromHtml()- Début");
-		//log.debug("getListeFichesFromHtml()- inCodePageHtml.length() : " + inCodePageHtml.length());
-		Common_Outils commonOutils = new Common_Outils();
-		
-    	HashSet<FicheLight> listeFiches = new HashSet<FicheLight>(0);
-    	
-    	// Dans les version suivante de Jericho le niveau de trace a changé
-    	//Config.LoggerProvider = LoggerProvider.DISABLED;
-    	
-    	Source source=new Source(commonOutils.remplacementBalises(commonOutils.nettoyageBalises(inCodePageHtml),false ) );
 
-    	source.fullSequentialParse();
-    	//log.debug("getListeFichesFromHtml()- source.length() : " + source.length());
-    	//log.debug("getListeFichesFromHtml()- source : " + source.toString().substring(0, Math.min(100, source.toString().length())));
-    	
-    	Element elementTableracine;
-    	try{
-    		elementTableracine=source.getFirstElementByClass("titre_page").getParentElement().getParentElement();
-    	}
-    	catch ( NullPointerException e){
-    		log.error("Probleme lors de la récupération de la liste des fiches, peut etre du a une connexion web defectueuse ou a un changement sur le site web Doris",  e);
-    		return listeFiches;
-    	}
-    	//log.debug("getListeFichesFromHtml()- elementTableracine.length() : " + elementTableracine.length());
-    	//log.debug("getListeFichesFromHtml()- elementTableracine : " + elementTableracine.toString().substring(0, Math.min(100, elementTableracine.toString().length())));
-
-    	List<? extends Element> listeElementsTD = elementTableracine.getAllElements(HTMLElementName.TD);
-    	//log.debug("getListeFichesFromHtml() - listeElementsTD.size() : " + listeElementsTD.size());
-		
-    	for (Element elementTD : listeElementsTD) {
-    		//log.debug("getListeFichesFromHtml() - elementTD.length() : " + elementTD.length());
-    		//log.debug("getListeFichesFromHtml()- elementTD : " + elementTD.toString().substring(0, Math.min(100, elementTD.toString().length())));
-    		
-			if (elementTD.getAttributeValue("width") != null){
-    			if (elementTD.getAttributeValue("width").toString().equals("75%")) {
-    				//log.debug("getListeFichesFromHtml() - elementTD : "+elementTD.getRenderer());
-    				Element elementTDA = elementTD.getFirstElement(HTMLElementName.A);
-    				
-    				//String contenu = elementTDA.getRenderer().toString();
-    				//log.debug("getListeFichesFromHtml() - contenu : "+contenu);
-    				
-    				String ficheNomScientifique = elementTDA.getRenderer().toString().replaceAll("([^-]*)-(.*)", "$1").trim();
-    				String ficheNomCommun = elementTDA.getRenderer().toString().replaceAll("([^-]*)-(.*)", "$2").trim();
-    				int ficheId = Integer.parseInt(elementTDA.getAttributeValue("href").replaceAll(".*fiche_numero=", "").replaceAll("&.*", ""));
-    				int ficheEtat = Integer.parseInt(elementTDA.getAttributeValue("href").replaceAll(".*fiche_etat=", "").replaceAll("&.*", ""));
-    				
-    				//log.debug("getListeFichesFromHtml() - fiche : "+ficheId+" - "+ficheNomScientifique+" - "+ficheNomCommun + " - Etat : " + ficheEtat);
-    				
-    				FicheLight fiche = new FicheLight(ficheId, ficheEtat, ficheNomScientifique, ficheNomCommun);
-      				
-    				listeFiches.add(fiche);
-    			}
-			}
-			
-		}
-    	
-    	source = null;
-    	listeElementsTD = null;
-		//log.info("getListeFichesFromHtml()- Fin");
-		return listeFiches;
-    }
-	
 	public Groupe getGroupeFromListeGroupes(List<Groupe> listeGroupes, int numGroupe, int numSousGroupe){
     	//log.trace("getGroupeFromListeGroupes() - Début");
     	//log.debug("getGroupeFromListeGroupes() - numGroupe : "+numGroupe);

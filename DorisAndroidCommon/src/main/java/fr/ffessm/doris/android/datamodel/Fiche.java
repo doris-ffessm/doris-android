@@ -66,11 +66,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import net.htmlparser.jericho.Attribute;
-import net.htmlparser.jericho.Element;
-import net.htmlparser.jericho.HTMLElementName;
-import net.htmlparser.jericho.Source;
-
 import org.apache.commons.lang3.StringUtils;
 
 import fr.ffessm.doris.android.sitedoris.Constants;
