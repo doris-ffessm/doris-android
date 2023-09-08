@@ -41,6 +41,7 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import fr.ffessm.doris.android.R;
@@ -69,6 +70,7 @@ import fr.ffessm.doris.android.tools.Fiches_Outils;
 //End of user code
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
+import fr.ffessm.doris.android.tools.Zones_Outils;
 
 public class ZoneGeoSelection_Adapter extends BaseAdapter {
 
@@ -126,17 +128,18 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return zoneGeographiqueList.get(position).getId();
+        //return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
         // Start of user code protected additional ZoneGeoSelection_Adapter getView_assign code
-        if (convertView == null) {
+        //if (convertView == null) { // due to indentation generation, avoid reuse of view
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.zonegeoselection_listviewrow, null);
-        }
+        //}
         final ZoneGeographique entry = filteredZoneGeographiqueList.get(position);
         if (_contextDB != null) entry.setContextDB(_contextDB);
 
@@ -201,6 +204,31 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter {
 
         ImageView ivIcone = (ImageView) convertView.findViewById(R.id.zonegeoselection_listviewrow_icon);
 
+        LinearLayout treeNodeZone = (LinearLayout)convertView.findViewById(R.id.zonegeoselection_tree_nodes);
+
+        int zoneDepth = Zones_Outils.getZoneLevel(entry);
+        if(treeNodeZone.getChildCount() == 1) {
+            for (int i = 0; i < zoneDepth; i++) {
+                ImageView image = new ImageView(this.context);
+                //image.setAdjustViewBounds(true);
+                image.setLayoutParams(new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
+                try {
+                    if (Zones_Outils.isLastChild(entry)) {
+                        image.setImageResource(R.drawable.ic_app_treenode_last_child);
+                    } else {
+                        image.setImageResource(R.drawable.ic_app_treenode_middle_child);
+                    }
+                } catch (SQLException throwables) {
+                    Log.e(LOG_TAG, "Error determining zonegeo sibling", throwables);
+                    throwables.printStackTrace();
+                }
+                image.setScaleType(ImageView.ScaleType.FIT_XY);
+                // Adds the view to the layout
+                treeNodeZone.addView(image, 0);
+            }
+        }
         //Log.d(LOG_TAG, "getView() - R.string.pref_key_accueil_icone_taille : " + context.getString(R.string.pref_key_accueil_icone_taille) );
         //Log.d(LOG_TAG, "getView() - R.string.accueil_icone_taille_defaut : " + context.getString(R.string.accueil_icone_taille_defaut) );
         int defaultIconSize = getParamOutils().getParamInt(
