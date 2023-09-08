@@ -4,40 +4,61 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/zonegeoselection_listviewrow"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"    
-	android:layout_marginBottom="2dp"
-    android:layout_marginTop="2dp"
+    android:layout_height="match_parent"
     android:orientation="vertical" >
+
 	<RelativeLayout
         android:id="@+id/RelativeLayout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal" >
 
-        <ImageView
-            android:id="@+id/zonegeoselection_listviewrow_icon"
+        <LinearLayout
+            android:id="@+id/zonegeoselection_tree_nodes"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="8dip"
-            android:layout_marginLeft="2dip"
-            android:layout_marginRight="2dip"
-            android:layout_marginTop="2dip"
-            android:adjustViewBounds="true"
-            android:contentDescription="ZoneGeographique icon"
-            android:maxHeight="48dp"
-            android:maxWidth="48dp"
-            android:src="@drawable/app_ic_launcher" >
+            android:layout_toLeftOf="@+id/zonegeoselection_listviewrow_icon"
+            android:orientation="horizontal">
+            <!-- Placeholder for TreeNode images (1 image per level) -->
+          <!--  <ImageView
+                android:id="@+id/zonegeoselection_listviewrow_tree"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_app_treenode_first_child">
 
-        </ImageView>
+            </ImageView>-->
+
+            <ImageView
+                android:id="@+id/zonegeoselection_listviewrow_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dip"
+
+                android:layout_marginTop="5dip"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="2dip"
+                android:layout_marginBottom="8dip"
+                android:layout_toLeftOf="@+id/zonegeoselection_listviewrow_label"
+                android:adjustViewBounds="true"
+                android:contentDescription="ZoneGeographique icon"
+                android:maxWidth="48dp"
+                android:maxHeight="48dp"
+                android:src="@drawable/app_ic_launcher">
+
+            </ImageView>
+        </LinearLayout>
+
+
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/zonegeoselection_listviewrow_icon"
             android:layout_toLeftOf="@+id/zonegeoselection_selectBtn_h"
-            android:layout_toRightOf="@+id/zonegeoselection_listviewrow_icon"
+            android:layout_toRightOf="@+id/zonegeoselection_tree_nodes"
             android:orientation="vertical"
 			android:paddingLeft="4dip"
 			android:paddingRight="4dip" >

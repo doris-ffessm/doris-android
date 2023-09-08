@@ -141,6 +141,16 @@ public class ZoneGeographique {
 			log.error("Pb while adding association fiches_ZonesGeographiques",e);
 		}
 	}
+
+	public List<ZoneGeographique> getZoneGeographicChilds(){
+		List<ZoneGeographique> result = new ArrayList<>();
+		log.info("getZoneGeographicChilds "+this.nom + " " + this.getSubZonesGeographiques());
+		for (ZoneGeographique sub_ZonesGeographiques : subZonesGeographiques) {
+			if(_contextDB != null) sub_ZonesGeographiques.setContextDB(_contextDB);
+			result.add(sub_ZonesGeographiques);
+		}
+		return result;
+	}
 	// end work in progress 	
 
 	public Collection<ZoneGeographique> getSubZonesGeographiques() {

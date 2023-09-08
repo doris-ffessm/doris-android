@@ -46,6 +46,7 @@ import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
+import fr.ffessm.doris.android.tools.Zones_Outils;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.content.Intent;
@@ -57,6 +58,7 @@ import android.view.MenuItem;
 
 import java.io.File;
 //Start of user code additional imports Accueil_CustomViewActivity
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +77,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -137,9 +140,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     private boolean isZoneFold = false;
     private int image_maximize;
     private int image_minimize;
-    protected List<View> allFoldableZoneView  = new ArrayList<View>();
+    protected List<View> allFoldableZoneView  = new ArrayList<>();
 
-    protected SparseArray<MultiProgressBar> progressBarZones = new SparseArray<MultiProgressBar>();
+    protected SparseArray<MultiProgressBar> progressBarZones = new SparseArray<>();
 
     // si false alors c'est que l'utilisateur a cliqué sur la croix pour le fermer,
     // tant que l'appli est ouverte elle ne se rouvrira pas, même en cas de rotation
@@ -367,6 +370,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         for (ZoneGeographique zoneGeo : listeZoneGeo) {
             // show all but previous zone (already displayed)
+            // make sure to set the DBHelper on the zone
+            if(zoneGeo.getContextDB() == null) {
+                zoneGeo.setContextDB(this.getHelper().getDorisDBHelper());
+            }
+
             if(currentZoneFilter == null || zoneGeo.getId() != currentZoneFilter.getId()) {
                 View zoneView = createNavigationZoneView(zoneGeo);
                 allFoldableZoneView.add(zoneView);
@@ -398,6 +406,35 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         // Icône illustrant la Zone
         int imageZone = getFichesOutils().getZoneIconeId(zone.getZoneGeoKind());
+
+        //int indentation = Zones_Outils.getZoneLevel(zone) * 32 ; // adjust indentation size
+        //viewZone.setPadding(indentation, 0, 0, 0);
+        LinearLayout treeNodeZone = (LinearLayout)viewZone.findViewById(R.id.zonegeoselection_tree_nodes);
+        int zoneDepth = Zones_Outils.getZoneLevel(zone);
+        for (int i = 0; i < zoneDepth; i++) {
+            ImageView image = new ImageView(this);
+            //image.setAdjustViewBounds(true);
+            image.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT));
+            //image.setMaxHeight(treeNodeZone.getHeight());
+            //image.setMaxWidth(32);
+            //image.setMinimumWidth(32);
+            //image.setImageResource(R.drawable.ic_app_filter_geo_zone);
+            try {
+                if(Zones_Outils.isLastChild(zone)){
+                    image.setImageResource(R.drawable.ic_app_treenode_last_child);
+                } else {
+                    image.setImageResource(R.drawable.ic_app_treenode_middle_child);
+                }
+            } catch (SQLException throwables) {
+                Log.e(LOG_TAG, "Error determining zonegeo sibling", throwables);
+                throwables.printStackTrace();
+            }
+            image.setScaleType(ImageView.ScaleType.FIT_XY);
+            // Adds the view to the layout
+            treeNodeZone.addView(image, 0);
+        }
 
         ImageView ivIcone = (ImageView) viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
         ivIcone.setImageResource(imageZone);
@@ -692,9 +729,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     @SuppressLint("NewApi")
     private void debugTest(StringBuilder sb) {
 
-        CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
-        while (it.hasNext()) {
-            sb.append("Date base locale : " + it.next().getDateBase() + "\n");
+        for (DorisDB_metadata dorisDB_metadata : getHelper().getDorisDB_metadataDao()) {
+            sb.append("Date base locale : " + dorisDB_metadata.getDateBase() + "\n");
         }
 
         sb.append("- - - - - -\n");

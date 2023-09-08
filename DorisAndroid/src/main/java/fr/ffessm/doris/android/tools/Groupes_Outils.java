@@ -109,7 +109,7 @@ public class Groupes_Outils {
         if (BuildConfig.DEBUG)
             Log.d(LOG_TAG, "getAllGroupesEnfantsJusquAuNiveau - niveauFeuilles : " + niveauFeuilles);
 
-        ArrayList<Groupe> groupesListeOut = new ArrayList<Groupe>();
+        ArrayList<Groupe> groupesListeOut = new ArrayList<>();
 
         // Trouve le groupe racine si aucun groupe passé
         if (groupesListeIn.size() == 0) {
@@ -145,7 +145,7 @@ public class Groupes_Outils {
     }
 
     public static ArrayList<Groupe> getAllGroupesForNextLevel(ArrayList<Groupe> currentLevelGroupes) {
-        ArrayList<Groupe> nextLevelGroups = new ArrayList<Groupe>();
+        ArrayList<Groupe> nextLevelGroups = new ArrayList<>();
         for (Groupe groupe : currentLevelGroupes) {
             nextLevelGroups.addAll(groupe.getGroupesFils());
         }
@@ -153,8 +153,7 @@ public class Groupes_Outils {
     }
 
     public static List<Groupe> getAllGroupesForNextLevel(List<Groupe> rawGroupes, Groupe rootGroupe) {
-        ArrayList<Groupe> nextLevelGroups = new ArrayList<Groupe>();
-        nextLevelGroups.addAll(rootGroupe.getGroupesFils());
+        ArrayList<Groupe> nextLevelGroups = new ArrayList<>(rootGroupe.getGroupesFils());
         return nextLevelGroups;
     }
 
@@ -192,6 +191,7 @@ public class Groupes_Outils {
         }
         return subGroupes;
     }
+
 
     public static int getTailleGroupeFiltre(Context context, DorisDBHelper contextDB, int filteredZoneGeoId, int filteredGroupeId) {
 
