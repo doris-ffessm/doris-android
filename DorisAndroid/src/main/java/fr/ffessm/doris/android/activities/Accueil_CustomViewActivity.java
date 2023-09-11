@@ -78,6 +78,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -138,9 +139,17 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     public ImageButton btnFoldUnfoldZoneSection;
     private LinearLayout llFoldUnfoldZoneSection;
     private boolean isZoneFold = false;
-    private int image_maximize;
-    private int image_minimize;
+    private int image_maximize_zone;
+    private int image_minimize_zone;
     protected List<View> allFoldableZoneView  = new ArrayList<>();
+
+    // deal with mode folding/unfolding
+    public ImageButton btnFoldUnfoldModeSection;
+    private LinearLayout llFoldUnfoldModeSection;
+    private boolean isModeFold = false;
+    private int image_maximize_mode;
+    private int image_minimize_mode;
+    protected List<View> allFoldableModeView  = new ArrayList<>();
 
     protected SparseArray<MultiProgressBar> progressBarZones = new SparseArray<>();
 
@@ -201,6 +210,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         // Affichage zone géo
         createCurrentZoneGeoViews();
         createNavigationZonesGeoViews();
+
+        // Affichage modeAffichages
+        createModeAffichageViews();
 
         //Lors du 1er démarrage de l'application dans la version actuelle,
         //on affiche la boite d'A Propos
@@ -313,7 +325,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     }
 
     /**
-     * Création de la liste pliabel des Zones
+     * Création de la liste pliable des Zones
      */
     protected void createNavigationZonesGeoViews() {
 
@@ -332,16 +344,16 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         // deal with fold/unfold
         btnFoldUnfoldZoneSection = (ImageButton) findViewById(R.id.accueil_zone_fold_unfold_section_imageButton);
         llFoldUnfoldZoneSection = (LinearLayout) findViewById(R.id.accueil_navigation_zones_layout);
-        image_maximize = R.drawable.ic_app_filter_geo_zone;
-        image_minimize = R.drawable.ic_app_filter_geo_zone;
+        image_maximize_zone = R.drawable.ic_app_filter_geo_zone;
+        image_minimize_zone = R.drawable.ic_app_filter_geo_zone;
         isZoneFold = true;
-        btnFoldUnfoldZoneSection.setImageResource(image_maximize);
+        btnFoldUnfoldZoneSection.setImageResource(image_maximize_zone);
         btnFoldUnfoldZoneSection.setVisibility(View.VISIBLE);
         if(isZoneFold) {
-            btnFoldUnfoldZoneSection.setImageResource(image_minimize);
+            btnFoldUnfoldZoneSection.setImageResource(image_minimize_zone);
             //btnFoldUnfoldZoneSection.setMaxWidth(96);
         } else {
-            btnFoldUnfoldZoneSection.setImageResource(image_maximize);
+            btnFoldUnfoldZoneSection.setImageResource(image_maximize_zone);
             //btnFoldUnfoldZoneSection.setMaxWidth(96);
         }
 
@@ -587,10 +599,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     private void foldUnfoldZoneSection() {
         isZoneFold = !isZoneFold;
         if(isZoneFold) {
-            btnFoldUnfoldZoneSection.setImageResource(image_minimize);
+            btnFoldUnfoldZoneSection.setImageResource(image_minimize_zone);
             ((TextView)findViewById(R.id.accueil_zone_title)).setText(R.string.accueil_customview_show_other_zones);
         } else {
-            btnFoldUnfoldZoneSection.setImageResource(image_maximize);
+            btnFoldUnfoldZoneSection.setImageResource(image_maximize_zone);
             ((TextView)findViewById(R.id.accueil_zone_title)).setText(R.string.accueil_customview_hide_other_zones);
         }
         for (View foldableZone : allFoldableZoneView) {
@@ -598,6 +610,111 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                 foldableZone.setVisibility(View.GONE);
             } else {
                 foldableZone.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    protected void createModeAffichageViews() {
+        LinearLayout llContainerLayout = (LinearLayout) findViewById(R.id.accueil_mode_affichage_layout);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+
+        final String[] modesValues = this.getResources().getStringArray(R.array.accueil_listes_ou_arbre_values);
+        String[] modesLibelles = this.getResources().getStringArray(R.array.accueil_listes_ou_arbre_lib);
+        int[] icons = { R.drawable.ic_action_liste_fiches, R.drawable.ic_action_arbre_phylogenetique, R.drawable.ic_action_liste_images};
+        for (int i = 0; i < modesValues.length ; i++) {
+            String mode = modesLibelles[i];
+            LayoutInflater inflater = (LayoutInflater) this
+               .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            View viewMode = inflater.inflate(R.layout.mode_affichage_listviewrow, null);
+
+            TextView tvLabel = (TextView) viewMode.findViewById(R.id.mode_affichage_listviewrow_text);
+            tvLabel.setText(mode);
+
+            ImageView iv = (ImageView) viewMode.findViewById(R.id.mode_affichage_listviewrow_icon);
+            iv.setImageResource(icons[i]);
+
+            RadioButton radio = (RadioButton) viewMode.findViewById(R.id.mode_affichage_listviewrow_radio);
+
+            // set current check button value
+            String current = prefs.getString(getResources().getString(
+                    R.string.pref_key_accueil_liste_ou_arbre_pardefaut),
+                    getResources().getString(
+                            R.string.accueil_liste_ou_arbre_default));
+            radio.setChecked(current.equals(modesValues[i]));
+
+            final int radioIndex = i;
+            radio.setOnClickListener(new View.OnClickListener() {
+                final int index = radioIndex;
+
+                public void onClick(View v) {
+                    int size = allFoldableModeView.size();
+                    for (int j = 0; j < size; j++) {
+                        View foldableMode = allFoldableModeView.get(j);
+                        RadioButton radio = (RadioButton) foldableMode.findViewById(R.id.mode_affichage_listviewrow_radio);
+                        if(j == index ) {
+                            radio.setChecked(true);
+                        } else {
+                            radio.setChecked(false);
+                        }
+                    }
+                    // update preferences
+                    prefs.edit().putString(
+                            Accueil_CustomViewActivity.this.getResources().getString(
+                                    R.string.pref_key_accueil_liste_ou_arbre_pardefaut),
+                                    modesValues[index]).apply();
+                    // todo update main screen icons
+                    Accueil_CustomViewActivity.this.refreshScreenData();
+                }
+            });
+
+            // TODO set onclick listener
+            // TODO set current check button value
+
+            allFoldableModeView.add(viewMode);
+            llContainerLayout.addView(viewMode);
+            viewMode.setVisibility(View.GONE);
+       }
+
+        // deal with fold/unfold
+        btnFoldUnfoldModeSection = (ImageButton) findViewById(R.id.accueil_mode_affichage_fold_unfold_section_imageButton);
+        llFoldUnfoldModeSection = (LinearLayout) findViewById(R.id.accueil_mode_affichage_layout);
+        image_maximize_mode = R.drawable.ic_app_filter_settings; // TODO change for proper icon
+        image_minimize_mode = R.drawable.ic_app_filter_settings;
+        isModeFold = true;
+        btnFoldUnfoldModeSection.setImageResource(image_maximize_mode);
+        btnFoldUnfoldModeSection.setVisibility(View.VISIBLE);
+        if(isModeFold) {
+            btnFoldUnfoldModeSection.setImageResource(image_minimize_mode);
+            //btnFoldUnfoldZoneSection.setMaxWidth(96);
+        } else {
+            btnFoldUnfoldModeSection.setImageResource(image_maximize_mode);
+        }
+
+        // foldUnfoldModeSection // toute la section sert de lien pour plier/déplier
+        btnFoldUnfoldModeSection.setOnClickListener(v -> {
+            foldUnfoldModeSection();
+        });
+        btnFoldUnfoldModeSection.setOnClickListener(v -> {
+            foldUnfoldModeSection();
+        });
+    }
+    private void foldUnfoldModeSection() {
+        isModeFold = !isModeFold;
+        if(isModeFold) {
+            btnFoldUnfoldModeSection.setImageResource(image_minimize_mode);
+            ((TextView)findViewById(R.id.accueil_mode_affichage_title)).setText(R.string.accueil_customview_show_mode_affichage);
+        } else {
+            btnFoldUnfoldModeSection.setImageResource(image_maximize_mode);
+            ((TextView)findViewById(R.id.accueil_mode_affichage_title)).setText(R.string.accueil_customview_hide_mode_affichage);
+        }
+        for (View foldableMode : allFoldableModeView) {
+            if (isModeFold) {
+                foldableMode.setVisibility(View.GONE);
+            } else {
+                foldableMode.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -857,6 +974,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                 sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreGeographique_sans));
             }
         }
+        sbRecherchePrecedente.append(" ; "); // todo remove
+        sbRecherchePrecedente.append(prefs.getString(getResources().getString(
+                R.string.pref_key_accueil_liste_ou_arbre_pardefaut),
+                getResources().getString(
+                        R.string.accueil_liste_ou_arbre_default)));
 
         // TODO rappeler le dernier text recherché
         TextView tvRecherchePrecedente = (TextView) findViewById(R.id.accueil_recherche_precedente_details);

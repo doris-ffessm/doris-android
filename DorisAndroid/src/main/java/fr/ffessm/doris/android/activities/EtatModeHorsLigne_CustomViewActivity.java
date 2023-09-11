@@ -45,6 +45,7 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.ThemeUtil;
+import fr.ffessm.doris.android.tools.Zones_Outils;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.content.Intent;
@@ -75,6 +76,8 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Button;
@@ -326,10 +329,46 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         // Avancement par Zone
 
         for (ZoneGeographique zoneGeo : listeZoneGeo) {
+            if (zoneGeo.getContextDB() == null) zoneGeo.setContextDB(this.getHelper().getDorisDBHelper());
             imageZone = getFichesOutils().getZoneIconeId(zoneGeo.getZoneGeoKind());
 
             MultiProgressBar progressBarZone = new MultiProgressBar(this, zoneGeo.getNom(), imageZone, false);
             updateProgressBarZone(context, zoneGeo, progressBarZone, "");
+
+            // manage indentation
+            LinearLayout zoneView = progressBarZone.findViewById(R.id.multiprogressbar_zone_layout);
+            int zoneDepth = Zones_Outils.getZoneLevel(zoneGeo);
+            for (int i = 0; i < zoneDepth; i++) {
+                ImageView image = new ImageView(this);
+                //image.setAdjustViewBounds(true);
+                image.setLayoutParams(new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
+                try {
+                    if (Zones_Outils.isLastChild(zoneGeo)) {
+                        image.setImageResource(R.drawable.ic_app_treenode_last_child);
+                    } else {
+                        image.setImageResource(R.drawable.ic_app_treenode_middle_child);
+                    }
+                } catch (SQLException throwables) {
+                    Log.e(LOG_TAG, "Error determining zonegeo sibling", throwables);
+                    throwables.printStackTrace();
+                }
+                image.setScaleType(ImageView.ScaleType.FIT_XY);
+                image.setVisibility(View.VISIBLE);
+                // Adds the view to the layout
+                zoneView.addView(image, 0);
+            }
+            ImageView imageroot = new ImageView(this);
+            if (zoneDepth == 0 ) {
+                imageroot.setImageResource(R.drawable.ic_app_treenode_middle_child);
+            } else {
+                imageroot.setImageResource(R.drawable.ic_app_treenode_last_child);
+            }
+            imageroot.setScaleType(ImageView.ScaleType.FIT_XY);
+            imageroot.setVisibility(View.VISIBLE);
+            // Adds the view to the layout
+            zoneView.addView(imageroot, 0);
 
             final ZoneGeographique fZoneGeo = zoneGeo;
             progressBarZone.setOnClickListener(new View.OnClickListener() {

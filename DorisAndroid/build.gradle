@@ -32,6 +32,7 @@ dependencies {
     implementation project(':GenandroidLib')
     implementation project(':DorisAndroidCommon')
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }
 
 repositories {
@@ -49,7 +50,7 @@ android {
     buildToolsVersion '34.0.0'
 
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 34
     }
 /*

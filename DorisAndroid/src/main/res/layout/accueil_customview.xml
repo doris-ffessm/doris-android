@@ -46,29 +46,29 @@
 					    android:layout_height="wrap_content"
 						android:paddingLeft="4dip"
         				android:paddingRight="4dip" >
-					
-					<LinearLayout 
-					    android:layout_width="match_parent"
-					    android:layout_height="wrap_content"
-					    android:orientation="vertical" >
-				
-						<TextView
-						    android:id="@+id/accueil_recherche_precedente_label"
-						    android:layout_width="wrap_content"
-						    android:layout_height="wrap_content"
-						    android:text="@string/accueil_recherche_precedente_label_text"
-						    android:textAppearance="?android:attr/textAppearanceMedium"
-						    android:textColor="?android:attr/textColorPrimary" >
 
-					    </TextView>
-					    <TextView
-					        android:id="@+id/accueil_recherche_precedente_details"
-					        android:layout_width="wrap_content"
-					        android:layout_height="wrap_content"
-					        android:paddingLeft="4dip"
-					        android:textAppearance="?android:attr/textAppearanceSmall"
-            				android:textColor="?android:attr/textColorSecondary">
-					    </TextView>
+					<LinearLayout
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:orientation="vertical">
+
+						<TextView
+							android:id="@+id/accueil_recherche_precedente_label"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:text="@string/accueil_recherche_precedente_label_text"
+							android:textAppearance="?android:attr/textAppearanceMedium"
+							android:textColor="?android:attr/textColorPrimary">
+
+						</TextView>
+
+						<TextView
+							android:id="@+id/accueil_recherche_precedente_details"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:paddingLeft="4dip"
+							android:textAppearance="?android:attr/textAppearanceSmall"
+							android:textColor="?android:attr/textColorSecondary"></TextView>
 					</LinearLayout>
 			
 				</RelativeLayout>
@@ -118,6 +118,42 @@
 				</LinearLayout>
 	        </LinearLayout>
 
+			<View style="@style/Separateur"/>
+
+			<LinearLayout
+				android:id="@+id/accueil_mode_affichage_layout"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical" >
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="2dp"
+					android:orientation="horizontal" >
+					<ImageButton
+						android:id="@+id/accueil_mode_affichage_fold_unfold_section_imageButton"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:adjustViewBounds="true"
+						android:background="@android:color/transparent"
+						android:scaleType="centerInside"
+						android:contentDescription="@string/fold_unfold_content_description"
+						android:src="@drawable/app_expander_ic_minimized" />
+					<TextView
+						android:id="@+id/accueil_mode_affichage_title"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginLeft="2dp"
+						android:layout_weight="36"
+						android:ellipsize="marquee"
+						android:fadingEdge="horizontal"
+						android:paddingLeft="4dp"
+						android:paddingRight="4dp"
+						android:text="@string/accueil_customview_show_mode_affichage"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						tools:ignore="HardcodedText" />
+				</LinearLayout>
+			</LinearLayout>
 			<View style="@style/Separateur"/>
 			
 			<TextView

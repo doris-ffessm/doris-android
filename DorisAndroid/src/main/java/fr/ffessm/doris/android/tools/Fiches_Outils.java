@@ -166,7 +166,7 @@ public class Fiches_Outils {
         filteredFicheIdList.clear();
         ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
 
-        String ordreTri = prefs.getString(context.getString(R.string.pref_key_accueil_fiches_ordre), "Commun");
+        String ordreTri = prefs.getString(context.getString(R.string.pref_key_accueil_fiches_ordre), context.getString(R.string.accueil_fiches_ordre_default));
         String orderByClause = "";
         if (ordreTri.equals("Commun")) orderByClause = " ORDER BY Fiche.textePourRechercheRapide";
         if (ordreTri.equals("Scientifique")) orderByClause = " ORDER BY Fiche.nomScientifique";
