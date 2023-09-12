@@ -670,9 +670,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                 }
             });
 
-            // TODO set onclick listener
-            // TODO set current check button value
-
             allFoldableModeView.add(viewMode);
             llContainerLayout.addView(viewMode);
             viewMode.setVisibility(View.GONE);
@@ -693,11 +690,12 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             btnFoldUnfoldModeSection.setImageResource(image_maximize_mode);
         }
 
-        // foldUnfoldModeSection // toute la section sert de lien pour plier/déplier
-        btnFoldUnfoldModeSection.setOnClickListener(v -> {
+        // toute la section sert de lien pour plier/déplier
+        LinearLayout llFold = (LinearLayout) llContainerLayout.findViewById(R.id.accueil_mode_affichage_fold_layout);
+        llFold.setOnClickListener(v -> {
             foldUnfoldModeSection();
         });
-        btnFoldUnfoldModeSection.setOnClickListener(v -> {
+        llFold.setOnClickListener(v -> {
             foldUnfoldModeSection();
         });
     }
