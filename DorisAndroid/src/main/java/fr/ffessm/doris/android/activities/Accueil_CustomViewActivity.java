@@ -681,8 +681,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         // deal with fold/unfold
         btnFoldUnfoldModeSection = (ImageButton) findViewById(R.id.accueil_mode_affichage_fold_unfold_section_imageButton);
         llFoldUnfoldModeSection = (LinearLayout) findViewById(R.id.accueil_mode_affichage_layout);
-        image_maximize_mode = R.drawable.ic_app_filter_settings; // TODO change for proper icon
-        image_minimize_mode = R.drawable.ic_app_filter_settings;
+        image_maximize_mode = R.drawable.sort_gear_grey;
+        image_minimize_mode = R.drawable.sort_gear_grey;
         isModeFold = true;
         btnFoldUnfoldModeSection.setImageResource(image_maximize_mode);
         btnFoldUnfoldModeSection.setVisibility(View.VISIBLE);
