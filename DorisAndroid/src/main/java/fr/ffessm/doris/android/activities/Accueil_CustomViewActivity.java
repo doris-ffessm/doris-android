@@ -346,7 +346,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         // Affichage lien vers "toutes Zones"
         ZoneGeographique zoneToutesZones = new ZoneGeographique();
         zoneToutesZones.setToutesZones();
-        View allZonesView = createNavigationZoneView(zoneToutesZones);
+        View allZonesView = createNavigationZoneView(zoneToutesZones, 0);
         allFoldableZoneView.add(allZonesView);
         llContainerLayout.addView(allZonesView);
         allZonesView.setVisibility(View.GONE);
@@ -354,7 +354,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         // affichage lien vers les zones sauf la zone courante déjà présentée dans createCurrentZoneGeoViews
         List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
         if (BuildConfig.DEBUG) Log.d(LOG_TAG, "listeZoneGeo : " + listeZoneGeo.size());
-
+        int i = 1;
         for (ZoneGeographique zoneGeo : listeZoneGeo) {
             // show all but previous zone (already displayed)
             // make sure to set the DBHelper on the zone
@@ -362,17 +362,17 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                 zoneGeo.setContextDB(this.getHelper().getDorisDBHelper());
             }
 
-            View zoneView = createNavigationZoneView(zoneGeo);
+            View zoneView = createNavigationZoneView(zoneGeo, i);
             allFoldableZoneView.add(zoneView);
             llContainerLayout.addView(zoneView);
             zoneView.setVisibility(View.GONE);
-
+            i++;
         }
 
     }
 
     /* Création de la Zone (Textes, Icônes et Boutons */
-    protected View createNavigationZoneView(final ZoneGeographique zone) {
+    protected View createNavigationZoneView(final ZoneGeographique zone, int index) {
         final Context context = this;
 
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -441,131 +441,41 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         viewZone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                // positionne la recherche pour cette zone
-                ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zone.getId());
-                // réinitialise le filtre espèce
-                ed.putInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
-                ed.apply();
-
-                if (accueil_liste_ou_arbre_pardefaut.equals("arbre")) {
-                    // Si choix de l'utilisateur, on accède à l'arbre en cliquant sur la zone
-
-                    //Permet de revenir à l'accueil après recherche par le groupe, si false on irait dans la liste en quittant
-                    Intent toGroupeSelectionView = new Intent(context, GroupeSelection_ClassListViewActivity.class);
-                    Bundle b = new Bundle();
-                    b.putBoolean("GroupeSelection_depuisAccueil", true);
-                    toGroupeSelectionView.putExtras(b);
-
-                    showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()) + "; " +
-                            getString(R.string.accueil_recherche_guidee_arbre_toast_text));
-                    startActivity(toGroupeSelectionView);
-
-                } else if (accueil_liste_ou_arbre_pardefaut.equals("photos")) {
-
-                    showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()) + " ; " +
-                            getString(R.string.accueil_recherche_liste_images_toast_text));
-                    startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
-
-
-                } else {
-                    // Par défaut, on ouvre la liste des fiches en cliquant sur la zone
-                    showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()) + " ; " +
-                            getString(R.string.accueil_recherche_liste_fiches_toast_text));
-                    startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
+                String desc = zone.getDescription();
+                if(desc == null) {
+                    desc= Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind());
                 }
-
+                showToast(desc);
             }
         });
 
-
-        // Gestion des boutons "secondaires" (de droite)
-        // Si Liste par Défaut : H = Arbre ; B = Photos
-        // Si Arbre par Défaut : H = Liste ; B = Photos
-        // Si Photos par Défaut : H = Liste ; B = Arbre
-
-        // Image
-        ImageButton imgBtnH = (ImageButton) viewZone.findViewById(R.id.zonegeoselection_selectBtn_h);
-        ImageButton imgBtnB = (ImageButton) viewZone.findViewById(R.id.zonegeoselection_selectBtn_b);
-        if (accueil_liste_ou_arbre_pardefaut.equals("arbre")) {
-            imgBtnH.setImageResource(
-                    ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_liste_fiches));
-            imgBtnB.setImageResource(
-                    ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_liste_images));
-        } else if (accueil_liste_ou_arbre_pardefaut.equals("photos")) {
-            imgBtnH.setImageResource(
-                    ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_liste_fiches));
-            imgBtnB.setImageResource(
-                    ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_arbre_phylogenetique));
-        } else {
-            imgBtnH.setImageResource(
-                    ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_arbre_phylogenetique));
-            imgBtnB.setImageResource(
-                    ThemeUtil.attrToResId(((Accueil_CustomViewActivity) context), R.attr.ic_action_liste_images));
-        }
-
-
-        // Clic sur Bouton du Haut (si Liste par défaut Alors Bouton Haut => Arbre, sinon Bouton Haut => Liste)
-        imgBtnH.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                // positionne la recherche pour cette zone
-                ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zone.getId());
-                // réinitialise le filtre espèce
-                ed.putInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
-                ed.apply();
-
-                if (accueil_liste_ou_arbre_pardefaut.equals("liste")) {
-                    //Permet de revenir à l'accueil après recherche par le groupe, si false on irait dans la liste en quittant
-                    Intent toGroupeSelectionView = new Intent(context, GroupeSelection_ClassListViewActivity.class);
-                    Bundle b = new Bundle();
-                    b.putBoolean("GroupeSelection_depuisAccueil", true);
-                    toGroupeSelectionView.putExtras(b);
-
-                    showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()) + " ; " +
-                            getString(R.string.accueil_recherche_guidee_arbre_toast_text));
-                    startActivity(toGroupeSelectionView);
+        // BoutonRadio
+        RadioButton imgBtnH = (RadioButton) viewZone.findViewById(R.id.zonegeoselection_selectBtn_radio);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        int currentZoneFilterId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), -1);
+        imgBtnH.setChecked(zone.getId() == currentZoneFilterId);
+        imgBtnH.setOnClickListener( v -> {
+            int size = allFoldableZoneView.size();
+            for (int j = 0; j < size; j++) {
+                View foldableZone = allFoldableZoneView.get(j);
+                RadioButton radio = (RadioButton) foldableZone.findViewById(R.id.zonegeoselection_selectBtn_radio);
+                if(j == index ) {
+                    radio.setChecked(true);
                 } else {
-                    showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()) + " ; " +
-                            getString(R.string.accueil_recherche_liste_fiches_toast_text));
-                    startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
-                }
-
-            }
-        });
-
-
-        // Clic sur Bouton du Bas (si Photos par défaut Alors Bouton Bas => Arbre, sinon Bouton Bas => Photos)
-        imgBtnB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                // positionne la recherche pour cette zone
-                ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zone.getId());
-                // réinitialise le filtre espèce
-                ed.putInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
-                ed.apply();
-
-                if (accueil_liste_ou_arbre_pardefaut.equals("photos")) {
-                    //Permet de revenir à l'accueil après recherche par le groupe, si false on irait dans la liste en quittant
-                    Intent toGroupeSelectionView = new Intent(context, GroupeSelection_ClassListViewActivity.class);
-                    Bundle b = new Bundle();
-                    b.putBoolean("GroupeSelection_depuisAccueil", true);
-                    toGroupeSelectionView.putExtras(b);
-
-                    showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()) + " ; " +
-                            getString(R.string.accueil_recherche_guidee_arbre_toast_text));
-                    startActivity(toGroupeSelectionView);
-                } else {
-                    showToast(Constants.getTitreCourtZoneGeographique(zone.getZoneGeoKind()) + " ; " +
-                            getString(R.string.accueil_recherche_liste_images_toast_text));
-                    startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
-
+                    radio.setChecked(false);
                 }
             }
-        });
 
+            SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+            // positionne la recherche pour cette zone
+            ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), zone.getId());
+            ed.apply();
+            // update main screen icons
+            Accueil_CustomViewActivity.this.refreshScreenData();
+
+            // close foldable layout
+            foldUnfoldZoneSection();
+        } );
 
         return viewZone;
     }

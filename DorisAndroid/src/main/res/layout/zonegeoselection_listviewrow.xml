@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Start of user code protected zonegeoselection_listviewrow linearlayout full_customization
-			-->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/zonegeoselection_listviewrow"
     android:layout_width="match_parent"
@@ -57,7 +56,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/zonegeoselection_listviewrow_icon"
-            android:layout_toLeftOf="@+id/zonegeoselection_selectBtn_h"
+            android:layout_toLeftOf="@+id/zonegeoselection_selectBtn_radio"
             android:layout_toRightOf="@+id/zonegeoselection_tree_nodes"
             android:orientation="vertical"
 			android:paddingLeft="4dip"
@@ -82,38 +81,16 @@
                 android:textColor="?android:attr/textColorSecondary" />
 
         </LinearLayout>
-
-        <ImageButton
-            android:id="@+id/zonegeoselection_selectBtn_h"
+        <RadioButton
+            android:id="@+id/zonegeoselection_selectBtn_radio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text=""
             android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/zonegeoselection_listviewrow_icon"
-            android:layout_margin="0dp"
-            android:background="@android:color/transparent"
-            android:drawablePadding="0dp"
-            android:paddingRight="5dp"
-            android:paddingTop="3dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_action_arbre_phylogenetique" />
-        
-         <ImageButton
-             android:id="@+id/zonegeoselection_selectBtn_b"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_alignParentRight="true"
-             android:layout_below="@+id/zonegeoselection_selectBtn_h"
-             android:paddingBottom="3dp"
-             android:layout_marginTop="10dp"
-             android:background="@android:color/transparent"
-             android:drawablePadding="0dp"
-             android:paddingRight="5dp"
-             android:scaleType="fitCenter"
-             android:src="@drawable/ic_action_liste_images" />
-      
+            android:layout_alignTop="@+id/zonegeoselection_listviewrow_icon" />
+
     </RelativeLayout>
     
     <View style="@style/Separateur" />
 </LinearLayout>
-<!-- End of user code
-			-->
+

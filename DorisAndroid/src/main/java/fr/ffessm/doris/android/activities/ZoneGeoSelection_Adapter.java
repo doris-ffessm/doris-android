@@ -58,6 +58,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 //Start of user code protected additional ZoneGeoSelection_Adapter imports
@@ -168,38 +169,18 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter {
 
         // Start of user code protected additional ZoneGeoSelection_Adapter getView code
 
-        ImageButton imgBtnH = (ImageButton) convertView.findViewById(R.id.zonegeoselection_selectBtn_h);
-        imgBtnH.setFocusable(false);
-        imgBtnH.setClickable(true);
-        imgBtnH.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (((ZoneGeoSelection_ClassListViewActivity) context).isActivityDestroyed() || ((ZoneGeoSelection_ClassListViewActivity) context).isFinishing())
-                    return;
-                Toast.makeText(context, "Filtre zone géographique : " + entry.getNom(), Toast.LENGTH_SHORT).show();
-                SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), entry.getId());
-                ed.apply();
-                ((ZoneGeoSelection_ClassListViewActivity) context).finish();
-            }
-        });
-
-        ImageButton imgBtnB = (ImageButton) convertView.findViewById(R.id.zonegeoselection_selectBtn_b);
-        imgBtnB.setFocusable(false);
-        imgBtnB.setClickable(true);
-        imgBtnB.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (((ZoneGeoSelection_ClassListViewActivity) context).isActivityDestroyed() || ((ZoneGeoSelection_ClassListViewActivity) context).isFinishing())
-                    return;
-                Toast.makeText(context, "Filtre zone géographique : " + entry.getNom(), Toast.LENGTH_SHORT).show();
-                SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), entry.getId());
-                ed.apply();
-                ((ZoneGeoSelection_ClassListViewActivity) context).finish();
-            }
+        RadioButton imgBtnH = (RadioButton) convertView.findViewById(R.id.zonegeoselection_selectBtn_radio);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        int currentZoneFilterId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), -1);
+        imgBtnH.setChecked(entry.getId() == currentZoneFilterId);
+        imgBtnH.setOnClickListener(v -> {
+            if (((ZoneGeoSelection_ClassListViewActivity) context).isActivityDestroyed() || ((ZoneGeoSelection_ClassListViewActivity) context).isFinishing())
+                return;
+            Toast.makeText(context, "Filtre zone géographique : " + entry.getNom(), Toast.LENGTH_SHORT).show();
+            SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+            ed.putInt(context.getString(R.string.pref_key_filtre_zonegeo), entry.getId());
+            ed.apply();
+            ((ZoneGeoSelection_ClassListViewActivity) context).finish();
         });
 
         ImageView ivIcone = (ImageView) convertView.findViewById(R.id.zonegeoselection_listviewrow_icon);
