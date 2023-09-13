@@ -661,8 +661,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                             Accueil_CustomViewActivity.this.getResources().getString(
                                     R.string.pref_key_accueil_liste_ou_arbre_pardefaut),
                                     modesValues[index]).apply();
-                    // todo update main screen icons
+                    // update main screen icons
                     Accueil_CustomViewActivity.this.refreshScreenData();
+                    // close foldable layout
+                    foldUnfoldModeSection();
                 }
             });
 

@@ -5,7 +5,9 @@
     android:id="@+id/mode_affichage_listviewrow"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingTop="5dp"
+    android:paddingLeft="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
