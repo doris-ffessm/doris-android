@@ -145,16 +145,14 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     public ImageButton btnFoldUnfoldZoneSection;
     private LinearLayout llFoldUnfoldZoneSection;
     private boolean isZoneFold = false;
-    private int image_maximize_zone;
-    private int image_minimize_zone;
     protected List<View> allFoldableZoneView  = new ArrayList<>();
+
+
+    public ImageButton btnFoldUnfoldSpecieGroupSection;
 
     // deal with mode folding/unfolding
     public ImageButton btnFoldUnfoldModeSection;
-    private LinearLayout llFoldUnfoldModeSection;
     private boolean isModeFold = false;
-    private int image_maximize_mode;
-    private int image_minimize_mode;
     protected List<View> allFoldableModeView  = new ArrayList<>();
 
     protected SparseArray<MultiProgressBar> progressBarZones = new SparseArray<>();
@@ -214,8 +212,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         }
 
         // Affichage zone géo
-        createCurrentZoneGeoViews();
         createNavigationZonesGeoViews();
+
+        // Affichage groupes d'espèces
+        createSpecieGroupViews();
 
         // Affichage modeAffichages
         createModeAffichageViews();
@@ -306,15 +306,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         super.onDestroy();
     }
 
-
-    protected void createCurrentZoneGeoViews() {
-        LinearLayout llContainerLayout = (LinearLayout) findViewById(R.id.accueil_current_zone_layout);
-
-        ZoneGeographique currentZoneFilter = getCurrentZoneGeographique();
-
-        llContainerLayout.addView(createNavigationZoneView(currentZoneFilter));
-    }
-
     /**
      * Création de la liste pliable des Zones
      */
@@ -335,17 +326,12 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         // deal with fold/unfold
         btnFoldUnfoldZoneSection = (ImageButton) findViewById(R.id.accueil_zone_fold_unfold_section_imageButton);
         llFoldUnfoldZoneSection = (LinearLayout) findViewById(R.id.accueil_navigation_zones_layout);
-        image_maximize_zone = R.drawable.ic_app_filter_geo_zone;
-        image_minimize_zone = R.drawable.ic_app_filter_geo_zone;
         isZoneFold = true;
-        btnFoldUnfoldZoneSection.setImageResource(image_maximize_zone);
         btnFoldUnfoldZoneSection.setVisibility(View.VISIBLE);
         if(isZoneFold) {
-            btnFoldUnfoldZoneSection.setImageResource(image_minimize_zone);
-            //btnFoldUnfoldZoneSection.setMaxWidth(96);
+            btnFoldUnfoldZoneSection.setImageBitmap(drawIconWithGear(getResources().getDrawable(R.drawable.doris_icone_toutes_zones)));
         } else {
-            btnFoldUnfoldZoneSection.setImageResource(image_maximize_zone);
-            //btnFoldUnfoldZoneSection.setMaxWidth(96);
+            btnFoldUnfoldZoneSection.setImageBitmap(drawIconWithGear(getResources().getDrawable(R.drawable.doris_icone_toutes_zones)));
         }
 
         // btnFoldUnfoldZoneSection // toute la section sert de lien pour plier/déplier
@@ -358,14 +344,12 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
 
         // Affichage lien vers "toutes Zones"
-        if(currentZoneFilter != null ) {
-            ZoneGeographique zoneToutesZones = new ZoneGeographique();
-            zoneToutesZones.setToutesZones();
-            View allZonesView = createNavigationZoneView(zoneToutesZones);
-            allFoldableZoneView.add(allZonesView);
-            llContainerLayout.addView(allZonesView);
-            allZonesView.setVisibility(View.GONE);
-        }
+        ZoneGeographique zoneToutesZones = new ZoneGeographique();
+        zoneToutesZones.setToutesZones();
+        View allZonesView = createNavigationZoneView(zoneToutesZones);
+        allFoldableZoneView.add(allZonesView);
+        llContainerLayout.addView(allZonesView);
+        allZonesView.setVisibility(View.GONE);
 
         // affichage lien vers les zones sauf la zone courante déjà présentée dans createCurrentZoneGeoViews
         List<ZoneGeographique> listeZoneGeo = this.getHelper().getZoneGeographiqueDao().queryForAll();
@@ -378,12 +362,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                 zoneGeo.setContextDB(this.getHelper().getDorisDBHelper());
             }
 
-            if(currentZoneFilter == null || zoneGeo.getId() != currentZoneFilter.getId()) {
-                View zoneView = createNavigationZoneView(zoneGeo);
-                allFoldableZoneView.add(zoneView);
-                llContainerLayout.addView(zoneView);
-                zoneView.setVisibility(View.GONE);
-            }
+            View zoneView = createNavigationZoneView(zoneGeo);
+            allFoldableZoneView.add(zoneView);
+            llContainerLayout.addView(zoneView);
+            zoneView.setVisibility(View.GONE);
+
         }
 
     }
@@ -590,10 +573,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     private void foldUnfoldZoneSection() {
         isZoneFold = !isZoneFold;
         if(isZoneFold) {
-            btnFoldUnfoldZoneSection.setImageResource(image_minimize_zone);
             ((TextView)findViewById(R.id.accueil_zone_title)).setText(R.string.accueil_customview_show_other_zones);
         } else {
-            btnFoldUnfoldZoneSection.setImageResource(image_maximize_zone);
             ((TextView)findViewById(R.id.accueil_zone_title)).setText(R.string.accueil_customview_hide_other_zones);
         }
         for (View foldableZone : allFoldableZoneView) {
@@ -604,7 +585,31 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             }
         }
     }
+    protected void createSpecieGroupViews() {
+        LinearLayout llContainer = (LinearLayout) findViewById(R.id.accueil_specie_group_layout);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        btnFoldUnfoldSpecieGroupSection = (ImageButton) llContainer.findViewById(R.id.accueil_specie_group_fold_unfold_section_imageButton);
+        btnFoldUnfoldSpecieGroupSection.setImageBitmap(drawIconWithGear(getResources().getDrawable(R.drawable.ic_action_arbre_phylogenetique)));
+        final Context context = this;
+        // toute la section et le bouton sert de lien pour plier/déplier
+        View.OnClickListener cl =new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Permet de revenir à l'accueil après recherche par le groupe, si false on irait dans la liste en quittant
+                Intent toGroupeSelectionView = new Intent(context, GroupeSelection_ClassListViewActivity.class);
+                Bundle b = new Bundle();
+                b.putBoolean("GroupeSelection_depuisAccueil", true);
+                toGroupeSelectionView.putExtras(b);
+
+                showToast(getString(R.string.accueil_recherche_guidee_arbre_toast_text));
+                startActivity(toGroupeSelectionView);
+            }
+        };
+        llContainer.setOnClickListener(cl);
+        btnFoldUnfoldSpecieGroupSection.setOnClickListener(cl);
+    }
     protected void createModeAffichageViews() {
         LinearLayout llContainerLayout = (LinearLayout) findViewById(R.id.accueil_mode_affichage_layout);
 
@@ -668,35 +673,22 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         // deal with fold/unfold
         btnFoldUnfoldModeSection = (ImageButton) findViewById(R.id.accueil_mode_affichage_fold_unfold_section_imageButton);
-        llFoldUnfoldModeSection = (LinearLayout) findViewById(R.id.accueil_mode_affichage_layout);
-        image_maximize_mode = R.drawable.sort_gear_grey;
-        image_minimize_mode = R.drawable.sort_gear_grey;
-        isModeFold = true;
-        btnFoldUnfoldModeSection.setImageResource(image_maximize_mode);
-        btnFoldUnfoldModeSection.setVisibility(View.VISIBLE);
-        if(isModeFold) {
-            btnFoldUnfoldModeSection.setImageResource(image_minimize_mode);
-            //btnFoldUnfoldZoneSection.setMaxWidth(96);
-        } else {
-            btnFoldUnfoldModeSection.setImageResource(image_maximize_mode);
-        }
+        btnFoldUnfoldModeSection.setImageBitmap(drawIconWithGear(getResources().getDrawable(R.drawable.ic_action_liste_fiches)));
 
         // toute la section sert de lien pour plier/déplier
         LinearLayout llFold = (LinearLayout) llContainerLayout.findViewById(R.id.accueil_mode_affichage_fold_layout);
         llFold.setOnClickListener(v -> {
             foldUnfoldModeSection();
         });
-        llFold.setOnClickListener(v -> {
+        btnFoldUnfoldModeSection.setOnClickListener(v -> {
             foldUnfoldModeSection();
         });
     }
     private void foldUnfoldModeSection() {
         isModeFold = !isModeFold;
         if(isModeFold) {
-            btnFoldUnfoldModeSection.setImageResource(image_minimize_mode);
             ((TextView)findViewById(R.id.accueil_mode_affichage_title)).setText(R.string.accueil_customview_show_mode_affichage);
         } else {
-            btnFoldUnfoldModeSection.setImageResource(image_maximize_mode);
             ((TextView)findViewById(R.id.accueil_mode_affichage_title)).setText(R.string.accueil_customview_hide_mode_affichage);
         }
         for (View foldableMode : allFoldableModeView) {
@@ -796,7 +788,32 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         EtatModeHorsLigne_CustomViewActivity.updateProgressBarZone(this, inZoneGeo, progressBarZone, sbTexte.toString());
     }
 
+    /**
+     * draw a bitmap with a gear on bottom right
+     * @return
+     */
+    protected Bitmap drawIconWithGear(Drawable baseDrawable){
+
+        int width = (int) (ScreenTools.dp2px(this,
+                        getParamOutils().getParamInt(R.string.pref_key_accueil_icone_taille, Integer.parseInt(this.getString(R.string.accueil_icone_taille_defaut))))/1.5);
+        int height = width;
+
+        // Create a blank bitmap with the desired width and height
+        Bitmap combinedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+        // Create a canvas to draw on the bitmap
+        Canvas canvas = new Canvas(combinedBitmap);
+        Drawable gearDrawable = getResources().getDrawable(R.drawable.gear_grey);
+        baseDrawable.setBounds(0,0,width, height);
+        gearDrawable.setBounds(width/2, height/2, width, height);
+
+        baseDrawable.draw(canvas);
+        gearDrawable.draw(canvas);
+        return combinedBitmap;
+    }
+
     protected Bitmap drawIconForCurrentSearch(){
+
         int width = ScreenTools.dp2px(this,
                 getParamOutils().getParamInt(R.string.pref_key_accueil_icone_taille, Integer.parseInt(this.getString(R.string.accueil_icone_taille_defaut))));
         int height = width;
@@ -807,8 +824,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         // Create a canvas to draw on the bitmap
         Canvas canvas = new Canvas(combinedBitmap);
 
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Load your drawables
         //Drawable backgroundDrawable = getResources().getDrawable(R.drawable.icon_background);

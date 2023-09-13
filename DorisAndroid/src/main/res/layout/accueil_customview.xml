@@ -75,14 +75,6 @@
 			</LinearLayout>
 			<View style="@style/Separateur"/>
 
-			<LinearLayout
-				android:id="@+id/accueil_current_zone_layout"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:orientation="vertical" >
-			</LinearLayout>
-			<View style="@style/Separateur"/>
-
             <LinearLayout
 		        android:id="@+id/accueil_navigation_zones_layout"
 		        android:layout_width="fill_parent"
