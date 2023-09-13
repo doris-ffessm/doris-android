@@ -1,0 +1,39 @@
+package fr.ffessm.doris.android.tools;
+
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import fr.ffessm.doris.android.R;
+
+public class SortModesTools {
+
+    public static Drawable getDrawable(Context context, String sortModeValue) {
+        Map<String, Drawable> map = getDrawableMap(context);
+        return map.get(sortModeValue);
+    }
+
+    public static Map<String, Drawable> getDrawableMap(Context context) {
+        TypedArray icons = context.getResources().obtainTypedArray(R.array.accueil_listes_ou_arbre_icons);
+
+        String[] values = context.getResources().getStringArray(R.array.accueil_listes_ou_arbre_values);
+        Map<String, Drawable> map = new HashMap<>();
+        for (int i = 0; i < Math.min(values.length, values.length); i++) {
+            map.put(values[i], icons.getDrawable(i));
+        }
+        return map;
+    }
+    public static Map<String, String> getLabelMap(Context context) {
+        String[] labels = context.getResources().getStringArray(R.array.accueil_listes_ou_arbre_lib);
+
+        String[] values = context.getResources().getStringArray(R.array.accueil_listes_ou_arbre_values);
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < Math.min(values.length, values.length); i++) {
+            map.put(values[i], labels[i]);
+        }
+        return map;
+    }
+}

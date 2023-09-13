@@ -1,0 +1,9 @@
+<resources>
+    <!-- list icons  associated to preferences_strings.xml/accueil_listes_ou_arbre_values-->
+    <!-- TODO rename arrays and group here all that are related to mode affichage -->
+    <string-array name="accueil_listes_ou_arbre_icons">
+        <item>@drawable/ic_action_liste_fiches</item>
+        <item>@drawable/ic_action_arbre_phylogenetique</item>
+        <item>@drawable/ic_action_liste_images</item>
+    </string-array>
+</resources>

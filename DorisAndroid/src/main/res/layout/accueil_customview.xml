@@ -37,7 +37,7 @@
 			        android:layout_marginTop="2dip"
 			        android:adjustViewBounds="true"
 			        android:contentDescription="recherche précédente"
-			        android:maxHeight="64dip"
+			        android:maxHeight="128dip"
 			        android:src="@drawable/doris_icone_doris_large" >
 
 			    </ImageView>

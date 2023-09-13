@@ -86,6 +86,13 @@ public class ScreenTools {
         return columnHeight;
     }
 
+    /**
+     *
+     * Adapt size from dp to px (ie. take care of density
+     * @param context
+     * @param dpDim
+     * @return
+     */
     public static int dp2px(Context context, int dpDim) {
         return (int) ((dpDim * context.getResources().getDisplayMetrics().density) + 0.5);
     }

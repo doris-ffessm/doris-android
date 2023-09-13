@@ -45,11 +45,17 @@ package fr.ffessm.doris.android.activities;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
+import fr.ffessm.doris.android.tools.SortModesTools;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.ffessm.doris.android.tools.Zones_Outils;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -304,24 +310,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     protected void createCurrentZoneGeoViews() {
         LinearLayout llContainerLayout = (LinearLayout) findViewById(R.id.accueil_current_zone_layout);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        ZoneGeographique currentZoneFilter = getCurrentZoneGeographique();
 
-        ZoneGeographique currentZoneFilter=null;
-        int currentZoneFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
-        if (currentZoneFilterId == -1 || currentZoneFilterId == 0) { // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
-            // pas de zone précdente
-        } else {
-            currentZoneFilter = getHelper().getZoneGeographiqueDao().queryForId(currentZoneFilterId);
-        }
-
-        // display previous zone first
-        if(currentZoneFilter != null){
-            llContainerLayout.addView(createNavigationZoneView(currentZoneFilter));
-        } else {
-            ZoneGeographique zoneToutesZones = new ZoneGeographique();
-            zoneToutesZones.setToutesZones();
-            llContainerLayout.addView(createNavigationZoneView(zoneToutesZones));
-        }
+        llContainerLayout.addView(createNavigationZoneView(currentZoneFilter));
     }
 
     /**
@@ -805,6 +796,50 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         EtatModeHorsLigne_CustomViewActivity.updateProgressBarZone(this, inZoneGeo, progressBarZone, sbTexte.toString());
     }
 
+    protected Bitmap drawIconForCurrentSearch(){
+        int width = ScreenTools.dp2px(this,
+                getParamOutils().getParamInt(R.string.pref_key_accueil_icone_taille, Integer.parseInt(this.getString(R.string.accueil_icone_taille_defaut))));
+        int height = width;
+
+        // Create a blank bitmap with the desired width and height
+        Bitmap combinedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+        // Create a canvas to draw on the bitmap
+        Canvas canvas = new Canvas(combinedBitmap);
+
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Load your drawables
+        //Drawable backgroundDrawable = getResources().getDrawable(R.drawable.icon_background);
+        Drawable zoneDrawable = getResources().getDrawable(getFichesOutils().getZoneIconeId(getCurrentZoneGeographique().getZoneGeoKind()));
+        Drawable modeDrawable = SortModesTools.getDrawable(this, getCurrentMode());
+        Groupe specieGroup = getCurrentSpecieFilter();
+        Drawable specieDrawable;
+        if (specieGroup != null && specieGroup.getCleURLImage() != null && !specieGroup.getCleURLImage().isEmpty()) {
+            int identifierIconeGroupe = getResources().getIdentifier(specieGroup.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw", getPackageName());
+
+            Bitmap bitmap = BitmapFactory.decodeStream(getResources().openRawResource(identifierIconeGroupe));
+            specieDrawable = new BitmapDrawable(getResources(), bitmap);
+        } else {
+            // default image
+            specieDrawable =  getResources().getDrawable(R.drawable.app_ic_launcher);
+        }
+
+        // Set bounds for the drawables (adjust these as needed)
+        //backgroundDrawable.setBounds(0, 0, width, height);
+        zoneDrawable.setBounds(0, 0, width/2, height/2);
+        modeDrawable.setBounds(width/2, height/4, width, height - height/4);
+        specieDrawable.setBounds(width/5, height/2, width/2 + width/5, height);
+
+        // Draw the drawables onto the canvas
+        //backgroundDrawable.draw(canvas);
+        zoneDrawable.draw(canvas);
+        modeDrawable.draw(canvas);
+        specieDrawable.draw(canvas);
+        return combinedBitmap;
+    }
+
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d(LOG_TAG, "Preference change detected for key =" + key);
         if (key.equals(R.string.pref_key_theme)) {
@@ -815,6 +850,46 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         }
     }
 
+    /**
+     * get the ZoneGeographique as set in the preferences or "Touteszones" if no preferences
+     * @return
+     */
+    private ZoneGeographique getCurrentZoneGeographique() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        ZoneGeographique currentZoneFilter=null;
+        int currentZoneFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
+        if (currentZoneFilterId == -1 || currentZoneFilterId == 0) { // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
+            // no previous zone, use a "AllZone"
+            currentZoneFilter = new ZoneGeographique();
+            currentZoneFilter.setToutesZones();
+        } else {
+            currentZoneFilter = getHelper().getZoneGeographiqueDao().queryForId(currentZoneFilterId);
+        }
+        return currentZoneFilter;
+    }
+
+    /**
+     * return the Groupe of the current specie filter or null if no filter
+     */
+    private Groupe getCurrentSpecieFilter() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int groupRootId = Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId();
+        int filtreCourantId = prefs.getInt(getString(R.string.pref_key_filtre_groupe), groupRootId);
+        if (filtreCourantId == groupRootId) {
+            return null;
+        } else {
+            Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
+            return groupeFiltreCourant;
+        }
+    }
+
+    private String getCurrentMode() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        return prefs.getString(getResources().getString(
+                R.string.pref_key_accueil_liste_ou_arbre_pardefaut),
+                getResources().getString(
+                        R.string.accueil_liste_ou_arbre_default));
+    }
 
     private Param_Outils getParamOutils() {
         if (paramOutils == null) paramOutils = new Param_Outils(getContext());
@@ -945,22 +1020,25 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     	*/
         // recherche précédente
         //ImageView ivIcone = (ImageView) findViewById(R.id.accueil_recherche_precedente_icone);
-        int iconeZine = getParamOutils().getParamInt(R.string.pref_key_accueil_icone_taille, Integer.parseInt(this.getString(R.string.accueil_icone_taille_defaut)));
-        ((ImageView) findViewById(R.id.accueil_recherche_precedente_icone)).setMaxHeight(iconeZine);
+        int iconeSize = ScreenTools.dp2px(this,
+                getParamOutils().getParamInt(R.string.pref_key_accueil_icone_taille, Integer.parseInt(this.getString(R.string.accueil_icone_taille_defaut))));
+        ImageView ivIcon = ((ImageView) findViewById(R.id.accueil_recherche_precedente_icone));
+        ivIcon.setMaxHeight(iconeSize);
+        ivIcon.setImageBitmap(drawIconForCurrentSearch());
 
 
         StringBuilder sbRecherchePrecedente = new StringBuilder();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        int groupRootId = Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId();
-        int filtreCourantId = prefs.getInt(getString(R.string.pref_key_filtre_groupe), groupRootId);
-        if (filtreCourantId == groupRootId) {
+
+        Groupe currentSpecieGroupFilter = getCurrentSpecieFilter();
+        if(currentSpecieGroupFilter == null) {
             sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreEspece_sans));
         } else {
-            Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
-            sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec) + " " + groupeFiltreCourant.getNomGroupe().trim());
+            sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec) + " " + currentSpecieGroupFilter.getNomGroupe().trim());
         }
-        sbRecherchePrecedente.append(" ; ");
+
+        sbRecherchePrecedente.append("\n");
         int currentFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
         if (currentFilterId == -1 || currentFilterId == 0) { // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
             sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreGeographique_sans));
@@ -972,11 +1050,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                 sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreGeographique_sans));
             }
         }
-        sbRecherchePrecedente.append(" ; "); // todo remove
-        sbRecherchePrecedente.append(prefs.getString(getResources().getString(
-                R.string.pref_key_accueil_liste_ou_arbre_pardefaut),
-                getResources().getString(
-                        R.string.accueil_liste_ou_arbre_default)));
+        sbRecherchePrecedente.append("\n");
+        sbRecherchePrecedente.append(SortModesTools.getLabelMap(this).get(getCurrentMode()));
 
         // TODO rappeler le dernier text recherché
         TextView tvRecherchePrecedente = (TextView) findViewById(R.id.accueil_recherche_precedente_details);
