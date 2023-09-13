@@ -152,7 +152,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
     // deal with mode folding/unfolding
     public ImageButton btnFoldUnfoldModeSection;
-    private boolean isModeFold = false;
+    private boolean isModeFold = true;
     protected List<View> allFoldableModeView  = new ArrayList<>();
 
     protected SparseArray<MultiProgressBar> progressBarZones = new SparseArray<>();
@@ -612,11 +612,20 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         }
     }
 
-    /*public void onClickAfficherListe(View view){
-    	showToast("L'idée est d'afficher directement la liste filtrée depuis ici, mais il faudrait que la ProgressionBar soit un objet plus propre.");
-    }*/
     public void onClickBtnListeFiches(View view) {
-        startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
+        switch ( getCurrentMode() ) {
+            case "photos":
+                startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
+                break;
+            case "liste":
+                startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
+                break;
+            case "arbre":
+                showToast("Affichage par groupe pas encore implémenté.");
+                break;
+            default:
+                startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
+        }
     }
 
     public void onClickBtnRechercheGuidee(View view) {
