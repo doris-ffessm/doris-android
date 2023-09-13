@@ -119,6 +119,42 @@
 	        </LinearLayout>
 
 			<View style="@style/Separateur"/>
+			<LinearLayout
+				android:id="@+id/accueil_specie_group_layout"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:orientation="vertical" >
+				<LinearLayout
+					android:id="@+id/accueil_specie_group_fold_layout"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="2dp"
+					android:orientation="horizontal" >
+					<ImageButton
+						android:id="@+id/accueil_specie_group_fold_unfold_section_imageButton"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:adjustViewBounds="true"
+						android:background="@android:color/transparent"
+						android:scaleType="centerInside"
+						android:contentDescription="@string/fold_unfold_content_description"
+						android:src="@drawable/app_expander_ic_minimized" />
+					<TextView
+						android:id="@+id/accueil_specie_group_title"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginLeft="2dp"
+						android:layout_weight="36"
+						android:ellipsize="marquee"
+						android:fadingEdge="horizontal"
+						android:paddingLeft="4dp"
+						android:paddingRight="4dp"
+						android:text="@string/accueil_customview_show_specie_group"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						tools:ignore="HardcodedText" />
+				</LinearLayout>
+			</LinearLayout>
+			<View style="@style/Separateur"/>
 
 			<LinearLayout
 				android:id="@+id/accueil_mode_affichage_layout"
@@ -156,7 +192,7 @@
 				</LinearLayout>
 			</LinearLayout>
 			<View style="@style/Separateur"/>
-			
+
 			<TextView
 		        android:id="@+id/accueil_etat_hors_ligne_titre"
 		        android:layout_width="wrap_content"

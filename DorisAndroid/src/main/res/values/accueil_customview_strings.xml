@@ -22,6 +22,8 @@
 
 	<string name="accueil_customview_show_other_zones">Montrer les filtres de zone géographique</string>
 	<string name="accueil_customview_hide_other_zones">Masquer les filtres de zone géographique</string>
+	<string name="accueil_customview_show_specie_group">Montrer les groupes d\'espèces</string>
+	<string name="accueil_customview_hide_specie_group">Masquer les groupes d\'espèces</string>
 	<string name="accueil_customview_show_mode_affichage">Montrer les modes d\'affichage</string>
 	<string name="accueil_customview_hide_mode_affichage">Masquer les modes d\'affichage</string>
 
