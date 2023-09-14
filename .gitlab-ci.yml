@@ -28,7 +28,7 @@ cache:
       - $HOME/.gradle/wrapper/dists
       - .gradle/wrapper
       - .gradle/caches
-  - key: "doris_db"
+  - key: "doris_db$CI_COMMIT_REF_SLUG"
     paths:
       - DorisAndroidPrefetch/run
 
