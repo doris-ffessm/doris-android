@@ -112,27 +112,27 @@ public class PrefetchGroupes {
 
         List<Groupe> listeGroupes = new ArrayList<>();
         // check manuel du n° https://doris.ffessm.fr/api/ezx/v1/object/<numeroGroupe>?oauth_token=c977aaf12f519c53081d70edd3010b3961bbfcc4  sur le site
-        Groupe racine = new Groupe(0,0,"racine", null);
+        Groupe racine = new Groupe(0,0,"racine", 0x00000000 ,null);
         racine.setId(1);
         listeGroupes.add(racine);
         listeGroupes.add(new Groupe(171365,0,"PROCARYOTES", getGroupeWithName(listeGroupes,"racine")));
         listeGroupes.add(new Groupe(48868,1000,"Procaryotes", getGroupeWithName(listeGroupes,"PROCARYOTES")));
-        listeGroupes.add(new Groupe(136033,0,"VEGETAUX", getGroupeWithName(listeGroupes,"racine")));
-        listeGroupes.add(new Groupe(136029,0,"Algues", getGroupeWithName(listeGroupes,"VEGETAUX")));
+        listeGroupes.add(new Groupe(136033,0,"VEGETAUX", 0xff00ff00, getGroupeWithName(listeGroupes,"racine")));
+        listeGroupes.add(new Groupe(136029,0,"Algues", 0x3A8F4500, getGroupeWithName(listeGroupes,"VEGETAUX")));
         listeGroupes.add(new Groupe(48869,2000,"Rhodophycées", getGroupeWithName(listeGroupes,"Algues")));
         listeGroupes.add(new Groupe(48972,2072,"Thalles érigés", getGroupeWithName(listeGroupes,"Rhodophycées")));
         listeGroupes.add(new Groupe(48973,2073,"Thalles encroûtants", getGroupeWithName(listeGroupes,"Rhodophycées")));
         listeGroupes.add(new Groupe(48870,3000,"Chlorophycées", getGroupeWithName(listeGroupes,"Algues")));
         listeGroupes.add(new Groupe(48871,4000,"Phéophycées",getGroupeWithName(listeGroupes,"Algues")));
-        listeGroupes.add(new Groupe(811394,4000,"Bryophytes",getGroupeWithName(listeGroupes,"VEGETAUX")));
-        listeGroupes.add(new Groupe(897451,4000,"Filicophytes",getGroupeWithName(listeGroupes,"VEGETAUX")));
+        listeGroupes.add(new Groupe(811394,4000,"Bryophytes", 0x4A8F3A00, getGroupeWithName(listeGroupes,"VEGETAUX")));
+        listeGroupes.add(new Groupe(897451,4000,"Filicophytes",0x558F3A00, getGroupeWithName(listeGroupes,"VEGETAUX")));
 
-        listeGroupes.add(new Groupe(136031,0,"Plantes à fleurs", getGroupeWithName(listeGroupes,"VEGETAUX")));
+        listeGroupes.add(new Groupe(136031,0,"Plantes à fleurs", 0x688F3A00, getGroupeWithName(listeGroupes,"VEGETAUX")));
         listeGroupes.add(new Groupe(48872,5000,"Plantes subaquatiques", getGroupeWithName(listeGroupes,"Plantes à fleurs")));
         listeGroupes.add(new Groupe(48873,6000,"Plantes terrestres", getGroupeWithName(listeGroupes,"Plantes à fleurs")));
-        listeGroupes.add(new Groupe(171370,0,"LICHENS", getGroupeWithName(listeGroupes,"racine")));
+        listeGroupes.add(new Groupe(171370,0,"LICHENS", 0x883A8F00, getGroupeWithName(listeGroupes,"racine")));
         listeGroupes.add(new Groupe(48874,7000,"Champignons et Lichens", getGroupeWithName(listeGroupes,"LICHENS")));
-        listeGroupes.add(new Groupe(171372,0,"ANIMAUX", getGroupeWithName(listeGroupes,"racine")));
+        listeGroupes.add(new Groupe(171372,0,"ANIMAUX", 0xC7695000, getGroupeWithName(listeGroupes,"racine")));
         listeGroupes.add(new Groupe(48875,8000,"Animaux unicellulaires",getGroupeWithName(listeGroupes,"ANIMAUX")));
         listeGroupes.add(new Groupe(136051,0,"EPONGES ou SPONGIAIRES", getGroupeWithName(listeGroupes,"Animaux unicellulaires")));
         listeGroupes.add(new Groupe(48876,9000,"Calcisponges", getGroupeWithName(listeGroupes,"EPONGES ou SPONGIAIRES")));

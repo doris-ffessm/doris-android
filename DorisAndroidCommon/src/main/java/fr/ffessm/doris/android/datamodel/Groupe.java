@@ -128,6 +128,10 @@ Seuls certains groupes de plus bas niveau ont le numéro de sous-groupe */
 	@DatabaseField
 	protected java.lang.String nomImage;
 
+	/** couleur associée au groupe Doris */
+	@DatabaseField
+	protected int couleurGroupe;
+
 	/** En haut des pages de groupe, il y a un petit texte expliquant les grandes caractéristques du groupe.
 C'est ce texte. */ 
 	/** TEST GM : SQLite = SQLite **/
@@ -166,11 +170,40 @@ C'est ce texte. */
         this.groupePere = groupePere;
     }
 
+    public Groupe(int numeroGroupe, int numeroSousGroupe, java.lang.String nomGroupe,
+				  java.lang.String descriptionGroupe,
+				  java.lang.String cleURLImage,
+				  java.lang.String nomImage,
+				  java.lang.String descriptionDetailleeGroupe,
+				  int couleurGroupe,
+				  Groupe groupePere) {
+		super();
+		this.numeroGroupe = numeroGroupe;
+		this.numeroSousGroupe = numeroSousGroupe;
+		this.nomGroupe = nomGroupe;
+		this.descriptionGroupe = descriptionGroupe;
+		this.cleURLImage = cleURLImage;
+		this.nomImage = nomImage;
+		this.descriptionDetailleeGroupe = descriptionDetailleeGroupe;
+		this.couleurGroupe = couleurGroupe;
+		this.groupePere = groupePere;
+	}
+
 	public Groupe(int numeroGroupe, int numeroSousGroupe, java.lang.String nomGroupe, Groupe groupePere) {
 		super();
 		this.numeroGroupe = numeroGroupe;
 		this.numeroSousGroupe = numeroSousGroupe;
 		this.nomGroupe = nomGroupe;
+		this.groupePere = groupePere;
+	}
+
+	public Groupe(int numeroGroupe, int numeroSousGroupe, java.lang.String nomGroupe,
+				  int couleurGroupe, Groupe groupePere) {
+		super();
+		this.numeroGroupe = numeroGroupe;
+		this.numeroSousGroupe = numeroSousGroupe;
+		this.nomGroupe = nomGroupe;
+		this.couleurGroupe = couleurGroupe;
 		this.groupePere = groupePere;
 	}
 
@@ -233,6 +266,15 @@ C'est ce texte. */
 	public void setDescriptionGroupe(java.lang.String descriptionGroupe) {
 		this.descriptionGroupe = descriptionGroupe;
 	}
+
+	public int getCouleurGroupe() {
+		return couleurGroupe;
+	}
+
+	public void setCouleurGroupe(int couleurGroupe) {
+		this.couleurGroupe = couleurGroupe;
+	}
+
 	public java.lang.String getCleURLImage() {
 		return this.cleURLImage;
 	}
