@@ -102,7 +102,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        ListView list = (ListView) findViewById(R.id.groupeselection_listview);
+        ListView list = findViewById(R.id.groupeselection_listview);
         list.setClickable(false);
         //Start of user code onCreate GroupeSelection_ClassListViewActivity adapter creation
         Log.d(LOG_TAG, "onCreate() - Début");
@@ -125,7 +125,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
         //Start of user code onCreate additions GroupeSelection_ClassListViewActivity
 
         // affiche ou cache le filtre espèce actuel (+ son bouton de suppression)
-        RelativeLayout currentFilterInfoLayout = (RelativeLayout) findViewById(R.id.groupselection_listview_filtre_espece_courant_layout);
+        RelativeLayout currentFilterInfoLayout = findViewById(R.id.groupselection_listview_filtre_espece_courant_layout);
 
         int groupRootId = Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId();
         int filtreCourantId = prefs.getInt(this.getString(R.string.pref_key_filtre_groupe), groupRootId);
@@ -136,7 +136,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
         } else {
             Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
 
-            TextView filtreCourantTV = (TextView) findViewById(R.id.groupselection_listview_filtre_espece_courant_textView);
+            TextView filtreCourantTV = findViewById(R.id.groupselection_listview_filtre_espece_courant_textView);
             currentFilterInfoLayout.setVisibility(View.VISIBLE);
             filtreCourantTV.setText(getString(R.string.groupselection_listview_filtre_espece_courant_label) + groupeFiltreCourant.getNomGroupe());
 
@@ -182,23 +182,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
             groupeSelection_adapter.notifyDataSetChanged();
 
         } else {
-            showToast("Filtre espèces : " + clickedGroupe.getNomGroupe());
-
-            prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), clickedGroupe.getId()).apply();
-
-            if (!depuisAccueil) {
-                ((GroupeSelection_ClassListViewActivity) this).finish();
-            } else {
-
-                DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
-
-                if (accueil_liste_ou_arbre_pardefaut.equals("photos")) {
-                    startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
-                } else {
-                    startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
-                }
-
-            }
+            showToast("Pas de sous-groupe. Cliquez sur le bouton radio pour sélectionner ce groupe.");
         }
 
         //End of user code
@@ -209,8 +193,8 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
     public void onRemoveCurrentFilterClick(View view) {
         showToast(R.string.groupselection_filtre_supprime);
 
-        prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
-        prefs.edit().apply();
+        prefs.edit().putInt(this.getString(R.string.pref_key_filtre_groupe),
+                Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId()).apply();
         finish();
     }
     //End of user code
@@ -321,7 +305,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
             case KeyEvent.KEYCODE_BACK:
 
                 if (retourGroupeSuperieur())
-                    ((GroupeSelection_ClassListViewActivity) this).finish();
+                    this.finish();
 
                 return true;
         }

@@ -48,13 +48,15 @@
         				android:paddingRight="4dip" >
 
 					<LinearLayout
+						android:id="@+id/accueil_recherche_precedente_text"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
+						android:layout_toLeftOf="@+id/accueil_recherche_precedente_apply"
 						android:orientation="vertical">
 
 						<TextView
 							android:id="@+id/accueil_recherche_precedente_label"
-							android:layout_width="wrap_content"
+							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
 							android:text="@string/accueil_recherche_precedente_label_text"
 							android:textAppearance="?android:attr/textAppearanceMedium"
@@ -64,14 +66,31 @@
 
 						<TextView
 							android:id="@+id/accueil_recherche_precedente_details"
-							android:layout_width="wrap_content"
+							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
 							android:paddingLeft="4dip"
 							android:textAppearance="?android:attr/textAppearanceSmall"
 							android:textColor="?android:attr/textColorSecondary"></TextView>
+
 					</LinearLayout>
-			
+
+
+					<ImageView
+						android:id="@+id/accueil_recherche_precedente_apply"
+						android:layout_width="wrap_content"
+						android:layout_height="fill_parent"
+						android:layout_alignParentRight="true"
+						android:scaleType="fitXY"
+						android:layout_marginLeft="2dip"
+						android:layout_marginTop="2dip"
+						android:layout_marginRight="2dip"
+						android:layout_marginBottom="2dip"
+						android:contentDescription="apply search"
+						android:src="@drawable/arrow_right_grey">
+
+					</ImageView>
 				</RelativeLayout>
+
 			</LinearLayout>
 			<View style="@style/Separateur"/>
 

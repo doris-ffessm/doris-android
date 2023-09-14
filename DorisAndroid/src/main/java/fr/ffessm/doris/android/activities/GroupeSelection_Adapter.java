@@ -62,6 +62,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 //Start of user code protected additional GroupeSelection_Adapter imports
@@ -91,7 +92,7 @@ public class GroupeSelection_Adapter extends BaseAdapter {
      * dbHelper used to autorefresh values and doing queries
      * must be set other wise most getter will return proxy that will need to be refreshed
      */
-    protected DorisDBHelper _contextDB = null;
+    protected DorisDBHelper _contextDB;
 
     private static final String LOG_TAG = GroupeSelection_Adapter.class.getCanonicalName();
 
@@ -247,66 +248,35 @@ public class GroupeSelection_Adapter extends BaseAdapter {
         }
 
         // Bouton Liste des Fiches
-        ImageButton selectButton1 = (ImageButton) convertView
-                .findViewById(R.id.groupeselection_btn1Select);
-        selectButton1.setFocusable(false);
-        selectButton1.setClickable(true);
-        selectButton1.setOnClickListener(new View.OnClickListener() {
+        RadioButton selectGroupeButton = (RadioButton) convertView
+                .findViewById(R.id.groupeselection_radioSelect);
+        selectGroupeButton.setFocusable(false);
+        selectGroupeButton.setClickable(true);
+        // set current filter
+        int groupRootId = Groupes_Outils.getGroupeRoot(groupeList).getId();
+        int filtreCourantId = prefs.getInt(context.getResources().getString(R.string.pref_key_filtre_groupe), groupRootId);
+        //  check/uncheck according to current status
+        selectGroupeButton.setChecked(entry.getId() == filtreCourantId);
+        selectGroupeButton.setOnClickListener(v -> {
+            if (((GroupeSelection_ClassListViewActivity) context).isActivityDestroyed() || ((GroupeSelection_ClassListViewActivity) context).isFinishing())
+                return;
+            Toast.makeText(context, "Filtre espèces : " + entry.getNomGroupe(), Toast.LENGTH_SHORT).show();
 
-            @Override
-            public void onClick(View v) {
-                if (((GroupeSelection_ClassListViewActivity) context).isActivityDestroyed() || ((GroupeSelection_ClassListViewActivity) context).isFinishing())
-                    return;
-                Toast.makeText(context, "Filtre espèces : " + entry.getNomGroupe(), Toast.LENGTH_SHORT).show();
+            prefs.edit().putInt(context.getString(pref_key_filtre_groupe), entry.getId()).apply();
+            if (BuildConfig.DEBUG)
+                Log.d(LOG_TAG, "onClick() - depuisAccueil : " + depuisAccueil);
+          //  if (!depuisAccueil) {
+                ((GroupeSelection_ClassListViewActivity) context).finish();
+           // } else {
+/*
+                DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
 
-                prefs.edit().putInt(context.getString(pref_key_filtre_groupe), entry.getId())
-                        .apply();
-
-                if (BuildConfig.DEBUG)
-                    Log.d(LOG_TAG, "onClick() - depuisAccueil : " + depuisAccueil);
-                if (!depuisAccueil) {
-                    ((GroupeSelection_ClassListViewActivity) context).finish();
-                } else {
-
-                    DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
-
-                    Intent toListeFiche_View = new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class);
-                    toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.getApplicationContext().startActivity(toListeFiche_View);
-                }
-            }
+                Intent toListeFiche_View = new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class);
+                toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.getApplicationContext().startActivity(toListeFiche_View);
+            }*/
         });
 
-        // Bouton Liste des Fiches par Images
-        ImageButton selectButton2 = (ImageButton) convertView
-                .findViewById(R.id.groupeselection_btn2Select);
-        selectButton2.setFocusable(false);
-        selectButton2.setClickable(true);
-        selectButton2.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (((GroupeSelection_ClassListViewActivity) context).isActivityDestroyed() || ((GroupeSelection_ClassListViewActivity) context).isFinishing())
-                    return;
-                Toast.makeText(context, "Filtre espèces : " + entry.getNomGroupe(), Toast.LENGTH_SHORT).show();
-
-                prefs.edit().putInt(context.getString(pref_key_filtre_groupe), entry.getId())
-                        .apply();
-
-                if (BuildConfig.DEBUG)
-                    Log.d(LOG_TAG, "onClick() - depuisAccueil : " + depuisAccueil);
-                if (!depuisAccueil) {
-                    ((GroupeSelection_ClassListViewActivity) context).finish();
-                } else {
-
-                    DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
-
-                    Intent toListeFiche_View = new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class);
-                    toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.getApplicationContext().startActivity(toListeFiche_View);
-                }
-            }
-        });
         // ajout de l'image "expand" si contient des sous groupes
         ImageView ivChildGroup = (ImageView) convertView.findViewById(R.id.groupeselection_ivChildGroup);
 
@@ -409,11 +379,8 @@ public class GroupeSelection_Adapter extends BaseAdapter {
 
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
             backToParentButton.setLayoutParams(layoutParams);
-            backToParentButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    buildTreeForRoot(parent);
-                }
+            backToParentButton.setOnClickListener(v -> {
+                buildTreeForRoot(parent);
             });
         } else {
             // ajout du nouveau bouton
@@ -435,15 +402,13 @@ public class GroupeSelection_Adapter extends BaseAdapter {
 
             backToParentButton.setPadding(5, 0, 5, 0);
 
-            backToParentButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            backToParentButton.setOnClickListener( v -> {
                     if (groupeList == null) {
                         groupeList = Groupes_Outils.getAllGroupes(_contextDB);
                     }
                     buildTreeForRoot(parent);
                 }
-            });
+            );
         }
         Log.d(LOG_TAG, "addBackToParentGroupButton() - Fin");
     }

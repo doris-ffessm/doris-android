@@ -14,25 +14,25 @@
 	    android:layout_marginBottom="2dp"
 	    android:paddingLeft="4dip">
 
-	    <LinearLayout
-	        android:id="@+id/groupselection_listview_navigation"
-	        android:layout_width="match_parent"
-	        android:layout_height="35dp"
-		    android:layout_toLeftOf="@+id/groupeselection_main_btnSelect" >
-	
-	        <!--  Ne sert pas réellement puisque removeAll systématique puis reconstruction dans GroupeSelection_Adapter -->
-	        <ImageButton
-	            android:id="@+id/groupselection_listview_imageButton_arbre_phylogenetique"
-				android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-		        android:layout_marginBottom="2dip"
-		        android:layout_marginTop="2dip"
-	            android:background="@drawable/button_selected_background"
-	            android:src="?attr/ic_action_arbre_phylogenetique" />
+		<LinearLayout
+			android:id="@+id/groupselection_listview_navigation"
+			android:layout_width="match_parent"
+			android:layout_height="35dp"
+			android:layout_toLeftOf="@+id/groupeselection_main_btnSelect">
 
-	    </LinearLayout>
-		<ImageButton
-			    android:id="@+id/groupeselection_main_btnSelect"
+			<!--  Ne sert pas réellement puisque removeAll systématique puis reconstruction dans GroupeSelection_Adapter -->
+			<ImageButton
+				android:id="@+id/groupselection_listview_imageButton_arbre_phylogenetique"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:layout_marginTop="2dip"
+				android:layout_marginBottom="2dip"
+				android:background="@drawable/button_selected_background"
+				android:src="?attr/ic_action_arbre_phylogenetique" />
+
+		</LinearLayout>
+		<RadioButton
+				android:id="@+id/groupeselection_main_radioSelect"
 			    android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:layout_alignParentRight="true"
@@ -41,10 +41,6 @@
 			    android:layout_marginRight="2dp"
 			    android:layout_marginTop="2dp"
 			    android:text=""
-			    android:drawablePadding="0dp"
-			    android:src="?attr/ic_action_liste_fiches"
-			    android:scaleType="fitCenter"
-		        android:background="@android:color/transparent"
 		        android:onClick="onClickCurrentGroup"
 		     />
 	</RelativeLayout>
