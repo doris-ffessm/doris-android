@@ -71,6 +71,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -142,6 +143,9 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 
         }
 
+        RadioButton radio = findViewById(R.id.groupeselection_main_radioSelect);
+        radio.setChecked(filtreCourantId == adapter.currentRootGroupe.getId());
+
         actionBar.setTitle(R.string.groupselection_listview_title);
 
         Log.d(LOG_TAG, "onCreate() - Fin");
@@ -177,6 +181,12 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
                     g.setContextDB(getHelper().getDorisDBHelper());
                 }
             }
+            // update radioButton status
+            int groupRootId = Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId();
+            int filtreCourantId = prefs.getInt(this.getString(R.string.pref_key_filtre_groupe), groupRootId);
+            RadioButton radio = findViewById(R.id.groupeselection_main_radioSelect);
+            radio.setChecked(filtreCourantId == clickedGroupe.getId());
+
             groupeSelection_adapter.currentRootGroupe = clickedGroupe;
             groupeSelection_adapter.updateList();
             groupeSelection_adapter.notifyDataSetChanged();
@@ -282,13 +292,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 
         DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
 
-        if (!depuisAccueil) {
-            finish();
-        } else {
-            Intent toListeFiche_View = new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class);
-            toListeFiche_View.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            this.getApplicationContext().startActivity(toListeFiche_View);
-        }
+        finish();
     }
 
 
