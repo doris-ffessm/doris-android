@@ -104,7 +104,7 @@ public class PrefetchDorisWebSite {
 	DorisDBHelper dbContext = null;
 	DataBase_Outils outilsBase = null;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		try {
 			new PrefetchDorisWebSite().doMain(args);
 		} catch (Exception e) {
@@ -319,7 +319,7 @@ public class PrefetchDorisWebSite {
             // - - - Bibliographie - - -
             log.info("webToDBAction() - - - Bibliographie - - -");
 			int nbMaxTitresATraiter = 100000;
-            // if (nbMaxTitresATraiter > nbMaxFichesATraiter ) nbMaxTitresATraiter = nbMaxFichesATraiter;
+            if (nbMaxTitresATraiter > nbMaxFichesATraiter ) nbMaxTitresATraiter = nbMaxFichesATraiter;
             PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, nbMaxTitresATraiter, nbFichesParRequetes);
             if ( bibliographies.prefetch() == -1 ) {
 				throw new RuntimeException("Error in PrefetchBibliographies");
@@ -597,9 +597,9 @@ public class PrefetchDorisWebSite {
 		
 		if (action == null) {
 			help();
-			String listeArgs = "";
+			StringBuilder listeArgs = new StringBuilder();
 			for (String arg : inArgs) {
-				listeArgs += arg + " ";
+				listeArgs.append(arg).append(" ");
 			}
 			log.error("arguments : " + listeArgs);
 			log.error("Action non prévue");
