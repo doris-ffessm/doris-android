@@ -735,8 +735,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
     protected Bitmap drawIconForCurrentSearch(){
 
-        int width = ScreenTools.dp2px(this,
-                getParamOutils().getParamInt(R.string.pref_key_accueil_icone_taille, Integer.parseInt(this.getString(R.string.accueil_icone_taille_defaut))));
+        int width = (int) (ScreenTools.dp2px(this,
+                        getParamOutils().getParamInt(R.string.pref_key_accueil_icone_taille, Integer.parseInt(this.getString(R.string.accueil_icone_taille_defaut))))*1.25);
         int height = width;
 
         // Create a blank bitmap with the desired width and height
