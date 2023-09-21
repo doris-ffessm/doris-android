@@ -186,7 +186,7 @@ public class PrefetchDBTools {
 			int rowC = 0;
 			CompiledStatement compiledStmt = null;
 			try {
-				compiledStmt = connection.compileStatement(statement, StatementType.EXECUTE, noFieldTypes);
+				compiledStmt = connection.compileStatement(statement, StatementType.EXECUTE, noFieldTypes, 0);
 				rowC = compiledStmt.runExecute();
 				log.info("executed {} table statement changed {} rows: {}" + rowC + " - " + statement);
 
