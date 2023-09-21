@@ -14,8 +14,8 @@ dependencies {
     implementation fileTree(dir: 'libs',
             include: '*.jar')
     // dependances maven
-    implementation 'com.j256.ormlite:ormlite-core:4.48'
-    implementation 'com.j256.ormlite:ormlite-android:4.48'
+    implementation 'com.j256.ormlite:ormlite-core:4.47'
+    implementation 'com.j256.ormlite:ormlite-android:4.47'
     implementation 'org.apache.commons:commons-lang3:3.13.0'
     implementation "ch.acra:acra-mail:$acraVersion"
     implementation "ch.acra:acra-toast:$acraVersion"
@@ -112,7 +112,7 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 }
