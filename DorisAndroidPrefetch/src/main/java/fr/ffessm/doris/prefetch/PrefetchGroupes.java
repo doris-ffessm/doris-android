@@ -42,6 +42,7 @@ termes.
 
 package fr.ffessm.doris.prefetch;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -117,22 +118,22 @@ public class PrefetchGroupes {
         listeGroupes.add(racine);
         listeGroupes.add(new Groupe(171365,0,"PROCARYOTES", getGroupeWithName(listeGroupes,"racine")));
         listeGroupes.add(new Groupe(48868,1000,"Procaryotes", getGroupeWithName(listeGroupes,"PROCARYOTES")));
-        listeGroupes.add(new Groupe(136033,0,"VEGETAUX", 0xff00ff00, getGroupeWithName(listeGroupes,"racine")));
-        listeGroupes.add(new Groupe(136029,0,"Algues", 0x3A8F4500, getGroupeWithName(listeGroupes,"VEGETAUX")));
+        listeGroupes.add(new Groupe(136033,0,"VEGETAUX",  getGroupeWithName(listeGroupes,"racine")));
+        listeGroupes.add(new Groupe(136029,0,"Algues", getGroupeWithName(listeGroupes,"VEGETAUX")));
         listeGroupes.add(new Groupe(48869,2000,"Rhodophycées", getGroupeWithName(listeGroupes,"Algues")));
         listeGroupes.add(new Groupe(48972,2072,"Thalles érigés", getGroupeWithName(listeGroupes,"Rhodophycées")));
         listeGroupes.add(new Groupe(48973,2073,"Thalles encroûtants", getGroupeWithName(listeGroupes,"Rhodophycées")));
         listeGroupes.add(new Groupe(48870,3000,"Chlorophycées", getGroupeWithName(listeGroupes,"Algues")));
         listeGroupes.add(new Groupe(48871,4000,"Phéophycées",getGroupeWithName(listeGroupes,"Algues")));
-        listeGroupes.add(new Groupe(811394,4000,"Bryophytes", 0x4A8F3A00, getGroupeWithName(listeGroupes,"VEGETAUX")));
-        listeGroupes.add(new Groupe(897451,4000,"Filicophytes",0x558F3A00, getGroupeWithName(listeGroupes,"VEGETAUX")));
+        listeGroupes.add(new Groupe(811394,4000,"Bryophytes", getGroupeWithName(listeGroupes,"VEGETAUX")));
+        listeGroupes.add(new Groupe(897451,4000,"Filicophytes", getGroupeWithName(listeGroupes,"VEGETAUX")));
 
-        listeGroupes.add(new Groupe(136031,0,"Plantes à fleurs", 0x688F3A00, getGroupeWithName(listeGroupes,"VEGETAUX")));
+        listeGroupes.add(new Groupe(136031,0,"Plantes à fleurs", getGroupeWithName(listeGroupes,"VEGETAUX")));
         listeGroupes.add(new Groupe(48872,5000,"Plantes subaquatiques", getGroupeWithName(listeGroupes,"Plantes à fleurs")));
         listeGroupes.add(new Groupe(48873,6000,"Plantes terrestres", getGroupeWithName(listeGroupes,"Plantes à fleurs")));
-        listeGroupes.add(new Groupe(171370,0,"LICHENS", 0x883A8F00, getGroupeWithName(listeGroupes,"racine")));
+        listeGroupes.add(new Groupe(171370,0,"LICHENS", getGroupeWithName(listeGroupes,"racine")));
         listeGroupes.add(new Groupe(48874,7000,"Champignons et Lichens", getGroupeWithName(listeGroupes,"LICHENS")));
-        listeGroupes.add(new Groupe(171372,0,"ANIMAUX", 0xC7695000, getGroupeWithName(listeGroupes,"racine")));
+        listeGroupes.add(new Groupe(171372,0,"ANIMAUX", getGroupeWithName(listeGroupes,"racine")));
         listeGroupes.add(new Groupe(48875,8000,"Animaux unicellulaires",getGroupeWithName(listeGroupes,"ANIMAUX")));
         listeGroupes.add(new Groupe(136051,0,"EPONGES ou SPONGIAIRES", getGroupeWithName(listeGroupes,"Animaux unicellulaires")));
         listeGroupes.add(new Groupe(48876,9000,"Calcisponges", getGroupeWithName(listeGroupes,"EPONGES ou SPONGIAIRES")));
@@ -325,13 +326,11 @@ public class PrefetchGroupes {
 
         try {
             TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-                            for (Groupe groupe : listeGroupes){
-                                dbContext.groupeDao.createOrUpdate(groupe);
-                            }
-                            return null;
+                    (Callable<Void>) () -> {
+                        for (Groupe groupe : listeGroupes){
+                            dbContext.groupeDao.createOrUpdate(groupe);
                         }
+                        return null;
                     });
         } catch ( Exception e) {
             // une erreur est survenue
@@ -347,15 +346,13 @@ public class PrefetchGroupes {
     protected void clearExistingGroups(){
         try {
             TransactionManager.callInTransaction(connectionSource,
-                    new Callable<Void>() {
-                        public Void call() throws Exception {
-                            List<Groupe> listGroupes = dbContext.groupeDao.queryForAll();
-                            if(!listGroupes.isEmpty()) {
-                                log.debug("Clearing existing groups");
-                                dbContext.groupeDao.delete(listGroupes);
-                            }
-                            return null;
+                    (Callable<Void>) () -> {
+                        List<Groupe> listGroupes = dbContext.groupeDao.queryForAll();
+                        if(!listGroupes.isEmpty()) {
+                            log.debug("Clearing existing groups");
+                            dbContext.groupeDao.delete(listGroupes);
                         }
+                        return null;
                     });
         } catch ( Exception e) {
             // une erreur est survenue
@@ -367,7 +364,7 @@ public class PrefetchGroupes {
     /**
      * retrieve the groupID in the data base if possible
      * retrieve the group definition on internet in order to collect the description and image link
-     * @param group
+     * @param group group to be updated
      */
     protected void updateGroupe(Groupe group) throws SQLException, IOException, WebSiteNotAvailableException {
 
@@ -389,7 +386,16 @@ public class PrefetchGroupes {
             // grab images in order to save them in the app
             downloadGroupeImage(group);
         }
+
+        // hue = 40, start color is in the yellow/green
+        List<Color> colors = ColorTools.getNbWheelColors((int) dbContext.groupeDao.countOf(), 40, 50, 75);
+        Color color = colors.get(group.getId()-1); // not very robust but work if the table is clean
+        group.setCouleurGroupe(ColorTools.getColorInt(color));
+
     }
+
+
+
 
 
     protected void downloadGroupeImage(Groupe group) throws IOException, WebSiteNotAvailableException {
