@@ -52,6 +52,8 @@ import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
@@ -230,6 +232,12 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         ((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommunNeverEmpty().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
         ((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText("N° " + ((Integer) entry.getNumeroFiche()).toString());
         ((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer) entry.getEtatFiche()).toString());
+
+        int[] colors = {entry.getGroupe().getCouleurGroupe(), Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT};
+        GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors);
+        gradientDrawable.setColors(colors);
+        findViewById(R.id.detailsfiche_elementview_nomcommun).setBackground(gradientDrawable);
+        findViewById(R.id.detailsfiche_elementview_nomscientifique).setBackground(gradientDrawable);
 
         TextView btnEtatFiche = (TextView) findViewById(R.id.detailsfiche_elementview_etatfiche);
         //1-Fiche en cours de rédaction;2-Fiche en cours de rédaction;3-Fiche en cours de rédaction;4-Fiche Publiée;5-Fiche proposée
