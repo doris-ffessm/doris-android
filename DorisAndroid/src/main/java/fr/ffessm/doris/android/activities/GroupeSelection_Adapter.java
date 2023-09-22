@@ -215,17 +215,10 @@ public class GroupeSelection_Adapter extends BaseAdapter {
         tvDetails.setText(detailsSB.toString());
 
         // assign group color in background
-
         int[] colors = {entry.getCouleurGroupe(), Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT};
-        float[] positions = {0.0f, 0.3f, 0.7f, 1.0f};
-
         GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors);
-        gradientDrawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
-        gradientDrawable.setGradientCenter(0.5f, 0.5f);
-        gradientDrawable.setGradientRadius(0.5f);
         gradientDrawable.setColors(colors);
         convertView.setBackground(gradientDrawable);
-
 
         // End of user code
 

@@ -53,6 +53,8 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.preference.PreferenceManager;
 import androidx.collection.LruCache;
 import android.util.Log;
@@ -220,6 +222,12 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
                 tvLabel.setText(entry.getNomCommunNeverEmpty() + " ");
                 break;
         }
+
+        // assign group color in background
+        int[] colors = {entry.getGroupe().getCouleurGroupe(), Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT};
+        GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors);
+        gradientDrawable.setColors(colors);
+        convertView.setBackground(gradientDrawable);
         // End of user code
 
         // assign the entry to the row in order to ease GUI interactions
