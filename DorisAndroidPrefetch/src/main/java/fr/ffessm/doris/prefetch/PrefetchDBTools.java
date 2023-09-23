@@ -178,8 +178,18 @@ public class PrefetchDBTools {
 		Boolean ignoreErrors = false;
 		Boolean returnsNegative  = false;
 		Boolean expectingZero  = false;
-		statements.add("CREATE INDEX fiches_ZoneGeographiques_I_id ON fiches_ZonesGeographiques(ZoneGeographique_id ASC)");
-		statements.add("CREATE INDEX photoFiche_I_ficheId ON photoFiche(fiche_id ASC)");
+		// desactivé ne fonctionne pas avec SQLLITE ?
+		// remonte une erreur
+		// java.sql.SQLException: SQL statement failed: CREATE INDEX fiches_ZoneGeographiques_I_id ON fiches_ZonesGeographiques(ZoneGeographique_id ASC)
+		//	at com.j256.ormlite.misc.SqlExceptionUtil.create(SqlExceptionUtil.java:22)
+		//	at fr.ffessm.doris.prefetch.PrefetchDBTools.databaseInitialisation(PrefetchDBTools.java:197)
+		//	at fr.ffessm.doris.prefetch.PrefetchDorisWebSite.webToDBAction(PrefetchDorisWebSite.java:286)
+		//	at fr.ffessm.doris.prefetch.PrefetchDorisWebSite.doMain(PrefetchDorisWebSite.java:140)
+		//	at fr.ffessm.doris.prefetch.PrefetchDorisWebSite.main(PrefetchDorisWebSite.java:109)
+		//Caused by: java.sql.SQLException: SQLite only supports TYPE_FORWARD_ONLY cursors
+
+		//statements.add("CREATE INDEX fiches_ZoneGeographiques_I_id ON fiches_ZonesGeographiques(ZoneGeographique_id ASC)");
+		//statements.add("CREATE INDEX photoFiche_I_ficheId ON photoFiche(fiche_id ASC)");
 		
 
 		for (String statement : statements) {
