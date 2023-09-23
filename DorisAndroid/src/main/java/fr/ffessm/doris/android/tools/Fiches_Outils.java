@@ -165,11 +165,22 @@ public class Fiches_Outils {
         ficheIdList.clear();
         filteredFicheIdList.clear();
         ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
-
-        String ordreTri = prefs.getString(context.getString(R.string.pref_key_accueil_fiches_ordre), context.getString(R.string.accueil_fiches_ordre_alpha_default));
+        String ordreTriAlpha = prefs.getString(context.getString(R.string.pref_key_accueil_fiches_ordre), context.getString(R.string.accueil_fiches_ordre_alpha_default));
         String orderByClause = "";
-        if (ordreTri.equals("Commun")) orderByClause = " ORDER BY Fiche.textePourRechercheRapide";
-        if (ordreTri.equals("Scientifique")) orderByClause = " ORDER BY Fiche.nomScientifique";
+        String modeAffichage = prefs.getString(context.getString(R.string.pref_key_current_mode_affichage), context.getString(R.string.current_mode_affichage_default));
+        if( modeAffichage.equals("liste_par_groupe") || modeAffichage.equals("photos_par_groupe")) {
+            if (ordreTriAlpha.equals("Commun"))
+                orderByClause = " ORDER BY groupe_id, Fiche.textePourRechercheRapide";
+            if (ordreTriAlpha.equals("Scientifique"))
+                orderByClause = " ORDER BY groupe_id, Fiche.nomScientifique";
+        }
+        else {
+            if (ordreTriAlpha.equals("Commun"))
+                orderByClause = " ORDER BY Fiche.textePourRechercheRapide";
+            if (ordreTriAlpha.equals("Scientifique"))
+                orderByClause = " ORDER BY Fiche.nomScientifique";
+        }
+
         // TODO deal with group sort
         //  if (ordreTri.equals("Groupe")) orderByClause = " ORDER BY groupe_id";
 
