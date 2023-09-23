@@ -317,7 +317,7 @@ public class PrefetchGroupes {
         // update groups in order to maintain _id and grap updated text
         for (Groupe g: listeGroupes     ) {
             try {
-                this.updateGroupe(g);
+                this.updateGroupe(g, listeGroupes);
             } catch (SQLException |IOException | WebSiteNotAvailableException e) {
                 log.error("Une erreur est survenue dans PrefetchGroupes", e);
                 return -1;
@@ -366,7 +366,7 @@ public class PrefetchGroupes {
      * retrieve the group definition on internet in order to collect the description and image link
      * @param group group to be updated
      */
-    protected void updateGroupe(Groupe group) throws SQLException, IOException, WebSiteNotAvailableException {
+    protected void updateGroupe(Groupe group, List<Groupe> groupList) throws SQLException, IOException, WebSiteNotAvailableException {
 
         Groupe queryPattern = new Groupe();
         queryPattern.setNumeroGroupe(group.getNumeroGroupe());
@@ -388,8 +388,8 @@ public class PrefetchGroupes {
         }
 
         // hue = 40, start color is in the yellow/green
-        List<Color> colors = ColorTools.getNbWheelColors((int) dbContext.groupeDao.countOf(), 40, 50, 75);
-        Color color = colors.get(group.getId()-1); // not very robust but work if the table is clean
+        List<Color> colors = ColorTools.getNbWheelColors(groupList.size(), 40, 50, 75);
+        Color color = colors.get(groupList.indexOf(group)); // not very robust but work if the table is clean
         group.setCouleurGroupe(ColorTools.getColorInt(color));
 
     }
