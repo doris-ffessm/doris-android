@@ -113,7 +113,8 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 
         depuisAccueil = getIntent().getExtras().getBoolean("GroupeSelection_depuisAccueil", false);
         ACRA.getErrorReporter().putCustomData("depuisAccueil", "" + depuisAccueil);
-        current_mode_affichage = paramOutils.getParamString(R.string.pref_key_current_mode_affichage, "liste");
+        current_mode_affichage = paramOutils.getParamString(R.string.pref_key_current_mode_affichage,
+                getString(R.string.current_mode_affichage_default));
 
         adapter = new GroupeSelection_Adapter(this, getHelper().getDorisDBHelper(), depuisAccueil);
         //End of user code

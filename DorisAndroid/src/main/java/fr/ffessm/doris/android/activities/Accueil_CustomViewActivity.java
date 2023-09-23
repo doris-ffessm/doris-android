@@ -51,6 +51,7 @@ import fr.ffessm.doris.android.tools.Zones_Outils;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -433,7 +434,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         // Quelle est l'action principale : par défaut ouverture de la liste des fiches de la Zone
         // sinon ouverture de l'arbre phylogénétique
-        final String current_mode_affichage = getParamOutils().getParamString(R.string.pref_key_current_mode_affichage, "liste");
+        final String current_mode_affichage = getParamOutils().getParamString(R.string.pref_key_current_mode_affichage,
+                getString(R.string.current_mode_affichage_default));
         //Log.d(LOG_TAG, "current_mode_affichage : "+current_mode_affichage);
 
 
@@ -528,7 +530,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         final String[] modesValues = this.getResources().getStringArray(R.array.current_mode_affichage_values);
         String[] modesLibelles = this.getResources().getStringArray(R.array.current_mode_affichage_libelle);
-        int[] icons = { R.drawable.ic_action_liste_fiches, R.drawable.ic_action_arbre_phylogenetique, R.drawable.ic_action_liste_images};
+        String[] modesDetails = this.getResources().getStringArray(R.array.current_mode_affichage_details);
+
+
         for (int i = 0; i < modesValues.length ; i++) {
             String mode = modesLibelles[i];
             LayoutInflater inflater = (LayoutInflater) this
@@ -538,9 +542,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
             TextView tvLabel = (TextView) viewMode.findViewById(R.id.mode_affichage_listviewrow_text);
             tvLabel.setText(mode);
+            TextView tvDetail = (TextView) viewMode.findViewById(R.id.mode_affichage_listviewrow_details);
+            tvDetail.setText(modesDetails[i]);
 
             ImageView iv = (ImageView) viewMode.findViewById(R.id.mode_affichage_listviewrow_icon);
-            iv.setImageResource(icons[i]);
+            iv.setImageDrawable(SortModesTools.getDrawable(this, modesValues[i]));
 
             RadioButton radio = (RadioButton) viewMode.findViewById(R.id.mode_affichage_listviewrow_radio);
 
@@ -582,7 +588,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             llContainerLayout.addView(viewMode);
             viewMode.setVisibility(View.GONE);
        }
-
         // deal with fold/unfold
         btnFoldUnfoldModeSection = (ImageButton) findViewById(R.id.accueil_mode_affichage_fold_unfold_section_imageButton);
         btnFoldUnfoldModeSection.setImageBitmap(drawIconWithGear(getResources().getDrawable(R.drawable.ic_action_liste_fiches)));
@@ -613,14 +618,23 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     }
 
     public void onClickBtnListeFiches(View view) {
+        // cf. current_mode_affichage_values in mode_affichage_resource.xml
         switch ( getCurrentMode() ) {
-            case "photos":
+
+            // liste_alpha, liste_par_groupe, photos_alpha, photos_par_groupe, groupe
+            case "photos_alpha":
                 startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
                 break;
-            case "liste":
+            case "photos_par_groupe":
+                startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
+                break;
+            case "liste_alpha":
                 startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
                 break;
-            case "arbre":
+            case "liste_par_groupe":
+                startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
+                break;
+            case "groupe":
                 showToast("Affichage par groupe pas encore implémenté.");
                 break;
             default:

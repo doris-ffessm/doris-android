@@ -4,21 +4,34 @@
 
     <!--<string name="accueil_liste_ou_arbre_prompt">"Accès principal aux fiches"</string>
     <string name="accueil_liste_ou_arbre_prompt_summary">(càd en cliquant sur la Zone)</string>-->
-    <string name="current_mode_affichage_default">liste</string>
+    <string name="current_mode_affichage_default">liste_alpha</string>
     <string-array name="current_mode_affichage_values">
-        <item>liste</item>
-        <item>arbre</item>
-        <item>photos</item>
+        <item>liste_alpha</item>
+        <item>liste_par_groupe</item>
+        <item>photos_alpha</item>
+        <item>photos_par_groupe</item>
+        <item>groupe</item>
     </string-array>
     <string-array name="current_mode_affichage_libelle">
-        <item>Liste de fiches (ordre alphabétique) </item>
-        <item>"Par l'arbre phylogénétique"</item>
-        <item>"Liste d'images (ordre alphabétique)"</item>
+        <item>Simple, tri alphabétique</item>
+        <item>Simple, tri groupe</item>
+        <item>"Images, tri alphabétique"</item>
+        <item>"Images, tri groupe "</item>
+        <item>"Groupe Doris</item>
+    </string-array>
+    <string-array name="current_mode_affichage_details">
+        <item>fiches triées par ordre alphabétique</item>
+        <item>fiches triées par groupe Doris</item>
+        <item>plusieurs images par fiches, fiches triées par ordre alphabétique</item>
+        <item>plusieurs images par fiches, fiches triées par ordre groupe Doris</item>
+        <item>Images de plusieurs espèces par ligne</item>
     </string-array>
 
     <string-array name="current_mode_affichage_icons">
         <item>@drawable/ic_action_liste_fiches</item>
         <item>@drawable/ic_action_arbre_phylogenetique</item>
         <item>@drawable/ic_action_liste_images</item>
+        <item>@drawable/ic_action_arbre_phylogenetique</item>
+        <item>@drawable/ic_action_arbre_phylogenetique</item>
     </string-array>
 </resources>

@@ -32,7 +32,21 @@
             android:layout_marginLeft="4dp"
             app:layout_constraintEnd_toStartOf="@+id/mode_affichage_listviewrow_checkBox"
             app:layout_constraintStart_toEndOf="@+id/mode_affichage_listviewrow_icon"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?android:attr/textColorPrimary" />
+        <TextView
+            android:id="@+id/mode_affichage_listviewrow_details"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Details"
+            android:layout_marginLeft="4dp"
+            app:layout_constraintEnd_toStartOf="@+id/mode_affichage_listviewrow_checkBox"
+            app:layout_constraintStart_toEndOf="@+id/mode_affichage_listviewrow_icon"
+            app:layout_constraintTop_toBottomOf="@id/mode_affichage_listviewrow_text"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="?android:attr/textColorSecondary" />
+
         <RadioButton
             android:id="@+id/mode_affichage_listviewrow_radio"
             android:layout_width="wrap_content"

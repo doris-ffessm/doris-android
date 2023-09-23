@@ -196,7 +196,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         };
 
         // Liste Fiches, Arbre ou Liste Images
-        current_mode_affichage = paramOutils.getParamString(R.string.pref_key_current_mode_affichage, "liste");
+        current_mode_affichage = paramOutils.getParamString(R.string.pref_key_current_mode_affichage,
+                getString(R.string.current_mode_affichage_default));
 
         // info de debug de Picasso
         if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)) {

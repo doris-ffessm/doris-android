@@ -13,7 +13,13 @@ public class SortModesTools {
 
     public static Drawable getDrawable(Context context, String sortModeValue) {
         Map<String, Drawable> map = getDrawableMap(context);
-        return map.get(sortModeValue);
+        Drawable res = map.get(sortModeValue);
+        if (res != null) {
+            return res;
+        } else {
+            // if not found return the first one
+            return map.values().iterator().next();
+        }
     }
 
     public static Map<String, Drawable> getDrawableMap(Context context) {
