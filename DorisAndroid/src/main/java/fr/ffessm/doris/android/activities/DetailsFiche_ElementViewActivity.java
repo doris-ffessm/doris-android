@@ -155,7 +155,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     Collection<String> insertedPhotosFiche = new ArrayList<>();
     boolean askedBgDownload = false;
 
-    String accueil_liste_ou_arbre_pardefaut;
+    String current_mode_affichage;
 
 // End of user code
 
@@ -196,7 +196,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         };
 
         // Liste Fiches, Arbre ou Liste Images
-        accueil_liste_ou_arbre_pardefaut = paramOutils.getParamString(R.string.pref_key_accueil_liste_ou_arbre_pardefaut, "liste");
+        current_mode_affichage = paramOutils.getParamString(R.string.pref_key_current_mode_affichage, "liste");
 
         // info de debug de Picasso
         if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)) {
@@ -657,7 +657,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
                     ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupe.getId());
                     ed.apply();
 
-                    if (accueil_liste_ou_arbre_pardefaut.equals("photos")) {
+                    if (current_mode_affichage.equals("photos")) {
                         startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
                     } else {
                         startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
@@ -680,7 +680,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
                     ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupePere.getId());
                     ed.apply();
 
-                    if (accueil_liste_ou_arbre_pardefaut.equals("photos")) {
+                    if (current_mode_affichage.equals("photos")) {
                         startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
                     } else {
                         startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
@@ -701,7 +701,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
                     ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupe.getId());
                     ed.apply();
 
-                    if (accueil_liste_ou_arbre_pardefaut.equals("photos")) {
+                    if (current_mode_affichage.equals("photos")) {
                         startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
                     } else {
                         startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));

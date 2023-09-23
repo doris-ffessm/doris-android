@@ -1,0 +1,24 @@
+<resources>
+    <!-- list icons  associated to preferences_strings.xml/accueil_listes_ou_arbre_values-->
+    <!-- TODO rename arrays and group here all that are related to mode affichage -->
+
+    <!--<string name="accueil_liste_ou_arbre_prompt">"Accès principal aux fiches"</string>
+    <string name="accueil_liste_ou_arbre_prompt_summary">(càd en cliquant sur la Zone)</string>-->
+    <string name="current_mode_affichage_default">liste</string>
+    <string-array name="current_mode_affichage_values">
+        <item>liste</item>
+        <item>arbre</item>
+        <item>photos</item>
+    </string-array>
+    <string-array name="current_mode_affichage_libelle">
+        <item>Liste de fiches (ordre alphabétique) </item>
+        <item>"Par l'arbre phylogénétique"</item>
+        <item>"Liste d'images (ordre alphabétique)"</item>
+    </string-array>
+
+    <string-array name="current_mode_affichage_icons">
+        <item>@drawable/ic_action_liste_fiches</item>
+        <item>@drawable/ic_action_arbre_phylogenetique</item>
+        <item>@drawable/ic_action_liste_images</item>
+    </string-array>
+</resources>

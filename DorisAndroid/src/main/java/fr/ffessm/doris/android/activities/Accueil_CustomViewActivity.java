@@ -433,8 +433,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         // Quelle est l'action principale : par défaut ouverture de la liste des fiches de la Zone
         // sinon ouverture de l'arbre phylogénétique
-        final String accueil_liste_ou_arbre_pardefaut = getParamOutils().getParamString(R.string.pref_key_accueil_liste_ou_arbre_pardefaut, "liste");
-        //Log.d(LOG_TAG, "accueil_liste_ou_arbre_pardefaut : "+accueil_liste_ou_arbre_pardefaut);
+        final String current_mode_affichage = getParamOutils().getParamString(R.string.pref_key_current_mode_affichage, "liste");
+        //Log.d(LOG_TAG, "current_mode_affichage : "+current_mode_affichage);
 
 
         // Gestion Clic Principal sur la Zone (partout sauf 2 boutons "secondaires" (càd de droite))
@@ -526,8 +526,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 
-        final String[] modesValues = this.getResources().getStringArray(R.array.accueil_listes_ou_arbre_values);
-        String[] modesLibelles = this.getResources().getStringArray(R.array.accueil_listes_ou_arbre_lib);
+        final String[] modesValues = this.getResources().getStringArray(R.array.current_mode_affichage_values);
+        String[] modesLibelles = this.getResources().getStringArray(R.array.current_mode_affichage_libelle);
         int[] icons = { R.drawable.ic_action_liste_fiches, R.drawable.ic_action_arbre_phylogenetique, R.drawable.ic_action_liste_images};
         for (int i = 0; i < modesValues.length ; i++) {
             String mode = modesLibelles[i];
@@ -546,9 +546,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
             // set current check button value
             String current = prefs.getString(getResources().getString(
-                    R.string.pref_key_accueil_liste_ou_arbre_pardefaut),
+                    R.string.pref_key_current_mode_affichage),
                     getResources().getString(
-                            R.string.accueil_liste_ou_arbre_default));
+                            R.string.current_mode_affichage_default));
             radio.setChecked(current.equals(modesValues[i]));
 
             final int radioIndex = i;
@@ -569,7 +569,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                     // update preferences
                     prefs.edit().putString(
                             Accueil_CustomViewActivity.this.getResources().getString(
-                                    R.string.pref_key_accueil_liste_ou_arbre_pardefaut),
+                                    R.string.pref_key_current_mode_affichage),
                                     modesValues[index]).apply();
                     // update main screen icons
                     Accueil_CustomViewActivity.this.refreshScreenData();
@@ -822,9 +822,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     private String getCurrentMode() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         return prefs.getString(getResources().getString(
-                R.string.pref_key_accueil_liste_ou_arbre_pardefaut),
+                R.string.pref_key_current_mode_affichage),
                 getResources().getString(
-                        R.string.accueil_liste_ou_arbre_default));
+                        R.string.current_mode_affichage_default));
     }
 
     private Param_Outils getParamOutils() {

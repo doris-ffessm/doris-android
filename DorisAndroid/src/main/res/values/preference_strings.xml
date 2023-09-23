@@ -39,7 +39,7 @@
 	<string name="pref_key_mode_precharg_photo_autres">mode_precharg_photo_autres</string>
 
 	<string name="pref_key_theme">aff_theme</string>
-	<string name="pref_key_accueil_liste_ou_arbre_pardefaut">aff_accueil_liste_ou_arbre_pardefaut</string>
+	<!--<string name="pref_key_accueil_liste_ou_arbre_pardefaut">aff_accueil_liste_ou_arbre_pardefaut</string>-->
 	<string name="pref_key_accueil_fiches_ordre">aff_accueil_fiches_ordre</string>
 	<string name="pref_key_accueil_etat_fiches_affiche">aff_accueil_etat_fiches_affiche</string>
 	<string name="pref_key_accueil_icone_taille">aff_accueil_icone_taille</string>
@@ -188,27 +188,15 @@
         <item>Holo (sombre)</item>
     </string-array>
 
-	<string name="accueil_liste_ou_arbre_prompt">"Accès principal aux fiches"</string>
-	<string name="accueil_liste_ou_arbre_prompt_summary">(càd en cliquant sur la Zone)</string>
-	<string name="accueil_liste_ou_arbre_default">liste</string>
-	<string-array name="accueil_listes_ou_arbre_values">
-        <item>liste</item>
-        <item>arbre</item>
-        <item>photos</item>
-    </string-array>
-   	<string-array name="accueil_listes_ou_arbre_lib">
-	    <item>Liste de fiches (ordre alphabétique) </item>
-        <item>"Par l'arbre phylogénétique"</item>
-        <item>"Liste d'images (ordre alphabétique)"</item>
-    </string-array>
+
     
-	<string name="accueil_fiches_ordre_prompt">"Ordre de tri des fiches"</string>
-	<string name="accueil_fiches_ordre_default">Commun</string>
-	<string-array name="accueil_fiches_ordre_values">
+	<string name="accueil_fiches_ordre_alpha_prompt">"Ordre de tri alphabétique des fiches"</string>
+	<string name="accueil_fiches_ordre_alpha_default">Commun</string>
+	<string-array name="accueil_fiches_ordre_alpha_values">
         <item>Commun</item>
         <item>Scientifique</item>
     </string-array>
-	<string-array name="accueil_fiches_ordre_lib">
+	<string-array name="accueil_fiches_ordre_alpha_lib">
 	    <item>Par le Nom Commun</item>
         <item>Par le Nom Scientifique</item>
     </string-array>

@@ -166,10 +166,12 @@ public class Fiches_Outils {
         filteredFicheIdList.clear();
         ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
 
-        String ordreTri = prefs.getString(context.getString(R.string.pref_key_accueil_fiches_ordre), context.getString(R.string.accueil_fiches_ordre_default));
+        String ordreTri = prefs.getString(context.getString(R.string.pref_key_accueil_fiches_ordre), context.getString(R.string.accueil_fiches_ordre_alpha_default));
         String orderByClause = "";
         if (ordreTri.equals("Commun")) orderByClause = " ORDER BY Fiche.textePourRechercheRapide";
         if (ordreTri.equals("Scientifique")) orderByClause = " ORDER BY Fiche.nomScientifique";
+        // TODO deal with group sort
+        //  if (ordreTri.equals("Groupe")) orderByClause = " ORDER BY groupe_id";
 
 
         String filtreEtat = prefs.getString(context.getString(R.string.pref_key_accueil_etat_fiches_affiche), "toutes");

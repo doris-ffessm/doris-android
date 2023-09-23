@@ -150,20 +150,20 @@
         	android:defaultValue="@string/pref_theme_default"
         	android:layout="@layout/preference_layout_preference"
         	/>
-   		<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+   		<!--<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
             android:key="@string/pref_key_accueil_liste_ou_arbre_pardefaut" 
         	android:title="@string/accueil_liste_ou_arbre_prompt" 
         	android:entryValues="@array/accueil_listes_ou_arbre_values"
         	android:entries="@array/accueil_listes_ou_arbre_lib" 
         	android:defaultValue="@string/accueil_liste_ou_arbre_default"
         	android:layout="@layout/preference_layout_preference"
-        	/>
+        	/>-->
         <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
             android:key="@string/pref_key_accueil_fiches_ordre" 
-        	android:title="@string/accueil_fiches_ordre_prompt" 
-        	android:entryValues="@array/accueil_fiches_ordre_values"
-        	android:entries="@array/accueil_fiches_ordre_lib" 
-        	android:defaultValue="@string/accueil_fiches_ordre_default"
+        	android:title="@string/accueil_fiches_ordre_alpha_prompt"
+        	android:entryValues="@array/accueil_fiches_ordre_alpha_values"
+        	android:entries="@array/accueil_fiches_ordre_alpha_lib"
+        	android:defaultValue="@string/accueil_fiches_ordre_alpha_default"
         	android:layout="@layout/preference_layout_preference"
         	/>
 		<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
