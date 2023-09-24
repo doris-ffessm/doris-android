@@ -9,11 +9,9 @@ import java.util.List;
 
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.activities.ListeImageFicheAvecFiltre_Adapter;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
-import fr.ffessm.doris.android.tools.Textes_Outils;
 
 public class IndexHelper {
     private static final String LOG_TAG = IndexHelper.class.getCanonicalName();
@@ -21,14 +19,14 @@ public class IndexHelper {
     protected DorisDBHelper _contextDB;
     protected Context context;
 
-    protected Fiches_Outils.OrdreTri ordreTri = Fiches_Outils.OrdreTri.NOMCOMMUN;
+    protected Fiches_Outils.OrdreTriAlphabetique ordreTriAlphabetique = Fiches_Outils.OrdreTriAlphabetique.NOMCOMMUN;
 
     public IndexHelper(Context context, DorisDBHelper _contextDB) {
         this._contextDB = _contextDB;
         this.context = context;
 
         Fiches_Outils fichesOutils = new Fiches_Outils(context);
-        ordreTri = fichesOutils.getOrdreTri(context);
+        ordreTriAlphabetique = fichesOutils.getOrdreTriAlphabetique(context);
     }
 
     public  HashMap<Character, Integer> getUsedAlphabetHashMap(List<Integer> filteredFicheIdList) {
@@ -55,10 +53,10 @@ public class IndexHelper {
             // use binarysearch if large list
             String alphabet_list[] = context.getResources().getStringArray(R.array.alphabet_array);
             int startSearchPos = 0;
-            for (int i = 0; i < alphabet_list.length; i++) {
-                int foundPosition = binarySearch(filteredFicheIdList, alphabet_list[i].charAt(0), startSearchPos, base_list_length - 1);
+            for (String s : alphabet_list) {
+                int foundPosition = binarySearch(filteredFicheIdList, s.charAt(0), startSearchPos, base_list_length - 1);
                 if (foundPosition != -1) {
-                    alphabetToIndex.put(alphabet_list[i].charAt(0), foundPosition);
+                    alphabetToIndex.put(s.charAt(0), foundPosition);
                     startSearchPos = foundPosition; // mini optimisation, no need to look before for former chars
                 }
             }
@@ -70,10 +68,9 @@ public class IndexHelper {
     protected char getFirstCharForIndex(Fiche entry) {
         //Start of user code protected ListeFicheAvecFiltre_Adapter binarySearch custom
         String nom;
-        switch (ordreTri) {
+        switch (ordreTriAlphabetique) {
             case NOMSCIENTIFIQUE:
-                nom = entry.getNomScientifique().replaceFirst("\\{\\{i\\}\\}", "");
-                ;
+                nom = entry.getNomScientifique().replaceFirst("\\{\\{i}}", "");
                 break;
             case NOMCOMMUN:
             default:
@@ -107,10 +104,9 @@ public class IndexHelper {
                 found = true;
                 break;
             }
-            ;
         }
         if (found) {
-            // search for the first occurence
+            // search for the first occurrence
             int best = mid;
             for (int i = mid; i > startBottom; i--) {
                 Fiche entry = getFicheForId(filteredFicheIdList.get(i));
@@ -129,8 +125,8 @@ public class IndexHelper {
 
     /**
      * USe a cache of fiche in the ApplicationContext
-     * @param ficheId
-     * @return
+     * @param ficheId Id of the fiche we are looking for
+     * @return the Fiche that has the given ID
      */
     public Fiche getFicheForId(Integer ficheId) {
         DorisApplicationContext appContext = DorisApplicationContext.getInstance();

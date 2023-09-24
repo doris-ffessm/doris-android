@@ -43,7 +43,6 @@ package fr.ffessm.doris.android.activities;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 import fr.ffessm.doris.android.DorisApplicationContext;
@@ -64,7 +63,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.collection.LruCache;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -112,7 +110,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
      * dbHelper used to autorefresh values and doing queries
      * must be set other wise most getter will return proxy that will need to be refreshed
      */
-    protected DorisDBHelper _contextDB = null;
+    protected DorisDBHelper _contextDB;
 
     private static final String LOG_TAG = ListeImageFicheAvecFiltre_Adapter.class.getCanonicalName();
 
@@ -132,11 +130,11 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
     protected Textes_Outils textesOutils;
 
     // vide signifie que l'on accepte tout
-    protected ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
+    protected ArrayList<Integer> acceptedGroupeId = new ArrayList<>();
     int filteredZoneGeoId = -1;
     int filteredGroupeId = 1;
 
-    protected Fiches_Outils.OrdreTri ordreTri = Fiches_Outils.OrdreTri.NOMCOMMUN;
+    protected Fiches_Outils.OrdreTriAlphabetique ordreTriAlphabetique = Fiches_Outils.OrdreTriAlphabetique.NOMCOMMUN;
 
     public ListeImageFicheAvecFiltre_Adapter(Context context, DorisDBHelper contextDB, int filteredZoneGeoId, int filteredGroupeId) {
         super();
@@ -151,7 +149,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
         photosOutils = new Photos_Outils(context);
         fichesOutils = new Fiches_Outils(context);
         textesOutils = new Textes_Outils(context);
-        ordreTri = fichesOutils.getOrdreTri(context);
+        ordreTriAlphabetique = fichesOutils.getOrdreTriAlphabetique(context);
 
         updateList();
     }
@@ -171,7 +169,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
         photosOutils = new Photos_Outils(context);
         fichesOutils = new Fiches_Outils(context);
         textesOutils = new Textes_Outils(context);
-        ordreTri = fichesOutils.getOrdreTri(context);
+        ordreTriAlphabetique = fichesOutils.getOrdreTriAlphabetique(context);
 
         // End of user code
         updateList();
@@ -225,7 +223,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
         tvDetails.setVisibility(View.GONE);
 
         TextView tvLabel = (TextView) convertView.findViewById(R.id.listeimageficheavecfiltre_listviewrow_label);
-        switch (ordreTri) {
+        switch (ordreTriAlphabetique) {
             case NOMSCIENTIFIQUE:
                 tvLabel.setText(textesOutils.textToSpannableStringDoris(entry.getNomScientifique()));
                 tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.ITALIC);

@@ -101,13 +101,12 @@ public class Fiches_Outils {
         MANUEL
     }
 
-    public enum OrdreTri {NOMCOMMUN, NOMSCIENTIFIQUE}
+    public enum OrdreTriAlphabetique {NOMCOMMUN, NOMSCIENTIFIQUE}
 
-    ;
 
     public int getNbFichesZoneGeo(ZoneGeographiqueKind inZoneGeo) {
 
-        int nbFiches = 0;
+        int nbFiches;
 
         if (inZoneGeo == ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES) {
             RuntimeExceptionDao<Fiche, Integer> entriesDao = ormLiteDBHelper.getFicheDao();
@@ -126,7 +125,7 @@ public class Fiches_Outils {
 
     public int getNbFichesPublished() {
 
-        int nbFiches = 0;
+        int nbFiches;
 
         RuntimeExceptionDao<Fiche, Integer> entriesDao = ormLiteDBHelper.getFicheDao();
         nbFiches = (int) entriesDao.queryForEq(
@@ -139,7 +138,7 @@ public class Fiches_Outils {
 
     public int getNbFichesProposed() {
 
-        int nbFiches = 0;
+        int nbFiches;
 
         RuntimeExceptionDao<Fiche, Integer> entriesDao = ormLiteDBHelper.getFicheDao();
         nbFiches = (int) entriesDao.queryForEq(
@@ -164,7 +163,7 @@ public class Fiches_Outils {
 
         ficheIdList.clear();
         filteredFicheIdList.clear();
-        ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
+        ArrayList<Integer> acceptedGroupeId = new ArrayList<>();
         String ordreTriAlpha = prefs.getString(context.getString(R.string.pref_key_accueil_fiches_ordre), context.getString(R.string.accueil_fiches_ordre_alpha_default));
         String orderByClause = "";
         String modeAffichage = prefs.getString(context.getString(R.string.pref_key_current_mode_affichage), context.getString(R.string.current_mode_affichage_default));
@@ -206,7 +205,7 @@ public class Fiches_Outils {
             if (filteredZoneGeoId == -1) {
                 Log.d(LOG_TAG, "_contextDB.ficheDao.queryForAll() - début " + contextDB.ficheDao.countOf());
                 //this.ficheList = _contextDB.ficheDao.queryForAll();
-                ficheIdList = new ArrayList<Integer>((int) contextDB.ficheDao.countOf());
+                ficheIdList = new ArrayList<>((int) contextDB.ficheDao.countOf());
 
 
                 // récupère les id seulement des fiches
@@ -223,7 +222,7 @@ public class Fiches_Outils {
                 Log.d(LOG_TAG, "queryFichesForZone - début - " + queryFichesForZone);
                 GenericRawResults<String[]> rawResults =
                         contextDB.ficheDao.queryRaw(queryFichesForZone);
-                ficheIdList = new ArrayList<Integer>();
+                ficheIdList = new ArrayList<>();
                 for (String[] resultColumns : rawResults) {
                     String iDString = resultColumns[0];
                     ficheIdList.add(Integer.parseInt(iDString));
@@ -245,7 +244,7 @@ public class Fiches_Outils {
                 Groupe searchedGroupe = contextDB.groupeDao.queryForId(filteredGroupeId);
                 //Log.d(LOG_TAG, "filter _contextDB="+_contextDB);
                 searchedGroupe.setContextDB(contextDB);
-                acceptedGroupeId = new ArrayList<Integer>();
+                acceptedGroupeId = new ArrayList<>();
                 for (Groupe groupe : Groupes_Outils.getAllSubGroupesForGroupe(searchedGroupe)) {
                     acceptedGroupeId.add(groupe.getId());
                 }
@@ -255,13 +254,13 @@ public class Fiches_Outils {
                 Log.d(LOG_TAG, "queryIdForGroupes = " + queryIdForGroupes);
                 GenericRawResults<String[]> rawResults =
                         contextDB.ficheDao.queryRaw(queryIdForGroupes.toString());
-                Set<Integer> ficheIdForGroupeList = new HashSet<Integer>();
+                Set<Integer> ficheIdForGroupeList = new HashSet<>();
                 for (String[] resultColumns : rawResults) {
                     String iDString = resultColumns[0];
                     ficheIdForGroupeList.add(Integer.parseInt(iDString));
                 }
                 // conserve uniquement les id des fiches qui sont dans les 2 filtres
-                List<Integer> groupFilteredFicheIdList = new ArrayList<Integer>();
+                List<Integer> groupFilteredFicheIdList = new ArrayList<>();
                 for (Integer i : ficheIdList) {
                     if (ficheIdForGroupeList.contains(i)) groupFilteredFicheIdList.add(i);
                 }
@@ -448,11 +447,11 @@ public class Fiches_Outils {
         }
     }
 
-    public OrdreTri getOrdreTri(Context context) {
+    public OrdreTriAlphabetique getOrdreTriAlphabetique(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String ordreTri = prefs.getString(context.getString(R.string.pref_key_accueil_fiches_ordre), "Commun");
-        if (ordreTri.equals("Commun")) return OrdreTri.NOMCOMMUN;
-        else return OrdreTri.NOMSCIENTIFIQUE;
+        if (ordreTri.equals("Commun")) return OrdreTriAlphabetique.NOMCOMMUN;
+        else return OrdreTriAlphabetique.NOMSCIENTIFIQUE;
     }
 
 

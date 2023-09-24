@@ -42,7 +42,6 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import fr.ffessm.doris.android.R;
@@ -107,13 +106,12 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
      * dbHelper used to autorefresh values and doing queries
      * must be set other wise most getter will return proxy that will need to be refreshed
      */
-    protected DorisDBHelper _contextDB = null;
+    protected DorisDBHelper _contextDB;
 
     private static final String LOG_TAG = ListeFicheAvecFiltre_Adapter.class.getCanonicalName();
 
     private List<Integer> ficheIdList;
     public List<Integer> filteredFicheIdList;
-    LruCache<Integer, Fiche> ficheCache = new LruCache<Integer, Fiche>(100);
     private final Object mLock = new Object();
     private SimpleFilter mFilter;
     SharedPreferences prefs;
@@ -128,12 +126,12 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
     protected Textes_Outils textesOutils;
 
     // vide signifie que l'on accepte tout
-    protected ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
+    protected ArrayList<Integer> acceptedGroupeId = new ArrayList<>();
     int filteredZoneGeoId = -1;
     int filteredGroupeId = 1;
 
 
-    protected Fiches_Outils.OrdreTri ordreTri = Fiches_Outils.OrdreTri.NOMCOMMUN;
+    protected Fiches_Outils.OrdreTriAlphabetique ordreTriAlphabetique = Fiches_Outils.OrdreTriAlphabetique.NOMCOMMUN;
 
     public ListeFicheAvecFiltre_Adapter(Context context, DorisDBHelper contextDB, int filteredZoneGeoId) {
         super();
@@ -147,7 +145,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
         photosOutils = new Photos_Outils(context);
         fichesOutils = new Fiches_Outils(context);
         textesOutils = new Textes_Outils(context);
-        ordreTri = fichesOutils.getOrdreTri(context);
+        ordreTriAlphabetique = fichesOutils.getOrdreTriAlphabetique(context);
         updateList();
     }
     //End of user code
@@ -164,7 +162,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
         photosOutils = new Photos_Outils(context);
         fichesOutils = new Fiches_Outils(context);
         textesOutils = new Textes_Outils(context);
-        ordreTri = fichesOutils.getOrdreTri(context);
+        ordreTriAlphabetique = fichesOutils.getOrdreTriAlphabetique(context);
         // End of user code
         updateList();
     }
@@ -216,7 +214,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 
         // set data in the row
         TextView tvLabel = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_label);
-        switch (ordreTri) {
+        switch (ordreTriAlphabetique) {
             case NOMSCIENTIFIQUE:
                 tvLabel.setText(textesOutils.textToSpannableStringDoris(entry.getNomScientifique()));
                 break;
@@ -240,7 +238,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
         // Start of user code protected additional ListeFicheAvecFiltre_Adapter getView code
         //	additional code
         TextView tvDetails = (TextView) convertView.findViewById(R.id.listeficheavecfiltre_listviewrow_details);
-        switch (ordreTri) {
+        switch (ordreTriAlphabetique) {
             case NOMSCIENTIFIQUE:
                 tvDetails.setText(entry.getNomCommunNeverEmpty());
                 break;
@@ -349,22 +347,12 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
             case 3:
                 btnEtatFiche.setVisibility(View.VISIBLE);
                 btnEtatFiche.setText(" R ");
-                btnEtatFiche.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(context, R.string.ficheredaction_explications, Toast.LENGTH_LONG).show();
-                    }
-                });
+                btnEtatFiche.setOnClickListener(v -> Toast.makeText(context, R.string.ficheredaction_explications, Toast.LENGTH_LONG).show());
                 break;
             case 5:
                 btnEtatFiche.setVisibility(View.VISIBLE);
                 btnEtatFiche.setText(" P ");
-                btnEtatFiche.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(context, R.string.ficheproposee_explications, Toast.LENGTH_LONG).show();
-                    }
-                });
+                btnEtatFiche.setOnClickListener(v -> Toast.makeText(context, R.string.ficheproposee_explications, Toast.LENGTH_LONG).show());
                 break;
             case 4:
                 btnEtatFiche.setVisibility(View.GONE);
@@ -482,7 +470,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 
             if (prefix == null || prefix.length() == 0) {
                 synchronized (mLock) {
-                    ArrayList<Integer> list = new ArrayList<Integer>(ficheIdList);
+                    ArrayList<Integer> list = new ArrayList<>(ficheIdList);
                     results.values = list;
                     results.count = list.size();
                 }
@@ -496,7 +484,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
                 final List<Integer> values = ficheIdList;
                 final int count = values.size();
 
-                final ArrayList<Integer> newValues = new ArrayList<Integer>(count);
+                final ArrayList<Integer> newValues = new ArrayList<>(count);
                 final int[] orders = sort ? new int[count] : null;
                 IndexHelper indexHelper = new IndexHelper(context, _contextDB );
                 for (int i = 0; i < count; i++) {
