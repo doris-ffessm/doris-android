@@ -81,6 +81,7 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.IndexHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
@@ -370,7 +371,8 @@ public class ListeFicheGroupAvecFiltre_ClassListViewActivity extends OrmLiteActi
     }
 
     public void populateIndexBarHashMap() {
-        alphabetToIndex = adapter.getUsedAlphabetHashMap();
+        IndexHelper indexHelper = new IndexHelper(context, getHelper().getDorisDBHelper() );
+        alphabetToIndex = indexHelper.getUsedAlphabetHashMap(adapter.filteredFicheIdList);
         number_of_alphabets = alphabetToIndex.size();        //Number of enteries in the map is equal to number of letters that would necessarily display on the right.
 
         /*Now I am making an entry of those alphabets which are not there in the Map*/
