@@ -47,6 +47,7 @@ import java.util.List;
 
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
+import fr.ffessm.doris.android.activities.view.indexbar.IndexHelper;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 
@@ -208,7 +209,9 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
         if (filteredFicheIdList.size() == 0) {
             return getNoResultSubstitute(convertView);
         }
-        final Fiche entry = getFicheForId(filteredFicheIdList.get(position));
+
+        IndexHelper indexHelper = new IndexHelper(context, _contextDB );
+        final Fiche entry = indexHelper.getFicheForId(filteredFicheIdList.get(position));
         if (entry == null) return convertView;
 
         // set data in the row
@@ -412,115 +415,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
         return convertView;
     }
 
-    protected Fiche getFicheForId(Integer ficheId) {
-        Fiche f = ficheCache.get(ficheId);
-        if (f != null) return f;
-        try {
-            f = _contextDB.ficheDao.queryForId(ficheId);
-            ficheCache.put(ficheId, f);
-            if (_contextDB != null) f.setContextDB(_contextDB);
-            return f;
-        } catch (SQLException e1) {
-            Log.e(LOG_TAG, "Cannot retreive fiche with _id = " + ficheId + " " + e1.getMessage(), e1);
-            return null;
-        }
-    }
 
-    public HashMap<Character, Integer> getUsedAlphabetHashMap() {
-        HashMap<Character, Integer> alphabetToIndex = new HashMap<Character, Integer>();
-        //Log.d(LOG_TAG,"getUsedAlphabetHashMap - début");
-        int base_list_length = filteredFicheIdList.size();
-        if (base_list_length < 100) {
-            // the base has been filtered so return the element from the filtered one
-            alphabetToIndex = new HashMap<Character, Integer>();
-
-
-            for (int i = 0; i < base_list_length; i++) {
-                Fiche entry = getFicheForId(filteredFicheIdList.get(i));
-                char firstCharacter = getFirstCharForIndex(entry);
-                boolean presentOrNot = alphabetToIndex.containsKey(firstCharacter);
-                if (!presentOrNot) {
-                    alphabetToIndex.put(firstCharacter, i);
-                    //Log.d(TAG,"Character="+firstCharacter+"  position="+i);
-                }
-            }
-
-        } else {
-            // large list
-            // use binarysearch if large list
-            String alphabet_list[] = context.getResources().getStringArray(R.array.alphabet_array);
-            int startSearchPos = 0;
-            for (String s : alphabet_list) {
-                int foundPosition = binarySearch(s.charAt(0), startSearchPos, base_list_length - 1);
-                if (foundPosition != -1) {
-                    alphabetToIndex.put(s.charAt(0), foundPosition);
-                    startSearchPos = foundPosition; // mini optimisation, no need to look before for former chars
-                }
-            }
-        }
-        Log.d(LOG_TAG, "getUsedAlphabetHashMap - fin");
-        return alphabetToIndex;
-    }
-
-    protected char getFirstCharForIndex(Fiche entry) {
-        //Start of user code protected ListeFicheAvecFiltre_Adapter binarySearch custom
-        String nom;
-        switch (ordreTri) {
-            case NOMSCIENTIFIQUE:
-                nom = entry.getNomScientifique().replaceFirst("\\{\\{i\\}\\}", "");
-                ;
-                break;
-            case NOMCOMMUN:
-            default:
-                nom = entry.getNomCommunNeverEmpty();
-                break;
-        }
-        if (nom.length() == 0) return '#';
-        return nom.charAt(0);
-        //End of user code
-    }
-
-
-    /**
-     * @param key         to be searched
-     * @param startBottom initial value for bottom, default = 0
-     * @param startTop    initial top value, default = array.length -1
-     * @return
-     */
-    public int binarySearch(char key, int startBottom, int startTop) {
-        int bot = startBottom;
-        int top = startTop;
-        int mid = startBottom;
-        boolean found = false;
-        while (bot <= top) {
-            mid = bot + (top - bot) / 2;
-            Fiche entry = getFicheForId(filteredFicheIdList.get(mid));
-            char midCharacter = getFirstCharForIndex(entry);
-            if (key < midCharacter) top = mid - 1;
-            else if (key > midCharacter) bot = mid + 1;
-            else {
-                found = true;
-                break;
-            }
-            ;
-        }
-        if (found) {
-            // search for the first occurence
-            int best = mid;
-            for (int i = mid; i > startBottom; i--) {
-                Fiche entry = getFicheForId(filteredFicheIdList.get(i));
-                char midCharacter = getFirstCharForIndex(entry);
-                if (midCharacter == key) {
-                    best = i;
-                } else {
-                    //previous is differents so we stop here
-                    break;
-                }
-
-            }
-            return best;
-        } else return -1;
-    }
 
 
     //Start of user code protected additional ListeFicheAvecFiltre_Adapter methods
@@ -603,10 +498,11 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 
                 final ArrayList<Integer> newValues = new ArrayList<Integer>(count);
                 final int[] orders = sort ? new int[count] : null;
-
+                IndexHelper indexHelper = new IndexHelper(context, _contextDB );
                 for (int i = 0; i < count; i++) {
                     final Integer valueId = values.get(i);
-                    Fiche value = getFicheForId(valueId);
+
+                    Fiche value = indexHelper.getFicheForId(valueId);
                     if (value != null) {
                         int order = ListeFicheAvecFiltre_Adapter.this.filter(i, value, prefixString);
                         if (order >= 0) {

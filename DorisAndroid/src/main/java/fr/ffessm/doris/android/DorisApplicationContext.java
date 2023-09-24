@@ -52,6 +52,9 @@ import android.content.res.Configuration;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+
+import androidx.collection.LruCache;
+
 import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.datamodel.Classification;
@@ -91,6 +94,10 @@ public class DorisApplicationContext {
 	public boolean isTelechPhotos = false;
 	public boolean isMovingPhotos = false;
 	public ZoneGeographiqueKind zoneTraitee = null;
+
+
+	/* global cache to help indexation  used by IndexHelper */
+	public LruCache<Integer, Fiche> ficheCache = new LruCache<>(100);
 	
 	// Permet de piloter finement l'interface de retour (depuis le bouton HOME)
 	// (i.e. sans respecter forcément le manifest.xml)
