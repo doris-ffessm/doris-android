@@ -45,7 +45,9 @@ package fr.ffessm.doris.android.activities;
 import java.util.HashMap;
 
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
+import fr.ffessm.doris.android.activities.view.indexbar.FicheIndexManager;
 import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.ParticipantIndexManager;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
@@ -149,6 +151,7 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
         // to deliver the intent if this activity is currently the foreground activity when
         // invoked again (when the user executes a search from this activity, we don't create
         // a new instance of this activity, so the system delivers the search intent here)
+        super.onNewIntent(intent);
         handleIntent(intent);
     }
 
@@ -314,7 +317,9 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
     }
 
     public void populateIndexBarHashMap() {
-        alphabetToIndex = adapter.getUsedAlphabetHashMap();
+
+        ParticipantIndexManager indexHelper = new ParticipantIndexManager(context, getHelper().getDorisDBHelper() );
+        alphabetToIndex = indexHelper.getUsedAlphabetHashMap(adapter.filteredParticipantList);
         number_of_alphabets = alphabetToIndex.size();        //Number of enteries in the map is equal to number of letters that would necessarily display on the right.
 
         /*Now I am making an entry of those alphabets which are not there in the Map*/

@@ -80,8 +80,9 @@ import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
+import fr.ffessm.doris.android.activities.view.indexbar.FicheIndexManager;
 import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
-import fr.ffessm.doris.android.activities.view.indexbar.IndexHelper;
+import fr.ffessm.doris.android.activities.view.indexbar.IndexManager;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
@@ -371,7 +372,7 @@ public class ListeFicheGroupAvecFiltre_ClassListViewActivity extends OrmLiteActi
     }
 
     public void populateIndexBarHashMap() {
-        IndexHelper indexHelper = new IndexHelper(context, getHelper().getDorisDBHelper() );
+        IndexManager indexHelper = new FicheIndexManager(context, getHelper().getDorisDBHelper() );
         alphabetToIndex = indexHelper.getUsedAlphabetHashMap(adapter.filteredFicheIdList);
         number_of_alphabets = alphabetToIndex.size();        //Number of enteries in the map is equal to number of letters that would necessarily display on the right.
 

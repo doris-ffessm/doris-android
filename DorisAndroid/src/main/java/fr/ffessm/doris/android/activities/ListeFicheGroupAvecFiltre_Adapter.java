@@ -60,21 +60,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.collection.LruCache;
-
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
-import fr.ffessm.doris.android.activities.view.indexbar.IndexHelper;
+import fr.ffessm.doris.android.activities.view.indexbar.FicheIndexManager;
+import fr.ffessm.doris.android.activities.view.indexbar.IndexManager;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
@@ -202,8 +200,8 @@ public class ListeFicheGroupAvecFiltre_Adapter extends BaseAdapter implements Fi
         if (filteredFicheIdList.size() == 0) {
             return getNoResultSubstitute(convertView);
         }
-        IndexHelper indexHelper = new IndexHelper(context, _contextDB );
-        final Fiche entry = indexHelper.getFicheForId(filteredFicheIdList.get(position));
+        FicheIndexManager indexHelper = new FicheIndexManager(context, _contextDB );
+        final Fiche entry = indexHelper.getItemForId(filteredFicheIdList.get(position));
         if (entry == null) return convertView;
 
         // set data in the row
@@ -490,10 +488,10 @@ public class ListeFicheGroupAvecFiltre_Adapter extends BaseAdapter implements Fi
                 final ArrayList<Integer> newValues = new ArrayList<Integer>(count);
                 final int[] orders = sort ? new int[count] : null;
 
-                IndexHelper indexHelper = new IndexHelper(context, _contextDB );
+                FicheIndexManager indexHelper = new FicheIndexManager(context, _contextDB );
                 for (int i = 0; i < count; i++) {
                     final Integer valueId = values.get(i);
-                    Fiche value = indexHelper.getFicheForId(valueId);
+                    Fiche value = indexHelper.getItemForId(valueId);
                     if (value != null) {
                         int order = ListeFicheGroupAvecFiltre_Adapter.this.filter(i, value, prefixString);
                         if (order >= 0) {
