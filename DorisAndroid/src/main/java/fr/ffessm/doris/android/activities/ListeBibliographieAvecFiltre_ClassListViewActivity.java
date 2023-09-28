@@ -46,8 +46,8 @@ import java.util.HashMap;
 
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.activities.view.indexbar.EntreeBibliographieIndexManager;
-import fr.ffessm.doris.android.activities.view.indexbar.FicheIndexManager;
-import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.DorisApplicationContext;
@@ -115,7 +115,7 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
         handleIntent(getIntent());
 
         // add handler for indexBar
-        mHandler = new IndexBarHandler(this);
+        mHandler = new AlphabetIndexBarHandler(this);
         //Start of user code onCreate additions ListeBibliographieAvecFiltre_ClassListViewActivity
 
         //End of user code
@@ -305,7 +305,7 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
     public void populateIndexBarHashMap() {
 
         EntreeBibliographieIndexManager indexHelper = new EntreeBibliographieIndexManager(this, getHelper().getDorisDBHelper() );
-        alphabetToIndex = indexHelper.getUsedAlphabetHashMap(adapter.filteredEntreeBibliographieList);
+        alphabetToIndex = indexHelper.getUsedIndexHashMapFromItems(adapter.filteredEntreeBibliographieList);
         number_of_alphabets = alphabetToIndex.size();        //Number of enteries in the map is equal to number of letters that would necessarily display on the right.
 
         /*Now I am making an entry of those alphabets which are not there in the Map*/
@@ -334,6 +334,11 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
 
             }//
         }//
+    }
+
+    @Override
+    public DorisDBHelper getDorisDBHelper() {
+        return getHelper().getDorisDBHelper();
     }
 
     @Override

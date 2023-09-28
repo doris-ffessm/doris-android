@@ -45,8 +45,7 @@ package fr.ffessm.doris.android.activities;
 import java.util.HashMap;
 
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
-import fr.ffessm.doris.android.activities.view.indexbar.FicheIndexManager;
-import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
 import fr.ffessm.doris.android.activities.view.indexbar.ParticipantIndexManager;
 import fr.ffessm.doris.android.datamodel.*;
 import fr.ffessm.doris.android.DorisApplicationContext;
@@ -123,7 +122,7 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
         handleIntent(getIntent());
 
         // add handler for indexBar
-        mHandler = new IndexBarHandler(this);
+        mHandler = new AlphabetIndexBarHandler(this);
         //Start of user code onCreate additions ListeParticipantAvecFiltre_ClassListViewActivity
         actionBar.setSubtitle("Participants");
 
@@ -319,7 +318,7 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
     public void populateIndexBarHashMap() {
 
         ParticipantIndexManager indexHelper = new ParticipantIndexManager(context, getHelper().getDorisDBHelper() );
-        alphabetToIndex = indexHelper.getUsedAlphabetHashMap(adapter.filteredParticipantList);
+        alphabetToIndex = indexHelper.getUsedIndexHashMapFromItems(adapter.filteredParticipantList);
         number_of_alphabets = alphabetToIndex.size();        //Number of enteries in the map is equal to number of letters that would necessarily display on the right.
 
         /*Now I am making an entry of those alphabets which are not there in the Map*/
@@ -348,6 +347,11 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
 
             }//
         }//
+    }
+
+    @Override
+    public DorisDBHelper getDorisDBHelper() {
+        return getHelper().getDorisDBHelper();
     }
 
     @Override

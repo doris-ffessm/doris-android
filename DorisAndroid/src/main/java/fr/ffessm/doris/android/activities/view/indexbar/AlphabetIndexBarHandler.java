@@ -55,7 +55,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import fr.ffessm.doris.android.R;
 
-public class IndexBarHandler extends Handler {
+public class AlphabetIndexBarHandler extends Handler {
 
 	ActivityWithIndexBar indexbar;
 	static String TAG="IndexBarHandler";
@@ -69,7 +69,7 @@ public class IndexBarHandler extends Handler {
 	 * Constructor of IndexBarHandler class which reserves the instance reference of its UI class
 	 * @param indexbar
 	 */
-	public IndexBarHandler(ActivityWithIndexBar indexbar) {
+	public AlphabetIndexBarHandler(ActivityWithIndexBar indexbar) {
 		this.indexbar=indexbar;
 	}
 	

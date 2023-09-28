@@ -10,7 +10,7 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
 
-public class ParticipantIndexManager extends IndexManager<Participant>{
+public class ParticipantIndexManager extends IndexManager<Participant, Character>{
     private static final String LOG_TAG = ParticipantIndexManager.class.getCanonicalName();
 
     protected DorisDBHelper _contextDB;
@@ -18,7 +18,8 @@ public class ParticipantIndexManager extends IndexManager<Participant>{
     protected Fiches_Outils.OrdreTriAlphabetique ordreTriAlphabetique = Fiches_Outils.OrdreTriAlphabetique.NOMCOMMUN;
 
     public ParticipantIndexManager(Context context, DorisDBHelper _contextDB) {
-        super(context);
+
+        super(context, AlphabetProvider.getAlphabet(context));
         this._contextDB = _contextDB;
 
         Fiches_Outils fichesOutils = new Fiches_Outils(context);
@@ -26,7 +27,7 @@ public class ParticipantIndexManager extends IndexManager<Participant>{
     }
 
     @Override
-    public char getFirstCharForIndex(Participant entry) {
+    public Character getIndexKeyForEntry(Participant entry) {
         return entry.getNom().trim().charAt(0); // il y a un blanc au début, devrait être nettoyé dans le prefecth
     }
 

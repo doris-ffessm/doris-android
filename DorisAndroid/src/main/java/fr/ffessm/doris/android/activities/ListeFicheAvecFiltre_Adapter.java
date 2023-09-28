@@ -46,8 +46,7 @@ import java.util.List;
 
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
-import fr.ffessm.doris.android.activities.view.indexbar.FicheIndexManager;
-import fr.ffessm.doris.android.activities.view.indexbar.IndexManager;
+import fr.ffessm.doris.android.activities.view.indexbar.FicheAlphabeticalIndexManager;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 
@@ -207,7 +206,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
             return getNoResultSubstitute(convertView);
         }
 
-        FicheIndexManager indexHelper = new FicheIndexManager(context, _contextDB );
+        FicheAlphabeticalIndexManager indexHelper = new FicheAlphabeticalIndexManager(context, _contextDB );
         final Fiche entry = indexHelper.getItemForId(filteredFicheIdList.get(position));
         if (entry == null) return convertView;
 
@@ -485,7 +484,7 @@ public class ListeFicheAvecFiltre_Adapter extends BaseAdapter implements Filtera
 
                 final ArrayList<Integer> newValues = new ArrayList<>(count);
                 final int[] orders = sort ? new int[count] : null;
-                FicheIndexManager indexHelper = new FicheIndexManager(context, _contextDB );
+                FicheAlphabeticalIndexManager indexHelper = new FicheAlphabeticalIndexManager(context, _contextDB );
                 for (int i = 0; i < count; i++) {
                     final Integer valueId = values.get(i);
 

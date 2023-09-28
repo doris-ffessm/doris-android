@@ -11,7 +11,7 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
 
-public class DefinitionGlossaireIndexManager extends IndexManager<DefinitionGlossaire>{
+public class DefinitionGlossaireIndexManager extends IndexManager<DefinitionGlossaire, Character>{
     private static final String LOG_TAG = DefinitionGlossaireIndexManager.class.getCanonicalName();
 
     protected DorisDBHelper _contextDB;
@@ -19,7 +19,7 @@ public class DefinitionGlossaireIndexManager extends IndexManager<DefinitionGlos
     protected Fiches_Outils.OrdreTriAlphabetique ordreTriAlphabetique = Fiches_Outils.OrdreTriAlphabetique.NOMCOMMUN;
 
     public DefinitionGlossaireIndexManager(Context context, DorisDBHelper _contextDB) {
-        super(context);
+        super(context, AlphabetProvider.getAlphabet(context));
         this._contextDB = _contextDB;
 
         Fiches_Outils fichesOutils = new Fiches_Outils(context);
@@ -27,7 +27,7 @@ public class DefinitionGlossaireIndexManager extends IndexManager<DefinitionGlos
     }
 
     @Override
-    public char getFirstCharForIndex(DefinitionGlossaire entry) {
+    public Character getIndexKeyForEntry(DefinitionGlossaire entry) {
         return entry.getTerme().charAt(0);
     }
 

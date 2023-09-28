@@ -48,20 +48,24 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ListView;
 
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
+
 public interface ActivityWithIndexBar  {
 	
-	public Handler getHandler();
+	Handler getHandler();
 	
-	public Context getBaseContext();
+	Context getBaseContext();
 
-	public Resources getResources();
+	Resources getResources();
 
-	public SharedPreferences getSharedPreferences(String string, int modePrivate);
+	SharedPreferences getSharedPreferences(String string, int modePrivate);
 
-	public ListView getAlphabetListView();
+	ListView getAlphabetListView();
 	
-	public View getAlphabetRowView();
+	View getAlphabetRowView();
 	
-	public void populateIndexBarHashMap();
+	void populateIndexBarHashMap();
+
+	DorisDBHelper getDorisDBHelper();
 
 }

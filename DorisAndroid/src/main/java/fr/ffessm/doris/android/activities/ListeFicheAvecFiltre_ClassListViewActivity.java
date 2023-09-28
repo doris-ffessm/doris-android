@@ -43,11 +43,15 @@ package fr.ffessm.doris.android.activities;
 
 
 import java.util.HashMap;
+import java.util.List;
 
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
-import fr.ffessm.doris.android.activities.view.indexbar.FicheIndexManager;
-import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
-import fr.ffessm.doris.android.activities.view.indexbar.IndexManager;
+import fr.ffessm.doris.android.activities.view.indexbar.FicheAlphabeticalIndexManager;
+import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.FicheGroupeIndexManager;
+import fr.ffessm.doris.android.activities.view.indexbar.GroupIndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.GroupeListProvider;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
@@ -64,6 +68,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.widget.LinearLayout;
 import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
@@ -112,7 +117,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
     Handler mHandler;
     HashMap<Character, Integer> alphabetToIndex;
-    int number_of_alphabets = -1;
+    HashMap<Integer, Integer> groupeIdToIndex;
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -141,7 +146,14 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         handleIntent(getIntent());
 
         // add handler for indexBar
-        mHandler = new IndexBarHandler(this);
+        if(isGroupeMode()) {
+            ListView listview = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
+            int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe),
+                    Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
+            mHandler = new GroupIndexBarHandler(this, listview, filtreGroupe);
+        } else {
+            mHandler = new AlphabetIndexBarHandler(this);
+        }
 
         //Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
 
@@ -169,6 +181,14 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
             ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
             list.invalidateViews();
         }
+        Integer filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
+
+        // send an update of the filtre on Groupe
+        Message msg = this.getHandler().obtainMessage();
+        msg.what = 2;
+        msg.obj=filtreGroupe;
+        mHandler.sendMessage(msg);
+
         updateFilterInActionBar();
 
         //End of user code
@@ -221,20 +241,32 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
             startActivity(toDetailView);
         } else if (view instanceof TextView && view.getId() == R.id.indexbar_alphabet_row_textview) {
             // click on indexBar
-            TextView rowview = (TextView) view;
+            if(!isGroupeMode()) {
+                TextView rowview = (TextView) view;
+                CharSequence alphabet = rowview.getText();
 
-            CharSequence alphabet = rowview.getText();
+                if (alphabet == null || alphabet.equals(""))
+                    return;
 
-            if (alphabet == null || alphabet.equals(""))
-                return;
-
-            String selected_alphabet = alphabet.toString().trim();
-            Integer newPosition = alphabetToIndex.get(selected_alphabet.charAt(0));
-            Log.d(LOG_TAG, "Selected Alphabet is:" + selected_alphabet + "   position is:" + newPosition);
-            if (newPosition != null) {
-                showToast(selected_alphabet);
-                ListView listview = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
-                listview.setSelection(newPosition);
+                String selected_alphabet = alphabet.toString().trim();
+                Integer newPosition = alphabetToIndex.get(selected_alphabet.charAt(0));
+                Log.d(LOG_TAG, "Selected Alphabet is:" + selected_alphabet + "   position is:" + newPosition);
+                if (newPosition != null) {
+                    showToast(selected_alphabet);
+                    ListView listview = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
+                    listview.setSelection(newPosition);
+                }
+            }  else  {
+                TextView rowview = (TextView) view;
+                if(rowview.getTag() !=  null && rowview.getTag() instanceof Groupe) {
+                    Groupe groupe = (Groupe) rowview.getTag();
+                    Integer newPosition = groupeIdToIndex.get(groupe.getId());
+                    if (newPosition != null) {
+                        showToast(groupe.getNomGroupe());
+                        ListView listview = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
+                        listview.setSelection(newPosition);
+                    }
+                }
             }
         }
     }
@@ -371,9 +403,32 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
     public void populateIndexBarHashMap() {
 
-        FicheIndexManager indexHelper = new FicheIndexManager(context, getHelper().getDorisDBHelper() );
-        alphabetToIndex = indexHelper.getUsedAlphabetHashMapId(adapter.filteredFicheIdList);
-        number_of_alphabets = alphabetToIndex.size();        //Number of entries in the map is equal to number of letters that would necessarily display on the right.
+        if(isGroupeMode()) {
+            populateIndexBarHashMapGroupe();
+        } else {
+            populateIndexBarHashMapAlphabet();
+        }
+    }
+
+    @Override
+    public DorisDBHelper getDorisDBHelper() {
+        return getHelper().getDorisDBHelper();
+    }
+
+    protected boolean isGroupeMode() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String currentMode =  prefs.getString(
+                this.getResources().getString(
+                        R.string.pref_key_current_mode_affichage),
+                this.getResources().getString(R.string.current_mode_affichage_default));
+        return currentMode.equals("liste_par_groupe") || currentMode.equals("photos_par_groupe");
+    }
+
+
+    public void populateIndexBarHashMapAlphabet() {
+
+        FicheAlphabeticalIndexManager indexHelper = new FicheAlphabeticalIndexManager(context, getHelper().getDorisDBHelper() );
+        alphabetToIndex = indexHelper.getUsedIndexHashMapItemIds(adapter.filteredFicheIdList);
 
         /*Now I am making an entry of those alphabets which are not there in the Map*/
         String alphabets[] = getResources().getStringArray(R.array.alphabet_array);
@@ -403,6 +458,40 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         }//
     }
 
+    public void populateIndexBarHashMapGroupe() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
+        FicheGroupeIndexManager indexHelper = new FicheGroupeIndexManager(context, getHelper().getDorisDBHelper(), filtreGroupe );
+        groupeIdToIndex = indexHelper.getUsedIndexHashMapItemIds(adapter.filteredFicheIdList);
+
+        /*Now I am making an entry of those GroupeId which are not present in the Map*/
+        List<Integer> allGroupIDs = GroupeListProvider.getAllGroupeIdList(getHelper().getDorisDBHelper());
+        String alphabets[] = getResources().getStringArray(R.array.alphabet_array);
+        int index = -1;
+
+        for (Integer groupID : allGroupIDs) {
+
+            index++;
+
+            if (groupeIdToIndex.containsKey(groupID))
+                continue;
+
+            /*Start searching the next character position. Example, here alpha is E. Since there is no entry for E, we need to find the position of next Character, F.*/
+            for (int i = index + 1; i < allGroupIDs.size(); i++) {        //start from next character to last character
+                Integer searchAlphabet = allGroupIDs.get(i);
+
+                /*If we find the position of F character, then on click event on E should take the user to F*/
+                if (groupeIdToIndex.containsKey(searchAlphabet)) {
+                    groupeIdToIndex.put(groupID, groupeIdToIndex.get(searchAlphabet));
+                    break;
+                } else if (i == allGroupIDs.size()) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
+                    groupeIdToIndex.put(groupID, adapter.filteredFicheIdList.size() - 1);
+                else
+                    continue;
+
+            }
+        }
+    }
     @Override
     public ListView getAlphabetListView() {
         return (ListView) findViewById(R.id.listeficheavecfiltre_listView_alphabets);

@@ -11,19 +11,19 @@ import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
 
-public class EntreeBibliographieIndexManager extends IndexManager<EntreeBibliographie>{
+public class EntreeBibliographieIndexManager extends IndexManager<EntreeBibliographie, Character>{
     private static final String LOG_TAG = EntreeBibliographieIndexManager.class.getCanonicalName();
 
     protected DorisDBHelper _contextDB;
 
 
     public EntreeBibliographieIndexManager(Context context, DorisDBHelper _contextDB) {
-        super(context);
+        super(context, AlphabetProvider.getAlphabet(context));
         this._contextDB = _contextDB;
     }
 
     @Override
-    public char getFirstCharForIndex(EntreeBibliographie entry) {
+    public Character getIndexKeyForEntry(EntreeBibliographie entry) {
         return entry.getAuteurs().charAt(0);
     }
 

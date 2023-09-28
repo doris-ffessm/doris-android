@@ -45,9 +45,9 @@ package fr.ffessm.doris.android.activities;
 import java.util.HashMap;
 
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
-import fr.ffessm.doris.android.activities.view.indexbar.FicheIndexManager;
-import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
-import fr.ffessm.doris.android.activities.view.indexbar.IndexManager;
+import fr.ffessm.doris.android.activities.view.indexbar.FicheAlphabeticalIndexManager;
+import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
@@ -144,7 +144,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
         handleIntent(getIntent());
 
         // add handler for indexBar
-        mHandler = new IndexBarHandler(this);
+        mHandler = new AlphabetIndexBarHandler(this);
         //Start of user code onCreate additions ListeImageFicheAvecFiltre_ClassListViewActivity
 
         //End of user code
@@ -371,8 +371,8 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
     }
 
     public void populateIndexBarHashMap() {
-        FicheIndexManager indexHelper = new FicheIndexManager(context, getHelper().getDorisDBHelper() );
-        alphabetToIndex = indexHelper.getUsedAlphabetHashMapId(adapter.filteredFicheIdList);
+        FicheAlphabeticalIndexManager indexHelper = new FicheAlphabeticalIndexManager(context, getHelper().getDorisDBHelper() );
+        alphabetToIndex = indexHelper.getUsedIndexHashMapItemIds(adapter.filteredFicheIdList);
         number_of_alphabets = alphabetToIndex.size();        //Number of enteries in the map is equal to number of letters that would necessarily display on the right.
 
         /*Now I am making an entry of those alphabets which are not there in the Map*/
@@ -401,6 +401,11 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 
             }//
         }//
+    }
+
+    @Override
+    public DorisDBHelper getDorisDBHelper() {
+        return getHelper().getDorisDBHelper();
     }
 
     @Override

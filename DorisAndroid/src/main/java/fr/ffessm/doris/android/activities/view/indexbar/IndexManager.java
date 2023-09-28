@@ -15,28 +15,30 @@ import fr.ffessm.doris.android.datamodel.AbstractWebNodeObject;
  * @param <ItemType>
  */
 
-public abstract class IndexManager<ItemType extends AbstractWebNodeObject> {
+public abstract class IndexManager<ItemType extends AbstractWebNodeObject, IndexKeyType extends Comparable> {
     private static final String LOG_TAG = IndexManager.class.getCanonicalName();
-
     protected Context context;
-   public IndexManager(Context context) {
-       this.context = context;
 
-   }
+    List<IndexKeyType> indexList;
+
+    public IndexManager(Context context, List<IndexKeyType> indexList) {
+        this.context = context;
+        this.indexList = indexList;
+    }
 
 
-    public  HashMap<Character, Integer> getUsedAlphabetHashMap(List<ItemType> filteredItemList) {
-        HashMap<Character, Integer> alphabetToIndex = new HashMap<Character, Integer>();
+    public  HashMap<IndexKeyType, Integer> getUsedIndexHashMapFromItems(List<ItemType> filteredItemList) {
+        HashMap<IndexKeyType, Integer> alphabetToIndex = new HashMap<>();
         Log.d(LOG_TAG, "getUsedAlphabetHashMap - début");
         int base_list_length = filteredItemList.size();
         if (base_list_length < 100) {
             // the base has been filtered so return the element from the filtered one
-            alphabetToIndex = new HashMap<Character, Integer>();
+            alphabetToIndex = new HashMap<>();
 
 
             for (int i = 0; i < base_list_length; i++) {
                 ItemType entry = filteredItemList.get(i);
-                char firstCharacter = getFirstCharForIndex(entry);
+                IndexKeyType firstCharacter = getIndexKeyForEntry(entry);
                 boolean presentOrNot = alphabetToIndex.containsKey(firstCharacter);
                 if (!presentOrNot) {
                     alphabetToIndex.put(firstCharacter, i);
@@ -47,12 +49,12 @@ public abstract class IndexManager<ItemType extends AbstractWebNodeObject> {
         } else {
             // large list
             // use binarysearch if large list
-            String alphabet_list[] = context.getResources().getStringArray(R.array.alphabet_array);
+            //String alphabet_list[] = context.getResources().getStringArray(R.array.alphabet_array);
             int startSearchPos = 0;
-            for (int i = 0; i < alphabet_list.length; i++) {
-                int foundPosition = binarySearch(filteredItemList, alphabet_list[i].charAt(0), startSearchPos, base_list_length - 1);
+            for (int i = 0; i < indexList.size(); i++) {
+                int foundPosition = binarySearch(filteredItemList, indexList.get(0), startSearchPos, base_list_length - 1);
                 if (foundPosition != -1) {
-                    alphabetToIndex.put(alphabet_list[i].charAt(0), foundPosition);
+                    alphabetToIndex.put(indexList.get(i), foundPosition);
                     startSearchPos = foundPosition; // mini optimisation, no need to look before for former chars
                 }
             }
@@ -61,8 +63,8 @@ public abstract class IndexManager<ItemType extends AbstractWebNodeObject> {
         return alphabetToIndex;
 
     }
-    public  HashMap<Character, Integer> getUsedAlphabetHashMapId(List<Integer> filteredFicheIdList) {
-        HashMap<Character, Integer> alphabetToIndex = new HashMap<>();
+    public  HashMap<IndexKeyType, Integer> getUsedIndexHashMapItemIds(List<Integer> filteredFicheIdList) {
+        HashMap<IndexKeyType, Integer> alphabetToIndex = new HashMap<>();
         Log.d(LOG_TAG, "getUsedAlphabetHashMap - début");
         int base_list_length = filteredFicheIdList.size();
         if (base_list_length < 100) {
@@ -72,7 +74,7 @@ public abstract class IndexManager<ItemType extends AbstractWebNodeObject> {
 
             for (int i = 0; i < base_list_length; i++) {
                 ItemType entry = getItemForId(filteredFicheIdList.get(i));
-                char firstCharacter = getFirstCharForIndex(entry);
+                IndexKeyType firstCharacter = getIndexKeyForEntry(entry);
                 boolean presentOrNot = alphabetToIndex.containsKey(firstCharacter);
                 if (!presentOrNot) {
                     alphabetToIndex.put(firstCharacter, i);
@@ -83,12 +85,12 @@ public abstract class IndexManager<ItemType extends AbstractWebNodeObject> {
         } else {
             // large list
             // use binarysearch if large list
-            String alphabet_list[] = context.getResources().getStringArray(R.array.alphabet_array);
+            //String alphabet_list[] = context.getResources().getStringArray(R.array.alphabet_array);
             int startSearchPos = 0;
-            for (String s : alphabet_list) {
-                int foundPosition = binarySearchId(filteredFicheIdList, s.charAt(0), startSearchPos, base_list_length - 1);
+            for (IndexKeyType s : this.indexList) {
+                int foundPosition = binarySearchId(filteredFicheIdList, s, startSearchPos, base_list_length - 1);
                 if (foundPosition != -1) {
-                    alphabetToIndex.put(s.charAt(0), foundPosition);
+                    alphabetToIndex.put(s, foundPosition);
                     startSearchPos = foundPosition; // mini optimisation, no need to look before for former chars
                 }
             }
@@ -97,7 +99,7 @@ public abstract class IndexManager<ItemType extends AbstractWebNodeObject> {
         return alphabetToIndex;
     }
 
-    public abstract char getFirstCharForIndex(ItemType entry);
+    public abstract IndexKeyType getIndexKeyForEntry(ItemType entry);
 
     /**
      * @param filteredFicheIdList  the list of Fiche Ids in which the search occurs
@@ -106,7 +108,7 @@ public abstract class IndexManager<ItemType extends AbstractWebNodeObject> {
      * @param startTop    initial top value, default = array.length -1
      * @return
      */
-    public int binarySearchId(List<Integer> filteredFicheIdList, char key, int startBottom, int startTop) {
+    public int binarySearchId(List<Integer> filteredFicheIdList, IndexKeyType key, int startBottom, int startTop) {
         int bot = startBottom;
         int top = startTop;
         int mid = startBottom;
@@ -114,9 +116,9 @@ public abstract class IndexManager<ItemType extends AbstractWebNodeObject> {
         while (bot <= top) {
             mid = bot + (top - bot) / 2;
             ItemType entry = getItemForId(filteredFicheIdList.get(mid));
-            char midCharacter = getFirstCharForIndex(entry);
-            if (key < midCharacter) top = mid - 1;
-            else if (key > midCharacter) bot = mid + 1;
+            IndexKeyType midCharacter = getIndexKeyForEntry(entry);
+            if (key.compareTo(midCharacter) < 0) top = mid - 1;
+            else if (key.compareTo(midCharacter) > 0) bot = mid + 1;
             else {
                 found = true;
                 break;
@@ -127,7 +129,7 @@ public abstract class IndexManager<ItemType extends AbstractWebNodeObject> {
             int best = mid;
             for (int i = mid; i > startBottom; i--) {
                 ItemType entry = getItemForId(filteredFicheIdList.get(i));
-                char midCharacter = getFirstCharForIndex(entry);
+                IndexKeyType midCharacter = getIndexKeyForEntry(entry);
                 if (midCharacter == key) {
                     best = i;
                 } else {
@@ -140,7 +142,7 @@ public abstract class IndexManager<ItemType extends AbstractWebNodeObject> {
         } else return -1;
     }
 
-    public int binarySearch(List<ItemType> filteredItemList, char key, int startBottom, int startTop) {
+    public int binarySearch(List<ItemType> filteredItemList, IndexKeyType key, int startBottom, int startTop) {
         int bot = startBottom;
         int top = startTop;
         int mid = startBottom;
@@ -148,9 +150,9 @@ public abstract class IndexManager<ItemType extends AbstractWebNodeObject> {
         while (bot <= top) {
             mid = bot + (top - bot) / 2;
             ItemType entry = filteredItemList.get(mid);
-            char midCharacter = getFirstCharForIndex(entry);
-            if (key < midCharacter) top = mid - 1;
-            else if (key > midCharacter) bot = mid + 1;
+            IndexKeyType midCharacter = getIndexKeyForEntry(entry);
+            if (key.compareTo(midCharacter) < 0 ) top = mid - 1;
+            else if (key.compareTo(midCharacter) > 0) bot = mid + 1;
             else {
                 found = true;
                 break;
@@ -162,7 +164,7 @@ public abstract class IndexManager<ItemType extends AbstractWebNodeObject> {
             int best = mid;
             for (int i = mid; i > startBottom; i--) {
                 ItemType entry = filteredItemList.get(i);
-                char midCharacter = getFirstCharForIndex(entry);
+                IndexKeyType midCharacter = getIndexKeyForEntry(entry);
                 if (midCharacter == key) {
                     best = i;
                 } else {
