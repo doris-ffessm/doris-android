@@ -105,6 +105,10 @@ public class OrmLiteActionBarActivity<H extends OrmLiteSqliteOpenHelper> extends
 		if(this.isFinishing() || this.isActivityDestroyed()) return;
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
+	protected void showShortToast(String message) {
+		if(this.isFinishing() || this.isActivityDestroyed()) return;
+		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+	}
 
     protected void showToast(int resId) {
         if(this.isFinishing() || this.isActivityDestroyed()) return;

@@ -248,7 +248,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
                 Integer newPosition = alphabetToIndex.get(selected_alphabet.charAt(0));
                 Log.d(LOG_TAG, "Selected Alphabet is:" + selected_alphabet + "   position is:" + newPosition);
                 if (newPosition != null) {
-                    showToast(selected_alphabet);
+                    showShortToast(selected_alphabet);
                     ListView listview = findViewById(R.id.listeimageficheavecfiltre_listview);
                     listview.setSelection(newPosition);
                 }
@@ -261,7 +261,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
                     Groupe groupe = (Groupe) rowview.getTag();
                     Integer newPosition = groupeIdToIndex.get(groupe.getId());
                     if (newPosition != null) {
-                        showToast("aller à la section "+groupe.getNomGroupe());
+                        showShortToast(groupe.getNomGroupe());
                         ListView listview = findViewById(R.id.listeimageficheavecfiltre_listview);
                         listview.setSelection(newPosition);
                     }
