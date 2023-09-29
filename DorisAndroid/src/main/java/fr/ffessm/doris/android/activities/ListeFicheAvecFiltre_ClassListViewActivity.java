@@ -496,7 +496,11 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
     }
 
     public View getAlphabetRowView() {
-        return findViewById(R.id.alphabet_row_layout);
+        if(isGroupeMode()) {
+            return findViewById(R.id.image_row_layout);
+        } else {
+            return findViewById(R.id.alphabet_row_layout);
+        }
     }
 
     // Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity

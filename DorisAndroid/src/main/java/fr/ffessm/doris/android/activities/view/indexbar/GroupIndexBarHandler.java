@@ -71,7 +71,6 @@ public class GroupIndexBarHandler extends Handler {
     int height_of_listview = 0;
     int height_of_row = 0;
     int number_of_groups_shown = 0;
-    int height_of_one_dot = 0;
 
     /**
      * Constructor of IndexBarHandler class which reserves the instance reference of its UI class
@@ -96,18 +95,13 @@ public class GroupIndexBarHandler extends Handler {
             //View view=indexbar.findViewById(R.id.alphabet_row_layout);
             View view = indexbar.getAlphabetRowView();
 
-            if (view instanceof TextView) {
-                TextView row = (TextView) view;
-                height_of_row = row.getHeight();            //Height of the row.
-                indexbar.getSharedPreferences("AndroidIndexBar", Context.MODE_PRIVATE).edit().putInt("height", height_of_row).apply();
-                view.setVisibility(View.GONE);
-            } else
-                return;
-
+            height_of_row = view.getHeight();            //Height of the row.
+            indexbar.getSharedPreferences("AndroidIndexBar", Context.MODE_PRIVATE).edit().putInt("height", height_of_row).apply();
+            view.setVisibility(View.GONE);              // this view is here only to help compute the size, it will be replaced by concrete ones in the correct location
 
             List<Groupe> groups_list = GroupeListProvider.getFilteredGroupeList(indexbar.getDorisDBHelper(), filtreGroupe);
             //Log.d(TAG,"Height of List= "+height_of_listview+"    height of one row="+height_of_alphabet_row);
-            number_of_groups_shown = height_of_listview / height_of_row;                //Number of Characters to be shown
+            number_of_groups_shown = (height_of_listview / (height_of_row ));                //Number of Characters to be shown
             //Log.d(TAG,"Number of Characters="+number_of_characters_shown+"  omits="+number_of_characters_omit);
 
 
@@ -158,8 +152,7 @@ public class GroupIndexBarHandler extends Handler {
      * @param groups_list
      */
     private void prepareArray(List<Groupe> groups_list) {
-
-        height_of_one_dot = convertDipToPx(9, indexbar.getBaseContext());
+        // images are 16dp height
         //Log.d(TAG,"Height of one dot i.e. 9dp= "+height_of_one_dot+" px");  //9dp=13px
 
         ArrayList<Groupe> groupeSelection = new ArrayList<>();
@@ -170,7 +163,7 @@ public class GroupIndexBarHandler extends Handler {
             groupeSelection.addAll(groups_list);
         } else {
             for (int i = 1; i < size; i++) {
-                if (i % (size / number_of_groups_shown) == 0) {
+                if (i == 1 || i % (size / (number_of_groups_shown - 1 )) == 0) {
                     groupeSelection.add(groups_list.get(i));
                 }
             }

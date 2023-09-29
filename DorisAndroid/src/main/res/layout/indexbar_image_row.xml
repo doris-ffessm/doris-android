@@ -4,9 +4,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/indexbar_alphabet_row_imageview"
     android:layout_width="wrap_content"
-    android:layout_height="16dp"
-    android:paddingTop="2dp"
-    android:paddingBottom="2dp"
+    android:layout_height="20dip"
+    android:paddingTop="0dp"
+    android:paddingBottom="1dp"
     android:gravity="center_horizontal"
+    android:scaleType="fitCenter"
     android:contentDescription="IndexImage"
     android:src="@android:drawable/ic_menu_close_clear_cancel" />

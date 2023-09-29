@@ -38,22 +38,24 @@
 	<include layout="@layout/indexbar_alphabet_row"
     	 	android:id="@+id/alphabet_row_layout"
     	 	android:visibility="invisible"/>
+	<include layout="@layout/indexbar_image_row"
+		android:id="@+id/image_row_layout"
+		android:visibility="invisible"/>
 	 	 
 	<RelativeLayout
         android:layout_height="match_parent"
 		android:layout_width="match_parent" 
-		android:id="@+id/listeficheavecfiltre_relativeLayout2"> 
-		
-	    <fr.ffessm.doris.android.activities.view.indexbar.CustomListView 
-		 	android:layout_height="fill_parent"
-			android:layout_width="match_parent" 
+		android:id="@+id/listeficheavecfiltre_relativeLayout2">
+
+		<fr.ffessm.doris.android.activities.view.indexbar.CustomListView
 			android:id="@+id/listeficheavecfiltre_listview"
-		    android:layout_toLeftOf="@+id/listeficheavecfiltre_listView_alphabets"
-			android:scrollingCache="false" 
-			android:scrollbarAlwaysDrawVerticalTrack="true" 
-			android:footerDividersEnabled="false" 
-			android:headerDividersEnabled="false">
-	    </fr.ffessm.doris.android.activities.view.indexbar.CustomListView >
+			android:layout_width="match_parent"
+			android:layout_height="fill_parent"
+			android:layout_toLeftOf="@+id/listeficheavecfiltre_listView_alphabets"
+			android:footerDividersEnabled="false"
+			android:headerDividersEnabled="false"
+			android:scrollbarAlwaysDrawVerticalTrack="true"
+			android:scrollingCache="false"></fr.ffessm.doris.android.activities.view.indexbar.CustomListView>
 
 		<ListView
 			android:id="@+id/listeficheavecfiltre_listView_alphabets"
