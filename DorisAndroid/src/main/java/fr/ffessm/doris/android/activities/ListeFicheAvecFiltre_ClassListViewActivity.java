@@ -129,7 +129,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
+        ListView list = findViewById(R.id.listeficheavecfiltre_listview);
         list.setClickable(true);
         //Start of user code onCreate ListeFicheAvecFiltre_ClassListViewActivity adapter creation
         Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - onCreate");
@@ -149,17 +149,13 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
         // add handler for indexBar
         if(isGroupeMode()) {
-            ListView listview = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
+            ListView listview = findViewById(R.id.listeficheavecfiltre_listview);
             int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe),
                     Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
             mHandler = new GroupIndexBarHandler(this, listview, filtreGroupe);
         } else {
             mHandler = new AlphabetIndexBarHandler(this);
         }
-
-        //Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
-
-        //End of user code
     }
 
     @Override
@@ -180,12 +176,12 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
         if (paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut))) != iconSize) {
             iconSize = paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)));
-            ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
+            ListView list = findViewById(R.id.listeficheavecfiltre_listview);
             list.invalidateViews();
         }
-        Integer filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
 
         // send an update of the filtre on Groupe
+        Integer filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
         Message msg = this.getHandler().obtainMessage();
         msg.what = IndxBarHandlerMessages.ON_RESUME_GROUP_EVT;
         msg.obj=filtreGroupe;
@@ -298,7 +294,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         inflater.inflate(R.menu.listeficheavecfiltre_classlistview_actions, menu);
         // Associate searchable configuration with the SearchView
         // deal with compat
-        MenuItem menuItem = (MenuItem) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_search);
+        MenuItem menuItem = menu.findItem(R.id.listeficheavecfiltre_classlistview_action_search);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -321,7 +317,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
         // add additional programmatic options in the menu
         //Start of user code additional onCreateOptionsMenu ListeFicheAvecFiltre_ClassListViewActivity
-        searchButtonMenuItem = (MenuItem) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
+        searchButtonMenuItem = menu.findItem(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
         updateFilterInActionBar();
         //searchPopupButtonManager = new SearchPopupButtonManager(this);
         //End of user code
@@ -459,8 +455,8 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
                 else {
                     continue;
                 }
-            }//
-        }//
+            }
+        }
     }
 
     public void populateIndexBarHashMapGroupe() {
@@ -499,7 +495,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
     }
     @Override
     public ListView getAlphabetListView() {
-        return (ListView) findViewById(R.id.listeficheavecfiltre_listView_alphabets);
+        return findViewById(R.id.listeficheavecfiltre_listView_alphabets);
     }
 
     public View getAlphabetRowView() {
