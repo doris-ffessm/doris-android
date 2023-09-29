@@ -1,12 +1,15 @@
 package fr.ffessm.doris.android.activities.view.indexbar;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,43 +24,40 @@ public class GroupListviewAdapter extends ArrayAdapter<Groupe> {
 
 	static String TAG="GroupListviewAdapter";
 	LayoutInflater inflater;
-	int textViewResourceId, omit;
+	int imagesViewResourceId, omit;
 	List<Groupe> data;
 	Context context;
 
 
-	public GroupListviewAdapter(Context context, int textViewResourceId, List<Groupe> objects) {
-		super(context, textViewResourceId, objects);
+	public GroupListviewAdapter(Context context, int imagesViewResourceId, List<Groupe> objects) {
+		super(context, imagesViewResourceId, objects);
 		inflater=LayoutInflater.from(context);
-		this.textViewResourceId=textViewResourceId;
+		this.imagesViewResourceId=imagesViewResourceId;
 		this.context=context;
 		data=objects;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Groupe groupe = data.get(position);
-		String character=groupe.getNomGroupe();
-		if(character.equals(".") ){
-			convertView=inflater.inflate(R.layout.indexbar_dot_row, null);
-		}
-		else
-			convertView=inflater.inflate(textViewResourceId, null);
+
+		convertView=inflater.inflate(imagesViewResourceId, null);
 		
 		
-		if (!(convertView instanceof TextView))
+		if (!(convertView instanceof ImageView))
 			return null;
-		TextView textview=(TextView)convertView;
+		ImageView imageView =(ImageView)convertView;
 		int height_of_row=context.getSharedPreferences("AndroidIndexBar", Context.MODE_PRIVATE).getInt("height", -1);
 
 		//textview.setHeight(height_of_row);
 
-		
-		textview.setText(".");
+		int identifierIcone1Groupe = context.getResources().getIdentifier(groupe.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw", context.getPackageName());
+		Bitmap bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(identifierIcone1Groupe));
+		imageView.setImageBitmap(bitmap);
 		int[] colors = {Color.TRANSPARENT,groupe.getCouleurGroupe()};
 		GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors);
 		gradientDrawable.setColors(colors);
-		textview.setBackground(gradientDrawable);
-		textview.setTag(groupe);
+		imageView.setBackground(gradientDrawable);
+		imageView.setTag(groupe);
 		return convertView;
 	}
 	

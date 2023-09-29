@@ -122,7 +122,7 @@ public class GroupIndexBarHandler extends Handler {
 			/*Main Task*/	
 			prepareArray(groups_list);
 			
-			ArrayAdapter<Groupe> groups_adapter=	new GroupListviewAdapter(indexbar.getBaseContext(),R.layout.indexbar_alphabet_row,groups_list);
+			ArrayAdapter<Groupe> groups_adapter=	new GroupListviewAdapter(indexbar.getBaseContext(),R.layout.indexbar_image_row,groups_list);
 			groups_listview.setAdapter(groups_adapter);
 			groups_listview.setOnItemClickListener((OnItemClickListener) indexbar);
 		}

@@ -70,6 +70,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
@@ -254,17 +255,20 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
                 Log.d(LOG_TAG, "Selected Alphabet is:" + selected_alphabet + "   position is:" + newPosition);
                 if (newPosition != null) {
                     showToast(selected_alphabet);
-                    ListView listview = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
+                    ListView listview = findViewById(R.id.listeficheavecfiltre_listview);
                     listview.setSelection(newPosition);
                 }
-            }  else  {
-                TextView rowview = (TextView) view;
+            }
+        } else if (view instanceof ImageView && view.getId() == R.id.indexbar_alphabet_row_imageview) {
+            // click on indexBar
+            if(isGroupeMode()) {
+                ImageView rowview = (ImageView) view;
                 if(rowview.getTag() !=  null && rowview.getTag() instanceof Groupe) {
                     Groupe groupe = (Groupe) rowview.getTag();
                     Integer newPosition = groupeIdToIndex.get(groupe.getId());
                     if (newPosition != null) {
-                        showToast(groupe.getNomGroupe());
-                        ListView listview = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
+                        showToast("aller à la section "+groupe.getNomGroupe());
+                        ListView listview = findViewById(R.id.listeficheavecfiltre_listview);
                         listview.setSelection(newPosition);
                     }
                 }
@@ -551,7 +555,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
         View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
         // peut être null si pas visible, ex dans actionbar overfloww si pas assez de place dans l'action bar
-        RelativeLayout viewGroup = (RelativeLayout) findViewById(R.id.listeavecfiltre_filtrespopup);
+        RelativeLayout viewGroup = findViewById(R.id.listeavecfiltre_filtrespopup);
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = layoutInflater.inflate(R.layout.listeficheavecfiltre_filtrespopup, viewGroup);
 
@@ -582,7 +586,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
             popup.showAtLocation(layout, Gravity.TOP | Gravity.RIGHT, 0, location[1]);
         }
         // bouton filtre espèce
-        Button btnFiltreEspece = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
+        Button btnFiltreEspece = layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         int groupRootId = Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId();
         int filtreCourantId = prefs.getInt(this.getString(R.string.pref_key_filtre_groupe), groupRootId);
@@ -606,7 +610,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         });
 
         // bouton filtre zone géographique
-        Button btnZoneGeo = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_ZoneGeoButton);
+        Button btnZoneGeo = layout.findViewById(R.id.listeavecfiltre_filtrespopup_ZoneGeoButton);
         int currentFilterId = prefs.getInt(ListeFicheAvecFiltre_ClassListViewActivity.this.getString(R.string.pref_key_filtre_zonegeo), -1);
         if (currentFilterId == -1) {
             btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_sans));
