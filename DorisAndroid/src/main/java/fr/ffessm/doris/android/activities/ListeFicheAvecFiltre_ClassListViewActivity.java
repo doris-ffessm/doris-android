@@ -42,12 +42,49 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
+import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
+import androidx.core.view.MenuItemCompat;
+
 import java.util.HashMap;
 import java.util.List;
 
+import fr.ffessm.doris.android.DorisApplicationContext;
+import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
-import fr.ffessm.doris.android.activities.view.indexbar.FicheAlphabeticalIndexManager;
 import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.FicheAlphabeticalIndexManager;
 import fr.ffessm.doris.android.activities.view.indexbar.FicheGroupeIndexManager;
 import fr.ffessm.doris.android.activities.view.indexbar.GroupIndexBarHandler;
 import fr.ffessm.doris.android.activities.view.indexbar.GroupeListProvider;
@@ -57,48 +94,10 @@ import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
-import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import androidx.core.app.NavUtils;
-import androidx.core.app.TaskStackBuilder;
-import androidx.appcompat.app.ActionBar;
-import androidx.core.view.MenuItemCompat;
-import androidx.appcompat.widget.SearchView;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.TextView;
-// Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity_additionalimports
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.graphics.drawable.BitmapDrawable;
-import android.preference.PreferenceManager;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.widget.Button;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-
-import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 // End of user code
 
 public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener, ActivityWithIndexBar {
@@ -106,15 +105,11 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
     private static final String LOG_TAG = ListeFicheAvecFiltre_ClassListViewActivity.class.getSimpleName();
 
     //Start of user code constants ListeFicheAvecFiltre_ClassListViewActivity
-
-    MenuItem searchButtonMenuItem;
-
-    int iconSize = R.string.list_icone_taille_defaut;
-
     final Context context = this;
     final Param_Outils paramOutils = new Param_Outils(context);
+    MenuItem searchButtonMenuItem;
+    int iconSize = R.string.list_icone_taille_defaut;
     //End of user code
-
     ListeFicheAvecFiltre_Adapter adapter;
 
     Handler mHandler;
@@ -128,6 +123,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         ListView list = findViewById(R.id.listeficheavecfiltre_listview);
         list.setClickable(true);
@@ -148,7 +144,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         handleIntent(getIntent());
 
         // add handler for indexBar
-        if(isGroupeMode()) {
+        if (isGroupeMode()) {
             ListView listview = findViewById(R.id.listeficheavecfiltre_listview);
             int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe),
                     Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
@@ -184,7 +180,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         Integer filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
         Message msg = this.getHandler().obtainMessage();
         msg.what = IndxBarHandlerMessages.ON_RESUME_GROUP_EVT;
-        msg.obj=filtreGroupe;
+        msg.obj = filtreGroupe;
         mHandler.sendMessage(msg);
 
         updateFilterInActionBar();
@@ -239,7 +235,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
             startActivity(toDetailView);
         } else if (view instanceof TextView && view.getId() == R.id.indexbar_alphabet_row_textview) {
             // click on indexBar
-            if(!isGroupeMode()) {
+            if (!isGroupeMode()) {
                 TextView rowview = (TextView) view;
                 CharSequence alphabet = rowview.getText();
 
@@ -257,13 +253,13 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
             }
         } else if (view instanceof ImageView && view.getId() == R.id.indexbar_alphabet_row_imageview) {
             // click on indexBar
-            if(isGroupeMode()) {
+            if (isGroupeMode()) {
                 ImageView rowview = (ImageView) view;
-                if(rowview.getTag() !=  null && rowview.getTag() instanceof Groupe) {
+                if (rowview.getTag() != null && rowview.getTag() instanceof Groupe) {
                     Groupe groupe = (Groupe) rowview.getTag();
                     Integer newPosition = groupeIdToIndex.get(groupe.getId());
                     if (newPosition != null) {
-                        showToast("aller à la section "+groupe.getNomGroupe());
+                        showToast("aller à la section " + groupe.getNomGroupe());
                         ListView listview = findViewById(R.id.listeficheavecfiltre_listview);
                         listview.setSelection(newPosition);
                     }
@@ -404,7 +400,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
     public void populateIndexBarHashMap() {
 
-        if(isGroupeMode()) {
+        if (isGroupeMode()) {
             populateIndexBarHashMapGroupe();
         } else {
             populateIndexBarHashMapAlphabet();
@@ -418,7 +414,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
     protected boolean isGroupeMode() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String currentMode =  prefs.getString(
+        String currentMode = prefs.getString(
                 this.getResources().getString(
                         R.string.pref_key_current_mode_affichage),
                 this.getResources().getString(R.string.current_mode_affichage_default));
@@ -428,7 +424,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
     public void populateIndexBarHashMapAlphabet() {
 
-        FicheAlphabeticalIndexManager indexHelper = new FicheAlphabeticalIndexManager(context, getHelper().getDorisDBHelper() );
+        FicheAlphabeticalIndexManager indexHelper = new FicheAlphabeticalIndexManager(context, getHelper().getDorisDBHelper());
         alphabetToIndex = indexHelper.getUsedIndexHashMapItemIds(adapter.filteredFicheIdList);
 
         /*Now I am making an entry of those alphabets which are not there in the Map*/
@@ -462,7 +458,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
     public void populateIndexBarHashMapGroupe() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
-        FicheGroupeIndexManager indexHelper = new FicheGroupeIndexManager(context, getHelper().getDorisDBHelper(), filtreGroupe );
+        FicheGroupeIndexManager indexHelper = new FicheGroupeIndexManager(context, getHelper().getDorisDBHelper(), filtreGroupe);
         groupeIdToIndex = indexHelper.getUsedIndexHashMapItemIds(adapter.filteredFicheIdList);
 
         /*Now I am making an entry of those GroupeId which are not present in the Map*/
@@ -493,6 +489,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
             }
         }
     }
+
     @Override
     public ListView getAlphabetListView() {
         return findViewById(R.id.listeficheavecfiltre_listView_alphabets);
