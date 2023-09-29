@@ -30,10 +30,10 @@ public class CustomListView extends ListView{
 		//Log.d(TAG, "(onLayout) Dimensions of Listview :left = " + left + " right="+right+" top="+top+" ,Height = " + bottom +" changed="+changed);
 		
 		/*Since this callback is called multiple times, we need to prevent its execution for multiple times.*/
-		if(changed==true){
+		if(changed){
 			if(_context instanceof ActivityWithIndexBar){
 				Message msg = ((ActivityWithIndexBar)_context).getHandler().obtainMessage();
-				msg.what = 1;
+				msg.what = IndxBarHandlerMessages.ON_LAYOUT_EVT;
 				msg.obj=bottom;								//height of the listview drawn on the screen
 				((ActivityWithIndexBar)_context).getHandler().handleMessage(msg);
 			}

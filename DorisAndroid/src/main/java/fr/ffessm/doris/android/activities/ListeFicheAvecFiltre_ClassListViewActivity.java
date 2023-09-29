@@ -51,6 +51,7 @@ import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
 import fr.ffessm.doris.android.activities.view.indexbar.FicheGroupeIndexManager;
 import fr.ffessm.doris.android.activities.view.indexbar.GroupIndexBarHandler;
 import fr.ffessm.doris.android.activities.view.indexbar.GroupeListProvider;
+import fr.ffessm.doris.android.activities.view.indexbar.IndxBarHandlerMessages;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
@@ -185,7 +186,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
         // send an update of the filtre on Groupe
         Message msg = this.getHandler().obtainMessage();
-        msg.what = 2;
+        msg.what = IndxBarHandlerMessages.ON_RESUME_GROUP_EVT;
         msg.obj=filtreGroupe;
         mHandler.sendMessage(msg);
 
@@ -431,7 +432,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         alphabetToIndex = indexHelper.getUsedIndexHashMapItemIds(adapter.filteredFicheIdList);
 
         /*Now I am making an entry of those alphabets which are not there in the Map*/
-        String alphabets[] = getResources().getStringArray(R.array.alphabet_array);
+        String[] alphabets = getResources().getStringArray(R.array.alphabet_array);
         int index = -1;
 
         for (String alpha1 : alphabets) {
@@ -451,9 +452,9 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
                     break;
                 } else if (i == 26) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
                     alphabetToIndex.put(alpha, adapter.filteredFicheIdList.size() - 1);
-                else
+                else {
                     continue;
-
+                }
             }//
         }//
     }
@@ -466,7 +467,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
         /*Now I am making an entry of those GroupeId which are not present in the Map*/
         List<Integer> allGroupIDs = GroupeListProvider.getAllGroupeIdList(getHelper().getDorisDBHelper());
-        String alphabets[] = getResources().getStringArray(R.array.alphabet_array);
+        String[] alphabets = getResources().getStringArray(R.array.alphabet_array);
         int index = -1;
 
         for (Integer groupID : allGroupIDs) {
@@ -511,12 +512,12 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         int currentZoneFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
         if (currentZoneFilterId == -1 || currentZoneFilterId == 0) { // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
             //actionBar.setTitle(R.string.accueil_recherche_precedente_filtreGeographique_sans);
-            String zonegeo_shortnames[] = getResources().getStringArray(R.array.zonegeo_shortname_array);
+            String[] zonegeo_shortnames = getResources().getStringArray(R.array.zonegeo_shortname_array);
             actionBar.setTitle(zonegeo_shortnames[0]);
         } else {
             //ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
             //actionBar.setTitle(currentZoneFilter.getNom().trim());
-            String zonegeo_shortnames[] = getResources().getStringArray(R.array.zonegeo_shortname_array);
+            String[] zonegeo_shortnames = getResources().getStringArray(R.array.zonegeo_shortname_array);
             actionBar.setTitle(zonegeo_shortnames[currentZoneFilterId]);
         }
 
@@ -592,19 +593,16 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
             btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec) + " " + groupeFiltreCourant.getNomGroupe().trim());
         }
 
-        btnFiltreEspece.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popup.setFocusable(true);
-                popup.dismiss();
+        btnFiltreEspece.setOnClickListener(v -> {
+            popup.setFocusable(true);
+            popup.dismiss();
 
-                //Permet de revenir à cette liste après choix du groupe, True on retournerait à l'accueil
-                Intent toGroupeSelectionView = new Intent(ListeFicheAvecFiltre_ClassListViewActivity.this, GroupeSelection_ClassListViewActivity.class);
-                Bundle b = new Bundle();
-                b.putBoolean("GroupeSelection_depuisAccueil", false);
-                toGroupeSelectionView.putExtras(b);
-                startActivity(toGroupeSelectionView);
-            }
+            //Permet de revenir à cette liste après choix du groupe, True on retournerait à l'accueil
+            Intent toGroupeSelectionView = new Intent(ListeFicheAvecFiltre_ClassListViewActivity.this, GroupeSelection_ClassListViewActivity.class);
+            Bundle b = new Bundle();
+            b.putBoolean("GroupeSelection_depuisAccueil", false);
+            toGroupeSelectionView.putExtras(b);
+            startActivity(toGroupeSelectionView);
         });
 
         // bouton filtre zone géographique
@@ -617,15 +615,12 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
             btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec) + " " + currentZoneFilter.getNom().trim());
         }
 
-        btnZoneGeo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popup.setFocusable(true);
-                popup.dismiss();
+        btnZoneGeo.setOnClickListener(v -> {
+            popup.setFocusable(true);
+            popup.dismiss();
 
-                //Toast.makeText(getApplicationContext(), "Zone géographique", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(ListeFicheAvecFiltre_ClassListViewActivity.this, ZoneGeoSelection_ClassListViewActivity.class));
-            }
+            //Toast.makeText(getApplicationContext(), "Zone géographique", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(ListeFicheAvecFiltre_ClassListViewActivity.this, ZoneGeoSelection_ClassListViewActivity.class));
         });
 
     }

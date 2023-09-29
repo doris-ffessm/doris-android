@@ -42,6 +42,8 @@ termes.
 package fr.ffessm.doris.android.activities.view.indexbar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Handler;
@@ -74,7 +76,7 @@ public class AlphabetIndexBarHandler extends Handler {
 	}
 	
 	public void handleMessage(Message msg) {
-		if (msg.what == 1) {
+		if (msg.what == IndxBarHandlerMessages.ON_LAYOUT_EVT) {
 			//Log.d(TAG,"IndexBarHandler called. Custom Listview is created. Now initializing Alphabet IndexBar Scroller Listview.");
 			/*Before creating the Index Bar Listview we need to determine the number of alphabets 
 			 * to be shown in this listview.
@@ -83,11 +85,11 @@ public class AlphabetIndexBarHandler extends Handler {
 			height_of_listview	=	(Integer)msg.obj;			//Height of the ListView in pixels
 			
 			//View view=indexbar.findViewById(R.id.alphabet_row_layout);
-			View view=indexbar.getAlphabetRowView();
+			View view = indexbar.getAlphabetRowView();
 			
-			if(view !=null && view instanceof TextView){
-				 TextView row=(TextView)view;
-				 height_of_alphabet_row=row.getHeight();			//Height of the row.
+			if(view instanceof TextView){
+				 TextView row = (TextView)view;
+				 height_of_alphabet_row = row.getHeight();			//Height of the row.
 				 indexbar.getSharedPreferences("AndroidIndexBar", Context.MODE_PRIVATE).edit().putInt("height", height_of_alphabet_row).apply();
 				 view.setVisibility(View.GONE);
 			}
@@ -107,9 +109,7 @@ public class AlphabetIndexBarHandler extends Handler {
 			/*Populating the Alphabet List*/			
 			ArrayList<String> alphabets_list=new ArrayList<String>();
 			String alphabet_array[]    =	indexbar.getResources().getStringArray(R.array.alphabet_array);
-			for(int i=0; i<27 ; i++){
-				alphabets_list.add(alphabet_array[i]);
-			}
+			alphabets_list.addAll(Arrays.asList(alphabet_array));
 			/*Main Task*/	
 			prepareArray(alphabets_list);
 			

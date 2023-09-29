@@ -85,7 +85,7 @@ public class GroupIndexBarHandler extends Handler {
 	}
 	
 	public void handleMessage(Message msg) {
-		if (msg.what == 1) { // msg = 1 layout changed
+		if (msg.what == IndxBarHandlerMessages.ON_LAYOUT_EVT) { // msg = 1 layout changed
 			//Log.d(TAG,"IndexBarHandler called. Custom Listview is created. Now initializing Alphabet IndexBar Scroller Listview.");
 			/*Before creating the Index Bar Listview we need to determine the number of alphabets 
 			 * to be shown in this listview.
@@ -96,7 +96,7 @@ public class GroupIndexBarHandler extends Handler {
 			//View view=indexbar.findViewById(R.id.alphabet_row_layout);
 			View view=indexbar.getAlphabetRowView();
 			
-			if(view !=null && view instanceof TextView){
+			if(view instanceof TextView){
 				 TextView row=(TextView)view;
 				 height_of_row =row.getHeight();			//Height of the row.
 				 indexbar.getSharedPreferences("AndroidIndexBar", Context.MODE_PRIVATE).edit().putInt("height", height_of_row).apply();
@@ -127,7 +127,7 @@ public class GroupIndexBarHandler extends Handler {
 			groups_listview.setOnItemClickListener((OnItemClickListener) indexbar);
 		}
 		// msg = 2 update required of the content
-		if (msg.what == 2 && height_of_listview != 0) {
+		if (msg.what == IndxBarHandlerMessages.ON_RESUME_GROUP_EVT && height_of_listview != 0) {
 
 			filtreGroupe	=	(Integer)msg.obj;			//update of the filtreGroupe
 			List<Groupe> groups_list = GroupeListProvider.getFilteredGroupeList(indexbar.getDorisDBHelper(), filtreGroupe);
@@ -150,7 +150,7 @@ public class GroupIndexBarHandler extends Handler {
 			groups_listview.setAdapter(groups_adapter);
 			groups_listview.setOnItemClickListener((OnItemClickListener) indexbar);
 
-			groups_adapter.notifyDataSetChanged();
+			//groups_adapter.notifyDataSetChanged();
 
 		}
 	}
