@@ -179,12 +179,18 @@ public class PrefetchGroupes {
         listeGroupes.add(new Groupe(48896, 29000, "Céphalopodes", getGroupeWithName(listeGroupes, "MOLLUSQUES")));
         //listeGroupes.add(new Groupe(48897,30000,"Gastéropodes Pulmonés", getGroupeWithName(listeGroupes,"MOLLUSQUES")));
         // TODO des changements ici
-        listeGroupes.add(new Groupe(171439, 0, "Gastéropodes Prosobranches pélagiques", getGroupeWithName(listeGroupes, "MOLLUSQUES")));
+        listeGroupes.add(new Groupe(869357, 0, "Gastéropodes pélagiques", getGroupeWithName(listeGroupes, "MOLLUSQUES")));
+
+        listeGroupes.add(new Groupe(171439, 0, "Gastéropodes Prosobranches pélagiques", getGroupeWithName(listeGroupes, "Gastéropodes pélagiques")));
+        listeGroupes.add(new Groupe(498097, 0, "Gastéropodes Opisthobranches pélagiques", getGroupeWithName(listeGroupes, "Gastéropodes pélagiques")));
+
         listeGroupes.add(new Groupe(48898, 31000, "Gastéropodes à coquille unique", getGroupeWithName(listeGroupes, "MOLLUSQUES")));
         listeGroupes.add(new Groupe(811641, 31050, "Coquille spiralée bien visible non recouverte par le manteau", getGroupeWithName(listeGroupes, "Gastéropodes à coquille unique")));
         listeGroupes.add(new Groupe(811620, 31050, "Coquille arrondie en forme de chapeau chinois ou aplatie", getGroupeWithName(listeGroupes, "Gastéropodes à coquille unique")));
         listeGroupes.add(new Groupe(48952, 31050, "Vermets", getGroupeWithName(listeGroupes, "Gastéropodes à coquille unique")));
         listeGroupes.add(new Groupe(814159, 31050, "Coquille lisse recouverte par le manteau", getGroupeWithName(listeGroupes, "Gastéropodes à coquille unique")));
+
+
 
 
         listeGroupes.add(new Groupe(48899, 32000, "Gastéropodes Opisthobranches", getGroupeWithName(listeGroupes, "MOLLUSQUES")));
@@ -238,6 +244,7 @@ public class PrefetchGroupes {
         listeGroupes.add(new Groupe(49009, 47112, "Carangues", getGroupeWithName(listeGroupes, "Poissons osseux nageant en pleine eau")));
         listeGroupes.add(new Groupe(49005, 47107, "Mulets, bars, loups", getGroupeWithName(listeGroupes, "Poissons osseux nageant en pleine eau")));
         listeGroupes.add(new Groupe(49010, 47113, "Thons, thazards, maquereaux, barracudas", getGroupeWithName(listeGroupes, "Poissons osseux nageant en pleine eau")));
+        listeGroupes.add(new Groupe(1843282, 47116, "Sardines", getGroupeWithName(listeGroupes, "Poissons osseux nageant en pleine eau")));
         listeGroupes.add(new Groupe(49012, 47115, "Fusiliers", getGroupeWithName(listeGroupes, "Poissons osseux nageant en pleine eau")));
         listeGroupes.add(new Groupe(49011, 47114, "Autres poissons de pleine eau", getGroupeWithName(listeGroupes, "Poissons osseux nageant en pleine eau")));
         //
