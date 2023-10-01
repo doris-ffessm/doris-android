@@ -292,14 +292,21 @@ public class PrefetchGroupes {
         listeGroupes.add(new Groupe(48998, 50100, "Anoures", getGroupeWithName(listeGroupes, "Amphibiens")));
         listeGroupes.add(new Groupe(48999, 50101, "Urodèles", getGroupeWithName(listeGroupes, "Amphibiens")));
         // TODO  changements ici !
-        listeGroupes.add(new Groupe(48918, 51000, "« Reptiles » et Mammifères aquatiques", getGroupeWithName(listeGroupes, "VERTÉBRÉS")));
-        listeGroupes.add(new Groupe(48932, 51017, "Tortues aquatiques", getGroupeWithName(listeGroupes, "« Reptiles » et Mammifères aquatiques")));
-        listeGroupes.add(new Groupe(48933, 51018, "Serpents aquatiques", getGroupeWithName(listeGroupes, "« Reptiles » et Mammifères aquatiques")));
-        listeGroupes.add(new Groupe(48934, 51019, "Pinnipèdes", getGroupeWithName(listeGroupes, "« Reptiles » et Mammifères aquatiques")));
-        listeGroupes.add(new Groupe(48935, 51020, "Siréniens", getGroupeWithName(listeGroupes, "« Reptiles » et Mammifères aquatiques")));
-        listeGroupes.add(new Groupe(48936, 51021, "Cétacés", getGroupeWithName(listeGroupes, "« Reptiles » et Mammifères aquatiques")));
-        listeGroupes.add(new Groupe(49008, 51111, "Mammifères d'eau douce", getGroupeWithName(listeGroupes, "« Reptiles » et Mammifères aquatiques")));
-        listeGroupes.add(new Groupe(48980, 51080, "Autres mammifères", getGroupeWithName(listeGroupes, "« Reptiles » et Mammifères aquatiques")));
+        listeGroupes.add(new Groupe(48918, 51000, "Mammifères aquatiques", getGroupeWithName(listeGroupes, "VERTÉBRÉS")));
+        listeGroupes.add(new Groupe(48934, 51019, "Pinnipèdes", getGroupeWithName(listeGroupes, "Mammifères aquatiques")));
+        listeGroupes.add(new Groupe(48935, 51020, "Siréniens", getGroupeWithName(listeGroupes, "Mammifères aquatiques")));
+        listeGroupes.add(new Groupe(48936, 51021, "Cétacés", getGroupeWithName(listeGroupes, "Mammifères aquatiques")));
+        listeGroupes.add(new Groupe(871058, 51023, "Cétacés à dents", getGroupeWithName(listeGroupes, "Cétacés")));
+        listeGroupes.add(new Groupe(871064, 51024, "Cétacés à fanons", getGroupeWithName(listeGroupes, "Cétacés")));
+        listeGroupes.add(new Groupe(48980, 51080, "Autres mammifères", getGroupeWithName(listeGroupes, "Mammifères aquatiques")));
+        listeGroupes.add(new Groupe(49008, 51111, "Mammifères d'eau douce", getGroupeWithName(listeGroupes, "Mammifères aquatiques")));
+
+        listeGroupes.add(new Groupe(862238, 51000, "Serpents et tortues aquatiques", getGroupeWithName(listeGroupes, "VERTÉBRÉS")));
+
+        listeGroupes.add(new Groupe(48932, 51017, "Tortues aquatiques", getGroupeWithName(listeGroupes, "Serpents et tortues aquatiques")));
+        listeGroupes.add(new Groupe(48933, 51018, "Serpents aquatiques", getGroupeWithName(listeGroupes, "Serpents et tortues aquatiques")));
+
+
 
         listeGroupes.add(new Groupe(48919, 52000, "Oiseaux", getGroupeWithName(listeGroupes, "VERTÉBRÉS")));
         listeGroupes.add(new Groupe(171395, 0, "AUTRES", getGroupeWithName(listeGroupes, "ANIMAUX")));
