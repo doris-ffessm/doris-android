@@ -311,7 +311,7 @@ public class PrefetchDorisWebSite {
             // if (nbMaxGroupesATraiter > nbMaxFichesATraiter ) nbMaxGroupesATraiter = nbMaxFichesATraiter;
 
             PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, nbMaxGroupesATraiter, nbFichesParRequetes);
-            if ( groupes.prefetchV4() == -1 ) {
+            if ( groupes.prefetchFromModalDialog() == -1 ) {
                 log.debug("Erreur Groupes");
 				throw new RuntimeException("Error in PrefetchGroupes");
             }
@@ -461,7 +461,7 @@ public class PrefetchDorisWebSite {
 				Source source = new Source(rootNode.get("content").asText());
 				source.fullSequentialParse();
 				List<Element> elements = source.getAllElements("a");
-				List<Element> filteredElements = new ArrayList<Element>();
+				List<Element> filteredElements = new ArrayList<>();
 				for (Element element : elements) {
 					if (element.getAttributeValue("data-groupid") != null) {
 						filteredElements.add(element);

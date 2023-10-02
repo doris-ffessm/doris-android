@@ -42,16 +42,27 @@ termes.
 
 package fr.ffessm.doris.prefetch;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.support.ConnectionSource;
 
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.Source;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.awt.Color;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -59,6 +70,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
 import java.util.concurrent.Callable;
 
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
@@ -79,8 +91,8 @@ public class PrefetchGroupes {
     DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper();
     DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper();
     JsonToDB jsonToDB = new JsonToDB();
-    private DorisDBHelper dbContext = null;
-    private ConnectionSource connectionSource = null;
+    private DorisDBHelper dbContext;
+    private ConnectionSource connectionSource;
 
     public PrefetchGroupes(DorisDBHelper dbContext, ConnectionSource connectionSource) {
         this.dbContext = dbContext;
@@ -92,6 +104,170 @@ public class PrefetchGroupes {
         this.dbContext = dbContext;
         this.connectionSource = connectionSource;
         httpHelper = new DorisAPIHTTPHelper(null);
+    }
+
+    /**
+     * recompute the groups by loading the modal dialog
+     * @return & if ok, -1 in case of error
+     */
+    public int prefetchFromModalDialog() throws IOException {
+        log.debug("PrefetchGroupes.prefetchFromModalDialog() - start");
+
+        // parse the html
+        String htmlString = getModalHtml();
+        Source source = new Source(htmlString);
+        source.fullSequentialParse();
+        List<Element> elements = source.getAllElements("a");
+        List<Element> filteredElements = new ArrayList<>();
+        for (Element element : elements) {
+            if (element.getAttributeValue("data-groupid") != null) {
+                filteredElements.add(element);
+            }
+        }
+        /*
+        for (Element element : filteredElements ) {
+            log.info(element.getContent() + " : " + element.getAttributeValue("data-groupid") + " : " + element.getDepth());
+        }
+         */
+
+        // create groupe from html
+        List<Groupe> listeGroupes = new ArrayList<>(); // all created Groupes
+        Stack<GroupeDepthTuple> currentGroupeStack = new Stack<>(); // allows to recreate the hierarchy
+        //int currentDepth = 0;
+
+        Groupe racine = new Groupe(0, 0, "racine", 0x00000000, null);
+        racine.setId(1);
+        listeGroupes.add(racine);
+        currentGroupeStack.push(new GroupeDepthTuple(0, racine));
+
+        for (Element element : filteredElements ) {
+            log.debug(element.getContent() + " : " + element.getAttributeValue("data-groupid") + " : " + element.getDepth());
+            Groupe parentGroup;
+            if(currentGroupeStack.peek().depth < element.getDepth()) {
+                // this is a children Groupe
+                parentGroup = currentGroupeStack.peek().groupe;
+
+            } else if(currentGroupeStack.peek().depth == element.getDepth()) {
+                // this is a sibling Groupe
+                currentGroupeStack.pop();
+                parentGroup = currentGroupeStack.peek().groupe;
+
+            } else /* if (currentGroupeStack.peek().depth > element.getDepth()) */{
+                // this is a new parent Groupe
+                // pop until reach lower depth
+                while(currentGroupeStack.peek().depth >= element.getDepth()) {
+                    currentGroupeStack.pop();
+                }
+                parentGroup = currentGroupeStack.peek().groupe;
+            }
+            String shortName = element.getContent().toString();
+            shortName = shortName.replaceAll("\\(.*?\\)", "");
+            shortName = shortName.replaceAll(":.*", "").trim();
+            Groupe newGroup = new Groupe(Integer.parseInt(element.getAttributeValue("data-groupid")),
+                    0, // useless now ?
+                    shortName,  // shorter name
+                    parentGroup);
+            newGroup.setDescriptionGroupe(element.getContent().toString()); // longer name
+            currentGroupeStack.push(new GroupeDepthTuple(element.getDepth(), newGroup));
+            log.info("new Groupe "+currentGroupeStack.size()+" :" +newGroup.getNomGroupe() +" "+newGroup.getNumeroGroupe());
+        }
+
+        log.info(String.format("Adding %d groups", listeGroupes.size()));
+        // update groups in order to maintain _id and grap updated text
+        for (Groupe g : listeGroupes) {
+            try {
+                this.updateGroupe(g, listeGroupes);
+            } catch (SQLException | IOException | WebSiteNotAvailableException e) {
+                log.error("Une erreur est survenue dans PrefetchGroupes", e);
+                return -1;
+            }
+        }
+
+        for (int i = listeGroupes.size() - 1; i >= 0; i--) {
+            patchMissingGroupeImage(listeGroupes.get(i), listeGroupes);
+        }
+
+        try {
+            TransactionManager.callInTransaction(connectionSource,
+                    (Callable<Void>) () -> {
+                        for (Groupe groupe : listeGroupes) {
+                            dbContext.groupeDao.createOrUpdate(groupe);
+                        }
+                        return null;
+                    });
+        } catch (Exception e) {
+            // une erreur est survenue
+            log.error("Une erreur est survenue dans PrefetchGroupes");
+            log.error(e);
+            return -1;
+        }
+        log.debug("PrefetchGroupes.prefetchFromModalDialog() - end");
+        return 1;
+    }
+
+    class GroupeDepthTuple {
+        public Integer depth;
+        public Groupe groupe;
+
+        public GroupeDepthTuple(Integer depth, Groupe groupe) {
+            this.depth = depth;
+            this.groupe = groupe;
+        }
+    }
+    protected String getModalHtml() throws IOException {
+        DefaultHttpClient client = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost("https://doris.ffessm.fr/ezjscore/call/");
+        httppost.setEntity(new StringEntity("ezjscServer_function_arguments=public%3A%3AgetGroupsModal&ezxform_token=",  "UTF8"));
+
+        httppost.setHeader("User-Agent","Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/118.0");
+        httppost.setHeader("Accept","application/json, text/javascript, /; q=0.01");
+        httppost.setHeader("Accept-Language","en-US,en;q=0.5");
+        httppost.setHeader("Accept-Encoding","gzip, deflate, br");
+        httppost.setHeader("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
+        httppost.setHeader("Accept-Encoding","gzip, deflate, br");
+        httppost.setHeader("X-Requested-With","XMLHttpRequest");
+        httppost.setHeader("Accept-Encoding","gzip, deflate, br");
+        httppost.setHeader("Origin","https://doris.ffessm.fr");
+        httppost.setHeader("Connection","keep-alive");
+        httppost.setHeader("Referer","https://doris.ffessm.fr/");
+        httppost.setHeader("Sec-Fetch-Dest","empty");
+        httppost.setHeader("Sec-Fetch-Mode","cors");
+        httppost.setHeader("Sec-Fetch-Site","same-origin");
+        httppost.setHeader("Pragma","no-cache");
+        httppost.setHeader("Cache-Control","no-cache");
+        /* requete curl equivalente   (obtenue par analyse du site web et inspection des appels reseaux depuis le browser
+        curl 'https://doris.ffessm.fr/ezjscore/call/' -X POST -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/118.0' -H 'Accept: application/json, text/javascript, /; q=0.01' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'X-Requested-With: XMLHttpRequest' -H 'Origin: https://doris.ffessm.fr' -H 'Connection: keep-alive' -H 'Referer: https://doris.ffessm.fr/' -H 'Cookie: tarteaucitron=!gajs=wait!gtag=wait!vimeo=wait' -H 'Sec-Fetch-Dest: empty' -H 'Sec-Fetch-Mode: cors' -H 'Sec-Fetch-Site: same-origin' -H 'Pragma: no-cache' -H 'Cache-Control: no-cache' --data-raw 'ezjscServer_function_arguments=public%3A%3AgetGroupsModal&ezxform_token='
+        -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/118.0'
+        -H 'Accept: application/json, text/javascript, /; q=0.01'
+        -H 'Accept-Language: en-US,en;q=0.5'
+        -H 'Accept-Encoding: gzip, deflate, br'
+        -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8'
+        -H 'X-Requested-With: XMLHttpRequest'
+        -H 'Origin: https://doris.ffessm.fr'
+        -H 'Connection: keep-alive'
+        -H 'Referer: https://doris.ffessm.fr/'
+        -H 'Cookie: tarteaucitron=!gajs=wait!gtag=wait!vimeo=wait'
+        -H 'Sec-Fetch-Dest: empty'
+        -H 'Sec-Fetch-Mode: cors'
+        -H 'Sec-Fetch-Site: same-origin'
+        -H 'Pragma: no-cache'
+         */
+
+        //Execute and get the response.
+        HttpResponse response = client.execute(httppost);
+        HttpEntity entity = response.getEntity();
+
+        if (entity != null) {
+            try (InputStream instream = entity.getContent()) {
+                // this returns a json structure
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode rootNode = objectMapper.readTree(instream);
+                log.debug("content : "+rootNode.get("content").asText());
+                return rootNode.get("content").asText();
+            }
+        } else {
+            throw new RuntimeException("Not able to get valid  response on https://doris.ffessm.fr/ezjscore/call/ post");
+        }
     }
 
     /* TODO : Ici en Durs mais devraient être récupérés avec la Classification */
