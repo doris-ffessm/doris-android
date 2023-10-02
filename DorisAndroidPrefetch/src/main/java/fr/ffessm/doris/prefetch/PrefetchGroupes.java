@@ -168,6 +168,7 @@ public class PrefetchGroupes {
                     shortName,  // shorter name
                     parentGroup);
             newGroup.setDescriptionGroupe(element.getContent().toString()); // longer name
+            listeGroupes.add(newGroup);
             currentGroupeStack.push(new GroupeDepthTuple(element.getDepth(), newGroup));
             log.info("new Groupe "+currentGroupeStack.size()+" :" +newGroup.getNomGroupe() +" "+newGroup.getNumeroGroupe());
         }
