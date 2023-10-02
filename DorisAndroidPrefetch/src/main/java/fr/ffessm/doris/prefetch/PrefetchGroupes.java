@@ -570,7 +570,8 @@ public class PrefetchGroupes {
         if (group.getNumeroGroupe() != 0) {
             log.debug("updateGroupe " + group + " " + group.getNumeroGroupe());
             fr.ffessm.doris.prefetch.ezpublish.jsondata.groupe.Groupe jsonGroup = dorisAPI_JSONDATABindingHelper.getGroupeFieldsFromObjectId(group.getNumeroGroupe());
-            group.setNomGroupe(jsonGroup.getDataMap().getTitle());
+            //group.setNomGroupe(jsonGroup.getDataMap().getTitle());
+            group.setDescriptionGroupe(jsonGroup.getDataMap().getTitle());
             group.setDescriptionDetailleeGroupe(jsonGroup.getDataMap().getDescription());
             group.setCleURLImage(jsonGroup.getDataMap().getImage());
 
@@ -611,6 +612,10 @@ public class PrefetchGroupes {
                     response.getEntity().writeTo(out);
                 }
                 group.setCleURLImage("gestionenligne/images_groupe_" + group.getNumeroGroupe() + ".png");
+            } else {
+                log.error("Error "+response.getStatusLine() +"cannot get group image " + uri);
+
+                group.setCleURLImage("images/pucecarre.gif");
             }
         } else {
             group.setCleURLImage("images/pucecarre.gif");
