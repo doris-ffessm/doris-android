@@ -200,19 +200,26 @@ public class GroupeSelection_Adapter extends BaseAdapter {
         if (_contextDB != null) entry.setContextDB(_contextDB);
 
         // set data in the row
-        TextView tvLabel = (TextView) convertView.findViewById(R.id.groupeselection_listviewrow_label);
+        TextView tvLabel = convertView.findViewById(R.id.groupeselection_listviewrow_label);
         StringBuilder labelSB = new StringBuilder();
         labelSB.append(entry.getNomGroupe());
         labelSB.append(" ");
         tvLabel.setText(labelSB.toString());
 
-        TextView tvDetails = (TextView) convertView.findViewById(R.id.groupeselection_listviewrow_details);
+        TextView tvDetails = convertView.findViewById(R.id.groupeselection_listviewrow_details);
         StringBuilder detailsSB = new StringBuilder();
-        if(entry.getDescriptionGroupe() != null) {
-            detailsSB.append(entry.getDescriptionGroupe().toString());
+        String description = entry.getDescriptionGroupe();
+        if(description != null) {
+            // description and name share a part, remove the common part to display only the difference
+            description = description.replaceAll(entry.getNomGroupe(), "");
+            description = description.replaceAll( ":", "");
+            description = description.replaceAll( "\\(", "");
+            description = description.replaceAll( "\\)", "").trim();
+            detailsSB.append(description);
+            tvDetails.setText(detailsSB.toString());
+        } else {
+            tvDetails.setText(" ");
         }
-        detailsSB.append(" ");
-        tvDetails.setText(detailsSB.toString());
 
         // assign group color in background
         int[] colors = {entry.getCouleurGroupe(), Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT};
@@ -223,13 +230,13 @@ public class GroupeSelection_Adapter extends BaseAdapter {
         // End of user code
 
         // assign the entry to the row in order to ease GUI interactions
-        LinearLayout llRow = (LinearLayout) convertView.findViewById(R.id.groupeselection_listviewrow);
+        LinearLayout llRow = convertView.findViewById(R.id.groupeselection_listviewrow);
         llRow.setTag(entry);
 
         // Start of user code protected additional GroupeSelection_Adapter getView code
         //	additional code
 
-        ImageView ivIconGroup = (ImageView) convertView.findViewById(R.id.groupeselection_listviewrow_icon);
+        ImageView ivIconGroup = convertView.findViewById(R.id.groupeselection_listviewrow_icon);
         int defaultIconSize = paramOutils.getParamInt(R.string.pref_key_accueil_icone_taille, Integer.parseInt(context.getString(R.string.accueil_icone_taille_defaut)));
         // Les icones ne sont pas d'une qualité suffisante pour être affichées à la même taille que les icônes des zones
         // On les diminue donc un peu
@@ -257,7 +264,7 @@ public class GroupeSelection_Adapter extends BaseAdapter {
         }
 
         // Bouton Liste des Fiches
-        RadioButton selectGroupeButton = (RadioButton) convertView
+        RadioButton selectGroupeButton = convertView
                 .findViewById(R.id.groupeselection_radioSelect);
         selectGroupeButton.setFocusable(false);
         selectGroupeButton.setClickable(true);
@@ -287,7 +294,7 @@ public class GroupeSelection_Adapter extends BaseAdapter {
         });
 
         // ajout de l'image "expand" si contient des sous groupes
-        ImageView ivChildGroup = (ImageView) convertView.findViewById(R.id.groupeselection_ivChildGroup);
+        ImageView ivChildGroup = convertView.findViewById(R.id.groupeselection_ivChildGroup);
 
         //TODO : test Nb groupes fils et nb fiches résultant (Attention lent)
         //Log.d(LOG_TAG,"Nb Sous-Groupes : "+entry.getGroupesFils().size());
@@ -317,7 +324,7 @@ public class GroupeSelection_Adapter extends BaseAdapter {
 
     protected void refreshNavigation() {
 
-        LinearLayout navigationLayout = (LinearLayout) ((GroupeSelection_ClassListViewActivity) context).findViewById(R.id.groupselection_listview_navigation);
+        LinearLayout navigationLayout = ((GroupeSelection_ClassListViewActivity) context).findViewById(R.id.groupselection_listview_navigation);
 
         navigationLayout.removeAllViews();
         addBackToParentGroupButton(navigationLayout, currentRootGroupe.getGroupePere());
@@ -388,9 +395,7 @@ public class GroupeSelection_Adapter extends BaseAdapter {
 
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) backToParentButton.getLayoutParams();
             backToParentButton.setLayoutParams(layoutParams);
-            backToParentButton.setOnClickListener(v -> {
-                buildTreeForRoot(parent);
-            });
+            backToParentButton.setOnClickListener(v -> buildTreeForRoot(parent));
         } else {
             // ajout du nouveau bouton
             Button backToParentButton = new Button(context);
