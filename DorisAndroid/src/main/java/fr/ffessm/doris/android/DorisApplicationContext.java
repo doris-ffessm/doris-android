@@ -63,6 +63,7 @@ import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
@@ -104,6 +105,7 @@ public class DorisApplicationContext {
 	public LruCache<Integer, DefinitionGlossaire> glossaireCache = new LruCache<>(100);
 	public LruCache<Integer, Participant> participantCache = new LruCache<>(100);
 	public LruCache<Integer, EntreeBibliographie> bibliographieCache = new LruCache<>(100);
+	public LruCache<Integer, Groupe> groupeCache = new LruCache<>(100);
 
 	
 	// Permet de piloter finement l'interface de retour (depuis le bouton HOME)

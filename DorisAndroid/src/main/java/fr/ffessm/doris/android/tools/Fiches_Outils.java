@@ -157,7 +157,7 @@ public class Fiches_Outils {
         return filteredFicheIdList;
     }
 
-    public List<Integer> getListeIdFichesFiltrees(Context context, DorisDBHelper contextDB, int filteredZoneGeoId, int filteredGroupeId) {
+    public List<Integer> getListeIdFichesFiltrees(Context context, DorisDBHelper contextDB, int filteredZoneGeoId, int filteredGroupeId, boolean allowSubGroups) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -245,8 +245,13 @@ public class Fiches_Outils {
                 //Log.d(LOG_TAG, "filter _contextDB="+_contextDB);
                 searchedGroupe.setContextDB(contextDB);
                 acceptedGroupeId = new ArrayList<>();
-                for (Groupe groupe : Groupes_Outils.getAllSubGroupesForGroupe(searchedGroupe)) {
-                    acceptedGroupeId.add(groupe.getId());
+                if(allowSubGroups) {
+                    for (Groupe groupe : Groupes_Outils.getAllSubGroupesForGroupe(searchedGroupe)) {
+                        acceptedGroupeId.add(groupe.getId());
+                    }
+                } else {
+                    // only strict group accepted
+                    acceptedGroupeId.add(searchedGroupe.getId());
                 }
                 StrBuilder queryIdForGroupes = new StrBuilder("SELECT _id FROM fiche WHERE groupe_id IN (");
                 queryIdForGroupes.appendWithSeparators(acceptedGroupeId, ", ");
@@ -277,6 +282,10 @@ public class Fiches_Outils {
         return filteredFicheIdList;
     }
 
+
+    public List<Integer> getListeIdFichesFiltrees(Context context, DorisDBHelper contextDB, int filteredZoneGeoId, int filteredGroupeId) {
+        return getListeIdFichesFiltrees(context, contextDB, filteredZoneGeoId, filteredGroupeId, true);
+    }
     public MajListeFichesType getMajListeFichesTypeZoneGeo(ZoneGeographiqueKind inZoneGeo) {
         switch (inZoneGeo) {
             case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:

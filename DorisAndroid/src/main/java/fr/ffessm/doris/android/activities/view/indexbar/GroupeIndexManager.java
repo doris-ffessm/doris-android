@@ -8,35 +8,38 @@ import java.sql.SQLException;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
 
-public class FicheGroupeIndexManager extends IndexManager<Fiche, Integer> {
-    private static final String LOG_TAG = FicheGroupeIndexManager.class.getCanonicalName();
+public class GroupeIndexManager extends IndexManager<Groupe, Integer> {
+    private static final String LOG_TAG = GroupeIndexManager.class.getCanonicalName();
 
     protected DorisDBHelper _contextDB;
 
-    public FicheGroupeIndexManager(Context context, DorisDBHelper _contextDB, Integer groupFilter) {
+
+    public GroupeIndexManager(Context context, DorisDBHelper _contextDB, Integer groupFilter) {
         super(context, GroupeListProvider.getFilteredGroupeIdList(_contextDB, groupFilter));
         this._contextDB = _contextDB;
     }
 
+
     @Override
-    public Integer getIndexKeyForEntry(Fiche entry) {
-        return entry.getGroupe().getId();
+    public Integer getIndexKeyForEntry(Groupe entry) {
+        return entry.getId();
     }
 
     @Override
-    public Fiche getItemForId(Integer itemId) {
+    public Groupe getItemForId(Integer itemId) {
             DorisApplicationContext appContext = DorisApplicationContext.getInstance();
-            Fiche f = appContext.ficheCache.get(itemId);
+            Groupe f = appContext.groupeCache.get(itemId);
             if (f != null) return f;
             try {
-                f = _contextDB.ficheDao.queryForId(itemId);
-                appContext.ficheCache.put(itemId, f);
+                f = _contextDB.groupeDao.queryForId(itemId);
+                appContext.groupeCache.put(itemId, f);
                 if (_contextDB != null) f.setContextDB(_contextDB);
                 return f;
             } catch (SQLException e1) {
-                Log.e(LOG_TAG, "Cannot retrieve fiche with _id = " + itemId + " " + e1.getMessage(), e1);
+                Log.e(LOG_TAG, "Cannot retrieve groupe with _id = " + itemId + " " + e1.getMessage(), e1);
                 return null;
             }
     }

@@ -64,6 +64,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -78,6 +79,8 @@ import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.activities.view.indexbar.FicheAlphabeticalIndexManager;
+import fr.ffessm.doris.android.activities.view.indexbar.GroupeIndexManager;
+import fr.ffessm.doris.android.activities.view.indexbar.GroupeListProvider;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
@@ -108,8 +111,8 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
 
     private static final String LOG_TAG = ListeImageGroupeAvecFiltre_Adapter.class.getCanonicalName();
 
-    private List<Integer> ficheIdList;
-    public List<Integer> filteredFicheIdList;
+    private List<Integer> groupeIdList;
+    public List<Integer> filteredGroupeIdList;
     private final Object mLock = new Object();
     private SimpleFilter mFilter;
     SharedPreferences prefs;
@@ -148,49 +151,30 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
         updateList();
     }
 
-
-    //End of user code
-
-    public ListeImageGroupeAvecFiltre_Adapter(Context context, DorisDBHelper contextDB) {
-        super();
-        this.context = context;
-        this._contextDB = contextDB;
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        // Start of user code protected ListeImageFicheAvecFiltre_Adapter constructor
-
-        paramOutils = new Param_Outils(context);
-        reseauOutils = new Reseau_Outils(context);
-        photosOutils = new Photos_Outils(context);
-        fichesOutils = new Fiches_Outils(context);
-        textesOutils = new Textes_Outils(context);
-        ordreTriAlphabetique = fichesOutils.getOrdreTriAlphabetique(context);
-
-        // End of user code
-        updateList();
-    }
-
     protected void updateList() {
         // Start of user code protected ListeImageFicheAvecFiltre_Adapter updateList
 
         // TODO : Bizarre que ce soit passé ainsi ....
         int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(_contextDB).getId());
 
-        this.filteredFicheIdList = fichesOutils.getListeIdFichesFiltrees(context, _contextDB, filteredZoneGeoId, filtreGroupe);
-        this.ficheIdList = fichesOutils.getListeIdFiches();
+
+        this.filteredGroupeIdList = GroupeListProvider.getFilteredGroupeIdList(_contextDB, filtreGroupe);
+        this.filteredGroupeIdList.remove(0); // remove the "racine" groupe
+        this.groupeIdList = GroupeListProvider.getAllGroupeIdList(_contextDB);
         // End of user code
     }
 
     @Override
     public int getCount() {
-        if (filteredFicheIdList.size() == 0) {
+        if (filteredGroupeIdList.size() == 0) {
             return 1;    // will create a dummy entry to invite changing the filters
         }
-        return filteredFicheIdList.size();
+        return filteredGroupeIdList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return filteredFicheIdList.get(position);
+        return filteredGroupeIdList.get(position);
     }
 
     @Override
@@ -201,70 +185,65 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
         // Start of user code protected additional ListeFicheAvecFiltre_Adapter getView_assign code
-        if (convertView == null) {
+        //if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.listeimageficheavecfiltre_listviewrow, null);
-        }
-        if (filteredFicheIdList.size() == 0) {
+            convertView = inflater.inflate(R.layout.listeimagegroupeavecfiltre_listviewrow, null);
+        //}
+        if (filteredGroupeIdList.size() == 0) {
             return getNoResultSubstitute(convertView);
         }
-        FicheAlphabeticalIndexManager indexHelper = new FicheAlphabeticalIndexManager(context, _contextDB );
-        final Fiche entry = indexHelper.getItemForId(filteredFicheIdList.get(position));
-        if (entry == null) return convertView;
+        GroupeIndexManager indexHelper = new GroupeIndexManager(context, _contextDB, filteredGroupeId );
+        final Groupe groupeEntry = indexHelper.getItemForId(filteredGroupeIdList.get(position));
+        if (groupeEntry == null) return convertView;
 
         TextView tvDetails = (TextView) convertView.findViewById(R.id.listeimageavecfiltre_listviewrow_details);
         tvDetails.setVisibility(View.GONE);
 
-        TextView tvLabel = (TextView) convertView.findViewById(R.id.listeimageficheavecfiltre_listviewrow_label);
-        switch (ordreTriAlphabetique) {
-            case NOMSCIENTIFIQUE:
-                tvLabel.setText(textesOutils.textToSpannableStringDoris(entry.getNomScientifique()));
-                tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.ITALIC);
-                break;
-            case NOMCOMMUN:
-            default:
-                String nc = entry.getNomCommunNeverEmpty();
-                if (!nc.isEmpty()) {
-                    tvLabel.setText(nc + " ");
-                } else {
-                    tvLabel.setText(textesOutils.textToSpannableStringDoris(entry.getNomScientifique()) + " ");
-                }
-                break;
-        }
+        TextView tvLabel = (TextView) convertView.findViewById(R.id.listeimagegroupeavecfiltre_listviewrow_label);
+        tvLabel.setText(groupeEntry.getNomGroupe());
 
         // assign group color in background
-        int[] colors = {entry.getGroupe().getCouleurGroupe(), Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT};
+        int[] colors = {groupeEntry.getCouleurGroupe(), Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT};
         GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors);
         gradientDrawable.setColors(colors);
         convertView.setBackground(gradientDrawable);
         // End of user code
 
         // assign the entry to the row in order to ease GUI interactions
-        LinearLayout llRow = (LinearLayout) convertView.findViewById(R.id.listeimageficheavecfiltre_listviewrow);
-        llRow.setTag(entry);
+        LinearLayout llRow = (LinearLayout) convertView.findViewById(R.id.listeimagegroupeavecfiltre_listviewrow);
+        llRow.setTag(groupeEntry);
 
         // Start of user code protected additional ListeFicheAvecFiltre_Adapter getView code
         //	additional code
-        HorizontalScrollView hsGallery = (HorizontalScrollView) convertView.findViewById(R.id.listeimageficheavecfiltre_elementview_gallery_horizontalScrollView);
+        HorizontalScrollView hsGallery = (HorizontalScrollView) convertView.findViewById(R.id.listeimagegroupeavecfiltre_elementview_gallery_horizontalScrollView);
         hsGallery.setVisibility(View.VISIBLE);
 
-        Collection<PhotoFiche> photosFiche = entry.getPhotosFiche();
-        if (photosFiche != null) {
+
+        // get Fiche and associated photo relevant for the given groupe
+
+        List<Integer> groupeficheIdList = fichesOutils.getListeIdFichesFiltrees(context, _contextDB, filteredZoneGeoId, groupeEntry.getId(), false);
+
+        //Collection<PhotoFiche> photosFiche = entry.getPhotosFiche();
+        //if (photosFiche != null) {
+        if(!groupeficheIdList.isEmpty()) {
             //sbDebugText.append("\nnbPhoto="+photosFiche.size()+"\n");
 
-            LinearLayout photoGallery = (LinearLayout) convertView.findViewById(R.id.listeimageficheavecfiltre_elementview_photogallery);
+            LinearLayout photoGallery = (LinearLayout) convertView.findViewById(R.id.listeimagegroupeavecfiltre_elementview_photogallery);
             photoGallery.removeAllViews();
 
             int pos = 0;
-            for (PhotoFiche photoFiche : photosFiche) {
+            for (Integer ficheID : groupeficheIdList) {
 
-                // Si la fiche n'est pas publiée, on n'affiche que la 1ère image, mais il existe une option dans les préférences Debug et Autres permettant de tout afficher
-                if (pos == 0 || entry.getEtatFiche() == 4 || prefs.getBoolean(context.getString(R.string.pref_key_affichage_tous_contenus), false)) {
-                    Log.d(LOG_TAG, "getView insertPhoto() " + entry.getNomCommun() + " photo: " + photoFiche.getCleURL());
-                    View photoView = insertPhoto(photoFiche);
-                    //photoView.setOnClickListener(new OnImageClickListener(entry.getId(),pos,this));
-                    //photoView.setOnClickListener(Log.d(LOG_TAG,"ListeImageFicheAvecFiltre_Adapter - getView"));
+                RuntimeExceptionDao<Fiche, Integer> ficheDao = ((ListeImageGroupeAvecFiltre_ClassListViewActivity) context).getHelper().getFicheDao();
+
+                Fiche fiche = ficheDao.queryForId(ficheID);
+                fiche.setContextDB(_contextDB);
+                ficheDao.refresh(fiche);
+                PhotoFiche photoPrincipale = fiche.getPhotoPrincipale();
+                if(photoPrincipale != null && photoPrincipale.getCleURL() != null) {
+                    View photoView = insertPhoto(photoPrincipale);
+
                     photoView.setPadding(0, 0, 2, 0);
                     photoGallery.addView(photoView);
 
@@ -277,7 +256,7 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
                         Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
                         toDetailView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         Bundle b = new Bundle();
-                        b.putInt("ficheId", entry.getId());
+                        b.putInt("ficheId", ficheID);
                         toDetailView.putExtras(b);
                         context.getApplicationContext().startActivity(toDetailView);
                     };
@@ -286,7 +265,7 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
 
 
                     final int posImageCourante = pos;
-                    View.OnLongClickListener photoLauncher = v -> {
+                    /*View.OnLongClickListener photoLauncher = v -> {
                         Log.d(LOG_TAG, "ListeImageFicheAvecFiltre_Adapter - onLongClick");
 
                         DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
@@ -301,6 +280,8 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
                     };
 
                     photoView.setOnLongClickListener(photoLauncher);
+
+                     */
 
                     pos++;
                 }
@@ -364,7 +345,7 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
         if ((oldFilteredZoneGeoId != filteredZoneGeoId) | (oldFilteredGroupeId != filteredGroupeId)) {
             //need full query
             updateList();
-            if (filteredFicheIdList.size() > 0) {
+            if (filteredGroupeIdList.size() > 0) {
                 notifyDataSetChanged();
             } else {
                 notifyDataSetInvalidated();
@@ -417,7 +398,7 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
 
             if (prefix == null || prefix.length() == 0) {
                 synchronized (mLock) {
-                    ArrayList<Integer> list = new ArrayList<>(ficheIdList);
+                    ArrayList<Integer> list = new ArrayList<>(groupeIdList);
                     results.values = list;
                     results.count = list.size();
                 }
@@ -428,7 +409,7 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
                 //
                 // End of user code
                 boolean sort = sortAfterFilter();
-                final List<Integer> values = ficheIdList;
+                final List<Integer> values = groupeIdList;
                 final int count = values.size();
 
                 final ArrayList<Integer> newValues = new ArrayList<>(count);
@@ -472,10 +453,10 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             if (results.count > 0) {
-                filteredFicheIdList = (List<Integer>) results.values;
+                filteredGroupeIdList = (List<Integer>) results.values;
                 notifyDataSetChanged();
             } else {
-                filteredFicheIdList = new ArrayList<>();
+                filteredGroupeIdList = new ArrayList<>();
                 notifyDataSetInvalidated();
             }
             // update hashmap for index

@@ -87,6 +87,7 @@ import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
 import fr.ffessm.doris.android.activities.view.indexbar.FicheAlphabeticalIndexManager;
 import fr.ffessm.doris.android.activities.view.indexbar.FicheGroupeIndexManager;
 import fr.ffessm.doris.android.activities.view.indexbar.GroupIndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.GroupeIndexManager;
 import fr.ffessm.doris.android.activities.view.indexbar.GroupeListProvider;
 import fr.ffessm.doris.android.activities.view.indexbar.IndxBarHandlerMessages;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
@@ -384,8 +385,8 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends OrmLiteAct
     public void populateIndexBarHashMapGroupe() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
-        FicheGroupeIndexManager indexHelper = new FicheGroupeIndexManager(context, getHelper().getDorisDBHelper(), filtreGroupe );
-        groupeIdToIndex = indexHelper.getUsedIndexHashMapItemIds(adapter.filteredFicheIdList);
+        GroupeIndexManager indexHelper = new GroupeIndexManager(context, getHelper().getDorisDBHelper(), filtreGroupe );
+        groupeIdToIndex = indexHelper.getUsedIndexHashMapItemIds(adapter.filteredGroupeIdList);
 
         /*Now I am making an entry of those GroupeId which are not present in the Map*/
         List<Integer> allGroupIDs = GroupeListProvider.getAllGroupeIdList(getHelper().getDorisDBHelper());
@@ -401,14 +402,14 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends OrmLiteAct
 
             /*Start searching the next character position. Example, here alpha is E. Since there is no entry for E, we need to find the position of next Character, F.*/
             for (int i = index + 1; i < allGroupIDs.size(); i++) {        //start from next character to last character
-                Integer searchAlphabet = allGroupIDs.get(i);
+                Integer searchGroupeId = allGroupIDs.get(i);
 
                 /*If we find the position of F character, then on click event on E should take the user to F*/
-                if (groupeIdToIndex.containsKey(searchAlphabet)) {
-                    groupeIdToIndex.put(groupID, groupeIdToIndex.get(searchAlphabet));
+                if (groupeIdToIndex.containsKey(searchGroupeId)) {
+                    groupeIdToIndex.put(groupID, groupeIdToIndex.get(searchGroupeId));
                     break;
                 } else if (i == allGroupIDs.size()) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
-                    groupeIdToIndex.put(groupID, adapter.filteredFicheIdList.size() - 1);
+                    groupeIdToIndex.put(groupID, adapter.filteredGroupeIdList.size() - 1);
                 else
                     continue;
 
