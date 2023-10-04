@@ -623,20 +623,14 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
             // liste_alpha, liste_par_groupe, photos_alpha, photos_par_groupe, groupe
             case "photos_alpha":
-                startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
-                break;
             case "photos_par_groupe":
                 startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
                 break;
-            case "liste_alpha":
-                startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
-                break;
-            case "liste_par_groupe":
-                startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
-                break;
             case "groupe":
-                showToast("Affichage par groupe pas encore implémenté.");
+                startActivity(new Intent(this, ListeImageGroupeAvecFiltre_ClassListViewActivity.class));
                 break;
+            case "liste_alpha":
+            case "liste_par_groupe":
             default:
                 startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
         }
