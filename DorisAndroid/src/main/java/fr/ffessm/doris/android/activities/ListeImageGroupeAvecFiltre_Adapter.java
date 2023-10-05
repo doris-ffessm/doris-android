@@ -298,7 +298,7 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
     }
 
     protected View getNoResultSubstitute(View convertView) {
-        TextView tvLabel = (TextView) convertView.findViewById(R.id.listeimageficheavecfiltre_listviewrow_label);
+        TextView tvLabel = (TextView) convertView.findViewById(R.id.listeimagegroupeavecfiltre_listviewrow_label);
         tvLabel.setText(R.string.listeficheavecfiltre_classlistview_no_result);
         // Start of user code protected additional ListeFicheAvecFiltre_Adapter getNoResultSubstitute code
         try {
@@ -324,7 +324,7 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
             tvDetails.setText(sbRechercheCourante.toString());
             tvDetails.setVisibility(View.VISIBLE);
 
-            HorizontalScrollView hsGallery = (HorizontalScrollView) convertView.findViewById(R.id.listeimageficheavecfiltre_elementview_gallery_horizontalScrollView);
+            HorizontalScrollView hsGallery = (HorizontalScrollView) convertView.findViewById(R.id.listeimagegroupeavecfiltre_elementview_gallery_horizontalScrollView);
             hsGallery.setVisibility(View.GONE);
         } catch (SQLException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
