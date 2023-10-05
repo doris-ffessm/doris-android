@@ -17,7 +17,7 @@
 		<LinearLayout
 			android:id="@+id/groupselection_listview_navigation"
 			android:layout_width="match_parent"
-			android:layout_height="35dp"
+			android:layout_height="35sp"
 			android:layout_toLeftOf="@+id/groupeselection_main_btnSelect">
 
 			<!--  Ne sert pas réellement puisque removeAll systématique puis reconstruction dans GroupeSelection_Adapter -->
@@ -49,14 +49,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/groupselection_listview_filtre_espece_courant_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/groupselection_listview_filtre_espece_courant_suppFiltreBtn"
-            android:text="@string/groupselection_listview_filtre_espece_courant_label"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="?android:attr/textColorPrimary" />
+		<TextView
+			android:id="@+id/groupselection_listview_filtre_espece_courant_textView"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toLeftOf="@+id/groupselection_listview_filtre_espece_courant_suppFiltreBtn"
+			android:text="@string/groupselection_listview_filtre_espece_courant_label"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:textColor="?android:attr/textColorPrimary" />
 
         <ImageButton
             android:id="@+id/groupselection_listview_filtre_espece_courant_suppFiltreBtn"
