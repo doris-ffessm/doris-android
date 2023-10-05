@@ -1,10 +1,12 @@
 package fr.ffessm.doris.android.activities.view.indexbar;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import java.util.List;
 
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.Groupe;
+import fr.ffessm.doris.android.tools.ScreenTools;
 
 public class GroupListviewAdapter extends ArrayAdapter<Groupe> {
 
@@ -46,9 +49,8 @@ public class GroupListviewAdapter extends ArrayAdapter<Groupe> {
 		if (!(convertView instanceof ImageView))
 			return null;
 		ImageView imageView =(ImageView)convertView;
-		int height_of_row=context.getSharedPreferences("AndroidIndexBar", Context.MODE_PRIVATE).getInt("height", -1);
-
-		//textview.setHeight(height_of_row);
+		imageView.setMinimumHeight((int)context.getResources().getDimension(R.dimen.indexbar_image_width));
+		imageView.setMinimumWidth((int)context.getResources().getDimension(R.dimen.indexbar_image_width));
 
 		int identifierIcone1Groupe = context.getResources().getIdentifier(groupe.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw", context.getPackageName());
 		Bitmap bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(identifierIcone1Groupe));
@@ -60,5 +62,6 @@ public class GroupListviewAdapter extends ArrayAdapter<Groupe> {
 		imageView.setTag(groupe);
 		return convertView;
 	}
+
 	
 }

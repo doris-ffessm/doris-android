@@ -47,6 +47,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -58,6 +59,7 @@ import java.util.List;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
+import fr.ffessm.doris.android.tools.ScreenTools;
 
 /**
  * Handler fro Groupe Index bar
@@ -92,10 +94,10 @@ public class GroupIndexBarHandler extends Handler {
 
             height_of_listview = (Integer) msg.obj;            //Height of the ListView in pixels
 
-            //View view=indexbar.findViewById(R.id.alphabet_row_layout);
             View view = indexbar.getAlphabetRowView();
 
-            height_of_row = view.getHeight();            //Height of the row.
+            //height_of_row = view.getHeight();            //Height of the row.
+            height_of_row = (int)view.getResources().getDimension(R.dimen.indexbar_image_width);
             indexbar.getSharedPreferences("AndroidIndexBar", Context.MODE_PRIVATE).edit().putInt("height", height_of_row).apply();
             view.setVisibility(View.GONE);              // this view is here only to help compute the size, it will be replaced by concrete ones in the correct location
 
@@ -110,7 +112,10 @@ public class GroupIndexBarHandler extends Handler {
 
             //ListView groups_listview=(ListView)indexbar.findViewById(R.id.listeficheavecfiltre_listView_alphabets);
             ListView groups_listview = indexbar.getAlphabetListView();
-            /*Populating the Alphabet List*/
+            groups_listview.getLayoutParams().width = (int)groups_listview.getResources().getDimension(R.dimen.indexbar_image_width);
+            groups_listview.requestLayout();
+
+
 
             /*Main Task*/
             prepareArray(groups_list);
@@ -173,12 +178,6 @@ public class GroupIndexBarHandler extends Handler {
         groups_list.addAll(groupeSelection);
 
 
-    }
-
-    public int convertDipToPx(int dp, Context context) {    //10dp=15px
-        Resources r = context.getResources();
-        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
-        return (int) px;
     }
 
 

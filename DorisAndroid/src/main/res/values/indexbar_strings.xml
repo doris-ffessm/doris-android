@@ -31,5 +31,5 @@
 	    <item>#</item>
 	</string-array>
 	<string name="dot">.</string>
-	
+	<dimen name="indexbar_image_width">32sp</dimen>
 </resources>

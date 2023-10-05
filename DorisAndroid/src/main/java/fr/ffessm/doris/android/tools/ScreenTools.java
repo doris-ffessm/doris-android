@@ -42,7 +42,9 @@ termes.
 package fr.ffessm.doris.android.tools;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Point;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -94,7 +96,15 @@ public class ScreenTools {
      * @return
      */
     public static int dp2px(Context context, int dpDim) {
-        return (int) ((dpDim * context.getResources().getDisplayMetrics().density) + 0.5);
+        Resources r = context.getResources();
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpDim, r.getDisplayMetrics());
+        return (int) px;
+    }
+
+    public static int sp2px(Context context, int spDim) {
+        Resources r = context.getResources();
+        float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, spDim, r.getDisplayMetrics());
+        return (int) px;
     }
 
 }
