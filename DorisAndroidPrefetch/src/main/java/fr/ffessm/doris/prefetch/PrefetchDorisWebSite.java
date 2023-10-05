@@ -42,19 +42,34 @@ termes.
 
 package fr.ffessm.doris.prefetch;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.auth.oauth2.Credential;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.misc.TransactionManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.Source;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Level;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,6 +112,7 @@ public class PrefetchDorisWebSite {
 		WEB_TO_DB,
         TEST_CONNECTION_V4,
 		DB_IMAGE_UPGRADE,
+		TEST_COLLECT_GROUP,
 		ERASE_ALL
 	}
 	
@@ -104,7 +120,7 @@ public class PrefetchDorisWebSite {
 	DorisDBHelper dbContext = null;
 	DataBase_Outils outilsBase = null;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		try {
 			new PrefetchDorisWebSite().doMain(args);
 		} catch (Exception e) {
@@ -147,6 +163,8 @@ public class PrefetchDorisWebSite {
 
             dbImageV4UpgradeAction();
 
+		} else if (action == ActionKind.TEST_COLLECT_GROUP) {
+			testCollectGroupAction();
 		} else if ( action == ActionKind.ERASE_ALL ) {
 			
 			eraseAllAction();
@@ -293,7 +311,7 @@ public class PrefetchDorisWebSite {
             // if (nbMaxGroupesATraiter > nbMaxFichesATraiter ) nbMaxGroupesATraiter = nbMaxFichesATraiter;
 
             PrefetchGroupes groupes = new PrefetchGroupes(dbContext, connectionSource, nbMaxGroupesATraiter, nbFichesParRequetes);
-            if ( groupes.prefetchV4() == -1 ) {
+            if ( groupes.prefetchFromModalDialog() == -1 ) {
                 log.debug("Erreur Groupes");
 				throw new RuntimeException("Error in PrefetchGroupes");
             }
@@ -319,7 +337,7 @@ public class PrefetchDorisWebSite {
             // - - - Bibliographie - - -
             log.info("webToDBAction() - - - Bibliographie - - -");
 			int nbMaxTitresATraiter = 100000;
-            // if (nbMaxTitresATraiter > nbMaxFichesATraiter ) nbMaxTitresATraiter = nbMaxFichesATraiter;
+            if (nbMaxTitresATraiter > nbMaxFichesATraiter ) nbMaxTitresATraiter = nbMaxFichesATraiter;
             PrefetchBibliographies bibliographies = new PrefetchBibliographies(dbContext, connectionSource, nbMaxTitresATraiter, nbFichesParRequetes);
             if ( bibliographies.prefetch() == -1 ) {
 				throw new RuntimeException("Error in PrefetchBibliographies");
@@ -366,6 +384,96 @@ public class PrefetchDorisWebSite {
         log.debug("webToDBAction() - Fin ");
     }
 
+	private void testCollectGroupAction() throws Exception{
+		log.debug("testCollectGroupAction() - Start");
+
+/*
+		HttpClient httpclient = HttpClients.createDefault();
+		HttpPost httppost = new HttpPost("http://www.a-domain.example/foo/");
+
+// Request parameters and other properties.
+		List<NameValuePair> params = new ArrayList<NameValuePair>(2);
+		params.add(new BasicNameValuePair("param-1", "12345"));
+		params.add(new BasicNameValuePair("param-2", "Hello!"));
+		httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+
+//Execute and get the response.
+		HttpResponse response = httpclient.execute(httppost);
+		HttpEntity entity = response.getEntity();
+
+		if (entity != null) {
+			try (InputStream instream = entity.getContent()) {
+				// do something useful
+			}
+		}*/
+		DefaultHttpClient client = new DefaultHttpClient();
+		HttpPost httppost = new HttpPost("https://doris.ffessm.fr/ezjscore/call/");
+		httppost.setEntity(new StringEntity("ezjscServer_function_arguments=public%3A%3AgetGroupsModal&ezxform_token=",  "UTF8"));
+		httppost.setHeader("User-Agent","Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/118.0");
+		httppost.setHeader("Accept","application/json, text/javascript, /; q=0.01");
+		httppost.setHeader("Accept-Language","en-US,en;q=0.5");
+		httppost.setHeader("Accept-Encoding","gzip, deflate, br");
+		httppost.setHeader("Content-Type","application/x-www-form-urlencoded; charset=UTF-8");
+		httppost.setHeader("Accept-Encoding","gzip, deflate, br");
+		httppost.setHeader("X-Requested-With","XMLHttpRequest");
+		httppost.setHeader("Accept-Encoding","gzip, deflate, br");
+		httppost.setHeader("Origin","https://doris.ffessm.fr");
+		httppost.setHeader("Connection","keep-alive");
+		httppost.setHeader("Referer","https://doris.ffessm.fr/");
+		httppost.setHeader("Sec-Fetch-Dest","empty");
+		httppost.setHeader("Sec-Fetch-Mode","cors");
+		httppost.setHeader("Sec-Fetch-Site","same-origin");
+		httppost.setHeader("Pragma","no-cache");
+		httppost.setHeader("Cache-Control","no-cache");
+		/* requete curl equivalente   (obtenue par analyse du site web et inspection des appels reseaux depuis le browser
+		curl 'https://doris.ffessm.fr/ezjscore/call/' -X POST -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/118.0' -H 'Accept: application/json, text/javascript, /; q=0.01' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'X-Requested-With: XMLHttpRequest' -H 'Origin: https://doris.ffessm.fr' -H 'Connection: keep-alive' -H 'Referer: https://doris.ffessm.fr/' -H 'Cookie: tarteaucitron=!gajs=wait!gtag=wait!vimeo=wait' -H 'Sec-Fetch-Dest: empty' -H 'Sec-Fetch-Mode: cors' -H 'Sec-Fetch-Site: same-origin' -H 'Pragma: no-cache' -H 'Cache-Control: no-cache' --data-raw 'ezjscServer_function_arguments=public%3A%3AgetGroupsModal&ezxform_token='
+		-H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/118.0'
+		-H 'Accept: application/json, text/javascript, /; q=0.01'
+		-H 'Accept-Language: en-US,en;q=0.5'
+		-H 'Accept-Encoding: gzip, deflate, br'
+		-H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8'
+		-H 'X-Requested-With: XMLHttpRequest'
+		-H 'Origin: https://doris.ffessm.fr'
+		-H 'Connection: keep-alive'
+		-H 'Referer: https://doris.ffessm.fr/'
+		-H 'Cookie: tarteaucitron=!gajs=wait!gtag=wait!vimeo=wait'
+		-H 'Sec-Fetch-Dest: empty'
+		-H 'Sec-Fetch-Mode: cors'
+		-H 'Sec-Fetch-Site: same-origin'
+		-H 'Pragma: no-cache'
+		 */
+
+		//Execute and get the response.
+		HttpResponse response = client.execute(httppost);
+		HttpEntity entity = response.getEntity();
+
+		if (entity != null) {
+			try (InputStream instream = entity.getContent()) {
+				// do something useful
+				//StringWriter writer = new StringWriter();
+				//IOUtils.copy(instream, writer, "UTF-8");
+				//log.info("group : "+writer.toString());
+				ObjectMapper objectMapper = new ObjectMapper();
+				JsonNode rootNode = objectMapper.readTree(instream);
+				//log.info("node : "+objectMapper.writeValueAsString(rootNode));
+				//rootNode.get("content").asText();
+				log.debug("content : "+rootNode.get("content").asText());
+				Source source = new Source(rootNode.get("content").asText());
+				source.fullSequentialParse();
+				List<Element> elements = source.getAllElements("a");
+				List<Element> filteredElements = new ArrayList<>();
+				for (Element element : elements) {
+					if (element.getAttributeValue("data-groupid") != null) {
+						filteredElements.add(element);
+					}
+				}
+				for (Element element : filteredElements ) {
+					log.info(element.getContent() + " : " + element.getAttributeValue("data-groupid") + " : " + element.getDepth());
+				}
+			}
+		}
+		log.debug("testCollectGroupAction() - End");
+	}
     private void dbImageV4UpgradeAction() throws Exception{
 		log.debug("dbImageV4UpgradeAction() - Début upgrade images pour doris.ffessm.fr V4");
 		
@@ -597,9 +705,9 @@ public class PrefetchDorisWebSite {
 		
 		if (action == null) {
 			help();
-			String listeArgs = "";
+			StringBuilder listeArgs = new StringBuilder();
 			for (String arg : inArgs) {
-				listeArgs += arg + " ";
+				listeArgs.append(arg).append(" ");
 			}
 			log.error("arguments : " + listeArgs);
 			log.error("Action non prévue");

@@ -52,12 +52,19 @@ import android.content.res.Configuration;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+
+import androidx.collection.LruCache;
+
 import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.datamodel.Classification;
 import fr.ffessm.doris.android.datamodel.ClassificationFiche;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
+import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
+import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.Groupe;
+import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.android.tools.Param_Outils;
@@ -91,6 +98,15 @@ public class DorisApplicationContext {
 	public boolean isTelechPhotos = false;
 	public boolean isMovingPhotos = false;
 	public ZoneGeographiqueKind zoneTraitee = null;
+
+
+	/* global cache to help indexation  used by IndexHelper */
+	public LruCache<Integer, Fiche> ficheCache = new LruCache<>(100);
+	public LruCache<Integer, DefinitionGlossaire> glossaireCache = new LruCache<>(100);
+	public LruCache<Integer, Participant> participantCache = new LruCache<>(100);
+	public LruCache<Integer, EntreeBibliographie> bibliographieCache = new LruCache<>(100);
+	public LruCache<Integer, Groupe> groupeCache = new LruCache<>(100);
+
 	
 	// Permet de piloter finement l'interface de retour (depuis le bouton HOME)
 	// (i.e. sans respecter forcément le manifest.xml)

@@ -45,7 +45,9 @@ package fr.ffessm.doris.android.activities;
 import java.util.HashMap;
 
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
-import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.EntreeBibliographieIndexManager;
+import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.DorisApplicationContext;
@@ -113,7 +115,7 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
         handleIntent(getIntent());
 
         // add handler for indexBar
-        mHandler = new IndexBarHandler(this);
+        mHandler = new AlphabetIndexBarHandler(this);
         //Start of user code onCreate additions ListeBibliographieAvecFiltre_ClassListViewActivity
 
         //End of user code
@@ -134,6 +136,7 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
         // to deliver the intent if this activity is currently the foreground activity when
         // invoked again (when the user executes a search from this activity, we don't create
         // a new instance of this activity, so the system delivers the search intent here)
+        super.onNewIntent(intent);
         handleIntent(intent);
     }
 
@@ -300,7 +303,9 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
     }
 
     public void populateIndexBarHashMap() {
-        alphabetToIndex = adapter.getUsedAlphabetHashMap();
+
+        EntreeBibliographieIndexManager indexHelper = new EntreeBibliographieIndexManager(this, getHelper().getDorisDBHelper() );
+        alphabetToIndex = indexHelper.getUsedIndexHashMapFromItems(adapter.filteredEntreeBibliographieList);
         number_of_alphabets = alphabetToIndex.size();        //Number of enteries in the map is equal to number of letters that would necessarily display on the right.
 
         /*Now I am making an entry of those alphabets which are not there in the Map*/
@@ -329,6 +334,11 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
 
             }//
         }//
+    }
+
+    @Override
+    public DorisDBHelper getDorisDBHelper() {
+        return getHelper().getDorisDBHelper();
     }
 
     @Override

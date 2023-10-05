@@ -89,7 +89,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
     final Context context = this;
 
     private SharedPreferences prefs;
-    private String accueil_liste_ou_arbre_pardefaut;
+    private String current_mode_affichage;
     //End of user code
 
     GroupeSelection_Adapter adapter;
@@ -113,7 +113,8 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 
         depuisAccueil = getIntent().getExtras().getBoolean("GroupeSelection_depuisAccueil", false);
         ACRA.getErrorReporter().putCustomData("depuisAccueil", "" + depuisAccueil);
-        accueil_liste_ou_arbre_pardefaut = paramOutils.getParamString(R.string.pref_key_accueil_liste_ou_arbre_pardefaut, "liste");
+        current_mode_affichage = paramOutils.getParamString(R.string.pref_key_current_mode_affichage,
+                getString(R.string.current_mode_affichage_default));
 
         adapter = new GroupeSelection_Adapter(this, getHelper().getDorisDBHelper(), depuisAccueil);
         //End of user code

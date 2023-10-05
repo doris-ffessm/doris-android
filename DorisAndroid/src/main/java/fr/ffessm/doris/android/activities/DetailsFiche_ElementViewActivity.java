@@ -42,34 +42,15 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.Fiche;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.ScreenTools;
-import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import androidx.core.app.NavUtils;
-import androidx.core.app.TaskStackBuilder;
-import androidx.appcompat.app.ActionBar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.TextView;
-
-import com.j256.ormlite.dao.RuntimeExceptionDao;
-
-// Start of user code protectedDetailsFiche_ElementViewActivity_additional_import
-import fr.ffessm.doris.android.BuildConfig;
-
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.widget.ImageView;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -81,15 +62,24 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
 
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -100,7 +90,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
+import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.FoldableClickListener;
 import fr.ffessm.doris.android.activities.view.FoldableClickListener.ImageButtonKind;
@@ -108,19 +100,23 @@ import fr.ffessm.doris.android.datamodel.AutreDenomination;
 import fr.ffessm.doris.android.datamodel.Classification;
 import fr.ffessm.doris.android.datamodel.ClassificationFiche;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
+import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.IntervenantFiche;
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
-
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
+import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.Textes_Outils;
+import fr.ffessm.doris.android.tools.ThemeUtil;
+import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 // End of user code
 
 public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
@@ -129,20 +125,16 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 // End of user code
 {
 
-    protected int ficheId;
-
     private static final String LOG_TAG = DetailsFiche_ElementViewActivity.class.getCanonicalName();
-
-// Start of user code protectedDetailsFiche_ElementViewActivity_additional_attributes
-
     final Context context = this;
-    final Activity activity = this;
 
+    // Start of user code protectedDetailsFiche_ElementViewActivity_additional_attributes
+    final Activity activity = this;
     final Textes_Outils textesOutils = new Textes_Outils(context);
     final Param_Outils paramOutils = new Param_Outils(context);
     final Reseau_Outils reseauOutils = new Reseau_Outils(context);
     final Photos_Outils photosOutils = new Photos_Outils(context);
-
+    protected int ficheId;
     protected int ficheNumero;
 
     boolean isOnCreate = true;
@@ -153,7 +145,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     Collection<String> insertedPhotosFiche = new ArrayList<>();
     boolean askedBgDownload = false;
 
-    String accueil_liste_ou_arbre_pardefaut;
+    String current_mode_affichage;
 
 // End of user code
 
@@ -168,6 +160,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         ficheId = getIntent().getExtras().getInt("ficheId");
         // Start of user code protectedDetailsFiche_ElementViewActivity_onCreate
@@ -194,7 +187,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         };
 
         // Liste Fiches, Arbre ou Liste Images
-        accueil_liste_ou_arbre_pardefaut = paramOutils.getParamString(R.string.pref_key_accueil_liste_ou_arbre_pardefaut, "liste");
+        current_mode_affichage = paramOutils.getParamString(R.string.pref_key_current_mode_affichage,
+                getString(R.string.current_mode_affichage_default));
 
         // info de debug de Picasso
         if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)) {
@@ -228,10 +222,16 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 
         ((TextView) findViewById(R.id.detailsfiche_elementview_nomscientifique)).setText(textesOutils.textToSpannableStringDoris(entry.getNomScientifique()));
         ((TextView) findViewById(R.id.detailsfiche_elementview_nomcommun)).setText(entry.getNomCommunNeverEmpty().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
-        ((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText("N° " + ((Integer) entry.getNumeroFiche()).toString());
+        ((TextView) findViewById(R.id.detailsfiche_elementview_numerofiche)).setText("N° " + ((Integer) entry.getNumeroFiche()));
         ((TextView) findViewById(R.id.detailsfiche_elementview_etatfiche)).setText(((Integer) entry.getEtatFiche()).toString());
 
-        TextView btnEtatFiche = (TextView) findViewById(R.id.detailsfiche_elementview_etatfiche);
+        int[] colors = {entry.getGroupe().getCouleurGroupe(), Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT};
+        GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors);
+        gradientDrawable.setColors(colors);
+        findViewById(R.id.detailsfiche_elementview_nomcommun).setBackground(gradientDrawable);
+        findViewById(R.id.detailsfiche_elementview_nomscientifique).setBackground(gradientDrawable);
+
+        TextView btnEtatFiche = findViewById(R.id.detailsfiche_elementview_etatfiche);
         //1-Fiche en cours de rédaction;2-Fiche en cours de rédaction;3-Fiche en cours de rédaction;4-Fiche Publiée;5-Fiche proposée
         switch (entry.getEtatFiche()) {
             case 1:
@@ -239,22 +239,12 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             case 3:
                 btnEtatFiche.setVisibility(View.VISIBLE);
                 btnEtatFiche.setText(" R ");
-                btnEtatFiche.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showToast(R.string.ficheredaction_explications);
-                    }
-                });
+                btnEtatFiche.setOnClickListener(v -> showToast(R.string.ficheredaction_explications));
                 break;
             case 5:
                 btnEtatFiche.setVisibility(View.VISIBLE);
                 btnEtatFiche.setText(" P ");
-                btnEtatFiche.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showToast(R.string.ficheproposee_explications);
-                    }
-                });
+                btnEtatFiche.setOnClickListener(v -> showToast(R.string.ficheproposee_explications));
                 break;
             case 4:
                 btnEtatFiche.setVisibility(View.GONE);
@@ -264,25 +254,15 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
                 btnEtatFiche.setText(" " + entry.getEtatFiche() + " ");
         }
 
-        ImageView picoEspeceReglementee = (ImageView) findViewById(R.id.detailsfiche_elementview_picto_reglementee);
-        ImageView picoEspeceDanger = (ImageView) findViewById(R.id.detailsfiche_elementview_picto_dangereuse);
+        ImageView picoEspeceReglementee = findViewById(R.id.detailsfiche_elementview_picto_reglementee);
+        ImageView picoEspeceDanger = findViewById(R.id.detailsfiche_elementview_picto_dangereuse);
         if (entry.getPictogrammes().contains(Constants.PictoKind.PICTO_ESPECE_REGLEMENTEE.ordinal() + ";")) {
             picoEspeceReglementee.setVisibility(View.VISIBLE);
-            picoEspeceReglementee.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showToast(R.string.picto_espece_reglementee_label);
-                }
-            });
+            picoEspeceReglementee.setOnClickListener(v -> showToast(R.string.picto_espece_reglementee_label));
         }
         if (entry.getPictogrammes().contains(Constants.PictoKind.PICTO_ESPECE_DANGEREUSE.ordinal() + ";")) {
             picoEspeceDanger.setVisibility(View.VISIBLE);
-            picoEspeceDanger.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showToast(R.string.picto_espece_en_danger_label);
-                }
-            });
+            picoEspeceDanger.setOnClickListener(v -> showToast(R.string.picto_espece_en_danger_label));
         }
 
 
@@ -292,7 +272,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         if (photosFiche != null && isOnCreate) {
             //sbDebugText.append("\nnbPhoto="+photosFiche.size()+"\n");
 
-            photoGallery = (LinearLayout) findViewById(R.id.detailsfiche_elementview_photogallery);
+            photoGallery = findViewById(R.id.detailsfiche_elementview_photogallery);
             int pos = 0;
             for (PhotoFiche photoFiche : photosFiche) {
 
@@ -311,7 +291,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 
         if (isOnCreate) {
             // do only on first creation
-            LinearLayout containerLayout = (LinearLayout) findViewById(R.id.detailsfiche_sections_layout);
+            LinearLayout containerLayout = findViewById(R.id.detailsfiche_sections_layout);
 
             // section Autres Dénominations
             if (entry.getAutresDenominations() != null) {
@@ -437,11 +417,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         if (paramOutils.getParamBoolean(R.string.pref_key_affichage_debug, false)) {
 
-            ((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setVisibility(View.VISIBLE);
+            findViewById(R.id.detailsfiche_elementview_debug_text).setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setText(sbDebugText.toString());
 
         } else {
-            ((TextView) findViewById(R.id.detailsfiche_elementview_debug_text)).setVisibility(View.GONE);
+            findViewById(R.id.detailsfiche_elementview_debug_text).setVisibility(View.GONE);
         }
         // End of user code
 
@@ -481,16 +461,16 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
                 context.startActivity(toDefinitionlView);
                 return true;
             case R.id.detailsfiche_elementview_action_aide:
-                AffichageMessageHTML aide = new AffichageMessageHTML(this, (Activity) this, getHelper());
+                AffichageMessageHTML aide = new AffichageMessageHTML(this, this, getHelper());
                 aide.affichageMessageHTML(this.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
                 return true;
             //End of user code
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
-                if(upIntent==null){
+                if (upIntent == null) {
                     // workaround bug https://gitlab.inria.fr/doris/doris-android/issues/134
-                    Intent i=new Intent(this, Accueil_CustomViewActivity.class);
+                    Intent i = new Intent(this, Accueil_CustomViewActivity.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     DorisApplicationContext.getInstance().resetIntentPrecedent(i);
                     upIntent = i;
@@ -568,12 +548,12 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         View convertView = inflater.inflate(R.layout.detailsfiche_elementview_foldablesection, null);
 
         // Titre de la Section
-        TextView titreText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_titre);
+        TextView titreText = convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_titre);
         titreText.setText(titre);
 
         // Texte avec mise en forme avancée, par exemple si le texte contient {{999}} alors on remplace par (Fiche)
         // et on met un lien vers la fiche sur (Fiche)
-        TextView contenuText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletext);
+        TextView contenuText = convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletext);
         SpannableString richtext = textesOutils.textToSpannableStringDoris(texte);
         Log.d(LOG_TAG, "addFoldableView() - titre : " + titre);
         Log.d(LOG_TAG, "addFoldableView() - text : " + texte);
@@ -583,13 +563,13 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         contenuText.setMovementMethod(LinkMovementMethod.getInstance());
 
         // Bouton de fermeture et d'ouverure du texte de la section
-        ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
+        ImageButton foldButton = convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
 
         FoldableClickListener foldable = new FoldableClickListener(this, contenuText, foldButton, ImageButtonKind.DETAILS_FICHE);
         allFoldableDetails.add(foldable);
         foldButton.setOnClickListener(foldable);
 
-        LinearLayout titreLinearLayout = (LinearLayout) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_linearlayout);
+        LinearLayout titreLinearLayout = convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_linearlayout);
         titreLinearLayout.setOnClickListener(foldable);
         // enregistre pour réagir au click long
         registerForContextMenu(foldButton);
@@ -623,18 +603,18 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         View convertView = inflater.inflate(R.layout.detailsfiche_elementview_foldablesection_2icones, null);
 
         // Titre de la Section
-        TextView titreText = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_titre);
+        TextView titreText = convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_titre);
         titreText.setText(titre);
 
         // Icônes de la Section
-        RelativeLayout sectionIcones = (RelativeLayout) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_icones);
+        RelativeLayout sectionIcones = convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_icones);
 
         final Groupe groupePere = getHelper().getGroupeDao().queryForId(groupe.getGroupePere().getId());
 
-        ImageButton icone1 = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldableicone1);
-        TextView texte1 = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletexte1);
-        ImageButton icone2 = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldableicone2);
-        TextView texte2 = (TextView) convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletexte2);
+        ImageButton icone1 = convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldableicone1);
+        TextView texte1 = convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletexte1);
+        ImageButton icone2 = convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldableicone2);
+        TextView texte2 = convertView.findViewById(R.id.detailsfiche_elementview_foldablesection_foldabletexte2);
 
         if (groupe.getNumeroSousGroupe() == 0) {
             int identifierIcone1Groupe = context.getResources().getIdentifier(groupe.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw", context.getPackageName());
@@ -642,20 +622,17 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             icone1.setImageBitmap(bitmap);
             icone1.setBackgroundResource(ThemeUtil.attrToResId(((DetailsFiche_ElementViewActivity) context), R.attr.ic_action_background));
             texte1.setText(groupe.getNomGroupe());
-            icone1.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                    ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupe.getId());
-                    ed.apply();
+            icone1.setOnClickListener(v -> {
+                SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+                ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupe.getId());
+                ed.apply();
 
-                    if (accueil_liste_ou_arbre_pardefaut.equals("photos")) {
-                        startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
-                    } else {
-                        startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
-                    }
-
+                if (current_mode_affichage.equals("photos")) {
+                    startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
+                } else {
+                    startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
                 }
+
             });
             icone2.setVisibility(View.GONE);
             texte2.setVisibility(View.GONE);
@@ -665,20 +642,17 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             icone1.setImageBitmap(bitmap);
             icone1.setBackgroundResource(ThemeUtil.attrToResId(((DetailsFiche_ElementViewActivity) context), R.attr.ic_action_background));
             texte1.setText(groupePere.getNomGroupe());
-            icone1.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                    ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupePere.getId());
-                    ed.apply();
+            icone1.setOnClickListener(v -> {
+                SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+                ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupePere.getId());
+                ed.apply();
 
-                    if (accueil_liste_ou_arbre_pardefaut.equals("photos")) {
-                        startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
-                    } else {
-                        startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
-                    }
-
+                if (current_mode_affichage.equals("photos")) {
+                    startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
+                } else {
+                    startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
                 }
+
             });
 
             int identifierIcone2Groupe = context.getResources().getIdentifier(groupe.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw", context.getPackageName());
@@ -686,31 +660,28 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             icone2.setImageBitmap(bitmap);
             icone2.setBackgroundResource(ThemeUtil.attrToResId(((DetailsFiche_ElementViewActivity) context), R.attr.ic_action_background));
             texte2.setText(groupe.getNomGroupe());
-            icone2.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                    ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupe.getId());
-                    ed.apply();
+            icone2.setOnClickListener(v -> {
+                SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
+                ed.putInt(context.getString(R.string.pref_key_filtre_groupe), groupe.getId());
+                ed.apply();
 
-                    if (accueil_liste_ou_arbre_pardefaut.equals("photos")) {
-                        startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
-                    } else {
-                        startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
-                    }
-
+                if (current_mode_affichage.equals("photos")) {
+                    startActivity(new Intent(context, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
+                } else {
+                    startActivity(new Intent(context, ListeFicheAvecFiltre_ClassListViewActivity.class));
                 }
+
             });
         }
 
         // Bouton d'Affichage et de Masque de la section
-        ImageButton foldButton = (ImageButton) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
+        ImageButton foldButton = convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
 
         FoldableClickListener foldable = new FoldableClickListener(this, sectionIcones, foldButton, ImageButtonKind.DETAILS_FICHE);
         allFoldableDetails.add(foldable);
         foldButton.setOnClickListener(foldable);
 
-        LinearLayout titreLinearLayout = (LinearLayout) convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_linearlayout);
+        LinearLayout titreLinearLayout = convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_linearlayout);
         titreLinearLayout.setOnClickListener(foldable);
         // enregistre pour réagir au click long
         registerForContextMenu(foldButton);
@@ -739,7 +710,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         View convertView = inflater.inflate(R.layout.details_tableau_phylogenetique_foldablesection, null);
 
         // Affichage de l'arbre
-        LinearLayout sectionArbre = (LinearLayout) convertView.findViewById(R.id.details_tableau_phylogenetique_contenu_linearlayout);
+        LinearLayout sectionArbre = convertView.findViewById(R.id.details_tableau_phylogenetique_contenu_linearlayout);
 
         for (ClassificationFiche classificationFiche : classificationFicheCollect) {
 
@@ -751,17 +722,17 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 
             View convertArbreView = inflater.inflate(R.layout.details_tableau_phylogenetique_detail, null);
 
-            TextView detailsfiche_arbreview_titre = (TextView) convertArbreView.findViewById(R.id.detailsfiche_arbreview_niveau);
+            TextView detailsfiche_arbreview_titre = convertArbreView.findViewById(R.id.detailsfiche_arbreview_niveau);
             SpannableString richtext = textesOutils.textToSpannableStringDoris(classification.getNiveau());
             detailsfiche_arbreview_titre.setText(richtext, BufferType.SPANNABLE);
             detailsfiche_arbreview_titre.setMovementMethod(LinkMovementMethod.getInstance());
 
-            TextView detailsfiche_arbreview_scientifique = (TextView) convertArbreView.findViewById(R.id.detailsfiche_arbreview_scientifique);
+            TextView detailsfiche_arbreview_scientifique = convertArbreView.findViewById(R.id.detailsfiche_arbreview_scientifique);
             richtext = textesOutils.textToSpannableStringDoris(classification.getTermeScientifique());
             detailsfiche_arbreview_scientifique.setText(richtext, BufferType.SPANNABLE);
             detailsfiche_arbreview_scientifique.setMovementMethod(LinkMovementMethod.getInstance());
 
-            TextView detailsfiche_arbreview_francais = (TextView) convertArbreView.findViewById(R.id.detailsfiche_arbreview_francais);
+            TextView detailsfiche_arbreview_francais = convertArbreView.findViewById(R.id.detailsfiche_arbreview_francais);
             if (!classification.getTermeFrancais().isEmpty()) {
                 richtext = textesOutils.textToSpannableStringDoris(classification.getTermeFrancais());
                 detailsfiche_arbreview_francais.setText(richtext, BufferType.SPANNABLE);
@@ -770,8 +741,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
                 detailsfiche_arbreview_francais.setVisibility(View.GONE);
             }
 
-            TextView detailsfiche_arbreview_description = (TextView) convertArbreView.findViewById(R.id.detailsfiche_arbreview_description);
-            ImageButton descriptionClassificationButton = (ImageButton) convertArbreView.findViewById(R.id.details_tableau_phylogenetique_fold_unflod_description_imageButton);
+            TextView detailsfiche_arbreview_description = convertArbreView.findViewById(R.id.detailsfiche_arbreview_description);
+            ImageButton descriptionClassificationButton = convertArbreView.findViewById(R.id.details_tableau_phylogenetique_fold_unflod_description_imageButton);
 
             if (!classification.getDescriptif().isEmpty()) {
                 richtext = textesOutils.textToSpannableStringDoris(classification.getDescriptif());
@@ -779,19 +750,14 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
                 detailsfiche_arbreview_description.setMovementMethod(LinkMovementMethod.getInstance());
 
                 // Ouverture fermeture des descriptions des Classifications
-                LinearLayout descriptionClassificationLayout = (LinearLayout) convertArbreView.findViewById(R.id.LinearLayout_description);
+                LinearLayout descriptionClassificationLayout = convertArbreView.findViewById(R.id.LinearLayout_description);
 
                 FoldableClickListener descriptionClassificationFoldable = new FoldableClickListener(this, descriptionClassificationLayout, descriptionClassificationButton, ImageButtonKind.DESCRIPTION_ARBRE_PHYLO);
                 allFoldableClassificationDescription.add(descriptionClassificationFoldable);
 
                 // Par défaut on cache la description
                 descriptionClassificationLayout.setVisibility(View.GONE);
-                descriptionClassificationButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onClickAllDescriptionClassification();
-                    }
-                });
+                descriptionClassificationButton.setOnClickListener(v -> onClickAllDescriptionClassification());
 
             } else {
                 detailsfiche_arbreview_description.setVisibility(View.GONE);
@@ -802,13 +768,13 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         }
 
         // Ouverture fermeture de l'arbre
-        ImageButton detailsTableauButton = (ImageButton) convertView.findViewById(R.id.details_tableau_phylogenetique_fold_unflod_section_imageButton);
+        ImageButton detailsTableauButton = convertView.findViewById(R.id.details_tableau_phylogenetique_fold_unflod_section_imageButton);
 
         FoldableClickListener detailsTableaufoldable = new FoldableClickListener(this, sectionArbre, detailsTableauButton, ImageButtonKind.DETAILS_FICHE);
         allFoldableDetails.add(detailsTableaufoldable);
         detailsTableauButton.setOnClickListener(detailsTableaufoldable);
 
-        LinearLayout detailsTableauLayout = (LinearLayout) convertView.findViewById(R.id.details_tableau_phylogenetique_fold_unflod_section_linearlayout);
+        LinearLayout detailsTableauLayout = convertView.findViewById(R.id.details_tableau_phylogenetique_fold_unflod_section_linearlayout);
         detailsTableauLayout.setOnClickListener(detailsTableaufoldable);
 
         // enregistre pour réagir au click long

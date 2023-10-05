@@ -43,12 +43,12 @@ package fr.ffessm.doris.android.activities;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
+import fr.ffessm.doris.android.activities.view.indexbar.FicheAlphabeticalIndexManager;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
@@ -58,10 +58,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.collection.LruCache;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -109,13 +110,12 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
      * dbHelper used to autorefresh values and doing queries
      * must be set other wise most getter will return proxy that will need to be refreshed
      */
-    protected DorisDBHelper _contextDB = null;
+    protected DorisDBHelper _contextDB;
 
     private static final String LOG_TAG = ListeImageFicheAvecFiltre_Adapter.class.getCanonicalName();
 
     private List<Integer> ficheIdList;
     public List<Integer> filteredFicheIdList;
-    LruCache<Integer, Fiche> ficheCache = new LruCache<Integer, Fiche>(100);
     private final Object mLock = new Object();
     private SimpleFilter mFilter;
     SharedPreferences prefs;
@@ -130,11 +130,11 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
     protected Textes_Outils textesOutils;
 
     // vide signifie que l'on accepte tout
-    protected ArrayList<Integer> acceptedGroupeId = new ArrayList<Integer>();
+    protected ArrayList<Integer> acceptedGroupeId = new ArrayList<>();
     int filteredZoneGeoId = -1;
     int filteredGroupeId = 1;
 
-    protected Fiches_Outils.OrdreTri ordreTri = Fiches_Outils.OrdreTri.NOMCOMMUN;
+    protected Fiches_Outils.OrdreTriAlphabetique ordreTriAlphabetique = Fiches_Outils.OrdreTriAlphabetique.NOMCOMMUN;
 
     public ListeImageFicheAvecFiltre_Adapter(Context context, DorisDBHelper contextDB, int filteredZoneGeoId, int filteredGroupeId) {
         super();
@@ -149,7 +149,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
         photosOutils = new Photos_Outils(context);
         fichesOutils = new Fiches_Outils(context);
         textesOutils = new Textes_Outils(context);
-        ordreTri = fichesOutils.getOrdreTri(context);
+        ordreTriAlphabetique = fichesOutils.getOrdreTriAlphabetique(context);
 
         updateList();
     }
@@ -169,7 +169,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
         photosOutils = new Photos_Outils(context);
         fichesOutils = new Fiches_Outils(context);
         textesOutils = new Textes_Outils(context);
-        ordreTri = fichesOutils.getOrdreTri(context);
+        ordreTriAlphabetique = fichesOutils.getOrdreTriAlphabetique(context);
 
         // End of user code
         updateList();
@@ -215,14 +215,15 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
         if (filteredFicheIdList.size() == 0) {
             return getNoResultSubstitute(convertView);
         }
-        final Fiche entry = getFicheForId(filteredFicheIdList.get(position));
+        FicheAlphabeticalIndexManager indexHelper = new FicheAlphabeticalIndexManager(context, _contextDB );
+        final Fiche entry = indexHelper.getItemForId(filteredFicheIdList.get(position));
         if (entry == null) return convertView;
 
         TextView tvDetails = (TextView) convertView.findViewById(R.id.listeimageavecfiltre_listviewrow_details);
         tvDetails.setVisibility(View.GONE);
 
         TextView tvLabel = (TextView) convertView.findViewById(R.id.listeimageficheavecfiltre_listviewrow_label);
-        switch (ordreTri) {
+        switch (ordreTriAlphabetique) {
             case NOMSCIENTIFIQUE:
                 tvLabel.setText(textesOutils.textToSpannableStringDoris(entry.getNomScientifique()));
                 tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.ITALIC);
@@ -238,6 +239,11 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
                 break;
         }
 
+        // assign group color in background
+        int[] colors = {entry.getGroupe().getCouleurGroupe(), Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT, Color.TRANSPARENT};
+        GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colors);
+        gradientDrawable.setColors(colors);
+        convertView.setBackground(gradientDrawable);
         // End of user code
 
         // assign the entry to the row in order to ease GUI interactions
@@ -269,45 +275,35 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
                     photoGallery.addView(photoView);
 
                     photoGallery.setClickable(true);
-                    View.OnClickListener ficheLauncher = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Log.d(LOG_TAG, "ListeImageFicheAvecFiltre_Adapter - onClick");
+                    View.OnClickListener ficheLauncher = v -> {
+                        Log.d(LOG_TAG, "ListeImageFicheAvecFiltre_Adapter - onClick");
 
-                            DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
+                        DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
 
-                            Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
-                            toDetailView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            Bundle b = new Bundle();
-                            b.putInt("ficheId", entry.getId());
-                            toDetailView.putExtras(b);
-                            context.getApplicationContext().startActivity(toDetailView);
-                        }
-
-                        ;
+                        Intent toDetailView = new Intent(context, DetailsFiche_ElementViewActivity.class);
+                        toDetailView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        Bundle b = new Bundle();
+                        b.putInt("ficheId", entry.getId());
+                        toDetailView.putExtras(b);
+                        context.getApplicationContext().startActivity(toDetailView);
                     };
 
                     photoView.setOnClickListener(ficheLauncher);
 
 
                     final int posImageCourante = pos;
-                    View.OnLongClickListener photoLauncher = new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
-                            Log.d(LOG_TAG, "ListeImageFicheAvecFiltre_Adapter - onLongClick");
+                    View.OnLongClickListener photoLauncher = v -> {
+                        Log.d(LOG_TAG, "ListeImageFicheAvecFiltre_Adapter - onLongClick");
 
-                            DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
+                        DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());
 
-                            Intent toImageView = new Intent(context, ImagePleinEcran_CustomViewActivity.class);
-                            toImageView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            toImageView.putExtra("position", posImageCourante);
-                            toImageView.putExtra("ficheId", entry.getId());
-                            context.startActivity(toImageView);
+                        Intent toImageView = new Intent(context, ImagePleinEcran_CustomViewActivity.class);
+                        toImageView.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        toImageView.putExtra("position", posImageCourante);
+                        toImageView.putExtra("ficheId", entry.getId());
+                        context.startActivity(toImageView);
 
-                            return true;
-                        }
-
-                        ;
+                        return true;
                     };
 
                     photoView.setOnLongClickListener(photoLauncher);
@@ -362,116 +358,6 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
 
         return convertView;
     }
-
-    protected Fiche getFicheForId(Integer ficheId) {
-        Fiche f = ficheCache.get(ficheId);
-        if (f != null) return f;
-        try {
-            f = _contextDB.ficheDao.queryForId(ficheId);
-            ficheCache.put(ficheId, f);
-            if (_contextDB != null) f.setContextDB(_contextDB);
-            return f;
-        } catch (SQLException e1) {
-            Log.e(LOG_TAG, "Cannot retreive fiche with _id = " + ficheId + " " + e1.getMessage(), e1);
-            return null;
-        }
-    }
-
-    public HashMap<Character, Integer> getUsedAlphabetHashMap() {
-        HashMap<Character, Integer> alphabetToIndex = new HashMap<Character, Integer>();
-        Log.d(LOG_TAG, "getUsedAlphabetHashMap - début");
-        int base_list_length = filteredFicheIdList.size();
-        if (base_list_length < 100) {
-            // the base has been filtered so return the element from the filtered one
-            alphabetToIndex = new HashMap<Character, Integer>();
-
-
-            for (int i = 0; i < base_list_length; i++) {
-                Fiche entry = getFicheForId(filteredFicheIdList.get(i));
-                char firstCharacter = getFirstCharForIndex(entry);
-                boolean presentOrNot = alphabetToIndex.containsKey(firstCharacter);
-                if (!presentOrNot) {
-                    alphabetToIndex.put(firstCharacter, i);
-                    //Log.d(TAG,"Character="+firstCharacter+"  position="+i);
-                }
-            }
-
-        } else {
-            // large list
-            // use binarysearch if large list
-            String alphabet_list[] = context.getResources().getStringArray(R.array.alphabet_array);
-            int startSearchPos = 0;
-            for (int i = 0; i < alphabet_list.length; i++) {
-                int foundPosition = binarySearch(alphabet_list[i].charAt(0), startSearchPos, base_list_length - 1);
-                if (foundPosition != -1) {
-                    alphabetToIndex.put(alphabet_list[i].charAt(0), foundPosition);
-                    startSearchPos = foundPosition; // mini optimisation, no need to look before for former chars
-                }
-            }
-        }
-        Log.d(LOG_TAG, "getUsedAlphabetHashMap - fin");
-        return alphabetToIndex;
-    }
-
-    protected char getFirstCharForIndex(Fiche entry) {
-        //Start of user code protected ListeFicheAvecFiltre_Adapter binarySearch custom
-        String nom;
-        switch (ordreTri) {
-            case NOMSCIENTIFIQUE:
-                nom = entry.getNomScientifique().replaceFirst("\\{\\{i\\}\\}", "");
-                break;
-            case NOMCOMMUN:
-            default:
-                nom = entry.getNomCommunNeverEmpty();
-                break;
-        }
-        if (nom.length() == 0) return '#';
-        return nom.charAt(0);
-        //End of user code
-    }
-
-
-    /**
-     * @param key         to be searched
-     * @param startBottom initial value for bottom, default = 0
-     * @param startTop    initial top value, default = array.length -1
-     * @return
-     */
-    public int binarySearch(char key, int startBottom, int startTop) {
-        int bot = startBottom;
-        int top = startTop;
-        int mid = startBottom;
-        boolean found = false;
-        while (bot <= top) {
-            mid = bot + (top - bot) / 2;
-            Fiche entry = getFicheForId(filteredFicheIdList.get(mid));
-            char midCharacter = getFirstCharForIndex(entry);
-            if (key < midCharacter) top = mid - 1;
-            else if (key > midCharacter) bot = mid + 1;
-            else {
-                found = true;
-                break;
-            }
-            ;
-        }
-        if (found) {
-            // search for the first occurence
-            int best = mid;
-            for (int i = mid; i > startBottom; i--) {
-                Fiche entry = getFicheForId(filteredFicheIdList.get(i));
-                char midCharacter = getFirstCharForIndex(entry);
-                if (midCharacter == key) {
-                    best = i;
-                } else {
-                    //previous is differents so we stop here
-                    break;
-                }
-
-            }
-            return best;
-        } else return -1;
-    }
-
 
     //Start of user code protected additional ListeFicheAvecFiltre_Adapter methods
     // additional methods
@@ -537,7 +423,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
 
             if (prefix == null || prefix.length() == 0) {
                 synchronized (mLock) {
-                    ArrayList<Integer> list = new ArrayList<Integer>(ficheIdList);
+                    ArrayList<Integer> list = new ArrayList<>(ficheIdList);
                     results.values = list;
                     results.count = list.size();
                 }
@@ -551,12 +437,13 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
                 final List<Integer> values = ficheIdList;
                 final int count = values.size();
 
-                final ArrayList<Integer> newValues = new ArrayList<Integer>(count);
+                final ArrayList<Integer> newValues = new ArrayList<>(count);
                 final int[] orders = sort ? new int[count] : null;
 
+                FicheAlphabeticalIndexManager indexHelper = new FicheAlphabeticalIndexManager(context, _contextDB );
                 for (int i = 0; i < count; i++) {
                     final Integer valueId = values.get(i);
-                    Fiche value = getFicheForId(valueId);
+                    Fiche value = indexHelper.getItemForId(valueId);
                     if (value != null) {
                         int order = ListeImageFicheAvecFiltre_Adapter.this.filter(i, value, prefixString);
                         if (order >= 0) {
@@ -594,7 +481,7 @@ public class ListeImageFicheAvecFiltre_Adapter extends BaseAdapter implements Fi
                 filteredFicheIdList = (List<Integer>) results.values;
                 notifyDataSetChanged();
             } else {
-                filteredFicheIdList = new ArrayList<Integer>();
+                filteredFicheIdList = new ArrayList<>();
                 notifyDataSetInvalidated();
             }
             // update hashmap for index

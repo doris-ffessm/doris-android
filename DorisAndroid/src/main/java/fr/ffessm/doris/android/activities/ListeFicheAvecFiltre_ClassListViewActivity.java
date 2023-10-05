@@ -42,33 +42,19 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import java.util.HashMap;
-
-import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
-import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
-import fr.ffessm.doris.android.datamodel.Fiche;
-import fr.ffessm.doris.android.datamodel.Groupe;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.datamodel.ZoneGeographique;
-import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.Groupes_Outils;
-import fr.ffessm.doris.android.tools.Param_Outils;
-import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.LinearLayout;
-import androidx.core.app.NavUtils;
-import androidx.core.app.TaskStackBuilder;
-import androidx.appcompat.app.ActionBar;
-import androidx.core.view.MenuItemCompat;
-import androidx.appcompat.widget.SearchView;
+import android.os.Message;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -76,20 +62,42 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.TextView;
-// Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity_additionalimports
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.graphics.drawable.BitmapDrawable;
-import android.preference.PreferenceManager;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
+import androidx.core.view.MenuItemCompat;
+
+import java.util.HashMap;
+import java.util.List;
+
+import fr.ffessm.doris.android.DorisApplicationContext;
+import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
+import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
+import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.FicheAlphabeticalIndexManager;
+import fr.ffessm.doris.android.activities.view.indexbar.FicheGroupeIndexManager;
+import fr.ffessm.doris.android.activities.view.indexbar.GroupIndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.GroupeListProvider;
+import fr.ffessm.doris.android.activities.view.indexbar.IndxBarHandlerMessages;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
+import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.Groupe;
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.datamodel.ZoneGeographique;
+import fr.ffessm.doris.android.tools.Groupes_Outils;
+import fr.ffessm.doris.android.tools.Param_Outils;
+import fr.ffessm.doris.android.tools.ThemeUtil;
+import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 // End of user code
 
 public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener, ActivityWithIndexBar {
@@ -97,20 +105,16 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
     private static final String LOG_TAG = ListeFicheAvecFiltre_ClassListViewActivity.class.getSimpleName();
 
     //Start of user code constants ListeFicheAvecFiltre_ClassListViewActivity
-
-    MenuItem searchButtonMenuItem;
-
-    int iconSize = R.string.list_icone_taille_defaut;
-
     final Context context = this;
     final Param_Outils paramOutils = new Param_Outils(context);
+    MenuItem searchButtonMenuItem;
+    int iconSize = R.string.list_icone_taille_defaut;
     //End of user code
-
     ListeFicheAvecFiltre_Adapter adapter;
 
     Handler mHandler;
     HashMap<Character, Integer> alphabetToIndex;
-    int number_of_alphabets = -1;
+    HashMap<Integer, Integer> groupeIdToIndex;
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -119,8 +123,9 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
+        ListView list = findViewById(R.id.listeficheavecfiltre_listview);
         list.setClickable(true);
         //Start of user code onCreate ListeFicheAvecFiltre_ClassListViewActivity adapter creation
         Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - onCreate");
@@ -139,11 +144,14 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         handleIntent(getIntent());
 
         // add handler for indexBar
-        mHandler = new IndexBarHandler(this);
-
-        //Start of user code onCreate additions ListeFicheAvecFiltre_ClassListViewActivity
-
-        //End of user code
+        if (isGroupeMode()) {
+            ListView listview = findViewById(R.id.listeficheavecfiltre_listview);
+            int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe),
+                    Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
+            mHandler = new GroupIndexBarHandler(this, listview, filtreGroupe);
+        } else {
+            mHandler = new AlphabetIndexBarHandler(this);
+        }
     }
 
     @Override
@@ -164,9 +172,17 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
         if (paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut))) != iconSize) {
             iconSize = paramOutils.getParamInt(R.string.pref_key_list_icone_taille, Integer.parseInt(context.getString(R.string.list_icone_taille_defaut)));
-            ListView list = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
+            ListView list = findViewById(R.id.listeficheavecfiltre_listview);
             list.invalidateViews();
         }
+
+        // send an update of the filtre on Groupe
+        Integer filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
+        Message msg = this.getHandler().obtainMessage();
+        msg.what = IndxBarHandlerMessages.ON_RESUME_GROUP_EVT;
+        msg.obj = filtreGroupe;
+        mHandler.sendMessage(msg);
+
         updateFilterInActionBar();
 
         //End of user code
@@ -179,6 +195,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         // to deliver the intent if this activity is currently the foreground activity when
         // invoked again (when the user executes a search from this activity, we don't create
         // a new instance of this activity, so the system delivers the search intent here)
+        super.onNewIntent(intent);
         handleIntent(intent);
     }
 
@@ -218,20 +235,35 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
             startActivity(toDetailView);
         } else if (view instanceof TextView && view.getId() == R.id.indexbar_alphabet_row_textview) {
             // click on indexBar
-            TextView rowview = (TextView) view;
+            if (!isGroupeMode()) {
+                TextView rowview = (TextView) view;
+                CharSequence alphabet = rowview.getText();
 
-            CharSequence alphabet = rowview.getText();
+                if (alphabet == null || alphabet.equals(""))
+                    return;
 
-            if (alphabet == null || alphabet.equals(""))
-                return;
-
-            String selected_alphabet = alphabet.toString().trim();
-            Integer newPosition = alphabetToIndex.get(selected_alphabet.charAt(0));
-            Log.d(LOG_TAG, "Selected Alphabet is:" + selected_alphabet + "   position is:" + newPosition);
-            if (newPosition != null) {
-                showToast(selected_alphabet);
-                ListView listview = (ListView) findViewById(R.id.listeficheavecfiltre_listview);
-                listview.setSelection(newPosition);
+                String selected_alphabet = alphabet.toString().trim();
+                Integer newPosition = alphabetToIndex.get(selected_alphabet.charAt(0));
+                Log.d(LOG_TAG, "Selected Alphabet is:" + selected_alphabet + "   position is:" + newPosition);
+                if (newPosition != null) {
+                    showShortToast(selected_alphabet);
+                    ListView listview = findViewById(R.id.listeficheavecfiltre_listview);
+                    listview.setSelection(newPosition);
+                }
+            }
+        } else if (view instanceof ImageView && view.getId() == R.id.indexbar_alphabet_row_imageview) {
+            // click on indexBar
+            if (isGroupeMode()) {
+                ImageView rowview = (ImageView) view;
+                if (rowview.getTag() != null && rowview.getTag() instanceof Groupe) {
+                    Groupe groupe = (Groupe) rowview.getTag();
+                    Integer newPosition = groupeIdToIndex.get(groupe.getId());
+                    if (newPosition != null) {
+                        showShortToast(groupe.getNomGroupe());
+                        ListView listview = findViewById(R.id.listeficheavecfiltre_listview);
+                        listview.setSelection(newPosition);
+                    }
+                }
             }
         }
     }
@@ -258,7 +290,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         inflater.inflate(R.menu.listeficheavecfiltre_classlistview_actions, menu);
         // Associate searchable configuration with the SearchView
         // deal with compat
-        MenuItem menuItem = (MenuItem) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_search);
+        MenuItem menuItem = menu.findItem(R.id.listeficheavecfiltre_classlistview_action_search);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -281,7 +313,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
         // add additional programmatic options in the menu
         //Start of user code additional onCreateOptionsMenu ListeFicheAvecFiltre_ClassListViewActivity
-        searchButtonMenuItem = (MenuItem) menu.findItem(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
+        searchButtonMenuItem = menu.findItem(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
         updateFilterInActionBar();
         //searchPopupButtonManager = new SearchPopupButtonManager(this);
         //End of user code
@@ -367,11 +399,36 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
     }
 
     public void populateIndexBarHashMap() {
-        alphabetToIndex = adapter.getUsedAlphabetHashMap();
-        number_of_alphabets = alphabetToIndex.size();        //Number of enteries in the map is equal to number of letters that would necessarily display on the right.
+
+        if (isGroupeMode()) {
+            populateIndexBarHashMapGroupe();
+        } else {
+            populateIndexBarHashMapAlphabet();
+        }
+    }
+
+    @Override
+    public DorisDBHelper getDorisDBHelper() {
+        return getHelper().getDorisDBHelper();
+    }
+
+    protected boolean isGroupeMode() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String currentMode = prefs.getString(
+                this.getResources().getString(
+                        R.string.pref_key_current_mode_affichage),
+                this.getResources().getString(R.string.current_mode_affichage_default));
+        return currentMode.equals("liste_par_groupe") || currentMode.equals("photos_par_groupe");
+    }
+
+
+    public void populateIndexBarHashMapAlphabet() {
+
+        FicheAlphabeticalIndexManager indexHelper = new FicheAlphabeticalIndexManager(context, getHelper().getDorisDBHelper());
+        alphabetToIndex = indexHelper.getUsedIndexHashMapItemIds(adapter.filteredFicheIdList);
 
         /*Now I am making an entry of those alphabets which are not there in the Map*/
-        String alphabets[] = getResources().getStringArray(R.array.alphabet_array);
+        String[] alphabets = getResources().getStringArray(R.array.alphabet_array);
         int index = -1;
 
         for (String alpha1 : alphabets) {
@@ -391,20 +448,59 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
                     break;
                 } else if (i == 26) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
                     alphabetToIndex.put(alpha, adapter.filteredFicheIdList.size() - 1);
+                else {
+                    continue;
+                }
+            }
+        }
+    }
+
+    public void populateIndexBarHashMapGroupe() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
+        FicheGroupeIndexManager indexHelper = new FicheGroupeIndexManager(context, getHelper().getDorisDBHelper(), filtreGroupe);
+        groupeIdToIndex = indexHelper.getUsedIndexHashMapItemIds(adapter.filteredFicheIdList);
+
+        /*Now I am making an entry of those GroupeId which are not present in the Map*/
+        List<Integer> allGroupIDs = GroupeListProvider.getAllGroupeIdList(getHelper().getDorisDBHelper());
+        String[] alphabets = getResources().getStringArray(R.array.alphabet_array);
+        int index = -1;
+
+        for (Integer groupID : allGroupIDs) {
+
+            index++;
+
+            if (groupeIdToIndex.containsKey(groupID))
+                continue;
+
+            /*Start searching the next character position. Example, here alpha is E. Since there is no entry for E, we need to find the position of next Character, F.*/
+            for (int i = index + 1; i < allGroupIDs.size(); i++) {        //start from next character to last character
+                Integer searchAlphabet = allGroupIDs.get(i);
+
+                /*If we find the position of F character, then on click event on E should take the user to F*/
+                if (groupeIdToIndex.containsKey(searchAlphabet)) {
+                    groupeIdToIndex.put(groupID, groupeIdToIndex.get(searchAlphabet));
+                    break;
+                } else if (i == allGroupIDs.size()) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
+                    groupeIdToIndex.put(groupID, adapter.filteredFicheIdList.size() - 1);
                 else
                     continue;
 
-            }//
-        }//
+            }
+        }
     }
 
     @Override
     public ListView getAlphabetListView() {
-        return (ListView) findViewById(R.id.listeficheavecfiltre_listView_alphabets);
+        return findViewById(R.id.listeficheavecfiltre_listView_alphabets);
     }
 
     public View getAlphabetRowView() {
-        return findViewById(R.id.alphabet_row_layout);
+        if(isGroupeMode()) {
+            return findViewById(R.id.image_row_layout);
+        } else {
+            return findViewById(R.id.alphabet_row_layout);
+        }
     }
 
     // Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity
@@ -417,12 +513,12 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         int currentZoneFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
         if (currentZoneFilterId == -1 || currentZoneFilterId == 0) { // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
             //actionBar.setTitle(R.string.accueil_recherche_precedente_filtreGeographique_sans);
-            String zonegeo_shortnames[] = getResources().getStringArray(R.array.zonegeo_shortname_array);
+            String[] zonegeo_shortnames = getResources().getStringArray(R.array.zonegeo_shortname_array);
             actionBar.setTitle(zonegeo_shortnames[0]);
         } else {
             //ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
             //actionBar.setTitle(currentZoneFilter.getNom().trim());
-            String zonegeo_shortnames[] = getResources().getStringArray(R.array.zonegeo_shortname_array);
+            String[] zonegeo_shortnames = getResources().getStringArray(R.array.zonegeo_shortname_array);
             actionBar.setTitle(zonegeo_shortnames[currentZoneFilterId]);
         }
 
@@ -456,7 +552,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
         View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
         // peut être null si pas visible, ex dans actionbar overfloww si pas assez de place dans l'action bar
-        RelativeLayout viewGroup = (RelativeLayout) findViewById(R.id.listeavecfiltre_filtrespopup);
+        RelativeLayout viewGroup = findViewById(R.id.listeavecfiltre_filtrespopup);
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View layout = layoutInflater.inflate(R.layout.listeficheavecfiltre_filtrespopup, viewGroup);
 
@@ -487,7 +583,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
             popup.showAtLocation(layout, Gravity.TOP | Gravity.RIGHT, 0, location[1]);
         }
         // bouton filtre espèce
-        Button btnFiltreEspece = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
+        Button btnFiltreEspece = layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         int groupRootId = Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId();
         int filtreCourantId = prefs.getInt(this.getString(R.string.pref_key_filtre_groupe), groupRootId);
@@ -498,23 +594,20 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
             btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec) + " " + groupeFiltreCourant.getNomGroupe().trim());
         }
 
-        btnFiltreEspece.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popup.setFocusable(true);
-                popup.dismiss();
+        btnFiltreEspece.setOnClickListener(v -> {
+            popup.setFocusable(true);
+            popup.dismiss();
 
-                //Permet de revenir à cette liste après choix du groupe, True on retournerait à l'accueil
-                Intent toGroupeSelectionView = new Intent(ListeFicheAvecFiltre_ClassListViewActivity.this, GroupeSelection_ClassListViewActivity.class);
-                Bundle b = new Bundle();
-                b.putBoolean("GroupeSelection_depuisAccueil", false);
-                toGroupeSelectionView.putExtras(b);
-                startActivity(toGroupeSelectionView);
-            }
+            //Permet de revenir à cette liste après choix du groupe, True on retournerait à l'accueil
+            Intent toGroupeSelectionView = new Intent(ListeFicheAvecFiltre_ClassListViewActivity.this, GroupeSelection_ClassListViewActivity.class);
+            Bundle b = new Bundle();
+            b.putBoolean("GroupeSelection_depuisAccueil", false);
+            toGroupeSelectionView.putExtras(b);
+            startActivity(toGroupeSelectionView);
         });
 
         // bouton filtre zone géographique
-        Button btnZoneGeo = (Button) layout.findViewById(R.id.listeavecfiltre_filtrespopup_ZoneGeoButton);
+        Button btnZoneGeo = layout.findViewById(R.id.listeavecfiltre_filtrespopup_ZoneGeoButton);
         int currentFilterId = prefs.getInt(ListeFicheAvecFiltre_ClassListViewActivity.this.getString(R.string.pref_key_filtre_zonegeo), -1);
         if (currentFilterId == -1) {
             btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_sans));
@@ -523,15 +616,12 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
             btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec) + " " + currentZoneFilter.getNom().trim());
         }
 
-        btnZoneGeo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popup.setFocusable(true);
-                popup.dismiss();
+        btnZoneGeo.setOnClickListener(v -> {
+            popup.setFocusable(true);
+            popup.dismiss();
 
-                //Toast.makeText(getApplicationContext(), "Zone géographique", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(ListeFicheAvecFiltre_ClassListViewActivity.this, ZoneGeoSelection_ClassListViewActivity.class));
-            }
+            //Toast.makeText(getApplicationContext(), "Zone géographique", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(ListeFicheAvecFiltre_ClassListViewActivity.this, ZoneGeoSelection_ClassListViewActivity.class));
         });
 
     }

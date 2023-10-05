@@ -52,7 +52,11 @@ import org.acra.data.StringFormat;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
+
+import fr.ffessm.doris.android.tools.SortModesTools;
 
 public class DorisApplication extends Application {
 
@@ -62,6 +66,19 @@ public class DorisApplication extends Application {
     public void onCreate() {
         super.onCreate();
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Début");
+
+        // upgrade mode affichage if required
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String current_mode = prefs.getString(getResources().getString(
+                R.string.pref_key_current_mode_affichage),
+                getResources().getString(
+                        R.string.current_mode_affichage_default));
+        if(SortModesTools.getLabelMap(this).get(current_mode) == null) {
+            prefs.edit().putString(getResources().getString(
+                    R.string.pref_key_current_mode_affichage),
+                    getResources().getString(
+                            R.string.current_mode_affichage_default)).apply();
+        }
 
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Fin");
     }

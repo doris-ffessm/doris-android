@@ -41,13 +41,13 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.tools;
 
+import android.content.Context;
+import android.util.Log;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import android.content.Context;
-import android.util.Log;
 
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
@@ -158,7 +158,7 @@ public class Groupes_Outils {
     }
 
     public static boolean isFichePartOfGroupe(Fiche fiche, Groupe searchedGroupe) {
-        boolean result = false;
+        boolean result;
         Groupe groupeFiche = fiche.getGroupe();
         if (groupeFiche == null) {
             Log.w(LOG_TAG, "PB pas de groupe pour la fiche isFichePartOfGroupe(" + fiche.getNomCommunNeverEmpty() + " " + fiche.getId() + ", " + searchedGroupe.getNomGroupe() + ")");
@@ -182,7 +182,7 @@ public class Groupes_Outils {
 
     public static ArrayList<Groupe> getAllSubGroupesForGroupe(Groupe groupe) {
 
-        ArrayList<Groupe> subGroupes = new ArrayList<Groupe>();
+        ArrayList<Groupe> subGroupes = new ArrayList<>();
         subGroupes.add(groupe);
         Collection<Groupe> directSubGroupes = groupe.getGroupesFils();
         for (Groupe subgroupe : directSubGroupes) {
@@ -200,4 +200,23 @@ public class Groupes_Outils {
         return fichesOutils.getListeIdFichesFiltrees(context, contextDB, filteredZoneGeoId, filteredGroupeId).size();
     }
 
+    /**
+     * Checks that the 2 group list are the same, use groupeId to compare
+     *
+     * @param groupListA first group list to compare
+     * @param groupListB second group list to compare
+     * @return true if both are equivalent
+     */
+    public static boolean areEquivalentGroupLists(List<Groupe> groupListA, List<Groupe> groupListB) {
+        boolean result = false;
+        List<Integer> groupIdListA = new ArrayList<>();
+        List<Integer> groupIdListB = new ArrayList<>();
+        for (Groupe gA : groupListA) {
+            groupIdListA.add(gA.getId());
+        }
+        for (Groupe gB : groupListB) {
+            groupIdListB.add(gB.getId());
+        }
+        return groupIdListA.containsAll(groupIdListB) && groupIdListB.containsAll(groupIdListA);
+    }
 }

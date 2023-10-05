@@ -13,13 +13,19 @@ public class SortModesTools {
 
     public static Drawable getDrawable(Context context, String sortModeValue) {
         Map<String, Drawable> map = getDrawableMap(context);
-        return map.get(sortModeValue);
+        Drawable res = map.get(sortModeValue);
+        if (res != null) {
+            return res;
+        } else {
+            // if not found return the first one
+            return map.values().iterator().next();
+        }
     }
 
     public static Map<String, Drawable> getDrawableMap(Context context) {
-        TypedArray icons = context.getResources().obtainTypedArray(R.array.accueil_listes_ou_arbre_icons);
+        TypedArray icons = context.getResources().obtainTypedArray(R.array.current_mode_affichage_icons);
 
-        String[] values = context.getResources().getStringArray(R.array.accueil_listes_ou_arbre_values);
+        String[] values = context.getResources().getStringArray(R.array.current_mode_affichage_values);
         Map<String, Drawable> map = new HashMap<>();
         for (int i = 0; i < Math.min(values.length, values.length); i++) {
             map.put(values[i], icons.getDrawable(i));
@@ -27,9 +33,9 @@ public class SortModesTools {
         return map;
     }
     public static Map<String, String> getLabelMap(Context context) {
-        String[] labels = context.getResources().getStringArray(R.array.accueil_listes_ou_arbre_lib);
+        String[] labels = context.getResources().getStringArray(R.array.current_mode_affichage_libelle);
 
-        String[] values = context.getResources().getStringArray(R.array.accueil_listes_ou_arbre_values);
+        String[] values = context.getResources().getStringArray(R.array.current_mode_affichage_values);
         Map<String, String> map = new HashMap<>();
         for (int i = 0; i < Math.min(values.length, values.length); i++) {
             map.put(values[i], labels[i]);

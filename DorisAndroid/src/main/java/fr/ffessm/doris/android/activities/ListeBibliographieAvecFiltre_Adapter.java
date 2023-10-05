@@ -95,7 +95,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter implements
      * dbHelper used to autorefresh values and doing queries
      * must be set other wise most getter will return proxy that will need to be refreshed
      */
-    protected DorisDBHelper _contextDB = null;
+    protected DorisDBHelper _contextDB;
 
     private static final String LOG_TAG = ListeBibliographieAvecFiltre_Adapter.class.getCanonicalName();
 
@@ -349,91 +349,6 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter implements
         return convertView;
     }
 
-    public HashMap<Character, Integer> getUsedAlphabetHashMap() {
-        HashMap<Character, Integer> alphabetToIndex = new HashMap<Character, Integer>();
-        Log.d(LOG_TAG, "getUsedAlphabetHashMap - début");
-        int base_list_length = filteredEntreeBibliographieList.size();
-        if (base_list_length < 100) {
-            // the base has been filtered so return the element from the filtered one
-            alphabetToIndex = new HashMap<Character, Integer>();
-
-
-            for (int i = 0; i < base_list_length; i++) {
-                EntreeBibliographie entry = filteredEntreeBibliographieList.get(i);
-                char firstCharacter = getFirstCharForIndex(entry);
-                boolean presentOrNot = alphabetToIndex.containsKey(firstCharacter);
-                if (!presentOrNot) {
-                    alphabetToIndex.put(firstCharacter, i);
-                    //Log.d(TAG,"Character="+firstCharacter+"  position="+i);
-                }
-            }
-
-        } else {
-            // large list
-            // use binarysearch if large list
-            String alphabet_list[] = context.getResources().getStringArray(R.array.alphabet_array);
-            int startSearchPos = 0;
-            for (int i = 0; i < alphabet_list.length; i++) {
-                int foundPosition = binarySearch(alphabet_list[i].charAt(0), startSearchPos, base_list_length - 1);
-                if (foundPosition != -1) {
-                    alphabetToIndex.put(alphabet_list[i].charAt(0), foundPosition);
-                    startSearchPos = foundPosition; // mini optimisation, no need to look before for former chars
-                }
-            }
-        }
-        Log.d(LOG_TAG, "getUsedAlphabetHashMap - fin");
-        return alphabetToIndex;
-    }
-
-    protected char getFirstCharForIndex(EntreeBibliographie entry) {
-        //Start of user code protected ListeBibliographieAvecFiltre_Adapter binarySearch custom
-        return entry.getAuteurs().charAt(0);
-        //End of user code
-    }
-
-
-    /**
-     * @param key         to be searched
-     * @param startBottom initial value for bottom, default = 0
-     * @param startTop    initial top value, default = array.length -1
-     * @return
-     */
-    public int binarySearch(char key, int startBottom, int startTop) {
-        int bot = startBottom;
-        int top = startTop;
-        int mid = startBottom;
-        boolean found = false;
-        while (bot <= top) {
-            mid = bot + (top - bot) / 2;
-            EntreeBibliographie entry = filteredEntreeBibliographieList.get(mid);
-            char midCharacter = getFirstCharForIndex(entry);
-            if (key < midCharacter) top = mid - 1;
-            else if (key > midCharacter) bot = mid + 1;
-            else {
-                found = true;
-                break;
-            }
-            ;
-        }
-        if (found) {
-            // search for the first occurence
-            int best = mid;
-            for (int i = mid; i > startBottom; i--) {
-                EntreeBibliographie entry = filteredEntreeBibliographieList.get(i);
-                char midCharacter = getFirstCharForIndex(entry);
-                if (midCharacter == key) {
-                    best = i;
-                } else {
-                    //previous is differents so we stop here
-                    break;
-                }
-
-            }
-            return best;
-        } else return -1;
-    }
-
-
     //Start of user code protected additional ListeBibliographieAvecFiltre_Adapter methods
     // additional methods
     //End of user code
@@ -473,7 +388,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter implements
 
             if (prefix == null || prefix.length() == 0) {
                 synchronized (mLock) {
-                    ArrayList<EntreeBibliographie> list = new ArrayList<EntreeBibliographie>(entreeBibliographieList);
+                    ArrayList<EntreeBibliographie> list = new ArrayList<>(entreeBibliographieList);
                     results.values = list;
                     results.count = list.size();
                 }
@@ -485,7 +400,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter implements
                 final List<EntreeBibliographie> values = entreeBibliographieList;
                 final int count = values.size();
 
-                final ArrayList<EntreeBibliographie> newValues = new ArrayList<EntreeBibliographie>(count);
+                final ArrayList<EntreeBibliographie> newValues = new ArrayList<>(count);
                 final int[] orders = sort ? new int[count] : null;
 
                 for (int i = 0; i < count; i++) {
@@ -526,7 +441,7 @@ public class ListeBibliographieAvecFiltre_Adapter extends BaseAdapter implements
                 filteredEntreeBibliographieList = (List<EntreeBibliographie>) results.values;
                 notifyDataSetChanged();
             } else {
-                filteredEntreeBibliographieList = new ArrayList<EntreeBibliographie>();
+                filteredEntreeBibliographieList = new ArrayList<>();
                 notifyDataSetInvalidated();
             }
             // update hashmap for index

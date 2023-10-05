@@ -51,6 +51,7 @@ import fr.ffessm.doris.android.tools.Zones_Outils;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -433,8 +434,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         // Quelle est l'action principale : par défaut ouverture de la liste des fiches de la Zone
         // sinon ouverture de l'arbre phylogénétique
-        final String accueil_liste_ou_arbre_pardefaut = getParamOutils().getParamString(R.string.pref_key_accueil_liste_ou_arbre_pardefaut, "liste");
-        //Log.d(LOG_TAG, "accueil_liste_ou_arbre_pardefaut : "+accueil_liste_ou_arbre_pardefaut);
+        final String current_mode_affichage = getParamOutils().getParamString(R.string.pref_key_current_mode_affichage,
+                getString(R.string.current_mode_affichage_default));
+        //Log.d(LOG_TAG, "current_mode_affichage : "+current_mode_affichage);
 
 
         // Gestion Clic Principal sur la Zone (partout sauf 2 boutons "secondaires" (càd de droite))
@@ -526,9 +528,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 
-        final String[] modesValues = this.getResources().getStringArray(R.array.accueil_listes_ou_arbre_values);
-        String[] modesLibelles = this.getResources().getStringArray(R.array.accueil_listes_ou_arbre_lib);
-        int[] icons = { R.drawable.ic_action_liste_fiches, R.drawable.ic_action_arbre_phylogenetique, R.drawable.ic_action_liste_images};
+        final String[] modesValues = this.getResources().getStringArray(R.array.current_mode_affichage_values);
+        String[] modesLibelles = this.getResources().getStringArray(R.array.current_mode_affichage_libelle);
+        String[] modesDetails = this.getResources().getStringArray(R.array.current_mode_affichage_details);
+
+
         for (int i = 0; i < modesValues.length ; i++) {
             String mode = modesLibelles[i];
             LayoutInflater inflater = (LayoutInflater) this
@@ -538,17 +542,19 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
             TextView tvLabel = (TextView) viewMode.findViewById(R.id.mode_affichage_listviewrow_text);
             tvLabel.setText(mode);
+            TextView tvDetail = (TextView) viewMode.findViewById(R.id.mode_affichage_listviewrow_details);
+            tvDetail.setText(modesDetails[i]);
 
             ImageView iv = (ImageView) viewMode.findViewById(R.id.mode_affichage_listviewrow_icon);
-            iv.setImageResource(icons[i]);
+            iv.setImageDrawable(SortModesTools.getDrawable(this, modesValues[i]));
 
             RadioButton radio = (RadioButton) viewMode.findViewById(R.id.mode_affichage_listviewrow_radio);
 
             // set current check button value
             String current = prefs.getString(getResources().getString(
-                    R.string.pref_key_accueil_liste_ou_arbre_pardefaut),
+                    R.string.pref_key_current_mode_affichage),
                     getResources().getString(
-                            R.string.accueil_liste_ou_arbre_default));
+                            R.string.current_mode_affichage_default));
             radio.setChecked(current.equals(modesValues[i]));
 
             final int radioIndex = i;
@@ -569,7 +575,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                     // update preferences
                     prefs.edit().putString(
                             Accueil_CustomViewActivity.this.getResources().getString(
-                                    R.string.pref_key_accueil_liste_ou_arbre_pardefaut),
+                                    R.string.pref_key_current_mode_affichage),
                                     modesValues[index]).apply();
                     // update main screen icons
                     Accueil_CustomViewActivity.this.refreshScreenData();
@@ -582,7 +588,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             llContainerLayout.addView(viewMode);
             viewMode.setVisibility(View.GONE);
        }
-
         // deal with fold/unfold
         btnFoldUnfoldModeSection = (ImageButton) findViewById(R.id.accueil_mode_affichage_fold_unfold_section_imageButton);
         btnFoldUnfoldModeSection.setImageBitmap(drawIconWithGear(getResources().getDrawable(R.drawable.ic_action_liste_fiches)));
@@ -613,16 +618,19 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     }
 
     public void onClickBtnListeFiches(View view) {
+        // cf. current_mode_affichage_values in mode_affichage_resource.xml
         switch ( getCurrentMode() ) {
-            case "photos":
+
+            // liste_alpha, liste_par_groupe, photos_alpha, photos_par_groupe, groupe
+            case "photos_alpha":
+            case "photos_par_groupe":
                 startActivity(new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class));
                 break;
-            case "liste":
-                startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
+            case "groupe":
+                startActivity(new Intent(this, ListeImageGroupeAvecFiltre_ClassListViewActivity.class));
                 break;
-            case "arbre":
-                showToast("Affichage par groupe pas encore implémenté.");
-                break;
+            case "liste_alpha":
+            case "liste_par_groupe":
             default:
                 startActivity(new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class));
         }
@@ -735,8 +743,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
     protected Bitmap drawIconForCurrentSearch(){
 
-        int width = ScreenTools.dp2px(this,
-                getParamOutils().getParamInt(R.string.pref_key_accueil_icone_taille, Integer.parseInt(this.getString(R.string.accueil_icone_taille_defaut))));
+        int width = (int) (ScreenTools.dp2px(this,
+                        getParamOutils().getParamInt(R.string.pref_key_accueil_icone_taille, Integer.parseInt(this.getString(R.string.accueil_icone_taille_defaut))))*1.25);
         int height = width;
 
         // Create a blank bitmap with the desired width and height
@@ -822,9 +830,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     private String getCurrentMode() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         return prefs.getString(getResources().getString(
-                R.string.pref_key_accueil_liste_ou_arbre_pardefaut),
+                R.string.pref_key_current_mode_affichage),
                 getResources().getString(
-                        R.string.accueil_liste_ou_arbre_default));
+                        R.string.current_mode_affichage_default));
     }
 
     private Param_Outils getParamOutils() {

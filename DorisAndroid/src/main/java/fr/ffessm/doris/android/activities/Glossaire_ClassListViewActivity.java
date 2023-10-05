@@ -45,8 +45,10 @@ package fr.ffessm.doris.android.activities;
 import java.util.HashMap;
 
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
-import fr.ffessm.doris.android.activities.view.indexbar.IndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.DefinitionGlossaireIndexManager;
+import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
 import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
@@ -113,7 +115,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
         handleIntent(getIntent());
 
         // add handler for indexBar
-        mHandler = new IndexBarHandler(this);
+        mHandler = new AlphabetIndexBarHandler(this);
         //Start of user code onCreate additions Glossaire_ClassListViewActivity
 
         actionBar.setSubtitle("Glossaire");
@@ -135,6 +137,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
         // to deliver the intent if this activity is currently the foreground activity when
         // invoked again (when the user executes a search from this activity, we don't create
         // a new instance of this activity, so the system delivers the search intent here)
+        super.onNewIntent(intent);
         handleIntent(intent);
     }
 
@@ -296,8 +299,9 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
     }
 
     public void populateIndexBarHashMap() {
-        alphabetToIndex = adapter.getUsedAlphabetHashMap();
-        number_of_alphabets = alphabetToIndex.size();        //Number of enteries in the map is equal to number of letters that would necessarily display on the right.
+        DefinitionGlossaireIndexManager indexHelper = new DefinitionGlossaireIndexManager(this, getHelper().getDorisDBHelper() );
+        alphabetToIndex = indexHelper.getUsedIndexHashMapFromItems(adapter.filteredDefinitionGlossaireList);
+        number_of_alphabets = alphabetToIndex.size();        //Number of entries in the map is equal to number of letters that would necessarily display on the right.
 
         /*Now I am making an entry of those alphabets which are not there in the Map*/
         String alphabets[] = getResources().getStringArray(R.array.alphabet_array);
@@ -325,6 +329,11 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
 
             }//
         }//
+    }
+
+    @Override
+    public DorisDBHelper getDorisDBHelper() {
+        return getHelper().getDorisDBHelper();
     }
 
     @Override
