@@ -369,13 +369,16 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             zoneView.setVisibility(View.GONE);
             i++;
         }
-
+        llContainerLayout.invalidate();
+        llContainerLayout.requestLayout();
     }
 
     /* Création de la Zone (Textes, Icônes et Boutons */
     protected View createNavigationZoneView(final ZoneGeographique zone, int index) {
         final Context context = this;
-
+        int iconeTaille = ScreenTools.dp2px(context, getParamOutils().getParamInt(R.string.pref_key_accueil_icone_taille,
+                Integer.parseInt(context.getString(R.string.accueil_icone_taille_defaut))
+        ));
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View viewZone = inflater.inflate(R.layout.zonegeoselection_listviewrow, null);
 
@@ -396,7 +399,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         //int indentation = Zones_Outils.getZoneLevel(zone) * 32 ; // adjust indentation size
         //viewZone.setPadding(indentation, 0, 0, 0);
-        LinearLayout treeNodeZone = (LinearLayout)viewZone.findViewById(R.id.zonegeoselection_tree_nodes);
+        LinearLayout treeNodeZone = viewZone.findViewById(R.id.zonegeoselection_listviewrow);
         int zoneDepth = Zones_Outils.getZoneLevel(zone);
         for (int i = 0; i < zoneDepth; i++) {
             ImageView image = new ImageView(this);
@@ -404,6 +407,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             image.setLayoutParams(new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.MATCH_PARENT));
+                    //iconeTaille+50));
+            //image.setScaleType(ImageView.ScaleType.MATRIX);
             //image.setMaxHeight(treeNodeZone.getHeight());
             //image.setMaxWidth(32);
             //image.setMinimumWidth(32);
@@ -425,9 +430,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         ImageView ivIcone = (ImageView) viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
         ivIcone.setImageResource(imageZone);
-        int iconeTaille = ScreenTools.dp2px(context, getParamOutils().getParamInt(R.string.pref_key_accueil_icone_taille,
-                Integer.parseInt(context.getString(R.string.accueil_icone_taille_defaut))
-        ));
+
         ivIcone.setMaxHeight(iconeTaille);
         ivIcone.setMaxWidth(iconeTaille);
 

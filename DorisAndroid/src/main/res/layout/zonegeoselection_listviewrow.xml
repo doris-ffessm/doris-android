@@ -4,8 +4,11 @@
     android:id="@+id/zonegeoselection_listviewrow"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-
+    android:orientation="horizontal" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 	<RelativeLayout
         android:id="@+id/RelativeLayout1"
         android:layout_width="match_parent"
@@ -92,5 +95,6 @@
     </RelativeLayout>
     
     <View style="@style/Separateur" />
+    </LinearLayout>
 </LinearLayout>
 

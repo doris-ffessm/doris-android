@@ -336,7 +336,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
             updateProgressBarZone(context, zoneGeo, progressBarZone, "");
 
             // manage indentation
-            LinearLayout zoneView = progressBarZone.findViewById(R.id.multiprogressbar_zone_layout);
+            LinearLayout zoneView = progressBarZone.findViewById(R.id.multiprogressbar_fold_unflod_section_linearlayout);
             int zoneDepth = Zones_Outils.getZoneLevel(zoneGeo);
             for (int i = 0; i < zoneDepth; i++) {
                 ImageView image = new ImageView(this);
@@ -359,16 +359,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
                 // Adds the view to the layout
                 zoneView.addView(image, 0);
             }
-            ImageView imageroot = new ImageView(this);
-            if (zoneDepth == 0 ) {
-                imageroot.setImageResource(R.drawable.ic_app_treenode_middle_child);
-            } else {
-                imageroot.setImageResource(R.drawable.ic_app_treenode_last_child);
-            }
-            imageroot.setScaleType(ImageView.ScaleType.FIT_XY);
-            imageroot.setVisibility(View.VISIBLE);
-            // Adds the view to the layout
-            zoneView.addView(imageroot, 0);
 
             final ZoneGeographique fZoneGeo = zoneGeo;
             progressBarZone.setOnClickListener(new View.OnClickListener() {
