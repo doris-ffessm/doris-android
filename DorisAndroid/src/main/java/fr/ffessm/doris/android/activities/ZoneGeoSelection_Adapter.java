@@ -187,6 +187,7 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter {
 
         LinearLayout treeNodeZone = (LinearLayout)convertView.findViewById(R.id.zonegeoselection_tree_nodes);
 
+        try {
         int zoneDepth = Zones_Outils.getZoneLevel(entry);
         if(treeNodeZone.getChildCount() == 1) {
             for (int i = 0; i < zoneDepth; i++) {
@@ -195,20 +196,19 @@ public class ZoneGeoSelection_Adapter extends BaseAdapter {
                 image.setLayoutParams(new ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.MATCH_PARENT));
-                try {
-                    if (Zones_Outils.isLastChild(entry)) {
-                        image.setImageResource(R.drawable.ic_app_treenode_last_child);
-                    } else {
-                        image.setImageResource(R.drawable.ic_app_treenode_middle_child);
-                    }
-                } catch (SQLException throwables) {
-                    Log.e(LOG_TAG, "Error determining zonegeo sibling", throwables);
-                    throwables.printStackTrace();
+                if (Zones_Outils.isLastChild(entry)) {
+                    image.setImageResource(R.drawable.ic_app_treenode_last_child);
+                } else {
+                    image.setImageResource(R.drawable.ic_app_treenode_middle_child);
                 }
                 image.setScaleType(ImageView.ScaleType.FIT_XY);
                 // Adds the view to the layout
                 treeNodeZone.addView(image, 0);
             }
+        }
+        } catch (SQLException throwables) {
+            Log.e(LOG_TAG, "Error determining zonegeo sibling", throwables);
+            throwables.printStackTrace();
         }
         //Log.d(LOG_TAG, "getView() - R.string.pref_key_accueil_icone_taille : " + context.getString(R.string.pref_key_accueil_icone_taille) );
         //Log.d(LOG_TAG, "getView() - R.string.accueil_icone_taille_defaut : " + context.getString(R.string.accueil_icone_taille_defaut) );

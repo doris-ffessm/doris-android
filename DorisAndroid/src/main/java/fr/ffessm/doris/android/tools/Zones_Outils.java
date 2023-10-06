@@ -9,12 +9,18 @@ import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.datamodel.associations.Fiches_ZonesGeographiques;
 
 public class Zones_Outils {
-    public static int getZoneLevel(ZoneGeographique zone) {
+    public static int getZoneLevel(ZoneGeographique zone) throws SQLException {
 
         ZoneGeographique parent = zone.getParentZoneGeographique();
         if( parent == null){
             return 0;
         } else {
+            if(parent.getContextDB() == null) {
+                parent.setContextDB(zone.getContextDB());
+            }
+            if(parent.getContextDB() != null) {
+                parent.getContextDB().zoneGeographiqueDao.refresh(parent);
+            }
             return getZoneLevel(parent) + 1;
         }
     }

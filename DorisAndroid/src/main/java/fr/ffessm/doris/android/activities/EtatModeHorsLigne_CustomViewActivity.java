@@ -337,27 +337,28 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
             // manage indentation
             LinearLayout zoneView = progressBarZone.findViewById(R.id.multiprogressbar_fold_unflod_section_linearlayout);
-            int zoneDepth = Zones_Outils.getZoneLevel(zoneGeo);
-            for (int i = 0; i < zoneDepth; i++) {
-                ImageView image = new ImageView(this);
-                //image.setAdjustViewBounds(true);
-                image.setLayoutParams(new ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT));
-                try {
+            try {
+                int zoneDepth = Zones_Outils.getZoneLevel(zoneGeo);
+                for (int i = 0; i < zoneDepth; i++) {
+                    ImageView image = new ImageView(this);
+                    //image.setAdjustViewBounds(true);
+                    image.setLayoutParams(new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT));
                     if (Zones_Outils.isLastChild(zoneGeo)) {
                         image.setImageResource(R.drawable.ic_app_treenode_last_child);
                     } else {
                         image.setImageResource(R.drawable.ic_app_treenode_middle_child);
                     }
-                } catch (SQLException throwables) {
-                    Log.e(LOG_TAG, "Error determining zonegeo sibling", throwables);
-                    throwables.printStackTrace();
+
+                    image.setScaleType(ImageView.ScaleType.FIT_XY);
+                    image.setVisibility(View.VISIBLE);
+                    // Adds the view to the layout
+                    zoneView.addView(image, 0);
                 }
-                image.setScaleType(ImageView.ScaleType.FIT_XY);
-                image.setVisibility(View.VISIBLE);
-                // Adds the view to the layout
-                zoneView.addView(image, 0);
+            } catch (SQLException throwables) {
+                Log.e(LOG_TAG, "Error navigating zonegeo db", throwables);
+                throwables.printStackTrace();
             }
 
             final ZoneGeographique fZoneGeo = zoneGeo;

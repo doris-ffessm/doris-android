@@ -400,32 +400,32 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         //int indentation = Zones_Outils.getZoneLevel(zone) * 32 ; // adjust indentation size
         //viewZone.setPadding(indentation, 0, 0, 0);
         LinearLayout treeNodeZone = viewZone.findViewById(R.id.zonegeoselection_listviewrow);
-        int zoneDepth = Zones_Outils.getZoneLevel(zone);
-        for (int i = 0; i < zoneDepth; i++) {
-            ImageView image = new ImageView(this);
-            //image.setAdjustViewBounds(true);
-            image.setLayoutParams(new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT));
-                    //iconeTaille+50));
-            //image.setScaleType(ImageView.ScaleType.MATRIX);
-            //image.setMaxHeight(treeNodeZone.getHeight());
-            //image.setMaxWidth(32);
-            //image.setMinimumWidth(32);
-            //image.setImageResource(R.drawable.ic_app_filter_geo_zone);
-            try {
+        try {
+            int zoneDepth = Zones_Outils.getZoneLevel(zone);
+            for (int i = 0; i < zoneDepth; i++) {
+                ImageView image = new ImageView(this);
+                //image.setAdjustViewBounds(true);
+                image.setLayoutParams(new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
+                        //iconeTaille+50));
+                //image.setScaleType(ImageView.ScaleType.MATRIX);
+                //image.setMaxHeight(treeNodeZone.getHeight());
+                //image.setMaxWidth(32);
+                //image.setMinimumWidth(32);
+                //image.setImageResource(R.drawable.ic_app_filter_geo_zone);
                 if(Zones_Outils.isLastChild(zone)){
                     image.setImageResource(R.drawable.ic_app_treenode_last_child);
                 } else {
                     image.setImageResource(R.drawable.ic_app_treenode_middle_child);
                 }
-            } catch (SQLException throwables) {
-                Log.e(LOG_TAG, "Error determining zonegeo sibling", throwables);
-                throwables.printStackTrace();
+                image.setScaleType(ImageView.ScaleType.FIT_XY);
+                // Adds the view to the layout
+                treeNodeZone.addView(image, 0);
             }
-            image.setScaleType(ImageView.ScaleType.FIT_XY);
-            // Adds the view to the layout
-            treeNodeZone.addView(image, 0);
+        } catch (SQLException throwables) {
+            Log.e(LOG_TAG, "Error determining zonegeo sibling", throwables);
+            throwables.printStackTrace();
         }
 
         ImageView ivIcone = (ImageView) viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
