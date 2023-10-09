@@ -509,6 +509,7 @@ public class PrefetchGroupes {
             }
         }
 
+        // call in reverse order to make sure that it find a leak with an image
         for (int i = listeGroupes.size() - 1; i >= 0; i--) {
             patchMissingGroupeImage(listeGroupes.get(i), listeGroupes);
         }
@@ -587,14 +588,32 @@ public class PrefetchGroupes {
     }
 
 
+    /**
+     * Use images from other sources in order to have relevant images for groups
+     * By default try using 1rst sub group image
+     * Must be called in reverse order to make sure that it find a leak with an image
+     * @param group
+     * @param allGroups
+     */
     protected void patchMissingGroupeImage(Groupe group, List<Groupe> allGroups) {
         if (group.getNumeroGroupe() != 0 && group.getCleURLImage().equals("images/pucecarre.gif")) {
-            // find 1rst groupeFils
-            //group.getGroupePere()
-            Optional<Groupe> firstChild = allGroups.stream().filter(g -> g.getGroupePere() != null && g.getGroupePere().getId() == group.getId()).findFirst();
-            if (firstChild.isPresent()) {
-                log.info("uses 1rst sub group image for missing group image of " + group.getNomGroupe() + " with " + firstChild.get().getNomGroupe());
-                group.setCleURLImage(firstChild.get().getCleURLImage());
+            if(group.getNumeroGroupe() == 136033) { // VEGETAUX
+                Optional<Groupe> alqgueGroupe = allGroups.stream().filter(g -> g.getNumeroGroupe() == 136029).findFirst(); // algues
+                group.setCleURLImage(alqgueGroupe.get().getCleURLImage());
+            } else  if(group.getNumeroGroupe() == 171378) { // Vertébrés
+                Optional<Groupe> alqgueGroupe = allGroups.stream().filter(g -> g.getNumeroGroupe() == 48914).findFirst(); // poissons osseux
+                group.setCleURLImage(alqgueGroupe.get().getCleURLImage());
+            } else  if(group.getNumeroGroupe() == 171372) { // ANIMAUX
+                Optional<Groupe> alqgueGroupe = allGroups.stream().filter(g -> g.getNumeroGroupe() == 48914).findFirst(); // poissons osseux
+                group.setCleURLImage(alqgueGroupe.get().getCleURLImage());
+            } else {
+                // find 1rst groupeFils
+                //group.getGroupePere()
+                Optional<Groupe> firstChild = allGroups.stream().filter(g -> g.getGroupePere() != null && g.getGroupePere().getId() == group.getId()).findFirst();
+                if (firstChild.isPresent()) {
+                    log.info("uses 1rst sub group image for missing group image of " + group.getNomGroupe() + " with " + firstChild.get().getNomGroupe());
+                    group.setCleURLImage(firstChild.get().getCleURLImage());
+                }
             }
         }
     }
