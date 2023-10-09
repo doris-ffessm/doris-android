@@ -202,14 +202,14 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         // Affichage Icônes Fédé.
         if (!mustShowLogoFede || !getParamOutils().getParamBoolean(R.string.pref_key_accueil_aff_iconesfede, true)) {
-            ((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
+            (findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
         }
 
         // Affichage Debug
         if (getParamOutils().getParamBoolean(R.string.pref_key_affichage_debug, false)) {
             if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Affichage Debug");
-            ((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
-            ((ScrollView) findViewById(R.id.accueil_debug)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
+            (findViewById(R.id.accueil_debug)).setVisibility(View.VISIBLE);
         }
 
         // Affichage zone géo
@@ -312,7 +312,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
      */
     protected void createNavigationZonesGeoViews() {
 
-        LinearLayout llContainerLayout = (LinearLayout) findViewById(R.id.accueil_navigation_zones_layout);
+        LinearLayout llContainerLayout = findViewById(R.id.accueil_navigation_zones_layout);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -325,8 +325,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         }
 
         // deal with fold/unfold
-        btnFoldUnfoldZoneSection = (ImageButton) findViewById(R.id.accueil_zone_fold_unfold_section_imageButton);
-        llFoldUnfoldZoneSection = (LinearLayout) findViewById(R.id.accueil_navigation_zones_layout);
+        btnFoldUnfoldZoneSection = findViewById(R.id.accueil_zone_fold_unfold_section_imageButton);
+        llFoldUnfoldZoneSection = findViewById(R.id.accueil_navigation_zones_layout);
         isZoneFold = true;
         btnFoldUnfoldZoneSection.setVisibility(View.VISIBLE);
         if(isZoneFold) {
@@ -336,12 +336,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         }
 
         // btnFoldUnfoldZoneSection // toute la section sert de lien pour plier/déplier
-        llFoldUnfoldZoneSection.setOnClickListener(v -> {
-            foldUnfoldZoneSection();
-        });
-        btnFoldUnfoldZoneSection.setOnClickListener(v -> {
-            foldUnfoldZoneSection();
-        });
+        llFoldUnfoldZoneSection.setOnClickListener(v -> foldUnfoldZoneSection());
+        btnFoldUnfoldZoneSection.setOnClickListener(v -> foldUnfoldZoneSection());
 
 
         // Affichage lien vers "toutes Zones"
@@ -383,11 +379,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         View viewZone = inflater.inflate(R.layout.zonegeoselection_listviewrow, null);
 
         // Nom et Description de la Zone
-        TextView tvLabel = (TextView) viewZone.findViewById(R.id.zonegeoselection_listviewrow_label);
+        TextView tvLabel = viewZone.findViewById(R.id.zonegeoselection_listviewrow_label);
         tvLabel.setText(zone.getNom());
 
         if (ScreenTools.getScreenWidth(context) > 500) { // TODO devra probablement être adapté lorsque l'on aura des fragments
-            TextView tvLDetails = (TextView) viewZone.findViewById(R.id.zonegeoselection_listviewrow_details);
+            TextView tvLDetails = viewZone.findViewById(R.id.zonegeoselection_listviewrow_details);
             tvLDetails.setVisibility(View.VISIBLE);
             tvLDetails.setText(zone.getDescription());
         } else {
@@ -428,7 +424,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             throwables.printStackTrace();
         }
 
-        ImageView ivIcone = (ImageView) viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
+        ImageView ivIcone = viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
         ivIcone.setImageResource(imageZone);
 
         ivIcone.setMaxHeight(iconeTaille);
@@ -455,7 +451,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         });
 
         // BoutonRadio
-        RadioButton imgBtnH = (RadioButton) viewZone.findViewById(R.id.zonegeoselection_selectBtn_radio);
+        RadioButton imgBtnH = viewZone.findViewById(R.id.zonegeoselection_selectBtn_radio);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         int currentZoneFilterId = prefs.getInt(context.getString(R.string.pref_key_filtre_zonegeo), -1);
         imgBtnH.setChecked(zone.getId() == currentZoneFilterId);
@@ -463,12 +459,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             int size = allFoldableZoneView.size();
             for (int j = 0; j < size; j++) {
                 View foldableZone = allFoldableZoneView.get(j);
-                RadioButton radio = (RadioButton) foldableZone.findViewById(R.id.zonegeoselection_selectBtn_radio);
-                if(j == index ) {
-                    radio.setChecked(true);
-                } else {
-                    radio.setChecked(false);
-                }
+                RadioButton radio = foldableZone.findViewById(R.id.zonegeoselection_selectBtn_radio);
+                radio.setChecked(j == index);
             }
 
             SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(context).edit();
@@ -501,11 +493,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         }
     }
     protected void createSpecieGroupViews() {
-        LinearLayout llContainer = (LinearLayout) findViewById(R.id.accueil_specie_group_layout);
+        LinearLayout llContainer = findViewById(R.id.accueil_specie_group_layout);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        btnFoldUnfoldSpecieGroupSection = (ImageButton) llContainer.findViewById(R.id.accueil_specie_group_fold_unfold_section_imageButton);
+        btnFoldUnfoldSpecieGroupSection = llContainer.findViewById(R.id.accueil_specie_group_fold_unfold_section_imageButton);
         btnFoldUnfoldSpecieGroupSection.setImageBitmap(drawIconWithGear(getResources().getDrawable(R.drawable.ic_action_arbre_phylogenetique)));
         final Context context = this;
         // toute la section et le bouton sert de lien pour plier/déplier
@@ -526,7 +518,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         btnFoldUnfoldSpecieGroupSection.setOnClickListener(cl);
     }
     protected void createModeAffichageViews() {
-        LinearLayout llContainerLayout = (LinearLayout) findViewById(R.id.accueil_mode_affichage_layout);
+        LinearLayout llContainerLayout = findViewById(R.id.accueil_mode_affichage_layout);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -543,15 +535,15 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
             View viewMode = inflater.inflate(R.layout.mode_affichage_listviewrow, null);
 
-            TextView tvLabel = (TextView) viewMode.findViewById(R.id.mode_affichage_listviewrow_text);
+            TextView tvLabel = viewMode.findViewById(R.id.mode_affichage_listviewrow_text);
             tvLabel.setText(mode);
-            TextView tvDetail = (TextView) viewMode.findViewById(R.id.mode_affichage_listviewrow_details);
+            TextView tvDetail = viewMode.findViewById(R.id.mode_affichage_listviewrow_details);
             tvDetail.setText(modesDetails[i]);
 
-            ImageView iv = (ImageView) viewMode.findViewById(R.id.mode_affichage_listviewrow_icon);
+            ImageView iv = viewMode.findViewById(R.id.mode_affichage_listviewrow_icon);
             iv.setImageDrawable(SortModesTools.getDrawable(this, modesValues[i]));
 
-            RadioButton radio = (RadioButton) viewMode.findViewById(R.id.mode_affichage_listviewrow_radio);
+            RadioButton radio = viewMode.findViewById(R.id.mode_affichage_listviewrow_radio);
 
             // set current check button value
             String current = prefs.getString(getResources().getString(
@@ -568,12 +560,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                     int size = allFoldableModeView.size();
                     for (int j = 0; j < size; j++) {
                         View foldableMode = allFoldableModeView.get(j);
-                        RadioButton radio = (RadioButton) foldableMode.findViewById(R.id.mode_affichage_listviewrow_radio);
-                        if(j == index ) {
-                            radio.setChecked(true);
-                        } else {
-                            radio.setChecked(false);
-                        }
+                        RadioButton radio = foldableMode.findViewById(R.id.mode_affichage_listviewrow_radio);
+                        radio.setChecked(j == index);
                     }
                     // update preferences
                     prefs.edit().putString(
@@ -592,17 +580,13 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             viewMode.setVisibility(View.GONE);
        }
         // deal with fold/unfold
-        btnFoldUnfoldModeSection = (ImageButton) findViewById(R.id.accueil_mode_affichage_fold_unfold_section_imageButton);
+        btnFoldUnfoldModeSection = findViewById(R.id.accueil_mode_affichage_fold_unfold_section_imageButton);
         btnFoldUnfoldModeSection.setImageBitmap(drawIconWithGear(getResources().getDrawable(R.drawable.ic_action_liste_fiches)));
 
         // toute la section sert de lien pour plier/déplier
-        LinearLayout llFold = (LinearLayout) llContainerLayout.findViewById(R.id.accueil_mode_affichage_fold_layout);
-        llFold.setOnClickListener(v -> {
-            foldUnfoldModeSection();
-        });
-        btnFoldUnfoldModeSection.setOnClickListener(v -> {
-            foldUnfoldModeSection();
-        });
+        LinearLayout llFold = llContainerLayout.findViewById(R.id.accueil_mode_affichage_fold_layout);
+        llFold.setOnClickListener(v -> foldUnfoldModeSection());
+        btnFoldUnfoldModeSection.setOnClickListener(v -> foldUnfoldModeSection());
     }
     private void foldUnfoldModeSection() {
         isModeFold = !isModeFold;
@@ -683,7 +667,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
     public void onClickBtnFermer(View view) {
         mustShowLogoFede = false;
-        ((RelativeLayout) findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
+        (findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
 
         showToast(getContext().getString(R.string.accueil_customview_logos_preference));
     }
@@ -709,9 +693,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         StringBuilder sbTexte = new StringBuilder();
         sbTexte.append(getContext().getString(R.string.accueil_customview_texte_text));
 
-        CloseableIterator<DorisDB_metadata> itDorisDB = getHelper().getDorisDB_metadataDao().iterator();
-        while (itDorisDB.hasNext()) {
-            sbTexte.append(itDorisDB.next().getDateBase());
+        for (DorisDB_metadata dorisDB_metadata : getHelper().getDorisDB_metadataDao()) {
+            sbTexte.append(dorisDB_metadata.getDateBase());
         }
         sbTexte.append("\n");
         sbTexte.append(getPhotosOutils().getCurrentPhotosDiskUsageShortSummary(this));
@@ -938,7 +921,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
             if (st != null) {
 
-                sb.append("  " + st.getAbsolutePath().toString() + "\n");
+                sb.append("  " + st.getAbsolutePath() + "\n");
 
             }
         }
@@ -951,25 +934,13 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
      */
 
     public void refreshScreenData() {
-        //Start of user code action when refreshing the screen Accueil_CustomViewActivity
         //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshScreenData() - Début");
-  	
-    	/* 
-    	DVK 
-    	StringBuilder sbTexte = new StringBuilder();
-    	sbTexte.append(getContext().getString(R.string.accueil_customview_texte_text));
-    	
-    	CloseableIterator<DorisDB_metadata> itDorisDB = getHelper().getDorisDB_metadataDao().iterator();
-    	while (itDorisDB.hasNext()) {
-    		sbTexte.append(itDorisDB.next().getDateBase());
-		}
-    	((TextView) findViewById(R.id.accueil_texte)).setText(sbTexte.toString());
-    	*/
+
         // recherche précédente
         //ImageView ivIcone = (ImageView) findViewById(R.id.accueil_recherche_precedente_icone);
         int iconeSize = ScreenTools.dp2px(this,
                 getParamOutils().getParamInt(R.string.pref_key_accueil_icone_taille, Integer.parseInt(this.getString(R.string.accueil_icone_taille_defaut))));
-        ImageView ivIcon = ((ImageView) findViewById(R.id.accueil_recherche_precedente_icone));
+        ImageView ivIcon = (findViewById(R.id.accueil_recherche_precedente_icone));
         ivIcon.setMaxHeight(iconeSize);
         ivIcon.setImageBitmap(drawIconForCurrentSearch());
 
@@ -977,15 +948,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         StringBuilder sbRecherchePrecedente = new StringBuilder();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-
-        Groupe currentSpecieGroupFilter = getCurrentSpecieFilter();
-        if(currentSpecieGroupFilter == null) {
-            sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreEspece_sans));
-        } else {
-            sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec) + " " + currentSpecieGroupFilter.getNomGroupe().trim());
-        }
-
-        sbRecherchePrecedente.append("\n");
+        // text for zone
         int currentFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
         if (currentFilterId == -1 || currentFilterId == 0) { // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
             sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreGeographique_sans));
@@ -998,6 +961,16 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             }
         }
         sbRecherchePrecedente.append("\n");
+        // Text for current specie filter
+        Groupe currentSpecieGroupFilter = getCurrentSpecieFilter();
+        if(currentSpecieGroupFilter == null) {
+            sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreEspece_sans));
+        } else {
+            sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec) + " " + currentSpecieGroupFilter.getNomGroupe().trim());
+        }
+
+        sbRecherchePrecedente.append("\n");
+        // text for current sort/presentation mode
         sbRecherchePrecedente.append(SortModesTools.getLabelMap(this).get(getCurrentMode()));
 
         // TODO rappeler le dernier text recherché
@@ -1038,16 +1011,11 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                     showToast(R.string.bg_notifToast_arretTelecharg);
                     DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 
-                    ProgressBar pbRunningBarLayout = (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);
+                    ProgressBar pbRunningBarLayout = findViewById(R.id.multiprogressbar_running_progressBar);
                     pbRunningBarLayout.setVisibility(View.GONE);
                 }
             });
-            progressBarZoneGenerale.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(context, EtatModeHorsLigne_CustomViewActivity.class));
-                }
-            });
+            progressBarZoneGenerale.setOnClickListener(v -> startActivity(new Intent(context, EtatModeHorsLigne_CustomViewActivity.class)));
             llContainerLayout.addView(progressBarZoneGenerale);
 
         } else {
@@ -1114,7 +1082,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                     showToast(R.string.bg_notifToast_arretTelecharg);
                     DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 
-                    ProgressBar pbRunningBarLayout = (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);
+                    ProgressBar pbRunningBarLayout = findViewById(R.id.multiprogressbar_running_progressBar);
                     pbRunningBarLayout.setVisibility(View.GONE);
                 }
 
