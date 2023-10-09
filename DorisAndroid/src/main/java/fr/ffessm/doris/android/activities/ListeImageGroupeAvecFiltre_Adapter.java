@@ -119,12 +119,12 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
     //Start of user code protected additional ListeImageFicheAvecFiltre_Adapter attributes
     // additional attributes
 
-    protected Groupe filtreGroupe;
     protected Param_Outils paramOutils;
     protected Reseau_Outils reseauOutils;
     protected Photos_Outils photosOutils;
     protected Fiches_Outils fichesOutils;
     protected Textes_Outils textesOutils;
+    protected Common_Outils commonOutils = new Common_Outils();
 
     // vide signifie que l'on accepte tout
     protected ArrayList<Integer> acceptedGroupeId = new ArrayList<>();
@@ -161,6 +161,7 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
         this.filteredGroupeIdList = GroupeListProvider.getFilteredGroupeIdList(_contextDB, filtreGroupe);
         this.filteredGroupeIdList.remove(0); // remove the "racine" groupe
         this.groupeIdList = GroupeListProvider.getAllGroupeIdList(_contextDB);
+        this.groupeIdList.remove(0); // remove the "racine" groupe
         // End of user code
     }
 
@@ -197,10 +198,10 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
         final Groupe groupeEntry = indexHelper.getItemForId(filteredGroupeIdList.get(position));
         if (groupeEntry == null) return convertView;
 
-        TextView tvDetails = (TextView) convertView.findViewById(R.id.listeimageavecfiltre_listviewrow_details);
+        TextView tvDetails = convertView.findViewById(R.id.listeimageavecfiltre_listviewrow_details);
         tvDetails.setVisibility(View.GONE);
 
-        TextView tvLabel = (TextView) convertView.findViewById(R.id.listeimagegroupeavecfiltre_listviewrow_label);
+        TextView tvLabel = convertView.findViewById(R.id.listeimagegroupeavecfiltre_listviewrow_label);
         tvLabel.setText(groupeEntry.getNomGroupe());
 
         // assign group color in background
@@ -211,12 +212,12 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
         // End of user code
 
         // assign the entry to the row in order to ease GUI interactions
-        LinearLayout llRow = (LinearLayout) convertView.findViewById(R.id.listeimagegroupeavecfiltre_listviewrow);
+        LinearLayout llRow = convertView.findViewById(R.id.listeimagegroupeavecfiltre_listviewrow);
         llRow.setTag(groupeEntry);
 
         // Start of user code protected additional ListeFicheAvecFiltre_Adapter getView code
         //	additional code
-        HorizontalScrollView hsGallery = (HorizontalScrollView) convertView.findViewById(R.id.listeimagegroupeavecfiltre_elementview_gallery_horizontalScrollView);
+        HorizontalScrollView hsGallery = convertView.findViewById(R.id.listeimagegroupeavecfiltre_elementview_gallery_horizontalScrollView);
         hsGallery.setVisibility(View.VISIBLE);
 
 
@@ -229,7 +230,7 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
         if(!groupeficheIdList.isEmpty()) {
             //sbDebugText.append("\nnbPhoto="+photosFiche.size()+"\n");
 
-            LinearLayout photoGallery = (LinearLayout) convertView.findViewById(R.id.listeimagegroupeavecfiltre_elementview_photogallery);
+            LinearLayout photoGallery = convertView.findViewById(R.id.listeimagegroupeavecfiltre_elementview_photogallery);
             photoGallery.removeAllViews();
 
             int pos = 0;
@@ -298,7 +299,7 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
     }
 
     protected View getNoResultSubstitute(View convertView) {
-        TextView tvLabel = (TextView) convertView.findViewById(R.id.listeimagegroupeavecfiltre_listviewrow_label);
+        TextView tvLabel = convertView.findViewById(R.id.listeimagegroupeavecfiltre_listviewrow_label);
         tvLabel.setText(R.string.listeficheavecfiltre_classlistview_no_result);
         // Start of user code protected additional ListeFicheAvecFiltre_Adapter getNoResultSubstitute code
         try {
@@ -320,11 +321,11 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
                 sbRechercheCourante.append(context.getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec) + " " + currentZoneFilter.getNom().trim());
             }
             // TODO ajouter le filtre textuel courant qui lui aussi peut impliquer de ne retourner aucun résultats
-            TextView tvDetails = (TextView) convertView.findViewById(R.id.listeimageavecfiltre_listviewrow_details);
+            TextView tvDetails = convertView.findViewById(R.id.listeimageavecfiltre_listviewrow_details);
             tvDetails.setText(sbRechercheCourante.toString());
             tvDetails.setVisibility(View.VISIBLE);
 
-            HorizontalScrollView hsGallery = (HorizontalScrollView) convertView.findViewById(R.id.listeimagegroupeavecfiltre_elementview_gallery_horizontalScrollView);
+            HorizontalScrollView hsGallery = convertView.findViewById(R.id.listeimagegroupeavecfiltre_elementview_gallery_horizontalScrollView);
             hsGallery.setVisibility(View.GONE);
         } catch (SQLException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -358,7 +359,11 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
         return false;
     }
 
-    public int filter(int position, Fiche entry, String pattern) {
+    public int filter(int position, Groupe entry, String pattern) {
+        // always filter groupe rcine
+        if(entry.getNomGroupe().equals("racine")) {
+            return -1;
+        }
         // Start of user code protected additional ListeFicheAvecFiltre_Adapter filter code
         // chercher séparement les mots (séparés par un blanc) et faire un "ET"
         String[] patterns = pattern.split(" ");
@@ -367,8 +372,12 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
             if (patt.isEmpty()) continue; // en cas de blanc multiples
             if (patt.equals("*"))
                 break;  // accepte tout; aussi utilisé pour le filtre en retour de sélection de filtre
-            if (entry.getTextePourRechercheRapide().contains(patt))
+            // DescriptionGroupe already contains NomGroupe
+            String lookuptxt = (commonOutils.formatStringNormalizer(entry.getDescriptionGroupe() )).toLowerCase(Locale.FRENCH).trim();
+            if (lookuptxt.contains(patt) )
                 continue;
+            //if (entry.getTextePourRechercheRapide().contains(patt))
+            //    continue;
             else isValid = false;
         }
         if (isValid) return 1;
@@ -415,10 +424,10 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
                 final ArrayList<Integer> newValues = new ArrayList<>(count);
                 final int[] orders = sort ? new int[count] : null;
 
-                FicheAlphabeticalIndexManager indexHelper = new FicheAlphabeticalIndexManager(context, _contextDB );
+                GroupeIndexManager indexHelper = new GroupeIndexManager(context, _contextDB, filteredGroupeId );
                 for (int i = 0; i < count; i++) {
                     final Integer valueId = values.get(i);
-                    Fiche value = indexHelper.getItemForId(valueId);
+                    Groupe value = indexHelper.getItemForId(valueId);
                     if (value != null) {
                         int order = ListeImageGroupeAvecFiltre_Adapter.this.filter(i, value, prefixString);
                         if (order >= 0) {
@@ -428,20 +437,6 @@ public class ListeImageGroupeAvecFiltre_Adapter extends BaseAdapter implements F
                         }
                     }
                 }
-				/* TODO implement a sort
-				if (sort) {
-					Comparator<Fiche> c = new Comparator<Fiche>() {
-						public int compare(Fiche object1, Fiche object2) {
-							// Start of user code protected additional ListeFicheAvecFiltre_Adapter compare code
-							int i1 = newValues.indexOf(object1);
-							int i2 = newValues.indexOf(object2);
-							return orders[i1] - orders[i2];
-							// End of user code
-						}
-					};
-					Collections.sort(newValues, c);
-				}
-				*/
                 results.values = newValues;
                 results.count = newValues.size();
             }
