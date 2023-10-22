@@ -32,7 +32,7 @@ public class DorisAPIHTTPHelper {
         if (credent != null && !DorisAPIConnexionHelper.use_http_header_for_token) {
             uri = uri + "?oauth_token=" + credent.getAccessToken();
         } else {
-            uri = uri + "?oauth_token=" + DorisOAuth2ClientCredentials.API_SUFFIXE;
+            uri = uri + "?oauth_token=" + DorisOAuth2ClientCredentials.API_ACCESSTOKEN;
         }
 
         DefaultHttpClient client = new DefaultHttpClient();
@@ -41,7 +41,7 @@ public class DorisAPIHTTPHelper {
         if (credent != null && DorisAPIConnexionHelper.use_http_header_for_token) {
             getHttpPage.addHeader("Authorization", "OAuth " + credent.getAccessToken());
         } else {
-            getHttpPage.addHeader("Authorization", "OAuth " + DorisOAuth2ClientCredentials.API_SUFFIXE);
+            getHttpPage.addHeader("Authorization", "OAuth " + DorisOAuth2ClientCredentials.API_ACCESSTOKEN);
         }
 
         HttpResponse response;
