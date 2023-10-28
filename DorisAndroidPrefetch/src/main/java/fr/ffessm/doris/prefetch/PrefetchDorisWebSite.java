@@ -133,6 +133,7 @@ public class PrefetchDorisWebSite {
 
 		Options options = createOptions();
 
+
 		CommandLineParser parser = new DefaultParser();
 		try {
 			CommandLine cmd = parser.parse(options, args);
@@ -146,6 +147,8 @@ public class PrefetchDorisWebSite {
 				org.apache.log4j.Logger logger = org.apache.log4j.Logger.getRootLogger();
 				logger.setLevel(Level.WARN);
 			}
+			log.info(Arrays.stream(args).collect(Collectors.joining(" ")));
+
 			this.copyBase = cmd.hasOption("copyBase");
 
 			if(cmd.hasOption("M")) {
