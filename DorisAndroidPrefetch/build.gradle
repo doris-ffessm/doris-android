@@ -1,9 +1,6 @@
 apply plugin: 'java'
-
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
-	/*sourceCompatibility JavaVersion.VERSION_1_8
-	targetCompatibility JavaVersion.VERSION_1_8*/
 }
 
 dependencies {
@@ -34,104 +31,43 @@ dependencies {
 // * pour obtenir une base 100% fraiche
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-task(buildDorisDBV4, dependsOn: 'classes', type: JavaExec) {
+task BuildDorisDBInteractive(dependsOn: 'classes',  type: JavaExec) {
 	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
-	args '-v',  'WEB_TO_DB'
+	if(project.hasProperty('user') ) {
+		args '--user', project.property('user'), '--interactive'
+	} else {
+
+		// must be set using gradle property such as: ./gradlew buildDorisDBV4 -Puser=foo@gmail.com -Ptoken=THEACCESSTOKEN
+		// or by providing these values in a gradle.setting file
+		args '--interactive'
+	}
 }
 
-task(buildDorisDBV4_limited, dependsOn: 'classes', type: JavaExec) {
-	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
-	classpath = sourceSets.main.runtimeClasspath
-	args '-v', '--max=2000',  'WEB_TO_DB'
+if (project.hasProperty("args")) {
+	ext.cmdargs = project.getProperty("args")
+} else {
+	ext.cmdargs = ""
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-// * UPDATE : Tout ce qui manque dans html_ref et images_ref est re-téléchargé.
-// * Cette génération de la base est suffisante pour un traitement quotidien.
-// * Elle permet d'obtenir les fiches nouvelles ou ayant changées de statut,
-// * par contre on n'a pas les modifications dans les fiches déjà publiées.
-// * Mensuellement on pourrait donc vider les dossiers *_ref
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-
-task(updateDorisDB, dependsOn: 'classes', type: JavaExec) {
+task BuildDorisDB(dependsOn: 'classes',  type: JavaExec) {
 	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
-	args '-v', 'UPDATE'
+
+	args cmdargs.split()
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-// * CD : Permet de créer la base et le CD hors ligne du Site.
-// * Ce mode utilise html_ref et de images_ref ce qui permet de ne pas tout
-// * re-télécharger systématiquement.
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-
-task(buildDorisCD, dependsOn: 'classes', type: JavaExec) {
+task buildDorisDBV4_limited( dependsOn: 'classes', type: JavaExec) {
 	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
-	args '-v', 'CDDVD_MED'
-}
+	if(project.hasProperty('user') && project.hasProperty('token')) {
+		args '--max', '2000','--user', project.property('user'), '--token', project.property('token')
+	} else {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-// * DVD : Permet de créer la base et le DVD hors ligne du Site avec toutes
-// * les images, c'est à dire les images en la meilleure qualité comprises.
-// * Ce mode utilise html_ref et de images_ref ce qui permet de ne pas tout
-// * re-télécharger systématiquement.
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-
-task(buildDorisDVD, dependsOn: 'classes', type: JavaExec) {
-	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
-	classpath = sourceSets.main.runtimeClasspath
-	args '-v', 'CDDVD_HI'
-}
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-// * Utile quand on veut créer un Base complètement à jour => tout le site sera
-// * re-téléchargé ensuite puisque plus de html_ref et de image_ref
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-
-task(cleanDoris, dependsOn: 'classes', type: JavaExec) {
-	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
-	classpath = sourceSets.main.runtimeClasspath
-	args '-v', 'ERASE_ALL'
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-// * Permet de supprimer html, image et database, ce qui permet de gagner de la place.
-// * S'ils n'étaient pas effacés, ils seraient renommés *_aammjjhhmmss. 
-// * html_ref et de image_ref sont conservés ce qui permet de ne pas tout
-// * re-télécharger systématiquement. C'est suffisant pour un traitement quotidien.
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-
-task(cleanDorisDBKeepRef, dependsOn: 'classes', type: JavaExec) {
-	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
-	classpath = sourceSets.main.runtimeClasspath
-	args '-v', 'ERASE_BUT_REF'
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-// * Déplacement de la Base vers DorisAndroid/assets/
-// * Permet que la prochaine génération de l'appli utilise la dernière version de la base 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
-task(copyDorisDBToAndroid, dependsOn: 'classes', type: JavaExec) {
-	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
-	classpath = sourceSets.main.runtimeClasspath
-	args '-v', 'DB_TO_ANDROID'
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-// * Déplacement des fichiers de html vers html_ref
-// * et images vers images_ref
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
-task(copyDwnldToRef, dependsOn: 'classes', type: JavaExec) {
-	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
-	classpath = sourceSets.main.runtimeClasspath
-	args '-v', 'DWNLD_TO_REF'
+		// must be set using gradle property such as: ./gradlew buildDorisDBV4 -Puser=foo@gmail.com -Ptoken=THEACCESSTOKEN
+		// or by providing these values in a gradle.setting file
+		args '--max', '2000','--user',  '--token'
+	}
 }
 
 

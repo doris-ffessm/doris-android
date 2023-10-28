@@ -57,6 +57,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.MissingArgumentException;
 import org.apache.commons.cli.MissingOptionException;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
@@ -192,7 +193,7 @@ public class PrefetchDorisWebSite {
 
 
 
-		} catch (UnrecognizedOptionException | MissingOptionException parseException) {
+		} catch (UnrecognizedOptionException | MissingOptionException | MissingArgumentException parseException) {
 			System.out.println(parseException.getMessage());
 			help(options);
 
@@ -246,9 +247,9 @@ public class PrefetchDorisWebSite {
 		options.addOption(new Option("help", "print this message"));
 		options.addOption(new Option("debug", false, "print debugging information"));
 		options.addOption(new Option("quiet", false, "be extra quiet"));
-		options.addOption(new Option( "noFetch", false, "Do not fetch data from doris.ffessm.fr, useful combined with interactive option in order to get an accessToken"));
-		options.addOption(new Option( "i","interactive", false, "prompt for user action through a web page to connect to the site and get an accessToken"));
-		options.addOption(new Option("d","delete-previous", false, "delete previous DB and workon a fresh data base"));
+		options.addOption(new Option( "noFetch", false, "Do not fetch data from doris.ffessm.fr, useful combined with -i option in order to get an accessToken to store and use with -t option"));
+		options.addOption(new Option( "i","interactive", false, "ask for a user action to open a web page to connect to the site and get an accessToken"));
+		options.addOption(new Option("d","delete-previous", false, "delete previous DB and work on a fresh data base"));
 
 
 		options.addOption(new Option("copyBase", "save existing base and work on a fresh empty base"));

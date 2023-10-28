@@ -121,7 +121,7 @@ collect-db-job:
     - cat /builds/keystore/sign.properties || true
   script:
     - echo "Get DB from doris web site"
-    - ./gradlew buildDorisDBV4
+    - ./gradlew buildDorisDB -Pargs='-u $DORIS_SITE_USER_ID --token=$DORIS_SITE_ACCESS_TOKEN'
   after_script:
     - *show_cache_content
   allow_failure: false
