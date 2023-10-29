@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - "**"
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    # At 01:00 on Sunday, Tuesday, and Thursday.
+    - cron:  '0 1 * * 0,2,4'
 jobs:
   collect-db-job:
     runs-on: ubuntu-latest
