@@ -13,8 +13,8 @@ jobs:
       - name: Show Cache Content
         run: |
           set +e
-          apt-get update -yq
-          apt-get install -yq sqlite3
+          sudo apt-get update -yq
+          sudo apt-get install -yq sqlite3
           pwd
           ls -lsa DorisAndroidPrefetch/run
           ls -lsa DorisAndroidPrefetch/run/database
@@ -47,8 +47,8 @@ jobs:
           path: DorisAndroidPrefetch/run/
       - name: Install Android SDK
         run: |
-          apt-get update -yq
-          apt-get install -yq wget tar unzip lib32stdc++6 lib32z1
+          sudo apt-get update -yq
+          sudo apt-get install -yq wget tar unzip lib32stdc++6 lib32z1
           export ANDROID_HOME="${PWD}/android-home"
           install -d $ANDROID_HOME
           if [[ ! -d $ANDROID_HOME/cmdline-tools/${ANDROID_SDK_TOOLS} ]]; then
