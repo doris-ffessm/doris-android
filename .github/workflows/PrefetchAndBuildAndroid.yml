@@ -112,3 +112,14 @@ jobs:
         with:
           name: doris-apk-artifacts
           path: DorisAndroid/build/outputs/apk/**/*.apk
+      - name: Archive Report Artifacts
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: doris-report-artifacts
+          path: DorisAndroid/build/reports/*
+      - name: Check and report lint results
+        uses: hidakatsuya/action-report-android-lint@v1.1.3
+        with:
+          result-path: 'DorisAndroid/build/reports/*.xml'
+          fail-on-warning: false
