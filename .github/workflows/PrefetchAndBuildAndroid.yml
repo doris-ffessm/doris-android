@@ -106,3 +106,9 @@ jobs:
       - name: Build and Lint
         run: |
           ./gradlew clean build lint
+      - name: Archive APK Artifacts
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: doris-apk-artifacts
+          path: DorisAndroid/build/outputs/apk/**/*.apk
