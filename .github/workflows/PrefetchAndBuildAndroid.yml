@@ -10,6 +10,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Cache previous DorisDB prefetch
+        uses: actions/cache@v3
+        with:
+          path: DorisAndroidPrefetch/run/database
+          key: ${{ runner.OS }}-dorisdb-cache
       - name: Show Cache Content
         run: |
           set +e
