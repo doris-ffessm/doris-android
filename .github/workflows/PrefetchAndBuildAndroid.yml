@@ -44,20 +44,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: doris-db-artifacts
-          path: path/to/artifact
-        run: |
-          set +e
-          apt-get update -yq
-          apt-get install -yq sqlite3
-          pwd
-          ls -lsa DorisAndroidPrefetch/run
-          ls -lsa DorisAndroidPrefetch/run/database
-          if [ -f DorisAndroidPrefetch/run/database/DorisAndroid.db ]; then
-            sqlite3 DorisAndroidPrefetch/run/database/DorisAndroid.db ".tables"
-            sqlite3 DorisAndroidPrefetch/run/database/DorisAndroid.db "SELECT * FROM dorisDB_metadata;"
-          fi
-          ls -lsa $HOME/.gradle
-          set -e
+          path: DorisAndroidPrefetch/run/
       - name: Install Android SDK
         run: |
           apt-get update -yq
