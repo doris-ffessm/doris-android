@@ -42,7 +42,7 @@ jobs:
       - name: Get DB from Doris web site
         run: |
           echo "Get DB from Doris web site"
-          ./gradlew buildDorisDB -Pargs="-u ${{ secrets.DORIS_SITE_USER_ID }} --token=${{ secrets.DORIS_SITE_ACCESS_TOKEN }}"
+          ./gradlew buildDorisDB -Pargs="-u ${{ secrets.DORIS_SITE_USER_ID }} --token=${{ secrets.DORIS_SITE_ACCESS_TOKEN }} --max=500"
       - name: Archive Artifacts
         if: always()
         uses: actions/upload-artifact@v2
