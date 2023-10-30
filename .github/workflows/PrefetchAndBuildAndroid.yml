@@ -8,6 +8,24 @@ on:
     # * is a special character in YAML so you have to quote this string
     # At 01:00 on Sunday, Tuesday, and Thursday.
     - cron:  '0 1 * * 0,2,4'
+
+env:
+
+  # ANDROID_COMPILE_SDK is the version of Android you're compiling with.
+  # It should match compileSdkVersion.
+  ANDROID_COMPILE_SDK: "34"
+
+  # ANDROID_BUILD_TOOLS is the version of the Android build tools you are using.
+  # It should match buildToolsVersion.
+  ANDROID_BUILD_TOOLS: "30.0.2"
+
+  # It's what version of the command line tools we're going to download from the official site.
+  # Official Site-> https://developer.android.com/studio/index.html
+  # There, look down below at the cli tools only, sdk tools package is of format:
+  #        commandlinetools-os_type-ANDROID_SDK_TOOLS_latest.zip
+  # when the script was last modified for latest compileSdkVersion, it was which is written down below
+  ANDROID_SDK_TOOLS: "10406996"
+
 jobs:
   collect-db-job:
     runs-on: ubuntu-latest
