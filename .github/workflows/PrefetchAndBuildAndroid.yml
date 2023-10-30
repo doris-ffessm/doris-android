@@ -45,7 +45,7 @@ jobs:
           ./gradlew buildDorisDB -Pargs="-u ${{ secrets.DORIS_SITE_USER_ID }} --token=${{ secrets.DORIS_SITE_ACCESS_TOKEN }} --max=500"
       - name: Archive Artifacts
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: doris-db-artifacts
           path: DorisAndroidPrefetch/run/
@@ -62,7 +62,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
       - name: Get DorisDB from previous jobs
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: doris-db-artifacts
           path: DorisAndroidPrefetch/run/
