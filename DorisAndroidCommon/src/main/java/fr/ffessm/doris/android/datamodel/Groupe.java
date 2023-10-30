@@ -310,9 +310,9 @@ C'est ce texte. */
 			log.warn("Groupe may not be properly refreshed from DB (_id="+_id+")");
 		}
 		
-		log.warn("getGroupePere() - groupePere.id="+_id+")");
-		log.warn("getGroupePere() - groupePere.numeroGroupe="+numeroGroupe+")");
-		log.warn("getGroupePere() - groupePere.nomGroupe="+nomGroupe+")");
+		log.debug("getGroupePere() - groupePere.id="+_id+")");
+		log.debug("getGroupePere() - groupePere.numeroGroupe="+numeroGroupe+")");
+		log.debug("getGroupePere() - groupePere.nomGroupe="+nomGroupe+")");
 		
 		return this.groupePere;
 	}

@@ -57,10 +57,20 @@ jobs:
           fi
           ls -lsa $HOME/.gradle
           set -e
-      - name: Get DB from Doris web site
+      - name: Get DB from Doris web site 🕸️
         run: |
           echo "Get DB from Doris web site"
           ./gradlew buildDorisDB -Pargs="-u ${{ secrets.DORIS_SITE_USER_ID }} --token=${{ secrets.DORIS_SITE_ACCESS_TOKEN }} --max=500"
+      - name: Report warnings/errors 🔍
+        run: |
+          grep ' WARN - ' DorisAndroidPrefetch/run/prefetch_debug.log > DorisAndroidPrefetch/run/prefetch_warn.log
+          grep ' ERROR - ' DorisAndroidPrefetch/run/prefetch_debug.log > DorisAndroidPrefetch/run/prefetch_error.log
+          if [ ! -s  DorisAndroidPrefetch/run/prefetch_warn.log ]; then
+            echo "::warning ::`tail -n 5 DorisAndroidPrefetch/run/prefetch_warn.log`"
+          fi
+          if [ ! -s  DorisAndroidPrefetch/run/prefetch_error.log ]; then
+            echo "::error ::`tail -n 5 DorisAndroidPrefetch/run/prefetch_error.log`"
+          fi
       - name: Archive Artifacts
         if: always()
         uses: actions/upload-artifact@v3

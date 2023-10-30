@@ -204,41 +204,7 @@ public class PrefetchDorisWebSite {
 			log.debug("doMain() - Fin");
 			System.exit(-1);
 		}
-		// old way
-	/*	action = checkArgs(args);
-		log.info("action : " + action);
-		log.info("Nb. Fiches Max : " + nbMaxFichesATraiter);
-				
-		
-		// - - - - - - - - - - - -
-		// - - - Test  - - - - - -
-		if ( action == ActionKind.TEST ) {
-			
-			testAction();
 
-		} else if ( action == ActionKind.DB_TO_ANDROID ) {
-			
-			dbToAndroidAction();
-
-		} else if ( action == ActionKind.WEB_TO_DB) {
-
-            webToDBAction();
-
-        } else if ( action == ActionKind.TEST_CONNECTION_V4 ) {
-
-            testConnection();
-
-        } else if ( action == ActionKind.DB_IMAGE_UPGRADE ) {
-
-            dbImageV4UpgradeAction();
-
-		} else if (action == ActionKind.TEST_COLLECT_GROUP) {
-			testCollectGroupAction();
-		} else if ( action == ActionKind.ERASE_ALL ) {
-			
-			eraseAllAction();
-		}
-*/
 		log.info("Nb Call to DorisAPIHTTPHelper: "+DorisAPIHTTPHelper.getNbHttpCall());
 		log.debug("doMain() - Fin");
 	}
@@ -287,45 +253,7 @@ public class PrefetchDorisWebSite {
 
 		return options;
 	}
-/*
-	private void testAction() throws Exception{
-		log.debug("doMain() - Début TEST");
-		
-		// Vérification, Création, Sauvegarde des dossiers de travail
-		//renommageDossiers(ActionKind.WEB_TO_DB);
-		//creationDossiers(ActionKind.WEB_TO_DB);
 
-		// - - - Base de Données - - -
-		PrefetchDBTools prefetchDBTools = new PrefetchDBTools();
-		prefetchDBTools.initializeSQLite(PrefetchConstants.DATABASE_URL);
-		connectionSource = new JdbcConnectionSource(PrefetchConstants.DATABASE_URL);
-		dbContext = prefetchDBTools.setupDatabase(connectionSource);
-		prefetchDBTools.databaseInitialisation(connectionSource);
-		outilsBase = new DataBase_Outils(dbContext);
-
-*/
-
-        /*
-		PrefetchGlossaire glossaire = new PrefetchGlossaire(dbContext, connectionSource, ActionKind.INIT, nbMaxFichesATraiter);
-		if ( glossaire.prefetch() == -1 ) {
-			log.debug("doMain() - Erreur Glossaire" );
-			System.exit(1);
-		}
-		*/
-/*
-		// - - - Liste des Fiches - - -
-		log.debug("dbV4ToAndroidAction() - - - Liste des Fiches - - -");
-		int nbMaxEspecesATraiter = 100000;
-		if (nbMaxEspecesATraiter > nbMaxFichesATraiter ) nbMaxEspecesATraiter = nbMaxFichesATraiter;
-		PrefetchFiches listeFiches = new PrefetchFiches(dbContext, connectionSource, nbMaxEspecesATraiter, nbFichesParRequetes);
-		if ( listeFiches.prefetch() == -1 ) {
-			log.debug("doMain() - Erreur Liste des Fiches" );
-			throw new RuntimeException("Erreur Liste des Fiches");
-		}
-
-		log.debug("doMain() - Fin TEST");
-	}
-*/
     private void getInteractiveAccessToken() throws Exception {
         log.debug("getAccessToken() - Début");
 
