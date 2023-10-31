@@ -63,9 +63,8 @@ jobs:
           ./gradlew buildDorisDB -Pargs="-u ${{ secrets.DORIS_SITE_USER_ID }} --token=${{ secrets.DORIS_SITE_ACCESS_TOKEN }} --max=500"
       - name: Report warnings/errors 🔍
         run: |
-          set -x
-          grep ' WARN - ' DorisAndroidPrefetch/run/prefetch_debug.log > DorisAndroidPrefetch/run/prefetch_warn.log
-          grep ' ERROR - ' DorisAndroidPrefetch/run/prefetch_debug.log > DorisAndroidPrefetch/run/prefetch_error.log
+          grep ' WARN - ' DorisAndroidPrefetch/run/prefetch_debug.log > DorisAndroidPrefetch/run/prefetch_warn.log || true
+          grep ' ERROR - ' DorisAndroidPrefetch/run/prefetch_debug.log > DorisAndroidPrefetch/run/prefetch_error.log || true
           if [ -s  DorisAndroidPrefetch/run/prefetch_warn.log ]; then
             echo "::warning file=DorisAndroidPrefetch/src/main/java/fr/ffessm/doris/prefetch/PrefetchDorisWebSite.java::`tail -n 5 DorisAndroidPrefetch/run/prefetch_warn.log`"
           fi
