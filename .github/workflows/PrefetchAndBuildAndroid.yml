@@ -38,11 +38,13 @@ jobs:
           java-version: 17
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
-      - name: Cache previous DorisDB prefetch
+      - name: Cache previous DorisDB prefetch # https://github.com/actions/cache/blob/main/tips-and-workarounds.md#update-a-cache
         uses: actions/cache@v3
         with:
           path: DorisAndroidPrefetch/run/database
-          key: ${{ runner.OS }}-dorisdb-cache
+          key: dorisdb-cache-${{ runner.OS }}-${{ github.run_id }}
+          restore-keys: |
+            dorisdb-cache-${{ runner.OS }}
       - name: Show Cache Content
         run: |
           set +e
