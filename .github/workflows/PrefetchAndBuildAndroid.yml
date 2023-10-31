@@ -66,10 +66,10 @@ jobs:
           grep ' WARN - ' DorisAndroidPrefetch/run/prefetch_debug.log > DorisAndroidPrefetch/run/prefetch_warn.log
           grep ' ERROR - ' DorisAndroidPrefetch/run/prefetch_debug.log > DorisAndroidPrefetch/run/prefetch_error.log
           if [ ! -s  DorisAndroidPrefetch/run/prefetch_warn.log ]; then
-            echo "::warning ::`tail -n 5 DorisAndroidPrefetch/run/prefetch_warn.log`"
+            echo "::warning file=DorisAndroidPrefetch/src/main/java/fr/ffessm/doris/prefetch/PrefetchDorisWebSite.java::`tail -n 5 DorisAndroidPrefetch/run/prefetch_warn.log`"
           fi
           if [ ! -s  DorisAndroidPrefetch/run/prefetch_error.log ]; then
-            echo "::error ::`tail -n 5 DorisAndroidPrefetch/run/prefetch_error.log`"
+            echo "::error file=DorisAndroidPrefetch/src/main/java/fr/ffessm/doris/prefetch/PrefetchDorisWebSite.java::`tail -n 5 DorisAndroidPrefetch/run/prefetch_error.log`"
           fi
       - name: Archive Artifacts
         if: always()
