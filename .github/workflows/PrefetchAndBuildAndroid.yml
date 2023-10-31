@@ -76,7 +76,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: doris-db-artifacts
-          path: DorisAndroidPrefetch/run/
+          path: |
+            DorisAndroidPrefetch/run/
+            !DorisAndroidPrefetch/run/images
   build-android-app-job:
     runs-on: ubuntu-latest
     needs: collect-db-job
@@ -93,7 +95,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: doris-db-artifacts
-          path: DorisAndroidPrefetch/run/
+          path: DorisAndroidPrefetch/run
       - name: Install Android SDK
         run: |
           sudo apt-get update -yq
@@ -119,12 +121,12 @@ jobs:
           chmod +x ./gradlew
       - name: Create Sign Info
         run: |
-          mkdir -p /builds/keystore
-          echo "${{ secrets.DORISANDROID_KEYSTORE }}" | base64 -d > /builds/keystore/doris_android.keystore
-          echo "keyAlias=doris" > /builds/keystore/sign.properties
-          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" >> /builds/keystore/sign.properties
-          echo "storeFile=/builds/keystore/doris_android.keystore" >> /builds/keystore/sign.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> /builds/keystore/sign.properties
+          mkdir -p $HOME/.ssh/keystore
+          echo "${{ secrets.DORISANDROID_KEYSTORE }}" | base64 -d > $HOME/.ssh/keystore/doris_android.keystore
+          echo "keyAlias=doris" > $HOME/.ssh/doris-android_sign.properties
+          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" >> $HOME/.ssh/doris-android_sign.properties
+          echo "storeFile=$HOME/.ssh/keystore/doris_android.keystore" >> $HOME/.ssh/doris-android_sign.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> $HOME/.ssh/doris-android_sign.properties
       - name: Copy Database
         run: |
           if [ -f DorisAndroidPrefetch/run/database/DorisAndroid.db ]; then
