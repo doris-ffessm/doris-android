@@ -63,14 +63,26 @@ jobs:
           ./gradlew buildDorisDB -Pargs="-u ${{ secrets.DORIS_SITE_USER_ID }} --token=${{ secrets.DORIS_SITE_ACCESS_TOKEN }} --max=500"
       - name: Report warnings/errors 🔍
         run: |
+          echo "### Database prefetch summary :inbox_tray:" >> $GITHUB_STEP_SUMMARY
           grep ' WARN - ' DorisAndroidPrefetch/run/prefetch_debug.log > DorisAndroidPrefetch/run/prefetch_warn.log || true
           grep ' ERROR - ' DorisAndroidPrefetch/run/prefetch_debug.log > DorisAndroidPrefetch/run/prefetch_error.log || true
           if [ -s  DorisAndroidPrefetch/run/prefetch_warn.log ]; then
             echo "::warning file=DorisAndroidPrefetch/src/main/java/fr/ffessm/doris/prefetch/PrefetchDorisWebSite.java::`tail -n 5 DorisAndroidPrefetch/run/prefetch_warn.log`"
+            echo ":warning: Partial prefetch" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            tail -n 5 DorisAndroidPrefetch/run/prefetch_warn.log  >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           fi
           if [ -s  DorisAndroidPrefetch/run/prefetch_error.log ]; then
             echo "::error file=DorisAndroidPrefetch/src/main/java/fr/ffessm/doris/prefetch/PrefetchDorisWebSite.java::`tail -n 5 DorisAndroidPrefetch/run/prefetch_error.log`"
+            echo ":x: Error in prefetch" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            tail -n 5 DorisAndroidPrefetch/run/prefetch_error.log  >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           fi
+          echo "Database content:" >> $GITHUB_STEP_SUMMARY
+          scripts/dbMarkdownSummary.sh DorisAndroidPrefetch/run/database/DorisAndroid.db >> $GITHUB_STEP_SUMMARY
+
       - name: Archive Artifacts
         if: always()
         uses: actions/upload-artifact@v3
