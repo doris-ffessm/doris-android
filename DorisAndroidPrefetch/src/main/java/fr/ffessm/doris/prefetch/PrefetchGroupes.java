@@ -136,6 +136,7 @@ public class PrefetchGroupes {
         //int currentDepth = 0;
 
         Groupe racine = new Groupe(0, 0, "racine", 0x00000000, null);
+        racine.setContextDB(dbContext);
         racine.setId(1);
         listeGroupes.add(racine);
         currentGroupeStack.push(new GroupeDepthTuple(0, racine));

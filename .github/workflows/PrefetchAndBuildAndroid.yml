@@ -1,0 +1,173 @@
+name: DorisAndroid CI
+
+on:
+  push:
+    branches:
+      - "**"
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    # At 01:00 on Sunday, Tuesday, and Thursday.
+    - cron:  '0 1 * * 0,2,4'
+
+env:
+
+  # ANDROID_COMPILE_SDK is the version of Android you're compiling with.
+  # It should match compileSdkVersion.
+  ANDROID_COMPILE_SDK: "34"
+
+  # ANDROID_BUILD_TOOLS is the version of the Android build tools you are using.
+  # It should match buildToolsVersion.
+  ANDROID_BUILD_TOOLS: "30.0.2"
+
+  # It's what version of the command line tools we're going to download from the official site.
+  # Official Site-> https://developer.android.com/studio/index.html
+  # There, look down below at the cli tools only, sdk tools package is of format:
+  #        commandlinetools-os_type-ANDROID_SDK_TOOLS_latest.zip
+  # when the script was last modified for latest compileSdkVersion, it was which is written down below
+  ANDROID_SDK_TOOLS: "10406996"
+
+jobs:
+  collect-db-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Cache previous DorisDB prefetch # https://github.com/actions/cache/blob/main/tips-and-workarounds.md#update-a-cache
+        uses: actions/cache@v3
+        with:
+          path: DorisAndroidPrefetch/run/database
+          key: dorisdb-cache-${{ runner.OS }}-${{ github.run_id }}
+          restore-keys: |
+            dorisdb-cache-${{ runner.OS }}
+      - name: Show Cache Content
+        run: |
+          set +e
+          sudo apt-get update -yq
+          sudo apt-get install -yq sqlite3
+          pwd
+          ls -lsa DorisAndroidPrefetch/run
+          ls -lsa DorisAndroidPrefetch/run/database
+          if [ -f DorisAndroidPrefetch/run/database/DorisAndroid.db ]; then
+            sqlite3 DorisAndroidPrefetch/run/database/DorisAndroid.db ".tables"
+            sqlite3 DorisAndroidPrefetch/run/database/DorisAndroid.db "SELECT * FROM dorisDB_metadata;"
+          fi
+          ls -lsa $HOME/.gradle
+          set -e
+      - name: Get DB from Doris web site 🕸️
+        run: |
+          echo "Get DB from Doris web site"
+          ./gradlew buildDorisDB -Pargs="-u ${{ secrets.DORIS_SITE_USER_ID }} --token=${{ secrets.DORIS_SITE_ACCESS_TOKEN }} --max=500"
+      - name: Report warnings/errors 🔍
+        run: |
+          echo "### Database prefetch summary :inbox_tray:" >> $GITHUB_STEP_SUMMARY
+          grep ' WARN - ' DorisAndroidPrefetch/run/prefetch_debug.log > DorisAndroidPrefetch/run/prefetch_warn.log || true
+          grep ' ERROR - ' DorisAndroidPrefetch/run/prefetch_debug.log > DorisAndroidPrefetch/run/prefetch_error.log || true
+          if [ -s  DorisAndroidPrefetch/run/prefetch_warn.log ]; then
+            echo "::warning file=DorisAndroidPrefetch/src/main/java/fr/ffessm/doris/prefetch/PrefetchDorisWebSite.java::`tail -n 5 DorisAndroidPrefetch/run/prefetch_warn.log`"
+            echo ":warning: Partial prefetch" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            tail -n 5 DorisAndroidPrefetch/run/prefetch_warn.log  >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -s  DorisAndroidPrefetch/run/prefetch_error.log ]; then
+            echo "::error file=DorisAndroidPrefetch/src/main/java/fr/ffessm/doris/prefetch/PrefetchDorisWebSite.java::`tail -n 5 DorisAndroidPrefetch/run/prefetch_error.log`"
+            echo ":x: Error in prefetch" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            tail -n 5 DorisAndroidPrefetch/run/prefetch_error.log  >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "Database content:" >> $GITHUB_STEP_SUMMARY
+          scripts/dbMarkdownSummary.sh DorisAndroidPrefetch/run/database/DorisAndroid.db >> $GITHUB_STEP_SUMMARY
+
+      - name: Archive Artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: doris-db-artifacts
+          path: |
+            DorisAndroidPrefetch/run/
+            !DorisAndroidPrefetch/run/images
+  build-android-app-job:
+    runs-on: ubuntu-latest
+    needs: collect-db-job
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Get DorisDB from previous jobs
+        uses: actions/download-artifact@v3
+        with:
+          name: doris-db-artifacts
+          path: DorisAndroidPrefetch/run
+      - name: Install Android SDK
+        run: |
+          sudo apt-get update -yq
+          sudo apt-get install -yq wget tar unzip lib32stdc++6 lib32z1
+          export ANDROID_HOME="${PWD}/android-home"
+          install -d $ANDROID_HOME
+          if [[ ! -d $ANDROID_HOME/cmdline-tools/${ANDROID_SDK_TOOLS} ]]; then
+            wget --output-document=$ANDROID_HOME/cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip
+            pushd $ANDROID_HOME
+            unzip -d cmdline-tools cmdline-tools.zip
+            mv cmdline-tools/cmdline-tools cmdline-tools/$ANDROID_SDK_TOOLS
+            ln -s ${ANDROID_HOME}/cmdline-tools/$ANDROID_SDK_TOOLS ${ANDROID_HOME}/cmdline-tools/latest
+            popd
+          else
+            echo "commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest already installed"
+          fi
+          export PATH=$PATH:${ANDROID_HOME}/cmdline-tools/latest/bin/
+          sdkmanager --version
+          yes | sdkmanager --sdk_root=${ANDROID_HOME} --licenses || true
+          sdkmanager --sdk_root=${ANDROID_HOME} "platforms;android-${ANDROID_COMPILE_SDK}"
+          sdkmanager --sdk_root=${ANDROID_HOME} "platform-tools"
+          sdkmanager --sdk_root=${ANDROID_HOME} "build-tools;${ANDROID_BUILD_TOOLS}"
+          chmod +x ./gradlew
+      - name: Create Sign Info
+        run: |
+          mkdir -p $HOME/.ssh/keystore
+          echo "${{ secrets.DORISANDROID_KEYSTORE }}" | base64 -d > $HOME/.ssh/keystore/doris_android.keystore
+          echo "keyAlias=doris" > $HOME/.ssh/doris-android_sign.properties
+          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" >> $HOME/.ssh/doris-android_sign.properties
+          echo "storeFile=$HOME/.ssh/keystore/doris_android.keystore" >> $HOME/.ssh/doris-android_sign.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> $HOME/.ssh/doris-android_sign.properties
+      - name: Copy Database
+        run: |
+          if [ -f DorisAndroidPrefetch/run/database/DorisAndroid.db ]; then
+            echo "use of the latest DB collected for the apk"
+            cp DorisAndroidPrefetch/run/database/*.db DorisAndroid/src/main/assets
+          else
+            echo "use DorisAndroid/src/main/assets/DorisAndroid.db stored in git"
+          fi
+          echo "DB version"
+          sqlite3 DorisAndroid/src/main/assets/DorisAndroid.db "SELECT * FROM dorisDB_metadata;"
+      - name: Build and Lint
+        run: |
+          ./gradlew clean build lint
+      - name: Archive APK Artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: doris-apk-artifacts
+          path: DorisAndroid/build/outputs/apk/**/*.apk
+      - name: Archive Report Artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: doris-report-artifacts
+          path: DorisAndroid/build/reports/*
+      - name: Check and report lint results
+        uses: hidakatsuya/action-report-android-lint@v1.1.3
+        with:
+          result-path: 'DorisAndroid/build/reports/*.xml'
+          fail-on-warning: false

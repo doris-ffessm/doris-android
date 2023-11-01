@@ -81,7 +81,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                 fiche.getNomScientifique().replaceAll("\\{\\{[^\\{]*\\}\\}", "").replaceAll("\\([^\\(]*\\)", "");
         fiche.setTextePourRechercheRapide(
                 (commonOutils.formatStringNormalizer(textePourRechercheRapide)
-                ).toLowerCase(Locale.FRENCH).trim() + "-" + objNameNodeId.getNodeId().intValue() + "-" + espece.getFields().getZoneGeo().getValue()
+                ).toLowerCase(Locale.FRENCH).trim() + "-" + objNameNodeId.getNodeId() + "-" + espece.getFields().getZoneGeo().getValue()
         );
         // Groupe
         if (espece.getFields().getGroup().getValue() != null) {
@@ -325,9 +325,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                         dbContext.classificationDao.create(classificationGenreFinal);
                         return null;
                     });
-        }
-
-        if (classificationGenre != null) {
+        } else {
             nbGenreEspece++;
             final ClassificationFiche classification_final = new ClassificationFiche(ficheDB, classificationGenre, 20);
 
@@ -351,8 +349,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                         dbContext.classificationDao.create(classificationEspeceFinal);
                         return null;
                     });
-        }
-        if (classificationEspece != null) {
+        } else {
             nbGenreEspece++;
             final ClassificationFiche classification_final = new ClassificationFiche(ficheDB, classificationEspece, 21);
 
@@ -363,7 +360,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                         return null;
                     });
         }
-        log.info(String.format("added %d ClassificationFiche(s) about Genre/Espece", nbGenreEspece));
+        log.debug(String.format("added %d ClassificationFiche(s) about Genre/Espece", nbGenreEspece));
     }
 
 
@@ -409,7 +406,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
 
         for (String numeroVerificateur : especeJSON.getFields().getVerificateurs().getValue().split("-")) {
             try {
-                if (numeroVerificateur != null && numeroVerificateur != "") {
+                if (numeroVerificateur != null && !numeroVerificateur.isEmpty()) {
                     final Participant doridien = dbContext.participantDao.queryForFirst(
                             dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroVerificateur).prepare()
                     );
@@ -429,7 +426,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         }
         for (String numeroContributeur : especeJSON.getFields().getContributors().getValue().split("-")) {
             try {
-                if (numeroContributeur != null && numeroContributeur != "") {
+                if (numeroContributeur != null && !numeroContributeur.isEmpty()) {
                     final Participant doridien = dbContext.participantDao.queryForFirst(
                             dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroContributeur).prepare()
                     );
@@ -449,7 +446,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         }
         for (String numeroCorrecteur : especeJSON.getFields().getCorrecteurs().getValue().split("-")) {
             try {
-                if (numeroCorrecteur != null && numeroCorrecteur != "") {
+                if (numeroCorrecteur != null && !numeroCorrecteur.isEmpty()) {
                     final Participant doridien = dbContext.participantDao.queryForFirst(
                             dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroCorrecteur).prepare()
                     );
@@ -469,7 +466,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         }
         for (String numeroDoridien : especeJSON.getFields().getDoridiens().getValue().split("-")) {
             try {
-                if (numeroDoridien != null && numeroDoridien != "") {
+                if (numeroDoridien != null && !numeroDoridien.isEmpty()) {
                     final Participant doridien = dbContext.participantDao.queryForFirst(
                             dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroDoridien).prepare()
                     );
@@ -487,7 +484,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                 // ignore les entrées invalides
             }
         }
-        log.info(String.format("added %d intervenant(s) on this fiche",nbIntervenants));
+        log.debug(String.format("added %d intervenant(s) on this fiche",nbIntervenants));
     }
     protected void removePhotoForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
 
@@ -506,7 +503,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
     }
     protected void updatePhotoForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException, WebSiteNotAvailableException {
 
-        List<Image> imageJSONListe = new ArrayList<Image>();
+        List<Image> imageJSONListe = new ArrayList<>();
 
         // itère sur les images trouvées pour cette fiche
         for (String possibleImageId : especeJSON.getFields().getImages().getValue().split("&")) {
@@ -547,7 +544,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                     }
                     return null;
                 });
-        log.info(String.format("added %d PhotoFiche related to this Fiche",listePhotoFiche.size()));
+        log.debug(String.format("added %d PhotoFiche related to this Fiche",listePhotoFiche.size()));
 
     }
     protected void removeZoneGeographiqueForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
@@ -603,7 +600,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                 // ignore les entrées invalides
             }
         }
-        log.info(String.format("added %d Fiches_ZonesGeographiques related to this Fiche",especeJSON.getFields().getZoneGeo().getValue().split("-").length));
+        log.debug(String.format("added %d Fiches_ZonesGeographiques related to this Fiche",especeJSON.getFields().getZoneGeo().getValue().split("-").length));
     }
 
     @Override
