@@ -59,7 +59,10 @@ Compile the Android app.
 
 ## How to contribute
 
-TODO  (contribute to discussions, post issue, create pull request, ...)
+The project welcomes any contributions: from bug reporting, feature suggestions, comment on the application UI, to bug fix and feature development.
+
+Most changes should be proposed first as an issue for discussion. If you're confident enough in your proposal, you can also directly propose a Pull Request :wink:.
+
 
 ## Developers notes
 
@@ -67,16 +70,18 @@ TODO  (contribute to discussions, post issue, create pull request, ...)
 
 - update version code and version name in `src/main/AndroidManifest.xml`
 - update changelog in `src/main/res/raw/apropos.html`
+- make sure the DB is complete in the latest CI pipeline
 
-- Tag and push to gitlab.
+- Tag and push to github.
 
 ```sh
 git tag -a 4.9.3-rc1 -m "my very nice version 4.9.3-rc1"
 git push origin 4.9.3-rc1
 ```
 
-The result will be in https://gitlab.inria.fr/doris/doris-android/-/releases
+The result will be in https://github.com/doris-ffessm/doris-android/releases
 
-- upload apk to https://play.google.com/console
+- upload apk to https://play.google.com/console as test deployment
 - check in test deployment and publish
+- promote test as production
 
