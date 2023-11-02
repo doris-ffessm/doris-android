@@ -134,7 +134,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
             removeZoneGeographiqueForFiche(ficheDB, especeJSON);
             String uri = DorisOAuth2ClientCredentials.getServerNodeUrlTousLesChamps( objNameNodeId.getNodeId().toString() );
 
-            log.error("Exception raised : Faulty specie uri "+uri+ " on fiche "+ficheDB.getNumeroFiche(), e);
+            log.error("Exception raised : Faulty specie uri "+uri+ " on fiche n° doris "+ficheDB.getNumeroFiche() +" - "+ficheDB.getNomCommun(), e);
             if(ficheDB.getEtatFiche() == 4) {
                 log.error("Stopping because the Fiche is normally published");
                 throw e;
