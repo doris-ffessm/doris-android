@@ -8,6 +8,7 @@ on:
     # * is a special character in YAML so you have to quote this string
     # At 01:00 on Sunday, Tuesday, and Thursday.
     - cron:  '0 1 * * 0,2,4'
+  workflow_dispatch:
 env:
 
   # ANDROID_COMPILE_SDK is the version of Android you're compiling with.
@@ -62,7 +63,7 @@ jobs:
       - name: Get DB from Doris web site 🕸️
         run: |
           echo "Get DB from Doris web site"
-          ./gradlew buildDorisDB -Pargs="-u ${{ secrets.DORIS_SITE_USER_ID }} --token=${{ secrets.DORIS_SITE_ACCESS_TOKEN }} --max=500"
+          ./gradlew buildDorisDB -Pargs="-u ${{ secrets.DORIS_SITE_USER_ID }} --token=${{ secrets.DORIS_SITE_ACCESS_TOKEN }} --max=1500"
       - name: Report warnings/errors 🔍
         run: |
           echo "### Database prefetch summary :inbox_tray:" >> $GITHUB_STEP_SUMMARY
