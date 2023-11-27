@@ -1,5 +1,11 @@
-Public web site about the DORISAndroid application: https://doris.gitlabpages.inria.fr/
 
+
+DORIS Android is an illustrated guide to underwater species in mainland France and overseas that can be taken "almost" anywhere.
+Based on data from the http://doris.ffessm.fr website, it helps you identify and observe marine and freshwater species, so you can make the most of your underwater dives or walks on the foreshore.
+
+Public web site (in French) about the DORISAndroid application: https://doris-ffessm.github.io
+
+The recommanded dowload is via the Google Play store: [![Get it on GooglePlay](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png)](https://play.google.com/store/apps/details?id=fr.ffessm.doris.android)
 
 ## Development
 
