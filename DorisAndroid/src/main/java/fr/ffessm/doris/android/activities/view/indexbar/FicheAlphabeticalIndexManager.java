@@ -35,7 +35,7 @@ public class FicheAlphabeticalIndexManager extends IndexManager<Fiche, Character
         String nom;
         switch (ordreTriAlphabetique) {
             case NOMSCIENTIFIQUE:
-                nom = entry.getNomScientifique().replaceFirst("\\{\\{i}}", "");
+                nom = entry.getNomScientifique().replaceAll("\\{\\{/?i\\}\\}", "");
                 break;
             case NOMCOMMUN:
             default:
