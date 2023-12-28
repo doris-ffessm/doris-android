@@ -106,7 +106,7 @@ public class JsonToDB {
 
     public List<PhotoFiche> getListePhotosFicheFromJsonImages(List<Image> jsonImagesJSON) {
 		
-		List<PhotoFiche> listePhotosFiche = new ArrayList<PhotoFiche>(0);
+		List<PhotoFiche> listePhotosFiche = new ArrayList<>(0);
 		for (Image jsonImage : jsonImagesJSON) {
 			listePhotosFiche.add(getPhotoFicheFromJSONImage(jsonImage));
 		}
@@ -262,7 +262,7 @@ public class JsonToDB {
 
 
         Fiche fiche = new Fiche(
-                "{{i}}"+ficheNodeId.getObjectName()+"{{/i}}"+" "+
+                "{{i}}"+ficheNodeId.getObjectName().trim()+"{{/i}}"+" "+
                         commonOutils.remplacementBalises( commonOutils.nettoyageBalises( jsonEspece.getFields().getDiscoverer().getValue() ), true ),
                 jsonEspece.getFields().getNomCommunFr().getValue(),
                 Integer.parseInt(jsonEspece.getFields().getReference().getValue()),
