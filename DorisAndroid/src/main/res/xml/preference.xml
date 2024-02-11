@@ -118,6 +118,14 @@
 				android:defaultValue="@string/mode_precharg_photo_region_defaut"
 				android:layout="@layout/preference_layout_preference"
 				/>
+			<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
+				android:key="@string/pref_key_mode_precharg_photo_region_guyanne"
+				android:title="@string/mode_precharg_photo_region_guyanne_prompt"
+				android:entryValues="@array/mode_precharg_photo_answers_values"
+				android:entries="@array/mode_precharg_photo_answers_lib"
+				android:defaultValue="@string/mode_precharg_photo_region_defaut"
+				android:layout="@layout/preference_layout_preference"
+				/>
    	        <!-- TODO :
 	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
 	            android:key="@string/pref_key_mode_precharg_photo_region_favorite"

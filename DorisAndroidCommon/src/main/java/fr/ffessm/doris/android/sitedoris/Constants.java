@@ -169,9 +169,11 @@ public class Constants {
                 return 8;
             case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
                 return 9;
+            case FAUNE_FLORE_GUYANNE:
+                return 10;
             // Aurait du être -1 (10 est la clé pour url) ?
             case FAUNE_FLORE_TOUTES_ZONES:
-                return 10;
+                return 77;
             default:
                 return 99;
         }

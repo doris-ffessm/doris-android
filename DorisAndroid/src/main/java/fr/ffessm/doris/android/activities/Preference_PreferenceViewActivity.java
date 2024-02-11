@@ -147,6 +147,8 @@ public class Preference_PreferenceViewActivity extends android.preference.Prefer
                 ZoneGeographiqueKind.FAUNE_FLORE_MER_ROUGE);
         setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_caraibes,
                 ZoneGeographiqueKind.FAUNE_FLORE_SUBAQUATIQUES_CARAIBES);
+        setLibelleModePrechargPhotoZone(R.string.pref_key_mode_precharg_photo_region_guyanne,
+                ZoneGeographiqueKind.FAUNE_FLORE_GUYANNE);
 
         final Preference btnQualiteImagesZonesKey = (Preference) getPreferenceManager().findPreference("button_qualite_images_zones_key");
         btnQualiteImagesZonesKey.setSummary(
