@@ -1012,11 +1012,11 @@ public class Photos_Outils {
                     nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_indopac, 0);
                     nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_antarctique, 0);
                     nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_caraibes, 0);
-                    nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_atlantne, 0);
-                    nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_mediter, 0);
-                    nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_guyanne, 0);
-                    nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_merrouge, 0);
-                    nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_habitat, 0);
+                    nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_atlantne, 0);
+                    nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_mediter, 0);
+                    nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_guyanne, 0);
+                    nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_merrouge, 0);
+                    nbAPrechar += paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_habitat, 0);
                     //  pas besoin de noter mer rouge, mediterranée qui sont des sous zones
                     return nbAPrechar;
                 case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
@@ -1036,11 +1036,11 @@ public class Photos_Outils {
                 case FAUNE_FLORE_MEDITERRANEE_FRANCAISE:
                     return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_mediter, 0);
                 case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
-                    return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_atlantne, 0);
+                    return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_atlantne, 0);
                 case FAUNE_FLORE_GUYANNE:
-                    return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_guyanne, 0);
+                    return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_guyanne, 0);
                 case FAUNE_FLORE_HABITAT:
-                    return paramOutils.getParamInt(R.string.pref_key_nbphotosprinc_recues_habitat, 0);
+                    return paramOutils.getParamInt(R.string.pref_key_nbphotos_recues_habitat, 0);
                 default:
                     return 0;
             }
