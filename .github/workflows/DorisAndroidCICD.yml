@@ -88,7 +88,7 @@ jobs:
 
       - name: Archive Artifacts
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: doris-db-artifacts
           path: |
@@ -107,7 +107,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
       - name: Get DorisDB from previous jobs
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: doris-db-artifacts
           path: DorisAndroidPrefetch/run
@@ -157,13 +157,13 @@ jobs:
           ./gradlew clean build lint
       - name: Archive APK Artifacts
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: doris-apk-artifacts
           path: DorisAndroid/build/outputs/apk/**/*.apk
       - name: Archive Report Artifacts
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: doris-report-artifacts
           path: DorisAndroid/build/reports/*
@@ -181,12 +181,12 @@ jobs:
       - build-android-app-job
     steps:
       - name: Get DorisDB (from previous jobs)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: doris-db-artifacts
           path: DorisAndroidPrefetch/run
       - name: Get DorisAndroid apk (from previous jobs)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: doris-db-artifacts
           path: DorisAndroidPrefetch/run
