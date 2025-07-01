@@ -10,9 +10,7 @@ def acraVersion = '5.8.4'
 //def androidSupportVersion = '28.0.0'
 
 dependencies {
-    // a terme on devrait remplacer cela vers des ref dans les repo maven correspondants
-    implementation fileTree(dir: 'libs',
-            include: '*.jar')
+
     // dependances maven
     implementation 'com.j256.ormlite:ormlite-core:4.47'
     implementation 'com.j256.ormlite:ormlite-android:4.47'
