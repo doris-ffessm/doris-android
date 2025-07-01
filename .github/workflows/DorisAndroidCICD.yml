@@ -33,14 +33,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
       - name: Cache previous DorisDB prefetch # https://github.com/actions/cache/blob/main/tips-and-workarounds.md#update-a-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: DorisAndroidPrefetch/run/database
           key: dorisdb-cache-${{ runner.OS }}-${{ github.run_id }}
@@ -88,7 +88,7 @@ jobs:
 
       - name: Archive Artifacts
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: doris-db-artifacts
           path: |
@@ -100,14 +100,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
       - name: Get DorisDB from previous jobs
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: doris-db-artifacts
           path: DorisAndroidPrefetch/run
@@ -157,13 +157,13 @@ jobs:
           ./gradlew clean build lint
       - name: Archive APK Artifacts
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: doris-apk-artifacts
           path: DorisAndroid/build/outputs/apk/**/*.apk
       - name: Archive Report Artifacts
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: doris-report-artifacts
           path: DorisAndroid/build/reports/*
@@ -181,12 +181,12 @@ jobs:
       - build-android-app-job
     steps:
       - name: Get DorisDB (from previous jobs)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: doris-db-artifacts
           path: DorisAndroidPrefetch/run
       - name: Get DorisAndroid apk (from previous jobs)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: doris-db-artifacts
           path: DorisAndroidPrefetch/run
