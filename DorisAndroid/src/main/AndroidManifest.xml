@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:installLocation="auto"
-    android:versionCode="81"
-    android:versionName="4.10.1">
+    android:installLocation="auto">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -29,7 +27,7 @@
             android:name=".activities.Accueil_CustomViewActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="false"></activity>
+            android:exported="false"/>
         <activity
             android:name=".activities.Preference_PreferenceViewActivity"
             android:label="@string/app_name"
@@ -291,7 +289,7 @@
             android:name=".services.GestionPhotoDiskService"
             android:icon="@drawable/app_ic_launcher"
             android:label="@string/gestion_photos_disk_service_name"
-            android:exported="false"></service>
+            android:exported="false"/>
     </application>
 
 </manifest>

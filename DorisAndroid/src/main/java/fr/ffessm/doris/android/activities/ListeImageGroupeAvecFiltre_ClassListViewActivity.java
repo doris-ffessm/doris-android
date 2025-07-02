@@ -304,56 +304,53 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends OrmLiteAct
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // behavior of option menu
-        switch (item.getItemId()) {
-            case R.id.listeficheavecfiltre_classlistview_action_preference:
-                startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-                return true;
+        int itemId = item.getItemId();
+        if (itemId == R.id.listeficheavecfiltre_classlistview_action_preference) {
+            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+            return true;
             //Start of user code additional menu action ListeFicheAvecFiltre_ClassListViewActivity
-            case R.id.listeficheavecfiltre_classlistview_action_filterpopup:
-                //showToast("searchPopupButtonManager.onClickFilterBtn(MenuItemCompat.getActionView(item))");
-                //	searchPopupButtonManager.onClickFilterBtn(MenuItemCompat.getActionView(item));
-                View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup); // SAME ID AS MENU ID
-                // crée le manager de popup
-                //searchPopupButtonManager = new SearchPopupButtonManager(this);
-                //showFilterPopupMenu(menuItemView);
-                //searchPopupButtonManager.onClickFilterBtn(menuItemView);
-                showPopup();
-                return true;
-
-            case R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist:
-                Intent i = new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class);
-                i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-                return true;
-            case R.id.listeficheavecfiltre_action_aide:
-                AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
-                aide.affichageMessageHTML(context.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
-                return true;
+        } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_filterpopup) {//showToast("searchPopupButtonManager.onClickFilterBtn(MenuItemCompat.getActionView(item))");
+            //	searchPopupButtonManager.onClickFilterBtn(MenuItemCompat.getActionView(item));
+            View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup); // SAME ID AS MENU ID
+            // crée le manager de popup
+            //searchPopupButtonManager = new SearchPopupButtonManager(this);
+            //showFilterPopupMenu(menuItemView);
+            //searchPopupButtonManager.onClickFilterBtn(menuItemView);
+            showPopup();
+            return true;
+        } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist) {
+            Intent i = new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class);
+            i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
+            return true;
+        } else if (itemId == R.id.listeficheavecfiltre_action_aide) {
+            AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
+            aide.affichageMessageHTML(context.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
+            return true;
             //End of user code
             // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
-                Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : " + upIntent.getComponent().toString());
+        } else if (itemId == android.R.id.home) {
+            Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
+            Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : " + upIntent.getComponent().toString());
 
-                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                    Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
-                    // This activity is NOT part of this app's task, so create a new task
-                    // when navigating up, with a synthesized back stack.
-                    TaskStackBuilder.create(this)
-                            // Add all of this activity's parents to the back stack
-                            .addNextIntentWithParentStack(upIntent)
-                            // Navigate up to the closest parent
-                            .startActivities();
-                } else {
-                    Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
-                    // This activity is part of this app's task, so simply
-                    // navigate up to the logical parent activity.
-                    NavUtils.navigateUpTo(this, upIntent);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
+                // This activity is NOT part of this app's task, so create a new task
+                // when navigating up, with a synthesized back stack.
+                TaskStackBuilder.create(this)
+                        // Add all of this activity's parents to the back stack
+                        .addNextIntentWithParentStack(upIntent)
+                        // Navigate up to the closest parent
+                        .startActivities();
+            } else {
+                Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
+                // This activity is part of this app's task, so simply
+                // navigate up to the logical parent activity.
+                NavUtils.navigateUpTo(this, upIntent);
+            }
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     //  ------------ dealing with Up button

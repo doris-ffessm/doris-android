@@ -1065,53 +1065,52 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // behavior of option menu
-        switch (item.getItemId()) {
-            case R.id.accueil_customview_action_preference:
-                startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-                return true;
+        int itemId = item.getItemId();
+        if (itemId == R.id.accueil_customview_action_preference) {
+            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+            return true;
             //Start of user code additional menu action Accueil_CustomViewActivity
-            case R.id.accueil_customview_action_telecharge_photofiches:
-                TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;
-                if (telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING) {
-                    DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity =
-                            (TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext()/*, this.getHelper()*/).execute("");
+        } else if (itemId == R.id.accueil_customview_action_telecharge_photofiches) {
+            TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;
+            if (telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING) {
+                DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity =
+                        (TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext()/*, this.getHelper()*/).execute("");
 
-                } else {
-                    if (Accueil_CustomViewActivity.this.isFinishing() || Accueil_CustomViewActivity.this.isActivityDestroyed())
-                        return true;
-                    showToast(R.string.bg_notifToast_arretTelecharg);
-                    DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
+            } else {
+                if (Accueil_CustomViewActivity.this.isFinishing() || Accueil_CustomViewActivity.this.isActivityDestroyed())
+                    return true;
+                showToast(R.string.bg_notifToast_arretTelecharg);
+                DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 
-                    ProgressBar pbRunningBarLayout = findViewById(R.id.multiprogressbar_running_progressBar);
-                    pbRunningBarLayout.setVisibility(View.GONE);
-                }
+                ProgressBar pbRunningBarLayout = findViewById(R.id.multiprogressbar_running_progressBar);
+                pbRunningBarLayout.setVisibility(View.GONE);
+            }
 
-                return true;
-            case R.id.accueil_customview_action_a_propos:
-                AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
-                aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label) + getContext().getString(R.string.app_name), aPropos.aProposAff(), "file:///android_res/raw/apropos.html");
-                return true;
-            case R.id.accueil_customview_action_participant:
-                startActivity(new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class));
-                return true;
-            case R.id.accueil_customview_action_glossaire:
-                startActivity(new Intent(this, Glossaire_ClassListViewActivity.class));
-                return true;
-            case R.id.accueil_customview_action_bibliographie:
-                startActivity(new Intent(this, ListeBibliographieAvecFiltre_ClassListViewActivity.class));
-                return true;
-            case R.id.accueil_customview_action_jeux:
-                startActivity(new Intent(this, Jeux_CustomViewActivity.class));
-                return true;
-            case R.id.accueil_customview_action_aide:
-                AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
-                aide.affichageMessageHTML(getContext().getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
-                return true;
+            return true;
+        } else if (itemId == R.id.accueil_customview_action_a_propos) {
+            AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
+            aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label) + getContext().getString(R.string.app_name), aPropos.aProposAff(), "file:///android_res/raw/apropos.html");
+            return true;
+        } else if (itemId == R.id.accueil_customview_action_participant) {
+            startActivity(new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class));
+            return true;
+        } else if (itemId == R.id.accueil_customview_action_glossaire) {
+            startActivity(new Intent(this, Glossaire_ClassListViewActivity.class));
+            return true;
+        } else if (itemId == R.id.accueil_customview_action_bibliographie) {
+            startActivity(new Intent(this, ListeBibliographieAvecFiltre_ClassListViewActivity.class));
+            return true;
+        } else if (itemId == R.id.accueil_customview_action_jeux) {
+            startActivity(new Intent(this, Jeux_CustomViewActivity.class));
+            return true;
+        } else if (itemId == R.id.accueil_customview_action_aide) {
+            AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
+            aide.affichageMessageHTML(getContext().getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
+            return true;
 
             //End of user code
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
 }

@@ -1,4 +1,6 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+}
 
 tasks.withType(JavaCompile) {
     /*sourceCompatibility = "1.8"
@@ -22,9 +24,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "com.squareup.picasso:picasso:2.71828"
-    // NOTE la version 21+ ne fonctionne pas bien, à revoir ...
-    //compile 'com.android.support:appcompat-v7:21.0.3'
-    //compile project(':android-support-v7-appcompat')
 
     // dependances inter-projets
     implementation project(':GenandroidLib')
@@ -34,22 +33,23 @@ dependencies {
 }
 
 repositories {
-    /* mavenCentral()
-    maven {
-        url "https://maven.google.com"
-    }*/
-    //jcenter()
     mavenCentral()
     google()
 }
 
 android {
-    compileSdkVersion 34
-    buildToolsVersion '34.0.0'
-    namespace = "fr.ffessm.doris.android"
+    namespace 'fr.ffessm.doris.android'
+    compileSdkVersion 36
+    //buildToolsVersion '35.0.0'
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 34
+        versionCode 81
+        versionName "4.10.1"
+    }
+    buildFeatures {
+        buildConfig true
+        resValues true
     }
 
     File signFile = file('/builds/keystore/sign.properties') // used by Jenkins
@@ -79,14 +79,12 @@ android {
         println 'sign.properties not found (neither in /builds/keystore/sign.properties nor in $HOME/.ssh/doris-android_sign.properties)'
     }
 
-    lintOptions {
-        // Don't abort if Lint finds an error, otherwise the Jenkins build
-        // will be marked as failed, and Jenkins won't analyse the Lint output
-        abortOnError false
-    }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    lint {
+        abortOnError false
     }
 }

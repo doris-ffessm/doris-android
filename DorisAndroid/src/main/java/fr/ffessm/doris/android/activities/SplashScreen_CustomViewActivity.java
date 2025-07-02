@@ -282,16 +282,14 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // behavior of option menu
-        switch (item.getItemId()) {
-            case R.id.splashscreen_customview_action_preference:
-                startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-                return true;
+        if (item.getItemId() == R.id.splashscreen_customview_action_preference) {
+            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+            return true;
             //Start of user code additional menu action SplashScreen_CustomViewActivity
 
             //End of user code
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
 }
