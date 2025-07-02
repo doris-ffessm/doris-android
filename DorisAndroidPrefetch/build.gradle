@@ -28,12 +28,6 @@ dependencies {
 	// dependances modules
 	implementation project(':DorisAndroidCommon')
 }
-/*sourceSets {
-    main.java.srcDirs = ['src']
-    main.resources.srcDirs = ['src']
-    test.java.srcDirs = ['tests/java']
-    test.resources.srcDirs = ['tests/resources']
-}*/
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 // * WEB_TO_DB : Crée la base à partir du site doris.ffessm.fr
@@ -61,14 +55,14 @@ if (project.hasProperty("args")) {
 }
 
 task BuildDorisDB(dependsOn: 'classes',  type: JavaExec) {
-	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
+	mainClass = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
 
 	args cmdargs.split()
 }
 
 task buildDorisDBV4_limited( dependsOn: 'classes', type: JavaExec) {
-	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
+	mainClass = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
 	if(project.hasProperty('user') && project.hasProperty('token')) {
 		args '--max', '2000','--user', project.property('user'), '--token', project.property('token')
@@ -86,7 +80,7 @@ task buildDorisDBV4_limited( dependsOn: 'classes', type: JavaExec) {
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 task(testConnexion, dependsOn: 'classes', type: JavaExec) {
-	main = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
+	mainClass = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
 	args '-i', 'TEST_CONNECTION_V4'
 }
