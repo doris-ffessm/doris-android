@@ -38,7 +38,7 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
       - name: Cache previous DorisDB prefetch # https://github.com/actions/cache/blob/main/tips-and-workarounds.md#update-a-cache
         uses: actions/cache@v4
         with:

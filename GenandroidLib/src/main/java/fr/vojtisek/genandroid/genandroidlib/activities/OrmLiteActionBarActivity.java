@@ -8,6 +8,8 @@ import com.j256.ormlite.support.ConnectionSource;
 
 import android.content.Context;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -17,7 +19,7 @@ public class OrmLiteActionBarActivity<H extends OrmLiteSqliteOpenHelper> extends
 	private volatile H helper;
 	private volatile boolean created = false;
 	private volatile boolean destroyed = false;
-	private static Logger logger = LoggerFactory.getLogger(OrmLiteActionBarActivity.class);
+	private static final Logger logger = LoggerFactory.getLogger(OrmLiteActionBarActivity.class);
 
 	/**
 	 * Get a helper for this action.
@@ -96,22 +98,29 @@ public class OrmLiteActionBarActivity<H extends OrmLiteSqliteOpenHelper> extends
 		this.helper = null;
 	}
 
+	@NonNull
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + "@" + Integer.toHexString(super.hashCode());
 	}
 	
 	protected void showToast(String message) {
-		if(this.isFinishing() || this.isActivityDestroyed()) return;
+		if(this.isFinishing() || this.isActivityDestroyed()) {
+			return;
+		}
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 	protected void showShortToast(String message) {
-		if(this.isFinishing() || this.isActivityDestroyed()) return;
+		if(this.isFinishing() || this.isActivityDestroyed()) {
+			return;
+		}
 		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 	}
 
     protected void showToast(int resId) {
-        if(this.isFinishing() || this.isActivityDestroyed()) return;
+        if(this.isFinishing() || this.isActivityDestroyed()) {
+			return;
+		}
         Toast.makeText(this, resId, Toast.LENGTH_LONG).show();
     }
 }
