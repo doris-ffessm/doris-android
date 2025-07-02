@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="fr.ffessm.doris.android"
     android:installLocation="auto"
     android:versionCode="81"
     android:versionName="4.10.1">
