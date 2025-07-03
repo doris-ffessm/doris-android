@@ -46,6 +46,7 @@ import java.util.TimerTask;
 
 import android.widget.Button;
 import android.widget.ImageView;
+
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
@@ -64,6 +65,7 @@ import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -79,125 +81,127 @@ import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 public class AffichageMessageHTML {
-	
-	private Context context;
-	private Activity activity;
-	private OrmLiteDBHelper dbHelper = null;
-	
-	
-	private static final String LOG_TAG = Accueil_CustomViewActivity.class.getCanonicalName();
-	
-	private final Param_Outils paramOutils;
-	private final Disque_Outils disqueOutils;
-	private final Photos_Outils photosOutils;
-	private final Fiches_Outils fichesOutils;
-	
-	public AffichageMessageHTML(Context context, Activity activity, OrmLiteDBHelper dbHelper) {
-		this.context = context;
-		this.activity = activity;
-		this.dbHelper = dbHelper;
-		
-		paramOutils = new Param_Outils(context);
-		disqueOutils = new Disque_Outils(context);
-		photosOutils = new Photos_Outils(context);
-		fichesOutils = new Fiches_Outils(context);
-	}
-	
-	public AffichageMessageHTML(Context context) {
-		this.context = context;
-		
-		paramOutils = new Param_Outils(context);
-		disqueOutils = new Disque_Outils(context);
-		photosOutils = new Photos_Outils(context);
-		fichesOutils = new Fiches_Outils(context);
-	}
 
-	/* *********************************************************************
+    private Context context;
+    private Activity activity;
+    private OrmLiteDBHelper dbHelper = null;
+
+
+    private static final String LOG_TAG = Accueil_CustomViewActivity.class.getCanonicalName();
+
+    private final Param_Outils paramOutils;
+    private final Disque_Outils disqueOutils;
+    private final Photos_Outils photosOutils;
+    private final Fiches_Outils fichesOutils;
+
+    public AffichageMessageHTML(Context context, Activity activity, OrmLiteDBHelper dbHelper) {
+        this.context = context;
+        this.activity = activity;
+        this.dbHelper = dbHelper;
+
+        paramOutils = new Param_Outils(context);
+        disqueOutils = new Disque_Outils(context);
+        photosOutils = new Photos_Outils(context);
+        fichesOutils = new Fiches_Outils(context);
+    }
+
+    public AffichageMessageHTML(Context context) {
+        this.context = context;
+
+        paramOutils = new Param_Outils(context);
+        disqueOutils = new Disque_Outils(context);
+        photosOutils = new Photos_Outils(context);
+        fichesOutils = new Fiches_Outils(context);
+    }
+
+    /* *********************************************************************
      * fonction permettant d'afficher des pages web locales comme l'Apropos par exemple
      ********************************************************************** */
-	public void affichageMessageHTML(String inTitre, String inTexte, final String inURL) {
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Début");
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - inTitre : " + inTitre);
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - inTexte : " + inTexte);
-		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - inURL : " + inURL);
+    public void affichageMessageHTML(String inTitre, String inTexte, final String inURL) {
+        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Début");
+        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - inTitre : " + inTitre);
+        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - inTexte : " + inTexte);
+        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - inURL : " + inURL);
 
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-		final AlertDialog alertDialog = alertDialogBuilder.create();
-		
-    	LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
-    	View layout = inflater.inflate(R.layout.apropos_aide,
-    	                               (ViewGroup) activity.findViewById(R.id.layout_root));
-    	
-    	alertDialog.setTitle(inTitre);
-    	
-    	TextView text = (TextView) layout.findViewById(R.id.text);
-    	if (! inTexte.isEmpty()) {
-	       	text.setText(inTexte);
-    	} else {
-    		text.setVisibility(View.GONE);
-    	}
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View layout = inflater.inflate(R.layout.apropos_aide,
+                (ViewGroup) activity.findViewById(R.id.layout_root));
+
+        alertDialog.setTitle(inTitre);
+
+        TextView text = (TextView) layout.findViewById(R.id.text);
+        if (!inTexte.isEmpty()) {
+            text.setText(inTexte);
+        } else {
+            text.setVisibility(View.GONE);
+        }
 
         ImageView closeBtn = (ImageView) layout.findViewById(R.id.btn_close);
-		closeBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 alertDialog.dismiss();
-			}
-		});
-    	
-    	final WebView pageWeb = (WebView) layout.findViewById(R.id.webView);
-    	pageWeb.setWebViewClient(new WebViewClient() { 
-    		 
-    	    @Override  
-    	    public boolean shouldOverrideUrlLoading(WebView inView, String inUrl)  
-    	    {  
-    	    	
-    	    	if (inUrl.startsWith("http")){
-	    	    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Lancement navigateur Android Défaut");
-	    	    	
-	    	    	Intent intent = new Intent(Intent.ACTION_VIEW);
-	    	    	intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					intent.setData(Uri.parse(inUrl));
-					context.startActivity(intent);
-	
-					return true;
-    	    	} else if (inUrl.startsWith("participant")){
-    	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Affichage Participant : "+inUrl.replace("participant://", ""));
-	
-    	    		Intent toParticipantView = new Intent(context, DetailsParticipant_ElementViewActivity.class);
-    	    		
-	    	        OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(context);
-	                RuntimeExceptionDao<Participant, Integer> entriesDao = ormLiteDBHelper.getParticipantDao();
-	    	        
-    	    		Bundle b = new Bundle();
-	    	        b.putInt("participantId", entriesDao.queryForEq("numeroParticipant", Integer.valueOf( inUrl.replace("participant://", "") ) ).get(0).getId() );
-	    	        ormLiteDBHelper.getParticipantDao().clearObjectCache();
-	    	        
-	    	        toParticipantView.putExtras(b);
-	    			context.startActivity(toParticipantView);
-	    			
-    	    		return true;
-    	    	} else if (inUrl.startsWith("preference")){
-    	    		if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Affichage preference : "+inUrl.replace("preference://", ""));
-	
-    	    		Intent toPrefView = new Intent(context, Preference_PreferenceViewActivity.class);
- 					
-    	    		String[] pref = inUrl.replace("preference://", "").split("/");
-    	    		
-    	    		toPrefView.putExtra("type_parametre", pref[0]);
-    	    		toPrefView.putExtra("parametre", pref[1]);
-    	    		
-    	    		Bundle b = new Bundle();
-    	    		toPrefView.putExtras(b);
-	    			context.startActivity(toPrefView);
-	    			
-    	    		return true;
-    	    	} else {
-    	    		return true;
-    	    	}
-    	    }  
-    	});  
+            }
+        });
+
+        final WebView pageWeb = (WebView) layout.findViewById(R.id.webView);
+        pageWeb.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView inView, String inUrl) {
+
+                if (inUrl.startsWith("http")) {
+                    if (BuildConfig.DEBUG)
+                        Log.d(LOG_TAG, "affichageMessageHTML() - Lancement navigateur Android Défaut");
+
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.setData(Uri.parse(inUrl));
+                    context.startActivity(intent);
+
+                    return true;
+                } else if (inUrl.startsWith("participant")) {
+                    if (BuildConfig.DEBUG)
+                        Log.d(LOG_TAG, "affichageMessageHTML() - Affichage Participant : " + inUrl.replace("participant://", ""));
+
+                    Intent toParticipantView = new Intent(context, DetailsParticipant_ElementViewActivity.class);
+
+                    OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(context);
+                    RuntimeExceptionDao<Participant, Integer> entriesDao = ormLiteDBHelper.getParticipantDao();
+
+                    Bundle b = new Bundle();
+                    b.putInt("participantId", entriesDao.queryForEq("numeroParticipant", Integer.valueOf(inUrl.replace("participant://", ""))).get(0).getId());
+                    ormLiteDBHelper.getParticipantDao().clearObjectCache();
+
+                    toParticipantView.putExtras(b);
+                    context.startActivity(toParticipantView);
+
+                    return true;
+                } else if (inUrl.startsWith("preference")) {
+                    if (BuildConfig.DEBUG)
+                        Log.d(LOG_TAG, "affichageMessageHTML() - Affichage preference : " + inUrl.replace("preference://", ""));
+
+                    Intent toPrefView = new Intent(context, Preference_PreferenceViewActivity.class);
+
+                    String[] pref = inUrl.replace("preference://", "").split("/");
+
+                    toPrefView.putExtra("type_parametre", pref[0]);
+                    toPrefView.putExtra("parametre", pref[1]);
+
+                    Bundle b = new Bundle();
+                    toPrefView.putExtras(b);
+                    context.startActivity(toPrefView);
+
+                    return true;
+                } else {
+                    return true;
+                }
+            }
+        });
     	
     	/* if (inURL.contains("#")){
 	    	// workaround tha allows to jump to an anchor
@@ -209,40 +213,40 @@ public class AffichageMessageHTML {
 	    	    }
 	    	}, 400);
     	} else { */
-    		pageWeb.loadUrl(inURL);
-    	//}
-    	alertDialog.setView(layout);
+        pageWeb.loadUrl(inURL);
+        //}
+        alertDialog.setView(layout);
 
-    	alertDialog.show();
+        alertDialog.show();
 
-    	alertDialog.getWindow().setLayout(ScreenTools.getScreenWidth(activity) - 20, ScreenTools.getScreenHeight(activity) - 20);
-    	
-    	if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Fin");
-	}
-	
-	
-	public String aProposAff() {
-		StringBuilder texte = new StringBuilder();
-		App_Outils outils = new App_Outils(context);
-		
-		texte.append(context.getString(R.string.a_propos_txt));
-		texte.append(outils.getAppVersion());
+        alertDialog.getWindow().setLayout(ScreenTools.getScreenWidth(activity) - 20, ScreenTools.getScreenHeight(activity) - 20);
 
-		String lastDateBase = "";
-		CloseableIterator<DorisDB_metadata> it = dbHelper.getDorisDB_metadataDao().iterator();
-    	while (it.hasNext()) {
-    		texte.append(System.getProperty("line.separator"));
-			lastDateBase = it.next().getDateBase();
-		}
-    	texte.append(context.getString(R.string.a_propos_base_date) + lastDateBase);
+        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "affichageMessageHTML() - Fin");
+    }
 
-		texte.append("; ");
-    	int nbFichesPubliees = fichesOutils.getNbFichesPublished();
-		int nbFichesProposees = fichesOutils.getNbFichesProposed();
-		texte.append(nbFichesPubliees + context.getString(R.string.a_propos_base_nb_fiches_publiees));
-		texte.append(nbFichesProposees + context.getString(R.string.a_propos_base_nb_fiches_redaction) );
-		texte.append((fichesOutils.getNbFichesZoneGeo(Constants.ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES)-(nbFichesPubliees+nbFichesProposees))
-				+ context.getString(R.string.a_propos_base_nb_fiches_proposées) );
-		return texte.toString();
-	}
+
+    public String aProposAff() {
+        StringBuilder texte = new StringBuilder();
+        App_Outils outils = new App_Outils(context);
+
+        texte.append(context.getString(R.string.a_propos_txt));
+        texte.append(outils.getAppVersion());
+
+        String lastDateBase = "";
+        CloseableIterator<DorisDB_metadata> it = dbHelper.getDorisDB_metadataDao().iterator();
+        while (it.hasNext()) {
+            texte.append(System.getProperty("line.separator"));
+            lastDateBase = it.next().getDateBase();
+        }
+        texte.append(context.getString(R.string.a_propos_base_date) + lastDateBase);
+
+        texte.append("; ");
+        int nbFichesPubliees = fichesOutils.getNbFichesPublished();
+        int nbFichesProposees = fichesOutils.getNbFichesProposed();
+        texte.append(nbFichesPubliees + context.getString(R.string.a_propos_base_nb_fiches_publiees));
+        texte.append(nbFichesProposees + context.getString(R.string.a_propos_base_nb_fiches_redaction));
+        texte.append((fichesOutils.getNbFichesZoneGeo(Constants.ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES) - (nbFichesPubliees + nbFichesProposees))
+                + context.getString(R.string.a_propos_base_nb_fiches_proposées));
+        return texte.toString();
+    }
 }
