@@ -38,7 +38,7 @@ repositories {
 }
 
 android {
-    namespace 'fr.ffessm.doris.android'
+    namespace = 'fr.ffessm.doris.android'
     compileSdkVersion 36
     //buildToolsVersion '35.0.0'
     defaultConfig {
@@ -48,8 +48,8 @@ android {
         versionName "4.10.1"
     }
     buildFeatures {
-        buildConfig true
-        resValues true
+        buildConfig = true
+        resValues = true
     }
 
     File signFile = file('/builds/keystore/sign.properties') // used by Jenkins
@@ -73,7 +73,7 @@ android {
                 keyPassword p.keyPassword
             }
         }
-        buildTypes.release.signingConfig signingConfigs.releaseConfig
+        buildTypes.release.signingConfig = signingConfigs.releaseConfig
     } else {
 
         println 'sign.properties not found (neither in /builds/keystore/sign.properties nor in $HOME/.ssh/doris-android_sign.properties)'
@@ -85,6 +85,6 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
     lint {
-        abortOnError false
+        abortOnError = false
     }
 }
