@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Start of user code customView_layout for Accueil -->
+<!--Start of user code customView_layout for Accueil
+ -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
+    android:paddingEnd="?android:attr/scrollbarSize"
     android:paddingLeft="0dip"
-    android:paddingRight="?android:attr/scrollbarSize" >
+    android:paddingRight="?android:attr/scrollbarSize"
+    android:paddingStart="0dip">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -17,23 +20,26 @@
         android:visibility="gone" >
 
         <ImageView
-            android:id="@+android:id/icon"
+            android:id="@android:id/icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:minWidth="48dp"
+            android:paddingStart="8dip"
+            android:paddingEnd="8dip"
+            android:paddingLeft="8dip"
             android:paddingRight="8dip" />
     </LinearLayout>
     
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:paddingBottom="4dip"
         android:paddingTop="4dip" >
 
         <TextView
-            android:id="@+android:id/title"
+            android:id="@android:id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
@@ -43,10 +49,11 @@
             android:text="Titre"/>
 
         <TextView
-            android:id="@+android:id/summary"
+            android:id="@android:id/summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@android:id/title"
+            android:layout_alignStart="@android:id/title"
             android:layout_below="@android:id/title"
             android:maxLines="4"
             android:textAppearance="?android:attr/textAppearanceSmall"
