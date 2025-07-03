@@ -30,6 +30,8 @@ env:
 jobs:
   collect-db-job:
     runs-on: ubuntu-latest
+    env:
+      MAX_FICHES: ${{ (github.ref == 'refs/heads/main' || github.event_name == 'schedule') && '1500' || '50' }} # max number of fiches downloaded during this build
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -63,7 +65,7 @@ jobs:
       - name: Get DB from Doris web site 🕸️
         run: |
           echo "Get DB from Doris web site"
-          ./gradlew buildDorisDB -Pargs="-u ${{ secrets.DORIS_SITE_USER_ID }} --token=${{ secrets.DORIS_SITE_ACCESS_TOKEN }} --max=1500"
+          ./gradlew buildDorisDB -Pargs="-u ${{ secrets.DORIS_SITE_USER_ID }} --token=${{ secrets.DORIS_SITE_ACCESS_TOKEN }} --max=${MAX_FICHES}"
       - name: Report warnings/errors 🔍
         run: |
           echo "### Database prefetch summary :inbox_tray:" >> $GITHUB_STEP_SUMMARY
