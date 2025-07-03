@@ -12,7 +12,10 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginTop="2dp"
 	    android:layout_marginBottom="2dp"
-	    android:paddingLeft="4dip">
+	    android:paddingLeft="4dip"
+		android:paddingRight="4dip"
+        android:paddingStart="4dip"
+		android:paddingEnd="4dip">
 
 		<LinearLayout
 			android:id="@+id/groupselection_listview_navigation"
@@ -32,16 +35,17 @@
 
 		</LinearLayout>
 		<RadioButton
-				android:id="@+id/groupeselection_main_radioSelect"
-			    android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignParentRight="true"
-		        android:layout_marginBottom="2dp"
-			    android:layout_marginLeft="2dp"
-			    android:layout_marginRight="2dp"
-			    android:layout_marginTop="2dp"
-			    android:text=""
-		        android:onClick="onClickCurrentGroup"
+			android:id="@+id/groupeselection_main_radioSelect"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+			android:layout_marginBottom="2dp"
+			android:layout_marginLeft="2dp"
+			android:layout_marginRight="2dp"
+			android:layout_marginTop="2dp"
+			android:text=""
+			android:onClick="onClickCurrentGroup"
 		     />
 	</RelativeLayout>
     <RelativeLayout
