@@ -22,7 +22,7 @@ class DeviceSecondaryExternal extends Device  {
 	
 	protected String mMountPoint;
 	
-	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+	@androidx.annotation.RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 	DeviceSecondaryExternal(Context context) {
 		
 		File[] possibleExtFilesDirs = ContextCompat.getExternalFilesDirs(context, "");
@@ -34,19 +34,9 @@ class DeviceSecondaryExternal extends Device  {
 			mMountPoint = mountPointFile.getAbsolutePath();
 	
 			// determine removable and emulated mode
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-	    		setRemovable(Environment.isExternalStorageRemovable(possibleExtFilesDirs[1])); // Gingerbread weiß es genau
-			}
-			else {
-				setRemovable(true); // Default ist, dass eine SD-Karte rausgenommen werden kann
-			}
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				mEmulated = Environment.isExternalStorageEmulated(possibleExtFilesDirs[1]);
-			} else {
-				// utilise le nom du point d emontage pour avoir une idee s'il est emule ou pas
-				mEmulated = Textes_Outils.containsIgnoreCase(mMountPoint, "emulated");
-			}
-		}
+            setRemovable(Environment.isExternalStorageRemovable(possibleExtFilesDirs[1])); // Gingerbread weiß es genau
+            mEmulated = Environment.isExternalStorageEmulated(possibleExtFilesDirs[1]);
+        }
 	}
 
 	
@@ -81,14 +71,19 @@ class DeviceSecondaryExternal extends Device  {
 
 	@Override
 	public boolean isAvailable() {
-		String mState = getState();
-		return (Environment.MEDIA_MOUNTED.equals(mState) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(mState));
+        String mState = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mState = getState();
+        }
+        return (Environment.MEDIA_MOUNTED.equals(mState) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(mState));
 	}
 
 	@Override
 	public boolean isWriteable() {
-		return Environment.MEDIA_MOUNTED.equals(getState());
-	}
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return Environment.MEDIA_MOUNTED.equals(getState());
+        } else return false;
+    }
 
 	
 	@Override
@@ -120,29 +115,14 @@ class DeviceSecondaryExternal extends Device  {
 	public File getPublicDirectory(String s) { 
 		return Environment.getExternalStoragePublicDirectory(s);
 	}
-	
-	@SuppressWarnings("deprecation")
-	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+
+	@androidx.annotation.RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 	@Override
 	public String getState() { 
 		File f = getMountPointFile();
-		
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-			return Environment.getExternalStorageState(f);
-		}
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-			return Environment.getStorageState(f);
-		}
-		// older versions don't have a clean method, try to emulate
-		if (mAvailable = f.isDirectory() && f.canRead()) {  
-			mWriteable = f.canWrite();
-		} else 
-			mWriteable = false;
-		if (mAvailable)
-			return mWriteable ? Environment.MEDIA_MOUNTED : Environment.MEDIA_MOUNTED_READ_ONLY;
-		else 
-			return Environment.MEDIA_REMOVED; 
-	}
+
+        return Environment.getExternalStorageState(f);
+    }
 
 	@Override
 	public File getMountPointFile() {
