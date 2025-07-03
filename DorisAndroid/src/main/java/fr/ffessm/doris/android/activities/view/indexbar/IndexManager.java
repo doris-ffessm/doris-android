@@ -6,7 +6,6 @@ import android.util.Log;
 import java.util.HashMap;
 import java.util.List;
 
-import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.AbstractWebNodeObject;
 
 
@@ -15,7 +14,7 @@ import fr.ffessm.doris.android.datamodel.AbstractWebNodeObject;
  * @param <ItemType>
  */
 
-public abstract class IndexManager<ItemType extends AbstractWebNodeObject, IndexKeyType extends Comparable> {
+public abstract class IndexManager<ItemType extends AbstractWebNodeObject, IndexKeyType extends Comparable<IndexKeyType>> {
     private static final String LOG_TAG = IndexManager.class.getCanonicalName();
     protected Context context;
 
@@ -106,8 +105,9 @@ public abstract class IndexManager<ItemType extends AbstractWebNodeObject, Index
      * @param key         to be searched
      * @param startBottom initial value for bottom, default = 0
      * @param startTop    initial top value, default = array.length -1
-     * @return
+     * @return int
      */
+
     public int binarySearchId(List<Integer> filteredFicheIdList, IndexKeyType key, int startBottom, int startTop) {
         int bot = startBottom;
         int top = startTop;
@@ -157,7 +157,6 @@ public abstract class IndexManager<ItemType extends AbstractWebNodeObject, Index
                 found = true;
                 break;
             }
-            ;
         }
         if (found) {
             // search for the first occurence
