@@ -10,19 +10,44 @@ buildscript {
     }
 }
 
+// applies to all projects (including root)
 allprojects {
-    // applies to all projects (including root)
+
     repositories {
         google()
         mavenCentral()
     }
 }
 
+// apply to all subprojects
 subprojects {
-    // apply to all subprojects
+    // apply to all subprojects with JavaCompile support
     tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    // applies all android specific subprojects
+    plugins.withId("com.android.application") {
+        configureAndroidProject(project)
+    }
+    plugins.withId("com.android.library") {
+        configureAndroidProject(project)
+    }
+}
+
+// shared configuration for all android app/lib
+def configureAndroidProject(Project project) {
+    project.android {
+        compileSdkVersion 34
+        defaultConfig {
+            minSdkVersion 21
+            targetSdkVersion 34
+        }
+        buildFeatures {
+            buildConfig = true
+            resValues = true
+        }
     }
 }

@@ -26,24 +26,13 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }
 
-repositories {
-    mavenCentral()
-    google()
-}
-
 android {
+    // also look into root build.gradle for other applied options
     namespace = 'fr.ffessm.doris.android'
     compileSdkVersion 36
-    //buildToolsVersion '35.0.0'
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 34
         versionCode 81
         versionName "4.10.1"
-    }
-    buildFeatures {
-        buildConfig = true
-        resValues = true
     }
 
     File signFile = file('/builds/keystore/sign.properties') // used by Jenkins
