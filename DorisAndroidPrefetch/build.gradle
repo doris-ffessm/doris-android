@@ -39,7 +39,8 @@ java {
 // * pour obtenir une base 100% fraiche
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-task BuildDorisDBInteractive(dependsOn: 'classes',  type: JavaExec) {
+tasks.register("BuildDorisDBInteractive", JavaExec) {
+	dependsOn("classes")
 	mainClass = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
 	if(project.hasProperty('user') ) {
@@ -58,14 +59,16 @@ if (project.hasProperty("args")) {
 	ext.cmdargs = ""
 }
 
-task BuildDorisDB(dependsOn: 'classes',  type: JavaExec) {
+tasks.register("BuildDorisDB", JavaExec) {
+	dependsOn("classes")
 	mainClass = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
 
 	args cmdargs.split()
 }
 
-task buildDorisDBV4_limited( dependsOn: 'classes', type: JavaExec) {
+tasks.register("buildDorisDBV4_limited", JavaExec) {
+	dependsOn("classes")
 	mainClass = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
 	if(project.hasProperty('user') && project.hasProperty('token')) {
@@ -83,7 +86,8 @@ task buildDorisDBV4_limited( dependsOn: 'classes', type: JavaExec) {
 // * récupération du token
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-task(testConnexion, dependsOn: 'classes', type: JavaExec) {
+tasks.register("testConnexion", JavaExec) {
+	dependsOn("classes")
 	mainClass = 'fr.ffessm.doris.prefetch.PrefetchDorisWebSite'
 	classpath = sourceSets.main.runtimeClasspath
 	args '-i', 'TEST_CONNECTION_V4'
