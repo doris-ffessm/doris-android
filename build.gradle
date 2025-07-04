@@ -1,9 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
-
 buildscript {
     repositories {
         mavenCentral()
@@ -14,10 +10,19 @@ buildscript {
     }
 }
 
-
 allprojects {
+    // applies to all projects (including root)
     repositories {
         google()
         mavenCentral()
+    }
+}
+
+subprojects {
+    // apply to all subprojects
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }

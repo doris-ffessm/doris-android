@@ -2,12 +2,6 @@ plugins {
     id 'com.android.application'
 }
 
-tasks.withType(JavaCompile) {
-    /*sourceCompatibility = "1.8"
-    targetCompatibility = "1.8"*/
-    options.encoding = 'UTF-8'
-}
-
 def acraVersion = '5.8.4'
 //def androidSupportVersion = '28.0.0'
 
