@@ -401,16 +401,22 @@ public class GestionPhotoDiskService extends IntentService {
     }
     
     private Photos_Outils getPhotosOutils(){ 
-    	if(photosOutils == null) photosOutils = new Photos_Outils(this);
+    	if(photosOutils == null) {
+			photosOutils = new Photos_Outils(this);
+		}
     	return photosOutils;
     }
     
 	private Param_Outils getParamOutils(){ 
-		if(paramOutils == null) paramOutils = new Param_Outils(this);
+		if(paramOutils == null) {
+			paramOutils = new Param_Outils(this);
+		}
     	return paramOutils;
 	}
 	private Disque_Outils getDisqueOutils() { 
-		if(disqueOutils == null) disqueOutils = new Disque_Outils(this);
+		if(disqueOutils == null) {
+			disqueOutils = new Disque_Outils(this);
+		}
     	return disqueOutils;
 	}
     

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mode_affichage_listviewrow"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
+    android:paddingStart="5dp"
+    android:paddingEnd="5dp"
     android:paddingTop="5dp"
-    android:paddingLeft="5dp">
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -28,9 +30,10 @@
             android:id="@+id/mode_affichage_listviewrow_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
             android:text="TextView"
             android:layout_marginLeft="4dp"
-            app:layout_constraintEnd_toStartOf="@+id/mode_affichage_listviewrow_checkBox"
+            app:layout_constraintEnd_toStartOf="@+id/mode_affichage_listviewrow_radio"
             app:layout_constraintStart_toEndOf="@+id/mode_affichage_listviewrow_icon"
             app:layout_constraintTop_toTopOf="parent"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -39,9 +42,10 @@
             android:id="@+id/mode_affichage_listviewrow_details"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Details"
             android:layout_marginLeft="4dp"
-            app:layout_constraintEnd_toStartOf="@+id/mode_affichage_listviewrow_checkBox"
+            android:layout_marginStart="4dp"
+            android:text="Details"
+            app:layout_constraintEnd_toStartOf="@+id/mode_affichage_listviewrow_radio"
             app:layout_constraintStart_toEndOf="@+id/mode_affichage_listviewrow_icon"
             app:layout_constraintTop_toBottomOf="@id/mode_affichage_listviewrow_text"
             android:textAppearance="?android:attr/textAppearanceSmall"

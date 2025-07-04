@@ -132,22 +132,20 @@ public class RechercheGuidee_CustomViewActivity extends OrmLiteActionBarActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // behavior of option menu
-        switch (item.getItemId()) {
-            case R.id.rechercheguidee_customview_action_preference:
-                startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-                return true;
+        int itemId = item.getItemId();
+        if (itemId == R.id.rechercheguidee_customview_action_preference) {
+            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+            return true;
             //Start of user code additional menu action RechercheGuidee_CustomViewActivity
-
-            case R.id.rechercheguidee_customview_action_aide:
-                AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
-                aide.affichageMessageHTML(context.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
-                return true;
+        } else if (itemId == R.id.rechercheguidee_customview_action_aide) {
+            AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
+            aide.affichageMessageHTML(context.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
+            return true;
 
 
             //End of user code
             // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                /* finish(); */
+        } else if (itemId == android.R.id.home) {/* finish(); */
 				/*
 	        	TaskStackBuilder.create(this)
 	                // Add all of this activity's parents to the back stack
@@ -155,24 +153,23 @@ public class RechercheGuidee_CustomViewActivity extends OrmLiteActionBarActivity
 	                // Navigate up to the closest parent
 	                .startActivities();
 	            */
-                Intent upIntent = NavUtils.getParentActivityIntent(this);
-                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                    // This activity is NOT part of this app's task, so create a new task
-                    // when navigating up, with a synthesized back stack.
-                    TaskStackBuilder.create(this)
-                            // Add all of this activity's parents to the back stack
-                            .addNextIntentWithParentStack(upIntent)
-                            // Navigate up to the closest parent
-                            .startActivities();
-                } else {
-                    // This activity is part of this app's task, so simply
-                    // navigate up to the logical parent activity.
-                    NavUtils.navigateUpTo(this, upIntent);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            Intent upIntent = NavUtils.getParentActivityIntent(this);
+            if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                // This activity is NOT part of this app's task, so create a new task
+                // when navigating up, with a synthesized back stack.
+                TaskStackBuilder.create(this)
+                        // Add all of this activity's parents to the back stack
+                        .addNextIntentWithParentStack(upIntent)
+                        // Navigate up to the closest parent
+                        .startActivities();
+            } else {
+                // This activity is part of this app's task, so simply
+                // navigate up to the logical parent activity.
+                NavUtils.navigateUpTo(this, upIntent);
+            }
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     //  ------------ dealing with Up button

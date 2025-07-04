@@ -14,11 +14,7 @@ import android.os.Environment;
  * Beschreibt die (primäre) SD-Karte in {@link Device}-Form. Interessant für 
  * API7 ist, dass die dort in {@link Context} nicht vorhandenen Methoden wie 
  * {@link Context#getExternalFilesDir(String)} emuliert werden.
- * 
- * TODO Die Erkennung, ob es sich um ein Gerät mit fester SD-Karte handelt,
- * findet nicht hier statt. {@link #isRemovable()} liefert also TRUE, zumindest
- * solange in {@link Environment2#rescanDevices()} kein Hack durchgeführt
- * wird.
+ *
  * 
  * @author Jockel
  * 
@@ -86,21 +82,18 @@ class DevicePrimaryExternal extends Device {
 	public File getFilesDir(Context ctx) { return getFilesDir(ctx, null); }
 
 	
-	@TargetApi(Build.VERSION_CODES.FROYO)
 	@Override
 	public File getFilesDir(Context ctx, String s) { 
 		return ctx.getExternalFilesDir(s);
 	}
 
 	
-	@TargetApi(Build.VERSION_CODES.FROYO)
 	@Override
 	public File getCacheDir(Context ctx) { 
 		return ctx.getExternalCacheDir();
 	}
 
 	
-	@TargetApi(Build.VERSION_CODES.FROYO)
 	@Override
 	public File getPublicDirectory(String s) { 
 		return Environment.getExternalStoragePublicDirectory(s);

@@ -13,23 +13,25 @@ env:
 
   # ANDROID_COMPILE_SDK is the version of Android you're compiling with.
   # It should match compileSdkVersion.
-  ANDROID_COMPILE_SDK: "34"
+  ANDROID_COMPILE_SDK: "36"
 
   # ANDROID_BUILD_TOOLS is the version of the Android build tools you are using.
   # It should match buildToolsVersion.
-  ANDROID_BUILD_TOOLS: "30.0.2"
+  ANDROID_BUILD_TOOLS: "35.0.0"
 
   # It's what version of the command line tools we're going to download from the official site.
   # Official Site-> https://developer.android.com/studio/index.html
   # There, look down below at the cli tools only, sdk tools package is of format:
   #        commandlinetools-os_type-ANDROID_SDK_TOOLS_latest.zip
   # when the script was last modified for latest compileSdkVersion, it was which is written down below
-  ANDROID_SDK_TOOLS: "10406996"
+  ANDROID_SDK_TOOLS: "13114758"
 
 
 jobs:
   collect-db-job:
     runs-on: ubuntu-latest
+    env:
+      MAX_FICHES: ${{ (github.ref == 'refs/heads/main' || github.event_name == 'schedule') && '1500' || '50' }} # max number of fiches downloaded during this build
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -38,7 +40,7 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v4
       - name: Cache previous DorisDB prefetch # https://github.com/actions/cache/blob/main/tips-and-workarounds.md#update-a-cache
         uses: actions/cache@v4
         with:
@@ -63,7 +65,7 @@ jobs:
       - name: Get DB from Doris web site 🕸️
         run: |
           echo "Get DB from Doris web site"
-          ./gradlew buildDorisDB -Pargs="-u ${{ secrets.DORIS_SITE_USER_ID }} --token=${{ secrets.DORIS_SITE_ACCESS_TOKEN }} --max=1500"
+          ./gradlew buildDorisDB -Pargs="-u ${{ secrets.DORIS_SITE_USER_ID }} --token=${{ secrets.DORIS_SITE_ACCESS_TOKEN }} --max=${MAX_FICHES}"
       - name: Report warnings/errors 🔍
         run: |
           echo "### Database prefetch summary :inbox_tray:" >> $GITHUB_STEP_SUMMARY
@@ -105,7 +107,7 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v4
       - name: Get DorisDB from previous jobs
         uses: actions/download-artifact@v4
         with:

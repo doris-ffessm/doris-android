@@ -444,58 +444,57 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // behavior of option menu
-        switch (item.getItemId()) {
-            case R.id.detailsfiche_elementview_action_preference:
-                startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-                return true;
+        int itemId = item.getItemId();
+        if (itemId == R.id.detailsfiche_elementview_action_preference) {
+            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+            return true;
             //Start of user code additional menu action DetailsFiche_ElementViewActivity
-            case R.id.detailsfiche_elementview_action_fold_all_sections:
-                foldAllDetails();
-                return true;
-            case R.id.detailsfiche_elementview_action_unfold_all_sections:
-                unfoldAllDetails();
-                return true;
-            case R.id.detailsfiche_elementview_action_glossaire:
-                DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
-                Intent toDefinitionlView = new Intent(context, Glossaire_ClassListViewActivity.class);
-                context.startActivity(toDefinitionlView);
-                return true;
-            case R.id.detailsfiche_elementview_action_aide:
-                AffichageMessageHTML aide = new AffichageMessageHTML(this, this, getHelper());
-                aide.affichageMessageHTML(this.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
-                return true;
+        } else if (itemId == R.id.detailsfiche_elementview_action_fold_all_sections) {
+            foldAllDetails();
+            return true;
+        } else if (itemId == R.id.detailsfiche_elementview_action_unfold_all_sections) {
+            unfoldAllDetails();
+            return true;
+        } else if (itemId == R.id.detailsfiche_elementview_action_glossaire) {
+            DorisApplicationContext.getInstance().setIntentPourRetour(getIntent());
+            Intent toDefinitionlView = new Intent(context, Glossaire_ClassListViewActivity.class);
+            context.startActivity(toDefinitionlView);
+            return true;
+        } else if (itemId == R.id.detailsfiche_elementview_action_aide) {
+            AffichageMessageHTML aide = new AffichageMessageHTML(this, this, getHelper());
+            aide.affichageMessageHTML(this.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
+            return true;
             //End of user code
             // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
-                if (upIntent == null) {
-                    // workaround bug https://gitlab.inria.fr/doris/doris-android/issues/134
-                    Intent i = new Intent(this, Accueil_CustomViewActivity.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    DorisApplicationContext.getInstance().resetIntentPrecedent(i);
-                    upIntent = i;
-                }
-                Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : " + upIntent.getComponent().toString());
+        } else if (itemId == android.R.id.home) {
+            Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
+            if (upIntent == null) {
+                // workaround bug https://gitlab.inria.fr/doris/doris-android/issues/134
+                Intent i = new Intent(this, Accueil_CustomViewActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                DorisApplicationContext.getInstance().resetIntentPrecedent(i);
+                upIntent = i;
+            }
+            Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : " + upIntent.getComponent().toString());
 
-                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                    Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
-                    // This activity is NOT part of this app's task, so create a new task
-                    // when navigating up, with a synthesized back stack.
-                    TaskStackBuilder.create(this)
-                            // Add all of this activity's parents to the back stack
-                            .addNextIntentWithParentStack(upIntent)
-                            // Navigate up to the closest parent
-                            .startActivities();
-                } else {
-                    Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
-                    // This activity is part of this app's task, so simply
-                    // navigate up to the logical parent activity.
-                    NavUtils.navigateUpTo(this, upIntent);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
+                // This activity is NOT part of this app's task, so create a new task
+                // when navigating up, with a synthesized back stack.
+                TaskStackBuilder.create(this)
+                        // Add all of this activity's parents to the back stack
+                        .addNextIntentWithParentStack(upIntent)
+                        // Navigate up to the closest parent
+                        .startActivities();
+            } else {
+                Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
+                // This activity is part of this app's task, so simply
+                // navigate up to the logical parent activity.
+                NavUtils.navigateUpTo(this, upIntent);
+            }
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     //  ------------ dealing with Up button
@@ -530,13 +529,11 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.detailsfiche_elementview_action_fold_all_sections:
-                foldAllDetails();
-                break;
-            case R.id.detailsfiche_elementview_action_unfold_all_sections:
-                unfoldAllDetails();
-                break;
+        int itemId = item.getItemId();
+        if (itemId == R.id.detailsfiche_elementview_action_fold_all_sections) {
+            foldAllDetails();
+        } else if (itemId == R.id.detailsfiche_elementview_action_unfold_all_sections) {
+            unfoldAllDetails();
         }
         return false;
     }
