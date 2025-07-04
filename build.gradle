@@ -21,11 +21,16 @@ allprojects {
 
 // apply to all subprojects
 subprojects {
-    // apply to all subprojects with JavaCompile support
-    tasks.withType(JavaCompile).configureEach {
-        options.encoding = 'UTF-8'
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+    // Configure pure Java modules
+    plugins.withId("java") {
+        java {
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(17)
+            }
+        }
+        tasks.withType(JavaCompile).configureEach {
+            options.encoding = 'UTF-8'
+        }
     }
 
     // applies all android specific subprojects
@@ -49,5 +54,12 @@ def configureAndroidProject(Project project) {
             buildConfig = true
             resValues = true
         }
+        compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
+        }
+    }
+    project.tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
     }
 }

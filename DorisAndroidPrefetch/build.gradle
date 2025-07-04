@@ -1,4 +1,6 @@
-apply plugin: 'java'
+plugins {
+	id 'java'
+}
 
 dependencies {
 	// local dependencies
@@ -27,6 +29,10 @@ dependencies {
 	implementation project(':DorisAndroidCommon')
 }
 
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 // * WEB_TO_DB : Crée la base à partir du site doris.ffessm.fr
 // * par defaut fonctionne en incremental: supprimer le fichier run/database/dorisAndroid.db
