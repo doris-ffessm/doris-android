@@ -80,6 +80,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 
@@ -134,11 +135,13 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         });
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        ListView list = findViewById(R.id.listeficheavecfiltre_listview);
-        list.setClickable(true);
+        ListView listview = findViewById(R.id.listeficheavecfiltre_listview);
+        listview.setClickable(true);
         //Start of user code onCreate ListeFicheAvecFiltre_ClassListViewActivity adapter creation
         Log.d(LOG_TAG, "ListeFicheAvecFiltre_ClassListViewActivity - onCreate");
 
@@ -148,16 +151,15 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
         //End of user code
         // avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        list.setOnItemClickListener(this);
+        listview.setOnItemClickListener(this);
 
-        list.setAdapter(adapter);
+        listview.setAdapter(adapter);
 
         // Get the intent, verify the actionstartActivity and get the query
         handleIntent(getIntent());
 
         // add handler for indexBar
         if (isGroupeMode()) {
-            ListView listview = findViewById(R.id.listeficheavecfiltre_listview);
             int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe),
                     Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
             mHandler = new GroupIndexBarHandler(this, listview, filtreGroupe);
@@ -245,10 +247,9 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
             b.putInt("ficheId", ((Fiche) view.getTag()).getId());
             toDetailView.putExtras(b);
             startActivity(toDetailView);
-        } else if (view instanceof TextView && view.getId() == R.id.indexbar_alphabet_row_textview) {
+        } else if (view instanceof TextView rowview && view.getId() == R.id.indexbar_alphabet_row_textview) {
             // click on indexBar
             if (!isGroupeMode()) {
-                TextView rowview = (TextView) view;
                 CharSequence alphabet = rowview.getText();
 
                 if (alphabet == null || alphabet.equals(""))
@@ -263,12 +264,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
                     listview.setSelection(newPosition);
                 }
             }
-        } else if (view instanceof ImageView && view.getId() == R.id.indexbar_alphabet_row_imageview) {
+        } else if (view instanceof ImageView rowview && view.getId() == R.id.indexbar_alphabet_row_imageview) {
             // click on indexBar
             if (isGroupeMode()) {
-                ImageView rowview = (ImageView) view;
-                if (rowview.getTag() != null && rowview.getTag() instanceof Groupe) {
-                    Groupe groupe = (Groupe) rowview.getTag();
+                if (rowview.getTag() != null && rowview.getTag() instanceof Groupe groupe) {
                     Integer newPosition = groupeIdToIndex.get(groupe.getId());
                     if (newPosition != null) {
                         showShortToast(groupe.getNomGroupe());
@@ -490,11 +489,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
                 if (groupeIdToIndex.containsKey(searchAlphabet)) {
                     groupeIdToIndex.put(groupID, groupeIdToIndex.get(searchAlphabet));
                     break;
-                } else if (i == allGroupIDs.size()) /*If there are no entries after E, then on click event on E should take the user to end of the list*/
-                    groupeIdToIndex.put(groupID, adapter.filteredFicheIdList.size() - 1);
-                else
-                    continue;
-
+                }
             }
         }
     }
@@ -521,43 +516,46 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
     public void updateFilterInActionBar() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         ActionBar actionBar = getSupportActionBar();
-        // mise à jour des titres
-        // Titre = zone
-        int currentZoneFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
-        if (currentZoneFilterId == -1 || currentZoneFilterId == 0) { // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
-            //actionBar.setTitle(R.string.accueil_recherche_precedente_filtreGeographique_sans);
-            String[] zonegeo_shortnames = getResources().getStringArray(R.array.zonegeo_shortname_array);
-            actionBar.setTitle(zonegeo_shortnames[0]);
-        } else {
-            //ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
-            //actionBar.setTitle(currentZoneFilter.getNom().trim());
-            String[] zonegeo_shortnames = getResources().getStringArray(R.array.zonegeo_shortname_array);
-            actionBar.setTitle(zonegeo_shortnames[currentZoneFilterId]);
-        }
+        if(actionBar != null) {
+            // mise à jour des titres
+            // Titre = zone
+            int currentZoneFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
+            if (currentZoneFilterId == -1 || currentZoneFilterId == 0) { // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
+                //actionBar.setTitle(R.string.accueil_recherche_precedente_filtreGeographique_sans);
+                String[] zonegeo_shortnames = getResources().getStringArray(R.array.zonegeo_shortname_array);
+                actionBar.setTitle(zonegeo_shortnames[0]);
+            } else {
+                //ZoneGeographique currentZoneFilter= getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
+                //actionBar.setTitle(currentZoneFilter.getNom().trim());
+                String[] zonegeo_shortnames = getResources().getStringArray(R.array.zonegeo_shortname_array);
+                actionBar.setTitle(zonegeo_shortnames[currentZoneFilterId]);
+            }
 
-        int groupRootId = Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId();
-        // sous titre = espèce 
-        int filtreCourantId = prefs.getInt(getString(R.string.pref_key_filtre_groupe), groupRootId);
-        if (filtreCourantId == groupRootId) {
-            actionBar.setSubtitle(R.string.accueil_recherche_precedente_filtreEspece_sans);
-        } else {
-            Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
-            actionBar.setSubtitle(groupeFiltreCourant.getNomGroupe().trim());
+            int groupRootId = Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId();
+            // sous titre = espèce
+            int filtreCourantId = prefs.getInt(getString(R.string.pref_key_filtre_groupe), groupRootId);
+            if (filtreCourantId == groupRootId) {
+                actionBar.setSubtitle(R.string.accueil_recherche_precedente_filtreEspece_sans);
+            } else {
+                Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
+                actionBar.setSubtitle(groupeFiltreCourant.getNomGroupe().trim());
 
-        }
-        // mise à jour des actions
-        if ((prefs.getInt(getString(R.string.pref_key_filtre_groupe), groupRootId) != groupRootId) ||
-                (prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1) != -1)) {
-            // mise à jour de l'image du bouton de filtre
-            if (searchButtonMenuItem != null)
-                searchButtonMenuItem.setIcon(ThemeUtil.attrToResId(((ListeFicheAvecFiltre_ClassListViewActivity) context), R.attr.ic_app_filter_settings_actif));
-        } else {
-            // pas de filtre actif
-            // remet l'imaged efiltre inactif
-            //searchButton.setImageResource(R.drawable.filter_settings_32);
-            if (searchButtonMenuItem != null)
-                searchButtonMenuItem.setIcon(ThemeUtil.attrToResId(((ListeFicheAvecFiltre_ClassListViewActivity) context), R.attr.ic_app_filter_settings));
+            }
 
+            // mise à jour des actions
+            if ((prefs.getInt(getString(R.string.pref_key_filtre_groupe), groupRootId) != groupRootId) ||
+                    (prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1) != -1)) {
+                // mise à jour de l'image du bouton de filtre
+                if (searchButtonMenuItem != null)
+                    searchButtonMenuItem.setIcon(ThemeUtil.attrToResId(((ListeFicheAvecFiltre_ClassListViewActivity) context), R.attr.ic_app_filter_settings_actif));
+            } else {
+                // pas de filtre actif
+                // remet l'imaged efiltre inactif
+                //searchButton.setImageResource(R.drawable.filter_settings_32);
+                if (searchButtonMenuItem != null)
+                    searchButtonMenuItem.setIcon(ThemeUtil.attrToResId(((ListeFicheAvecFiltre_ClassListViewActivity) context), R.attr.ic_app_filter_settings));
+
+            }
         }
     }
 
@@ -593,7 +591,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
             View containerView = findViewById(R.id.listeficheavecfiltre_listview);
             containerView.getLocationOnScreen(location);
             Log.d(LOG_TAG, "menuitem pos =" + location[0] + " " + location[1] + " ");
-            popup.showAtLocation(layout, Gravity.TOP | Gravity.RIGHT, 0, location[1]);
+            popup.showAtLocation(layout, Gravity.TOP | Gravity.END, 0, location[1]);
         }
         // bouton filtre espèce
         Button btnFiltreEspece = layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
@@ -604,7 +602,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
             btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_sans));
         } else {
             Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
-            btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec) + " " + groupeFiltreCourant.getNomGroupe().trim());
+            btnFiltreEspece.setText(MessageFormat.format("{0} {1}", getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec), groupeFiltreCourant.getNomGroupe().trim()));
         }
 
         btnFiltreEspece.setOnClickListener(v -> {
@@ -626,7 +624,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
             btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_sans));
         } else {
             ZoneGeographique currentZoneFilter = getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
-            btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec) + " " + currentZoneFilter.getNom().trim());
+            btnZoneGeo.setText(MessageFormat.format("{0} {1}", getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec), currentZoneFilter.getNom().trim()));
         }
 
         btnZoneGeo.setOnClickListener(v -> {
