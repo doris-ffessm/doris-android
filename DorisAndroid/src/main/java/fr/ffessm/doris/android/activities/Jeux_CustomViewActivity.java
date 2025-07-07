@@ -42,6 +42,11 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 import android.os.Bundle;
+
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -76,6 +81,7 @@ import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Jeu;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+import fr.ffessm.doris.android.tools.ThemeUtil;
 
 public class Jeux_CustomViewActivity extends FragmentActivity
         implements JeuxReponses_ClassListViewFragment.JeuSelectionneListener,
@@ -97,12 +103,19 @@ public class Jeux_CustomViewActivity extends FragmentActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d(LOG_TAG, "onCreate() - Début");
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(savedInstanceState);
+        ThemeUtil.onActivityCreateSetTheme(this);
 
         getParamOutils().setParamBoolean(R.string.pref_key_jeux_actifs, true);
 
         Log.d(LOG_TAG, "onCreate() - 010");
         setContentView(R.layout.jeux_view);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.jeux_view_layout), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         // Si l'application avait déjà été lancée, on ne recrée pas (cas des rotations)
         if (savedInstanceState != null) {

@@ -74,7 +74,11 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
+import androidx.core.graphics.Insets;
 import androidx.core.view.MenuItemCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import java.util.HashMap;
 import java.util.List;
@@ -117,9 +121,17 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
     HashMap<Integer, Integer> groupeIdToIndex;
 
     public void onCreate(Bundle bundle) {
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        //EdgeToEdge.enable(this);
         super.onCreate(bundle);
         ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.listeficheavecfiltre_listview);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.listeficheavecfiltre_listview_layout), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -494,8 +506,12 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBar
 
     public View getAlphabetRowView() {
         if(isGroupeMode()) {
+            // we don't need alphabet row in groupe mode
+            findViewById(R.id.alphabet_row_layout).setVisibility(View.GONE);
             return findViewById(R.id.image_row_layout);
         } else {
+            // we need image row in alphabet mode
+            findViewById(R.id.image_row_layout).setVisibility(View.GONE);
             return findViewById(R.id.alphabet_row_layout);
         }
     }

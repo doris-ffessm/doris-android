@@ -45,10 +45,10 @@ subprojects {
 // shared configuration for all android app/lib
 def configureAndroidProject(Project project) {
     project.android {
-        compileSdkVersion 34
+        compileSdkVersion 36
         defaultConfig {
             minSdkVersion 21
-            targetSdkVersion 34
+            targetSdkVersion 35
         }
         buildFeatures {
             buildConfig = true
