@@ -1,27 +1,20 @@
-apply plugin: 'java'
-
-tasks.withType(JavaCompile) {
-    sourceCompatibility = "17"
-    targetCompatibility = "17"
+plugins {
+    id 'java'
 }
 
-
 dependencies {
+    // local dependencies
     // implementation fileTree(dir: 'libs', include: '*.jar')
 
-    // dependances maven
+    // maven dependencies
     implementation 'org.apache.commons:commons-lang3:3.13.0'
     //implementation 'net.htmlparser.jericho:jericho-html:3.3'
     implementation 'com.j256.ormlite:ormlite-core:4.47'
     implementation 'commons-logging:commons-logging:1.1.1'
     implementation 'kxml2:kxml2:2.3.0'
-/*
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8*/
 }
-/* sourceSets {
-    main.java.srcDirs = ['src']
-    main.resources.srcDirs = ['src']
-    test.java.srcDirs = ['tests/java']
-    test.resources.srcDirs = ['tests/resources']
-}*/
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+

@@ -1,9 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
-
 buildscript {
     repositories {
         mavenCentral()
@@ -14,10 +10,56 @@ buildscript {
     }
 }
 
-
+// applies to all projects (including root)
 allprojects {
+
     repositories {
         google()
         mavenCentral()
+    }
+}
+
+// apply to all subprojects
+subprojects {
+    // Configure pure Java modules
+    plugins.withId("java") {
+        java {
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(17)
+            }
+        }
+        tasks.withType(JavaCompile).configureEach {
+            options.encoding = 'UTF-8'
+        }
+    }
+
+    // applies all android specific subprojects
+    plugins.withId("com.android.application") {
+        configureAndroidProject(project)
+    }
+    plugins.withId("com.android.library") {
+        configureAndroidProject(project)
+    }
+}
+
+// shared configuration for all android app/lib
+def configureAndroidProject(Project project) {
+    project.android {
+        compileSdkVersion 36
+        defaultConfig {
+            minSdkVersion 21
+            targetSdkVersion 35
+        }
+        buildFeatures {
+            buildConfig = true
+            resValues = true
+        }
+        compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
+        }
+    }
+    project.tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
     }
 }

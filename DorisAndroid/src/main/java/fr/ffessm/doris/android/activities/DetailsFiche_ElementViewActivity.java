@@ -78,6 +78,10 @@ import android.widget.TextView.BufferType;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.squareup.picasso.NetworkPolicy;
@@ -154,10 +158,15 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(savedInstanceState);
         ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.detailsfiche_elementview);
-
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.detailsfiche_elementview_layout), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
