@@ -63,6 +63,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 
+
 import java.io.File;
 //Start of user code additional imports Accueil_CustomViewActivity
 import java.sql.SQLException;
@@ -79,7 +80,16 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
+
+import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.OnApplyWindowInsetsListener;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -169,8 +179,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(savedInstanceState);
         ThemeUtil.onActivityCreateSetTheme(this);
+
         setContentView(R.layout.accueil_customview);
         //Start of user code onCreate Accueil_CustomViewActivity
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Début");
@@ -183,6 +195,59 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     		showToast("Veuillez patienter que la base de donnée s'initialise.");
 		}*/
 
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.accueil_customview_layout), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        // Find the view that needs padding to avoid system bars.
+    /*    View mainContentContainer = findViewById(R.id.accueil_customview_main_content_container); // <<--- IMPORTANT: Use your actual ID
+
+        if (mainContentContainer != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(mainContentContainer, new OnApplyWindowInsetsListener() {
+                @Override
+                public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat windowInsets) {
+                    // Get the insets for the system bars (status bar, navigation bar)
+                    Insets systemBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+                    Insets navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
+
+                    Log.d("InsetsDebug", "View ID: " + v.getId());
+                    Log.d("InsetsDebug", "Top inset: " + systemBarInsets.top);
+                    Log.d("InsetsDebug", "Bottom inset: " + systemBarInsets.bottom);
+                    Log.d("InsetsDebug", "Left inset: " + systemBarInsets.left);
+                    Log.d("InsetsDebug", "Right inset: " + systemBarInsets.right);
+                    Log.d("InsetsDebug", "View ID: " + v.getId());
+                    Log.d("InsetsDebug", "SystemBars - Top: " + systemBarInsets.top + ", Bottom: " + systemBarInsets.bottom);
+                    Log.d("InsetsDebug", "NavBars    - Top: " + navBarInsets.top + ", Bottom: " + navBarInsets.bottom); // Log this
+
+                    // Apply these insets as padding to the view 'v' (which is mainContentContainer)
+                    // This pushes the content of 'mainContentContainer' away from the system bars.
+                    v.setPadding(
+                            systemBarInsets.left,
+                            systemBarInsets.top,
+                            systemBarInsets.right,
+                            systemBarInsets.bottom
+                    );
+
+                    // If you have a Toolbar at the very top of this 'mainContentContainer'
+                    // you might want to handle its top padding separately or adjust its height.
+                    // For example, if your Toolbar is *outside* mainContentContainer and fixed at the top,
+                    // mainContentContainer might only need left, right, and bottom padding.
+
+                    // Tell the system that you've used the insets
+                    return WindowInsetsCompat.CONSUMED;
+                }
+            });
+        } else {
+            // Log an error or handle the case where the view is not found,
+            // though this shouldn't happen if the ID is correct.
+            Log.e(LOG_TAG, "Missing element accueil_customview_main_content_container");
+
+        }
+
+     */
         // Defines a Handler object that's attached to the UI thread
         mHandler = new Handler(Looper.getMainLooper()) {
             /*
@@ -190,7 +255,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
              * the Handler receives a new Message to process.
              */
             @Override
-            public void handleMessage(Message inputMessage) {
+            public void handleMessage(@NonNull Message inputMessage) {
                 if (Accueil_CustomViewActivity.this.isFinishing() || Accueil_CustomViewActivity.this.isActivityDestroyed())
                     return;
                 if (inputMessage.obj != null) {
@@ -326,7 +391,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         // deal with fold/unfold
         btnFoldUnfoldZoneSection = findViewById(R.id.accueil_zone_fold_unfold_section_imageButton);
-        llFoldUnfoldZoneSection = findViewById(R.id.accueil_navigation_zones_layout);
+        llFoldUnfoldZoneSection = llContainerLayout;
         isZoneFold = true;
         btnFoldUnfoldZoneSection.setVisibility(View.VISIBLE);
         if(isZoneFold) {
@@ -421,7 +486,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             }
         } catch (SQLException throwables) {
             Log.e(LOG_TAG, "Error determining zonegeo sibling", throwables);
-            throwables.printStackTrace();
         }
 
         ImageView ivIcone = viewZone.findViewById(R.id.zonegeoselection_listviewrow_icon);
@@ -770,15 +834,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         return combinedBitmap;
     }
 
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.d(LOG_TAG, "Preference change detected for key =" + key);
-        if (key.equals(R.string.pref_key_theme)) {
-            // change theme to the selected one
-            showToast("Preference change detected for Theme=" + sharedPreferences.getString(key, "Default"));
-            //	sharedPreferences.getString(key, )
-            //	ThemeUtil.changeToTheme(this, theme)
-        }
-    }
 
     /**
      * get the ZoneGeographique as set in the preferences or "Touteszones" if no preferences
@@ -808,8 +863,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         if (filtreCourantId == groupRootId) {
             return null;
         } else {
-            Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
-            return groupeFiltreCourant;
+            return getHelper().getGroupeDao().queryForId(filtreCourantId);
         }
     }
 
@@ -850,70 +904,52 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     private void debugTest(StringBuilder sb) {
 
         for (DorisDB_metadata dorisDB_metadata : getHelper().getDorisDB_metadataDao()) {
-            sb.append("Date base locale : " + dorisDB_metadata.getDateBase() + "\n");
+            sb.append("Date base locale : ").append(dorisDB_metadata.getDateBase()).append("\n");
         }
 
         sb.append("- - - - - -\n");
-        sb.append(getApplicationContext().getFilesDir().getAbsolutePath() + "\n");
-        sb.append(getApplicationContext().getFilesDir().listFiles().length + "\n");
+        sb.append(getApplicationContext().getFilesDir().getAbsolutePath()).append("\n");
+        sb.append(getApplicationContext().getFilesDir().listFiles().length).append("\n");
         sb.append("- - - - - -\n");
 
 
-        sb.append("prefered_disque : " +
-                ImageLocation.values()[getParamOutils().getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
-                        ImageLocation.APP_INTERNAL.ordinal())] + "\n");
+        sb.append("prefered_disque : ").append(ImageLocation.values()[getParamOutils().getParamInt(R.string.pref_key_prefered_disque_stockage_photo,
+                ImageLocation.APP_INTERNAL.ordinal())]).append("\n");
 
         Disque_Outils disqueOutils = new Disque_Outils(getContext());
-        sb.append("Espace Interne - Espace Total : " + disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getInternalStorage().getSize().second) + "\n");
-        sb.append("Espace Interne - Place Dispo. : " + disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getInternalStorage().getSize().first) + "\n");
-        sb.append("Espace Interne - Path : " + DiskEnvironmentHelper.getInternalStorage().getMountPointFile().getAbsolutePath() + "\n");
+        sb.append("Espace Interne - Espace Total : ").append(disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getInternalStorage().getSize().second)).append("\n");
+        sb.append("Espace Interne - Place Dispo. : ").append(disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getInternalStorage().getSize().first)).append("\n");
+        sb.append("Espace Interne - Path : ").append(DiskEnvironmentHelper.getInternalStorage().getMountPointFile().getAbsolutePath()).append("\n");
 
-        sb.append("Carte SD Interne - Dispo. ( *.isEmulated() ) : " + DiskEnvironmentHelper.getPrimaryExternalStorage().isEmulated() + "\n");
+        sb.append("Carte SD Interne - Dispo. ( *.isEmulated() ) : ").append(DiskEnvironmentHelper.getPrimaryExternalStorage().isEmulated()).append("\n");
         if (!DiskEnvironmentHelper.getPrimaryExternalStorage().isEmulated()) {
             try {
-                sb.append("Carte SD Interne - Espace Total : " + disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getPrimaryExternalStorage().getSize().second) + "\n");
-                sb.append("Carte SD Interne - Place Dispo. : " + disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getPrimaryExternalStorage().getSize().first) + "\n");
-                sb.append("Carte SD Interne - Path : " + DiskEnvironmentHelper.getPrimaryExternalStorage().getMountPointFile().getAbsolutePath() + "\n");
+                sb.append("Carte SD Interne - Espace Total : ").append(disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getPrimaryExternalStorage().getSize().second)).append("\n");
+                sb.append("Carte SD Interne - Place Dispo. : ").append(disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getPrimaryExternalStorage().getSize().first)).append("\n");
+                sb.append("Carte SD Interne - Path : ").append(DiskEnvironmentHelper.getPrimaryExternalStorage().getMountPointFile().getAbsolutePath()).append("\n");
             } catch (Exception e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
             }
 
         }
 
-        sb.append("Carte Externe - Dispo. ( *Available() ) : " + DiskEnvironmentHelper.isSecondaryExternalStorageAvailable(this) + "\n");
+        sb.append("Carte Externe - Dispo. ( *Available() ) : ").append(DiskEnvironmentHelper.isSecondaryExternalStorageAvailable(this)).append("\n");
         if (DiskEnvironmentHelper.isSecondaryExternalStorageAvailable(this)) {
             try {
-                sb.append("Carte Externe - Espace Total : " + disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getSecondaryExternalStorage(this).getSize().second) + "\n");
-                sb.append("Carte Externe - Place Dispo. : " + disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getSecondaryExternalStorage(this).getSize().first) + "\n");
-                sb.append("Carte Externe - Path : " + DiskEnvironmentHelper.getSecondaryExternalStorage(this).getMountPointFile().getAbsolutePath() + "\n");
+                sb.append("Carte Externe - Espace Total : ").append(disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getSecondaryExternalStorage(this).getSize().second)).append("\n");
+                sb.append("Carte Externe - Place Dispo. : ").append(disqueOutils.getHumanDiskUsage(DiskEnvironmentHelper.getSecondaryExternalStorage(this).getSize().first)).append("\n");
+                sb.append("Carte Externe - Path : ").append(DiskEnvironmentHelper.getSecondaryExternalStorage(this).getMountPointFile().getAbsolutePath()).append("\n");
             } catch (NoSecondaryStorageException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
             }
         }
 
-        sb.append("déplacement en cours : " +
-                getParamOutils().getParamBoolean(R.string.pref_key_deplace_photo_encours, false) + "\n");
+        sb.append("déplacement en cours : ").append(getParamOutils().getParamBoolean(R.string.pref_key_deplace_photo_encours, false)).append("\n");
 
         sb.append("List StorageVolume:\n");
         for (StorageVolume st : StorageHelper.getStorages(true)) {
-            sb.append("  " + st.toString() + "\n");
+            sb.append("  ").append(st.toString()).append("\n");
         }
-
-//    	sb.append("test:\n");
-//    	sb.append("  Environment.getExternalStoragePublicDirectory(\"DORISAndroid\")="+ Environment.getExternalStoragePublicDirectory("DORISAndroid").getAbsolutePath()+"\n");
-//    	sb.append("  Environment.getExternalStoragePublicDirectory(\"\")="+ Environment.getExternalStoragePublicDirectory("").getAbsolutePath()+"\n");
-//    	sb.append("test Context.getExternalFilesDirs(\"\"):\n");
-//    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//	    	for( File st :this.getExternalFilesDirs("")){
-//	    		sb.append("  "+ st.getAbsolutePath().toString()+"\n");
-//	    	}
-//    	}
-//    	sb.append("test Context.getExternalFilesDirs(\"DORISAndroid\"):\n");
-//    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//	    	for( File st :this.getExternalFilesDirs("DORISAndroid")){
-//	    		sb.append("  "+ st.getAbsolutePath().toString()+"\n");
-//	    	}
-//    	}
 
         ContextCompat.getExternalFilesDirs(this, "");
         sb.append("test ContextCompat.getExternalFilesDirs(\"/\"):\n");
@@ -926,8 +962,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             }
         }
     }
-
-    //End of user code
 
     /**
      * refresh screen from data
@@ -955,7 +989,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         } else {
             ZoneGeographique currentZoneFilter = getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
             if (currentZoneFilter != null) {
-                sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec) + " " + currentZoneFilter.getNom().trim());
+                sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec)).append(" ").append(currentZoneFilter.getNom().trim());
             } else {
                 sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreGeographique_sans));
             }
@@ -966,7 +1000,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         if(currentSpecieGroupFilter == null) {
             sbRecherchePrecedente.append(getString(R.string.accueil_recherche_precedente_filtreEspece_sans));
         } else {
-            sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec) + " " + currentSpecieGroupFilter.getNomGroupe().trim());
+            sbRecherchePrecedente.append(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec)).append(" ").append(currentSpecieGroupFilter.getNomGroupe().trim());
         }
 
         sbRecherchePrecedente.append("\n");

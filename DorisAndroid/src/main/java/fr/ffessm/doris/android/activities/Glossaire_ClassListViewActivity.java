@@ -64,8 +64,13 @@ import android.widget.LinearLayout;
 import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
 import androidx.appcompat.app.ActionBar;
+import androidx.core.graphics.Insets;
 import androidx.core.view.MenuItemCompat;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -93,9 +98,15 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
     int number_of_alphabets = -1;
 
     public void onCreate(Bundle bundle) {
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(bundle);
         ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.glossaire_listview);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.glossaire_listview_layout), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);

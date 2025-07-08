@@ -1,36 +1,21 @@
-apply plugin: 'com.android.library'
-
-
-//def androidSupportVersion = '28.0.0'
+plugins {
+    id 'com.android.library'
+}
 
 dependencies {
     // implementation fileTree(dir: 'libs', include: '*.jar', exclude: 'ormlite*')
-    // dependances maven
+    // maven dependencies
     implementation 'com.j256.ormlite:ormlite-core:4.47'
     implementation 'com.j256.ormlite:ormlite-android:4.47'
     // dependances Android
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     // NOTE la version 21+ ne fonctionne pas bien, à revoir ...
     //compile 'com.android.support:appcompat-v7:21.0.3'
     //compile project(':android-support-v7-appcompat')
 }
-repositories {
-    mavenCentral()
-    maven {
-        url = "https://maven.google.com"
-    }
-}
 
 android {
-    compileSdkVersion 36
-    //buildToolsVersion '35.0.0'
+    // also look into root build.gradle for other applied options
     namespace = "fr.vojtisek.genandroid.genandroidlib"
-    defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 34
-    }
-    buildFeatures {
-        buildConfig = true
-    }
 }
