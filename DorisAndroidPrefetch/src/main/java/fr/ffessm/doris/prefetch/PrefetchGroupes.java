@@ -42,6 +42,8 @@ termes.
 
 package fr.ffessm.doris.prefetch;
 
+import static java.lang.String.*;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.j256.ormlite.misc.TransactionManager;
@@ -62,7 +64,6 @@ import java.awt.Color;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -75,6 +76,7 @@ import java.util.concurrent.Callable;
 
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Groupe;
+import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPIHTTPHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONDATABindingHelper;
 import fr.ffessm.doris.prefetch.ezpublish.DorisAPI_JSONTreeHelper;
@@ -91,8 +93,8 @@ public class PrefetchGroupes {
     DorisAPI_JSONTreeHelper dorisAPI_JSONTreeHelper = new DorisAPI_JSONTreeHelper();
     DorisAPI_JSONDATABindingHelper dorisAPI_JSONDATABindingHelper = new DorisAPI_JSONDATABindingHelper();
     JsonToDB jsonToDB = new JsonToDB();
-    private DorisDBHelper dbContext;
-    private ConnectionSource connectionSource;
+    private final DorisDBHelper dbContext;
+    private final ConnectionSource connectionSource;
 
     public PrefetchGroupes(DorisDBHelper dbContext, ConnectionSource connectionSource) {
         this.dbContext = dbContext;
@@ -110,6 +112,7 @@ public class PrefetchGroupes {
      * recompute the groups by loading the modal dialog
      * @return & if ok, -1 in case of error
      */
+    @SuppressWarnings("DefaultLocale")
     public int prefetchFromModalDialog() throws IOException {
         log.debug("PrefetchGroupes.prefetchFromModalDialog() - start");
 
@@ -169,12 +172,26 @@ public class PrefetchGroupes {
                     shortName,  // shorter name
                     parentGroup);
             newGroup.setDescriptionGroupe(element.getContent().toString()); // longer name
-            listeGroupes.add(newGroup);
+
             currentGroupeStack.push(new GroupeDepthTuple(element.getDepth(), newGroup));
-            log.info("new Groupe "+currentGroupeStack.size()+" :" +newGroup.getNomGroupe() +" "+newGroup.getNumeroGroupe());
+            try {
+                final Groupe existingGroupe = dbContext.groupeDao.queryForFirst(
+                        dbContext.groupeDao.queryBuilder().where().eq("numeroGroupe", newGroup.getNumeroGroupe()).prepare()
+                );
+                if(existingGroupe != null) {
+                    log.info("cached Groupe " + currentGroupeStack.size() + " :" + newGroup.getNomGroupe() + " " + newGroup.getNumeroGroupe());
+                } else {
+                    listeGroupes.add(newGroup);
+                    log.info("new    Groupe " + currentGroupeStack.size() + " :" + newGroup.getNomGroupe() + " " + newGroup.getNumeroGroupe());
+                }
+            } catch (SQLException e) {
+                log.error(e);
+            }
         }
 
-        log.info(String.format("Adding %d groups", listeGroupes.size()));
+        log.info(format("Adding/updating %d groups", listeGroupes.size()));
+        nbDownloadedGroupImages = 0;
+        nbGroupImagesFromCache = 0;
         // update groups in order to maintain _id and grap updated text
         for (Groupe g : listeGroupes) {
             try {
@@ -184,7 +201,7 @@ public class PrefetchGroupes {
                 return -1;
             }
         }
-
+        log.info(format("Downloaded group images %d, group images already in cache %d", nbDownloadedGroupImages, nbGroupImagesFromCache));
         for (int i = listeGroupes.size() - 1; i >= 0; i--) {
             patchMissingGroupeImage(listeGroupes.get(i), listeGroupes);
         }
@@ -280,6 +297,7 @@ public class PrefetchGroupes {
     // https://doris.ffessm.fr/api/ezp/v1/content/node/119?oauth_token=c977aaf12f519c53081d70edd3010b3961bbfcc4
 
 
+    @SuppressWarnings("DefaultLocale")
     public int prefetchV4() {
         //clearExistingGroups();
 
@@ -499,7 +517,9 @@ public class PrefetchGroupes {
         listeGroupes.add(new Groupe(49014, 53118, "Kamptozoaires ou Entoproctes", getGroupeWithName(listeGroupes, "Autres groupes mineurs")));
 
 
-        log.debug(String.format("Adding %d groups", listeGroupes.size()));
+        log.debug(format("Adding %d groups", listeGroupes.size()));
+        nbDownloadedGroupImages = 0;
+        nbGroupImagesFromCache = 0;
         // update groups in order to maintain _id and grap updated text
         for (Groupe g : listeGroupes) {
             try {
@@ -509,7 +529,7 @@ public class PrefetchGroupes {
                 return -1;
             }
         }
-
+        log.debug(format("Downloaded group images %d, group images already in cache %d", nbDownloadedGroupImages, nbGroupImagesFromCache));
         // call in reverse order to make sure that it find a leak with an image
         for (int i = listeGroupes.size() - 1; i >= 0; i--) {
             patchMissingGroupeImage(listeGroupes.get(i), listeGroupes);
@@ -559,6 +579,7 @@ public class PrefetchGroupes {
      *
      * @param group group to be updated
      */
+    @SuppressWarnings("DefaultLocale")
     protected void updateGroupe(Groupe group, List<Groupe> groupList) throws SQLException, IOException, WebSiteNotAvailableException {
 
         Groupe queryPattern = new Groupe();
@@ -570,7 +591,8 @@ public class PrefetchGroupes {
             group.setId(groupFound.get(0).getId());
         }
         if (group.getNumeroGroupe() != 0) {
-            log.debug("updateGroupe " + group + " " + group.getNumeroGroupe());
+            log.info(format("updateGroupe %d %d (modified %s)", group.getNumeroGroupe(), group.getNumeroSousGroupe(), group.getModificationDate()));
+
             fr.ffessm.doris.prefetch.ezpublish.jsondata.groupe.Groupe jsonGroup = dorisAPI_JSONDATABindingHelper.getGroupeFieldsFromObjectId(group.getNumeroGroupe());
             //group.setNomGroupe(jsonGroup.getDataMap().getTitle());
             group.setDescriptionGroupe(jsonGroup.getDataMap().getTitle());
@@ -600,13 +622,13 @@ public class PrefetchGroupes {
         if (group.getNumeroGroupe() != 0 && group.getCleURLImage().equals("images/pucecarre.gif")) {
             if(group.getNumeroGroupe() == 136033) { // VEGETAUX
                 Optional<Groupe> alqgueGroupe = allGroups.stream().filter(g -> g.getNumeroGroupe() == 136029).findFirst(); // algues
-                group.setCleURLImage(alqgueGroupe.get().getCleURLImage());
+                alqgueGroupe.ifPresent(groupe -> group.setCleURLImage(groupe.getCleURLImage()));
             } else  if(group.getNumeroGroupe() == 171378) { // Vertébrés
                 Optional<Groupe> alqgueGroupe = allGroups.stream().filter(g -> g.getNumeroGroupe() == 48914).findFirst(); // poissons osseux
-                group.setCleURLImage(alqgueGroupe.get().getCleURLImage());
+                alqgueGroupe.ifPresent(groupe -> group.setCleURLImage(groupe.getCleURLImage()));
             } else  if(group.getNumeroGroupe() == 171372) { // ANIMAUX
                 Optional<Groupe> alqgueGroupe = allGroups.stream().filter(g -> g.getNumeroGroupe() == 48914).findFirst(); // poissons osseux
-                group.setCleURLImage(alqgueGroupe.get().getCleURLImage());
+                alqgueGroupe.ifPresent(groupe -> group.setCleURLImage(groupe.getCleURLImage()));
             } else {
                 // find 1rst groupeFils
                 //group.getGroupePere()
@@ -620,16 +642,28 @@ public class PrefetchGroupes {
     }
 
 
+    /**
+     * nb images downloaded
+     */
+    protected int nbDownloadedGroupImages = 0;
+    /**
+     * nb images from cache (ie. not downloaded)
+     */
+    protected int nbGroupImagesFromCache = 0;
     protected void downloadGroupeImage(Groupe group) throws IOException, WebSiteNotAvailableException {
         if (!group.getCleURLImage().isEmpty()) {
+            Path path = Paths.get(PrefetchConstants.DOSSIER_RACINE + "/images/images_groupe_" + group.getNumeroGroupe() + ".png");
+            if (Files.exists(path)) {
+                nbGroupImagesFromCache++;
+                return;
+            }
             String uri = "https://" + DorisOAuth2ClientCredentials.DORIS_WEB_SERVER_HOST + "/" + group.getCleURLImage();
             HttpResponse response = httpHelper.getHttpResponse(uri);
             if (response.getStatusLine().getStatusCode() == 200) {
-                // !! some folder may have a .
-                Path path = Paths.get(PrefetchConstants.DOSSIER_RACINE + "/images/images_groupe_" + group.getNumeroGroupe() + ".png");
                 Files.createDirectories(path.getParent());
                 try (FileOutputStream out = new FileOutputStream(path.toString())) {
                     response.getEntity().writeTo(out);
+                    nbDownloadedGroupImages++;
                 }
                 group.setCleURLImage("gestionenligne/images_groupe_" + group.getNumeroGroupe() + ".png");
             } else {
