@@ -39,7 +39,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
     // Initialisation de la Gestion des Log
     public static Log log = LogFactory.getLog(PrefetchFiches.class);
 
-    private static Common_Outils commonOutils = new Common_Outils();
+    private static final Common_Outils commonOutils = new Common_Outils();
 
     public PrefetchFiches(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter) {
         super(dbContext, connectionSource, nbMaxFichesATraiter);
@@ -92,6 +92,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                 fiche.setGroupe(groupeDoris);
             } catch (SQLException throwables) {
                 log.error(String.format("Cannot set group %s due to exception %s", espece.getFields().getGroup().getValue(), throwables.getMessage()), throwables);
+                fiche.setDateModification(fiche.getDateModification()+"_error_"+Math.random());
             }
         }
 
@@ -214,6 +215,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
             if (!autreDenomination.getDenomination().contentEquals("<html />")) {
                 String textePourRechercheRapide = ficheDB.getTextePourRechercheRapide();
                 textePourRechercheRapide += " " + autreDenomination.getDenomination().replaceAll("\\([^\\(]*\\)", "");
+                ficheDB.setTextePourRechercheRapide(textePourRechercheRapide);
 
                 autreDenomination.setFiche(ficheDB);
                 final AutreDenomination autreDenomination_final = autreDenomination;
@@ -407,7 +409,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
     protected void updateParticipantForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         int nbIntervenants = 0;
         Object numeroAuteurPrincipal = especeJSON.getFields().getPrincipalWriter().getValue();
-        if(numeroAuteurPrincipal != null && numeroAuteurPrincipal instanceof String && numeroAuteurPrincipal != ""){
+        if(numeroAuteurPrincipal instanceof String && numeroAuteurPrincipal != ""){
             try {
                 final Participant doridien = dbContext.participantDao.queryForFirst(
                         dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroAuteurPrincipal).prepare()
