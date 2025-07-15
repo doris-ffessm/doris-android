@@ -311,6 +311,14 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                                 return null;
                             });
 
+                } else {
+                    String uri = DorisOAuth2ClientCredentials.getServerObjectUrlTousLesChamps( String.valueOf(classificationFiche.getClassification().getNumeroDoris()) );
+
+                    log.warn(String.format("Failed to retrieve classification fields %d %s \n\tfor fiche %d - %s",
+                            classificationFiche.getClassification().getNumeroDoris(), uri,
+                            ficheDB.getWebNodeId(),
+                            DorisOAuth2ClientCredentials.SPECIES_NODE_URL));
+                    this.postNodeCreationHasWarning = true;
                 }
 
             }
