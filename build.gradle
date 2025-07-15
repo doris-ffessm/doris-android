@@ -6,7 +6,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.11.0'
+        classpath 'com.android.tools.build:gradle:8.11.1'
     }
 }
 
@@ -48,7 +48,7 @@ def configureAndroidProject(Project project) {
         compileSdkVersion 36
         defaultConfig {
             minSdkVersion 21
-            targetSdkVersion 35
+            targetSdkVersion 36
         }
         buildFeatures {
             buildConfig = true
