@@ -184,7 +184,8 @@
         <activity
             android:name=".activities.GroupeSelection_ClassListViewActivity"
             android:parentActivityName=".activities.Accueil_CustomViewActivity"
-            android:theme="@style/Theme.AppDorisAndroid">
+            android:theme="@style/Theme.AppDorisAndroid"
+            android:enableOnBackInvokedCallback="true">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -257,7 +258,8 @@
             android:name=".activities.Jeux_CustomViewActivity"
             android:exported="false"
             android:parentActivityName=".activities.Accueil_CustomViewActivity"
-            android:theme="@style/Theme.AppDorisAndroid">
+            android:theme="@style/Theme.AppDorisAndroid"
+            android:enableOnBackInvokedCallback="true">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
