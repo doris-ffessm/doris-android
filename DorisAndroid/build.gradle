@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
 }
 
-def acraVersion = '5.8.4'
+def acraVersion = '5.12.0'
 //def androidSupportVersion = '28.0.0'
 
 dependencies {
