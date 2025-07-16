@@ -42,9 +42,6 @@ termes.
 package fr.ffessm.doris.android;
 
 import org.acra.ACRA;
-import org.acra.annotation.AcraCore;
-import org.acra.annotation.AcraMailSender;
-import org.acra.annotation.AcraToast;
 import org.acra.config.CoreConfigurationBuilder;
 import org.acra.config.MailSenderConfigurationBuilder;
 import org.acra.config.ToastConfigurationBuilder;
@@ -87,21 +84,25 @@ public class DorisApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
 
-        CoreConfigurationBuilder builder = new CoreConfigurationBuilder(this);
-        //core configuration:
-        builder
+        ACRA.init(this, new CoreConfigurationBuilder()
+                //core configuration:
                 .withBuildConfigClass(BuildConfig.class)
                 .withLogcatArguments("-t", "200", "-v", "time")
-                .withReportFormat(StringFormat.JSON);
-        //each plugin you chose above can be configured with its builder like this:
-        builder.getPluginConfigurationBuilder(ToastConfigurationBuilder.class)
-                .withResText(R.string.crash_toast_text)
-                //make sure to enable all plugins you want to use:
-                .withEnabled(true);
-        builder.getPluginConfigurationBuilder(MailSenderConfigurationBuilder.class)
-                .withMailTo("doris4android@gmail.com")
-                .withResBody(R.string.crash_mail_body_text)
-                .withEnabled(true);
-        ACRA.init(this, builder);
+                .withReportFormat(StringFormat.JSON)
+                .withPluginConfigurations(
+                        new ToastConfigurationBuilder()
+                                .withText(getString(R.string.crash_toast_text))
+                                .withEnabled(true)
+                                .build()
+                )
+                .withPluginConfigurations(
+                        new MailSenderConfigurationBuilder()
+                                .withMailTo("doris4android@gmail.com")
+                                .withBody(getString(R.string.crash_mail_body_text))
+                                .withEnabled(true)
+                                .build()
+                )
+
+        );
     }
 }

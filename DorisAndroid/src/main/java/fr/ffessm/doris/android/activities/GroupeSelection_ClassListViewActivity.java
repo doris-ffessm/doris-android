@@ -52,6 +52,7 @@ import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
@@ -75,12 +76,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.view.KeyEvent;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.window.OnBackInvokedCallback;
+import android.window.OnBackInvokedDispatcher;
 
 import org.acra.ACRA;
+
+import java.text.MessageFormat;
+import java.util.Objects;
 
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 // End of user code
@@ -99,6 +104,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 
     GroupeSelection_Adapter adapter;
 
+    private OnBackInvokedCallback mOnBackInvokedCallback; // Member
 
     public void onCreate(Bundle bundle) {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
@@ -111,8 +117,25 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
             return insets;
         });
 
+        if (Build.VERSION.SDK_INT >= 33) {
+            /* close only if we are on the top group otherwise navigate to the upper group */
+            mOnBackInvokedCallback = () -> {
+                if (retourGroupeSuperieur()) {
+                    this.finish();
+                }
+            };
+
+            // Register the callback
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+                    mOnBackInvokedCallback
+            );
+        }
+
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         ListView list = findViewById(R.id.groupeselection_listview);
         list.setClickable(false);
@@ -122,7 +145,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Param_Outils paramOutils = new Param_Outils(context);
 
-        depuisAccueil = getIntent().getExtras().getBoolean("GroupeSelection_depuisAccueil", false);
+        depuisAccueil = Objects.requireNonNull(getIntent().getExtras()).getBoolean("GroupeSelection_depuisAccueil", false);
         ACRA.getErrorReporter().putCustomData("depuisAccueil", "" + depuisAccueil);
         current_mode_affichage = paramOutils.getParamString(R.string.pref_key_current_mode_affichage,
                 getString(R.string.current_mode_affichage_default));
@@ -151,7 +174,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 
             TextView filtreCourantTV = findViewById(R.id.groupselection_listview_filtre_espece_courant_textView);
             currentFilterInfoLayout.setVisibility(View.VISIBLE);
-            filtreCourantTV.setText(getString(R.string.groupselection_listview_filtre_espece_courant_label) + groupeFiltreCourant.getNomGroupe());
+            filtreCourantTV.setText(MessageFormat.format("{0}{1}", getString(R.string.groupselection_listview_filtre_espece_courant_label), groupeFiltreCourant.getNomGroupe()));
 
         }
 
@@ -171,6 +194,16 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
         Log.d(LOG_TAG, "onResume() - Début");
         Log.d(LOG_TAG, "onResume() - Fin");
         //End of user code
+    }
+    @Override
+    protected void onDestroy() {
+        // Unregister the callback if it was registered
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && mOnBackInvokedCallback != null) {
+            getOnBackInvokedDispatcher().unregisterOnBackInvokedCallback(mOnBackInvokedCallback);
+            mOnBackInvokedCallback = null; // Clear the reference
+            Log.d(LOG_TAG, "OnBackInvokedCallback: Unregistered in onDestroy.");
+        }
+        super.onDestroy();
     }
 
     public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
@@ -303,29 +336,6 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 
         finish();
     }
-
-
-    /* *********************************************************************
-     * Capture des évènements sur le Clavier Physique de l'appareil
-     ********************************************************************** */
-    @Override
-    public boolean onKeyDown(int inKeyCode, KeyEvent inEvent) {
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - Début");
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - inKeyCode : " + inKeyCode);
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - inEvent : " + inEvent);
-
-        switch (inKeyCode) {
-            case KeyEvent.KEYCODE_BACK:
-
-                if (retourGroupeSuperieur())
-                    this.finish();
-
-                return true;
-        }
-
-        return false;
-    }
-
 
     public boolean retourGroupeSuperieur() {
         // Retour true si on est à la racine et donc que l'on doit fermé et false sinon

@@ -41,6 +41,7 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.core.graphics.Insets;
@@ -55,6 +56,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.window.OnBackInvokedCallback;
+import android.window.OnBackInvokedDispatcher;
 
 import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -97,6 +100,8 @@ public class Jeux_CustomViewActivity extends FragmentActivity
 
     Param_Outils paramOutils;
 
+    private OnBackInvokedCallback mOnBackInvokedCallback;
+
     /**
      * Called when the activity is first created.
      */
@@ -116,6 +121,48 @@ public class Jeux_CustomViewActivity extends FragmentActivity
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        if (Build.VERSION.SDK_INT >= 33) {
+            /* close only if we are on the top group otherwise navigate to the upper group */
+            mOnBackInvokedCallback = () -> {
+                Log.d(LOG_TAG, "onKeyDown() - jeuStatut : " + DorisApplicationContext.getInstance().jeuStatut.name());
+
+                if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.ACCUEIL) {
+
+                    ((Jeux_CustomViewActivity) this).finish();
+                    return;
+                }
+
+                if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_ZONE_GEO) {
+                    questionFrag.createListeJeuxViews();
+                    reponsesFrag.createListeJeuxViews();
+
+                    DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.ACCUEIL;
+                    return;
+                }
+
+                if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_NIVEAU) {
+                    questionFrag.createListeZonesGeographiquesViews();
+                    reponsesFrag.createListeZonesGeographiquesViews();
+
+                    DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_ZONE_GEO;
+                    return;
+                }
+
+                // Forcément en mode jeu => on revient au choix du Niveau
+                questionFrag.createListeNiveauxViews();
+                reponsesFrag.createListeNiveauxViews();
+
+                DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_NIVEAU;
+
+            };
+
+            // Register the callback
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+                    mOnBackInvokedCallback
+            );
+        }
 
         // Si l'application avait déjà été lancée, on ne recrée pas (cas des rotations)
         if (savedInstanceState != null) {
@@ -197,6 +244,12 @@ public class Jeux_CustomViewActivity extends FragmentActivity
     @Override
     protected void onDestroy() {
         Log.d(LOG_TAG, "onDestroy() - Début");
+        // Unregister the callback if it was registered
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && mOnBackInvokedCallback != null) {
+            getOnBackInvokedDispatcher().unregisterOnBackInvokedCallback(mOnBackInvokedCallback);
+            mOnBackInvokedCallback = null; // Clear the reference
+            Log.d(LOG_TAG, "OnBackInvokedCallback: Unregistered in onDestroy.");
+        }
         super.onDestroy();
         Log.d(LOG_TAG, "onDestroy() - Fin");
     }
@@ -254,49 +307,6 @@ public class Jeux_CustomViewActivity extends FragmentActivity
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public boolean onKeyDown(int inKeyCode, KeyEvent inEvent) {
-        Log.d(LOG_TAG, "onKeyDown() - Début");
-        Log.d(LOG_TAG, "onKeyDown() - inEvent : " + inEvent);
-
-        switch (inKeyCode) {
-            case KeyEvent.KEYCODE_BACK:
-                Log.d(LOG_TAG, "onKeyDown() - jeuStatut : " + DorisApplicationContext.getInstance().jeuStatut.name());
-
-                if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.ACCUEIL) {
-
-                    ((Jeux_CustomViewActivity) this).finish();
-                    return true;
-                }
-
-                if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_ZONE_GEO) {
-                    questionFrag.createListeJeuxViews();
-                    reponsesFrag.createListeJeuxViews();
-
-                    DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.ACCUEIL;
-                    return true;
-                }
-
-                if (DorisApplicationContext.getInstance().jeuStatut == Jeu.Statut.CHOIX_NIVEAU) {
-                    questionFrag.createListeZonesGeographiquesViews();
-                    reponsesFrag.createListeZonesGeographiquesViews();
-
-                    DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_ZONE_GEO;
-                    return true;
-                }
-
-                // Forcément en mode jeu => on revient au choix du Niveau
-                questionFrag.createListeNiveauxViews();
-                reponsesFrag.createListeNiveauxViews();
-
-                DorisApplicationContext.getInstance().jeuStatut = Jeu.Statut.CHOIX_NIVEAU;
-
-                return true;
-        }
-
-        return false;
     }
 
     public void onJeuSelectionne(Jeu.JeuRef jeuSelectionne) {

@@ -51,7 +51,6 @@ import fr.ffessm.doris.android.tools.Zones_Outils;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -69,6 +68,7 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -81,11 +81,10 @@ import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
-import androidx.core.view.OnApplyWindowInsetsListener;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -96,14 +95,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
-import android.widget.ScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.j256.ormlite.dao.CloseableIterator;
 
 import android.widget.ImageButton;
 
@@ -395,9 +390,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         isZoneFold = true;
         btnFoldUnfoldZoneSection.setVisibility(View.VISIBLE);
         if(isZoneFold) {
-            btnFoldUnfoldZoneSection.setImageBitmap(drawIconWithGear(getResources().getDrawable(R.drawable.doris_icone_toutes_zones)));
+            btnFoldUnfoldZoneSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.doris_icone_toutes_zones, getTheme()))));
         } else {
-            btnFoldUnfoldZoneSection.setImageBitmap(drawIconWithGear(getResources().getDrawable(R.drawable.doris_icone_toutes_zones)));
+            btnFoldUnfoldZoneSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.doris_icone_toutes_zones, getTheme()))));
         }
 
         // btnFoldUnfoldZoneSection // toute la section sert de lien pour plier/déplier
@@ -562,21 +557,18 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         btnFoldUnfoldSpecieGroupSection = llContainer.findViewById(R.id.accueil_specie_group_fold_unfold_section_imageButton);
-        btnFoldUnfoldSpecieGroupSection.setImageBitmap(drawIconWithGear(getResources().getDrawable(R.drawable.ic_action_arbre_phylogenetique)));
+        btnFoldUnfoldSpecieGroupSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_arbre_phylogenetique, getTheme()))));
         final Context context = this;
         // toute la section et le bouton sert de lien pour plier/déplier
-        View.OnClickListener cl =new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Permet de revenir à l'accueil après recherche par le groupe, si false on irait dans la liste en quittant
-                Intent toGroupeSelectionView = new Intent(context, GroupeSelection_ClassListViewActivity.class);
-                Bundle b = new Bundle();
-                b.putBoolean("GroupeSelection_depuisAccueil", true);
-                toGroupeSelectionView.putExtras(b);
+        View.OnClickListener cl = v -> {
+            //Permet de revenir à l'accueil après recherche par le groupe, si false on irait dans la liste en quittant
+            Intent toGroupeSelectionView = new Intent(context, GroupeSelection_ClassListViewActivity.class);
+            Bundle b = new Bundle();
+            b.putBoolean("GroupeSelection_depuisAccueil", true);
+            toGroupeSelectionView.putExtras(b);
 
-                showToast(getString(R.string.accueil_recherche_guidee_arbre_toast_text));
-                startActivity(toGroupeSelectionView);
-            }
+            showToast(getString(R.string.accueil_recherche_guidee_arbre_toast_text));
+            startActivity(toGroupeSelectionView);
         };
         llContainer.setOnClickListener(cl);
         btnFoldUnfoldSpecieGroupSection.setOnClickListener(cl);
@@ -645,7 +637,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
        }
         // deal with fold/unfold
         btnFoldUnfoldModeSection = findViewById(R.id.accueil_mode_affichage_fold_unfold_section_imageButton);
-        btnFoldUnfoldModeSection.setImageBitmap(drawIconWithGear(getResources().getDrawable(R.drawable.ic_action_liste_fiches)));
+        btnFoldUnfoldModeSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_liste_fiches, getTheme()))));
 
         // toute la section sert de lien pour plier/déplier
         LinearLayout llFold = llContainerLayout.findViewById(R.id.accueil_mode_affichage_fold_layout);
@@ -782,7 +774,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         // Create a canvas to draw on the bitmap
         Canvas canvas = new Canvas(combinedBitmap);
-        Drawable gearDrawable = getResources().getDrawable(R.drawable.gear_grey);
+        Drawable gearDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.gear_grey, getTheme());
         baseDrawable.setBounds(0,0,width, height);
         gearDrawable.setBounds(width/2, height/2, width, height);
 
@@ -806,24 +798,26 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         // Load your drawables
         //Drawable backgroundDrawable = getResources().getDrawable(R.drawable.icon_background);
-        Drawable zoneDrawable = getResources().getDrawable(getFichesOutils().getZoneIconeId(getCurrentZoneGeographique().getZoneGeoKind()));
+        Drawable zoneDrawable = ResourcesCompat.getDrawable(getResources(), getFichesOutils().getZoneIconeId(getCurrentZoneGeographique().getZoneGeoKind()), getTheme());
         Drawable modeDrawable = SortModesTools.getDrawable(this, getCurrentMode());
         Groupe specieGroup = getCurrentSpecieFilter();
         Drawable specieDrawable;
         if (specieGroup != null && specieGroup.getCleURLImage() != null && !specieGroup.getCleURLImage().isEmpty()) {
-            int identifierIconeGroupe = getResources().getIdentifier(specieGroup.getImageNameOnDisk().replaceAll("\\.[^\\.]*$", ""), "raw", getPackageName());
+            int identifierIconeGroupe = getResources().getIdentifier(specieGroup.getImageNameOnDisk().replaceAll("\\.[^.]*$", ""), "raw", getPackageName());
 
             Bitmap bitmap = BitmapFactory.decodeStream(getResources().openRawResource(identifierIconeGroupe));
             specieDrawable = new BitmapDrawable(getResources(), bitmap);
         } else {
             // default image
-            specieDrawable =  getResources().getDrawable(R.drawable.app_ic_launcher);
+            specieDrawable =  ResourcesCompat.getDrawable(getResources(),R.drawable.app_ic_launcher, getTheme());
         }
 
         // Set bounds for the drawables (adjust these as needed)
         //backgroundDrawable.setBounds(0, 0, width, height);
+        assert zoneDrawable != null;
         zoneDrawable.setBounds(0, 0, width/2, height/2);
         modeDrawable.setBounds(width/2, height/4, width, height - height/4);
+        assert specieDrawable != null;
         specieDrawable.setBounds(width/5, height/2, width/2 + width/5, height);
 
         // Draw the drawables onto the canvas
@@ -909,7 +903,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         sb.append("- - - - - -\n");
         sb.append(getApplicationContext().getFilesDir().getAbsolutePath()).append("\n");
-        sb.append(getApplicationContext().getFilesDir().listFiles().length).append("\n");
+        sb.append(Objects.requireNonNull(getApplicationContext().getFilesDir().listFiles()).length).append("\n");
         sb.append("- - - - - -\n");
 
 
@@ -957,7 +951,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
             if (st != null) {
 
-                sb.append("  " + st.getAbsolutePath() + "\n");
+                sb.append("  ").append(st.getAbsolutePath()).append("\n");
 
             }
         }
@@ -1037,17 +1031,14 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             progressBarZones.put(zoneToutesZones.getId(), progressBarZoneGenerale);
 
             final Context context = this;
-            progressBarZoneGenerale.pbProgressBar_running.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (Accueil_CustomViewActivity.this.isFinishing() || Accueil_CustomViewActivity.this.isActivityDestroyed())
-                        return;
-                    showToast(R.string.bg_notifToast_arretTelecharg);
-                    DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
+            progressBarZoneGenerale.pbProgressBar_running.setOnClickListener(v -> {
+                if (Accueil_CustomViewActivity.this.isFinishing() || Accueil_CustomViewActivity.this.isActivityDestroyed())
+                    return;
+                showToast(R.string.bg_notifToast_arretTelecharg);
+                DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 
-                    ProgressBar pbRunningBarLayout = findViewById(R.id.multiprogressbar_running_progressBar);
-                    pbRunningBarLayout.setVisibility(View.GONE);
-                }
+                ProgressBar pbRunningBarLayout = findViewById(R.id.multiprogressbar_running_progressBar);
+                pbRunningBarLayout.setVisibility(View.GONE);
             });
             progressBarZoneGenerale.setOnClickListener(v -> startActivity(new Intent(context, EtatModeHorsLigne_CustomViewActivity.class)));
             llContainerLayout.addView(progressBarZoneGenerale);

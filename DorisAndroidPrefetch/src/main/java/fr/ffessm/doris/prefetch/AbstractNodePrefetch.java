@@ -93,6 +93,7 @@ public abstract class AbstractNodePrefetch<DBObject extends AbstractWebNodeObjec
         dbTypeName = getNewDBObjectInstance().getClass().getSimpleName();
     }
 
+    @SuppressWarnings("DefaultLocale")
     public int prefetch() throws Exception {
         log.debug(String.format("AbstractNodePrefetch<%s>.prefetch() - begin", dbTypeName));
 
