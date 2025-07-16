@@ -182,67 +182,12 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         //Start of user code onCreate Accueil_CustomViewActivity
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Début");
 
-	/*	// si pas de fiche alors il faut initialiser la base à partir du prefetched_DB
-		RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
-    	if(ficheDao.countOf() == 0){
-    		new InitialisationApplication_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
-    		
-    		showToast("Veuillez patienter que la base de donnée s'initialise.");
-		}*/
-
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.accueil_customview_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Find the view that needs padding to avoid system bars.
-    /*    View mainContentContainer = findViewById(R.id.accueil_customview_main_content_container); // <<--- IMPORTANT: Use your actual ID
-
-        if (mainContentContainer != null) {
-            ViewCompat.setOnApplyWindowInsetsListener(mainContentContainer, new OnApplyWindowInsetsListener() {
-                @Override
-                public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat windowInsets) {
-                    // Get the insets for the system bars (status bar, navigation bar)
-                    Insets systemBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-                    Insets navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
-
-                    Log.d("InsetsDebug", "View ID: " + v.getId());
-                    Log.d("InsetsDebug", "Top inset: " + systemBarInsets.top);
-                    Log.d("InsetsDebug", "Bottom inset: " + systemBarInsets.bottom);
-                    Log.d("InsetsDebug", "Left inset: " + systemBarInsets.left);
-                    Log.d("InsetsDebug", "Right inset: " + systemBarInsets.right);
-                    Log.d("InsetsDebug", "View ID: " + v.getId());
-                    Log.d("InsetsDebug", "SystemBars - Top: " + systemBarInsets.top + ", Bottom: " + systemBarInsets.bottom);
-                    Log.d("InsetsDebug", "NavBars    - Top: " + navBarInsets.top + ", Bottom: " + navBarInsets.bottom); // Log this
-
-                    // Apply these insets as padding to the view 'v' (which is mainContentContainer)
-                    // This pushes the content of 'mainContentContainer' away from the system bars.
-                    v.setPadding(
-                            systemBarInsets.left,
-                            systemBarInsets.top,
-                            systemBarInsets.right,
-                            systemBarInsets.bottom
-                    );
-
-                    // If you have a Toolbar at the very top of this 'mainContentContainer'
-                    // you might want to handle its top padding separately or adjust its height.
-                    // For example, if your Toolbar is *outside* mainContentContainer and fixed at the top,
-                    // mainContentContainer might only need left, right, and bottom padding.
-
-                    // Tell the system that you've used the insets
-                    return WindowInsetsCompat.CONSUMED;
-                }
-            });
-        } else {
-            // Log an error or handle the case where the view is not found,
-            // though this shouldn't happen if the ID is correct.
-            Log.e(LOG_TAG, "Missing element accueil_customview_main_content_container");
-
-        }
-
-     */
         // Defines a Handler object that's attached to the UI thread
         mHandler = new Handler(Looper.getMainLooper()) {
             /*
@@ -688,12 +633,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         startActivity(toGroupeSelectionView);
     }
 
-    /*public void onClickBtnListeParticipants(View view){
-        startActivity(new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class));
-    }
-    public void onClickBtnGlossaire(View view){
-        startActivity(new Intent(this, Glossaire_ClassListViewActivity.class));
-    }*/
     public void onClickBtnIconeSiteWeb_doris(View view) {
         String url = getString(R.string.accueil_customview_logo_doris_url);
         if (!url.isEmpty()) {
@@ -727,13 +666,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         showToast(getContext().getString(R.string.accueil_customview_logos_preference));
     }
-	/*public void reinitializeDBFromPrefetched(){
-		//XMLHelper.loadDBFromXMLFile(getHelper().getDorisDBHelper(), this.getResources().openRawResource(R.raw.prefetched_db));
-
-		new InitialisationApplication_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
-		showToast("Veuillez patienter que la base de donnée s'initialise.");
-		
-    }*/
 
     public void dataHasChanged(String textmessage) {
         Message completeMessage = mHandler.obtainMessage(1, textmessage);
