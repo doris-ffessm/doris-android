@@ -323,9 +323,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         ZoneGeographique currentZoneFilter=null;
         int currentZoneFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
-        if (currentZoneFilterId == -1 || currentZoneFilterId == 0) { // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
-            // pas de zone précdente
-        } else {
+        if (currentZoneFilterId != -1 && currentZoneFilterId != 0) {
             currentZoneFilter = getHelper().getZoneGeographiqueDao().queryForId(currentZoneFilterId);
         }
 
@@ -499,8 +497,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     protected void createSpecieGroupViews() {
         LinearLayout llContainer = findViewById(R.id.accueil_specie_group_layout);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
         btnFoldUnfoldSpecieGroupSection = llContainer.findViewById(R.id.accueil_specie_group_fold_unfold_section_imageButton);
         btnFoldUnfoldSpecieGroupSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_arbre_phylogenetique, getTheme()))));
         final Context context = this;
@@ -565,10 +561,18 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                         radio.setChecked(j == index);
                     }
                     // update preferences
+                    String current = prefs.getString(getResources().getString(
+                                    R.string.pref_key_current_mode_affichage),
+                            getResources().getString(
+                                    R.string.current_mode_affichage_default));
+                    if(!current.equals(modesValues[index])) {
+                        showToast(getResources().getString(R.string.accueil_changed_display_mode_toast_text) + modesDetails[index]);
+                    }
                     prefs.edit().putString(
                             Accueil_CustomViewActivity.this.getResources().getString(
                                     R.string.pref_key_current_mode_affichage),
                                     modesValues[index]).apply();
+
                     // update main screen icons
                     Accueil_CustomViewActivity.this.refreshScreenData();
                     // close foldable layout
@@ -693,7 +697,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
     /**
      * draw a bitmap with a gear on bottom right
-     * @return
      */
     protected Bitmap drawIconWithGear(Drawable baseDrawable){
 
