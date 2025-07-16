@@ -88,8 +88,8 @@ public class Fiches_Outils {
 
         ormLiteDBHelper = new OrmLiteDBHelper(context);
 
-        ficheIdList = new ArrayList<Integer>();
-        filteredFicheIdList = new ArrayList<Integer>();
+        ficheIdList = new ArrayList<>();
+        filteredFicheIdList = new ArrayList<>();
     }
 
     public enum MajListeFichesType {
@@ -298,6 +298,16 @@ public class Fiches_Outils {
                 return MajListeFichesType.valueOf(paramOutils.getParamString(R.string.pref_key_maj_liste_fiches_region_caraibes, "M1"));
             case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
                 return MajListeFichesType.valueOf(paramOutils.getParamString(R.string.pref_key_maj_liste_fiches_region_atlantno, "M1"));
+            case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
+                return MajListeFichesType.valueOf(paramOutils.getParamString(R.string.pref_key_maj_liste_fiches_region_atlantne, "M1"));
+            case FAUNE_FLORE_MEDITERRANEE_FRANCAISE:
+                return MajListeFichesType.valueOf(paramOutils.getParamString(R.string.pref_key_maj_liste_fiches_region_mediter, "M1"));
+            case FAUNE_FLORE_MER_ROUGE:
+                return MajListeFichesType.valueOf(paramOutils.getParamString(R.string.pref_key_maj_liste_fiches_region_merrouge, "M1"));
+            case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+                return MajListeFichesType.valueOf(paramOutils.getParamString(R.string.pref_key_maj_liste_fiches_region_antarctique, "M1"));
+            case FAUNE_FLORE_GUYANNE:
+                return MajListeFichesType.valueOf(paramOutils.getParamString(R.string.pref_key_maj_liste_fiches_region_guyanne, "M1"));
             default:
                 return null;
         }

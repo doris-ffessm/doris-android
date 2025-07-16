@@ -42,69 +42,58 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.ffessm.doris.android.tools.Zones_Outils;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask.Status;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
+import android.util.SparseArray;
+import android.util.SparseIntArray;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
-import androidx.appcompat.app.ActionBar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import com.j256.ormlite.dao.CloseableIterator;
 
-
-//Start of user code additional imports EtatModeHorsLigne_CustomViewActivity
-import java.util.HashMap;
-import java.util.List;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.AsyncTask.Status;
-import android.util.Log;
-import android.util.SparseArray;
-import android.util.SparseIntArray;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
-
-import com.j256.ormlite.dao.CloseableIterator;
+import java.util.HashMap;
+import java.util.List;
 
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
+import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.MultiProgressBar;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
-import fr.ffessm.doris.android.tools.disk.DiskEnvironmentHelper;
-import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
-import fr.ffessm.doris.android.tools.disk.StorageHelper;
-import fr.ffessm.doris.android.tools.disk.StorageHelper.StorageVolume;
 import fr.ffessm.doris.android.services.GestionPhotoDiskService;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.android.tools.Disque_Outils;
@@ -113,6 +102,13 @@ import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+import fr.ffessm.doris.android.tools.ThemeUtil;
+import fr.ffessm.doris.android.tools.Zones_Outils;
+import fr.ffessm.doris.android.tools.disk.DiskEnvironmentHelper;
+import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
+import fr.ffessm.doris.android.tools.disk.StorageHelper;
+import fr.ffessm.doris.android.tools.disk.StorageHelper.StorageVolume;
+import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 //End of user code
 public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
@@ -131,10 +127,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     Disque_Outils disqueOutils;
     Fiches_Outils fichesOutils;
 
-    protected SparseArray<MultiProgressBar> progressBarZones = new SparseArray<MultiProgressBar>();
+    protected SparseArray<MultiProgressBar> progressBarZones = new SparseArray<>();
     protected MultiProgressBar progressBarZoneGenerale;
-    protected List<MultiProgressBar> allFoldableProgressBarZones = new ArrayList<MultiProgressBar>();
-    protected HashMap<String, View.OnClickListener> reusableClickListener = new HashMap<String, View.OnClickListener>();
+    protected List<MultiProgressBar> allFoldableProgressBarZones = new ArrayList<>();
+    protected HashMap<String, View.OnClickListener> reusableClickListener = new HashMap<>();
 
     /**
      * Si déplacement Photos en cours, des mises à jour ne sont pas nécessaires
@@ -199,7 +195,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
             return insets;
         });
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         //Start of user code onCreate EtatModeHorsLigne_CustomViewActivity
 
@@ -231,7 +229,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
              * the Handler receives a new Message to process.
              */
             @Override
-            public void handleMessage(Message inputMessage) {
+            public void handleMessage(@NonNull Message inputMessage) {
                 if (EtatModeHorsLigne_CustomViewActivity.this.isFinishing() || EtatModeHorsLigne_CustomViewActivity.this.isActivityDestroyed())
                     return;
                 if (inputMessage.obj != null) {
@@ -285,7 +283,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
     protected void createProgressBarZone() {
         //Log.d(LOG_TAG, "createProgressBarZone()");
-        LinearLayout llContainerLayout = (LinearLayout) findViewById(R.id.etatmodehorsligne_avancements_layout);
+        LinearLayout llContainerLayout = findViewById(R.id.etatmodehorsligne_avancements_layout);
 
         // Avancement et Affichage toutes Zones
         ZoneGeographique zoneToutesZones = new ZoneGeographique();
@@ -300,36 +298,27 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
         final Context context = this;
         // Arrêt téléchargement si Click sur Icône de l'avancement (le petit rond qui tourne)
-        progressBarZoneGenerale.pbProgressBar_running.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showToast(R.string.bg_notifToast_arretTelecharg);
-                DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
+        progressBarZoneGenerale.pbProgressBar_running.setOnClickListener(v -> {
+            showToast(R.string.bg_notifToast_arretTelecharg);
+            DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 
-                ProgressBar pbRunningBarLayout = (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);
-                pbRunningBarLayout.setVisibility(View.GONE);
-            }
+            ProgressBar pbRunningBarLayout = findViewById(R.id.multiprogressbar_running_progressBar);
+            pbRunningBarLayout.setVisibility(View.GONE);
         });
         // Affichage Préférence de la Zone Géographique
-        progressBarZoneGenerale.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        progressBarZoneGenerale.setOnClickListener(v -> {
 
-                Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, Preference_PreferenceViewActivity.class);
-                intent.putExtra("type_parametre", "mode_precharg_category");
-                intent.putExtra("parametre", "button_qualite_images_zones_key");
+            Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, Preference_PreferenceViewActivity.class);
+            intent.putExtra("type_parametre", "mode_precharg_category");
+            intent.putExtra("parametre", "button_qualite_images_zones_key");
 
-                startActivity(intent);
-            }
+            startActivity(intent);
         });
         // Masquage des Avancements par Zone si Clique sur Bouton de repli
-        progressBarZoneGenerale.btnFoldUnflodSection.setOnClickListener(new ImageButton.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressBarZoneGenerale.btn_fold_unfold();
-                for (MultiProgressBar foldableProgressBarZones : allFoldableProgressBarZones) {
-                    foldableProgressBarZones.fold_unfold();
-                }
+        progressBarZoneGenerale.btnFoldUnflodSection.setOnClickListener(v -> {
+            progressBarZoneGenerale.btn_fold_unfold();
+            for (MultiProgressBar foldableProgressBarZones : allFoldableProgressBarZones) {
+                foldableProgressBarZones.fold_unfold();
             }
         });
 
@@ -373,48 +362,57 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
             }
 
             final ZoneGeographique fZoneGeo = zoneGeo;
-            progressBarZone.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (BuildConfig.DEBUG)
-                        Log.d(LOG_TAG, "setOnClickListener() - zoneGeoId : " + fZoneGeo.getId());
-                    Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, Preference_PreferenceViewActivity.class);
+            progressBarZone.setOnClickListener(v -> {
+                if (BuildConfig.DEBUG)
+                    Log.d(LOG_TAG, "setOnClickListener() - zoneGeoId : " + fZoneGeo.getId());
+                Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, Preference_PreferenceViewActivity.class);
 
-                    String param;
-
-                    switch (fZoneGeo.getZoneGeoKind()) {
-                        case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
-                            param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_france);
-                            break;
-                        case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
-                            param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_eaudouce);
-                            break;
-                        case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
-                            param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_indopac);
-                            break;
-                        case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
-                            param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_antarctique);
-                            break;
-                        case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
-                            param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_caraibes);
-                            break;
-                        case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
-                            param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_atlantno);
-                            break;
-                        default:
-                            param = null;
-                    }
-
-                    if (param != null) {
-                        intent.putExtra("type_parametre", "button_qualite_images_zones_key");
-                        intent.putExtra("parametre", param);
-                    } else {
-                        intent.putExtra("type_parametre", "mode_precharg_category");
-                        intent.putExtra("parametre", "button_qualite_images_zones_key");
-                    }
-
-                    startActivity(intent);
+                String param;
+                ZoneGeographiqueKind zoneGzeoKind = fZoneGeo.getZoneGeoKind();
+                switch (zoneGzeoKind) {
+                    case FAUNE_FLORE_MARINES_FRANCE_METROPOLITAINE:
+                        param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_france);
+                        break;
+                    case FAUNE_FLORE_FACADE_ATLANTIQUE_FRANCAISE:
+                        param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_atlantne);
+                        break;
+                    case FAUNE_FLORE_MEDITERRANEE_FRANCAISE:
+                        param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_mediter);
+                        break;
+                    case FAUNE_FLORE_DULCICOLES_FRANCE_METROPOLITAINE:
+                        param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_eaudouce);
+                        break;
+                    case FAUNE_FLORE_DULCICOLES_ATLANTIQUE_NORD_OUEST:
+                        param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_atlantno);
+                        break;
+                    case FAUNE_FLORE_MARINES_DULCICOLES_INDO_PACIFIQUE:
+                        param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_indopac);
+                        break;
+                    case FAUNE_FLORE_TERRES_ANTARCTIQUES_FRANCAISES:
+                        param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_antarctique);
+                        break;
+                    case FAUNE_FLORE_MER_ROUGE:
+                        param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_merrouge);
+                        break;
+                    case FAUNE_FLORE_SUBAQUATIQUES_CARAIBES:
+                        param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_caraibes);
+                        break;
+                    case FAUNE_FLORE_GUYANNE:
+                        param = getParamOutils().getStringNameParam(R.string.pref_key_mode_precharg_photo_region_guyanne);
+                        break;
+                    default:
+                        param = null;
                 }
+
+                if (param != null) {
+                    intent.putExtra("type_parametre", "button_qualite_images_zones_key");
+                    intent.putExtra("parametre", param);
+                } else {
+                    intent.putExtra("type_parametre", "mode_precharg_category");
+                    intent.putExtra("parametre", "button_qualite_images_zones_key");
+                }
+
+                startActivity(intent);
             });
 
             progressBarZones.put(fZoneGeo.getId(), progressBarZone);
@@ -447,32 +445,22 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
     protected void createGestionPhotos() {
 
-        llGestionPhotos = (LinearLayout) findViewById(R.id.etatmodehorsligne_gestion_photos_linearlayout);
-        btnFoldUnflodGestionPhotos = (ImageButton) findViewById(R.id.etatmodehorsligne_gestion_photos_fold_unflod_section_imageButton);
-        tlFoldUnflodGestionPhotos = (TableLayout) findViewById(R.id.etatmodehorsligne_gestion_reset_linearlayout);
+        llGestionPhotos = findViewById(R.id.etatmodehorsligne_gestion_photos_linearlayout);
+        btnFoldUnflodGestionPhotos = findViewById(R.id.etatmodehorsligne_gestion_photos_fold_unflod_section_imageButton);
+        tlFoldUnflodGestionPhotos = findViewById(R.id.etatmodehorsligne_gestion_reset_linearlayout);
 
         imageCouranteGestionPhotos = image_maximize;
         btnFoldUnflodGestionPhotos.setImageResource(imageCouranteGestionPhotos);
 
-        btnGestionPhotosResetVig = (Button) findViewById(R.id.etatmodehorsligne_gestion_reset_vig_btn);
-        btnGestionPhotosResetMedRes = (Button) findViewById(R.id.etatmodehorsligne_gestion_reset_med_btn);
-        btnGestionPhotosResetHiRes = (Button) findViewById(R.id.etatmodehorsligne_gestion_reset_hi_btn);
-        btnGestionPhotosResetAutres = (Button) findViewById(R.id.etatmodehorsligne_gestion_reset_autres_btn);
-        btnGestionPhotosResetCache = (Button) findViewById(R.id.etatmodehorsligne_gestion_reset_cache_btn);
+        btnGestionPhotosResetVig = findViewById(R.id.etatmodehorsligne_gestion_reset_vig_btn);
+        btnGestionPhotosResetMedRes = findViewById(R.id.etatmodehorsligne_gestion_reset_med_btn);
+        btnGestionPhotosResetHiRes = findViewById(R.id.etatmodehorsligne_gestion_reset_hi_btn);
+        btnGestionPhotosResetAutres = findViewById(R.id.etatmodehorsligne_gestion_reset_autres_btn);
+        btnGestionPhotosResetCache = findViewById(R.id.etatmodehorsligne_gestion_reset_cache_btn);
 
         // Masquage des Boutons de suppression des photos
-        llGestionPhotos.setOnClickListener(new LinearLayout.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                foldUnflodGestionPhotos();
-            }
-        });
-        btnFoldUnflodGestionPhotos.setOnClickListener(new LinearLayout.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                foldUnflodGestionPhotos();
-            }
-        });
+        llGestionPhotos.setOnClickListener(v -> foldUnflodGestionPhotos());
+        btnFoldUnflodGestionPhotos.setOnClickListener(v -> foldUnflodGestionPhotos());
 
         // Boutons de Suppression des Images par Type
         btnGestionPhotosResetVig.setOnClickListener(reusableClickListener.get(
@@ -505,33 +493,23 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
     protected void createGestionDisk() {
 
-        llGestionDisk = (LinearLayout) findViewById(R.id.etatmodehorsligne_gestion_disk_layout);
-        tlFoldUnflodGestionDisk = (TableLayout) findViewById(R.id.etatmodehorsligne_gestion_disk_buttons_tablelayout);
-        btnFoldUnflodGestionDisk = (ImageButton) findViewById(R.id.etatmodehorsligne_gestion_disk_fold_unflod_section_imageButton);
+        llGestionDisk = findViewById(R.id.etatmodehorsligne_gestion_disk_layout);
+        tlFoldUnflodGestionDisk = findViewById(R.id.etatmodehorsligne_gestion_disk_buttons_tablelayout);
+        btnFoldUnflodGestionDisk = findViewById(R.id.etatmodehorsligne_gestion_disk_fold_unflod_section_imageButton);
 
         imageCouranteGestionDisk = image_maximize;
         btnFoldUnflodGestionDisk.setImageResource(imageCouranteGestionDisk);
 
-        btnInternalDiskDepl = (Button) findViewById(R.id.etatmodehorsligne_diskselection_internal_depl_btn);
-        btnInternalDiskSupp = (Button) findViewById(R.id.etatmodehorsligne_diskselection_internal_supp_btn);
-        btnPrimaryDiskDepl = (Button) findViewById(R.id.etatmodehorsligne_diskselection_primary_depl_btn);
-        btnPrimaryDiskSupp = (Button) findViewById(R.id.etatmodehorsligne_diskselection_primary_supp_btn);
-        btnSecondaryDiskDepl = (Button) findViewById(R.id.etatmodehorsligne_diskselection_secondary_depl_btn);
-        btnSecondaryDiskSupp = (Button) findViewById(R.id.etatmodehorsligne_diskselection_secondary_supp_btn);
+        btnInternalDiskDepl = findViewById(R.id.etatmodehorsligne_diskselection_internal_depl_btn);
+        btnInternalDiskSupp = findViewById(R.id.etatmodehorsligne_diskselection_internal_supp_btn);
+        btnPrimaryDiskDepl = findViewById(R.id.etatmodehorsligne_diskselection_primary_depl_btn);
+        btnPrimaryDiskSupp = findViewById(R.id.etatmodehorsligne_diskselection_primary_supp_btn);
+        btnSecondaryDiskDepl = findViewById(R.id.etatmodehorsligne_diskselection_secondary_depl_btn);
+        btnSecondaryDiskSupp = findViewById(R.id.etatmodehorsligne_diskselection_secondary_supp_btn);
 
         // Masquage de l'ensemble des Boutons de suppression des photos
-        llGestionDisk.setOnClickListener(new ImageButton.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                foldUnflodGestionDisk();
-            }
-        });
-        btnFoldUnflodGestionDisk.setOnClickListener(new ImageButton.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                foldUnflodGestionDisk();
-            }
-        });
+        llGestionDisk.setOnClickListener(v -> foldUnflodGestionDisk());
+        btnFoldUnflodGestionDisk.setOnClickListener(v -> foldUnflodGestionDisk());
 
         // les boutons Supprimer ont toujours le même setOnClickListener, on l'associe donc ici.
         // Pour les Déplacements, c'est dans le refreshusedDisk()
@@ -581,6 +559,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
             //Log.d(LOG_TAG, "refreshProgressBarZone() - zoneGeo : "+zoneGeo.getId()+" - "+zoneGeo.getNom());
 
             updateProgressBarZone(this, zoneGeo, progressBarZones.get(zoneGeo.getId()), "");
+            for (ZoneGeographique zoneGeoChild : zoneGeo.getZoneGeographicChilds()) {
+                updateProgressBarZone(this, zoneGeoChild, progressBarZones.get(zoneGeoChild.getId()), "");
+            }
         }
 
     }
@@ -606,16 +587,8 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 
 
         // Affichage Barres avancements
-        if (nbPhotosPrincATelecharger == 0) {
-            affichageBarrePhotoPrinc = false;
-        } else {
-            affichageBarrePhotoPrinc = true;
-        }
-        if (nbPhotosAutresATelecharger == 0) {
-            affichageBarrePhotoAutres = false;
-        } else {
-            affichageBarrePhotoAutres = true;
-        }
+        affichageBarrePhotoPrinc = nbPhotosPrincATelecharger != 0;
+        affichageBarrePhotoAutres = nbPhotosAutresATelecharger != 0;
 
         // P0 : Aucune photo à précharger
 
@@ -726,7 +699,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         // if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshFolderSize() - Début");
 
         StringBuilder etatDiskStringBuilder = new StringBuilder();
-        Boolean auMoins1DossierNonVide = false;
+        boolean auMoins1DossierNonVide = false;
 
         TextView gestionPhotosTextView = (TextView) findViewById(R.id.etatmodehorsligne_gestion_photos_description_textView);
 
@@ -889,10 +862,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         // Mémoire interne
         //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Mémoire interne");
 
-        etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_internal_libelle) + " :\n\t");
-        etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(internalUsedSize) + " / ");
-        etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getInternalStorage().getSize().first) + " / ");
-        etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getInternalStorage().getSize().second) + "\n");
+        etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_internal_libelle)).append(" :\n\t");
+        etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(internalUsedSize)).append(" / ");
+        etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getInternalStorage().getSize().first)).append(" / ");
+        etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getInternalStorage().getSize().second)).append("\n");
         //etatDiskStringBuilder.append(DiskEnvironment.getInternalStorage().getFile().getAbsolutePath()+"\n");
         //etatDiskStringBuilder.append("Donnée application="+this.getDir(Photos_Outils.MED_RES_FICHE_FOLDER, Context.MODE_PRIVATE)+"\n");
         //etatDiskStringBuilder.append("'Hash' pour vérifier si Carte SD Interne != Stockage interne : "
@@ -902,10 +875,10 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         if (!DiskEnvironmentHelper.getPrimaryExternalStorage().isEmulated()) {
             //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Disque primaire (Carte SD Interne)");
 
-            etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_primary_libelle) + " :\n\t");
-            etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(primaryUsedSize) + " / ");
-            etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getPrimaryExternalStorage().getSize().first) + " / ");
-            etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getPrimaryExternalStorage().getSize().second) + "\n");
+            etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_primary_libelle)).append(" :\n\t");
+            etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(primaryUsedSize)).append(" / ");
+            etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getPrimaryExternalStorage().getSize().first)).append(" / ");
+            etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getPrimaryExternalStorage().getSize().second)).append("\n");
             //etatDiskStringBuilder.append(DiskEnvironment.getPrimaryExternalStorage().getFile().getAbsolutePath()+"\n");
             //etatDiskStringBuilder.append("'Hash' pour vérifier si Carte SD Interne != Stockage interne : "
             //		+DiskEnvironment.getPrimaryExternalStorage().getSize().first+"-"+DiskEnvironment.getPrimaryExternalStorage().getSize().second+"\n");
@@ -919,11 +892,11 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         if (DiskEnvironmentHelper.isSecondaryExternalStorageAvailable(this)) {
             //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "refreshUsedDisk() - Carte SD externe (nommée amovible)");
 
-            etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_secondary_libelle) + " :\n\t");
-            etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(secondaryUsedSize) + " / ");
+            etatDiskStringBuilder.append(getContext().getString(R.string.etatmodehorsligne_diskselection_secondary_libelle)).append(" :\n\t");
+            etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(secondaryUsedSize)).append(" / ");
             try {
-                etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getSecondaryExternalStorage(this).getSize().first) + " / ");
-                etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getSecondaryExternalStorage(this).getSize().second) + "\n");
+                etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getSecondaryExternalStorage(this).getSize().first)).append(" / ");
+                etatDiskStringBuilder.append(getDisqueOutils().getHumanDiskUsage(DiskEnvironmentHelper.getSecondaryExternalStorage(this).getSize().second)).append("\n");
                 //etatDiskStringBuilder.append(DiskEnvironment.getSecondaryExternalStorage().getFile().getAbsolutePath()+"\n");
 
             } catch (NoSecondaryStorageException e) {
@@ -931,12 +904,12 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
             }
         }
         //etatDiskStringBuilder.append("Photo actuellement sur : "+new Photos_Outils(EtatModeHorsLigne_CustomViewActivity.this).getPreferedLocation()+"\n");
-        TextView gestionDiskTextView = (TextView) findViewById(R.id.etatmodehorsligne_gestion_disk_description_textView);
+        TextView gestionDiskTextView = findViewById(R.id.etatmodehorsligne_gestion_disk_description_textView);
 
         gestionDiskTextView.setText(etatDiskStringBuilder.toString());
 
         // Si encours de traitement on affiche la ProgressBar sinon on la cache
-        ProgressBar deplacementEnCoursProgressBar = (ProgressBar) findViewById(R.id.etatmodehorsligne_gestion_disk_buttons_progressBar);
+        ProgressBar deplacementEnCoursProgressBar = findViewById(R.id.etatmodehorsligne_gestion_disk_buttons_progressBar);
         if (isMovingPhotos) {
             deplacementEnCoursProgressBar.setVisibility(View.VISIBLE);
         } else deplacementEnCoursProgressBar.setVisibility(View.GONE);
@@ -992,7 +965,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         // -- Carte Mémoire Interne (Non Amovible, en fait une partition de la Mémoire Interne destinée à stocker les données des Applications) -- //
         // Affichage ou non de la Carte Interne
         if (carteInterneDispo) {
-            TableRow trGestionDiskPrimary = (TableRow) findViewById(R.id.etatmodehorsligne_gestion_disk_primary_row);
+            TableRow trGestionDiskPrimary = findViewById(R.id.etatmodehorsligne_gestion_disk_primary_row);
             trGestionDiskPrimary.setVisibility(View.VISIBLE);
 
             if ((getPhotosOutils().getPhotosDiskUsage(ImageLocation.APP_INTERNAL) != 0)
@@ -1024,7 +997,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
             if (isMovingPhotos || isTelechPhotos) btnPrimaryDiskSupp.setEnabled(false);
 
         } else {
-            TableRow trGestionDiskPrimary = (TableRow) findViewById(R.id.etatmodehorsligne_gestion_disk_primary_row);
+            TableRow trGestionDiskPrimary = findViewById(R.id.etatmodehorsligne_gestion_disk_primary_row);
             trGestionDiskPrimary.setVisibility(View.GONE);
         }
 
@@ -1106,140 +1079,115 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     private void addReusableClickListener(final String action, final String source, final String target) {
 
         if (action.equals(GestionPhotoDiskService.ACT_MOVE)) {
-            reusableClickListener.put(action + "-" + source + "2" + target, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Déplace les fichiers de la source vers la cible
+            reusableClickListener.put(action + "-" + source + "2" + target, v -> {
+                // Déplace les fichiers de la source vers la cible
 
-                    AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(getContext());
 
 
-                    if (target.equals(ImageLocation.APP_INTERNAL.name())) {
-                        alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_diskselection_internal_confirmation));
-                    } else if (target.equals(ImageLocation.PRIMARY.name())) {
-                        alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_diskselection_primary_confirmation));
-                    } else if (target.equals(ImageLocation.SECONDARY.name())) {
-                        alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_diskselection_secondary_confirmation));
-                    }
-                    alertDialogbD.setCancelable(true);
-
-                    // On déplace le disque si validé
-                    alertDialogbD.setPositiveButton(getContext().getString(R.string.btn_yes),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-
-                                    // utilise le déplacement sous forme de service
-                                    // use this to start and trigger a service
-                                    Intent i = new Intent(getApplicationContext(), GestionPhotoDiskService.class);
-                                    // add data to the intent
-                                    i.putExtra(GestionPhotoDiskService.INTENT_ACTION, GestionPhotoDiskService.ACT_MOVE);
-                                    i.putExtra(GestionPhotoDiskService.INTENT_SOURCE, source);
-                                    i.putExtra(GestionPhotoDiskService.INTENT_TARGET, target);
-
-                                    getApplicationContext().startService(i);
-
-                                    DorisApplicationContext.getInstance().notifyDataHasChanged(null);
-
-                                }
-                            });
-
-                    // Abandon donc Rien à Faire
-                    alertDialogbD.setNegativeButton(getContext().getString(R.string.btn_annul),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-
-                    AlertDialog alertDialog = alertDialogbD.create();
-                    alertDialog.show();
+                if (target.equals(ImageLocation.APP_INTERNAL.name())) {
+                    alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_diskselection_internal_confirmation));
+                } else if (target.equals(ImageLocation.PRIMARY.name())) {
+                    alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_diskselection_primary_confirmation));
+                } else if (target.equals(ImageLocation.SECONDARY.name())) {
+                    alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_diskselection_secondary_confirmation));
                 }
+                alertDialogbD.setCancelable(true);
+
+                // On déplace le disque si validé
+                alertDialogbD.setPositiveButton(getContext().getString(R.string.btn_yes),
+                        (dialog, id) -> {
+
+                            // utilise le déplacement sous forme de service
+                            // use this to start and trigger a service
+                            Intent i = new Intent(getApplicationContext(), GestionPhotoDiskService.class);
+                            // add data to the intent
+                            i.putExtra(GestionPhotoDiskService.INTENT_ACTION, GestionPhotoDiskService.ACT_MOVE);
+                            i.putExtra(GestionPhotoDiskService.INTENT_SOURCE, source);
+                            i.putExtra(GestionPhotoDiskService.INTENT_TARGET, target);
+
+                            getApplicationContext().startService(i);
+                            DorisApplicationContext.getInstance().zoneTraitee = null;
+                            DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+
+                        });
+
+                // Abandon donc Rien à Faire
+                alertDialogbD.setNegativeButton(getContext().getString(R.string.btn_annul),
+                        (dialog, id) -> dialog.cancel());
+
+                AlertDialog alertDialog = alertDialogbD.create();
+                alertDialog.show();
             });
         } else if (action.equals(GestionPhotoDiskService.ACT_DELETE_DISK)) {
 
             //Log.d(LOG_TAG, "Création reusableClickListener - "+action+"-"+source);
 
-            reusableClickListener.put(action + "-" + source, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            reusableClickListener.put(action + "-" + source, v -> {
 
-                    AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(getContext());
-                    alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_gestion_reset_confirmation));
-                    alertDialogbD.setCancelable(true);
+                AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(getContext());
+                alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_gestion_reset_confirmation));
+                alertDialogbD.setCancelable(true);
 
-                    // On vide le disque si validé
-                    alertDialogbD.setPositiveButton(getContext().getString(R.string.btn_yes),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
+                // On vide le disque si validé
+                alertDialogbD.setPositiveButton(getContext().getString(R.string.btn_yes),
+                        (dialog, id) -> {
 
-                                    // utilise la suppression sous forme de service
+                            // utilise la suppression sous forme de service
 
-                                    Intent i = new Intent(getApplicationContext(), GestionPhotoDiskService.class);
+                            Intent i = new Intent(getApplicationContext(), GestionPhotoDiskService.class);
 
-                                    i.putExtra(GestionPhotoDiskService.INTENT_ACTION, GestionPhotoDiskService.ACT_DELETE_DISK);
-                                    i.putExtra(GestionPhotoDiskService.INTENT_SOURCE, source);
-                                    i.putExtra(GestionPhotoDiskService.INTENT_TARGET, "");
-                                    getApplicationContext().startService(i);
+                            i.putExtra(GestionPhotoDiskService.INTENT_ACTION, GestionPhotoDiskService.ACT_DELETE_DISK);
+                            i.putExtra(GestionPhotoDiskService.INTENT_SOURCE, source);
+                            i.putExtra(GestionPhotoDiskService.INTENT_TARGET, "");
+                            getApplicationContext().startService(i);
 
-                                    DorisApplicationContext.getInstance().notifyDataHasChanged(null);
-                                }
-                            });
+                            DorisApplicationContext.getInstance().zoneTraitee = null;
+                            DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+                        });
 
-                    // Abandon donc Rien à Faire
-                    alertDialogbD.setNegativeButton(getContext().getString(R.string.btn_annul),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
+                // Abandon donc Rien à Faire
+                alertDialogbD.setNegativeButton(getContext().getString(R.string.btn_annul),
+                        (dialog, id) -> dialog.cancel());
 
-                    AlertDialog alertDialog = alertDialogbD.create();
-                    alertDialog.show();
+                AlertDialog alertDialog = alertDialogbD.create();
+                alertDialog.show();
 
-                }
             });
 
         } else if (action.equals(GestionPhotoDiskService.ACT_DELETE_FOLDER)) {
 
             //Log.d(LOG_TAG, "Création reusableClickListener - "+action+"-"+source);
 
-            reusableClickListener.put(action + "-" + source, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            reusableClickListener.put(action + "-" + source, v -> {
 
-                    AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(getContext());
-                    alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_gestion_reset_confirmation));
-                    alertDialogbD.setCancelable(true);
+                AlertDialog.Builder alertDialogbD = new AlertDialog.Builder(getContext());
+                alertDialogbD.setMessage(getContext().getString(R.string.etatmodehorsligne_gestion_reset_confirmation));
+                alertDialogbD.setCancelable(true);
 
-                    // On vide le dossier si validé
-                    alertDialogbD.setPositiveButton(getContext().getString(R.string.btn_yes),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
+                // On vide le dossier si validé
+                alertDialogbD.setPositiveButton(getContext().getString(R.string.btn_yes),
+                        (dialog, id) -> {
 
-                                    // utilise la suppression sous forme de service
+                            // utilise la suppression sous forme de service
 
-                                    Intent i = new Intent(getApplicationContext(), GestionPhotoDiskService.class);
+                            Intent i = new Intent(getApplicationContext(), GestionPhotoDiskService.class);
 
-                                    i.putExtra(GestionPhotoDiskService.INTENT_ACTION, GestionPhotoDiskService.ACT_DELETE_FOLDER);
-                                    i.putExtra(GestionPhotoDiskService.INTENT_SOURCE, source);
-                                    i.putExtra(GestionPhotoDiskService.INTENT_TARGET, "");
-                                    getApplicationContext().startService(i);
+                            i.putExtra(GestionPhotoDiskService.INTENT_ACTION, GestionPhotoDiskService.ACT_DELETE_FOLDER);
+                            i.putExtra(GestionPhotoDiskService.INTENT_SOURCE, source);
+                            i.putExtra(GestionPhotoDiskService.INTENT_TARGET, "");
+                            getApplicationContext().startService(i);
 
-                                    DorisApplicationContext.getInstance().notifyDataHasChanged(null);
-                                }
-                            });
-                    // Abandon donc Rien à Faire
-                    alertDialogbD.setNegativeButton(getContext().getString(R.string.btn_annul),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
+                            DorisApplicationContext.getInstance().zoneTraitee = null;
+                            DorisApplicationContext.getInstance().notifyDataHasChanged(null);
+                        });
+                // Abandon donc Rien à Faire
+                alertDialogbD.setNegativeButton(getContext().getString(R.string.btn_annul),
+                        (dialog, id) -> dialog.cancel());
 
-                    AlertDialog alertDialog = alertDialogbD.create();
-                    alertDialog.show();
+                AlertDialog alertDialog = alertDialogbD.create();
+                alertDialog.show();
 
-                }
             });
 
         }
@@ -1278,7 +1226,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         isTelechPhotos = DorisApplicationContext.getInstance().isTelechPhotos;
 
         // mise à jour de la date de la base
-        TextView etatBase = (TextView) findViewById(R.id.etatmodehorsligne_etat_base_description_textView);
+        TextView etatBase = findViewById(R.id.etatmodehorsligne_etat_base_description_textView);
         try {
             CloseableIterator<DorisDB_metadata> it = getHelper().getDorisDB_metadataDao().iterator();
             while (it.hasNext()) {
@@ -1346,7 +1294,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
                 showToast(R.string.bg_notifToast_arretTelecharg);
                 DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 
-                ProgressBar pbRunningBarLayout = (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);
+                ProgressBar pbRunningBarLayout = findViewById(R.id.multiprogressbar_running_progressBar);
                 pbRunningBarLayout.setVisibility(View.GONE);
             }
 
@@ -1370,18 +1318,20 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	                .startActivities();
 	            */
             Intent upIntent = NavUtils.getParentActivityIntent(this);
-            if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                // This activity is NOT part of this app's task, so create a new task
-                // when navigating up, with a synthesized back stack.
-                TaskStackBuilder.create(this)
-                        // Add all of this activity's parents to the back stack
-                        .addNextIntentWithParentStack(upIntent)
-                        // Navigate up to the closest parent
-                        .startActivities();
-            } else {
-                // This activity is part of this app's task, so simply
-                // navigate up to the logical parent activity.
-                NavUtils.navigateUpTo(this, upIntent);
+            if(upIntent!=null) {
+                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                    // This activity is NOT part of this app's task, so create a new task
+                    // when navigating up, with a synthesized back stack.
+                    TaskStackBuilder.create(this)
+                            // Add all of this activity's parents to the back stack
+                            .addNextIntentWithParentStack(upIntent)
+                            // Navigate up to the closest parent
+                            .startActivities();
+                } else {
+                    // This activity is part of this app's task, so simply
+                    // navigate up to the logical parent activity.
+                    NavUtils.navigateUpTo(this, upIntent);
+                }
             }
             return true;
         }
@@ -1398,7 +1348,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     }
 
     @Override
-    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+    public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
         //Start of user code onCreateSupportNavigateUpTaskStack EtatModeHorsLigne_CustomViewActivity
         super.onCreateSupportNavigateUpTaskStack(builder);
         //End of user code

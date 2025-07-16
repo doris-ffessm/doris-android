@@ -42,47 +42,35 @@ termes.
 package fr.ffessm.doris.android.async;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.R;
-
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-
-// Start of user code additional imports TelechargePhotosAsync_BgActivity
-
-import java.util.ArrayList;
-import java.util.HashSet;
-
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.GenericRawResults;
 
-import android.preference.PreferenceManager;
-import android.content.SharedPreferences;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
-import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
+import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.LimitTimer;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
-import fr.ffessm.doris.android.tools.Reseau_Outils;
-
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+import fr.ffessm.doris.android.tools.Reseau_Outils;
 
 // End of user code
 
@@ -90,13 +78,13 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
     private static final String LOG_TAG = TelechargePhotosAsync_BgActivity.class.getCanonicalName();
 
 
-    private NotificationHelper mNotificationHelper;
-    private OrmLiteDBHelper dbHelper;
-    private Context context;
+    private final NotificationHelper mNotificationHelper;
+    private final OrmLiteDBHelper dbHelper;
+    private final Context context;
 
     // Start of user code additional attribute declarations TelechargePhotosAsync_BgActivity
 
-    private DorisDBHelper dorisDBHelper;
+    private final DorisDBHelper dorisDBHelper;
 
     // Permet de ralentir le traitement pour laisser du temps processeur aux autres applications
     // en milliseconde, on multiplie selon les contextes par 1, 2, 4
@@ -105,12 +93,12 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
     // timer utilisé pour déclencher un refresh que toutes les x mili
     LimitTimer limitTimer = new LimitTimer(5000); //5 secondes 
 
-    private Param_Outils paramOutils;
-    private Photos_Outils photosOutils;
-    private Reseau_Outils reseauOutils;
+    private final Param_Outils paramOutils;
+    private final Photos_Outils photosOutils;
+    private final Reseau_Outils reseauOutils;
 
-    Integer nbPhotosPrincATelechargerPourZone[] = new Integer[12];
-    Integer nbPhotosATelechargerPourZone[] = new Integer[12];
+    Integer[] nbPhotosPrincATelechargerPourZone = new Integer[12];
+    Integer[] nbPhotosATelechargerPourZone = new Integer[12];
     HashSet<String> hsImagesVigAllreadyAvailable;
     HashSet<String> hsImagesMedResAllreadyAvailable;
     HashSet<String> hsImagesHiResAllreadyAvailable;
@@ -147,8 +135,8 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
 
         // TODO : Tempo pour ralentir traitement : lecture paramètre temporaire
         try {
-            tempo = Integer.valueOf(preferences.getString(context.getString(R.string.pref_key_asynch_tempo), "50"));
-        } catch (Exception e) {
+            tempo = Integer.parseInt(preferences.getString(context.getString(R.string.pref_key_asynch_tempo), "50"));
+        } catch (Exception ignored) {
         }
 
         this.dorisDBHelper = dbHelper.getDorisDBHelper();
@@ -342,6 +330,8 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
 
     public int telechargementPhotosPrincipalesFiches(List<ZoneGeographique> listeZoneGeo) {
 
+        int nbTelechargements = 0;
+        int nbPhotoAlreadyPresent = 0;
         for (ZoneGeographique zoneGeo : listeZoneGeo) {
             if (BuildConfig.DEBUG)
                 Log.d(LOG_TAG, "telechargementPhotosPrincipalesFiches - zoneGeo : " + zoneGeo.getId() + " - " + zoneGeo.getNom());
@@ -371,7 +361,8 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
 
                 // récupère les cleURL et les imgPostfixCodes des fiches
 
-                List<String[]> listePhotoPrinc = new ArrayList<String[]>(100);
+                List<String[]> listePhotoPrinc;
+                listePhotoPrinc = new ArrayList<String[]>(100);
                 try {
                     rawResults = dorisDBHelper.photoFicheDao.queryRaw(
                             "SELECT cleURL, imgPostfixCodes FROM fiches_ZonesGeographiques, fiche, photoFiche "
@@ -389,35 +380,34 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
                 DaoManager.unregisterDao(dbHelper.getConnectionSource(), dorisDBHelper.photoFicheDao);
 
                 try {
-                    //int nbTelechargements = 0;
-
+                    int photoIndex = 0;
                     for (String[] resultColumns : listePhotoPrinc) {
 
-                        // Les vignettes des Photos Principales sont toujours téléchargées (si pas P0)
-                        if (!hsImagesVigAllreadyAvailable.contains(resultColumns[0])) {
-                            photosOutils.downloadPostFixedPhotoFile(resultColumns[0], Photos_Outils.ImageType.VIGNETTE, resultColumns[1]);
-                            //nbTelechargements++;
-                        }
+                        String imageFileName = resultColumns[0].substring(resultColumns[0].lastIndexOf('/') + 1);
 
-                        // Comme on télécharge toujours la vignette, on ne fait avancer le compteur
-                        // que si c'est la qualité demandée
                         if (imageTypeImage == Photos_Outils.ImageType.VIGNETTE) {
+                            if (!hsImagesVigAllreadyAvailable.contains(imageFileName)
+                                    && !hsImagesHiResAllreadyAvailable.contains(imageFileName)) { // some image exists only in high res
+                                photosOutils.downloadPostFixedPhotoFile(resultColumns[0], Photos_Outils.ImageType.VIGNETTE, resultColumns[1]);
+                                nbTelechargements++;
+                            } else nbPhotoAlreadyPresent++;
                             nbPhotosPrinRecuesPourZone++;
                         }
 
                         if (imageTypeImage == Photos_Outils.ImageType.MED_RES) {
-                            if (!hsImagesMedResAllreadyAvailable.contains(resultColumns[0])) {
+                            if (!hsImagesMedResAllreadyAvailable.contains(imageFileName)
+                                    && !hsImagesHiResAllreadyAvailable.contains(imageFileName)) { // some image exists only in high res
                                 photosOutils.downloadPostFixedPhotoFile("/" + resultColumns[0], Photos_Outils.ImageType.MED_RES, resultColumns[1]);
-                                //nbTelechargements++;
-                            }
+                                nbTelechargements++;
+                            } else nbPhotoAlreadyPresent++;
                             nbPhotosPrinRecuesPourZone++;
                         }
 
                         if (imageTypeImage == Photos_Outils.ImageType.HI_RES) {
-                            if (!hsImagesHiResAllreadyAvailable.contains(resultColumns[0])) {
+                            if (!hsImagesHiResAllreadyAvailable.contains(imageFileName)) {
                                 photosOutils.downloadPostFixedPhotoFile("/" + resultColumns[0], Photos_Outils.ImageType.HI_RES, resultColumns[1]);
-                                //nbTelechargements++;
-                            }
+                                nbTelechargements++;
+                            } else nbPhotoAlreadyPresent++;
                             nbPhotosPrinRecuesPourZone++;
                         }
 	    				/*	
@@ -448,10 +438,13 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
                             // tempo pour économiser le CPU
                             Thread.sleep(tempo); // wait for 50 milliseconds before running another loop
                         }
+                        photoIndex++;
+                        if (photoIndex % 200 == 0) {
+                            Log.d(LOG_TAG, "nbPhotoAlreadyPresent=" + nbPhotoAlreadyPresent);
+                            Log.d(LOG_TAG, "nbTelechargements=" + nbTelechargements);
+                        }
                     }
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, e.getMessage(), e);
-                } catch (InterruptedException e) {
+                } catch (IOException | InterruptedException e) {
                     Log.e(LOG_TAG, e.getMessage(), e);
                 }
 
@@ -475,6 +468,8 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
 
     public int telechargementPhotosFiches(List<ZoneGeographique> listeZoneGeo) {
 
+        int nbTelechargements = 0;
+        int nbPhotoAlreadyPresent = 0;
         GenericRawResults<String[]> rawResults = null;
         Photos_Outils.ImageType imageTypeImage;
 
@@ -502,8 +497,9 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
                 publishProgress(0);
 
                 imageTypeImage = photosOutils.getImageQualityToDownload(false, zoneGeo.getZoneGeoKind());
-                if (BuildConfig.DEBUG)
+                if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "telechargementPhotosFiches - zoneId : " + zoneId + " - Type Image : " + imageTypeImage);
+                }
 
 
                 // SELECT cleURL FROM fiches_ZonesGeographiques, photoFiche WHERE ZoneGeographique_id = 1
@@ -514,7 +510,7 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
                 // CREATE INDEX photoFiche_I_ficheId ON photoFiche(fiche_id ASC);
 
                 // récupère les cleURL et le imgPostfixCodes des fiches
-                List<String[]> listePhotos = new ArrayList<String[]>(100);
+                List<String[]> listePhotos = new ArrayList<>(100);
                 try {
                     rawResults =
                             dorisDBHelper.fiches_ZonesGeographiquesDao.queryRaw(
@@ -535,31 +531,39 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
 
                 try {
                     //int nbTelechargements = 0;
+                    int photoIndex = 0;
                     for (String[] resultColumns : listePhotos) {
 
                         // On télécharge toujours la vignette si en mode <> P0 ou P1
-                        if (!hsImagesVigAllreadyAvailable.contains(resultColumns[0])) {
-                            photosOutils.downloadPostFixedPhotoFile("/" + resultColumns[0], Photos_Outils.ImageType.VIGNETTE, resultColumns[1]);
-                            //nbTelechargements++;
-                        }
+						/*	if ( !hsImagesVigAllreadyAvailable.contains(resultColumns[0]) ){
+							photosOutils.downloadPostFixedPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.VIGNETTE, resultColumns[1]);
+							//nbTelechargements++;
+        				}*/
+                        String imageFileName = resultColumns[0].substring(resultColumns[0].lastIndexOf('/') + 1);
 
                         if (imageTypeImage == Photos_Outils.ImageType.VIGNETTE) {
+                            if (!hsImagesVigAllreadyAvailable.contains(imageFileName)
+                                    && !hsImagesHiResAllreadyAvailable.contains(imageFileName)) { // some image may exist in high res instead of vignette
+                                photosOutils.downloadPostFixedPhotoFile("/" + resultColumns[0], Photos_Outils.ImageType.VIGNETTE, resultColumns[1]);
+                                nbTelechargements++;
+                            } else nbPhotoAlreadyPresent++;
                             nbPhotosRecuesPourZone++;
                         }
 
                         if (imageTypeImage == Photos_Outils.ImageType.MED_RES) {
-                            if (!hsImagesMedResAllreadyAvailable.contains(resultColumns[0])) {
+                            if (!hsImagesMedResAllreadyAvailable.contains(imageFileName)
+                                    && !hsImagesHiResAllreadyAvailable.contains(imageFileName)) { // some image may exist in high res instead of med res
                                 photosOutils.downloadPostFixedPhotoFile("/" + resultColumns[0], Photos_Outils.ImageType.MED_RES, resultColumns[1]);
-                                //nbTelechargements++;
-                            }
+                                nbTelechargements++;
+                            } else nbPhotoAlreadyPresent++;
                             nbPhotosRecuesPourZone++;
                         }
 
                         if (imageTypeImage == Photos_Outils.ImageType.HI_RES) {
-                            if (!hsImagesHiResAllreadyAvailable.contains(resultColumns[0])) {
+                            if (!hsImagesHiResAllreadyAvailable.contains(imageFileName)) {
                                 photosOutils.downloadPostFixedPhotoFile("/" + resultColumns[0], Photos_Outils.ImageType.HI_RES, resultColumns[1]);
-                                //nbTelechargements++;
-                            }
+                                nbTelechargements++;
+                            } else nbPhotoAlreadyPresent++;
                             nbPhotosRecuesPourZone++;
                         }
 						
@@ -593,14 +597,18 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
                             // toutes les 200 images ajoutées fait une micro pause pour économiser le CPU pour l'UI
                             Thread.sleep(4 * tempo); // wait for 200 milliseconds before running another loop
                         }
+
+                        photoIndex++;
+                        if (photoIndex % 200 == 0) {
+                            Log.d(LOG_TAG, "nbPhotoAlreadyPresent=" + nbPhotoAlreadyPresent);
+                            Log.d(LOG_TAG, "nbTelechargements=" + nbTelechargements);
+                        }
                         if (this.isCancelled()) {
                             // annulation demandée, fini la tache dés que possible
                             break;
                         }
                     }
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, e.getMessage(), e);
-                } catch (InterruptedException e) {
+                } catch (IOException | InterruptedException e) {
                     Log.e(LOG_TAG, e.getMessage(), e);
                 }
             }
@@ -629,7 +637,7 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
         mNotificationHelper.setMaxItemToProcess(0);
 
         // Nombre de Photos d'intervenants
-        List<String[]> countPhoto = new ArrayList<String[]>(2);
+        List<String[]> countPhoto = new ArrayList<>(2);
         try {
             rawResults =
                     dorisDBHelper.participantDao.queryRaw("SELECT count(*) FROM Participant "
@@ -649,7 +657,7 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
 
         // récupère les url des photos
         // SELECT cleURLPhotoParticipant FROM Participant WHERE cleURLPhotoParticipant <> ""
-        List<String[]> listePhotos = new ArrayList<String[]>(100);
+        List<String[]> listePhotos = new ArrayList<>(100);
         try {
             rawResults =
                     dorisDBHelper.participantDao.queryRaw(
@@ -691,9 +699,7 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
                     break;
                 }
             }
-        } catch (IOException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
         }
 
@@ -709,7 +715,7 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
         mNotificationHelper.setMaxItemToProcess(0);
 
         // Nombre de Photos de la Bibliographie
-        List<String[]> countPhoto = new ArrayList<String[]>(2);
+        List<String[]> countPhoto = new ArrayList<>(2);
         try {
             rawResults =
                     dorisDBHelper.entreeBibliographieDao.queryRaw("SELECT count(*) FROM entreeBibliographie "
@@ -728,7 +734,7 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
         publishProgress(0);
 
         // récupère les url des photos
-        List<String[]> listePhotos = new ArrayList<String[]>(100);
+        List<String[]> listePhotos = new ArrayList<>(100);
         try {
             rawResults =
                     dorisDBHelper.entreeBibliographieDao.queryRaw(
@@ -771,9 +777,7 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
                     break;
                 }
             }
-        } catch (IOException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
         }
 
@@ -789,7 +793,7 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
         mNotificationHelper.setMaxItemToProcess(0);
 
         // Nombre de Photos dans le Glossaire
-        List<String[]> countPhoto = new ArrayList<String[]>(2);
+        List<String[]> countPhoto = new ArrayList<>(2);
         try {
             rawResults =
                     dorisDBHelper.definitionGlossaireDao.queryRaw("SELECT count(*) FROM definitionGlossaire "
@@ -808,7 +812,7 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
         publishProgress(0);
 
         // récupère les url des photos
-        List<String[]> listeListePhotos = new ArrayList<String[]>(100);
+        List<String[]> listeListePhotos = new ArrayList<>(100);
         try {
             rawResults =
                     dorisDBHelper.definitionGlossaireDao.queryRaw(
@@ -863,9 +867,7 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
                     break;
                 }
             }
-        } catch (IOException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
         }
 
