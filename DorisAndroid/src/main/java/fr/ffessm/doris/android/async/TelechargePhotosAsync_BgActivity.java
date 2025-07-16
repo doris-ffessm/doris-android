@@ -42,45 +42,35 @@ termes.
 package fr.ffessm.doris.android.async;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.R;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-
-// Start of user code additional imports TelechargePhotosAsync_BgActivity
-
-import java.util.ArrayList;
-import java.util.HashSet;
-
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.GenericRawResults;
 
-import android.preference.PreferenceManager;
-import android.content.SharedPreferences;
-import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
+import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
+import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.LimitTimer;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
-import fr.ffessm.doris.android.tools.Reseau_Outils;
-
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+import fr.ffessm.doris.android.tools.Reseau_Outils;
 
 // End of user code
 
@@ -88,13 +78,13 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
     private static final String LOG_TAG = TelechargePhotosAsync_BgActivity.class.getCanonicalName();
 
 
-    private NotificationHelper mNotificationHelper;
-    private OrmLiteDBHelper dbHelper;
-    private Context context;
+    private final NotificationHelper mNotificationHelper;
+    private final OrmLiteDBHelper dbHelper;
+    private final Context context;
 
     // Start of user code additional attribute declarations TelechargePhotosAsync_BgActivity
 
-    private DorisDBHelper dorisDBHelper;
+    private final DorisDBHelper dorisDBHelper;
 
     // Permet de ralentir le traitement pour laisser du temps processeur aux autres applications
     // en milliseconde, on multiplie selon les contextes par 1, 2, 4
@@ -103,12 +93,12 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
     // timer utilisé pour déclencher un refresh que toutes les x mili
     LimitTimer limitTimer = new LimitTimer(5000); //5 secondes 
 
-    private Param_Outils paramOutils;
-    private Photos_Outils photosOutils;
-    private Reseau_Outils reseauOutils;
+    private final Param_Outils paramOutils;
+    private final Photos_Outils photosOutils;
+    private final Reseau_Outils reseauOutils;
 
-    Integer nbPhotosPrincATelechargerPourZone[] = new Integer[12];
-    Integer nbPhotosATelechargerPourZone[] = new Integer[12];
+    Integer[] nbPhotosPrincATelechargerPourZone = new Integer[12];
+    Integer[] nbPhotosATelechargerPourZone = new Integer[12];
     HashSet<String> hsImagesVigAllreadyAvailable;
     HashSet<String> hsImagesMedResAllreadyAvailable;
     HashSet<String> hsImagesHiResAllreadyAvailable;
@@ -145,8 +135,8 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
 
         // TODO : Tempo pour ralentir traitement : lecture paramètre temporaire
         try {
-            tempo = Integer.valueOf(preferences.getString(context.getString(R.string.pref_key_asynch_tempo), "50"));
-        } catch (Exception e) {
+            tempo = Integer.parseInt(preferences.getString(context.getString(R.string.pref_key_asynch_tempo), "50"));
+        } catch (Exception ignored) {
         }
 
         this.dorisDBHelper = dbHelper.getDorisDBHelper();
@@ -454,9 +444,7 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
                             Log.d(LOG_TAG, "nbTelechargements=" + nbTelechargements);
                         }
                     }
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, e.getMessage(), e);
-                } catch (InterruptedException e) {
+                } catch (IOException | InterruptedException e) {
                     Log.e(LOG_TAG, e.getMessage(), e);
                 }
 
@@ -620,9 +608,7 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
                             break;
                         }
                     }
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, e.getMessage(), e);
-                } catch (InterruptedException e) {
+                } catch (IOException | InterruptedException e) {
                     Log.e(LOG_TAG, e.getMessage(), e);
                 }
             }
@@ -713,9 +699,7 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
                     break;
                 }
             }
-        } catch (IOException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
         }
 
@@ -793,9 +777,7 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
                     break;
                 }
             }
-        } catch (IOException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
         }
 
@@ -885,9 +867,7 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
                     break;
                 }
             }
-        } catch (IOException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
         }
 
