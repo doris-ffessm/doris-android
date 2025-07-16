@@ -55,10 +55,14 @@ import android.os.AsyncTask.Status;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceScreen;
+import android.widget.ListView;
 import android.widget.Toast;
 import android.util.Log;
 
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
@@ -101,7 +105,24 @@ public class Preference_PreferenceViewActivity extends android.preference.Prefer
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(savedInstanceState);
         ThemeUtil.onActivityCreateSetTheme(this);
+
         addPreferencesFromResource(R.xml.preference);
+
+        // Find the ListView that holds the preferences
+        // This is the standard ID for the ListView within a PreferenceActivity
+        ListView preferenceListView = findViewById(android.R.id.list);
+
+        if (preferenceListView != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(preferenceListView, (v, insets) -> {
+                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+                ((ListView) v).setClipToPadding(false);
+                return insets;
+            });
+        } else {
+            // Fallback or logging if the list view isn't found, though it should be for PreferenceActivity
+            Log.w(LOG_TAG, "Preference ListView (android.R.id.list) not found. Insets may not be applied correctly.");
+        }
         //Start of user code Preference preference activity additional onCreate
 
         // Si téléchargements en tâche de fond, il est arrêté
