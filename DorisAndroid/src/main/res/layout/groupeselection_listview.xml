@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:id="@+id/groupeselection_listview_layout"
+	android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
 	android:background="?attr/dorisAppBackground">
@@ -12,13 +13,17 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginTop="2dp"
 	    android:layout_marginBottom="2dp"
-	    android:paddingLeft="4dip">
+	    android:paddingLeft="4dip"
+		android:paddingRight="4dip"
+        android:paddingStart="4dip"
+		android:paddingEnd="4dip">
 
 		<LinearLayout
 			android:id="@+id/groupselection_listview_navigation"
 			android:layout_width="match_parent"
 			android:layout_height="35sp"
-			android:layout_toLeftOf="@+id/groupeselection_main_btnSelect">
+			android:layout_toLeftOf="@+id/groupeselection_main_radioSelect"
+            android:layout_toStartOf="@+id/groupeselection_main_radioSelect">
 
 			<!--  Ne sert pas réellement puisque removeAll systématique puis reconstruction dans GroupeSelection_Adapter -->
 			<ImageButton
@@ -32,16 +37,17 @@
 
 		</LinearLayout>
 		<RadioButton
-				android:id="@+id/groupeselection_main_radioSelect"
-			    android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_alignParentRight="true"
-		        android:layout_marginBottom="2dp"
-			    android:layout_marginLeft="2dp"
-			    android:layout_marginRight="2dp"
-			    android:layout_marginTop="2dp"
-			    android:text=""
-		        android:onClick="onClickCurrentGroup"
+			android:id="@+id/groupeselection_main_radioSelect"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+			android:layout_marginBottom="2dp"
+			android:layout_marginLeft="2dp"
+			android:layout_marginRight="2dp"
+			android:layout_marginTop="2dp"
+			android:text=""
+			android:onClick="onClickCurrentGroup"
 		     />
 	</RelativeLayout>
     <RelativeLayout
@@ -54,7 +60,8 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_toLeftOf="@+id/groupselection_listview_filtre_espece_courant_suppFiltreBtn"
-			android:text="@string/groupselection_listview_filtre_espece_courant_label"
+            android:layout_toStartOf="@+id/groupselection_listview_filtre_espece_courant_suppFiltreBtn"
+            android:text="@string/groupselection_listview_filtre_espece_courant_label"
 			android:textAppearance="?android:attr/textAppearanceMedium"
 			android:textColor="?android:attr/textColorPrimary" />
 
@@ -62,6 +69,7 @@
             android:id="@+id/groupselection_listview_filtre_espece_courant_suppFiltreBtn"
             android:layout_width="32sp"
             android:layout_height="32sp"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:contentDescription="@string/groupselection_listview_suppression_filtre_espece_courant_descBtn"

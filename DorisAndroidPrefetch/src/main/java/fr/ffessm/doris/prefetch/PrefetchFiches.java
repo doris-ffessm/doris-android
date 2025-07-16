@@ -39,7 +39,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
     // Initialisation de la Gestion des Log
     public static Log log = LogFactory.getLog(PrefetchFiches.class);
 
-    private static Common_Outils commonOutils = new Common_Outils();
+    private static final Common_Outils commonOutils = new Common_Outils();
 
     public PrefetchFiches(DorisDBHelper dbContext, ConnectionSource connectionSource, int nbMaxFichesATraiter) {
         super(dbContext, connectionSource, nbMaxFichesATraiter);
@@ -92,11 +92,14 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                 fiche.setGroupe(groupeDoris);
             } catch (SQLException throwables) {
                 log.error(String.format("Cannot set group %s due to exception %s", espece.getFields().getGroup().getValue(), throwables.getMessage()), throwables);
+                fiche.setDateModification(fiche.getDateModification()+"_error_"+Math.random());
             }
         }
 
         return fiche;
     }
+
+    protected boolean postNodeCreationHasWarning = false;
 
     @Override
     protected void postNodeCreation(ObjNameNodeId objNameNodeId, Fiche ficheDB, Espece especeJSON) throws SQLException, WebSiteNotAvailableException {
@@ -118,6 +121,15 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
             updatePhotoForFiche(ficheDB, especeJSON);
             removeZoneGeographiqueForFiche(ficheDB, especeJSON);
             updateZoneGeographiqueForFiche(ficheDB, especeJSON);
+            if(postNodeCreationHasWarning) {
+                // one of the postNodeCreation raised a warning, the fiche will require to be updated after a fix
+                ficheDB.setDateModification(ficheDB.getDateCreation()+"_has_warning");
+                TransactionManager.callInTransaction(connectionSource,
+                    (Callable<Void>) () -> {
+                        dbContext.ficheDao.createOrUpdate(ficheDB);
+                        return null;
+                    });
+            }
         } catch (Exception e) {
             // revert element that have been partially added if the Fiche isn't fully retrieved (web connection error)
             TransactionManager.callInTransaction(connectionSource,
@@ -144,6 +156,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         }
     }
 
+    @SuppressWarnings("DefaultLocale")
     protected void removeSectionFicheForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         // remove previous SectionFiche if any
         SectionFiche sectionFicheQuery = new SectionFiche();
@@ -159,6 +172,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                     });
         }
     }
+    @SuppressWarnings("DefaultLocale")
     protected void updateSectionFicheForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         // Create SectionFiche related to this Fiche
         List<SectionFiche> sectionsFiche = jsonToDB.getSectionsFicheFromJSONEspece(especeJSON);
@@ -175,6 +189,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         }
     }
 
+    @SuppressWarnings("DefaultLocale")
     protected void removeAutreDenominationForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         // remove previous SectionFiche if any
         AutreDenomination query = new AutreDenomination();
@@ -190,6 +205,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         }
     }
 
+    @SuppressWarnings("DefaultLocale")
     protected void updateAutreDenominationForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         // Create AutreDenomination related to this Fiche
         List<AutreDenomination> autresDenominations = jsonToDB.getAutresDenominationFicheFromJSONEspece(especeJSON);
@@ -199,6 +215,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
             if (!autreDenomination.getDenomination().contentEquals("<html />")) {
                 String textePourRechercheRapide = ficheDB.getTextePourRechercheRapide();
                 textePourRechercheRapide += " " + autreDenomination.getDenomination().replaceAll("\\([^\\(]*\\)", "");
+                ficheDB.setTextePourRechercheRapide(textePourRechercheRapide);
 
                 autreDenomination.setFiche(ficheDB);
                 final AutreDenomination autreDenomination_final = autreDenomination;
@@ -223,11 +240,13 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                         return null;
                     });
         } catch (Exception e) {
+            postNodeCreationHasWarning = true;
             log.warn(String.format("Failed to update Fiche %d with new textePourRechercheRapide", ficheDB.getNumeroFiche()), e);
         }
     }
 
 
+    @SuppressWarnings("DefaultLocale")
     protected void removeClassificationForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         // remove previous ClassificationFiche if any
         ClassificationFiche query = new ClassificationFiche();
@@ -247,6 +266,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
     /**
      *  Ajout aux Classifications si pas encore dans la liste
      */
+    @SuppressWarnings("DefaultLocale")
     protected void updateClassificationForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         /* Initialement on a sur la fiche que le niveau et la référence de la Classification */
         List<ClassificationFiche> classificationsFiche = jsonToDB.getClassificationFicheFromJSONEspece(especeJSON);
@@ -273,6 +293,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                             classificationFiche.getClassification().getNumeroDoris(), uri,
                             ficheDB.getWebNodeId(),
                             DorisOAuth2ClientCredentials.SPECIES_NODE_URL), e);
+                    postNodeCreationHasWarning = true;
                 }
 
                 // Parfois on n'arrive pas à la récupérer
@@ -290,6 +311,14 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                                 return null;
                             });
 
+                } else {
+                    String uri = DorisOAuth2ClientCredentials.getServerObjectUrlTousLesChamps( String.valueOf(classificationFiche.getClassification().getNumeroDoris()) );
+
+                    log.warn(String.format("Failed to retrieve classification fields %d %s \n\tfor fiche %d - %s",
+                            classificationFiche.getClassification().getNumeroDoris(), uri,
+                            ficheDB.getWebNodeId(),
+                            DorisOAuth2ClientCredentials.SPECIES_NODE_URL));
+                    this.postNodeCreationHasWarning = true;
                 }
 
             }
@@ -310,6 +339,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
     }
 
     /* Ajout Genre et Espèce aux Classification                  */
+    @SuppressWarnings("DefaultLocale")
     protected void updateGenreForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         log.debug("Adding ClassificationFiche(s) about Genre/Espece");
         int nbGenreEspece = 0;
@@ -364,6 +394,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
     }
 
 
+    @SuppressWarnings("DefaultLocale")
     protected void removeParticipantForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         // remove previous IntervenantFiche if any
         IntervenantFiche query = new IntervenantFiche();
@@ -382,10 +413,11 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
     /**
      * Doridiens ayant participés à la rédaction de la fiche
      */
+    @SuppressWarnings("DefaultLocale")
     protected void updateParticipantForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         int nbIntervenants = 0;
         Object numeroAuteurPrincipal = especeJSON.getFields().getPrincipalWriter().getValue();
-        if(numeroAuteurPrincipal != null && numeroAuteurPrincipal instanceof String && numeroAuteurPrincipal != ""){
+        if(numeroAuteurPrincipal instanceof String && numeroAuteurPrincipal != ""){
             try {
                 final Participant doridien = dbContext.participantDao.queryForFirst(
                         dbContext.participantDao.queryBuilder().where().eq("numeroParticipant", numeroAuteurPrincipal).prepare()
@@ -486,6 +518,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         }
         log.debug(String.format("added %d intervenant(s) on this fiche",nbIntervenants));
     }
+    @SuppressWarnings("DefaultLocale")
     protected void removePhotoForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
 
         // remove previous PhotoFiche if any
@@ -501,6 +534,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                     });
         }
     }
+    @SuppressWarnings("DefaultLocale")
     protected void updatePhotoForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException, WebSiteNotAvailableException {
 
         List<Image> imageJSONListe = new ArrayList<>();
@@ -520,6 +554,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
 
             } catch (NumberFormatException | IOException e) {
                 log.warn(String.format("Failed retrieving image information for %s", possibleImageId),e);
+                postNodeCreationHasWarning = true;
             }
         }
 
@@ -547,6 +582,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
         log.debug(String.format("added %d PhotoFiche related to this Fiche",listePhotoFiche.size()));
 
     }
+    @SuppressWarnings("DefaultLocale")
     protected void removeZoneGeographiqueForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
         // remove previous PhotoFiche if any
         Fiches_ZonesGeographiques query = new Fiches_ZonesGeographiques();
@@ -561,6 +597,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                     });
         }
     }
+    @SuppressWarnings("DefaultLocale")
     protected void updateZoneGeographiqueForFiche(Fiche ficheDB, Espece especeJSON) throws SQLException {
 
         ZoneGeographique zoneGeographique ;
@@ -580,6 +617,7 @@ public class PrefetchFiches extends AbstractNodePrefetch<Fiche, Espece, Dao<Fich
                                 especeJSON.getFields().getNomCommunFr().getValue()
                                 ));
                         log.error(especeJSON.toString());
+                        postNodeCreationHasWarning = true;
                         if(ficheDB.getEtatFiche() == 5 ) {
                             log.warn("EtatFiche = 5 -> Ignore zone géographique");
                             break;

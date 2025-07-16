@@ -7,6 +7,7 @@ import android.content.Context;
 
 import androidx.core.content.ContextCompat;
 
+import android.os.Build;
 import android.text.TextUtils.SimpleStringSplitter;
 import android.util.Log;
 import fr.ffessm.doris.android.DorisApplicationContext;
@@ -43,8 +44,10 @@ public class DiskEnvironmentHelper {
 	public static Device getSecondaryExternalStorage(Context context) throws NoSecondaryStorageException {
 		
 		if (existSecondaryExternal(context)) {
-			if(mSecondary == null) mSecondary = new DeviceSecondaryExternal(context);
-		}
+			if(mSecondary == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				mSecondary = new DeviceSecondaryExternal(context);
+			}
+        }
 		else {
 			if (existSecondaryExternalLegacy(context)) {
 				if(mSecondary == null) mSecondary = createSecondaryExternalLegacy();

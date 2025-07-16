@@ -68,6 +68,11 @@ import fr.ffessm.doris.android.BuildConfig;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager.widget.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
@@ -176,9 +181,15 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(savedInstanceState);
         ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.imagepleinecran_customview);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.imagepleinecran_customview_layout), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -385,39 +396,39 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // behavior of option menu
-        switch (item.getItemId()) {
-            case R.id.imagepleinecran_customview_action_preference:
-                startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-                return true;
+
+        int itemId = item.getItemId();
+        if (itemId == R.id.imagepleinecran_customview_action_preference) {
+            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+            return true;
             //Start of user code additional menu action ImagePleinEcran_CustomViewActivity
 
             //End of user code
             // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                Log.d(LOG_TAG, "onOptionsItemSelected() - home");
+        } else if (itemId == android.R.id.home) {
+            Log.d(LOG_TAG, "onOptionsItemSelected() - home");
 
-                Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
+            Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
 
-                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                    // This activity is NOT part of this app's task, so create a new task
-                    // when navigating up, with a synthesized back stack.
-                    TaskStackBuilder.create(this)
-                            // Add all of this activity's parents to the back stack
-                            .addNextIntentWithParentStack(upIntent)
-                            // Navigate up to the closest parent
-                            .startActivities();
-                } else {
-                    // This activity is part of this app's task, so simply
-                    // navigate up to the logical parent activity.
-                    Bundle b = new Bundle();
-                    b.putInt("ficheId", ficheId);
-                    upIntent.putExtras(b);
-                    NavUtils.navigateUpTo(this, upIntent);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                // This activity is NOT part of this app's task, so create a new task
+                // when navigating up, with a synthesized back stack.
+                TaskStackBuilder.create(this)
+                        // Add all of this activity's parents to the back stack
+                        .addNextIntentWithParentStack(upIntent)
+                        // Navigate up to the closest parent
+                        .startActivities();
+            } else {
+                // This activity is part of this app's task, so simply
+                // navigate up to the logical parent activity.
+                Bundle b = new Bundle();
+                b.putInt("ficheId", ficheId);
+                upIntent.putExtras(b);
+                NavUtils.navigateUpTo(this, upIntent);
+            }
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     //  ------------ dealing with Up button

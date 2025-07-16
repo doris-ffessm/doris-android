@@ -5,7 +5,7 @@ Based on data from the http://doris.ffessm.fr website, it helps you identify and
 
 Public web site (in French) about the DORISAndroid application: https://doris-ffessm.github.io
 
-The recommanded dowload is via the Google Play store: [<img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="100">](https://play.google.com/store/apps/details?id=fr.ffessm.doris.android)
+The recommended download is via the Google Play store: [<img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="100">](https://play.google.com/store/apps/details?id=fr.ffessm.doris.android)
 
 ## Development
 

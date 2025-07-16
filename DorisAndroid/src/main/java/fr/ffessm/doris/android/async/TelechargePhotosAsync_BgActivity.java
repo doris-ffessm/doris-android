@@ -54,7 +54,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.R;
 
@@ -70,7 +69,6 @@ import com.j256.ormlite.dao.GenericRawResults;
 
 import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
-
 import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
@@ -549,7 +547,7 @@ public class TelechargePhotosAsync_BgActivity extends AsyncTask<String, Integer,
                     for (String[] resultColumns : listePhotos) {
 
                         // On télécharge toujours la vignette si en mode <> P0 ou P1
-					/*	if ( !hsImagesVigAllreadyAvailable.contains(resultColumns[0]) ){
+						/*	if ( !hsImagesVigAllreadyAvailable.contains(resultColumns[0]) ){
 							photosOutils.downloadPostFixedPhotoFile("/"+resultColumns[0], Photos_Outils.ImageType.VIGNETTE, resultColumns[1]);
 							//nbTelechargements++;
         				}*/

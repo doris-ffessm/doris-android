@@ -52,10 +52,16 @@ import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
 import androidx.appcompat.app.ActionBar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -70,12 +76,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.view.KeyEvent;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.window.OnBackInvokedCallback;
+import android.window.OnBackInvokedDispatcher;
 
 import org.acra.ACRA;
+
+import java.text.MessageFormat;
+import java.util.Objects;
 
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 // End of user code
@@ -94,14 +104,38 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 
     GroupeSelection_Adapter adapter;
 
+    private OnBackInvokedCallback mOnBackInvokedCallback; // Member
 
     public void onCreate(Bundle bundle) {
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(bundle);
         ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.groupeselection_listview);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.groupeselection_listview_layout), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        if (Build.VERSION.SDK_INT >= 33) {
+            /* close only if we are on the top group otherwise navigate to the upper group */
+            mOnBackInvokedCallback = () -> {
+                if (retourGroupeSuperieur()) {
+                    this.finish();
+                }
+            };
+
+            // Register the callback
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+                    mOnBackInvokedCallback
+            );
+        }
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         ListView list = findViewById(R.id.groupeselection_listview);
         list.setClickable(false);
@@ -111,7 +145,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         Param_Outils paramOutils = new Param_Outils(context);
 
-        depuisAccueil = getIntent().getExtras().getBoolean("GroupeSelection_depuisAccueil", false);
+        depuisAccueil = Objects.requireNonNull(getIntent().getExtras()).getBoolean("GroupeSelection_depuisAccueil", false);
         ACRA.getErrorReporter().putCustomData("depuisAccueil", "" + depuisAccueil);
         current_mode_affichage = paramOutils.getParamString(R.string.pref_key_current_mode_affichage,
                 getString(R.string.current_mode_affichage_default));
@@ -140,7 +174,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 
             TextView filtreCourantTV = findViewById(R.id.groupselection_listview_filtre_espece_courant_textView);
             currentFilterInfoLayout.setVisibility(View.VISIBLE);
-            filtreCourantTV.setText(getString(R.string.groupselection_listview_filtre_espece_courant_label) + groupeFiltreCourant.getNomGroupe());
+            filtreCourantTV.setText(MessageFormat.format("{0}{1}", getString(R.string.groupselection_listview_filtre_espece_courant_label), groupeFiltreCourant.getNomGroupe()));
 
         }
 
@@ -160,6 +194,16 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
         Log.d(LOG_TAG, "onResume() - Début");
         Log.d(LOG_TAG, "onResume() - Fin");
         //End of user code
+    }
+    @Override
+    protected void onDestroy() {
+        // Unregister the callback if it was registered
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && mOnBackInvokedCallback != null) {
+            getOnBackInvokedDispatcher().unregisterOnBackInvokedCallback(mOnBackInvokedCallback);
+            mOnBackInvokedCallback = null; // Clear the reference
+            Log.d(LOG_TAG, "OnBackInvokedCallback: Unregistered in onDestroy.");
+        }
+        super.onDestroy();
     }
 
     public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
@@ -227,44 +271,41 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // behavior of option menu
-        switch (item.getItemId()) {
-            case R.id.groupeselection_classlistview_action_preference:
-                startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-                return true;
+        int itemId = item.getItemId();
+        if (itemId == R.id.groupeselection_classlistview_action_preference) {
+            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+            return true;
             //Start of user code additional menu action GroupeSelection_ClassListViewActivity
-
-            case R.id.groupeselection_classlistview_action_aide:
-                AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
-                aide.affichageMessageHTML(context.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
-                return true;
+        } else if (itemId == R.id.groupeselection_classlistview_action_aide) {
+            AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
+            aide.affichageMessageHTML(context.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
+            return true;
 
             //End of user code
             // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                // Retour en Arrière et Si arrivée à la Racine retour à l'appli précédente
-                if (retourGroupeSuperieur()) {
-                    Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
+        } else if (itemId == android.R.id.home) {// Retour en Arrière et Si arrivée à la Racine retour à l'appli précédente
+            if (retourGroupeSuperieur()) {
+                Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
 
-                    if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                        // This activity is NOT part of this app's task, so create a new task
-                        // when navigating up, with a synthesized back stack.
-                        TaskStackBuilder.create(this)
-                                // Add all of this activity's parents to the back stack
-                                .addNextIntentWithParentStack(upIntent)
-                                // Navigate up to the closest parent
-                                .startActivities();
-                    } else {
-                        // This activity is part of this app's task, so simply
-                        // navigate up to the logical parent activity.
-                        NavUtils.navigateUpTo(this, upIntent);
-                    }
+                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                    // This activity is NOT part of this app's task, so create a new task
+                    // when navigating up, with a synthesized back stack.
+                    TaskStackBuilder.create(this)
+                            // Add all of this activity's parents to the back stack
+                            .addNextIntentWithParentStack(upIntent)
+                            // Navigate up to the closest parent
+                            .startActivities();
+                } else {
+                    // This activity is part of this app's task, so simply
+                    // navigate up to the logical parent activity.
+                    NavUtils.navigateUpTo(this, upIntent);
                 }
+            }
 
 
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     //  ------------ dealing with Up button
@@ -295,29 +336,6 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
 
         finish();
     }
-
-
-    /* *********************************************************************
-     * Capture des évènements sur le Clavier Physique de l'appareil
-     ********************************************************************** */
-    @Override
-    public boolean onKeyDown(int inKeyCode, KeyEvent inEvent) {
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - Début");
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - inKeyCode : " + inKeyCode);
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onKeyDown() - inEvent : " + inEvent);
-
-        switch (inKeyCode) {
-            case KeyEvent.KEYCODE_BACK:
-
-                if (retourGroupeSuperieur())
-                    this.finish();
-
-                return true;
-        }
-
-        return false;
-    }
-
 
     public boolean retourGroupeSuperieur() {
         // Retour true si on est à la racine et donc que l'on doit fermé et false sinon

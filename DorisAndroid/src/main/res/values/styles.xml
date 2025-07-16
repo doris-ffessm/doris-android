@@ -21,7 +21,6 @@
 
         <item name="ic_action_background">@drawable/icon_background</item>
 
-
         <item name="android:navigationBarColor" tools:targetApi="21">@android:color/transparent</item>
         <item name="android:windowTranslucentStatus" tools:targetApi="21">false</item>
         <item name="android:windowTranslucentNavigation" tools:targetApi="21">false</item>

@@ -53,6 +53,11 @@ import android.os.Bundle;
 import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
 import androidx.appcompat.app.ActionBar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -183,10 +188,16 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        super.onCreate(savedInstanceState);
         ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.etatmodehorsligne_customview);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.etatmodehorsligne_customview_layout), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -1265,38 +1276,37 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // behavior of option menu
-        switch (item.getItemId()) {
-            case R.id.etatmodehorsligne_customview_action_preference:
-                startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-                return true;
+        int itemId = item.getItemId();
+        if (itemId == R.id.etatmodehorsligne_customview_action_preference) {
+            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+            return true;
             //Start of user code additional menu action EtatModeHorsLigne_CustomViewActivity
-            case R.id.etatmodehorsligne_customview_action_telecharge_photofiches:
-                TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;
-                if (telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING) {
-                    DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity =
-                            (TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext()/*, this.getHelper()*/).execute("");
+        } else if (itemId == R.id.etatmodehorsligne_customview_action_telecharge_photofiches) {
+            TelechargePhotosAsync_BgActivity telechargePhotosFiches_BgActivity = DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity;
+            if (telechargePhotosFiches_BgActivity == null || telechargePhotosFiches_BgActivity.getStatus() != Status.RUNNING) {
+                DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity =
+                        (TelechargePhotosAsync_BgActivity) new TelechargePhotosAsync_BgActivity(getApplicationContext()/*, this.getHelper()*/).execute("");
 
-                } else {
-                    showToast(R.string.bg_notifToast_arretTelecharg);
-                    DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
+            } else {
+                showToast(R.string.bg_notifToast_arretTelecharg);
+                DorisApplicationContext.getInstance().telechargePhotosFiches_BgActivity.cancel(true);
 
-                    ProgressBar pbRunningBarLayout = (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);
-                    pbRunningBarLayout.setVisibility(View.GONE);
-                }
+                ProgressBar pbRunningBarLayout = (ProgressBar) findViewById(R.id.multiprogressbar_running_progressBar);
+                pbRunningBarLayout.setVisibility(View.GONE);
+            }
 
-                return true;
-            case R.id.etatmodehorsligne_customview_action_a_propos:
-                AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
-                aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label) + getContext().getString(R.string.app_name), aPropos.aProposAff(), "file:///android_res/raw/apropos.html");
-                return true;
-            case R.id.etatmodehorsligne_customview_action_aide:
-                AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
-                aide.affichageMessageHTML(getContext().getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html#ParamHorsLigne");
-                return true;
+            return true;
+        } else if (itemId == R.id.etatmodehorsligne_customview_action_a_propos) {
+            AffichageMessageHTML aPropos = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
+            aPropos.affichageMessageHTML(getContext().getString(R.string.a_propos_label) + getContext().getString(R.string.app_name), aPropos.aProposAff(), "file:///android_res/raw/apropos.html");
+            return true;
+        } else if (itemId == R.id.etatmodehorsligne_customview_action_aide) {
+            AffichageMessageHTML aide = new AffichageMessageHTML(getContext(), (Activity) getContext(), getHelper());
+            aide.affichageMessageHTML(getContext().getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html#ParamHorsLigne");
+            return true;
             //End of user code
             // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                /* finish(); */
+        } else if (itemId == android.R.id.home) {/* finish(); */
 				/*
 	        	TaskStackBuilder.create(this)
 	                // Add all of this activity's parents to the back stack
@@ -1304,24 +1314,23 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
 	                // Navigate up to the closest parent
 	                .startActivities();
 	            */
-                Intent upIntent = NavUtils.getParentActivityIntent(this);
-                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                    // This activity is NOT part of this app's task, so create a new task
-                    // when navigating up, with a synthesized back stack.
-                    TaskStackBuilder.create(this)
-                            // Add all of this activity's parents to the back stack
-                            .addNextIntentWithParentStack(upIntent)
-                            // Navigate up to the closest parent
-                            .startActivities();
-                } else {
-                    // This activity is part of this app's task, so simply
-                    // navigate up to the logical parent activity.
-                    NavUtils.navigateUpTo(this, upIntent);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            Intent upIntent = NavUtils.getParentActivityIntent(this);
+            if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                // This activity is NOT part of this app's task, so create a new task
+                // when navigating up, with a synthesized back stack.
+                TaskStackBuilder.create(this)
+                        // Add all of this activity's parents to the back stack
+                        .addNextIntentWithParentStack(upIntent)
+                        // Navigate up to the closest parent
+                        .startActivities();
+            } else {
+                // This activity is part of this app's task, so simply
+                // navigate up to the logical parent activity.
+                NavUtils.navigateUpTo(this, upIntent);
+            }
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     //  ------------ dealing with Up button

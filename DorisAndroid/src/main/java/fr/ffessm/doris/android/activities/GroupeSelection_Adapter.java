@@ -282,7 +282,7 @@ public class GroupeSelection_Adapter extends BaseAdapter {
             if (BuildConfig.DEBUG)
                 Log.d(LOG_TAG, "onClick() - depuisAccueil : " + depuisAccueil);
           //  if (!depuisAccueil) {
-                ((GroupeSelection_ClassListViewActivity) context).finish();
+            ((GroupeSelection_ClassListViewActivity) context).finish();
            // } else {
 /*
                 DorisApplicationContext.getInstance().setIntentPourRetour(((Activity) context).getIntent());

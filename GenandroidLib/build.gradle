@@ -1,57 +1,21 @@
-apply plugin: 'com.android.library'
-
-
-//def androidSupportVersion = '28.0.0'
+plugins {
+    id 'com.android.library'
+}
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: '*.jar', exclude: 'ormlite*')
-    // dependances maven
+    // implementation fileTree(dir: 'libs', include: '*.jar', exclude: 'ormlite*')
+    // maven dependencies
     implementation 'com.j256.ormlite:ormlite-core:4.47'
     implementation 'com.j256.ormlite:ormlite-android:4.47'
     // dependances Android
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     // NOTE la version 21+ ne fonctionne pas bien, à revoir ...
     //compile 'com.android.support:appcompat-v7:21.0.3'
     //compile project(':android-support-v7-appcompat')
 }
-repositories {
-    mavenCentral()
-    maven {
-        url "https://maven.google.com"
-    }
-}
 
 android {
-    compileSdkVersion 34
-    buildToolsVersion '34.0.0'
-
-    defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 34
-    }
-
-  /*  sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-        }
-
-        // Move the tests to tests/java, tests/res, etc...
-        instrumentTest.setRoot('tests')
-
-        // Move the build types to build-types/<type>
-        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
-        // This moves them out of them default location under src/<type>/... which would
-        // conflict with src/ being used by the main source set.
-        // Adding new build types or product flavors should be accompanied
-        // by a similar customization.
-        debug.setRoot('build-types/debug')
-        release.setRoot('build-types/release')
-    }*/
+    // also look into root build.gradle for other applied options
+    namespace = "fr.vojtisek.genandroid.genandroidlib"
 }

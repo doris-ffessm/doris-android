@@ -58,6 +58,8 @@ import android.preference.PreferenceScreen;
 import android.widget.Toast;
 import android.util.Log;
 
+import androidx.core.view.WindowCompat;
+
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.util.List;
@@ -73,6 +75,7 @@ import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
+import fr.ffessm.doris.android.tools.ThemeUtil;
 
 //End of user code
 
@@ -95,7 +98,9 @@ public class Preference_PreferenceViewActivity extends android.preference.Prefer
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(savedInstanceState);
+        ThemeUtil.onActivityCreateSetTheme(this);
         addPreferencesFromResource(R.xml.preference);
         //Start of user code Preference preference activity additional onCreate
 

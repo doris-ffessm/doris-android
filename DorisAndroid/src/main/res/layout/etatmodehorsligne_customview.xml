@@ -3,6 +3,7 @@
 -->
 <!-- freely adapt here the desired layout for your custom view -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/etatmodehorsligne_customview_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -17,7 +18,7 @@
 	        android:layout_height="wrap_content">
 		<LinearLayout 
 		    android:layout_width="match_parent"
-		    android:layout_height="match_parent"
+		    android:layout_height="wrap_content"
 		    android:orientation="vertical">
 		    <TextView
 		        android:id="@+id/etatmodehorsligne_description_textView"
@@ -142,7 +143,7 @@
 				        android:id="@+id/etatmodehorsligne_gestion_photos_description_textView"
 				        android:layout_width="wrap_content"
 				        android:layout_height="wrap_content"
-				        android:layout_marginLeft="2dp"
+				        android:layout_marginStart="2dp"
 				        android:textAppearance="?android:attr/textAppearanceSmall"
 						android:textColor="?android:attr/textColorSecondary"
 				        android:text="@string/etatmodehorsligne_gestion_photos_description_text" />
@@ -254,7 +255,7 @@
 			    	    android:id="@+id/etatmodehorsligne_gestion_disk_titre_textView"
 			    	    android:layout_width="wrap_content"
 			    	    android:layout_height="wrap_content"
-			    	    android:layout_marginLeft="2dp"
+			    	    android:layout_marginStart="2dp"
 			    	    android:layout_weight="36"
 			    	    android:text="@string/etatmodehorsligne_gestion_disk_titre_text"
 			    	    android:textAppearance="?android:attr/textAppearanceMedium"
@@ -290,7 +291,7 @@
 				        android:id="@+id/etatmodehorsligne_gestion_disk_description_textView"
 				        android:layout_width="wrap_content"
 				        android:layout_height="wrap_content"
-				        android:layout_marginLeft="2dp"
+				        android:layout_marginStart="2dp"
 				        android:textAppearance="?android:attr/textAppearanceSmall"
 						android:textColor="?android:attr/textColorSecondary"
 				        android:text="@string/etatmodehorsligne_gestion_disk_description_text" />
@@ -304,7 +305,7 @@
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
 			    android:layout_marginTop="2dp"
-			    android:layout_marginLeft="24dp"
+			    android:layout_marginStart="24dp"
 		        android:shrinkColumns="*"
 		        android:stretchColumns="*" >
 			

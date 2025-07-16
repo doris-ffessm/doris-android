@@ -56,6 +56,11 @@ import android.os.Bundle;
 import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
 import androidx.appcompat.app.ActionBar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -115,9 +120,15 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(savedInstanceState);
         ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.detailsparticipant_elementview);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.detailsparticipant_elementview_layout), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -266,40 +277,39 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // behavior of option menu
-        switch (item.getItemId()) {
-            case R.id.detailsparticipant_elementview_action_preference:
-                startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-                return true;
+        int itemId = item.getItemId();
+        if (itemId == R.id.detailsparticipant_elementview_action_preference) {
+            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+            return true;
             //Start of user code additional menu action DetailsParticipant_ElementViewActivity
-            case R.id.detailsparticipant_elementview_action_aide:
-                AffichageMessageHTML aide = new AffichageMessageHTML(this, (Activity) this, getHelper());
-                aide.affichageMessageHTML(this.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
-                return true;
+        } else if (itemId == R.id.detailsparticipant_elementview_action_aide) {
+            AffichageMessageHTML aide = new AffichageMessageHTML(this, (Activity) this, getHelper());
+            aide.affichageMessageHTML(this.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
+            return true;
             //End of user code
             // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
-                Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : " + upIntent.getComponent().toString());
+        } else if (itemId == android.R.id.home) {
+            Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
+            Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : " + upIntent.getComponent().toString());
 
-                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                    Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
-                    // This activity is NOT part of this app's task, so create a new task
-                    // when navigating up, with a synthesized back stack.
-                    TaskStackBuilder.create(this)
-                            // Add all of this activity's parents to the back stack
-                            .addNextIntentWithParentStack(upIntent)
-                            // Navigate up to the closest parent
-                            .startActivities();
-                } else {
-                    Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
-                    // This activity is part of this app's task, so simply
-                    // navigate up to the logical parent activity.
-                    NavUtils.navigateUpTo(this, upIntent);
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
+                // This activity is NOT part of this app's task, so create a new task
+                // when navigating up, with a synthesized back stack.
+                TaskStackBuilder.create(this)
+                        // Add all of this activity's parents to the back stack
+                        .addNextIntentWithParentStack(upIntent)
+                        // Navigate up to the closest parent
+                        .startActivities();
+            } else {
+                Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == false");
+                // This activity is part of this app's task, so simply
+                // navigate up to the logical parent activity.
+                NavUtils.navigateUpTo(this, upIntent);
+            }
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     //  ------------ dealing with Up button

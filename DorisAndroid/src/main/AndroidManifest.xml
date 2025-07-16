@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="fr.ffessm.doris.android"
-    android:installLocation="auto"
-    android:versionCode="81"
-    android:versionName="4.10.1">
+    android:installLocation="auto">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".DorisApplication"
@@ -17,9 +14,8 @@
         <!-- End of user code -->
         <activity
             android:name=".activities.SplashScreen_CustomViewActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.AppDorisAndroid">
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,14 +24,12 @@
         </activity>
         <activity
             android:name=".activities.Accueil_CustomViewActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="false"></activity>
+            android:exported="false"
+            android:theme="@style/Theme.AppDorisAndroid" />
         <activity
             android:name=".activities.Preference_PreferenceViewActivity"
-            android:label="@string/app_name"
-            android:parentActivityName=".activities.Accueil_CustomViewActivity"
-            android:exported="false">
+            android:exported="false"
+            android:parentActivityName=".activities.Accueil_CustomViewActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -44,10 +38,9 @@
         </activity>
         <activity
             android:name=".activities.EtatModeHorsLigne_CustomViewActivity"
-            android:label="@string/app_name"
+            android:exported="false"
             android:parentActivityName=".activities.Accueil_CustomViewActivity"
-            android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="false">
+            android:theme="@style/Theme.AppDorisAndroid">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -56,10 +49,9 @@
         </activity>
         <activity
             android:name=".activities.RechercheGuidee_CustomViewActivity"
-            android:label="@string/app_name"
+            android:exported="false"
             android:parentActivityName=".activities.Accueil_CustomViewActivity"
-            android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="false">
+            android:theme="@style/Theme.AppDorisAndroid">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -68,11 +60,10 @@
         </activity>
         <activity
             android:name=".activities.ListeFicheAvecFiltre_ClassListViewActivity"
-            android:label="@string/app_name"
+            android:exported="false"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.Accueil_CustomViewActivity"
-            android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="false">
+            android:theme="@style/Theme.AppDorisAndroid">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
 
@@ -89,11 +80,10 @@
         </activity>
         <activity
             android:name=".activities.ListeImageFicheAvecFiltre_ClassListViewActivity"
-            android:label="@string/app_name"
+            android:exported="false"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.Accueil_CustomViewActivity"
-            android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="false">
+            android:theme="@style/Theme.AppDorisAndroid">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
 
@@ -110,11 +100,10 @@
         </activity>
         <activity
             android:name=".activities.ListeImageGroupeAvecFiltre_ClassListViewActivity"
-            android:label="@string/app_name"
+            android:exported="false"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.Accueil_CustomViewActivity"
-            android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="false">
+            android:theme="@style/Theme.AppDorisAndroid">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
 
@@ -131,10 +120,9 @@
         </activity>
         <activity
             android:name=".activities.DetailsFiche_ElementViewActivity"
-            android:label="@string/app_name"
+            android:exported="false"
             android:parentActivityName=".activities.ListeFicheAvecFiltre_ClassListViewActivity"
-            android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="false">
+            android:theme="@style/Theme.AppDorisAndroid">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -143,10 +131,9 @@
         </activity>
         <activity
             android:name=".activities.ImagePleinEcran_CustomViewActivity"
-            android:label="@string/app_name"
+            android:exported="false"
             android:parentActivityName=".activities.DetailsFiche_ElementViewActivity"
-            android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="false">
+            android:theme="@style/Theme.AppDorisAndroid">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -155,11 +142,10 @@
         </activity>
         <activity
             android:name=".activities.ListeParticipantAvecFiltre_ClassListViewActivity"
-            android:label="@string/app_name"
+            android:exported="false"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.Accueil_CustomViewActivity"
-            android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="false">
+            android:theme="@style/Theme.AppDorisAndroid">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
 
@@ -176,10 +162,9 @@
         </activity>
         <activity
             android:name=".activities.DetailsParticipant_ElementViewActivity"
-            android:label="@string/app_name"
+            android:exported="false"
             android:parentActivityName=".activities.ListeParticipantAvecFiltre_ClassListViewActivity"
-            android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="false">
+            android:theme="@style/Theme.AppDorisAndroid">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -188,7 +173,6 @@
         </activity>
         <activity
             android:name=".activities.ZoneGeoSelection_ClassListViewActivity"
-            android:label="@string/app_name"
             android:parentActivityName=".activities.Accueil_CustomViewActivity"
             android:theme="@style/Theme.AppDorisAndroid">
 
@@ -199,9 +183,9 @@
         </activity>
         <activity
             android:name=".activities.GroupeSelection_ClassListViewActivity"
-            android:label="@string/app_name"
             android:parentActivityName=".activities.Accueil_CustomViewActivity"
-            android:theme="@style/Theme.AppDorisAndroid">
+            android:theme="@style/Theme.AppDorisAndroid"
+            android:enableOnBackInvokedCallback="true">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -210,11 +194,10 @@
         </activity>
         <activity
             android:name=".activities.Glossaire_ClassListViewActivity"
-            android:label="@string/app_name"
+            android:exported="false"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.Accueil_CustomViewActivity"
-            android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="false">
+            android:theme="@style/Theme.AppDorisAndroid">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
 
@@ -231,10 +214,9 @@
         </activity>
         <activity
             android:name=".activities.DetailEntreeGlossaire_ElementViewActivity"
-            android:label="@string/app_name"
+            android:exported="false"
             android:parentActivityName=".activities.Glossaire_ClassListViewActivity"
-            android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="false">
+            android:theme="@style/Theme.AppDorisAndroid">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -243,11 +225,10 @@
         </activity>
         <activity
             android:name=".activities.ListeBibliographieAvecFiltre_ClassListViewActivity"
-            android:label="@string/app_name"
+            android:exported="false"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.Accueil_CustomViewActivity"
-            android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="false">
+            android:theme="@style/Theme.AppDorisAndroid">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
 
@@ -264,10 +245,9 @@
         </activity>
         <activity
             android:name=".activities.DetailsBibliographie_ElementViewActivity"
-            android:label="@string/app_name"
+            android:exported="false"
             android:parentActivityName=".activities.ListeBibliographieAvecFiltre_ClassListViewActivity"
-            android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="false">
+            android:theme="@style/Theme.AppDorisAndroid">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -276,23 +256,22 @@
         </activity>
         <activity
             android:name=".activities.Jeux_CustomViewActivity"
-            android:label="@string/app_name"
+            android:exported="false"
             android:parentActivityName=".activities.Accueil_CustomViewActivity"
             android:theme="@style/Theme.AppDorisAndroid"
-            android:exported="false">
+            android:enableOnBackInvokedCallback="true">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.Accueil_CustomViewActivity" />
-        </activity>
-        <!-- Start of user code zone 2 -->
+        </activity> <!-- Start of user code zone 2 -->
         <!-- List of services -->
         <service
             android:name=".services.GestionPhotoDiskService"
+            android:exported="false"
             android:icon="@drawable/app_ic_launcher"
-            android:label="@string/gestion_photos_disk_service_name"
-            android:exported="false"></service>
+            android:label="@string/gestion_photos_disk_service_name" />
     </application>
 
 </manifest>

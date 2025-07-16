@@ -1,83 +1,51 @@
-apply plugin: 'com.android.application'
-
-tasks.withType(JavaCompile) {
-    /*sourceCompatibility = "1.8"
-    targetCompatibility = "1.8"*/
-    options.encoding = 'UTF-8'
+plugins {
+    id 'com.android.application'
 }
 
-def acraVersion = '5.8.4'
+def acraVersion = '5.12.0'
 //def androidSupportVersion = '28.0.0'
 
 dependencies {
-    // a terme on devrait remplacer cela vers des ref dans les repo maven correspondants
-    implementation fileTree(dir: 'libs',
-            include: '*.jar')
+
     // dependances maven
     implementation 'com.j256.ormlite:ormlite-core:4.47'
     implementation 'com.j256.ormlite:ormlite-android:4.47'
-    implementation 'org.apache.commons:commons-lang3:3.13.0'
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
     implementation "ch.acra:acra-mail:$acraVersion"
     implementation "ch.acra:acra-toast:$acraVersion"
 
     // dependances Android
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "com.squareup.picasso:picasso:2.71828"
-    // NOTE la version 21+ ne fonctionne pas bien, à revoir ...
-    //compile 'com.android.support:appcompat-v7:21.0.3'
-    //compile project(':android-support-v7-appcompat')
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.activity:activity:1.10.1'
 
+    constraints {
+        implementation('androidx.core:core:1.9.0') {
+            because 'Ensure a recent version of androidx.core for WindowInsetsCompat.Type'
+        }
+        // If you use Kotlin, you might also need/want core-ktx
+        // implementation('androidx.core:core-ktx:1.9.0') {
+        //     because 'Ensure a recent version of androidx.core-ktx'
+        // }
+    }
     // dependances inter-projets
     implementation project(':GenandroidLib')
     implementation project(':DorisAndroidCommon')
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-}
-
-repositories {
-    /* mavenCentral()
-    maven {
-        url "https://maven.google.com"
-    }*/
-    //jcenter()
-    mavenCentral()
-    google()
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
 }
 
 android {
-    compileSdkVersion 34
-    buildToolsVersion '34.0.0'
-
+    // also look into root build.gradle for other applied options
+    namespace = 'fr.ffessm.doris.android'
+    compileSdkVersion 36
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 34
+        versionCode 81
+        versionName "4.10.1"
     }
-/*
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-        }
 
-        // Move the tests to tests/java, tests/res, etc...
-        instrumentTest.setRoot('tests')
-
-        // Move the build types to build-types/<type>
-        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
-        // This moves them out of them default location under src/<type>/... which would
-        // conflict with src/ being used by the main source set.
-        // Adding new build types or product flavors should be accompanied
-        // by a similar customization.
-        debug.setRoot('build-types/debug')
-        release.setRoot('build-types/release')
-    }
-*/
     File signFile = file('/builds/keystore/sign.properties') // used by Jenkins
     if (!signFile.exists()) {
         // may be used by developers owning the appropriate keystore
@@ -99,20 +67,18 @@ android {
                 keyPassword p.keyPassword
             }
         }
-        buildTypes.release.signingConfig signingConfigs.releaseConfig
+        buildTypes.release.signingConfig = signingConfigs.releaseConfig
     } else {
 
         println 'sign.properties not found (neither in /builds/keystore/sign.properties nor in $HOME/.ssh/doris-android_sign.properties)'
     }
 
-    lintOptions {
-        // Don't abort if Lint finds an error, otherwise the Jenkins build
-        // will be marked as failed, and Jenkins won't analyse the Lint output
-        abortOnError false
-    }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    lint {
+        abortOnError = false
     }
 }

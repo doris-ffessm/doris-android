@@ -71,6 +71,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.EdgeToEdge;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 import fr.ffessm.doris.android.datamodel.SQLiteDataBaseHelper;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 
@@ -90,10 +96,19 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(savedInstanceState);
         ThemeUtil.onActivityCreateSetTheme(this);
+
         PreferenceManager.setDefaultValues(this, R.xml.preference, false);
         setContentView(R.layout.splashscreen_customview);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.splashscreen_customview_layout), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
         //Start of user code onCreate SplashScreen_CustomViewActivity
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -282,16 +297,14 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // behavior of option menu
-        switch (item.getItemId()) {
-            case R.id.splashscreen_customview_action_preference:
-                startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
-                return true;
+        if (item.getItemId() == R.id.splashscreen_customview_action_preference) {
+            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+            return true;
             //Start of user code additional menu action SplashScreen_CustomViewActivity
 
             //End of user code
-            default:
-                return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
 }
