@@ -148,16 +148,19 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
 
     // deal with zone folding/unfolding
-    public ImageButton btnFoldUnfoldZoneSection;
+    public ImageButton btnLeftFoldUnfoldZoneSection;
+    public ImageButton btnRightFoldUnfoldZoneSection;
     private LinearLayout llFoldUnfoldZoneSection;
     private boolean isZoneFold = false;
     protected List<View> allFoldableZoneView  = new ArrayList<>();
 
-
-    public ImageButton btnFoldUnfoldSpecieGroupSection;
+    // deal with specie folding/unfolding
+    public ImageButton btnLeftFoldUnfoldSpecieGroupSection;
+    public ImageButton btnRightFoldUnfoldSpecieGroupSection;
 
     // deal with mode folding/unfolding
-    public ImageButton btnFoldUnfoldModeSection;
+    public ImageButton btnLeftFoldUnfoldModeSection;
+    public ImageButton btnRightFoldUnfoldModeSection;
     private boolean isModeFold = true;
     protected List<View> allFoldableModeView  = new ArrayList<>();
 
@@ -328,19 +331,16 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         }
 
         // deal with fold/unfold
-        btnFoldUnfoldZoneSection = findViewById(R.id.accueil_zone_fold_unfold_section_imageButton);
+        btnLeftFoldUnfoldZoneSection = findViewById(R.id.accueil_zone_fold_unfold_section_left_imageButton);
         llFoldUnfoldZoneSection = llContainerLayout;
-        isZoneFold = true;
-        btnFoldUnfoldZoneSection.setVisibility(View.VISIBLE);
-        if(isZoneFold) {
-            btnFoldUnfoldZoneSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.doris_icone_toutes_zones, getTheme()))));
-        } else {
-            btnFoldUnfoldZoneSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.doris_icone_toutes_zones, getTheme()))));
-        }
+        btnRightFoldUnfoldZoneSection = findViewById(R.id.accueil_zone_fold_unfold_section_right_imageButton);
+        btnLeftFoldUnfoldZoneSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.doris_icone_toutes_zones, getTheme()))));
+        btnRightFoldUnfoldZoneSection.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_menu_down_outline, getTheme()));
 
-        // btnFoldUnfoldZoneSection // toute la section sert de lien pour plier/déplier
+        // the entire raw is used to fold/unfold
         llFoldUnfoldZoneSection.setOnClickListener(v -> foldUnfoldZoneSection());
-        btnFoldUnfoldZoneSection.setOnClickListener(v -> foldUnfoldZoneSection());
+        btnLeftFoldUnfoldZoneSection.setOnClickListener(v -> foldUnfoldZoneSection());
+        btnRightFoldUnfoldZoneSection.setOnClickListener(v -> foldUnfoldZoneSection());
 
 
         // Affichage lien vers "toutes Zones"
@@ -483,8 +483,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         isZoneFold = !isZoneFold;
         if(isZoneFold) {
             ((TextView)findViewById(R.id.accueil_zone_title)).setText(R.string.accueil_customview_show_other_zones);
+            btnRightFoldUnfoldZoneSection.setImageDrawable(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_down_outline, getTheme())));
         } else {
             ((TextView)findViewById(R.id.accueil_zone_title)).setText(R.string.accueil_customview_hide_other_zones);
+            btnRightFoldUnfoldZoneSection.setImageDrawable(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_up_outline, getTheme())));
         }
         for (View foldableZone : allFoldableZoneView) {
             if (isZoneFold) {
@@ -497,8 +499,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     protected void createSpecieGroupViews() {
         LinearLayout llContainer = findViewById(R.id.accueil_specie_group_layout);
 
-        btnFoldUnfoldSpecieGroupSection = llContainer.findViewById(R.id.accueil_specie_group_fold_unfold_section_imageButton);
-        btnFoldUnfoldSpecieGroupSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_arbre_phylogenetique, getTheme()))));
+        btnLeftFoldUnfoldSpecieGroupSection = llContainer.findViewById(R.id.accueil_specie_group_fold_unfold_section_left_imageButton);
+        btnLeftFoldUnfoldSpecieGroupSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_arbre_phylogenetique, getTheme()))));
+        btnRightFoldUnfoldSpecieGroupSection = llContainer.findViewById(R.id.accueil_specie_group_fold_unfold_section_right_imageButton);
         final Context context = this;
         // toute la section et le bouton sert de lien pour plier/déplier
         View.OnClickListener cl = v -> {
@@ -512,7 +515,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             startActivity(toGroupeSelectionView);
         };
         llContainer.setOnClickListener(cl);
-        btnFoldUnfoldSpecieGroupSection.setOnClickListener(cl);
+        btnLeftFoldUnfoldSpecieGroupSection.setOnClickListener(cl);
+        btnRightFoldUnfoldSpecieGroupSection.setOnClickListener(cl);
     }
     protected void createModeAffichageViews() {
         LinearLayout llContainerLayout = findViewById(R.id.accueil_mode_affichage_layout);
@@ -585,20 +589,24 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             viewMode.setVisibility(View.GONE);
        }
         // deal with fold/unfold
-        btnFoldUnfoldModeSection = findViewById(R.id.accueil_mode_affichage_fold_unfold_section_imageButton);
-        btnFoldUnfoldModeSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_liste_fiches, getTheme()))));
+        btnLeftFoldUnfoldModeSection = findViewById(R.id.accueil_mode_affichage_fold_unfold_section_left_imageButton);
+        btnLeftFoldUnfoldModeSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_liste_fiches, getTheme()))));
+        btnRightFoldUnfoldModeSection = findViewById(R.id.accueil_mode_affichage_fold_unfold_section_right_imageButton);
 
-        // toute la section sert de lien pour plier/déplier
+        // all the raw is used to fold/unfold
         LinearLayout llFold = llContainerLayout.findViewById(R.id.accueil_mode_affichage_fold_layout);
         llFold.setOnClickListener(v -> foldUnfoldModeSection());
-        btnFoldUnfoldModeSection.setOnClickListener(v -> foldUnfoldModeSection());
+        btnLeftFoldUnfoldModeSection.setOnClickListener(v -> foldUnfoldModeSection());
+        btnRightFoldUnfoldModeSection.setOnClickListener(v -> foldUnfoldModeSection());
     }
     private void foldUnfoldModeSection() {
         isModeFold = !isModeFold;
         if(isModeFold) {
             ((TextView)findViewById(R.id.accueil_mode_affichage_title)).setText(R.string.accueil_customview_show_mode_affichage);
+            btnRightFoldUnfoldModeSection.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_down_outline, getTheme()));
         } else {
             ((TextView)findViewById(R.id.accueil_mode_affichage_title)).setText(R.string.accueil_customview_hide_mode_affichage);
+            btnRightFoldUnfoldModeSection.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_up_outline, getTheme()));
         }
         for (View foldableMode : allFoldableModeView) {
             if (isModeFold) {

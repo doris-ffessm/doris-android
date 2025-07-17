@@ -79,7 +79,7 @@
 						android:id="@+id/accueil_recherche_precedente_apply"
 						android:layout_width="wrap_content"
 						android:layout_height="fill_parent"
-						android:layout_alignParentRight="true"
+						android:layout_alignParentEnd="true"
 						android:scaleType="fitXY"
 						android:layout_marginLeft="2dip"
 						android:layout_marginTop="2dip"
@@ -105,19 +105,20 @@
 					android:layout_marginTop="2dp"
 					android:orientation="horizontal" >
 					<ImageButton
-						android:id="@+id/accueil_zone_fold_unfold_section_imageButton"
+						android:id="@+id/accueil_zone_fold_unfold_section_left_imageButton"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:adjustViewBounds="true"
 						android:background="@android:color/transparent"
 						android:scaleType="centerInside"
+						android:visibility="gone"
 						android:contentDescription="@string/fold_unfold_content_description"
 						android:src="@drawable/app_expander_ic_minimized" />
 					<TextView
 						android:id="@+id/accueil_zone_title"
-						android:layout_width="match_parent"
+						android:layout_width="0dp"
 						android:layout_height="wrap_content"
-						android:layout_marginLeft="2dp"
+						android:layout_marginStart="2dp"
 						android:layout_weight="36"
 						android:ellipsize="marquee"
 						android:fadingEdge="horizontal"
@@ -126,6 +127,16 @@
 						android:text="@string/accueil_customview_show_other_zones"
 						android:textAppearance="?android:attr/textAppearanceMedium"
 						tools:ignore="HardcodedText" />
+					<ImageButton
+						android:id="@+id/accueil_zone_fold_unfold_section_right_imageButton"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:adjustViewBounds="true"
+						android:background="@android:color/transparent"
+						android:scaleType="centerInside"
+						android:contentDescription="@string/fold_unfold_content_description"
+						android:src="@drawable/ic_menu_down_outline" />
+
 				</LinearLayout>
 	        </LinearLayout>
 
@@ -142,19 +153,20 @@
 					android:layout_marginTop="2dp"
 					android:orientation="horizontal" >
 					<ImageButton
-						android:id="@+id/accueil_specie_group_fold_unfold_section_imageButton"
+						android:id="@+id/accueil_specie_group_fold_unfold_section_left_imageButton"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:adjustViewBounds="true"
 						android:background="@android:color/transparent"
 						android:scaleType="centerInside"
+						android:visibility="gone"
 						android:contentDescription="@string/fold_unfold_content_description"
 						android:src="@drawable/app_expander_ic_minimized" />
 					<TextView
 						android:id="@+id/accueil_specie_group_title"
-						android:layout_width="match_parent"
+						android:layout_width="0dp"
 						android:layout_height="wrap_content"
-						android:layout_marginLeft="2dp"
+						android:layout_marginStart="2dp"
 						android:layout_weight="36"
 						android:ellipsize="marquee"
 						android:fadingEdge="horizontal"
@@ -163,6 +175,15 @@
 						android:text="@string/accueil_customview_show_specie_group"
 						android:textAppearance="?android:attr/textAppearanceMedium"
 						tools:ignore="HardcodedText" />
+					<ImageButton
+						android:id="@+id/accueil_specie_group_fold_unfold_section_right_imageButton"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:adjustViewBounds="true"
+						android:background="@android:color/transparent"
+						android:scaleType="centerInside"
+						android:contentDescription="@string/fold_unfold_content_description"
+						android:src="@drawable/ic_menu_down_outline" />
 				</LinearLayout>
 			</LinearLayout>
 			<View style="@style/Separateur"/>
@@ -179,19 +200,20 @@
 					android:layout_marginTop="2dp"
 					android:orientation="horizontal" >
 					<ImageButton
-						android:id="@+id/accueil_mode_affichage_fold_unfold_section_imageButton"
+						android:id="@+id/accueil_mode_affichage_fold_unfold_section_left_imageButton"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:adjustViewBounds="true"
 						android:background="@android:color/transparent"
 						android:scaleType="centerInside"
+						android:visibility="gone"
 						android:contentDescription="@string/fold_unfold_content_description"
 						android:src="@drawable/app_expander_ic_minimized" />
 					<TextView
 						android:id="@+id/accueil_mode_affichage_title"
-						android:layout_width="match_parent"
+						android:layout_width="0dp"
 						android:layout_height="wrap_content"
-						android:layout_marginLeft="2dp"
+						android:layout_marginStart="2dp"
 						android:layout_weight="36"
 						android:ellipsize="marquee"
 						android:fadingEdge="horizontal"
@@ -200,6 +222,15 @@
 						android:text="@string/accueil_customview_show_mode_affichage"
 						android:textAppearance="?android:attr/textAppearanceMedium"
 						tools:ignore="HardcodedText" />
+					<ImageButton
+						android:id="@+id/accueil_mode_affichage_fold_unfold_section_right_imageButton"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:adjustViewBounds="true"
+						android:background="@android:color/transparent"
+						android:scaleType="centerInside"
+						android:contentDescription="@string/fold_unfold_content_description"
+						android:src="@drawable/ic_menu_down_outline" />
 				</LinearLayout>
 			</LinearLayout>
 			<View style="@style/Separateur"/>
