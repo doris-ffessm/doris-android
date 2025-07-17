@@ -148,16 +148,19 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
 
     // deal with zone folding/unfolding
-    public ImageButton btnFoldUnfoldZoneSection;
+    public ImageButton btnLeftFoldUnfoldZoneSection;
+    public ImageButton btnRightFoldUnfoldZoneSection;
     private LinearLayout llFoldUnfoldZoneSection;
     private boolean isZoneFold = false;
     protected List<View> allFoldableZoneView  = new ArrayList<>();
 
-
-    public ImageButton btnFoldUnfoldSpecieGroupSection;
+    // deal with specie folding/unfolding
+    public ImageButton btnLeftFoldUnfoldSpecieGroupSection;
+    public ImageButton btnRightFoldUnfoldSpecieGroupSection;
 
     // deal with mode folding/unfolding
-    public ImageButton btnFoldUnfoldModeSection;
+    public ImageButton btnLeftFoldUnfoldModeSection;
+    public ImageButton btnRightFoldUnfoldModeSection;
     private boolean isModeFold = true;
     protected List<View> allFoldableModeView  = new ArrayList<>();
 
@@ -182,67 +185,12 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         //Start of user code onCreate Accueil_CustomViewActivity
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Début");
 
-	/*	// si pas de fiche alors il faut initialiser la base à partir du prefetched_DB
-		RuntimeExceptionDao<Fiche, Integer> ficheDao = getHelper().getFicheDao();
-    	if(ficheDao.countOf() == 0){
-    		new InitialisationApplication_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
-    		
-    		showToast("Veuillez patienter que la base de donnée s'initialise.");
-		}*/
-
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.accueil_customview_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Find the view that needs padding to avoid system bars.
-    /*    View mainContentContainer = findViewById(R.id.accueil_customview_main_content_container); // <<--- IMPORTANT: Use your actual ID
-
-        if (mainContentContainer != null) {
-            ViewCompat.setOnApplyWindowInsetsListener(mainContentContainer, new OnApplyWindowInsetsListener() {
-                @Override
-                public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat windowInsets) {
-                    // Get the insets for the system bars (status bar, navigation bar)
-                    Insets systemBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-                    Insets navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
-
-                    Log.d("InsetsDebug", "View ID: " + v.getId());
-                    Log.d("InsetsDebug", "Top inset: " + systemBarInsets.top);
-                    Log.d("InsetsDebug", "Bottom inset: " + systemBarInsets.bottom);
-                    Log.d("InsetsDebug", "Left inset: " + systemBarInsets.left);
-                    Log.d("InsetsDebug", "Right inset: " + systemBarInsets.right);
-                    Log.d("InsetsDebug", "View ID: " + v.getId());
-                    Log.d("InsetsDebug", "SystemBars - Top: " + systemBarInsets.top + ", Bottom: " + systemBarInsets.bottom);
-                    Log.d("InsetsDebug", "NavBars    - Top: " + navBarInsets.top + ", Bottom: " + navBarInsets.bottom); // Log this
-
-                    // Apply these insets as padding to the view 'v' (which is mainContentContainer)
-                    // This pushes the content of 'mainContentContainer' away from the system bars.
-                    v.setPadding(
-                            systemBarInsets.left,
-                            systemBarInsets.top,
-                            systemBarInsets.right,
-                            systemBarInsets.bottom
-                    );
-
-                    // If you have a Toolbar at the very top of this 'mainContentContainer'
-                    // you might want to handle its top padding separately or adjust its height.
-                    // For example, if your Toolbar is *outside* mainContentContainer and fixed at the top,
-                    // mainContentContainer might only need left, right, and bottom padding.
-
-                    // Tell the system that you've used the insets
-                    return WindowInsetsCompat.CONSUMED;
-                }
-            });
-        } else {
-            // Log an error or handle the case where the view is not found,
-            // though this shouldn't happen if the ID is correct.
-            Log.e(LOG_TAG, "Missing element accueil_customview_main_content_container");
-
-        }
-
-     */
         // Defines a Handler object that's attached to the UI thread
         mHandler = new Handler(Looper.getMainLooper()) {
             /*
@@ -376,28 +324,17 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        ZoneGeographique currentZoneFilter=null;
-        int currentZoneFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
-        if (currentZoneFilterId == -1 || currentZoneFilterId == 0) { // test sur 0, juste pour assurer la migration depuis alpha3 , a supprimer plus tard
-            // pas de zone précdente
-        } else {
-            currentZoneFilter = getHelper().getZoneGeographiqueDao().queryForId(currentZoneFilterId);
-        }
-
         // deal with fold/unfold
-        btnFoldUnfoldZoneSection = findViewById(R.id.accueil_zone_fold_unfold_section_imageButton);
+        btnLeftFoldUnfoldZoneSection = findViewById(R.id.accueil_zone_fold_unfold_section_left_imageButton);
         llFoldUnfoldZoneSection = llContainerLayout;
-        isZoneFold = true;
-        btnFoldUnfoldZoneSection.setVisibility(View.VISIBLE);
-        if(isZoneFold) {
-            btnFoldUnfoldZoneSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.doris_icone_toutes_zones, getTheme()))));
-        } else {
-            btnFoldUnfoldZoneSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.doris_icone_toutes_zones, getTheme()))));
-        }
+        btnRightFoldUnfoldZoneSection = findViewById(R.id.accueil_zone_fold_unfold_section_right_imageButton);
+        btnLeftFoldUnfoldZoneSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.doris_icone_toutes_zones, getTheme()))));
+        btnRightFoldUnfoldZoneSection.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_menu_down_outline, getTheme()));
 
-        // btnFoldUnfoldZoneSection // toute la section sert de lien pour plier/déplier
+        // the entire raw is used to fold/unfold
         llFoldUnfoldZoneSection.setOnClickListener(v -> foldUnfoldZoneSection());
-        btnFoldUnfoldZoneSection.setOnClickListener(v -> foldUnfoldZoneSection());
+        btnLeftFoldUnfoldZoneSection.setOnClickListener(v -> foldUnfoldZoneSection());
+        btnRightFoldUnfoldZoneSection.setOnClickListener(v -> foldUnfoldZoneSection());
 
 
         // Affichage lien vers "toutes Zones"
@@ -540,8 +477,10 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         isZoneFold = !isZoneFold;
         if(isZoneFold) {
             ((TextView)findViewById(R.id.accueil_zone_title)).setText(R.string.accueil_customview_show_other_zones);
+            btnRightFoldUnfoldZoneSection.setImageDrawable(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_down_outline, getTheme())));
         } else {
             ((TextView)findViewById(R.id.accueil_zone_title)).setText(R.string.accueil_customview_hide_other_zones);
+            btnRightFoldUnfoldZoneSection.setImageDrawable(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_up_outline, getTheme())));
         }
         for (View foldableZone : allFoldableZoneView) {
             if (isZoneFold) {
@@ -554,10 +493,9 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     protected void createSpecieGroupViews() {
         LinearLayout llContainer = findViewById(R.id.accueil_specie_group_layout);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        btnFoldUnfoldSpecieGroupSection = llContainer.findViewById(R.id.accueil_specie_group_fold_unfold_section_imageButton);
-        btnFoldUnfoldSpecieGroupSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_arbre_phylogenetique, getTheme()))));
+        btnLeftFoldUnfoldSpecieGroupSection = llContainer.findViewById(R.id.accueil_specie_group_fold_unfold_section_left_imageButton);
+        btnLeftFoldUnfoldSpecieGroupSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_arbre_phylogenetique, getTheme()))));
+        btnRightFoldUnfoldSpecieGroupSection = llContainer.findViewById(R.id.accueil_specie_group_fold_unfold_section_right_imageButton);
         final Context context = this;
         // toute la section et le bouton sert de lien pour plier/déplier
         View.OnClickListener cl = v -> {
@@ -571,7 +509,8 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             startActivity(toGroupeSelectionView);
         };
         llContainer.setOnClickListener(cl);
-        btnFoldUnfoldSpecieGroupSection.setOnClickListener(cl);
+        btnLeftFoldUnfoldSpecieGroupSection.setOnClickListener(cl);
+        btnRightFoldUnfoldSpecieGroupSection.setOnClickListener(cl);
     }
     protected void createModeAffichageViews() {
         LinearLayout llContainerLayout = findViewById(R.id.accueil_mode_affichage_layout);
@@ -620,10 +559,18 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                         radio.setChecked(j == index);
                     }
                     // update preferences
+                    String current = prefs.getString(getResources().getString(
+                                    R.string.pref_key_current_mode_affichage),
+                            getResources().getString(
+                                    R.string.current_mode_affichage_default));
+                    if(!current.equals(modesValues[index])) {
+                        showToast(getResources().getString(R.string.accueil_changed_display_mode_toast_text) + modesDetails[index]);
+                    }
                     prefs.edit().putString(
                             Accueil_CustomViewActivity.this.getResources().getString(
                                     R.string.pref_key_current_mode_affichage),
                                     modesValues[index]).apply();
+
                     // update main screen icons
                     Accueil_CustomViewActivity.this.refreshScreenData();
                     // close foldable layout
@@ -636,20 +583,24 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
             viewMode.setVisibility(View.GONE);
        }
         // deal with fold/unfold
-        btnFoldUnfoldModeSection = findViewById(R.id.accueil_mode_affichage_fold_unfold_section_imageButton);
-        btnFoldUnfoldModeSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_liste_fiches, getTheme()))));
+        btnLeftFoldUnfoldModeSection = findViewById(R.id.accueil_mode_affichage_fold_unfold_section_left_imageButton);
+        btnLeftFoldUnfoldModeSection.setImageBitmap(drawIconWithGear(Objects.requireNonNull(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_action_liste_fiches, getTheme()))));
+        btnRightFoldUnfoldModeSection = findViewById(R.id.accueil_mode_affichage_fold_unfold_section_right_imageButton);
 
-        // toute la section sert de lien pour plier/déplier
+        // all the raw is used to fold/unfold
         LinearLayout llFold = llContainerLayout.findViewById(R.id.accueil_mode_affichage_fold_layout);
         llFold.setOnClickListener(v -> foldUnfoldModeSection());
-        btnFoldUnfoldModeSection.setOnClickListener(v -> foldUnfoldModeSection());
+        btnLeftFoldUnfoldModeSection.setOnClickListener(v -> foldUnfoldModeSection());
+        btnRightFoldUnfoldModeSection.setOnClickListener(v -> foldUnfoldModeSection());
     }
     private void foldUnfoldModeSection() {
         isModeFold = !isModeFold;
         if(isModeFold) {
             ((TextView)findViewById(R.id.accueil_mode_affichage_title)).setText(R.string.accueil_customview_show_mode_affichage);
+            btnRightFoldUnfoldModeSection.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_down_outline, getTheme()));
         } else {
             ((TextView)findViewById(R.id.accueil_mode_affichage_title)).setText(R.string.accueil_customview_hide_mode_affichage);
+            btnRightFoldUnfoldModeSection.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_up_outline, getTheme()));
         }
         for (View foldableMode : allFoldableModeView) {
             if (isModeFold) {
@@ -688,12 +639,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         startActivity(toGroupeSelectionView);
     }
 
-    /*public void onClickBtnListeParticipants(View view){
-        startActivity(new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class));
-    }
-    public void onClickBtnGlossaire(View view){
-        startActivity(new Intent(this, Glossaire_ClassListViewActivity.class));
-    }*/
     public void onClickBtnIconeSiteWeb_doris(View view) {
         String url = getString(R.string.accueil_customview_logo_doris_url);
         if (!url.isEmpty()) {
@@ -727,13 +672,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         showToast(getContext().getString(R.string.accueil_customview_logos_preference));
     }
-	/*public void reinitializeDBFromPrefetched(){
-		//XMLHelper.loadDBFromXMLFile(getHelper().getDorisDBHelper(), this.getResources().openRawResource(R.raw.prefetched_db));
-
-		new InitialisationApplication_BgActivity(getApplicationContext(), this.getHelper(), this).execute("");
-		showToast("Veuillez patienter que la base de donnée s'initialise.");
-		
-    }*/
 
     public void dataHasChanged(String textmessage) {
         Message completeMessage = mHandler.obtainMessage(1, textmessage);
@@ -761,7 +699,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
     /**
      * draw a bitmap with a gear on bottom right
-     * @return
      */
     protected Bitmap drawIconWithGear(Drawable baseDrawable){
 

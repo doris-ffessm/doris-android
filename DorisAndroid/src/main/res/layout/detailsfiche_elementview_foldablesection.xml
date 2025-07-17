@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/detailsfiche_elementview_foldablesection"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,43 +12,40 @@
 	    android:layout_height="wrap_content"
 	    android:layout_marginTop="2dp"
 	    android:orientation="horizontal" >
-
-		<ImageButton
-		    android:id="@+id/detailsfiche_elementview_fold_unflod_section_imageButton"
-		    android:layout_width="wrap_content"
-		    android:layout_height="40dp"
-		    android:layout_marginLeft="4dp"
-		    android:adjustViewBounds="true"
-		    android:background="@android:color/transparent"
-		    android:scaleType="centerInside"
-			android:contentDescription="@string/fold_unfold_content_description"
-		    android:src="@drawable/app_expander_ic_minimized" />
-
 		<TextView
 		    android:id="@+id/detailsfiche_elementview_foldablesection_titre"
-		    android:layout_width="wrap_content"
+		    android:layout_width="0dp"
 		    android:layout_height="wrap_content"
 		    android:layout_marginTop="4dp"
-		    android:layout_marginLeft="4dp"
+			android:layout_weight="1"
+		    android:layout_marginStart="4dp"
 		    android:text="Titre"
 		    android:textAppearance="?android:attr/textAppearanceMedium"
-		    android:textColor="?android:attr/textColorPrimary"/>
-    </LinearLayout>
+		    android:textColor="?android:attr/textColorPrimary"
+            tools:ignore="HardcodedText" />
+		<ImageButton
+			android:id="@+id/detailsfiche_elementview_fold_unfold_section_imageButton"
+			android:layout_width="wrap_content"
+			android:layout_height="40dp"
+			android:layout_weight="0"
+			android:adjustViewBounds="true"
+			android:background="@android:color/transparent"
+			android:scaleType="centerInside"
+			android:contentDescription="@string/fold_unfold_content_description"
+			android:src="@drawable/ic_menu_down_outline" />
+	</LinearLayout>
 
     <fr.ffessm.doris.android.activities.view.PatchedTextView
         android:id="@+id/detailsfiche_elementview_foldablesection_foldabletext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="4dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
 		android:textColor="?android:attr/textColorSecondary"
-        android:text="Contenu" />
-
-    
-
+        android:text="Contenu"
+        tools:ignore="HardcodedText" />
     <View style="@style/Separateur"/>
-    
-    
+
 </LinearLayout>

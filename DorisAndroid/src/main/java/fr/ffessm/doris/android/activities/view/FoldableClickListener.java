@@ -43,19 +43,19 @@ termes.
 package fr.ffessm.doris.android.activities.view;
 
 
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.activities.DetailsFiche_ElementViewActivity;
-import fr.ffessm.doris.android.tools.ThemeUtil;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 
+import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.DetailsFiche_ElementViewActivity;
+
 public class FoldableClickListener implements OnClickListener {
 
 	private static final String LOG_TAG = DetailsFiche_ElementViewActivity.class.getCanonicalName();
 	
-	private Context context;
+	private final Context context;
 	
 	protected View associatedFoldableView;
 	protected ImageButton foldButton;
@@ -79,12 +79,17 @@ public class FoldableClickListener implements OnClickListener {
 		
 		switch(imageButtonKind){
 		case DETAILS_FICHE :
-			image_maximize = R.drawable.app_expander_ic_maximized;
-			image_minimize = R.drawable.app_expander_ic_minimized;
+			image_maximize = R.drawable.ic_menu_down_outline;
+			image_minimize = R.drawable.ic_menu_up_outline;
 			break;
 		case DESCRIPTION_ARBRE_PHYLO :
-			image_maximize = ThemeUtil.attrToResId(((DetailsFiche_ElementViewActivity) context), R.attr.ic_app_more_informations);
+			/*image_maximize = ThemeUtil.attrToResId(((DetailsFiche_ElementViewActivity) context), R.attr.ic_app_more_informations);
 			image_minimize = ThemeUtil.attrToResId(((DetailsFiche_ElementViewActivity) context), R.attr.ic_app_more_informations);
+
+			*/
+
+			image_maximize = R.drawable.ic_menu_down_outline;
+			image_minimize = R.drawable.ic_menu_up_outline;
 			break;
 		}
 	}
@@ -92,34 +97,30 @@ public class FoldableClickListener implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if(associatedFoldableView.getVisibility() == View.GONE){
-			associatedFoldableView.setVisibility(View.VISIBLE);;
-			foldButton.setImageResource(image_maximize);
+			unfold();
 		}
 		else{
-			associatedFoldableView.setVisibility(View.GONE);
-			foldButton.setImageResource(image_minimize);
+			fold();
 		}
 	}
 	
 	public void onClick() {
 		if(associatedFoldableView.getVisibility() == View.GONE){
-			associatedFoldableView.setVisibility(View.VISIBLE);;
-			foldButton.setImageResource(image_maximize);
+			unfold();
 		}
 		else{
-			associatedFoldableView.setVisibility(View.GONE);
-			foldButton.setImageResource(image_minimize);
+			fold();
 		}
 	}
 	
 	public void fold(){
 		associatedFoldableView.setVisibility(View.GONE);
-		foldButton.setImageResource(image_minimize);
+		foldButton.setImageResource(image_maximize);
 	}
 	
 	public void unfold(){
 		associatedFoldableView.setVisibility(View.VISIBLE);
-		foldButton.setImageResource(image_maximize);
+		foldButton.setImageResource(image_minimize);
 	}
 
 }

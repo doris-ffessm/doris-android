@@ -13,6 +13,7 @@
 	<string name="accueil_recherche_guidee_arbre_toast_text">Recherche par groupe/famille</string>
 	<string name="accueil_recherche_liste_images_toast_text">Recherche par liste d\'images</string>
 	<string name="accueil_recherche_liste_fiches_toast_text">Recherche par liste de fiches</string>
+	<string name="accueil_changed_display_mode_toast_text">Mode d\'affichage changé : </string>
 	
 	<string name="accueil_liste_participants_text">Participants</string>
 	<string name="accueil_glossaire_text">Glossaire</string>
