@@ -93,6 +93,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
@@ -359,27 +360,27 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             // section "Crédits"
             StringBuilder sbCreditText = new StringBuilder();
             final String urlString = Constants.getFicheFromIdUrl(entry.getNumeroFiche());
-            sbCreditText.append("{{A:" + urlString + "}}");
+            sbCreditText.append("{{A:").append(urlString).append("}}");
             sbCreditText.append(urlString);
             sbCreditText.append("{{/A}}");
 
-            sbCreditText.append("\n" + getString(R.string.detailsfiche_elementview_datecreation_label));
+            sbCreditText.append("\n").append(getString(R.string.detailsfiche_elementview_datecreation_label));
             sbCreditText.append(entry.getDateCreation());
 
             if (!entry.getDateModification().isEmpty()) {
-                sbCreditText.append("\n" + getString(R.string.detailsfiche_elementview_datemodification_label));
+                sbCreditText.append("\n").append(getString(R.string.detailsfiche_elementview_datemodification_label));
                 sbCreditText.append(entry.getDateModification());
             }
 
             for (IntervenantFiche intervenant : entry.getIntervenants()) {
                 intervenant.setContextDB(getHelper().getDorisDBHelper());
                 //sbCreditText.append("\n"+intervenant.getId());
-                sbCreditText.append("\n" + Constants.getTitreParticipant(intervenant.getRoleIntervenant()) + " : ");
+                sbCreditText.append("\n").append(Constants.getTitreParticipant(intervenant.getRoleIntervenant())).append(" : ");
 
                 Participant participant = intervenant.getParticipant();
                 participant.setContextDB(getHelper().getDorisDBHelper());
 
-                sbCreditText.append("{{P:" + participant.getId() + "}}");
+                sbCreditText.append("{{P:").append(participant.getId()).append("}}");
                 sbCreditText.append(participant.getNom());
                 sbCreditText.append("{{/P}}");
 
@@ -484,7 +485,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
                 DorisApplicationContext.getInstance().resetIntentPrecedent(i);
                 upIntent = i;
             }
-            Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : " + upIntent.getComponent().toString());
+            Log.d(LOG_TAG, "onOptionsItemSelected() - upIntent : " + Objects.requireNonNull(upIntent.getComponent()).toString());
 
             if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
                 Log.d(LOG_TAG, "onOptionsItemSelected() - shouldUpRecreateTask == true");
@@ -568,8 +569,8 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         // make our ClickableSpans and URLSpans work 
         contenuText.setMovementMethod(LinkMovementMethod.getInstance());
 
-        // Bouton de fermeture et d'ouverure du texte de la section
-        ImageButton foldButton = convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
+        // button allowing to fold/unfold the section
+        ImageButton foldButton = convertView.findViewById(R.id.detailsfiche_elementview_fold_unfold_section_imageButton);
 
         FoldableClickListener foldable = new FoldableClickListener(this, contenuText, foldButton, ImageButtonKind.DETAILS_FICHE);
         allFoldableDetails.add(foldable);
@@ -586,7 +587,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             contenuText.setVisibility(View.GONE); // par défaut invisible
         } else {
             contenuText.setVisibility(View.VISIBLE);
-            foldButton.setImageResource(R.drawable.app_expander_ic_maximized);
+            foldButton.setImageResource(R.drawable.ic_menu_up_outline);
         }
 
         containerLayout.addView(convertView);
@@ -681,7 +682,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         }
 
         // Bouton d'Affichage et de Masque de la section
-        ImageButton foldButton = convertView.findViewById(R.id.detailsfiche_elementview_fold_unflod_section_imageButton);
+        ImageButton foldButton = convertView.findViewById(R.id.detailsfiche_elementview_fold_unfold_section_imageButton);
 
         FoldableClickListener foldable = new FoldableClickListener(this, sectionIcones, foldButton, ImageButtonKind.DETAILS_FICHE);
         allFoldableDetails.add(foldable);
@@ -699,7 +700,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             sectionIcones.setVisibility(View.GONE); // par défaut invisible
         } else {
             sectionIcones.setVisibility(View.VISIBLE);
-            foldButton.setImageResource(R.drawable.app_expander_ic_maximized);
+            foldButton.setImageResource(R.drawable.ic_menu_up_outline);
         }
 
         containerLayout.addView(convertView);
@@ -792,7 +793,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
             sectionArbre.setVisibility(View.GONE); // par défaut invisible
         } else {
             sectionArbre.setVisibility(View.VISIBLE);
-            detailsTableauButton.setImageResource(R.drawable.app_expander_ic_maximized);
+            detailsTableauButton.setImageResource(R.drawable.ic_menu_up_outline);
         }
 
         containerLayout.addView(convertView);
@@ -842,7 +843,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
                         .fit()
                         .centerInside()
                         .into(imageView);
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         } else {
             // pas préchargée en local pour l'instant, cherche sur internet si c'est autorisé

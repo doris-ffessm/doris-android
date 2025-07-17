@@ -324,12 +324,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        ZoneGeographique currentZoneFilter=null;
-        int currentZoneFilterId = prefs.getInt(getString(R.string.pref_key_filtre_zonegeo), -1);
-        if (currentZoneFilterId != -1 && currentZoneFilterId != 0) {
-            currentZoneFilter = getHelper().getZoneGeographiqueDao().queryForId(currentZoneFilterId);
-        }
-
         // deal with fold/unfold
         btnLeftFoldUnfoldZoneSection = findViewById(R.id.accueil_zone_fold_unfold_section_left_imageButton);
         llFoldUnfoldZoneSection = llContainerLayout;
