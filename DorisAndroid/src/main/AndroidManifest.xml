@@ -37,6 +37,11 @@
                 android:value=".activities.Accueil_CustomViewActivity" />
         </activity>
         <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/preference_title"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".activities.EtatModeHorsLigne_CustomViewActivity"
             android:exported="false"
             android:parentActivityName=".activities.Accueil_CustomViewActivity"

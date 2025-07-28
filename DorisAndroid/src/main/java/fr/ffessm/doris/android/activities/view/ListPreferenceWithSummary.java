@@ -42,8 +42,8 @@ termes.
 package fr.ffessm.doris.android.activities.view;
 
 import android.content.Context;
-import android.preference.ListPreference;
 import android.util.AttributeSet;
+import androidx.preference.ListPreference;
 
 public class ListPreferenceWithSummary extends ListPreference{
 	 

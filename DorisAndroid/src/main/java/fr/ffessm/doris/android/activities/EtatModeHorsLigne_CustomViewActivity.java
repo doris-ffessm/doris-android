@@ -308,7 +308,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         // Affichage Préférence de la Zone Géographique
         progressBarZoneGenerale.setOnClickListener(v -> {
 
-            Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, Preference_PreferenceViewActivity.class);
+            Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, SettingsActivity.class);
             intent.putExtra("type_parametre", "mode_precharg_category");
             intent.putExtra("parametre", "button_qualite_images_zones_key");
 
@@ -365,7 +365,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
             progressBarZone.setOnClickListener(v -> {
                 if (BuildConfig.DEBUG)
                     Log.d(LOG_TAG, "setOnClickListener() - zoneGeoId : " + fZoneGeo.getId());
-                Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, Preference_PreferenceViewActivity.class);
+                Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, SettingsActivity.class);
 
                 String param;
                 ZoneGeographiqueKind zoneGzeoKind = fZoneGeo.getZoneGeoKind();
@@ -1281,7 +1281,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.etatmodehorsligne_customview_action_preference) {
-            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
             //Start of user code additional menu action EtatModeHorsLigne_CustomViewActivity
         } else if (itemId == R.id.etatmodehorsligne_customview_action_telecharge_photofiches) {

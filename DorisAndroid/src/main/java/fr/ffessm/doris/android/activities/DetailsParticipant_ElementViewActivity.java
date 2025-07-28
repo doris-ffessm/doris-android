@@ -279,7 +279,7 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.detailsparticipant_elementview_action_preference) {
-            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
             //Start of user code additional menu action DetailsParticipant_ElementViewActivity
         } else if (itemId == R.id.detailsparticipant_elementview_action_aide) {

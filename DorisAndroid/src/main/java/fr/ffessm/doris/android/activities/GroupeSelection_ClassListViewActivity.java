@@ -273,7 +273,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.groupeselection_classlistview_action_preference) {
-            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
             //Start of user code additional menu action GroupeSelection_ClassListViewActivity
         } else if (itemId == R.id.groupeselection_classlistview_action_aide) {

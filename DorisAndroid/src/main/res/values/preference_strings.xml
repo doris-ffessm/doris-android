@@ -60,6 +60,7 @@
 	<string name="pref_key_asynch_tempo">debug_asynch_fiche_tempo</string>
 	
     <!-- Options text -->
+    <string name="preference_title">Préférences</string>
     <string name="preference_menu_title">Préférences</string>
         
 	<!-- Preferences -->

@@ -55,6 +55,7 @@ import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
 import fr.ffessm.doris.android.activities.DetailsParticipant_ElementViewActivity;
 import fr.ffessm.doris.android.activities.Preference_PreferenceViewActivity;
+import fr.ffessm.doris.android.activities.SettingsActivity;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
@@ -185,7 +186,7 @@ public class AffichageMessageHTML {
                     if (BuildConfig.DEBUG)
                         Log.d(LOG_TAG, "affichageMessageHTML() - Affichage preference : " + inUrl.replace("preference://", ""));
 
-                    Intent toPrefView = new Intent(context, Preference_PreferenceViewActivity.class);
+                    Intent toPrefView = new Intent(context, SettingsActivity.class);
 
                     String[] pref = inUrl.replace("preference://", "").split("/");
 

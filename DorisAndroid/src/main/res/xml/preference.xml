@@ -1,283 +1,296 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:key="racine">
+<androidx.preference.PreferenceScreen
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	app:key="racine">
 
     <!--Start of user code protected PreferenceViewActivity preference
 		-->
-	<PreferenceScreen
-	    android:key="mode_connecte_category"
-	    android:title="@string/mode_connecte_preference_category_title"
-	    android:summary="@string/mode_connecte_preference_category_summary"
-        android:layout="@layout/preference_layout_category">
+	<androidx.preference.PreferenceScreen
+	    app:key="mode_connecte_category"
+	    app:title="@string/mode_connecte_preference_category_title"
+	    app:summary="@string/mode_connecte_preference_category_summary"
+        app:layout="@layout/preference_layout_category">
         
-        <CheckBoxPreference android:key="@string/pref_key_mode_connecte_wifi_only"
-            android:title="@string/mode_connecte_wifi_only_prompt"
-            android:summary="@string/mode_connecte_wifi_only_summary"
-            android:defaultValue="false"
-            android:layout="@layout/preference_layout_preference"
+        <androidx.preference.CheckBoxPreference
+			app:key="@string/pref_key_mode_connecte_wifi_only"
+			app:title="@string/mode_connecte_wifi_only_prompt"
+			app:summary="@string/mode_connecte_wifi_only_summary"
+			app:defaultValue="false"
+			app:layout="@layout/preference_layout_preference"
             />
-         <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:key="@string/pref_key_mode_connecte_qualite_photo"
-            android:title="@string/mode_connecte_qualite_photo_prompt"
-            android:entryValues="@array/mode_connecte_qualite_photo_values"
-            android:entries="@array/mode_connecte_qualite_photo_lib"
-			android:defaultValue="@string/mode_connecte_qualite_photo_defaut"
-			android:layout="@layout/preference_layout_preference"
+         <androidx.preference.ListPreference
+			 app:key="@string/pref_key_mode_connecte_qualite_photo"
+			 app:title="@string/mode_connecte_qualite_photo_prompt"
+			 android:entryValues="@array/mode_connecte_qualite_photo_values"
+			 android:entries="@array/mode_connecte_qualite_photo_lib"
+			 app:defaultValue="@string/mode_connecte_qualite_photo_defaut"
+			 app:layout="@layout/preference_layout_preference"
+			 app:useSimpleSummaryProvider="true"
 			/>
-   	</PreferenceScreen>
+   	</androidx.preference.PreferenceScreen>
 
-	<PreferenceScreen
-	    android:key="mode_precharg_category"
-        android:title="@string/mode_precharg_preference_category_title"
-        android:summary="@string/mode_precharg_preference_category_summary"
-        android:layout="@layout/preference_layout_category">
+	<androidx.preference.PreferenceScreen
+	    app:key="mode_precharg_category"
+		app:title="@string/mode_precharg_preference_category_title"
+		app:summary="@string/mode_precharg_preference_category_summary"
+		app:layout="@layout/preference_layout_category">
          
-        <CheckBoxPreference android:key="@string/pref_key_mode_precharg_wifi_only"
-            android:title="@string/mode_precharg_wifi_only_prompt"
-            android:summary="@string/mode_precharg_wifi_only_summary"
-            android:defaultValue="true"
-            android:layout="@layout/preference_layout_preference"
+        <androidx.preference.CheckBoxPreference
+			app:key="@string/pref_key_mode_precharg_wifi_only"
+            app:title="@string/mode_precharg_wifi_only_prompt"
+            app:summary="@string/mode_precharg_wifi_only_summary"
+            app:defaultValue="true"
+            app:layout="@layout/preference_layout_preference"
             />
 		<Preference android:title="Avancement précharg. et espace de stockage"
 			android:key="@string/pref_key_precharg_status"
 			android:summary="This is a cool button"
 			android:layout="@layout/preference_layout_preference"/>
-        <PreferenceScreen
-	        android:key="button_qualite_images_zones_key"
-	        android:title="@string/mode_precharg_photo_region_prompt"
-	        android:persistent="false"
-	        android:layout="@layout/preference_layout_preferencescreen">
-	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:key="@string/pref_key_mode_precharg_photo_region_france"
-	            android:title="@string/mode_precharg_photo_region_france_prompt"
+        <androidx.preference.PreferenceScreen
+	        app:key="button_qualite_images_zones_key"
+	        app:title="@string/mode_precharg_photo_region_prompt"
+	        app:persistent="false"
+	        app:layout="@layout/preference_layout_preferencescreen">
+	        <androidx.preference.ListPreference
+				app:key="@string/pref_key_mode_precharg_photo_region_france"
+				app:title="@string/mode_precharg_photo_region_france_prompt"
 				android:entryValues="@array/mode_precharg_photo_answers_values"
 				android:entries="@array/mode_precharg_photo_answers_lib"
-				android:defaultValue="@string/mode_precharg_photo_region_defaut"
-				android:layout="@layout/preference_layout_preference"
+				app:defaultValue="@string/mode_precharg_photo_region_defaut"
+				app:layout="@layout/preference_layout_preference"
+				app:useSimpleSummaryProvider="true"
 				/>
-			<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-				android:key="@string/pref_key_mode_precharg_photo_region_atlantne"
-				android:title="@string/mode_precharg_photo_region_atlantne_prompt"
+			<androidx.preference.ListPreference
+				app:key="@string/pref_key_mode_precharg_photo_region_atlantne"
+				app:title="@string/mode_precharg_photo_region_atlantne_prompt"
 				android:entryValues="@array/mode_precharg_photo_answers_values"
 				android:entries="@array/mode_precharg_photo_answers_lib"
-				android:defaultValue="@string/mode_precharg_photo_region_defaut"
-				android:layout="@layout/preference_layout_preference"
+				app:defaultValue="@string/mode_precharg_photo_region_defaut"
+				app:layout="@layout/preference_layout_preference"
+				app:useSimpleSummaryProvider="true"
 				/>
-			<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-				android:key="@string/pref_key_mode_precharg_photo_region_mediter"
-				android:title="@string/mode_precharg_photo_region_mediter_prompt"
+			<androidx.preference.ListPreference
+				app:key="@string/pref_key_mode_precharg_photo_region_mediter"
+				app:title="@string/mode_precharg_photo_region_mediter_prompt"
 				android:entryValues="@array/mode_precharg_photo_answers_values"
 				android:entries="@array/mode_precharg_photo_answers_lib"
-				android:defaultValue="@string/mode_precharg_photo_region_defaut"
-				android:layout="@layout/preference_layout_preference"
+				app:defaultValue="@string/mode_precharg_photo_region_defaut"
+				app:layout="@layout/preference_layout_preference"
+				app:useSimpleSummaryProvider="true"
 				/>
-	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-   				android:key="@string/pref_key_mode_precharg_photo_region_eaudouce"
-	            android:title="@string/mode_precharg_photo_region_eaudouce_prompt"
+	        <androidx.preference.ListPreference
+				app:key="@string/pref_key_mode_precharg_photo_region_eaudouce"
+				app:title="@string/mode_precharg_photo_region_eaudouce_prompt"
 	            android:entryValues="@array/mode_precharg_photo_answers_values"
 	            android:entries="@array/mode_precharg_photo_answers_lib"
-				android:defaultValue="@string/mode_precharg_photo_region_defaut"
-				android:layout="@layout/preference_layout_preference"
+				app:defaultValue="@string/mode_precharg_photo_region_defaut"
+				app:layout="@layout/preference_layout_preference"
+				app:useSimpleSummaryProvider="true"
 				/>
-			<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-				android:key="@string/pref_key_mode_precharg_photo_region_atlantno"
-				android:title="@string/mode_precharg_photo_region_atlantno_prompt"
+			<androidx.preference.ListPreference
+				app:key="@string/pref_key_mode_precharg_photo_region_atlantno"
+				app:title="@string/mode_precharg_photo_region_atlantno_prompt"
 				android:entryValues="@array/mode_precharg_photo_answers_values"
 				android:entries="@array/mode_precharg_photo_answers_lib"
-				android:defaultValue="@string/mode_precharg_photo_region_defaut"
-				android:layout="@layout/preference_layout_preference"
+				app:defaultValue="@string/mode_precharg_photo_region_defaut"
+				app:layout="@layout/preference_layout_preference"
+				app:useSimpleSummaryProvider="true"
 				/>
-	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-   				android:key="@string/pref_key_mode_precharg_photo_region_indopac"
-	            android:title="@string/mode_precharg_photo_region_indopac_prompt"
+	        <androidx.preference.ListPreference
+				app:key="@string/pref_key_mode_precharg_photo_region_indopac"
+				app:title="@string/mode_precharg_photo_region_indopac_prompt"
    				android:entryValues="@array/mode_precharg_photo_answers_values"
 	            android:entries="@array/mode_precharg_photo_answers_lib"
-				android:defaultValue="@string/mode_precharg_photo_region_defaut"
-				android:layout="@layout/preference_layout_preference"
+				app:defaultValue="@string/mode_precharg_photo_region_defaut"
+				app:layout="@layout/preference_layout_preference"
+				app:useSimpleSummaryProvider="true"
 				/>
-			<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-				android:key="@string/pref_key_mode_precharg_photo_region_antarctique"
-				android:title="@string/mode_precharg_photo_region_antarctique_prompt"
+			<androidx.preference.ListPreference
+				app:key="@string/pref_key_mode_precharg_photo_region_antarctique"
+				app:title="@string/mode_precharg_photo_region_antarctique_prompt"
 				android:entryValues="@array/mode_precharg_photo_answers_values"
 				android:entries="@array/mode_precharg_photo_answers_lib"
-				android:defaultValue="@string/mode_precharg_photo_region_defaut"
-				android:layout="@layout/preference_layout_preference"
+				app:defaultValue="@string/mode_precharg_photo_region_defaut"
+				app:layout="@layout/preference_layout_preference"
+				app:useSimpleSummaryProvider="true"
 				/>
-			<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-				android:key="@string/pref_key_mode_precharg_photo_region_merrouge"
-				android:title="@string/mode_precharg_photo_region_merrouge_prompt"
+			<androidx.preference.ListPreference
+				app:key="@string/pref_key_mode_precharg_photo_region_merrouge"
+				app:title="@string/mode_precharg_photo_region_merrouge_prompt"
 				android:entryValues="@array/mode_precharg_photo_answers_values"
 				android:entries="@array/mode_precharg_photo_answers_lib"
-				android:defaultValue="@string/mode_precharg_photo_region_defaut"
-				android:layout="@layout/preference_layout_preference"
+				app:defaultValue="@string/mode_precharg_photo_region_defaut"
+				app:layout="@layout/preference_layout_preference"
+				app:useSimpleSummaryProvider="true"
 				/>
-	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:key="@string/pref_key_mode_precharg_photo_region_caraibes"
-	            android:title="@string/mode_precharg_photo_region_caraibes_prompt"
+	        <androidx.preference.ListPreference
+				app:key="@string/pref_key_mode_precharg_photo_region_caraibes"
+				app:title="@string/mode_precharg_photo_region_caraibes_prompt"
 	            android:entryValues="@array/mode_precharg_photo_answers_values"
 				android:entries="@array/mode_precharg_photo_answers_lib"
-				android:defaultValue="@string/mode_precharg_photo_region_defaut"
-				android:layout="@layout/preference_layout_preference"
+				app:defaultValue="@string/mode_precharg_photo_region_defaut"
+				app:layout="@layout/preference_layout_preference"
+				app:useSimpleSummaryProvider="true"
 				/>
-			<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-				android:key="@string/pref_key_mode_precharg_photo_region_guyanne"
-				android:title="@string/mode_precharg_photo_region_guyanne_prompt"
+			<androidx.preference.ListPreference
+				app:key="@string/pref_key_mode_precharg_photo_region_guyanne"
+				app:title="@string/mode_precharg_photo_region_guyanne_prompt"
 				android:entryValues="@array/mode_precharg_photo_answers_values"
 				android:entries="@array/mode_precharg_photo_answers_lib"
-				android:defaultValue="@string/mode_precharg_photo_region_defaut"
-				android:layout="@layout/preference_layout_preference"
+				app:defaultValue="@string/mode_precharg_photo_region_defaut"
+				app:layout="@layout/preference_layout_preference"
+				app:useSimpleSummaryProvider="true"
 				/>
-   	        <!-- TODO :
-	        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-	            android:key="@string/pref_key_mode_precharg_photo_region_favorite"
-	            android:title="@string/mode_precharg_photo_favorite_prompt"
-	            android:entryValues="@array/mode_precharg_photo_answers_values"
-	            android:entries="@array/mode_precharg_photo_answers_lib"
-				android:defaultValue="@string/mode_precharg_photo_region_defaut"
-				android:layout="@layout/preference_layout_preference"
-				/>
-			-->
-        </PreferenceScreen>
-        <CheckBoxPreference android:key="@string/pref_key_mode_precharg_photo_autres"
-            android:title="@string/mode_precharg_photo_autres_prompt" 
-            android:summary="@string/mode_precharg_photo_autres_summary"
-            android:defaultValue="false"
-            android:layout="@layout/preference_layout_preference"
+        </androidx.preference.PreferenceScreen>
+        <androidx.preference.CheckBoxPreference
+			app:key="@string/pref_key_mode_precharg_photo_autres"
+			app:title="@string/mode_precharg_photo_autres_prompt"
+			app:summary="@string/mode_precharg_photo_autres_summary"
+			app:defaultValue="false"
+			app:layout="@layout/preference_layout_preference"
             />
-	</PreferenceScreen>
+	</androidx.preference.PreferenceScreen>
 
-	<PreferenceScreen
-	    android:key="presentation_category"
-		android:title="@string/presentation_preference_category_title"
-		android:summary="@string/presentation_preference_category_summary"
-	    android:layout="@layout/preference_layout_category">
-   		<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:key="@string/pref_key_theme" 
-        	android:title="@string/pref_theme_prompt" 
+	<androidx.preference.PreferenceCategory
+	    app:key="presentation_category"
+		app:title="@string/presentation_preference_category_title"
+		app:summary="@string/presentation_preference_category_summary"
+		app:layout="@layout/preference_layout_category">
+   		<androidx.preference.ListPreference
+			app:key="@string/pref_key_theme"
+			app:title="@string/pref_theme_prompt"
         	android:entryValues="@array/pref_theme_values"
-        	android:entries="@array/pref_theme_lib" 
-        	android:defaultValue="@string/pref_theme_default"
-        	android:layout="@layout/preference_layout_preference"
+        	android:entries="@array/pref_theme_lib"
+			app:defaultValue="@string/pref_theme_default"
+			app:layout="@layout/preference_layout_preference"
+			app:useSimpleSummaryProvider="true"
         	/>
-   		<!--<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:key="@string/pref_key_accueil_liste_ou_arbre_pardefaut" 
-        	android:title="@string/accueil_liste_ou_arbre_prompt" 
-        	android:entryValues="@array/accueil_listes_ou_arbre_values"
-        	android:entries="@array/accueil_listes_ou_arbre_lib" 
-        	android:defaultValue="@string/accueil_liste_ou_arbre_default"
-        	android:layout="@layout/preference_layout_preference"
-        	/>-->
-        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:key="@string/pref_key_accueil_fiches_ordre" 
-        	android:title="@string/accueil_fiches_ordre_alpha_prompt"
+        <androidx.preference.ListPreference
+			app:key="@string/pref_key_accueil_fiches_ordre"
+			app:title="@string/accueil_fiches_ordre_alpha_prompt"
         	android:entryValues="@array/accueil_fiches_ordre_alpha_values"
         	android:entries="@array/accueil_fiches_ordre_alpha_lib"
-        	android:defaultValue="@string/accueil_fiches_ordre_alpha_default"
-        	android:layout="@layout/preference_layout_preference"
+			app:defaultValue="@string/accueil_fiches_ordre_alpha_default"
+			app:layout="@layout/preference_layout_preference"
+			app:useSimpleSummaryProvider="true"
         	/>
-		<fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:key="@string/pref_key_accueil_etat_fiches_affiche" 
-        	android:title="@string/accueil_etat_fiches_affiche_prompt" 
+		<androidx.preference.ListPreference
+			app:key="@string/pref_key_accueil_etat_fiches_affiche"
+			app:title="@string/accueil_etat_fiches_affiche_prompt"
         	android:entryValues="@array/accueil_etat_fiches_affiche_values"
-        	android:entries="@array/accueil_etat_fiches_affiche_lib" 
-        	android:defaultValue="@string/accueil_etat_fiches_affiche_default"
-        	android:layout="@layout/preference_layout_preference"
+        	android:entries="@array/accueil_etat_fiches_affiche_lib"
+			app:defaultValue="@string/accueil_etat_fiches_affiche_default"
+			app:layout="@layout/preference_layout_preference"
+			app:useSimpleSummaryProvider="true"
         	/>
-	    <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:key="@string/pref_key_accueil_icone_taille"
-        	android:title="@string/accueil_icone_taille_prompt"
+	    <androidx.preference.ListPreference
+			app:key="@string/pref_key_accueil_icone_taille"
+			app:title="@string/accueil_icone_taille_prompt"
         	android:entryValues="@array/accueil_icone_taille_valeurs"
         	android:entries="@array/accueil_icone_taille_lib"
-        	android:defaultValue="@string/accueil_icone_taille_defaut"
-        	android:layout="@layout/preference_layout_preference"
+			app:defaultValue="@string/accueil_icone_taille_defaut"
+			app:layout="@layout/preference_layout_preference"
+			app:useSimpleSummaryProvider="true"
         	/>
-        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:key="@string/pref_key_list_icone_taille"
-        	android:title="@string/list_icone_taille_prompt"
+        <androidx.preference.ListPreference
+			app:key="@string/pref_key_list_icone_taille"
+			app:title="@string/list_icone_taille_prompt"
         	android:entryValues="@array/list_icone_taille_valeurs"
         	android:entries="@array/list_icone_taille_lib"
-        	android:defaultValue="@string/list_icone_taille_defaut"
-        	android:layout="@layout/preference_layout_preference"
+			app:defaultValue="@string/list_icone_taille_defaut"
+			app:layout="@layout/preference_layout_preference"
+			app:useSimpleSummaryProvider="true"
         	/>
-        <fr.ffessm.doris.android.activities.view.ListPreferenceWithSummary
-            android:key="@string/pref_key_fiche_icone_taille"
-            android:title="@string/fiche_icone_taille_prompt"
+        <androidx.preference.ListPreference
+			app:key="@string/pref_key_fiche_icone_taille"
+			app:title="@string/fiche_icone_taille_prompt"
             android:entryValues="@array/fiche_icone_taille_valeurs"
             android:entries="@array/fiche_icone_taille_lib"
-            android:defaultValue="@string/fiche_icone_taille_defaut"
-            android:layout="@layout/preference_layout_preference"
+			app:defaultValue="@string/fiche_icone_taille_defaut"
+			app:layout="@layout/preference_layout_preference"
+			app:useSimpleSummaryProvider="true"
             />
-		<CheckBoxPreference
-		    android:key="@string/pref_key_accueil_aff_iconesfede"
-			android:title="@string/pref_accueil_aff_iconesfede_prompt"
-			android:summary="@string/pref_accueil_aff_iconesfede_summary"
-			android:defaultValue="true"
-			android:layout="@layout/preference_layout_preference"
+		<androidx.preference.CheckBoxPreference
+		    app:key="@string/pref_key_accueil_aff_iconesfede"
+			app:title="@string/pref_accueil_aff_iconesfede_prompt"
+			app:summary="@string/pref_accueil_aff_iconesfede_summary"
+			app:defaultValue="true"
+			app:layout="@layout/preference_layout_preference"
 			/>
-		<CheckBoxPreference
-		    android:key="@string/pref_key_fiche_aff_details_pardefaut"
-			android:title="@string/pref_fiche_aff_details_pardefaut_prompt"
-			android:summary="@string/pref_fiche_aff_details_pardefaut_summary"
-			android:defaultValue="true"
-			android:layout="@layout/preference_layout_preference"
+		<androidx.preference.CheckBoxPreference
+			app:key="@string/pref_key_fiche_aff_details_pardefaut"
+			app:title="@string/pref_fiche_aff_details_pardefaut_prompt"
+			app:summary="@string/pref_fiche_aff_details_pardefaut_summary"
+			app:defaultValue="true"
+			app:layout="@layout/preference_layout_preference"
 			/>
-		<CheckBoxPreference
-		    android:key="@string/pref_key_imagepleinecran_aff_zoomcontrol"
-			android:title="@string/pref_imagepleinecran_aff_zoomcontrol_prompt"
-			android:summary="@string/pref_imagepleinecran_aff_zoomcontrol_summary"
-			android:defaultValue="false"
-			android:layout="@layout/preference_layout_preference"
+		<androidx.preference.CheckBoxPreference
+			app:key="@string/pref_key_imagepleinecran_aff_zoomcontrol"
+			app:title="@string/pref_imagepleinecran_aff_zoomcontrol_prompt"
+			app:summary="@string/pref_imagepleinecran_aff_zoomcontrol_summary"
+			app:defaultValue="false"
+			app:layout="@layout/preference_layout_preference"
 			/>
-    </PreferenceScreen>
+    </androidx.preference.PreferenceCategory>
     
-	<PreferenceScreen
-       	android:key="debug_category"
-        android:title="@string/debug_preference_category_title"
-		android:summary="@string/debug_preference_category_summary"
-        android:layout="@layout/preference_layout_category"
+	<androidx.preference.PreferenceScreen
+       	app:key="debug_category"
+		app:title="@string/debug_preference_category_title"
+		app:summary="@string/debug_preference_category_summary"
+		app:layout="@layout/preference_layout_category"
         >
-        <CheckBoxPreference android:key="@string/pref_key_affichage_debug"
-            android:title="@string/debug_preferences_affichage_prompt"
-            android:summary="@string/debug_preferences_affichage_summary"  
-            android:defaultValue="false"
-            android:layout="@layout/preference_layout_preference"
+        <androidx.preference.CheckBoxPreference
+			app:key="@string/pref_key_affichage_debug"
+			app:title="@string/debug_preferences_affichage_prompt"
+			app:summary="@string/debug_preferences_affichage_summary"
+			app:defaultValue="false"
+			app:layout="@layout/preference_layout_preference"
             />
         <!-- Permet d'afficher / surtout masquer par défaut le contenu des fiches en cours de travail,
                 contenu n'apparaissant pas sur le site ! -->
-        <CheckBoxPreference android:key="affichage_tous_contenus"
-            android:title="Montrer tous les contenus"
-            android:summary="Utile pour les développeurs"
-            android:defaultValue="false"
-            android:layout="@layout/preference_layout_preference"
+        <androidx.preference.CheckBoxPreference
+			app:key="affichage_tous_contenus"
+			app:title="Montrer tous les contenus"
+			app:summary="Utile pour les développeurs"
+			app:defaultValue="false"
+			app:layout="@layout/preference_layout_preference"
             />
-        <EditTextPreference android:key="@string/pref_key_sync_max_card_number" 
-        	android:title="@string/sync_max_card_number_prompt" 
-        	android:summary="@string/sync_max_card_number_summary" 
-        	android:defaultValue="@string/sync_max_card_number_default"
-        	android:layout="@layout/preference_layout_preference"
+        <androidx.preference.EditTextPreference
+			app:key="@string/pref_key_sync_max_card_number"
+			app:title="@string/sync_max_card_number_prompt"
+			app:summary="@string/sync_max_card_number_summary"
+			app:defaultValue="@string/sync_max_card_number_default"
+			app:layout="@layout/preference_layout_preference"
+			app:useSimpleSummaryProvider="true"
         	/>
-        <CheckBoxPreference android:key="@string/pref_key_limit_download"
-            android:summary="réduit les download (utile pour le debug de l'application)" 
-            android:title="Limitation des downloads" 
-            android:defaultValue="false"
-            android:layout="@layout/preference_layout_preference"
+        <androidx.preference.CheckBoxPreference
+			app:key="@string/pref_key_limit_download"
+			app:summary="réduit les download (utile pour le debug de l'application)"
+			app:title="Limitation des downloads"
+			app:defaultValue="false"
+			app:layout="@layout/preference_layout_preference"
             />
-        <CheckBoxPreference android:key="@string/pref_key_debug_maj_base_prochain_demarrage"
-            android:summary="Permet de forcer la mise à jour de la base au prochain démarrage de l'appli." 
-            android:title="MAJ Base" 
-            android:defaultValue="false"
-            android:layout="@layout/preference_layout_preference"
+        <androidx.preference.CheckBoxPreference
+			app:key="@string/pref_key_debug_maj_base_prochain_demarrage"
+			app:summary="Permet de forcer la mise à jour de la base au prochain démarrage de l'appli."
+			app:title="MAJ Base"
+			app:defaultValue="false"
+			app:layout="@layout/preference_layout_preference"
             />
-        <EditTextPreference android:key="@string/pref_key_asynch_tempo"
-            android:summary="Tempo pour garder application fluide durant traitement Fiches" 
-            android:title="Limitation Vitesse" 
-            android:defaultValue="50"
-            android:layout="@layout/preference_layout_preference"
+        <androidx.preference.EditTextPreference
+			app:key="@string/pref_key_asynch_tempo"
+			app:summary="Tempo pour garder application fluide durant traitement Fiches"
+			app:title="Limitation Vitesse"
+			app:defaultValue="50"
+			app:layout="@layout/preference_layout_preference"
+			app:useSimpleSummaryProvider="true"
             />
         
         
-     </PreferenceScreen>
+     </androidx.preference.PreferenceScreen>
  
 
 	<!--End of user code
 		-->
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>
