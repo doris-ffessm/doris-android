@@ -83,7 +83,7 @@ import android.widget.TextView;
 // Start of user code protectedListeParticipantAvecFiltre_ClassListViewActivity_additionalimports
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 // End of user code
 
 public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener, ActivityWithIndexBar {

@@ -44,7 +44,7 @@ package fr.ffessm.doris.android.tools;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import fr.ffessm.doris.android.R;

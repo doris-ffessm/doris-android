@@ -50,7 +50,7 @@ import org.acra.data.StringFormat;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 
 import fr.ffessm.doris.android.tools.SortModesTools;
