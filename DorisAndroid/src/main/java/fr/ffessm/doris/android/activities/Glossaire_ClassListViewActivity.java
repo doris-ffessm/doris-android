@@ -260,7 +260,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.glossaire_classlistview_action_preference) {
-            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
             //Start of user code additional menu action Glossaire_ClassListViewActivity
 

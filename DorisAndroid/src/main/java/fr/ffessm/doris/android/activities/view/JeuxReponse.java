@@ -42,38 +42,13 @@ termes.
 package fr.ffessm.doris.android.activities.view;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.j256.ormlite.dao.CloseableIterator;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
-
-import fr.ffessm.doris.android.BuildConfig;
-import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
-import fr.ffessm.doris.android.activities.DetailsParticipant_ElementViewActivity;
-import fr.ffessm.doris.android.activities.Preference_PreferenceViewActivity;
-import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.datamodel.Participant;
-import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
-import fr.ffessm.doris.android.tools.ScreenTools;
 
 public class JeuxReponse {
 

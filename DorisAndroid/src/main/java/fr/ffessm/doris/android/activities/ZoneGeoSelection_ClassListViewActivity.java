@@ -177,7 +177,7 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteActionBarActi
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.zonegeoselection_classlistview_action_preference) {
-            startActivity(new Intent(this, Preference_PreferenceViewActivity.class));
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
             //Start of user code additional menu action ZoneGeoSelection_ClassListViewActivity
 

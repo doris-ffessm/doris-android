@@ -27,14 +27,9 @@
             android:exported="false"
             android:theme="@style/Theme.AppDorisAndroid" />
         <activity
-            android:name=".activities.Preference_PreferenceViewActivity"
-            android:exported="false"
-            android:parentActivityName=".activities.Accueil_CustomViewActivity">
-
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.Accueil_CustomViewActivity" />
+            android:name=".activities.SettingsActivity"
+            android:label="@string/preference_title"
+            android:exported="false">
         </activity>
         <activity
             android:name=".activities.EtatModeHorsLigne_CustomViewActivity"
