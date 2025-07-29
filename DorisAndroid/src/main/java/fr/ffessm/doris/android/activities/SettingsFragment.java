@@ -82,15 +82,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         CharSequence[] entries = lp.getEntries();
         CharSequence[] entryValues = lp.getEntryValues();
 
-        if (!getPhotosOutils(context).isPhotosParFicheInitialized)
-            getPhotosOutils(context).initNbPhotosParFiche();
+        if (!getPhotosOutils().isPhotosParFicheInitialized)
+            getPhotosOutils().initNbPhotosParFiche();
 
         for (int i = 0; i < entries.length; i++) {
-            long volumeNecessaire = getPhotosOutils(context).getEstimVolPhotosParZone(
+            long volumeNecessaire = getPhotosOutils().getEstimVolPhotosParZone(
                     Photos_Outils.PrecharMode.valueOf(entryValues[i].toString()),
                     zoneGeoKind
             );
-            entries[i] = entries[i].toString().replace("@size", getDisqueOutils(context).getHumanDiskUsage(volumeNecessaire));
+            entries[i] = entries[i].toString().replace("@size", getDisqueOutils().getHumanDiskUsage(volumeNecessaire));
 
             if (entryValues[i].toString().equals(lp.getValue())) {
                 summary = entries[i];
@@ -118,6 +118,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         updateBtnEtatModeHorsLigne();
         updateEntries();
         updateBtnQualiteImagesZonesSummary();
+        updateBtnOtherImagesSummary();
     }
 
 
@@ -147,7 +148,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             zoneToutesZones.setId(-1);
             zoneToutesZones.setNom(this.getString(R.string.avancement_touteszones_titre));
 
-            String sb = getPhotosOutils(context).getCurrentPhotosDiskUsageShortSummary(context) +
+            String sb = getPhotosOutils().getCurrentPhotosDiskUsageShortSummary(context) +
                     "; ";
 
             button.setSummary(EtatModeHorsLigne_CustomViewActivity.updateProgressBarZone(context, zoneToutesZones, null, sb));
@@ -189,17 +190,27 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         }
     }
 
-    private Photos_Outils getPhotosOutils(Context context) {
+    private void updateBtnOtherImagesSummary() {
+        final Preference btnAutresImagesKey = findPreference(
+                context.getString(R.string.pref_key_mode_precharg_photo_autres));
+        if (btnAutresImagesKey != null) {
+            btnAutresImagesKey.setSummary(
+                    context.getString(R.string.mode_precharg_photo_autres_summary)
+                            .replace("@size", disqueOutils.getHumanDiskUsage(getPhotosOutils().getEstimVolPhotosAutres()))
+            );
+        }
+    }
+    private Photos_Outils getPhotosOutils() {
         if (photosOutils == null) photosOutils = new Photos_Outils(context);
         return photosOutils;
     }
 
-    private Param_Outils getParamOutils(Context context) {
+    private Param_Outils getParamOutils() {
         if (paramOutils == null) paramOutils = new Param_Outils(context);
         return paramOutils;
     }
 
-    private Disque_Outils getDisqueOutils(Context context) {
+    private Disque_Outils getDisqueOutils() {
         if (disqueOutils == null) disqueOutils = new Disque_Outils(context);
         return disqueOutils;
     }
