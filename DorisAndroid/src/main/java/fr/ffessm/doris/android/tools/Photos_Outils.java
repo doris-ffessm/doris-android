@@ -64,7 +64,6 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.dao.DaoManager;
 
 import fr.ffessm.doris.android.BuildConfig;
-import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
@@ -75,7 +74,6 @@ import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.android.tools.Disque_Outils.ImageLocation;
 import fr.ffessm.doris.android.tools.disk.DiskEnvironmentHelper;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
-
 
 /**
  * Attention certaines fonctions se basent sur imagesNbInFolder qui n'est calculé qu'une fois par défaut
@@ -1248,6 +1246,7 @@ public class Photos_Outils {
     private int nbPhotosTotal;
     private float nbPhotosParFiche;
     private int nbFichesZoneGeo[] = new int[ZoneGeographiqueKind.values().length];
+    public boolean isPhotosParFicheInitialized = false;
 
     public void initNbPhotosParFiche() {
         nbFichesTotal = fichesOutils.getNbFichesZoneGeo(ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES);
@@ -1270,8 +1269,10 @@ public class Photos_Outils {
             //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "initNbPhotosParFiche() - zone.ordinal() : "+zone.ordinal());
             nbFichesZoneGeo[zone.ordinal()] = fichesOutils.getNbFichesZoneGeo(zone);
         }
-
+        isPhotosParFicheInitialized = true;
     }
+
+
 
     public long getEstimVolPhotosParZone(PrecharMode precharMode, ZoneGeographiqueKind inZoneGeo) {
         //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "getEstimVolPhotosParZone() - precharMode : "+precharMode);

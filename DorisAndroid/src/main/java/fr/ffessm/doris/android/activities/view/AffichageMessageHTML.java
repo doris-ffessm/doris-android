@@ -41,10 +41,6 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities.view;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import android.widget.Button;
 import android.widget.ImageView;
 
 import com.j256.ormlite.dao.CloseableIterator;
@@ -54,7 +50,6 @@ import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
 import fr.ffessm.doris.android.activities.DetailsParticipant_ElementViewActivity;
-import fr.ffessm.doris.android.activities.Preference_PreferenceViewActivity;
 import fr.ffessm.doris.android.activities.SettingsActivity;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
