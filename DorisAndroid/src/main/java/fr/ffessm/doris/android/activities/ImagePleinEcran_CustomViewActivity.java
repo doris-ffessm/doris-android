@@ -69,10 +69,7 @@ import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 import android.util.Log;
 
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager.widget.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
@@ -87,12 +84,8 @@ import java.util.ArrayList;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.tools.Param_Outils;
-import fr.ffessm.doris.android.tools.Textes_Outils;
 
-//End of user code
 public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
-//Start of user code additional implements ImagePleinEcran_CustomViewActivity
-//End of user code
 {
 
     //Start of user code constants ImagePleinEcran_CustomViewActivity
@@ -153,12 +146,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
+    private final Runnable mHideRunnable = this::hide;
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
@@ -181,19 +169,10 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
         super.onCreate(savedInstanceState);
         ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.imagepleinecran_customview);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.imagepleinecran_customview_layout), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-        //Start of user code onCreate ImagePleinEcran_CustomViewActivity
 
         viewPager = (ViewPager) findViewById(R.id.imagepleinecran_pager);
 
@@ -212,12 +191,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
         RuntimeExceptionDao<Fiche, Integer> entriesDao = getHelper().getFicheDao();
         Fiche entry = entriesDao.queryForId(ficheId);
         entry.setContextDB(getHelper().getDorisDBHelper());
-        //Collection<PhotoFiche> photosFiche = entry.getPhotosFiche();
         ArrayList<PhotoFiche> photosFicheArrayList = new ArrayList<PhotoFiche>(entry.getPhotosFiche());
-
-        actionBar.setTitle(entry.getNomCommunNeverEmpty().replaceAll("\\{\\{[^\\}]*\\}\\}", ""));
-        Textes_Outils textesOutils = new Textes_Outils(this);
-        actionBar.setSubtitle(textesOutils.textToSpannableStringDoris(entry.getNomScientifique()));
 
         // Image adapter
         adapter = new ImagePleinEcran_Adapter(ImagePleinEcran_CustomViewActivity.this, photosFicheArrayList);
@@ -254,19 +228,13 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 
 
         // Set up the user interaction to manually show or hide the system UI.
-        mContentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggle();
-            }
-        });
+        mContentView.setOnClickListener(view -> toggle());
 
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.dummy_control_button).setOnTouchListener(mDelayHideTouchListener);
 
-        //End of user code
     }
 
 
@@ -274,7 +242,6 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
     protected void onResume() {
         super.onResume();
         refreshScreenData();
-        //Start of user code onResume ImagePleinEcran_CustomViewActivity
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (prefs.getBoolean(getString(R.string.pref_key_imagepleinecran_aff_zoomcontrol), false) != affZoomControl) {
             affZoomControl = prefs.getBoolean(getString(R.string.pref_key_imagepleinecran_aff_zoomcontrol), false);
@@ -282,9 +249,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
             view.invalidate();
             // ne fonctionne pas :-(
         }
-        //End of user code
     }
-    //Start of user code additional code ImagePleinEcran_CustomViewActivity
 
     boolean affZoomControl = false;
 
@@ -323,12 +288,9 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
             showDescriptionRunner = null;
         }
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            showDescriptionRunner = new Runnable() {
-                @Override
-                public void run() {
-                    //shows toast after 2000ms
-                    adapter.showDescription(position);
-                }
+            showDescriptionRunner = () -> {
+                //shows toast after 2000ms
+                adapter.showDescription(position);
             };
 
             handler.postDelayed(showDescriptionRunner, 2000);
@@ -370,8 +332,6 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
-
-    //End of user code
 
     /**
      * refresh screen from data

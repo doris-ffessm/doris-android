@@ -49,6 +49,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+
+import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -86,13 +88,13 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 
     private static final String LOG_TAG = ImagePleinEcran_Adapter.class.getSimpleName();
 
-    private ImagePleinEcran_CustomViewActivity _activity;
-    private ArrayList<PhotoFiche> _PhotoFicheLists;
+    private final ImagePleinEcran_CustomViewActivity _activity;
+    private final ArrayList<PhotoFiche> _PhotoFicheLists;
     private LayoutInflater inflater;
 
-    private Param_Outils paramOutils;
-    private Photos_Outils photosOutils;
-    private Reseau_Outils reseauOutils;
+    private final Param_Outils paramOutils;
+    private final Photos_Outils photosOutils;
+    private final Reseau_Outils reseauOutils;
 
 
     // constructor
@@ -113,11 +115,12 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return view == ((RelativeLayout) object);
+        return view == object;
     }
 
+    @NonNull
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
         final fr.ffessm.doris.android.tools.TouchImageView imgDisplay;
         ImageView btnClose;
         ImageView btnHiResNotAvailable;
@@ -191,7 +194,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
                             .resize(largeur, hauteur)
                             .centerInside()
                             .into(imgDisplay);
-                } catch (IOException e) {
+                } catch (IOException ignored) {
                 }
             } else {
                 if (reseauOutils.isTelechargementsModeConnectePossible()) {
@@ -203,7 +206,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
                                 .centerInside()
                                 .into(imgDisplay,
                                         chainedLoadImageViewCallback);  // on enchaine avec la vrai image requise
-                    } catch (IOException e) {
+                    } catch (IOException ignored) {
                     }
                 } else {
                     // téléchargement non autorisé, cherche dans le cache picasso
@@ -228,7 +231,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
                                                 .centerInside()
                                                 .placeholder(R.drawable.doris_icone_doris_large_pas_connecte)
                                                 .into(imgDisplay);
-                                    } catch (IOException e) {
+                                    } catch (IOException ignored) {
                                     }
                                     btnHiResNotAvailable.setVisibility(View.VISIBLE);
                                 }
@@ -384,7 +387,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
     }
 
     @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
+    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         ((ViewPager) container).removeView((RelativeLayout) object);
 
     }
@@ -400,7 +403,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         String description = photoFiche.getDescription();
         String texteAff = description;
         if (titre.length() > Integer.parseInt(paramOutils.getParamString(R.string.imagepleinecran_titre_longmax, "25")))
-            texteAff = titre + System.getProperty("line.separator") + description;
+            texteAff = titre + System.lineSeparator() + description;
         if (!texteAff.isEmpty()) {
             if (_activity.isActivityDestroyed() || _activity.isFinishing()) return;
             Toast.makeText(_activity, texteAff, Toast.LENGTH_LONG).show();
@@ -412,11 +415,12 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
         showFullDescription(photoFiche);
     }
     private void showFullDescription(PhotoFiche photoFiche) {
+        String specieName = photoFiche.getFiche().getNomCommunNeverEmpty().replaceAll("\\{\\{[^\\}]*\\}\\}", "");
         String titre = photoFiche.getTitre();
         String description = photoFiche.getDescription();
-        String texteAff = titre + System.getProperty("line.separator") + description;
+        String texteAff = titre + System.lineSeparator() + description;
         AlertDialog alertDialog = new AlertDialog.Builder(_activity).create();
-        //alertDialog.setTitle(photoFiche.getTitre());
+        alertDialog.setTitle(specieName);
         alertDialog.setMessage(texteAff);
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
