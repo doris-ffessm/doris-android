@@ -42,8 +42,8 @@ android {
     namespace = 'fr.ffessm.doris.android'
     compileSdkVersion 36
     defaultConfig {
-        versionCode 82
-        versionName "4.11.0"
+        versionCode 83
+        versionName "4.11.1"
     }
 
     File signFile = file('/builds/keystore/sign.properties') // used by Jenkins
