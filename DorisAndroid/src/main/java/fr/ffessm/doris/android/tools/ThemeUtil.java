@@ -71,9 +71,6 @@ public class ThemeUtil {
         String theme = prefs.getString(activity.getString(R.string.pref_key_theme), "DorisAndroid");
         Log.d(LOG_TAG, "theme = " + theme);
         switch (theme) {
-            case "DorisAndroid":
-                activity.setTheme(R.style.Theme_AppDorisAndroid);
-                break;
             case "DorisAndroidLight":
                 activity.setTheme(R.style.Theme_AppDorisAndroidLight);
                 break;
@@ -86,6 +83,10 @@ public class ThemeUtil {
             case "HoloLight":
                 activity.setTheme(R.style.Theme_AppHoloLight);
                 break;
+            case "DorisAndroid":
+            case "DORISAndroid":
+            default:
+                activity.setTheme(R.style.Theme_AppDorisAndroid);
         }
     }
 
