@@ -53,7 +53,7 @@ import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -67,7 +67,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 // Start of user code protectedZoneGeoSelection_ClassListViewActivity_additionalimports
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.widget.TextView;
 
 import fr.ffessm.doris.android.BuildConfig;

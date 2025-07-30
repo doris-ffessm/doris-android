@@ -57,7 +57,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 //Start of user code additional imports SplashScreen_CustomViewActivity
 import java.io.File;
 import java.io.FileOutputStream;

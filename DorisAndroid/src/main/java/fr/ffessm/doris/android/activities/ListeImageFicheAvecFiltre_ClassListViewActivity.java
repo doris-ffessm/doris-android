@@ -96,7 +96,7 @@ import android.widget.TextView;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.widget.Button;

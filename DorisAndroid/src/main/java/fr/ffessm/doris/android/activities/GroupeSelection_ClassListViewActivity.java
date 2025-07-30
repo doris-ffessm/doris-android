@@ -75,7 +75,7 @@ import android.widget.ListView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
