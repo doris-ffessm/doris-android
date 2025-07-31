@@ -4,6 +4,8 @@ on: workflow_dispatch
 jobs:
   cleanup:
     runs-on: ubuntu-latest
+    permissions:
+      actions: write # Grants permission to write to GitHub Actions (includes deleting caches)
     steps:
       - name: Cleanup
         run: |
@@ -17,8 +19,13 @@ jobs:
           echo "Deleting caches..."
           for cacheKey in $cacheKeysForPR
           do
-              echo "Deleting cache $cacheKey"
-              gh actions-cache delete $cacheKey -R $REPO --confirm
+              echo "Attempting to delete cache: $cacheKey"
+              gh actions-cache delete "$cacheKey" -R "${REPO}" --confirm
+              if [ $? -eq 0 ]; then
+                  echo "Successfully deleted cache: $cacheKey"
+              else
+                  echo "Failed to delete cache (or it was already deleted): $cacheKey"
+              fi
           done
           echo "Done"
         env:
