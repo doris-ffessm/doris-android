@@ -73,6 +73,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Groupe;
@@ -202,14 +203,33 @@ public class PrefetchGroupes {
             }
         }
         log.info(format("Downloaded group images %d, group images already in cache %d", nbDownloadedGroupImages, nbGroupImagesFromCache));
-        for (int i = listeGroupes.size() - 1; i >= 0; i--) {
-            patchMissingGroupeImage(listeGroupes.get(i), listeGroupes);
-        }
 
+        if (!saveListGroupInDB(listeGroupes)) return -1;
+
+        // update contextDb for all groups in order to enable correct navigation
+        for (Groupe groupe : listeGroupes) {
+            groupe.setContextDB(dbContext);
+        }
+        // patch missing images
+        for (Groupe groupe : listeGroupes) {
+            patchMissingGroupeImage(groupe, listeGroupes);
+        }
+        if (!saveListGroupInDB(listeGroupes)) return -1;
+
+        log.debug("PrefetchGroupes.prefetchFromModalDialog() - end");
+        return 1;
+    }
+
+    /**
+     * save the list of groupe in the DB
+     * @param listGroupes
+     * @return true if it's ok, false otherwise
+     */
+    public boolean saveListGroupInDB(List<Groupe> listGroupes) {
         try {
             TransactionManager.callInTransaction(connectionSource,
                     (Callable<Void>) () -> {
-                        for (Groupe groupe : listeGroupes) {
+                        for (Groupe groupe : listGroupes) {
                             dbContext.groupeDao.createOrUpdate(groupe);
                         }
                         return null;
@@ -218,11 +238,10 @@ public class PrefetchGroupes {
             // une erreur est survenue
             log.error("Une erreur est survenue dans PrefetchGroupes");
             log.error(e);
-            return -1;
+            return false;
         }
-        log.debug("PrefetchGroupes.prefetchFromModalDialog() - end");
-        return 1;
-    }
+        return true;
+    };
 
     class GroupeDepthTuple {
         public Integer depth;
@@ -634,6 +653,7 @@ public class PrefetchGroupes {
                 //group.getGroupePere()
                 Optional<Groupe> firstChild = allGroups.stream().filter(g -> g.getGroupePere() != null && g.getGroupePere().getId() == group.getId()).findFirst();
                 if (firstChild.isPresent()) {
+                    log.info("child group of " + group.getNomGroupe() + " : " + group.getGroupesFils().stream().map( g -> g.getNomGroupe()).collect(Collectors.joining(", ")));
                     log.info("uses 1rst sub group image for missing group image of " + group.getNomGroupe() + " with " + firstChild.get().getNomGroupe());
                     group.setCleURLImage(firstChild.get().getCleURLImage());
                 }
