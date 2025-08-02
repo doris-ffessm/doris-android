@@ -11,11 +11,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -23,14 +20,14 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.preference.PreferenceManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
-import fr.ffessm.doris.android.tools.SortModesTools;
+import fr.ffessm.doris.android.tools.DisplayModeRecord;
+import fr.ffessm.doris.android.tools.DisplayModeUtils;
 import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 /**
@@ -169,9 +166,19 @@ public class AbstractSpeciesListActivity extends OrmLiteActionBarActivity<OrmLit
         Button btnDisplayMode = layout.findViewById(R.id.listeavecfiltre_filtrespopup_DisplayModeButton);
         String currentDisplayMode = prefs.getString(this.getString(R.string.pref_key_current_mode_affichage), getResources().getString(
                 R.string.current_mode_affichage_default));
-
-        btnDisplayMode.setText(this.getString(R.string.listeficheavecfiltre_popup_displaymode) + " " + currentDisplayMode);
-
+        List<DisplayModeRecord> dmRecords = DisplayModeUtils.getDisplayModeRecords(this);
+        DisplayModeRecord currentDisplayModeRecord = null;
+        for (DisplayModeRecord dmr : dmRecords) {
+            if (dmr.value().equals(currentDisplayMode)) {
+                currentDisplayModeRecord = dmr;
+                break;
+            }
+        }
+        if (currentDisplayModeRecord == null) {
+            btnDisplayMode.setText(this.getString(R.string.listeficheavecfiltre_popup_displaymode) + " " + currentDisplayMode);
+        } else {
+            btnDisplayMode.setText(this.getString(R.string.listeficheavecfiltre_popup_displaymode) + " " + currentDisplayModeRecord.label());
+        }
         btnDisplayMode.setOnClickListener(v -> {
             popup.setFocusable(true);
             popup.dismiss();

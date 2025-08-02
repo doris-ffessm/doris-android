@@ -45,35 +45,29 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.preference.PreferenceManager;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.datamodel.ZoneGeographique;
-import fr.ffessm.doris.android.tools.Fiches_Outils;
+import fr.ffessm.doris.android.tools.DisplayModeRecord;
+import fr.ffessm.doris.android.tools.DisplayModeUtils;
 import fr.ffessm.doris.android.tools.Param_Outils;
-import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.SortModesTools;
-import fr.ffessm.doris.android.tools.Zones_Outils;
 
 public class DisplayModeSelection_Adapter extends BaseAdapter {
 
-    private Context context;
-    private Activity hostActivity;
+    private final Context context;
+    private final Activity hostActivity;
     Param_Outils paramOutils;
 
     private static final String LOG_TAG = DisplayModeSelection_Adapter.class.getCanonicalName();
@@ -90,12 +84,7 @@ public class DisplayModeSelection_Adapter extends BaseAdapter {
     }
 
     protected void updateList() {
-        String[] modesValues = context.getResources().getStringArray(R.array.current_mode_affichage_values);
-        String[] modesLibelles = context.getResources().getStringArray(R.array.current_mode_affichage_libelle);
-        String[] modesDetails = context.getResources().getStringArray(R.array.current_mode_affichage_details);
-        for (int i = 0; i < modesValues.length; i++) {
-            displayModeRecords.add(new DisplayModeRecord(modesValues[i], modesLibelles[i], modesDetails[i]));
-        }
+        displayModeRecords = DisplayModeUtils.getDisplayModeRecords(context);
     }
 
     @Override
@@ -123,12 +112,12 @@ public class DisplayModeSelection_Adapter extends BaseAdapter {
 
         // set data in the row
         TextView tvLabel = convertView.findViewById(R.id.mode_affichage_listviewrow_text);
-        tvLabel.setText(displayMode.label);
+        tvLabel.setText(displayMode.label());
         TextView tvDetail = convertView.findViewById(R.id.mode_affichage_listviewrow_details);
-        tvDetail.setText(displayMode.details);
+        tvDetail.setText(displayMode.details());
 
         ImageView iv = convertView.findViewById(R.id.mode_affichage_listviewrow_icon);
-        iv.setImageDrawable(SortModesTools.getDrawable(context, displayMode.value));
+        iv.setImageDrawable(SortModesTools.getDrawable(context, displayMode.value()));
 
         RadioButton radio = convertView.findViewById(R.id.mode_affichage_listviewrow_radio);
         // set current check button value
@@ -136,7 +125,7 @@ public class DisplayModeSelection_Adapter extends BaseAdapter {
                         R.string.pref_key_current_mode_affichage),
                 context.getResources().getString(
                         R.string.current_mode_affichage_default));
-        radio.setChecked(current.equals(displayMode.value));
+        radio.setChecked(current.equals(displayMode.value()));
 
         radio.setOnClickListener(v ->{
             String previous = prefs.getString(context.getResources().getString(
@@ -144,12 +133,12 @@ public class DisplayModeSelection_Adapter extends BaseAdapter {
             prefs.edit().putString(
                     context.getResources().getString(
                             R.string.pref_key_current_mode_affichage),
-                    displayMode.value).apply();
+                    displayMode.value()).apply();
 
             // Ask to Replace the previous activity
             Intent resultIntent = new Intent();
 
-            switch (displayMode.value) {
+            switch (displayMode.value()) {
                 case "photos_alpha":
                 case "photos_par_groupe":
                     if (previous.equals("photos_alpha") || previous.equals("photos_par_groupe")) {
@@ -195,9 +184,4 @@ public class DisplayModeSelection_Adapter extends BaseAdapter {
         return paramOutils;
     }
 
-    record DisplayModeRecord(
-            String value,
-            String label,
-            String details
-    ) { }
 }
