@@ -81,7 +81,6 @@ import java.util.List;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
-import fr.ffessm.doris.android.activities.view.ListeFicheFilterPopupHelper;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
 import fr.ffessm.doris.android.activities.view.indexbar.FicheAlphabeticalIndexManager;
@@ -92,14 +91,12 @@ import fr.ffessm.doris.android.activities.view.indexbar.IndxBarHandlerMessages;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 
-public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener, ActivityWithIndexBar {
+public class ListeImageFicheAvecFiltre_ClassListViewActivity extends AbstractSpeciesListActivity implements OnItemClickListener, ActivityWithIndexBar {
 
     private static final String LOG_TAG = ListeImageFicheAvecFiltre_ClassListViewActivity.class.getSimpleName();
 
@@ -340,13 +337,8 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
             //Start of user code additional menu action ListeFicheAvecFiltre_ClassListViewActivity
-        } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_filterpopup) {//showToast("searchPopupButtonManager.onClickFilterBtn(MenuItemCompat.getActionView(item))");
-            //	searchPopupButtonManager.onClickFilterBtn(MenuItemCompat.getActionView(item));
-            View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup); // SAME ID AS MENU ID
-            // crée le manager de popup
-            //searchPopupButtonManager = new SearchPopupButtonManager(this);
-            //showFilterPopupMenu(menuItemView);
-            //searchPopupButtonManager.onClickFilterBtn(menuItemView);
+        } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_filterpopup) {
+            // open filter popup
             showPopup();
             return true;
         } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist) {
@@ -549,8 +541,4 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
         }
     }
 
-    public void showPopup() {
-        ListeFicheFilterPopupHelper popupHelper = new ListeFicheFilterPopupHelper(this);
-        popupHelper.showPopup();
-    }
 }

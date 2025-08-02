@@ -80,7 +80,6 @@ import java.util.List;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
-import fr.ffessm.doris.android.activities.view.ListeFicheFilterPopupHelper;
 import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
 import fr.ffessm.doris.android.activities.view.indexbar.GroupIndexBarHandler;
 import fr.ffessm.doris.android.activities.view.indexbar.GroupeIndexManager;
@@ -89,13 +88,11 @@ import fr.ffessm.doris.android.activities.view.indexbar.IndxBarHandlerMessages;
 import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
-public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener, ActivityWithIndexBar {
+public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends AbstractSpeciesListActivity implements OnItemClickListener, ActivityWithIndexBar {
 
     private static final String LOG_TAG = ListeImageGroupeAvecFiltre_ClassListViewActivity.class.getSimpleName();
 
@@ -466,10 +463,5 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends OrmLiteAct
                 searchButtonMenuItem.setIcon(ThemeUtil.attrToResId(((ListeImageGroupeAvecFiltre_ClassListViewActivity) context), R.attr.ic_app_filter_settings));
 
         }
-    }
-
-    public void showPopup() {
-        ListeFicheFilterPopupHelper popupHelper = new ListeFicheFilterPopupHelper(this);
-        popupHelper.showPopup();
     }
 }
