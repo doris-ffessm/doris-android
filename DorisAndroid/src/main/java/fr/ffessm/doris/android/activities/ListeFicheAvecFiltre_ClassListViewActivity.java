@@ -342,11 +342,6 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends AbstractSpeciesL
             // open filter popup
             showFilterPopup();
             return true;
-        } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist) {
-            Intent i = new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class);
-            i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
-            return true;
         } else if (itemId == R.id.listeficheavecfiltre_action_aide) {
             AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
             aide.affichageMessageHTML(context.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");

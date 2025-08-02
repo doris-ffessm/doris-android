@@ -321,16 +321,8 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends AbstractSpe
         });
 
         // add additional programmatic options in the menu
-        //Start of user code additional onCreateOptionsMenu ListeFicheAvecFiltre_ClassListViewActivity
-        // changement du titre (on aurai aussi pu simplement changer le menu ?)
-        MenuItem switchListMode = menu.findItem(R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist);
-        switchListMode.setTitle(R.string.listeficheavecfiltre_classlistview_action_imagelist2textlist_title);
-        switchListMode.setIcon(R.drawable.ic_action_liste_fiches);
-
         searchButtonMenuItem = menu.findItem(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
         updateFilterInActionBar();
-        //searchPopupButtonManager = new SearchPopupButtonManager(this);
-        //End of user code
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -346,11 +338,6 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends AbstractSpe
         } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_filterpopup) {
             // open filter popup
             showFilterPopup();
-            return true;
-        } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist) {
-            Intent i = new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class);
-            i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
             return true;
         } else if (itemId == R.id.listeficheavecfiltre_action_aide) {
             AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
