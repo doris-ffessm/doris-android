@@ -41,22 +41,9 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities;
 
-
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.core.app.NavUtils;
-import androidx.core.app.TaskStackBuilder;
-import androidx.appcompat.app.ActionBar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -65,33 +52,34 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-// Start of user code protectedZoneGeoSelection_ClassListViewActivity_additionalimports
-import android.content.SharedPreferences;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.preference.PreferenceManager;
-import android.widget.TextView;
 
-import fr.ffessm.doris.android.BuildConfig;
+import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.tools.ScreenTools;
-// End of user code
+import fr.ffessm.doris.android.tools.ThemeUtil;
+import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
-public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener {
+public class DisplayModeSelection_ViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener {
 
-    private static final String LOG_TAG = ZoneGeoSelection_ClassListViewActivity.class.getSimpleName();
+    private static final String LOG_TAG = DisplayModeSelection_ViewActivity.class.getSimpleName();
 
-    //Start of user code constants ZoneGeoSelection_ClassListViewActivity
-    //End of user code
-
-    ZoneGeoSelection_Adapter adapter;
-
+    DisplayModeSelection_Adapter adapter;
 
     public void onCreate(Bundle bundle) {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(bundle);
         ThemeUtil.onActivityCreateSetTheme(this);
-        setContentView(R.layout.zonegeoselection_listview);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.zonegeoselection_listview_layout), (v, insets) -> {
+        setContentView(R.layout.displaymodeselection_listview);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.displaymodeselection_view_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
@@ -100,71 +88,41 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteActionBarActi
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        ListView list = (ListView) findViewById(R.id.zonegeoselection_listview);
+        ListView list = (ListView) findViewById(R.id.displaymodeselection_listview);
         list.setClickable(false);
-        //Start of user code onCreate ZoneGeoSelection_ClassListViewActivity adapter creation
-        adapter = new ZoneGeoSelection_Adapter(this, getHelper().getDorisDBHelper());
-        //End of user code
         // avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         list.setOnItemClickListener(this);
 
+        adapter = new DisplayModeSelection_Adapter(this, this);
+        list.setOnItemClickListener(this);
+
+        // set adapter
         list.setAdapter(adapter);
 
-        //Start of user code onCreate additions ZoneGeoSelection_ClassListViewActivity
         if (ScreenTools.getScreenWidth(this) > 700)
-            actionBar.setTitle(getString(R.string.zonegeoselection_listview_title_large));
+            actionBar.setTitle(getString(R.string.displaymodeselection_listview_title_large));
         else
-            actionBar.setTitle(getString(R.string.zonegeoselection_listview_title));
-        //End of user code
+            actionBar.setTitle(getString(R.string.displaymodeselection_listview_title));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //Start of user code onResume additions ZoneGeoSelection_ClassListViewActivity
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-
-        TextView currentFilterText = (TextView) findViewById(R.id.zonegeoselection_listview_filtre_courant);
-        int currentFilterId = pref.getInt(this.getString(R.string.pref_key_filtre_zonegeo), -1);
-
-        if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onResume() - currentFilterId : " + currentFilterId);
-
-        if (currentFilterId == -1) {
-            currentFilterText.setText("");
-            findViewById(R.id.zonegeoselection_listview_filtre_courant__suppFiltreBtn).setVisibility(View.GONE);
-        } else {
-            ZoneGeographique currentZoneFilter = getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
-            currentFilterText.setText(currentZoneFilter.getNom());
-            findViewById(R.id.zonegeoselection_listview_filtre_courant__suppFiltreBtn).setVisibility(View.VISIBLE);
-        }
-        //End of user code
     }
-
 
     public void onItemClick(AdapterView<?> arg0, View view, int position, long index) {
-        //Start of user code onItemClick additions ZoneGeoSelection_ClassListViewActivity
         //showToast(view.toString() + ", "+ view.getId());
-        //End of user code
-    }
-
-    public void onRemoveCurrentFilterClick(View view) {
-        showToast(R.string.zonegeoselection_filtre_supprime);
-        SharedPreferences.Editor ed = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        ed.putInt(this.getString(R.string.pref_key_filtre_zonegeo), -1);
-        ed.apply();
-        finish();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // add options in the menu
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.zonegeoselection_classlistview_actions, menu);
+        inflater.inflate(R.menu.displaymodeselection_listview_actions, menu);
         // add additional programmatic options in the menu
         return super.onCreateOptionsMenu(menu);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -176,13 +134,6 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteActionBarActi
             // Respond to the action bar's Up/Home button
         } else if (itemId == android.R.id.home) {
             finish();
-				/*
-	        	TaskStackBuilder.create(this)
-	                // Add all of this activity's parents to the back stack
-	                .addNextIntentWithParentStack(getSupportParentActivityIntent())
-	                // Navigate up to the closest parent
-	                .startActivities();
-	            */
             /*
             Intent upIntent = NavUtils.getParentActivityIntent(this);
             if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
@@ -198,34 +149,24 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteActionBarActi
                 // navigate up to the logical parent activity.
                 NavUtils.navigateUpTo(this, upIntent);
             }
-
-            */
+             */
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+
+
     //  ------------ dealing with Up button
     @Override
     public Intent getSupportParentActivityIntent() {
-        //Start of user code getSupportParentActivityIntent ZoneGeoSelection_ClassListViewActivity
         // navigates to the parent activity
         return new Intent(this, Accueil_CustomViewActivity.class);
-        //End of user code
     }
 
     @Override
     public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-        //Start of user code onCreateSupportNavigateUpTaskStack ZoneGeoSelection_ClassListViewActivity
         super.onCreateSupportNavigateUpTaskStack(builder);
-        //End of user code
     }
-
-    // Start of user code protectedZoneGeoSelection_ClassListViewActivity
-    public void onClickFilterBtn(View view) {
-        showToast("filter button pressed. \nPlease customize ;-)");
-    }
-    // End of user code
-
 
 }

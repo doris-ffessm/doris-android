@@ -245,6 +245,12 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends AbstractSp
     @Override
     protected void onDestroy() {
         Log.d(LOG_TAG, "onDestroy()");
+        // remove everything associated to this handler
+        if(mHandler != null){
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+            Log.d(LOG_TAG, "Removed all callbacks and messages for "+this.getClass().getSimpleName());
+        }
 
         //On vide le cache des infos liées aux fiches
         getHelper().getFicheDao().clearObjectCache();
@@ -285,7 +291,6 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends AbstractSp
         });
 
         // add additional programmatic options in the menu
-        //Start of user code additional onCreateOptionsMenu ListeFicheAvecFiltre_ClassListViewActivity
         // changement du titre (on aurai aussi pu simplement changer le menu ?)
         MenuItem switchListMode = menu.findItem(R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist);
         switchListMode.setTitle(R.string.listeficheavecfiltre_classlistview_action_imagelist2textlist_title);
@@ -293,8 +298,6 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends AbstractSp
 
         searchButtonMenuItem = menu.findItem(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
         updateFilterInActionBar();
-        //searchPopupButtonManager = new SearchPopupButtonManager(this);
-        //End of user code
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -306,7 +309,6 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends AbstractSp
         if (itemId == R.id.listeficheavecfiltre_classlistview_action_preference) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
-            //Start of user code additional menu action ListeFicheAvecFiltre_ClassListViewActivity
         } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_filterpopup) {
             showFilterPopup();
             return true;
@@ -319,7 +321,6 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends AbstractSp
             AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
             aide.affichageMessageHTML(context.getString(R.string.aide_label), " ", "file:///android_res/raw/aide.html");
             return true;
-            //End of user code
             // Respond to the action bar's Up/Home button
         } else if (itemId == android.R.id.home) {
             Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
@@ -348,17 +349,13 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends AbstractSp
     //  ------------ dealing with Up button
     @Override
     public Intent getSupportParentActivityIntent() {
-        //Start of user code getSupportParentActivityIntent ListeFicheAvecFiltre_ClassListViewActivity
         // navigates to the parent activity
         return new Intent(this, Accueil_CustomViewActivity.class);
-        //End of user code
     }
 
     @Override
     public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
-        //Start of user code onCreateSupportNavigateUpTaskStack ListeFicheAvecFiltre_ClassListViewActivity
         super.onCreateSupportNavigateUpTaskStack(builder);
-        //End of user code
     }
 
     // -------------- handler (for indexBar)
@@ -420,7 +417,6 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends AbstractSp
         return findViewById(R.id.alphabet_row_layout);
     }
 
-    // Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity
 
     public void updateFilterInActionBar() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

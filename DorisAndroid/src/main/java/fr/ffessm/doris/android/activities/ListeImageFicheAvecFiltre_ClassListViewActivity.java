@@ -276,6 +276,12 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends AbstractSpe
     protected void onDestroy() {
         Log.d(LOG_TAG, "onDestroy()");
 
+        // remove everything associated to this handler
+        if(mHandler != null){
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+            Log.d(LOG_TAG, "Removed all callbacks and messages for "+this.getClass().getSimpleName());
+        }
         //On vide le cache des infos liées aux fiches
         getHelper().getFicheDao().clearObjectCache();
         getHelper().getFiches_ZonesGeographiquesDao().clearObjectCache();
@@ -495,8 +501,6 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends AbstractSpe
     public View getAlphabetRowView() {
         return findViewById(R.id.alphabet_row_layout);
     }
-
-    // Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity
 
     public void updateFilterInActionBar() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

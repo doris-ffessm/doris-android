@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignBottom="@+id/listeavecfiltre_filtrespopup_bottom_backgroundimageView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:scaleType="fitXY"
         android:src="@drawable/popupwindow_background" />
 	
@@ -41,11 +40,23 @@
         android:text="@string/listeficheavecfiltre_popup_filtreGeographique_sans"
 		android:textColor="#fff3f3f3" />
 
+	<Button
+		android:id="@+id/listeavecfiltre_filtrespopup_DisplayModeButton"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@+id/listeavecfiltre_filtrespopup_ZoneGeoButton"
+		android:layout_marginBottom="5dp"
+		android:layout_marginLeft="10dp"
+		android:layout_marginRight="10dp"
+		android:layout_marginTop="5dp"
+		android:text="@string/listeficheavecfiltre_popup_displaymode_default"
+		android:textColor="#fff3f3f3" />
+
     <ImageView
         android:id="@+id/listeavecfiltre_filtrespopup_bottom_backgroundimageView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-	    android:layout_below="@+id/listeavecfiltre_filtrespopup_ZoneGeoButton"
+	    android:layout_below="@+id/listeavecfiltre_filtrespopup_DisplayModeButton"
         android:scaleType="fitXY"
         android:src="@android:color/transparent" />
 

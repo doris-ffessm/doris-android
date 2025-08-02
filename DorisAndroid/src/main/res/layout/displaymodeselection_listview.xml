@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/displaymodeselection_view_layout"
+	android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+	android:background="?attr/dorisAppBackground">
+	<!--	Start of user code protectedzonegeoselection_listviewheader 
+      -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/displaymodeselection_header_label"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+	    android:textColor="?android:attr/textColorPrimary" />
+    <View style="@style/Separateur"/>
+
+	<ListView 
+	    android:id="@+id/displaymodeselection_listview"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent" >
+	</ListView>
+</LinearLayout>

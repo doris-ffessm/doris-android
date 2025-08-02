@@ -190,6 +190,12 @@
                 android:value=".activities.Accueil_CustomViewActivity" />
         </activity>
         <activity
+            android:name=".activities.DisplayModeSelection_ViewActivity"
+            android:parentActivityName=".activities.Accueil_CustomViewActivity"
+            android:theme="@style/Theme.AppDorisAndroid"
+            android:enableOnBackInvokedCallback="true">
+        </activity>
+        <activity
             android:name=".activities.Glossaire_ClassListViewActivity"
             android:exported="false"
             android:launchMode="singleTop"

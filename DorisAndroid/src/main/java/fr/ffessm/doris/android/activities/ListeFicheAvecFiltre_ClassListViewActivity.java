@@ -47,6 +47,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.number.NumberRangeFormatter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -274,6 +275,13 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends AbstractSpeciesL
     @Override
     protected void onDestroy() {
         Log.d(LOG_TAG, "onDestroy()");
+
+        // remove everything associated to this handler
+        if(mHandler != null){
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+            Log.d(LOG_TAG, "Removed all callbacks and messages for "+this.getClass().getSimpleName());
+        }
 
         //On vide le cache des infos liées aux fiches
         getHelper().getFicheDao().clearObjectCache();
