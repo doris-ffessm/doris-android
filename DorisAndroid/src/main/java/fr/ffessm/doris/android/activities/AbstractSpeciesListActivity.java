@@ -24,7 +24,7 @@ import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 public class AbstractSpeciesListActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> {
     private static final String LOG_TAG = AbstractSpeciesListActivity.class.getSimpleName();
 
-    public void showPopup() {
+    public void showFilterPopup() {
 
         View menuItemView = this.findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
         // peut être null si pas visible, ex: dans actionbar overflow si pas assez de place dans l'action bar

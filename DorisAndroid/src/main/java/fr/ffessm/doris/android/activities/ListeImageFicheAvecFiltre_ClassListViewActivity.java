@@ -339,7 +339,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends AbstractSpe
             //Start of user code additional menu action ListeFicheAvecFiltre_ClassListViewActivity
         } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_filterpopup) {
             // open filter popup
-            showPopup();
+            showFilterPopup();
             return true;
         } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist) {
             Intent i = new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class);

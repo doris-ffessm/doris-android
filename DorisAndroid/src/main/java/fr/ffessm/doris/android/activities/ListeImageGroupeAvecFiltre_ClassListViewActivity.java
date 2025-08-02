@@ -308,7 +308,7 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends AbstractSp
             return true;
             //Start of user code additional menu action ListeFicheAvecFiltre_ClassListViewActivity
         } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_filterpopup) {
-            showPopup();
+            showFilterPopup();
             return true;
         } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist) {
             Intent i = new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class);

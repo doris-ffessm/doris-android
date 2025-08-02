@@ -332,7 +332,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends AbstractSpeciesL
             return true;
         } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_filterpopup) {
             // open filter popup
-            showPopup();
+            showFilterPopup();
             return true;
         } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist) {
             Intent i = new Intent(this, ListeImageFicheAvecFiltre_ClassListViewActivity.class);
