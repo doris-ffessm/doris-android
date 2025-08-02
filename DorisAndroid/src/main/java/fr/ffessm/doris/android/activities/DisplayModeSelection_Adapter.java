@@ -1,0 +1,187 @@
+/* *********************************************************************
+ * Licence CeCILL-B
+ * *********************************************************************
+ * Copyright (c) 2012-2017 - FFESSM
+ * Auteurs : Guillaume Moynard <gmo7942@gmail.com>
+ *           Didier Vojtisek <dvojtise@gmail.com>
+ * *********************************************************************
+
+Ce logiciel est un programme informatique servant à afficher de manière 
+ergonomique sur un terminal Android les fiches du site : doris.ffessm.fr. 
+
+Les images, logos et textes restent la propriété de leurs auteurs, cf. : 
+doris.ffessm.fr.
+
+Ce logiciel est régi par la licence CeCILL-B soumise au droit français et
+respectant les principes de diffusion des logiciels libres. Vous pouvez
+utiliser, modifier et/ou redistribuer ce programme sous les conditions
+de la licence CeCILL-B telle que diffusée par le CEA, le CNRS et l'INRIA 
+sur le site "http://www.cecill.info".
+
+En contrepartie de l'accessibilité au code source et des droits de copie,
+de modification et de redistribution accordés par cette licence, il n'est
+offert aux utilisateurs qu'une garantie limitée.  Pour les mêmes raisons,
+seule une responsabilité restreinte pèse sur l'auteur du programme,  le
+titulaire des droits patrimoniaux et les concédants successifs.
+
+A cet égard  l'attention de l'utilisateur est attirée sur les risques
+associés au chargement,  à l'utilisation,  à la modification et/ou au
+développement et à la reproduction du logiciel par l'utilisateur étant 
+donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+manipuler et qui le réserve donc à des développeurs et des professionnels
+avertis possédant  des  connaissances  informatiques approfondies.  Les
+utilisateurs sont donc invités à charger  et  tester  l'adéquation  du
+logiciel à leurs besoins dans des conditions permettant d'assurer la
+sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
+à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+
+Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
+pris connaissance de la licence CeCILL-B, et que vous en avez accepté les
+termes.
+* ********************************************************************* */
+package fr.ffessm.doris.android.activities;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.TextView;
+
+import androidx.preference.PreferenceManager;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.tools.DisplayModeRecord;
+import fr.ffessm.doris.android.tools.DisplayModeUtils;
+import fr.ffessm.doris.android.tools.Param_Outils;
+import fr.ffessm.doris.android.tools.SortModesTools;
+
+public class DisplayModeSelection_Adapter extends BaseAdapter {
+
+    private final Context context;
+    private final Activity hostActivity;
+    Param_Outils paramOutils;
+
+    private static final String LOG_TAG = DisplayModeSelection_Adapter.class.getCanonicalName();
+
+    List<DisplayModeRecord> displayModeRecords = new ArrayList<>();
+    SharedPreferences prefs;
+
+    public DisplayModeSelection_Adapter(Context context, Activity hostActivity) {
+        super();
+        this.context = context;
+        this.hostActivity = hostActivity;
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        updateList();
+    }
+
+    protected void updateList() {
+        displayModeRecords = DisplayModeUtils.getDisplayModeRecords(context);
+    }
+
+    @Override
+    public int getCount() {
+        return displayModeRecords.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return displayModeRecords.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup viewGroup) {
+        LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = inflater.inflate(R.layout.mode_affichage_listviewrow, null);
+
+        final DisplayModeRecord displayMode = displayModeRecords.get(position);
+
+        // set data in the row
+        TextView tvLabel = convertView.findViewById(R.id.mode_affichage_listviewrow_text);
+        tvLabel.setText(displayMode.label());
+        TextView tvDetail = convertView.findViewById(R.id.mode_affichage_listviewrow_details);
+        tvDetail.setText(displayMode.details());
+
+        ImageView iv = convertView.findViewById(R.id.mode_affichage_listviewrow_icon);
+        iv.setImageDrawable(SortModesTools.getDrawable(context, displayMode.value()));
+
+        RadioButton radio = convertView.findViewById(R.id.mode_affichage_listviewrow_radio);
+        // set current check button value
+        String current = prefs.getString(context.getResources().getString(
+                        R.string.pref_key_current_mode_affichage),
+                context.getResources().getString(
+                        R.string.current_mode_affichage_default));
+        radio.setChecked(current.equals(displayMode.value()));
+
+        radio.setOnClickListener(v ->{
+            String previous = prefs.getString(context.getResources().getString(
+                    R.string.pref_key_current_mode_affichage), "liste_alpha");
+            prefs.edit().putString(
+                    context.getResources().getString(
+                            R.string.pref_key_current_mode_affichage),
+                    displayMode.value()).apply();
+
+            // Ask to Replace the previous activity
+            Intent resultIntent = new Intent();
+
+            switch (displayMode.value()) {
+                case "photos_alpha":
+                case "photos_par_groupe":
+                    if (previous.equals("photos_alpha") || previous.equals("photos_par_groupe")) {
+                        resultIntent.putExtra("action", "restart_current");
+                        hostActivity.setResult(Activity.RESULT_OK, resultIntent);
+                    } else {
+                        resultIntent.putExtra("action", "replace_with_new");
+                        resultIntent.putExtra("target_activity_class_name", ListeImageFicheAvecFiltre_ClassListViewActivity.class.getName());
+                        hostActivity.setResult(Activity.RESULT_OK, resultIntent);
+                    }
+                    break;
+                case "groupe":
+                    if (previous.equals("groupe") ) {
+                        resultIntent.putExtra("action", "restart_current");
+                        hostActivity.setResult(Activity.RESULT_OK, resultIntent);
+                    } else {
+                        resultIntent.putExtra("action", "replace_with_new");
+                        resultIntent.putExtra("target_activity_class_name", ListeImageGroupeAvecFiltre_ClassListViewActivity.class.getName());
+                        hostActivity.setResult(Activity.RESULT_OK, resultIntent);
+                    }
+                    break;
+                case "liste_alpha":
+                case "liste_par_groupe":
+                default:
+                    if (previous.equals("liste_alpha") || previous.equals("liste_par_groupe") ) {
+                        resultIntent.putExtra("action", "restart_current");
+                        hostActivity.setResult(Activity.RESULT_OK, resultIntent);
+                    } else {
+                        resultIntent.putExtra("action", "replace_with_new");
+                        resultIntent.putExtra("target_activity_class_name", ListeFicheAvecFiltre_ClassListViewActivity.class.getName());
+                        hostActivity.setResult(Activity.RESULT_OK, resultIntent);
+                    }
+            }
+            hostActivity.finish();
+        });
+
+        return convertView;
+
+    }
+
+    private Param_Outils getParamOutils() {
+        if (paramOutils == null) paramOutils = new Param_Outils(context);
+        return paramOutils;
+    }
+
+}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="displaymodeselection_listview_title">Sélect. mode d\'affichage.</string>
+	<string name="displaymodeselection_listview_title_large">Sélection mode d\'affichage</string>
+    <string name="displaymodeselection_header_label">Mode d\'affichage\u00A0: </string>
+</resources>

@@ -42,46 +42,14 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import java.util.HashMap;
-import java.util.List;
-
-import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
-import fr.ffessm.doris.android.activities.view.indexbar.FicheAlphabeticalIndexManager;
-import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
-import fr.ffessm.doris.android.activities.view.indexbar.FicheGroupeIndexManager;
-import fr.ffessm.doris.android.activities.view.indexbar.GroupIndexBarHandler;
-import fr.ffessm.doris.android.activities.view.indexbar.GroupeListProvider;
-import fr.ffessm.doris.android.activities.view.indexbar.IndxBarHandlerMessages;
-import fr.ffessm.doris.android.datamodel.DorisDBHelper;
-import fr.ffessm.doris.android.datamodel.Fiche;
-import fr.ffessm.doris.android.datamodel.Groupe;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.datamodel.ZoneGeographique;
-import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.Groupes_Outils;
-import fr.ffessm.doris.android.tools.Param_Outils;
-import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import androidx.core.app.NavUtils;
-import androidx.core.app.TaskStackBuilder;
-import androidx.appcompat.app.ActionBar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.MenuItemCompat;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -90,23 +58,45 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-// Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity_additionalimports
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.graphics.drawable.BitmapDrawable;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
+import androidx.core.graphics.Insets;
+import androidx.core.view.MenuItemCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.preference.PreferenceManager;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.widget.Button;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 
+import java.util.HashMap;
+import java.util.List;
+
+import fr.ffessm.doris.android.DorisApplicationContext;
+import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
-// End of user code
+import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
+import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.FicheAlphabeticalIndexManager;
+import fr.ffessm.doris.android.activities.view.indexbar.FicheGroupeIndexManager;
+import fr.ffessm.doris.android.activities.view.indexbar.GroupIndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.GroupeListProvider;
+import fr.ffessm.doris.android.activities.view.indexbar.IndxBarHandlerMessages;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
+import fr.ffessm.doris.android.datamodel.Fiche;
+import fr.ffessm.doris.android.datamodel.Groupe;
+import fr.ffessm.doris.android.tools.Groupes_Outils;
+import fr.ffessm.doris.android.tools.Param_Outils;
+import fr.ffessm.doris.android.tools.ThemeUtil;
 
-public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener, ActivityWithIndexBar {
+
+public class ListeImageFicheAvecFiltre_ClassListViewActivity extends AbstractSpeciesListActivity implements OnItemClickListener, ActivityWithIndexBar {
 
     private static final String LOG_TAG = ListeImageFicheAvecFiltre_ClassListViewActivity.class.getSimpleName();
 
@@ -190,7 +180,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 
 
         // send an update of the filtre on Groupe
-        Integer filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
+        int filtreGroupe = prefs.getInt(context.getString(R.string.pref_key_filtre_groupe), Groupes_Outils.getGroupeRoot(getHelper().getDorisDBHelper()).getId());
         Message msg = this.getHandler().obtainMessage();
         msg.what = IndxBarHandlerMessages.ON_RESUME_GROUP_EVT;
         msg.obj=filtreGroupe;
@@ -202,7 +192,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         // Because this activity has set launchMode="singleTop", the system calls this method
         // to deliver the intent if this activity is currently the foreground activity when
         // invoked again (when the user executes a search from this activity, we don't create
@@ -286,6 +276,12 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
     protected void onDestroy() {
         Log.d(LOG_TAG, "onDestroy()");
 
+        // remove everything associated to this handler
+        if(mHandler != null){
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+            Log.d(LOG_TAG, "Removed all callbacks and messages for "+this.getClass().getSimpleName());
+        }
         //On vide le cache des infos liées aux fiches
         getHelper().getFicheDao().clearObjectCache();
         getHelper().getFiches_ZonesGeographiquesDao().clearObjectCache();
@@ -325,16 +321,8 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
         });
 
         // add additional programmatic options in the menu
-        //Start of user code additional onCreateOptionsMenu ListeFicheAvecFiltre_ClassListViewActivity
-        // changement du titre (on aurai aussi pu simplement changer le menu ?)
-        MenuItem switchListMode = menu.findItem(R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist);
-        switchListMode.setTitle(R.string.listeficheavecfiltre_classlistview_action_imagelist2textlist_title);
-        switchListMode.setIcon(R.drawable.ic_action_liste_fiches);
-
         searchButtonMenuItem = menu.findItem(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
         updateFilterInActionBar();
-        //searchPopupButtonManager = new SearchPopupButtonManager(this);
-        //End of user code
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -347,19 +335,9 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
             //Start of user code additional menu action ListeFicheAvecFiltre_ClassListViewActivity
-        } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_filterpopup) {//showToast("searchPopupButtonManager.onClickFilterBtn(MenuItemCompat.getActionView(item))");
-            //	searchPopupButtonManager.onClickFilterBtn(MenuItemCompat.getActionView(item));
-            View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup); // SAME ID AS MENU ID
-            // crée le manager de popup
-            //searchPopupButtonManager = new SearchPopupButtonManager(this);
-            //showFilterPopupMenu(menuItemView);
-            //searchPopupButtonManager.onClickFilterBtn(menuItemView);
-            showPopup();
-            return true;
-        } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_textlist2imagelist) {
-            Intent i = new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class);
-            i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
+        } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_filterpopup) {
+            // open filter popup
+            showFilterPopup();
             return true;
         } else if (itemId == R.id.listeficheavecfiltre_action_aide) {
             AffichageMessageHTML aide = new AffichageMessageHTML(context, (Activity) context, getHelper());
@@ -401,7 +379,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
     }
 
     @Override
-    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+    public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
         //Start of user code onCreateSupportNavigateUpTaskStack ListeFicheAvecFiltre_ClassListViewActivity
         super.onCreateSupportNavigateUpTaskStack(builder);
         //End of user code
@@ -511,8 +489,6 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
         return findViewById(R.id.alphabet_row_layout);
     }
 
-    // Start of user code protectedListeFicheAvecFiltre_ClassListViewActivity
-
     public void updateFilterInActionBar() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         ActionBar actionBar = getSupportActionBar();
@@ -555,86 +531,5 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends OrmLiteActi
 
         }
     }
-
-    public void showPopup() {
-
-        View menuItemView = findViewById(R.id.listeficheavecfiltre_classlistview_action_filterpopup);
-        // peut être null si pas visible, ex: dans actionbar overflow si pas assez de place dans l'action bar
-        RelativeLayout viewGroup = findViewById(R.id.listeavecfiltre_filtrespopup);
-        LayoutInflater layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = layoutInflater.inflate(R.layout.listeficheavecfiltre_filtrespopup, viewGroup);
-
-        int popupWidth = getResources().getDimensionPixelSize(R.dimen.listeficheavecfiltre_popup_width);
-        int popupHeight = getResources().getDimensionPixelSize(R.dimen.listeficheavecfiltre_popup_height);
-        //Log.d(LOG_TAG,"showPopup() - width="+popupWidth+", height="+popupHeight);
-
-        final PopupWindow popup = new PopupWindow(layout);
-        popup.setWidth(popupWidth);
-        popup.setHeight(popupHeight);
-
-        //popup.setOutsideTouchable(true);
-        popup.setFocusable(true);
-
-        popup.setBackgroundDrawable(new BitmapDrawable());
-        int[] location = new int[2];
-        if (menuItemView != null) {
-            menuItemView.getLocationOnScreen(location);
-            Log.d(LOG_TAG, "menuitem pos =" + location[0] + " " + location[1]);
-
-            popup.showAsDropDown(menuItemView, 0, 0);
-        } else {
-            Log.d(LOG_TAG, "menuitem pos not available, anchor to top of the listview");
-            //popup.showAsDropDown(findViewById(R.id.listeficheavecfiltre_listview),0,0);
-            View containerView = findViewById(R.id.listeimageficheavecfiltre_listview);
-            containerView.getLocationOnScreen(location);
-            Log.d(LOG_TAG, "menuitem pos =" + location[0] + " " + location[1] + " ");
-            popup.showAtLocation(layout, Gravity.TOP | Gravity.RIGHT, 0, location[1]);
-        }
-        // bouton filtre espèce
-        Button btnFiltreEspece = layout.findViewById(R.id.listeavecfiltre_filtrespopup_GroupeButton);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        int filtreCourantId = prefs.getInt(this.getString(R.string.pref_key_filtre_groupe), 1);
-        if (filtreCourantId == 1) {
-            btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_sans));
-        } else {
-            Groupe groupeFiltreCourant = getHelper().getGroupeDao().queryForId(filtreCourantId);
-            btnFiltreEspece.setText(getString(R.string.listeficheavecfiltre_popup_filtreEspece_avec) + " " + groupeFiltreCourant.getNomGroupe().trim());
-        }
-
-        btnFiltreEspece.setOnClickListener(v -> {
-            popup.setFocusable(true);
-            popup.dismiss();
-
-            //Permet de revenir à cette liste après choix du groupe, True on retournerait à l'accueil
-            Intent toGroupeSelectionView = new Intent(ListeImageFicheAvecFiltre_ClassListViewActivity.this, GroupeSelection_ClassListViewActivity.class);
-            Bundle b = new Bundle();
-            b.putBoolean("GroupeSelection_depuisAccueil", false);
-            toGroupeSelectionView.putExtras(b);
-            startActivity(toGroupeSelectionView);
-        });
-
-        // bouton filtre zone géographique
-        Button btnZoneGeo = layout.findViewById(R.id.listeavecfiltre_filtrespopup_ZoneGeoButton);
-        int currentFilterId = prefs.getInt(ListeImageFicheAvecFiltre_ClassListViewActivity.this.getString(R.string.pref_key_filtre_zonegeo), -1);
-        if (currentFilterId == -1) {
-            btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_sans));
-        } else {
-            ZoneGeographique currentZoneFilter = getHelper().getZoneGeographiqueDao().queryForId(currentFilterId);
-            btnZoneGeo.setText(getString(R.string.listeficheavecfiltre_popup_filtreGeographique_avec) + " " + currentZoneFilter.getNom().trim());
-        }
-
-        btnZoneGeo.setOnClickListener(v -> {
-            popup.setFocusable(true);
-            popup.dismiss();
-
-            //Toast.makeText(getApplicationContext(), "Zone géographique", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(ListeImageFicheAvecFiltre_ClassListViewActivity.this, ZoneGeoSelection_ClassListViewActivity.class));
-        });
-
-    }
-
-
-    // End of user code
-
 
 }

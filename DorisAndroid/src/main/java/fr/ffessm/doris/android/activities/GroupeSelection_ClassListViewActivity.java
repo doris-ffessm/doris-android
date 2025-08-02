@@ -71,7 +71,6 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-// Start of user code protectedGroupeSelection_ClassListViewActivity_additionalimports
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -88,7 +87,6 @@ import java.text.MessageFormat;
 import java.util.Objects;
 
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
-// End of user code
 
 public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener {
 
@@ -284,7 +282,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
             //End of user code
             // Respond to the action bar's Up/Home button
         } else if (itemId == android.R.id.home) {// Retour en Arrière et Si arrivée à la Racine retour à l'appli précédente
-            if (retourGroupeSuperieur()) {
+          /*  if (retourGroupeSuperieur()) {
                 Intent upIntent = DorisApplicationContext.getInstance().getIntentPrecedent();
 
                 if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
@@ -301,8 +299,8 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
                     NavUtils.navigateUpTo(this, upIntent);
                 }
             }
-
-
+*/
+            this.finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
