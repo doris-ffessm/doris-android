@@ -26,6 +26,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
         android:text="@string/listeficheavecfiltre_popup_filtreEspece_sans"
+		android:textAllCaps="false"
         android:textColor="#fff3f3f3" />
 
     <Button
@@ -38,6 +39,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
         android:text="@string/listeficheavecfiltre_popup_filtreGeographique_sans"
+		android:textAllCaps="false"
 		android:textColor="#fff3f3f3" />
 
 	<Button
@@ -50,6 +52,7 @@
 		android:layout_marginRight="10dp"
 		android:layout_marginTop="5dp"
 		android:text="@string/listeficheavecfiltre_popup_displaymode_default"
+		android:textAllCaps="false"
 		android:textColor="#fff3f3f3" />
 
     <ImageView
