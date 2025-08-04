@@ -137,6 +137,8 @@ public class SplashScreen_CustomViewActivity extends OrmLiteActionBarActivity<Or
 
                     SharedPreferences.Editor ed = prefs.edit();
                     ed.putBoolean(getString(R.string.pref_key_debug_maj_base_prochain_demarrage), false);
+                    // force fede icons on update of the application
+                    ed.putBoolean(getString(R.string.pref_key_accueil_aff_iconesfede), true);
                     ed.apply();
                 }
 

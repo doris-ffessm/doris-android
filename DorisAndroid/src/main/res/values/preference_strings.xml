@@ -262,14 +262,14 @@
         <item>Très Grandes</item>
     </string-array>
     
-	<string name="pref_accueil_aff_iconesfede_prompt">Affichage Icônes Fédé.\u00A0?</string>
-	<string name="pref_accueil_aff_iconesfede_summary">"Masquer permet de gagner de la place sur l'écran d'accueil"</string>
+	<string name="pref_accueil_aff_iconesfede_prompt">Affichage Logos Fédé.\u00A0?</string>
+    <string name="pref_accueil_aff_iconesfede_summary" />
 	
 	<string name="pref_fiche_aff_details_pardefaut_prompt">Fiche\u00A0: montrer détails\u00A0?</string>
 	<string name="pref_fiche_aff_details_pardefaut_summary">"Les détails de la fiche sont tous affichés par défaut"</string>
 	
 	<string name="pref_imagepleinecran_aff_zoomcontrol_prompt">Afficher boutons de contrôle de zoom</string>
-	<string name="pref_imagepleinecran_aff_zoomcontrol_summary"></string>
+	<string name="pref_imagepleinecran_aff_zoomcontrol_summary"/>
 	
 	<string name="imagepleinecran_titre_longmax">25</string>
 		

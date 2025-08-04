@@ -127,9 +127,7 @@ import fr.ffessm.doris.android.tools.disk.StorageHelper.StorageVolume;
 
 //End of user code
 public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
-//Start of user code additional implements Accueil_CustomViewActivity
-        implements DataChangedListener
-//End of user code
+        implements SharedPreferences.OnSharedPreferenceChangeListener, DataChangedListener
 {
 
     //Start of user code constants Accueil_CustomViewActivity
@@ -166,12 +164,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
     protected SparseArray<MultiProgressBar> progressBarZones = new SparseArray<>();
 
-    // si false alors c'est que l'utilisateur a cliqué sur la croix pour le fermer,
-    // tant que l'appli est ouverte elle ne se rouvrira pas, même en cas de rotation
-    public static boolean mustShowLogoFede = true;
-
-    //End of user code
-
     /**
      * Called when the activity is first created.
      */
@@ -207,11 +199,6 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
                 refreshScreenData();
             }
         };
-
-        // Affichage Icônes Fédé.
-        if (!mustShowLogoFede || !getParamOutils().getParamBoolean(R.string.pref_key_accueil_aff_iconesfede, true)) {
-            (findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
-        }
 
         // Affichage Debug
         if (getParamOutils().getParamBoolean(R.string.pref_key_affichage_debug, false)) {
@@ -282,21 +269,29 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
 
     @Override
     protected void onResume() {
+
+        Log.d(LOG_TAG, "onResume()");
         super.onResume();
         refreshScreenData();
-        //Start of user code onResume Accueil_CustomViewActivity
-        Log.d(LOG_TAG, "onResume()");
+        // Affichage Icônes Fédé.
+        updateIconesFedeVisibility(getParamOutils().getParamBoolean(R.string.pref_key_accueil_aff_iconesfede, true));
 
         DorisApplicationContext.getInstance().resetIntentPrecedent(getIntent());
 
-        //End of user code
+        // --- Register the preference change listener ---
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
+        Log.d(LOG_TAG, "Registered OnSharedPreferenceChangeListener");
     }
 
     //Start of user code additional code Accueil_CustomViewActivity
     @Override
     protected void onPause() {
         super.onPause();
-        //PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+        // --- Unregister the preference change listener ---
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+        Log.d(LOG_TAG, "Unregistered OnSharedPreferenceChangeListener");
     }
 
     @Override
@@ -667,12 +662,34 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
     }
 
     public void onClickBtnFermer(View view) {
-        mustShowLogoFede = false;
-        (findViewById(R.id.accueil_logos)).setVisibility(View.GONE);
+        getParamOutils().setParamBoolean(R.string.pref_key_accueil_aff_iconesfede, false);
 
         showToast(getContext().getString(R.string.accueil_customview_logos_preference));
     }
-
+    // --- Implement the listener method ---
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(this.getString(R.string.pref_key_accueil_aff_iconesfede))) {
+            boolean shouldShowIconesFede = sharedPreferences.getBoolean(key, true);
+            Log.d(LOG_TAG, "Preference changed: " + key + " = " + shouldShowIconesFede);
+            updateIconesFedeVisibility(shouldShowIconesFede);
+        }
+    }
+    // --- Helper method to update view visibility ---
+    private void updateIconesFedeVisibility(boolean shouldShow) {
+        View accueilLogosView = (findViewById(R.id.accueil_logos));
+        if (accueilLogosView != null) {
+            if (shouldShow) {
+                accueilLogosView.setVisibility(View.VISIBLE);
+                Log.d(LOG_TAG, "accueil_logos set to VISIBLE");
+            } else {
+                accueilLogosView.setVisibility(View.GONE);
+                Log.d(LOG_TAG, "accueil_logos set to GONE");
+            }
+        } else {
+            Log.w(LOG_TAG, "updateIconesFedeVisibility: accueilLogosView is null!");
+        }
+    }
     public void dataHasChanged(String textmessage) {
         Message completeMessage = mHandler.obtainMessage(1, textmessage);
         completeMessage.sendToTarget();

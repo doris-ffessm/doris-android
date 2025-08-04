@@ -35,7 +35,7 @@
 	<string name="accueil_customview_logo_doris_url">http://doris.ffessm.fr</string>
 	<string name="accueil_customview_logo_bio_description">Logo Biologie Accueil</string>
 	<string name="accueil_customview_logo_bio_url">http://biologie.ffessm.fr</string>
-	<string name="accueil_customview_logos_preference">"Il est possible de masquer par défaut ce bandeau dans les préférences."</string>
+	<string name="accueil_customview_logos_preference">"Vous pouvez rétablir ce bandeau via les préférences."</string>
 	
 	<string name="menu_option_telecharge_photofiches">Précharg. photos M/A</string>
 	<string name="menu_option_maj_listesfiches">MaJ listes fiches</string>
