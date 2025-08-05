@@ -41,6 +41,7 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities.view;
 
+import android.os.Build;
 import android.widget.ImageView;
 
 import com.j256.ormlite.dao.CloseableIterator;
@@ -243,6 +244,12 @@ public class AffichageMessageHTML {
         texte.append(nbFichesProposees + context.getString(R.string.a_propos_base_nb_fiches_redaction));
         texte.append((fichesOutils.getNbFichesZoneGeo(Constants.ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES) - (nbFichesPubliees + nbFichesProposees))
                 + context.getString(R.string.a_propos_base_nb_fiches_proposées));
-        return texte.toString();
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
+            texte.append("\n");
+            texte.append(context.getString(R.string.a_propos_ssl_compatibility_mode_activated));
+        }
+
+            return texte.toString();
     }
 }
