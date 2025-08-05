@@ -97,6 +97,8 @@ public class PrefetchGroupes {
     private final DorisDBHelper dbContext;
     private final ConnectionSource connectionSource;
 
+    public static final String DEFAULT_GROUP_IMAGE = "images/pucecarre.gif";
+
     public PrefetchGroupes(DorisDBHelper dbContext, ConnectionSource connectionSource) {
         this.dbContext = dbContext;
         this.connectionSource = connectionSource;
@@ -135,6 +137,7 @@ public class PrefetchGroupes {
          */
 
         // create groupe from html
+        List<Groupe> allGroupeList = new ArrayList<>();
         List<Groupe> listeGroupes = new ArrayList<>(); // all created Groupes
         Stack<GroupeDepthTuple> currentGroupeStack = new Stack<>(); // allows to recreate the hierarchy
         //int currentDepth = 0;
@@ -180,9 +183,17 @@ public class PrefetchGroupes {
                         dbContext.groupeDao.queryBuilder().where().eq("numeroGroupe", newGroup.getNumeroGroupe()).prepare()
                 );
                 if(existingGroupe != null) {
-                    log.info("cached Groupe " + currentGroupeStack.size() + " :" + newGroup.getNomGroupe() + " " + newGroup.getNumeroGroupe());
+
+                    if(existingGroupe.getCleURLImage().isEmpty() || existingGroupe.getCleURLImage().equals(DEFAULT_GROUP_IMAGE)){
+                        log.info("updating Groupe " + currentGroupeStack.size() + " :" + newGroup.getNomGroupe() + " " + newGroup.getNumeroGroupe());
+                        listeGroupes.add(newGroup);
+                    } else {
+                        log.info("cached Groupe " + currentGroupeStack.size() + " :" + newGroup.getNomGroupe() + " " + newGroup.getNumeroGroupe());
+                    }
+                    allGroupeList.add(existingGroupe);
                 } else {
                     listeGroupes.add(newGroup);
+                    allGroupeList.add(newGroup);
                     log.info("new    Groupe " + currentGroupeStack.size() + " :" + newGroup.getNomGroupe() + " " + newGroup.getNumeroGroupe());
                 }
             } catch (SQLException e) {
@@ -207,14 +218,15 @@ public class PrefetchGroupes {
         if (!saveListGroupInDB(listeGroupes)) return -1;
 
         // update contextDb for all groups in order to enable correct navigation
-        for (Groupe groupe : listeGroupes) {
+        for (Groupe groupe : allGroupeList) {
             groupe.setContextDB(dbContext);
         }
+
         // patch missing images
-        for (Groupe groupe : listeGroupes) {
-            patchMissingGroupeImage(groupe, listeGroupes);
+        for (Groupe groupe : allGroupeList) {
+            patchMissingGroupeImage(groupe, allGroupeList);
         }
-        if (!saveListGroupInDB(listeGroupes)) return -1;
+        if (!saveListGroupInDB(allGroupeList)) return -1;
 
         log.debug("PrefetchGroupes.prefetchFromModalDialog() - end");
         return 1;
@@ -638,10 +650,13 @@ public class PrefetchGroupes {
      * @param allGroups
      */
     protected void patchMissingGroupeImage(Groupe group, List<Groupe> allGroups) {
-        if (group.getNumeroGroupe() != 0 && group.getCleURLImage().equals("images/pucecarre.gif")) {
+        if (group.getNumeroGroupe() != 0 && group.getCleURLImage().equals(DEFAULT_GROUP_IMAGE)) {
             if(group.getNumeroGroupe() == 136033) { // VEGETAUX
                 Optional<Groupe> alqgueGroupe = allGroups.stream().filter(g -> g.getNumeroGroupe() == 136029).findFirst(); // algues
-                alqgueGroupe.ifPresent(groupe -> group.setCleURLImage(groupe.getCleURLImage()));
+                alqgueGroupe.ifPresent(groupe -> {
+                    group.setCleURLImage(groupe.getCleURLImage());
+                    log.info("patching " + group.getNomGroupe() + " with image  " + groupe.getCleURLImage());
+                });
             } else  if(group.getNumeroGroupe() == 171378) { // Vertébrés
                 Optional<Groupe> alqgueGroupe = allGroups.stream().filter(g -> g.getNumeroGroupe() == 48914).findFirst(); // poissons osseux
                 alqgueGroupe.ifPresent(groupe -> group.setCleURLImage(groupe.getCleURLImage()));
@@ -653,6 +668,7 @@ public class PrefetchGroupes {
                 //group.getGroupePere()
                 Optional<Groupe> firstChild = allGroups.stream().filter(g -> g.getGroupePere() != null && g.getGroupePere().getId() == group.getId()).findFirst();
                 if (firstChild.isPresent()) {
+                    log.info("group " + group.getNomGroupe() + " dbcontext="+group.getContextDB());
                     log.info("child group of " + group.getNomGroupe() + " : " + group.getGroupesFils().stream().map( g -> g.getNomGroupe()).collect(Collectors.joining(", ")));
                     log.info("uses 1rst sub group image for missing group image of " + group.getNomGroupe() + " with " + firstChild.get().getNomGroupe());
                     group.setCleURLImage(firstChild.get().getCleURLImage());
@@ -689,10 +705,10 @@ public class PrefetchGroupes {
             } else {
                 log.error("Error "+response.getStatusLine() +"cannot get group image " + uri);
 
-                group.setCleURLImage("images/pucecarre.gif");
+                group.setCleURLImage(DEFAULT_GROUP_IMAGE);
             }
         } else {
-            group.setCleURLImage("images/pucecarre.gif");
+            group.setCleURLImage(DEFAULT_GROUP_IMAGE);
         }
     }
 
