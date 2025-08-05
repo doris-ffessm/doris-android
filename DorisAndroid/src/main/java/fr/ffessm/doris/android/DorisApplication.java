@@ -41,19 +41,25 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android;
 
+import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+
+import androidx.preference.PreferenceManager;
+
+import com.squareup.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
+
 import org.acra.ACRA;
 import org.acra.config.CoreConfigurationBuilder;
 import org.acra.config.MailSenderConfigurationBuilder;
 import org.acra.config.ToastConfigurationBuilder;
 import org.acra.data.StringFormat;
 
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
-import android.util.Log;
-
 import fr.ffessm.doris.android.tools.SortModesTools;
+import fr.ffessm.doris.android.tools.UnsafeOkHttpClientUtil;
+import okhttp3.OkHttpClient;
 
 public class DorisApplication extends Application {
 
@@ -76,7 +82,21 @@ public class DorisApplication extends Application {
                     getResources().getString(
                             R.string.current_mode_affichage_default)).apply();
         }
+        // apply workaround for Let's Encrypt invalid root certificate on older Android versions
+        OkHttpClient customOkHttpClient = UnsafeOkHttpClientUtil.getOkHTTPClientInstance();
+        Picasso.Builder builder = new Picasso.Builder(this);
+        OkHttp3Downloader downloader =
+                new OkHttp3Downloader(customOkHttpClient);
+        builder.downloader(downloader);
 
+        try {
+            Picasso.setSingletonInstance(builder.build());
+            Log.d(LOG_TAG, "Custom Picasso instance with OkHttp3Downloader set.");
+        } catch (IllegalStateException e) {
+            // Picasso instance was already set. This is okay if done intentionally elsewhere,
+            // but for a single global setup, this shouldn't happen often.
+            Log.w(LOG_TAG, "Picasso singleton already set. Custom OkHttpClient might not be used if set previously without it.", e);
+        }
         if (BuildConfig.DEBUG) Log.v(LOG_TAG, "onCreate() - Fin");
     }
 

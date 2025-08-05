@@ -74,6 +74,10 @@ import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
 import fr.ffessm.doris.android.tools.Disque_Outils.ImageLocation;
 import fr.ffessm.doris.android.tools.disk.DiskEnvironmentHelper;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Attention certaines fonctions se basent sur imagesNbInFolder qui n'est calculé qu'une fois par défaut
@@ -553,35 +557,67 @@ public class Photos_Outils {
                         return false;
                     }
 
+                    // Get custom OkHttpClient
+                    // This client will have relaxed SSL for old Android versions, and standard SSL for new ones.
+                    OkHttpClient client = UnsafeOkHttpClientUtil.getOkHTTPClientInstance();
+
+                    // Create the request
+                    Request request = new Request.Builder()
+                            .url(urlHtml.toString()) // Convert URL object to String
+                            .build();
+                    InputStream input = null;
+                    OutputStream output = null;
+                    ResponseBody responseBody = null;
                     try {
-                        HttpURLConnection urlConnection = (HttpURLConnection) urlHtml.openConnection();
-                        urlConnection.setConnectTimeout(3000);
-                        urlConnection.setReadTimeout(10000);
+                        // Execute the request synchronously
+                        Response response = client.newCall(request).execute(); // Synchronous call
 
-                        urlConnection.connect();
+                        if (!response.isSuccessful()) {
+                            Log.w(LOG_TAG, "OkHttp request not successful: " + response.code() + " for URL: " + urlHtml.toString());
+                            // Handle unsuccessful response (e.g., throw IOException or return false)
+                            response.body().close(); // Ensure body is closed even on failure
+                            return false;
+                        }
 
-                        // download the file
-                        input = urlConnection.getInputStream();
-                        //Log.d(LOG_TAG, "downloadPhotoFile() - fichierImage.getCanonicalPath() : "+fichierImage.getCanonicalPath() );
+                        responseBody = response.body();
+
+                        input = responseBody.byteStream(); // Get the InputStream from the OkHttp response body
                         output = new FileOutputStream(fichierImage);
+
+                        byte[] buffer = new byte[4 * 1024]; // 4KB buffer
+                        int count;
+                        long totalBytesRead = 0;
 
                         while ((count = input.read(buffer)) != -1) {
                             output.write(buffer, 0, count);
+                            totalBytesRead += count;
                         }
+                        output.flush(); // Ensure all buffered data is written to the file
 
-                        urlConnection.disconnect();
-                        output.flush();
-                        output.close();
-                        input.close();
+                        Log.d(LOG_TAG, "File downloaded successfully: " + fichierImage.getAbsolutePath() + " (" + totalBytesRead + " bytes)");
 
                     } catch (IOException e) {
-                        Log.w(LOG_TAG, e.getMessage(), e);
+                        Log.e(LOG_TAG, "OkHttp download failed for URL: " + urlHtml.toString(), e);
                         return false;
+                    } finally {
+                        // Close resources
+                        try {
+                            if (output != null) {
+                                output.close();
+                            }
+                            if (input != null) {
+                                input.close();
+                            }
+                            // For OkHttp, the ResponseBody also needs to be closed if it was obtained.
+                            if (responseBody != null) {
+                                responseBody.close(); // This is important to release resources
+                            }
+                        } catch (IOException e) {
+                            Log.e(LOG_TAG, "Error closing streams for URL: " + urlHtml.toString(), e);
+                        }
                     }
                 }
             }
-
-
         } else {
             return false;
         }

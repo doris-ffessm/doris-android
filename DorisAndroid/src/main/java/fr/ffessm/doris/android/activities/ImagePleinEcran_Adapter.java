@@ -260,7 +260,7 @@ public class ImagePleinEcran_Adapter extends PagerAdapter {
 
                             @Override
                             public void onError(Exception e) {
-                                Log.e(LOG_TAG, "onError: "+requestedImage);
+                                Log.e(LOG_TAG, "onError: "+requestedImage, e);
                                 btnHiResNotAvailable.setVisibility(View.VISIBLE);
                             }
                         });
