@@ -3,6 +3,7 @@ package fr.ffessm.doris.android.activities;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -60,10 +61,47 @@ public class SettingsActivity extends AppCompatActivity implements
             });
         }
 
+        // capture activity intend and transfer to fragment
+        // --- START: Intent Parameter Handling ---
+        String rootKeyForFragment = null;
+        String preferenceToHighlightKey = null; // If you need to scroll/highlight a specific preference later
+
+        Bundle intentExtras = getIntent().getExtras();
+        if (intentExtras != null) {
+            String typeParam = intentExtras.getString("type_parametre"); // This is your sub-screen key
+            String param = intentExtras.getString("parametre");       // This is a specific preference key within that sub-screen
+
+            if (typeParam != null) {
+                Log.d(LOG_TAG, "onCreate() - Intent wants to navigate to preference screen key: " + typeParam);
+                rootKeyForFragment = typeParam;
+                if (param != null) {
+                    Log.d(LOG_TAG, "onCreate() - Intent wants to highlight/find preference key: " + param);
+                    preferenceToHighlightKey = param;
+                }
+            }
+        }
+        // --- END: Intent Parameter Handling ---
+
         if (savedInstanceState == null) {
+            SettingsFragment fragment = new SettingsFragment();
+            Bundle args = new Bundle();
+
+            if (rootKeyForFragment != null) {
+                // If the Intent specified a sub-screen, set it as the root for the fragment.
+                args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, rootKeyForFragment);
+            }
+
+            if (preferenceToHighlightKey != null) {
+                // Pass the key of the specific preference to be highlighted/scrolled to
+                args.putString(SettingsFragment.ARG_HIGHLIGHT_PREFERENCE_KEY, preferenceToHighlightKey);
+            }
+
+            if (!args.isEmpty()) {
+                fragment.setArguments(args);
+            }
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.settings_container, new SettingsFragment()) // R.id.settings_container is in activity_settings_host.xml
+                    .replace(R.id.settings_container, fragment) // R.id.settings_container is in activity_settings_host.xml
                     .commit();
         }
 
@@ -125,5 +163,6 @@ public class SettingsActivity extends AppCompatActivity implements
             getSupportActionBar().setTitle(title);
         }
     }
+
 
 }
