@@ -28,6 +28,18 @@ public class SettingsActivity extends AppCompatActivity implements
         PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
     private static final String LOG_TAG = SettingsActivity.class.getCanonicalName();
+
+    /**
+     * For navigating to a specific sub-screen (PreferenceScreen)
+     */
+    public static final String EXTRA_PREFERENCE_SCREEN_KEY = "fr.ffessm.doris.android.activities.SettingsActivity.PREFERENCE_SCREEN_KEY";
+
+    /**
+     * For targeting a specific preference item (e.g., to highlight or open)
+     */
+    public static final String EXTRA_TARGET_PREFERENCE_KEY = "fr.ffessm.doris.android.activities.SettingsActivity.TARGET_PREFERENCE_KEY";
+
+
     final Context context = this;
 
     @Override
@@ -64,12 +76,12 @@ public class SettingsActivity extends AppCompatActivity implements
         // capture activity intend and transfer to fragment
         // --- START: Intent Parameter Handling ---
         String rootKeyForFragment = null;
-        String preferenceToHighlightKey = null; // If you need to scroll/highlight a specific preference later
+        String preferenceToHighlightKey = null; // to scroll/highlight a specific preference later
 
         Bundle intentExtras = getIntent().getExtras();
         if (intentExtras != null) {
-            String typeParam = intentExtras.getString("type_parametre"); // This is your sub-screen key
-            String param = intentExtras.getString("parametre");       // This is a specific preference key within that sub-screen
+            String typeParam = intentExtras.getString(EXTRA_PREFERENCE_SCREEN_KEY); // sub-screen key
+            String param = intentExtras.getString(EXTRA_TARGET_PREFERENCE_KEY);     // preference key within that sub-screen
 
             if (typeParam != null) {
                 Log.d(LOG_TAG, "onCreate() - Intent wants to navigate to preference screen key: " + typeParam);

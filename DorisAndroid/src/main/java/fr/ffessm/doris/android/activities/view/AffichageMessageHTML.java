@@ -186,8 +186,8 @@ public class AffichageMessageHTML {
 
                     String[] pref = inUrl.replace("preference://", "").split("/");
 
-                    toPrefView.putExtra("type_parametre", pref[0]);
-                    toPrefView.putExtra("parametre", pref[1]);
+                    toPrefView.putExtra(SettingsActivity.EXTRA_PREFERENCE_SCREEN_KEY, pref[0]);
+                    toPrefView.putExtra(SettingsActivity.EXTRA_TARGET_PREFERENCE_KEY, pref[1]);
 
                     Bundle b = new Bundle();
                     toPrefView.putExtras(b);
