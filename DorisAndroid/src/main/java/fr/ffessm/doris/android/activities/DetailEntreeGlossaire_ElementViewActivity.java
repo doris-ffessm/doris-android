@@ -275,22 +275,9 @@ public class DetailEntreeGlossaire_ElementViewActivity extends AbstractDorisActi
     //  ------------ dealing with Up button
     @Override
     public Intent getSupportParentActivityIntent() {
-        //Start of user code getSupportParentActivityIntent DetailEntreeGlossaire_ClassListViewActivity
         // navigates to the parent activity
         return new Intent(this, Glossaire_ClassListViewActivity.class);
-        //End of user code
     }
 
-    @Override
-    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-        //Start of user code onCreateSupportNavigateUpTaskStack DetailEntreeGlossaire_ClassListViewActivity
-        super.onCreateSupportNavigateUpTaskStack(builder);
-        //End of user code
-    }
-
-    // Start of user code protectedDetailEntreeGlossaire_ElementViewActivity_additional_operations
-
-
-    // End of user code
 
 }

@@ -340,11 +340,6 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends AbstractSp
         return new Intent(this, Accueil_CustomViewActivity.class);
     }
 
-    @Override
-    public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
-        super.onCreateSupportNavigateUpTaskStack(builder);
-    }
-
     // -------------- handler (for indexBar)
     @Override
     public Handler getHandler() {

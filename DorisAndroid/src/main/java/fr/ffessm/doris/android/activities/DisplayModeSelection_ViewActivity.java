@@ -147,18 +147,10 @@ public class DisplayModeSelection_ViewActivity extends AbstractDorisActivity imp
         return super.onOptionsItemSelected(item);
     }
 
-
-
     //  ------------ dealing with Up button
     @Override
     public Intent getSupportParentActivityIntent() {
         // navigates to the parent activity
         return new Intent(this, Accueil_CustomViewActivity.class);
     }
-
-    @Override
-    public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
-        super.onCreateSupportNavigateUpTaskStack(builder);
-    }
-
 }

@@ -404,17 +404,4 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
         return toDetailView;
         //End of user code
     }
-
-    @Override
-    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-        //Start of user code onCreateSupportNavigateUpTaskStack ImagePleinEcran_CustomViewActivity
-        super.onCreateSupportNavigateUpTaskStack(builder);
-        //End of user code
-    }
-
-    // Start of user code protected ImagePleinEcran_CustomViewActivity_additional_operations
-
-
-    // End of user code
-
 }

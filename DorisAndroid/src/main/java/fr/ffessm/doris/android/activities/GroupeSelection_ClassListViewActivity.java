@@ -302,18 +302,10 @@ public class GroupeSelection_ClassListViewActivity extends AbstractDorisActivity
     //  ------------ dealing with Up button
     @Override
     public Intent getSupportParentActivityIntent() {
-        //Start of user code getSupportParentActivityIntent GroupeSelection_ClassListViewActivity
         // navigates to the parent activity
         return new Intent(this, Accueil_CustomViewActivity.class);
-        //End of user code
     }
 
-    @Override
-    public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
-        //Start of user code onCreateSupportNavigateUpTaskStack GroupeSelection_ClassListViewActivity
-        super.onCreateSupportNavigateUpTaskStack(builder);
-        //End of user code
-    }
 
     // Start of user code protectedGroupeSelection_ClassListViewActivity
 

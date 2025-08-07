@@ -500,20 +500,11 @@ public class DetailsFiche_ElementViewActivity extends AbstractDorisActivity
     //  ------------ dealing with Up button
     @Override
     public Intent getSupportParentActivityIntent() {
-        //Start of user code getSupportParentActivityIntent DetailsFiche_ClassListViewActivity
         Log.d(LOG_TAG, "getSupportParentActivityIntent()");
         // navigates to the parent activity
         return new Intent(this, ListeFicheAvecFiltre_ClassListViewActivity.class);
-        //End of user code
     }
 
-    @Override
-    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-        //Start of user code onCreateSupportNavigateUpTaskStack DetailsFiche_ClassListViewActivity
-        Log.d(LOG_TAG, "onCreateSupportNavigateUpTaskStack()");
-        super.onCreateSupportNavigateUpTaskStack(builder);
-        //End of user code
-    }
 
     // Start of user code protectedDetailsFiche_ElementViewActivity_additional_operations
     // pour le menu sur click long

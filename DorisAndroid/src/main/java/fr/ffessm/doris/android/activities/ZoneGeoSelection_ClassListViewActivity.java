@@ -199,24 +199,7 @@ public class ZoneGeoSelection_ClassListViewActivity extends AbstractDorisActivit
     //  ------------ dealing with Up button
     @Override
     public Intent getSupportParentActivityIntent() {
-        //Start of user code getSupportParentActivityIntent ZoneGeoSelection_ClassListViewActivity
         // navigates to the parent activity
         return new Intent(this, Accueil_CustomViewActivity.class);
-        //End of user code
     }
-
-    @Override
-    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-        //Start of user code onCreateSupportNavigateUpTaskStack ZoneGeoSelection_ClassListViewActivity
-        super.onCreateSupportNavigateUpTaskStack(builder);
-        //End of user code
-    }
-
-    // Start of user code protectedZoneGeoSelection_ClassListViewActivity
-    public void onClickFilterBtn(View view) {
-        showToast("filter button pressed. \nPlease customize ;-)");
-    }
-    // End of user code
-
-
 }

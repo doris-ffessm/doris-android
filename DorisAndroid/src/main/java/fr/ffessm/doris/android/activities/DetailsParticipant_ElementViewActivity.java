@@ -297,17 +297,8 @@ public class DetailsParticipant_ElementViewActivity extends AbstractDorisActivit
     //  ------------ dealing with Up button
     @Override
     public Intent getSupportParentActivityIntent() {
-        //Start of user code getSupportParentActivityIntent DetailsParticipant_ClassListViewActivity
         // navigates to the parent activity
         return new Intent(this, ListeParticipantAvecFiltre_ClassListViewActivity.class);
-        //End of user code
-    }
-
-    @Override
-    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-        //Start of user code onCreateSupportNavigateUpTaskStack DetailsParticipant_ClassListViewActivity
-        super.onCreateSupportNavigateUpTaskStack(builder);
-        //End of user code
     }
 
     // Start of user code protectedDetailsParticipant_ElementViewActivity_additional_operations

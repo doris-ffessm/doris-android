@@ -282,18 +282,10 @@ public class DetailsBibliographie_ElementViewActivity extends AbstractDorisActiv
     //  ------------ dealing with Up button
     @Override
     public Intent getSupportParentActivityIntent() {
-        //Start of user code getSupportParentActivityIntent DetailsBibliographie_ClassListViewActivity
         // navigates to the parent activity
         return new Intent(this, ListeBibliographieAvecFiltre_ClassListViewActivity.class);
-        //End of user code
     }
 
-    @Override
-    public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
-        //Start of user code onCreateSupportNavigateUpTaskStack DetailsBibliographie_ClassListViewActivity
-        super.onCreateSupportNavigateUpTaskStack(builder);
-        //End of user code
-    }
 
     // Start of user code protectedDetailsBibliographie_ElementViewActivity_additional_operations
     private Photos_Outils getPhotosOutils() {
