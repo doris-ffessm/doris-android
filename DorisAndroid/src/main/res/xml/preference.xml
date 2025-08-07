@@ -45,10 +45,6 @@
             app:defaultValue="true"
             app:layout="@layout/preference_layout_preference"
             />
-		<Preference android:title="Avancement précharg. et espace de stockage"
-			android:key="@string/pref_key_precharg_status"
-			android:summary="This is a cool button"
-			android:layout="@layout/preference_layout_preference"/>
         <androidx.preference.PreferenceScreen
 	        app:key="button_qualite_images_zones_key"
 	        app:title="@string/mode_precharg_photo_region_prompt"
@@ -170,9 +166,13 @@
 			app:defaultValue="false"
 			app:layout="@layout/preference_layout_preference"
             />
+		<Preference android:title="Avancement précharg. et espace de stockage"
+			android:key="@string/pref_key_precharg_status"
+			android:summary="This is a cool button"
+			android:layout="@layout/preference_layout_preference"/>
 	</androidx.preference.PreferenceScreen>
 
-	<androidx.preference.PreferenceCategory
+	<androidx.preference.PreferenceScreen
 	    app:key="presentation_category"
 		app:title="@string/presentation_preference_category_title"
 		app:summary="@string/presentation_preference_category_summary"
@@ -252,7 +252,7 @@
 			app:defaultValue="false"
 			app:layout="@layout/preference_layout_preference"
 			/>
-    </androidx.preference.PreferenceCategory>
+    </androidx.preference.PreferenceScreen>
     
 	<androidx.preference.PreferenceScreen
        	app:key="debug_category"
