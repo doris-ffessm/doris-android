@@ -42,26 +42,12 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.datamodel.Groupe;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.Groupes_Outils;
-import fr.ffessm.doris.android.tools.Param_Outils;
-import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.core.app.TaskStackBuilder;
-import androidx.appcompat.app.ActionBar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -71,24 +57,33 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.window.OnBackInvokedCallback;
 import android.window.OnBackInvokedDispatcher;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.core.app.TaskStackBuilder;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.preference.PreferenceManager;
+
 import org.acra.ACRA;
 
 import java.text.MessageFormat;
 import java.util.Objects;
 
+import fr.ffessm.doris.android.DorisApplicationContext;
+import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
+import fr.ffessm.doris.android.datamodel.Groupe;
+import fr.ffessm.doris.android.tools.Groupes_Outils;
+import fr.ffessm.doris.android.tools.Param_Outils;
 
-public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener {
+public class GroupeSelection_ClassListViewActivity extends AbstractDorisActivity implements OnItemClickListener {
 
     private static final String LOG_TAG = GroupeSelection_ClassListViewActivity.class.getSimpleName();
 
@@ -105,9 +100,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
     private OnBackInvokedCallback mOnBackInvokedCallback; // Member
 
     public void onCreate(Bundle bundle) {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(bundle);
-        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.groupeselection_listview);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.groupeselection_listview_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -316,7 +309,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
     }
 
     @Override
-    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+    public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
         //Start of user code onCreateSupportNavigateUpTaskStack GroupeSelection_ClassListViewActivity
         super.onCreateSupportNavigateUpTaskStack(builder);
         //End of user code

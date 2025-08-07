@@ -33,7 +33,7 @@ import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 
-public class UserPreferences_Fragment extends PreferenceFragmentCompat {
+public class UserPreferences_Fragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String ARG_HIGHLIGHT_PREFERENCE_KEY = "highlight_preference_key";
     public static final String ARG_SCREEN_TITLE = "screen_title";
 
@@ -99,7 +99,6 @@ public class UserPreferences_Fragment extends PreferenceFragmentCompat {
         updateBtnQualiteImagesZonesSummary();
 
     }
-
     private void setLibelleModePrechargPhotoZone(ListPreference lp, Constants.ZoneGeographiqueKind zoneGeoKind) {
         CharSequence summary = "";
         CharSequence[] entries = lp.getEntries();
@@ -155,6 +154,8 @@ public class UserPreferences_Fragment extends PreferenceFragmentCompat {
     @Override
     public void onResume() {
         super.onResume();
+
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         // Also update title onResume, as the fragment might be shown again after being paused
         // or after returning from a sub-screen via back press.
         updateActivityTitle();
@@ -164,6 +165,11 @@ public class UserPreferences_Fragment extends PreferenceFragmentCompat {
         updateBtnOtherImagesSummary();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    }
 
     private void updateActivityTitle() {
         if (getActivity() instanceof UserPreferences_Activity && !TextUtils.isEmpty(currentTitle)) {
@@ -293,6 +299,16 @@ public class UserPreferences_Fragment extends PreferenceFragmentCompat {
         return false;
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, @Nullable String key) {
+        if (key == null || key.equals(getString(R.string.pref_key_theme))) {
+            // Theme preference has changed
+            if (getActivity() != null) {
+                Log.d("PrefFragment", "Theme preference changed, requesting activity recreate.");
+                getActivity().recreate();
+            }
+        }
+    }
 
     private Photos_Outils getPhotosOutils() {
         if (photosOutils == null) photosOutils = new Photos_Outils(context);
@@ -308,4 +324,5 @@ public class UserPreferences_Fragment extends PreferenceFragmentCompat {
         if (disqueOutils == null) disqueOutils = new Disque_Outils(context);
         return disqueOutils;
     }
+
 }

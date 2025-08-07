@@ -42,35 +42,11 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import java.util.HashMap;
-
-import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
-import fr.ffessm.doris.android.activities.view.indexbar.EntreeBibliographieIndexManager;
-import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
-import fr.ffessm.doris.android.datamodel.DorisDBHelper;
-import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.LinearLayout;
-import androidx.core.app.NavUtils;
-import androidx.core.app.TaskStackBuilder;
-import androidx.appcompat.app.ActionBar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.MenuItemCompat;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -79,12 +55,32 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
+import androidx.core.graphics.Insets;
+import androidx.core.view.MenuItemCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import java.util.HashMap;
+
+import fr.ffessm.doris.android.DorisApplicationContext;
+import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
+import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.EntreeBibliographieIndexManager;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
+import fr.ffessm.doris.android.datamodel.EntreeBibliographie;
 // Start of user code protectedListeBibliographieAvecFiltre_ClassListViewActivity_additionalimports
 // End of user code
 
-public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener, ActivityWithIndexBar {
+public class ListeBibliographieAvecFiltre_ClassListViewActivity extends AbstractDorisActivity implements OnItemClickListener, ActivityWithIndexBar {
 
     private static final String LOG_TAG = ListeBibliographieAvecFiltre_ClassListViewActivity.class.getSimpleName();
 
@@ -98,9 +94,7 @@ public class ListeBibliographieAvecFiltre_ClassListViewActivity extends OrmLiteA
     int number_of_alphabets = -1;
 
     public void onCreate(Bundle bundle) {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(bundle);
-        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.listebibliographieavecfiltre_listview);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.listebibliographieavecfiltre_listview_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

@@ -42,20 +42,9 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.core.app.TaskStackBuilder;
-import androidx.appcompat.app.ActionBar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,18 +54,22 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-// Start of user code protectedZoneGeoSelection_ClassListViewActivity_additionalimports
-import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.core.app.TaskStackBuilder;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.preference.PreferenceManager;
+
 import fr.ffessm.doris.android.BuildConfig;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
+import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.tools.ScreenTools;
 // End of user code
 
-public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener {
+public class ZoneGeoSelection_ClassListViewActivity extends AbstractDorisActivity implements OnItemClickListener {
 
     private static final String LOG_TAG = ZoneGeoSelection_ClassListViewActivity.class.getSimpleName();
 
@@ -87,9 +80,7 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteActionBarActi
 
 
     public void onCreate(Bundle bundle) {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(bundle);
-        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.zonegeoselection_listview);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.zonegeoselection_listview_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

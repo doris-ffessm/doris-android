@@ -71,7 +71,6 @@ import androidx.core.app.TaskStackBuilder;
 import androidx.core.graphics.Insets;
 import androidx.core.view.MenuItemCompat;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.preference.PreferenceManager;
 
@@ -117,9 +116,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends AbstractSpe
     HashMap<Integer, Integer> groupeIdToIndex;
 
     public void onCreate(Bundle bundle) {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(bundle);
-        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.listeimageficheavecfiltre_listview);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.listeimageficheavecfiltre_listview_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

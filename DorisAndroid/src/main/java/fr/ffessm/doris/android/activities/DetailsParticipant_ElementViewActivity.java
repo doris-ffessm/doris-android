@@ -42,70 +42,55 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.Participant;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import androidx.core.app.NavUtils;
-import androidx.core.app.TaskStackBuilder;
-import androidx.appcompat.app.ActionBar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.TextView;
-
-import com.j256.ormlite.dao.RuntimeExceptionDao;
-
-
-// Start of user code protectedDetailsParticipant_ElementViewActivity_additional_import
-import java.io.IOException;
-
 import android.net.Uri;
-
-import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
-import fr.ffessm.doris.android.sitedoris.Constants;
-
+import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.TextView.BufferType;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.acra.ACRA;
 
-import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
+import java.io.IOException;
+
+import fr.ffessm.doris.android.DorisApplicationContext;
+import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
+import fr.ffessm.doris.android.datamodel.Participant;
+import fr.ffessm.doris.android.sitedoris.Constants;
 import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.Textes_Outils;
 
 // End of user code
 
-public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
-// Start of user code protectedDetailsParticipant_ElementViewActivity_additional_implements
-// End of user code
+public class DetailsParticipant_ElementViewActivity extends AbstractDorisActivity
 {
 
     protected int participantId;
 
     private static final String LOG_TAG = DetailsParticipant_ElementViewActivity.class.getCanonicalName();
-
-// Start of user code protectedDetailsParticipant_ElementViewActivity_additional_attributes
 
     final Context context = this;
 
@@ -113,16 +98,13 @@ public class DetailsParticipant_ElementViewActivity extends OrmLiteActionBarActi
     Reseau_Outils reseauOutils = new Reseau_Outils(context);
 
     protected int participantNumeroDoris;
-// End of user code
 
     /**
      * Called when the activity is first created.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(savedInstanceState);
-        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.detailsparticipant_elementview);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.detailsparticipant_elementview_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

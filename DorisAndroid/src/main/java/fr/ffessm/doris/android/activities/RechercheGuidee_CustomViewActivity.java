@@ -42,56 +42,40 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.core.app.NavUtils;
-import androidx.core.app.TaskStackBuilder;
-import androidx.appcompat.app.ActionBar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
-
-//Start of user code additional imports RechercheGuidee_CustomViewActivity
-import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
-import fr.ffessm.doris.android.BuildConfig;
-
-import android.app.Activity;
-import android.content.Context;
-import android.util.Log;
 import android.view.View;
 
-//End of user code
-public class RechercheGuidee_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
-//Start of user code additional implements RechercheGuidee_CustomViewActivity
-//End of user code
-{
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
-    //Start of user code constants RechercheGuidee_CustomViewActivity
+import fr.ffessm.doris.android.BuildConfig;
+import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
+
+public class RechercheGuidee_CustomViewActivity extends AbstractDorisActivity
+{
     private static final String LOG_TAG = RechercheGuidee_CustomViewActivity.class.getSimpleName();
 
     final Context context = this;
-
-    //End of user code
 
     /**
      * Called when the activity is first created.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(savedInstanceState);
-        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.rechercheguidee_customview);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.rechercheguidee_customview_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -193,7 +177,7 @@ public class RechercheGuidee_CustomViewActivity extends OrmLiteActionBarActivity
     }
 
     @Override
-    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+    public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
         //Start of user code onCreateSupportNavigateUpTaskStack RechercheGuidee_CustomViewActivity
         super.onCreateSupportNavigateUpTaskStack(builder);
         //End of user code

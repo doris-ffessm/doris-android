@@ -63,6 +63,8 @@ public class ThemeUtil {
 
     private static final String LOG_TAG = ThemeUtil.class.getSimpleName();
 
+    public static String THEME_DEFAULT = "DorisAndroid";
+
     /**
      * Changes the theme of the activity, the activity is restarted (must not be called in onCreate())
      *
@@ -77,7 +79,7 @@ public class ThemeUtil {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 
-        String theme = prefs.getString(activity.getString(R.string.pref_key_theme), "DorisAndroid");
+        String theme = prefs.getString(activity.getString(R.string.pref_key_theme), THEME_DEFAULT);
         Log.d(LOG_TAG, "theme = " + theme);
         switch (theme) {
             case "DorisAndroidLight":

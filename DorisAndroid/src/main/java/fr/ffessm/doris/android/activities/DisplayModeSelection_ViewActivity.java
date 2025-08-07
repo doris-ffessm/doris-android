@@ -52,29 +52,24 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.app.TaskStackBuilder;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.tools.ScreenTools;
-import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
-public class DisplayModeSelection_ViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener {
+public class DisplayModeSelection_ViewActivity extends AbstractDorisActivity implements OnItemClickListener {
 
     private static final String LOG_TAG = DisplayModeSelection_ViewActivity.class.getSimpleName();
 
     DisplayModeSelection_Adapter adapter;
 
     public void onCreate(Bundle bundle) {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(bundle);
-        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.displaymodeselection_listview);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.displaymodeselection_view_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -85,7 +80,7 @@ public class DisplayModeSelection_ViewActivity extends OrmLiteActionBarActivity<
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        ListView list = (ListView) findViewById(R.id.displaymodeselection_listview);
+        ListView list = findViewById(R.id.displaymodeselection_listview);
         list.setClickable(false);
         // avoid opening the keyboard on view opening
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -162,7 +157,7 @@ public class DisplayModeSelection_ViewActivity extends OrmLiteActionBarActivity<
     }
 
     @Override
-    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
+    public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
         super.onCreateSupportNavigateUpTaskStack(builder);
     }
 

@@ -54,7 +54,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import androidx.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -80,8 +79,8 @@ import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.preference.PreferenceManager;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.squareup.picasso.NetworkPolicy;
@@ -108,7 +107,6 @@ import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.Fiche;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.IntervenantFiche;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.datamodel.PhotoFiche;
 import fr.ffessm.doris.android.datamodel.SectionFiche;
@@ -121,19 +119,15 @@ import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
 import fr.ffessm.doris.android.tools.Textes_Outils;
 import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 // End of user code
 
-public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
-// Start of user code protectedDetailsFiche_ElementViewActivity_additional_implements
+public class DetailsFiche_ElementViewActivity extends AbstractDorisActivity
         implements DataChangedListener
-// End of user code
 {
 
     private static final String LOG_TAG = DetailsFiche_ElementViewActivity.class.getCanonicalName();
     final Context context = this;
 
-    // Start of user code protectedDetailsFiche_ElementViewActivity_additional_attributes
     final Activity activity = this;
     final Textes_Outils textesOutils = new Textes_Outils(context);
     final Param_Outils paramOutils = new Param_Outils(context);
@@ -152,16 +146,12 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
 
     String current_mode_affichage;
 
-// End of user code
-
     /**
      * Called when the activity is first created.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(savedInstanceState);
-        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.detailsfiche_elementview);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.detailsfiche_elementview_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
