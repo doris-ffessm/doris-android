@@ -252,7 +252,7 @@
         <item>Grandes</item>
         <item>Très Grandes</item>
     </string-array>
-    <string name="fiche_icone_taille_prompt">Taille des vignettes des fiches</string>
+    <string name="fiche_icone_taille_prompt">Taille des vignettes dans les fiches</string>
     <string name="fiche_icone_taille_defaut">128</string>
 	<string-array name="fiche_icone_taille_valeurs">
         <item>64</item>
@@ -269,14 +269,14 @@
         <item>Très Grandes</item>
     </string-array>
     
-	<string name="pref_accueil_aff_iconesfede_prompt">Affichage Logos Fédé.\u00A0?</string>
-    <string name="pref_accueil_aff_iconesfede_summary" />
+	<string name="pref_accueil_aff_iconesfede_prompt">Afficher logos fédéraux\u00A0?</string>
+    <string name="pref_accueil_aff_iconesfede_summary" >Décocher pour masquer les logos fédéraux de la page d\'accueil (Un reset est pratiqué lors des mises à jour de l\'application)</string>
 	
 	<string name="pref_fiche_aff_details_pardefaut_prompt">Fiche\u00A0: montrer détails\u00A0?</string>
-	<string name="pref_fiche_aff_details_pardefaut_summary">"Les détails de la fiche sont tous affichés par défaut"</string>
+	<string name="pref_fiche_aff_details_pardefaut_summary">"Si coché, toutes les sections des fiches sont ouvertes par défaut"</string>
 	
-	<string name="pref_imagepleinecran_aff_zoomcontrol_prompt">Afficher boutons de contrôle de zoom</string>
-	<string name="pref_imagepleinecran_aff_zoomcontrol_summary"/>
+	<string name="pref_imagepleinecran_aff_zoomcontrol_prompt">Afficher boutons de zoom</string>
+    <string name="pref_imagepleinecran_aff_zoomcontrol_summary">Ajoute des boutons de contrôle sur les vues image plein écran.</string>
 	
 	<string name="imagepleinecran_titre_longmax">25</string>
 		
