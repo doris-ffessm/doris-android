@@ -50,7 +50,7 @@
 	        app:title="@string/mode_precharg_photo_region_prompt"
 	        app:persistent="false"
 	        app:layout="@layout/preference_layout_preferencescreen"
-			app:fragment="fr.ffessm.doris.android.activities.SettingsFragment">
+			app:fragment="fr.ffessm.doris.android.fragments.UserPreferences_Fragment">
 	        <androidx.preference.ListPreference
 				app:key="@string/pref_key_mode_precharg_photo_region_france"
 				app:title="@string/mode_precharg_photo_region_france_prompt"
@@ -176,7 +176,8 @@
 	    app:key="presentation_category"
 		app:title="@string/presentation_preference_category_title"
 		app:summary="@string/presentation_preference_category_summary"
-		app:layout="@layout/preference_layout_category">
+		app:layout="@layout/preference_layout_category"
+		app:fragment="fr.ffessm.doris.android.fragments.UserPreferences_Fragment">
    		<androidx.preference.ListPreference
 			app:key="@string/pref_key_theme"
 			app:title="@string/pref_theme_prompt"
@@ -259,7 +260,7 @@
 		app:title="@string/debug_preference_category_title"
 		app:summary="@string/debug_preference_category_summary"
 		app:layout="@layout/preference_layout_category"
-		app:fragment="fr.ffessm.doris.android.activities.SettingsFragment"
+		app:fragment="fr.ffessm.doris.android.fragments.UserPreferences_Fragment"
         >
         <androidx.preference.CheckBoxPreference
 			app:key="@string/pref_key_affichage_debug"

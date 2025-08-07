@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceManager;
@@ -276,14 +277,13 @@ public class UserPreferences_Fragment extends PreferenceFragmentCompat {
             return -1;
         }
     }
-
     private boolean findPreferencePositionRecursive(PreferenceGroup group, Preference target, int[] position) {
         for (int i = 0; i < group.getPreferenceCount(); i++) {
             Preference pref = group.getPreference(i);
             if (pref == target) {
                 return true;
             }
-            if (pref instanceof PreferenceGroup) {
+            if (pref instanceof PreferenceCategory) {
                 if (findPreferencePositionRecursive((PreferenceGroup) pref, target, position)) {
                     return true;
                 }
