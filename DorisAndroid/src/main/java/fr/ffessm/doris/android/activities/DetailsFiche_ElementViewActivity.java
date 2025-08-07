@@ -456,7 +456,7 @@ public class DetailsFiche_ElementViewActivity extends OrmLiteActionBarActivity<O
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.detailsfiche_elementview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
             //Start of user code additional menu action DetailsFiche_ElementViewActivity
         } else if (itemId == R.id.detailsfiche_elementview_action_fold_all_sections) {

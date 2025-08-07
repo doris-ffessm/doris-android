@@ -1046,7 +1046,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.accueil_customview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
             //Start of user code additional menu action Accueil_CustomViewActivity
         } else if (itemId == R.id.accueil_customview_action_telecharge_photofiches) {

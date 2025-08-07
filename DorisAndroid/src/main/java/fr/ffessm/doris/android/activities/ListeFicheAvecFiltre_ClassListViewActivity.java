@@ -47,7 +47,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.icu.number.NumberRangeFormatter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -336,7 +335,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends AbstractSpeciesL
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.listeficheavecfiltre_classlistview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
         } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_filterpopup) {
             // open filter popup

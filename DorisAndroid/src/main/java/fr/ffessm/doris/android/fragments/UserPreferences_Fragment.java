@@ -1,4 +1,4 @@
-package fr.ffessm.doris.android.activities;
+package fr.ffessm.doris.android.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +23,8 @@ import androidx.preference.PreferenceScreen;
 import androidx.recyclerview.widget.RecyclerView;
 
 import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.EtatModeHorsLigne_CustomViewActivity;
+import fr.ffessm.doris.android.activities.UserPreferences_Activity;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.preferences.PreferenceViewHelper;
 import fr.ffessm.doris.android.sitedoris.Constants;
@@ -30,11 +32,11 @@ import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 
-public class SettingsFragment extends PreferenceFragmentCompat {
+public class UserPreferences_Fragment extends PreferenceFragmentCompat {
     public static final String ARG_HIGHLIGHT_PREFERENCE_KEY = "highlight_preference_key";
     public static final String ARG_SCREEN_TITLE = "screen_title";
 
-    private static final String LOG_TAG = SettingsFragment.class.getCanonicalName();
+    private static final String LOG_TAG = UserPreferences_Fragment.class.getCanonicalName();
 
     // Keys for the preferences inside the sub-screen whose values we monitor
     Context context;
@@ -163,8 +165,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
 
     private void updateActivityTitle() {
-        if (getActivity() instanceof SettingsActivity && !TextUtils.isEmpty(currentTitle)) {
-            ((SettingsActivity) getActivity()).setActivityTitle(currentTitle);
+        if (getActivity() instanceof UserPreferences_Activity && !TextUtils.isEmpty(currentTitle)) {
+            ((UserPreferences_Activity) getActivity()).setActivityTitle(currentTitle);
         }
     }
 

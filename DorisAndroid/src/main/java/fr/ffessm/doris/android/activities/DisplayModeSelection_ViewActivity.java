@@ -42,7 +42,6 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -54,13 +53,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.preference.PreferenceManager;
 
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
@@ -129,7 +126,7 @@ public class DisplayModeSelection_ViewActivity extends OrmLiteActionBarActivity<
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.zonegeoselection_classlistview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
             // Respond to the action bar's Up/Home button
         } else if (itemId == android.R.id.home) {

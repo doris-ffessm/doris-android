@@ -295,9 +295,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         // Affichage Préférence de la Zone Géographique
         progressBarZoneGenerale.setOnClickListener(v -> {
 
-            Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, SettingsActivity.class);
-            intent.putExtra(SettingsActivity.EXTRA_PREFERENCE_SCREEN_KEY, "mode_precharg_category");
-            intent.putExtra(SettingsActivity.EXTRA_TARGET_PREFERENCE_KEY, "button_qualite_images_zones_key");
+            Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, UserPreferences_Activity.class);
+            intent.putExtra(UserPreferences_Activity.EXTRA_PREFERENCE_SCREEN_KEY, "mode_precharg_category");
+            intent.putExtra(UserPreferences_Activity.EXTRA_TARGET_PREFERENCE_KEY, "button_qualite_images_zones_key");
 
             startActivity(intent);
         });
@@ -352,7 +352,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
             progressBarZone.setOnClickListener(v -> {
                 if (BuildConfig.DEBUG)
                     Log.d(LOG_TAG, "setOnClickListener() - zoneGeoId : " + fZoneGeo.getId());
-                Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, SettingsActivity.class);
+                Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, UserPreferences_Activity.class);
 
                 String param;
                 ZoneGeographiqueKind zoneGzeoKind = fZoneGeo.getZoneGeoKind();
@@ -392,11 +392,11 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
                 }
 
                 if (param != null) {
-                    intent.putExtra(SettingsActivity.EXTRA_PREFERENCE_SCREEN_KEY, "button_qualite_images_zones_key");
-                    intent.putExtra(SettingsActivity.EXTRA_TARGET_PREFERENCE_KEY, param);
+                    intent.putExtra(UserPreferences_Activity.EXTRA_PREFERENCE_SCREEN_KEY, "button_qualite_images_zones_key");
+                    intent.putExtra(UserPreferences_Activity.EXTRA_TARGET_PREFERENCE_KEY, param);
                 } else {
-                    intent.putExtra(SettingsActivity.EXTRA_PREFERENCE_SCREEN_KEY, "mode_precharg_category");
-                    intent.putExtra(SettingsActivity.EXTRA_TARGET_PREFERENCE_KEY, "button_qualite_images_zones_key");
+                    intent.putExtra(UserPreferences_Activity.EXTRA_PREFERENCE_SCREEN_KEY, "mode_precharg_category");
+                    intent.putExtra(UserPreferences_Activity.EXTRA_TARGET_PREFERENCE_KEY, "button_qualite_images_zones_key");
                 }
 
                 startActivity(intent);
@@ -1268,7 +1268,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.etatmodehorsligne_customview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
             //Start of user code additional menu action EtatModeHorsLigne_CustomViewActivity
         } else if (itemId == R.id.etatmodehorsligne_customview_action_telecharge_photofiches) {

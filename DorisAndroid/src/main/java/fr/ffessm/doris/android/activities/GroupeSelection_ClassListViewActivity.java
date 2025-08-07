@@ -54,7 +54,7 @@ import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.core.app.NavUtils;
+
 import androidx.core.app.TaskStackBuilder;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.graphics.Insets;
@@ -271,7 +271,7 @@ public class GroupeSelection_ClassListViewActivity extends OrmLiteActionBarActiv
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.groupeselection_classlistview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
             //Start of user code additional menu action GroupeSelection_ClassListViewActivity
         } else if (itemId == R.id.groupeselection_classlistview_action_aide) {

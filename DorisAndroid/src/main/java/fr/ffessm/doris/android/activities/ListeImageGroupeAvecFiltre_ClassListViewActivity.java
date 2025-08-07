@@ -302,7 +302,7 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends AbstractSp
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.listeficheavecfiltre_classlistview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
         } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_filterpopup) {
             showFilterPopup();

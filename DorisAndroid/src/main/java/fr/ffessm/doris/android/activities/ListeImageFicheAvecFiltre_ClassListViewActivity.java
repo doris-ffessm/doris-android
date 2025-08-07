@@ -332,7 +332,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends AbstractSpe
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.listeficheavecfiltre_classlistview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
             //Start of user code additional menu action ListeFicheAvecFiltre_ClassListViewActivity
         } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_filterpopup) {

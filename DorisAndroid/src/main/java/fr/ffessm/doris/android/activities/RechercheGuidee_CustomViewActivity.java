@@ -145,7 +145,7 @@ public class RechercheGuidee_CustomViewActivity extends OrmLiteActionBarActivity
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.rechercheguidee_customview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
             //Start of user code additional menu action RechercheGuidee_CustomViewActivity
         } else if (itemId == R.id.rechercheguidee_customview_action_aide) {

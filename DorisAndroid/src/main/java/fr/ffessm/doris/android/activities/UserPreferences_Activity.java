@@ -22,12 +22,13 @@ import androidx.preference.PreferenceScreen;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
+import fr.ffessm.doris.android.fragments.UserPreferences_Fragment;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 
-public class SettingsActivity extends AppCompatActivity implements
+public class UserPreferences_Activity extends AppCompatActivity implements
         PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
-    private static final String LOG_TAG = SettingsActivity.class.getCanonicalName();
+    private static final String LOG_TAG = UserPreferences_Activity.class.getCanonicalName();
 
     /**
      * For navigating to a specific sub-screen (PreferenceScreen)
@@ -95,7 +96,7 @@ public class SettingsActivity extends AppCompatActivity implements
         // --- END: Intent Parameter Handling ---
 
         if (savedInstanceState == null) {
-            SettingsFragment fragment = new SettingsFragment();
+            UserPreferences_Fragment fragment = new UserPreferences_Fragment();
             Bundle args = new Bundle();
 
             if (rootKeyForFragment != null) {
@@ -105,7 +106,7 @@ public class SettingsActivity extends AppCompatActivity implements
 
             if (preferenceToHighlightKey != null) {
                 // Pass the key of the specific preference to be highlighted/scrolled to
-                args.putString(SettingsFragment.ARG_HIGHLIGHT_PREFERENCE_KEY, preferenceToHighlightKey);
+                args.putString(UserPreferences_Fragment.ARG_HIGHLIGHT_PREFERENCE_KEY, preferenceToHighlightKey);
             }
 
             if (!args.isEmpty()) {
@@ -135,14 +136,14 @@ public class SettingsActivity extends AppCompatActivity implements
         if (pref instanceof PreferenceScreen) { // Check if it's a PreferenceScreen that was clicked
             // Create a new instance of your main SettingsFragment (or a specific one if designed)
             // and tell it which sub-screen to load using its key as the rootKey.
-            SettingsFragment fragment = new SettingsFragment(); // Or your specific fragment for this sub-screen
+            UserPreferences_Fragment fragment = new UserPreferences_Fragment(); // Or your specific fragment for this sub-screen
             Bundle args = new Bundle();
             // The key of the PreferenceScreen that was clicked will be passed as the rootKey
             // so the new fragment instance loads that specific screen.
             args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, pref.getKey());
             // Pass the title of the clicked PreferenceScreen to the new fragment instance
             if (pref.getTitle() != null) {
-                args.putCharSequence(SettingsFragment.ARG_SCREEN_TITLE, pref.getTitle());
+                args.putCharSequence(UserPreferences_Fragment.ARG_SCREEN_TITLE, pref.getTitle());
             }
             fragment.setArguments(args);
 

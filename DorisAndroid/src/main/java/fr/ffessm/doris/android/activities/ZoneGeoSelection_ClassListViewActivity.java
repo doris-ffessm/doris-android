@@ -48,7 +48,7 @@ import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.core.app.NavUtils;
+
 import androidx.core.app.TaskStackBuilder;
 import androidx.appcompat.app.ActionBar;
 import androidx.core.graphics.Insets;
@@ -171,7 +171,7 @@ public class ZoneGeoSelection_ClassListViewActivity extends OrmLiteActionBarActi
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.zonegeoselection_classlistview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
             // Respond to the action bar's Up/Home button
         } else if (itemId == android.R.id.home) {

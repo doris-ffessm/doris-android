@@ -51,7 +51,7 @@ import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
 import fr.ffessm.doris.android.activities.DetailsParticipant_ElementViewActivity;
-import fr.ffessm.doris.android.activities.SettingsActivity;
+import fr.ffessm.doris.android.activities.UserPreferences_Activity;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
@@ -182,12 +182,12 @@ public class AffichageMessageHTML {
                     if (BuildConfig.DEBUG)
                         Log.d(LOG_TAG, "affichageMessageHTML() - Affichage preference : " + inUrl.replace("preference://", ""));
 
-                    Intent toPrefView = new Intent(context, SettingsActivity.class);
+                    Intent toPrefView = new Intent(context, UserPreferences_Activity.class);
 
                     String[] pref = inUrl.replace("preference://", "").split("/");
 
-                    toPrefView.putExtra(SettingsActivity.EXTRA_PREFERENCE_SCREEN_KEY, pref[0]);
-                    toPrefView.putExtra(SettingsActivity.EXTRA_TARGET_PREFERENCE_KEY, pref[1]);
+                    toPrefView.putExtra(UserPreferences_Activity.EXTRA_PREFERENCE_SCREEN_KEY, pref[0]);
+                    toPrefView.putExtra(UserPreferences_Activity.EXTRA_TARGET_PREFERENCE_KEY, pref[1]);
 
                     Bundle b = new Bundle();
                     toPrefView.putExtras(b);
