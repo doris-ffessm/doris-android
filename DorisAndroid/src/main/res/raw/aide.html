@@ -15,7 +15,7 @@
 		</style>
 	</head>
 	<body>
-		<p>
+		<div>
 			<h3><a name="Sommaire">Sommaire de l'Aide</a></h3>
 			<ul class="Aide">
 				<li><a href="#Principes">Principes</a></li>
@@ -28,9 +28,6 @@
 				<li><a href="#Parametres">Paramètres</a></li>
 				<ul class="Aide">
 					<li><a href="#ParamModeConnecte">Mode Connecté</a></li>
-                    <!-- A réactiver qd maj fiches au point
-					<li><a href="#ParamMajListesFiches">Mise à jour des Fiches</a></li>
-					-->
 					<li><a href="#ParamHorsLignePhotos">Précharg. Photos pour Mode Hors Ligne</a></li>
 					<ul class="Aide">
 						<li><a href="#ParamHorsLigneParam">Choix des Qualités</a></li>
@@ -40,137 +37,109 @@
 					<li><a href="#ParamPresentation">Options de Présentation</a></li>
 				</ul>
 			</ul>
-			<ul class="Retour">
-				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
-			</ul>
-			<h3><a name="Principes"></a>Principes</h3>
-			<span class="Aide">
-				Les <b>Fiches</b>, les <b>termes du Glossaire</b>, les informations sur les <b>Participants</b> et les <b>références Bibliographiques</b> publiés sur le site <b>DORIS</b> sont compris dans l'application.
-				<br />
-				Les <b>Photos</b>, elles, doivent être téléchargées. Si vous avez un accès à internet cela peut être fait durant la navigation. Mais pour économiser votre forfait et gagner en fluidité vous pouvez les télécharger préalablement en WIFI.<br />
-				Tout cela est <a href="#Parametre">paramétrable</a>.
-			</span>
-			<ul class="Retour">
-				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
-			</ul>
-			<h3><a name="Navigation"></a>Navigation</h3>
-			<h4><a name="Menus"></a>Menus</h4>
-			<span class="Aide">	
-				<ul class="Aide">
-					<li><img src="ic_action_participants.png" style="background-color:grey; margin: 1px;" alt="Menu Participants" align="middle"/> - Participants</li>
-					<li><img src="ic_action_glossaire.png" style="background-color:grey; margin: 1px;" alt="Menu Glossaire" align="middle"/> - Glossaire</li>
-					<li><img src="ic_action_bibliographie.png" style="background-color:grey; margin: 1px;" alt="Menu Bibliographoe" align="middle"/> - Bibliographie</li>
+        </div>
+        <div>
+			<h3><a name="Principes">Principes</a></h3>
+				<span class="Aide">
+					Les <b>Fiches</b>, les <b>termes du Glossaire</b>, les informations sur les <b>Participants</b> et les <b>références Bibliographiques</b> publiés sur le site <b>DORIS</b> sont compris dans l'application.
+					<br />
+					Les <b>Photos</b>, elles, doivent être téléchargées. Si vous avez un accès à internet cela peut être fait durant la navigation. Mais pour économiser votre forfait et gagner en fluidité vous pouvez les télécharger préalablement en WIFI.<br />
+					Tout cela est <a href="#Parametre">paramétrable</a>.
+				</span>
+				<ul class="Retour">
+					<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
 				</ul>
-				Les icônes ci-dessus n'apparaissent que si la largeur de l'écran est suffisante, les applications sont sinon accessibles via le menu.
-			</span>
-			<ul class="Retour">
-				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
-			</ul>
-			<h4><a name="Filtres"></a>Filtres</h4>
-			<span class="Aide">
-				Il est possible de filtrer les fiches par <b>Zone Géographique</b> et par <b>Groupe Phylogénique</b> (indépendamment ou en même temps).<br />
-				Pour cela, depuis la page d'accueil il est possible de cliquer directement sur la zone choisie, soit sur son arbre phylogénique : <img src="ic_action_arbre_phylogenetique.png" style="background-color:grey;" alt="Icône Arbre" align="top"/>.<br />
-				Une fois la liste des fiches affichées, il est possible de filtrer en utilisant l'action <b>Filtre</b> : <img src="app_filter_settings_32.png" style="background-color:grey;" alt="Icône Arbre" align="top"/>.<br />
-				Lorsqu'un filtre est activé l'icône placée dans la barre supérieure devient orange : <img src="app_filter_settings_actif_32.png" style="background-color:grey;" alt="Icône Filtre" align="top"/><br />
-				Pour enlever un filtre, il faut soit revenir à l'accueil le choix suivant annulera alors le précédent, soit cliquer sur l'icône orange ci-avant et supprimer les filtres.<br />
-			</span>
-			<ul class="Retour">
-				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
-			</ul>
-			<h4><a name="ImagesIndisponibles"></a>Images indisponibles</h4>
-			<span class="Aide">
-				Lors de votre utilisation de l'application, il est possible que des images soient indisponibles. Ceci parce qu'elles n'ont pas été téléchargées préalablement et que vous n'avez pas de réseaux ou n'avez pas autorisé les téléchargements sans WIFI (<a href="#ParamHorsLignePhotos">Paramètres</a>).<br />
-				Dans ce cas, une icône remplace l'image du site : <img src="app_doris_pas_connecte.png" style="background-color:grey;" alt="Image Indisponible" align="top"/>.<br />
-				Les illustrations du Glossaire doivent être téléchargées préalablement pour être visible (<a href="#ParamHorsLigneAutresPhotos">Paramètres</a>), si ce n'est pas le cas vous verrez cette image : <img src="app_glossaire_indisponible.png" style="background-color:grey;" alt="Image Indisponible" align="top"/>.<br />
-			</span>
-			<ul class="Retour">
-				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
-			</ul>
-			<h3><a name="Parametre"></a>Paramètres</h3>
-			<h4><a name="ParamModeConnecte"></a>Mode Connecté</h4>
-			<span class="Aide">
-				Par défaut, les vignettes des listes et, lors de leur affichage, les photos de qualité intermédiaire sont téléchargées <span style="text-decoration: underline;">si elles ne sont pas disponibles sur l'appareil</span>.<br />
-				Il est possible de n'autoriser ces téléchargements que quand l'appareil est connecté à internet en WIFI. <b>Cette option est particulièrement destinée aux personnes ayant un forfait data limité.</b><br />
-				<br />
-				Il est aussi possible de télécharger les photos dans la meilleure qualité disponible sur le site.<br />
-				<br />
-				<i>Ces images sont enregistrées dans un cache vidé automatiquement au besoin. Il n'est donc pas garanti qu'elles soient disponibles lors d'un prochain visionnage hors ligne.</i>
-			</span>
-			<ul class="Retour">
-				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
-			</ul>
-        <!-- Désactivé tant que fonction pas au point
-			<h4><a name="ParamMajListesFiches"></a>Mise à jour des fiches d'espèce</h4>
-			<span class="Aide">
-				Les fiches d'espèces ne peuvent pas être mises à jour en masse par l'application, cela demanderait de télécharger puis de traiter l'ensemble des fiches. Cela serait trop lourd et long sur un terminal Android.<br />
-				Néanmoins 2 possibilités sont proposées :
-				<ol>
-					<li>Chaque fiche peut-être mise à jour individuellement à partir de son Menu.</li>
-					<li>Les fiches ayant changé de statut (<i>Nouvelle -> Proposée -> En-cours de Rédaction -> Publiée</i>) peuvent être mises à jour.<br />
-					Cette mise à jour s'effectue par zone géographique, chaque zone nécessite un téléchargement de 1Mo environ. La fréquence de mise à jour des fiches se choisit dans les paramètres (<a href="preference://mode_precharg_category/button_maj_liste_fiches_zones_key" class="appli">ouvrir</a>).</li>
-				</ol>
-				L'application est régulièrement mise à jour sur Google Play et intègre systématiquement l'ensemble des modifications réalisées sur le Site DORIS.<br />
-			</span>
-			<ul class="Retour">
-				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
-			</ul>
-			-->
-			<h4><a name="ParamHorsLignePhotos"></a>Préchargement Photos pour le Mode Hors Ligne</h4>
-			<h5><a name="ParamHorsLigneParam"></a>Choix des Qualités</h5>
-			<span class="Aide">
-				Par défaut, les vignettes de la photo principale de chaque fiche sont téléchargées lorsque l'application est lancée et si l'appareil est connecté à internet en WIFI.<br />
-				<br />
-				Il est possible d'activer ces téléchargements en permanence (c'est à dire aussi en 4G, 3G, etc.) <b>mais faites alors très attention à votre forfait.</b><br />
-				Il est aussi possible de préciser pour chacune des zones <b>DORIS</b>, en quelles qualités les images vont être préchargées (<a href="preference://mode_precharg_category/button_qualite_images_zones_key" class="appli">Ouvrir les préférences</a>). Une évaluation de la place occupée est affichée lors de ces choix.<br />
-				Certaines fiches appartiennent à plusieurs Zones, leurs images ne sont téléchargées qu'une seule fois.<br />
-				<br />
-				<b><span style="text-decoration: underline;">Attention à vos choix</span></b>, il y a plus de 20 000 photos sur le site. À raison de :
-				<ul>
-					<li>~8 Ko par vignette cela représente 190 Mo</li>
-					<li>~25 Ko par photo en qualité intermédiaire cela représente 550 Mo</li>
-					<li>~100 Ko par photo en qualité maximum cela représente presque 2 Go</li>
+			<h3><a name="Navigation">Navigation</a></h3>
+				<h4><a name="Menus">Menus</a></h4>
+					<span class="Aide">
+						<ul class="Aide">
+							<li><img src="ic_action_participants.png" style="background-color:grey; margin: 1px;" alt="Menu Participants" align="middle"/> - Participants</li>
+							<li><img src="ic_action_glossaire.png" style="background-color:grey; margin: 1px;" alt="Menu Glossaire" align="middle"/> - Glossaire</li>
+							<li><img src="ic_action_bibliographie.png" style="background-color:grey; margin: 1px;" alt="Menu Bibliographoe" align="middle"/> - Bibliographie</li>
+						</ul>
+						Les icônes ci-dessus n'apparaissent que si la largeur de l'écran est suffisante, les applications sont sinon accessibles via le menu.
+					</span>
+				<h4><a name="Filtres">Filtres</a></h4>
+					<span class="Aide">
+						Il est possible de filtrer les fiches par <b>Zone Géographique</b> et par <b>Groupe Doris</b> (indépendamment ou en même temps).<br />
+						Pour Trier : depuis la page d'accueil il est possible de cliquer directement sur la zone choisie, soit sur son arbre de groupe : <img src="ic_action_arbre_phylogenetique.png" style="background-color:grey;" alt="Icône Arbre" align="top"/>.<br />
+						Une fois la liste des fiches affichées, il est possible de filtrer en utilisant l'action <b>Filtre</b> : <img src="app_filter_settings_32.png" style="background-color:grey;" alt="Icône Arbre" align="top"/>.<br />
+						Lorsqu'un filtre est activé l'icône placée dans la barre supérieure devient orange : <img src="app_filter_settings_actif_32.png" style="background-color:grey;" alt="Icône Filtre" align="top"/><br />
+						Pour enlever un filtre, il faut soit revenir à l'accueil le choix suivant annulera alors le précédent, soit cliquer sur l'icône orange ci-avant et supprimer les filtres.<br />
+
+                        <b>Note :</b> le filtre de groupe utilise les groupes "Doris". Ceux-ci sont définis par les rédacteurs des fiches
+                        et ne correspondent pas exactement aux groupes phylogéniques.<br/>
+                    </span>
+				<h4><a name="ImagesIndisponibles"></a>Images indisponibles</h4>
+					<span class="Aide">
+						Lors de votre utilisation de l'application, il est possible que des images soient indisponibles. Ceci parce qu'elles n'ont pas été téléchargées préalablement et que vous n'avez pas de réseaux ou n'avez pas autorisé les téléchargements sans WIFI (<a href="#ParamHorsLignePhotos">Paramètres</a>).<br />
+						Dans ce cas, une icône remplace l'image du site : <img src="app_doris_pas_connecte.png" style="background-color:grey;" alt="Image Indisponible" align="top"/>.<br />
+                    </span>
+				<ul class="Retour">
+					<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
 				</ul>
-			</span>
-			<ul class="Retour">
-				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
-			</ul>
-			<br />
-			<a name="ParamHorsLigneAutresPhotos"></a>
-			<span class="Aide">
-			De même, les photos des participants et celles de références bibliographiques peuvent être téléchargées à l'avance (~32 Mo).<br />
-			<b>Pour que les illustrations du Glossaire</b> apparaissent ce préchargement est <b><span style="text-decoration: underline;">indispensable</span></b>.
-			</span>
-			<br />
-			<h5><a name="ParamHorsLigneSupp"></a>Suppression des photos</h5>
-			<span class="Aide">
-				Vous pouvez consulter :
-				<ul>
-					<li>l'avancement des téléchargements,</li>
-					<li>la place utilisée par les images,</li>
-					<li>et vider les dossiers les contenant</li>
-				</ul>
-				depuis l'<b>État du Mode Hors Ligne</b> accessible depuis le bas de l'interface d'accueil.
-				<br />
-			</span>
-			<ul class="Retour">
-				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
-			</ul>
-			<h5><a name="ParamHorsLigneDeplac"></a>Choix de l'espace de stockage</h5>
-			<span class="Aide">
-				Par défaut, les images téléchargées sont stockées dans l'Espace de Stockage Interne de votre appareil (i.e. avec vos applications).<br />
-				Quand ils existent, il est possible de sélectionner l'un des 2 autres espaces qu'Android propose. Si le changement d'espace a lieu alors que beaucoup de photos ont déjà été téléchargées, leur déplacement peut être assez long (prévoir jusqu'à 1/4h - 1/2h).
-				<br />
-			</span>
-			<ul class="Retour">
-				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>
-			</ul>
-			<h4><a name="ParamPresentation"></a>Options de Présentation</h4>
-			<span class="Aide">
-				Les choix de présentation ont, pour l'instant, été déterminés pour convenir aux téléphones.<br/>
-				Nous travaillerons pour les tablettes dès que possible.<br />
-				Il est néanmoins possible de modifier certains de nos choix afin d'adapter l'interface à vos besoins et habitudes : (<a href="preference://racine/presentation_category" class="appli">ouvrir</a>).<br />
-			</span>
-		</p>
+			<h3><a name="Parametres">Paramètres</a></h3>
+				<h4><a name="ParamModeConnecte">Mode Connecté</a></h4>
+					<span class="Aide">
+						Par défaut, les vignettes des listes et, lors de leur affichage, les photos de qualité intermédiaire sont téléchargées <span style="text-decoration: underline;">si elles ne sont pas disponibles sur l'appareil</span>.<br />
+						Il est possible de n'autoriser ces téléchargements que quand l'appareil est connecté à internet en WIFI. <b>Cette option est particulièrement destinée aux personnes ayant un forfait data limité.</b><br />
+						<br />
+						Il est aussi possible de télécharger les photos dans la meilleure qualité disponible sur le site.<br />
+						<br />
+						<i>Ces images sont enregistrées dans un cache vidé automatiquement au besoin. Il n'est donc pas garanti qu'elles soient disponibles lors d'un prochain visionnage hors ligne.</i>
+					</span>
+				<h4><a name="ParamHorsLignePhotos">Préchargement Photos pour le Mode Hors Ligne</a></h4>
+            		<h5><a name="ParamHorsLigneParam">Choix des Qualités</a></h5>
+						<span class="Aide">
+							Par défaut, les vignettes de la photo principale de chaque fiche sont téléchargées lorsque l'application est lancée et si l'appareil est connecté à internet en WIFI.<br />
+							<br />
+							Il est possible d'activer ces téléchargements en permanence (c'est à dire aussi en 5G, 4G, etc.) <b>mais faites alors très attention à votre forfait.</b><br />
+							Il est aussi possible de préciser pour chacune des zones <b>DORIS</b>, en quelles qualités les images vont être préchargées (<a href="preference://mode_precharg_category/button_qualite_images_zones_key" class="appli">Ouvrir</a>). <br/>
+							Une évaluation de la place occupée est affichée lors de ces choix.<br />
+							Certaines fiches appartiennent à plusieurs Zones, leurs images ne sont téléchargées qu'une seule fois.<br />
+							<br />
+							<b><span style="text-decoration: underline;">Attention à vos choix</span></b>, il y a plus de 20 000 photos sur le site. À raison de :
+							<ul>
+								<li>~8 Ko par vignette cela représente 190 Mo</li>
+								<li>~25 Ko par photo en qualité intermédiaire cela représente 550 Mo</li>
+								<li>~100 Ko par photo en qualité maximum cela représente presque 2 Go</li>
+							</ul>
+						</span>
+						<br />
+						<a name="ParamHorsLigneAutresPhotos"></a>
+						<span class="Aide">
+							De même, les photos des <b>participants</b>, des <b>références bibliographiques</b> et du <b>glossaire</b> peuvent être
+							téléchargées à l'avance (~72 Mo)(<a href="preference://mode_precharg_category/mode_precharg_photo_autres" class="appli">ouvrir</a>).<br />
+						</span>
+						<br />
+					<h5><a name="ParamHorsLigneSupp">Suppression des photos</a></h5>
+						<span class="Aide">
+							Vous pouvez consulter :
+							<ul>
+								<li>l'avancement des téléchargements,</li>
+								<li>la place utilisée par les images,</li>
+								<li>et vider les dossiers les contenant</li>
+							</ul>
+							depuis le bas de l'interface d'accueil :<b>Gestion du Mode Hors Ligne</b>.
+							<br />
+						</span>
+            		<h5><a name="ParamHorsLigneDeplac">Choix de l'espace de stockage</a></h5>
+
+						<span class="Aide">
+							Par défaut, les images téléchargées sont stockées dans l'Espace de Stockage Interne de votre appareil (i.e. avec vos applications).<br />
+							Quand ils existent, il est possible de sélectionner l'un des 2 autres espaces qu'Android propose. Si le changement d'espace a lieu alors que beaucoup de photos ont déjà été téléchargées, leur déplacement peut être assez long (prévoir jusqu'à 1/4h - 1/2h).
+							<br />
+						</span>
+            	<h4><a name="ParamPresentation">Options de Présentation</a></h4>
+					<span class="Aide">
+						Les options de <a href="preference://racine/presentation_category" class="appli">présentation</a>
+						permettent d'adapter l'application à vos besoins, tels que:<br/>
+						Changer le <a href="preference://presentation_category/aff_theme" class="appli">thème de l'application</a> (clair ou sombre),
+						Adapter la <a href="preference://presentation_category/aff_liste_icone_taille" class="appli">taille des icones dans les listes</a>
+						ou bien utiliser les <a href="preference://presentation_category/aff_accueil_fiches_ordre" class="appli">noms scientifiques plutôt que les noms communs</a>
+						pour le tri alphabétique.
+					</span>
+		</div>
 		<p>
 			<ul class="Retour">
 				<li><a href="#Sommaire"><img src="ic_menu_revert.png" alt="Retour"/></a></li>

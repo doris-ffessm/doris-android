@@ -71,7 +71,6 @@ import androidx.core.app.TaskStackBuilder;
 import androidx.core.graphics.Insets;
 import androidx.core.view.MenuItemCompat;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.preference.PreferenceManager;
 
@@ -117,9 +116,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends AbstractSpe
     HashMap<Integer, Integer> groupeIdToIndex;
 
     public void onCreate(Bundle bundle) {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(bundle);
-        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.listeimageficheavecfiltre_listview);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.listeimageficheavecfiltre_listview_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -332,7 +329,7 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends AbstractSpe
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.listeficheavecfiltre_classlistview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
             //Start of user code additional menu action ListeFicheAvecFiltre_ClassListViewActivity
         } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_filterpopup) {
@@ -372,17 +369,8 @@ public class ListeImageFicheAvecFiltre_ClassListViewActivity extends AbstractSpe
     //  ------------ dealing with Up button
     @Override
     public Intent getSupportParentActivityIntent() {
-        //Start of user code getSupportParentActivityIntent ListeFicheAvecFiltre_ClassListViewActivity
         // navigates to the parent activity
         return new Intent(this, Accueil_CustomViewActivity.class);
-        //End of user code
-    }
-
-    @Override
-    public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
-        //Start of user code onCreateSupportNavigateUpTaskStack ListeFicheAvecFiltre_ClassListViewActivity
-        super.onCreateSupportNavigateUpTaskStack(builder);
-        //End of user code
     }
 
     // -------------- handler (for indexBar)

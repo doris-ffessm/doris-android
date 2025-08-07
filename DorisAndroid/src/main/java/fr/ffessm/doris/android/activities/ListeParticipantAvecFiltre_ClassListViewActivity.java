@@ -42,34 +42,12 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import java.util.HashMap;
-
-import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
-import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
-import fr.ffessm.doris.android.activities.view.indexbar.ParticipantIndexManager;
-import fr.ffessm.doris.android.datamodel.*;
-import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.Param_Outils;
-import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.LinearLayout;
-import androidx.core.app.NavUtils;
-import androidx.core.app.TaskStackBuilder;
-import androidx.appcompat.app.ActionBar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.MenuItemCompat;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -78,15 +56,33 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-// Start of user code protectedListeParticipantAvecFiltre_ClassListViewActivity_additionalimports
 
-import android.content.SharedPreferences;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
+import androidx.core.graphics.Insets;
+import androidx.core.view.MenuItemCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.preference.PreferenceManager;
+
+import java.util.HashMap;
+
+import fr.ffessm.doris.android.DorisApplicationContext;
+import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
+import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.ParticipantIndexManager;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
+import fr.ffessm.doris.android.datamodel.Participant;
+import fr.ffessm.doris.android.tools.Param_Outils;
 // End of user code
 
-public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener, ActivityWithIndexBar {
+public class ListeParticipantAvecFiltre_ClassListViewActivity extends AbstractDorisActivity implements OnItemClickListener, ActivityWithIndexBar {
 
     private static final String LOG_TAG = ListeParticipantAvecFiltre_ClassListViewActivity.class.getSimpleName();
 
@@ -104,9 +100,7 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
     int number_of_alphabets = -1;
 
     public void onCreate(Bundle bundle) {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(bundle);
-        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.listeparticipantavecfiltre_listview);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.listeparticipantavecfiltre_listview_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -273,7 +267,7 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.listeparticipantavecfiltre_classlistview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
             //Start of user code additional menu action ListeParticipantAvecFiltre_ClassListViewActivity
 
@@ -306,17 +300,8 @@ public class ListeParticipantAvecFiltre_ClassListViewActivity extends OrmLiteAct
     //  ------------ dealing with Up button
     @Override
     public Intent getSupportParentActivityIntent() {
-        //Start of user code getSupportParentActivityIntent ListeParticipantAvecFiltre_ClassListViewActivity
         // navigates to the parent activity
         return new Intent(this, Accueil_CustomViewActivity.class);
-        //End of user code
-    }
-
-    @Override
-    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-        //Start of user code onCreateSupportNavigateUpTaskStack ListeParticipantAvecFiltre_ClassListViewActivity
-        super.onCreateSupportNavigateUpTaskStack(builder);
-        //End of user code
     }
 
     // -------------- handler (for indexBar)

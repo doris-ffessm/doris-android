@@ -27,7 +27,7 @@
             android:exported="false"
             android:theme="@style/Theme.AppDorisAndroid" />
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".activities.UserPreferences_Activity"
             android:label="@string/preference_title"
             android:parentActivityName=".activities.Accueil_CustomViewActivity"
             android:exported="false"

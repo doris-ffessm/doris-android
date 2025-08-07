@@ -47,7 +47,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.icu.number.NumberRangeFormatter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -72,7 +71,6 @@ import androidx.core.app.TaskStackBuilder;
 import androidx.core.graphics.Insets;
 import androidx.core.view.MenuItemCompat;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.preference.PreferenceManager;
 
@@ -114,10 +112,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends AbstractSpeciesL
     HashMap<Integer, Integer> groupeIdToIndex;
 
     public void onCreate(Bundle bundle) {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        //EdgeToEdge.enable(this);
         super.onCreate(bundle);
-        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.listeficheavecfiltre_listview);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.listeficheavecfiltre_listview_layout), (v, insets) -> {
@@ -336,7 +331,7 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends AbstractSpeciesL
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.listeficheavecfiltre_classlistview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
         } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_filterpopup) {
             // open filter popup
@@ -375,18 +370,10 @@ public class ListeFicheAvecFiltre_ClassListViewActivity extends AbstractSpeciesL
     //  ------------ dealing with Up button
     @Override
     public Intent getSupportParentActivityIntent() {
-        //Start of user code getSupportParentActivityIntent ListeFicheAvecFiltre_ClassListViewActivity
         // navigates to the parent activity
         return new Intent(this, Accueil_CustomViewActivity.class);
-        //End of user code
     }
 
-    @Override
-    public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
-        //Start of user code onCreateSupportNavigateUpTaskStack ListeFicheAvecFiltre_ClassListViewActivity
-        super.onCreateSupportNavigateUpTaskStack(builder);
-        //End of user code
-    }
 
     // -------------- handler (for indexBar)
     @Override

@@ -10,7 +10,7 @@
 	<string name="a_propos_base_date">"MàJ de la base le\u00A0: "</string>
 	<string name="a_propos_base_nb_fiches_publiees">" fiches complètes, "</string>
 	<string name="a_propos_base_nb_fiches_redaction">" en cours de rédaction et "</string>
-	<string name="a_propos_base_nb_fiches_proposées">" proposées"</string>
+	<string name="a_propos_base_nb_fiches_proposees">" proposées"</string>
 	<string name="a_propos_ssl_compatibility_mode_activated">"Mode compatibilité SSL activé."</string>
 		
 	<string name="aide_menu">Aide</string>

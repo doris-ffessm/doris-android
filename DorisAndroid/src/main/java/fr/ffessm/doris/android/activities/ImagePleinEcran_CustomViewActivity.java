@@ -55,7 +55,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
-import androidx.appcompat.app.ActionBar;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -359,7 +359,7 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
 
         int itemId = item.getItemId();
         if (itemId == R.id.imagepleinecran_customview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
             //Start of user code additional menu action ImagePleinEcran_CustomViewActivity
 
@@ -404,17 +404,4 @@ public class ImagePleinEcran_CustomViewActivity extends OrmLiteActionBarActivity
         return toDetailView;
         //End of user code
     }
-
-    @Override
-    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-        //Start of user code onCreateSupportNavigateUpTaskStack ImagePleinEcran_CustomViewActivity
-        super.onCreateSupportNavigateUpTaskStack(builder);
-        //End of user code
-    }
-
-    // Start of user code protected ImagePleinEcran_CustomViewActivity_additional_operations
-
-
-    // End of user code
-
 }

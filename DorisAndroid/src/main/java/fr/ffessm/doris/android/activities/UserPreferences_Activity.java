@@ -3,6 +3,7 @@ package fr.ffessm.doris.android.activities;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -21,12 +22,25 @@ import androidx.preference.PreferenceScreen;
 import fr.ffessm.doris.android.DorisApplicationContext;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
+import fr.ffessm.doris.android.fragments.UserPreferences_Fragment;
 import fr.ffessm.doris.android.tools.ThemeUtil;
 
-public class SettingsActivity extends AppCompatActivity implements
+public class UserPreferences_Activity extends AppCompatActivity implements
         PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
 
-    private static final String LOG_TAG = SettingsActivity.class.getCanonicalName();
+    private static final String LOG_TAG = UserPreferences_Activity.class.getCanonicalName();
+
+    /**
+     * For navigating to a specific sub-screen (PreferenceScreen)
+     */
+    public static final String EXTRA_PREFERENCE_SCREEN_KEY = "fr.ffessm.doris.android.activities.SettingsActivity.PREFERENCE_SCREEN_KEY";
+
+    /**
+     * For targeting a specific preference item (e.g., to highlight or open)
+     */
+    public static final String EXTRA_TARGET_PREFERENCE_KEY = "fr.ffessm.doris.android.activities.SettingsActivity.TARGET_PREFERENCE_KEY";
+
+
     final Context context = this;
 
     @Override
@@ -60,10 +74,47 @@ public class SettingsActivity extends AppCompatActivity implements
             });
         }
 
+        // capture activity intend and transfer to fragment
+        // --- START: Intent Parameter Handling ---
+        String rootKeyForFragment = null;
+        String preferenceToHighlightKey = null; // to scroll/highlight a specific preference later
+
+        Bundle intentExtras = getIntent().getExtras();
+        if (intentExtras != null) {
+            String typeParam = intentExtras.getString(EXTRA_PREFERENCE_SCREEN_KEY); // sub-screen key
+            String param = intentExtras.getString(EXTRA_TARGET_PREFERENCE_KEY);     // preference key within that sub-screen
+
+            if (typeParam != null) {
+                Log.d(LOG_TAG, "onCreate() - Intent wants to navigate to preference screen key: " + typeParam);
+                rootKeyForFragment = typeParam;
+                if (param != null) {
+                    Log.d(LOG_TAG, "onCreate() - Intent wants to highlight/find preference key: " + param);
+                    preferenceToHighlightKey = param;
+                }
+            }
+        }
+        // --- END: Intent Parameter Handling ---
+
         if (savedInstanceState == null) {
+            UserPreferences_Fragment fragment = new UserPreferences_Fragment();
+            Bundle args = new Bundle();
+
+            if (rootKeyForFragment != null) {
+                // If the Intent specified a sub-screen, set it as the root for the fragment.
+                args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, rootKeyForFragment);
+            }
+
+            if (preferenceToHighlightKey != null) {
+                // Pass the key of the specific preference to be highlighted/scrolled to
+                args.putString(UserPreferences_Fragment.ARG_HIGHLIGHT_PREFERENCE_KEY, preferenceToHighlightKey);
+            }
+
+            if (!args.isEmpty()) {
+                fragment.setArguments(args);
+            }
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.settings_container, new SettingsFragment()) // R.id.settings_container is in activity_settings_host.xml
+                    .replace(R.id.settings_container, fragment) // R.id.settings_container is in activity_settings_host.xml
                     .commit();
         }
 
@@ -85,14 +136,14 @@ public class SettingsActivity extends AppCompatActivity implements
         if (pref instanceof PreferenceScreen) { // Check if it's a PreferenceScreen that was clicked
             // Create a new instance of your main SettingsFragment (or a specific one if designed)
             // and tell it which sub-screen to load using its key as the rootKey.
-            SettingsFragment fragment = new SettingsFragment(); // Or your specific fragment for this sub-screen
+            UserPreferences_Fragment fragment = new UserPreferences_Fragment(); // Or your specific fragment for this sub-screen
             Bundle args = new Bundle();
             // The key of the PreferenceScreen that was clicked will be passed as the rootKey
             // so the new fragment instance loads that specific screen.
             args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, pref.getKey());
             // Pass the title of the clicked PreferenceScreen to the new fragment instance
             if (pref.getTitle() != null) {
-                args.putCharSequence(SettingsFragment.ARG_SCREEN_TITLE, pref.getTitle());
+                args.putCharSequence(UserPreferences_Fragment.ARG_SCREEN_TITLE, pref.getTitle());
             }
             fragment.setArguments(args);
 
@@ -125,5 +176,6 @@ public class SettingsActivity extends AppCompatActivity implements
             getSupportActionBar().setTitle(title);
         }
     }
+
 
 }

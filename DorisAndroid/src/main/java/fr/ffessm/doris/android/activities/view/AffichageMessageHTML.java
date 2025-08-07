@@ -41,54 +41,45 @@ termes.
 * ********************************************************************* */
 package fr.ffessm.doris.android.activities.view;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.Accueil_CustomViewActivity;
 import fr.ffessm.doris.android.activities.DetailsParticipant_ElementViewActivity;
-import fr.ffessm.doris.android.activities.SettingsActivity;
+import fr.ffessm.doris.android.activities.UserPreferences_Activity;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.Participant;
 import fr.ffessm.doris.android.sitedoris.Constants;
-import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
-import fr.ffessm.doris.android.tools.Param_Outils;
-import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.TextView;
 
 public class AffichageMessageHTML {
 
-    private Context context;
+    private final Context context;
     private Activity activity;
     private OrmLiteDBHelper dbHelper = null;
 
 
     private static final String LOG_TAG = Accueil_CustomViewActivity.class.getCanonicalName();
 
-    private final Param_Outils paramOutils;
-    private final Disque_Outils disqueOutils;
-    private final Photos_Outils photosOutils;
     private final Fiches_Outils fichesOutils;
 
     public AffichageMessageHTML(Context context, Activity activity, OrmLiteDBHelper dbHelper) {
@@ -96,18 +87,12 @@ public class AffichageMessageHTML {
         this.activity = activity;
         this.dbHelper = dbHelper;
 
-        paramOutils = new Param_Outils(context);
-        disqueOutils = new Disque_Outils(context);
-        photosOutils = new Photos_Outils(context);
         fichesOutils = new Fiches_Outils(context);
     }
 
     public AffichageMessageHTML(Context context) {
         this.context = context;
 
-        paramOutils = new Param_Outils(context);
-        disqueOutils = new Disque_Outils(context);
-        photosOutils = new Photos_Outils(context);
         fichesOutils = new Fiches_Outils(context);
     }
 
@@ -126,26 +111,21 @@ public class AffichageMessageHTML {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View layout = inflater.inflate(R.layout.apropos_aide,
-                (ViewGroup) activity.findViewById(R.id.layout_root));
+                activity.findViewById(R.id.layout_root));
 
         alertDialog.setTitle(inTitre);
 
-        TextView text = (TextView) layout.findViewById(R.id.text);
+        TextView text = layout.findViewById(R.id.text);
         if (!inTexte.isEmpty()) {
             text.setText(inTexte);
         } else {
             text.setVisibility(View.GONE);
         }
 
-        ImageView closeBtn = (ImageView) layout.findViewById(R.id.btn_close);
-        closeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alertDialog.dismiss();
-            }
-        });
+        ImageView closeBtn = layout.findViewById(R.id.btn_close);
+        closeBtn.setOnClickListener(view -> alertDialog.dismiss());
 
-        final WebView pageWeb = (WebView) layout.findViewById(R.id.webView);
+        final WebView pageWeb = layout.findViewById(R.id.webView);
         pageWeb.setWebViewClient(new WebViewClient() {
 
             @Override
@@ -167,12 +147,14 @@ public class AffichageMessageHTML {
 
                     Intent toParticipantView = new Intent(context, DetailsParticipant_ElementViewActivity.class);
 
-                    OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(context);
-                    RuntimeExceptionDao<Participant, Integer> entriesDao = ormLiteDBHelper.getParticipantDao();
+                    Bundle b;
+                    try (OrmLiteDBHelper ormLiteDBHelper = new OrmLiteDBHelper(context)) {
+                        RuntimeExceptionDao<Participant, Integer> entriesDao = ormLiteDBHelper.getParticipantDao();
 
-                    Bundle b = new Bundle();
-                    b.putInt("participantId", entriesDao.queryForEq("numeroParticipant", Integer.valueOf(inUrl.replace("participant://", ""))).get(0).getId());
-                    ormLiteDBHelper.getParticipantDao().clearObjectCache();
+                        b = new Bundle();
+                        b.putInt("participantId", entriesDao.queryForEq("numeroParticipant", Integer.valueOf(inUrl.replace("participant://", ""))).get(0).getId());
+                        ormLiteDBHelper.getParticipantDao().clearObjectCache();
+                    }
 
                     toParticipantView.putExtras(b);
                     context.startActivity(toParticipantView);
@@ -182,12 +164,12 @@ public class AffichageMessageHTML {
                     if (BuildConfig.DEBUG)
                         Log.d(LOG_TAG, "affichageMessageHTML() - Affichage preference : " + inUrl.replace("preference://", ""));
 
-                    Intent toPrefView = new Intent(context, SettingsActivity.class);
+                    Intent toPrefView = new Intent(context, UserPreferences_Activity.class);
 
                     String[] pref = inUrl.replace("preference://", "").split("/");
 
-                    toPrefView.putExtra("type_parametre", pref[0]);
-                    toPrefView.putExtra("parametre", pref[1]);
+                    toPrefView.putExtra(UserPreferences_Activity.EXTRA_PREFERENCE_SCREEN_KEY, pref[0]);
+                    toPrefView.putExtra(UserPreferences_Activity.EXTRA_TARGET_PREFERENCE_KEY, pref[1]);
 
                     Bundle b = new Bundle();
                     toPrefView.putExtras(b);
@@ -230,20 +212,18 @@ public class AffichageMessageHTML {
         texte.append(outils.getAppVersion());
 
         String lastDateBase = "";
-        CloseableIterator<DorisDB_metadata> it = dbHelper.getDorisDB_metadataDao().iterator();
-        while (it.hasNext()) {
-            texte.append(System.getProperty("line.separator"));
-            lastDateBase = it.next().getDateBase();
+        for (DorisDB_metadata dorisDBMetadata : dbHelper.getDorisDB_metadataDao()) {
+            texte.append(System.lineSeparator());
+            lastDateBase = dorisDBMetadata.getDateBase();
         }
-        texte.append(context.getString(R.string.a_propos_base_date) + lastDateBase);
+        texte.append(context.getString(R.string.a_propos_base_date)).append(lastDateBase);
 
         texte.append("; ");
         int nbFichesPubliees = fichesOutils.getNbFichesPublished();
         int nbFichesProposees = fichesOutils.getNbFichesProposed();
-        texte.append(nbFichesPubliees + context.getString(R.string.a_propos_base_nb_fiches_publiees));
-        texte.append(nbFichesProposees + context.getString(R.string.a_propos_base_nb_fiches_redaction));
-        texte.append((fichesOutils.getNbFichesZoneGeo(Constants.ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES) - (nbFichesPubliees + nbFichesProposees))
-                + context.getString(R.string.a_propos_base_nb_fiches_proposées));
+        texte.append(nbFichesPubliees).append(context.getString(R.string.a_propos_base_nb_fiches_publiees));
+        texte.append(nbFichesProposees).append(context.getString(R.string.a_propos_base_nb_fiches_redaction));
+        texte.append((fichesOutils.getNbFichesZoneGeo(Constants.ZoneGeographiqueKind.FAUNE_FLORE_TOUTES_ZONES) - (nbFichesPubliees + nbFichesProposees))).append(context.getString(R.string.a_propos_base_nb_fiches_proposees));
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
             texte.append("\n");

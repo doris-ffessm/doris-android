@@ -33,7 +33,7 @@ import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 /**
  * Abstract gathering code common to all list views related to species
  */
-public class AbstractSpeciesListActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> {
+public class AbstractSpeciesListActivity extends AbstractDorisActivity {
     private static final String LOG_TAG = AbstractSpeciesListActivity.class.getSimpleName();
 
     private final String activityName = getClass().getSimpleName();
@@ -41,7 +41,7 @@ public class AbstractSpeciesListActivity extends OrmLiteActionBarActivity<OrmLit
     private ActivityResultLauncher<Intent> selectionActivityLauncher;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // --- 2. Register the ActivityResultContract and its callback ---
         // This MUST be done before the Activity is created (e.g., in onCreate or as an instance variable initializer)

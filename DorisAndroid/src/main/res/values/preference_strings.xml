@@ -65,7 +65,7 @@
         
 	<!-- Preferences -->
 	<string name="mode_connecte_preference_category_title">Mode connecté / à la demande</string>
-	<string name="mode_connecte_preference_category_summary"></string>
+	<string name="mode_connecte_preference_category_summary">Options applicables aux téléchargements de photos lorsqu\'elles ne sont pas préchargées.</string>
 	
 	<string name="mode_connecte_wifi_only_prompt">Téléch. photos en wifi uniquement\u00A0?</string>
 	<string name="mode_connecte_wifi_only_summary">Si coché, les images non préchargées ne s\'afficheront que lorsque votre appareil est connecté en WiFi.\nCela permet de limiter l\'utilisation du forfait data. </string>
@@ -82,10 +82,10 @@
     
     
 	<string name="mode_precharg_preference_category_title">Préchargements</string>
-    <string name="mode_precharg_preference_category_summary">Paramétrer le Mode Hors Ligne</string>
+    <string name="mode_precharg_preference_category_summary">Paramétrage du Mode Hors Ligne</string>
     
 	<string name="mode_precharg_wifi_only_prompt">Précharg. en wifi uniquement\u00A0?</string>
-	<string name="mode_precharg_wifi_only_summary">Attention, si non coché le préchargement des photos se lancera aussi en 4G, 3G, etc.</string>
+	<string name="mode_precharg_wifi_only_summary">Attention, si non coché le préchargement des photos se lancera aussi en 5G, 4G, etc.</string>
 	
 	<string name="maj_liste_fiches_region_prompt">Mise à jour des Listes de Fiches</string>
 	<string name="maj_liste_fiches_region_summary">Permet de paramétrer la mise à jour des fiches ayant changé de statut.</string>
@@ -118,7 +118,7 @@
 
 
 	<string name="mode_precharg_photo_region_prompt">Qualité des Images par Zone</string>
-	<string name="mode_precharg_photo_region_summary">"Volume nécessaire estimé : "</string>
+	<string name="mode_precharg_photo_region_summary">"Paramétrage de la qualité des images à précharger par zone géographique.\nVolume nécessaire estimé : "</string>
     <string name="mode_precharg_photo_region_defaut">P1</string>
     
     <string name="mode_precharg_photo_region_france_prompt">France Métropolitaine\u00A0?</string>
@@ -133,6 +133,13 @@
     <string name="mode_precharg_photo_region_guyanne_prompt">\u22B3 Guyanne\u00A0?</string>
     <string name="mode_precharg_photo_region_habitat_prompt">Habitats subaquatiques\u00A0?</string>
     <!-- <string name="mode_precharg_photo_favorite_prompt">- Fiches préférées ? (A FAIRE)</string> -->
+
+    <string name="mode_precharg_photo_region_explanation_title">Note sur le téléchargement des zones</string>
+    <string name="mode_precharg_photo_region_explanation_summary">Chaque zone géographique a sa propre directive de téléchargement.\n
+        Une fiche peut appartenir à plusieurs zones, notamment dans le cas des zones imbriquées (dénotée par un \u22B3 )(ex: France est parent de Méditerranée).\n
+        Les directives sont cumulatives en cas de qualités d\'image requises différentes.
+        Vérifiez les réglages individuels pour un contrôle précis."
+	</string>
   
     <string name="mode_precharg_photo_autres_prompt">Précharg. Autres Photos\u00A0?</string>
     <string name="mode_precharg_photo_autres_summary">Photos Participants, Bibliographies et Glossaire (environ @size)</string>
@@ -170,7 +177,7 @@
     <string name="icone_habitat">drawable/doris_icone_habitat</string>
 	
 	<string name="presentation_preference_category_title">Présentation</string>
-	<string name="presentation_preference_category_summary">Affich. par défaut, Taille icônes, etc.</string>
+	<string name="presentation_preference_category_summary">Thème, Affichage par défaut, Taille icônes, etc.</string>
 	
 	<string name="pref_theme_prompt">"Thème"</string>
 	<string name="pref_theme_default">DorisAndroid</string>
@@ -245,7 +252,7 @@
         <item>Grandes</item>
         <item>Très Grandes</item>
     </string-array>
-    <string name="fiche_icone_taille_prompt">Taille des vignettes des fiches</string>
+    <string name="fiche_icone_taille_prompt">Taille des vignettes dans les fiches</string>
     <string name="fiche_icone_taille_defaut">128</string>
 	<string-array name="fiche_icone_taille_valeurs">
         <item>64</item>
@@ -262,14 +269,14 @@
         <item>Très Grandes</item>
     </string-array>
     
-	<string name="pref_accueil_aff_iconesfede_prompt">Affichage Logos Fédé.\u00A0?</string>
-    <string name="pref_accueil_aff_iconesfede_summary" />
+	<string name="pref_accueil_aff_iconesfede_prompt">Afficher logos fédéraux\u00A0?</string>
+    <string name="pref_accueil_aff_iconesfede_summary" >Décocher pour masquer les logos fédéraux de la page d\'accueil (Un reset est pratiqué lors des mises à jour de l\'application)</string>
 	
 	<string name="pref_fiche_aff_details_pardefaut_prompt">Fiche\u00A0: montrer détails\u00A0?</string>
-	<string name="pref_fiche_aff_details_pardefaut_summary">"Les détails de la fiche sont tous affichés par défaut"</string>
+	<string name="pref_fiche_aff_details_pardefaut_summary">"Si coché, toutes les sections des fiches sont ouvertes par défaut"</string>
 	
-	<string name="pref_imagepleinecran_aff_zoomcontrol_prompt">Afficher boutons de contrôle de zoom</string>
-	<string name="pref_imagepleinecran_aff_zoomcontrol_summary"/>
+	<string name="pref_imagepleinecran_aff_zoomcontrol_prompt">Afficher boutons de zoom</string>
+    <string name="pref_imagepleinecran_aff_zoomcontrol_summary">Ajoute des boutons de contrôle sur les vues image plein écran.</string>
 	
 	<string name="imagepleinecran_titre_longmax">25</string>
 		

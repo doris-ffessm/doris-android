@@ -42,68 +42,54 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.Groupes_Outils;
-import fr.ffessm.doris.android.tools.SortModesTools;
-import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.ffessm.doris.android.tools.Zones_Outils;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-
-
-
-import java.io.File;
-//Start of user code additional imports Accueil_CustomViewActivity
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask.Status;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import androidx.preference.PreferenceManager;
+import android.util.Log;
+import android.util.SparseArray;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.preference.PreferenceManager;
 
-import android.util.Log;
-import android.util.SparseArray;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RadioButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
-import android.widget.ImageButton;
+import java.io.File;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import fr.ffessm.doris.android.BuildConfig;
 import fr.ffessm.doris.android.DorisApplicationContext;
+import fr.ffessm.doris.android.R;
 import fr.ffessm.doris.android.activities.view.AffichageMessageHTML;
 import fr.ffessm.doris.android.activities.view.MultiProgressBar;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
@@ -112,21 +98,24 @@ import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
 import fr.ffessm.doris.android.datamodel.Groupe;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.sitedoris.Constants;
+import fr.ffessm.doris.android.tools.App_Outils;
 import fr.ffessm.doris.android.tools.Disque_Outils;
 import fr.ffessm.doris.android.tools.Disque_Outils.ImageLocation;
 import fr.ffessm.doris.android.tools.Fiches_Outils;
-import fr.ffessm.doris.android.tools.App_Outils;
-import fr.ffessm.doris.android.tools.Photos_Outils;
+import fr.ffessm.doris.android.tools.Groupes_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
+import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Reseau_Outils;
 import fr.ffessm.doris.android.tools.ScreenTools;
+import fr.ffessm.doris.android.tools.SortModesTools;
+import fr.ffessm.doris.android.tools.Zones_Outils;
 import fr.ffessm.doris.android.tools.disk.DiskEnvironmentHelper;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 import fr.ffessm.doris.android.tools.disk.StorageHelper;
 import fr.ffessm.doris.android.tools.disk.StorageHelper.StorageVolume;
 
 //End of user code
-public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
+public class Accueil_CustomViewActivity extends AbstractDorisActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener, DataChangedListener
 {
 
@@ -169,9 +158,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(savedInstanceState);
-        ThemeUtil.onActivityCreateSetTheme(this);
 
         setContentView(R.layout.accueil_customview);
         //Start of user code onCreate Accueil_CustomViewActivity
@@ -1046,7 +1033,7 @@ public class Accueil_CustomViewActivity extends OrmLiteActionBarActivity<OrmLite
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.accueil_customview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
             //Start of user code additional menu action Accueil_CustomViewActivity
         } else if (itemId == R.id.accueil_customview_action_telecharge_photofiches) {

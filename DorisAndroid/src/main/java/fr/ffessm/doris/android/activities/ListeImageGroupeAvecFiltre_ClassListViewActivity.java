@@ -70,7 +70,6 @@ import androidx.core.app.TaskStackBuilder;
 import androidx.core.graphics.Insets;
 import androidx.core.view.MenuItemCompat;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.preference.PreferenceManager;
 
@@ -110,9 +109,7 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends AbstractSp
     HashMap<Integer, Integer> groupeIdToIndex;
 
     public void onCreate(Bundle bundle) {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(bundle);
-        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.listeimagegroupeavecfiltre_listview);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.listeimagegroupeavecfiltre_listview_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -302,7 +299,7 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends AbstractSp
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.listeficheavecfiltre_classlistview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
         } else if (itemId == R.id.listeficheavecfiltre_classlistview_action_filterpopup) {
             showFilterPopup();
@@ -341,11 +338,6 @@ public class ListeImageGroupeAvecFiltre_ClassListViewActivity extends AbstractSp
     public Intent getSupportParentActivityIntent() {
         // navigates to the parent activity
         return new Intent(this, Accueil_CustomViewActivity.class);
-    }
-
-    @Override
-    public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
-        super.onCreateSupportNavigateUpTaskStack(builder);
     }
 
     // -------------- handler (for indexBar)

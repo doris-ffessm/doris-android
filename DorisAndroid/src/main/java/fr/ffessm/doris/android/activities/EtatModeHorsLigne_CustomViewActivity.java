@@ -74,7 +74,6 @@ import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.j256.ormlite.dao.CloseableIterator;
@@ -92,7 +91,6 @@ import fr.ffessm.doris.android.activities.view.MultiProgressBar;
 import fr.ffessm.doris.android.async.TelechargePhotosAsync_BgActivity;
 import fr.ffessm.doris.android.datamodel.DataChangedListener;
 import fr.ffessm.doris.android.datamodel.DorisDB_metadata;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
 import fr.ffessm.doris.android.datamodel.ZoneGeographique;
 import fr.ffessm.doris.android.services.GestionPhotoDiskService;
 import fr.ffessm.doris.android.sitedoris.Constants.ZoneGeographiqueKind;
@@ -102,23 +100,14 @@ import fr.ffessm.doris.android.tools.Fiches_Outils;
 import fr.ffessm.doris.android.tools.Param_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils;
 import fr.ffessm.doris.android.tools.Photos_Outils.ImageType;
-import fr.ffessm.doris.android.tools.ThemeUtil;
 import fr.ffessm.doris.android.tools.Zones_Outils;
 import fr.ffessm.doris.android.tools.disk.DiskEnvironmentHelper;
 import fr.ffessm.doris.android.tools.disk.NoSecondaryStorageException;
 import fr.ffessm.doris.android.tools.disk.StorageHelper;
 import fr.ffessm.doris.android.tools.disk.StorageHelper.StorageVolume;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
 
-//End of user code
-public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper>
-//Start of user code additional implements EtatModeHorsLigne_CustomViewActivity
-        implements DataChangedListener
-//End of user code
+public class EtatModeHorsLigne_CustomViewActivity extends AbstractDorisActivity implements DataChangedListener
 {
-
-    //Start of user code constants EtatModeHorsLigne_CustomViewActivity
-
     private static final String LOG_TAG = EtatModeHorsLigne_CustomViewActivity.class.getCanonicalName();
     Handler mHandler;
 
@@ -185,9 +174,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(savedInstanceState);
-        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.etatmodehorsligne_customview);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.etatmodehorsligne_customview_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -198,8 +185,6 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        //Start of user code onCreate EtatModeHorsLigne_CustomViewActivity
 
         getSupportActionBar().setTitle(getContext().getString(R.string.etatmodehorsligne_titre_text));
 
@@ -236,7 +221,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
                     showToast((String) inputMessage.obj);
                 }
 
-                // Mise à jour de l'affichage
+                // Update the UI
                 refreshScreenData();
 
             }
@@ -244,18 +229,13 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         };
 
         DorisApplicationContext.getInstance().addDataChangeListeners(this);
-        //End of user code
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         refreshScreenData();
-        //Start of user code onResume EtatModeHorsLigne_CustomViewActivity
-        //if (BuildConfig.DEBUG) Log.d(LOG_TAG, "onResume() - Fin");
-        //End of user code
     }
-    //Start of user code additional code EtatModeHorsLigne_CustomViewActivity
 
     @Override
     protected void onDestroy() {
@@ -308,9 +288,9 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         // Affichage Préférence de la Zone Géographique
         progressBarZoneGenerale.setOnClickListener(v -> {
 
-            Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, SettingsActivity.class);
-            intent.putExtra("type_parametre", "mode_precharg_category");
-            intent.putExtra("parametre", "button_qualite_images_zones_key");
+            Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, UserPreferences_Activity.class);
+            intent.putExtra(UserPreferences_Activity.EXTRA_PREFERENCE_SCREEN_KEY, "mode_precharg_category");
+            intent.putExtra(UserPreferences_Activity.EXTRA_TARGET_PREFERENCE_KEY, "button_qualite_images_zones_key");
 
             startActivity(intent);
         });
@@ -365,7 +345,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
             progressBarZone.setOnClickListener(v -> {
                 if (BuildConfig.DEBUG)
                     Log.d(LOG_TAG, "setOnClickListener() - zoneGeoId : " + fZoneGeo.getId());
-                Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, SettingsActivity.class);
+                Intent intent = new Intent(EtatModeHorsLigne_CustomViewActivity.this, UserPreferences_Activity.class);
 
                 String param;
                 ZoneGeographiqueKind zoneGzeoKind = fZoneGeo.getZoneGeoKind();
@@ -405,11 +385,11 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
                 }
 
                 if (param != null) {
-                    intent.putExtra("type_parametre", "button_qualite_images_zones_key");
-                    intent.putExtra("parametre", param);
+                    intent.putExtra(UserPreferences_Activity.EXTRA_PREFERENCE_SCREEN_KEY, "button_qualite_images_zones_key");
+                    intent.putExtra(UserPreferences_Activity.EXTRA_TARGET_PREFERENCE_KEY, param);
                 } else {
-                    intent.putExtra("type_parametre", "mode_precharg_category");
-                    intent.putExtra("parametre", "button_qualite_images_zones_key");
+                    intent.putExtra(UserPreferences_Activity.EXTRA_PREFERENCE_SCREEN_KEY, "mode_precharg_category");
+                    intent.putExtra(UserPreferences_Activity.EXTRA_TARGET_PREFERENCE_KEY, "button_qualite_images_zones_key");
                 }
 
                 startActivity(intent);
@@ -1281,7 +1261,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.etatmodehorsligne_customview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
             //Start of user code additional menu action EtatModeHorsLigne_CustomViewActivity
         } else if (itemId == R.id.etatmodehorsligne_customview_action_telecharge_photofiches) {
@@ -1341,16 +1321,7 @@ public class EtatModeHorsLigne_CustomViewActivity extends OrmLiteActionBarActivi
     //  ------------ dealing with Up button
     @Override
     public Intent getSupportParentActivityIntent() {
-        //Start of user code getSupportParentActivityIntent EtatModeHorsLigne_CustomViewActivity
         // navigates to the parent activity
         return new Intent(this, Accueil_CustomViewActivity.class);
-        //End of user code
-    }
-
-    @Override
-    public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
-        //Start of user code onCreateSupportNavigateUpTaskStack EtatModeHorsLigne_CustomViewActivity
-        super.onCreateSupportNavigateUpTaskStack(builder);
-        //End of user code
     }
 }

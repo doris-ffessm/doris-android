@@ -42,35 +42,11 @@ termes.
 package fr.ffessm.doris.android.activities;
 
 
-import java.util.HashMap;
-
-import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
-import fr.ffessm.doris.android.activities.view.indexbar.DefinitionGlossaireIndexManager;
-import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
-import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
-import fr.ffessm.doris.android.datamodel.DorisDBHelper;
-import fr.ffessm.doris.android.datamodel.OrmLiteDBHelper;
-import fr.ffessm.doris.android.DorisApplicationContext;
-import fr.ffessm.doris.android.R;
-import fr.ffessm.doris.android.tools.ThemeUtil;
-import fr.vojtisek.genandroid.genandroidlib.activities.OrmLiteActionBarActivity;
-
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.LinearLayout;
-import androidx.core.app.NavUtils;
-import androidx.core.app.TaskStackBuilder;
-import androidx.appcompat.app.ActionBar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.MenuItemCompat;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -79,12 +55,32 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
+import androidx.core.graphics.Insets;
+import androidx.core.view.MenuItemCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import java.util.HashMap;
+
+import fr.ffessm.doris.android.DorisApplicationContext;
+import fr.ffessm.doris.android.R;
+import fr.ffessm.doris.android.activities.view.indexbar.ActivityWithIndexBar;
+import fr.ffessm.doris.android.activities.view.indexbar.AlphabetIndexBarHandler;
+import fr.ffessm.doris.android.activities.view.indexbar.DefinitionGlossaireIndexManager;
+import fr.ffessm.doris.android.datamodel.DefinitionGlossaire;
+import fr.ffessm.doris.android.datamodel.DorisDBHelper;
 // Start of user code protectedGlossaire_ClassListViewActivity_additionalimports
 // End of user code
 
-public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<OrmLiteDBHelper> implements OnItemClickListener, ActivityWithIndexBar {
+public class Glossaire_ClassListViewActivity extends AbstractDorisActivity implements OnItemClickListener, ActivityWithIndexBar {
 
     private static final String LOG_TAG = Glossaire_ClassListViewActivity.class.getSimpleName();
 
@@ -98,9 +94,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
     int number_of_alphabets = -1;
 
     public void onCreate(Bundle bundle) {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(bundle);
-        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.glossaire_listview);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.glossaire_listview_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -260,7 +254,7 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
         // behavior of option menu
         int itemId = item.getItemId();
         if (itemId == R.id.glossaire_classlistview_action_preference) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, UserPreferences_Activity.class));
             return true;
             //Start of user code additional menu action Glossaire_ClassListViewActivity
 
@@ -289,18 +283,10 @@ public class Glossaire_ClassListViewActivity extends OrmLiteActionBarActivity<Or
     //  ------------ dealing with Up button
     @Override
     public Intent getSupportParentActivityIntent() {
-        //Start of user code getSupportParentActivityIntent Glossaire_ClassListViewActivity
         // navigates to the parent activity
         return new Intent(this, Accueil_CustomViewActivity.class);
-        //End of user code
     }
 
-    @Override
-    public void onCreateSupportNavigateUpTaskStack(TaskStackBuilder builder) {
-        //Start of user code onCreateSupportNavigateUpTaskStack Glossaire_ClassListViewActivity
-        super.onCreateSupportNavigateUpTaskStack(builder);
-        //End of user code
-    }
 
     // -------------- handler (for indexBar)
     @Override
